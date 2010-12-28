@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-11-23 09:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_journal
@@ -28,7 +28,7 @@ msgstr ""
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr ""
 
 #. module: sale_journal
@@ -67,11 +67,32 @@ msgid "Invoicing Method"
 msgstr "Fakturametod"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Fakturatyper"
+#: model:ir.module.module,description:sale_journal.module_meta_information
+msgid ""
+"\n"
+"    The sales journal modules allows you to categorise your\n"
+"    sales and deliveries (picking lists) between different journals.\n"
+"    This module is very helpful for bigger companies that\n"
+"    works by departments.\n"
+"\n"
+"    You can use journal for different purposes, some examples:\n"
+"    * isolate sales of different departments\n"
+"    * journals for deliveries by truck or by UPS\n"
+"\n"
+"    Journals have a responsible and evolves between different status:\n"
+"    * draft, open, cancel, done.\n"
+"\n"
+"    Batch operations can be processed on the different journals to\n"
+"    confirm all sales at once, to validate or invoice packing, ...\n"
+"\n"
+"    It also supports batch invoicing methods that can be configured by\n"
+"    partners and sales orders, examples:\n"
+"    * daily invoicing,\n"
+"    * monthly invoicing, ...\n"
+"\n"
+"    Some statistics by journals are provided.\n"
+"    "
+msgstr ""
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -112,6 +133,13 @@ msgid "Partner"
 msgstr ""
 
 #. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Fakturatyper"
+
+#. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
 msgstr ""
@@ -125,3 +153,147 @@ msgstr "Managing sales and deliveries by journal"
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Objektnamnet måste börja med x_ och får inte innehålla några specialtecken!"
+
+#~ msgid "Sale Stats"
+#~ msgstr "Försäljningsstatistik"
+
+#~ msgid "Sale Journal"
+#~ msgstr "Faktureringsjournal"
+
+#~ msgid "to be invoiced"
+#~ msgstr "skall faktureras"
+
+#~ msgid "Monthly sales"
+#~ msgstr "Försäljning per månad"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Sätt till preliminär"
+
+#~ msgid "waiting"
+#~ msgstr "väntar"
+
+#~ msgid "Journal date"
+#~ msgstr "Journaldatum"
+
+#~ msgid "My open journals"
+#~ msgstr "Mina öppna journaler"
+
+#~ msgid "# of Lines"
+#~ msgstr "antal rader"
+
+#~ msgid "done"
+#~ msgstr "klar"
+
+#~ msgid "Average Price"
+#~ msgstr "Snittpris"
+
+#~ msgid "State"
+#~ msgstr "Delstat"
+
+#~ msgid "Total Price"
+#~ msgstr "Totalt belopp"
+
+#~ msgid "All Months"
+#~ msgstr "Alla månader"
+
+#~ msgid "Sales Orders by Journal"
+#~ msgstr "Kundorder per journal"
+
+#~ msgid "Open journals"
+#~ msgstr "Öppna journaler"
+
+#~ msgid "None"
+#~ msgstr "Ingen"
+
+#~ msgid "In progress"
+#~ msgstr "Pågående"
+
+#~ msgid "Sales by journal (this month)"
+#~ msgstr "Försäljning per journal (denna månad)"
+
+#~ msgid "Draft"
+#~ msgstr "Preliminär"
+
+#~ msgid "Validation date"
+#~ msgstr "Valideringsdatum"
+
+#~ msgid "Month"
+#~ msgstr "Månad"
+
+#~ msgid "Invoice state"
+#~ msgstr "Fakturastatus"
+
+#~ msgid "cancel"
+#~ msgstr "avbryt"
+
+#~ msgid "Order State"
+#~ msgstr "Kundorderstatus"
+
+#~ msgid "Code"
+#~ msgstr "Kod"
+
+#~ msgid "draft"
+#~ msgstr "preliminär"
+
+#~ msgid "Draft sales"
+#~ msgstr "Preliminär kundorder"
+
+#~ msgid "Quotation"
+#~ msgstr "Offert"
+
+#~ msgid "Sales Journals"
+#~ msgstr "Kundorderjournaler"
+
+#~ msgid "Creation date"
+#~ msgstr "Skapad datum"
+
+#~ msgid "Responsible"
+#~ msgstr "Ansvarig"
+
+#~ msgid "Open"
+#~ msgstr "Öppna"
+
+#~ msgid "Sales"
+#~ msgstr "Kundorder"
+
+#~ msgid "Open Journal"
+#~ msgstr "Öppna journal"
+
+#~ msgid "Done"
+#~ msgstr "Klar"
+
+#~ msgid "Journal Stats"
+#~ msgstr "Journalstatus"
+
+#~ msgid "Cancel"
+#~ msgstr "Avbryt"
+
+#~ msgid "Journal"
+#~ msgstr "Journal"
+
+#~ msgid "invoiced"
+#~ msgstr "fakturerad"
+
+#~ msgid "My Open Journals"
+#~ msgstr "Mina öppna journaler"
+
+#~ msgid "confirmed"
+#~ msgstr "godkänd"
+
+#~ msgid "Quantities"
+#~ msgstr "Antal"
+
+#~ msgid "States"
+#~ msgstr "Stater"
+
+#~ msgid "Invoicing Methods"
+#~ msgstr "Fakturametoder"
+
+#~ msgid "Sales by Journal"
+#~ msgstr "Kundorder per journal"
+
+#~ msgid "This Month"
+#~ msgstr "Denna månad"
+
+#~ msgid "Journal Information"
+#~ msgstr "Journalinformation"

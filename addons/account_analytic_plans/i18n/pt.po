@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-15 01:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -129,11 +129,6 @@ msgid "Bank Statement Line"
 msgstr ""
 
 #. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Erro: É necessária a referência BVR."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Conta Analítica"
@@ -155,9 +150,16 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Printing date"
-msgstr "Data de impressão"
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: view:analytic.plan.create.model:0
+#, python-format
+msgid "Distribution Model Saved"
+msgstr "Modelo de Sistibuição Guardado"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -173,11 +175,6 @@ msgstr "Imprimir"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
 msgstr "Percentagem"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_sale_order_line
-msgid "Sale Order Line"
-msgstr ""
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -215,16 +212,21 @@ msgid "Maximum Allowed (%)"
 msgstr "Máximo Permitido(%)"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
-#: view:analytic.plan.create.model:0
-#, python-format
-msgid "Distribution Model Saved"
-msgstr "Modelo de Sistibuição Guardado"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Data de impressão"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Lines"
 msgstr "Plano de Linhas Analítica"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
@@ -271,11 +273,6 @@ msgstr ""
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Tem de definir um diário analítico no diário '%s'!"
-
-#. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Erro! Número Bvr inválido (soma de controlo errada)"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -463,6 +460,11 @@ msgstr "Código de Distribuição"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+msgid "%"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
 msgstr "100.00%"
 
@@ -518,6 +520,15 @@ msgstr "Erro de Valor"
 msgid "You can not create move line on view account."
 msgstr ""
 
+#~ msgid "Currency:"
+#~ msgstr "Moeda:"
+
+#~ msgid "to"
+#~ msgstr "para"
+
+#~ msgid "Period from"
+#~ msgstr "Periodo a partir de"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -527,8 +538,95 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome do modelo inválido na definição da acção"
 
+#~ msgid "Select Information"
+#~ msgstr "Informação Selecionada"
+
+#~ msgid "Analytic Account Ref."
+#~ msgstr "Referência da Conta Analítica"
+
+#~ msgid "Create Model"
+#~ msgstr "Criar Modelo"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML Inválido para a Arquitectura de Vista!"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Este módulo permite o uso de vários planos analíticos, de acordo com o "
+#~ "diário geral, \n"
+#~ "então multiplas linhas analíticas são criadas quando facturas ou movimentos\n"
+#~ "são confirmados(as).\n"
+#~ "\n"
+#~ "Por exemplo, pode definir a seguinte estrutura analítica: \n"
+#~ "  Projecto\n"
+#~ "    Projecto 1\n"
+#~ "          Sub-Projecto 1.1\n"
+#~ "          Sub-Projecto 1.2\n"
+#~ "    Projecto 2\n"
+#~ "  Vendedor\n"
+#~ "        Eric\n"
+#~ "        Fabien\n"
+#~ "\n"
+#~ "Aqui, temos dois planos: Projectos e Vendedores. Uma Linha de factura "
+#~ "precisa\n"
+#~ "ser capaz de escrever movimentos analíticos nos dois planos: Sub-Projectos "
+#~ "1.1 e\n"
+#~ "Fabien. O montante pode também ser dividido. O seguinte exemplo é para\n"
+#~ "a factura que toca os dois sub-projectos e atribuido para um vendedor:\n"
+#~ "\n"
+#~ "Plano 1:\n"
+#~ "    Sub-Projecto 1.1 : 50%\n"
+#~ "    Sub-Projecto 1.2 : 50%\n"
+#~ "Plano 2:\n"
+#~ "   Eric: 100%\n"
+#~ "Então quando esta linha de factura for confirmada, irá gerar 3 linhas "
+#~ "analíticas, \n"
+#~ "para cada um dos movimentos da conta.\n"
+#~ "        "
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Printing date:"
+#~ msgstr "Data de Impressão:"
+
+#~ msgid "Analytic Distribution's models"
+#~ msgstr "Modelos de Distribuições Analítica"
+
+#~ msgid ""
+#~ "This distribution model has been saved. You will be able to reuse it later."
+#~ msgstr ""
+#~ "Este modelo de distribuição foi gravado. Poderá reutilizá-lo mais tarde."
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Erro! Não pode criar menus recursivos."
@@ -541,3 +639,9 @@ msgstr ""
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Erro: É necessária a referência BVR."
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Erro! Número Bvr inválido (soma de controlo errada)"

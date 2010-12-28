@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-01 08:44+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -22,6 +22,7 @@ msgid "# Leads"
 msgstr "# Leads"
 
 #. module: crm
+#: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: selection:crm.lead.report,type:0
@@ -81,6 +82,7 @@ msgid "Select Opportunities"
 msgstr "Selecteer verkoopkansen"
 
 #. module: crm
+#: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
 #: view:crm.send.mail:0
 msgid " "
@@ -139,11 +141,6 @@ msgid "No Repeat"
 msgstr "Geen herhaling"
 
 #. module: crm
-#: field:crm.case.section,resource_calendar_id:0
-msgid "Resource's Calendar"
-msgstr "Resource's agenda"
-
-#. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_lead_to_partner.py:0
 #: code:addons/crm/wizard/crm_phonecall_to_partner.py:0
@@ -197,10 +194,11 @@ msgid "Warning!"
 msgstr "Waarschuwing!"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_send_email.py:0
-#, python-format
-msgid "Can not send mail!"
-msgstr "Kan geen email versturen!"
+#: view:crm.lead.report:0
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
+#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
+msgid "Opportunities Analysis"
+msgstr "Verkoopkansen analyse"
 
 #. module: crm
 #: field:crm.lead,partner_id:0
@@ -379,6 +377,11 @@ msgid "Contact"
 msgstr "Contactpersoon"
 
 #. module: crm
+#: view:crm.installer:0
+msgid "Enhance your core CRM Application with additional functionalities."
+msgstr ""
+
+#. module: crm
 #: field:crm.case.stage,on_change:0
 msgid "Change Probability Automatically"
 msgstr "Wijzig waarschijnlijkheid automatisch"
@@ -411,6 +414,7 @@ msgid "When a real project/opportunity is detected"
 msgstr "Wanneer een echt project/verkoopkans is ontdekt"
 
 #. module: crm
+#: selection:crm.case.stage,type:0
 #: field:crm.installer,crm_fundraising:0
 msgid "Fundraising"
 msgstr "Fondsenwerving"
@@ -538,11 +542,9 @@ msgid "Create Opportunity"
 msgstr "Maak verkoopkans"
 
 #. module: crm
-#: selection:crm.lead.report,month:0
-#: selection:crm.meeting,month_list:0
-#: selection:crm.phonecall.report,month:0
-msgid "August"
-msgstr "Augustus"
+#: view:crm.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -660,6 +662,11 @@ msgstr ""
 "gebeurtenissen voor deze relatie hebben plaatsgevonden."
 
 #. module: crm
+#: selection:crm.case.stage,type:0
+msgid "Claim"
+msgstr ""
+
+#. module: crm
 #: constraint:base.action.rule:0
 msgid "Error: The mail is not well formated"
 msgstr ""
@@ -738,6 +745,11 @@ msgid ""
 msgstr ""
 "Definieer een regel of herhaalpatroon of tijd om uit te sluiten van de "
 "herhaalregel."
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
+msgstr ""
 
 #. module: crm
 #: view:crm.segmentation.line:0
@@ -824,6 +836,7 @@ msgstr "Statistisch dashboard"
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_partner_to_opportunity.py:0
 #: code:addons/crm/wizard/crm_phonecall_to_opportunity.py:0
+#: selection:crm.case.stage,type:0
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: selection:crm.lead.report,type:0
@@ -1230,6 +1243,7 @@ msgstr "Stadium:"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead5
+#: model:crm.case.stage,name:crm.stage_opportunity5
 #: view:crm.lead:0
 msgid "Won"
 msgstr "Gewonnen"
@@ -1250,6 +1264,7 @@ msgid "HTML formatting?"
 msgstr "HTML formaat?"
 
 #. module: crm
+#: field:crm.case.stage,type:0
 #: field:crm.lead,type:0
 #: field:crm.lead.report,type:0
 #: view:crm.meeting:0
@@ -1277,6 +1292,13 @@ msgstr "Laagste"
 #: field:crm.send.mail.attachment,binary:0
 msgid "Attachment"
 msgstr "Bijlage"
+
+#. module: crm
+#: selection:crm.lead.report,month:0
+#: selection:crm.meeting,month_list:0
+#: selection:crm.phonecall.report,month:0
+msgid "August"
+msgstr "Augustus"
 
 #. module: crm
 #: view:crm.lead:0
@@ -1363,7 +1385,9 @@ msgstr "Conditie dossier velden"
 #: view:crm.case.stage:0
 #: model:ir.actions.act_window,name:crm.crm_case_stage_act
 #: model:ir.actions.act_window,name:crm.crm_lead_stage_act
+#: model:ir.actions.act_window,name:crm.crm_opportunity_stage_act
 #: model:ir.ui.menu,name:crm.menu_crm_lead_stage_act
+#: model:ir.ui.menu,name:crm.menu_crm_opportunity_stage_act
 msgid "Stages"
 msgstr "Fases"
 
@@ -2518,11 +2542,10 @@ msgid "Weekly"
 msgstr "Wekelijks"
 
 #. module: crm
-#: view:crm.lead.report:0
-#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
-#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
-msgid "Opportunities Analysis"
-msgstr "Verkoopkansen analyse"
+#: code:addons/crm/wizard/crm_send_email.py:0
+#, python-format
+msgid "Can not send mail!"
+msgstr "Kan geen email versturen!"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2781,6 +2804,11 @@ msgid "Continue Process"
 msgstr "Vervolg proces"
 
 #. module: crm
+#: view:crm.installer:0
+msgid "Configure Your CRM Application"
+msgstr ""
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2partner
 msgid "Phonecall to Partner"
 msgstr "Telefoongesprek met relatie"
@@ -2913,7 +2941,6 @@ msgstr "Uitnodigingen"
 
 #. module: crm
 #: field:crm.case.categ,object_id:0
-#: field:crm.case.stage,object_id:0
 msgid "Object Name"
 msgstr "Objectnaam"
 
@@ -3147,6 +3174,7 @@ msgstr "Succes ratio (%)"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead1
+#: model:crm.case.stage,name:crm.stage_opportunity1
 msgid "New"
 msgstr "Nieuw"
 
@@ -3246,6 +3274,7 @@ msgid "Prospect Opportunity"
 msgstr "Verkoopkans prospect"
 
 #. module: crm
+#: view:crm.installer:0
 #: model:ir.actions.act_window,name:crm.action_crm_installer
 msgid "CRM Application Configuration"
 msgstr "CRM Applicatie configuratie"
@@ -3287,12 +3316,8 @@ msgid "Daily"
 msgstr "Dagelijks"
 
 #. module: crm
-#: model:res.request.link,name:crm.request_link_meeting
-msgid "Case Meeting"
-msgstr "Dossieroverleg"
-
-#. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
+#: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
 msgstr "Kwalificatie"
 
@@ -3491,6 +3516,7 @@ msgstr "Van"
 #: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
+#: model:res.request.link,name:crm.request_link_meeting
 #, python-format
 msgid "Meeting"
 msgstr "Afspraak"
@@ -3587,6 +3613,15 @@ msgstr "Plan telefoongesprek"
 #: selection:crm.phonecall.report,month:0
 msgid "January"
 msgstr "Januari"
+
+#. module: crm
+#: model:ir.actions.act_window,help:crm.crm_opportunity_stage_act
+msgid ""
+"Create specific stages that will help your sales better organise their sales "
+"pipeline by maintaining them to their sales opportunities. It will allow "
+"them to easily track how is positioned a specific opportunity in the sales "
+"cycle."
+msgstr ""
 
 #. module: crm
 #: model:process.process,name:crm.process_process_contractprocess0
@@ -3799,6 +3834,7 @@ msgstr "Plan een afspraak"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead6
+#: model:crm.case.stage,name:crm.stage_opportunity6
 #: view:crm.lead:0
 msgid "Lost"
 msgstr "Verloren"
@@ -3852,6 +3888,7 @@ msgstr "Optie"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead4
+#: model:crm.case.stage,name:crm.stage_opportunity4
 msgid "Negotiation"
 msgstr "Onderhandeling"
 
@@ -3888,6 +3925,7 @@ msgstr "Tweede"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead3
+#: model:crm.case.stage,name:crm.stage_opportunity3
 msgid "Proposition"
 msgstr "Voorstel"
 
@@ -4120,6 +4158,9 @@ msgstr "Nieuwsbrief"
 #~ "De email kan niet worden verzonden met een lege bodytekst, U dient een "
 #~ "omschrijving in de body op te geven."
 
+#~ msgid "Create menus for a case section"
+#~ msgstr "Menu's aanmaken voor een dossiersectie"
+
 #, python-format
 #~ msgid ""
 #~ "You can not escalate this case.\n"
@@ -4141,14 +4182,26 @@ msgstr "Nieuwsbrief"
 #~ "Het e-mailadres voor in het 'Antwoorden-Aan' veld van alle e-mails die "
 #~ "verzonden worden over dossiers in deze sectie."
 
+#~ msgid "Base Information"
+#~ msgstr "Stamgegevens"
+
 #~ msgid "All Cases"
 #~ msgstr "Alle dossiers"
+
+#~ msgid "My Draft "
+#~ msgstr "Mijn concept "
+
+#~ msgid "this wizard will create all sub-menus, within the selected menu."
+#~ msgstr "Deze assistent zal alle submenu's binnen het gekozen menu aanmaken."
 
 #~ msgid "Delay After Trigger Date:"
 #~ msgstr "Vertraging na triggerdatum"
 
 #~ msgid "Button Pressed"
 #~ msgstr "Knop ingedrukt"
+
+#~ msgid "All Open "
+#~ msgstr "Alle openstaande "
 
 #~ msgid "Template of Email to Send"
 #~ msgstr "Sjabloon te verzenden email"
@@ -4162,6 +4215,9 @@ msgstr "Nieuwsbrief"
 #~ msgid "Case history"
 #~ msgstr "Geschiedenis dossier"
 
+#~ msgid "Create menu Entries"
+#~ msgstr "Maak menu-items aan"
+
 #~ msgid "Watchers Emails"
 #~ msgstr "Email toeschouwers"
 
@@ -4173,6 +4229,9 @@ msgstr "Nieuwsbrief"
 
 #~ msgid "Maximim Priority"
 #~ msgstr "Hoogste prioriteit"
+
+#~ msgid "All Unclosed and Unassigned "
+#~ msgstr "Alle geopende en niet-toegewezen "
 
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the partner."
@@ -4186,6 +4245,9 @@ msgstr "Nieuwsbrief"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor weergave!"
+
+#~ msgid "My Open "
+#~ msgstr "Mijn open "
 
 #~ msgid ""
 #~ "The generic Open ERP Customer Relationship Management\n"
@@ -4233,6 +4295,9 @@ msgstr "Nieuwsbrief"
 #~ "De CRM module heeft een e-mail gateway voor de synchronisatie van mails en "
 #~ "OpenERP."
 
+#~ msgid "Select Views (empty for default)"
+#~ msgstr "Kies weergaves (leeg voor standaard)"
+
 #~ msgid "Case State"
 #~ msgstr "Status dossier"
 
@@ -4248,6 +4313,12 @@ msgstr "Nieuwsbrief"
 #~ msgid "Cases Histories"
 #~ msgstr "Historie dossiers"
 
+#~ msgid "All Draft "
+#~ msgstr "Alle concepten "
+
+#~ msgid "My cases"
+#~ msgstr "Mijn dossiers"
+
 #~ msgid "Fields to Change"
 #~ msgstr "Te veranderen velden"
 
@@ -4260,14 +4331,36 @@ msgstr "Nieuwsbrief"
 #~ msgid "Open cases"
 #~ msgstr "Open dossiers"
 
+#~ msgid "My Open Cases"
+#~ msgstr "Mijn openstaande dossiers"
+
+#~ msgid "My Unclosed "
+#~ msgstr "Mijn openstaande "
+
+#~ msgid "My Late "
+#~ msgstr "Mijn te late "
+
+#~ msgid "All Late "
+#~ msgstr "Alle te late "
+
 #~ msgid "Delay type"
 #~ msgstr "Soort vertraging"
+
+#~ msgid "My Pending "
+#~ msgstr "Mijn wachtende "
 
 #~ msgid "Call Object Method"
 #~ msgstr "Object-methode aanroepen"
 
 #~ msgid "%(email_from)s = Partner email"
 #~ msgstr "%(email_from)s = Emailadres relatie"
+
+#~ msgid ""
+#~ "These people will receive a copy of the futur communication between partner "
+#~ "and users by email"
+#~ msgstr ""
+#~ "Deze mensen ontvangen een kopie van de toekomstige email-communicatie tussen "
+#~ "de relatie en de gebruikers"
 
 #~ msgid "%(partner)s = Partner name"
 #~ msgstr "%(partner)s = Naam relatie"
@@ -4285,6 +4378,12 @@ msgstr "Nieuwsbrief"
 #~ msgid "Remind responsible"
 #~ msgstr "Herinner verantwoordelijke"
 
+#~ msgid ""
+#~ "You may want to create a new parent menu to put all the created menus in."
+#~ msgstr ""
+#~ "U wilt wellicht een nieuw hoofdmenu maken om alle aangemaakte menu's in "
+#~ "onder te brengen."
+
 #~ msgid "Minimum Priority"
 #~ msgstr "Minimum prioriteit"
 
@@ -4295,14 +4394,26 @@ msgstr "Nieuwsbrief"
 #~ "Vink dit aan wanneer u alle documenten die gekoppeld zijn aan dit dossier "
 #~ "wilt meezenden met de herinnerings e-mail."
 
+#~ msgid "All Unassigned "
+#~ msgstr "Alle niet-toegewezen "
+
 #~ msgid "Parent Section"
 #~ msgstr "Hoofdsectie"
+
+#~ msgid "Created Menus"
+#~ msgstr "Aangemaakte menu's"
 
 #~ msgid "Child Sections"
 #~ msgstr "Subsecties"
 
+#~ msgid "Parent Menu"
+#~ msgstr "Hoofdmenu"
+
 #~ msgid "%(case_id)s = Case ID"
 #~ msgstr "%(case_id)s = Dossier-ID"
+
+#~ msgid "All Unclosed "
+#~ msgstr "Alle openstaande "
 
 #~ msgid "Conditions on Case Partner"
 #~ msgstr "Voorwaarden aan dossier relatie"
@@ -4310,11 +4421,20 @@ msgstr "Nieuwsbrief"
 #~ msgid "Send Reminder"
 #~ msgstr "Verstuur herinnering"
 
+#~ msgid "Tree View"
+#~ msgstr "Boomstructuurweergave"
+
 #~ msgid "Business Opportunities"
 #~ msgstr "Zakelijke kansen"
 
+#~ msgid "All Pending "
+#~ msgstr "Alle wachtende "
+
 #~ msgid "Partner Email"
 #~ msgstr "Email relatie"
+
+#~ msgid "Create Menus For Cases"
+#~ msgstr "Maak menu's voor dossiers"
 
 #~ msgid "Mail to partner"
 #~ msgstr "Naar relatie mailen"
@@ -4339,6 +4459,9 @@ msgstr "Nieuwsbrief"
 #~ msgid "Segmentations"
 #~ msgstr "Segmenten"
 
+#~ msgid "Deadline Date is automatically computed from Start Date + Duration"
+#~ msgstr "De deadline wordt automatisch berekend als begindatum + duur"
+
 #~ msgid "Conditions on Priority Range"
 #~ msgstr "Voorwaarden aan het bereik van de prioriteit"
 
@@ -4352,6 +4475,12 @@ msgstr "Nieuwsbrief"
 
 #~ msgid "E-Mail Actions"
 #~ msgstr "E-mail acties"
+
+#~ msgid "All Histories"
+#~ msgstr "Alle historie"
+
+#~ msgid "My Canceled "
+#~ msgstr "Mijn geannuleerde "
 
 #~ msgid "Latest E-Mail"
 #~ msgstr "Laatste e-mail"
@@ -4371,11 +4500,17 @@ msgstr "Nieuwsbrief"
 #~ msgid "Logs History"
 #~ msgstr "Log historie"
 
+#~ msgid "Form View"
+#~ msgstr "Formulier-weergave"
+
 #~ msgid "Conditions on Timing"
 #~ msgstr "Voorwaarden aan timing"
 
 #~ msgid "Planned revenue"
 #~ msgstr "Geraamde omzet"
+
+#~ msgid "Mail to watchers (Cc)"
+#~ msgstr "E-mail naar toeschouwers (Cc)"
 
 #~ msgid "Cases by section"
 #~ msgstr "Dossiers op sectie"
@@ -5449,6 +5584,9 @@ msgstr "Nieuwsbrief"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ongeldige modelnaam in de definitie van de actie."
 
+#~ msgid "Resource's Calendar"
+#~ msgstr "Resource's agenda"
+
 #, python-format
 #~ msgid "is converted to Opportunity."
 #~ msgstr "is omgezet naar verkoopkans."
@@ -5472,6 +5610,9 @@ msgstr "Nieuwsbrief"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fout! U kunt geen recursief menu maken."
+
+#~ msgid "Case Meeting"
+#~ msgstr "Dossieroverleg"
 
 #, python-format
 #~ msgid "There is no stage for won opportunities defined for this Sale Team."

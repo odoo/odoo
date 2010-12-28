@@ -28,7 +28,7 @@
     <record model="ir.actions.act_window" id="open_gtd_context_tree">
         <field name="name">Contexts</field>
         <field name="res_model">project.gtd.context</field>
-        <field name="help">Contexts are defined in the "Getting Things Done" methodology. It allows you to categorize your tasks according to the context in which they have to be done: at office, at home, when I take my car, etc.</field>
+        <field name="help">Contexts are defined in the "Getting Things Done" methodology. It allows you to categorize your tasks according to the context in which they have to be done: at the office, at home, when I take my car, etc.</field>
     </record>
 
     <menuitem name="Contexts" id="menu_open_gtd_time_contexts" groups="group_project_getting"
@@ -67,7 +67,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_gtd_timebox_tree"/>
-        <field name="help">Timeboxes are defined in the "Getting Things Done" methodology. It defines a period of time in order to categorize your tasks: today, this week, this month, long term.</field>
+        <field name="help">Timeboxes are defined in the "Getting Things Done" methodology. A timebox defines a period of time in order to categorize your tasks: today, this week, this month, long term.</field>
     </record>
 
     <menuitem name="Timeboxes" id="menu_open_gtd_time_timeboxes" parent="project.menu_tasks_config" action="open_gtd_timebox_tree"/>

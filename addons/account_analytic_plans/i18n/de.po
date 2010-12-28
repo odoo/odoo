@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
-"PO-Revision-Date: 2010-12-06 12:31+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-25 10:25+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-26 04:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -83,6 +83,7 @@ msgstr "OK"
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
 msgstr ""
+"Sie können keine Buchung auf einem bereits abgeschlossenen Konto vornehmen."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
@@ -112,7 +113,7 @@ msgstr "Kurzbez."
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Falscher Buchungsbetrag in Soll oder Haben"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
@@ -130,11 +131,6 @@ msgid "Bank Statement Line"
 msgstr "Bankauszug Buchungen"
 
 #. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Analytisches Konto"
@@ -143,6 +139,8 @@ msgstr "Analytisches Konto"
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
 msgstr ""
+"Die Journalkurzbezeichnung sollte innerhalb eines Unternehmens eindeutig "
+"sein !"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,ref:0
@@ -154,11 +152,20 @@ msgstr "Analyt. Konto Referenz"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Sie können keine Buchung auf Forderungs- oder Verbindlichkeitskonten "
+"erstellen, ohne vorher einen Partner erstellt zu haben."
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Printing date"
-msgstr "Datum Druck"
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Auftragsposition"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: view:analytic.plan.create.model:0
+#, python-format
+msgid "Distribution Model Saved"
+msgstr "Verrechnungsvorlage gespeichert"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -174,11 +181,6 @@ msgstr "Druck"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
 msgstr "Prozent"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_sale_order_line
-msgid "Sale Order Line"
-msgstr "Auftragsposition"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -216,16 +218,23 @@ msgid "Maximum Allowed (%)"
 msgstr "Max. Erlaubt (100%)"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
-#: view:analytic.plan.create.model:0
-#, python-format
-msgid "Distribution Model Saved"
-msgstr "Verrechnungsvorlage gespeichert"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Datum Druck"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Lines"
 msgstr "Analyt. Verrechnung Positionen"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+"Der Betrag des Zahlungsbelegs sollte mit dem Betrag der Position auf dem "
+"Bankauszug übereinstimmen."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
@@ -273,11 +282,6 @@ msgstr "Bis Datum"
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr ""
 "Sie müssen noch ein anal. Journal für das %s Journal der Fibu erzeugen."
-
-#. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -397,6 +401,7 @@ msgstr "Konto1 ID"
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
 msgstr ""
+"Das Unternehmen muss für zugehörige Konten und Perioden identisch sein."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
@@ -501,6 +506,11 @@ msgstr "Kurzbezeichnung"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+msgid "%"
+msgstr "%"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
 msgstr "100,00 %"
 
@@ -543,7 +553,7 @@ msgstr "Sequenz"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "Die Journalbezeichnung sollte pro Unternehmen eindeutig sein."
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -554,7 +564,10 @@ msgstr "Wertefehler"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "Sie können keine Buchungen auf Konten des Typs Ansicht erstellen."
+
+#~ msgid "Currency:"
+#~ msgstr "Währung:"
 
 #~ msgid "Select Information"
 #~ msgstr "Wähle Information"
@@ -565,11 +578,20 @@ msgstr ""
 #~ msgid "Create Model"
 #~ msgstr "Erzeuge Model"
 
+#~ msgid "to"
+#~ msgstr "an"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #~ msgid "OK"
 #~ msgstr "OK"
+
+#~ msgid "Period from"
+#~ msgstr "Gültig ab"
+
+#~ msgid "Printing date:"
+#~ msgstr "Druckdatum:"
 
 #~ msgid "Analytic Distribution's models"
 #~ msgstr "Kostnerechnung Umlage Modell"
@@ -653,6 +675,9 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Auftragsposition"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

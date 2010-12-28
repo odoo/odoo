@@ -159,12 +159,13 @@ class pos_order(osv.osv):
                 'amount_return':0.0,
                 'amount_tax':0.0,
             }
-            val = 0.0
+            val = val1 = 0.0
             cur = order.pricelist_id.currency_id
             for payment in order.statement_ids:
                 res[order.id]['amount_paid'] +=  payment.amount
                 res[order.id]['amount_return'] += (payment.amount < 0 and payment.amount or 0)
             for line in order.lines:
+                val1 += line.price_subtotal_incl
                 if order.price_type != 'tax_excluded':
                     res[order.id]['amount_tax'] = reduce(lambda x, y: x+round(y['amount'], 2),
                         tax_obj.compute_inv(cr, uid, line.product_id.taxes_id,
@@ -174,7 +175,8 @@ class pos_order(osv.osv):
                 elif line.qty != 0.0:
                     for c in tax_obj.compute_all(cr, uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
                         val += c.get('amount', 0.0)
-                    res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
+            res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
+            res[order.id]['amount_total'] = res[order.id]['amount_tax'] + cur_obj.round(cr, uid, cur, val1)
         return res
 
     def _sale_journal_get(self, cr, uid, context=None):
@@ -248,7 +250,7 @@ class pos_order(osv.osv):
         'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True, help="User who is logged into the system."),
         'sale_manager': fields.many2one('res.users', 'Salesman Manager'),
         'amount_tax': fields.function(_amount_all, method=True, string='Taxes', digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
-        'amount_total': fields.function(_amount_total, method=True, string='Total'),
+        'amount_total': fields.function(_amount_all, method=True, string='Total', multi='all'),
         'amount_paid': fields.function(_amount_all, string='Paid', states={'draft': [('readonly', False)]}, readonly=True, method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'amount_return': fields.function(_amount_all, 'Returned', method=True, digits_compute=dp.get_precision('Point Of Sale'), multi='all'),
         'lines': fields.one2many('pos.order.line', 'order_id', 'Order Lines', states={'draft': [('readonly', False)]}, readonly=True),
@@ -986,19 +988,14 @@ class pos_order_line(osv.osv):
                     else:
                         res[line.id][f] = line.price_unit * line.qty
                 elif f == 'price_subtotal_incl':
-                    tax_amount = 0.0
                     taxes = [t for t in line.product_id.taxes_id]
                     if line.qty == 0.0:
                         res[line.id][f] = 0.0
                         continue
-                    computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, line.price_unit, line.qty)['taxes']
-                    for tax in computed_taxes:
-                        tax_amount += tax['amount']
-                    if line.discount!=0.0:
-                        res[line.id][f] = line.price_unit * line.qty * (1 - (line.discount or 0.0) / 100.0)
-                    else:
-                        res[line.id][f] = line.price_unit * line.qty
-                    res[line.id][f] += tax_amount
+                    price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
+                    computed_taxes = account_tax_obj.compute_all(cr, uid, taxes, price, line.qty)
+                    cur = line.order_id.pricelist_id.currency_id
+                    res[line.id][f] = self.pool.get('res.currency').round(cr, uid, cur, computed_taxes['total'])
         return res
 
     def price_by_product_multi(self, cr, uid, ids, context=None):

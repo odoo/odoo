@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-27 14:37+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -353,6 +353,11 @@ msgid "Mail Header"
 msgstr "Cabeçalho da Mensagem"
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr "Tarefa concluída"
@@ -426,9 +431,9 @@ msgid "Estimated time to close this task by the delegated user"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Trabalho feito"
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr "Reactivar projecto"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -761,6 +766,18 @@ msgid "New title of the task delegated to the user"
 msgstr ""
 
 #. module: project
+#: view:report.project.task.user:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr ""
@@ -841,9 +858,9 @@ msgid "Project Management"
 msgstr "Gestão de Projectos"
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Processo de configuração"
+#: selection:report.project.task.user,month:0
+msgid "August"
+msgstr "agosto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -961,9 +978,17 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr ""
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Alertar Terceiro"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1078,9 +1103,9 @@ msgid "Stages"
 msgstr "Estágios"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr "agosto"
+#: view:project.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1094,6 +1119,11 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
+
+#. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Alertar Terceiro"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1229,9 +1259,9 @@ msgid "User's projects"
 msgstr "Projectos do utilizador"
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "Reactivar projecto"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Processo de configuração"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1506,19 +1536,6 @@ msgid "Bill Time on Tasks"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"assigned personnel.  A project can be put into a hierarchy, as a child of a "
-"Parent Project. This allows you to design large project structure with "
-"different phases spread over the project's duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on. If you have personalized your "
-"Project application in order to invoice the time spent on a task, you can "
-"choose to invoice or not one project in the billing section."
-msgstr ""
-
-#. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
 msgstr ""
@@ -1572,6 +1589,7 @@ msgstr "Tarefa: %s(nome)"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr ""
 
@@ -1792,6 +1810,11 @@ msgid "Task '%s' cancelled"
 msgstr "Tarefa '%s' cancelada"
 
 #. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Trabalho feito"
+
+#. module: project
 #: help:project.task.delegate,planned_hours_me:0
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
@@ -1949,6 +1972,9 @@ msgstr "Orçamentos"
 #~ msgstr ""
 #~ "Soma das horas planeadas de todas as tarefas relacionadas com este projecto."
 
+#~ msgid "Delay"
+#~ msgstr "Atraso"
+
 #~ msgid "config.compute.remaining"
 #~ msgstr "config.compute.remaining"
 
@@ -2079,8 +2105,142 @@ msgstr "Orçamentos"
 #~ msgid "Reporting"
 #~ msgstr "Relatório"
 
+#~ msgid "Tasks Process"
+#~ msgstr "Processo de Tarefas"
+
+#~ msgid "New title of the task delegated to the user."
+#~ msgstr "Novo título da tarefa delegada para o utilizador."
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't send mail because the contact for this task (%s) has no email "
+#~ "address!"
+#~ msgstr ""
+#~ "Não foi possivel enviar o email porque o contacto para esta tarefa (%s) não "
+#~ "tem endereço de email!"
+
+#~ msgid "Change Remaining Hours"
+#~ msgstr "Mudar as Horas Restantes"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome de modelo inválido na definição da acção."
+
+#~ msgid "My Running Projects"
+#~ msgstr "Meus projectos em Execução"
+
+#~ msgid "All Attachments"
+#~ msgstr "Todos os Anexos"
+
+#~ msgid "Unassigned Tasks"
+#~ msgstr "Tarefas não Atribuídas"
+
+#~ msgid "Task Types"
+#~ msgstr "Tipos de Tarefas"
+
+#~ msgid "My Tasks in Progress"
+#~ msgstr "Minhas Tarefas em Progresso"
+
+#~ msgid "Analysis"
+#~ msgstr "Análises"
+
+#~ msgid "My Draft Tasks"
+#~ msgstr "Minhas Tarefas Rascunho"
+
+#, python-format
+#~ msgid ""
+#~ "A new project has been created !\n"
+#~ "We suggest you to close this one and work on this new project."
+#~ msgstr ""
+#~ "Um novo projecto foi criado!\n"
+#~ "Sugerimos-lhe fechar este e trabalhar em um novo projecto."
+
+#~ msgid "All Tasks"
+#~ msgstr "Todas as Tarefas"
+
+#~ msgid "My Current Tasks"
+#~ msgstr "Minhas Tarefas Actuais"
+
+#~ msgid "New Project"
+#~ msgstr "Novo Projecto"
+
+#~ msgid "My Pending Tasks"
+#~ msgstr "Minhas Tarefas Pendentes"
+
+#~ msgid "Tasks in Progress"
+#~ msgstr "Tarefas em Progresso"
+
+#, python-format
+#~ msgid "Operation Done"
+#~ msgstr "Operação Concluída"
+
+#~ msgid "Task Details"
+#~ msgstr "Detalhes da Tarefa"
+
+#~ msgid "Trigger invoices from sale order lines"
+#~ msgstr "Accionar facturas a partir de linhas de ordem de venda"
+
+#~ msgid "Sum of spent hours of all tasks related to this project."
+#~ msgstr ""
+#~ "Soma das horas gastas em todas as tarefas relacionadas para este projecto."
+
+#~ msgid ""
+#~ "If you have [?] in the project name, it means there are no analytic account "
+#~ "linked to this project."
+#~ msgstr ""
+#~ "Se tiver [?] no nome do projecto, significa que não existe nenhuma conta "
+#~ "analítica ligada para este projecto."
+
+#~ msgid "Task summary"
+#~ msgstr "Resumo da tarefa"
+
+#~ msgid "Create a Task"
+#~ msgstr "Criar uma Tarefa"
+
+#~ msgid "Parent Task"
+#~ msgstr "Tarefa Ascendente"
+
+#~ msgid "Send mail to customer"
+#~ msgstr "Enviar correio para o cliente"
+
+#~ msgid "Projects Structure"
+#~ msgstr "Estrutura de Projectos"
+
+#~ msgid "Running"
+#~ msgstr "Em Progresso"
+
+#~ msgid ""
+#~ "If you have [?] in the name, it means there are no analytic account linked "
+#~ "to project."
+#~ msgstr ""
+#~ "Se o nome tiver [?], significa que não há nenhuma conta analítica ligada a "
+#~ "este projecto."
+
+#~ msgid "Delegate Task"
+#~ msgstr "Delegar Tarefa"
+
+#~ msgid "New Feature"
+#~ msgstr "Nova Característica"
+
+#~ msgid "Template of Projects"
+#~ msgstr "Modelo de Projectos"
+
+#~ msgid "Partner Info"
+#~ msgstr "Informação do Terceiro"
+
+#~ msgid "Compute Remaining Hours"
+#~ msgstr "Calcular as Horas Restantes"
+
+#~ msgid "Error ! You can not create recursive projects."
+#~ msgstr "Erro! Não pode criar projectos recursivo."
+
+#~ msgid "Date Stop: %(date_stop)s"
+#~ msgstr "Data Parada: %s(date_stop)"
+
+#~ msgid "Expected End"
+#~ msgstr "Fim Esperado"
+
+#~ msgid "Running projects"
+#~ msgstr "Projectos em execução"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "O nome do módulo deve ser único!"

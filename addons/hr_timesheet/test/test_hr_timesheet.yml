@@ -94,7 +94,7 @@
 -
   !python {model: hr.sign.in.project}: |
     uid = ref('test_timesheet_user1')
-    self.check_state(cr, uid, [ref("hr_employee_fracline1")], {"active_ids": [ref("hr_timesheet.menu_hr_timesheet_sign_in")]})
+    self.check_state(cr, uid, [ref("hr_employee_fracline1")], {"active_ids": [ref("hr_timesheet.action_hr_timesheet_sign_in")]})
 -
   I select start date and Perform start work on project.
 -
@@ -110,7 +110,7 @@
   !python {model: hr.sign.in.project}: |
        uid = ref('test_timesheet_user1')
        ids = self.search(cr, uid, [('emp_id', '=', ref('hr_employee_fracline1')),('name', '=', 'Francline')])
-       self.check_state(cr, uid, ids, {"active_ids": [ref("hr_timesheet.menu_hr_timesheet_sign_in")]
+       self.check_state(cr, uid, ids, {"active_ids": [ref("hr_timesheet.action_hr_timesheet_sign_in")]
              })
 
 -

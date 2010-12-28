@@ -38,7 +38,7 @@
             <field name="res_model">delivery.carrier</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create and manage the delivery method(s) you want your sales to be processed with. Each delivery method can be assigned to a pricelist which computes the price of the delivery according to the products sold or delivered.</field>
+            <field name="help">Create and manage the delivery methods you need for your sales activities. Each delivery method can be assigned to a price list which computes the price of the delivery according to the products sold or delivered.</field>
         </record>
         <menuitem action="action_delivery_carrier_form" id="menu_action_delivery_carrier_form" parent="menu_delivery" groups="base.group_extended"/>
 
@@ -88,7 +88,7 @@
             <field name="res_model">delivery.grid</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">The delivery pricelist allows you to compute the cost and sales price of the delivery based on the weight of the products and other criteria. You can define several pricelists for one delivery method, for each region such as countries or a zone in a specific country defined by a zip code range.</field>
+            <field name="help">The delivery price list allows you to compute the cost and sales price of the delivery according to the weight of the products and other criteria. You can define several price lists for one delivery method, per country or a zone in a specific country defined by a postal code range.</field>
         </record>
         <menuitem action="action_delivery_grid_form" id="menu_action_delivery_grid_form" parent="menu_delivery"/>
 
@@ -133,7 +133,7 @@
             <field name="arch" type="xml">
                 <group name="logistics" position="inside">
                     <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':active_id}"/>
+                    <field name="carrier_id" context="{'order_id':active_id or False}"/>
                 </group>
             </field>
         </record>
@@ -280,7 +280,7 @@
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Products']/group/button[@name='action_process']" position="after">
+                <xpath expr="/form/notebook/page[@string='Products']/group/button[@string='Create Invoice']" position="after">
                     <button name="%(report_shipping)d" string="Delivery Order" states="done,assigned" type="action" icon="gtk-print"/>
                 </xpath>
             </field>

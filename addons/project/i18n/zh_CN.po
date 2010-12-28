@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 14:54+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -341,6 +341,11 @@ msgid "Mail Header"
 msgstr "邮件头"
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr "完成任务"
@@ -412,9 +417,9 @@ msgid "Estimated time to close this task by the delegated user"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "工作完成"
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr "重新启动项目"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -746,6 +751,18 @@ msgid "New title of the task delegated to the user"
 msgstr ""
 
 #. module: project
+#: view:report.project.task.user:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr ""
@@ -826,8 +843,8 @@ msgid "Project Management"
 msgstr "项目管理"
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
+#: selection:report.project.task.user,month:0
+msgid "August"
 msgstr ""
 
 #. module: project
@@ -946,9 +963,17 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr ""
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "警告业务伙伴"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1063,8 +1088,8 @@ msgid "Stages"
 msgstr ""
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
+#: view:project.installer:0
+msgid "Configure"
 msgstr ""
 
 #. module: project
@@ -1079,6 +1104,11 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
+
+#. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "警告业务伙伴"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1213,9 +1243,9 @@ msgid "User's projects"
 msgstr "用户计划"
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "重新启动项目"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
+msgstr ""
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1485,19 +1515,6 @@ msgid "Bill Time on Tasks"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"assigned personnel.  A project can be put into a hierarchy, as a child of a "
-"Parent Project. This allows you to design large project structure with "
-"different phases spread over the project's duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on. If you have personalized your "
-"Project application in order to invoice the time spent on a task, you can "
-"choose to invoice or not one project in the billing section."
-msgstr ""
-
-#. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
 msgstr ""
@@ -1551,6 +1568,7 @@ msgstr "任务:%(名称)"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr ""
 
@@ -1763,6 +1781,11 @@ msgstr "确认状态"
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr ""
+
+#. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "工作完成"
 
 #. module: project
 #: help:project.task.delegate,planned_hours_me:0
@@ -2081,6 +2104,12 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "在动作定义使用了无效的模型名称。"
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't send mail because the contact for this task (%s) has no email "
+#~ "address!"
+#~ msgstr "任务 %s 无法发送邮件因为联系人没有邮箱地址"
 
 #~ msgid "Estimated time to close this task by the delegated user."
 #~ msgstr "委托用户结束这任务的估计时间"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2008-10-22 15:09+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 02:12+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
@@ -21,19 +21,19 @@ msgstr ""
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
-msgstr ""
+msgstr "Noeud de processus"
 
 #. module: process
 #: help:process.process,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the process "
 "without removing it."
-msgstr ""
+msgstr "Décocher le champ \"actif\" masque le processus sans le supprimer."
 
 #. module: process
 #: field:process.node,menu_id:0
 msgid "Related Menu"
-msgstr "Menu Relatif"
+msgstr "Menu associé"
 
 #. module: process
 #: field:process.transition,action_ids:0
@@ -44,7 +44,7 @@ msgstr "Boutons"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Group By..."
-msgstr ""
+msgstr "Regrouper par..."
 
 #. module: process
 #: selection:process.node,kind:0
@@ -54,12 +54,12 @@ msgstr "État"
 #. module: process
 #: view:process.node:0
 msgid "Kind Of Node"
-msgstr ""
+msgstr "Genre de noeud"
 
 #. module: process
 #: field:process.node,help_url:0
 msgid "Help URL"
-msgstr ""
+msgstr "URL de l'aide"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
@@ -67,7 +67,7 @@ msgstr ""
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Nodes"
-msgstr ""
+msgstr "Noeuds de processus"
 
 #. module: process
 #: view:process.process:0
@@ -80,17 +80,17 @@ msgstr "Nœuds"
 #: field:process.node,condition_ids:0
 #: view:process.process:0
 msgid "Conditions"
-msgstr ""
+msgstr "Conditions"
 
 #. module: process
 #: view:process.transition:0
 msgid "Search Process Transition"
-msgstr ""
+msgstr "Rechercher dans les transitions de processus"
 
 #. module: process
 #: field:process.condition,node_id:0
 msgid "Node"
-msgstr ""
+msgstr "Nœud"
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -105,7 +105,7 @@ msgstr "Description"
 #. module: process
 #: model:ir.model,name:process.model_process_transition_action
 msgid "Process Transitions Actions"
-msgstr ""
+msgstr "Actions des transitions de processus"
 
 #. module: process
 #: field:process.condition,model_id:0
@@ -119,7 +119,7 @@ msgstr "Objet"
 #. module: process
 #: field:process.transition,source_node_id:0
 msgid "Source Node"
-msgstr ""
+msgstr "Noeud source"
 
 #. module: process
 #: view:process.transition:0
@@ -136,12 +136,12 @@ msgstr "ID de l'Action"
 #: model:ir.model,name:process.model_process_transition
 #: view:process.transition:0
 msgid "Process Transition"
-msgstr ""
+msgstr "Transition du processus"
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
 msgid "Condition"
-msgstr ""
+msgstr "Condition"
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -152,7 +152,7 @@ msgstr "Factice"
 #: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.ui.menu,name:process.menu_process_form
 msgid "Processes"
-msgstr ""
+msgstr "Processus"
 
 #. module: process
 #: field:process.condition,name:0
@@ -161,7 +161,7 @@ msgstr ""
 #: field:process.transition,name:0
 #: field:process.transition.action,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: process
 #: field:process.node,transition_in:0
@@ -185,7 +185,7 @@ msgstr "Transition"
 #. module: process
 #: view:process.process:0
 msgid "Search Process"
-msgstr ""
+msgstr "Rechercher dans les processus"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -201,12 +201,12 @@ msgstr "Actif"
 #. module: process
 #: view:process.transition:0
 msgid "Associated Groups"
-msgstr ""
+msgstr "Groupes associés"
 
 #. module: process
 #: field:process.node,model_states:0
 msgid "States Expression"
-msgstr ""
+msgstr "Expression d'états"
 
 #. module: process
 #: selection:process.transition.action,state:0
@@ -219,20 +219,34 @@ msgid "Starting Flow"
 msgstr "Flux de Départ"
 
 #. module: process
+#: model:ir.module.module,description:process.module_meta_information
+msgid ""
+"\n"
+"     This module shows the basic processes involved\n"
+"     in the selected modules and in the sequence they\n"
+"     occur\n"
+"\n"
+"     Note: This applies to the modules containing modulename_process_xml\n"
+"     for e.g product/process/product_process_xml\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: process
 #: field:process.condition,model_states:0
 msgid "Expression"
-msgstr ""
+msgstr "Expression"
 
 #. module: process
 #: field:process.transition,group_ids:0
 msgid "Required Groups"
-msgstr ""
+msgstr "Groupes nécessaires"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Incoming Transitions"
-msgstr ""
+msgstr "Transitions entrantes"
 
 #. module: process
 #: field:process.transition.action,state:0
@@ -249,24 +263,24 @@ msgstr "Transitions finales"
 #: field:process.node,process_id:0
 #: view:process.process:0
 msgid "Process"
-msgstr ""
+msgstr "Processus"
 
 #. module: process
 #: view:process.node:0
 msgid "Search ProcessNode"
-msgstr ""
+msgstr "Rechercher dans les noeuds de processus"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Other Conditions"
-msgstr ""
+msgstr "Autres conditions"
 
 #. module: process
 #: model:ir.module.module,shortdesc:process.module_meta_information
 #: model:ir.ui.menu,name:process.menu_process
 msgid "Enterprise Process"
-msgstr ""
+msgstr "Processus de la société"
 
 #. module: process
 #: view:process.transition:0
@@ -277,18 +291,18 @@ msgstr "Actions"
 #: view:process.node:0
 #: view:process.process:0
 msgid "Properties"
-msgstr ""
+msgstr "Propriétés"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
 #: model:ir.ui.menu,name:process.menu_process_transition_form
 msgid "Process Transitions"
-msgstr ""
+msgstr "Transitions de processus"
 
 #. module: process
 #: field:process.transition,target_node_id:0
 msgid "Target Node"
-msgstr ""
+msgstr "Noeud cible"
 
 #. module: process
 #: field:process.node,kind:0

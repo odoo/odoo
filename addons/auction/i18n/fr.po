@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-03 08:52+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-20 04:21+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -24,7 +24,7 @@ msgstr "Reporting"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_taken
 msgid "Auction taken"
-msgstr ""
+msgstr "Enchère placée"
 
 #. module: auction
 #: view:auction.lots:0
@@ -61,6 +61,7 @@ msgstr " "
 #: view:auction.lots.auction.move:0
 msgid "Warning, Erase The Object Adjudication Price and Its Buyer!"
 msgstr ""
+"Attention, ceci supprime le prix d'adjudication ainsi que l'acheteur !"
 
 #. module: auction
 #: help:auction.pay.buy,statement_id1:0
@@ -101,23 +102,24 @@ msgstr "Acheteur"
 #. module: auction
 #: field:report.auction,object:0
 msgid "No of objects"
-msgstr "Nb d'objets"
+msgstr "N° des objets"
 
 #. module: auction
 #: help:auction.lots,paid_vnd:0
 msgid ""
 "When state of Seller Invoice is 'Paid', this field is selected as True."
 msgstr ""
+"Quand l'état de la facture du vendeur est \"Payée\", ce champ est à \"Vrai\"."
 
 #. module: auction
 #: report:auction.total.rml:0
 msgid "# of paid items (based on invoices):"
-msgstr ""
+msgstr "Nb. d'articles payé (sur la base des factures):"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Border"
-msgstr ""
+msgstr "Bordereau de dépôt"
 
 #. module: auction
 #: field:auction.lots.make.invoice,amount:0
@@ -128,12 +130,12 @@ msgstr "Montant facturé"
 #. module: auction
 #: help:auction.lots,name:0
 msgid "Auction object name"
-msgstr ""
+msgstr "Nom du l'objet de l'enchère"
 
 #. module: auction
 #: model:ir.model,name:auction.model_aie_category
 msgid "aie.category"
-msgstr ""
+msgstr "aie.category"
 
 #. module: auction
 #: field:auction.deposit.cost,amount:0
@@ -152,7 +154,7 @@ msgstr "Bordereau de dépôt"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Reference"
-msgstr ""
+msgstr "Référence"
 
 #. module: auction
 #: help:auction.dates,state:0
@@ -160,6 +162,8 @@ msgid ""
 "When auction starts the state is 'Draft'.\n"
 " At the end of auction, the state becomes 'Closed'."
 msgstr ""
+"Quand l'enchère démarre, l'état est 'Brouillon'.\n"
+" A la fin de l'enchère, l'état devient 'Terminée'."
 
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
@@ -169,7 +173,7 @@ msgstr "Compte analytique"
 #. module: auction
 #: help:auction.pay.buy,amount3:0
 msgid "Amount For Third Bank Statement"
-msgstr ""
+msgstr "Montant pour le relevé de la troisième banque"
 
 #. module: auction
 #: field:auction.lots,lot_num:0
@@ -199,7 +203,7 @@ msgstr "État"
 #. module: auction
 #: view:auction.dates:0
 msgid "First Auction Date"
-msgstr ""
+msgstr "Date de la première enchère"
 
 #. module: auction
 #: selection:report.auction,month:0
@@ -212,6 +216,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the auction "
 "lot category without removing it."
 msgstr ""
+"Si le champ actif est à \"Faux\", cela vous permet de cacher la catégorie "
+"d'enchère sans la supprimer."
 
 #. module: auction
 #: view:auction.lots:0
@@ -231,12 +237,12 @@ msgstr "Total Adj."
 #. module: auction
 #: view:auction.lots.sms.send:0
 msgid "SMS - Gateway: clickatell','Bulk SMS send"
-msgstr ""
+msgstr "SMS - Passerelle : clickatell',' envoi de SMS en masse"
 
 #. module: auction
 #: help:auction.lots,costs:0
 msgid "Deposit cost"
-msgstr ""
+msgstr "Dépôt de garantie"
 
 #. module: auction
 #: selection:auction.lots,state:0
@@ -248,12 +254,12 @@ msgstr "Non Vendu"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Search Auction deposit"
-msgstr ""
+msgstr "Recherche les enchères proposées"
 
 #. module: auction
 #: help:auction.lots,lot_num:0
 msgid "List number in depositer inventory"
-msgstr ""
+msgstr "Numéro de l'article dans le stock du dépositaire"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -274,39 +280,39 @@ msgstr "Coûts des vendeurs"
 #: model:ir.actions.report.xml,name:auction.bid_auction
 #: model:ir.ui.menu,name:auction.menu_action_bid_open
 msgid "Bids"
-msgstr "Ordre d'achat"
+msgstr "Offres"
 
 #. module: auction
 #: view:auction.lots.buyer_map:0
 msgid "Buyer Map"
-msgstr ""
+msgstr "Associer un acheteur"
 
 #. module: auction
 #: field:report.object.encoded,obj_ret:0
 msgid "# obj ret"
-msgstr ""
+msgstr "# obj ret"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_bid
 msgid "Bid Auctions"
-msgstr ""
+msgstr "Enchères de type offre"
 
 #. module: auction
 #: help:auction.lots,image:0
 msgid "Object Image"
-msgstr ""
+msgstr "Image de l'objet"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_buyer_map.py:0
 #, python-format
 msgid "No buyer is set for this lot."
-msgstr ""
+msgstr "Pas d'acheteur pour ce lot."
 
 #. module: auction
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "The Buyer \"%s\" has no Invoice Address."
-msgstr ""
+msgstr "L'acheteur \"%s\" n'a pas d'adresse de facturation"
 
 #. module: auction
 #: view:auction.dates:0
@@ -316,22 +322,22 @@ msgstr "Commissions"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
 msgid "Auction Deposit Cost"
-msgstr ""
+msgstr "Frais d'insertion pour l'enchère"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Border Form"
-msgstr ""
+msgstr "Formulaire du bordereau de dépôt"
 
 #. module: auction
 #: help:auction.lots,statement_id:0
 msgid "Bank statement line for given buyer"
-msgstr ""
+msgstr "Ligne de relevé bancaire pour l'acheteur sélectionné"
 
 #. module: auction
 #: field:auction.lot.category,aie_categ:0
 msgid "Category"
-msgstr ""
+msgstr "Catégorie"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_view_auction_buyer_map
@@ -341,7 +347,7 @@ msgstr "Associer un acheteur à un partenaire"
 #. module: auction
 #: view:auction.lots:0
 msgid "Search Auction Lots"
-msgstr ""
+msgstr "Rechercher des lots d'enchères"
 
 #. module: auction
 #: field:report.auction,net_revenue:0
@@ -362,7 +368,7 @@ msgstr "Envoi SMS"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "August"
-msgstr ""
+msgstr "Août"
 
 #. module: auction
 #: view:auction.lots:0
@@ -375,23 +381,23 @@ msgstr "Vendu"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "June"
-msgstr ""
+msgstr "Juin"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
 #, python-format
 msgid "No Lots belong to this Auction Date"
-msgstr ""
+msgstr "Absence de lots sur cette séance"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "October"
-msgstr ""
+msgstr "Octobre"
 
 #. module: auction
 #: field:auction.bid_line,name:0
 msgid "Bid date"
-msgstr "Date de l'ordre d'achat"
+msgstr "Date de l'offre"
 
 #. module: auction
 #: field:auction.dates,acc_expense:0
@@ -411,17 +417,17 @@ msgstr "Description de l'objet"
 #. module: auction
 #: field:auction.lots,artist2_id:0
 msgid "Artist/Author2"
-msgstr ""
+msgstr "Artiste/Auteur2"
 
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line1"
-msgstr ""
+msgstr "Ligne 1"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
 msgid "Make Invoice for Buyer"
-msgstr ""
+msgstr "Produire une facture pour l'acheteur"
 
 #. module: auction
 #: field:auction.lots,gross_revenue:0
@@ -437,7 +443,7 @@ msgstr "Payer les objets de l'acheteur"
 #. module: auction
 #: help:auction.dates,auction2:0
 msgid "End date of auction"
-msgstr ""
+msgstr "Date de fin de l'enchère"
 
 #. module: auction
 #: view:auction.lots.sms.send:0
@@ -447,7 +453,7 @@ msgstr "Envoyer un SMS"
 #. module: auction
 #: field:auction.lots,name2:0
 msgid "Short Description (2)"
-msgstr "Courte description (2)"
+msgstr "Description courte (2)"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -458,12 +464,12 @@ msgstr "Acheteurs"
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id4
 msgid "VAT 12%"
-msgstr ""
+msgstr "TVA 12%"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Buyer Invoices"
-msgstr ""
+msgstr "Factures de l'acheteur"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.res_w_buyer
@@ -478,22 +484,22 @@ msgstr "Prix maximum"
 #. module: auction
 #: help:auction.dates,auction1:0
 msgid "Start date of auction"
-msgstr ""
+msgstr "Date de début de l'enchère"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_auction_move
 msgid "Auction Move"
-msgstr ""
+msgstr "Mouvement d'enchère"
 
 #. module: auction
 #: help:auction.dates,buyer_costs:0
 msgid "Account tax for buyer"
-msgstr ""
+msgstr "Compte de taxe de l'acheteur"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Next Auction"
-msgstr ""
+msgstr "Prochaine enchère"
 
 #. module: auction
 #: view:auction.taken:0
@@ -509,22 +515,22 @@ msgstr "Paiement"
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "The object \"%s\" has no buyer assigned."
-msgstr ""
+msgstr "L'objet \"%s\" n'a pas d'acheteur affecté."
 
 #. module: auction
 #: selection:auction.deposit,method:0
 msgid "Keep until sold"
-msgstr ""
+msgstr "Conserver jusqu'à ce qu'ils soient vendus"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Last Auction Date"
-msgstr ""
+msgstr "Date de la dernière enchère"
 
 #. module: auction
 #: model:account.tax,name:auction.tax_seller
 msgid "Seller Costs (12%)"
-msgstr ""
+msgstr "Coûts pour le vendeur (12%)"
 
 #. module: auction
 #: field:auction.lots,paid_vnd:0
@@ -557,7 +563,7 @@ msgstr "Facturé"
 #. module: auction
 #: report:auction.total.rml:0
 msgid "# of items taken away:"
-msgstr ""
+msgstr "Nb. d'articles emportés :"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction
@@ -573,12 +579,12 @@ msgstr "%)"
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer Information"
-msgstr ""
+msgstr "Information de l'acheteur"
 
 #. module: auction
 #: help:auction.lots,gross_revenue:0
 msgid "Buyer Price - Seller Price"
-msgstr ""
+msgstr "Prix de l'acheteur - Prix du vendeur"
 
 #. module: auction
 #: field:auction.lots.make.invoice,objects:0
@@ -599,7 +605,7 @@ msgstr "Prix de l'acheteur"
 #. module: auction
 #: view:auction.lots:0
 msgid "Bids Details"
-msgstr ""
+msgstr "Détails de l'offre"
 
 #. module: auction
 #: field:auction.lots,is_ok:0
@@ -615,17 +621,17 @@ msgstr "Fin de la vente"
 #: model:ir.actions.act_window,name:auction.action_auction_catalog_flagey_wizard
 #: model:ir.model,name:auction.model_auction_catalog_flagey
 msgid "Auction Catalog Flagey"
-msgstr ""
+msgstr "Catalogue de vente aux enchères Flagey"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "March"
-msgstr ""
+msgstr "Mars"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax4
 msgid "Seller Costs1"
-msgstr ""
+msgstr "Coûts 1 du vendeur"
 
 #. module: auction
 #: field:auction.deposit,create_uid:0
@@ -646,14 +652,14 @@ msgstr "Coûts indirects"
 #. module: auction
 #: help:auction.dates,seller_costs:0
 msgid "Account tax for seller"
-msgstr ""
+msgstr "Compte de taxe pour le vendeur"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_invoice.py:0
 #: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "Erreur utilisateur"
 
 #. module: auction
 #: model:ir.module.module,shortdesc:auction.module_meta_information
@@ -687,27 +693,33 @@ msgid ""
 "* The 'Paid' state is used when user pay for the object                 \n"
 "* The 'Sold' state is used when user buy the object."
 msgstr ""
+" * L'état 'Brouillon' est utilisé quand l'objet est défini en tant que "
+"nouvel oerpbjet.\n"
+"* L'état 'Non Vendu' est utilisé quand l'objet reste invendu après une "
+"longue période, l'utilisateur peut repasser l'objet à l'état 'Brouillon'\n"
+"* L'état 'Payé' est utilisé quand l'utilisateur paie l'objet\n"
+"* L'état 'Vendu' est utilisé quand l'utilisateur achète l'objet."
 
 #. module: auction
 #: view:auction.catalog.flagey:0
 msgid "Print"
-msgstr ""
+msgstr "Imprimer"
 
 #. module: auction
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: auction
 #: help:auction.lots,ach_emp:0
 msgid "When state is Taken Away, this field is marked as True"
-msgstr ""
+msgstr "Quand l'état est 'Objet Emporté', ce champ est à 'Vrai'"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_taken
 msgid "Gestion emporte"
-msgstr ""
+msgstr "Gestion emportée"
 
 #. module: auction
 #: view:auction.bid:0
@@ -730,7 +742,7 @@ msgstr "Catégories des objets"
 #. module: auction
 #: field:auction.lots.sms.send,app_id:0
 msgid "API ID"
-msgstr ""
+msgstr "Id. de l'API"
 
 #. module: auction
 #: field:auction.bid,name:0
@@ -746,7 +758,7 @@ msgstr "Estimation Min."
 #. module: auction
 #: selection:report.auction,month:0
 msgid "September"
-msgstr ""
+msgstr "Septembre"
 
 #. module: auction
 #: field:report.auction,net_margin:0
@@ -756,12 +768,12 @@ msgstr "Marge Nette"
 #. module: auction
 #: field:auction.lots,vnd_lim_net:0
 msgid "Net limit ?"
-msgstr ""
+msgstr "Limite nette ?"
 
 #. module: auction
 #: field:aie.category,child_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "inconnu"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -782,12 +794,12 @@ msgstr "# d'Objets Encodés"
 #. module: auction
 #: field:aie.category,parent_id:0
 msgid "Parent aie Category"
-msgstr ""
+msgstr "Catégorie aie parente"
 
 #. module: auction
 #: view:report.auction:0
 msgid "Auction Summary"
-msgstr ""
+msgstr "Résumé de l'enchère"
 
 #. module: auction
 #: view:auction.lots.make.invoice:0
@@ -799,28 +811,28 @@ msgstr "(Laisser vide pour une numérotation automatique)"
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "No Invoice Address"
-msgstr ""
+msgstr "Pas d'adresse de facturation"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.v_huissier
 msgid "Bailiffs Listing"
-msgstr ""
+msgstr "Listes des huissiers"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "This record does not exist !"
-msgstr ""
+msgstr "Cet enregistrement n'existe pas !"
 
 #. module: auction
 #: field:auction.pay.buy,total:0
 msgid "Total Amount"
-msgstr ""
+msgstr "Montant total"
 
 #. module: auction
 #: help:auction.pay.buy,amount:0
 msgid "Amount For First Bank Statement"
-msgstr ""
+msgstr "Montant pour le relevé bancaire principal"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_object_date
@@ -831,7 +843,7 @@ msgstr "Objets par jour"
 #. module: auction
 #: help:auction.lots,author_right:0
 msgid "Account tax for author commission"
-msgstr ""
+msgstr "Compte de taxe pour la commission de l'auteur"
 
 #. module: auction
 #: model:product.template,name:auction.monproduit_product_template
@@ -862,12 +874,12 @@ msgstr "Coûts Additionnels"
 #. module: auction
 #: view:auction.lots.buyer_map:0
 msgid "Map "
-msgstr ""
+msgstr "Plan "
 
 #. module: auction
 #: field:auction.lots,paid_ach:0
 msgid "Buyer Invoice Reconciled"
-msgstr ""
+msgstr "Facture fournisseur rapprochée"
 
 #. module: auction
 #: field:auction.deposit,date_dep:0
@@ -887,17 +899,17 @@ msgstr "Coûts spécifiques"
 #. module: auction
 #: report:buyer.list:0
 msgid "To pay ("
-msgstr ""
+msgstr "À payer ("
 
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer
 msgid "Buyer Costs (20%)"
-msgstr ""
+msgstr "Coûts de l'acheteur (20%)"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction
 msgid "Dashboard"
-msgstr ""
+msgstr "Tableau de bord"
 
 #. module: auction
 #: view:auction.dates:0
@@ -915,12 +927,12 @@ msgstr "Adjudications Totales"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice
 msgid "Make invoice"
-msgstr ""
+msgstr "Produire la facture"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembre"
 
 #. module: auction
 #: view:auction.dates:0
@@ -931,22 +943,22 @@ msgstr "Historique"
 #. module: auction
 #: field:aie.category,code:0
 msgid "Code"
-msgstr ""
+msgstr "Code"
 
 #. module: auction
 #: report:auction.code_bar_lot:0
 msgid "Nr."
-msgstr ""
+msgstr "No."
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.v_report_barcode_lot
 msgid "Barcode batch"
-msgstr ""
+msgstr "Lot du code-barre"
 
 #. module: auction
 #: report:report.auction.buyer.result:0
 msgid "Num"
-msgstr ""
+msgstr "Num"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
@@ -956,7 +968,7 @@ msgstr "Annuler"
 #. module: auction
 #: view:auction.lots:0
 msgid "Buyer's Payment History"
-msgstr ""
+msgstr "Historique de paiement de l'acheteur"
 
 #. module: auction
 #: view:auction.artists:0
@@ -977,7 +989,7 @@ msgstr "Payer"
 #. module: auction
 #: view:auction.lots.make.invoice:0
 msgid "Create Invoices For Seller"
-msgstr ""
+msgstr "Créer des factures pour le vendeur"
 
 #. module: auction
 #: field:report.object.encoded,obj_margin:0
@@ -987,7 +999,7 @@ msgstr "Marge Nette"
 #. module: auction
 #: help:auction.lots,lot_local:0
 msgid "Auction Location"
-msgstr ""
+msgstr "Emplacement de l'enchère"
 
 #. module: auction
 #: view:auction.dates:0
@@ -999,12 +1011,13 @@ msgstr "Analytique"
 msgid ""
 "When state of Buyer Invoice is 'Paid', this field is selected as True."
 msgstr ""
+"Quand l'état de la facture de l'acheteur est 'Payée', ce champ est à 'Vrai'."
 
 #. module: auction
 #: report:bids.lots:0
 #: report:bids.phones.details:0
 msgid "Cat.N"
-msgstr ""
+msgstr "Cat.N"
 
 #. module: auction
 #: selection:auction.deposit,method:0
@@ -1025,17 +1038,17 @@ msgstr "Facturer les objets de l'acheteur"
 #. module: auction
 #: view:report.auction:0
 msgid "My Auction"
-msgstr ""
+msgstr "Mon enchère"
 
 #. module: auction
 #: help:auction.lots,gross_margin:0
 msgid "(Gross Revenue*100.0)/ Object Price"
-msgstr ""
+msgstr "(Revenu Brut*100.0)/Prix de l'objet"
 
 #. module: auction
 #: field:auction.bid,contact_tel:0
 msgid "Contact Number"
-msgstr ""
+msgstr "Numéro du contact"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1063,14 +1076,14 @@ msgstr "Numéro de facture"
 #: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "Active IDs not Found"
-msgstr ""
+msgstr "Pas d'identifiants actifs trouvés"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:0
 #: code:addons/auction/wizard/auction_aie_send_result.py:0
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
-msgstr ""
+msgstr "La connexion à www.auction-in-europe.com a échoué !"
 
 #. module: auction
 #: field:report.auction,gross_revenue:0
@@ -1080,7 +1093,7 @@ msgstr "Revenu brut"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.open_board_auction
 msgid "Auction board"
-msgstr ""
+msgstr "Tableau des enchères"
 
 #. module: auction
 #: field:aie.category,name:0
@@ -1093,13 +1106,13 @@ msgstr "Nom"
 #: field:auction.deposit,name:0
 #: field:auction.lots,bord_vnd_id:0
 msgid "Depositer Inventory"
-msgstr "Inventaire de dépôt"
+msgstr "Inventaire du dépositaire"
 
 #. module: auction
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "The Buyer has no Invoice Address."
-msgstr ""
+msgstr "L'acheteur n'a pas d'adresse de facturation."
 
 #. module: auction
 #: view:report.object.encoded:0
@@ -1114,7 +1127,7 @@ msgstr "Connexion"
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_adjudication
 msgid "report_auction_adjudication"
-msgstr ""
+msgstr "report_auction_adjudication"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.seller_lots_3
@@ -1135,7 +1148,7 @@ msgstr "Marquer les Lots"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots
 msgid "Auction Object"
-msgstr ""
+msgstr "Objet de l'enchère"
 
 #. module: auction
 #: field:auction.lots,obj_num:0
@@ -1151,7 +1164,7 @@ msgstr "Comptabilité"
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.bid_phone
 msgid "Bids phones"
-msgstr "Téléphone: Ordre d'achat"
+msgstr "N° de téléphone des offres"
 
 #. module: auction
 #: field:report.auction,avg_estimation:0
@@ -1175,12 +1188,12 @@ msgstr "Droit d'auteurs"
 #: view:auction.lots:0
 #: view:report.auction:0
 msgid "Group By..."
-msgstr ""
+msgstr "Regrouper par..."
 
 #. module: auction
 #: help:auction.dates,journal_id:0
 msgid "Account journal for buyer"
-msgstr ""
+msgstr "Journal comptable pour l'acheteur"
 
 #. module: auction
 #: field:auction.bid,bid_lines:0
@@ -1188,12 +1201,12 @@ msgstr ""
 #: report:bids.lots:0
 #: model:ir.model,name:auction.model_auction_bid_line
 msgid "Bid"
-msgstr "Ordre d'achat"
+msgstr "Offre"
 
 #. module: auction
 #: view:report.object.encoded:0
 msgid "Total net rev."
-msgstr ""
+msgstr "Rev. net total"
 
 #. module: auction
 #: view:auction.lots.buyer_map:0
@@ -1209,12 +1222,12 @@ msgstr "Vendeurs"
 #. module: auction
 #: help:auction.lots,lot_est2:0
 msgid "Maximum Estimate Price"
-msgstr ""
+msgstr "Prix maximum estimé"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Notes"
-msgstr ""
+msgstr "Remarques"
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -1229,7 +1242,7 @@ msgstr "@ d'articles non vendus"
 #. module: auction
 #: view:auction.dates:0
 msgid "Create Invoices"
-msgstr ""
+msgstr "Créer les factures"
 
 #. module: auction
 #: field:auction.bid,auction_id:0
@@ -1246,7 +1259,7 @@ msgstr ", ID"
 #. module: auction
 #: report:buyer.list:0
 msgid "Adj.("
-msgstr ""
+msgstr "Adj. ("
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.lot_list_inv
@@ -1256,7 +1269,7 @@ msgstr "Liste des lots - Paysage"
 #. module: auction
 #: view:auction.artists:0
 msgid "Author/Artist"
-msgstr ""
+msgstr "Auteur/Artiste"
 
 #. module: auction
 #: field:auction.lots,ach_login:0
@@ -1282,12 +1295,12 @@ msgstr "Emplacement"
 #. module: auction
 #: view:report.auction:0
 msgid "Month -1"
-msgstr ""
+msgstr "Mois -1"
 
 #. module: auction
 #: help:auction.lots,is_ok:0
 msgid "When buyer pay for bank statement', this field is marked"
-msgstr ""
+msgstr "Quand l'acheteur paie pour un relevé bancaire, ce champ est coché."
 
 #. module: auction
 #: field:auction.lots,ach_emp:0
@@ -1297,17 +1310,17 @@ msgstr "Emporté"
 #. module: auction
 #: view:report.object.encoded:0
 msgid "Total gross rev."
-msgstr ""
+msgstr "Rev. brut total"
 
 #. module: auction
 #: help:auction.lots,lot_est1:0
 msgid "Minimum Estimate Price"
-msgstr ""
+msgstr "Prix minimum estimé"
 
 #. module: auction
 #: view:auction.deposit:0
 msgid "Deposit Date"
-msgstr ""
+msgstr "Date de dépôt"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_numerotate.py:0
@@ -1318,18 +1331,18 @@ msgstr "Ce lot n'existe pas !"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "July"
-msgstr ""
+msgstr "Juillet"
 
 #. module: auction
 #: field:auction.bid_line,call:0
 msgid "To be Called"
-msgstr "A appeler"
+msgstr "À appeler"
 
 #. module: auction
 #: view:auction.lots:0
 #: model:ir.actions.act_window,name:auction.action_report_auction_lots_estimation_adj_category_tree
 msgid "Min est/Adj/Max est"
-msgstr ""
+msgstr "Estim. min/Adjudic./Estim. max"
 
 #. module: auction
 #: field:auction.lots,lot_est1:0
@@ -1339,7 +1352,7 @@ msgstr "Estimation Minimum"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_sms_send
 msgid "Sms send "
-msgstr ""
+msgstr "Envoyer SMS "
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -1350,7 +1363,7 @@ msgstr "Changer la date de l'enchère"
 #. module: auction
 #: field:auction.artists,birth_death_dates:0
 msgid "Lifespan"
-msgstr ""
+msgstr "Durée de vie"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1361,19 +1374,19 @@ msgstr "Méthode de retrait"
 #. module: auction
 #: view:auction.dates:0
 msgid "Buyer Commissions"
-msgstr ""
+msgstr "Commissions de l'acheteur"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction
 #: model:ir.ui.menu,name:auction.menu_report_auction
 msgid "Auction Analysis"
-msgstr ""
+msgstr "Analyse des enchères"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:0
 #, python-format
 msgid "Payment aborted !"
-msgstr ""
+msgstr "Paiement interrompu !"
 
 #. module: auction
 #: field:auction.lot.history,price:0
@@ -1388,7 +1401,7 @@ msgstr "Début de la vente"
 #. module: auction
 #: help:auction.pay.buy,statement_id3:0
 msgid "Third Bank Statement For Buyer"
-msgstr ""
+msgstr "Relevé de compte tertiaire pour l'acheteur"
 
 #. module: auction
 #: view:report.auction:0
@@ -1405,27 +1418,27 @@ msgstr "Estimation Max :"
 #. module: auction
 #: view:auction.lots:0
 msgid "Statistical"
-msgstr ""
+msgstr "Statistique"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit
 msgid "Auction Deposit Border"
-msgstr ""
+msgstr "Bordereau de dépôt de l'enchère"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_object_encoded_tree
 msgid "Object statistics"
-msgstr ""
+msgstr "Statistiques de l'objet"
 
 #. module: auction
 #: help:auction.lots,net_margin:0
 msgid "(Net Revenue * 100)/ Object Price"
-msgstr ""
+msgstr "(Revenu net * 100)/ Prix de l'objet"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_history
 msgid "Lot History"
-msgstr ""
+msgstr "Historique du lot"
 
 #. module: auction
 #: view:auction.lots.make.invoice:0
@@ -1436,7 +1449,7 @@ msgstr "Créer les factures"
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id5
 msgid "VAT 5%"
-msgstr ""
+msgstr "TVA 5%"
 
 #. module: auction
 #: field:auction.dates,expo1:0
@@ -1451,22 +1464,22 @@ msgstr "Lot"
 #. module: auction
 #: help:aie.category,child_ids:0
 msgid "Childs aie category"
-msgstr ""
+msgstr "Sous-categorie aie"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
 msgid "auction.artists"
-msgstr ""
+msgstr "auction.artists"
 
 #. module: auction
 #: field:report.auction,avg_price:0
 msgid "Avg Price."
-msgstr ""
+msgstr "Prix moyen."
 
 #. module: auction
 #: help:auction.pay.buy,statement_id2:0
 msgid "Second Bank Statement For Buyer"
-msgstr ""
+msgstr "Relevé bancaire secondaire pour l'acheteur"
 
 #. module: auction
 #: field:auction.dates,journal_id:0
@@ -1493,17 +1506,17 @@ msgstr "Actif"
 #. module: auction
 #: view:auction.dates:0
 msgid "Exposition Dates"
-msgstr ""
+msgstr "Dates d'exposition"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax1
 msgid "TVA"
-msgstr ""
+msgstr "TVA"
 
 #. module: auction
 #: field:auction.lots,important:0
 msgid "To be Emphatized"
-msgstr ""
+msgstr "À mettre en avant"
 
 #. module: auction
 #: report:buyer.list:0
@@ -1513,7 +1526,7 @@ msgstr "Total :"
 #. module: auction
 #: model:account.tax,name:auction.auction_tax2
 msgid "TVA1"
-msgstr ""
+msgstr "TVA1"
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1535,23 +1548,23 @@ msgstr "Objets par Jour"
 #. module: auction
 #: help:auction.dates,expo2:0
 msgid "Last exposition date for auction"
-msgstr ""
+msgstr "Dernier jour d'exposition pou l'enchère"
 
 #. module: auction
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "Missed buyer !"
-msgstr ""
+msgstr "Acheteur manqué !"
 
 #. module: auction
 #: report:auction.code_bar_lot:0
 msgid "Flagey"
-msgstr ""
+msgstr "Flagey"
 
 #. module: auction
 #: view:board.board:0
 msgid "Auction manager "
-msgstr "Gestionnaire des Enchères "
+msgstr "Gestionnaire de l'enchère "
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_invoice.py:0
@@ -1560,11 +1573,13 @@ msgid ""
 "Two different buyers for the same invoice !\n"
 "Please correct this problem before invoicing"
 msgstr ""
+"Deux acheteurs différents pour la même facture !\n"
+"Veuillez corriger ce problème avant la facturation"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Invoice"
-msgstr ""
+msgstr "Facture"
 
 #. module: auction
 #: field:auction.lots,vnd_lim:0
@@ -1574,27 +1589,27 @@ msgstr "Limite du vendeur"
 #. module: auction
 #: field:auction.deposit,transfer:0
 msgid "Transfer"
-msgstr ""
+msgstr "Transférer"
 
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line3"
-msgstr ""
+msgstr "Ligne 3"
 
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Line2"
-msgstr ""
+msgstr "Ligne 2"
 
 #. module: auction
 #: help:auction.lots,obj_ret:0
 msgid "Object Ret"
-msgstr ""
+msgstr "Ret objet"
 
 #. module: auction
 #: view:report.auction.adjudication:0
 msgid "Total adjudication"
-msgstr ""
+msgstr "Adjudication totale"
 
 #. module: auction
 #: selection:auction.deposit,method:0
@@ -1619,12 +1634,12 @@ msgstr "Produit"
 #. module: auction
 #: report:buyer.list:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: auction
 #: view:auction.lots:0
 msgid "Seller Information"
-msgstr ""
+msgstr "Information du vendeur"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1638,7 +1653,7 @@ msgstr "Objets"
 #. module: auction
 #: view:auction.dates:0
 msgid "Seller Invoices"
-msgstr ""
+msgstr "Factures du vendeur"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1653,7 +1668,7 @@ msgstr "Permettre un montant négatif"
 #. module: auction
 #: help:auction.pay.buy,amount2:0
 msgid "Amount For Second Bank Statement"
-msgstr ""
+msgstr "Montant pour le relevé bancaire secondaire"
 
 #. module: auction
 #: field:auction.lot.history,auction_id:0
@@ -1665,7 +1680,7 @@ msgstr "Date de l'enchère"
 #. module: auction
 #: view:auction.lots.sms.send:0
 msgid "SMS Text"
-msgstr ""
+msgstr "Texte du SMS"
 
 #. module: auction
 #: field:auction.dates,auction1:0
@@ -1675,7 +1690,7 @@ msgstr "Début de l'enchère"
 #. module: auction
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create Invoices For Buyer"
-msgstr ""
+msgstr "Créer les factures pour l'acheteur"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1691,12 +1706,12 @@ msgstr "Artistes"
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Pay Objects"
-msgstr ""
+msgstr "Payer les objets"
 
 #. module: auction
 #: help:auction.dates,expo1:0
 msgid "Beginning exposition date for auction"
-msgstr ""
+msgstr "Date de début de l'exposition de l'enchère"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_line_open
@@ -1706,12 +1721,12 @@ msgstr "Lots ouverts"
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_open_deposit
 msgid "Deposit slip"
-msgstr ""
+msgstr "Bordereau de dépôt"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_enable
 msgid "Lots Enable"
-msgstr ""
+msgstr "Activer les lots"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1731,41 +1746,41 @@ msgstr "Liste des Acheteurs"
 #. module: auction
 #: report:buyer.list:0
 msgid "Buyer costs("
-msgstr ""
+msgstr "Coûts de l'acheteur ("
 
 #. module: auction
 #: field:auction.pay.buy,statement_id1:0
 #: field:auction.pay.buy,statement_id2:0
 #: field:auction.pay.buy,statement_id3:0
 msgid "Statement"
-msgstr "Déclaration"
+msgstr "Relevé"
 
 #. module: auction
 #: help:auction.lots,seller_price:0
 #: help:auction.lots.make.invoice,amount:0
 msgid "Seller Price"
-msgstr ""
+msgstr "Prix du vendeur"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax20
 #: model:account.tax,name:auction.auction_tax6
 msgid "Frais de vente"
-msgstr ""
+msgstr "Frais de vente"
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id1
 msgid "VAT 1%"
-msgstr ""
+msgstr "TVA 1%"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax
 msgid "Droit d'auteur"
-msgstr ""
+msgstr "Droit d'auteur"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_buyer_map
 msgid "Map Buyer"
-msgstr ""
+msgstr "Associer un acheteur"
 
 #. module: auction
 #: field:report.auction.object.date,name:0
@@ -1778,6 +1793,8 @@ msgid ""
 "Provide deposit information: seller, Withdrawned Method, Object, Deposit "
 "Costs"
 msgstr ""
+"Fournit des informations sur le dépôt : vendeur, méthode de retrait, objet, "
+"coûts de dépôt"
 
 #. module: auction
 #: field:auction.lots,net_revenue:0
@@ -1790,7 +1807,7 @@ msgstr "Revenu net"
 #: code:addons/auction/wizard/auction_pay_buy.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Erreur !"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1800,7 +1817,7 @@ msgstr "# d'articles :"
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer_author
 msgid "Author rights (4%)"
-msgstr ""
+msgstr "Droits d'auteur (4%)"
 
 #. module: auction
 #: field:report.object.encoded,estimation:0
@@ -1808,14 +1825,33 @@ msgid "Estimation"
 msgstr "Estimation"
 
 #. module: auction
+#: model:ir.module.module,description:auction.module_meta_information
+msgid ""
+"\n"
+"     This module manages the records of the artists,\n"
+"     the articles to be put up for auction,the buyers and\n"
+"     sellers.\n"
+"\n"
+"     It completely manages an auction such as managing bids,\n"
+"     keeping track of the sold articles along with the paid\n"
+"     and unpaid objects including delivery of the articles.\n"
+"     Dashboards for auction that includes:\n"
+"       * My Latest Objects (list)\n"
+"       * My Latest Deposits (list)\n"
+"       * Objects Statistics (list)\n"
+"       * My Objects By Day (list)\n"
+"    "
+msgstr ""
+
+#. module: auction
 #: view:auction.taken:0
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buyer_form_id
 msgid "Buyer Form"
-msgstr "Fiche du acheteur"
+msgstr "Fiche de l'acheteur"
 
 #. module: auction
 #: field:auction.bid,partner_id:0
@@ -1826,7 +1862,7 @@ msgstr "Nom de l'acheteur"
 #: view:report.auction:0
 #: field:report.auction,day:0
 msgid "Day"
-msgstr ""
+msgstr "Jour"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_lots_make_invoice
@@ -1847,12 +1883,12 @@ msgstr "Fermé"
 #. module: auction
 #: view:auction.dates:0
 msgid "Search Next Auction Dates"
-msgstr ""
+msgstr "Rechercher les prochaines dates d'enchères"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
 msgid "Print Auction Catalog Flagey Report..."
-msgstr ""
+msgstr "Imprimer le rapport Flagey du catalogue d'enchère"
 
 #. module: auction
 #: field:auction.lots,ach_avance:0
@@ -1872,17 +1908,17 @@ msgstr "Min/Adj/Max"
 #. module: auction
 #: view:auction.catalog.flagey:0
 msgid "Catalog Flagey Report"
-msgstr ""
+msgstr "Rapport Flagey du catalogue"
 
 #. module: auction
 #: help:auction.lots,obj_price:0
 msgid "Object Price"
-msgstr ""
+msgstr "Prix de l'objet"
 
 #. module: auction
 #: view:auction.bid:0
 msgid "Bids Lines"
-msgstr ""
+msgstr "Lignes d'offres"
 
 #. module: auction
 #: view:auction.lots:0
@@ -1892,7 +1928,7 @@ msgstr "Catalogue"
 #. module: auction
 #: help:auction.lots,auction_id:0
 msgid "Auction for object"
-msgstr ""
+msgstr "Enchère pour l'objet"
 
 #. module: auction
 #: field:auction.deposit.cost,account:0
@@ -1909,12 +1945,12 @@ msgstr "Configuration"
 #, python-format
 msgid ""
 "You should pay all the total: \"%.2f\" are missing to accomplish the payment."
-msgstr ""
+msgstr "La totalité est dûe : \"%.2f\" manquent pour compléter le paiement."
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_pay_buy
 msgid "Pay buy"
-msgstr ""
+msgstr "Payer acheter"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_outils_menu
@@ -1934,12 +1970,12 @@ msgstr "Dernier jour d'exposition"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_able
 msgid "Lots able"
-msgstr ""
+msgstr "Lots disponibles"
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id3
 msgid "VAT 10%"
-msgstr ""
+msgstr "TVA 10%"
 
 #. module: auction
 #: field:auction.artists,name:0
@@ -1949,7 +1985,7 @@ msgstr "Nom Artiste/Auteur"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "December"
-msgstr ""
+msgstr "Décembre"
 
 #. module: auction
 #: field:auction.lots,image:0
@@ -1960,22 +1996,22 @@ msgstr "Image"
 #: help:auction.lots,buyer_price:0
 #: help:auction.lots.make.invoice.buyer,amount:0
 msgid "Buyer Price"
-msgstr ""
+msgstr "Prix de l'acheteur"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_category
 msgid "Auction Lots Category"
-msgstr ""
+msgstr "Catégories des lots d'enchère"
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id2
 msgid "VAT 20%"
-msgstr ""
+msgstr "TVA 20%"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer_sel
 msgid "Auction payment for seller"
-msgstr ""
+msgstr "Paiement de l'enchère pour le vendeur"
 
 #. module: auction
 #: view:auction.lots:0
@@ -2006,7 +2042,7 @@ msgstr "........."
 #. module: auction
 #: view:report.auction:0
 msgid "Auction Summary tree view"
-msgstr ""
+msgstr "Vue arborescente du résumé de l'enchère"
 
 #. module: auction
 #: report:report.auction.buyer.result:0
@@ -2022,7 +2058,7 @@ msgstr "Dates des ventes aux enchères"
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction_open
 msgid "Auction DashBoard"
-msgstr ""
+msgstr "Tableau de bord des enchères"
 
 #. module: auction
 #: view:report.auction:0
@@ -2036,23 +2072,23 @@ msgstr "Utilisateur"
 #. module: auction
 #: view:auction.pay.buy:0
 msgid "Payment Lines"
-msgstr ""
+msgstr "Lignes de paiement"
 
 #. module: auction
 #: code:addons/auction/auction.py:0
 #, python-format
 msgid "Missed Address !"
-msgstr ""
+msgstr "Adresse manquante !"
 
 #. module: auction
 #: help:auction.lots,net_revenue:0
 msgid "Buyer Price - Seller Price - Indirect Cost"
-msgstr ""
+msgstr "Prix de l'acheteur - Prix du vendeur - Coût indirect"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
 msgid "Open Bids"
-msgstr ""
+msgstr "Offres en cours"
 
 #. module: auction
 #: field:auction.artists,pseudo:0
@@ -2068,7 +2104,7 @@ msgstr "Non Vendu"
 #: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
-msgstr "Coût de l'acheteur"
+msgstr "Coûts de l'acheteur"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -2082,7 +2118,7 @@ msgstr "Date de l'Enchère :"
 #: code:addons/auction/wizard/auction_lots_numerotate.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Erreur"
 
 #. module: auction
 #: field:auction.dates,buyer_invoice_history:0
@@ -2109,7 +2145,7 @@ msgstr "Totaux de la vente"
 #. module: auction
 #: view:auction.deposit:0
 msgid "General Information"
-msgstr ""
+msgstr "Informations générales"
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -2124,22 +2160,22 @@ msgstr "Fermer"
 #. module: auction
 #: model:ir.model,name:auction.model_report_object_encoded
 msgid "Object encoded"
-msgstr ""
+msgstr "Objet saisi"
 
 #. module: auction
 #: view:auction.bid:0
 msgid "Search Auction Bid"
-msgstr ""
+msgstr "Rechercher les offres de l'enchère"
 
 #. module: auction
 #: report:bids.phones.details:0
 msgid "Est"
-msgstr ""
+msgstr "Est"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Seller Commissions"
-msgstr ""
+msgstr "Commissions du vendeur"
 
 #. module: auction
 #: view:report.object.encoded:0
@@ -2149,7 +2185,7 @@ msgstr "Statistique de l'Objet"
 #. module: auction
 #: help:auction.dates,journal_seller_id:0
 msgid "Account journal for seller"
-msgstr ""
+msgstr "Journal comptable pour le vendeur"
 
 #. module: auction
 #: field:auction.dates,auction2:0
@@ -2159,13 +2195,13 @@ msgstr "Fin de l'enchère"
 #. module: auction
 #: view:auction.deposit:0
 msgid "Objects Description"
-msgstr ""
+msgstr "Description des objets"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_pay_buy.py:0
 #, python-format
 msgid "No auction date for \"%s\": Please set one."
-msgstr ""
+msgstr "Absence de séance pour \"%s\" : En établir une, SVP."
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2177,7 +2213,7 @@ msgstr "Description"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: auction
 #: field:auction.lots,obj_price:0
@@ -2187,7 +2223,7 @@ msgstr "Prix d'adjudication"
 #. module: auction
 #: field:auction.dates,acc_income:0
 msgid "Income Account"
-msgstr "Compte des entrées"
+msgstr "Compte de revenus"
 
 #. module: auction
 #: field:auction.lots.sms.send,password:0
@@ -2197,12 +2233,12 @@ msgstr "Mot de passe"
 #. module: auction
 #: selection:report.auction,month:0
 msgid "February"
-msgstr ""
+msgstr "Février"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "April"
-msgstr ""
+msgstr "Avril"
 
 #. module: auction
 #: view:auction.pay.buy:0
@@ -2237,7 +2273,7 @@ msgstr "Dépenses"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer
 msgid "Auction payer"
-msgstr ""
+msgstr "Payeur de l'enchère"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -2258,7 +2294,7 @@ msgstr "Biographie de l'auteur"
 #: view:report.auction:0
 #: field:report.auction,year:0
 msgid "Year"
-msgstr ""
+msgstr "Année"
 
 #. module: auction
 #: field:auction.lots,history_ids:0

@@ -47,14 +47,14 @@ class wiki_create_menu(osv.osv_memory):
         obj_action = self.pool.get('ir.actions.act_window')
         group_id = context.get('active_id', False)
         if not group_id:
-            return {}
+            return {'type':  'ir.actions.act_window_close'}
 
         datas = self.browse(cr, uid, ids, context=context)
         data = False
         if datas:
             data = datas[0]
         if not data:
-            return {}
+            return {'type':  'ir.actions.act_window_close'}
         value = {            
             'name': 'Wiki Page',
             'view_type': 'form',
@@ -86,7 +86,7 @@ class wiki_create_menu(osv.osv_memory):
                         'action': 'ir.actions.act_window,'+ str(action_id),
                         }, context)
         obj_wiki_group.write(cr, uid, [group_id], {'menu_id':menu_id})        
-        return {}
+        return {'type':  'ir.actions.act_window_close'}
 
 
 wiki_create_menu()

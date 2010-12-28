@@ -65,8 +65,8 @@ class product_pulled_flow(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, help="This field will fill the packing Origin and the name of its moves"),
         'cancel_cascade': fields.boolean('Cancel Cascade', help="Allow you to cancel moves related to the product pull flow"),
-        'location_id': fields.many2one('stock.location','Location', required=True, help="Is the destination location that needs supplying"),
-        'location_src_id': fields.many2one('stock.location','Location Source', help="Location used by Destination Location to supply"),
+        'location_id': fields.many2one('stock.location','Destination Location', required=True, help="Is the destination location that needs supplying"),
+        'location_src_id': fields.many2one('stock.location','Source Location', help="Location used by Destination Location to supply"),
         'journal_id': fields.many2one('stock.journal','Journal'),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procure Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'type_proc': fields.selection([('produce','Produce'),('buy','Buy'),('move','Move')], 'Type of Procurement', required=True),

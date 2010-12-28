@@ -135,7 +135,7 @@
                             <button name="case_reset" string="Reset to New" states="done,cancel" type="object" icon="gtk-convert"/>
                         </group>
                    </page>
-                   <page string="Emails" groups="base.group_extended">
+                   <page string="Communication &amp; History" groups="base.group_extended">
                        <group colspan="4">
                            <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                        </group>
@@ -242,7 +242,7 @@
                <field name="email_from"/>
                <field name="job_id" widget="selection"/>
                <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitements" icon="terp-personal-" separator="1"/>
+                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" separator="1"/>
                </field>
                <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
                    <filter icon="terp-personal+" context="{'invisible_department': False}"

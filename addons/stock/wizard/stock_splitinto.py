@@ -64,7 +64,7 @@ class stock_split_into(osv.osv_memory):
             if quantity_rest>0:
                 quantity_rest = move.product_qty - quantity
                 tracking_id = track_obj.create(cr, uid, {}, context=context)
-                if quantity==0.0:
+                if quantity == 0.0:
                     move_obj.write(cr, uid, [move.id], {'tracking_id': tracking_id}, context=context)
                 else:
                     default_val = {
@@ -79,6 +79,6 @@ class stock_split_into(osv.osv_memory):
                         inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, current_move)]}, context=context)
 
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 stock_split_into()
 

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-15 12:59+0000\n"
-"Last-Translator: Simon Vidmar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-16 18:08+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: outlook
@@ -39,6 +39,7 @@ msgstr "Opis"
 
 #. module: outlook
 #: model:ir.ui.menu,name:outlook.menu_base_config_plugins_outlook
+#: view:outlook.installer:0
 msgid "Outlook Plug-In"
 msgstr "Vtičnik za Outlook"
 
@@ -53,9 +54,10 @@ msgid "Outlook Interface"
 msgstr "Vmesnik za Outlook"
 
 #. module: outlook
-#: field:outlook.installer,config_logo:0
-msgid "Image"
-msgstr "Slika"
+#: field:outlook.installer,doc_name:0
+#: field:outlook.installer,name:0
+msgid "File name"
+msgstr ""
 
 #. module: outlook
 #: field:outlook.installer,outlook:0
@@ -63,9 +65,20 @@ msgid "Outlook Plug-in "
 msgstr "Vtičnik za Outlook "
 
 #. module: outlook
-#: model:ir.model,name:outlook.model_outlook_installer
-msgid "outlook.installer"
-msgstr "outlook.installer"
+#: model:ir.module.module,description:outlook.module_meta_information
+msgid ""
+"\n"
+"      This module provide the Outlook plug-in. \n"
+"\n"
+"      Outlook plug-in allows you to select an object that you’d like to add\n"
+"      to your email and its attachments from MS Outlook. You can select a "
+"partner, a task,\n"
+"      a project, an analytical account, or any other object and Archived "
+"selected\n"
+"      mail in mailgate.messages with attachments.\n"
+"\n"
+"      "
+msgstr ""
 
 #. module: outlook
 #: help:outlook.installer,doc_file:0
@@ -75,6 +88,7 @@ msgstr ""
 #. module: outlook
 #: model:ir.actions.act_window,name:outlook.action_outlook_installer
 #: model:ir.actions.act_window,name:outlook.action_outlook_wizard
+#: view:outlook.installer:0
 msgid "Outlook Plug-In Configuration"
 msgstr ""
 
@@ -83,6 +97,18 @@ msgstr ""
 msgid ""
 "Allows you to select an object that you’d like to add to your email and its "
 "attachments."
+msgstr ""
+
+#. module: outlook
+#: model:ir.model,name:outlook.model_outlook_installer
+msgid "outlook.installer"
+msgstr "outlook.installer"
+
+#. module: outlook
+#: view:outlook.installer:0
+msgid ""
+"This plug-in allows you to link your e-mail to OpenERP's documents. You can "
+"attach it to any existing one in OpenERP or create a new one."
 msgstr ""
 
 #. module: outlook
@@ -101,10 +127,9 @@ msgid "Installation and Configuration Steps"
 msgstr ""
 
 #. module: outlook
-#: field:outlook.installer,doc_name:0
-#: field:outlook.installer,name:0
-msgid "File name"
-msgstr ""
+#: field:outlook.installer,config_logo:0
+msgid "Image"
+msgstr "Slika"
 
 #. module: outlook
 #: help:outlook.installer,plugin_file:0

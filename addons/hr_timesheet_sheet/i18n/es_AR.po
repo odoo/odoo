@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2009-09-23 20:21+0000\n"
 "Last-Translator: Silvana Herrera <sherrera@thymbra.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
@@ -275,9 +275,29 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
-msgid "Timesheet lines"
-msgstr "Líneas hoja de servicios"
+#: model:ir.module.module,description:hr_timesheet_sheet.module_meta_information
+msgid ""
+"\n"
+"This module helps you to easily encode and validate timesheet and "
+"attendances\n"
+"within the same view. The upper part of the view is for attendances and\n"
+"track (sign in/sign out) events. The lower part is for timesheet.\n"
+"\n"
+"Other tabs contains statistics views to help you analyse your\n"
+"time or the time of your team:\n"
+"* Time spent by day (with attendances)\n"
+"* Time spent by project\n"
+"\n"
+"This module also implements a complete timesheet validation process:\n"
+"* Draft sheet\n"
+"* Confirmation at the end of the period by the employee\n"
+"* Validation by the project manager\n"
+"\n"
+"The validation can be configured in the company:\n"
+"* Period size (day, week, month, year)\n"
+"* Maximal difference between timesheet and attendances\n"
+"    "
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: constraint:res.company:0
@@ -306,6 +326,12 @@ msgstr ""
 #: selection:timesheet.report,state:0
 msgid "New"
 msgstr "Nuevo"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot duplicate a timesheet !"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
@@ -602,10 +628,9 @@ msgid "Timesheet range"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr "¡No puede modificar una entrada en una hoja de servicios confirmada!"
+#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
+msgid "Timesheet lines"
+msgstr "Líneas hoja de servicios"
 
 #. module: hr_timesheet_sheet
 #: view:board.board:0
@@ -663,8 +688,8 @@ msgstr "Período"
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
-msgid "You cannot duplicate a timesheet !"
-msgstr ""
+msgid "You can not modify an entry in a confirmed timesheet !"
+msgstr "¡No puede modificar una entrada en una hoja de servicios confirmada!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -706,6 +731,12 @@ msgstr ""
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
 msgstr "Hoja de servicios por cuentas"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:0
+#, python-format
+msgid "Open Timesheet"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -937,3 +968,185 @@ msgstr "Total"
 #: field:hr.timesheet.report,journal_id:0
 msgid "Journal"
 msgstr ""
+
+#~ msgid "Confirm timesheet sheet"
+#~ msgstr "Confirmar hoja de servicios"
+
+#~ msgid "Timeshet range"
+#~ msgstr "Rango hoja de servicios"
+
+#~ msgid "My timesheets to confirm"
+#~ msgstr "Mis hojas de servicios a confirmar"
+
+#~ msgid "Review end of day check day is complete"
+#~ msgstr "Revisar final del día que la comprobación del día está completa"
+
+#~ msgid "Draft Timesheet sheet"
+#~ msgstr "Hoja de servicios borrador"
+
+#~ msgid "My Current Timesheet"
+#~ msgstr "Mi hoja de servicios actual"
+
+#~ msgid "Defines employee's timesheet entry"
+#~ msgstr "Define entrada hoja de servicios del empleado"
+
+#~ msgid "Validated Timesheet"
+#~ msgstr "Hoja de servicios validada"
+
+#~ msgid "Timesheet by Day"
+#~ msgstr "Hoja de servicios por día"
+
+#~ msgid "Defines the task work entry into timesheet line"
+#~ msgstr "Define la tarea de trabajo en línea hoja de servicios"
+
+#~ msgid "Total Difference"
+#~ msgstr "Diferencia total"
+
+#~ msgid "Phone call encoding"
+#~ msgstr "Codificación llamada telefónica"
+
+#~ msgid "timesheet is confirmed at the end of the week / month"
+#~ msgstr "Hoja de servicios es confirmada al final de la semana / mes"
+
+#~ msgid "Timesheet by Days"
+#~ msgstr "Hoja de servicios por días"
+
+#~ msgid ""
+#~ "Allowed difference between the sign in/out and the timesheet computation for "
+#~ "one sheet. Set this to 0 if you do not want any control."
+#~ msgstr ""
+#~ "﻿Diferencia permitida entre el registro de entrada/salida y el cálculo del "
+#~ "tiempo para una hoja de servicio. Establezca su valor a 0 si no quiere "
+#~ "ningún control."
+
+#~ msgid "You must select a Current date wich is in the timesheet dates !"
+#~ msgstr ""
+#~ "¡Debe seleccionar una fecha actual que esté en las fechas de la hoja de "
+#~ "servicios!"
+
+#~ msgid "Encode your timesheet line"
+#~ msgstr "Codifica su línea de hoja de servicios"
+
+#~ msgid "Analytic cost"
+#~ msgstr "Costo analítico"
+
+#~ msgid "Control by the project manager"
+#~ msgstr "Control por el responsable del proyecto"
+
+#~ msgid "Confirm Timesheet"
+#~ msgstr "Confirmar hoja de servicios"
+
+#~ msgid "Timesheet sheet confirm at the end of the period"
+#~ msgstr "Hoja de servicios confirmada al final del periodo"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para la definición de la vista!"
+
+#~ msgid "Timesheets by period"
+#~ msgstr "Hojas de servicios por período"
+
+#~ msgid "My Department's Timesheet"
+#~ msgstr "Hoja de servicios de mi departamento"
+
+#~ msgid "Confirmed Timesheet"
+#~ msgstr "Hoja de servicios confirmada"
+
+#~ msgid "Timesheets To Confirm"
+#~ msgstr "Hojas de servicios a confirmar"
+
+#~ msgid "Review"
+#~ msgstr "Revisión"
+
+#~ msgid "Phone call"
+#~ msgstr "Llamada telefónica"
+
+#~ msgid "Review of work"
+#~ msgstr "Revisión de trabajo"
+
+#~ msgid "Encode Your hours and Sign in / out"
+#~ msgstr "Codificar sus horas y registrar entrada/salida"
+
+#~ msgid "Invoice on timesheet"
+#~ msgstr "Facturar sobre hoja de servicios"
+
+#~ msgid "Status"
+#~ msgstr "Estado"
+
+#~ msgid "Invoice based on timesheet"
+#~ msgstr "Factura basada en hoja de servicios"
+
+#~ msgid "Timesheets To Validate"
+#~ msgstr "Hojas de servicios a validar"
+
+#~ msgid "Timesheet allowed difference"
+#~ msgstr "Diferencia permitida hoja de servicios"
+
+#~ msgid "Creates your analytic cost accoording to quantity"
+#~ msgstr "Crea su coste analítico acorde con cantidad"
+
+#~ msgid "Creates invoice based on timesheet"
+#~ msgstr "Crea factura basada en hoja de servicios"
+
+#~ msgid "Timesheet is validate by project manager."
+#~ msgstr "Hoja de servicios es validada por el responsable del proyecto"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
+#~ "especial!"
+
+#~ msgid "Create Analytic cost"
+#~ msgstr "Crear costo analítico"
+
+#~ msgid "Validate Timesheet"
+#~ msgstr "Validar hoja de servicios"
+
+#~ msgid "hr_timesheet_sheet.sheet"
+#~ msgstr "Hoja de servicios"
+
+#~ msgid "At the end of the period (week/month)"
+#~ msgstr "Al final del periodo (semana/mes)"
+
+#, python-format
+#~ msgid "You can not duplicate a timesheet !"
+#~ msgstr "¡No se puede duplicar una hoja de asistencia!"
+
+#~ msgid "Encode how much time u spent on phone call"
+#~ msgstr "Codifica cuanto tiempo dedica en llamadas telefónicas"
+
+#~ msgid "timesheet entry is into draft state."
+#~ msgstr "entrada hoja de servicios está en estado borrador."
+
+#~ msgid "Analytic cost is created"
+#~ msgstr "Coste analítico es creado"
+
+#~ msgid "Unvalidated Timesheets"
+#~ msgstr "Hojas de servicios no validadas"
+
+#~ msgid "My Department's Timesheet to Validate"
+#~ msgstr "Hoja de servicios de mi departamento a validar"
+
+#~ msgid "Accept"
+#~ msgstr "Aceptar"
+
+#~ msgid "Review of your work at the end of the day"
+#~ msgstr "Revisar su trabajo al final del día"
+
+#~ msgid "My timesheets"
+#~ msgstr "Mis hojas de servicios"
+
+#~ msgid "Confirm timesheet at the end of the period"
+#~ msgstr "Confirmar hoja de tareas al final del periodo"
+
+#~ msgid "Hr Timesheet Process"
+#~ msgstr "Proceso hoja de asistencia RH"
+
+#~ msgid "Whatever time u spent for phone call"
+#~ msgstr "Cualquier tiempo que dedique a la llamada telefónica"
+
+#~ msgid "Attendance entry moves into the timesheet"
+#~ msgstr "Movimiento de entrada de asistencia en hoja de tareas"
+
+#~ msgid "My Department's Timesheet to Confirm"
+#~ msgstr "Hoja de tareas de mi departamento a confirmar"

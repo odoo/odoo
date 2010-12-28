@@ -4,7 +4,7 @@
 		<!--
         Procurement
         -->
-		
+
 
         <record id="procurement_tree_view" model="ir.ui.view">
             <field name="name">procurement.order.tree</field>
@@ -63,10 +63,10 @@
                         <field name="product_id" on_change="onchange_product_id(product_id)"/>
                         <field name="location_id" domain="[('usage','=','internal')]"/>
                         <field name="product_qty"/>
-                        <field name="product_uom" widget="selection"/>
+                        <field name="product_uom"/>
 
                         <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                        <field name="product_uos" widget="selection" groups="product.group_uos,base.group_extended"/>
+                        <field name="product_uos"  groups="product.group_uos,base.group_extended"/>
 
                         <separator colspan="4" string="Status"/>
                         <field colspan="4" name="message" readonly="1"/>
@@ -132,7 +132,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="context">{'search_default_current':1}</field>
-            <field name="help">A procurement order is used to record a need in a specific product at a specific location. They are usually created automatically by the sales orders, the Pull Logistics rules or the minimum stock rules. When the procurement order is confirmed, it creates automatically the necessary operations to fullfil the need: purchase order proposition, manufacturing order, etc.</field>
+            <field name="help">A procurement order is used to record a need for a specific product at a specific location. A procurement order is usually created automatically from sales orders, a Pull Logistics rule or Minimum Stock Rules. When the procurement order is confirmed, it automatically creates the necessary operations to fullfil the need: purchase order proposition, manufacturing order, etc.</field>
         </record>
 
         <record id="procurement_exceptions" model="ir.actions.act_window">
@@ -143,9 +143,9 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_perm_exceptions':1}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
-            <field name="help">Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sale Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the products configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, or ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message)</field>
+            <field name="help">Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).</field>
         </record>
-        
+
         <record id="procurement_action5" model="ir.actions.act_window">
             <field name="name">Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
@@ -224,6 +224,10 @@
                         <field name="procurement_id" readonly="1"/>
                         <field name="active" />
                     </group>
+                    <group col="4" colspan="4" groups="base.group_extended">
+                        <separator string="Procurement Orders to Process" colspan="4" />
+                        <field name="procurement_draft_ids" colspan="4" nolabel="1"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -235,14 +239,14 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="view_warehouse_orderpoint_tree"/>
             <field name="search_view_id" ref="warehouse_orderpoint_search" />
-            <field name="help">You can define your minimum stock rules, so that OpenERP will trigger automatically the propositions of manufacturing or purchase orders according to the stock level. Once the virtual stock of a product (=stock on hand minus all confirmed orders and reservations) is bellow the minimum quantity, OpenERP will generate a procurement request in order to fullfil the stock up to the maximum quantity.</field>
+            <field name="help">You can define your minimum stock rules, so that OpenERP will automatically create draft manufacturing orders or purchase quotations according to the stock level. Once the virtual stock of a product (= stock on hand minus all confirmed orders and reservations) is below the minimum quantity, OpenERP will generate a procurement request to increase the stock up to the maximum quantity.</field>
         </record>
 
-        <act_window 
+        <act_window
         context="{'search_default_warehouse_id': active_id}"
         id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Minimum Stock Rules" 
-        res_model="stock.warehouse.orderpoint" 
+        name="Minimum Stock Rules"
+        res_model="stock.warehouse.orderpoint"
         src_model="stock.warehouse"/>
 
         <!-- add product_uom to context to be the default value when adding new orderpoints -->

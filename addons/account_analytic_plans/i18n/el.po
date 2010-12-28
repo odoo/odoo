@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-11-19 13:31+0000\n"
 "Last-Translator: Kontaxis Panagiotis <Unknown>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -132,11 +132,6 @@ msgid "Bank Statement Line"
 msgstr "Γραμμή Εξτρέ"
 
 #. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Λογαριασμος Αναλυτικής"
@@ -158,9 +153,16 @@ msgid ""
 msgstr ""
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Printing date"
-msgstr "Ημερομηνία εκτύπωσης"
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: view:analytic.plan.create.model:0
+#, python-format
+msgid "Distribution Model Saved"
+msgstr "Μοντέλο Διανομής Αποθηκεύτηκε"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -176,11 +178,6 @@ msgstr "Εκτύπωση"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
 msgstr "Ποσοστό"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_sale_order_line
-msgid "Sale Order Line"
-msgstr "Γραμμή Παραγγελίας Πώλησης"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -218,16 +215,21 @@ msgid "Maximum Allowed (%)"
 msgstr "Μέγιστο Επιτρεπόμενο (%)"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
-#: view:analytic.plan.create.model:0
-#, python-format
-msgid "Distribution Model Saved"
-msgstr "Μοντέλο Διανομής Αποθηκεύτηκε"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Ημερομηνία εκτύπωσης"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Lines"
 msgstr "Γραμμές Πλάνου Αναλυτικής"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
@@ -274,11 +276,6 @@ msgstr "Σε Ημερ/νία"
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Πρέπει να ορίσετε το αναλυτικό ημερολόγιο για το '%s' ημερολόγιο!"
-
-#. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -504,6 +501,11 @@ msgstr "Κώδικας Διανομής"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+msgid "%"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
 msgstr "100.00%"
 
@@ -669,6 +671,9 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Λανθασμένο όνομα μοντέλου στον ορισμό ενέργειας"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Γραμμή Παραγγελίας Πώλησης"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Λάθος ! Δεν μπορείς να δημιουργήσεις κενό Μενού"

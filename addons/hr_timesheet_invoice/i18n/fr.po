@@ -6,22 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:15+0000\n"
-"PO-Revision-Date: 2010-11-24 09:27+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 14:16+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:22+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 #: view:report_timesheet.user:0
 msgid "Timesheet by user"
-msgstr "Timesheets par utilisateur"
+msgstr "Feuille de temps par utilisateur"
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
@@ -42,7 +41,7 @@ msgstr "Compte analytique incomplet"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
 msgid "Create invoice from timesheet final"
-msgstr ""
+msgstr "Créer facture depuis une feuille de temps terminée"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -55,11 +54,13 @@ msgid ""
 "This lists show you every task work you can invoice to the customer. Select "
 "the lines in order to generate the invoices automatically."
 msgstr ""
+"Cette liste regroupe toutes les tâches que vous pouvez facturer au client. "
+"Sélectionnez les lignes dans l'ordre pour créer les factures automatiquement."
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "    7 Days    "
-msgstr ""
+msgstr "    7 jours    "
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -69,7 +70,7 @@ msgstr "Revenus"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.line:0
 msgid "To Invoice"
-msgstr ""
+msgstr "À facturer"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
@@ -217,11 +218,6 @@ msgstr ""
 #: view:random.timesheet.lines:0
 #: view:report.timesheet.line:0
 msgid "Group By..."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -374,6 +370,17 @@ msgstr "Erreur !"
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
 msgid "Gratis"
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,description:hr_timesheet_invoice.module_meta_information
+msgid ""
+"\n"
+"Module to generate invoices based on costs (human resources, expenses, "
+"...).\n"
+"You can define price lists in analytic account, make some theoretical "
+"revenue\n"
+"reports, eso."
 msgstr ""
 
 #. module: hr_timesheet_invoice
@@ -568,11 +575,6 @@ msgstr "Timesheet par compte"
 #: field:hr.timesheet.analytic.profit,date_from:0
 msgid "From"
 msgstr "De"
-
-#. module: hr_timesheet_invoice
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_invoiced:0

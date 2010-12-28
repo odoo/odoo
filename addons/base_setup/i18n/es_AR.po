@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-15 15:41+0000\n"
 "Last-Translator: Silvana Herrera <sherrera@thymbra.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_setup
@@ -22,14 +22,19 @@ msgid "City"
 msgstr "Ciudad"
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid "Install"
+msgstr "Instalar"
+
+#. module: base_setup
 #: field:base.setup.installer,account_voucher:0
 msgid "Invoicing"
 msgstr ""
 
 #. module: base_setup
-#: field:base.setup.company,name:0
-msgid "Company Name"
-msgstr "Nombre de la compañía"
+#: field:base.setup.installer,hr:0
+msgid "Human Resources"
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.company,email:0
@@ -158,6 +163,13 @@ msgid "res_config_contents"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.company:0
+msgid ""
+"Your company information will be used to personalize documents issued with "
+"OpenERP such as invoices, sales orders and much more."
+msgstr ""
+
+#. module: base_setup
 #: view:base.setup.installer:0
 msgid "title"
 msgstr ""
@@ -165,6 +177,25 @@ msgstr ""
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
+msgstr ""
+
+#. module: base_setup
+#: model:ir.module.module,description:base_setup.module_meta_information
+msgid ""
+"\n"
+"    This module implements a configuration system that helps user\n"
+"    to configure the system at the installation of a new database.\n"
+"\n"
+"    It allows you to select between a list of profiles to install:\n"
+"    * Minimal profile\n"
+"    * Accounting only\n"
+"    * Services companies\n"
+"    * Manufacturing companies\n"
+"\n"
+"    It also asks screens to help easily configure your company, the header "
+"and\n"
+"    footer, the account chart to install and the language.\n"
+"    "
 msgstr ""
 
 #. module: base_setup
@@ -182,12 +213,9 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: help:base.setup.installer,point_of_sale:0
-msgid ""
-"Helps you get the most out of your points of sales with fast sale encoding, "
-"simplified payment mode encoding, automatic picking lists generation and "
-"more."
-msgstr ""
+#: field:base.setup.company,name:0
+msgid "Company Name"
+msgstr "Nombre de la compañía"
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -209,8 +237,8 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
-#: field:base.setup.installer,hr:0
-msgid "Human Resources"
+#: model:ir.model,name:base_setup.model_base_setup_company
+msgid "base.setup.company"
 msgstr ""
 
 #. module: base_setup
@@ -279,6 +307,14 @@ msgid ""
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
+msgid ""
+"Select the Applications you want your system to cover. If you are not sure "
+"about your exact needs at this stage, you can easily install them later."
+msgstr ""
+
+#. module: base_setup
+#: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
 msgstr ""
@@ -287,6 +323,14 @@ msgstr ""
 #: field:base.setup.company,logo:0
 msgid "Logo"
 msgstr "Logo"
+
+#. module: base_setup
+#: help:base.setup.installer,point_of_sale:0
+msgid ""
+"Helps you get the most out of your points of sales with fast sale encoding, "
+"simplified payment mode encoding, automatic picking lists generation and "
+"more."
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
@@ -408,8 +452,8 @@ msgid "Street"
 msgstr "Calle"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_company
-msgid "base.setup.company"
+#: view:base.setup.company:0
+msgid "Configure Your Company Information"
 msgstr ""
 
 #. module: base_setup
@@ -418,6 +462,7 @@ msgid "Example: http://openerp.com"
 msgstr ""
 
 #. module: base_setup
+#: view:base.setup.installer:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_installer
 msgid "Install Applications"
 msgstr ""
@@ -481,9 +526,6 @@ msgstr ""
 
 #~ msgid "Report Information"
 #~ msgstr "Información de los informes"
-
-#~ msgid "Install"
-#~ msgstr "Instalar"
 
 #~ msgid "Cancel"
 #~ msgstr "Cancelar"

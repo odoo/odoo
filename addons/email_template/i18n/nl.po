@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-01 08:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:35+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: email_template
@@ -182,6 +182,11 @@ msgid "HTML code"
 msgstr "HTML-code"
 
 #. module: email_template
+#: view:email_template.mailbox:0
+msgid "Send Mail"
+msgstr "Verstuur bericht"
+
+#. module: email_template
 #: help:email_template.account,name:0
 msgid ""
 "The description is used as the Sender name along with the provided From "
@@ -302,9 +307,9 @@ msgid "Attached Files"
 msgstr "Bijgevoegde bestanden"
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "Standard Body"
-msgstr "Standaard berichttekst"
+#: field:email_template.account,smtpssl:0
+msgid "SSL/TLS (only in python 2.6)"
+msgstr "SSL/TLS (alleen in python 2.6)"
 
 #. module: email_template
 #: field:email_template.account,email_id:0
@@ -448,9 +453,20 @@ msgid "Mail from Account %s successfully Sent."
 msgstr "Mail van account %s met succes verstuurd."
 
 #. module: email_template
+#: view:email_template.mailbox:0
+msgid "Standard Body"
+msgstr "Standaard berichttekst"
+
+#. module: email_template
 #: selection:email.template,template_language:0
 msgid "Mako Templates"
 msgstr "Mako Sjablonen"
+
+#. module: email_template
+#: help:email.template,def_body_html:0
+#: help:email.template,def_body_text:0
+msgid "The text version of the mail"
+msgstr "De tekst-versie van het bericht"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:0
@@ -469,10 +485,9 @@ msgid "Test Outgoing Connection"
 msgstr "Test uitgaande verbinding"
 
 #. module: email_template
-#: help:email.template,def_body_html:0
-#: help:email.template,def_body_text:0
-msgid "The text version of the mail"
-msgstr "De tekst-versie van het bericht"
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
+msgid "Mailbox"
+msgstr "Postvak"
 
 #. module: email_template
 #: help:email.template,reply_to:0
@@ -858,7 +873,6 @@ msgstr "Taal"
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
-#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #: model:ir.ui.menu,name:email_template.menu_email_template_tools
 #, python-format
 msgid "Email Template"
@@ -870,9 +884,9 @@ msgid "Send/Receive"
 msgstr "Versturen/ontvangen"
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "Send Mail"
-msgstr "Verstuur bericht"
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
+msgid "Personal Mails"
+msgstr ""
 
 #. module: email_template
 #: view:email_template.account:0
@@ -999,11 +1013,6 @@ msgid "User Information"
 msgstr "Gebruikersinformatie"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Actions"
-msgstr "Acties"
-
-#. module: email_template
 #: code:addons/email_template/email_template_account.py:0
 #, python-format
 msgid ""
@@ -1021,9 +1030,9 @@ msgstr ""
 "gebruikt in de bestandsnaam. bijv: 2009_SO003.pdf"
 
 #. module: email_template
-#: help:email_template.mailbox,date_mail:0
-msgid "Date on which Email Sent or Received"
-msgstr "Datum waarop de email is verstuurd of ontvangen"
+#: field:email_template.mailbox,folder:0
+msgid "Folder"
+msgstr "Map"
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -1032,9 +1041,9 @@ msgid "Trash"
 msgstr "Prullenbak"
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template_mailbox
-msgid "Email Mailbox"
-msgstr "Email postvak"
+#: help:email_template.mailbox,date_mail:0
+msgid "Date on which Email Sent or Received"
+msgstr "Datum waarop de email is verstuurd of ontvangen"
 
 #. module: email_template
 #: code:addons/email_template/email_template_mailbox.py:0
@@ -1111,6 +1120,11 @@ msgid "Null Value"
 msgstr "Nulwaarde"
 
 #. module: email_template
+#: model:ir.model,name:email_template.model_email_template_mailbox
+msgid "Email Mailbox"
+msgstr "Email postvak"
+
+#. module: email_template
 #: field:email.template,template_language:0
 msgid "Templating Language"
 msgstr "Taal voor sjabloon"
@@ -1156,9 +1170,8 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
+#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
-#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "Emails"
 
@@ -1207,9 +1220,13 @@ msgid "Existing files"
 msgstr "Bestaande bestanden"
 
 #. module: email_template
-#: field:email_template.account,smtpssl:0
-msgid "SSL/TLS (only in python 2.6)"
-msgstr "SSL/TLS (alleen in python 2.6)"
+#: model:ir.module.module,description:email_template.module_meta_information
+msgid ""
+"\n"
+"    Email Template is extraction of Power Email basically just to send the "
+"emails.\n"
+"    "
+msgstr ""
 
 #. module: email_template
 #: view:email_template.send.wizard:0
@@ -1280,9 +1297,9 @@ msgid "Mail Format"
 msgstr "Mail-indeling"
 
 #. module: email_template
-#: field:email_template.mailbox,folder:0
-msgid "Folder"
-msgstr "Map"
+#: view:email.template:0
+msgid "Actions"
+msgstr "Acties"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -1324,11 +1341,49 @@ msgstr "Heeft bijlagen"
 msgid "No Description"
 msgstr "Geen beschrijving"
 
+#~ msgid "Email Data"
+#~ msgstr "Email Data"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ongeldige modelnaam in de definitie van de actie."
 
+#~ msgid "My Accounts"
+#~ msgstr "Mijn accounts"
+
+#~ msgid "E-MAIL Templates"
+#~ msgstr "E-MAIL Sjablonen"
+
+#~ msgid "Download Full Mail"
+#~ msgstr "Download volledig bericht"
+
+#~ msgid "The default recipient of email.Placeholders can be used here."
+#~ msgstr ""
+#~ "De standaard ontvanger van email. Hierin kunnen plaatsvervangers worden "
+#~ "gebruikt."
+
+#~ msgid "Mailboxes"
+#~ msgstr "Mailboxen"
+
+#~ msgid "Track campaign items"
+#~ msgstr "Volg campagne items"
+
 #~ msgid "Invalid arguments"
 #~ msgstr "Ongeldige argumenten"
+
+#~ msgid "SMTP Server"
+#~ msgstr "SMTP Server"
+
+#~ msgid ""
+#~ "Add here all attachments of the current document you want to include in the "
+#~ "e-mail."
+#~ msgstr ""
+#~ "Voeg hier alle bijlagen van het huidige document toe die u wilt bijvoegen "
+#~ "bij de email."
+
+#~ msgid "The default subject of email. Placeholders can be used here."
+#~ msgstr ""
+#~ "Het standaard-onderwerp van email. Plaatsvervangers kunnen hier worden "
+#~ "gebruikt."
 
 #, python-format
 #~ msgid ""
@@ -1350,9 +1405,21 @@ msgstr "Geen beschrijving"
 #~ "            context = {}\n"
 #~ "        filters = [('folder', '=', 'outbox"
 
+#~ msgid ""
+#~ "File name pattern can be specified with placeholders.eg. 2009_SO003.pdf"
+#~ msgstr ""
+#~ "Bestandsnaam patroon kan met plaatsvervangers worden opgegeven.bijv. "
+#~ "2009_SO003.pdf"
+
+#~ msgid "Enter port number,eg:SMTP-587 "
+#~ msgstr "Vul poortnummer in, bijv. SMTP-587 "
+
 #, python-format
 #~ msgid "Mako templates not installed"
 #~ msgstr "Mako sjablonen niet geïnstalleerd"
+
+#~ msgid "eg: yourname@yourdomain.com "
+#~ msgstr "bijv: uwnaam@uwdomein.nl "
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor weergave opbouw!"
@@ -1362,6 +1429,14 @@ msgstr "Geen beschrijving"
 #~ "Datetime Extraction failed.Date:%s \\n                      \tError:%s"
 #~ msgstr ""
 #~ "Datumtijd extractie mislukt.Datum:%s \\n                      \tFout:%s"
+
+#, python-format
+#~ msgid ""
+#~ "Mail from Account %s failed. Probable Reason:Server Send Error\n"
+#~ "Description: %s"
+#~ msgstr ""
+#~ "Mail van account %s mislukt. Waarschijnlijke reden:Server verzend fout\n"
+#~ "Omschrijving: %s"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fout ! U kunt geen recursief menu maken."

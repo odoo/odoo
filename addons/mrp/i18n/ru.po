@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-27 11:08+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -26,11 +26,6 @@ msgstr "Перемещение создано"
 #: report:mrp.production.order:0
 msgid "No. Of Cycles"
 msgstr "Кол-во циклов"
-
-#. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
-msgid "Number of operations this workcenter can do."
-msgstr ""
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -105,6 +100,11 @@ msgid "Routings"
 msgstr "Техн. маршруты"
 
 #. module: mrp
+#: field:mrp.workcenter,product_id:0
+msgid "Work Center Product"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
 msgstr ""
@@ -117,6 +117,13 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid ""
+"Number of iterations this work center has to do in the specified operation "
+"of the routing."
 msgstr ""
 
 #. module: mrp
@@ -214,6 +221,13 @@ msgstr "Ед. изм."
 msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bills of materials."
+msgstr ""
+
+#. module: mrp
+#: help:mrp.workcenter,product_id:0
+msgid ""
+"Fill this product to track easily your production costs in the analytic "
+"accounting."
 msgstr ""
 
 #. module: mrp
@@ -381,6 +395,11 @@ msgid "Advanced Routes"
 msgstr ""
 
 #. module: mrp
+#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
+msgid "Working Time"
+msgstr "Рабочее время"
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation"
 msgstr "Недельное изменения оценки запасов"
@@ -532,11 +551,6 @@ msgid "March"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_load
-msgid "Workcenter Load"
-msgstr "Загрузка рабочей области"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Workcenter per cycle."
 msgstr ""
@@ -551,13 +565,6 @@ msgstr ""
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.product_price,number:0
-msgid ""
-"Specify quantity of products to produce or buy. Report of Cost structure "
-"will be displayed base on this qunatity."
 msgstr ""
 
 #. module: mrp
@@ -604,6 +611,7 @@ msgstr "Ошибка ! Невозможно создать рекурсивну�
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
+#: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
 msgstr ""
@@ -631,12 +639,11 @@ msgid "Planning"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.workcenter:0
-msgid "Costing Information"
-msgstr ""
+#: view:mrp.production:0
+msgid "Ready"
+msgstr "Готово"
 
 #. module: mrp
-#: help:mrp.routing.workcenter,hour_nbr:0
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for doing one cycle."
 msgstr "Время в часах на выполнение одного цикла"
@@ -728,6 +735,13 @@ msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
 
 #. module: mrp
+#: view:mrp.installer:0
+msgid ""
+"Add more functionalities to the core Manufacturing Application with the "
+"following addons."
+msgstr ""
+
+#. module: mrp
 #: report:mrp.production.order:0
 msgid "Printing date"
 msgstr ""
@@ -793,6 +807,13 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.routing.workcenter,hour_nbr:0
+msgid ""
+"Time in hours for this work center to achieve the operation of the specified "
+"routing."
 msgstr ""
 
 #. module: mrp
@@ -1016,6 +1037,11 @@ msgid "Name"
 msgstr "Название"
 
 #. module: mrp
+#: view:mrp.installer:0
+msgid "MRP Application Configuration"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.installer,mrp_jit:0
 msgid ""
 "Enables Just In Time computation of procurement orders.\n"
@@ -1044,6 +1070,45 @@ msgstr ""
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#. module: mrp
+#: model:ir.module.module,description:mrp.module_meta_information
+msgid ""
+"\n"
+"    This is the base module to manage the manufacturing process in OpenERP.\n"
+"\n"
+"    Features:\n"
+"    * Make to Stock / Make to Order (by line)\n"
+"    * Multi-level BoMs, no limit\n"
+"    * Multi-level routing, no limit\n"
+"    * Routing and workcenter integrated with analytic accounting\n"
+"    * Scheduler computation periodically / Just In Time module\n"
+"    * Multi-pos, multi-warehouse\n"
+"    * Different reordering policies\n"
+"    * Cost method by product: standard price, average price\n"
+"    * Easy analysis of troubles or needs\n"
+"    * Very flexible\n"
+"    * Allows to browse Bill of Materials in complete structure\n"
+"        that include child and phantom BoMs\n"
+"    It supports complete integration and planification of stockable goods,\n"
+"    consumable of services. Services are completely integrated with the "
+"rest\n"
+"    of the software. For instance, you can set up a sub-contracting service\n"
+"    in a BoM to automatically purchase on order the assembly of your "
+"production.\n"
+"\n"
+"    Reports provided by this module:\n"
+"    * Bill of Material structure and components\n"
+"    * Load forecast on workcenters\n"
+"    * Print a production order\n"
+"    * Stock forecasts\n"
+"    Dashboard provided by this module::\n"
+"    * List of next production orders\n"
+"    * List of deliveries (out picking)\n"
+"    * Graph of work center load\n"
+"    * List of procurement in exception\n"
+"    "
 msgstr ""
 
 #. module: mrp
@@ -1207,6 +1272,11 @@ msgstr ""
 #: view:mrp.bom:0
 msgid "Revisions"
 msgstr "Ревизии"
+
+#. module: mrp
+#: view:mrp.installer:0
+msgid "Configure Your Manufacturing Resource Planning Application"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -1558,6 +1628,12 @@ msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Copy"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products"
 msgstr ""
@@ -1896,6 +1972,11 @@ msgid "Number of Hours"
 msgstr "Количество часов"
 
 #. module: mrp
+#: view:mrp.workcenter:0
+msgid "Costing Information"
+msgstr ""
+
+#. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 msgid "Procurement Orders"
 msgstr "Заказы на снабжение"
@@ -1903,11 +1984,6 @@ msgstr "Заказы на снабжение"
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr ""
-
-#. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
-msgid "Working Period"
 msgstr ""
 
 #. module: mrp
@@ -1919,6 +1995,11 @@ msgstr ""
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
 msgstr "Родительский маршрут"
+
+#. module: mrp
+#: view:mrp.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
@@ -1972,7 +2053,6 @@ msgid "BoM Revisions"
 msgstr "Ревизии спецификации"
 
 #. module: mrp
-#: view:mrp.production:0
 #: selection:mrp.production,state:0
 #: selection:mrp.production.order,state:0
 msgid "Draft"
@@ -2271,6 +2351,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: help:mrp.product_price,number:0
+msgid ""
+"Specify quantity of products to produce or buy. Report of Cost structure "
+"will be displayed base on this quantity."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Stock"
 msgstr ""
@@ -2499,6 +2586,9 @@ msgstr ""
 #~ msgid "Exceptions Procurements"
 #~ msgstr "Исключения поставок"
 
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "ПМР и Логистическое планирование"
+
 #~ msgid "Stockable Stock"
 #~ msgstr "Склад для складирования"
 
@@ -2508,10 +2598,10 @@ msgstr ""
 #~ msgid "Do nothing"
 #~ msgstr "Ничего не делать"
 
-#~ msgid "Working Time"
-#~ msgstr "Рабочее время"
-
 #~ msgid "Workcenters load"
+#~ msgstr "Загрузка рабочей области"
+
+#~ msgid "Workcenter Load"
 #~ msgstr "Загрузка рабочей области"
 
 #~ msgid "MRP Management - Reporting"
@@ -2519,6 +2609,10 @@ msgstr ""
 
 #~ msgid "Workcenter Loads"
 #~ msgstr "Загрузка рабочих областей"
+
+#, python-format
+#~ msgid "Product name"
+#~ msgstr "Название изделия"
 
 #~ msgid "Workcenters"
 #~ msgstr "Участки обработки"
@@ -2545,9 +2639,6 @@ msgstr ""
 
 #~ msgid "Production Orders Planning"
 #~ msgstr "Планирование заказов на производство"
-
-#~ msgid "Ready"
-#~ msgstr "Готово"
 
 #~ msgid "The system waits for requested products in stock."
 #~ msgstr "Ожидание требуемого материала/изделия на складе"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-11 23:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 04:57+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -355,6 +355,11 @@ msgid "Mail Header"
 msgstr "Cabeçalho de Correspondência"
 
 #. module: project
+#: view:project.installer:0
+msgid "Configure Your Project Management Application"
+msgstr ""
+
+#. module: project
 #: model:process.node,name:project.process_node_donetask0
 msgid "Done task"
 msgstr "Tarefa concluida"
@@ -428,9 +433,9 @@ msgid "Estimated time to close this task by the delegated user"
 msgstr "Tempo Estimado para o usuário concluir esta tarefa a ele atribuída"
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
-msgstr "Trabalho concluído"
+#: view:project.project:0
+msgid "Reactivate Project"
+msgstr "Reativar projeto"
 
 #. module: project
 #: code:addons/project/project.py:0
@@ -782,6 +787,18 @@ msgid "New title of the task delegated to the user"
 msgstr "Novo título de tarefa atribuído ao usuário"
 
 #. module: project
+#: view:report.project.task.user:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: project
+#: view:project.installer:0
+msgid ""
+"Various OpenERP applications are available to manage your projects with "
+"different level of control and flexibility."
+msgstr ""
+
+#. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
 msgstr "Projeto x Planejado e Total de Horas"
@@ -862,9 +879,9 @@ msgid "Project Management"
 msgstr "Gerência de Projeto"
 
 #. module: project
-#: field:project.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Configuração em Progresso"
+#: selection:report.project.task.user,month:0
+msgid "August"
+msgstr "Agosto"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
@@ -987,9 +1004,17 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr "Fornece a ordem sequencial ao exibir uma lista de tarefas"
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Alerte o Parceiro"
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"assigned personnel. A project can be put into a hierarchy, as a child of a "
+"Parent Project. This allows you to design large project structure with "
+"different phases spread over the project's duration cycle. Each user can set "
+"his default project in his own preferences, in order to filter automatically "
+"the tasks or issues he usually works on. If you have personalized your "
+"Project application in order to invoice the time spent on a task, you can "
+"choose to invoice or not one project in the billing section."
+msgstr ""
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1104,9 +1129,9 @@ msgid "Stages"
 msgstr "Estágios"
 
 #. module: project
-#: selection:report.project.task.user,month:0
-msgid "August"
-msgstr "Agosto"
+#: view:project.installer:0
+msgid "Configure"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1122,6 +1147,11 @@ msgid ""
 msgstr ""
 "Novo status da sua tarefa. Pendente irá reabrir automaticamente quando a "
 "tarefa atribuída for concluída"
+
+#. module: project
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Alerte o Parceiro"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1262,9 +1292,9 @@ msgid "User's projects"
 msgstr "Projetos do usuário"
 
 #. module: project
-#: view:project.project:0
-msgid "Reactivate Project"
-msgstr "Reativar projeto"
+#: field:project.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Configuração em Progresso"
 
 #. module: project
 #: view:project.task.delegate:0
@@ -1551,19 +1581,6 @@ msgid "Bill Time on Tasks"
 msgstr "Cobrar Tempo em Tarefas"
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"assigned personnel.  A project can be put into a hierarchy, as a child of a "
-"Parent Project. This allows you to design large project structure with "
-"different phases spread over the project's duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on. If you have personalized your "
-"Project application in order to invoice the time spent on a task, you can "
-"choose to invoice or not one project in the billing section."
-msgstr ""
-
-#. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
 msgstr "Minhas Horas Restantes por Projeto"
@@ -1617,6 +1634,7 @@ msgstr "Tarefa: %(name)s"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_installer
+#: view:project.installer:0
 msgid "Project Application Configuration"
 msgstr "Configuração da Aplicação Projeto"
 
@@ -1839,6 +1857,11 @@ msgid "Task '%s' cancelled"
 msgstr "Tarefa '%s' cancelada"
 
 #. module: project
+#: field:project.task,work_ids:0
+msgid "Work done"
+msgstr "Trabalho concluído"
+
+#. module: project
 #: help:project.task.delegate,planned_hours_me:0
 msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
@@ -1915,6 +1938,14 @@ msgstr "Orçamentos"
 
 #~ msgid "New title of the task delegated to the user."
 #~ msgstr "Novo título da tarefa delegado ao usuário."
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't send mail because the contact for this task (%s) has no email "
+#~ "address!"
+#~ msgstr ""
+#~ "Não consegui enviar email porque o contato desta tarefa(%s) não possui "
+#~ "endereço de email!"
 
 #~ msgid "Change Remaining Hours"
 #~ msgstr "Mudar Horas Restantes"

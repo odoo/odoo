@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-09 10:08+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 14:13+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -37,7 +38,7 @@ msgstr "Catégorie de partenaire"
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_watchers:0
 msgid "Mail to Watchers (CC)"
-msgstr ""
+msgstr "Envoyer un courriel aux observateurs (en copie)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -91,6 +92,8 @@ msgid ""
 "These people will receive a copy of the future communication between partner "
 "and users by email"
 msgstr ""
+"Ces personnes recevront une copie de la future communication entre le "
+"partenaire et les utilisateurs par courriel"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -107,8 +110,8 @@ msgstr "Nom de la règle"
 msgid ""
 "Check this if you want the rule to send a reminder by email to the partner."
 msgstr ""
-"Cocher là si vous voulez que la règle envoi un rappel par email au "
-"partenaire."
+"Cocher ici si vous voulez activer la règle d'envoi par courriel d'un rappel "
+"au partenaire."
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
@@ -118,11 +121,16 @@ msgid ""
 "maintained with a specific sales team, or an opportunity which still has "
 "status pending after 14 days triggers an automatic reminder email."
 msgstr ""
+"Créer des actions déclenchées automatiquement en fonction des activités de "
+"l'utilisateur dans le système. Ex : une opportunité créée par un utilisateur "
+"donné peut être automatiquement maintenue avec une équipe de vente donnée, "
+"ou encore : une opportunité  avec un status toujours \"en attente\" après 14 "
+"jours déclenche automatiquement un courriel de rappel."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
-msgstr ""
+msgstr "Conditions sur le partenaire du modèle"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -137,7 +145,7 @@ msgstr "Partenaire"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_subject)s = Object subject"
-msgstr ""
+msgstr "%(object_subject)s = Objet sujet"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -235,6 +243,9 @@ msgid ""
 "The rule uses the AND operator. The model must match all non-empty fields so "
 "that the rule executes the action described in the 'Actions' tab."
 msgstr ""
+"La règle utilise l'opérateur ET. Le modèle doit correspondre à tous les "
+"champs non vides pour que la règle exécute les actions décrites dans "
+"l'onglet \"Actions\"."
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
@@ -249,6 +260,10 @@ msgid ""
 "string 'urgent'\n"
 "Note: This is case sensitive search."
 msgstr ""
+"Expression régulière pour identifier le nom de la ressource\n"
+"Par exemple : \"urgent.*\" va chercher des enregistrements dont le nom "
+"commence par la chaine de caractères \"urgent\"\n"
+"Remarque : cette recherche tient compte de la casse."
 
 #. module: base_action_rule
 #: field:base.action.rule,act_method:0
@@ -258,7 +273,7 @@ msgstr "Appel de la Méthode Objet"
 #. module: base_action_rule
 #: field:base.action.rule,act_email_to:0
 msgid "Email To"
-msgstr ""
+msgstr "Envoyer un courriel à"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_watchers:0
@@ -266,6 +281,8 @@ msgid ""
 "Check this if you want the rule to mark CC(mail to any other person defined "
 "in actions)."
 msgstr ""
+"Cochez cette case si vous voulez que la règle envoie un courriel en copie à "
+"toutes les autres personnes définies dans Actions."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -283,6 +300,8 @@ msgid ""
 "Use a python expression to specify the right field on which one than we will "
 "use for the 'From' field of the header"
 msgstr ""
+"Utilisez une expression Python pour définir le champ à utiliser dans l'en-"
+"tête en tant qu'expéditeur (\"De\")"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -314,7 +333,7 @@ msgstr "Actif"
 #: code:addons/base_action_rule/base_action_rule.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "Pas de courriel défini dans l'adresse de votre société"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
@@ -325,6 +344,8 @@ msgstr "Envoyer un rappel au Responsable"
 #: model:ir.module.module,description:base_action_rule.module_meta_information
 msgid "This module allows to implement action rules for any object."
 msgstr ""
+"Ce module permet de mettre en place des régles d'action pour n'importe quel "
+"objet."
 
 #. module: base_action_rule
 #: help:base.action.rule,sequence:0
@@ -359,7 +380,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_ir_cron
 msgid "ir.cron"
-msgstr ""
+msgstr "ir.cron"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -379,7 +400,7 @@ msgstr "Actions e-mail"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Information"
-msgstr ""
+msgstr "Information de courriel"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -399,12 +420,17 @@ msgstr "Responsable"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(partner_email)s = Partner Email"
+msgstr "%(partner_email)s = Courriel du partenaire"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_date)s = Creation date"
 msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user_email)s = Responsible Email"
-msgstr ""
+msgstr "%(object_user_email)s = Courriel du responsable"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_body:0
@@ -432,7 +458,7 @@ msgstr "Envoyer un e-mail au responsable"
 #. module: base_action_rule
 #: field:base.action.rule,act_email_cc:0
 msgid "Add Watchers (Cc)"
-msgstr ""
+msgstr "Ajouter des observateurs (en copie)"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -448,7 +474,7 @@ msgstr "Actions automatisées"
 #. module: base_action_rule
 #: field:base.action.rule,server_action_id:0
 msgid "Server Action"
-msgstr ""
+msgstr "Action du serveur"
 
 #. module: base_action_rule
 #: field:base.action.rule,regex_name:0
@@ -461,11 +487,13 @@ msgid ""
 "Check this if you want that all documents attached to the object be attached "
 "to the reminder email sent."
 msgstr ""
+"Cochez cette case si vous voulez que tous les documents attachés à l'objet "
+"soient aussi attachés au courriel de rappel."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Timing"
-msgstr ""
+msgstr "Conditions sur le temps d'exécution"
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -483,6 +511,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the rule "
 "without removing it."
 msgstr ""
+"Si ce champ est à \"Faux\", cela vous permet de cacher la règle sans la "
+"supprimer."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -497,7 +527,7 @@ msgstr "Date de création"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on States"
-msgstr ""
+msgstr "Conditions sur les états"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_type:0

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-01 07:36+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_crm
@@ -47,6 +47,28 @@ msgid "Customer has no addresses defined!"
 msgstr "Kunde hat keine Adresse"
 
 #. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr ""
+
+#. module: sale_crm
+#: model:ir.module.module,description:sale_crm.module_meta_information
+msgid ""
+"\n"
+"This module adds a shortcut on one or several opportunity cases in the CRM.\n"
+"This shortcut allows you to generate a sales order based on the selected "
+"case.\n"
+"If different cases are open (a list), it generates one sale order by\n"
+"case.\n"
+"The case is then closed and linked to the generated sales order.\n"
+"\n"
+"We suggest you to install this module if you installed both the sale and "
+"the\n"
+"crm modules.\n"
+"    "
+msgstr ""
+
+#. module: sale_crm
 #: view:crm.make.sale:0
 msgid "_Create"
 msgstr "Erzeuge"
@@ -76,11 +98,6 @@ msgid "Converted to Sales Quotation(id: %s)."
 msgstr "Umgewandelt zu Verkaufsangebot (id: %s)."
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Angebot erstellen"
-
-#. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
 #, python-format
 msgid "Opportunity "
@@ -91,11 +108,6 @@ msgstr "Verkaufschance "
 #, python-format
 msgid "Opportunity: %s"
 msgstr "Verkaufschance: %s"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_sale_order
-msgid "Sale Order"
-msgstr "Verkaufsauftrag"
 
 #. module: sale_crm
 #: model:ir.module.module,shortdesc:sale_crm.module_meta_information
@@ -114,6 +126,11 @@ msgstr "Shop"
 
 #. module: sale_crm
 #: view:board.board:0
+msgid "Opportunities by Stage"
+msgstr ""
+
+#. module: sale_crm
+#: view:board.board:0
 msgid "My Quotations"
 msgstr "Meine Angebote"
 
@@ -129,14 +146,19 @@ msgid "Sales Team"
 msgstr "Verkaufsteam"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sale"
-msgstr "Erzeuge Verkauf"
+#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
+msgid "Make Quotation"
+msgstr "Angebot erstellen"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Cancel"
 msgstr "Abbrechen"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #~ msgid "Crm opportunity quotation"
 #~ msgstr "CRM Verkaufschance Angebot"
@@ -242,8 +264,14 @@ msgstr "Abbrechen"
 #~ "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
 #~ "beinhalten"
 
+#~ msgid "Sale Order"
+#~ msgstr "Verkaufsauftrag"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Make sale"
+#~ msgstr "Erzeuge Verkauf"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"

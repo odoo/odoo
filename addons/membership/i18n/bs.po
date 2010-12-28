@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:15+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 13:59+0000\n"
 "Last-Translator: adnan <adnankraljic@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -163,11 +163,6 @@ msgid "Partner doesn't have an address to make the invoice."
 msgstr ""
 
 #. module: membership
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Greška : BVR referenca je potrebna."
-
-#. module: membership
 #: model:ir.model,name:membership.model_res_partner
 #: field:membership.membership_line,partner:0
 msgid "Partner"
@@ -313,11 +308,6 @@ msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: membership
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Greaška : UOS mora biti u drugoj kategoriji od UOM"
-
-#. module: membership
 #: view:product.product:0
 msgid "Membership products"
 msgstr "Članski proizvodi"
@@ -363,8 +353,20 @@ msgid "September"
 msgstr ""
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "December"
+#: model:ir.module.module,description:membership.module_meta_information
+msgid ""
+"\n"
+"This module allows you to manage all operations for managing memberships.\n"
+"It supports different kind of members:\n"
+"* Free member\n"
+"* Associated member (ex: a group subscribe for a membership for all\n"
+"  subsidiaries)\n"
+"* Paid members,\n"
+"* Special member prices, ...\n"
+"\n"
+"It is integrated with sales and accounting to allow you to automatically\n"
+"invoice and send propositions for membership renewal.\n"
+"    "
 msgstr ""
 
 #. module: membership
@@ -506,11 +508,6 @@ msgstr "Udruženi član"
 #: view:product.product:0
 msgid "Accounting Info"
 msgstr ""
-
-#. module: membership
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Greška : Pogrešan Bvr broj"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -672,6 +669,11 @@ msgstr ""
 #. module: membership
 #: view:report.membership:0
 msgid "Last 30 Days"
+msgstr ""
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "December"
 msgstr ""
 
 #. module: membership
@@ -922,3 +924,12 @@ msgstr ""
 
 #~ msgid "Invoice Membership"
 #~ msgstr "Fakturiši članstvo"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Greaška : UOS mora biti u drugoj kategoriji od UOM"
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Greška : Pogrešan Bvr broj"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Greška : BVR referenca je potrebna."

@@ -31,7 +31,7 @@
       properly.
       The Plugin allows you archive email and its attachments to the selected 
       OpenERP objects. You can select a partner, a task, a project, an analytical
-      account,or any other object and attach selected mail as .eml file in 
+      account,or any other object and attach selected mail as eml file in 
       attachment of selected record. You can create Documents for crm Lead,
       HR Applicant and project issue from selected mails.
 

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="base.user_root" model="res.users">
+            <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+        </record>
+
+    </data>
+</openerp>

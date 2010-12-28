@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-11 11:56+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -130,11 +130,6 @@ msgid "Bank Statement Line"
 msgstr "Kontoutdragsrad"
 
 #. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Analys konto"
@@ -157,9 +152,16 @@ msgstr ""
 "Du kan inte skapa en transaktion på en ett konto utan en kund/leverantör"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Printing date"
-msgstr "Utskriftsdatum"
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: view:analytic.plan.create.model:0
+#, python-format
+msgid "Distribution Model Saved"
+msgstr "Distributionsmodell sparad"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
@@ -175,11 +177,6 @@ msgstr "Utskrift"
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
 msgstr "Procent"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_sale_order_line
-msgid "Sale Order Line"
-msgstr "Säljorderrad"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -217,15 +214,20 @@ msgid "Maximum Allowed (%)"
 msgstr "Maximalt tillåtet (%)"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
-#: view:analytic.plan.create.model:0
-#, python-format
-msgid "Distribution Model Saved"
-msgstr "Distributionsmodell sparad"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Utskriftsdatum"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Lines"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -273,11 +275,6 @@ msgstr "Till datum:"
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Du måste skapa en analysjournal för '%s' jpurnalen!"
-
-#. module: account_analytic_plans
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -465,6 +462,11 @@ msgstr "Fördelningskod"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+msgid "%"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
 msgstr "100.00%"
 
@@ -590,6 +592,9 @@ msgstr "Du kan inte skapa transaktioner på visa-konton."
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Felaktigt namn för modell i händelsedefinitionen."
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Säljorderrad"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fel! Ni kan inte skapa rekursiva menyer"

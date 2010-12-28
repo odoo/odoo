@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-02 21:42+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Basque <eu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -35,12 +35,6 @@ msgid "Cancelled Invoice"
 msgstr "Factura Ezeztatua(k)"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "PRO-FORMA"
-msgstr "PRO-FORMA"
-
-#. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 #: field:notify.message,name:0
 msgid "Title"
@@ -57,11 +51,6 @@ msgstr "Molde eta mezu-dun Fakturak"
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
 msgstr "Beherapena (%)"
-
-#. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Print"
-msgstr "Inprimatu"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -86,8 +75,23 @@ msgid "Unit Price"
 msgstr "Unitate Prezioa"
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: account_invoice_layout
@@ -103,9 +107,10 @@ msgid "Document"
 msgstr ""
 
 #. module: account_invoice_layout
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "PRO-FORMA"
+msgstr "PRO-FORMA"
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
@@ -126,6 +131,11 @@ msgstr "Adierazpen Mezua"
 #: selection:account.invoice.line,state:0
 msgid "Product"
 msgstr ""
+
+#. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Mezua Idatzi"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
@@ -156,9 +166,9 @@ msgid "Source Account"
 msgstr "Jatorri Kontua"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Mezua Idatzi"
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -284,9 +294,9 @@ msgid "Supplier Invoice"
 msgstr ""
 
 #. module: account_invoice_layout
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Inprimatu"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -317,8 +327,8 @@ msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
 msgstr ""
 
 #. module: account_invoice_layout

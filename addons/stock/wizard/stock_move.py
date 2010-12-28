@@ -46,7 +46,7 @@ class stock_move_track(osv.osv_memory):
         datas = self.read(cr, uid, ids)[0]
         move_obj = self.pool.get('stock.move')
         move_obj._track_lines(cr, uid, context['active_id'], datas, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_move_track()
 
@@ -102,7 +102,7 @@ class stock_move_consume(osv.osv_memory):
             move_obj.action_consume(cr, uid, move_ids,
                              data['product_qty'], data['location_id'],
                              context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_move_consume()
 
@@ -163,7 +163,7 @@ class stock_move_scrap(osv.osv_memory):
             move_obj.action_scrap(cr, uid, move_ids,
                              data['product_qty'], data['location_id'],
                              context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_move_scrap()
 
@@ -218,7 +218,7 @@ class split_in_production_lot(osv.osv_memory):
         if context is None:
             context = {}
         self.split(cr, uid, ids, context.get('active_ids'), context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def split(self, cr, uid, ids, move_ids, context=None):
         """ To split stock moves into production lot

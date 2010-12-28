@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
-"PO-Revision-Date: 2010-12-15 17:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 14:14+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-16 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:21+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -39,6 +39,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set as a property to any "
 "Partner."
 msgstr ""
+"Нельзя удалить/деактивировать счет, который используется как реквизит "
+"партнера."
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -68,7 +70,7 @@ msgstr "Остаток"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Please define sequence on invoice journal"
-msgstr ""
+msgstr "Пожалуйста, определите последовательность в журнале счетов"
 
 #. module: account
 #: constraint:account.period:0
@@ -101,6 +103,8 @@ msgid ""
 "The Profit and Loss report gives you an overview of your company profit and "
 "loss in a single document"
 msgstr ""
+"Отчет по прибыли и убытку позволяет просмотреть прибыли и убытки в одном "
+"документе"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -173,6 +177,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: account
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
@@ -208,16 +218,6 @@ msgid "Tax Templates"
 msgstr "Шаблоны налогов"
 
 #. module: account
-#: view:account.invoice.report:0
-msgid "supplier"
-msgstr "поставщик"
-
-#. module: account
-#: model:account.journal,name:account.refund_expenses_journal
-msgid "Expenses Credit Notes Journal - (test)"
-msgstr ""
-
-#. module: account
 #: model:ir.model,name:account.model_account_tax
 msgid "account.tax"
 msgstr "Счет налога"
@@ -229,6 +229,8 @@ msgid ""
 "No period defined for this date: %s !\n"
 "Please create a fiscal year."
 msgstr ""
+"Не определен период для даты: %s !\n"
+"Пожалуйста, создайте финансовый год."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
@@ -261,7 +263,7 @@ msgstr "Счет '%s' оплачивается частично: %s%s из %s%s 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr ""
+msgstr "Бухгалтерские проводки - входные данные для сверки."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -289,7 +291,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscalyear"
-msgstr ""
+msgstr "Закрыть финансовый год"
 
 #. module: account
 #: field:account.automatic.reconcile,allow_write_off:0
@@ -352,6 +354,12 @@ msgid ""
 "reports, so that you can see positive figures instead of negative ones in "
 "expenses accounts."
 msgstr ""
+
+#. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
+msgid "Configure"
+msgstr "Настройка"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -584,7 +592,7 @@ msgstr "Закрытие отчетного года"
 #. module: account
 #: model:process.transition,note:account.process_transition_confirmstatementfromdraft0
 msgid "The accountant confirms the statement."
-msgstr ""
+msgstr "Бухгалтер подтверждает документ."
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -684,10 +692,14 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 
 #. module: account
-#: constraint:account.account:0
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "Ошибка! Вы не можете создать рекурсивные счета."
+#: view:account.account:0
+#: selection:account.aged.trial.balance,result_selection:0
+#: selection:account.common.partner.report,result_selection:0
+#: selection:account.partner.balance,result_selection:0
+#: selection:account.partner.ledger,result_selection:0
+#: model:ir.actions.act_window,name:account.action_aged_receivable
+msgid "Receivable Accounts"
+msgstr "Счета к получению"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -873,17 +885,6 @@ msgid "Due"
 msgstr "Срок"
 
 #. module: account
-#: report:account.overdue:0
-msgid ""
-"Exception made of a mistake of our side, it seems that the following bills "
-"stay unpaid. Please, take appropriate measures in order to carry out this "
-"payment in the next 8 days."
-msgstr ""
-"Возможна ошибка на нашей стороне, но нам кажется, что следующие счета не "
-"были оплачены. Просим принять меры по оплате либо подтверждению платежа в "
-"течение ближайших 8 дней."
-
-#. module: account
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total_tax:0
 msgid "Total With Tax"
@@ -910,6 +911,11 @@ msgstr "Общая сумма"
 #: selection:account.entries.report,type:0
 msgid "Consolidation"
 msgstr "Объединение"
+
+#. module: account
+#: model:account.account.type,name:account.account_type_liability
+msgid "Liability"
+msgstr "Обязательства"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1015,11 +1021,6 @@ msgstr "Неделя года"
 #: field:account.report.general.ledger,landscape:0
 msgid "Landscape Mode"
 msgstr "Режим: пейзаж"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_liability
-msgid "Bilanzkonten - Passiva - Kapitalkonten"
-msgstr ""
 
 #. module: account
 #: view:board.board:0
@@ -1252,11 +1253,6 @@ msgid "Overdue Payments"
 msgstr "Просроченные платежи"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
-
-#. module: account
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Initial Balance"
@@ -1284,6 +1280,9 @@ msgid "Journal Items Analysis"
 msgstr "Анализ записей журнала"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_partner_all
+#: model:ir.ui.menu,name:account.menu_partners
+#: model:ir.ui.menu,name:account.menu_partners_partners
 #: model:ir.ui.menu,name:account.next_id_22
 msgid "Partners"
 msgstr "Партнеры"
@@ -1443,6 +1442,11 @@ msgstr "Повторяющиеся проводки"
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Шаблон для финансовой области"
+
+#. module: account
+#: model:account.tax.code,name:account.account_tax_code_0
+msgid "Tax Code Test"
+msgstr ""
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1887,16 +1891,6 @@ msgid "Image"
 msgstr "Изображение"
 
 #. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-msgid "Receivable Accounts"
-msgstr "Счета к получению"
-
-#. module: account
 #: report:account.move.voucher:0
 msgid "Canceled"
 msgstr "Отменено"
@@ -1946,13 +1940,6 @@ msgid "Open Entries"
 msgstr "Открытые проводки"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_invoice_tree4
-msgid ""
-"A vendor refund is a credit note from your supplier indicating that he "
-"refunds part or totality of the invoice sent to you."
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
 msgstr ""
@@ -1980,11 +1967,6 @@ msgstr "Январь"
 #: view:account.journal:0
 msgid "Validations"
 msgstr "Проверки"
-
-#. module: account
-#: model:account.journal,name:account.close_journal
-msgid "End of Year"
-msgstr "Конец года"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2041,6 +2023,14 @@ msgstr ""
 #: view:account.chart.template:0
 msgid "Search Chart of Account Templates"
 msgstr "Искать шаблоны планов счетов"
+
+#. module: account
+#: view:account.installer:0
+msgid ""
+"The default Chart of Accounts is matching your country selection. If no "
+"certified Chart of Accounts exists for your specified country, a generic one "
+"can be installed and will be selected by default."
+msgstr ""
 
 #. module: account
 #: view:account.account.type:0
@@ -2201,7 +2191,7 @@ msgstr "Фильтры"
 #: selection:account.period,state:0
 #: selection:report.invoice.created,state:0
 msgid "Open"
-msgstr "Открыть"
+msgstr "Открыт"
 
 #. module: account
 #: model:process.node,note:account.process_node_draftinvoices0
@@ -2245,6 +2235,13 @@ msgstr "Базовый Код"
 #. module: account
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
+msgstr ""
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_invoice_tree4
+msgid ""
+"A supplier refund is a credit note from your supplier indicating that he "
+"refunds part or totality of the invoice sent to you."
 msgstr ""
 
 #. module: account
@@ -2674,11 +2671,6 @@ msgid "Base Code Amount"
 msgstr ""
 
 #. module: account
-#: model:account.account.type,name:account.account_type_view
-msgid "Ansicht"
-msgstr ""
-
-#. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
 msgid "Default Sale Tax"
 msgstr ""
@@ -3009,7 +3001,10 @@ msgid "Purchase"
 msgstr "Закупка"
 
 #. module: account
+#: view:account.installer:0
+#: view:account.installer.modules:0
 #: model:ir.actions.act_window,name:account.action_account_installer
+#: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
 msgstr "Настройка бухгалтерского учета"
 
@@ -3479,18 +3474,19 @@ msgid "#Entries"
 msgstr ""
 
 #. module: account
-#: view:account.account:0
-#: field:account.account,user_type:0
-#: view:account.account.template:0
-#: field:account.account.template,user_type:0
-#: view:account.account.type:0
-#: field:account.bank.accounts.wizard,account_type:0
-#: field:account.entries.report,user_type:0
-#: model:ir.model,name:account.model_account_account_type
-#: field:report.account.receivable,type:0
-#: field:report.account_type.sales,user_type:0
-msgid "Account Type"
-msgstr "Тип счета"
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"You selected an Unit of Measure which is not compatible with the product."
+msgstr ""
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+"defined !"
+msgstr ""
 
 #. module: account
 #: view:account.state.open:0
@@ -3540,15 +3536,6 @@ msgstr ""
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
 msgstr "Журнал аналитических проводок"
-
-#. module: account
-#: model:ir.actions.act_window,help:account.action_invoice_tree3
-msgid ""
-"Customer Refunds helps you manage the credit notes issued/to be issued for "
-"your customers. A refund invoice is a document that cancels an invoice or a "
-"part of it. You can easily generate refunds and reconcile them from the "
-"invoice form."
-msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance
@@ -3723,12 +3710,18 @@ msgid "Shortcut"
 msgstr "Горячая клвиша"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"The Payment Term of Supplier does not have Payment Term Lines(Computation) "
-"defined !"
-msgstr ""
+#: view:account.account:0
+#: field:account.account,user_type:0
+#: view:account.account.template:0
+#: field:account.account.template,user_type:0
+#: view:account.account.type:0
+#: field:account.bank.accounts.wizard,account_type:0
+#: field:account.entries.report,user_type:0
+#: model:ir.model,name:account.model_account_account_type
+#: field:report.account.receivable,type:0
+#: field:report.account_type.sales,user_type:0
+msgid "Account Type"
+msgstr "Тип счета"
 
 #. module: account
 #: report:account.account.balance:0
@@ -3853,6 +3846,7 @@ msgstr "Описание налога"
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
+#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.pl.report,target_move:0
@@ -3984,6 +3978,11 @@ msgid "Account Journal Select"
 msgstr ""
 
 #. module: account
+#: view:account.invoice:0
+msgid "Print Invoice"
+msgstr ""
+
+#. module: account
 #: view:account.tax.template:0
 msgid "Credit Notes"
 msgstr ""
@@ -4036,10 +4035,11 @@ msgid "Analytic Account Statistics"
 msgstr "Статистика счета аналитики"
 
 #. module: account
-#: report:account.vat.declaration:0
-#: field:account.vat.declaration,based_on:0
-msgid "Based On"
-msgstr "Основан на"
+#: view:wizard.multi.charts.accounts:0
+msgid ""
+"This will automatically configure your chart of accounts, bank accounts, "
+"taxes and journals according to the selected template"
+msgstr ""
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4116,14 +4116,10 @@ msgid "Closing balance based on cashBox"
 msgstr ""
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"Please verify the price of the invoice !\n"
-"The real total does not match the computed total."
-msgstr ""
-"Пожалуйста проверьте цены в счете!\n"
-"Итоговая сумма не совпадает с расчетной."
+#: constraint:account.account:0
+#: constraint:account.tax.code:0
+msgid "Error ! You can not create recursive accounts."
+msgstr "Ошибка! Вы не можете создать рекурсивные счета."
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -4239,6 +4235,16 @@ msgstr "Новый учетный год"
 #: field:res.partner,invoice_ids:0
 msgid "Invoices"
 msgstr "Счета"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"Please verify the price of the invoice !\n"
+"The real total does not match the computed total."
+msgstr ""
+"Пожалуйста проверьте цены в счете!\n"
+"Итоговая сумма не совпадает с расчетной."
 
 #. module: account
 #: view:account.invoice:0
@@ -4480,6 +4486,7 @@ msgstr "Остаток по аналитике"
 #: field:account.general.journal,target_move:0
 #: report:account.general.ledger:0
 #: report:account.journal.period.print:0
+#: field:account.move.journal,target_move:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
@@ -4515,12 +4522,6 @@ msgstr "Проводка"
 #: field:account.tax.template,python_compute_inv:0
 msgid "Python Code (reverse)"
 msgstr ""
-
-#. module: account
-#: view:account.journal.column:0
-#: model:ir.model,name:account.model_account_journal_column
-msgid "Journal Column"
-msgstr "Столбец журнала"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear_form
@@ -4798,13 +4799,6 @@ msgstr ""
 #, python-format
 msgid "Bank Journal "
 msgstr "Журнал банковских операций "
-
-#. module: account
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Ошибка: Единицы продажи и единицы измерения должны принадлежать к разным "
-"категориям."
 
 #. module: account
 #: view:account.journal:0
@@ -5155,6 +5149,8 @@ msgstr "Подчиненный счет"
 
 #. module: account
 #: view:account.move.line.reconcile:0
+#: code:addons/account/account_move_line.py:0
+#, python-format
 msgid "Write-Off"
 msgstr "Сртсание"
 
@@ -5169,17 +5165,18 @@ msgid "account.analytic.line.extended"
 msgstr "account.analytic.line.extended"
 
 #. module: account
+#: model:account.account.type,name:account.account_type_income
+msgid "Income"
+msgstr "Доход"
+
+#. module: account
 #: selection:account.bank.statement.line,type:0
 #: view:account.invoice:0
+#: view:account.invoice.report:0
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Supplier"
 msgstr "Поставщик"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_asset
-msgid "Bilanzkonten - Aktiva - Vermögenskonten"
-msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -5672,6 +5669,11 @@ msgid "Default Credit Account"
 msgstr "Счет по кредиту по умолчанию"
 
 #. module: account
+#: view:account.installer:0
+msgid "Configure Your Accounting Chart"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
 msgstr "  количество дней: 30"
@@ -5856,6 +5858,11 @@ msgid "Centralisation"
 msgstr "Централизация"
 
 #. module: account
+#: view:wizard.multi.charts.accounts:0
+msgid "Generate Your Accounting Chart from a Chart Template"
+msgstr ""
+
+#. module: account
 #: view:account.account:0
 #: view:account.account.template:0
 #: view:account.analytic.account:0
@@ -5961,14 +5968,14 @@ msgstr "Примечания"
 #. module: account
 #: model:ir.model,name:account.model_analytic_entries_report
 msgid "Analytic Entries Statistics"
-msgstr ""
+msgstr "Статистика аналитических проводок"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:0
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "Entries: "
-msgstr ""
+msgstr "Проводки: "
 
 #. module: account
 #: view:account.use.model:0
@@ -5992,7 +5999,7 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
 msgid "State is draft"
-msgstr ""
+msgstr "Состояние \"Черновик\""
 
 #. module: account
 #: view:account.move.line:0
@@ -6003,12 +6010,18 @@ msgstr "Всего по дебету"
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "Entry \"%s\" is not valid !"
-msgstr ""
+msgstr "Проводка \"%s\" не верна !"
 
 #. module: account
 #: report:account.invoice:0
 msgid "Fax :"
 msgstr "Факс :"
+
+#. module: account
+#: report:account.vat.declaration:0
+#: field:account.vat.declaration,based_on:0
+msgid "Based On"
+msgstr "Основан на"
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6055,7 +6068,7 @@ msgstr "Создать проводку"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  valuation: percent"
-msgstr ""
+msgstr "  оценка: процент"
 
 #. module: account
 #: field:account.installer,bank_accounts_id:0
@@ -6073,7 +6086,7 @@ msgstr ""
 #: code:addons/account/wizard/account_use_model.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Ошибка !"
 
 #. module: account
 #: report:account.journal.period.print:0
@@ -6119,7 +6132,7 @@ msgstr ""
 #: view:account.move:0
 #: field:account.move,to_check:0
 msgid "To Review"
-msgstr ""
+msgstr "Для проверки"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -6128,12 +6141,12 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr ""
+msgstr "Записи журнала"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
 msgid "Display Ledger Report with One partner per page"
-msgstr ""
+msgstr "Вывести отчет по регистру с одним партнером на странице"
 
 #. module: account
 #: view:account.partner.balance:0
@@ -6161,6 +6174,7 @@ msgstr ""
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
+#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.pl.report,target_move:0
@@ -6177,6 +6191,8 @@ msgstr "Все проводки"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Ошибка. ед. изм. по умолчанию и закупочные ед. изм. должны иметь одинаковую "
+"категорию."
 
 #. module: account
 #: view:account.journal.select:0
@@ -6197,7 +6213,7 @@ msgstr "Сверка счета"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Taxes Fiscal Position"
-msgstr ""
+msgstr "Налоги системы налогообложения"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -6211,7 +6227,7 @@ msgstr "Главная книга"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderbank0
 msgid "The payment order is sent to the bank."
-msgstr ""
+msgstr "Платежное поручение отправлено в банк."
 
 #. module: account
 #: view:account.balance.report:0
@@ -6268,7 +6284,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_income
 msgid "Income Accounts"
-msgstr ""
+msgstr "Счета доходов"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -6282,16 +6298,11 @@ msgid "Child Codes"
 msgstr ""
 
 #. module: account
-#: model:account.journal,name:account.refund_sales_journal
-msgid "Sales Credit Note Journal - (test)"
-msgstr ""
-
-#. module: account
 #: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/account_invoice_refund.py:0
 #, python-format
 msgid "Data Insufficient !"
-msgstr ""
+msgstr "Недостаточно данных !"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree1
@@ -6307,12 +6318,13 @@ msgstr "Количество к списанию"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Sales"
-msgstr ""
+msgstr "Продажи"
 
 #. module: account
-#: model:account.journal,name:account.cash_journal
-msgid "Cash Journal - (test)"
-msgstr ""
+#: view:account.journal.column:0
+#: model:ir.model,name:account.model_account_journal_column
+msgid "Journal Column"
+msgstr "Столбец журнала"
 
 #. module: account
 #: selection:account.invoice.report,state:0
@@ -6349,7 +6361,7 @@ msgstr ""
 #: field:account.invoice,origin:0
 #: field:report.invoice.created,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Документ-источник"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_form
@@ -6377,15 +6389,6 @@ msgid "Taxes:"
 msgstr "Налоги"
 
 #. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"The partner bank account to pay\n"
-"Keep empty to use the default"
-msgstr ""
-"Банковский счет партнера для оплаты\\n\n"
-"Оставьте пустым для использования по умолчанию"
-
-#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr ""
@@ -6395,12 +6398,12 @@ msgstr ""
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,product_uom_id:0
 msgid "Product UOM"
-msgstr ""
+msgstr "Ед. изм."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
 msgid "9"
-msgstr ""
+msgstr "9"
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -6417,7 +6420,7 @@ msgstr "Длина периода (в днях)"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "Ежемесячный оборот"
 
 #. module: account
 #: view:account.move:0
@@ -6441,11 +6444,6 @@ msgstr ""
 #: field:account.tax.code,line_ids:0
 msgid "Lines"
 msgstr "Строк"
-
-#. module: account
-#: model:account.journal,name:account.bank_journal
-msgid "Bank Journal - (test)"
-msgstr ""
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -6473,11 +6471,6 @@ msgstr "Вы уверены, что хотите открыть данный с�
 #. module: account
 #: field:account.account.template,parent_id:0
 msgid "Parent Account Template"
-msgstr ""
-
-#. module: account
-#: model:account.account.type,name:account.account_type_income
-msgid "Erfolgskonten - Erlöse"
 msgstr ""
 
 #. module: account
@@ -6535,7 +6528,7 @@ msgstr "Общая сумма долга покупателя перед вам�
 #. module: account
 #: model:ir.model,name:account.model_ir_sequence
 msgid "ir.sequence"
-msgstr ""
+msgstr "ir.sequence"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -6558,12 +6551,12 @@ msgstr "ОК"
 #: code:addons/account/report/account_partner_balance.py:0
 #, python-format
 msgid "Unknown Partner"
-msgstr ""
+msgstr "Неизвестный партнер"
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Opening Balance"
-msgstr ""
+msgstr "Начальное сальдо"
 
 #. module: account
 #: help:account.journal,centralisation:0
@@ -6586,12 +6579,12 @@ msgstr "Позиция банковской выписки"
 #. module: account
 #: field:account.automatic.reconcile,date2:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Дата окончания"
 
 #. module: account
 #: field:account.invoice.report,uom_name:0
 msgid "Default UoM"
-msgstr ""
+msgstr "Ед. изм. по умолчанию"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,purchase_tax:0
@@ -6602,6 +6595,13 @@ msgstr ""
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Подтвердить"
+
+#. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"Bank Account Number, Company bank account if Invoice is customer or supplier "
+"refund, otherwise Partner bank account number."
+msgstr ""
 
 #. module: account
 #: help:account.tax,domain:0
@@ -6667,7 +6667,7 @@ msgstr ""
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
 msgid "Comment"
-msgstr ""
+msgstr "Комментарий"
 
 #. module: account
 #: field:account.tax,domain:0
@@ -6723,17 +6723,22 @@ msgstr "Знак в отчётах"
 #: code:addons/account/account_cash_statement.py:0
 #, python-format
 msgid "You can not have two open register for the same journal"
+msgstr "Вы не можете иметь два открытых регистра для одного журнала"
+
+#. module: account
+#: report:account.invoice:0
+msgid "Must be after setLang()"
 msgstr ""
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  day of the month= -1"
-msgstr ""
+msgstr "  день месяца= -1"
 
 #. module: account
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
 
 #. module: account
 #: help:account.journal,type:0
@@ -6765,7 +6770,7 @@ msgstr ""
 #: view:account.move.line:0
 #: selection:account.move.line,state:0
 msgid "Unbalanced"
-msgstr ""
+msgstr "Несбалансированный"
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -6808,7 +6813,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "Bad account !"
-msgstr ""
+msgstr "Неверный счет !"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -6826,11 +6831,6 @@ msgstr "Налог по счету"
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "No piece number !"
-msgstr ""
-
-#. module: account
-#: model:account.journal,name:account.expenses_journal
-msgid "Expenses Journal - (test)"
 msgstr ""
 
 #. module: account
@@ -6853,7 +6853,7 @@ msgstr "Всего к оплате"
 #: field:account.analytic.chart,to_date:0
 #: field:project.account.analytic.line,to_date:0
 msgid "To"
-msgstr ""
+msgstr "По"
 
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
@@ -6865,7 +6865,7 @@ msgstr "Закрываемый учетный год"
 #: view:account.invoice.cancel:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_cancel
 msgid "Cancel Selected Invoices"
-msgstr ""
+msgstr "Отмена выбранных счетов"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -6874,7 +6874,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "May"
-msgstr ""
+msgstr "Май"
 
 #. module: account
 #: view:account.account:0
@@ -6908,11 +6908,6 @@ msgid "Sale Taxes"
 msgstr "Налоги с продаж"
 
 #. module: account
-#: model:account.journal,name:account.sales_journal
-msgid "Sales Journal - (test)"
-msgstr ""
-
-#. module: account
 #: model:account.account.type,name:account.account_type_cash_moves
 #: selection:account.analytic.journal,type:0
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -6930,7 +6925,7 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaymentorder0
 msgid "Payment of invoices"
-msgstr ""
+msgstr "Оплата счетов"
 
 #. module: account
 #: field:account.bank.statement.line,sequence:0
@@ -6948,7 +6943,7 @@ msgstr "Последовательность"
 #. module: account
 #: model:ir.model,name:account.model_account_bs_report
 msgid "Account Balance Sheet Report"
-msgstr ""
+msgstr "Отчет - баланс счета"
 
 #. module: account
 #: help:account.tax,price_include:0
@@ -6966,7 +6961,7 @@ msgstr "Да"
 #. module: account
 #: view:report.account_type.sales:0
 msgid "Sales by Account type"
-msgstr ""
+msgstr "Продажи по типу счета"
 
 #. module: account
 #: help:account.invoice,move_id:0
@@ -6976,11 +6971,21 @@ msgstr ""
 #. module: account
 #: selection:account.installer,period:0
 msgid "Monthly"
-msgstr ""
+msgstr "Ежемесячно"
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 14"
+msgstr "  кол-во дней: 14"
+
+#. module: account
+#: model:account.account.type,name:account.account_type_asset
+msgid "Asset"
+msgstr "Актив"
+
+#. module: account
+#: view:analytic.entries.report:0
+msgid "    7 Days    "
 msgstr ""
 
 #. module: account
@@ -7047,7 +7052,7 @@ msgstr "Книга расчетов с контрагентами"
 #. module: account
 #: report:account.account.balance.landscape:0
 msgid "Year :"
-msgstr ""
+msgstr "Год:"
 
 #. module: account
 #: selection:account.tax.template,type:0
@@ -7082,12 +7087,7 @@ msgstr "Рассчитать подписку"
 #. module: account
 #: report:account.move.voucher:0
 msgid "Amount (in words) :"
-msgstr ""
-
-#. module: account
-#: model:account.account.type,name:account.account_type_other
-msgid "Jahresabschlusskonten u. Statistik"
-msgstr ""
+msgstr "Величина (прописью):"
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
@@ -7127,7 +7127,7 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "No Invoice Lines !"
-msgstr ""
+msgstr "Нет позиций в счете !"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7187,7 +7187,7 @@ msgstr "Метод отсрочки"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Invoice '%s' is paid."
-msgstr ""
+msgstr "Счет '%s' оплачен."
 
 #. module: account
 #: model:process.node,note:account.process_node_electronicfile0
@@ -7280,6 +7280,11 @@ msgstr ""
 #: model:process.node,note:account.process_node_invoiceinvoice0
 #: model:process.node,note:account.process_node_supplierinvoiceinvoice0
 msgid "Invoice's state is Open"
+msgstr "Состояние счета \"Открыт\""
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Add extra Accounting functionalities to the ones already installed."
 msgstr ""
 
 #. module: account
@@ -7293,7 +7298,7 @@ msgstr "Книга расходов"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma"
-msgstr ""
+msgstr "Проформа"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -7332,12 +7337,7 @@ msgstr ""
 #. module: account
 #: model:ir.module.module,shortdesc:account.module_meta_information
 msgid "Accounting and Financial Management"
-msgstr ""
-
-#. module: account
-#: model:process.node,name:account.process_node_manually0
-msgid "Manually"
-msgstr "Вручную"
+msgstr "Бухучет и управление финансами"
 
 #. module: account
 #: field:account.automatic.reconcile,period_id:0
@@ -7368,7 +7368,7 @@ msgstr "Чистый итог:"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_generic_reporting
 msgid "Generic Reporting"
-msgstr ""
+msgstr "Общие отчеты"
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,journal_id:0
@@ -7397,7 +7397,7 @@ msgstr "Категория счета доходов"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form_template
 msgid "Fiscal Position Templates"
-msgstr ""
+msgstr "Шаблоны систем налогообложения"
 
 #. module: account
 #: view:account.entries.report:0
@@ -7442,7 +7442,7 @@ msgstr "План счетов"
 #: model:process.node,name:account.process_node_paymententries0
 #: model:process.transition,name:account.process_transition_reconcilepaid0
 msgid "Payment"
-msgstr ""
+msgstr "Платеж"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_period_tree
@@ -7473,6 +7473,15 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
+msgstr "Общий отчет по счету"
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_invoice_tree3
+msgid ""
+"This menu helps you manage the credit notes issued/to be issued for your "
+"customers. A refund invoice is a document that cancels an invoice or a part "
+"of it. You can easily generate refunds and reconcile them from the invoice "
+"form."
 msgstr ""
 
 #. module: account
@@ -7550,14 +7559,14 @@ msgstr "Журнал возвратов"
 #: report:account.general.journal:0
 #: report:account.partner.balance:0
 msgid "Filter By"
-msgstr ""
+msgstr "Фильтровать по"
 
 #. module: account
 #: view:account.entries.report:0
 #: view:board.board:0
 #: model:ir.actions.act_window,name:account.action_company_analysis_tree
 msgid "Company Analysis"
-msgstr ""
+msgstr "Анализ компании"
 
 #. module: account
 #: help:account.invoice,account_id:0
@@ -7574,7 +7583,7 @@ msgstr "Основной код"
 #. module: account
 #: model:ir.model,name:account.model_account_payment_term_line
 msgid "Payment Term Line"
-msgstr ""
+msgstr "Позиция условий оплаты"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -7591,7 +7600,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Подитог"
 
 #. module: account
 #: report:account.invoice:0
@@ -7620,7 +7629,7 @@ msgstr "Срок"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_payables
 msgid "Suppliers"
-msgstr ""
+msgstr "Поставщики"
 
 #. module: account
 #: constraint:account.move:0
@@ -7646,7 +7655,7 @@ msgstr ""
 #. module: account
 #: view:account.tax.code:0
 msgid "Statistics"
-msgstr ""
+msgstr "Статистика"
 
 #. module: account
 #: field:account.analytic.chart,from_date:0
@@ -7657,7 +7666,7 @@ msgstr "От"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close
 msgid "Fiscalyear Close"
-msgstr ""
+msgstr "Закрыть финансовый год"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -7671,7 +7680,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
 msgid "Unpaid Invoices"
-msgstr ""
+msgstr "Неоплаченные счета"
 
 #. module: account
 #: field:account.move.line.reconcile,debit:0
@@ -7705,7 +7714,7 @@ msgstr "Разрешенные счета (остваьте пустым для 
 #: model:ir.actions.act_window,name:account.action_account_analytic_chart
 #: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
 msgid "Chart of Analytic Accounts"
-msgstr ""
+msgstr "План аналитических счетов"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_configuration_misc
@@ -7745,6 +7754,18 @@ msgid ""
 msgstr "Уникальный номер счета, автоматически вычислен при создании сета."
 
 #. module: account
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: account
+#: model:account.account.type,name:account.account_type_expense
+msgid "Expense"
+msgstr "Расход"
+
+#. module: account
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "Bad account!"
@@ -7753,7 +7774,7 @@ msgstr ""
 #. module: account
 #: help:account.chart,fiscalyear:0
 msgid "Keep empty for all open fiscal years"
-msgstr ""
+msgstr "Оставьте пустым для всех открытых финансовых лет"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -7839,21 +7860,16 @@ msgid "Print Account Partner Balance"
 msgstr ""
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
-
-#. module: account
 #: field:res.partner,contract_ids:0
 msgid "Contracts"
-msgstr ""
+msgstr "Договоры"
 
 #. module: account
 #: field:account.cashbox.line,ending_id:0
 #: field:account.cashbox.line,starting_id:0
 #: field:account.entries.report,reconcile_id:0
 msgid "unknown"
-msgstr ""
+msgstr "неизвестен"
 
 #. module: account
 #: field:account.fiscalyear.close,journal_id:0
@@ -7863,7 +7879,7 @@ msgstr "Открытие журнала проводок"
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
 msgid "Draft invoices are checked, validated and printed."
-msgstr ""
+msgstr "Черновики счетов проверены и напечатаны."
 
 #. module: account
 #: help:account.chart.template,property_reserve_and_surplus_account:0
@@ -7920,7 +7936,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Residual Amount"
-msgstr ""
+msgstr "Остаток суммы"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7972,7 +7988,7 @@ msgstr "Информация"
 #. module: account
 #: model:process.node,note:account.process_node_bankstatement0
 msgid "Registered payment"
-msgstr ""
+msgstr "Зарегистрированный платеж"
 
 #. module: account
 #: view:account.fiscalyear.close.state:0
@@ -7982,7 +7998,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "Product Information"
-msgstr ""
+msgstr "Информация о ТМЦ"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -8001,13 +8017,13 @@ msgstr "Создать счет"
 #. module: account
 #: field:account.installer,purchase_tax:0
 msgid "Purchase Tax(%)"
-msgstr ""
+msgstr "Налог на покупку(%)"
 
 #. module: account
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Please create some invoice lines."
-msgstr ""
+msgstr "Пожалуйста, создайте позиции счета"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_list
@@ -8021,6 +8037,11 @@ msgstr ""
 #: report:account.overdue:0
 msgid "Dear Sir/Madam,"
 msgstr "Уважаемые господа,"
+
+#. module: account
+#: view:account.installer.modules:0
+msgid "Configure Your Accounting Application"
+msgstr "Настройка модуля бухучета"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_form
@@ -8131,7 +8152,7 @@ msgstr "С уважением,"
 #. module: account
 #: view:account.invoice:0
 msgid "Unpaid"
-msgstr ""
+msgstr "Не оплачено"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_tax_code_tree
@@ -8155,7 +8176,7 @@ msgstr ""
 #: code:addons/account/wizard/account_change_currency.py:0
 #, python-format
 msgid "Current currency is not confirured properly !"
-msgstr ""
+msgstr "Текущая валюта неправильно настроена !"
 
 #. module: account
 #: view:account.account.template:0
@@ -8216,7 +8237,7 @@ msgstr ""
 #. module: account
 #: report:account.account.balance:0
 msgid "Display Account"
-msgstr ""
+msgstr "Вывод счета"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -8226,7 +8247,7 @@ msgstr "("
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Modify"
-msgstr ""
+msgstr "Изменить"
 
 #. module: account
 #: view:account.account.type:0
@@ -8253,12 +8274,12 @@ msgstr "К оплате"
 #: view:report.account_type.sales:0
 #: view:report.hr.timesheet.invoice.journal:0
 msgid "This Year"
-msgstr ""
+msgstr "Этот год"
 
 #. module: account
 #: view:board.board:0
 msgid "Account Board"
-msgstr ""
+msgstr "Панель счетов"
 
 #. module: account
 #: view:account.model:0
@@ -8291,7 +8312,7 @@ msgstr "Вы должны выбрать счета для согласован�
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
 msgid "Balance by Type of Account"
-msgstr ""
+msgstr "Баланс по типу счета"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
@@ -8368,7 +8389,7 @@ msgstr "Транзакции сверки"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
 msgid "Common Report"
-msgstr ""
+msgstr "Общий отчет"
 
 #. module: account
 #: view:account.account:0
@@ -8398,7 +8419,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "July"
-msgstr ""
+msgstr "Июль"
 
 #. module: account
 #: view:account.account:0
@@ -8445,12 +8466,12 @@ msgstr ""
 #: field:account.report.general.ledger,chart_account_id:0
 #: field:account.vat.declaration,chart_account_id:0
 msgid "Chart of account"
-msgstr ""
+msgstr "План счетов"
 
 #. module: account
 #: field:account.move.line,date_maturity:0
 msgid "Due date"
-msgstr ""
+msgstr "Срок"
 
 #. module: account
 #: view:account.move.journal:0
@@ -8549,12 +8570,12 @@ msgstr "В ожидании"
 #: model:process.transition,name:account.process_transition_analyticinvoice0
 #: model:process.transition,name:account.process_transition_supplieranalyticcost0
 msgid "From analytic accounts"
-msgstr ""
+msgstr "Из аналитических счетов"
 
 #. module: account
 #: field:account.installer.modules,account_payment:0
 msgid "Suppliers Payment Management"
-msgstr ""
+msgstr "Управление оплатами поставщикам"
 
 #. module: account
 #: field:account.period,name:0
@@ -8579,7 +8600,7 @@ msgstr "Активен"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Unknown Error"
-msgstr ""
+msgstr "Неизвестная ошибка"
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -8600,7 +8621,7 @@ msgstr ""
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr ""
+msgstr "Открытие/закрытие периода"
 
 #. module: account
 #: field:account.account,currency_id:0
@@ -8649,7 +8670,7 @@ msgstr ""
 #. module: account
 #: report:account.move.voucher:0
 msgid "Through :"
-msgstr ""
+msgstr "Через :"
 
 #. module: account
 #: view:account.general.journal:0
@@ -8676,7 +8697,7 @@ msgstr ""
 #: field:account.invoice,number:0
 #: field:account.move,name:0
 msgid "Number"
-msgstr ""
+msgstr "Номер"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -8718,7 +8739,7 @@ msgstr "Периоды"
 #. module: account
 #: field:account.invoice.report,currency_rate:0
 msgid "Currency Rate"
-msgstr ""
+msgstr "Курс валюты"
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
@@ -8732,7 +8753,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "April"
-msgstr ""
+msgstr "Апрель"
 
 #. module: account
 #: view:account.move.line.reconcile.select:0
@@ -8819,7 +8840,7 @@ msgstr ""
 #: selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "Regular"
-msgstr ""
+msgstr "Обычный"
 
 #. module: account
 #: view:account.account:0
@@ -8833,7 +8854,7 @@ msgstr ""
 #. module: account
 #: report:account.move.voucher:0
 msgid "State:"
-msgstr ""
+msgstr "Состояние:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_running
@@ -8854,7 +8875,7 @@ msgstr "Данный месяц"
 #: view:account.analytic.inverted.balance:0
 #: model:ir.actions.act_window,name:account.action_account_partner_ledger
 msgid "Select Period"
-msgstr ""
+msgstr "Выберите период"
 
 #. module: account
 #: view:account.entries.report:0
@@ -8917,7 +8938,7 @@ msgstr "База налога"
 #: code:addons/account/report/account_profit_loss.py:0
 #, python-format
 msgid "Net Profit"
-msgstr ""
+msgstr "Чистая прибыль"
 
 #. module: account
 #: view:ir.sequence:0
@@ -8927,13 +8948,13 @@ msgstr "Последовательности отчетного года"
 #. module: account
 #: help:account.model,name:0
 msgid "This is a model for recurring accounting entries"
-msgstr ""
+msgstr "Это модель для повторяющихся проводок"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:0
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Не определен счет доходов для ТМЦ: \"%s\" (id:%d)"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -9002,7 +9023,7 @@ msgstr "Компания"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_action_subscription_form
 msgid "Define Recurring Entries"
-msgstr ""
+msgstr "Определить повторяющиеся проводки"
 
 #. module: account
 #: field:account.entries.report,date_maturity:0
@@ -9071,7 +9092,7 @@ msgstr "Позиции счета"
 #: field:account.report.general.ledger,period_to:0
 #: field:account.vat.declaration,period_to:0
 msgid "End period"
-msgstr ""
+msgstr "Конец периода"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -9086,7 +9107,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal
 msgid "account.analytic.journal"
-msgstr ""
+msgstr "account.analytic.journal"
 
 #. module: account
 #: report:account.move.voucher:0
@@ -9102,17 +9123,17 @@ msgstr ""
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
 msgid "Invoice's state is Done"
-msgstr ""
+msgstr "Состояние счета - сделано"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
 msgid "Report of the Sales by Account"
-msgstr ""
+msgstr "Отчет о продажах по счету"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Fiscal Position"
-msgstr ""
+msgstr "Счета системы налогообложения"
 
 #. module: account
 #: report:account.invoice:0
@@ -9163,12 +9184,12 @@ msgstr ""
 #. module: account
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
-msgstr ""
+msgstr "Ошибка ! Нельзя создать рекурсивные шаблоны счетов."
 
 #. module: account
 #: view:account.subscription:0
 msgid "Recurring"
-msgstr ""
+msgstr "Повторение"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -9179,7 +9200,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
-msgstr ""
+msgstr "Дебиторская задолженность"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -9189,7 +9210,7 @@ msgstr "Условия платежа партнера"
 #. module: account
 #: field:temp.range,name:0
 msgid "Range"
-msgstr ""
+msgstr "Диапазон"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -9221,9 +9242,9 @@ msgid "Account Tax Code Template"
 msgstr ""
 
 #. module: account
-#: model:account.account.type,name:account.account_type_expense
-msgid "Erfolgskonten - Aufwendungen"
-msgstr ""
+#: model:process.node,name:account.process_node_manually0
+msgid "Manually"
+msgstr "Вручную"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9232,7 +9253,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "December"
-msgstr ""
+msgstr "Декабрь"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree
@@ -9260,7 +9281,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_journal.py:0
 #, python-format
 msgid "This period is already closed !"
-msgstr ""
+msgstr "Этот период уже закрыт !"
 
 #. module: account
 #: help:account.move.line,currency_id:0
@@ -9279,14 +9300,9 @@ msgid "Billing"
 msgstr ""
 
 #. module: account
-#: model:account.journal,name:account.check_journal
-msgid "Checks Journal - (test)"
-msgstr ""
-
-#. module: account
 #: view:account.account:0
 msgid "Parent Account"
-msgstr ""
+msgstr "Основной счет"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
@@ -9301,14 +9317,14 @@ msgstr "Оставшиеся суммы"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_statistic_report_statement
 msgid "Statistic Reports"
-msgstr ""
+msgstr "Статистические отчеты"
 
 #. module: account
 #: field:account.installer,progress:0
 #: field:account.installer.modules,progress:0
 #: field:wizard.multi.charts.accounts,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Настройка производится"
 
 #. module: account
 #: view:account.fiscal.position.template:0
@@ -9319,7 +9335,7 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Invoice '%s' is waiting for validation."
-msgstr ""
+msgstr "Счет '%s' ожидает проверки."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9328,12 +9344,12 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "November"
-msgstr ""
+msgstr "Ноябрь"
 
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr ""
+msgstr "Код счета должен быть уникальным для компании !"
 
 #. module: account
 #: help:account.invoice.line,account_id:0
@@ -9344,7 +9360,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "The date of your Journal Entry is not in the defined period!"
-msgstr ""
+msgstr "Дата вашей записи в журнале вне определенного периода!"
 
 #. module: account
 #: field:account.subscription,period_total:0
@@ -9355,12 +9371,12 @@ msgstr "Количество периодов"
 #: report:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr ""
+msgstr "Основной журнал"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Search Invoice"
-msgstr ""
+msgstr "Искать счет"
 
 #. module: account
 #: report:account.invoice:0
@@ -9394,7 +9410,7 @@ msgstr "Общая информация"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Accounting Documents"
-msgstr ""
+msgstr "Бухгалтерские документы"
 
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move_lines
@@ -9410,7 +9426,7 @@ msgstr "Книга расходов (только количество)"
 #. module: account
 #: model:process.node,note:account.process_node_supplierpaidinvoice0
 msgid "Invoice's state is Done."
-msgstr ""
+msgstr "Состояние счета - Сделано"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_reconcilepaid0
@@ -9420,7 +9436,7 @@ msgstr ""
 #. module: account
 #: view:account.account.template:0
 msgid "Search Account Templates"
-msgstr ""
+msgstr "Искать шаблоны счетов"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -9445,7 +9461,7 @@ msgstr "Правая скобка"
 #. module: account
 #: model:ir.model,name:account.model_account_addtmpl_wizard
 msgid "account.addtmpl.wizard"
-msgstr ""
+msgstr "ccount.addtmpl.wizard"
 
 #. module: account
 #: field:account.aged.trial.balance,result_selection:0
@@ -9482,7 +9498,7 @@ msgstr "Ссылка"
 #: field:account.use.model,model:0
 #: model:ir.model,name:account.model_account_model
 msgid "Account Model"
-msgstr ""
+msgstr "Модель счета"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9491,7 +9507,7 @@ msgstr ""
 #: selection:report.account.sales,month:0
 #: selection:report.account_type.sales,month:0
 msgid "February"
-msgstr ""
+msgstr "Февраль"
 
 #. module: account
 #: field:account.bank.accounts.wizard,bank_account_id:0
@@ -9516,12 +9532,12 @@ msgstr "Срок платежа"
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
 msgid "Future"
-msgstr ""
+msgstr "Будущие"
 
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr ""
+msgstr "Искать записи в журале"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -9533,7 +9549,7 @@ msgstr ""
 #: help:account.tax.template,ref_tax_sign:0
 #: help:account.tax.template,tax_sign:0
 msgid "Usually 1 or -1."
-msgstr ""
+msgstr "Обычно 1 или -1."
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
@@ -9548,22 +9564,25 @@ msgstr ""
 #. module: account
 #: field:account.analytic.line,amount_currency:0
 msgid "Amount currency"
-msgstr ""
+msgstr "Валюта суммы"
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:0
 #, python-format
 msgid "You must enter a period length that cannot be 0 or below !"
-msgstr ""
+msgstr "Вы должны ввести длину периода больше 0 !"
 
 #. module: account
 #: code:addons/account/account.py:0
 #, python-format
 msgid "You cannot remove an account which has account entries!. "
-msgstr ""
+msgstr "Нельзя удалить счет по которому есть проводки ! "
 
 #~ msgid "Partner account"
 #~ msgstr "Счет контрагента"
+
+#~ msgid "Error! You can not create recursive account."
+#~ msgstr "Ошибка! Вы не можете создать счетЮ который ссылается сам на себя."
 
 #~ msgid "Unpaid Supplier Invoices"
 #~ msgstr "Неоплаченные счета поставщика"
@@ -9588,6 +9607,18 @@ msgstr ""
 
 #~ msgid "Total entries"
 #~ msgstr "Проводки итогов"
+
+#~ msgid "Disc. (%)"
+#~ msgstr "Скидка (%)"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "departement at +32 81 81 37 00."
+#~ msgstr ""
+#~ "Если ваш платеж был уже проведен, когда данное письмо было отослано, "
+#~ "пожалуйста игнорируйте это сообщение. При необходимости вы можете связаться "
+#~ "с нашей бухгалтерией по телефону +32 81 81 37 00."
 
 #~ msgid "Unpaid Supplier Refunds"
 #~ msgstr "Невыплаченные возвраты средств от поставщика"
@@ -9642,9 +9673,6 @@ msgstr ""
 
 #~ msgid "Value"
 #~ msgstr "Значение"
-
-#~ msgid "Income"
-#~ msgstr "Доход"
 
 #~ msgid "Print General Journal"
 #~ msgstr "Печать главного журнала"
@@ -9704,9 +9732,6 @@ msgstr ""
 #~ msgid "Analytic Journal Report"
 #~ msgstr "Отчет по журналу аналитики"
 
-#~ msgid "Expense"
-#~ msgstr "Расход"
-
 #~ msgid "Options"
 #~ msgstr "Параметры"
 
@@ -9718,6 +9743,15 @@ msgstr ""
 
 #~ msgid "Draft Supplier Invoices"
 #~ msgstr "Черновики счетов поставщика"
+
+#~ msgid ""
+#~ "Exception made of a mistake of our side, it seems that the following bills "
+#~ "stay unpaid. Please, take appropriate measures in order to carry out this "
+#~ "payment in the next 8 days."
+#~ msgstr ""
+#~ "Возможна ошибка на нашей стороне, но нам кажется, что следующие счета не "
+#~ "были оплачены. Просим принять меры по оплате либо подтверждению платежа в "
+#~ "течение ближайших 8 дней."
 
 #~ msgid "Create subscription entries"
 #~ msgstr "Создать проводки подписки"
@@ -9920,6 +9954,10 @@ msgstr ""
 #~ msgid "Account Num."
 #~ msgstr "Номер счета"
 
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "Нет аналитического журнала!"
+
 #~ msgid "Reconcile Paid"
 #~ msgstr "Выверите Оплаченный"
 
@@ -9928,6 +9966,13 @@ msgstr ""
 
 #~ msgid "J.C. or Move name"
 #~ msgstr "J.C. или имя Перемещения"
+
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Данные отсутствуют"
+
+#~ msgid "account.config.wizard"
+#~ msgstr "Мастер конфигурации"
 
 #~ msgid "Cancel Invoice"
 #~ msgstr "Отмена счета"
@@ -9953,6 +9998,9 @@ msgstr ""
 
 #~ msgid "Journal de frais"
 #~ msgstr "Журнал расходов"
+
+#~ msgid "Fiscal Position Taxes Mapping"
+#~ msgstr "Структура налогов финансовой области"
 
 #~ msgid ""
 #~ "If a default tax is given in the partner it only overrides taxes from "
@@ -9981,6 +10029,9 @@ msgstr ""
 
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Основной аналитический счет"
+
+#~ msgid "Fiscal Position Template Account Mapping"
+#~ msgstr "Шаблон структуры счетов финансовой области"
 
 #~ msgid "Continue"
 #~ msgstr "Продолжить"
@@ -10018,14 +10069,32 @@ msgstr ""
 #~ msgid "Date or Code"
 #~ msgstr "Дата или Код"
 
+#~ msgid ""
+#~ "The fiscal position will determine taxes and the accounts used for the the "
+#~ "partner."
+#~ msgstr ""
+#~ "Финансовая область будет определять налоги и счета, используемые для "
+#~ "контрагента."
+
 #~ msgid "Reconciliation of entries from invoice(s) and payment(s)"
 #~ msgstr "Согласование проводок из счета (ов) и оплат"
+
+#, python-format
+#~ msgid ""
+#~ "No period defined for this date !\n"
+#~ "Please create a fiscal year."
+#~ msgstr ""
+#~ "Не определен период для этой даты!\n"
+#~ "Пожалуйста создайте финансовый год."
 
 #~ msgid "Create a Fiscal Year"
 #~ msgstr "Создать финансовый год"
 
 #~ msgid "Close Fiscal Year with new entries"
 #~ msgstr "Закрыть учетный год с новыми проводками"
+
+#~ msgid "Fiscal Position Template Tax Mapping"
+#~ msgstr "Структура налоговых шаблонов для финансовой области"
 
 #~ msgid "Name of the fiscal year as displayed in reports."
 #~ msgstr "Название отчетного года для отображения в отчетах"
@@ -10035,9 +10104,6 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Недопустимое имя модели в определении действия."
-
-#~ msgid "Asset"
-#~ msgstr "Актив"
 
 #~ msgid "Specify The Message for the Overdue Payment Report."
 #~ msgstr "Укажите сообщение для отчета о просроченных платежах"
@@ -10136,6 +10202,13 @@ msgstr ""
 #~ msgid "analytic Invoice"
 #~ msgstr "aналитический счет"
 
+#~ msgid ""
+#~ "The partner bank account to pay\n"
+#~ "Keep empty to use the default"
+#~ msgstr ""
+#~ "Банковский счет партнера для оплаты\\n\n"
+#~ "Оставьте пустым для использования по умолчанию"
+
 #~ msgid "Message"
 #~ msgstr "Сообщение"
 
@@ -10150,9 +10223,6 @@ msgstr ""
 
 #~ msgid "Payment Reconcile"
 #~ msgstr "Согласование платежа"
-
-#~ msgid "Liability"
-#~ msgstr "Обязательства"
 
 #~ msgid "All periods if empty"
 #~ msgstr "Все периоды, если не заполнено"
@@ -10296,6 +10366,14 @@ msgstr ""
 #~ msgid "Account Configure"
 #~ msgstr "Настройка счета"
 
+#, python-format
+#~ msgid "The opening journal must not have any entry in the new fiscal year !"
+#~ msgstr ""
+#~ "Открывающийся журнал не должен иметь проводок в новом финансовом году!"
+
+#~ msgid "Header"
+#~ msgstr "Заголовок"
+
 #~ msgid "Select invoices you want to pay and manages advances"
 #~ msgstr "Выберите счета для оплаты и авансирования"
 
@@ -10334,3 +10412,14 @@ msgstr ""
 
 #~ msgid "Date/Period Filter"
 #~ msgstr "Фильтр даты/периода"
+
+#~ msgid "supplier"
+#~ msgstr "поставщик"
+
+#~ msgid "End of Year"
+#~ msgstr "Конец года"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Ошибка: Единицы продажи и единицы измерения должны принадлежать к разным "
+#~ "категориям."

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-09-09 07:17+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_intrastat
@@ -83,8 +83,9 @@ msgid "March"
 msgstr ""
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "August"
+#: report:account.invoice.intrastat:0
+#: field:report.intrastat.code,description:0
+msgid "Description"
 msgstr ""
 
 #. module: report_intrastat
@@ -186,8 +187,12 @@ msgid "Invoice"
 msgstr ""
 
 #. module: report_intrastat
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
+#: model:ir.module.module,description:report_intrastat.module_meta_information
+msgid ""
+"\n"
+"    A module that adds intrastat reports.\n"
+"    This module gives the details of the goods traded between the countries "
+"of European Union "
 msgstr ""
 
 #. module: report_intrastat
@@ -253,9 +258,8 @@ msgid "November"
 msgstr ""
 
 #. module: report_intrastat
-#: report:account.invoice.intrastat:0
-#: field:report.intrastat.code,description:0
-msgid "Description"
+#: selection:report.intrastat,month:0
+msgid "August"
 msgstr ""
 
 #. module: report_intrastat

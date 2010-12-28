@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-14 21:27+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 16:04+0000\n"
+"Last-Translator: Carlos-smile <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -76,13 +75,13 @@ msgstr "Todas las cajas de efectivo del día:"
 #. module: point_of_sale
 #: view:pos.box.entries:0
 msgid "Put Money"
-msgstr ""
+msgstr "Introducir dnero"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_cash_register_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_cash_register_all
 msgid "Register Analysis"
-msgstr ""
+msgstr "Análisis registro"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
@@ -451,6 +450,11 @@ msgid "Codes"
 msgstr "Códigos"
 
 #. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Output Operation"
+msgstr "Salidas de caja"
+
+#. module: point_of_sale
 #: view:all.closed.cashbox.of.the.day:0
 #: view:pos.details:0
 #: view:pos.payment.report:0
@@ -551,14 +555,14 @@ msgstr "Registros de caja ya están cerrados."
 #. module: point_of_sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Error: Código EAN no válido"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
 #: view:pos.confirm:0
 #: view:pos.open.statement:0
 msgid "Open Statements"
-msgstr ""
+msgstr "Abrir extractos"
 
 #. module: point_of_sale
 #: view:pos.add.product:0
@@ -602,7 +606,7 @@ msgstr "Marzo"
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
-msgstr ""
+msgstr "Producto del usuario"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:0
@@ -787,6 +791,13 @@ msgid "Draft Invoice"
 msgstr "Factura borrador"
 
 #. module: point_of_sale
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Product for expenses"
 msgstr ""
@@ -807,11 +818,6 @@ msgstr "Observación posición fiscal :"
 #: selection:report.pos.order,month:0
 msgid "September"
 msgstr "Septiembre"
-
-#. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_bankcard_journal
-msgid "Bancontact Journal"
-msgstr ""
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1175,6 +1181,22 @@ msgid "Connected Salesman"
 msgstr "Comercial conectado"
 
 #. module: point_of_sale
+#: model:ir.module.module,description:point_of_sale.module_meta_information
+msgid ""
+"\n"
+"Main features :\n"
+" - Fast encoding of the sale.\n"
+" - Allow to choose one payment mode (the quick way) or to split the payment "
+"between several payment mode.\n"
+" - Computation of the amount of money to return.\n"
+" - Create and confirm picking list automatically.\n"
+" - Allow the user to create invoice automatically.\n"
+" - Allow to refund former sales.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr "Método de precio"
@@ -1264,11 +1286,6 @@ msgstr "Número de copias"
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
 msgstr "Pago punto de venta"
-
-#. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
-msgstr "Salidas de caja"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1821,11 +1838,6 @@ msgid "Discount "
 msgstr "Descuento "
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_visa_journal
-msgid "Visa Journal"
-msgstr ""
-
-#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Factura de proveedor"
@@ -1957,6 +1969,11 @@ msgstr "Vendedor"
 #: selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Facturado"
+
+#. module: point_of_sale
+#: report:pos.invoice:0
+msgid "Must be after setLang()"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -2346,6 +2363,9 @@ msgstr ""
 #~ msgid "Detail of Sales"
 #~ msgstr "Detalle de ventas"
 
+#~ msgid "Operation N° :"
+#~ msgstr "Operación Num. :"
+
 #~ msgid "Refund Orders"
 #~ msgstr "Devoluciones"
 
@@ -2363,6 +2383,15 @@ msgstr ""
 
 #~ msgid "Date :"
 #~ msgstr "Fecha :"
+
+#~ msgid "Disc :"
+#~ msgstr "Desc. :"
+
+#~ msgid "User :"
+#~ msgstr "Usuario :"
+
+#~ msgid "Total :"
+#~ msgstr "Total :"
 
 #~ msgid "Point of Sale journal configuration."
 #~ msgstr "Configuración Terminal Punto de Venta"
@@ -2394,6 +2423,9 @@ msgstr ""
 #~ msgid "Define default journals"
 #~ msgstr "Definir diarios por defecto"
 
+#~ msgid "Tel :"
+#~ msgstr "Tel :"
+
 #~ msgid "Default rebate journal"
 #~ msgstr "Diario de devoluciones por defecto"
 
@@ -2408,6 +2440,9 @@ msgstr ""
 
 #~ msgid "Sales of the day"
 #~ msgstr "Ventas del día"
+
+#~ msgid "."
+#~ msgstr "."
 
 #~ msgid "Discount"
 #~ msgstr "Descuento"
@@ -2438,6 +2473,10 @@ msgstr ""
 
 #~ msgid "Refund order :"
 #~ msgstr "Devolución :"
+
+#, python-format
+#~ msgid "Cannot delete a point of sale which is already confirmed !"
+#~ msgstr "¡No se puede eliminar una venta que ya está confirmada!"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -2472,6 +2511,9 @@ msgstr ""
 #~ msgid "D_iscount"
 #~ msgstr "D_escuento"
 
+#~ msgid "Ce bon est valide jusqu'au"
+#~ msgstr "Este bono es válido hasta"
+
 #~ msgid "Payment Term"
 #~ msgstr "Plazo de pago"
 
@@ -2484,11 +2526,19 @@ msgstr ""
 #~ msgid "Company:"
 #~ msgstr "Compañía:"
 
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "No se puede crear una factura sin una empresa."
+
 #~ msgid "Payment Name"
 #~ msgstr "Descripción pago"
 
 #~ msgid "Piece Number"
 #~ msgstr "Número ref."
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Error del usuario"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de la acción."
@@ -2519,6 +2569,9 @@ msgstr ""
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Sortie de caisse"
+#~ msgstr "Salidas de caja"
 
 #~ msgid "You must assign a production lot for this product"
 #~ msgstr "Debe asignar un lote de producción para este producto"

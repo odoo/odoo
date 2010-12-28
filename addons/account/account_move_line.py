@@ -289,7 +289,12 @@ class account_move_line(osv.osv):
             acc = account
             if s>0:
                 acc = acc1
-            v = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], s, account=acc, account_invert=True)
+            compute_ctx = context.copy()
+            compute_ctx.update({
+                    'res.currency.compute.account': acc,
+                    'res.currency.compute.account_invert': True,
+                })
+            v = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], s, context=compute_ctx)
             data['amount_currency'] = v
         return data
 
@@ -308,7 +313,7 @@ class account_move_line(osv.osv):
                     FROM account_move_line l1, account_move_line l2
                     WHERE l2.account_id = l1.account_id
                       AND l1.id <= l2.id
-                      AND l2.id IN %%s AND """ + \
+                      AND l2.id IN %s AND """ + \
                 self._query_get(cr, uid, obj='l1', context=c) + \
                 " GROUP BY l2.id"
 
@@ -433,7 +438,7 @@ class account_move_line(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
-        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
+        'partner_id': fields.many2one('res.partner', 'Partner', select=1, ondelete='restrict'),
         'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
         'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
                                 store = {
@@ -556,8 +561,11 @@ class account_move_line(osv.osv):
         if (amount>0) and journal:
             x = journal_obj.browse(cr, uid, journal).default_credit_account_id
             if x: acc = x
-        context.update({'date': date})
-        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc, context=context)
+        context.update({
+                'date': date,
+                'res.currency.compute.account': acc,
+            })
+        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, context=context)
         result['value'] = {
             'debit': v > 0 and v or 0.0,
             'credit': v < 0 and -v or 0.0
@@ -763,7 +771,7 @@ class account_move_line(osv.osv):
             if 'comment' in context and context['comment']:
                 libelle = context['comment']
             else:
-                libelle = 'Write-Off'
+                libelle = _('Write-Off')
             writeoff_lines = [
                 (0, 0, {
                     'name': libelle,
@@ -955,7 +963,6 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
-            attrs.append('string="'+field_it[2]+'"')
             attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 

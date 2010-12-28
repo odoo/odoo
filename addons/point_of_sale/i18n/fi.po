@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 14:23+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -451,6 +451,11 @@ msgid "Codes"
 msgstr ""
 
 #. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Output Operation"
+msgstr ""
+
+#. module: point_of_sale
 #: view:all.closed.cashbox.of.the.day:0
 #: view:pos.details:0
 #: view:pos.payment.report:0
@@ -785,6 +790,13 @@ msgid "Draft Invoice"
 msgstr "Luonnoslasku"
 
 #. module: point_of_sale
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Product for expenses"
 msgstr ""
@@ -804,11 +816,6 @@ msgstr "Tilikausiposition huomautus :"
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
-
-#. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_bankcard_journal
-msgid "Bancontact Journal"
 msgstr ""
 
 #. module: point_of_sale
@@ -1173,6 +1180,22 @@ msgid "Connected Salesman"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.module.module,description:point_of_sale.module_meta_information
+msgid ""
+"\n"
+"Main features :\n"
+" - Fast encoding of the sale.\n"
+" - Allow to choose one payment mode (the quick way) or to split the payment "
+"between several payment mode.\n"
+" - Computation of the amount of money to return.\n"
+" - Create and confirm picking list automatically.\n"
+" - Allow the user to create invoice automatically.\n"
+" - Allow to refund former sales.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr ""
@@ -1261,11 +1284,6 @@ msgstr "Tulosteiden määrä"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
-
-#. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
 msgstr ""
 
 #. module: point_of_sale
@@ -1819,11 +1837,6 @@ msgid "Discount "
 msgstr ""
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_visa_journal
-msgid "Visa Journal"
-msgstr ""
-
-#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Toimittajan lasku"
@@ -1955,6 +1968,11 @@ msgstr "Myyjä"
 #: selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Laskutettu"
+
+#. module: point_of_sale
+#: report:pos.invoice:0
+msgid "Must be after setLang()"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -2417,20 +2435,36 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Virheellinen mallin nimi toiminnon määrittelyssä."
 
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "Et voi luoda laskua ilman kumppania."
+
 #~ msgid "Detail of Sales"
 #~ msgstr "Myynnin tiedot"
 
 #~ msgid "Ok"
 #~ msgstr "OK"
 
+#~ msgid "Operation N° :"
+#~ msgstr "Toimenpide nro:"
+
 #~ msgid "Select default journals"
 #~ msgstr "Valitse oletuspäiväkirjat"
+
+#~ msgid "Disc :"
+#~ msgstr "Alennus:"
 
 #~ msgid "Order Payments"
 #~ msgstr "Tilauksen maksut"
 
 #~ msgid "Date :"
 #~ msgstr "Päivämäärä:"
+
+#~ msgid "User :"
+#~ msgstr "Käyttäjä :"
+
+#~ msgid "Total :"
+#~ msgstr "Yhteensä:"
 
 #~ msgid "Point of Sale journal configuration."
 #~ msgstr "Kassapäätteen päiväkirjojen konfiguraatio."
@@ -2465,6 +2499,12 @@ msgstr ""
 #~ msgid "Wizard default journals"
 #~ msgstr "Ohjattu toiminto oletuspäiväkirjoille"
 
+#~ msgid "Tel :"
+#~ msgstr "Puh.:"
+
+#~ msgid "."
+#~ msgstr "."
+
 #~ msgid "E-mail :"
 #~ msgstr "Sähköposti:"
 
@@ -2483,6 +2523,10 @@ msgstr ""
 #~ msgid "Refund order :"
 #~ msgstr "Hyvitystilaus:"
 
+#, python-format
+#~ msgid "Cannot delete a point of sale which is already confirmed !"
+#~ msgstr "Et voi poistaa kassapäätettä joka on jo vahvistettu!"
+
 #~ msgid "Pos Payment"
 #~ msgstr "Kassapääte maksu"
 
@@ -2497,6 +2541,13 @@ msgstr ""
 
 #~ msgid "D_iscount"
 #~ msgstr "Alennus"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "UserError"
+
+#~ msgid "Ce bon est valide jusqu'au"
+#~ msgstr "Etuseteli on voimassa"
 
 #~ msgid "Print Date:"
 #~ msgstr "Tulostettu:"

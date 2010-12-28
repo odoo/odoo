@@ -24,7 +24,7 @@ import netsvc
 
 class sale_make_invoice(osv.osv_memory):
     _name = "sale.make.invoice"
-    _description = "Sale Make Invoice"
+    _description = "Sales Make Invoice"
     _columns = {
         'grouped': fields.boolean('Group the invoices', help='Check the box to group the invoices for the same customers'),
         'invoice_date': fields.date('Invoice Date'),
@@ -32,16 +32,16 @@ class sale_make_invoice(osv.osv_memory):
     _defaults = {
         'grouped': False
     }
-    
+
     def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}
-        record_id = context and context.get('active_id', False)     
+        record_id = context and context.get('active_id', False)
         order = self.pool.get('sale.order').browse(cr, uid, record_id, context=context)
         if order.state == 'draft':
-            raise osv.except_osv(_('Warning !'),'You can not create invoice when sale order is not confirmed.')
+            raise osv.except_osv(_('Warning !'),'You can not create invoice when sales order is not confirmed.')
         return False
-    
+
     def make_invoices(self, cr, uid, ids, context=None):
         order_obj = self.pool.get('sale.order')
         mod_obj = self.pool.get('ir.model.data')
@@ -53,11 +53,11 @@ class sale_make_invoice(osv.osv_memory):
         wf_service = netsvc.LocalService("workflow")
         for id in context.get(('active_ids'), []):
             wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
-            
+
         for o in order_obj.browse(cr, uid, context.get(('active_ids'), []), context=context):
             for i in o.invoice_ids:
                 newinv.append(i.id)
-        
+
         res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_invoice_filter')
 
         return {
@@ -69,9 +69,9 @@ class sale_make_invoice(osv.osv_memory):
             'view_id': False,
             'context': "{'type': 'out_refund'}",
             'type': 'ir.actions.act_window',
-            'search_view_id': res and res[1] or False                
+            'search_view_id': res and res[1] or False
         }
 
-sale_make_invoice()        
+sale_make_invoice()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

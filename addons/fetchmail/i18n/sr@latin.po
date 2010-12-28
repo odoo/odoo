@@ -7,15 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
-"PO-Revision-Date: 2010-12-10 16:43+0000\n"
-"Last-Translator: Milan Milosevic <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-23 16:22+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:35+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: fetchmail
+#: constraint:email.server:0
+msgid ""
+"Warning! Record for selected Model can not be created\n"
+"Please choose valid Model"
+msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -28,11 +35,6 @@ msgid "Confirm"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,action_id:0
-msgid "Reply Email"
-msgstr ""
-
-#. module: fetchmail
 #: view:email.server:0
 msgid "Group By..."
 msgstr ""
@@ -41,17 +43,22 @@ msgstr ""
 #: view:email.server:0
 #: field:email.server,state:0
 msgid "State"
-msgstr ""
+msgstr "Stanje"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Set to Draft"
+msgid "POP"
 msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
-msgstr ""
+msgstr "Nije potvrdjeno"
+
+#. module: fetchmail
+#: field:email.server,user:0
+msgid "User Name"
+msgstr "Korisničko ime"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -61,61 +68,62 @@ msgstr ""
 #. module: fetchmail
 #: view:email.server:0
 msgid "POP/IMAP Servers"
-msgstr ""
+msgstr "POP/IMAP Serveri"
 
 #. module: fetchmail
 #: model:ir.module.module,shortdesc:fetchmail.module_meta_information
 msgid "Fetchmail Server"
-msgstr ""
+msgstr "Email Server"
 
 #. module: fetchmail
 #: view:email.server:0
 #: field:email.server,note:0
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #. module: fetchmail
-#: field:email.server,priority:0
-msgid "Server Priority"
+#: help:email.server,object_id:0
+msgid ""
+"OpenObject Model. Generates a record of this model.\n"
+"Select Object with message_new attrbutes."
 msgstr ""
 
 #. module: fetchmail
 #: field:email.server,attach:0
 msgid "Add Attachments ?"
-msgstr ""
+msgstr "Dodajes Attachmente ( dodatke) ?"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "POP"
-msgstr ""
-
-#. module: fetchmail
-#: field:email.server,user:0
-msgid "User Name"
-msgstr ""
-
-#. module: fetchmail
-#: field:email.server,user_id:0
-msgid "User"
-msgstr ""
-
-#. module: fetchmail
-#: field:email.server,date:0
-msgid "Date"
-msgstr ""
-
-#. module: fetchmail
-#: selection:email.server,state:0
-msgid "Waiting for Verification"
-msgstr ""
-
-#. module: fetchmail
-#: help:email.server,object_id:0
-msgid "OpenObject Model. Generates a record of this model."
+msgid "# of emails"
 msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
+msgid "Email History"
+msgstr "Email Istorija"
+
+#. module: fetchmail
+#: field:email.server,user_id:0
+msgid "User"
+msgstr "Korisnik"
+
+#. module: fetchmail
+#: field:email.server,date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: fetchmail
+#: selection:email.server,state:0
+msgid "Waiting for Verification"
+msgstr "Cekanje na Potvrdu"
+
+#. module: fetchmail
+#: field:email.server,password:0
+msgid "Password"
+msgstr "Lozinka"
+
+#. module: fetchmail
 #: view:mailgate.message:0
 msgid "Emails"
 msgstr ""
@@ -128,22 +136,32 @@ msgstr ""
 #. module: fetchmail
 #: view:email.server:0
 msgid "Server & Login"
-msgstr ""
+msgstr "Server & Login"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Auto Reply?"
-msgstr ""
+msgstr "Auto Odgovor?"
 
 #. module: fetchmail
 #: field:email.server,name:0
 msgid "Name"
-msgstr ""
+msgstr "Ime"
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_mailgate_message
 msgid "Mailgateway Message"
-msgstr ""
+msgstr "Poruka Email prolaza"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+msgid "POP Servers"
+msgstr "POP Serveri"
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Set to Draft"
+msgstr "Postavi u pripremu"
 
 #. module: fetchmail
 #: field:email.server,message_ids:0
@@ -152,41 +170,40 @@ msgid "Messages"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Email Servers"
-msgstr ""
+msgid "Fetchmail Services"
+msgstr "Email Servisi"
 
 #. module: fetchmail
 #: field:email.server,server:0
 msgid "Server"
-msgstr ""
+msgstr "Server"
 
 #. module: fetchmail
 #: field:email.server,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktivan"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Process Parameter"
-msgstr ""
+msgstr "Obradi Parametar"
 
 #. module: fetchmail
 #: field:email.server,is_ssl:0
 msgid "SSL ?"
-msgstr ""
+msgstr "SSL ?"
 
 #. module: fetchmail
 #: selection:email.server,type:0
 #: selection:mailgate.message,server_type:0
 msgid "IMAP Server"
-msgstr ""
+msgstr "MAP Server"
 
 #. module: fetchmail
 #: field:email.server,object_id:0
 msgid "Model"
-msgstr ""
+msgstr "Model"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -197,12 +214,7 @@ msgstr ""
 #: view:email.server:0
 #: model:ir.model,name:fetchmail.model_email_server
 msgid "POP/IMAP Server"
-msgstr ""
-
-#. module: fetchmail
-#: field:email.server,password:0
-msgid "Password"
-msgstr ""
+msgstr "POP/IMAP Server"
 
 #. module: fetchmail
 #: constraint:email.server:0
@@ -213,17 +225,17 @@ msgstr ""
 #: field:email.server,type:0
 #: field:mailgate.message,server_type:0
 msgid "Server Type"
-msgstr ""
+msgstr "Tup Servera"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Login Information"
-msgstr ""
+msgstr "Informacije o Prijavi"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Server Information"
-msgstr ""
+msgstr "Podaci o Serveru"
 
 #. module: fetchmail
 #: help:email.server,attach:0
@@ -234,12 +246,12 @@ msgstr ""
 #: selection:email.server,type:0
 #: selection:mailgate.message,server_type:0
 msgid "POP Server"
-msgstr ""
+msgstr "POP Server"
 
 #. module: fetchmail
 #: field:email.server,port:0
 msgid "Port"
-msgstr ""
+msgstr "Port"
 
 #. module: fetchmail
 #: model:ir.module.module,description:fetchmail.module_meta_information
@@ -252,6 +264,13 @@ msgid ""
 "    * Email based Records (Add, Update)\n"
 "    "
 msgstr ""
+"Fetchmail: \n"
+"    *Hvata emailove sa pop/imap servera\n"
+"    *Podrzava SSL\n"
+"    *Integrise se sa svim modulima\n"
+"    *Automatski prima Emailove\n"
+"    *Na bazi Email-a pravi snimanja ( Dodaje, Dopunjava)\n"
+"    "
 
 #. module: fetchmail
 #: view:email.server:0
@@ -268,15 +287,25 @@ msgstr ""
 #. module: fetchmail
 #: help:email.server,priority:0
 msgid "Priority between 0 to 10, select define the order of Processing"
+msgstr "Vaznost izmedju 0 i 10,  izaberi i definisi redosled Procesuiranja"
+
+#. module: fetchmail
+#: field:email.server,action_id:0
+msgid "Email Server Action"
 msgstr ""
+
+#. module: fetchmail
+#: field:email.server,priority:0
+msgid "Server Priority"
+msgstr "Prioritet Servera"
 
 #. module: fetchmail
 #: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
-msgstr ""
+msgstr "Email Server"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Fetch Emails"
-msgstr ""
+msgstr "Hvata Emailove"

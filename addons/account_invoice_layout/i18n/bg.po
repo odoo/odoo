@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-10 17:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-10-30 08:53+0000\n"
 "Last-Translator: lem0na <nickyk@gmx.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:21+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -34,12 +34,6 @@ msgid "Cancelled Invoice"
 msgstr ""
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
-msgid "PRO-FORMA"
-msgstr "Проформа"
-
-#. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 #: field:notify.message,name:0
 msgid "Title"
@@ -56,11 +50,6 @@ msgstr ""
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
 msgstr "Отстъка (%)"
-
-#. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Print"
-msgstr "Печат"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -87,8 +76,23 @@ msgid "Unit Price"
 msgstr "Единична цена"
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: account_invoice_layout
@@ -104,9 +108,10 @@ msgid "Document"
 msgstr "Документ"
 
 #. module: account_invoice_layout
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "PRO-FORMA"
+msgstr "Проформа"
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
@@ -127,6 +132,11 @@ msgstr "Съобщение за известяване"
 #: selection:account.invoice.line,state:0
 msgid "Product"
 msgstr "Продукт"
+
+#. module: account_invoice_layout
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr ""
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
@@ -157,9 +167,9 @@ msgid "Source Account"
 msgstr "Изходена сметка"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr ""
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Отказ"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -285,9 +295,9 @@ msgid "Supplier Invoice"
 msgstr "Фактура за доставчик"
 
 #. module: account_invoice_layout
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr ""
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Печат"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -318,9 +328,9 @@ msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Отказ"
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -338,6 +348,9 @@ msgstr "Съобщение"
 msgid "All Notification Messages"
 msgstr "Всички съобщения за исвестяване"
 
+#~ msgid ":"
+#~ msgstr ":"
+
 #~ msgid "Invoice Date:"
 #~ msgstr "Дата на фактура:"
 
@@ -350,6 +363,12 @@ msgstr "Всички съобщения за исвестяване"
 #~ msgid "Customer Ref:"
 #~ msgstr "Отпратка към клиент:"
 
+#~ msgid "Description"
+#~ msgstr "Описание"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "Прекратена фактура"
+
 #~ msgid "Fax :"
 #~ msgstr "Факс :"
 
@@ -359,8 +378,17 @@ msgstr "Всички съобщения за исвестяване"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Невалиден XML за преглед на архитектурата"
 
+#~ msgid "Total (excl. taxes):"
+#~ msgstr "Общо (без данъци):"
+
+#~ msgid "Taxes"
+#~ msgstr "Данъци"
+
 #~ msgid "VAT :"
 #~ msgstr "ДДС :"
+
+#~ msgid "(incl. taxes):"
+#~ msgstr "(влк. данъци):"
 
 #~ msgid "Total"
 #~ msgstr "Общо"

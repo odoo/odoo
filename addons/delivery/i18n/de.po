@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-30 11:38+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:45+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -102,11 +102,6 @@ msgid "Delivery Order :"
 msgstr "Lieferauftrag:"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_sale_order
-msgid "Sale Order"
-msgstr "Verkaufsauftrag"
-
-#. module: delivery
 #: field:delivery.grid.line,variable_factor:0
 msgid "Variable Factor"
 msgstr "Variabl. Faktor"
@@ -122,6 +117,7 @@ msgstr "Fest"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
+#: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "Auslieferungsmethode"
 
@@ -173,6 +169,11 @@ msgstr "Operator"
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
 msgstr "Partner"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -270,11 +271,6 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
-
-#. module: delivery
-#: field:sale.order,carrier_id:0
-msgid "Delivery method"
-msgstr "Auslieferungsmethode"
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
@@ -404,6 +400,11 @@ msgstr ""
 "können unterschiedliche Preislisten für eine Auslieferungsmethode "
 "definieren, z.B. aufgeteilt nach Regionen, Ländern, Liefergebiet, "
 "Postleitzahlenzone etc."
+
+#. module: delivery
+#: selection:delivery.grid.line,operator:0
+msgid "<="
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
@@ -554,11 +555,18 @@ msgstr "Preistyp"
 #~ msgid "Notes"
 #~ msgstr "Bemerkungen"
 
+#, python-format
+#~ msgid "No grid avaible !"
+#~ msgstr "Kein Netz verfügbar!"
+
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "Fehler: Falscher EAN code"
 
 #~ msgid "Cancel"
 #~ msgstr "Abbrechen"
+
+#~ msgid "Delivery method"
+#~ msgstr "Auslieferungsmethode"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "Die USt. scheint falsch zu sein."
@@ -600,6 +608,9 @@ msgstr "Preistyp"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Sale Order"
+#~ msgstr "Verkaufsauftrag"
 
 #~ msgid ""
 #~ "If the active field is set to true, it will allow you to hide the delivery "

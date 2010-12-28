@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-11 12:52+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-17 22:30+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:18+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -41,9 +41,9 @@ msgid "Group By..."
 msgstr "Объединять по..."
 
 #. module: procurement
-#: view:procurement.order:0
-msgid "Planification"
-msgstr "Планирование"
+#: help:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Draft procurement of the product and location of that orderpoint"
+msgstr ""
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -178,6 +178,11 @@ msgid "Stock Move"
 msgstr "Движение ТМЦ"
 
 #. module: procurement
+#: view:procurement.order:0
+msgid "Planification"
+msgstr "Планирование"
+
+#. module: procurement
 #: selection:procurement.order,state:0
 msgid "Ready"
 msgstr "Готово"
@@ -221,6 +226,11 @@ msgid ""
 msgstr ""
 "Ссылка на документ, создавший этот запрос на снабжение.\n"
 "Выполнено OpenERP автоматически."
+
+#. module: procurement
+#: view:stock.warehouse.orderpoint:0
+msgid "Procurement Orders to Process"
+msgstr ""
 
 #. module: procurement
 #: constraint:res.company:0
@@ -416,6 +426,19 @@ msgid "Service"
 msgstr "Сервис"
 
 #. module: procurement
+#: model:ir.module.module,description:procurement.module_meta_information
+msgid ""
+"\n"
+"    This is the module for computing Procurements.\n"
+"    "
+msgstr ""
+
+#. module: procurement
+#: field:stock.warehouse.orderpoint,procurement_draft_ids:0
+msgid "Related Procurement Orders"
+msgstr ""
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
 msgstr "Мин. кол-во"
@@ -602,9 +625,7 @@ msgid "Procurement Reason"
 msgstr "Причина снабжения"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
 #: sql_constraint:stock.warehouse.orderpoint:0
-#, python-format
 msgid "Qty Multiple must be greater than zero."
 msgstr "Кратное кол-во должно быть больше 0."
 
@@ -788,7 +809,7 @@ msgstr "Выполняется"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_uom:0
 msgid "Product UOM"
-msgstr "Ед.изм."
+msgstr "Ед. изм."
 
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
@@ -909,6 +930,9 @@ msgstr "ПЛАНИРОВЩИК"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "ПМР и Логистическое планирование"
 
 #~ msgid "Invalid arguments"
 #~ msgstr "Недопустимые аргументы"

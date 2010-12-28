@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-10 17:15+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-11 16:21+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Galician <gl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 04:47+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -164,11 +164,6 @@ msgid "Partner doesn't have an address to make the invoice."
 msgstr ""
 
 #. module: membership
-#: constraint:account.invoice:0
-msgid "Error: BVR reference is required."
-msgstr "Erro: referencia BVR é necesaria."
-
-#. module: membership
 #: model:ir.model,name:membership.model_res_partner
 #: field:membership.membership_line,partner:0
 msgid "Partner"
@@ -314,11 +309,6 @@ msgid "Date until which membership remains active."
 msgstr ""
 
 #. module: membership
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Erro: UOS debe estar nunha categoría distinta da UOM"
-
-#. module: membership
 #: view:product.product:0
 msgid "Membership products"
 msgstr "Produtos para socios"
@@ -364,8 +354,20 @@ msgid "September"
 msgstr ""
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "December"
+#: model:ir.module.module,description:membership.module_meta_information
+msgid ""
+"\n"
+"This module allows you to manage all operations for managing memberships.\n"
+"It supports different kind of members:\n"
+"* Free member\n"
+"* Associated member (ex: a group subscribe for a membership for all\n"
+"  subsidiaries)\n"
+"* Paid members,\n"
+"* Special member prices, ...\n"
+"\n"
+"It is integrated with sales and accounting to allow you to automatically\n"
+"invoice and send propositions for membership renewal.\n"
+"    "
 msgstr ""
 
 #. module: membership
@@ -507,11 +509,6 @@ msgstr "Socio Asociado"
 #: view:product.product:0
 msgid "Accounting Info"
 msgstr ""
-
-#. module: membership
-#: constraint:account.invoice:0
-msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr "Error: Invalid BVR Number (checksum errada)."
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -676,6 +673,11 @@ msgid "Last 30 Days"
 msgstr ""
 
 #. module: membership
+#: selection:report.membership,month:0
+msgid "December"
+msgstr ""
+
+#. module: membership
 #: view:membership.invoice:0
 msgid "Close"
 msgstr ""
@@ -822,3 +824,125 @@ msgstr "Ano"
 #: view:report.membership:0
 msgid "Revenue Done"
 msgstr ""
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome do modelo inválido na definición da acción."
+
+#~ msgid "Currency"
+#~ msgstr "Moeda"
+
+#~ msgid "Error ! You can not create recursive accounts."
+#~ msgstr "Erro! Non podes crear contas recursivas."
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Erro: referencia BVR é necesaria."
+
+#~ msgid "Free members"
+#~ msgstr "Socios gratis"
+
+#~ msgid "Confirm"
+#~ msgstr "Confirme"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para a Arquitectura das Vistas!"
+
+#~ msgid "State"
+#~ msgstr "Estado"
+
+#~ msgid "Membership by Years"
+#~ msgstr "Socios por Anos"
+
+#~ msgid "Reporting"
+#~ msgstr "Reportaxe"
+
+#~ msgid "Configuration"
+#~ msgstr "Configuración"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Erro: UOS debe estar nunha categoría distinta da UOM"
+
+#~ msgid "Future members (invoice not confirmed)"
+#~ msgstr "Socios futuros (factura non confirmada)"
+
+#~ msgid "Membership Product - 2"
+#~ msgstr "Produto para socios - 2"
+
+#~ msgid "Membership Product - 1"
+#~ msgstr "Produto para socios - 1"
+
+#~ msgid "Canceled"
+#~ msgstr "Cancelada"
+
+#~ msgid "Invoiced"
+#~ msgstr "Facturado"
+
+#~ msgid "The price negociated by the partner"
+#~ msgstr "O prezo negociado pola empresa"
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Error: Invalid BVR Number (checksum errada)."
+
+#~ msgid "Paid"
+#~ msgstr "Pago"
+
+#~ msgid "Specify if this product is a membership product"
+#~ msgstr "Indique se este producto é un produto para socios"
+
+#~ msgid "Invoiced members"
+#~ msgstr "Socios facturados"
+
+#~ msgid "You cannot have 2 pricelist versions that overlap!"
+#~ msgstr "Non pode ter dúas versións de tarifas que se sobrepoñan!"
+
+#~ msgid "Old members"
+#~ msgstr "Socios antigos"
+
+#~ msgid "Choose invoice details"
+#~ msgstr "Escolla detalles da factura"
+
+#~ msgid "Waiting"
+#~ msgstr "Esperando"
+
+#~ msgid "Future members"
+#~ msgstr "Socios futuros"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "Associated members"
+#~ msgstr "Socios asociados"
+
+#~ msgid "Paid members"
+#~ msgstr "Socios pagados"
+
+#~ msgid "Canceled Member"
+#~ msgstr "Socio cancelado"
+
+#, python-format
+#~ msgid "No Address defined for this partner"
+#~ msgstr "Non existe enderezo fixado para esta empresa"
+
+#~ msgid "Current members"
+#~ msgstr "Socios actuais"
+
+#~ msgid "New Membership by Years"
+#~ msgstr "Novos Socios por Anos"
+
+#~ msgid "Invoice Membership"
+#~ msgstr "Factura para socio"
+
+#~ msgid "Current membership state"
+#~ msgstr "Estado actual do socio"
+
+#~ msgid ""
+#~ "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList "
+#~ "Item!"
+#~ msgstr ""
+#~ "Erro! Non se pode asignar a Lista de Prezos Principal coma Outra Lista de "
+#~ "Prezos no elemento Lista de Prezos!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡O nome do obxecto debe comenzar con x_ e non pode conter ningún carácter "
+#~ "especial !"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-18 07:52+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:35+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: email_template
@@ -166,6 +166,11 @@ msgid "HTML code"
 msgstr "HTML код"
 
 #. module: email_template
+#: view:email_template.mailbox:0
+msgid "Send Mail"
+msgstr "Отправить письмо"
+
+#. module: email_template
 #: help:email_template.account,name:0
 msgid ""
 "The description is used as the Sender name along with the provided From "
@@ -279,9 +284,9 @@ msgid "Attached Files"
 msgstr "Прикрепленные файлы"
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "Standard Body"
-msgstr ""
+#: field:email_template.account,smtpssl:0
+msgid "SSL/TLS (only in python 2.6)"
+msgstr "SSL/TLS (только для python 2.6)"
 
 #. module: email_template
 #: field:email_template.account,email_id:0
@@ -419,9 +424,20 @@ msgid "Mail from Account %s successfully Sent."
 msgstr ""
 
 #. module: email_template
+#: view:email_template.mailbox:0
+msgid "Standard Body"
+msgstr ""
+
+#. module: email_template
 #: selection:email.template,template_language:0
 msgid "Mako Templates"
 msgstr "Шаблоны Mako"
+
+#. module: email_template
+#: help:email.template,def_body_html:0
+#: help:email.template,def_body_text:0
+msgid "The text version of the mail"
+msgstr ""
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:0
@@ -440,10 +456,9 @@ msgid "Test Outgoing Connection"
 msgstr "Проверьте исходящую связь"
 
 #. module: email_template
-#: help:email.template,def_body_html:0
-#: help:email.template,def_body_text:0
-msgid "The text version of the mail"
-msgstr ""
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
+msgid "Mailbox"
+msgstr "Почтовый ящик"
 
 #. module: email_template
 #: help:email.template,reply_to:0
@@ -812,7 +827,6 @@ msgstr "Язык"
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
-#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #: model:ir.ui.menu,name:email_template.menu_email_template_tools
 #, python-format
 msgid "Email Template"
@@ -824,9 +838,9 @@ msgid "Send/Receive"
 msgstr "Отправить/Получить"
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "Send Mail"
-msgstr "Отправить письмо"
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
+msgid "Personal Mails"
+msgstr ""
 
 #. module: email_template
 #: view:email_template.account:0
@@ -951,11 +965,6 @@ msgid "User Information"
 msgstr ""
 
 #. module: email_template
-#: view:email.template:0
-msgid "Actions"
-msgstr ""
-
-#. module: email_template
 #: code:addons/email_template/email_template_account.py:0
 #, python-format
 msgid ""
@@ -971,8 +980,8 @@ msgid ""
 msgstr ""
 
 #. module: email_template
-#: help:email_template.mailbox,date_mail:0
-msgid "Date on which Email Sent or Received"
+#: field:email_template.mailbox,folder:0
+msgid "Folder"
 msgstr ""
 
 #. module: email_template
@@ -982,8 +991,8 @@ msgid "Trash"
 msgstr ""
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template_mailbox
-msgid "Email Mailbox"
+#: help:email_template.mailbox,date_mail:0
+msgid "Date on which Email Sent or Received"
 msgstr ""
 
 #. module: email_template
@@ -1055,6 +1064,11 @@ msgid "Null Value"
 msgstr ""
 
 #. module: email_template
+#: model:ir.model,name:email_template.model_email_template_mailbox
+msgid "Email Mailbox"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,template_language:0
 msgid "Templating Language"
 msgstr ""
@@ -1097,9 +1111,8 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
+#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
-#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr ""
 
@@ -1146,9 +1159,13 @@ msgid "Existing files"
 msgstr ""
 
 #. module: email_template
-#: field:email_template.account,smtpssl:0
-msgid "SSL/TLS (only in python 2.6)"
-msgstr "SSL/TLS (только для python 2.6)"
+#: model:ir.module.module,description:email_template.module_meta_information
+msgid ""
+"\n"
+"    Email Template is extraction of Power Email basically just to send the "
+"emails.\n"
+"    "
+msgstr ""
 
 #. module: email_template
 #: view:email_template.send.wizard:0
@@ -1216,8 +1233,8 @@ msgid "Mail Format"
 msgstr ""
 
 #. module: email_template
-#: field:email_template.mailbox,folder:0
-msgid "Folder"
+#: view:email.template:0
+msgid "Actions"
 msgstr ""
 
 #. module: email_template
@@ -1297,9 +1314,6 @@ msgstr ""
 
 #~ msgid "Invalid arguments"
 #~ msgstr "Недопустимые параметры"
-
-#~ msgid "Mailbox"
-#~ msgstr "Почтовый ящик"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Некорректный формат XML для просмотра архитектуры!"

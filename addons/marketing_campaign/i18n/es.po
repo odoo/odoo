@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
-"PO-Revision-Date: 2010-12-09 08:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-26 08:04+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-15 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-27 04:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -142,12 +142,21 @@ msgid ""
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
 msgstr ""
+"Expresión de Python para decidir si la actividad se puede ejecutar, de lo "
+"contrario será eliminada o cancelada.La expresión puede utilizar las "
+"siguientes variables [navegables]:\n"
+"   - actividad: la actividad de la campaña\n"
+"   - trabajo: el elemento de trabajo de la campaña\n"
+"   - recurso: el recurso que representa esta campaña\n"
+"   - transiciones: lista de las transiciones de la campaña salientes desde "
+"esta actividad\n"
+"...- re: Expresión regular de Python"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Set to Draft"
-msgstr "Canviar a borrador"
+msgstr "Cambiar a borrador"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,to_ids:0
@@ -191,6 +200,11 @@ msgstr "Transiciones salientes"
 #: view:marketing.campaign.workitem:0
 msgid "Reset"
 msgstr "Reiniciar"
+
+#. module: marketing_campaign
+#: help:marketing.campaign,object_id:0
+msgid "Choose the resource on which you want this campaign to be run"
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -242,6 +256,16 @@ msgid ""
 "Normal - the campaign runs normally and automatically sends all emails and "
 "reports (be very careful with this mode, you're live!)"
 msgstr ""
+"Test - Crea y procesa todas las actividades directamente (sin esperar por el "
+"retardo de las transiciones) pero no se envían correos ni se crean "
+"informes.\n"
+"Test en tiempo real - Crea y procesa todas las actividades directamente pero "
+"no envían correos ni se crean informes.\n"
+"Confirmación manual - La campaña se ejecuta normalidad, pero el usuario "
+"tiene que validar todos los elementos de trabajo manualmente.\n"
+"Normal - La campaña se ejecuta con normalidad y automáticamente envía todos "
+"los correos correos e informes (tenga cuidado con este modo, ¡trabaja \"en "
+"vivo\"!)"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
@@ -271,6 +295,8 @@ msgid ""
 "The generated workitems will be linked to the partner related to the record. "
 "If the record is the partner itself leave this field empty."
 msgstr ""
+"Los elementos de trabajo generados serán enlazados a la empresa relacionada "
+"con el registro. Si el registro es la propia empresa deje vacío este campo."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -297,6 +323,14 @@ msgid ""
 "of the resource record\n"
 "  "
 msgstr ""
+"El tipo de acción a ejecutar cuando se introduce un registro en esta "
+"actividad, como:\n"
+"   - Correo: envía un correo usando una plantilla predeterminada de correo\n"
+"   - Informe: imprime un informe existente definido en el recurso y lo "
+"guarda en el directorio especificado\n"
+"   - Acción personalizada: ejecuta una acción predeterminada, por ejemplo "
+"para modificar los campos del recurso\n"
+"  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
@@ -349,6 +383,11 @@ msgstr "Informes de marketing"
 #: field:marketing.campaign.activity,type:0
 msgid "Type"
 msgstr "Tipo"
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
+msgid "Related Resource"
+msgstr "Recurso relacionado"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -437,6 +476,9 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
+"Indique un coste variable si considera que cada elemento de campaña que ha "
+"llegado a este punto ha supuesto un coste determinado. Puede obtener "
+"estadísticas de los costes en la sección de informes."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -622,9 +664,31 @@ msgid "Preview"
 msgstr "Vista previa"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-msgid "Related Resource"
-msgstr "Recurso relacionado"
+#: model:ir.module.module,description:marketing_campaign.module_meta_information
+msgid ""
+"\n"
+"This module provides leads automation through marketing campaigns (campaigns "
+"can in fact be defined on any resource, not just CRM Leads).\n"
+"         The campaigns are dynamic and multi-channels. The process is as "
+"follows:\n"
+"          * Design marketing campaigns like workflows, including email "
+"templates to send, reports to print and send by email, custom actions, etc.\n"
+"          * Define input segments that will select the items that should "
+"enter the campaign (e.g leads from certain countries, etc.)\n"
+"          * Run you campaign in simulation mode to test it real-time or "
+"accelerated, and fine-tune it\n"
+"          * You may also start the real campaign in manual mode, where each "
+"action requires manual validation\n"
+"          * Finally launch your campaign live, and watch the statistics as "
+"the campaign does everything fully automatically. \n"
+"          While the campaign runs you can of course continue to fine-tune "
+"the parameters, input segments, workflow, etc.\n"
+"          \n"
+"          Note: If you need demo data, you can install the "
+"marketing_campaign_crm_demo module, but this will also install the CRM "
+"application as it depends on CRM Leads.\n"
+"    "
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -647,6 +711,8 @@ msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
 msgstr ""
+"Una actividad con una señal puede ser llamada mediante programación. Tenga "
+"cuidado, el elemento siempre se crea cuando se envía una señal."
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -729,10 +795,9 @@ msgid "Campaign Workitem"
 msgstr "Elemento de trabajo de campaña"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-#: field:marketing.campaign.segment,ir_filter_id:0
-msgid "Filter"
-msgstr "Filtro"
+#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
+msgid "Campaign Activity"
+msgstr "Actividad campaña"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,report_directory_id:0
@@ -762,11 +827,6 @@ msgstr "Transición automática"
 #: view:res.partner:0
 msgid "History"
 msgstr "Histórico"
-
-#. module: marketing_campaign
-#: help:marketing.campaign,object_id:0
-msgid "Choose the model on which you want this campaign to be run"
-msgstr "Seleccione el modelo sobre el cual quiere realizar la campaña"
 
 #. module: marketing_campaign
 #: model:ir.module.module,shortdesc:marketing_campaign.module_meta_information
@@ -845,6 +905,11 @@ msgid ""
 "possible action could be sending an email template that has previously been "
 "created in the system."
 msgstr ""
+"Una campaña de marketing es un evento o actividad que le ayudará a gestionar "
+"y contactar sus empresas con mensajes específicos. Una campaña puede tener "
+"muchas actividades que se ejecutarán en una situación específica. Una acción "
+"posible podría ser el envío de una plantilla de correo electrónico que ha "
+"sido creada previamente en el sistema."
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
@@ -949,6 +1014,9 @@ msgid ""
 "revenue on each campaign activity. Cost and Revenue statistics are included "
 "in Campaign Reporting."
 msgstr ""
+"Coste fijo para el funcionamiento de esta campaña. También puede especificar "
+"los costes variables y los ingresos en cada actividad de la campaña. Se "
+"incluyen estadísticas de costes e ingresos en los informes de la campaña."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:0
@@ -1002,6 +1070,11 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"Filtro para seleccionar los registros de recursos que pertenecen a este "
+"segmento. Se pueden crear y guardar nuevos filtros con la búsqueda avanzada "
+"en la vista de lista de los recursos. Si no hay ningún filtro establecido, "
+"se seleccionan todos los registros sin filtrar. El modo de sincronización "
+"también puede añadir un criterio para el filtro."
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
@@ -1015,9 +1088,10 @@ msgid "Next Synchronization"
 msgstr "Siguiente sincronización"
 
 #. module: marketing_campaign
-#: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
-msgid "Campaign Activity"
-msgstr "Actividad campaña"
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,ir_filter_id:0
+msgid "Filter"
+msgstr "Filtro"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -1060,6 +1134,9 @@ msgstr "Año"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "¡Error! No puede crear un menú recursivo"
+
+#~ msgid "Choose the model on which you want this campaign to be run"
+#~ msgstr "Seleccione el modelo sobre el cual quiere realizar la campaña"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "¡XML no válido para la estructura de la vista!"

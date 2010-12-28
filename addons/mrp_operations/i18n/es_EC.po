@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-03 15:44+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-19 00:04+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-14 05:27+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_operations
@@ -403,6 +403,39 @@ msgid "Started"
 msgstr ""
 
 #. module: mrp_operations
+#: model:ir.module.module,description:mrp_operations.module_meta_information
+msgid ""
+"\n"
+"     This module adds state, date_start,date_stop in production order "
+"operation lines\n"
+"     (in the \"Work Centers\" tab)\n"
+"     State: draft, confirm, done, cancel\n"
+"     When finishing/confirming,cancelling production orders set all state "
+"lines to the according state\n"
+"     Create menus:\n"
+"         Production Management > All Operations\n"
+"         Production Management > All Operations > Operations To Do "
+"(state=\"confirm\")\n"
+"     Which is a view on \"Work Centers\" lines in production order,\n"
+"     editable tree\n"
+"\n"
+"    Add buttons in the form view of production order under workcenter tab:\n"
+"    * start (set state to confirm), set date_start\n"
+"    * done (set state to done), set date_stop\n"
+"    * set to draft (set state to draft)\n"
+"    * cancel set state to cancel\n"
+"\n"
+"    When the production order becomes \"ready to produce\", operations must\n"
+"    become 'confirmed'. When the production order is done, all operations\n"
+"    must become done.\n"
+"\n"
+"    The field delay is the delay(stop date - start date).\n"
+"    So that we can compare the theoretic delay and real delay.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "June"
 msgstr ""
@@ -749,3 +782,96 @@ msgstr ""
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Operation is started"
+#~ msgstr "Operación es iniciada"
+
+#~ msgid "Start Cancel Operation"
+#~ msgstr "Operación cancelación inicio"
+
+#~ msgid "Operations Code"
+#~ msgstr "Código operaciones"
+
+#~ msgid "Mrp Operation Process"
+#~ msgstr "Proceso operación MRP"
+
+#~ msgid "Start Done Operation"
+#~ msgstr "Operación realizado inicio"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Work Order Events Using Bar Codes"
+#~ msgstr "Eventos de órdenes de producción usando códigos de barras"
+
+#~ msgid "Start - Stop Codes"
+#~ msgstr "Códigos Iniciar - Parar"
+
+#~ msgid "From production order, create the workorder"
+#~ msgstr "Desde orden de producción, crear la orden de trabajo"
+
+#~ msgid "Hours by Workcenter"
+#~ msgstr "Horas por centro de trabajo"
+
+#~ msgid "All Work Orders"
+#~ msgstr "Todas las órdenes de producción"
+
+#~ msgid "Workcenters Barcode"
+#~ msgstr "Código de barras centros de producción"
+
+#~ msgid "Operation is done"
+#~ msgstr "Operación es realizada"
+
+#~ msgid "Production order for any products"
+#~ msgstr "Orden de producción para cualquier producto"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "Workcenter Production start end workflow"
+#~ msgstr "Flujo de inicio y fin producción del centro de producción"
+
+#~ msgid "This is delay between operation start and stop in this workcenter"
+#~ msgstr ""
+#~ "Este es el retraso entre las operaciones de inicio y finalización en este "
+#~ "centro de producción"
+
+#~ msgid "From work order, define the cycles and hour for creating product"
+#~ msgstr ""
+#~ "Desde orden de producción, define los ciclos y hora para crear producto"
+
+#~ msgid "Prod.State"
+#~ msgstr "Estado producción"
+
+#~ msgid "Production Work Center"
+#~ msgstr "Centro de trabajo de producción"
+
+#~ msgid "Production start Operation"
+#~ msgstr "Operación inicio de producción"
+
+#~ msgid "Packing Exception"
+#~ msgstr "Excepción de empaque"
+
+#~ msgid "Work Orders to Do"
+#~ msgstr "Órdenes de producción a realizar"
+
+#~ msgid "Cancel Operation"
+#~ msgstr "Operación cancelación"
+
+#~ msgid "Work start Operation"
+#~ msgstr "Operación inicio de trabajo"
+
+#~ msgid "Done Operation"
+#~ msgstr "Operación realizado"
+
+#~ msgid "Operation is cancelled"
+#~ msgstr "Operación es cancelada"
+
+#~ msgid "Start working"
+#~ msgstr "Iniciar producción"

@@ -95,41 +95,24 @@ class account_invoice(osv.osv):
         cur_obj = self.pool.get('res.currency')
         data_inv = self.browse(cr, uid, ids, context=context)
         for inv in data_inv:
-            debit = credit = 0.0
-            context.update({'date':inv.date_invoice})
-            context_unreconciled=context.copy()
+            if inv.reconciled: 
+                res[inv.id] = 0.0
+                continue
+            inv_total = inv.amount_total
+            context_unreconciled = context.copy()
             for lines in inv.move_lines:
-                debit_tmp = lines.debit
-                credit_tmp = lines.credit
-                # If currency conversion needed
-                if inv.company_id.currency_id.id <> inv.currency_id.id:
-                    # If invoice paid, compute currency amount according to invoice date
-                    # otherwise, take the line date
-                    if not inv.reconciled:
-                        context.update({'date':lines.date})
-                    context_unreconciled.update({'date':lines.date})
-                    # If amount currency setted, compute for debit and credit in company currency
-                    if lines.amount_currency < 0:
-                        credit_tmp=abs(cur_obj.compute(cr, uid, lines.currency_id.id, inv.company_id.currency_id.id, lines.amount_currency, round=False, context=context_unreconciled))
-                    elif lines.amount_currency > 0:
-                        debit_tmp=abs(cur_obj.compute(cr, uid, lines.currency_id.id, inv.company_id.currency_id.id, lines.amount_currency, round=False, context=context_unreconciled))
-                    # Then, recomput into invoice currency to avoid rounding trouble !
-                    debit += cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, debit_tmp, round=False, context=context)
-                    credit += cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id, credit_tmp, round=False, context=context)
+                if lines.currency_id and lines.currency_id.id == inv.currency_id.id:
+                    if inv.type in ('out_invoice','in_refund'):
+                        inv_total += lines.amount_currency
+                    else:
+                        inv_total -= lines.amount_currency
                 else:
-                    debit+=debit_tmp
-                    credit+=credit_tmp
+                   context_unreconciled.update({'date': lines.date})
+                   amount_in_invoice_currency = cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id,abs(lines.debit-lines.credit),round=False,context=context_unreconciled)
+                   inv_total -= amount_in_invoice_currency
 
-            if not inv.amount_total:
-                result = 0.0
-            elif inv.type in ('out_invoice','in_refund'):
-                amount = credit-debit
-                result = inv.amount_total - amount
-            else:
-                amount = debit-credit
-                result = inv.amount_total - amount
-            # Use is_zero function to avoid rounding trouble => should be fixed into ORM
-            res[inv.id] = not self.pool.get('res.currency').is_zero(cr, uid, inv.company_id.currency_id, result) and result or 0.0
+            result = inv_total 
+            res[inv.id] =  self.pool.get('res.currency').round(cr, uid, inv.currency_id, result)
         return res
 
     # Give Journal Items related to the payment reconciled to this invoice
@@ -268,21 +251,21 @@ class account_invoice(osv.osv):
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 20),
             },
             multi='all'),
         'amount_tax': fields.function(_amount_all, method=True, digits_compute=dp.get_precision('Account'), string='Tax',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 20),
             },
             multi='all'),
         'amount_total': fields.function(_amount_all, method=True, digits_compute=dp.get_precision('Account'), string='Total',
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 20),
                 'account.invoice.tax': (_get_invoice_tax, None, 20),
-                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 20),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 20),
             },
             multi='all'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -302,7 +285,7 @@ class account_invoice(osv.osv):
             store={
                 'account.invoice': (lambda self, cr, uid, ids, c={}: ids, ['invoice_line'], 50),
                 'account.invoice.tax': (_get_invoice_tax, None, 50),
-                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount'], 50),
+                'account.invoice.line': (_get_invoice_line, ['price_unit','invoice_line_tax_id','quantity','discount','invoice_id'], 50),
                 'account.move.line': (_get_invoice_from_line, None, 50),
                 'account.move.reconcile': (_get_invoice_from_reconcile, None, 50),
             },
@@ -1396,23 +1379,20 @@ class account_invoice_line(osv.osv):
             a = res.product_tmpl_id.property_account_expense.id
             if not a:
                 a = res.categ_id.property_account_expense_categ.id
-
         a = fpos_obj.map_account(cr, uid, fpos, a)
         if a:
             result['account_id'] = a
 
         if type in ('out_invoice', 'out_refund'):
-            taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
-            tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
+            taxes = res.taxes_id and res.taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
         else:
-            taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a).tax_ids or False)
-            tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
+            taxes = res.supplier_taxes_id and res.supplier_taxes_id or (a and self.pool.get('account.account').browse(cr, uid, a, context=context).tax_ids or False)
+        tax_id = fpos_obj.map_tax(cr, uid, fpos, taxes)
+
         if type in ('in_invoice', 'in_refund'):
             result.update( {'price_unit': price_unit or res.standard_price,'invoice_line_tax_id': tax_id} )
         else:
             result.update({'price_unit': res.list_price, 'invoice_line_tax_id': tax_id})
-
-#        if not name:
         result['name'] = res.partner_ref
 
         domain = {}
@@ -1443,11 +1423,21 @@ class account_invoice_line(osv.osv):
         return res_final
 
     def uos_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None):
-        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context)
+        warning = {}
+        res = self.product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context=context)
         if 'uos_id' in res['value']:
             del res['value']['uos_id']
         if not uom:
             res['value']['price_unit'] = 0.0
+        if product and uom:
+            prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
+            prod_uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
+            if prod.uom_id.category_id.id != prod_uom.category_id.id:
+                 warning = {
+                    'title': _('Warning!'),
+                    'message': _('You selected an Unit of Measure which is not compatible with the product.')
+            }
+            return {'value': res['value'], 'warning': warning}
         return res
 
     def move_line_get(self, cr, uid, invoice_id, context=None):

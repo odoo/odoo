@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:02+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:02+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43:47+0000\n"
+"PO-Revision-Date: 2010-12-21 19:43:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -583,11 +583,6 @@ msgid "Created"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
-msgid "Set Exclude range"
-msgstr ""
-
-#. module: base_calendar
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Private"
@@ -827,6 +822,7 @@ msgstr ""
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
+#: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
 msgstr ""
@@ -913,11 +909,9 @@ msgid "User"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,active:0
-#: field:calendar.event,active:0
-#: field:calendar.todo,active:0
-#: field:res.alarm,active:0
-msgid "Active"
+#: view:calendar.event:0
+#: field:calendar.event,date:0
+msgid "Date"
 msgstr ""
 
 #. module: base_calendar
@@ -1024,9 +1018,11 @@ msgid "Summary"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
-#: field:calendar.event,date:0
-msgid "Date"
+#: field:calendar.alarm,active:0
+#: field:calendar.event,active:0
+#: field:calendar.todo,active:0
+#: field:res.alarm,active:0
+msgid "Active"
 msgstr ""
 
 #. module: base_calendar
@@ -1516,6 +1512,13 @@ msgid "Accept"
 msgstr ""
 
 #. module: base_calendar
+#: selection:base.calendar.set.exrule,week_list:0
+#: selection:calendar.event,week_list:0
+#: selection:calendar.todo,week_list:0
+msgid "Saturday"
+msgstr ""
+
+#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation To"
 msgstr ""
@@ -1555,10 +1558,10 @@ msgid "Trigger Date"
 msgstr ""
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,week_list:0
-#: selection:calendar.event,week_list:0
-#: selection:calendar.todo,week_list:0
-msgid "Saturday"
+#: help:calendar.alarm,attach:0
+msgid "* Points to a sound resource,                     which is rendered when the alarm is triggered for audio,\n"
+"                    * File which is intended to be sent as message attachments for email,\n"
+"                    * Points to a procedure resource, which is invoked when                      the alarm is triggered for procedure."
 msgstr ""
 
 #. module: base_calendar

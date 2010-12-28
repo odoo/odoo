@@ -287,20 +287,20 @@ class account_account(osv.osv):
             sums = {}
             while brs:
                 current = brs[0]
-                can_compute = True
-                for child in current.child_id:
-                    if child.id not in sums:
-                        can_compute = False
-                        try:
-                            brs.insert(0, brs.pop(brs.index(child)))
-                        except ValueError:
-                            brs.insert(0, child)
-                if can_compute:
-                    brs.pop(0)
-                    for fn in field_names:
-                        sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
-                        if current.child_id:
-                            sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
+#                can_compute = True
+#                for child in current.child_id:
+#                    if child.id not in sums:
+#                        can_compute = False
+#                        try:
+#                            brs.insert(0, brs.pop(brs.index(child)))
+#                        except ValueError:
+#                            brs.insert(0, child)
+#                if can_compute:
+                brs.pop(0)
+                for fn in field_names:
+                    sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
+                    if current.child_id:
+                        sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
             res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
@@ -580,7 +580,7 @@ class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
     _columns = {
-        'name': fields.char('Journal Name', size=64, required=True, translate=True),
+        'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Code', size=5, required=True, help="The code will be used to generate the numbers of the journal entries of this journal."),
         'type': fields.selection([('sale', 'Sale'),('sale_refund','Sale Refund'), ('purchase', 'Purchase'), ('purchase_refund','Purchase Refund'), ('cash', 'Cash'), ('bank', 'Bank and Cheques'), ('general', 'General'), ('situation', 'Opening/Closing Situation')], 'Type', size=32, required=True,
                                  help="Select 'Sale' for Sale journal to be used at the time of making invoice."\
@@ -627,10 +627,13 @@ class account_journal(osv.osv):
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if 'company_id' in vals:
-            move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
-            if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
+        if context is None:
+            context = {}
+        for journal in self.browse(cr, uid, ids, context=context):
+            if 'company_id' in vals and journal.company_id.id != vals['company_id']:
+                move_lines = self.pool.get('account.move.line').search(cr, uid, [('journal_id', 'in', ids)])
+                if move_lines:
+                    raise osv.except_osv(_('Warning !'), _('You cannot modify company of this journal as its related record exist in Entry Lines'))
         return super(account_journal, self).write(cr, uid, ids, vals, context=context)
 
     def create_sequence(self, cr, uid, vals, context=None):
@@ -705,7 +708,8 @@ class account_journal(osv.osv):
 
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type, currency):
+
+    def onchange_type(self, cr, uid, ids, type, currency, context=None):
         obj_data = self.pool.get('ir.model.data')
         user_pool = self.pool.get('res.users')
 
@@ -722,12 +726,11 @@ class account_journal(osv.osv):
 
         res = {}
 
-        view_id = type_map.get(type, 'general')
+        view_id = type_map.get(type, 'account_journal_view')
 
         user = user_pool.browse(cr, uid, uid)
         if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
             view_id = 'account_journal_bank_view_multi'
-
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
         data = obj_data.browse(cr, uid, data_id[0], context=context)
 
@@ -2598,6 +2601,24 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'seq_journal': True
     }
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(wizard_multi_charts_accounts, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        configured_cmp = []
+        unconfigured_cmp = []
+        cmp_select = []
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
+        #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
+        cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
+        configured_cmp = [r[0] for r in cr.fetchall()]
+        unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
+        if unconfigured_cmp:
+            cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+            for field in res['fields']:
+               if field == 'company_id':
+                   res['fields'][field]['domain'] = unconfigured_cmp
+                   res['fields'][field]['selection'] = cmp_select
+        return res
+
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])
         obj_acc = self.pool.get('account.account')
@@ -2677,7 +2698,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             tax_template_ref[tax.id] = new_tax
 
         #deactivate the parent_store functionnality on account_account for rapidity purpose
-        self.pool._init = True
+        ctx = context and context.copy() or {}
+        ctx['defer_parent_store_computation'] = True
 
         children_acc_template = obj_acc_template.search(cr, uid, [('parent_id','child_of',[obj_acc_root.id]),('nocreate','!=',True)])
         children_acc_template.sort()
@@ -2705,17 +2727,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'tax_ids': [(6,0,tax_ids)],
                 'company_id': company_id,
             }
-            new_account = obj_acc.create(cr, uid, vals)
+            new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
         #reactivate the parent_store functionnality on account_account
-        self.pool._init = False
         self.pool.get('account.account')._parent_store_compute(cr)
 
         for key,value in todo_dict.items():
             if value['account_collected_id'] or value['account_paid_id']:
                 obj_acc_tax.write(cr, uid, [key], {
-                    'account_collected_id': acc_template_ref[value['account_collected_id']],
-                    'account_paid_id': acc_template_ref[value['account_paid_id']],
+                    'account_collected_id': acc_template_ref.get(value['account_collected_id'], False),
+                    'account_paid_id': acc_template_ref.get(value['account_paid_id'], False),
                 })
 
         # Creating Journals Sales and Purchase
@@ -2856,7 +2877,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': tmp,
                 'currency_id': line.currency_id and line.currency_id.id or False,
                 'code': new_code,
-                'type': 'other',
+                'type': 'liquidity',
                 'user_type': account_template.user_type and account_template.user_type.id or False,
                 'reconcile': True,
                 'parent_id': acc_template_ref[ref_acc_bank.id] or False,
@@ -2878,7 +2899,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['name']= vals['name']
             vals_journal['code']= _('BNK') + str(current_num)
             vals_journal['sequence_id'] = seq_id
-            vals_journal['type'] = 'cash'
+            vals_journal['type'] = line.account_type == 'cash' and 'cash' or 'bank'
             vals_journal['company_id'] =  company_id
             vals_journal['analytic_journal_id'] = analitical_journal_bank
 
