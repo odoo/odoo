@@ -111,12 +111,10 @@
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
-            parent="menu_mrp_property"
-            groups="base.group_extended" />
+            parent="menu_mrp_property"/>
         <menuitem
             action="mrp_property_group_action"
-            id="menu_mrp_property_group_action"
-            parent="menu_mrp_property"/>
+            id="menu_mrp_property_group_action"/>
 
         <!--
         Work Centers
@@ -188,9 +186,9 @@
                    <group col='15' colspan='4'>
                         <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
                         <separator orientation="vertical"/>
-	                    <field name="code"/>
-	                    <field name="name"/>
-	                    <field name="resource_type"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="resource_type"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
@@ -939,12 +937,11 @@
         <!-- Planning -->
 
         <menuitem id="menu_mrp_planning" name="Planning"
-		        parent="base.menu_mrp_root" sequence="2"
-		        groups="base.group_extended"/>
-		<menuitem action="mrp.mrp_production_action_planning"
-		        id="menu_mrp_production_order_action"
-		        parent="menu_mrp_planning" sequence="1"
-		        groups="base.group_extended"/>
+                parent="base.menu_mrp_root" sequence="2"
+                groups="base.group_extended"/>
+        <menuitem action="mrp.mrp_production_action_planning"
+                id="menu_mrp_production_order_action"
+                parent="menu_mrp_planning" sequence="1"/>
 
     </data>
 </openerp>
