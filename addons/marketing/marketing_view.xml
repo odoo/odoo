@@ -2,7 +2,15 @@
 <openerp>
     <data>
 
-        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17" groups="marketing.group_marketing_user,marketing.group_marketing_manager"/>
+        <menuitem
+            name="Marketing"
+            icon="terp-crm"
+            id="base.marketing_menu"
+            sequence="17"
+            groups="marketing.group_marketing_user,marketing.group_marketing_manager"
+            web_icon="images/marketing.png"
+            web_icon_hover="images/marketing-hover.png"/>
+
 
         <record id="view_marketing_installer" model="ir.ui.view">
             <field name="name">marketing.installer.view</field>
