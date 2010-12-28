@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-21 15:17+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-12-27 17:35+0000\n"
+"Last-Translator: Anders Eriksson, Aspirix AB <ae@mobilasystem.se>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-23 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:39+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -257,7 +257,7 @@ msgstr "Ägare"
 #. module: base
 #: field:ir.actions.act_window,src_model:0
 msgid "Source Object"
-msgstr ""
+msgstr "Källobjekt"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -273,7 +273,7 @@ msgstr "ir.ui.view_sc"
 #: field:res.widget.user,widget_id:0
 #: field:res.widget.wizard,widget_id:0
 msgid "Widget"
-msgstr ""
+msgstr "Widget"
 
 #. module: base
 #: view:ir.model.access:0
@@ -500,7 +500,7 @@ msgstr "ir.actions.actions"
 #. module: base
 #: view:partner.wizard.ean.check:0
 msgid "Want to check Ean ? "
-msgstr ""
+msgstr "Vill du kolla EAN? "
 
 #. module: base
 #: field:ir.values,key2:0
@@ -521,7 +521,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,title:0
 msgid "Partner Form"
-msgstr ""
+msgstr "Partnersida"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -569,7 +569,7 @@ msgstr "Albanien / Shqip"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr ""
+msgstr "Tillfällen"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -589,7 +589,7 @@ msgstr "Rapporttyp t.ex. pdf, html, raw, swx,odt, html2html, mako2html"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
 msgid "Basic Partner"
-msgstr ""
+msgstr "Baspartner"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -634,6 +634,8 @@ msgid ""
 "Groups are used to define access rights on objects and the visibility of "
 "screens and menus"
 msgstr ""
+"Grupper används för att definerar åtkomsträttigheter och vad som visas i "
+"menyer och på sidor."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -702,7 +704,7 @@ msgstr ""
 #. module: base
 #: view:ir.values:0
 msgid "client_action_multi, client_action_relate"
-msgstr ""
+msgstr "client_action_multi, client_action_relate"
 
 #. module: base
 #: model:res.country,name:base.ad
@@ -718,7 +720,7 @@ msgstr "Underkategori"
 #. module: base
 #: model:ir.model,name:base.model_ir_config_parameter
 msgid "ir.config_parameter"
-msgstr ""
+msgstr "ir.config_parameter"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -728,7 +730,7 @@ msgstr "TGZ arkiv"
 #. module: base
 #: view:res.lang:0
 msgid "%B - Full month name."
-msgstr ""
+msgstr "%B - Månadens namn, en förkortat."
 
 #. module: base
 #: view:ir.attachment:0
@@ -754,7 +756,7 @@ msgstr "Guam (USA)"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_hr_project
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "Personal dashboard"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -841,6 +843,9 @@ msgid ""
 "decimal number [00,53]. All days in a new year preceding the first Monday "
 "are considered to be in week 0."
 msgstr ""
+"%W - Veckonummer för året (Måndag är veckans första dag) som ett decimaltal "
+"[00,53]. All dagar under det nya året som infaller före den första måndagen "
+"antas ligga i vecka 0."
 
 #. module: base
 #: field:ir.module.module,website:0
@@ -954,6 +959,9 @@ msgid ""
 "you select the invoice, then `object.invoice_address_id.email` is the field "
 "which gives the correct address"
 msgstr ""
+"Visar vilka fält som skall användas för att hämta epostadresser. Exempel när "
+"du väljer en faktura sä är `object.invoice_address_id.email` fältet som "
+"visar rätt epostadress."
 
 #. module: base
 #: view:res.lang:0
@@ -1001,6 +1009,7 @@ msgid ""
 "If you check this box, your customized translations will be overwritten and "
 "replaced by the official ones."
 msgstr ""
+"Om du markerar denna så ersätter du din egen översättning med den officiella."
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml:0
@@ -1026,6 +1035,9 @@ msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
 "used to refer to other modules data, as in module.reference_id"
 msgstr ""
+"'%s' innehåller för många punkter. XML-id:n ska inte innehålla några "
+"punkter. Dessa används för att referera till moduldata, som i "
+"modul.referensid"
 
 #. module: base
 #: field:partner.sms.send,user:0
@@ -1099,7 +1111,7 @@ msgstr ""
 #. module: base
 #: field:res.currency,accuracy:0
 msgid "Computational Accuracy"
-msgstr ""
+msgstr "Beräkningsnoggrannhet"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -1205,7 +1217,7 @@ msgstr ""
 #. module: base
 #: field:ir.attachment,res_model:0
 msgid "Attached Model"
-msgstr ""
+msgstr "Modell som används"
 
 #. module: base
 #: view:ir.rule:0
@@ -1283,6 +1295,9 @@ msgid ""
 "decimal number [00,53]. All days in a new year preceding the first Sunday "
 "are considered to be in week 0."
 msgstr ""
+"%U - Årets veckonummer (Söndag är första dagen i veckan) som decimaltal "
+"[00,53] Alla dagar som infaller före den första söndagen antas hamna i vecka "
+"0."
 
 #. module: base
 #: view:ir.ui.view:0
@@ -1331,6 +1346,8 @@ msgid ""
 "When using CSV format, please also check that the first line of your file is "
 "one of the following:"
 msgstr ""
+"Om du använder CSV-formatet, kontrollera att den första raden är en av de "
+"följande:"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_log_act_window
@@ -1369,7 +1386,7 @@ msgstr "Sök kontakt"
 #. module: base
 #: view:ir.module.module:0
 msgid "Uninstall (beta)"
-msgstr ""
+msgstr "Avinstallera (beta)"
 
 #. module: base
 #: selection:ir.actions.act_window,target:0
@@ -1387,7 +1404,7 @@ msgstr "Bahamas"
 #, python-format
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
-msgstr ""
+msgstr "Kan inte skapa nästa id eftersom partnern har ett alfanumeriskt id !"
 
 #. module: base
 #: view:ir.attachment:0
@@ -1415,6 +1432,8 @@ msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
 msgstr ""
+"Exempel: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
+"GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
@@ -1422,6 +1441,8 @@ msgid ""
 "Views allows you to personalize each view of OpenERP. You can add new "
 "fields, move fields, rename them or delete the ones that you do not need."
 msgstr ""
+"Vyer gör det möjligt att anpassa alla sidor i OpenERP. Du kan lägga till "
+"fält, flytta fält, döpa om dem eller ta bort de du inte behöver."
 
 #. module: base
 #: field:ir.actions.act_window,groups_id:0
@@ -1442,7 +1463,7 @@ msgstr ""
 #: view:res.users:0
 #: field:res.users,groups_id:0
 msgid "Groups"
-msgstr ""
+msgstr "Grupper"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -1513,14 +1534,14 @@ msgstr "Fält"
 #. module: base
 #: view:ir.rule:0
 msgid "Groups (no group = global)"
-msgstr ""
+msgstr "Grupper (ingen grupp = global)"
 
 #. module: base
 #: selection:res.config.users,view:0
 #: selection:res.config.view,view:0
 #: selection:res.users,view:0
 msgid "Simplified"
-msgstr ""
+msgstr "Förenklat"
 
 #. module: base
 #: model:res.country,name:base.st
@@ -1535,7 +1556,7 @@ msgstr "Faktura"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Portugese (BR) / Português (BR)"
-msgstr ""
+msgstr "Portugisiska (BR) / Português (BR)"
 
 #. module: base
 #: model:res.country,name:base.bb
@@ -1585,7 +1606,7 @@ msgstr "Händelse som skall startas"
 #. module: base
 #: field:ir.actions.url,target:0
 msgid "Action Target"
-msgstr ""
+msgstr "Händelsemål"
 
 #. module: base
 #: model:res.country,name:base.ai
@@ -1617,7 +1638,7 @@ msgstr "Zimbabwe"
 #. module: base
 #: view:base.module.update:0
 msgid "Please be patient, as this operation may take a few seconds..."
-msgstr ""
+msgstr "Vänligen vänta, den här operationen kan ta några sekunder..."
 
 #. module: base
 #: help:ir.values,action_id:0
@@ -1737,7 +1758,7 @@ msgstr "Fel!"
 #. module: base
 #: view:res.lang:0
 msgid "%p - Equivalent of either AM or PM."
-msgstr ""
+msgstr "%p - Lika med antingen FM eller EM,"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -1783,12 +1804,12 @@ msgstr "Norfolk Island"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Korean (KR) / 한국어 (KR)"
-msgstr ""
+msgstr "Koreanska (KR) / 한국어 (KR)"
 
 #. module: base
 #: model:res.widget,title:base.matrixise_twitter_widget
 msgid "Stéphane Wirtel's tweets"
-msgstr ""
+msgstr "Stéphane Wirtel's tweets"
 
 #. module: base
 #: field:ir.actions.server,action_id:0
@@ -1922,7 +1943,7 @@ msgstr "Kalender"
 #. module: base
 #: field:res.partner.address,partner_id:0
 msgid "Partner Name"
-msgstr ""
+msgstr "Partner namn"
 
 #. module: base
 #: field:workflow.activity,signal_send:0
@@ -1958,6 +1979,8 @@ msgid ""
 "way you want to print them in letters and other documents. Some example: "
 "Mr., Mrs. "
 msgstr ""
+"Underhåll de kontakttitlar som du vill använda i systemet. T ex Herr, Fru, "
+"Fröken osv... "
 
 #. module: base
 #: field:res.company,rml_footer1:0
@@ -2499,7 +2522,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_partner_form
 #: view:res.partner:0
 msgid "Customers"
-msgstr ""
+msgstr "Kunder"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -3082,6 +3105,8 @@ msgid ""
 "invoice, then `object.invoice_address_id.mobile` is the field which gives "
 "the correct mobile number"
 msgstr ""
+"Visar vilket fält som skall användas som mobilnummer. Exempel välj en "
+"faktura, då innehåller `object.invoice_address_id.mobile` rätt mobilnummer."
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -3453,7 +3478,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_product
 msgid "Products"
-msgstr ""
+msgstr "Produkter"
 
 #. module: base
 #: field:ir.actions.act_window,domain:0
@@ -3624,7 +3649,7 @@ msgstr ""
 #: model:ir.model,name:base.model_res_partner_address
 #: view:res.partner.address:0
 msgid "Partner Addresses"
-msgstr ""
+msgstr "Företagsadress"
 
 #. module: base
 #: view:res.lang:0
@@ -3900,7 +3925,7 @@ msgstr "Botswana"
 #: model:ir.ui.menu,name:base.menu_partner_title_partner
 #: view:res.partner.title:0
 msgid "Partner Titles"
-msgstr ""
+msgstr "Partnertitlar"
 
 #. module: base
 #: help:ir.actions.act_window,auto_refresh:0
@@ -4777,6 +4802,13 @@ msgid ""
 "installed the CRM, with the history tab, you can track all the interactions "
 "with a partner such as opportunities, emails, or sales orders issued."
 msgstr ""
+"Kunder (de kallas även partners på andra ställen i systemet) hjälper diga "
+"att underhålla adresserna till företagen oavsett om de är prospekts, kunder "
+"och/eller leverantörer. Kundsidan används för att visa information för att "
+"kommunicera med dina kunder i form av adresser, kontakter, prislistor och "
+"mycket annat? Om du installerat CRM-modulen så visas en historikflik där kan "
+"du följa kommunikation med kunden i form av oppurtunities, mail och "
+"kundorder mm."
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -5862,7 +5894,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_sale_config_sales
 #: model:ir.ui.menu,name:base.menu_sales
 msgid "Sales"
-msgstr ""
+msgstr "Kundorder"
 
 #. module: base
 #: field:ir.actions.server,child_ids:0
@@ -6011,7 +6043,7 @@ msgstr "Aktivitet"
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Postal Address"
-msgstr ""
+msgstr "Postadress"
 
 #. module: base
 #: field:res.company,parent_id:0
@@ -6989,7 +7021,7 @@ msgstr "Villkor"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_other_form
 msgid "Other Partners"
-msgstr ""
+msgstr "Övriga partners"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_currency_form
@@ -7119,7 +7151,7 @@ msgstr "Japan"
 #. module: base
 #: field:ir.cron,numbercall:0
 msgid "Number of Calls"
-msgstr ""
+msgstr "Antal anrop"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -7133,11 +7165,13 @@ msgid ""
 "Important when you deal with multiple actions, the execution order will be "
 "decided based on this, low number is higher priority."
 msgstr ""
+"Viktigt när du använder multipla åtgärder, exekveringsordningen brestäms av "
+"denna, låga nummer har högst prioritet."
 
 #. module: base
 #: field:ir.actions.report.xml,header:0
 msgid "Add RML header"
-msgstr ""
+msgstr "Lägg till RM L header"
 
 #. module: base
 #: model:res.country,name:base.gr
@@ -7147,7 +7181,7 @@ msgstr "Greece"
 #. module: base
 #: field:res.request,trigger_date:0
 msgid "Trigger Date"
-msgstr ""
+msgstr "Triggerdatum"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7157,44 +7191,44 @@ msgstr "Croatian / hrvatski jezik"
 #. module: base
 #: field:base.language.install,overwrite:0
 msgid "Overwrite Existing Terms"
-msgstr ""
+msgstr "Skriv över existerande villkor"
 
 #. module: base
 #: help:ir.actions.server,code:0
 msgid "Python code to be executed"
-msgstr ""
+msgstr "Pythonkod som skall exekveras"
 
 #. module: base
 #: sql_constraint:res.country:0
 msgid "The code of the country must be unique !"
-msgstr ""
+msgstr "Landskoden måste vara unik !"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_management_time_tracking
 msgid "Time Tracking"
-msgstr ""
+msgstr "Tidredovisning"
 
 #. module: base
 #: view:res.partner.category:0
 msgid "Partner Category"
-msgstr ""
+msgstr "Partnerkategori"
 
 #. module: base
 #: view:ir.actions.server:0
 #: selection:ir.actions.server,state:0
 msgid "Trigger"
-msgstr ""
+msgstr "Trigger"
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_update
 msgid "Update Module"
-msgstr ""
+msgstr "Uppdatera modulen"
 
 #. module: base
 #: view:ir.model.fields:0
 #: field:ir.model.fields,translate:0
 msgid "Translate"
-msgstr ""
+msgstr "Översätt"
 
 #. module: base
 #: field:res.request.history,body:0
@@ -7228,29 +7262,29 @@ msgstr ""
 #: field:res.partner,child_ids:0
 #: field:res.request,ref_partner_id:0
 msgid "Partner Ref."
-msgstr ""
+msgstr "Partnerref."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier_name
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Leverantörer"
 
 #. module: base
 #: view:publisher_warranty.contract.wizard:0
 msgid "Register"
-msgstr ""
+msgstr "Registrera"
 
 #. module: base
 #: field:res.request,ref_doc2:0
 msgid "Document Ref 2"
-msgstr ""
+msgstr "Dokumentreferens 2"
 
 #. module: base
 #: field:res.request,ref_doc1:0
 msgid "Document Ref 1"
-msgstr ""
+msgstr "Dokumentreferens 1"
 
 #. module: base
 #: model:res.country,name:base.ga
@@ -7267,7 +7301,7 @@ msgstr "ir.model.data"
 #: view:ir.rule:0
 #: view:res.groups:0
 msgid "Access Rights"
-msgstr ""
+msgstr "Åtkomsträttigheter"
 
 #. module: base
 #: model:res.country,name:base.gl
@@ -7277,7 +7311,7 @@ msgstr "Greenland"
 #. module: base
 #: field:res.partner.bank,acc_number:0
 msgid "Account Number"
-msgstr ""
+msgstr "Kontonummer"
 
 #. module: base
 #: view:res.lang:0
@@ -7301,6 +7335,8 @@ msgid ""
 "loading a new language it becomes available as default interface language "
 "for users and partners."
 msgstr ""
+"Den här wizarden hjälper dig lägga till ett nytt språk till ditt OpenERP "
+"system. Det nya språket blir standardspråk för användare och partners."
 
 #. module: base
 #: field:ir.actions.server,subject:0
@@ -7318,18 +7354,18 @@ msgstr "Från"
 #. module: base
 #: view:res.users:0
 msgid "Preferences"
-msgstr ""
+msgstr "Preferenser"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_consumers0
 msgid "Consumers"
-msgstr ""
+msgstr "Konsumenter"
 
 #. module: base
 #: view:res.config:0
 #: wizard_button:server.action.create,init,step_1:0
 msgid "Next"
-msgstr ""
+msgstr "Nästa"
 
 #. module: base
 #: help:ir.cron,function:0
@@ -7341,7 +7377,7 @@ msgstr ""
 #. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Övriga"
 
 #. module: base
 #: model:res.country,name:base.cn
@@ -7364,7 +7400,7 @@ msgstr "Western Sahara"
 #. module: base
 #: model:ir.model,name:base.model_workflow
 msgid "workflow"
-msgstr ""
+msgstr "arbetsflöde"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_res_company_form
@@ -7436,14 +7472,14 @@ msgstr "5.  %y, %Y         ==> 08, 2008"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_ltd
 msgid "ltd"
-msgstr ""
+msgstr "ltd"
 
 #. module: base
 #: field:ir.model.fields,model_id:0
 #: field:ir.values,res_id:0
 #: field:res.log,res_id:0
 msgid "Object ID"
-msgstr ""
+msgstr "Objekt ID"
 
 #. module: base
 #: view:res.company:0
@@ -7453,12 +7489,12 @@ msgstr "Liggande"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_administration
 msgid "Administration"
-msgstr ""
+msgstr "Administration"
 
 #. module: base
 #: view:base.module.update:0
 msgid "Click on Update below to start the process..."
-msgstr ""
+msgstr "Klicka op Uppdatera nedan för att starta bearbetningen..."
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -7469,12 +7505,12 @@ msgstr "Iran"
 #: model:ir.actions.act_window,name:base.res_widget_user_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_user_act_window
 msgid "Widgets per User"
-msgstr ""
+msgstr "Widgets per användare"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Slovak / Slovenský jazyk"
-msgstr ""
+msgstr "Slovakiska / Slovenský jazyk"
 
 #. module: base
 #: field:base.language.export,state:0
@@ -7486,23 +7522,23 @@ msgstr "okänd"
 #. module: base
 #: field:res.currency,symbol:0
 msgid "Symbol"
-msgstr ""
+msgstr "Symbol"
 
 #. module: base
 #: help:res.config.users,login:0
 #: help:res.users,login:0
 msgid "Used to log into the system"
-msgstr ""
+msgstr "Används för att logga in i systemet"
 
 #. module: base
 #: view:base.update.translations:0
 msgid "Synchronize Translation"
-msgstr ""
+msgstr "Synkronisera översättningen"
 
 #. module: base
 #: field:ir.ui.view_sc,res_id:0
 msgid "Resource Ref."
-msgstr ""
+msgstr "Resurs ref."
 
 #. module: base
 #: model:res.country,name:base.ki
@@ -7517,7 +7553,7 @@ msgstr "Iraq"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_association
 msgid "Association"
-msgstr ""
+msgstr "Association"
 
 #. module: base
 #: model:res.country,name:base.cl
@@ -7529,7 +7565,7 @@ msgstr "Chile"
 #: model:ir.ui.menu,name:base.menu_config_address_book
 #: model:ir.ui.menu,name:base.menu_procurement_management_supplier
 msgid "Address Book"
-msgstr ""
+msgstr "Adressbok"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence_type
@@ -7550,12 +7586,12 @@ msgstr "Kontonummer"
 #: code:addons/base/res/res_lang.py:0
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
-msgstr ""
+msgstr "Basspråket 'en_Us' kan inte tas bort !"
 
 #. module: base
 #: selection:ir.model,state:0
 msgid "Base Object"
-msgstr ""
+msgstr "Basobjekt"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -7565,7 +7601,7 @@ msgstr "Beroenden :"
 #. module: base
 #: field:ir.model.fields,field_description:0
 msgid "Field Label"
-msgstr ""
+msgstr "Fält ledtext"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_form
@@ -7575,6 +7611,9 @@ msgid ""
 "account, etc.). With the history tab, you can follow all moves transactions "
 "related to a customer, like sales order, claims."
 msgstr ""
+"Adressboken hanterar din kundlista. Kundsidan innehåller information "
+"(adresser, kontakter, prislistor, konton mm). Med historikfliken kan du "
+"följa alla transaktioner med kunden som kundorder, ärenden mm."
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -7584,7 +7623,7 @@ msgstr "Djibouti"
 #. module: base
 #: field:ir.translation,value:0
 msgid "Translation Value"
-msgstr ""
+msgstr "Översättning"
 
 #. module: base
 #: model:res.country,name:base.ag
@@ -7602,7 +7641,7 @@ msgstr "Zaire"
 #: field:workflow.instance,res_id:0
 #: field:workflow.triggers,res_id:0
 msgid "Resource ID"
-msgstr ""
+msgstr "Resurs ID"
 
 #. module: base
 #: view:ir.cron:0
@@ -7613,7 +7652,7 @@ msgstr "Information"
 #. module: base
 #: view:res.widget.user:0
 msgid "User Widgets"
-msgstr ""
+msgstr "Användarwidgets"
 
 #. module: base
 #: view:base.module.update:0
@@ -7641,7 +7680,7 @@ msgstr "Turkish / Türkçe"
 #: view:workflow:0
 #: field:workflow,activities:0
 msgid "Activities"
-msgstr ""
+msgstr "Aktiviteter"
 
 #. module: base
 #: field:ir.actions.act_window,auto_refresh:0
@@ -7652,7 +7691,7 @@ msgstr "Automatisk uppdatering"
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
-msgstr ""
+msgstr "osv_memory fältet kan bara jämföras med = och != operatorn."
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -7662,24 +7701,24 @@ msgstr "Diagram"
 #. module: base
 #: help:multi_company.default,name:0
 msgid "Name it to easily find a record"
-msgstr ""
+msgstr "Namnge det för att lätt kunna hitta en post"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Menu Items"
-msgstr ""
+msgstr "Menyrader"
 
 #. module: base
 #: constraint:ir.rule:0
 msgid "Rules are not supported for osv_memory objects !"
-msgstr ""
+msgstr "Regler stöds inte av osv_memory objekt !"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_event_association
 #: model:ir.ui.menu,name:base.menu_event_main
 msgid "Events Organisation"
-msgstr ""
+msgstr "Händelseorganisation"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -7688,7 +7727,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.next_id_6
 #: view:workflow.activity:0
 msgid "Actions"
-msgstr ""
+msgstr "Åtgärder"
 
 #. module: base
 #: selection:res.request,priority:0
@@ -7708,7 +7747,7 @@ msgstr "Croatia"
 #. module: base
 #: help:res.bank,bic:0
 msgid "Bank Identifier Code"
-msgstr ""
+msgstr "Bank identifieringskod"
 
 #. module: base
 #: model:res.country,name:base.tm
@@ -7759,12 +7798,12 @@ msgstr "Christmas Island"
 #. module: base
 #: view:ir.actions.server:0
 msgid "Other Actions Configuration"
-msgstr ""
+msgstr "Annan åtgärdskonfigurering"
 
 #. module: base
 #: selection:ir.module.module.dependency,state:0
 msgid "Uninstallable"
-msgstr ""
+msgstr "Ej installerabar"
 
 #. module: base
 #: view:res.config.installer:0
@@ -7788,7 +7827,7 @@ msgstr "Extra Info"
 #: model:ir.actions.act_window,name:base.act_values_form_action
 #: model:ir.ui.menu,name:base.menu_values_form_action
 msgid "Client Events"
-msgstr ""
+msgstr "Klienthändelser"
 
 #. module: base
 #: view:ir.module.module:0
@@ -7798,13 +7837,13 @@ msgstr "Lägg i installationskön"
 #. module: base
 #: model:ir.model,name:base.model_partner_wizard_ean_check
 msgid "Ean Check"
-msgstr ""
+msgstr "EAN kontroll"
 
 #. module: base
 #: sql_constraint:res.config.users:0
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Du kan inte ha två användare med samma användarid !"
 
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
@@ -7820,7 +7859,7 @@ msgstr "Skicka"
 #: field:res.config.users,menu_tips:0
 #: field:res.users,menu_tips:0
 msgid "Menu Tips"
-msgstr ""
+msgstr "Meny tips"
 
 #. module: base
 #: field:ir.translation,src:0
@@ -7831,16 +7870,17 @@ msgstr "Källa"
 #: help:res.partner.address,partner_id:0
 msgid "Keep empty for a private address, not related to partner."
 msgstr ""
+"Lämna blank om det är en privat adress som inte ska kopplas till en partner."
 
 #. module: base
 #: model:res.country,name:base.vu
 msgid "Vanuatu"
-msgstr ""
+msgstr "Vanuatu"
 
 #. module: base
 #: view:res.company:0
 msgid "Internal Header/Footer"
-msgstr ""
+msgstr "Internt sidhuvud/sidfot"
 
 #. module: base
 #: code:addons/base/module/wizard/base_export_language.py:0
@@ -7855,24 +7895,24 @@ msgstr ""
 #. module: base
 #: view:base.module.upgrade:0
 msgid "Start configuration"
-msgstr ""
+msgstr "Påbörja konfigurationen"
 
 #. module: base
 #: view:base.language.export:0
 msgid "_Export"
-msgstr ""
+msgstr "_Export"
 
 #. module: base
 #: field:base.language.install,state:0
 #: field:base.module.import,state:0
 #: field:base.module.update,state:0
 msgid "state"
-msgstr ""
+msgstr "status"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Catalan / Català"
-msgstr ""
+msgstr "Katalanska / Català"
 
 #. module: base
 #: model:res.country,name:base.do
@@ -7882,7 +7922,7 @@ msgstr "Dominican Republic"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Serbian (Cyrillic) / српски"
-msgstr ""
+msgstr "Serbiska (Cyrillic) / српски"
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -7895,22 +7935,24 @@ msgid ""
 "Check this box if the partner is a supplier. If it's not checked, purchase "
 "people will not see it when encoding a purchase order."
 msgstr ""
+"Markera den här rutan om partnern är en leverantör. Om den inte är markerar "
+"så kommer partnern inte visas när man väljer leverantör på en inköpsorder."
 
 #. module: base
 #: field:ir.model.fields,relation_field:0
 msgid "Relation Field"
-msgstr ""
+msgstr "Relationsfält"
 
 #. module: base
 #: view:res.partner.event:0
 msgid "Event Logs"
-msgstr ""
+msgstr "Händelseloggar"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_configuration.py:0
 #, python-format
 msgid "System Configuration done"
-msgstr ""
+msgstr "Systemkonfigurationen klar"
 
 #. module: base
 #: field:workflow.triggers,instance_id:0
@@ -7931,7 +7973,7 @@ msgstr "https://translations.launchpad.net/openobject"
 #. module: base
 #: field:ir.actions.report.xml,report_xml:0
 msgid "XML path"
-msgstr ""
+msgstr "XML sökväg"
 
 #. module: base
 #: selection:ir.actions.todo,restart:0
@@ -7987,7 +8029,7 @@ msgstr "Telefon"
 #. module: base
 #: model:res.widget,title:base.albertnan_twitter_widget
 msgid "Albert Cervera Areny's tweets"
-msgstr ""
+msgstr "Albert Cervera Areny's tweets"
 
 #. module: base
 #: field:ir.cron,active:0
@@ -8015,28 +8057,28 @@ msgstr "Thailand"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_lead
 msgid "Leads & Opportunities"
-msgstr ""
+msgstr "Leads & Opportunities"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Romanian / română"
-msgstr ""
+msgstr "Rumänska / română"
 
 #. module: base
 #: view:res.log:0
 msgid "System Logs"
-msgstr ""
+msgstr "Systemloggar"
 
 #. module: base
 #: selection:workflow.activity,join_mode:0
 #: selection:workflow.activity,split_mode:0
 msgid "And"
-msgstr ""
+msgstr "Och"
 
 #. module: base
 #: field:ir.model.fields,relation:0
 msgid "Object Relation"
-msgstr ""
+msgstr "Objektrelation"
 
 #. module: base
 #: view:ir.rule:0
@@ -8047,7 +8089,7 @@ msgstr "Allmänt"
 #. module: base
 #: model:res.country,name:base.uz
 msgid "Uzbekistan"
-msgstr ""
+msgstr "Uzbekistan"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window
@@ -8058,7 +8100,7 @@ msgstr "ir.actions.act_window"
 #. module: base
 #: field:ir.rule,perm_create:0
 msgid "Apply For Create"
-msgstr ""
+msgstr "Tillämpa vid ny post"
 
 #. module: base
 #: model:res.country,name:base.vi
@@ -8103,12 +8145,12 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_workflow_workitem
 msgid "workflow.workitem"
-msgstr ""
+msgstr "workflow.workitem"
 
 #. module: base
 #: selection:ir.module.module,state:0
 msgid "Not Installable"
-msgstr ""
+msgstr "Ej installerbar"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -8124,14 +8166,14 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:0
 #, python-format
 msgid "You cannot remove the field '%s' !"
-msgstr ""
+msgstr "Du kan inte ta bort fältet '%s' !"
 
 #. module: base
 #: field:ir.exports,resource:0
 #: view:ir.property:0
 #: field:ir.property,res_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Resurs"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8159,24 +8201,24 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
 msgid "base.module.configuration"
-msgstr ""
+msgstr "base.module.configuration"
 
 #. module: base
 #: field:base.language.export,name:0
 #: field:ir.attachment,datas_fname:0
 msgid "Filename"
-msgstr ""
+msgstr "Filnamn"
 
 #. module: base
 #: field:ir.model,access_ids:0
 #: view:ir.model.access:0
 msgid "Access"
-msgstr ""
+msgstr "Åtkomst"
 
 #. module: base
 #: model:res.country,name:base.sk
 msgid "Slovak Republic"
-msgstr ""
+msgstr "Slovakiska republiken"
 
 #. module: base
 #: model:ir.ui.menu,name:base.publisher_warranty
@@ -8206,7 +8248,7 @@ msgstr "Bahrain"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_12
 msgid "Segmentation"
-msgstr ""
+msgstr "Segmentering"
 
 #. module: base
 #: view:ir.attachment:0
@@ -8228,7 +8270,7 @@ msgstr "Företag"
 #. module: base
 #: view:res.users:0
 msgid "Email & Signature"
-msgstr ""
+msgstr "Epost & signatur"
 
 #. module: base
 #: view:publisher_warranty.contract:0
@@ -8238,27 +8280,27 @@ msgstr ""
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Bulgarian / български език"
-msgstr ""
+msgstr "Bulgariska / български език"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_aftersale
 msgid "After-Sale Services"
-msgstr ""
+msgstr "Eftermarknadsservice"
 
 #. module: base
 #: view:ir.actions.todo:0
 msgid "Launch"
-msgstr ""
+msgstr "Starta"
 
 #. module: base
 #: field:ir.actions.act_window,limit:0
 msgid "Limit"
-msgstr ""
+msgstr "Gräns"
 
 #. module: base
 #: help:ir.actions.server,wkf_model_id:0
 msgid "Workflow to be executed on this model."
-msgstr ""
+msgstr "Arbetsflöde som skall användas på denna modell."
 
 #. module: base
 #: model:res.country,name:base.jm
@@ -8283,7 +8325,7 @@ msgstr "Azerbaijan"
 #: code:addons/base/res/partner/partner.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Varning"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8299,7 +8341,7 @@ msgstr "Virgin Islands (British)"
 #: view:ir.property:0
 #: model:ir.ui.menu,name:base.next_id_15
 msgid "Parameters"
-msgstr ""
+msgstr "Parametrar"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8309,12 +8351,12 @@ msgstr "Czech / Čeština"
 #. module: base
 #: model:res.country,name:base.wf
 msgid "Wallis and Futuna Islands"
-msgstr ""
+msgstr "Wallis och Futunaöarna"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_wizard_screen
 msgid "ir.wizard.screen"
-msgstr ""
+msgstr "ir.wizard.screen"
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -8324,22 +8366,22 @@ msgstr "Rwanda"
 #. module: base
 #: view:ir.sequence:0
 msgid "Day of the week (0:Monday): %(weekday)s"
-msgstr ""
+msgstr "Veckoday (0:Måndag): %(weekday)s"
 
 #. module: base
 #: model:res.country,name:base.ck
 msgid "Cook Islands"
-msgstr ""
+msgstr "Cooköarna"
 
 #. module: base
 #: field:ir.model.data,noupdate:0
 msgid "Non Updatable"
-msgstr ""
+msgstr "Ej uppdateringsbar"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Klingon"
-msgstr ""
+msgstr "Klingon"
 
 #. module: base
 #: model:res.country,name:base.sg
@@ -8354,7 +8396,7 @@ msgstr "Aktuellt fönster"
 #. module: base
 #: view:ir.values:0
 msgid "Action Source"
-msgstr ""
+msgstr "Åtgärdskälla"
 
 #. module: base
 #: view:res.config.view:0
@@ -8363,6 +8405,9 @@ msgid ""
 "simplified interface, which has less features but is easier. You can always "
 "switch later from the user preferences."
 msgstr ""
+"Om det är första gången du använder OpenERP så rekomenderar vi förenklat "
+"användargränssnitt, det innehåller färre funktioner men är enklare. Du kan "
+"alltid byta senare."
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -8374,7 +8419,7 @@ msgstr ""
 #: field:res.partner.address,country_id:0
 #: field:res.partner.bank,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Land"
 
 #. module: base
 #: field:ir.model.fields,complete_name:0
@@ -8385,7 +8430,7 @@ msgstr "Fullständigt namn"
 #. module: base
 #: field:ir.values,object:0
 msgid "Is Object"
-msgstr ""
+msgstr "Är ett objekt"
 
 #. module: base
 #: view:ir.rule:0
@@ -8402,22 +8447,22 @@ msgstr "Kategorinamn"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
 msgid "IT sector"
-msgstr ""
+msgstr "IT sektorn"
 
 #. module: base
 #: view:ir.actions.act_window:0
 msgid "Select Groups"
-msgstr ""
+msgstr "Välj grupper"
 
 #. module: base
 #: view:res.lang:0
 msgid "%X - Appropriate time representation."
-msgstr ""
+msgstr "%X - Aktuell tidrepresentation"
 
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (SV) / Español (SV)"
-msgstr ""
+msgstr "Spanska (SV) / Español (SV)"
 
 #. module: base
 #: help:res.lang,grouping:0
@@ -8441,14 +8486,14 @@ msgstr "Guideknapp"
 #. module: base
 #: selection:ir.translation,type:0
 msgid "Report/Template"
-msgstr ""
+msgstr "Rapport/Mall"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
 #: selection:ir.ui.view,type:0
 #: selection:wizard.ir.model.menu.create.line,view_type:0
 msgid "Graph"
-msgstr ""
+msgstr "Diagram"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
@@ -8475,7 +8520,7 @@ msgstr "Konfiggurationsguide"
 #. module: base
 #: field:res.lang,code:0
 msgid "Locale Code"
-msgstr ""
+msgstr "Lokal kod"
 
 #. module: base
 #: field:workflow.activity,split_mode:0
@@ -8485,28 +8530,28 @@ msgstr ""
 #. module: base
 #: view:base.module.upgrade:0
 msgid "Note that this operation might take a few minutes."
-msgstr ""
+msgstr "Notera att den här operationen kan ta några minuter"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_localisation
 msgid "Localisation"
-msgstr ""
+msgstr "Lokalisering"
 
 #. module: base
 #: view:ir.actions.server:0
 msgid "Action to Launch"
-msgstr ""
+msgstr "Åtgärd som skall startas"
 
 #. module: base
 #: view:ir.cron:0
 msgid "Execution"
-msgstr ""
+msgstr "Exekvering"
 
 #. module: base
 #: field:ir.actions.server,condition:0
 #: field:workflow.transition,condition:0
 msgid "Condition"
-msgstr ""
+msgstr "Villkor"
 
 #. module: base
 #: help:ir.values,model_id:0
@@ -8516,7 +8561,7 @@ msgstr ""
 #. module: base
 #: field:ir.ui.view,name:0
 msgid "View Name"
-msgstr ""
+msgstr "Vynamn"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8526,7 +8571,7 @@ msgstr "Italian / Italiano"
 #. module: base
 #: field:ir.actions.report.xml,attachment:0
 msgid "Save As Attachment Prefix"
-msgstr ""
+msgstr "Spara som bilageprefix"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -8538,12 +8583,12 @@ msgstr ""
 #. module: base
 #: view:res.lang:0
 msgid "%j - Day of the year [001,366]."
-msgstr ""
+msgstr "%j - Dag per år [001,366]"
 
 #. module: base
 #: field:ir.actions.server,mobile:0
 msgid "Mobile No"
-msgstr ""
+msgstr "Mobilnr"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_by_category
@@ -8552,12 +8597,12 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_partner_category_form
 #: view:res.partner.category:0
 msgid "Partner Categories"
-msgstr ""
+msgstr "Partnerkategorier"
 
 #. module: base
 #: view:base.module.upgrade:0
 msgid "System Update"
-msgstr ""
+msgstr "Systemuppdatering"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -8567,7 +8612,7 @@ msgstr "Guidefält"
 #. module: base
 #: help:ir.sequence,prefix:0
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "Prefix för löpnumret"
 
 #. module: base
 #: model:res.country,name:base.sc
@@ -8577,13 +8622,13 @@ msgstr "Seychelles"
 #. module: base
 #: model:res.widget,title:base.nhomar_twitter_widget
 msgid "Nhomar Hernandez's tweets"
-msgstr ""
+msgstr "Nhomar Hernandez's tweets"
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank
 #: view:res.partner.bank:0
 msgid "Bank Accounts"
-msgstr ""
+msgstr "Bankkonton"
 
 #. module: base
 #: model:res.country,name:base.sl
@@ -8594,7 +8639,7 @@ msgstr "Sierra Leone"
 #: view:res.company:0
 #: view:res.partner:0
 msgid "General Information"
-msgstr ""
+msgstr "Allmän information"
 
 #. module: base
 #: model:res.country,name:base.tc
@@ -8604,7 +8649,7 @@ msgstr "Turks and Caicos Islands"
 #. module: base
 #: field:res.partner.bank,owner_name:0
 msgid "Account Owner"
-msgstr ""
+msgstr "Kontoägare"
 
 #. module: base
 #: code:addons/base/res/res_user.py:0
@@ -8621,12 +8666,12 @@ msgstr ""
 #: field:workflow,osv:0
 #: field:workflow.instance,res_type:0
 msgid "Resource Object"
-msgstr ""
+msgstr "Resursobjekt"
 
 #. module: base
 #: help:ir.sequence,number_increment:0
 msgid "The next number of the sequence will be incremented by this number"
-msgstr ""
+msgstr "Nästa nummer i sekvensen kommer att beräknas utgående från detta"
 
 #. module: base
 #: field:ir.cron,function:0
@@ -8638,12 +8683,12 @@ msgstr "Funktion"
 #. module: base
 #: view:res.widget:0
 msgid "Search Widget"
-msgstr ""
+msgstr "Sökwidget"
 
 #. module: base
 #: selection:ir.actions.todo,restart:0
 msgid "Never"
-msgstr ""
+msgstr "Aldrig"
 
 #. module: base
 #: selection:res.partner.address,type:0
@@ -8654,7 +8699,7 @@ msgstr "Leverans"
 #: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
-msgstr ""
+msgstr "Företag"
 
 #. module: base
 #: model:res.country,name:base.gw
@@ -8670,7 +8715,7 @@ msgstr ""
 #: code:addons/base/res/partner/partner.py:0
 #, python-format
 msgid "Partners: "
-msgstr ""
+msgstr "Partners "
 
 #. module: base
 #: model:res.country,name:base.kp
@@ -8680,18 +8725,18 @@ msgstr "North Korea"
 #. module: base
 #: selection:ir.actions.server,state:0
 msgid "Create Object"
-msgstr ""
+msgstr "Skapa objekt"
 
 #. module: base
 #: view:ir.filters:0
 #: field:res.log,context:0
 msgid "Context"
-msgstr ""
+msgstr "Innehåll"
 
 #. module: base
 #: field:res.bank,bic:0
 msgid "BIC/Swift code"
-msgstr ""
+msgstr "BIC/Swift nummer"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
@@ -8706,7 +8751,7 @@ msgstr "Polish / Język polski"
 #. module: base
 #: field:ir.exports,name:0
 msgid "Export Name"
-msgstr ""
+msgstr "Export namn"
 
 #. module: base
 #: help:res.partner.address,type:0
@@ -8714,6 +8759,8 @@ msgid ""
 "Used to select automatically the right address according to the context in "
 "sales and purchases documents."
 msgstr ""
+"Används för att automatiskt välja rätt adress beroende på innehållet i "
+"försäljnings- eller inköpsdokumentet."
 
 #. module: base
 #: model:res.country,name:base.lk
