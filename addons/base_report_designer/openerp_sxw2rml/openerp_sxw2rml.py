@@ -26,7 +26,7 @@ OpenERP SXW2RML - The OpenERP's report engine
 
 OpenERP SXW2RML is part of the OpenERP Report Project.
 OpenERP Report is a module that allows you to render high quality PDF document
-from an OpenOffice template (.sxw) and any relationnal database.
+from an OpenOffice template (.sxw) and any relationl database.
 """
 __version__ = '0.9'
 
