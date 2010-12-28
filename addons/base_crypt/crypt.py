@@ -140,8 +140,18 @@ class users(osv.osv):
     _inherit="res.users"
 
     def login(self, db, login, password):
-	if not password:
-	    return False
+	try:
+	    return self._login(db, login, password)
+	except Exception, e:
+	    import logging
+	    logging.getLogger('netsvc').exception('Could not authenticate')
+	    return Exception('Access Denied')
+
+    def _login(self, db, login, password):
+        if not password:
+            return False
+        if db is False:
+            raise RuntimeError("Cannot authenticate to False db!")
 
         cr = pooler.get_db(db).cursor()
         cr.execute( 'SELECT password FROM res_users WHERE login=%s', (login.encode( 'utf-8' ),) )
