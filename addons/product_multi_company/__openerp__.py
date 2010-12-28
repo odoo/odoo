@@ -28,7 +28,7 @@
     "init_xml" : [],
     "demo_xml" : [],
     "description": """
-        This module defines several prices, one for each company.
+        This module updates the definitions of standard price, public price and seller price with property fields.
     """,
     'update_xml': [],
     'test':[],

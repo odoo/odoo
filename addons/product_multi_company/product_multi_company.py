@@ -23,6 +23,7 @@ from osv import osv, fields
 
 class product_template(osv.osv):
     _inherit = "product.template"
+    _description = "Product Template"
     _columns={
         'list_price': fields.property('product.template',
             type='float',
@@ -42,6 +43,7 @@ product_template()
 
 class pricelist_partnerinfo(osv.osv):
     _inherit = 'pricelist.partnerinfo' 
+    _description = "Pricelist Partner"
     _columns = {
         'price': fields.property('pricelist.partnerinfo',
             type='float',
