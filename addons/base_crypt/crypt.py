@@ -40,7 +40,6 @@ from random import seed, sample
 from string import ascii_letters, digits
 from osv import fields,osv
 import pooler
-import tools
 from tools.translate import _
 from service import security
 
@@ -127,18 +126,43 @@ def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
 class users(osv.osv):
     _name="res.users"
     _inherit="res.users"
+    # agi - 022108
+    # Add handlers for 'input_pw' field.
+
+    # Maps a res_users id to the salt used to encrypt its associated password.
+    _salt_cache = {}
+    _clear_uid_cache = True
 
     def set_pw(self, cr, uid, id, name, value, args, context):
         if not value:
             raise osv.except_osv(_('Error'), _("Please specify the password !"))
-        self.write( cr, uid, id, { 'password' : encrypt_md5( value, gen_salt() ) } )
+
+        self._salt_cache.setdefault(cr.dbname, {})
+        salt = self._salt_cache[cr.dbname][id] = gen_salt()
+        encrypted = encrypt_md5(value, salt)
+        cr.execute('update res_users set password=%s where id=%s',
+            (encrypted.encode('utf-8'), int(id)))
+        cr.commit()
         del value
 
     def get_pw( self, cr, uid, ids, name, args, context ):
+        cr.execute('select id, password from res_users where id in %s', (tuple(map(int, ids)),))
+        stored_pws = cr.fetchall()
         res = {}
-        for id in ids:
-            res[id] = ''
+
+        for id, stored_pw in stored_pws:
+            res[id] = stored_pw
+
         return res
+
+    _columns = {
+        # The column size could be smaller as it is meant to store a hash, but
+        # an existing column cannot be downsized; thus we use the original
+        # column size.
+        'password': fields.function(get_pw, fnct_inv=set_pw, type='char',
+            method=True, size=64, string='Password', invisible=True,
+            store=True),
+    }
 
     def login(self, db, login, password):
         if not password:
@@ -149,45 +173,33 @@ class users(osv.osv):
         try:
             cr = pooler.get_db(db).cursor()
             return self._login(cr, db, login, password)
-        except Exception, e:
+        except Exception:
             if cr: cr.close()
             import logging
             logging.getLogger('netsvc').exception('Could not authenticate')
             return Exception('Access Denied')
 
     def _login(self, cr, db, login, password):
-        cr.execute( 'SELECT password FROM res_users WHERE login=%s',
+        cr.execute( 'SELECT password, id FROM res_users WHERE login=%s',
             (login.encode('utf-8'),))
-        stored_pw = id = cr.fetchone()
 
-        if stored_pw:
-            stored_pw = stored_pw[0]
+        if cr.rowcount:
+            stored_pw, id = cr.fetchone()
         else:
             # Return early if no one has a login name like that.
             return False
     
-        # Calculate a new password ('updated_pw') from 'stored_pw' if the
-        # latter isn't encrypted yet. Use that to update the database entry.
-        # Also update the 'stored_pw' to reflect the change.
-    
-        if stored_pw[0:3] != magic_md5:
-            updated_pw = encrypt_md5( stored_pw, gen_salt() )
-            cr.execute( 'UPDATE res_users SET password=%s WHERE login=%s', (updated_pw.encode( 'utf-8' ), login.encode( 'utf-8' ),) )
-            cr.commit()
-    
-            cr.execute( 'SELECT password FROM res_users WHERE login=%s', (login.encode( 'utf-8' ),) )
-            stored_pw = cr.fetchone()[0]
-    
+        stored_pw = self.maybe_encrypt(cr, stored_pw, id)
+
         # Calculate an encrypted password from the user-provided
         # password.
+        self._salt_cache.setdefault(db, {})
+        salt = self._salt_cache[db][id] = stored_pw[len(magic_md5):11]
+        encrypted_pw = encrypt_md5(password, salt)
     
-        salt = _salt_cache[password] = stored_pw[3:11]
-        encrypted_pw = encrypt_md5( password, salt )
-    
-        # Retrieve a user id from the database, factoring in an encrypted
-        # password.
-    
-        cr.execute('select id from res_users where login=%s and password=%s and active', (login.encode('utf-8'), encrypted_pw.encode('utf-8')))
+        # Check if the encrypted password matches against the one in the db.
+        cr.execute('select id from res_users where id=%s and password=%s and active', 
+            (int(id), encrypted_pw.encode('utf-8')))
         res = cr.fetchone()
         cr.close()
     
@@ -197,12 +209,18 @@ class users(osv.osv):
             return False
 
     def check(self, db, uid, passwd):
+        # Get a chance to hash all passwords in db before using the uid_cache.
+        if self._clear_uid_cache:
+            self._uid_cache.get(db, {}).clear()
+            self._clear_uid_cache = False
+            self._salt_cache.get(db, {}).clear()
+
         cached_pass = self._uid_cache.get(db, {}).get(uid)
         if (cached_pass is not None) and cached_pass == passwd:
             return True
-    
+
         cr = pooler.get_db(db).cursor()
-        if passwd not in _salt_cache:
+        if uid not in self._salt_cache.get(db, {}):
             cr.execute( 'SELECT login FROM res_users WHERE id=%s', (uid,) )
             stored_login = cr.fetchone()
             if stored_login:
@@ -210,26 +228,41 @@ class users(osv.osv):
     
             if not self.login(db,stored_login,passwd):
                 raise security.ExceptionNoTb('AccessDenied')
-        salt = _salt_cache[passwd]
+
+        salt = self._salt_cache[db][uid]
         cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s', 
-            (int(uid), encrypt_md5( passwd, salt )) )
+            (int(uid), encrypt_md5(passwd, salt)))
         res = cr.fetchone()[0]
         cr.close()
         if not bool(res):
             raise security.ExceptionNoTb('AccessDenied')
+
         if res:
-            self._uid_cache[uid] = passwd
+            if self._uid_cache.has_key(db):
+                ulist = self._uid_cache[db]
+                ulist[uid] = passwd
+            else:
+                self._uid_cache[db] = {uid: passwd}
         return bool(res)
     
-    
-    def access(self, db, uid, passwd, sec_level, ids):
-        cr = pooler.get_db(db).cursor()
-        salt = _salt_cache[passwd]
-        cr.execute('SELECT id FROM res_users WHERE id=%s AND password=%s', (uid, encrypt_md5( passwd, salt )) )
-        res = cr.fetchone()
-        cr.close()
-        if not res:
-            raise security.ExceptionNoTb('Bad username or password')
-        return res[0]
+    def maybe_encrypt(self, cr, pw, id):
+        # If the password 'pw' is not encrypted, then encrypt all passwords
+        # in the db. Returns the (possibly newly) encrypted password for 'id'.
+
+        if pw[0:len(magic_md5)] != magic_md5:
+            cr.execute('select id, password from res_users')
+            res = cr.fetchall()
+            for i, p in res:
+                encrypted = p
+                if p[0:len(magic_md5)] != magic_md5:
+                    encrypted = encrypt_md5(p, gen_salt())
+                    cr.execute('update res_users set password=%s where id=%s',
+                        (encrypted.encode('utf-8'), int(i)))
+                if i == id:
+                    encrypted_res = encrypted
+            cr.commit()
+            return encrypted_res
+        return pw
 
 users()
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
