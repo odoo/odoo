@@ -187,7 +187,7 @@ def check(db, uid, passwd):
             stored_login = stored_login[0]
 
         if not login(db,stored_login,passwd):
-            return security.ExceptionNoTb('AccessDenied')
+            raise security.ExceptionNoTb('AccessDenied')
     salt = _salt_cache[passwd]
     cr.execute(' select count(*) from res_users where id=%s and password=%s', (int(uid), encrypt_md5( passwd, salt )) )
     res = cr.fetchone()[0]
