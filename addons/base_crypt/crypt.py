@@ -37,7 +37,7 @@
 # USA.
 
 from random import seed, sample
-from string import letters, digits
+from string import ascii_letters, digits
 from osv import fields,osv
 import pooler
 import tools
@@ -46,7 +46,7 @@ from service import security
 
 magic_md5 = '$1$'
 
-def gen_salt( length=8, symbols=letters + digits ):
+def gen_salt( length=8, symbols=ascii_letters + digits ):
     seed()
     return ''.join( sample( symbols, length ) )
 
@@ -66,6 +66,7 @@ def gen_salt( length=8, symbols=letters + digits ):
 # *
 # * Poul-Henning Kamp
 
+#TODO: py>=2.6: from hashlib import md5
 import md5
 
 def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
