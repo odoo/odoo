@@ -11,7 +11,7 @@
           <field name="arch" type="xml">
             <data>
             <xpath expr="//field[@name='journal_ids']" position="replace">
-                <field name="journal_ids" colspan="4" nolabel="1" readonly="1"/>
+                <field name="journal_ids" colspan="4" nolabel="1" required="0" readonly="1"/>
             </xpath>
             <xpath expr="/form/label[@string='']" position="replace">
                 <separator string="Trial Balance" colspan="4"/>
