@@ -179,8 +179,13 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         if res_lines and self.init_balance:
             #FIXME: replace the label of lname with a string translatable
             sql = """
-                SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
+                SELECT 0 AS lid, '' AS ldate, '' AS lcode, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
                 '' AS move_name, '' AS mmove_id, '' AS period_code,
+                sum(case when a.currency_id is not null then
+                         l.amount_currency
+                        else
+                         0.0
+                        end) as amount_currency,
                 '' AS currency_code,
                 NULL AS currency_id,
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,
