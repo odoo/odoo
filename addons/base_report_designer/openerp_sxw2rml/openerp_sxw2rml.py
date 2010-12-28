@@ -251,8 +251,8 @@ class DomApi(DomApiGeneral):
             parent = self.style_dict[style_name].getAttribute("style:parent-style-name").encode("utf-8")
             res = self.getStylePropertiesDict(parent)
 
-        childs = self.style_dict[style_name].childNodes
-        for c in childs:
+        children = self.style_dict[style_name].childNodes
+        for c in children:
             if c.nodeType == c.ELEMENT_NODE and c.nodeName.find("properties")>0 :
                 for attr in c._attrs.keys():
                     res[attr] = c.getAttribute(attr).encode("utf-8")
