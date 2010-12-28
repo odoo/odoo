@@ -47,6 +47,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
             'get_partners':self._get_partners,
+            'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_intial_balance':self._get_intial_balance,
             'display_initial_balance':self._display_initial_balance,
             'display_currency':self._display_currency,
@@ -125,6 +126,10 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             return new
         else:
             return self.comma_me(new)
+        
+    def _get_currency(self):
+        self.cr.execute("select distinct currency_id from account_invoice")
+        return self.cr.fetchall() 
 
     def lines(self, partner):
         move_state = ['draft','posted']
@@ -137,7 +142,9 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         else:
             RECONCILE_TAG = "AND l.reconcile_id IS NULL"
         self.cr.execute(
-            "SELECT l.id, l.date, j.code, acc.code as a_code, acc.name as a_name, l.ref, m.name as move_name, l.name, l.debit, l.credit, l.amount_currency,l.currency_id, c.symbol AS currency_code " \
+            "SELECT l.id, l.date, j.code, acc.code as a_code, acc.name as a_name, l.ref, m.name as move_name, l.name, l.debit, l.credit," \
+            "sum(case when acc.currency_id is not null then l.amount_currency else 0.0 end) as amount_currency," \
+            "l.currency_id, c.symbol AS currency_code " \
             "FROM account_move_line l " \
             "LEFT JOIN account_journal j " \
                 "ON (l.journal_id = j.id) " \
@@ -149,7 +156,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                 "AND l.account_id IN %s AND " + self.query +" " \
                 "AND m.state IN %s " \
                 " " + RECONCILE_TAG + " "\
-                "ORDER BY l.date",
+                "GROUP BY l.id, l.date, j.code, acc.code, acc.name, l.ref, m.name, l.name, l.debit, l.credit, l.currency_id, c.symbol ORDER BY l.date",
                 (partner.id, tuple(self.account_ids), tuple(move_state)))
         res = self.cr.dictfetchall()
         sum = 0.0

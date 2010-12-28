@@ -192,6 +192,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                 '' AS partner_name
                 FROM account_move_line l
                 LEFT JOIN account_move m on (l.move_id=m.id)
+                LEFT JOIN account_account a ON (l.account_id=a.id)
                 LEFT JOIN res_currency c on (l.currency_id=c.id)
                 LEFT JOIN res_partner p on (l.partner_id=p.id)
                 LEFT JOIN account_invoice i on (m.id =i.move_id)
@@ -214,6 +215,8 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                     l['amount_currency'] = abs(l['amount_currency']) * -1
             if l['amount_currency'] != None:
                 self.tot_currency = self.tot_currency + l['amount_currency']
+            self.cr.execute("select distinct currency_id from account_invoice")
+            l['cur_id']=self.cr.fetchall()
         return res
 
     def _sum_debit_account(self, account):
