@@ -647,7 +647,6 @@ class pos_order(osv.osv):
                                                                line.qty, partner_id = order.partner_id.id, fposition_id=order.partner_id.property_account_position.id)['value'])
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
-                inv_line['account_id'] = acc
                 inv_line['name'] = inv_name
                 inv_line['invoice_line_tax_id'] = ('invoice_line_tax_id' in inv_line)\
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []
@@ -988,7 +987,6 @@ class pos_order_line(osv.osv):
                     else:
                         res[line.id][f] = line.price_unit * line.qty
                 elif f == 'price_subtotal_incl':
-                    tax_amount = 0.0
                     taxes = [t for t in line.product_id.taxes_id]
                     if line.qty == 0.0:
                         res[line.id][f] = 0.0

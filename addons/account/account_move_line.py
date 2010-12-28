@@ -289,7 +289,12 @@ class account_move_line(osv.osv):
             acc = account
             if s>0:
                 acc = acc1
-            v = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], s, account=acc, account_invert=True)
+            compute_ctx = context.copy()
+            compute_ctx.update({
+                    'res.currency.compute.account': acc,
+                    'res.currency.compute.account_invert': True,
+                })
+            v = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], s, context=compute_ctx)
             data['amount_currency'] = v
         return data
 
@@ -556,8 +561,11 @@ class account_move_line(osv.osv):
         if (amount>0) and journal:
             x = journal_obj.browse(cr, uid, journal).default_credit_account_id
             if x: acc = x
-        context.update({'date': date})
-        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, account=acc, context=context)
+        context.update({
+                'date': date,
+                'res.currency.compute.account': acc,
+            })
+        v = currency_obj.compute(cr, uid, currency_id, acc.company_id.currency_id.id, amount, context=context)
         result['value'] = {
             'debit': v > 0 and v or 0.0,
             'credit': v < 0 and -v or 0.0
@@ -879,7 +887,7 @@ class account_move_line(osv.osv):
         fld = []
         fields = {}
         flds = []
-        title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
+        title = _("Accounting Entries") #self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write" colors="red:state==\'draft\';black:state==\'valid\'">\n\t''' % (title)
 
         ids = journal_pool.search(cr, uid, [])
@@ -898,8 +906,8 @@ class account_move_line(osv.osv):
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
-        fld.append(('period_id', 3, 'Period'))
-        fld.append(('journal_id', 10, 'Journal'))
+        fld.append(('period_id', 3, _('Period')))
+        fld.append(('journal_id', 10, _('Journal')))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
@@ -919,10 +927,10 @@ class account_move_line(osv.osv):
 #                state = 'colors="red:state==\'draft\'"'
             attrs = []
             if field == 'debit':
-                attrs.append('sum = "Total debit"')
+                attrs.append('sum = "%s"' % _("Total debit"))
 
             elif field == 'credit':
-                attrs.append('sum = "Total credit"')
+                attrs.append('sum = "%s"' % _("Total credit"))
 
             elif field == 'move_id':
                 attrs.append('required = "False"')
@@ -955,7 +963,6 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
-            attrs.append('string="'+field_it[2]+'"')
             attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 

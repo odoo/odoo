@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-17 03:03+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 08:13+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:39+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -196,6 +196,16 @@ msgstr "Imprimer"
 #: view:hr.attendance:0
 msgid "Hr Attendance Search"
 msgstr "Recherche sur les temps de présences"
+
+#. module: hr_attendance
+#: model:ir.module.module,description:hr_attendance.module_meta_information
+msgid ""
+"\n"
+"    This module aims to manage employee's attendances.\n"
+"    Keeps account of the attendances of the employees on the basis of the\n"
+"    actions(Sign in/Sign out) performed by them.\n"
+"       "
+msgstr ""
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -482,6 +492,7 @@ msgstr "Date enregistrée"
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "Présences"
 
@@ -579,6 +590,15 @@ msgstr "Année"
 msgid "hr.sign.in.out.ask"
 msgstr "hr.sign.in.out.ask"
 
+#, python-format
+#~ msgid ""
+#~ "You tried to sign out with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Vous essayez de pointer votre sortie avec une date antérieure à un autre "
+#~ "pointage !\n"
+#~ "Contactez l'administrateur pour corriger vos présences."
+
 #~ msgid "Action reason"
 #~ msgstr "Motif de pointage"
 
@@ -593,6 +613,15 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Select a starting and a end date"
 #~ msgstr "Sélectionnez une date de début et de fin"
+
+#, python-format
+#~ msgid ""
+#~ "You tried to sign in with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Vous avez essayé de pointer une entrée à une date antérieure à un autre "
+#~ "évènement !\n"
+#~ "Contactez l'administrateur pour corriger vos présences."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -610,6 +639,14 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de modèle non valide dans la définition de l'action."
+
+#, python-format
+#~ msgid ""
+#~ "You tried to sign with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Vous essayez de pointer à une date antérieure à un autre évènement.\n"
+#~ "Contactez l'administrateur pour corriger vos pointages."
 
 #~ msgid ""
 #~ "You did not signed out the last time. Please enter the date and time you "

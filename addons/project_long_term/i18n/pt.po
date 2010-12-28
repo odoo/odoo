@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-12 09:19+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_long_term
@@ -55,7 +55,6 @@ msgid "Error! project start-date must be lower then project end-date."
 msgstr "Erro! A data de início do projeto deve ser anterior à do seu fim"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: view:project.resource.allocation:0
 msgid "Resources Allocation"
 msgstr ""
@@ -66,11 +65,34 @@ msgid "Schedule"
 msgstr ""
 
 #. module: project_long_term
+#: model:ir.module.module,description:project_long_term.module_meta_information
+msgid ""
+"\n"
+"\n"
+"        Long Term Project management module that tracks planning, "
+"scheduling, resources allocation.\n"
+"        Mainly used with Big project management.\n"
+"            - Project Phases will be maintained by Manager of the project\n"
+"            - Compute Phase Scheduling: Compute start date and end date of "
+"the phases which are in draft,open and pending state of the project given.\n"
+"                                        If no project given then all the "
+"draft,open and pending state phases will be taken\n"
+"            - Compute Task Scheduling: This works same as the scheduler "
+"button on project.phase. It takes the project as argument and computes all "
+"the open,draft and pending tasks\n"
+"            - Schedule Tasks: All the tasks which are in draft,pending and "
+"open state are scheduled with taking the phase's start date\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: project_long_term
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
 msgstr "Erro! Não se pode criar tarefas recursivamente"
 
 #. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
 msgid "Resource Allocations"
 msgstr ""

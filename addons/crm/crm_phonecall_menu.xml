@@ -69,7 +69,7 @@
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
         <field name="context" eval="'{\'search_default_section_id\':section_id, \'set_editable\':True,\'default_state\':\'open\', \'search_default_current\':1,\'search_default_today\':1, \'default_categ_id\': ' + str(ref('categ_phone1')) +'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">The Inbound Calls tool allows you to log your inbound calls on the fly. Each call you get will appear on the partner form for the traceability of every contact you get with a partner. From the call record, you can trigger a request for another call, a meeting or a business opportunity.</field>
+        <field name="help">The Inbound Calls tool allows you to log your inbound calls on the fly. Each call you get will appear on the partner form to trace every contact you have with a partner. From the phone call form, you can trigger a request for another call, a meeting or an opportunity.</field>
 
     </record>
 
@@ -107,7 +107,7 @@
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone2'))+')]'"/>
         <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'open\', \'search_default_current\':1, \'default_categ_id\': ' + str(ref('categ_phone2')) +'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
-        <field name="help">Outbound Calls lists all the calls to be performed by your sales team. They can record the information about the call on the form view. These information will appear on the partner form for the traceability of every contact you get with a customer. You can import a .CSV file with a list of calls to be done for your sales team.</field>
+        <field name="help">Outbound Calls list all the calls to be done by your sales team. A salesman can record the information about the call in the form view. This information will be stored in the partner form to trace every contact you have with a customer. You can also import a .CSV file with a list of calls to be done by your sales team.</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_tree_phone_outgoing0">

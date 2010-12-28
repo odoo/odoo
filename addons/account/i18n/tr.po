@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-02 07:52+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:20+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -177,6 +177,12 @@ msgid ""
 msgstr ""
 
 #. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Uyarı!"
+
+#. module: account
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
@@ -213,16 +219,6 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_account_tax_template_form
 msgid "Tax Templates"
 msgstr "Vergi Şablonu"
-
-#. module: account
-#: view:account.invoice.report:0
-msgid "supplier"
-msgstr "tedarikçi"
-
-#. module: account
-#: model:account.journal,name:account.refund_expenses_journal
-msgid "Expenses Credit Notes Journal - (test)"
-msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -713,10 +709,14 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr "To reconcile the entries company should be the same for all entries"
 
 #. module: account
-#: constraint:account.account:0
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
-msgstr ""
+#: view:account.account:0
+#: selection:account.aged.trial.balance,result_selection:0
+#: selection:account.common.partner.report,result_selection:0
+#: selection:account.partner.balance,result_selection:0
+#: selection:account.partner.ledger,result_selection:0
+#: model:ir.actions.act_window,name:account.action_aged_receivable
+msgid "Receivable Accounts"
+msgstr "Alacak Hesapları"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -905,17 +905,6 @@ msgid "Due"
 msgstr "Due"
 
 #. module: account
-#: report:account.overdue:0
-msgid ""
-"Exception made of a mistake of our side, it seems that the following bills "
-"stay unpaid. Please, take appropriate measures in order to carry out this "
-"payment in the next 8 days."
-msgstr ""
-"Exception made of a mistake of our side, it seems that the following bills "
-"stay unpaid. Please, take appropriate measures in order to carry out this "
-"payment in the next 8 days."
-
-#. module: account
 #: view:account.invoice.report:0
 #: field:account.invoice.report,price_total_tax:0
 msgid "Total With Tax"
@@ -942,6 +931,11 @@ msgstr "Toplam Miktar"
 #: selection:account.entries.report,type:0
 msgid "Consolidation"
 msgstr "Konsolidasyon (Birleştirme)"
+
+#. module: account
+#: model:account.account.type,name:account.account_type_liability
+msgid "Liability"
+msgstr "Liability"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1050,11 +1044,6 @@ msgstr "Yıl:Hafta"
 #: field:account.report.general.ledger,landscape:0
 msgid "Landscape Mode"
 msgstr "Landscape Mode"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_liability
-msgid "Bilanzkonten - Passiva - Kapitalkonten"
-msgstr ""
 
 #. module: account
 #: view:board.board:0
@@ -1316,6 +1305,9 @@ msgid "Journal Items Analysis"
 msgstr "Journal Items Analysis"
 
 #. module: account
+#: model:ir.actions.act_window,name:account.action_partner_all
+#: model:ir.ui.menu,name:account.menu_partners
+#: model:ir.ui.menu,name:account.menu_partners_partners
 #: model:ir.ui.menu,name:account.next_id_22
 msgid "Partners"
 msgstr "Partners"
@@ -1479,6 +1471,11 @@ msgstr "Recurring Entries"
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Template for Fiscal Position"
+
+#. module: account
+#: model:account.tax.code,name:account.account_tax_code_0
+msgid "Tax Code Test"
+msgstr ""
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1931,16 +1928,6 @@ msgid "Image"
 msgstr "Image"
 
 #. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-msgid "Receivable Accounts"
-msgstr "Alacak Hesapları"
-
-#. module: account
 #: report:account.move.voucher:0
 msgid "Canceled"
 msgstr "Canceled"
@@ -1993,13 +1980,6 @@ msgid "Open Entries"
 msgstr "Open Entries"
 
 #. module: account
-#: model:ir.actions.act_window,help:account.action_invoice_tree4
-msgid ""
-"A vendor refund is a credit note from your supplier indicating that he "
-"refunds part or totality of the invoice sent to you."
-msgstr ""
-
-#. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
 msgstr "Accounts to Reconcile"
@@ -2027,11 +2007,6 @@ msgstr "January"
 #: view:account.journal:0
 msgid "Validations"
 msgstr "Validations"
-
-#. module: account
-#: model:account.journal,name:account.close_journal
-msgid "End of Year"
-msgstr ""
 
 #. module: account
 #: view:account.entries.report:0
@@ -2307,6 +2282,13 @@ msgstr "Temel Kod"
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
 msgstr "Gives the sequence order when displaying a list of invoice tax."
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_invoice_tree4
+msgid ""
+"A supplier refund is a credit note from your supplier indicating that he "
+"refunds part or totality of the invoice sent to you."
+msgstr ""
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -2741,11 +2723,6 @@ msgstr ""
 #: field:account.invoice.tax,base_amount:0
 msgid "Base Code Amount"
 msgstr "Base Code Amount"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_view
-msgid "Ansicht"
-msgstr ""
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
@@ -3578,6 +3555,13 @@ msgstr "#Entries"
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid ""
+"You selected an Unit of Measure which is not compatible with the product."
+msgstr ""
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
 "The Payment Term of Supplier does not have Payment Term Lines(Computation) "
 "defined !"
 msgstr ""
@@ -3632,15 +3616,6 @@ msgstr "Standard Encoding"
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
 msgstr "Journal for analytic entries"
-
-#. module: account
-#: model:ir.actions.act_window,help:account.action_invoice_tree3
-msgid ""
-"Customer Refunds helps you manage the credit notes issued/to be issued for "
-"your customers. A refund invoice is a document that cancels an invoice or a "
-"part of it. You can easily generate refunds and reconcile them from the "
-"invoice form."
-msgstr ""
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance
@@ -3959,6 +3934,7 @@ msgstr "Vergi Açıklaması"
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
+#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.pl.report,target_move:0
@@ -4090,6 +4066,11 @@ msgstr "Not implemented"
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
 msgstr "Account Journal Select"
+
+#. module: account
+#: view:account.invoice:0
+msgid "Print Invoice"
+msgstr ""
 
 #. module: account
 #: view:account.tax.template:0
@@ -4225,24 +4206,10 @@ msgid "Closing balance based on cashBox"
 msgstr "Closing balance based on cashBox"
 
 #. module: account
-#: code:addons/account/invoice.py:0
-#, python-format
-msgid ""
-"Please verify the price of the invoice !\n"
-"The real total does not match the computed total."
+#: constraint:account.account:0
+#: constraint:account.tax.code:0
+msgid "Error ! You can not create recursive accounts."
 msgstr ""
-"Please verify the price of the invoice !\n"
-"The real total does not match the computed total."
-
-#. module: account
-#: code:addons/account/account_move_line.py:0
-#: code:addons/account/wizard/account_invoice_state.py:0
-#: code:addons/account/wizard/account_report_balance_sheet.py:0
-#: code:addons/account/wizard/account_state_open.py:0
-#: code:addons/account/wizard/account_validate_account_move.py:0
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -4359,6 +4326,16 @@ msgstr "New Fiscal Year"
 #: field:res.partner,invoice_ids:0
 msgid "Invoices"
 msgstr "Faturalar"
+
+#. module: account
+#: code:addons/account/invoice.py:0
+#, python-format
+msgid ""
+"Please verify the price of the invoice !\n"
+"The real total does not match the computed total."
+msgstr ""
+"Please verify the price of the invoice !\n"
+"The real total does not match the computed total."
 
 #. module: account
 #: view:account.invoice:0
@@ -4600,6 +4577,7 @@ msgstr "Analytic Balance -"
 #: field:account.general.journal,target_move:0
 #: report:account.general.ledger:0
 #: report:account.journal.period.print:0
+#: field:account.move.journal,target_move:0
 #: report:account.partner.balance:0
 #: field:account.partner.balance,target_move:0
 #: field:account.partner.ledger,target_move:0
@@ -4635,12 +4613,6 @@ msgstr "Entry"
 #: field:account.tax.template,python_compute_inv:0
 msgid "Python Code (reverse)"
 msgstr "Python Code (reverse)"
-
-#. module: account
-#: view:account.journal.column:0
-#: model:ir.model,name:account.model_account_journal_column
-msgid "Journal Column"
-msgstr "Yevmiye Kolonu"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear_form
@@ -4922,11 +4894,6 @@ msgstr ""
 #, python-format
 msgid "Bank Journal "
 msgstr "Bank Journal "
-
-#. module: account
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
 
 #. module: account
 #: view:account.journal:0
@@ -5289,6 +5256,8 @@ msgstr "Child Accounts"
 
 #. module: account
 #: view:account.move.line.reconcile:0
+#: code:addons/account/account_move_line.py:0
+#, python-format
 msgid "Write-Off"
 msgstr "Write-Off"
 
@@ -5303,17 +5272,18 @@ msgid "account.analytic.line.extended"
 msgstr "account.analytic.line.extended"
 
 #. module: account
+#: model:account.account.type,name:account.account_type_income
+msgid "Income"
+msgstr "Income"
+
+#. module: account
 #: selection:account.bank.statement.line,type:0
 #: view:account.invoice:0
+#: view:account.invoice.report:0
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Supplier"
 msgstr "Tedarikçi"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_asset
-msgid "Bilanzkonten - Aktiva - Vermögenskonten"
-msgstr ""
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -6341,6 +6311,7 @@ msgstr ""
 #: selection:account.common.partner.report,target_move:0
 #: selection:account.common.report,target_move:0
 #: selection:account.general.journal,target_move:0
+#: selection:account.move.journal,target_move:0
 #: selection:account.partner.balance,target_move:0
 #: selection:account.partner.ledger,target_move:0
 #: selection:account.pl.report,target_move:0
@@ -6474,11 +6445,6 @@ msgid "Child Codes"
 msgstr "Alt Kodlar"
 
 #. module: account
-#: model:account.journal,name:account.refund_sales_journal
-msgid "Sales Credit Note Journal - (test)"
-msgstr ""
-
-#. module: account
 #: code:addons/account/invoice.py:0
 #: code:addons/account/wizard/account_invoice_refund.py:0
 #, python-format
@@ -6502,9 +6468,10 @@ msgid "Sales"
 msgstr "Satışlar"
 
 #. module: account
-#: model:account.journal,name:account.cash_journal
-msgid "Cash Journal - (test)"
-msgstr ""
+#: view:account.journal.column:0
+#: model:ir.model,name:account.model_account_journal_column
+msgid "Journal Column"
+msgstr "Yevmiye Kolonu"
 
 #. module: account
 #: selection:account.invoice.report,state:0
@@ -6569,13 +6536,6 @@ msgid "Taxes:"
 msgstr "Vergiler:"
 
 #. module: account
-#: help:account.invoice,partner_bank_id:0
-msgid ""
-"The partner bank account to pay\n"
-"Keep empty to use the default"
-msgstr ""
-
-#. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
 msgstr "For taxes of type percentage, enter % ratio between 0-1."
@@ -6635,11 +6595,6 @@ msgid "Lines"
 msgstr "Satırlar"
 
 #. module: account
-#: model:account.journal,name:account.bank_journal
-msgid "Bank Journal - (test)"
-msgstr ""
-
-#. module: account
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid ""
@@ -6668,11 +6623,6 @@ msgstr "Bu faturayı açmak istediğinizden emin misiniz?"
 #: field:account.account.template,parent_id:0
 msgid "Parent Account Template"
 msgstr "Ana Hesap Şablonu"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_income
-msgid "Erfolgskonten - Erlöse"
-msgstr ""
 
 #. module: account
 #: view:account.bank.statement:0
@@ -6775,6 +6725,11 @@ msgid "Unknown Partner"
 msgstr "Bilinmeyen İş Ortağı"
 
 #. module: account
+#: view:account.bank.statement:0
+msgid "Opening Balance"
+msgstr "Opening Balance"
+
+#. module: account
 #: help:account.journal,centralisation:0
 msgid ""
 "Check this box to determine that each entry of this journal won't create a "
@@ -6814,6 +6769,15 @@ msgstr ""
 #: view:account.bank.statement:0
 msgid "Confirm"
 msgstr "Onayla"
+
+#. module: account
+#: help:account.invoice,partner_bank_id:0
+msgid ""
+"Bank Account Number, Company bank account if Invoice is customer or supplier "
+"refund, otherwise Partner bank account number."
+msgstr ""
+"Bank Account Number, Company bank account if Invoice is customer or supplier "
+"refund, otherwise Partner bank account number."
 
 #. module: account
 #: help:account.tax,domain:0
@@ -6943,6 +6907,11 @@ msgid "You can not have two open register for the same journal"
 msgstr "You can not have two open register for the same journal"
 
 #. module: account
+#: report:account.invoice:0
+msgid "Must be after setLang()"
+msgstr ""
+
+#. module: account
 #: view:account.payment.term.line:0
 msgid "  day of the month= -1"
 msgstr "  day of the month= -1"
@@ -7050,11 +7019,6 @@ msgid "No piece number !"
 msgstr "No piece number !"
 
 #. module: account
-#: model:account.journal,name:account.expenses_journal
-msgid "Expenses Journal - (test)"
-msgstr ""
-
-#. module: account
 #: view:product.product:0
 #: view:product.template:0
 msgid "Sales Properties"
@@ -7129,11 +7093,6 @@ msgid "Sale Taxes"
 msgstr "Satış Vergisi"
 
 #. module: account
-#: model:account.journal,name:account.sales_journal
-msgid "Sales Journal - (test)"
-msgstr ""
-
-#. module: account
 #: model:account.account.type,name:account.account_type_cash_moves
 #: selection:account.analytic.journal,type:0
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -7205,6 +7164,16 @@ msgstr "Monthly"
 #: view:account.payment.term.line:0
 msgid "  number of days: 14"
 msgstr "  number of days: 14"
+
+#. module: account
+#: model:account.account.type,name:account.account_type_asset
+msgid "Asset"
+msgstr "Asset"
+
+#. module: account
+#: view:analytic.entries.report:0
+msgid "    7 Days    "
+msgstr "    7 Days    "
 
 #. module: account
 #: field:account.partner.reconcile.process,progress:0
@@ -7308,11 +7277,6 @@ msgstr "Subscription Compute"
 #: report:account.move.voucher:0
 msgid "Amount (in words) :"
 msgstr "Amount (in words) :"
-
-#. module: account
-#: model:account.account.type,name:account.account_type_other
-msgid "Jahresabschlusskonten u. Statistik"
-msgstr ""
 
 #. module: account
 #: field:account.bank.statement.line,partner_id:0
@@ -7573,11 +7537,6 @@ msgid "Accounting and Financial Management"
 msgstr "Accounting and Financial Management"
 
 #. module: account
-#: model:process.node,name:account.process_node_manually0
-msgid "Manually"
-msgstr "Manually"
-
-#. module: account
 #: field:account.automatic.reconcile,period_id:0
 #: view:account.bank.statement:0
 #: field:account.bank.statement,period_id:0
@@ -7715,6 +7674,15 @@ msgstr "Account Analytic Inverted Balance"
 #: model:ir.model,name:account.model_account_common_report
 msgid "Account Common Report"
 msgstr "Account Common Report"
+
+#. module: account
+#: model:ir.actions.act_window,help:account.action_invoice_tree3
+msgid ""
+"This menu helps you manage the credit notes issued/to be issued for your "
+"customers. A refund invoice is a document that cancels an invoice or a part "
+"of it. You can easily generate refunds and reconcile them from the invoice "
+"form."
+msgstr ""
 
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
@@ -7990,6 +7958,18 @@ msgstr ""
 "created."
 
 #. module: account
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: account
+#: model:account.account.type,name:account.account_type_expense
+msgid "Expense"
+msgstr "Expense"
+
+#. module: account
 #: code:addons/account/account_move_line.py:0
 #, python-format
 msgid "Bad account!"
@@ -8135,11 +8115,11 @@ msgstr "Referans Tipi"
 #. module: account
 #: help:account.bs.report,reserve_account_id:0
 msgid ""
-"This Account is used for trasfering Profit/Loss(If It is Profit: Amount will "
+"This Account is used for transferring Profit/Loss(If It is Profit: Amount will "
 "be added, Loss : Amount will be duducted.), Which is calculated from Profilt "
 "& Loss Report"
 msgstr ""
-"This Account is used for trasfering Profit/Loss(If It is Profit: Amount will "
+"This Account is used for transferring Profit/Loss(If It is Profit: Amount will "
 "be added, Loss : Amount will be duducted.), Which is calculated from Profilt "
 "& Loss Report"
 
@@ -9370,9 +9350,14 @@ msgid "End period"
 msgstr "End period"
 
 #. module: account
-#: view:account.bank.statement:0
-msgid "Opening Balance"
-msgstr "Opening Balance"
+#: code:addons/account/account_move_line.py:0
+#: code:addons/account/wizard/account_invoice_state.py:0
+#: code:addons/account/wizard/account_report_balance_sheet.py:0
+#: code:addons/account/wizard/account_state_open.py:0
+#: code:addons/account/wizard/account_validate_account_move.py:0
+#, python-format
+msgid "Warning"
+msgstr "Uyarı"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal
@@ -9518,9 +9503,9 @@ msgid "Account Tax Code Template"
 msgstr "Ana Vergi Kodu Şablonu"
 
 #. module: account
-#: model:account.account.type,name:account.account_type_expense
-msgid "Erfolgskonten - Aufwendungen"
-msgstr ""
+#: model:process.node,name:account.process_node_manually0
+msgid "Manually"
+msgstr "Manually"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -9575,11 +9560,6 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
 msgid "Billing"
 msgstr "Billing"
-
-#. module: account
-#: model:account.journal,name:account.check_journal
-msgid "Checks Journal - (test)"
-msgstr ""
 
 #. module: account
 #: view:account.account:0
@@ -9860,6 +9840,38 @@ msgstr "You must enter a period length that cannot be 0 or below !"
 msgid "You cannot remove an account which has account entries!. "
 msgstr "You cannot remove an account which has account entries!. "
 
+#~ msgid "New Customer Invoice"
+#~ msgstr "Yeni Müşteri Faturası"
+
+#~ msgid "Confirm draft invoices"
+#~ msgstr "Ön faturayı onayla"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "departement at +32 81 81 37 00."
+#~ msgstr ""
+#~ "Bu postanın gönderilmesinden sonra ödemeniz yapılacaktır. Lütfen gerektiği "
+#~ "zaman muhasebe bölümümüzü arayınız."
+
+#~ msgid "Select Message"
+#~ msgstr "Mesaj Seç"
+
+#~ msgid "Entries Encoding"
+#~ msgstr "Giriş Kodlamaları"
+
+#~ msgid "Confirm statement from draft"
+#~ msgstr "Onay Taslağı"
+
+#~ msgid "Print Taxes Report"
+#~ msgstr "Vergi Raporlarını Yazdır"
+
+#~ msgid "Entry label"
+#~ msgstr "Giriş etiketi"
+
+#~ msgid "Disc. (%)"
+#~ msgstr "Disk (%)"
+
 #~ msgid "Contact"
 #~ msgstr "Kişi"
 
@@ -9869,29 +9881,428 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ msgid "Other"
 #~ msgstr "Diğer"
 
+#~ msgid "Unpaid Supplier Invoices"
+#~ msgstr "Ödenmemiş Tedarikçi Faturaları"
+
+#~ msgid "Unreconciled entries"
+#~ msgstr "Mutabakatsız girişler"
+
+#~ msgid "Charts of Account"
+#~ msgstr "Hesap çizelgesi"
+
+#~ msgid "Move line select"
+#~ msgstr "Seçilen satırı taşı"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Hesap Kayıt satırı"
+
+#~ msgid "Recurrent Entries"
+#~ msgstr "tekrarlanan kayıtlar"
+
+#~ msgid "Account Num."
+#~ msgstr "Hesap numarası"
+
+#~ msgid "Delta Debit"
+#~ msgstr "delta borç"
+
+#~ msgid "Debit Trans."
+#~ msgstr "borç hareketleri"
+
+#~ msgid "Total entries"
+#~ msgstr "toplam kayıtlar"
+
+#~ msgid "Payment Reconcilation"
+#~ msgstr "ödeme mutabakatı"
+
+#~ msgid "Contra"
+#~ msgstr "Karşı"
+
+#~ msgid "Unpaid Supplier Refunds"
+#~ msgstr "Ödenmeyen tedarikçi iadesi"
+
+#~ msgid "Journal Voucher"
+#~ msgstr "Yevmiye Fişi"
+
+#~ msgid "Aged Trial Balance"
+#~ msgstr "Yaşlandırılmış Mizan"
+
+#~ msgid "Supplier invoice"
+#~ msgstr "Tedarikçi Faturası"
+
+#~ msgid "Reconcile Paid"
+#~ msgstr "Ödenen Mutabakat"
+
+#~ msgid "Fiscal Position Accounts Mapping"
+#~ msgstr "Mali Durum Eşleme Hes."
+
+#~ msgid "Account Entry Reconcile"
+#~ msgstr "Mutabakat Kayıt Hesabı"
+
+#~ msgid "Analytic Invoice"
+#~ msgstr "Fatura Analizi"
+
+#~ msgid "Partial Payment"
+#~ msgstr "Kısmi Ödeme"
+
+#~ msgid "Move Lines Created."
+#~ msgstr "Kalem Hareketleri Oluşturuldu."
+
+#~ msgid "Partner account"
+#~ msgstr "Cari Hesabı"
+
+#~ msgid "Move Lines"
+#~ msgstr "Hareket Kalemleri"
+
+#~ msgid "Bank Reconciliation"
+#~ msgstr "Banka Mutabakat"
+
+#~ msgid "Print Journal"
+#~ msgstr "Yevmiye Yazdır"
+
+#~ msgid "Cancel Invoice"
+#~ msgstr "Faturayı İptalet"
+
+#~ msgid "Select Chart of Accounts"
+#~ msgstr "Hesap Kartı Seç"
+
+#~ msgid "End date"
+#~ msgstr "Bitiş Tarihi"
+
+#~ msgid "Entries by Statements"
+#~ msgstr "Ekstre Kayıtları"
+
+#~ msgid "analytic Invoice"
+#~ msgstr "Fatura Analizi"
+
+#~ msgid "Grand total"
+#~ msgstr "Genel Toplam"
+
+#~ msgid "Fiscal Position Taxes Mapping"
+#~ msgstr "Mali Durum Vergi Haritası"
+
+#~ msgid "New Supplier Invoice"
+#~ msgstr "Yeni Tedarikçi Faturası"
+
+#~ msgid "Amount paid"
+#~ msgstr "Ödeme Tutarı"
+
+#~ msgid "Voucher Nb"
+#~ msgstr "Fiş Numarası"
+
+#~ msgid "Total write-off"
+#~ msgstr "Toplam Şüpheli Alacak"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Yeni Analiz Hesabı"
+
+#~ msgid "Period from :"
+#~ msgstr "Başl. Dönemi :"
+
+#~ msgid "Bank Receipt"
+#~ msgstr "Banka Tahsilatı"
+
+#~ msgid "Invoice import"
+#~ msgstr "Fatura Al"
+
+#~ msgid "Standard entry"
+#~ msgstr "Standart Kayıt"
+
+#~ msgid "Fiscal Position Template Account Mapping"
+#~ msgstr "Mali Durum Şablonu Eşleme Hes."
+
 #~ msgid "Parent Analytic Account"
 #~ msgstr "Ana Alaniz Hesapları"
+
+#~ msgid "Ending Balance"
+#~ msgstr "Kapanış Bakiyesi"
+
+#~ msgid "Analytic Credit"
+#~ msgstr "Alacak Analizi"
+
+#~ msgid "Display History"
+#~ msgstr "Geçmişi Göster"
+
+#~ msgid "        Start date"
+#~ msgstr "        Başl. Tarihi"
+
+#~ msgid "Statement reconcile line"
+#~ msgstr "Ekstre Mutabakat Kalemi"
+
+#~ msgid "Close states"
+#~ msgstr "Durumları Kapat"
+
+#~ msgid "Print General Journal"
+#~ msgstr "Genel Yevmiyeyi Yazdır"
+
+#~ msgid "Invoice Movement"
+#~ msgstr "Fatura Hareketi"
+
+#~ msgid "Legal Statements"
+#~ msgstr "Mali Ekstreler"
 
 #~ msgid "VAT"
 #~ msgstr "KDV"
 
+#~ msgid "Account to reconcile"
+#~ msgstr "Mutabakat Hesabı"
+
+#~ msgid "Third party"
+#~ msgstr "Üçüncü Parti"
+
 #~ msgid "Account Number"
 #~ msgstr "Hesap Numarası"
+
+#~ msgid "Include in base amount"
+#~ msgstr "Matrah Tutarı Dahil"
+
+#~ msgid "Delta Credit"
+#~ msgstr "Delta Kredi"
+
+#~ msgid "New Statement"
+#~ msgstr "Yeni Ekstre"
+
+#~ msgid "Print Central Journal"
+#~ msgstr "Ana Yevmiyeyi Yazdır"
+
+#~ msgid "Date or Code"
+#~ msgstr "Tarih veya Kod"
 
 #~ msgid "Account Manager"
 #~ msgstr "Hesap Yöneticisi"
 
+#~ msgid "Start date"
+#~ msgstr "Başlama Tarihi"
+
 #~ msgid "Untaxed amount"
 #~ msgstr "Tutar"
+
+#~ msgid "Pay invoice"
+#~ msgstr "Fatura Öde"
+
+#~ msgid "Draft Customer Invoices"
+#~ msgstr "Açık Müşteri Faturaları"
+
+#~ msgid "No Filter"
+#~ msgstr "Filtre Yok"
+
+#~ msgid "          Start date"
+#~ msgstr "          Başl. Tarihi"
+
+#~ msgid "Analytic Journal Report"
+#~ msgstr "Günllük Analiz Raporu"
+
+#~ msgid "Invoice Sequence"
+#~ msgstr "Fatura Sıra No"
+
+#~ msgid "Customer Invoice Process"
+#~ msgstr "Müşteri Fatura İşlemleri"
+
+#~ msgid "Validate Account Moves"
+#~ msgstr "Hesap Hareketlerini Onayla"
+
+#~ msgid "Unpaid invoices"
+#~ msgstr "Ödenmemiş Faturalar"
+
+#~ msgid "Payment Reconcile"
+#~ msgstr "Ödeme Mutabakatı Yap"
+
+#~ msgid "Draft Supplier Invoices"
+#~ msgstr "Açık Tedarikçi Faturaları"
+
+#~ msgid "Create subscription entries"
+#~ msgstr "Abonelik Kaydı Oluştur"
+
+#~ msgid "Create a Fiscal Year"
+#~ msgstr "Bir Mali Yıl Oluştur"
+
+#~ msgid "Date Invoiced"
+#~ msgstr "Fatura Tarihi"
+
+#~ msgid "Statement Entries"
+#~ msgstr "Ekstre Kayıtları"
+
+#~ msgid "Automatic reconciliation"
+#~ msgstr "Otomatik Mutabakat"
 
 #~ msgid "Date End"
 #~ msgstr "Bitiş Tarihi"
 
+#~ msgid "Entries Encoding by Line"
+#~ msgstr "Kayıt Kodlaması Kalem bazında"
+
+#~ msgid "Entries Reconcile"
+#~ msgstr "Mutabakat Kayıtları"
+
+#~ msgid "Taxes Reports"
+#~ msgstr "Vergi Raporları"
+
+#~ msgid "Overdue Payment Message"
+#~ msgstr "Vadesi Geçen Ödeme için Mesajı"
+
+#~ msgid "End of Year Treatments"
+#~ msgstr "İşlem Yıl Bitişi"
+
+#~ msgid "Generic Reports"
+#~ msgstr "Genel Raporlar"
+
+#~ msgid "Analytic Chart of Accounts"
+#~ msgstr "Hesap Planı Kartları Analizi"
+
+#~ msgid "Analytic account costs and revenues"
+#~ msgstr "Maliyet ve Gelir Hesap Analizi"
+
+#~ msgid "Open State"
+#~ msgstr "Bölge Aç"
+
+#~ msgid "Skip 'Draft' State for Created Entries"
+#~ msgstr "Oluşturulan Kayıtlar için \"Taslak\" Durumunu Atla"
+
 #~ msgid "Full Account Name"
 #~ msgstr "Tam Hesap Adı"
 
+#~ msgid "Draft Supplier Refunds"
+#~ msgstr "Açık Tedarikçi İadeleri"
+
+#~ msgid "Accounting Statement"
+#~ msgstr "Muhasebe Tablosu"
+
+#~ msgid "Reconcilation of entries from payment order."
+#~ msgstr "Ödeme Emri Kayıtlarının Mutabakatını Yap"
+
+#~ msgid "Analytic Journal -"
+#~ msgstr "Yevmiye Analizi -"
+
+#~ msgid "Analytic Debit"
+#~ msgstr "Borç Analizi"
+
+#~ msgid "Draft Customer Refunds"
+#~ msgstr "Açık Müşteri İadeleri"
+
+#~ msgid "Cancel selected invoices"
+#~ msgstr "Seçili Faturaları İptal Et"
+
+#~ msgid "Reconcilate the entries from payment"
+#~ msgstr "Ödeme Kayıtlarının Mutabakatını Yap"
+
+#~ msgid "By Date and Period"
+#~ msgstr "Dönem ve Tarihe göre"
+
+#~ msgid "Financial Management"
+#~ msgstr "Finansal Yönetim"
+
+#~ msgid "Additionnal Information"
+#~ msgstr "Ek Bilgi"
+
+#~ msgid " Close states of Fiscal year and periods"
+#~ msgstr " Dönemleri ve Mali Yıl Tablolarını Kapat"
+
+#~ msgid "Partner Accounts"
+#~ msgstr "Cari Hesaplar"
+
+#~ msgid "Real Entries"
+#~ msgstr "Gerçekleşen Kayıtlar"
+
+#~ msgid "Import invoice"
+#~ msgstr "Faturayı Al"
+
+#~ msgid "Invoice line"
+#~ msgstr "Fatura Kalemi"
+
+#~ msgid "Filter on Periods"
+#~ msgstr "Dönemde Filtrele"
+
+#~ msgid "Pay and reconcile"
+#~ msgstr "Öde ve Mutabakat Yap"
+
+#~ msgid "New Supplier Refund"
+#~ msgstr "Yeni Tedarikçi İade Faturası"
+
+#~ msgid "Journal code"
+#~ msgstr "Yevmiye Kodu"
+
+#~ msgid "Entry Name"
+#~ msgstr "Kayıt Adı"
+
+#~ msgid "Credit Note"
+#~ msgstr "Alacak Dekontu"
+
+#~ msgid "3 Months"
+#~ msgstr "3 Ay"
+
+#~ msgid "By date"
+#~ msgstr "Tarihe göre"
+
+#~ msgid "Select Chart"
+#~ msgstr "Kart Seç"
+
+#~ msgid "Fiscal Position Template Tax Mapping"
+#~ msgstr "Mali Durum Şablonu Vergi Eşlemesi"
+
+#~ msgid "Payment Entries"
+#~ msgstr "Ödeme Kayıtları"
+
+#~ msgid "Overdue Payment Report Message"
+#~ msgstr "Vadesi Geçen Ödeme Rapor Mesajı"
+
+#~ msgid "Movement"
+#~ msgstr "Hareket"
+
+#~ msgid "Financial Journals"
+#~ msgstr "Finansal Yevmiyeler"
+
+#~ msgid "By Period"
+#~ msgstr "Döneme göre"
+
 #~ msgid "Maximum Quantity"
 #~ msgstr "Max. Miktar"
+
+#~ msgid "Base on"
+#~ msgstr "Matrahta"
+
+#~ msgid "Cash Payment"
+#~ msgstr "Nakit Ödeme"
+
+#~ msgid "Account Move"
+#~ msgstr "Hesap Hareketi"
+
+#~ msgid "Taxed Amount"
+#~ msgstr "Vergi Tutarı"
+
+#~ msgid "Subtotal w/o tax"
+#~ msgstr "Vergi Hariç Alt Top."
+
+#~ msgid "Invoice Ref"
+#~ msgstr "Fatura Ref."
+
+#~ msgid "       Include Reconciled Entries"
+#~ msgstr "       Dahil Mutabık Kayıtlar"
+
+#~ msgid "Date/Period Filter"
+#~ msgstr "Tarih/Dönem Filtresi"
+
+#~ msgid "Credit Trans."
+#~ msgstr "Alacak İşlemleri"
+
+#~ msgid "Search Entries"
+#~ msgstr "Arama Kayıtları"
+
+#~ msgid "Payment date"
+#~ msgstr "Ödeme Tarihi"
+
+#~ msgid "Unpaid Customer Invoices"
+#~ msgstr "Ödenmemiş Müşteri Faturaları"
+
+#~ msgid "Journal/Payment Mode"
+#~ msgstr "Yevmiye/Ödeme Biçimi"
+
+#~ msgid "Canceled Invoice"
+#~ msgstr "İptal Edilen Fatura"
+
+#~ msgid "Bank Payment"
+#~ msgstr "Banka Ödemesi"
+
+#~ msgid "File statement"
+#~ msgstr "Dosya Ekstresi"
 
 #~ msgid "Partner Other Ledger"
 #~ msgstr "Cari Diğer Defteri"
@@ -9899,23 +10310,224 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ msgid "Accounting Entries"
 #~ msgstr "Muhasebe Kayıtları"
 
+#~ msgid "General Ledger -"
+#~ msgstr "Defter-i Kebir -"
+
+#~ msgid "Quantities"
+#~ msgstr "Miktarlar"
+
 #~ msgid "Date Start"
 #~ msgstr "Tarih Başlangıcı"
+
+#~ msgid "By Date"
+#~ msgstr "Tarihe göre"
+
+#~ msgid "The date of the generated entries"
+#~ msgstr "Oluşturulan Kayıt Tarihi"
+
+#~ msgid "Modify Invoice"
+#~ msgstr "Fatura Düzenle"
+
+#~ msgid "Entries Encoding by Move"
+#~ msgstr "Kayıt Kodlaması Yer Değiştirmesine göre"
+
+#~ msgid "Filter on Partners"
+#~ msgstr "Carileri Filtrele"
+
+#~ msgid "Analytic Entries by Journal"
+#~ msgstr "Yevmiye Kaydı Analizi"
+
+#~ msgid "Journal name"
+#~ msgstr "Yevmiye Adı"
+
+#~ msgid "Import invoice from statement"
+#~ msgstr "Ekstreden Fatura Al"
+
+#~ msgid "Import from invoices or payments"
+#~ msgstr "Faturalardan veya Ödemelerden import et"
+
+#~ msgid "Reconcile entries"
+#~ msgstr "Kayıtların Mutabakatını Yap"
+
+#~ msgid "Print Aged Trial Balance"
+#~ msgstr "Yaşlandırılmış Mizanı Yazdır"
+
+#~ msgid "General Credit"
+#~ msgstr "Genel Kredi"
 
 #~ msgid "A/c No."
 #~ msgstr "A/c No."
 
+#~ msgid "Control Invoice"
+#~ msgstr "Fatura Kontrol Et"
+
+#~ msgid "Account Balance"
+#~ msgstr "Hesap Bakiyesi"
+
+#~ msgid "Payment amount"
+#~ msgstr "Ödeme Tutarı"
+
+#~ msgid "All Months"
+#~ msgstr "Tüm Aylar"
+
+#~ msgid "Group invoice lines"
+#~ msgstr "Fatura Kalemlerini Gruplandır"
+
 #~ msgid "Total amount"
 #~ msgstr "Toplam Tutar"
+
+#~ msgid "Select Date-Period"
+#~ msgstr "Tarih-Dönem Seç"
+
+#~ msgid "New Customer Refund"
+#~ msgstr "Yeni Müşteri İade Faturası"
+
+#~ msgid "Import invoices"
+#~ msgstr "Faturaları Import Et"
+
+#~ msgid "Full Payment"
+#~ msgstr "Tam Ödeme"
+
+#~ msgid "Journal Purchase"
+#~ msgstr "Alış Yevmiyesi"
+
+#~ msgid "Cash Receipt"
+#~ msgstr "Nakit Tahsilatı"
+
+#~ msgid "All account entries"
+#~ msgstr "Tüm Hesap Kayıtları"
+
+#~ msgid "Date Filter"
+#~ msgstr "Tarih Filtresi"
+
+#~ msgid "Choose Journal and Payment Date"
+#~ msgstr "Ödeme Tarihi ve Yevmiye Seç"
+
+#~ msgid "Unpaid Customer Refunds"
+#~ msgstr "Ödenmemiş Müşteri İadeleri"
+
+#~ msgid "Supplier Invoice Process"
+#~ msgstr "Tedarikçi Fatura Prosesi"
+
+#~ msgid "Receivable and Payable"
+#~ msgstr "Alacak ve Borç"
+
+#~ msgid "Subscription Entries"
+#~ msgstr "Abonelik Kayıtları"
+
+#~ msgid "PRO-FORMA Customer Invoices"
+#~ msgstr "PRO-FORMA Müşteri Faturaları"
+
+#~ msgid "Analytic Journal Definition"
+#~ msgstr "Yevmiye Analiz Tanımı"
+
+#~ msgid "List of Accounts"
+#~ msgstr "Hesap Listesi"
+
+#~ msgid "Printing Date :"
+#~ msgstr "Yazdırma Tarihi :"
+
+#~ msgid "Entries of Open Analytic Journals"
+#~ msgstr "Açık Günllük Analiz Kayıtları"
+
+#~ msgid "Current Date"
+#~ msgstr "Geçerli Tarih"
+
+#~ msgid "Print VAT Decl."
+#~ msgstr "KDV Bey. Yazdır"
+
+#~ msgid "Financial Accounts"
+#~ msgstr "Finansal Hesaplar"
+
+#~ msgid "Print Journal -"
+#~ msgstr "Yevmiye Yazdır -"
+
+#~ msgid "Reconcile Entries."
+#~ msgstr "Kayıtların Mutabakatını Yap"
+
+#~ msgid "Paid invoice when reconciled."
+#~ msgstr "Mutabık iken Fatura Ödenmiş"
+
+#~ msgid "Accounting and financial management"
+#~ msgstr "Muhasebe ve Finans Yönetimi"
+
+#~ msgid "General Debit"
+#~ msgstr "Genel Borç"
 
 #~ msgid "Account Code"
 #~ msgstr "Hesap Kodu"
 
+#~ msgid "Statement Process"
+#~ msgstr "Ekstre Prosesi"
+
+#~ msgid "Statement reconcile"
+#~ msgstr "Ekstre Mutabakatı"
+
+#~ msgid "Compute Entry Dates"
+#~ msgstr "Giriş Tarihlerini Hesapla"
+
+#~ msgid "x Sales Credit Note Journal"
+#~ msgstr "x Satış Alacak Dekontu Yevmiyesi"
+
+#~ msgid "Analytic accounts to close"
+#~ msgstr "Çözümleyici hesabı kapat"
+
+#~ msgid "Draft invoices"
+#~ msgstr "Taslak Faturlar"
+
+#~ msgid "Accounts to invoice"
+#~ msgstr "Hesapları faturala"
+
+#~ msgid "Costs to invoice"
+#~ msgstr "Maliyetleri faturala"
+
 #~ msgid "Aged receivables"
 #~ msgstr "Eski Alacaklar"
 
+#~ msgid "My indicators"
+#~ msgstr "Göstergelerim"
+
+#~ msgid "Aged income"
+#~ msgstr "Yaşlandırılmış Gelir"
+
+#~ msgid "Show Debit/Credit Information"
+#~ msgstr "Borç/Kredi Bilgisini Göster"
+
+#~ msgid "All accounts"
+#~ msgstr "Tüm hesaplar"
+
+#~ msgid "Notification"
+#~ msgstr "Bildirim"
+
+#~ msgid "Financial Period"
+#~ msgstr "Mali Dönem"
+
+#~ msgid "Account balance-Compare Years"
+#~ msgstr "Hesap Bakiyesi (Yıl Karşılaştırma)"
+
+#~ msgid "Show Accounts"
+#~ msgstr "Hsapları Göster"
+
+#~ msgid "You can select maximum 3 years. Please check again."
+#~ msgstr "En fazla 3 yıl seçebilirsiniz. Lütfen tekrar kontrol edin."
+
+#~ msgid ""
+#~ "You might have done following mistakes. Please correct them and try again."
+#~ msgstr ""
+#~ "Aşağıdaki hataları yapmış olabilirsiniz. Lütfen bunları düzeltin ve tekrar "
+#~ "deneyin."
+
+#~ msgid "You have to select at least 1 Fiscal Year. Try again."
+#~ msgstr "En az 1 Mali Yıl seçmelisiniz. Tekrar deneyin."
+
+#~ msgid "Customize Report"
+#~ msgstr "Raporu Yapılandır"
+
 #~ msgid "Error! You can not create recursive analytic accounts."
 #~ msgstr "Hata! Yinelenen çözümleme hesabı oluşturamazsınız."
+
+#~ msgid "Journal de frais"
+#~ msgstr "Yevmiye defteri masrafları"
 
 #~ msgid "Canada"
 #~ msgstr "Kanada"
@@ -10167,6 +10779,9 @@ msgstr "You cannot remove an account which has account entries!. "
 
 #~ msgid "\"smtp_server\" needs to be set to send mails to users"
 #~ msgstr "\"smtp_server\" needs to be set to send mails to users"
+
+#~ msgid "supplier"
+#~ msgstr "tedarikçi"
 
 #~ msgid "new"
 #~ msgstr "yeni"
@@ -10864,9 +11479,6 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ "Set a product if this rule only apply to one product. Keep empty for all "
 #~ "products"
 
-#~ msgid "Warning!"
-#~ msgstr "Uyarı!"
-
 #~ msgid "Dummy"
 #~ msgstr "Kukla"
 
@@ -11013,6 +11625,15 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ "(Pazartesi haftanın ilk günü olmak üzere). Yeni bir yıldaki ilk Pazartesiden "
 #~ "önceki bütün günler 0'ıncı hafta içinde kabul edilir."
 
+#~ msgid ""
+#~ "Exception made of a mistake of our side, it seems that the following bills "
+#~ "stay unpaid. Please, take appropriate measures in order to carry out this "
+#~ "payment in the next 8 days."
+#~ msgstr ""
+#~ "Exception made of a mistake of our side, it seems that the following bills "
+#~ "stay unpaid. Please, take appropriate measures in order to carry out this "
+#~ "payment in the next 8 days."
+
 #~ msgid "is ready to process."
 #~ msgstr "is ready to process."
 
@@ -11037,9 +11658,6 @@ msgstr "You cannot remove an account which has account entries!. "
 
 #~ msgid "Action URL"
 #~ msgstr "İşlem URLsi"
-
-#~ msgid "Liability"
-#~ msgstr "Liability"
 
 #~ msgid "STOCK_NEW"
 #~ msgstr "STOCK_NEW"
@@ -16274,9 +16892,6 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ msgid "New Database"
 #~ msgstr "New Database"
 
-#~ msgid "Income"
-#~ msgstr "Income"
-
 #~ msgid "Order State"
 #~ msgstr "Sipariş Durumu"
 
@@ -17666,13 +18281,6 @@ msgstr "You cannot remove an account which has account entries!. "
 #~ msgid "This error occurs on database %s"
 #~ msgstr "Bu hata %s veritabanında gerçekleşti"
 
-#~ msgid ""
-#~ "Bank Account Number, Company bank account if Invoice is customer or supplier "
-#~ "refund, otherwise Partner bank account number."
-#~ msgstr ""
-#~ "Bank Account Number, Company bank account if Invoice is customer or supplier "
-#~ "refund, otherwise Partner bank account number."
-
 #~ msgid "Import module"
 #~ msgstr "Modülü İçeri Aktar"
 
@@ -18227,12 +18835,6 @@ msgstr "You cannot remove an account which has account entries!. "
 
 #~ msgid "Last Product Inventories"
 #~ msgstr "Last Product Inventories"
-
-#~ msgid "Asset"
-#~ msgstr "Asset"
-
-#~ msgid "    7 Days    "
-#~ msgstr "    7 Days    "
 
 #~ msgid "Bigger than the reference UoM"
 #~ msgstr "Bigger than the reference UoM"
@@ -19124,9 +19726,6 @@ msgstr "You cannot remove an account which has account entries!. "
 
 #~ msgid "Manages analytic distribution and purchase orders."
 #~ msgstr "Manages analytic distribution and purchase orders."
-
-#~ msgid "Expense"
-#~ msgstr "Expense"
 
 #~ msgid ""
 #~ "Expression, must be True to match\n"

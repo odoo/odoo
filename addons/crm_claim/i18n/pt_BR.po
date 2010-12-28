@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-16 13:45+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-18 11:07+0000\n"
 "Last-Translator: Cristiano Korndörfer <codigo.aberto@dorfer.com.br>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_claim
@@ -130,6 +130,11 @@ msgstr "Cancelada"
 #: model:crm.case.resource.type,name:crm_claim.type_claim2
 msgid "Preventive"
 msgstr "Preventiva"
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Fixed"
+msgstr ""
 
 #. module: crm_claim
 #: field:crm.claim,partner_address_id:0
@@ -299,7 +304,6 @@ msgid "Stages"
 msgstr "Estágios"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr "Análise de Reclamações"
@@ -446,6 +450,11 @@ msgid "User"
 msgstr "Usuário"
 
 #. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Awaiting Response"
+msgstr ""
+
+#. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
 msgid "Claim Categories"
 msgstr "Categorias de Reclamações"
@@ -476,6 +485,17 @@ msgid "October"
 msgstr "Outubro"
 
 #. module: crm_claim
+#: model:ir.module.module,description:crm_claim.module_meta_information
+msgid ""
+"\n"
+"This modules allows you to track your customers/suppliers claims and "
+"flames.\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr "Janeiro"
@@ -494,6 +514,7 @@ msgstr "Essas pessoas receberão e-mail."
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
@@ -648,16 +669,6 @@ msgid "Report a Claim"
 msgstr "Relatar uma Reclamação"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Actions Done"
-msgstr "Ações Concluídas"
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Actions Defined"
-msgstr "Ações Definidas"
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
 msgstr "Lembrete"
@@ -736,3 +747,15 @@ msgstr "Data de Criação"
 #: field:crm.claim.report,name:0
 msgid "Year"
 msgstr "Ano"
+
+#~ msgid "Planned Revenue"
+#~ msgstr "Lucro Planejado"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome do modelo inválido na definição da ação."
+
+#~ msgid "Actions Defined"
+#~ msgstr "Ações Definidas"
+
+#~ msgid "Actions Done"
+#~ msgstr "Ações Concluídas"

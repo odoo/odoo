@@ -7,15 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-16 21:48+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-20 00:57+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_quality
@@ -49,6 +48,9 @@ msgid ""
 "\n"
 "Test checks for fields, views, security rules, dependancy level\n"
 msgstr ""
+"\n"
+"Le test vérifie les champs, les vues, les règles de sécurité, le niveau de "
+"dépendance\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
@@ -345,6 +347,10 @@ msgid ""
 "needed in order to run it.\n"
 "\n"
 msgstr ""
+"\n"
+"Ce test vérifie la vitesse du module. Notez qu'il est nécessaire d'avoir au "
+"moins 5 données de démonstration pour pouvoir le lancer.\n"
+"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -359,6 +365,8 @@ msgid ""
 "\n"
 "This test checks if the module satisfy tiny structure\n"
 msgstr ""
+"\n"
+"Ce tests vérifie si le module correspond à la structure \"tiny\"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/structure_test/structure_test.py:0
@@ -439,6 +447,10 @@ msgid ""
 "of Python. See http://www.logilab.org/project/name/pylint for further info.\n"
 " "
 msgstr ""
+"Ce test utilise Pylint et vérifie si le module correspond aux standards de "
+"développement de Python. Visitez http://www.logilab.org/project/name/pylint "
+"pour de plus amples informations.\n"
+" "
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/workflow_test/workflow_test.py:0
@@ -461,6 +473,14 @@ msgstr "Terminé"
 #: wizard_button:quality_detail_save,init,end:0
 msgid "Cancel"
 msgstr "Annuler"
+
+#. module: base_module_quality
+#: code:addons/base_module_quality/pep8_test/pep8_test.py:0
+#, python-format
+msgid ""
+"\n"
+"PEP-8 Test , copyright of py files check, method can not call from loops\n"
+msgstr ""
 
 #. module: base_module_quality
 #: field:module.quality.check,final_score:0
@@ -502,6 +522,10 @@ msgid ""
 "'unit_test/test.py' is needed in module.\n"
 "\n"
 msgstr ""
+"\n"
+"Ce test vérifie les tests unitaires (Pyunit) du module. Notez que le fichier "
+"'unit_test/test.py' doit être présent dans le module.\n"
+"\n"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/method_test/method_test.py:0
@@ -511,6 +535,9 @@ msgid ""
 "This test checks if the module classes are raising exception when calling "
 "basic methods or not.\n"
 msgstr ""
+"\n"
+"Ce test vérifie si les classes du module remontent ou non une exception "
+"quand on appelle une méthode basique.\n"
 
 #. module: base_module_quality
 #: field:module.quality.detail,detail:0
@@ -521,7 +548,7 @@ msgstr "Détails"
 #: code:addons/base_module_quality/speed_test/speed_test.py:0
 #, python-format
 msgid "Warning! Not enough demo data"
-msgstr ""
+msgstr "Avertissement ! Pas assez de données de démonstration"
 
 #. module: base_module_quality
 #: code:addons/base_module_quality/pylint_test/pylint_test.py:0
@@ -583,6 +610,24 @@ msgid ""
 "using it, otherwise it may crash.\n"
 "    "
 msgstr ""
+"\n"
+"Le but de ce module est de vérifier la qualité des autres modules.\n"
+"\n"
+"Il ajoute un assistant sur la liste des modules dans OpenERP, qui vous "
+"permet de\n"
+"les évaluer à partir de différents critères comme : les respect des normes "
+"de développement\n"
+"d'OpenERP, la vitesse d'exécution...\n"
+"\n"
+"Ce module fournit également un cadre de travail générique pour définir vos "
+"propres tests de qualité.\n"
+"Pour plus d'informations, les développeurs peuvent regarder le fichier "
+"base_module_quality/README.txt\n"
+"\n"
+"AVERTISSEMENT : Ce module ne fonctionne pas comme un fichier ZIP, vous devez "
+"le décompresser avant\n"
+"de l'utiliser, sinon il plante.\n"
+"    "
 
 #. module: base_module_quality
 #: model:ir.model,name:base_module_quality.model_module_quality_check
@@ -666,3 +711,30 @@ msgstr "Qualité"
 #, python-format
 msgid "Feed back About terp file of Module"
 msgstr "Retour d'information sur le fichier terp du module"
+
+#~ msgid "General Info"
+#~ msgstr "Information générale"
+
+#~ msgid "wizard.quality.check"
+#~ msgstr "wizard.quality.check"
+
+#~ msgid "quality.check.detail"
+#~ msgstr "quality.check.detail"
+
+#~ msgid "Verbose Detail"
+#~ msgstr "Verbose Detail"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Le nom du module doit être unique !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML incorrect dans l'architecture de la vue !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer par x_ et ne doit contenir aucun caractère "
+#~ "spécial !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La taille du champ ne doit jamais être inférieure à 1 !"

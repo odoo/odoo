@@ -1,9 +1,9 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2008 Zikzakmedia S.L. (http://zikzakmedia.com) All Rights Reserved.
-#                       Jordi Esteve <jesteve@zikzakmedia.com>
+#    Copyright (c) 2008-2010 Zikzakmedia S.L. (http://zikzakmedia.com) All Rights Reserved.
+#                            Jordi Esteve <jesteve@zikzakmedia.com>
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -25,6 +25,7 @@
     "name" : "Spanish Charts of Accounts (PGCE 2008)",
     "version" : "3.0",
     "author" : "Spanish Localization Team",
+    'website' : 'https://launchpad.net/openerp-spain',
     "category" : "Localisation/Account Charts",
     "description": """Spanish Charts of Accounts (PGCE 2008)
 

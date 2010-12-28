@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-09 11:28+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-22 08:03+0000\n"
+"Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_crm
@@ -44,6 +43,28 @@ msgstr "¡Datos insuficientes!"
 #, python-format
 msgid "Customer has no addresses defined!"
 msgstr "¡El cliente no tiene definidas direcciones!"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_make_sale
+msgid "Make sales"
+msgstr "Crear ventas"
+
+#. module: sale_crm
+#: model:ir.module.module,description:sale_crm.module_meta_information
+msgid ""
+"\n"
+"This module adds a shortcut on one or several opportunity cases in the CRM.\n"
+"This shortcut allows you to generate a sales order based on the selected "
+"case.\n"
+"If different cases are open (a list), it generates one sale order by\n"
+"case.\n"
+"The case is then closed and linked to the generated sales order.\n"
+"\n"
+"We suggest you to install this module if you installed both the sale and "
+"the\n"
+"crm modules.\n"
+"    "
+msgstr ""
 
 #. module: sale_crm
 #: view:crm.make.sale:0
@@ -76,11 +97,6 @@ msgid "Converted to Sales Quotation(id: %s)."
 msgstr "Convertido a presupuesto de venta (id: %s)."
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
-msgid "Make Quotation"
-msgstr "Realizar un presupuesto"
-
-#. module: sale_crm
 #: code:addons/sale_crm/wizard/crm_make_sale.py:0
 #, python-format
 msgid "Opportunity "
@@ -91,11 +107,6 @@ msgstr "Oportunidad "
 #, python-format
 msgid "Opportunity: %s"
 msgstr "Oportunidad: %s"
-
-#. module: sale_crm
-#: model:ir.model,name:sale_crm.model_sale_order
-msgid "Sale Order"
-msgstr "Pedido venta"
 
 #. module: sale_crm
 #: model:ir.module.module,shortdesc:sale_crm.module_meta_information
@@ -115,7 +126,7 @@ msgstr "Tienda"
 #. module: sale_crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr ""
+msgstr "Oportunidades por etapa"
 
 #. module: sale_crm
 #: view:board.board:0
@@ -134,14 +145,19 @@ msgid "Sales Team"
 msgstr "Equipo de ventas"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_crm_make_sale
-msgid "Make sale"
-msgstr "Realizar venta"
+#: model:ir.actions.act_window,name:sale_crm.action_crm_make_sale
+msgid "Make Quotation"
+msgstr "Realizar un presupuesto"
 
 #. module: sale_crm
 #: view:crm.make.sale:0
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
 
 #~ msgid "All at once"
 #~ msgstr "Todo junto"
@@ -249,6 +265,12 @@ msgstr "Cancelar"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Make sale"
+#~ msgstr "Realizar venta"
+
+#~ msgid "Sale Order"
+#~ msgstr "Pedido venta"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "¡El nombre del módulo debe ser único!"

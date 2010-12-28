@@ -58,18 +58,18 @@ class stock_return_picking(osv.osv_memory):
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
-        """ 
+        """
          Creates view dynamically and adding fields at runtime.
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param context: A standard dictionary 
+         @param context: A standard dictionary
          @return: New arch of view with new columns.
         """
         if context is None:
             context = {}
         res = super(stock_return_picking, self).view_init(cr, uid, fields_list, context=context)
-        record_id = context and context.get('active_id', False) 
+        record_id = context and context.get('active_id', False)
         if record_id:
             pick_obj = self.pool.get('stock.picking')
             pick = pick_obj.browse(cr, uid, record_id, context=context)
@@ -91,15 +91,15 @@ class stock_return_picking(osv.osv_memory):
             if not valid_lines:
                 raise osv.except_osv(_('Warning !'), _("There are no products to return (only lines in Done state and not fully returned yet can be returned)!"))
         return res
-    
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form',
                         context=None, toolbar=False, submenu=False):
-        """ 
+        """
          Changes the view dynamically
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param context: A standard dictionary 
+         @param context: A standard dictionary
          @return: New arch of view.
         """
         res = super(stock_return_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
@@ -120,7 +120,7 @@ class stock_return_picking(osv.osv_memory):
                 quantity = m.product_qty
                 if m.state=='done' and quantity > return_history[m.id]:
                     arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
-                    res['fields']['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True} 
+                    res['fields']['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True}
                     res.setdefault('returns', []).append(m.id)
             arch_lst.append('<field name="invoice_state"/>\n<newline/>')
             res['fields']['invoice_state']={'string':_('Invoicing'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To be refunded/invoiced')), ('none', _('No invoicing'))]}
@@ -138,9 +138,9 @@ class stock_return_picking(osv.osv_memory):
          @param self: The object pointer.
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
-         @param ids: List of ids selected 
-         @param context: A standard dictionary 
-         @return: A dictionary which of fields with values. 
+         @param ids: List of ids selected
+         @param context: A standard dictionary
+         @return: A dictionary which of fields with values.
         """
         if context is None:
             context = {} 
@@ -154,7 +154,7 @@ class stock_return_picking(osv.osv_memory):
         data = self.read(cr, uid, ids[0])
         new_picking = None
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
-    
+
         set_invoice_state_to_none = True
         returned_lines = 0
         for move in pick.move_lines:
@@ -165,22 +165,22 @@ class stock_return_picking(osv.osv_memory):
                     new_type = 'out'
                 else:
                     new_type = 'internal'
-                new_picking = pick_obj.copy(cr, uid, pick.id, {'name':'%s (return)' % pick.name,
+                new_picking = pick_obj.copy(cr, uid, pick.id, {'name':'%s-return' % pick.name,
                         'move_lines':[], 'state':'draft', 'type':new_type,
                         'date':date_cur, 'invoice_state':data['invoice_state'],})
             new_location=move.location_dest_id.id
             if move.state=='done':
                 new_qty = data['return%s' % move.id]
                 returned_qty = move.product_qty
-    
+
                 for rec in move.move_history_ids2:
                     returned_qty -= rec.product_qty
-        
+
                 if returned_qty != new_qty:
                     set_invoice_state_to_none = False
 
                 if new_qty:
-                    returned_lines += 1 
+                    returned_lines += 1
                     new_move=move_obj.copy(cr, uid, move.id, {
                         'product_qty': new_qty,
                         'product_uos_qty': uom_obj._compute_qty(cr, uid, move.product_uom.id,

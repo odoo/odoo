@@ -139,8 +139,8 @@
       {'active_ids': pick_ids})
     self.create_invoice(cr, uid, [id], {"active_ids": pick_ids, "active_id": pick_ids[0]})
 -
-  I check that an invoice_id field of Delivery&Invoices gets bind with the value.
+  I check that an invoice_ids field of Delivery&Invoices gets bind with the value.
 -
   !python {model: purchase.order}: |
     pur_id2=self.browse(cr, uid, ref("purchase_order_po2"))
-    assert(pur_id2.invoice_id)
+    assert(pur_id2.invoice_ids)

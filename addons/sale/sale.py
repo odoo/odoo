@@ -185,7 +185,7 @@ class sale_order(osv.osv):
         for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
         return result.keys()
-
+    
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True,
             readonly=True, states={'draft': [('readonly', False)]}, select=True),
@@ -274,6 +274,9 @@ class sale_order(osv.osv):
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'Order Reference must be unique !'),
+    ]
     _order = 'name desc'
 
     # Form filling
@@ -559,17 +562,19 @@ class sale_order(osv.osv):
         if context is None:
             context = {}
         sale_order_line_obj = self.pool.get('sale.order.line')
+        proc_obj = self.pool.get('procurement.order')
         for sale in self.browse(cr, uid, ids, context=context):
             for pick in sale.picking_ids:
                 if pick.state not in ('draft', 'cancel'):
                     raise osv.except_osv(
                         _('Could not cancel sales order !'),
                         _('You must first cancel all picking attached to this sales order.'))
-                for mov in pick.move_lines:
-                    proc_ids = self.pool.get('procurement.order').search(cr, uid, [('move_id', '=', mov.id)])
-                    if proc_ids:
-                        for proc in proc_ids:
-                            wf_service.trg_validate(uid, 'procurement.order', proc, 'button_check', cr)
+                if pick.state == 'cancel':
+                    for mov in pick.move_lines:
+                        proc_ids = proc_obj.search(cr, uid, [('move_id', '=', mov.id)])
+                        if proc_ids:
+                            for proc in proc_ids:
+                                wf_service.trg_validate(uid, 'procurement.order', proc, 'button_check', cr)
             for r in self.read(cr, uid, ids, ['picking_ids']):
                 for pick in r['picking_ids']:
                     wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
@@ -722,7 +727,6 @@ class sale_order(osv.osv):
                     })
                     proc_ids.append(proc_id)
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'procurement_id': proc_id})
-
                     if order.state == 'shipping_except':
                         for pick in order.picking_ids:
                             for move in pick.move_lines:

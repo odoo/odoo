@@ -401,7 +401,7 @@ class account_voucher(osv.osv):
 
         return default
 
-    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, context=None):
+    def onchange_partner_id(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=None):
         """price
         Returns a dict that contains new values and context
 
@@ -415,6 +415,9 @@ class account_voucher(osv.osv):
             context = {}
         if not journal_id:
             return {}
+        context_multi_currency = context.copy()
+        if date:
+            context_multi_currency.update({'date': date})
 
         line_pool = self.pool.get('account.voucher.line')
         line_ids = ids and line_pool.search(cr, uid, [('voucher_id', '=', ids[0])]) or False
@@ -476,9 +479,9 @@ class account_voucher(osv.osv):
 
         company_currency = journal.company_id.currency_id.id
         if company_currency != currency_id and ttype == 'payment':
-            total_debit = currency_pool.compute(cr, uid, currency_id, company_currency, total_debit)
+            total_debit = currency_pool.compute(cr, uid, currency_id, company_currency, total_debit, context=context_multi_currency)
         elif company_currency != currency_id and ttype == 'receipt':
-            total_credit = currency_pool.compute(cr, uid, currency_id, company_currency, total_credit)
+            total_credit = currency_pool.compute(cr, uid, currency_id, company_currency, total_credit, context=context_multi_currency)
 
         for line in moves:
             if line.credit and line.reconcile_partial_id and ttype == 'receipt':
@@ -500,18 +503,18 @@ class account_voucher(osv.osv):
                 'type': line.credit and 'dr' or 'cr',
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
-                'amount_original':currency_pool.compute(cr, uid, company_currency, currency_id, original_amount),
+                'amount_original':currency_pool.compute(cr, uid, company_currency, currency_id, original_amount, context=context_multi_currency),
                 'date_original':line.date,
                 'date_due':line.date_maturity,
-                'amount_unreconciled':currency_pool.compute(cr, uid, company_currency, currency_id, line.amount_unreconciled)
+                'amount_unreconciled':currency_pool.compute(cr, uid, company_currency, currency_id, line.amount_unreconciled, context=context_multi_currency)
             }
             if line.credit:
                 amount = min(line.amount_unreconciled, total_debit)
-                rs['amount'] = currency_pool.compute(cr, uid, company_currency, currency_id, amount)
+                rs['amount'] = currency_pool.compute(cr, uid, company_currency, currency_id, amount, context=context_multi_currency)
                 total_debit -= amount
             else:
                 amount = min(line.amount_unreconciled, total_credit)
-                rs['amount'] = currency_pool.compute(cr, uid, company_currency, currency_id, amount)
+                rs['amount'] = currency_pool.compute(cr, uid, company_currency, currency_id, amount, context=context_multi_currency)
                 total_credit -= amount
 
             default['value']['line_ids'].append(rs)
@@ -528,7 +531,7 @@ class account_voucher(osv.osv):
 
         return default
 
-    def onchange_date(self, cr, user, ids, date, context=None):
+    def onchange_date(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=None):
         """
         @param date: latest value from user input for field date
         @param args: other arguments
@@ -536,14 +539,13 @@ class account_voucher(osv.osv):
         @return: Returns a dict which contains new values, and context
         """
         period_pool = self.pool.get('account.period')
-        pids = period_pool.search(cr, user, [('date_start', '<=', date), ('date_stop', '>=', date)])
-        if not pids:
-            return {}
-        return {
-            'value':{
-                'period_id':pids[0]
-            }
-        }
+        res = self.onchange_partner_id(cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=context)
+        pids = period_pool.search(cr, uid, [('date_start', '<=', date), ('date_stop', '>=', date)])
+        if pids:
+            if not 'value' in res:
+                res['value'] = {}
+            res['value'].update({'period_id':pids[0]})
+        return res
 
     def onchange_journal(self, cr, uid, ids, journal_id, line_ids, tax_id, partner_id, context=None):
         if not journal_id:
@@ -642,6 +644,9 @@ class account_voucher(osv.osv):
         for inv in self.browse(cr, uid, ids, context=context):
             if inv.move_id:
                 continue
+            context_multi_currency = context.copy()
+            context_multi_currency.update({'date': inv.date})
+
             if inv.number:
                 name = inv.number
             elif inv.journal_id.sequence_id:
@@ -671,9 +676,9 @@ class account_voucher(osv.osv):
             # TODO: is there any other alternative then the voucher type ??
             # -for sale, purchase we have but for the payment and receipt we do not have as based on the bank/cash journal we can not know its payment or receipt
             if inv.type in ('purchase', 'payment'):
-                credit = currency_pool.compute(cr, uid, current_currency, company_currency, inv.amount)
+                credit = currency_pool.compute(cr, uid, current_currency, company_currency, inv.amount, context=context_multi_currency)
             elif inv.type in ('sale', 'receipt'):
-                debit = currency_pool.compute(cr, uid, current_currency, company_currency, inv.amount)
+                debit = currency_pool.compute(cr, uid, current_currency, company_currency, inv.amount, context=context_multi_currency)
             if debit < 0:
                 credit = -debit
                 debit = 0.0
@@ -701,14 +706,14 @@ class account_voucher(osv.osv):
             rec_list_ids = []
             line_total = debit - credit
             if inv.type == 'sale':
-                line_total = line_total - currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.tax_amount)
+                line_total = line_total - currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.tax_amount, context=context_multi_currency)
             elif inv.type == 'purchase':
-                line_total = line_total + currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.tax_amount)
+                line_total = line_total + currency_pool.compute(cr, uid, inv.currency_id.id, company_currency, inv.tax_amount, context=context_multi_currency)
 
             for line in inv.line_ids:
                 if not line.amount:
                     continue
-                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount)
+                amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context_multi_currency)
                 move_line = {
                     'journal_id': inv.journal_id.id,
                     'period_id': inv.period_id.id,
@@ -770,7 +775,7 @@ class account_voucher(osv.osv):
                     'date': inv.date,
                     'credit': diff > 0 and diff or 0.0,
                     'debit': diff < 0 and -diff or 0.0,
-                    'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1) or 0.0,
+		    'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
                     'currency_id': company_currency <> current_currency and current_currency or False,
                 }
 
@@ -977,7 +982,7 @@ class account_bank_statement_line(osv.osv):
     def _check_amount(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.voucher_id:
-                if not (obj.amount == obj.voucher_id.amount):
+                if not (abs(obj.amount) == obj.voucher_id.amount):
                     return False
         return True
 

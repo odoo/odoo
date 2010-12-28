@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
-"PO-Revision-Date: 2010-10-15 09:14+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-22 08:47+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:27+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -41,6 +41,16 @@ msgstr "Хэрэглэх төлбөрийн горимыг сонгох"
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
+msgstr "Бүлэглэх..."
+
+#. module: account_payment
+#: model:ir.module.module,description:account_payment.module_meta_information
+msgid ""
+"\n"
+"This module provides :\n"
+"* a more efficient way to manage invoice payment.\n"
+"* a basic mechanism to easily plug various automated payment.\n"
+"    "
 msgstr ""
 
 #. module: account_payment
@@ -75,7 +85,7 @@ msgstr ""
 #. module: account_payment
 #: field:payment.mode,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Компани"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -95,7 +105,7 @@ msgstr "Гүйлгээ"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Used Account"
-msgstr ""
+msgstr "Ашиглагдсан Данс"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
@@ -106,7 +116,7 @@ msgstr "Товлосон огноо"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Хаагдсан дансан дээр шилжих мөр үүсгэж болохгүй."
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -122,7 +132,7 @@ msgstr "_Төлбөрийн баримт руу нэмэх"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Төлбөрийн Суурин Тайлан"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -133,7 +143,7 @@ msgstr "Дүн"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Данс руу буруу кредит эсвэл дебит утга орсон байна !"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -159,7 +169,7 @@ msgstr "Баримтын дугаар"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "Төлбөрийн мөр дахин давтагдах ёсгүй!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -199,7 +209,7 @@ msgstr "Нэхэмжлэлийн ашигтай огноо"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "Ажиллагааны Төрөл"
 
 #. module: account_payment
 #: selection:payment.line,state:0
@@ -252,7 +262,7 @@ msgstr ""
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Алдаа !"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -267,7 +277,7 @@ msgstr "Гүйцэтгэх огноо"
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "Төлбөрийн Горимын Банкны эсвэл Бэлэн мөнгөний Бүртгэл"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -288,13 +298,15 @@ msgstr "Орох данс"
 #. module: account_payment
 #: view:payment.order:0
 msgid "Search Payment Orders"
-msgstr ""
+msgstr "Төлбөрийн Захиалга хайх"
 
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Харилцагчгүйгээр хүлээн авах / төлбөрийн дансан дээр шилжих мөр үүсгэж "
+"болохгүй."
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -329,7 +341,7 @@ msgstr "Төлбөрийн менежмент"
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
-msgstr ""
+msgstr "Банкны тайлан тэнцлийн мөр"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
@@ -344,12 +356,12 @@ msgstr "Төлөх дүн"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Currency"
-msgstr ""
+msgstr "Валют"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Yes"
-msgstr ""
+msgstr "Тийм"
 
 #. module: account_payment
 #: help:payment.line,info_owner:0
@@ -367,7 +379,7 @@ msgstr ""
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Бүртгэл Төлбөрийн Суурин Тайлан"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -404,7 +416,7 @@ msgstr "Залгамжлагчтай холбоотой мэдээлэл"
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "No partner defined on entry line"
-msgstr ""
+msgstr "Оролтын мөрд харилцагч тодорхойлогдоогүй байна."
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -414,7 +426,7 @@ msgstr "Худалдан авагчийн хаяг"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
+msgstr "Суурин Тайлан"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -440,7 +452,7 @@ msgstr "Төлбөрийн мөрүүд"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Журналын бичилт"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -457,7 +469,7 @@ msgstr "Энэ бичлэг худалдан авагчийн мэдээлэлд
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
-msgstr ""
+msgstr "Хайх"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -467,7 +479,7 @@ msgstr "Төлбөрийн Огноо"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Total:"
-msgstr ""
+msgstr "Нийт:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -477,7 +489,7 @@ msgstr "Үүссэн огноо"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "ADD"
-msgstr ""
+msgstr "ADD"
 
 #. module: account_payment
 #: view:account.bank.statement:0
@@ -502,12 +514,12 @@ msgstr "Худалдан авагч"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr ""
+msgstr "Төлөлт хийх данс"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Invoice Ref"
-msgstr ""
+msgstr "Нэхэмжлэл Лав."
 
 #. module: account_payment
 #: field:payment.line,name:0
@@ -539,7 +551,7 @@ msgstr "Дууссан"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_invoice
 msgid "Invoice"
-msgstr ""
+msgstr "Нэхэмжлэл"
 
 #. module: account_payment
 #: field:payment.line,communication:0
@@ -594,7 +606,7 @@ msgstr "Хүлээн авах банкны данс"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr ""
+msgstr "Та төлбөрөө хийхэд итгэлтэй байна уу?"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -628,7 +640,7 @@ msgstr "Төлбөр"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Order / Payment"
-msgstr ""
+msgstr "Төлбөрийн дараалал / Төлбөр"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
@@ -652,7 +664,7 @@ msgstr "Нэр"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Банкны данс"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -663,7 +675,7 @@ msgstr "Журналын бичлэгийн мэдээлэл"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "payment.order.create"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -688,7 +700,7 @@ msgstr ""
 #: view:account.payment.make.payment:0
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_make_payment
 msgid "Make Payment"
-msgstr ""
+msgstr "Төлбөр Хийх"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
@@ -709,7 +721,7 @@ msgstr "Төлбөрийн горимд тохирох банкны данс"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "Дансны харагдац дээр шилжих мөр үүсгэж болохгүй."
 
 #~ msgid "Suitable bank types"
 #~ msgstr "Тохирох банкны төрлүүд"

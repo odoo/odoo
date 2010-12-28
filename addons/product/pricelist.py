@@ -225,7 +225,7 @@ class product_pricelist(osv.osv):
                     'ORDER BY sequence',
                     (tmpl_id, product_id, pricelist_id, qty))
                 res1 = cr.dictfetchall()
-
+                uom_price_already_computed = False
                 for res in res1:
                     if res:
                         if res['base'] == -1:
@@ -246,11 +246,17 @@ class product_pricelist(osv.osv):
                                     [('product_id', '=', tmpl_id)] + where)
                             price = 0.0
                             if sinfo:
+                                qty_in_product_uom = qty
+                                product_default_uom = product_obj.read(cr, uid, [tmpl_id], ['uom_id'])[0]['uom_id'][0]
+                                seller_uom = supplierinfo_obj.read(cr, uid, sinfo, ['product_uom'])[0]['product_uom'][0]
+                                if seller_uom and product_default_uom and product_default_uom != seller_uom:
+                                    uom_price_already_computed = True
+                                    qty_in_product_uom = product_uom_obj._compute_qty(cr, uid, product_default_uom, qty, to_uom_id=seller_uom)
                                 cr.execute('SELECT * ' \
                                         'FROM pricelist_partnerinfo ' \
                                         'WHERE suppinfo_id IN %s' \
                                             'AND min_quantity <= %s ' \
-                                        'ORDER BY min_quantity DESC LIMIT 1', (tuple(sinfo),qty,))
+                                        'ORDER BY min_quantity DESC LIMIT 1', (tuple(sinfo),qty_in_product_uom,))
                                 res2 = cr.dictfetchone()
                                 if res2:
                                     price = res2['price']
@@ -279,7 +285,7 @@ class product_pricelist(osv.osv):
                         price = False
 
                 if price:
-                    if 'uom' in context:
+                    if 'uom' in context and not uom_price_already_computed:
                         product = products_dict[product_id]
                         uom = product.uos_id or product.uom_id
                         price = self.pool.get('product.uom')._compute_price(cr, uid, uom.id, price, context['uom'])
@@ -538,7 +544,7 @@ class product_pricelist_item(osv.osv):
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"),
 
         'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only applies if the partner buys/sells more than this quantity."),
-        'sequence': fields.integer('Sequence', required=True, help="Gives the sequence order when displaying a list of pricelist items."),
+        'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
         'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="The mode for computing the price for this rule."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 

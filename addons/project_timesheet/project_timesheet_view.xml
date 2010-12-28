@@ -123,6 +123,11 @@
 			<field name="search_view_id" ref="view_account_analytic_line_filter_inherit_buttons"/>
             <field name="help">This lists show you every task work you can invoice to the customer. Select the lines in order to generate the invoices automatically.</field>
         </record>
+  		<menuitem action="hr_timesheet.action_hr_timesheet_sign_in"
+            id="menu_hr_timesheet_sign_in"
+            groups="base.group_extended"
+            parent="hr_attendance.menu_hr_attendance"
+            sequence="5" />
 
         <menuitem id="menu_project_billing" name="Invoicing"
                   parent="base.menu_main_pm" sequence="5"/>
