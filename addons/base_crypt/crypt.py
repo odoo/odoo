@@ -178,7 +178,7 @@ def check(db, uid, passwd):
         return True
     cr = pooler.get_db(db).cursor()
     if passwd not in _salt_cache:
-        cr.execute( 'select login from res_users where id=%d', (uid,) )
+        cr.execute( 'select login from res_users where id=%s', (uid,) )
         stored_login = cr.fetchone()
         if stored_login:
             stored_login = stored_login[0]
@@ -186,7 +186,7 @@ def check(db, uid, passwd):
         if not login(db,stored_login,passwd):
             return False
     salt = _salt_cache[passwd]
-    cr.execute(' select count(*) from res_users where id=%d and password=%s', (int(uid), encrypt_md5( passwd, salt )) )
+    cr.execute(' select count(*) from res_users where id=%s and password=%s', (int(uid), encrypt_md5( passwd, salt )) )
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):
