@@ -1055,7 +1055,8 @@ class property(function):
                 replaces[value._name][value.id] = True
 
         for rep in replaces:
-            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, replaces[rep].keys(), context=context))
+            nids = obj.pool.get(rep).search(cr, uid, [('id','in',replaces[rep].keys())], context=context)
+            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, nids, context=context))
 
         for prop in prop_name:
             for id in ids:
