@@ -607,8 +607,8 @@ class account_journal(osv.osv):
     }
 
     _defaults = {
-        'user_id': lambda self,cr,uid,context: uid,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'user_id': lambda self, cr, uid, context: uid,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -707,7 +707,6 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
 
         return self.name_get(cr, user, ids, context=context)
-
 
     def onchange_type(self, cr, uid, ids, type, currency, context=None):
         obj_data = self.pool.get('ir.model.data')
