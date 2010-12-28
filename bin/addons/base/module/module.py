@@ -502,7 +502,7 @@ class module(osv.osv):
                     if f2:
                         logger.info('module %s: loading translation file for language %s', mod.name, iso_lang2)
                         tools.trans_load(cr.dbname, f2, lang, verbose=False, context=context)
-                    context2['overwrite'] = True
+                        context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
                 # like "en".
