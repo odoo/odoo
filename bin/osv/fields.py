@@ -443,7 +443,7 @@ class one2many(_column):
             elif act[0] == 3:
                 obj.datas[act[1]][self._fields_id] = False
             elif act[0] == 4:
-                obj.datas[act[1]] = id
+                obj.datas[act[1]][self._fields_id] = id
             elif act[0] == 5:
                 for o in obj.datas.values():
                     if o[self._fields_id] == id:
