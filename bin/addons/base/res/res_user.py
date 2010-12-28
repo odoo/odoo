@@ -448,7 +448,7 @@ class users(osv.osv):
             return True
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s', 
+            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s',
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
             if not bool(res):
@@ -547,7 +547,7 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
             if len(user_names) >= 5:
                 user_names = user_names[:5]
                 user_names += '...'
-            raise osv.except_osv(_('Warning !'), 
+            raise osv.except_osv(_('Warning !'),
                         _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
                             ', '.join(user_names))
         return super(groups2, self).unlink(cr, uid, ids, context=context)
@@ -573,6 +573,34 @@ class res_config_view(osv.osv_memory):
                                  {'view':res['view']}, context=context)
 
 res_config_view()
+
+class change_user_password(osv.osv_memory):
+    _name = 'change.user.password'
+    _columns = {
+        'current_password':fields.char('Current Password', size=64, required=True, help="Enter your current password."),
+        'new_password': fields.char('New Password', size=64, required=True, help="Enter new password."),
+        'confirm_password': fields.char('Confirm Password', size=64, required=True, help="Enter new password again for confirmation."),
+    }
+    _defaults={
+        'current_password' : '',
+        'new_password' : '',
+        'confirm_password' : '',
+    }
+
+    def change_password(self, cr, uid, ids, context=None):
+        user_obj = self.pool.get('res.users')
+        if ids:
+            current_password = user_obj.browse(cr, uid, uid, context).password
+            password_rec = self.browse(cr, uid, ids[0], context)
+            if password_rec.new_password != password_rec.confirm_password:
+                raise osv.except_osv(_('Warning !'), _('New password and confirm password does not match !'))
+            elif current_password != password_rec.current_password:
+                raise osv.except_osv(_('Warning !'), _('Current password does not match !'))
+            else:
+                user_obj.write(cr, uid, [uid], {'password': password_rec.new_password}, context)
+        return {}
+
+change_user_password()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
