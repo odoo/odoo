@@ -124,20 +124,21 @@ def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
 
     return magic + salt + '$' + rearranged
 
-_salt_cache = {}
-
-
-#def check_super(passwd):
-#    salt = _salt_cache[passwd]
-#    if encrypt_md5( passwd, salt ) == tools.config['admin_passwd']:
-#         return True
-#    else:
-#         raise Exception('AccessDenied')
-
-
 class users(osv.osv):
     _name="res.users"
     _inherit="res.users"
+
+    def set_pw(self, cr, uid, id, name, value, args, context):
+        if not value:
+            raise osv.except_osv(_('Error'), _("Please specify the password !"))
+        self.write( cr, uid, id, { 'password' : encrypt_md5( value, gen_salt() ) } )
+        del value
+
+    def get_pw( self, cr, uid, ids, name, args, context ):
+        res = {}
+        for id in ids:
+            res[id] = ''
+        return res
 
     def login(self, db, login, password):
         if not password:
@@ -155,9 +156,10 @@ class users(osv.osv):
             return Exception('Access Denied')
 
     def _login(self, cr, db, login, password):
-        cr.execute( 'SELECT password FROM res_users WHERE login=%s', (login.encode( 'utf-8' ),) )
-        stored_pw = cr.fetchone()
-    
+        cr.execute( 'SELECT password FROM res_users WHERE login=%s',
+            (login.encode('utf-8'),))
+        stored_pw = id = cr.fetchone()
+
         if stored_pw:
             stored_pw = stored_pw[0]
         else:
@@ -177,7 +179,7 @@ class users(osv.osv):
             stored_pw = cr.fetchone()[0]
     
         # Calculate an encrypted password from the user-provided
-        # password ('encrypted_pw').
+        # password.
     
         salt = _salt_cache[password] = stored_pw[3:11]
         encrypted_pw = encrypt_md5( password, salt )
@@ -209,7 +211,8 @@ class users(osv.osv):
             if not self.login(db,stored_login,passwd):
                 raise security.ExceptionNoTb('AccessDenied')
         salt = _salt_cache[passwd]
-        cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s', (int(uid), encrypt_md5( passwd, salt )) )
+        cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s', 
+            (int(uid), encrypt_md5( passwd, salt )) )
         res = cr.fetchone()[0]
         cr.close()
         if not bool(res):
@@ -228,17 +231,5 @@ class users(osv.osv):
         if not res:
             raise security.ExceptionNoTb('Bad username or password')
         return res[0]
-
-    def set_pw( self, cr, uid, id, name, value, args, context ):
-        if not value:
-            raise osv.except_osv(_('Error'), _("Please specify the password !"))
-        self.write( cr, uid, id, { 'password' : encrypt_md5( value, gen_salt() ) } )
-        del value
-
-    def get_pw( self, cr, uid, ids, name, args, context ):
-        res = {}
-        for id in ids:
-            res[id] = ''
-        return res
 
 users()
