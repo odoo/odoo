@@ -129,16 +129,15 @@ class users(osv.osv):
     # agi - 022108
     # Add handlers for 'input_pw' field.
 
-    # Maps a res_users id to the salt used to encrypt its associated password.
-    _salt_cache = {}
-    _clear_uid_cache = True
-
     def set_pw(self, cr, uid, id, name, value, args, context):
         if not value:
             raise osv.except_osv(_('Error'), _("Please specify the password !"))
 
-        self._salt_cache.setdefault(cr.dbname, {})
-        salt = self._salt_cache[cr.dbname][id] = gen_salt()
+        obj = pooler.get_pool(cr.dbname).get('res.users')
+        if not hasattr(obj, "_salt_cache"):
+            obj._salt_cache = {}
+
+        salt = obj._salt_cache[id] = gen_salt()
         encrypted = encrypt_md5(value, salt)
         cr.execute('update res_users set password=%s where id=%s',
             (encrypted.encode('utf-8'), int(id)))
@@ -181,8 +180,10 @@ class users(osv.osv):
 
         # Calculate an encrypted password from the user-provided
         # password.
-        self._salt_cache.setdefault(db, {})
-        salt = self._salt_cache[db][id] = stored_pw[len(magic_md5):11]
+        obj = pooler.get_pool(db).get('res.users')
+        if not hasattr(obj, "_salt_cache"):
+            obj._salt_cache = {}
+        salt = obj._salt_cache[id] = stored_pw[len(magic_md5):11]
         encrypted_pw = encrypt_md5(password, salt)
 
         # Check if the encrypted password matches against the one in the db.
@@ -197,17 +198,17 @@ class users(osv.osv):
 
     def check(self, db, uid, passwd):
         # Get a chance to hash all passwords in db before using the uid_cache.
-        if self._clear_uid_cache:
+        obj = pooler.get_pool(db).get('res.users')
+        if not hasattr(obj, "_salt_cache"):
+            obj._salt_cache = {}
             self._uid_cache.get(db, {}).clear()
-            self._clear_uid_cache = False
-            self._salt_cache.get(db, {}).clear()
 
         cached_pass = self._uid_cache.get(db, {}).get(uid)
         if (cached_pass is not None) and cached_pass == passwd:
             return True
 
         cr = pooler.get_db(db).cursor()
-        if uid not in self._salt_cache.get(db, {}):
+        if uid not in obj._salt_cache:
             cr.execute('select login from res_users where id=%s', (int(uid),))
             stored_login = cr.fetchone()
             if stored_login:
@@ -216,7 +217,7 @@ class users(osv.osv):
             if not self.login(db,stored_login,passwd):
                 return False
 
-        salt = self._salt_cache[db][uid]
+        salt = obj._salt_cache[uid]
         cr.execute('select count(id) from res_users where id=%s and password=%s',
             (int(uid), encrypt_md5(passwd, salt)))
         res = cr.fetchone()[0]
