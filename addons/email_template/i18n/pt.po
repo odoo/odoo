@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-12 09:33+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-20 11:40+0000\n"
+"Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: email_template
@@ -134,6 +134,8 @@ msgid ""
 "Specify the username if your SMTP server requires authentication, otherwise "
 "leave it empty."
 msgstr ""
+"Indique o nome de utilizador se o seu servidor SMTP necessitar de "
+"autenticação. Caso contrário, deixe o campo ficar vazio."
 
 #. module: email_template
 #: field:email_template.mailbox,server_ref:0
@@ -164,12 +166,20 @@ msgid "HTML code"
 msgstr "Código HTML"
 
 #. module: email_template
+#: view:email_template.mailbox:0
+msgid "Send Mail"
+msgstr "Enviar o correio"
+
+#. module: email_template
 #: help:email_template.account,name:0
 msgid ""
 "The description is used as the Sender name along with the provided From "
 "Email, unless it is already specified in the From Email, e.g: John Doe "
 "<john@doe.com>"
 msgstr ""
+"A descrição é usada para o nome do remetente - juntamente com o endereço "
+"eletrónico -, a menos que já exista no campo \"Remetente\" (exemplo: João "
+"Silva <joao.silva@qualquercoisa.com>"
 
 #. module: email_template
 #: field:email.template,from_account:0
@@ -240,7 +250,7 @@ msgstr "Êxito total"
 #. module: email_template
 #: selection:email_template.account,send_pref:0
 msgid "Both HTML & Text (Mixed)"
-msgstr ""
+msgstr "HTML e texto (misturados)"
 
 #. module: email_template
 #: view:email_template.preview:0
@@ -255,7 +265,7 @@ msgstr ""
 #. module: email_template
 #: selection:email_template.account,send_pref:0
 msgid "Both HTML & Text (Alternative)"
-msgstr ""
+msgstr "HTML e texto (alternativo)"
 
 #. module: email_template
 #: field:email_template.send.wizard,requested:0
@@ -275,14 +285,14 @@ msgid "Attached Files"
 msgstr "Ficheiros anexos"
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "Standard Body"
-msgstr "Corpo padrão"
+#: field:email_template.account,smtpssl:0
+msgid "SSL/TLS (only in python 2.6)"
+msgstr "SSL/TLS (só com o Python 2.6)"
 
 #. module: email_template
 #: field:email_template.account,email_id:0
 msgid "From Email"
-msgstr ""
+msgstr "Remetente"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:0
@@ -303,7 +313,7 @@ msgstr "Corpo (texto)"
 #. module: email_template
 #: view:email_template.mailbox:0
 msgid "Company Emails"
-msgstr ""
+msgstr "Endereços eletrónicos da empresa"
 
 #. module: email_template
 #: view:email_template.send.wizard:0
@@ -311,6 +321,9 @@ msgid ""
 "Tip: Multiple emails are sent in the same language (the first one is "
 "proposed). We suggest you send emails in groups according to language."
 msgstr ""
+"Dica: os envios de lotes de mensagens são feitos na mesma língua (a primeira "
+"proposta). Sugere-se que envie as mensagens em grupos, de acordo com as "
+"línguas pretendidas."
 
 #. module: email_template
 #: help:email_template.preview,reply_to:0
@@ -415,9 +428,20 @@ msgid "Mail from Account %s successfully Sent."
 msgstr ""
 
 #. module: email_template
+#: view:email_template.mailbox:0
+msgid "Standard Body"
+msgstr "Corpo padrão"
+
+#. module: email_template
 #: selection:email.template,template_language:0
 msgid "Mako Templates"
 msgstr ""
+
+#. module: email_template
+#: help:email.template,def_body_html:0
+#: help:email.template,def_body_text:0
+msgid "The text version of the mail"
+msgstr "Versão da mensagem, em texto"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:0
@@ -436,10 +460,9 @@ msgid "Test Outgoing Connection"
 msgstr "Testar ligação para envio"
 
 #. module: email_template
-#: help:email.template,def_body_html:0
-#: help:email.template,def_body_text:0
-msgid "The text version of the mail"
-msgstr "Versão da mensagem, em texto"
+#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
+msgid "Mailbox"
+msgstr ""
 
 #. module: email_template
 #: help:email.template,reply_to:0
@@ -542,7 +565,7 @@ msgstr ""
 #. module: email_template
 #: view:email.template:0
 msgid "Body (Raw HTML)"
-msgstr ""
+msgstr "Corpo (HTML)"
 
 #. module: email_template
 #: field:email.template,use_sign:0
@@ -562,7 +585,7 @@ msgstr "Opções"
 #. module: email_template
 #: view:email_template.send.wizard:0
 msgid "Body (Plain Text)"
-msgstr ""
+msgstr "Corpo (texto simples)"
 
 #. module: email_template
 #: view:email.template:0
@@ -618,7 +641,7 @@ msgstr "Agrupar por..."
 #. module: email_template
 #: selection:email_template.send.wizard,state:0
 msgid "Multiple Mail Wizard Step 1"
-msgstr ""
+msgstr "Assistente para envio de várias mensagens - Passo 1"
 
 #. module: email_template
 #: field:email_template.account,user:0
@@ -808,7 +831,6 @@ msgstr "Língua"
 #: code:addons/email_template/wizard/email_template_send_wizard.py:0
 #: model:ir.ui.menu,name:email_template.menu_email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
-#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #: model:ir.ui.menu,name:email_template.menu_email_template_tools
 #, python-format
 msgid "Email Template"
@@ -820,9 +842,9 @@ msgid "Send/Receive"
 msgstr "Enviar/Receber"
 
 #. module: email_template
-#: view:email_template.mailbox:0
-msgid "Send Mail"
-msgstr "Enviar o correio"
+#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
+msgid "Personal Mails"
+msgstr ""
 
 #. module: email_template
 #: view:email_template.account:0
@@ -835,6 +857,8 @@ msgstr ""
 msgid ""
 "Only users from these groups will be allowed to send mails from this Template"
 msgstr ""
+"Só utilizadores pertencentes a estes grupos poderão enviar mensagens a "
+"partir deste modelo"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:0
@@ -892,7 +916,7 @@ msgstr "Cópia do modelo "
 #. module: email_template
 #: view:email_template.send.wizard:0
 msgid "Discard Mail"
-msgstr ""
+msgstr "Anular mensagem"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
@@ -947,11 +971,6 @@ msgid "User Information"
 msgstr "Informação de utilizador"
 
 #. module: email_template
-#: view:email.template:0
-msgid "Actions"
-msgstr "Ações"
-
-#. module: email_template
 #: code:addons/email_template/email_template_account.py:0
 #, python-format
 msgid ""
@@ -969,9 +988,9 @@ msgid ""
 msgstr ""
 
 #. module: email_template
-#: help:email_template.mailbox,date_mail:0
-msgid "Date on which Email Sent or Received"
-msgstr ""
+#: field:email_template.mailbox,folder:0
+msgid "Folder"
+msgstr "Pasta"
 
 #. module: email_template
 #: view:email_template.mailbox:0
@@ -980,8 +999,8 @@ msgid "Trash"
 msgstr "Lixeira"
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template_mailbox
-msgid "Email Mailbox"
+#: help:email_template.mailbox,date_mail:0
+msgid "Date on which Email Sent or Received"
 msgstr ""
 
 #. module: email_template
@@ -1052,6 +1071,11 @@ msgid "Null Value"
 msgstr "Valor nulo"
 
 #. module: email_template
+#: model:ir.model,name:email_template.model_email_template_mailbox
+msgid "Email Mailbox"
+msgstr ""
+
+#. module: email_template
 #: field:email.template,template_language:0
 msgid "Templating Language"
 msgstr ""
@@ -1094,9 +1118,8 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
-#: model:ir.actions.act_window,name:email_template.action_email_template_mailbox
+#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
-#: model:ir.ui.menu,name:email_template.menu_email_template_personal_mails
 msgid "Emails"
 msgstr "Mensagens"
 
@@ -1143,9 +1166,13 @@ msgid "Existing files"
 msgstr "Ficheiros existentes"
 
 #. module: email_template
-#: field:email_template.account,smtpssl:0
-msgid "SSL/TLS (only in python 2.6)"
-msgstr "SSL/TLS (só com o Python 2.6)"
+#: model:ir.module.module,description:email_template.module_meta_information
+msgid ""
+"\n"
+"    Email Template is extraction of Power Email basically just to send the "
+"emails.\n"
+"    "
+msgstr ""
 
 #. module: email_template
 #: view:email_template.send.wizard:0
@@ -1211,9 +1238,9 @@ msgid "Mail Format"
 msgstr "Formato das mensagens"
 
 #. module: email_template
-#: field:email_template.mailbox,folder:0
-msgid "Folder"
-msgstr "Pasta"
+#: view:email.template:0
+msgid "Actions"
+msgstr "Ações"
 
 #. module: email_template
 #: view:email_template.account:0
@@ -1240,7 +1267,7 @@ msgstr ""
 #. module: email_template
 #: selection:email_template.send.wizard,state:0
 msgid "Simple Mail Wizard Step 1"
-msgstr ""
+msgstr "Assistente para envio de uma mensagem - Passo 1"
 
 #. module: email_template
 #: selection:email_template.mailbox,mail_type:0

@@ -708,7 +708,8 @@ class account_journal(osv.osv):
 
         return self.name_get(cr, user, ids, context=context)
 
-    def onchange_type(self, cr, uid, ids, type, currency):
+
+    def onchange_type(self, cr, uid, ids, type, currency, context=None):
         obj_data = self.pool.get('ir.model.data')
         user_pool = self.pool.get('res.users')
 
@@ -730,7 +731,6 @@ class account_journal(osv.osv):
         user = user_pool.browse(cr, uid, uid)
         if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
             view_id = 'account_journal_bank_view_multi'
-
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
         data = obj_data.browse(cr, uid, data_id[0], context=context)
 
@@ -2600,6 +2600,24 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'code_digits': 6,
         'seq_journal': True
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(wizard_multi_charts_accounts, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        configured_cmp = []
+        unconfigured_cmp = []
+        cmp_select = []
+        company_ids = self.pool.get('res.company').search(cr, uid, [], context=context)
+        #display in the widget selection of companies, only the companies that haven't been configured yet (but don't care about the demo chart of accounts)
+        cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
+        configured_cmp = [r[0] for r in cr.fetchall()]
+        unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
+        if unconfigured_cmp:
+            cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
+            for field in res['fields']:
+               if field == 'company_id':
+                   res['fields'][field]['domain'] = unconfigured_cmp
+                   res['fields'][field]['selection'] = cmp_select
+        return res
 
     def execute(self, cr, uid, ids, context=None):
         obj_multi = self.browse(cr, uid, ids[0])

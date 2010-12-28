@@ -29,6 +29,11 @@ import re
 import time
 import tools
 
+
+def get_datetime(date_field):
+    return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
+
+
 class base_action_rule(osv.osv):
     """ Base Action Rules """
 
@@ -115,6 +120,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 help="Use a python expression to specify the right field on which one than we will use for the 'From' field of the header"),
         'act_email_to' : fields.char('Email To', size=64, required=False,
                                      help="Use a python expression to specify the right field on which one than we will use for the 'To' field of the header"),
+        'last_run': fields.datetime('Last Run', readonly=1),
     }
 
     _defaults = {
@@ -145,7 +151,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         # Searching for action rules
         cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
                         LEFT JOIN ir_model model on (model.id = rule.model_id) \
-                        where active")
+                        WHERE active")
         res = cr.fetchall()
         # Check if any rule matching with current object
         for obj_name, rule_id in res:
@@ -153,7 +159,10 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 continue
             else:
                 obj = self.pool.get(obj_name)
-                self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
+                # If the rule doesn't involve a time condition, run it immediately
+                # Otherwise we let the scheduler run the action
+                if self.browse(cr, uid, rule_id, context=context).trg_date_type == 'none':
+                    self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
         return True
 
     def _create(self, old_create, model, context=None):
@@ -206,8 +215,50 @@ the rule to mark CC(mail to any other person defined in actions)."),
         """
         rule_pool = self.pool.get('base.action.rule')
         rule_ids = rule_pool.search(cr, uid, [], context=context)
-        return self._register_hook(cr, uid, rule_ids, context=context)
-        
+        self._register_hook(cr, uid, rule_ids, context=context)
+
+        rules = self.browse(cr, uid, rule_ids, context=context)
+        for rule in rules:
+            model = rule.model_id.model
+            model_pool = self.pool.get(model)
+            last_run = False
+            if rule.last_run:
+                last_run = get_datetime(rule.last_run)
+            now = datetime.now()
+            for obj_id in model_pool.search(cr, uid, [], context=context):
+                obj = model_pool.browse(cr, uid, obj_id, context=context)
+                # Calculate when this action should next occur for this object
+                base = False
+                if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
+                    base = obj.create_date
+                elif (rule.trg_date_type=='action_last'
+                        and hasattr(obj, 'create_date')):
+                    if hasattr(obj, 'date_action_last') and obj.date_action_last:
+                        base = obj.date_action_last
+                    else:
+                        base = obj.create_date
+                elif (rule.trg_date_type=='deadline'
+                        and hasattr(obj, 'date_deadline')
+                        and obj.date_deadline):
+                    base = obj.date_deadline
+                elif (rule.trg_date_type=='date'
+                        and hasattr(obj, 'date')
+                        and obj.date):
+                    base = obj.date
+                if base:
+                    fnct = {
+                        'minutes': lambda interval: timedelta(minutes=interval),
+                        'day': lambda interval: timedelta(days=interval),
+                        'hour': lambda interval: timedelta(hours=interval),
+                        'month': lambda interval: timedelta(months=interval),
+                    }
+                    base = get_datetime(base)
+                    delay = fnct[rule.trg_date_range_type](rule.trg_date_range)
+                    action_date = base + delay
+                    if (not last_run or (last_run <= action_date < now)):
+                        self._action(cr, uid, [rule.id], [obj], context=context)
+            rule_pool.write(cr, uid, [rule.id], {'last_run': now},
+                            context=context)
 
     def format_body(self, body):
         """ Foramat Action rule's body
@@ -391,7 +442,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if context is None:
             context = {}
 
-
         context.update({'action': True})
         if not scrit:
             scrit = []
@@ -402,41 +452,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 ok = self.do_check(cr, uid, action, obj, context=context)
                 if not ok:
                     continue
-
-                base = False
-                if action.trg_date_type=='create' and hasattr(obj, 'create_date'):
-                    base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif action.trg_date_type=='action_last' and hasattr(obj, 'create_date'):
-                    if hasattr(obj, 'date_action_last') and obj.date_action_last:
-                        base = datetime.strptime(obj.date_action_last, '%Y-%m-%d %H:%M:%S')
-                    else:
-                        base = datetime.strptime(obj.create_date[:19], '%Y-%m-%d %H:%M:%S')
-                elif action.trg_date_type=='deadline' and hasattr(obj, 'date_deadline') \
-                                and obj.date_deadline:
-                    base = datetime.strptime(obj.date_deadline, '%Y-%m-%d %H:%M:%S')
-                elif action.trg_date_type=='date' and hasattr(obj, 'date') and obj.date:
-                    base = datetime.strptime(obj.date, '%Y-%m-%d %H:%M:%S')
-                if base:
-                    fnct = {
-                        'minutes': lambda interval: timedelta(minutes=interval), 
-                        'day': lambda interval: timedelta(days=interval), 
-                        'hour': lambda interval: timedelta(hours=interval), 
-                        'month': lambda interval: timedelta(months=interval), 
-                    }
-                    d = base + fnct[action.trg_date_range_type](action.trg_date_range)
-                    dt = d.strftime('%Y-%m-%d %H:%M:%S')
-                    ok = False
-                    if hasattr(obj, 'date_action_last') and hasattr(obj, 'date_action_next'):
-                        ok = (dt <= time.strftime('%Y-%m-%d %H:%M:%S')) and \
-                                ((not obj.date_action_next) or \
-                                (dt >= obj.date_action_next and \
-                                obj.date_action_last < obj.date_action_next))
-                        if not ok:
-                            if not obj.date_action_next or dt < obj.date_action_next:
-                                obj.date_action_next = dt
-                                model_obj.write(cr, uid, [obj.id], {'date_action_next': dt}, context)
-                else:
-                    ok = action.trg_date_type == 'none'
 
                 if ok:
                     self.do_action(cr, uid, action, model_obj, obj, context)

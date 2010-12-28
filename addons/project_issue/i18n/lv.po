@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-18 18:16+0000\n"
-"Last-Translator: Vladimirs Kuzmins <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 14:41+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-19 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_issue
@@ -243,13 +243,6 @@ msgid "Convert To Task"
 msgstr "Pārveidot par uzdevumu"
 
 #. module: project_issue
-#: model:crm.case.categ,name:project_issue.bug_categ
-msgid "Maintenance"
-msgstr "Uzturēšana"
-
-#. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
 #: view:project.issue.report:0
 msgid "Issues Analysis"
 msgstr "Incidentu analīze"
@@ -491,6 +484,14 @@ msgid "Update Date"
 msgstr "Labošanas datums"
 
 #. module: project_issue
+#: model:ir.module.module,description:project_issue.module_meta_information
+msgid ""
+"\n"
+"        This module provide Issues/Bugs Management in Project\n"
+"    "
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 #: field:project.issue,categ_id:0
 #: view:project.issue.report:0
@@ -628,9 +629,9 @@ msgid "Feature Tracker Tree"
 msgstr "Jaunu iespēju reģistra koks"
 
 #. module: project_issue
-#: help:project.issue,email_from:0
-msgid "These people will receive email."
-msgstr "Šie cilvēki saņems e-pastu"
+#: model:crm.case.categ,name:project_issue.bug_categ
+msgid "Bugs"
+msgstr ""
 
 #. module: project_issue
 #: view:board.board:0
@@ -767,6 +768,11 @@ msgid "Details"
 msgstr "Sīkāka informācija"
 
 #. module: project_issue
+#: help:project.issue,email_from:0
+msgid "These people will receive email."
+msgstr "Šie cilvēki saņems e-pastu"
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Reply"
 msgstr "Atbildēt"
@@ -796,6 +802,12 @@ msgstr "Pārdošanas komanda"
 #: selection:project.issue.report,month:0
 msgid "May"
 msgstr "Maijs"
+
+#. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.action_project_issue_report
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_report_tree
+msgid "Issue Analysis"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -938,3 +950,6 @@ msgstr ""
 #: view:board.board:0
 msgid "My Open Issues by Creation Date"
 msgstr ""
+
+#~ msgid "Maintenance"
+#~ msgstr "Uzturēšana"

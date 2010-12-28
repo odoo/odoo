@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-27 13:32+0000\n"
 "Last-Translator: sagas <sagas@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:01+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -105,6 +105,11 @@ msgid "Routings"
 msgstr "工艺路线"
 
 #. module: mrp
+#: field:mrp.workcenter,product_id:0
+msgid "Work Center Product"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
 msgstr ""
@@ -117,6 +122,13 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid ""
+"Number of iterations this work center has to do in the specified operation "
+"of the routing."
 msgstr ""
 
 #. module: mrp
@@ -214,6 +226,13 @@ msgstr "计量单位"
 msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bills of materials."
+msgstr ""
+
+#. module: mrp
+#: help:mrp.workcenter,product_id:0
+msgid ""
+"Fill this product to track easily your production costs in the analytic "
+"accounting."
 msgstr ""
 
 #. module: mrp
@@ -537,11 +556,6 @@ msgid "March"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_workcenter_load
-msgid "Workcenter Load"
-msgstr "工作中心负荷"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work center per cycle."
 msgstr ""
@@ -556,13 +570,6 @@ msgstr ""
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.product_price,number:0
-msgid ""
-"Specify quantity of products to produce or buy. Report of Cost structure "
-"will be displayed base on this qunatity."
 msgstr ""
 
 #. module: mrp
@@ -609,6 +616,7 @@ msgstr "错误!你不能创建递归的物料清单"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
+#: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
 msgstr ""
@@ -636,12 +644,11 @@ msgid "Planning"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.workcenter:0
-msgid "Costing Information"
-msgstr ""
+#: view:mrp.production:0
+msgid "Ready"
+msgstr "准备好"
 
 #. module: mrp
-#: help:mrp.routing.workcenter,hour_nbr:0
 #: help:mrp.workcenter,time_cycle:0
 msgid "Time in hours for this work center to achieve the operation of the specified routing."
 msgstr "一个周期的工作小时数"
@@ -805,6 +812,13 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.routing.workcenter,hour_nbr:0
+msgid ""
+"Time in hours for this work center to achieve the operation of the specified "
+"routing."
 msgstr ""
 
 #. module: mrp
@@ -1061,6 +1075,45 @@ msgstr ""
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#. module: mrp
+#: model:ir.module.module,description:mrp.module_meta_information
+msgid ""
+"\n"
+"    This is the base module to manage the manufacturing process in OpenERP.\n"
+"\n"
+"    Features:\n"
+"    * Make to Stock / Make to Order (by line)\n"
+"    * Multi-level BoMs, no limit\n"
+"    * Multi-level routing, no limit\n"
+"    * Routing and workcenter integrated with analytic accounting\n"
+"    * Scheduler computation periodically / Just In Time module\n"
+"    * Multi-pos, multi-warehouse\n"
+"    * Different reordering policies\n"
+"    * Cost method by product: standard price, average price\n"
+"    * Easy analysis of troubles or needs\n"
+"    * Very flexible\n"
+"    * Allows to browse Bill of Materials in complete structure\n"
+"        that include child and phantom BoMs\n"
+"    It supports complete integration and planification of stockable goods,\n"
+"    consumable of services. Services are completely integrated with the "
+"rest\n"
+"    of the software. For instance, you can set up a sub-contracting service\n"
+"    in a BoM to automatically purchase on order the assembly of your "
+"production.\n"
+"\n"
+"    Reports provided by this module:\n"
+"    * Bill of Material structure and components\n"
+"    * Load forecast on workcenters\n"
+"    * Print a production order\n"
+"    * Stock forecasts\n"
+"    Dashboard provided by this module::\n"
+"    * List of next production orders\n"
+"    * List of deliveries (out picking)\n"
+"    * Graph of work center load\n"
+"    * List of procurement in exception\n"
+"    "
 msgstr ""
 
 #. module: mrp
@@ -1580,6 +1633,12 @@ msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:0
+#, python-format
+msgid "Copy"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products"
 msgstr "该生产批此产品"
@@ -1917,6 +1976,11 @@ msgid "Number of Hours"
 msgstr "小时数"
 
 #. module: mrp
+#: view:mrp.workcenter:0
+msgid "Costing Information"
+msgstr ""
+
+#. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 msgid "Procurement Orders"
 msgstr "产品需求单"
@@ -1993,7 +2057,6 @@ msgid "BoM Revisions"
 msgstr "物料清单版本"
 
 #. module: mrp
-#: view:mrp.production:0
 #: selection:mrp.production,state:0
 #: selection:mrp.production.order,state:0
 msgid "Draft"
@@ -2292,6 +2355,13 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: help:mrp.product_price,number:0
+msgid ""
+"Specify quantity of products to produce or buy. Report of Cost structure "
+"will be displayed base on this quantity."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Stock"
 msgstr "按库存"
@@ -2328,14 +2398,38 @@ msgstr ""
 msgid "Year"
 msgstr ""
 
+#, python-format
+#~ msgid "Product name"
+#~ msgstr "品名"
+
+#, python-format
+#~ msgid "products"
+#~ msgstr "产品"
+
 #~ msgid "Status"
 #~ msgstr "状态"
+
+#, python-format
+#~ msgid "Workcenter name"
+#~ msgstr "工作中心名称"
 
 #~ msgid "Production Orders"
 #~ msgstr "生产单"
 
+#, python-format
+#~ msgid "Product Quantity"
+#~ msgstr "产品数量"
+
+#, python-format
+#~ msgid "Unit Product Price"
+#~ msgstr "产品单价"
+
 #~ msgid "Workcenter Name"
 #~ msgstr "工作中心名称"
+
+#, python-format
+#~ msgid "Product uom"
+#~ msgstr "产品计量单位"
 
 #~ msgid "Unit of Measure"
 #~ msgstr "计量单位"
@@ -2400,6 +2494,9 @@ msgstr ""
 #~ msgid "Parameters"
 #~ msgstr "参数"
 
+#~ msgid "Production workcenters used"
+#~ msgstr "所用的工作中心"
+
 #~ msgid "Property"
 #~ msgstr "属性"
 
@@ -2424,6 +2521,10 @@ msgstr ""
 #~ msgid "UoS Quantity"
 #~ msgstr "销售单位数量"
 
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "警告！"
+
 #~ msgid "Origin"
 #~ msgstr "来源"
 
@@ -2432,6 +2533,10 @@ msgstr ""
 
 #~ msgid "Stockable Stock"
 #~ msgstr "可库存库存"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "没有供应商为该产品定义！"
 
 #~ msgid ""
 #~ "This is the days added to what you promise to customers for security purpose"
@@ -2446,11 +2551,27 @@ msgstr ""
 #~ msgid "product"
 #~ msgstr "产品"
 
+#, python-format
+#~ msgid "from stock: products assigned."
+#~ msgstr "来自库存：产品已分配"
+
+#, python-format
+#~ msgid "from stock and no minimum orderpoint rule defined"
+#~ msgstr "来自库存并无定义再订货点规则"
+
 #~ msgid "Production Orders Planning"
 #~ msgstr "生产单计划"
 
 #~ msgid "Qty Multiple"
 #~ msgstr "数量倍数"
+
+#, python-format
+#~ msgid "Hours Cost"
+#~ msgstr "按小时计算的成本"
+
+#, python-format
+#~ msgid "SUBTOTAL"
+#~ msgstr "小计"
 
 #~ msgid "Exception"
 #~ msgstr "异常"
@@ -2458,11 +2579,20 @@ msgstr ""
 #~ msgid "References"
 #~ msgstr "参考"
 
+#, python-format
+#~ msgid ""
+#~ "The production is in \"%s\" state. You can not change the production "
+#~ "quantity anymore"
+#~ msgstr "产品状态为 \"%s\"，您不能再更改产品数量"
+
 #~ msgid "Human Resource"
 #~ msgstr "人力资源"
 
 #~ msgid "Workcenters"
 #~ msgstr "工作中心"
+
+#~ msgid "Create Procurement"
+#~ msgstr "创建请料单"
 
 #~ msgid "Number of Cycle"
 #~ msgstr "循环数"
@@ -2655,6 +2785,9 @@ msgstr ""
 #~ msgid "Product & Location"
 #~ msgstr "产品&库位"
 
+#~ msgid "MRP & Logistic Scheduler"
+#~ msgstr "MRP&物流调度"
+
 #~ msgid ""
 #~ "Number of operation this workcenter can do in parallel. If this workcenter "
 #~ "represent a team of 5 workers, the capacity per cycle is 5."
@@ -2734,9 +2867,6 @@ msgstr ""
 
 #~ msgid "Exceptions Procurements to Fix"
 #~ msgstr "异常产品需求修正"
-
-#~ msgid "Ready"
-#~ msgstr "准备好"
 
 #~ msgid "Workcenter Operations"
 #~ msgstr "工作中心运作"
@@ -2991,6 +3121,10 @@ msgstr ""
 #~ msgid "Scheduled End"
 #~ msgstr "安排结束"
 
+#, python-format
+#~ msgid "Product Standard Price"
+#~ msgstr "产品成本价格"
+
 #~ msgid "Compute Stock Minimum Rules Only"
 #~ msgstr "仅运算最少库存规则"
 
@@ -3009,6 +3143,9 @@ msgstr ""
 #~ msgid "Workcenters load"
 #~ msgstr "工作中心负荷"
 
+#~ msgid "Workcenter Load"
+#~ msgstr "工作中心负荷"
+
 #~ msgid "MRP Management - Reporting"
 #~ msgstr "MRP管理 - 报表"
 
@@ -3019,6 +3156,10 @@ msgstr ""
 #~ "A module that adds new reports based on MRP cases.\n"
 #~ "    Workcenter loads, Weekly Stock value variation"
 #~ msgstr "这模块增加新的报表基于MRP业务个案,工作中心负荷,每周的库存变化"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "供应商地址未定义"
 
 #~ msgid "MRP & Logistics Scheduler"
 #~ msgstr "MRP&物流调度"

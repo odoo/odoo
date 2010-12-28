@@ -63,7 +63,6 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         if context is None:
             context = {}
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         data = self.read(cr, uid, ids, [], context=context)[0]
 
         account_ids = {}

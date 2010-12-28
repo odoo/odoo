@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-25 19:36+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:25+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -142,6 +142,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Eroare! Nu puteţi crea categorii recursive."
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "Tastatură"
@@ -190,7 +197,6 @@ msgid "PriceList"
 msgstr "Lista de prețuri"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "UM"
@@ -249,11 +255,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "Produse: "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -467,6 +468,13 @@ msgid "Codes"
 msgstr ""
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr ""
@@ -665,13 +673,23 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr ""
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr ""
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -1119,6 +1137,30 @@ msgid "Unit of Sale"
 msgstr ""
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1246,6 +1288,14 @@ msgstr ""
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Versiuni tarif"
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -1548,6 +1598,11 @@ msgid "Make to Order"
 msgstr ""
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Variante"
@@ -1652,8 +1707,8 @@ msgid "Name of this kind of price."
 msgstr ""
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
 
 #. module: product
@@ -1741,11 +1796,6 @@ msgstr ""
 #. module: product
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
 msgstr ""
 
 #. module: product
@@ -1958,13 +2008,6 @@ msgstr ""
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
 msgstr ""
 
 #. module: product
@@ -2214,8 +2257,122 @@ msgid ""
 "and his childs. Keep empty for all products"
 msgstr ""
 
+#~ msgid "Packagings"
+#~ msgstr "Ambalaje"
+
+#~ msgid "Palet"
+#~ msgstr "Palet"
+
+#~ msgid ""
+#~ "This is the average time between the confirmation of the customer order and "
+#~ "the delivery of the finnished products. It's the time you promise to your "
+#~ "customers."
+#~ msgstr ""
+#~ "Acesta este timpul mediu dintre confirmarea comenzii clientului şi livrarea "
+#~ "produselor finite. Acesta este timpul promis clienţilor."
+
+#~ msgid "Palette Dimension"
+#~ msgstr "Dimensiune palet"
+
 #~ msgid "Customer Price"
 #~ msgstr "Pret client"
+
+#~ msgid "The mode of computation of the price for this rule."
+#~ msgstr "Modul de calculare a pretului pentru aceasta regula."
+
+#~ msgid "Rentable product"
+#~ msgstr "Produs inchiriabil"
+
+#~ msgid "Supplier of Product"
+#~ msgstr "Furnizor de produs"
+
+#~ msgid "Starting date for validity of this pricelist version."
+#~ msgstr ""
+#~ "Data de inceput pentru valabilitatea aceste versiuni de lista de preturi."
+
+#~ msgid ""
+#~ "Will change the way procurements are processed, consumable are stockable "
+#~ "products with infinite stock, or without a stock management in the system."
+#~ msgstr ""
+#~ "Va schimba modul in care este procesata aprovizionarea; consumabilele sunt "
+#~ "produse stocabile cu stoc infinit si pentru care nu se tine evindenta "
+#~ "stocului in sistem."
+
+#~ msgid "Childs Categories"
+#~ msgstr "Categorii copil"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "Marja max. de pret"
+
+#~ msgid ""
+#~ "Sets the price so that it is a multiple of this value.\n"
+#~ "Rounding is applied after the discount and before the surcharge.\n"
+#~ "To have prices that ends by 9.99, set rounding 10, surcharge -0.01"
+#~ msgstr ""
+#~ "Selectai pretul ca multiplu al acestei valori.\n"
+#~ "Rotunjirea se aplica dupa discount si inainte de rmajorare.\n"
+#~ "Pentru a avea preturi care se termina cu 9.99, selectati rotunjire 10 si "
+#~ "majorare la -0.01."
+
+#~ msgid "You can see the list of supplier for that product."
+#~ msgstr "Puteti vedea lista de furnizori pentru acel produs."
+
+#~ msgid ""
+#~ "The cost of the product for accounting stock valorisation. It can serves as "
+#~ "a base price for supplier price."
+#~ msgstr ""
+#~ "Costul produsului pentru contabilizarea valorii stocului. Poate fi folosit "
+#~ "ca pret de baza pentru pret furnizor."
+
+#~ msgid ""
+#~ "Unit of Measure of the same category can be converted between each others."
+#~ msgstr ""
+#~ "Unitatile de masura din aceeasi categorie pot fi convertite intre ele."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "coef (base unit) = 1 (this unit)"
+#~ msgstr ""
+#~ "The coefficient for the formula:\n"
+#~ "coef (base unit) = 1 (this unit)"
+
+#~ msgid ""
+#~ "'Make to Stock': When needed, take from the stock or wait until "
+#~ "refurnishing. 'Make to Order': When needed, purchase or produce for the "
+#~ "procurement request."
+#~ msgstr ""
+#~ "'Produce pe stoc': cand e necesar, ia de pe stoc sau astaepta furnizarea. "
+#~ "\"Produce la comanda': cand e necesar, cumpara sau produce conform "
+#~ "necesarului."
+
+#~ msgid ""
+#~ "The rule only apply if the partner buys/sells more than this quantity."
+#~ msgstr ""
+#~ "Regula se aplica numai daca partenerul cumpara/vinde mai mult decat aceasta "
+#~ "cantitate."
+
+#~ msgid ""
+#~ "The computed quantity will be a multiple of this value. Use 1.0 for products "
+#~ "that can not be splitted."
+#~ msgstr ""
+#~ "Cantitatea calculata va fi multiplu al acestei valori. Folositi 1.0 pentru "
+#~ "produsele care nu pot fi 'explodate'."
+
+#~ msgid "Paletization"
+#~ msgstr "Paletizare"
+
+#~ msgid "Ending date for validity of this pricelist version."
+#~ msgstr "Data sfarsit de valabilitate a acesti versiuni de lista de preturi."
+
+#~ msgid "Price Min. Margin"
+#~ msgstr "Margine pret min."
+
+#~ msgid ""
+#~ "The coefficient for the formula:\n"
+#~ "1 (base unit) = coef (this unit)"
+#~ msgstr ""
+#~ "Coeficiuentul pentru formula:\n"
+#~ "1 (Um baza) = coef (aceasta UM)"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "ID-ul certificatului trebuie să fie unic !"

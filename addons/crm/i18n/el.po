@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-15 09:39+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:11+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -85,6 +85,7 @@ msgid "Select Opportunities"
 msgstr "Επιλογή Εκαιριών"
 
 #. module: crm
+#: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
 #: view:crm.send.mail:0
 msgid " "
@@ -141,11 +142,6 @@ msgstr "Ο Υποψήφιος Πελάτης '%s' έχει κλείσει"
 #: selection:crm.meeting,freq:0
 msgid "No Repeat"
 msgstr "Χωρίς Επανάληψη"
-
-#. module: crm
-#: field:crm.case.section,resource_calendar_id:0
-msgid "Resource's Calendar"
-msgstr "Ημερολόγιο Πόρων"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
@@ -737,6 +733,11 @@ msgstr "Τρέχουσα Δραστηριότητα"
 msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
+msgstr ""
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
 msgstr ""
 
 #. module: crm
@@ -3223,11 +3224,6 @@ msgid "Daily"
 msgstr "Ημερησίως"
 
 #. module: crm
-#: model:res.request.link,name:crm.request_link_meeting
-msgid "Case Meeting"
-msgstr "Συνάντηση Υπόθεσης"
-
-#. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
 #: model:crm.case.stage,name:crm.stage_opportunity2
 msgid "Qualification"
@@ -3418,6 +3414,7 @@ msgstr "Από"
 #: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
+#: model:res.request.link,name:crm.request_link_meeting
 #, python-format
 msgid "Meeting"
 msgstr "Συνάντηση"
@@ -4397,8 +4394,23 @@ msgstr ""
 #~ msgid "Trigger Date"
 #~ msgstr "Ημερ/νία Εκκιίνησης"
 
+#~ msgid "Deadline Date is automatically computed from Start Date + Duration"
+#~ msgstr ""
+#~ "Η ημερομηνία λήξης υπολογίζεται αυτόματα από την Ημερομηνία Έναρξης + "
+#~ "Διάρκεια"
+
+#~ msgid "this wizard will create all sub-menus, within the selected menu."
+#~ msgstr ""
+#~ "αυτός ο βοηθός θα δημιουργήσει όλα τα υπομενού, μέσα σε ένα επιλεγμένο μενού"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
+
+#~ msgid ""
+#~ "You may want to create a new parent menu to put all the created menus in."
+#~ msgstr ""
+#~ "Ίσως να θέλετε να δημιουργήσετε ένα νέο μενού για να βάλετε όλα τα μενιύ που "
+#~ "δημιουργήσατε μέσα."
 
 #~ msgid "%(case_description)s = Case description"
 #~ msgstr "%(case_description)s = Case description"
@@ -4423,6 +4435,9 @@ msgstr ""
 #~ msgid "is converted to Opportunity."
 #~ msgstr "μετατρέπεται σε Ευκαιρία"
 
+#~ msgid "Resource's Calendar"
+#~ msgstr "Ημερολόγιο Πόρων"
+
 #~ msgid "Opportunities By Categories"
 #~ msgstr "Ευκαιρίες ανά Κατηγορία"
 
@@ -4443,3 +4458,6 @@ msgstr ""
 
 #~ msgid "Shortcut for this menu already exists!"
 #~ msgstr "Η συντόμευση για αυτό το μενού υπάρχει ήδη!"
+
+#~ msgid "Case Meeting"
+#~ msgstr "Συνάντηση Υπόθεσης"

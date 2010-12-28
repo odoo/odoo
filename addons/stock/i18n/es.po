@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-12-09 11:09+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,8 +14,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#~ msgid "Stock Management"
+#~ msgstr "Gestión de inventario"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -114,6 +117,7 @@ msgstr "Albarán"
 #: report:lot.stock.overview_all:0
 #: field:report.stock.inventory,product_qty:0
 #: field:report.stock.move,product_qty:0
+#: field:stock.change.product.qty,new_quantity:0
 #: field:stock.inventory.line,product_qty:0
 #: field:stock.inventory.line.split,qty:0
 #: report:stock.inventory.move:0
@@ -226,9 +230,9 @@ msgid "Origin"
 msgstr "Origen"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_configuration
-msgid "Configuration"
-msgstr "Configuración"
+#: view:report.stock.lines.date:0
+msgid "Non Inv"
+msgstr "No factura"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -505,11 +509,6 @@ msgstr ""
 #: field:stock.location,usage:0
 msgid "Location Type"
 msgstr "Tipo de ubicación"
-
-#. module: stock
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."
 
 #. module: stock
 #: help:report.stock.move,type:0
@@ -823,9 +822,16 @@ msgid "Transit Location for Inter-Companies Transfers"
 msgstr "Ubicación de tránsito para transferencias inter-compañías"
 
 #. module: stock
-#: field:stock.location,stock_virtual_value:0
-msgid "Virtual Stock Value"
-msgstr "Valor stock virtual"
+#: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
+#: model:ir.model,name:stock.model_stock_change_product_qty
+#: view:stock.change.product.qty:0
+msgid "Change Product Quantity"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_inventory_merge
+msgid "Merge Inventory"
+msgstr "Fusionar inventario"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -891,6 +897,7 @@ msgstr "Urgente"
 
 #. module: stock
 #: view:stock.picking:0
+#: report:stock.picking.list:0
 msgid "Journal"
 msgstr "Diario"
 
@@ -999,6 +1006,7 @@ msgid "Address of partner"
 msgstr "Dirección de empresa"
 
 #. module: stock
+#: model:res.company,overdue_msg:stock.res_company_shop0
 #: model:res.company,overdue_msg:stock.res_company_tinyshop0
 msgid ""
 "\n"
@@ -1225,9 +1233,17 @@ msgid "Downstream Traceability"
 msgstr "Trazabilidad hacia abajo"
 
 #. module: stock
-#: report:stock.picking.list:0
-msgid "Packing List:"
-msgstr "Albarán:"
+#: model:ir.actions.act_window,help:stock.action_stock_journal_form
+msgid ""
+"The stock journals system allows you assign each stock operation into a "
+"specific journal according to the type of operation to perform or the "
+"worker/team that should perform the operation. Examples of stock journals "
+"may be: quality control, pick lists, packing, etc."
+msgstr ""
+"El sistema de diarios de stock permite asignar cada operación de stock a un "
+"diario específico dependiendo del tipo de operación a realizar o el empleado "
+"/ equipo que debe de realizar la operación. Algunos ejemplos de diarios de "
+"stock: control calidad, lista de preparación, embalaje, etc"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1241,14 +1257,12 @@ msgstr ""
 "stock generados por las órdenes de producción."
 
 #. module: stock
-#: help:stock.move,price_unit:0
+#: code:addons/stock/stock.py:0
+#, python-format
 msgid ""
-"Technical field used to record the product cost set by the user during a "
-"picking confirmation (when average price costing method is used)"
+"Can not create Journal Entry, Output Account defined on this product and "
+"Variant account on category of this product are same."
 msgstr ""
-"Campo técnico utilizado para registrar el coste del producto indicado por el "
-"usuario durante una confirmación de albarán (cuando se utiliza el método del "
-"precio medio de coste)."
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -1278,6 +1292,7 @@ msgid "Shop 1"
 msgstr "Tienda 1"
 
 #. module: stock
+#: view:stock.change.product.qty:0
 #: view:stock.change.standard.price:0
 #: view:stock.fill.inventory:0
 #: view:stock.inventory.merge:0
@@ -1376,6 +1391,11 @@ msgstr "Tipo"
 #: model:stock.location,name:stock.stock_location_5
 msgid "Generic IT Suppliers"
 msgstr "Proveedores TI genéricos"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Picking List:"
+msgstr ""
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1777,9 +1797,23 @@ msgid "Split in production lots"
 msgstr "Dividir en lotes de producción"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory_merge
-msgid "Merge Inventory"
-msgstr "Fusionar inventario"
+#: model:ir.model,name:stock.model_stock_location
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,location_id:0
+#: field:stock.change.product.qty,location_id:0
+#: field:stock.fill.inventory,location_id:0
+#: field:stock.inventory.line,location_id:0
+#: report:stock.inventory.move:0
+#: view:stock.location:0
+#: view:stock.move:0
+#: field:stock.move.consume,location_id:0
+#: field:stock.move.scrap,location_id:0
+#: field:stock.picking,location_id:0
+#: report:stock.picking.list:0
+#: field:stock.report.prodlots,location_id:0
+#: field:stock.report.tracklots,location_id:0
+msgid "Location"
+msgstr "Ubicación"
 
 #. module: stock
 #: view:product.template:0
@@ -1796,6 +1830,14 @@ msgstr "Dirección de envío:"
 #, python-format
 msgid "Provide the quantities of the returned products."
 msgstr "Indique las cantidades de los productos devueltos."
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Can not create Journal Entry, Input Account defined on this product and "
+"Variant account on category of this product are same."
+msgstr ""
 
 #. module: stock
 #: view:stock.change.standard.price:0
@@ -1833,6 +1875,16 @@ msgstr ""
 #: field:stock.warehouse,partner_address_id:0
 msgid "Owner Address"
 msgstr "Dirección dueño"
+
+#. module: stock
+#: help:stock.move,price_unit:0
+msgid ""
+"Technical field used to record the product cost set by the user during a "
+"picking confirmation (when average price costing method is used)"
+msgstr ""
+"Campo técnico utilizado para registrar el coste del producto indicado por el "
+"usuario durante una confirmación de albarán (cuando se utiliza el método del "
+"precio medio de coste)."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_move_report
@@ -1973,6 +2025,7 @@ msgid "Logistical shipping unit: pallet, box, pack ..."
 msgstr "Unidad de envío logística: Palet, caja, paquete, ..."
 
 #. module: stock
+#: view:stock.change.product.qty:0
 #: view:stock.change.standard.price:0
 msgid "_Apply"
 msgstr "_Aplicar"
@@ -2494,7 +2547,6 @@ msgid "Stock Level Forecast"
 msgstr "Previsión nivel de stock"
 
 #. module: stock
-#: model:account.journal,name:stock.stock_journal
 #: model:ir.model,name:stock.model_stock_journal
 #: field:report.stock.move,stock_journal:0
 #: view:stock.journal:0
@@ -2515,6 +2567,7 @@ msgid "Maxtor Suppliers"
 msgstr "Proveedores Maxtor"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_change_product_qty.py:0
 #: code:addons/stock/wizard/stock_change_standard_price.py:0
 #, python-format
 msgid "Active ID is not set in Context"
@@ -2622,6 +2675,12 @@ msgstr ""
 "(id: %d)"
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Can not consume a move with negative or zero quantity !"
+msgstr ""
+
+#. module: stock
 #: field:stock.location,stock_real:0
 msgid "Real Stock"
 msgstr "Stock real"
@@ -2676,6 +2735,13 @@ msgstr "Número lote de producción"
 #: field:stock.move,product_uos_qty:0
 msgid "Quantity (UOS)"
 msgstr "Cantidad (UdV)"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"You are moving %.2f %s products but only %.2f %s available in this lot."
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
@@ -2934,13 +3000,6 @@ msgid "Please provide Proper Quantity !"
 msgstr "¡Indique cantidad correcta!"
 
 #. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "You are moving %.2f products but only %.2f available in this lot."
-msgstr ""
-"Está moviendo %.2f productos pero sólo hay %.2f disponibles en este lote."
-
-#. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
 msgstr "UdV del producto"
@@ -3064,6 +3123,11 @@ msgid "Enable Related Account"
 msgstr "Activa cuenta relacionada"
 
 #. module: stock
+#: field:stock.location,stock_virtual_value:0
+msgid "Virtual Stock Value"
+msgstr "Valor stock virtual"
+
+#. module: stock
 #: view:product.product:0
 #: view:stock.inventory.line.split:0
 #: view:stock.move.split:0
@@ -3158,17 +3222,9 @@ msgid "Reason"
 msgstr "Motivo"
 
 #. module: stock
-#: model:ir.actions.act_window,help:stock.action_stock_journal_form
-msgid ""
-"The stock journals system allows you assign each stock operation into a "
-"specific journal according to the type of operation to perform or the "
-"worker/team that should perform the operation. Examples of stock journals "
-"may be: quality control, pick lists, packing, etc."
+#: report:stock.picking.list:0
+msgid "Delivery Order:"
 msgstr ""
-"El sistema de diarios de stock permite asignar cada operación de stock a un "
-"diario específico dependiendo del tipo de operación a realizar o el empleado "
-"/ equipo que debe de realizar la operación. Algunos ejemplos de diarios de "
-"stock: control calidad, lista de preparación, embalaje, etc"
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3320,10 +3376,14 @@ msgid "Merge inventories"
 msgstr "Fusionar inventarios"
 
 #. module: stock
-#: field:product.product,location_id:0
-#: view:stock.location:0
-msgid "Stock Location"
-msgstr "Ubicación de stock"
+#: help:stock.change.product.qty,new_quantity:0
+msgid "This quantity is expressed in the Default UoM of the product."
+msgstr ""
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Reception:"
+msgstr ""
 
 #. module: stock
 #: help:stock.location,scrap_location:0
@@ -3365,6 +3425,12 @@ msgid "Product Category"
 msgstr "Categoría de producto"
 
 #. module: stock
+#: code:addons/stock/wizard/stock_change_product_qty.py:0
+#, python-format
+msgid "INV: "
+msgstr ""
+
+#. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
 msgid "Reporting"
 msgstr "Informe"
@@ -3398,15 +3464,21 @@ msgstr ""
 "productos contenidos en el paquete."
 
 #. module: stock
-#: view:report.stock.lines.date:0
-msgid "Non Inv"
-msgstr "No factura"
+#: model:ir.ui.menu,name:stock.menu_stock_configuration
+msgid "Configuration"
+msgstr "Configuración"
 
 #. module: stock
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Lots"
 msgstr "Lotes existentes"
+
+#. module: stock
+#: field:product.product,location_id:0
+#: view:stock.location:0
+msgid "Stock Location"
+msgstr "Ubicación de stock"
 
 #. module: stock
 #: help:stock.change.standard.price,new_price:0
@@ -3489,24 +3561,6 @@ msgid "Pack"
 msgstr "Paquete"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_location
-#: view:report.stock.inventory:0
-#: field:report.stock.inventory,location_id:0
-#: field:stock.fill.inventory,location_id:0
-#: field:stock.inventory.line,location_id:0
-#: report:stock.inventory.move:0
-#: view:stock.location:0
-#: view:stock.move:0
-#: field:stock.move.consume,location_id:0
-#: field:stock.move.scrap,location_id:0
-#: field:stock.picking,location_id:0
-#: report:stock.picking.list:0
-#: field:stock.report.prodlots,location_id:0
-#: field:stock.report.tracklots,location_id:0
-msgid "Location"
-msgstr "Ubicación"
-
-#. module: stock
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Date Expected"
@@ -3529,6 +3583,11 @@ msgstr ""
 #: field:stock.move,auto_validate:0
 msgid "Auto Validate"
 msgstr "Auto validar"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Weight"
+msgstr "Peso"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -3657,11 +3716,6 @@ msgid "Please specify at least one non-zero quantity!"
 msgstr "¡Introduzca por lo menos una cantidad que no sea cero!"
 
 #. module: stock
-#: report:stock.picking.list:0
-msgid "weight"
-msgstr "Peso"
-
-#. module: stock
 #: help:product.template,property_stock_procurement:0
 msgid ""
 "For the current product, this stock location will be used, instead of the "
@@ -3769,6 +3823,11 @@ msgstr "Error"
 #: field:stock.ups.final,xmlfile:0
 msgid "XML File"
 msgstr "Fichero XML"
+
+#. module: stock
+#: view:stock.change.product.qty:0
+msgid "Select Quantity"
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:0
@@ -4074,6 +4133,10 @@ msgstr "Movimiento parcial"
 #~ msgid "STOCK_PREFERENCES"
 #~ msgstr "STOCK_PREFERENCES"
 
+#, python-format
+#~ msgid "Futur Stock"
+#~ msgstr "Existencias futuras"
+
 #~ msgid "LIFO"
 #~ msgstr "LIFO"
 
@@ -4103,6 +4166,14 @@ msgstr "Movimiento parcial"
 
 #~ msgid "Products Received"
 #~ msgstr "Productos recibidos"
+
+#, python-format
+#~ msgid "Futur Productions"
+#~ msgstr "Producciones futuras"
+
+#, python-format
+#~ msgid "Futur Receptions"
+#~ msgstr "Recepciones futuras"
 
 #~ msgid "Move History"
 #~ msgstr "Histórico movimientos"
@@ -4255,11 +4326,18 @@ msgstr "Movimiento parcial"
 #~ "Lote de seguimiento es el código que se colocará en la unidad/palet "
 #~ "logístico."
 
+#, python-format
+#~ msgid "Futur Deliveries"
+#~ msgstr "Envíos futuros"
+
 #~ msgid "Tracking Number"
 #~ msgstr "Número seguimiento"
 
 #~ msgid "terp-stock"
 #~ msgstr "terp-stock"
+
+#~ msgid "Packing List:"
+#~ msgstr "Albarán:"
 
 #~ msgid "STOCK_MEDIA_RECORD"
 #~ msgstr "STOCK_MEDIA_RECORD"
@@ -4312,6 +4390,10 @@ msgstr "Movimiento parcial"
 #~ msgid "This account will be used to value the input stock"
 #~ msgstr "Esta cuenta será utilizada para calcular el stock de entrada"
 
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Estado de la factura"
+
 #~ msgid "STOCK_UNDO"
 #~ msgstr "STOCK_UNDO"
 
@@ -4332,6 +4414,10 @@ msgstr "Movimiento parcial"
 
 #~ msgid "STOCK_APPLY"
 #~ msgstr "STOCK_APPLY"
+
+#, python-format
+#~ msgid "Please select at least two inventories."
+#~ msgstr "Por favor, seleccione por lo menos dos inventarios."
 
 #~ msgid "Dest. Address"
 #~ msgstr "Dirección destinatario"
@@ -4380,6 +4466,10 @@ msgstr "Movimiento parcial"
 
 #~ msgid "STOCK_COPY"
 #~ msgstr "STOCK_COPY"
+
+#, python-format
+#~ msgid "Futur Qty"
+#~ msgstr "Ctdad futura"
 
 #~ msgid "STOCK_CDROM"
 #~ msgstr "STOCK_CDROM"
@@ -4455,6 +4545,10 @@ msgstr "Movimiento parcial"
 
 #~ msgid "Planned Date"
 #~ msgstr "Fecha prevista"
+
+#, python-format
+#~ msgid "No production sequence defined"
+#~ msgstr "No se ha definido una secuencia de producción"
 
 #~ msgid "STOCK_COLOR_PICKER"
 #~ msgstr "STOCK_COLOR_PICKER"
@@ -4687,6 +4781,10 @@ msgstr "Movimiento parcial"
 #~ msgid "Split in Two"
 #~ msgstr "Partir en dos"
 
+#, python-format
+#~ msgid "Futur P&L"
+#~ msgstr "P&L futuro"
+
 #~ msgid ""
 #~ "For the current product (template), this stock location will be used, "
 #~ "instead of the default one, as the source location for stock moves generated "
@@ -4704,6 +4802,10 @@ msgstr "Movimiento parcial"
 
 #~ msgid "Supplier Invoice"
 #~ msgstr "Factura de proveedor"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "Para facturar"
 
 #~ msgid "terp-product"
 #~ msgstr "terp-product"
@@ -4743,6 +4845,14 @@ msgstr "Movimiento parcial"
 
 #~ msgid "Move State"
 #~ msgstr "Estado de movimientos"
+
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "No se ha creado factura"
+
+#, python-format
+#~ msgid "Invoice cannot be created from Packing."
+#~ msgstr "No se puede crear factura desde albaranes."
 
 #~ msgid "Future Delivery Orders"
 #~ msgstr "Órdenes de entrega futuras"
@@ -4797,11 +4907,22 @@ msgstr "Movimiento parcial"
 #~ msgid "Print Item Labels"
 #~ msgstr "Imprimir etiquetas"
 
+#, python-format
+#~ msgid "Please select one and only one inventory !"
+#~ msgstr "¡ Por favor, seleccione un y sólo un inventario !"
+
+#, python-format
+#~ msgid "Invoice is already created."
+#~ msgstr "La factura ya está creada."
+
 #~ msgid "Units"
 #~ msgstr "Unidades"
 
 #~ msgid "Total :"
 #~ msgstr "Total:"
+
+#~ msgid "weight"
+#~ msgstr "Peso"
 
 #~ msgid ""
 #~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
@@ -4852,8 +4973,41 @@ msgstr "Movimiento parcial"
 #~ msgid "Move Lines"
 #~ msgstr "Líneas movimiento"
 
+#~ msgid "Qty"
+#~ msgstr "Cant."
+
 #~ msgid "Supplier Refund"
 #~ msgstr "Factura rectificativa (abono) de proveedor"
+
+#~ msgid ""
+#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
+#~ "structured stock locations.\n"
+#~ "Thanks to the double entry management, the inventory controlling is powerful "
+#~ "and flexible:\n"
+#~ "* Moves history and planning,\n"
+#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
+#~ "* Stock valuation (standard or average price, ...)\n"
+#~ "* Robustness faced with Inventory differences\n"
+#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
+#~ "* Bar code supported\n"
+#~ "* Rapid detection of mistakes through double entry system\n"
+#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+#~ "    "
+#~ msgstr ""
+#~ "El módulo de inventario y logística de OpenERP puede gestionar multi-"
+#~ "almacenes y multi-ubicaciones jerárquicas de stock.\n"
+#~ "Gracias a la gestión de partida doble, el control de inventario es potente y "
+#~ "flexible:\n"
+#~ "* Historial de movimientos y planificación,\n"
+#~ "* Métodos de inventario diferentes (FIFO, LIFO ...)\n"
+#~ "* Valoración de existencias (estándar o precio medio ...)\n"
+#~ "* Robustez frente a las diferencias de inventario\n"
+#~ "* Reglas automáticas de abastecimiento (nivel de stock mínimo, JIT ...)\n"
+#~ "* Soporte a código de barras\n"
+#~ "* Detección rápida de errores a través de sistema de partida doble\n"
+#~ "* Trazabilidad (hacia arriba/abajo, lotes de producción, número de serie "
+#~ "...)\n"
+#~ "    "
 
 #, python-format
 #~ msgid ""
@@ -5038,6 +5192,11 @@ msgstr "Movimiento parcial"
 #~ msgid "terp-check"
 #~ msgstr "terp-check"
 
+#, python-format
+#~ msgid "You are moving %.2f products but only %.2f available in this lot."
+#~ msgstr ""
+#~ "Está moviendo %.2f productos pero sólo hay %.2f disponibles en este lote."
+
 #~ msgid "terp-camera_test"
 #~ msgstr "terp-camera_test"
 
@@ -5108,3 +5267,6 @@ msgstr "Movimiento parcial"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."

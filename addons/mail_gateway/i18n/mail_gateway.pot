@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:51+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:51+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:37+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -124,6 +124,11 @@ msgid "Description"
 msgstr ""
 
 #. module: mail_gateway
+#: field:mailgate.message,email_to:0
+msgid "To"
+msgstr ""
+
+#. module: mail_gateway
 #: help:mailgate.message,references:0
 msgid "References emails."
 msgstr ""
@@ -179,8 +184,9 @@ msgid "Stage"
 msgstr ""
 
 #. module: mail_gateway
-#: field:mailgate.message,email_to:0
-msgid "To"
+#: code:addons/mail_gateway/mail_gateway.py:0
+#, python-format
+msgid " added note on "
 msgstr ""
 
 #. module: mail_gateway

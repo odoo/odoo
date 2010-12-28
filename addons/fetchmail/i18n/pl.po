@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-11-10 08:36+0000\n"
 "Last-Translator: Jarosław Ogrodnik <nobodythere@gmail.com>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: fetchmail
@@ -47,13 +47,18 @@ msgstr "Stan"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Set to Draft"
-msgstr "Ustaw na projekt"
+msgid "POP"
+msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
 msgstr "Nie potwierdzone"
+
+#. module: fetchmail
+#: field:email.server,user:0
+msgid "User Name"
+msgstr "Nazwa użytkownika"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -90,13 +95,13 @@ msgstr "Dodać załaczniki ?"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "POP"
+msgid "# of emails"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,user:0
-msgid "User Name"
-msgstr "Nazwa użytkownika"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+msgid "Email History"
+msgstr "Historia poczty"
 
 #. module: fetchmail
 #: field:email.server,user_id:0
@@ -119,7 +124,6 @@ msgid "Password"
 msgstr "Hasło"
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: view:mailgate.message:0
 msgid "Emails"
 msgstr ""
@@ -150,16 +154,25 @@ msgid "Mailgateway Message"
 msgstr "Wiadomość Mailgateway"
 
 #. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+msgid "POP Servers"
+msgstr "Serwery POP"
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Set to Draft"
+msgstr "Ustaw na projekt"
+
+#. module: fetchmail
 #: field:email.server,message_ids:0
 #: model:ir.actions.act_window,name:fetchmail.action_view_mail_message_emails
 msgid "Messages"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Email Servers"
-msgstr ""
+msgid "Fetchmail Services"
+msgstr "Usługi Fetchmail"
 
 #. module: fetchmail
 #: field:email.server,server:0
@@ -303,17 +316,8 @@ msgstr "Pobierz pocztę"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Niewłaściwy XML dla architektury widoku!"
 
-#~ msgid "POP Servers"
-#~ msgstr "Serwery POP"
-
-#~ msgid "Fetchmail Services"
-#~ msgstr "Usługi Fetchmail"
-
 #~ msgid "Received Email History"
 #~ msgstr "Historia otrzymanych wiadomości"
-
-#~ msgid "Email History"
-#~ msgstr "Historia poczty"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Reguły nie sa obsługiwane w obiektach osv_memory !"
