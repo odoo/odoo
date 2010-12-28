@@ -110,7 +110,7 @@
                     <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator orientation="vertical"/>
                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Ordered date of the sales order"/>
-                   <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Ordered month of the sales order"/>
+                   <filter string="Month" name="order_month" icon="terp-go-month" context="{'group_by':'month'}" help="Ordered month of the sales order"/>
                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Ordered Year of the sales order"/>
                 </group>
             </search>
@@ -207,6 +207,17 @@
                 <field name="month" />
                 <field name="product_id" />
                 <field name="price_total" />
+                <field name="user_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="uom_name" invisible="1"/>
+                <field name="categ_id" invisible="1"/>
+                <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
+                <field name="state" invisible="1"/>
+                <field name="shop_id" invisible="1"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                <field name="day" invisible="1"/>
+                <field name="year" invisible="1"/>
+                <field name="date" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -216,7 +227,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="domain">[('state','in',('manual','progress','done')),('year','=', time.strftime('%Y'))]</field>
-        <field name="context">{'group_by_no_leaf':1,'group_by':['month','product_id']}</field>
+        <field name="context">{'search_default_order_month':1,'group_by_no_leaf':0,'group_by':['month', 'product_id']}</field>
         <field name="view_id" ref="view_sales_by_month_tree"/>
     </record>
 
