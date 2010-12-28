@@ -27,12 +27,10 @@ import orm
 import netsvc
 import pooler
 import copy
-import sys
-import traceback
 import logging
 from psycopg2 import IntegrityError, errorcodes
 from tools.func import wraps
-from tools.translate import _
+from tools.translate import translate
 
 module_list = []
 module_class_list = {}
@@ -46,11 +44,78 @@ class except_osv(Exception):
         self.args = (exc_type, name)
 
 
-class osv_pool(netsvc.Service):
+class object_proxy(netsvc.Service):
+    def __init__(self):
+        self.logger = logging.getLogger('web-services')
+        netsvc.Service.__init__(self, 'object_proxy', audience='')
+        self.exportMethod(self.exec_workflow)
+        self.exportMethod(self.execute)
 
     def check(f):
         @wraps(f)
         def wrapper(self, dbname, *args, **kwargs):
+            """ Wraps around OSV functions and normalises a few exceptions
+            """
+
+            def tr(src, ttype):
+                # We try to do the same as the _(), but without the frame
+                # inspection, since we aready are wrapping an osv function
+                # trans_obj = self.get('ir.translation') cannot work yet :(
+                ctx = {}
+                if not kwargs:
+                    if args and isinstance(args[-1], dict):
+                        ctx = args[-1]
+                elif isinstance(kwargs, dict):
+                    ctx = kwargs.get('context', {})
+
+                uid = 1
+                if args and isinstance(args[0], (long, int)):
+                    uid = args[0]
+
+                lang = ctx and ctx.get('lang')
+                if not (lang or hasattr(src, '__call__')):
+                    return src
+
+                # We open a *new* cursor here, one reason is that failed SQL
+                # queries (as in IntegrityError) will invalidate the current one.
+                cr = False
+                
+                if hasattr(src, '__call__'):
+                    # callable. We need to find the right parameters to call
+                    # the  orm._sql_message(self, cr, uid, ids, context) function,
+                    # or we skip..
+                    # our signature is f(osv_pool, dbname [,uid, obj, method, args])
+                    try:
+                        if args and len(args) > 1:
+                            obj = self.get(args[1])
+                            if len(args) > 3 and isinstance(args[3], (long, int, list)):
+                                ids = args[3]
+                            else:
+                                ids = []
+                        cr = pooler.get_db_only(dbname).cursor()
+                        return src(obj, cr, uid, ids, context=(ctx or {}))
+                    except Exception:
+                        pass
+                    finally:
+                        if cr: cr.close()
+                   
+                    return False # so that the original SQL error will
+                                 # be returned, it is the best we have.
+
+                try:
+                    cr = pooler.get_db_only(dbname).cursor()
+                    res = translate(cr, name=False, source_type=ttype,
+                                    lang=lang, source=src)
+                    if res:
+                        return res
+                    else:
+                        return src
+                finally:
+                    if cr: cr.close()
+
+            def _(src):
+                return tr(src, 'code')
+
             try:
                 if not pooler.get_pool(dbname)._ready:
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
@@ -62,9 +127,11 @@ class osv_pool(netsvc.Service):
             except except_osv, inst:
                 self.abortResponse(1, inst.name, inst.exc_type, inst.value)
             except IntegrityError, inst:
-                for key in self._sql_error.keys():
+                osv_pool = pooler.get_pool(dbname)
+                for key in osv_pool._sql_error.keys():
                     if key in inst[0]:
-                        self.abortResponse(1, _('Constraint Error'), 'warning', _(self._sql_error[key]))
+                        self.abortResponse(1, _('Constraint Error'), 'warning',
+                                        tr(osv_pool._sql_error[key], 'sql_constraint') or inst[0])
                 if inst.pgcode in (errorcodes.NOT_NULL_VIOLATION, errorcodes.FOREIGN_KEY_VIOLATION, errorcodes.RESTRICT_VIOLATION):
                     msg = _('The operation cannot be completed, probably due to the following:\n- deletion: you may be trying to delete a record while other records still reference it\n- creation/update: a mandatory field is not correctly set')
                     self.logger.debug("IntegrityError", exc_info=True)
@@ -77,9 +144,8 @@ class osv_pool(netsvc.Service):
                             last_quote_end = errortxt.rfind('"')
                             last_quote_begin = errortxt.rfind('"', 0, last_quote_end)
                             model_name = table = errortxt[last_quote_begin+1:last_quote_end].strip()
-                            print "MODEL", last_quote_begin, last_quote_end, model_name
                         model = table.replace("_",".")
-                        model_obj = self.get(model)
+                        model_obj = osv_pool.get(model)
                         if model_obj:
                             model_name = model_obj._description or model_obj._name
                         msg += _('\n\n[object with reference: %s - %s]') % (model_name, model)
@@ -88,40 +154,11 @@ class osv_pool(netsvc.Service):
                     self.abortResponse(1, _('Integrity Error'), 'warning', msg)
                 else:
                     self.abortResponse(1, _('Integrity Error'), 'warning', inst[0])
-            except Exception, e:
+            except Exception:
                 self.logger.exception("Uncaught exception")
                 raise
 
         return wrapper
-
-
-    def __init__(self):
-        self._ready = False
-        self.obj_pool = {}
-        self.module_object_list = {}
-        self.created = []
-        self._sql_error = {}
-        self._store_function = {}
-        self._init = True
-        self._init_parent = {}
-        self.logger = logging.getLogger("web-services")
-        netsvc.Service.__init__(self, 'object_proxy', audience='')
-        self.exportMethod(self.obj_list)
-        self.exportMethod(self.exec_workflow)
-        self.exportMethod(self.execute)
-
-    def init_set(self, cr, mode):
-        different = mode != self._init
-        if different:
-            if mode:
-                self._init_parent = {}
-            if not mode:
-                for o in self._init_parent:
-                    self.get(o)._parent_store_compute(cr)
-            self._init = mode
-
-        self._ready = True
-        return different
 
     def execute_cr(self, cr, uid, obj, method, *args, **kw):
         object = pooler.get_pool(cr.dbname).get(obj)
@@ -131,13 +168,12 @@ class osv_pool(netsvc.Service):
 
     @check
     def execute(self, db, uid, obj, method, *args, **kw):
-        db, pool = pooler.get_db_and_pool(db)
-        cr = db.cursor()
+        cr = pooler.get_db(db).cursor()
         try:
             try:
                 if method.startswith('_'):
                     raise except_osv('Access Denied', 'Private methods (such as %s) cannot be called remotely.' % (method,))
-                res = pool.execute_cr(cr, uid, obj, method, *args, **kw)
+                res = self.execute_cr(cr, uid, obj, method, *args, **kw)
                 if res is None:
                     self.logger.warning('The method %s of the object %s can not return `None` !', method, obj)
                 cr.commit()
@@ -165,6 +201,34 @@ class osv_pool(netsvc.Service):
         finally:
             cr.close()
         return res
+
+object_proxy()
+
+class osv_pool(object):
+    def __init__(self):
+        self._ready = False
+        self.obj_pool = {}
+        self.module_object_list = {}
+        self.created = []
+        self._sql_error = {}
+        self._store_function = {}
+        self._init = True
+        self._init_parent = {}
+        self.logger = logging.getLogger("pool")
+
+    def init_set(self, cr, mode):
+        different = mode != self._init
+        if different:
+            if mode:
+                self._init_parent = {}
+            if not mode:
+                for o in self._init_parent:
+                    self.get(o)._parent_store_compute(cr)
+            self._init = mode
+
+        self._ready = True
+        return different
+
 
     def obj_list(self):
         return self.obj_pool.keys()

@@ -33,12 +33,12 @@
 #
 import datetime as DT
 import string
-import netsvc
 import sys
 import warnings
-
+import xmlrpclib
 from psycopg2 import Binary
 
+import netsvc
 import tools
 from tools.translate import _
 
@@ -341,8 +341,10 @@ class many2one(_column):
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        context = context or {}
-        values = values or {}
+        if context is None:
+            context = {}
+        if values is None:
+            values = {}
 
         res = {}
         for r in values:
@@ -454,12 +456,12 @@ class one2many(_column):
         raise _('Not Implemented')
 
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
         if self._context:
             context = context.copy()
         context.update(self._context)
-        if not values:
+        if values is None:
             values = {}
 
         res = {}
@@ -613,7 +615,10 @@ class many2many(_column):
             elif act[0] == 3:
                 cr.execute('delete from '+self._rel+' where ' + self._id1 + '=%s and '+ self._id2 + '=%s', (id, act[1]))
             elif act[0] == 4:
-                cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, act[1]))
+                # following queries are in the same transaction - so should be relatively safe
+                cr.execute('SELECT 1 FROM '+self._rel+' WHERE '+self._id1+' = %s and '+self._id2+' = %s', (id, act[1]))
+                if not cr.fetchone():
+                    cr.execute('insert into '+self._rel+' ('+self._id1+','+self._id2+') values (%s,%s)', (id, act[1]))
             elif act[0] == 5:
                 cr.execute('update '+self._rel+' set '+self._id2+'=null where '+self._id2+'=%s', (id,))
             elif act[0] == 6:
@@ -670,6 +675,37 @@ def get_nice_size(a):
     else:
         size = 0
     return (x, tools.human_size(size))
+
+def sanitize_binary_value(dict_item):
+    # binary fields should be 7-bit ASCII base64-encoded data,
+    # but we do additional sanity checks to make sure the values
+    # will are not something else that won't pass via xmlrpc
+    index, value = dict_item
+    if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
+        # these builtin types are meant to pass untouched
+        return index, value
+
+    # For all other cases, handle the value as a binary string:
+    # it could be a 7-bit ASCII string (e.g base64 data), but also
+    # any 8-bit content from files, with byte values that cannot
+    # be passed inside XML!
+    # See for more info:
+    #  - http://bugs.python.org/issue10066
+    #  - http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char
+    #
+    # One solution is to convert the byte-string to unicode,
+    # so it gets serialized as utf-8 encoded data (always valid XML)
+    # If invalid XML byte values were present, tools.ustr() uses
+    # the Latin-1 codec as fallback, which converts any 8-bit
+    # byte value, resulting in valid utf-8-encoded bytes
+    # in the end:
+    #  >>> unicode('\xe1','latin1').encode('utf8') == '\xc3\xa1'
+    # Note: when this happens, decoding on the other endpoint
+    # is not likely to produce the expected output, but this is
+    # just a safety mechanism (in these cases base64 data or
+    # xmlrpc.Binary values should be used instead
+    return index, tools.ustr(value)
+
 
 # ---------------------------------------------------------
 # Function fields
@@ -740,9 +776,9 @@ class function(_column):
         return self._fnct_search(obj, cr, uid, obj, name, args, context=context)
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
-        if not context:
+        if context is None:
             context = {}
-        if not values:
+        if values is None:
             values = {}
         res = {}
         if self._method:
@@ -761,9 +797,13 @@ class function(_column):
                     if res[r] and res[r] in dict_names:
                         res[r] = (res[r], dict_names[res[r]])
 
-        if self._type == 'binary' and context.get('bin_size', False):
-            # convert the data returned by the function with the size of that data...
-            res = dict(map( get_nice_size, res.items()))
+        if self._type == 'binary':
+            if context.get('bin_size', False):
+                # client requests only the size of binary fields
+                res = dict(map(get_nice_size, res.items()))
+            else:
+                res = dict(map(sanitize_binary_value, res.items()))
+
         if self._type == "integer":
             for r in res.keys():
                 # Converting value into string so that it does not affect XML-RPC Limits

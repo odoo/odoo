@@ -43,7 +43,7 @@ def _get_fields_type(self, cr, uid, context=None):
 class ir_model(osv.osv):
     _name = 'ir.model'
     _description = "Objects"
-    _rec_name = 'name'
+    _order = 'model'
 
     def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
         models = self.browse(cr, uid, ids, context=context)
@@ -75,12 +75,14 @@ class ir_model(osv.osv):
             fnct_search=_search_osv_memory,
             help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)")
     }
+    
     _defaults = {
         'model': lambda *a: 'x_',
-        'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
-    def _check_model_name(self, cr, uid, ids):
-        for model in self.browse(cr, uid, ids):
+    
+    def _check_model_name(self, cr, uid, ids, context=None):
+        for model in self.browse(cr, uid, ids, context=context):
             if model.state=='manual':
                 if not model.model.startswith('x_'):
                     return False
@@ -88,8 +90,10 @@ class ir_model(osv.osv):
                 return False
         return True
 
+    def _model_name_msg(self, cr, uid, ids, context=None):
+        return _('The Object name must start with x_ and not contain any special character !')
     _constraints = [
-        (_check_model_name, 'The Object name must start with x_ and not contain any special character !', ['model']),
+        (_check_model_name, _model_name_msg, ['model']),
     ]
 
     # overridden to allow searching both on model name (model field)
@@ -180,9 +184,12 @@ class ir_model_fields(osv.osv):
         'field_description': lambda *a: '',
         'selectable': lambda *a: 1,
     }
-    _order = "id"
+    _order = "name"
+    def _size_gt_zero_msg(self, cr, user, ids, context=None):
+        return _('Size of the field can never be less than 1 !')
+
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>0)', 'Size of the field can never be less than 1 !'),
+        ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
     ]
     def unlink(self, cr, user, ids, context=None):
         for field in self.browse(cr, user, ids, context):
@@ -369,6 +376,7 @@ ir_model_access()
 class ir_model_data(osv.osv):
     _name = 'ir.model.data'
     __logger = logging.getLogger('addons.base.'+_name)
+    _order = 'module,model,name'
     _columns = {
         'name': fields.char('XML Identifier', required=True, size=128, select=1),
         'model': fields.char('Object', required=True, size=64, select=1),
@@ -381,8 +389,8 @@ class ir_model_data(osv.osv):
     _defaults = {
         'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_update': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'noupdate': lambda *a: False,
-        'module': lambda *a: ''
+        'noupdate': False,
+        'module': ''
     }
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module !'),
@@ -393,6 +401,12 @@ class ir_model_data(osv.osv):
         self.loads = {}
         self.doinit = True
         self.unlink_mark = {}
+
+    def _auto_init(self, cr, context=None):
+        super(ir_model_data, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_model_data_module_name_index\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
     @tools.cache()
     def _get_id(self, cr, uid, module, xml_id):
@@ -441,18 +455,19 @@ class ir_model_data(osv.osv):
         action_id = False
 
         if xml_id:
-            cr.execute('select id,res_id from ir_model_data where module=%s and name=%s', (module,xml_id))
+            cr.execute('''SELECT imd.id, imd.res_id, md.id
+                          FROM ir_model_data imd LEFT JOIN %s md ON (imd.res_id = md.id)
+                          WHERE imd.module=%%s AND imd.name=%%s''' % model_obj._table,
+                          (module, xml_id))
             results = cr.fetchall()
-            for action_id2,res_id2 in results:
-                cr.execute('select id from '+model_obj._table+' where id=%s', (res_id2,))
-                result3 = cr.fetchone()
-                if not result3:
+            for imd_id2,res_id2,real_id2 in results:
+                if not real_id2:
                     self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
                     self.get_object_reference.clear_cache(cr.dbname, uid, module, xml_id)
-                    cr.execute('delete from ir_model_data where id=%s', (action_id2,))
+                    cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:
-                    res_id,action_id = res_id2,action_id2
+                    res_id,action_id = res_id2,imd_id2
 
         if action_id and res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright P. Christeas <p_christ@hol.gr> 2008,2009
-# A part of the code comes from the ganeti project:  http://www.mail-archive.com/ganeti-devel@googlegroups.com/msg00713.html#
+# Copyright P. Christeas <p_christ@hol.gr> 2008-2010
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -136,14 +135,24 @@ class HTTPDir:
             return self.path
         return False
 
-class noconnection:
+class noconnection(object):
     """ a class to use instead of the real connection
     """
+    def __init__(self, realsocket=None):
+        self.__hidden_socket = realsocket
+
     def makefile(self, mode, bufsize):
         return None
 
     def close(self):
         pass
+
+    def getsockname(self):
+        """ We need to return info about the real socket that is used for the request
+        """
+        if not self.__hidden_socket:
+            raise AttributeError("No-connection class cannot tell real socket")
+        return self.__hidden_socket.getsockname()
 
 class dummyconn:
     def shutdown(self, tru):
@@ -191,6 +200,12 @@ class HttpOptions:
 
         self.send_response(200)
         self.send_header("Content-Length", 0)
+        if 'Microsoft' in self.headers.get('User-Agent', ''):
+            self.send_header('MS-Author-Via', 'DAV') 
+            # Microsoft's webdav lib ass-umes that the server would
+            # be a FrontPage(tm) one, unless we send a non-standard
+            # header that we are not an elephant.
+            # http://www.ibm.com/developerworks/rational/library/2089.html
 
         for key, value in opts.items():
             if isinstance(value, basestring):
@@ -239,13 +254,21 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
         fore.raw_requestline = "%s %s %s\n" % (self.command, path, self.version)
         if not fore.parse_request(): # An error code has been sent, just exit
             return
+        if fore.headers.status:
+            self.log_error("Parse error at headers: %s", fore.headers.status)
+            self.close_connection = 1
+            self.send_error(400,"Parse error at HTTP headers")
+            return
+
         self.request_version = fore.request_version
         if auth_provider and auth_provider.realm:
             try:
                 self.sec_realms[auth_provider.realm].checkRequest(fore,path)
             except AuthRequiredExc,ae:
-                if self.request_version != 'HTTP/1.1':
-                    self.log_error("Cannot require auth at %s",self.request_version)
+                # Darwin 9.x.x webdav clients will report "HTTP/1.0" to us, while they support (and need) the
+                # authorisation features of HTTP/1.1 
+                if self.request_version != 'HTTP/1.1' and ('Darwin/9.' not in fore.headers.get('User-Agent', '')):
+                    self.log_error("Cannot require auth at %s", self.request_version)
                     self.send_error(403)
                     return
                 self._get_ignore_body(fore) # consume any body that came, not loose sync with input
@@ -390,15 +413,21 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
                 npath = '/' + npath
 
             if not self.in_handlers.has_key(p):
-                self.in_handlers[p] = vdir.handler(noconnection(),self.client_address,self.server)
+                self.in_handlers[p] = vdir.handler(noconnection(self.request),self.client_address,self.server)
                 if vdir.auth_provider:
                     vdir.auth_provider.setupAuth(self, self.in_handlers[p])
             hnd = self.in_handlers[p]
             hnd.rfile = self.rfile
             hnd.wfile = self.wfile
             self.rlpath = self.raw_requestline
-            self._handle_one_foreign(hnd,npath, vdir.auth_provider)
-            # print "Handled, closing = ", self.close_connection
+            try:
+                self._handle_one_foreign(hnd,npath, vdir.auth_provider)
+            except IOError, e:
+                if e.errno == errno.EPIPE:
+                    self.log_message("Could not complete request %s," \
+                            "client closed connection", self.rlpath.rstrip())
+                else:
+                    raise
             return
         # if no match:
         self.send_error(404, "Path not found: %s" % self.path)

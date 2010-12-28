@@ -153,8 +153,8 @@ class expression(object):
                 if not isinstance(field,fields.property):
                     continue
 
-            if field._properties and ((not field.store) or field._fnct_search):
-                # this is a function field
+            if field._properties and not field.store:
+                # this is a function field that is not stored
                 if not field._fnct_search:
                     # the function field doesn't provide a search function and doesn't store
                     # values in the database, so we must ignore it : we generate a dummy leaf
@@ -185,7 +185,7 @@ class expression(object):
                 else:
                     call_null = True
 
-                    if right:
+                    if right is not False:
                         if isinstance(right, basestring):
                             ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                             if ids2:
@@ -234,7 +234,7 @@ class expression(object):
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
                 else:
                     call_null_m2m = True
-                    if right:
+                    if right is not False:
                         if isinstance(right, basestring):
                             res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
                             if res_ids:

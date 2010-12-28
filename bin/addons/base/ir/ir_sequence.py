@@ -2,20 +2,19 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-TODAY OpenERP S.A. <http://www.openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -26,6 +25,7 @@ import pooler
 
 class ir_sequence_type(osv.osv):
     _name = 'ir.sequence.type'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name',size=64, required=True),
         'code': fields.char('Code',size=32, required=True),
@@ -38,6 +38,7 @@ def _code_get(self, cr, uid, context={}):
 
 class ir_sequence(osv.osv):
     _name = 'ir.sequence'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name',size=64, required=True),
         'code': fields.selection(_code_get, 'Code',size=64, required=True),
@@ -74,17 +75,22 @@ class ir_sequence(osv.osv):
 
     def get_id(self, cr, uid, sequence_id, test='id', context=None):
         assert test in ('code','id')
-        company_id = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.id
-        seq_id = self.search(cr, uid, [(test,'=',sequence_id),('active','=',True),('company_id','=',company_id)])
-        if not seq_id:
-            seq_id = self.search(cr, uid, [(test,'=',sequence_id),('active','=',True),('company_id','=',False)])
-        if seq_id:
-            sequece_data = self.browse(cr, uid, seq_id[0], context)
-            self.write(cr, uid, sequece_data.id, {'number_next': sequece_data.number_next + sequece_data.number_increment})
-            if sequece_data.number_next:
-                return self._process(sequece_data.prefix) + '%%0%sd' % sequece_data.padding % sequece_data.number_next + self._process(sequece_data.suffix)
+        company_id = self.pool.get('res.users').read(cr, uid, uid, ['company_id'], context=context)['company_id'][0] or None
+        cr.execute('''SELECT id, number_next, prefix, suffix, padding
+                      FROM ir_sequence
+                      WHERE %s=%%s
+                       AND active=true
+                       AND (company_id = %%s or company_id is NULL)
+                      ORDER BY company_id, id
+                      FOR UPDATE NOWAIT''' % test,
+                      (sequence_id, company_id))
+        res = cr.dictfetchone()
+        if res:
+            cr.execute('UPDATE ir_sequence SET number_next=number_next+number_increment WHERE id=%s AND active=true', (res['id'],))
+            if res['number_next']:
+                return self._process(res['prefix']) + '%%0%sd' % res['padding'] % res['number_next'] + self._process(res['suffix'])
             else:
-                return self._process(sequece_data.prefix) + self._process(sequece_data.suffix)
+                return self._process(res['prefix']) + self._process(res['suffix'])
         return False
 
     def get(self, cr, uid, code):

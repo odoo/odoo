@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="menu_base_partner" name="Sales" sequence="0"/>
+        <menuitem icon="terp-partner" id="menu_base_partner" name="Sales" sequence="0"
+                  web_icon="data/sales.png"
+                  web_icon_hover="data/sales-hover.png"/>
 
         <menuitem id="menu_address_book" name="Address Book" parent="menu_base_partner" sequence="2"/>
 
@@ -314,7 +316,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <newline/>
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="History" groups="base.group_extended" invisible="True">
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="comment" nolabel="1"/>
@@ -337,7 +339,7 @@
                         <field name="name" select="1"/>
                         <field name="address" select="1"/>
                         <field name="country" select="1"/>
-                        <field name="category_id" select="1"/>
+                        <field name="category_id" select="1" groups="base.group_extended"/>
                         <field name="user_id" select="1">
                             <filter string="My Partners" icon="terp-personal+" domain="[('user_id','=',uid)]"/>
                         </field>

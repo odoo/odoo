@@ -16,7 +16,7 @@ class YamlTag(object):
         return "<%s %s>" % (self.__class__.__name__, sorted(self.__dict__.items()))
 
 class Assert(YamlTag):
-    def __init__(self, model, id, severity=logging.WARNING, string="NONAME", **kwargs):
+    def __init__(self, model, id=None, severity=logging.WARNING, string="NONAME", **kwargs):
         self.model = model
         self.id = id
         self.severity = severity

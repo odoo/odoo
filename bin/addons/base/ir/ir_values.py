@@ -26,8 +26,7 @@ from tools.translate import _
 
 EXCLUDED_FIELDS = set((
     'report_sxw_content', 'report_rml_content', 'report_sxw', 'report_rml',
-    'report_sxw_content_data', 'report_rml_content_data', 'search_view',
-    'search_view_id'))
+    'report_sxw_content_data', 'report_rml_content_data', 'search_view', ))
 
 class ir_values(osv.osv):
     _name = 'ir.values'
@@ -72,21 +71,21 @@ class ir_values(osv.osv):
         'name': fields.char('Name', size=128),
         'model_id': fields.many2one('ir.model', 'Object', size=128,
             help="This field is not used, it only helps you to select a good model."),
-        'model': fields.char('Object Name', size=128),
+        'model': fields.char('Object Name', size=128, select=True),
         'action_id': fields.many2one('ir.actions.actions', 'Action',
             help="This field is not used, it only helps you to select the right action."),
         'value': fields.text('Value'),
         'value_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
             method=True, type='text', string='Value'),
         'object': fields.boolean('Is Object'),
-        'key': fields.selection([('action','Action'),('default','Default')], 'Type', size=128),
-        'key2' : fields.char('Event Type',help="The kind of action or button in the client side that will trigger the action.", size=128),
+        'key': fields.selection([('action','Action'),('default','Default')], 'Type', size=128, select=True),
+        'key2' : fields.char('Event Type',help="The kind of action or button in the client side that will trigger the action.", size=128, select=True),
         'meta': fields.text('Meta Datas'),
         'meta_unpickle': fields.function(_value_unpickle, fnct_inv=_value_pickle,
             method=True, type='text', string='Metadata'),
-        'res_id': fields.integer('Object ID', help="Keep 0 if the action must appear on all resources."),
-        'user_id': fields.many2one('res.users', 'User', ondelete='cascade'),
-        'company_id': fields.many2one('res.company', 'Company')
+        'res_id': fields.integer('Object ID', help="Keep 0 if the action must appear on all resources.", select=True),
+        'user_id': fields.many2one('res.users', 'User', ondelete='cascade', select=True),
+        'company_id': fields.many2one('res.company', 'Company', select=True)
     }
     _defaults = {
         'key': lambda *a: 'action',
@@ -94,11 +93,11 @@ class ir_values(osv.osv):
         'company_id': lambda *a: False
     }
 
-    def _auto_init(self, cr, context={}):
+    def _auto_init(self, cr, context=None):
         super(ir_values, self)._auto_init(cr, context)
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_values_key_model_key2_index\'')
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_values_key_model_key2_res_id_user_id_idx\'')
         if not cr.fetchone():
-            cr.execute('CREATE INDEX ir_values_key_model_key2_index ON ir_values (key, model, key2)')
+            cr.execute('CREATE INDEX ir_values_key_model_key2_res_id_user_id_idx ON ir_values (key, model, key2, res_id, user_id)')
 
     def set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=False, preserve_user=False, company=False):
         if isinstance(value, unicode):

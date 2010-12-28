@@ -23,7 +23,7 @@
 
 {
     'name': 'Base',
-    'version': '1.2',
+    'version': '1.3',
     'category': 'Generic Modules/Base',
     'description': """The kernel of OpenERP, needed for all installation.""",
     'author': 'OpenERP SA',
@@ -71,20 +71,22 @@
 
         'res/ir_property_view.xml',
         'security/base_security.xml',
-        'maintenance/maintenance_view.xml',
+        'publisher_warranty/publisher_warranty_view.xml',
 
         'security/ir.model.access.csv',
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
+        'publisher_warranty/publisher_warranty_data.xml',
     ],
     'demo_xml': [
         'base_demo.xml',
         'res/partner/partner_demo.xml',
         'res/partner/crm_demo.xml',
+        'res/res_widget_demo.xml',
     ],
     'test': [
         'test/base_test.xml',
-        #'test/base_test.yml'
+        'test/base_test.yml',
         'test/test_context.xml',
         'test/bug_lp541545.xml',
     ],

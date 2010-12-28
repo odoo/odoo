@@ -57,7 +57,7 @@ class ir_translation(osv.osv):
     _columns = {
         'name': fields.char('Field Name', size=128, required=True),
         'res_id': fields.integer('Resource ID', select=True),
-        'lang': fields.selection(_get_language, string='Language', size=5),
+        'lang': fields.selection(_get_language, string='Language', size=16),
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
@@ -138,7 +138,7 @@ class ir_translation(osv.osv):
         and source. All values passed to this method should be unicode (not byte strings),
         especially ``source``.
 
-        :param name: identification of the term to translate, such as field name
+        :param name: identification of the term to translate, such as field name (optional if source is passed)
         :param types: single string defining type of term to translate (see ``type`` field on ir.translation), or sequence of allowed types (strings)
         :param lang: language code of the desired translation
         :param source: optional source term to translate (should be unicode)
@@ -153,19 +153,22 @@ class ir_translation(osv.osv):
         if isinstance(types, basestring):
             types = (types,)
         if source:
-            cr.execute('select value ' \
-                    'from ir_translation ' \
-                    'where lang=%s ' \
-                        'and type in %s ' \
-                        'and name=%s ' \
-                        'and src=%s',
-                    (lang or '', types, tools.ustr(name), source))
+            query = """SELECT value 
+                       FROM ir_translation 
+                       WHERE lang=%s 
+                        AND type in %s 
+                        AND src=%s"""
+            params = (lang or '', types, source)
+            if name:
+                query += " AND name=%s"
+                params += (tools.ustr(name),)
+            cr.execute(query, params)
         else:
-            cr.execute('select value ' \
-                    'from ir_translation ' \
-                    'where lang=%s ' \
-                        'and type in %s ' \
-                        'and name=%s',
+            cr.execute("""SELECT value
+                          FROM ir_translation
+                          WHERE lang=%s
+                           AND type in %s
+                           AND name=%s""",
                     (lang or '', types, tools.ustr(name)))
         res = cr.fetchone()
         trad = res and res[0] or u''
