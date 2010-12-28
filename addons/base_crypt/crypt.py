@@ -174,8 +174,8 @@ def login(db, login, password):
 #    else:
 #         raise Exception('AccessDenied')
 
-def check(db, uid, passwd):
-    if security._uid_cache.has_key( uid ) and (security._uid_cache[uid]==passwd):
+def check_creds(db, uid, passwd):
+    if security._uid_cache.get(db, {}).get(uid) and security._uid_cache.get(db, {}).get(uid) == passwd:
         return True
     cr = pooler.get_db(db).cursor()
     if passwd not in _salt_cache:
@@ -191,7 +191,7 @@ def check(db, uid, passwd):
     res = cr.fetchone()[0]
     cr.close()
     if not bool(res):
-        raise Exception('AccessDenied')
+        raise security.ExceptionNoTb('AccessDenied')
     if res:
         security._uid_cache[uid] = passwd
     return bool(res)
@@ -204,14 +204,14 @@ def access(db, uid, passwd, sec_level, ids):
     res = cr.fetchone()
     cr.close()
     if not res:
-        raise Exception('Bad username or password')
+        raise security.ExceptionNoTb('Bad username or password')
     return res[0]
 
 # check if module is installed or not
 security.login=login
 #security.check_super=check_super
 security.access=access
-security.check=check
+security.check_creds=check_creds
 
 class users(osv.osv):
     _name="res.users"
