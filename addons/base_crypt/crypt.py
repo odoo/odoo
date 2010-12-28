@@ -174,9 +174,11 @@ def login(db, login, password):
 #    else:
 #         raise Exception('AccessDenied')
 
-def check_creds(db, uid, passwd):
-    if security._uid_cache.get(db, {}).get(uid) and security._uid_cache.get(db, {}).get(uid) == passwd:
+def check(db, uid, passwd):
+    cached_pass = security._uid_cache.get(db, {}).get(uid)
+    if (cached_pass is not None) and cached_pass == passwd:
         return True
+
     cr = pooler.get_db(db).cursor()
     if passwd not in _salt_cache:
         cr.execute( 'select login from res_users where id=%s', (uid,) )
@@ -185,7 +187,7 @@ def check_creds(db, uid, passwd):
             stored_login = stored_login[0]
 
         if not login(db,stored_login,passwd):
-            return False
+            return security.ExceptionNoTb('AccessDenied')
     salt = _salt_cache[passwd]
     cr.execute(' select count(*) from res_users where id=%s and password=%s', (int(uid), encrypt_md5( passwd, salt )) )
     res = cr.fetchone()[0]
@@ -211,7 +213,7 @@ def access(db, uid, passwd, sec_level, ids):
 security.login=login
 #security.check_super=check_super
 security.access=access
-security.check_creds=check_creds
+security.check=check
 
 class users(osv.osv):
     _name="res.users"
