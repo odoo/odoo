@@ -611,8 +611,8 @@ class account_journal(osv.osv):
     }
 
     _defaults = {
-        'user_id': lambda self,cr,uid,context: uid,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'user_id': lambda self, cr, uid, context: uid,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -711,7 +711,6 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
 
         return self.name_get(cr, user, ids, context=context)
-
 
     def onchange_type(self, cr, uid, ids, type, currency, context=None):
         obj_data = self.pool.get('ir.model.data')
@@ -1282,6 +1281,8 @@ class account_move(osv.osv):
         return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context=None, check=True):
+        if context is None:
+            context = {}
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context=context):
@@ -2615,11 +2616,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
-        if unconfigured_cmp:
-            cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
-            for field in res['fields']:
-               if field == 'company_id':
-                   res['fields'][field]['domain'] = unconfigured_cmp
+        for field in res['fields']:
+           if field == 'company_id':
+               res['fields'][field]['domain'] = unconfigured_cmp
+               res['fields'][field]['selection'] = [('', '')]
+               if unconfigured_cmp:
+                   cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
                    res['fields'][field]['selection'] = cmp_select
         return res
 

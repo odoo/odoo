@@ -221,7 +221,7 @@ class hr_department(osv.osv):
     _inherit = 'hr.department'
     _columns = {
         'manager_id': fields.many2one('hr.employee', 'Manager'),
-        'member_ids': fields.one2many('hr.employee', 'department_id', 'Members'),
+        'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
 
 hr_department()
