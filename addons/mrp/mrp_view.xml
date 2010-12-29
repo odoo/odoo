@@ -11,10 +11,9 @@
 
 
         <menuitem name="Master Data"
-                  id="menu_mrp_bom"
-                  parent="base.menu_mrp_root"
-                  groups="mrp.group_mrp_manager,mrp.group_mrp_user"
-                  sequence="5" />
+            id="menu_mrp_bom"
+            parent="base.menu_mrp_root"
+            sequence="5" />
 
         <!--
         Property / Property Group
@@ -112,12 +111,10 @@
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
-            parent="menu_mrp_property"
-            groups="base.group_extended" />
+            parent="menu_mrp_property"/>
         <menuitem
             action="mrp_property_group_action"
-            id="menu_mrp_property_group_action"
-            parent="menu_mrp_property"/>
+            id="menu_mrp_property_group_action"/>
 
         <!--
         Work Centers
@@ -189,9 +186,9 @@
                    <group col='15' colspan='4'>
                         <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
                         <separator orientation="vertical"/>
-	                    <field name="code"/>
-	                    <field name="name"/>
-	                    <field name="resource_type"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="resource_type"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
@@ -438,7 +435,6 @@
             action="mrp_bom_form_action"
             id="menu_mrp_bom_form_action"
             parent="menu_mrp_bom"
-            groups="mrp.group_mrp_user,mrp.group_mrp_manager"
             sequence="10"/>
         <menuitem
             action="mrp_bom_form_action2"
@@ -750,7 +746,7 @@
                        <field name="origin"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="10" col="8">
+                    <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
@@ -773,7 +769,8 @@
             <field name="context">{'search_default_current':1}</field>
             <field name="help">Manufacturing Orders are usually proposed automatically by OpenERP based on the bill of materials and the procurement rules, but you can also create manufacturing orders manually. OpenERP will handle the consumption of the raw materials (stock decrease) and the production of the finished products (stock increase) when the order is processed.</field>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action"
+            parent="menu_mrp_manufacturing" sequence="1"/>
 
         <record id="mrp_production_action_planning" model="ir.actions.act_window">
             <field name="name">Manufacturing Orders</field>
@@ -912,7 +909,7 @@
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"
             src_model="product.product"
-            groups="base.group_extended"/>
+            groups="mrp.group_mrp_user"/>
 
         <act_window
             domain="[('bom_id','=',False)]"
@@ -920,7 +917,8 @@
             id="act_product_product_2_mrp_bom"
             name="Bill of Materials"
             res_model="mrp.bom"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="mrp.group_mrp_user"/>
 
         <!-- Menu for Resource for MRP-->
 
@@ -942,12 +940,11 @@
         <!-- Planning -->
 
         <menuitem id="menu_mrp_planning" name="Planning"
-		        parent="base.menu_mrp_root" sequence="2"
-		        groups="base.group_extended"/>
-		<menuitem action="mrp.mrp_production_action_planning"
-		        id="menu_mrp_production_order_action"
-		        parent="menu_mrp_planning" sequence="1"
-		        groups="base.group_extended"/>
+                parent="base.menu_mrp_root" sequence="2"
+                groups="base.group_extended"/>
+        <menuitem action="mrp.mrp_production_action_planning"
+                id="menu_mrp_production_order_action"
+                parent="menu_mrp_planning" sequence="1"/>
 
     </data>
 </openerp>

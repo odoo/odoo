@@ -204,7 +204,7 @@ class account_account(osv.osv):
                 args[pos] = ('id', 'in', ids1)
             pos += 1
 
-        if context and context.has_key('consolidate_childs'): #add consolidated childs of accounts
+        if context and context.has_key('consolidate_children'): #add consolidated children of accounts
             ids = super(account_account, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
             for consolidate_child in self.browse(cr, uid, context['account_id'], context=context).child_consol_ids:
@@ -285,6 +285,7 @@ class account_account(osv.osv):
             children_and_consolidated.reverse()
             brs = list(self.browse(cr, uid, children_and_consolidated, context=context))
             sums = {}
+            currency_obj = self.pool.get('res.currency')
             while brs:
                 current = brs[0]
 #                can_compute = True
@@ -299,8 +300,11 @@ class account_account(osv.osv):
                 brs.pop(0)
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
-                    if current.child_id:
-                        sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
+                    for child in current.child_id:
+                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
+                            sums[current.id][fn] += sums[child.id][fn]
+                        else:
+                            sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
             res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
@@ -607,8 +611,8 @@ class account_journal(osv.osv):
     }
 
     _defaults = {
-        'user_id': lambda self,cr,uid,context: uid,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'user_id': lambda self, cr, uid, context: uid,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
     _sql_constraints = [
         ('code_company_uniq', 'unique (code, company_id)', 'The code of the journal must be unique per company !'),
@@ -707,7 +711,6 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
 
         return self.name_get(cr, user, ids, context=context)
-
 
     def onchange_type(self, cr, uid, ids, type, currency, context=None):
         obj_data = self.pool.get('ir.model.data')
@@ -1278,6 +1281,8 @@ class account_move(osv.osv):
         return super(account_move, self).copy(cr, uid, id, default, context)
 
     def unlink(self, cr, uid, ids, context=None, check=True):
+        if context is None:
+            context = {}
         toremove = []
         obj_move_line = self.pool.get('account.move.line')
         for move in self.browse(cr, uid, ids, context=context):
@@ -1916,7 +1921,7 @@ class account_tax(osv.osv):
         RETURN:
             [ tax ]
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
-            one tax for each tax id in IDS and their childs
+            one tax for each tax id in IDS and their children
         """
         res = self._unit_compute(cr, uid, taxes, price_unit, address_id, product, partner, quantity)
         total = 0.0
@@ -2011,7 +2016,7 @@ class account_tax(osv.osv):
         RETURN:
             [ tax ]
             tax = {'name':'', 'amount':0.0, 'account_collected_id':1, 'account_paid_id':2}
-            one tax for each tax id in IDS and their childs
+            one tax for each tax id in IDS and their children
         """
         res = self._unit_compute_inv(cr, uid, taxes, price_unit, address_id, product, partner=None)
         total = 0.0
@@ -2611,11 +2616,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         cr.execute("SELECT company_id FROM account_account WHERE active = 't' AND account_account.parent_id IS NULL AND name != %s", ("Chart For Automated Tests",))
         configured_cmp = [r[0] for r in cr.fetchall()]
         unconfigured_cmp = list(set(company_ids)-set(configured_cmp))
-        if unconfigured_cmp:
-            cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
-            for field in res['fields']:
-               if field == 'company_id':
-                   res['fields'][field]['domain'] = unconfigured_cmp
+        for field in res['fields']:
+           if field == 'company_id':
+               res['fields'][field]['domain'] = unconfigured_cmp
+               res['fields'][field]['selection'] = [('', '')]
+               if unconfigured_cmp:
+                   cmp_select = [(line.id, line.name) for line in self.pool.get('res.company').browse(cr, uid, unconfigured_cmp)]
                    res['fields'][field]['selection'] = cmp_select
         return res
 

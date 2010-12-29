@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-27 10:40+0000\n"
+"PO-Revision-Date: 2010-12-28 19:28+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-28 04:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:49+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -399,9 +399,9 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
-"Los contables utilizan esta vista para introducir asientos masivamente en "
-"OpenERP. OpenERP crea los asientos contables si utiliza extractos bancarios, "
-"registros de caja o pagos de cliente/proveedor."
+"Los contables utilizan esta vista para introducir apuntes masivamente en "
+"OpenERP. Cuando utiliza los extractos bancarios, hojas de caja, o pagos de "
+"cliente/proveedor OpenERP crea automáticamente apuntes contables."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -2153,7 +2153,7 @@ msgstr "Descripción"
 #: code:addons/account/installer.py:0
 #, python-format
 msgid "ECNJ"
-msgstr ""
+msgstr "ACOMPRA"
 
 #. module: account
 #: view:account.subscription:0
@@ -2412,7 +2412,7 @@ msgstr "Contabilidad. Líneas de modelo"
 #: code:addons/account/installer.py:0
 #, python-format
 msgid "EXJ"
-msgstr "GASTO"
+msgstr "COMPRA"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
@@ -4754,6 +4754,15 @@ msgid ""
 "calendar year gives many companies an advantage, allowing them to close "
 "their books at a time which is most convenient for them."
 msgstr ""
+"Defina el ejercicio fiscal de su compañía según la periodicidad que ha "
+"decidido seguir. Un ejercicio fiscal es un periodo de 1 año sobre el cual la "
+"compañía presupuesta sus gastos. Puede incluir cualquier periodo de 12 "
+"meses. El ejercicio fiscal suele denominarse según la fecha en la que acaba. "
+"Así, si el ejercicio fiscal de una compañía finaliza el 30 de noviembre de "
+"2011, entonces todo lo comprendido entre el 1 de diciembre de 2010 y el 30 "
+"de noviembre de 2011 será considerado como el EF 2011. No usar el calendario "
+"natural es una ventaja para muchas compañías, ya que les permite cerrar sus "
+"libros en el momento más conveniente para ellas."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -6389,6 +6398,9 @@ msgid ""
 "o.journal_id.id) - sum_credit(o.period_id.id, o.journal_id.id))) ]] [[ "
 "o.journal_id.currency and o.journal_id.currency.symbol"
 msgstr ""
+"o.journal_id.currency and formatLang((sum_debit(o.period_id.id, "
+"o.journal_id.id) - sum_credit(o.period_id.id, o.journal_id.id))) ]] [[ "
+"o.journal_id.currency and o.journal_id.currency.symbol"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -6694,6 +6706,12 @@ msgid ""
 "Create and manage them from here and decide whether a period should be left "
 "open or closed depending on your company's activities over a specific period."
 msgstr ""
+"Aquí puede definir un periodo, un intervalo de tiempo entre cierres "
+"consecutivos de los libros de su compañía. Un periodo contable es "
+"típicamente un mes o un trimestre, correspondientemente al régimen "
+"impositivo usado en el negocio. Creelos y gestionelos desde aquí, y decida "
+"si un periodo debe permanecer abierto o cerrado según las actividades de su "
+"compañía en un plazo específico."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
@@ -7054,6 +7072,11 @@ msgid ""
 "line of the expense account, OpenERP will propose to you automatically the "
 "Tax related to this account and the counter-part \"Account Payable\"."
 msgstr ""
+"Esta vista es usada por los contables para registrar apuntes masivamente en "
+"OpenERP. Si quiere registrar una factura de proveedor, comience "
+"introduciendo el apunte de la cuenta de gastos. OpenERP le propondrá "
+"automáticamente el impuesto asociado a esta cuenta, y la \"cuenta a pagar\" "
+"de contrapartida."
 
 #. module: account
 #: help:res.company,property_reserve_and_surplus_account:0
@@ -7118,6 +7141,12 @@ msgid ""
 "Situation' to be used at the time of new fiscal year creation or end of year "
 "entries generation."
 msgstr ""
+"Seleccione 'Ventas' para el diario de ventas que será usado cuando se creen "
+"facturas. Seleccione 'Compras' para el diario a usar cuando se aprueben "
+"pedidos de compra. Seleccione 'Efectivo' (Caja) para que se use a la hora de "
+"hacer pagos. Seleccione 'General' para operaciones misceláneas. Seleccione "
+"'Situación apertura/cierre' para usarlo cuando se crea un nuevo ejercicio "
+"fiscal o la generación del asiento de cierre."
 
 #. module: account
 #: report:account.invoice:0
@@ -7806,6 +7835,13 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Este menú imprime una declaración de IVA basada en facturas o pagos. Puede "
+"seleccionar uno o varios periodos del ejercicio fiscal. La información "
+"necesaria para la declaración de impuestos es generada por OpenERP a partir "
+"de las facturas (o pagos, en algunos países). Esta información se actualiza "
+"en tiempo real; lo cual es muy útil porque le permite previsualizar en "
+"cualquier momento los impuestos a pagar al principio y al final del mes o "
+"trimestre."
 
 #. module: account
 #: report:account.invoice:0
@@ -7875,6 +7911,10 @@ msgid ""
 "of it. You can easily generate refunds and reconcile them from the invoice "
 "form."
 msgstr ""
+"Este menú le permite gestionar notas de crédito (reembolsos) emitidas/a "
+"emitir a sus clientes. Una factura rectificativa es un documento que anula "
+"una factura o parte de ella. Puede generar reembolsos fácilmente y "
+"reconciliarlos desde el formulario de factura."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
@@ -7907,7 +7947,7 @@ msgstr "No se puede crear asiento factura en el diario centralizado"
 #. module: account
 #: field:account.account.type,report_type:0
 msgid "P&L / BS Category"
-msgstr ""
+msgstr "Categoría Balance / PyG"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -8306,9 +8346,9 @@ msgstr "Tipo de referencia"
 #. module: account
 #: help:account.bs.report,reserve_account_id:0
 msgid ""
-"This Account is used for trasfering Profit/Loss(If It is Profit: Amount will "
-"be added, Loss : Amount will be duducted.), Which is calculated from Profilt "
-"& Loss Report"
+"This Account is used for transferring Profit/Loss(If It is Profit: Amount "
+"will be added, Loss : Amount will be duducted.), Which is calculated from "
+"Profilt & Loss Report"
 msgstr ""
 "Esta cuenta se utiliza para transferir las Pérdidas/Ganancias (si es una "
 "Ganancia: Importe será añadido, Pérdida: Importe será deducido), que se "
@@ -8488,7 +8528,7 @@ msgstr ""
 #: code:addons/account/installer.py:0
 #, python-format
 msgid "SCNJ"
-msgstr ""
+msgstr "AVENTA"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_analyticinvoice0
@@ -8507,6 +8547,10 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"Establece la vista usada cuando se escriben o consultan apuntes en este "
+"diario. La vista le dice a OpenERP qué campos deben ser visibles, requeridos "
+"o de sólo lectura, y en qué orden. Puede crear su propia vista en cada "
+"diario para introducir apuntes más rápido."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -8735,6 +8779,12 @@ msgid ""
 "the income account. OpenERP will propose to you automatically the Tax "
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
+"Esta vista es usada por los contables para registrar apuntes masivamente en "
+"OpenERP. Si quiere registrar una factura de cliente, seleccione el diario y "
+"el periodo en la barra de herramientas de búsqueda. Luego, comience "
+"introduciendo el apunte de la cuenta de ingresos. OpenERP le propondrá "
+"automáticamente el impuesto asociado a esta cuenta, y la \"cuenta a cobrar\" "
+"de contrapartida."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
@@ -9056,6 +9106,10 @@ msgid ""
 "Make sure you have configured Payment Term properly !\n"
 "It should contain atleast one Payment Term Line with type \"Balance\" !"
 msgstr ""
+"¡ No se puede confirmar un asiento descuadrado !\n"
+"¡ Asegúrese de haber configurado el plazo de pago correctamente !\n"
+"¡ Debería contener al menos una línea de plazo de pago con de tipo \"Saldo\" "
+"!"
 
 #. module: account
 #: help:res.partner,property_account_payable:0

@@ -36,7 +36,7 @@ class account_invoice_report(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month', readonly=True),
         'product_id': fields.many2one('product.product', 'Product', readonly=True),
         'product_qty':fields.float('Qty', readonly=True),
-        'uom_name': fields.char('Default UoM', size=128, readonly=True),
+        'uom_name': fields.char('Reference UoM', size=128, readonly=True),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term', readonly=True),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], readonly=True),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position', readonly=True),
@@ -88,7 +88,11 @@ class account_invoice_report(osv.osv):
                     ai.partner_id as partner_id,
                     ai.payment_term as payment_term,
                     ai.period_id as period_id,
-                    u.name as uom_name,
+                    (case when u.uom_type not in ('reference') then
+                        (select name from product_uom where uom_type='reference' and category_id=u.category_id)
+                    else
+                        u.name
+                    end) as uom_name,
                     ai.currency_id as currency_id,
                     ai.journal_id as journal_id,
                     ai.fiscal_position as fiscal_position,
@@ -104,9 +108,9 @@ class account_invoice_report(osv.osv):
                     ai.account_id as account_id,
                     ai.partner_bank_id as partner_bank_id,
                     sum(case when ai.type in ('out_refund','in_invoice') then
-                         ail.quantity * u.factor * -1
+                         ail.quantity / u.factor * -1
                         else
-                         ail.quantity * u.factor
+                         ail.quantity / u.factor
                         end) as product_qty,
                     sum(case when ai.type in ('out_refund','in_invoice') then
                          ail.quantity*ail.price_unit * -1
@@ -125,9 +129,9 @@ class account_invoice_report(osv.osv):
                     else
                       sum(ail.quantity*ail.price_unit)
                     end)/(case when ai.type in ('out_refund','in_invoice') then
-                      sum(ail.quantity*u.factor*-1)
+                      sum(ail.quantity/u.factor*-1)
                     else
-                      sum(ail.quantity*u.factor)
+                      sum(ail.quantity/u.factor)
                     end) / cr.rate as price_average,
                     cr.rate as currency_rate,
                     sum((select extract(epoch from avg(date_trunc('day',aml.date_created)-date_trunc('day',l.create_date)))/(24*60*60)::decimal(16,2)
@@ -179,7 +183,9 @@ class account_invoice_report(osv.osv):
                     ai.account_id,
                     ai.partner_bank_id,
                     ai.residual,
-                    ai.amount_total
+                    ai.amount_total,
+                    u.uom_type,
+                    u.category_id
             )
         """)
 

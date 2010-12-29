@@ -376,9 +376,9 @@ class openerp_dav_handler(dav_interface):
                     cr.close()
         return self.db_name_list
 
-    def get_childs(self, uri, filters=None):
+    def get_children(self,uri, filters=None):
         """ return the child objects as self.baseuris for the given URI """
-        self.parent.log_message('get childs: %s' % uri)
+        self.parent.log_message('get children: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri, allow_last=True)
 
         if not dbname:
@@ -395,7 +395,7 @@ class openerp_dav_handler(dav_interface):
                 fp = node.full_path()
                 if fp and len(fp):
                     fp = '/'.join(fp)
-                    self.parent.log_message('childs for: %s' % fp)
+                    self.parent.log_message('children for: %s' % fp)
                 else:
                     fp = None
                 domain = None
@@ -433,7 +433,7 @@ class openerp_dav_handler(dav_interface):
         except DAV_Error:
             raise
         except Exception, e:
-            self.parent.log_error("cannot get_childs: "+ str(e))
+            self.parent.log_error("cannot get_children: "+ str(e))
             raise
         finally:
             if cr: cr.close()

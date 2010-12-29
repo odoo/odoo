@@ -199,15 +199,15 @@ class hr_evaluation(osv.osv):
         for evaluation in self.browse(cr, uid, ids, context=context):
             wait = False
             for phase in evaluation.plan_id.phase_ids:
-                childs = []
+                children = []
                 if phase.action == "bottom-up":
-                    childs = evaluation.employee_id.child_ids
+                    children = evaluation.employee_id.child_ids
                 elif phase.action in ("top-down", "final"):
                     if evaluation.employee_id.parent_id:
-                        childs = [evaluation.employee_id.parent_id]
+                        children = [evaluation.employee_id.parent_id]
                 elif phase.action == "self":
-                    childs = [evaluation.employee_id]
-                for child in childs:
+                    children = [evaluation.employee_id]
+                for child in children:
 #                    if not child.user_id:
 #                        continue
 
