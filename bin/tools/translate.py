@@ -219,6 +219,7 @@ class GettextAlias(object):
                 logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:
             logger.debug('translation went wrong for "%r", skipped', source)
+                # if so, double-check the root/base translations filenames
         finally:
             if cr and is_new_cr:
                 cr.close()
@@ -748,6 +749,10 @@ def trans_generate(lang, modules, dbname=None):
         path_list = apaths
     else :
         path_list = [root_path,] + apaths
+    
+    # Also scan these non-addon paths
+    for bin_path in ['osv', 'report' ]:
+        path_list.append(os.path.join(tools.config['root_path'], bin_path))
 
     logger.debug("Scanning modules at paths: ", path_list)
 
