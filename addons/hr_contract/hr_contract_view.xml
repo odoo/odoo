@@ -120,24 +120,10 @@
                         <field name="medic_exam" />
                         </group>
                     </page>
-                    <page string="Contracts">
-                        <field colspan="4" name="contract_ids" nolabel="1"/>
-                    </page>
                 </page>
             </field>
         </record>
 
-        <record id="hr_employee_view_form3" model="ir.ui.view">
-            <field name="name">hr.employee.view.form3</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="parent_id" position="after">
-                    <field name="contract_id"/>
-                </field>
-            </field>
-        </record>
 
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
