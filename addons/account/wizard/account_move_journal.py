@@ -92,12 +92,14 @@ class account_move_journal(osv.osv_memory):
         journal = False
         if journal_id:
             journal = journal_pool.read(cr, uid, [journal_id], ['name'])[0]['name']
+            journal_string = _("Journal: %s") % tools.ustr(journal)
         else:
-            journal = "All"
+            journal_string = _("Journal: All")
 
         period = False
         if period_id:
             period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
+            period_string = _("Period: %s") % tools.ustr(period)
 
         view = """<?xml version="1.0" encoding="utf-8"?>
         <form string="Standard entries">
@@ -105,16 +107,16 @@ class account_move_journal(osv.osv_memory):
             <field name="target_move" />
             <newline/>
             <group colspan="4" >
-                <label width="300" string="Journal: %s"/>
+                <label width="300" string="%s"/>
                 <newline/>
-                <label width="300" string="Period:  %s"/>
+                <label width="300" string="%s"/>
             </group>
             <group colspan="4" col="4">
                 <label string ="" colspan="2"/>
                 <button icon="gtk-cancel" special="cancel" string="Cancel"/>
                 <button icon="terp-gtk-go-back-rtl" string="Open" name="action_open_window" default_focus="1" type="object"/>
             </group>
-        </form>""" % (tools.ustr(journal), tools.ustr(period))
+        </form>""" % (journal_string, period_string)
 
         view = etree.fromstring(view.encode('utf8'))
         xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)

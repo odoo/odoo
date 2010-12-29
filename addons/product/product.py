@@ -805,5 +805,4 @@ class res_users(osv.osv):
     _defaults = {
         'groups_id': _get_group,
     }
-
 res_users()

@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-26 23:05+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2010-12-27 10:40+0000\n"
+"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-27 04:40+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -2370,6 +2369,13 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Este menú imprime una declaración de IVA basada en facturas o pagos. "
+"Seleccione uno o varios periodos del ejercicio fiscal. La información "
+"necesaria para la declaración de IVA es generada automáticamente por OpenERP "
+"a partir de las facturas (o pagos, en algunos países). Esta información se "
+"actualiza en tiempo real. Es muy útil porque le permite previsualizar en "
+"cualquier momento los impuestos que debe al principio y fin del mes o "
+"trimestre."
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -3077,6 +3083,15 @@ msgid ""
 " 'Unreconciled' will copy only the journal items that were unreconciled on "
 "the first day of the new fiscal year."
 msgstr ""
+"Establezca aquí el método que se usará, el asistente genérico, para crear el "
+"asiento de cierre de ejercicio para todas las cuentas de este tipo.\n"
+"\n"
+" 'Ninguno' significa que no se hará nada.\n"
+" 'Saldo' normalmente se usará para cuentas de efectivo.\n"
+" 'Detallado' copiará cada apunte del ejercicio anterior, incluso los no "
+"conciliados.\n"
+" 'Sin conciliar' copiará sólo los apuntes aun no conciliados el primer día "
+"del nuevo ejercicio fiscal."
 
 #. module: account
 #: view:account.tax:0
@@ -5677,6 +5692,12 @@ msgid ""
 "all lines of your statement. When you are in the Payment column of the a "
 "line, you can press F1 to open the reconciliation form."
 msgstr ""
+"Un extracto bancario es un resumen de todas las transacciones financieras "
+"ocurridas durante un periodo determinado de tiempo en una cuenta bancaria, "
+"tarjeta de crédito o cualquier otro tipo de cuenta. Comience introduciendo "
+"el saldo de apertura y cierre, y luego introduzca todas las lineas de su "
+"extracto. Situándose en la columna Pago de una línea, puede pulsar F1 para "
+"abrir el formulario de conciliación."
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -6400,6 +6421,11 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"Para que una factura se considere pagada, los apuntes contables de la "
+"factura deben estar conciliados con sus contrapartidas, normalmente pagos. "
+"Con la funcionalidad de reconciliación automática, OpenERP realiza su propia "
+"búsqueda de apuntes a conciliar en una serie de cuentas. Encuentra los "
+"apuntes, para cada tercero, donde las cantidades se correspondan."
 
 #. module: account
 #: view:account.move:0
@@ -6533,6 +6559,9 @@ msgid ""
 "Account Voucher module includes all the basic requirements of Voucher "
 "Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "
 msgstr ""
+"El módulo de recibos (justificantes) contables incluye todos los requisitos "
+"básicos de justificantes bancarios, de caja, ventas, compras, gastos, "
+"contrapartidas, etc... "
 
 #. module: account
 #: view:account.chart.template:0
@@ -6733,6 +6762,13 @@ msgid ""
 "Most of the OpenERP operations (invoices, timesheets, expenses, etc) "
 "generate analytic entries on the related account."
 msgstr ""
+"El plan de cuentas normales tiene una estructura predefinida por los "
+"requisitos legales del país. La estructura del plan de cuentas analíticas "
+"debería reflejar las necesidades de su negocio de cara al análisis de costes "
+"e ingresos. Por lo general se estructuran por contratos, proyectos, "
+"productos o departamentos. La mayoría de las operaciones de OpenERP "
+"(facturas, hojas de servicio, gastos, etc) generan asientos analíticos en la "
+"cuenta asociada."
 
 #. module: account
 #: field:account.analytic.journal,line_ids:0
@@ -6807,6 +6843,26 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"Módulo financiero y contable que cubre:\n"
+"    Contabilidad general\n"
+"    Contabilidad analítica / de costes\n"
+"    Gestión de terceros\n"
+"    Gestión de impuestos\n"
+"    Presupuestos\n"
+"    Facturación de clientes y proveedores\n"
+"    Extractos bancarios\n"
+"    Conciliación por tercero\n"
+"    Crea un cuadro de mandos para contables que incluye:\n"
+"    * Lista de presupuestos sin facturar\n"
+"    * Gráfica de cuentas vencidas a cobrar\n"
+"    * Gráfica de efectos a cobrar\n"
+"\n"
+"Los procesos, como el mantenimiento del libro mayor se realizan a través de "
+"los diarios financieros definidos\n"
+"(los asientos se agrupan por diario) para un ejercicio fiscal determinado; y "
+"para la preparación de recibos \n"
+"existe un módulo llamado account_voucher.\n"
+"    "
 
 #. module: account
 #: report:account.invoice:0
@@ -8250,7 +8306,7 @@ msgstr "Tipo de referencia"
 #. module: account
 #: help:account.bs.report,reserve_account_id:0
 msgid ""
-"This Account is used for trasfering Profit/Loss(If It is Profit: Amount will "
+"This Account is used for transferring Profit/Loss(If It is Profit: Amount will "
 "be added, Loss : Amount will be duducted.), Which is calculated from Profilt "
 "& Loss Report"
 msgstr ""
@@ -8395,6 +8451,10 @@ msgid ""
 "depending on the country and sometimes industry sector. OpenERP allows you "
 "to define and manage them from this menu."
 msgstr ""
+"Un código de impuesto es una referencia al tipo impositivo a aplicar sobre "
+"la base imponible (o descontar sobre el bruto) dependiente del país y a "
+"veces del sector industrial. OpenERP le permite definirlos y gestionarlos "
+"desde este menú."
 
 #. module: account
 #: report:account.overdue:0
@@ -8416,6 +8476,12 @@ msgid ""
 "accounts of a company are required by law to disclose a certain amount of "
 "information. They have to be certified by an external auditor yearly."
 msgstr ""
+"Cree y gestione las cuentas que necesite para registrar los asientos "
+"financieros. Las cuentas son registros de su compañía para apuntar todas las "
+"transacciones financieras. Las compañías resumen sus cuentas anuales en dos "
+"informes principales: el balance y el informe de pérdidas y ganancias. "
+"Habitualmente la presentación de las cuentas anuales es una exigencia legal, "
+"y en algunos países deben ser certificadas anualmente por un auditor externo."
 
 #. module: account
 #: code:addons/account/account.py:0
@@ -9669,7 +9735,7 @@ msgstr "Imprimir diarios analíticos"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Fin.Account"
-msgstr ""
+msgstr "Cuenta fin."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph

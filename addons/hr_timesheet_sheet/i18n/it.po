@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-25 14:29+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-12-27 12:13+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-26 04:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
@@ -169,6 +169,8 @@ msgstr "Rifiuta"
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates!"
 msgstr ""
+"Non è possibile inserire una data di presenza che sta al di fuori del range "
+"di date per l'attuale timesheet!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -185,7 +187,7 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign in from an other date than today"
-msgstr ""
+msgstr "Non è possibile registrare una entrata in un giorno diverso da oggi"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -207,7 +209,7 @@ msgstr "Attenzione !"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
 msgid "Employee's timesheet entry"
-msgstr ""
+msgstr "Voce del timesheet impiegato"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -334,7 +336,7 @@ msgstr "Non è possibile duplicare un timesheet!"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
 msgid "My Total Attendances By Week"
-msgstr ""
+msgstr "La mia presenza totale per settimana"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -362,7 +364,7 @@ msgstr "Ore"
 #: view:timesheet.report:0
 #: field:timesheet.report,cost:0
 msgid "#Cost"
-msgstr ""
+msgstr "# Costo"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.attendance:0
@@ -385,7 +387,7 @@ msgstr "Azione non valida!"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "The project manager validates the timesheets."
-msgstr ""
+msgstr "Il Manager di progetto convalita i timesheet."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -411,7 +413,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
 msgid "Work on Task"
-msgstr ""
+msgstr "Lavoro sull'attività"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -433,7 +435,7 @@ msgstr "Orari di Lavoro Totali"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Available Attendance"
-msgstr ""
+msgstr "Presenza media"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -509,6 +511,8 @@ msgid ""
 "The timesheet line represents the time spent by the employee on a specific "
 "service provided."
 msgstr ""
+"La linea del timesheet rappresenta il tempo speso dall'impiegato su di uno "
+"specifico servizio fornito."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
@@ -639,7 +643,7 @@ msgstr "Righe Orari di Lavoro"
 #. module: hr_timesheet_sheet
 #: view:board.board:0
 msgid "My Total Attendance By Week"
-msgstr ""
+msgstr "La mia presenza totale per settimana"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -674,7 +678,7 @@ msgstr "Quantità"
 #: view:timesheet.report:0
 #: field:timesheet.report,general_account_id:0
 msgid "General Account"
-msgstr ""
+msgstr "Contabilità Generale"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
@@ -785,6 +789,8 @@ msgid ""
 "The timesheet cannot be validated as it does not contain equal no. of sign "
 "ins and sign outs!"
 msgstr ""
+"Il timesheet non può essere convalidato perchè non contiene un egual numero "
+"di entrate ed uscite!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
@@ -827,7 +833,7 @@ msgstr "Maggio"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
 msgid "Defines the work summary of task"
-msgstr ""
+msgstr "Definisce un riepilogo lavoro sull'attività"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -882,7 +888,7 @@ msgstr "Impiegati"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Information of time spent on a service"
-msgstr ""
+msgstr "Informazione del tempo speso su di un servizio"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -919,13 +925,13 @@ msgstr "Contabilità Analitica"
 #: view:timesheet.report:0
 #: field:timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
-msgstr ""
+msgstr "Tipo di fatturazione"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
-msgstr ""
+msgstr "# Presenza totale"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form

@@ -276,6 +276,7 @@
                     <field name="company_currency_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="type"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -762,7 +763,7 @@
             <field name="search_view_id" ref="view_account_type_search"/>
             <field name="help">An account type is used to determine how an account is used in each journal. The deferral method of an account type determines the process for the annual closing. Reports such as the Balance Sheet and the Profit and Loss report use the category (profit/loss or balance sheet). For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need for your company.</field>
         </record>
-        <menuitem action="action_account_type_form" groups="base.group_extended,group_account_manager" sequence="6" id="menu_action_account_type_form" parent="account_account_menu"/>
+        <menuitem action="action_account_type_form" sequence="6" id="menu_action_account_type_form" parent="account_account_menu"/>
         <!--
     Entries
     -->
@@ -1227,7 +1228,7 @@
             id="menu_action_account_moves_all"
             parent="account.menu_finance_entries"
             sequence="1"
-            groups="group_account_user,group_account_manager"
+            groups="group_account_user"
         />
 
         <record id="action_move_line_select" model="ir.actions.act_window">
@@ -1475,7 +1476,7 @@
             action="action_move_journal_line"
             id="menu_action_move_journal_line_form"
             parent="account.menu_finance_entries"
-            groups="group_account_user,group_account_manager"
+            groups="group_account_user"
             sequence="5"/>
 
         <record id="action_move_line_form" model="ir.actions.act_window">
@@ -1742,7 +1743,7 @@
         </record>
         <menuitem
             action="action_model_form" id="menu_action_model_form" sequence="5"
-            parent="account.menu_configuration_misc" groups="base.group_extended,group_account_manager"/>
+            parent="account.menu_configuration_misc" groups="base.group_extended"/>
 
         <!--
             # Payment Terms
@@ -1842,8 +1843,7 @@
             <field name="search_view_id" ref="view_payment_term_search"/>
         </record>
         <menuitem action="action_payment_term_form"
-            id="menu_action_payment_term_form" parent="menu_configuration_misc"
-            groups="group_account_manager"/>
+            id="menu_action_payment_term_form" parent="menu_configuration_misc"/>
 
         <!--
         # Account Subscriptions
@@ -1958,7 +1958,7 @@
         </record>
         <menuitem
             name="Define Recurring Entries" action="action_subscription_form"
-            groups="base.group_extended,group_account_manager,group_account_user"
+            groups="base.group_extended"
             id="menu_action_subscription_form" sequence="1"
             parent="account.menu_finance_recurrent_entries"/>
 
@@ -2063,7 +2063,7 @@
 
         <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
 
-        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>
@@ -2095,17 +2095,17 @@
             id="account_template_folder"
             name="Templates"
             parent="menu_finance_accounting"
-            groups="base.group_multi_company,group_account_manager"/>
+            groups="base.group_multi_company"/>
         <menuitem
             id="account_template_taxes"
             name="Taxes"
             parent="account_template_folder"
-            groups="base.group_multi_company,group_account_manager" sequence="2"/>
+            sequence="2"/>
         <menuitem
             id="account_template_accounts"
             name="Accounts"
             parent="account_template_folder"
-            groups="base.group_multi_company,group_account_manager" sequence="1"/>
+            sequence="1"/>
 
 
         <record id="view_account_template_form" model="ir.ui.view">
@@ -2751,8 +2751,8 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             <field name="view_id" ref="account_cash_statement_graph"/>
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
-        <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"
-            groups="group_account_user,group_account_manager"/>
+        <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines"
+            parent="menu_finance_bank_and_cash"/>
 
         <record id="action_partner_all" model="ir.actions.act_window">
             <field name="name">Partners</field>

@@ -9,7 +9,9 @@
 "access_account_account_user","account.account user","model_account_account","base.group_user",1,0,0,0
 "access_account_account_partner_manager","account.account partner manager","model_account_account","base.group_partner_manager",1,0,0,0
 "access_account_journal_view","account.journal.view","model_account_journal_view","account.group_account_user",1,0,0,0
+"access_account_journal_view_hruser","account.journal.view hruser","model_account_journal_view","base.group_hr_user",1,0,0,0
 "access_account_journal_column","account.journal.column","model_account_journal_column","account.group_account_user",1,0,0,0
+"access_account_journal_column_hruser","account.journal.column hruser","model_account_journal_column","base.group_hr_user",1,0,0,0
 "access_account_journal","account.journal","model_account_journal","account.group_account_user",1,0,0,0
 "access_account_period","account.period","model_account_period","account.group_account_user",1,0,0,0
 "access_account_journal_period_manager","account.journal.period manager","model_account_journal_period","account.group_account_manager",1,0,0,0
@@ -31,7 +33,7 @@
 "access_account_tax_code_template","account.tax.code.template","model_account_tax_code_template","account.group_account_manager",1,1,1,1
 "access_account_chart_template","account.chart.template","model_account_chart_template","account.group_account_manager",1,1,1,1
 "access_account_tax_template","account.tax.template","model_account_tax_template","account.group_account_manager",1,1,1,1
-"access_account_bank_statement","account.bank.statement","model_account_bank_statement","account.group_account_user",1,0,0,0
+"access_account_bank_statement","account.bank.statement","model_account_bank_statement","account.group_account_user",1,1,1,1
 "access_account_bank_statement_line","account.bank.statement.line","model_account_bank_statement_line","account.group_account_user",1,1,1,1
 "access_account_analytic_line","account.analytic.line","model_account_analytic_line","account.group_account_user",1,1,1,1
 "access_account_analytic_line_manager","account.analytic.line manager","model_account_analytic_line","account.group_account_manager",1,0,0,0
@@ -69,8 +71,8 @@
 "access_account_invoice_user","account.invoice.line user","model_account_invoice_line","base.group_user",1,0,0,0
 "access_account_payment_term_partner_manager","account.payment.term partner manager","model_account_payment_term","base.group_user",1,0,0,0
 "access_account_payment_term_line_partner_manager","account.payment.term.line partner manager","model_account_payment_term_line","base.group_user",1,0,0,0
-"access_account_account_product_manager","account.account product manager","model_account_account","product.group_product_manager",1,0,0,0
-"access_account_journal_product_manager","account.journal product manager","model_account_journal","product.group_product_manager",1,0,0,0
+"access_account_account_sale_manager","account.account sale manager","model_account_account","base.group_sale_manager",1,0,0,0
+"access_account_journal_sale_manager","account.journal sale manager","model_account_journal","base.group_sale_manager",1,0,0,0
 "access_account_fiscal_position_product_manager","account.fiscal.position account.manager","model_account_fiscal_position","account.group_account_manager",1,1,1,1
 "access_account_fiscal_position_tax_product_manager","account.fiscal.position.tax account.manager","model_account_fiscal_position_tax","account.group_account_manager",1,1,1,1
 "access_account_fiscal_position_account_product_manager","account.fiscal.position account.manager","model_account_fiscal_position_account","account.group_account_manager",1,1,1,1
@@ -97,6 +99,7 @@
 "access_account_invoice_manager","account.invoice manager","model_account_invoice","account.group_account_manager",1,0,0,0
 "access_account_bank_statement_manager","account.bank.statement manager","model_account_bank_statement","account.group_account_manager",1,1,1,1
 "access_account_entries_report_manager","account.entries.report","model_account_entries_report","account.group_account_manager",1,1,1,1
+"access_account_entries_report_user","account.entries.report","model_account_entries_report","account.group_account_user",1,0,0,0
 "access_analytic_entries_report_manager","analytic.entries.report","model_analytic_entries_report","account.group_account_manager",1,0,0,0
 "access_account_cashbox_line","account.cashbox.line","model_account_cashbox_line","account.group_account_manager",1,1,1,1
 "access_account_cashbox_line","account.cashbox.line","model_account_cashbox_line","account.group_account_user",1,1,1,1
@@ -116,5 +119,8 @@
 "access_report_account_receivable_invoice","report.account.receivable.invoice","model_report_account_receivable","account.group_account_invoice",1,1,1,1
 "access_report_account_receivable_user","report.account.receivable.user","model_report_account_receivable","account.group_account_user",1,1,1,1
 "access_account_sequence_fiscal_year_invoice","account.sequence.fiscalyear invoice","model_account_sequence_fiscalyear","account.group_account_invoice",1,1,1,1
+"access_account_tax_sale_manager","account.tax sale manager","model_account_tax","base.group_sale_salesman",1,0,0,0
+"access_account_journal_sale_manager","account.journal sale manager","model_account_journal","base.group_sale_salesman",1,0,0,0
+"access_account_invoice_tax_sale_manager","account.invoice.tax  sale manager","model_account_invoice_tax","base.group_sale_salesman",1,0,0,0
 "access_account_sequence_fiscal_year_sale_user","account.sequence.fiscalyear.sale.user","model_account_sequence_fiscalyear","base.group_sale_salesman",1,1,1,0
 "access_account_sequence_fiscal_year_sale_manager","account.sequence.fiscalyear.sale.manager","model_account_sequence_fiscalyear","base.group_sale_manager",1,1,1,1

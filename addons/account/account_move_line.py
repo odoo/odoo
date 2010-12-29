@@ -309,7 +309,7 @@ class account_move_line(osv.osv):
             context = {}
         c = context.copy()
         c['initital_bal'] = True
-        sql = """SELECT l2.id, SUM(l1.debit-l1.credit) 
+        sql = """SELECT l2.id, SUM(l1.debit-l1.credit)
                     FROM account_move_line l1, account_move_line l2
                     WHERE l2.account_id = l1.account_id
                       AND l1.id <= l2.id
@@ -318,8 +318,7 @@ class account_move_line(osv.osv):
                 " GROUP BY l2.id"
 
         cr.execute(sql, [tuple(ids)])
-        res = dict(cr.fetchall())
-        return res
+        return dict(cr.fetchall())
 
     def _invoice(self, cursor, user, ids, name, arg, context=None):
         invoice_obj = self.pool.get('account.invoice')
@@ -887,7 +886,7 @@ class account_move_line(osv.osv):
         fld = []
         fields = {}
         flds = []
-        title = "Accounting Entries" #self.view_header_get(cr, uid, view_id, view_type, context)
+        title = _("Accounting Entries") #self.view_header_get(cr, uid, view_id, view_type, context)
         xml = '''<?xml version="1.0"?>\n<tree string="%s" editable="top" refresh="5" on_write="on_create_write" colors="red:state==\'draft\';black:state==\'valid\'">\n\t''' % (title)
 
         ids = journal_pool.search(cr, uid, [])
@@ -906,8 +905,8 @@ class account_move_line(osv.osv):
                 else:
                     fields.get(field.field).append(journal.id)
                     common_fields[field.field] = common_fields[field.field] + 1
-        fld.append(('period_id', 3, 'Period'))
-        fld.append(('journal_id', 10, 'Journal'))
+        fld.append(('period_id', 3, _('Period')))
+        fld.append(('journal_id', 10, _('Journal')))
         flds.append('period_id')
         flds.append('journal_id')
         fields['period_id'] = all_journal
@@ -927,10 +926,10 @@ class account_move_line(osv.osv):
 #                state = 'colors="red:state==\'draft\'"'
             attrs = []
             if field == 'debit':
-                attrs.append('sum = "Total debit"')
+                attrs.append('sum = "%s"' % _("Total debit"))
 
             elif field == 'credit':
-                attrs.append('sum = "Total credit"')
+                attrs.append('sum = "%s"' % _("Total credit"))
 
             elif field == 'move_id':
                 attrs.append('required = "False"')
