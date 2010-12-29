@@ -55,10 +55,10 @@
         'wizard/hr_payroll_year_salary.xml',
     ],
     'test': [
-#         'test/payslip.yml',
-#         'test/payment_advice.yml',
-#         'test/payroll_register.yml',
-          'test/hr_payroll_report.yml',
+         'test/payslip.yml',
+         'test/payment_advice.yml',
+         'test/payroll_register.yml',
+        # 'test/hr_payroll_report.yml',
     ],
     'demo_xml': [
         'hr_payroll_demo.xml'

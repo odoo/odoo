@@ -64,7 +64,7 @@
         </record>
 
         <menuitem name="Evaluations" parent="hr.menu_hr_root" id="menu_eval_hr" sequence="6"/>
-        <menuitem name="Periodic Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4" groups="base.group_hr_manager"/>
+        <menuitem name="Periodic Evaluations" parent="hr.menu_hr_configuration" id="menu_eval_hr_config" sequence="4"/>
         <menuitem parent="menu_eval_hr_config" id="menu_open_view_hr_evaluation_plan_tree"
             action="open_view_hr_evaluation_plan_tree"/>
 
@@ -262,7 +262,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
-            <field name="help">Each employee can be assigned to an evaluation plan. These plans define the frequency and the way you manage your periodic personnal evaluation. You will be able to define steps and attach interview forms to each step. OpenERP manages all kind of evaluations: bottom-up, top-down, self evaluation and final evaluation by the manager.</field>
+            <field name="help">Each employee may be assigned an evaluation plan. Such a plan defines the frequency and the way you manage your periodic personnel evaluation. You will be able to define steps and attach interviews to each step. OpenERP manages all kind of evaluations: bottom-up, top-down, self-evaluation and final evaluation by the manager.</field>
         </record>
 
         <menuitem name="Evaluations" parent="menu_eval_hr" id="menu_open_view_hr_evaluation_tree"
@@ -358,7 +358,7 @@
             <field name="domain">[('is_evaluation' ,'=', True)]</field>
             <field name="context">{"search_default_todo":1,"search_default_user_id":uid}</field>
             <field name="search_view_id" ref="view_hr_evaluation_interview_search"/>
-            <field name="help">Interview Requests are generated automatically by OpenERP according to employees evaluation plan. Each user receives automatic emails and requests to perform evaluation of their collegues periodically.</field>
+            <field name="help">Interview Requests are generated automatically by OpenERP according to an employee's evaluation plan. Each user receives automatic emails and requests to evaluate their colleagues periodically.</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="hr_evaluation_interview_tree">

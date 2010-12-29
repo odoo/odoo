@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-01 09:34+0000\n"
+"PO-Revision-Date: 2010-12-28 23:25+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-22 05:39+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
@@ -48,6 +48,8 @@ msgstr "Verfalldauer"
 msgid ""
 "The date on which the lot starts deteriorating without becoming dangerous."
 msgstr ""
+"Der Tag ab dem sich die Qualität verschlechtert, ohne dass die Produkte "
+"bereits unbrauchbar sind."
 
 #. module: product_expiry
 #: field:product.product,use_time:0
@@ -59,11 +61,12 @@ msgstr "Mindesthaltbarkeit"
 msgid ""
 "The combination of serial number and internal reference must be unique !"
 msgstr ""
+"Die Kombination von Serinenummer und interner Referenz muss eindeutig sein."
 
 #. module: product_expiry
 #: help:stock.production.lot,removal_date:0
 msgid "The date on which the lot should be removed."
-msgstr ""
+msgstr "Datum ab dem das Fertigungslos nicht mehr verwendet werden sollte."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
@@ -75,7 +78,7 @@ msgstr "Produkt"
 msgid ""
 "The number of days after which an alert should be notified about the "
 "production lot."
-msgstr ""
+msgstr "Anzahl der Tage nachdem ein Alarm ausgegeben werden soll."
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -92,6 +95,8 @@ msgstr "Datum der Vernichtung"
 msgid ""
 "The date on which the lot may become dangerous and should not be consumed."
 msgstr ""
+"Datum nachdem die Losnummer verschieden und nicht mehr benutzt werden "
+"sollten."
 
 #. module: product_expiry
 #: model:ir.module.module,description:product_expiry.module_meta_information
@@ -181,6 +186,8 @@ msgstr ""
 msgid ""
 "The date on which an alert should be notified about the production lot."
 msgstr ""
+"Das Datum, an dem eine Benachrichtung für den Fertgungsauftrag generiert "
+"werden kann"
 
 #. module: product_expiry
 #: field:product.product,alert_time:0

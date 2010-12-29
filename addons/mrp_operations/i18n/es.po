@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-21 08:57+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"PO-Revision-Date: 2010-12-28 09:07+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-22 05:29+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_operations
@@ -23,7 +24,7 @@ msgstr ""
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
 msgid "Work Orders"
-msgstr "Órdenes de producción"
+msgstr "Órdenes de trabajo"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
@@ -61,7 +62,7 @@ msgstr "Marzo"
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
 msgid "Work Centers"
-msgstr "Centros de trabajo"
+msgstr "Centros de producción"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -134,7 +135,7 @@ msgstr "Centro de producción"
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
 msgid "The work orders are created on the basis of the production order."
-msgstr "Las órdenes de trabajo son creadas en base a la orden de producción"
+msgstr "Las órdenes de trabajo son creadas en base a la orden de producción."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:0
@@ -152,7 +153,7 @@ msgstr "Cancelada"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
 msgid "Confirmed Work Orders"
-msgstr "Órdenes de producción confirmadas"
+msgstr "Órdenes de trabajo confirmadas"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
@@ -203,7 +204,7 @@ msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
 msgstr ""
-"Hay una orden de trabajo por centro de trabajo. La información sobre el "
+"Hay una orden de trabajo por centro de producción. La información sobre el "
 "número de ciclos o duración del ciclo."
 
 #. module: mrp_operations
@@ -269,7 +270,7 @@ msgstr "Fecha orden"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
 msgid "Future Work Orders"
-msgstr "Órdenes de producción futuras"
+msgstr "Órdenes de trabajo futuras"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:0
@@ -466,7 +467,7 @@ msgstr "Hijo se mueve"
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
 msgid "Work Orders Planning"
-msgstr "Planeación de Ordenes de Trabajo"
+msgstr "Planificación de órdenes de trabajo"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -483,6 +484,8 @@ msgstr "Noviembre"
 #: help:mrp.production.workcenter.line,delay:0
 msgid "This is lead time between operation start and stop in this workcenter"
 msgstr ""
+"Este es el plazo de ejecución entre las operaciones de inicio y parada en "
+"este centro de producción."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -547,11 +550,16 @@ msgid ""
 "operations will have different impacts on the costs of manufacture and "
 "planning depending on the available workload."
 msgstr ""
+"Para fabricar o ensamblar productos, así como usar materias primas y el "
+"producto terminado, debe gestionar operaciones de producción. Las "
+"operaciones de producción a menudo se llaman órdenes de trabajo. Las "
+"distintas operaciones tienen diferentes efectos sobre los costes de "
+"fabricación y la planificación depende de la carga de trabajo disponible."
 
 #. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
 msgid "Work Center Production start end workflow"
-msgstr ""
+msgstr "Flujo de inicio-final de la producción en los centros de producción"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
@@ -595,6 +603,11 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
+"Las órdenes de trabajo es la lista de operaciones que se realizarán para "
+"cada orden de producción. Una vez que se inicia el primer trabajo de una "
+"orden de producción, esta se marca automáticamente como iniciada. Una vez "
+"que termine la última operación de una orden de producción, esta se realiza "
+"automáticamente y los productos relacionados son producidos."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -609,7 +622,7 @@ msgstr "Información"
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr "Códigos de barra de centros de trabajo"
+msgstr "Códigos de barra de centros de producción"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
@@ -637,13 +650,13 @@ msgstr "Producción"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Search Work Orders"
-msgstr "Buscar Órdenes de Trabajo"
+msgstr "Buscar órdenes de trabajo"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
-msgstr "Centro de trabajo"
+msgstr "Centro de producción"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -685,7 +698,7 @@ msgstr ")"
 #. module: mrp_operations
 #: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
 msgid "Work Order Analysis"
-msgstr "Análisisde órdenes de trabajo"
+msgstr "Análisis de órdenes de trabajo"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -703,7 +716,7 @@ msgstr "UdM"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Hours by Work Center"
-msgstr "Horas por centro de trabajo"
+msgstr "Horas por centro de producción"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
@@ -753,6 +766,8 @@ msgid ""
 "When the operation is finished, the operator updates the system by finishing "
 "the work order."
 msgstr ""
+"Cuando se finaliza la operación, el operador actualiza el sistema "
+"finalizando la orden de trabajo."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -773,7 +788,7 @@ msgstr "Estado producción"
 #: view:mrp.workorder:0
 #: field:mrp.workorder,year:0
 msgid "Year"
-msgstr ""
+msgstr "Año"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0

@@ -129,6 +129,7 @@ class project(osv.osv):
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'parent_id': fields.many2one('project.project', 'Parent Project'),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
@@ -342,7 +343,16 @@ class task(osv.osv):
 
     def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
         return {'value':{'remaining_hours': planned - effective}}
-
+    
+    def onchange_project(self, cr, uid, id, project_id):
+        if not project_id:
+            return {}
+        data = self.pool.get('project.project').browse(cr, uid, [project_id])
+        partner_id=data and data[0].parent_id.partner_id
+        if partner_id:
+            return {'value':{'partner_id':partner_id.id}}
+        return {}
+    
     def _default_project(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -358,7 +368,7 @@ class task(osv.osv):
         default['active'] = True
         default['type_id'] = False
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
+            default['name'] = self.browse(cr, uid, id, context=context).name
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     def _check_dates(self, cr, uid, ids, context=None):
@@ -475,6 +485,7 @@ class task(osv.osv):
     #
     # Override view according to the company definition
     #
+
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')

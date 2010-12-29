@@ -1024,45 +1024,43 @@ class calendar_event(osv.osv):
 
         qry = "UPDATE \"%s\" set rrule_type=%%s " % self._table
         qry_args = [ rrule_type, ]
+        new_val = val.copy()
+        for k, v in val.items():
+            if  val['freq'] == 'weekly' and val.get('byday'):
+                for day in val['byday'].split(','):
+                    new_val[day] = True
+                val.pop('byday')
 
-        if rrule_type == 'custom':
-            new_val = val.copy()
-            for k, v in val.items():
-                if  val['freq'] == 'weekly' and val.get('byday'):
-                    for day in val['byday'].split(','):
-                        new_val[day] = True
-                    val.pop('byday')
+            if val.get('until'):
+                until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
+                new_val['end_date'] = until.strftime('%Y-%m-%d')
+                val.pop('until')
+                new_val.pop('until')
 
-                if val.get('until'):
-                    until = parser.parse(''.join((re.compile('\d')).findall(val.get('until'))))
-                    new_val['end_date'] = until.strftime('%Y-%m-%d')
-                    val.pop('until')
-                    new_val.pop('until')
+            if val.get('bymonthday'):
+                new_val['day'] = val.get('bymonthday')
+                val.pop('bymonthday')
+                new_val['select1'] = 'date'
+                new_val.pop('bymonthday')
 
-                if val.get('bymonthday'):
-                    new_val['day'] = val.get('bymonthday')
-                    val.pop('bymonthday')
-                    new_val['select1'] = 'date'
-                    new_val.pop('bymonthday')
+            if val.get('byday'):
+                d = val.get('byday')
+                if '-' in d:
+                    new_val['byday'] = d[:2]
+                    new_val['week_list'] = d[2:4].upper()
+                else:
+                    new_val['byday'] = d[:1]
+                    new_val['week_list'] = d[1:3].upper()
+                new_val['select1'] = 'day'
 
-                if val.get('byday'):
-                    d = val.get('byday')
-                    if '-' in d:
-                        new_val['byday'] = d[:2]
-                        new_val['week_list'] = d[2:4].upper()
-                    else:
-                        new_val['byday'] = d[:1]
-                        new_val['week_list'] = d[1:3].upper()
-                    new_val['select1'] = 'day'
+            if val.get('bymonth'):
+                new_val['month_list'] = val.get('bymonth')
+                val.pop('bymonth')
+                new_val.pop('bymonth')
 
-                if val.get('bymonth'):
-                    new_val['month_list'] = val.get('bymonth')
-                    val.pop('bymonth')
-                    new_val.pop('bymonth')
-
-            for k, v in new_val.items():
-                qry += ", %s=%%s" % k
-                qry_args.append(v)
+        for k, v in new_val.items():
+            qry += ", %s=%%s" % k
+            qry_args.append(v)
 
         qry = qry + " where id=%s"
         qry_args.append(id)
@@ -1082,10 +1080,12 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, context=context):
             event = datas['id']
             if datas.get('rrule_type'):
+                if  datas['rrule_type']=='daily_working':
+                    datas.update({'rrule_type': 'weekly'})
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
                     cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
-                elif datas.get('rrule_type') == 'custom':
+                if datas.get('rrule_type') :
                     if datas.get('interval', 0) < 0:
                         raise osv.except_osv(_('Warning!'), _('Interval can not be Negative'))
                     if datas.get('count', 0) < 0:
@@ -1132,7 +1132,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU'),
         'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
-                            ('yearly', 'Yearly'), ('custom', 'Custom')], 
+                            ('yearly', 'Yearly'),], 
                             'Recurrency', states={'done': [('readonly', True)]},
                             help="Let the event automatically repeat at that interval"),
         'alarm_id': fields.many2one('res.alarm', 'Alarm', states={'done': [('readonly', True)]},
@@ -1144,16 +1144,15 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'user_id': fields.many2one('res.users', 'Responsible', states={'done': [('readonly', True)]}),
         'organizer': fields.char("Organizer", size=256, states={'done': [('readonly', True)]}), # Map with Organizer Attribure of VEvent.
         'organizer_id': fields.many2one('res.users', 'Organizer', states={'done': [('readonly', True)]}),
-        'freq': fields.selection([('None', 'No Repeat'), \
-                                ('hourly', 'Hours'), \
-                                ('daily', 'Days'), \
-                                ('weekly', 'Weeks'), \
-                                ('monthly', 'Months'), \
-                                ('yearly', 'Years'), \
-                                ('secondly', 'Seconds'), \
-                                ('minutely', 'Minutes') ], 'Frequency'),
-        'interval': fields.integer('Interval', help="Repeat every x"),
-        'count': fields.integer('Count', help="Repeat max that times"),
+        'freq': fields.selection([('None', 'No Repeat'),
+                                ('hourly', 'Hours'),
+                                ('daily', 'Days'),
+                                ('weekly', 'Weeks'),
+                                ('monthly', 'Months'),
+                                ('yearly', 'Years'), ], 'Frequency'),
+                                
+        'interval': fields.integer('Interval', help="Repeat every (Days/Week/Month/Year)"),
+        'count': fields.integer('Repeat', help="Repeat x times"),
         'mo': fields.boolean('Mon'),
         'tu': fields.boolean('Tue'),
         'we': fields.boolean('Wed'),
@@ -1161,7 +1160,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         'fr': fields.boolean('Fri'),
         'sa': fields.boolean('Sat'),
         'su': fields.boolean('Sun'),
-        'select1': fields.selection([('date', 'Date of month'), \
+        'select1': fields.selection([('date', 'Date of month'), 
                                     ('day', 'Day of month')], 'Option'),
         'day': fields.integer('Date of month'),
         'week_list': fields.selection([('MO', 'Monday'), ('TU', 'Tuesday'), \
@@ -1177,7 +1176,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                  'event_id', 'attendee_id', 'Attendees'),
         'allday': fields.boolean('All Day', states={'done': [('readonly', True)]}),
         'active': fields.boolean('Active', help="If the active field is set to \
-true, it will allow you to hide the event alarm information without removing it.")
+         true, it will allow you to hide the event alarm information without removing it."),
+        'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),                                    
+        'edit_all': fields.boolean('Edit All', help="Edit all Occurrences  of recurrent Meeting."),        
     }
     def default_organizer(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
@@ -1199,45 +1200,15 @@ true, it will allow you to hide the event alarm information without removing it.
             'organizer': default_organizer,
     }
 
-    def open_event(self, cr, uid, ids, context=None):
-        """
-        Open Event From for Editing
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of event’s IDs
-        @param context: A standard dictionary for contextual values
-        @return: Dictionary value which open Crm Meeting form.
-        """
-        if context is None:
+    def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
+        if not context:
             context = {}
-
         data_obj = self.pool.get('ir.model.data')
-
         value = {}
-
-        id2 = data_obj._get_id(cr, uid, 'base_calendar', 'event_form_view')
-        id3 = data_obj._get_id(cr, uid, 'base_calendar', 'event_tree_view')
-        id4 = data_obj._get_id(cr, uid, 'base_calendar', 'event_calendar_view')
-        if id2:
-            id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-        if id3:
-            id3 = data_obj.browse(cr, uid, id3, context=context).res_id
-        if id4:
-            id4 = data_obj.browse(cr, uid, id4, context=context).res_id
-        for id in ids:
-            value = {
-                    'name': _('Event'),
-                    'view_type': 'form',
-                    'view_mode': 'form,tree',
-                    'res_model': 'calendar.event',
-                    'view_id': False,
-                    'views': [(id2, 'form'), (id3, 'tree'), (id4, 'calendar')],
-                    'type': 'ir.actions.act_window',
-                    'res_id': base_calendar_id2real_id(id),
-                    'nodestroy': True
-                    }
-
-        return value
+        if edit_all and rrule_type:
+            for id in ids:
+              base_calendar_id2real_id(id)
+        return value              
 
     def modify_all(self, cr, uid, event_ids, defaults, context=None, *args):
         """
@@ -1367,15 +1338,13 @@ true, it will allow you to hide the event alarm information without removing it.
         weekstring = ''
         monthstring = ''
         yearstring = ''
-
-        freq = datas.get('freq')
-        if freq == 'None':
+        freq=datas.get('rrule_type')
+        if  freq == 'none':
             return ''
-
+            
         interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
 
         if freq == 'weekly':
-
             byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
             if byday:
                 weekstring = ';BYDAY=' + ','.join(byday)
@@ -1388,16 +1357,7 @@ true, it will allow you to hide the event alarm information without removing it.
             elif datas.get('select1')=='date':
                 monthstring = ';BYMONTHDAY=' + str(datas.get('day'))
 
-        elif freq == 'yearly':
-            if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
-                raise osv.except_osv(_('Error!'), ("Please select proper Day of month"))
-            bymonth = ';BYMONTH=' + str(datas.get('month_list'))
-            if datas.get('select1')=='day':
-                bystring = ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-            elif datas.get('select1')=='date':
-                bystring = ';BYMONTHDAY=' + str(datas.get('day'))
-            yearstring = bymonth + bystring
-
+       
         if datas.get('end_date'):
             datas['end_date'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
         enddate = (datas.get('count') and (';COUNT=' + str(datas.get('count'))) or '') +\
