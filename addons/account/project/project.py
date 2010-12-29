@@ -24,6 +24,7 @@ from osv import osv
 
 class account_analytic_journal(osv.osv):
     _name = 'account.analytic.journal'
+    _description = 'Analytic Journal'
     _columns = {
         'name': fields.char('Journal Name', size=64, required=True),
         'code': fields.char('Journal Code', size=8),

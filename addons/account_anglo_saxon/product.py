@@ -30,7 +30,25 @@ class product_category(osv.osv):
             string="Price Difference Account",
             method=True,
             view_load=True,
-            help="This account will be used to value price difference between purchase price and cost price."),                
+            help="This account will be used to value price difference between purchase price and cost price."),
+
+        #Redefine fields to change help text for anglo saxon methodology.            
+        'property_account_income_categ': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Income Account",
+            method=True,
+            view_load=True,
+            help="This account will be used to value outgoing stock for the current product category using sale price"),
+        'property_account_expense_categ': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Expense Account",
+            method=True,
+            view_load=True,
+            help="This account will be used to value outgoing stock for the current product category using cost price"),                
 
     }
 product_category()
@@ -45,7 +63,25 @@ class product_template(osv.osv):
             string="Price Difference Account",
             method=True,
             view_load=True,
-            help="This account will be used to value price difference between purchase price and cost price."),                
+            help="This account will be used to value price difference between purchase price and cost price."),
+            
+        #Redefine fields to change help text for anglo saxon methodology.
+        'property_account_income': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Income Account",
+            method=True,
+            view_load=True,
+            help="This account will be used to value outgoing stock for the current product category using sale price"),
+        'property_account_expense': fields.property(
+            'account.account',
+            type='many2one',
+            relation='account.account',
+            string="Expense Account",
+            method=True,
+            view_load=True,
+            help="This account will be used to value outgoing stock for the current product category using cost price"),                
 
     }
 product_template()

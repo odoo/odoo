@@ -190,11 +190,8 @@ class stock_partial_move(osv.osv_memory):
         
         p_moves = {}
         picking_type = self.__get_picking_type(cr, uid, move_ids)
-        print picking_type
+        
         moves_list = picking_type == 'product_moves_in' and partial.product_moves_in  or partial.product_moves_out
-        print picking_type == 'product_moves_in'
-        print partial.product_moves_out
-        print moves_list
         for product_move in moves_list:
             p_moves[product_move.move_id.id] = product_move
             
@@ -204,11 +201,6 @@ class stock_partial_move(osv.osv_memory):
                 continue
             if not p_moves.get(move.id):
                 continue
-            
-            print p_moves[move.id].product_id.id
-            print p_moves[move.id].quantity
-            print p_moves[move.id].product_uom.id
-            
             partial_datas['move%s' % (move.id)] = {
                 'product_id' : p_moves[move.id].id,
                 'product_qty' : p_moves[move.id].quantity,
@@ -224,7 +216,6 @@ class stock_partial_move(osv.osv_memory):
                 })
                 
             
-        print partial_datas
         move_obj.do_partial(cr, uid, moves_ids_final, partial_datas, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

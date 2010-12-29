@@ -108,7 +108,7 @@ class crm_merge_opportunity(osv.osv_memory):
             elif this.state in ['cancel', 'open', 'pending']:
                 act = 'case_' + this.state
                 getattr(opp_obj, act)(cr, uid, [record_id])
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     _columns = {
         'opportunity_ids' : fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),

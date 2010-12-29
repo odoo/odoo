@@ -126,7 +126,7 @@ class idea_post_vote(osv.osv_memory):
 
             idea_pool._vote_save(cr, uid, vote_id, None, score, context)
             #vote = vote_pool.create(cr, uid, vote)
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
 idea_post_vote()
 

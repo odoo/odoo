@@ -1,8 +1,8 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-"access_mrp_workcenter","mrp.workcenter","model_mrp_workcenter","mrp.group_mrp_user",1,1,1,1
+"access_mrp_workcenter","mrp.workcenter","model_mrp_workcenter","mrp.group_mrp_user",1,0,0,0
 "access_mrp_routing","mrp.routing","model_mrp_routing","mrp.group_mrp_user",1,0,0,0
 "access_mrp_routing_workcenter","mrp.routing.workcenter","model_mrp_routing_workcenter","mrp.group_mrp_user",1,0,0,0
-"access_mrp_bom","mrp.bom","model_mrp_bom","group_mrp_user",1,1,1,0
+"access_mrp_bom","mrp.bom","model_mrp_bom","group_mrp_user",1,0,0,0
 "access_mrp_bom_revision","mrp.bom.revision","model_mrp_bom_revision","group_mrp_user",1,0,0,0
 "access_mrp_production","mrp.production user","model_mrp_production","mrp.group_mrp_user",1,1,1,1
 "access_mrp_production_salesman","mrp.production salesman","model_mrp_production","base.group_sale_salesman",1,1,1,0
@@ -12,7 +12,7 @@
 "access_mrp_property","mrp.property","procurement.model_mrp_property","mrp.group_mrp_manager",1,1,1,1
 "access_mrp_production_product_line","mrp.production.product.line","model_mrp_production_product_line","mrp.group_mrp_user",1,1,1,1
 "access_procurement","procurement.order","model_procurement_order","mrp.group_mrp_user",1,1,1,1
-"access_mrp_workcenter_manager","mrp.workcenter.manager","model_mrp_workcenter","mrp.group_mrp_manager",1,0,0,0
+"access_mrp_workcenter_manager","mrp.workcenter.manager","model_mrp_workcenter","mrp.group_mrp_manager",1,1,1,1
 "access_mrp_routing_manager","mrp.routing.manager","model_mrp_routing","mrp.group_mrp_manager",1,1,1,1
 "access_mrp_routing_workcenter_manager","mrp.routing.workcenter.manager","model_mrp_routing_workcenter","mrp.group_mrp_manager",1,1,1,1
 "access_mrp_bom_manager","mrp.bom.manager","model_mrp_bom","mrp.group_mrp_manager",1,1,1,1
@@ -23,7 +23,7 @@
 "access_stock_warehouse","stock.warehouse mrp_worker","stock.model_stock_warehouse","mrp.group_mrp_user",1,0,0,0
 "access_account_analytic_journal_mrp_worker","account.analytic.journal mrp_worker","account.model_account_analytic_journal","mrp.group_mrp_user",1,0,0,0
 "access_account_account","account.account mrp_worker","account.model_account_account","mrp.group_mrp_user",1,0,0,0
-"access_purchase_order_mrp_worker","purchase.order mrp_worker","purchase.model_purchase_order","mrp.group_mrp_user",1,1,1,1
+"access_purchase_order_mrp_worker","purchase.order mrp_worker","purchase.model_purchase_order","mrp.group_mrp_user",1,0,0,0
 "access_purchase_order_line_mrp_worker","purchase.order.line mrp_worker","purchase.model_purchase_order_line","mrp.group_mrp_user",1,0,0,0
 "access_hr_timesheet_group_mrp_worker","resource.calendar mrp_manager","resource.model_resource_calendar","mrp.group_mrp_manager",1,1,1,1
 "access_procurement_stock_worker","procurement.order stock_worker","model_procurement_order","stock.group_stock_user",1,1,1,1
@@ -32,23 +32,23 @@
 "access_mrp_production_order","mrp.production.order","model_mrp_production_order","mrp.group_mrp_manager",1,1,1,1
 "access_report_workcenter_load","report.workcenter.load","model_report_workcenter_load","mrp.group_mrp_manager",1,1,1,1
 "access_report_mrp_inout","report.mrp.inout","model_report_mrp_inout","mrp.group_mrp_manager",1,1,1,1
-"access_product_product_manager","product.product manager","model_product_product","mrp.group_mrp_manager",1,0,0,0
+"access_product_product_manager","product.product manager","product.model_product_product","mrp.group_mrp_manager",1,0,0,0
 "access_ir_property_manager","ir.property manager","base.model_ir_property","mrp.group_mrp_manager",1,1,1,1
 "access_account_sequence_fiscalyear","account.sequence.fiscalyear","account.model_account_sequence_fiscalyear","mrp.group_mrp_user",1,1,1,1
-"access_product_product_user","product.product user","model_product_product","mrp.group_mrp_user",1,0,0,0
+"access_product_product_user","product.product user","product.model_product_product","mrp.group_mrp_user",1,0,0,0
 "access_product_template_user","product.template user","product.model_product_template","mrp.group_mrp_user",1,0,0,0
-"access_product_uom_user","product.uom user","product.model_product_uom","mrp.group_mrp_user",1,1,1,1
+"access_product_uom_user","product.uom user","product.model_product_uom","mrp.group_mrp_user",1,0,0,0
 "access_product_supplierinfo_user","product.supplierinfo user","product.model_product_supplierinfo","mrp.group_mrp_user",1,1,1,1
-"access_res_partner_address","res.partner.address","base.model_res_partner_address","mrp.group_mrp_user",1,1,1,1
+"access_res_partner_address","res.partner.address","base.model_res_partner_address","mrp.group_mrp_user",1,0,0,0
 "access_stock_tracking","stock.tracking","stock.model_stock_tracking","mrp.group_mrp_user",1,1,1,0
-"access_res_partner","res.partner","base.model_res_partner","mrp.group_mrp_user",1,1,1,0
+"access_res_partner","res.partner","base.model_res_partner","mrp.group_mrp_user",1,0,0,0
 "access_workcenter_user","mrp.production.workcenter.line.user","model_mrp_production_workcenter_line","mrp.group_mrp_user",1,1,1,1
 "access_resource_calendar_leaves_user","mrp.resource.calendar.leaves.user","resource.model_resource_calendar_leaves","mrp.group_mrp_user",1,1,1,1
 "access_resource_calendar_leaves_manager","mrp.resource.calendar.leaves.manager","resource.model_resource_calendar_leaves","mrp.group_mrp_manager",1,0,0,0
 "access_resource_calendar_attendance_manager","mrp.resource.calendar.attendance.manager","resource.model_resource_calendar_attendance","mrp.group_mrp_manager",1,1,1,1
-"access_product_puom_categ","product.uom.categ","product.model_product_uom_categ","mrp.group_mrp_user",1,1,1,0
-"access_resource_resource","resource.resource","resource.model_resource_resource","mrp.group_mrp_user",1,1,1,0
-"access_board_board_user","mrp.board.board","board.model_board_board","mrp.group_mrp_user",1,1,1,0
+"access_product_puom_categ","product.uom.categ","product.model_product_uom_categ","mrp.group_mrp_user",1,0,0,0
+"access_resource_resource","resource.resource","resource.model_resource_resource","mrp.group_mrp_user",1,0,0,0
+"access_board_board_user","mrp.board.board","board.model_board_board","mrp.group_mrp_user",1,0,0,0
 "access_account_sequence_fiscalyear_manager","account.sequence.fiscalyear","account.model_account_sequence_fiscalyear","mrp.group_mrp_manager",1,0,0,0
 "access_product_template_manager","product.template mgr","product.model_product_template","mrp.group_mrp_manager",1,0,0,0
 "access_product_uom_manager","product.uom user","product.model_product_uom","mrp.group_mrp_manager",1,0,0,0
@@ -62,7 +62,7 @@
 "access_mrp_production_manager","mrp.production manager","model_mrp_production","mrp.group_mrp_manager",1,0,0,0
 "access_procurement_manager","procurement.order","model_procurement_order","mrp.group_mrp_manager",1,0,0,0
 "access_workcenter_manager","mrp.production.workcenter.line","model_mrp_production_workcenter_line","mrp.group_mrp_manager",1,0,0,0
-"access_stock_move_mrp_manager","stock.move mrp_manager","stock.model_stock_move","mrp.group_mrp_manager",1,0,0,1
+"access_stock_move_mrp_manager","stock.move mrp_manager","stock.model_stock_move","mrp.group_mrp_manager",1,0,0,0
 "access_mrp_production_product_line_manager","mrp.production.product.line manager","model_mrp_production_product_line","mrp.group_mrp_manager",1,0,0,0
 "access_account_sequence_fiscalyear_system","account.sequence.fiscalyear.system","account.model_account_sequence_fiscalyear","mrp.group_mrp_manager",1,0,0,0
 "access_stock_production_lot_user","stock.production.lot","stock.model_stock_production_lot","mrp.group_mrp_user",1,1,1,1
@@ -71,3 +71,26 @@
 "access_report_mrp_inout_user","report.mrp.inout user","model_report_mrp_inout","mrp.group_mrp_user",1,0,0,0
 "access_report_workcenter_load_user","report.workcenter.load.user","model_report_workcenter_load","mrp.group_mrp_user",1,0,0,0
 "access_mrp_bom_salesman","mrp.bom","model_mrp_bom","base.group_sale_salesman",1,0,0,0
+"access_mrp_bom_stockuser","mrp.bom","model_mrp_bom","stock.group_stock_user",1,0,0,0
+"access_product_uom_categ_mrp_manager","product.uom.categ mrp_manager","product.model_product_uom_categ","mrp.group_mrp_manager",1,1,1,1
+"access_product_uom_mrp_manager","product.uom mrp_manager","product.model_product_uom","mrp.group_mrp_manager",1,1,1,1
+"access_product_ul_mrp_manager","product.ul mrp_manager","product.model_product_ul","mrp.group_mrp_manager",1,1,1,1
+"access_product_category_mrp_manager","product.category mrp_manager","product.model_product_category","mrp.group_mrp_manager",1,1,1,1
+"access_product_template_mrp_manager","product.template mrp_manager","product.model_product_template","mrp.group_mrp_manager",1,1,1,1
+"access_product_product_mrp_manager","product.product mrp_manager","product.model_product_product","mrp.group_mrp_manager",1,1,1,1
+"access_product_packaging_mrp_manager","product.packaging mrp_manager","product.model_product_packaging","mrp.group_mrp_manager",1,1,1,1
+"access_product_supplierinfo_mrp_manager","product.supplierinfo mrp_manager","product.model_product_supplierinfo","mrp.group_mrp_manager",1,1,1,1
+"access_pricelist_partnerinfo_mrp_manager","pricelist.partnerinfo mrp_manager","product.model_pricelist_partnerinfo","mrp.group_mrp_manager",1,1,1,1
+"access_product_price_type_mrp_manager","product.price.type mrp_manager","product.model_product_price_type","mrp.group_mrp_manager",1,1,1,1
+"access_product_pricelist_type_mrp_manager","product.pricelist.type mrp_manager","product.model_product_pricelist_type","mrp.group_mrp_manager",1,1,1,1
+"access_product_pricelist_mrp_manager","product.pricelist mrp_manager","product.model_product_pricelist","mrp.group_mrp_manager",1,1,1,1
+"access_ir_property_group_product_mrp_manager","ir_property group_product_mrp_manager","base.model_ir_property","mrp.group_mrp_manager",1,1,1,1
+"access_product_group_res_partner_mrp_manager","res_partner group_mrp_manager","base.model_res_partner","mrp.group_mrp_manager",1,1,1,1
+"access_product_pricelist_version_mrp_manager","product.pricelist.version mrp_manager","product.model_product_pricelist_version","mrp.group_mrp_manager",1,1,1,1
+"access_product_pricelist_item_mrp_manager","product.pricelist.item mrp_manager","product.model_product_pricelist_item","mrp.group_mrp_manager",1,1,1,1
+"access_resource_calendar_manufacturinguser","resource.calendar manufacturing.user","resource.model_resource_calendar","mrp.group_mrp_user",1,0,0,0
+"access_account_account_mrp_manager","account.account mrp manager","account.model_account_account","mrp.group_mrp_manager",1,0,0,0
+"access_account_journal_mrp_manager","account.journal mrp manager","account.model_account_journal","mrp.group_mrp_manager",1,0,0,0
+"access_stock_location_mrp_manager","stock.location product mrp manager","stock.model_stock_location","mrp.group_mrp_manager",1,0,0,0
+"access_sale_order_manufacturing_user","sale.order manufacturing.user","sale.model_sale_order","mrp.group_mrp_user",1,1,0,0
+"access_sale_order_line_manufacturing_user","sale.order.line manufacturing.user","sale.model_sale_order_line","mrp.group_mrp_user",1,1,0,0

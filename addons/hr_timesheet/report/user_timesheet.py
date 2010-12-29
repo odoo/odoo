@@ -35,10 +35,10 @@ def lengthmonth(year, month):
 
 class report_custom(report_rml):
 
-    def get_month_name(self, cr, uid, month):
+    def get_month_name(self, cr, uid, month, context=None):
         _months = {1:_("January"), 2:_("February"), 3:_("March"), 4:_("April"), 5:_("May"), 6:_("June"), 7:_("July"), 8:_("August"), 9:_("September"), 10:_("October"), 11:_("November"), 12:_("December")}
         return _months[month]
-    def get_weekday_name(self, cr, uid, weekday):
+    def get_weekday_name(self, cr, uid, weekday, context=None):
         _weekdays = {1:_('Mon'), 2:_('Tue'), 3:_('Wed'), 4:_('Thu'), 5:_('Fri'), 6:_('Sat'), 7:_('Sun')}
         return _weekdays[weekday]
 
@@ -54,8 +54,8 @@ class report_custom(report_rml):
         som = datetime.date(data['form']['year'], data['form']['month'], 1)
         eom = som + datetime.timedelta(lengthmonth(som.year, som.month))
 
-        date_xml = ['<date month="%s" year="%d" />' % (self.get_month_name(cr, uid, som.month), som.year), '<days>']
-        date_xml += ['<day number="%d" name="%s" weekday="%d" />' % (x, self.get_weekday_name(cr, uid, som.replace(day=x).weekday()+1), som.replace(day=x).weekday()+1) for x in range(1, lengthmonth(som.year, som.month)+1)]
+        date_xml = ['<date month="%s" year="%d" />' % (self.get_month_name(cr, uid, som.month, context=context), som.year), '<days>']
+        date_xml += ['<day number="%d" name="%s" weekday="%d" />' % (x, self.get_weekday_name(cr, uid, som.replace(day=x).weekday()+1, context=context), som.replace(day=x).weekday()+1) for x in range(1, lengthmonth(som.year, som.month)+1)]
 
         date_xml.append('</days>')
         date_xml.append('<cols>2.5cm%s,2cm</cols>\n' % (',0.7cm' * lengthmonth(som.year, som.month)))
