@@ -564,19 +564,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="7">
                         <field name="name" string="Reference"/>
                         <field name="date_planned"/>
                         <field name="origin"/>
+                        <newline/>
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
-                        <group colspan="2" col="4">
                         <field name="product_uom"/>
                         <button type="action"
                             icon="terp-accessories-archiver+"
                             name="%(mrp.action_change_production_qty)d"
                             string="Change Qty" states="ready,confirmed" />
-                        </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
