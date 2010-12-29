@@ -24,23 +24,23 @@
                 <form string="Publisher Warranty Contract">
                     <group col="2" colspan="4">
                         <group col="2">
-                    		<field name="name"/>
+                            <field name="name"/>
                         </group>
                         <group col="2">
-                    		<field name="date_start"/>
-                    		<field name="date_stop"/>
-                    	</group>
+                            <field name="date_start"/>
+                            <field name="date_stop"/>
+                        </group>
                         <group col="2">
                             <field name="state"/>
                             <field name="kind"/>
                         </group>
                         <group col="2">
-                        	<button name="check_validity" string="Validate" type="object"
-                        	attrs="{'invisible':[('state','in',['valid', 'terminated', 'canceled'])]}"/>
-                        	<button name="check_validity" string="Refresh Validation Dates" type="object"
-                        	attrs="{'invisible':[('state','in',['unvalidated'])]}"/>
+                            <button name="check_validity" string="Validate" type="object"
+                            attrs="{'invisible':[('state','in',['valid', 'terminated', 'canceled'])]}"/>
+                            <button name="check_validity" string="Refresh Validation Dates" type="object"
+                            attrs="{'invisible':[('state','in',['unvalidated'])]}"/>
                         </group>
-                	</group>
+                    </group>
                 </form>
             </field>
         </record>
@@ -80,10 +80,10 @@
         </record>
 
         <menuitem name="Publisher Warranty" id="publisher_warranty"
-            parent="base.menu_administration" groups="base.group_extended"/>
+            parent="base.menu_administration"/>
 
         <menuitem action="action_publisher_warranty_contract_form" id="menu_publisher_warranty_contract"
-        	parent="publisher_warranty" sequence="2"/>
+            parent="publisher_warranty" sequence="2"/>
 
 
         <record id="publisher_warranty_contract_add_wizard" model="ir.ui.view">
@@ -92,7 +92,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Register a Contract">
-					<group col="8">
+                    <group col="8">
                         <group colspan="3" col="1">
                             <field name="config_logo" widget="image" width="220" height="130" nolabel="1" colspan="1"/>
                             <newline/>
