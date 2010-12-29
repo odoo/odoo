@@ -59,6 +59,7 @@ class configmanager(object):
             'translate_in': None,
             'translate_out': None,
             'overwrite_existing_translations': False,
+            'load_language': None,
             'language': None,
             'pg_path': None,
             'admin_passwd': 'admin',
@@ -210,6 +211,8 @@ class configmanager(object):
             "Option '-l' is mandatory in case of importation"
             )
 
+        group.add_option('--load-language', dest="load_language",
+                         help="specifies the languages for the translations you want to be loaded")
         group.add_option('-l', "--language", dest="language",
                          help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
         group.add_option("--i18n-export", dest="translate_out",
@@ -291,7 +294,8 @@ class configmanager(object):
                 self.options[arg] = getattr(opt, arg)
 
         keys = [
-            'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'debug_mode', 'smtp_ssl',
+            'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
+            'debug_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory'

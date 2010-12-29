@@ -827,6 +827,10 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report, skip_cleanup=True)
 
+        if tools.config['load_language']:
+            for lang in tools.config['load_language'].split(','):
+                tools.load_language(cr, lang)
+
         if update_module:
             modobj = pool.get('ir.module.module')
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
