@@ -219,6 +219,8 @@
                     <field name="project_id" on_change="onchange_project(project_id)"/>
                     <field name="responsible_id"/>
                     <field name="date_start"/>
+                    <field name="date_end"/>
+                    <field name="duration"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -268,6 +270,7 @@
                         </field>
                         <field name="responsible_id"/>
                         <field name="date_start"/>
+                        <field name="date_end"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
