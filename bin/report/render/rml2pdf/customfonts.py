@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -34,7 +34,7 @@ the reportlab engine.
 This file could be customized per distro (although most Linux/Unix ones)
 should have the same filenames, only need the code below).
 
-Due to an awful configuration that ships with reportlab at many Linux 
+Due to an awful configuration that ships with reportlab at many Linux
 and Ubuntu distros, we have to override the search path, too.
 """
 
@@ -56,26 +56,26 @@ CustomTTFonts = [ ('Helvetica',"DejaVu Sans", "DejaVuSans.ttf", 'normal'),
         ('Courier',"FreeMono BoldOblique", "FreeMonoBoldOblique.ttf", 'bolditalic'),]
 
 
-TTFSearchPath_Linux = ( 
+TTFSearchPath_Linux = [
             '/usr/share/fonts/truetype', # SuSE
             '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
             '/usr/share/fonts/truetype/*', # Ubuntu,
             '/usr/share/fonts/TTF/*', # at Mandriva/Mageia
-            )
+            ]
 
-TTFSearchPath_Windows = ( 
+TTFSearchPath_Windows = [
             'c:/winnt/fonts',
             'c:/windows/fonts'
-            )
+            ]
 
-TTFSearchPath_Darwin = ( 
+TTFSearchPath_Darwin = [
             #mac os X - from
             #http://developer.apple.com/technotes/tn/tn2024.html
             '~/Library/Fonts',
             '/Library/Fonts',
             '/Network/Library/Fonts',
             '/System/Library/Fonts',
-            )
+            ]
 
 TTFSearchPathMap = {
     'Darwin': TTFSearchPath_Darwin,
@@ -89,7 +89,7 @@ __foundFonts = None
 def FindCustomFonts():
     """Fill the __foundFonts list with those filenames, whose fonts
        can be found in the reportlab ttf font path.
-       
+
        This process needs only be done once per loading of this module,
        it is cached. But, if the system admin adds some font in the
        meanwhile, the server must be restarted eventually.
@@ -131,7 +131,7 @@ def FindCustomFonts():
 
 def SetCustomFonts(rmldoc):
     """ Map some font names to the corresponding TTF fonts
-    
+
         The ttf font may not even have the same name, as in
         Times -> Liberation Serif.
         This function is called once per report, so it should
