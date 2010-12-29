@@ -58,6 +58,7 @@ class configmanager(object):
             'xmlrpcs': True,
             'translate_in': None,
             'translate_out': None,
+            'overwrite_existing_translations': False,
             'language': None,
             'pg_path': None,
             'admin_passwd': 'admin',
@@ -215,6 +216,8 @@ class configmanager(object):
                          help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit")
         group.add_option("--i18n-import", dest="translate_in",
                          help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
+        group.add_option("--i18n-overwrite", dest="overwrite_existing_translations", action="store_true", default=False,
+                         help="overwrites existing translation terms on importing a CSV or a PO file.")
         group.add_option("--modules", dest="translate_modules",
                          help="specify modules to export. Use in combination with --i18n-export")
         group.add_option("--addons-path", dest="addons_path",
@@ -239,6 +242,9 @@ class configmanager(object):
 
         die(opt.translate_in and (not opt.language or not opt.db_name),
             "the i18n-import option cannot be used without the language (-l) and the database (-d) options")
+
+        die(opt.overwrite_existing_translations and (not opt.translate_in),
+            "the i18n-overwrite option cannot be used without the i18n-import option")
 
         die(opt.translate_out and (not opt.db_name),
             "the i18n-export option cannot be used without the database (-d) option")
@@ -285,7 +291,7 @@ class configmanager(object):
                 self.options[arg] = getattr(opt, arg)
 
         keys = [
-            'language', 'translate_out', 'translate_in', 'debug_mode', 'smtp_ssl',
+            'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'debug_mode', 'smtp_ssl',
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
             'list_db', 'xmlrpcs',
             'test_file', 'test_disable', 'test_commit', 'test_report_directory'
@@ -443,7 +449,7 @@ class configmanager(object):
         loglevelnames = dict(zip(self._LOGLEVELS.values(), self._LOGLEVELS.keys()))
         p.add_section('options')
         for opt in sorted(self.options.keys()):
-            if opt in ('version', 'language', 'translate_out', 'translate_in', 'init', 'update'):
+            if opt in ('version', 'language', 'translate_out', 'translate_in', 'overwrite_existing_translations', 'init', 'update'):
                 continue
             if opt in self.blacklist_for_save:
                 continue
