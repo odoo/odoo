@@ -685,8 +685,10 @@ class orm_template(object):
         :param filename: optional file to store partial import state for recovery
         :rtype: tuple
 
-        This method is used when importing data via client menu
-        Example of fields to import for a sale.order
+        This method is used when importing data via client menu.
+
+        Example of fields to import for a sale.order::
+
             .id,                         (=database_id)
             partner_id,                  (=name_search)
             order_line/.id,              (=database_id)
