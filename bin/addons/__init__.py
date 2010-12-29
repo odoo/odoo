@@ -819,6 +819,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = tools.assertion_report()
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
+        if 'base' in tools.config['update']:
+            cr.execute("update ir_module_module set state=%s where name=%s", ('to upgrade', 'base'))
         graph = create_graph(cr, ['base'], force)
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
