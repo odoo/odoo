@@ -3906,7 +3906,9 @@ class orm(orm_template):
                 order_field = order_split[0].strip()
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
-                if order_field in self._columns:
+                if order_field == 'id':
+                    order_by_clause = '"%s"."%s"' % (self._table, order_field)
+                elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
                         inner_clause = '"%s"."%s"' % (self._table, order_field)
