@@ -40,6 +40,7 @@ from lxml import etree
 import tools
 import netsvc
 from tools.misc import UpdateableStr
+from tools.misc import SKIPPED_ELEMENT_TYPES
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
@@ -467,9 +468,6 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     modules = set([t[0] for t in trans[1:]])
     _process(format, modules, trans, buffer, lang, newlang)
     del trans
-
-# We'd better not import orm here, so copy this from osv.orm:
-SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
 def trans_parse_xsl(de):
     res = []
