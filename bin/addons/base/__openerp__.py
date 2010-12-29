@@ -89,6 +89,7 @@
         'test/base_test.yml',
         'test/test_context.xml',
         'test/bug_lp541545.xml',
+        'test/test_osv_expression.yml',
     ],
     'installable': True,
     'active': True,
