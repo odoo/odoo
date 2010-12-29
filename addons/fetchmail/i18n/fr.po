@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-19 22:23+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-28 15:55+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: fetchmail
@@ -47,13 +46,18 @@ msgstr "État"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Set to Draft"
-msgstr "Mettre à l'état \"Brouillon\""
+msgid "POP"
+msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
 msgstr "Non confirmé"
+
+#. module: fetchmail
+#: field:email.server,user:0
+msgid "User Name"
+msgstr "Nom de l'utilisateur"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -90,13 +94,13 @@ msgstr "Ajouter des pièces jointes ?"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "POP"
+msgid "# of emails"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,user:0
-msgid "User Name"
-msgstr "Nom de l'utilisateur"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+msgid "Email History"
+msgstr "Historique des courriels"
 
 #. module: fetchmail
 #: field:email.server,user_id:0
@@ -119,7 +123,6 @@ msgid "Password"
 msgstr "Mot de passe"
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: view:mailgate.message:0
 msgid "Emails"
 msgstr ""
@@ -150,16 +153,25 @@ msgid "Mailgateway Message"
 msgstr "Message pour la passerelle de courriel"
 
 #. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+msgid "POP Servers"
+msgstr "Serveurs POP"
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Set to Draft"
+msgstr "Mettre à l'état \"Brouillon\""
+
+#. module: fetchmail
 #: field:email.server,message_ids:0
 #: model:ir.actions.act_window,name:fetchmail.action_view_mail_message_emails
 msgid "Messages"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Email Servers"
-msgstr ""
+msgid "Fetchmail Services"
+msgstr "Services Fetchmail"
 
 #. module: fetchmail
 #: field:email.server,server:0

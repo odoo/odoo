@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-19 08:54+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-20 12:16+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: membership
@@ -140,7 +139,7 @@ msgstr "Partenaire associé."
 #. module: membership
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
-msgstr ""
+msgstr "# Facturés"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
@@ -299,7 +298,7 @@ msgstr ""
 #: view:report.membership:0
 #: field:report.membership,membership_id:0
 msgid "Membership Product"
-msgstr ""
+msgstr "Produit pour l'adhésion"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
@@ -314,20 +313,13 @@ msgstr "Le membre facturé peut être membre associé."
 #. module: membership
 #: view:membership.invoice:0
 msgid "Join"
-msgstr ""
+msgstr "Adhérer"
 
 #. module: membership
 #: help:product.product,membership_date_to:0
 #: help:res.partner,membership_stop:0
 msgid "Date until which membership remains active."
 msgstr "Date jusqu'à laquelle l'adhésion reste active."
-
-#. module: membership
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Erreur : l'Unité Secondaire doit appartenir à une autre catégorie que "
-"l'Unité de Mesure."
 
 #. module: membership
 #: view:product.product:0
@@ -337,7 +329,7 @@ msgstr "Produits d'adhésion"
 #. module: membership
 #: field:membership.membership_line,date:0
 msgid "Join Date"
-msgstr ""
+msgstr "Date d'adhésion"
 
 #. module: membership
 #: help:res.partner,free_member:0
@@ -367,7 +359,7 @@ msgstr "La facture d'adhésion a été payée."
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Modèle de produit"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -375,9 +367,21 @@ msgid "September"
 msgstr "Septembre"
 
 #. module: membership
-#: selection:report.membership,month:0
-msgid "December"
-msgstr "Décembre"
+#: model:ir.module.module,description:membership.module_meta_information
+msgid ""
+"\n"
+"This module allows you to manage all operations for managing memberships.\n"
+"It supports different kind of members:\n"
+"* Free member\n"
+"* Associated member (ex: a group subscribe for a membership for all\n"
+"  subsidiaries)\n"
+"* Paid members,\n"
+"* Special member prices, ...\n"
+"\n"
+"It is integrated with sales and accounting to allow you to automatically\n"
+"invoice and send propositions for membership renewal.\n"
+"    "
+msgstr ""
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
@@ -451,7 +455,7 @@ msgstr "Date à partir de laquelle l'adhésion devient active."
 #. module: membership
 #: view:report.membership:0
 msgid "Associated Partner"
-msgstr ""
+msgstr "Partenaire associé"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_invoice
@@ -464,7 +468,7 @@ msgstr "Facture de l'adhésion"
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesman"
-msgstr ""
+msgstr "Vendeur"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
@@ -677,7 +681,7 @@ msgstr "Derniers 365 jours"
 #. module: membership
 #: view:product.product:0
 msgid "General"
-msgstr ""
+msgstr "Général"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
@@ -687,12 +691,17 @@ msgstr "La facture brouillon est maintenant ouverte."
 #. module: membership
 #: view:product.product:0
 msgid "Inactive"
-msgstr ""
+msgstr "Inactif"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Last 30 Days"
 msgstr "30 derniers jours"
+
+#. module: membership
+#: selection:report.membership,month:0
+msgid "December"
+msgstr "Décembre"
 
 #. module: membership
 #: view:membership.invoice:0
@@ -807,7 +816,7 @@ msgstr "Membre en attente"
 #: field:report.membership,date_from:0
 #: view:res.partner:0
 msgid "Start Date"
-msgstr ""
+msgstr "Date de début"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
@@ -841,6 +850,10 @@ msgstr "Année"
 #: view:report.membership:0
 msgid "Revenue Done"
 msgstr ""
+
+#~ msgid "You can not have 2 pricelist version that overlaps!"
+#~ msgstr ""
+#~ "Vous en pouvez pas avoir 2 listes de prix avec des dates qui se chevauchent"
 
 #~ msgid "Currency"
 #~ msgstr "Devise"
@@ -925,6 +938,11 @@ msgstr ""
 
 #~ msgid "Current membership state"
 #~ msgstr "État de l'adhésion courante"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Erreur : l'Unité Secondaire doit appartenir à une autre catégorie que "
+#~ "l'Unité de Mesure."
 
 #~ msgid "You cannot have 2 pricelist versions that overlap!"
 #~ msgstr ""

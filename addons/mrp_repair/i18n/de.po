@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-09 09:39+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-28 19:41+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -147,6 +147,32 @@ msgstr "Garantie bis"
 #: view:mrp.repair:0
 msgid "Notes"
 msgstr "Bemerkungen"
+
+#. module: mrp_repair
+#: model:ir.module.module,description:mrp_repair.module_meta_information
+msgid ""
+"\n"
+"           The aim is to have a complete module to manage all products "
+"repairs. The following topics should be covered by this module:\n"
+"           * Add/remove products in the reparation\n"
+"           * Impact for stocks\n"
+"           * Invoicing (products and/or services)\n"
+"           * Warranty concept\n"
+"           * Repair quotation report\n"
+"           * Notes for the technician and for the final customer\n"
+msgstr ""
+"\n"
+"           Der Zweck der Anwendung ist die Abbildung aller Vorgänge zur "
+"Reparatur von Produkten. Folgende Anforderungen werden dabei abgebildet:\n"
+"              * Ersatz/Ausbau von Produkten im Kontext des "
+"Reparaturvorgangs\n"
+"              * Berücksichtigung der Bestandsänderung durch Ersatz und "
+"Ausbau\n"
+"              * Abrechnung von Reparaturen\n"
+"              * Berücksichtigung von Garantiezeiten\n"
+"              * Angebotserstellung für kostenpflichtige Reparaturen\n"
+"              * Benachrichtigungen für den technischen Kundendienst und den "
+"Kunden\n"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_tax:0
@@ -891,6 +917,10 @@ msgstr "Kein Partner"
 
 #~ msgid "Quality"
 #~ msgstr "Qualität"
+
+#, python-format
+#~ msgid "You have to select a partner in the repair form !"
+#~ msgstr "Sie müssen einen Partner für den Reparaturauftrag auswählen"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."

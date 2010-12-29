@@ -35,8 +35,6 @@
             vat_code_chart_root => vat_code_chart_pymes_root
             l10nES_chart_template => l10nES_chart_template_pymes
             pgc_* => pgc_pymes_*
-      - Se establece el template name de las plantillas (este es un campo creado
-            específicamente para diferenciar las plantillas de ambos planes).
 
       Borja López Soilán (Pexego) - borjals@pexego.es
       Última actualización: 2010-10-18
@@ -679,7 +677,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_153"/>
             <field name="type">view</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Desembolsos no exigidos, otras partes vinculadas</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1535_child" model="account.account.template">
@@ -687,7 +685,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_1535"/>
             <field name="type">other</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Desembolsos no exigidos, otras partes vinculadas</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1536" model="account.account.template">
@@ -695,7 +693,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_153"/>
             <field name="type">view</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Otros desembolsos no exigidos</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1536_child" model="account.account.template">
@@ -703,7 +701,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_1536"/>
             <field name="type">other</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Otros desembolsos no exigidos</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_154" model="account.account.template">
@@ -711,7 +709,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_15"/>
             <field name="type">view</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Aportaciones no dinerarias pendientes por acciones o participaciones consideradas como pasivos financieros</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1543" model="account.account.template">
@@ -719,7 +717,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_154"/>
             <field name="type">view</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Aportaciones no dinerarias pendientes, empresas del grupo</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1543_child" model="account.account.template">
@@ -727,7 +725,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_1543"/>
             <field name="type">other</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Aportaciones no dinerarias pendientes, empresas del grupo</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1544" model="account.account.template">
@@ -735,7 +733,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_154"/>
             <field name="type">view</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Aportaciones no dinerarias pendientes, empresas asociadas</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1544_child" model="account.account.template">
@@ -743,7 +741,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_1544"/>
             <field name="type">other</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Aportaciones no dinerarias pendientes, empresas asociadas</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1545" model="account.account.template">
@@ -751,7 +749,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_154"/>
             <field name="type">view</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Aportaciones no dinerarias pendientes, otras partes vinculadas</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1545_child" model="account.account.template">
@@ -759,7 +757,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_1545"/>
             <field name="type">other</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Aportaciones no dinerarias pendientes, otras partes vinculadas</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1546" model="account.account.template">
@@ -767,7 +765,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_154"/>
             <field name="type">view</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Otras aportaciones no dinerarias pendientes</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_1546_child" model="account.account.template">
@@ -775,7 +773,7 @@
             <field name="reconcile" eval="False"/>
             <field name="parent_id" ref="pgc_pymes_1546"/>
             <field name="type">other</field>
-            <field name="name">Provisión por retribuciones del personal</field>
+            <field name="name">Otras aportaciones no dinerarias pendientes</field>
             <field name="user_type" ref="capital"/>
         </record>
         <record id="pgc_pymes_16" model="account.account.template">
@@ -11434,6 +11432,7 @@
             <field name="name">Reversión del deterioro de créditos a corto plazo, otras empresas</field>
             <field name="user_type" ref="ingresos"/>
         </record>
+
       <!-- Tax Code Configuration -->
         <record id="vat_code_chart_pymes_root" model="account.tax.code.template">
             <field name="name">Plantilla Plan de Impuestos PYMES</field>
@@ -11441,7 +11440,7 @@
 
       <!-- Chart template -->
         <record id="l10nES_chart_template_pymes" model="account.chart.template">
-            <field name="name">Plantilla Plan General Contable PYMES 2008</field>
+            <field name="name">Plantilla PGCE PYMES 2008</field>
             <field name="account_root_id" ref="pgc_pymes_0"/>
             <field name="tax_code_root_id" ref="vat_code_chart_pymes_root"/>
             <field name="bank_account_view_id" ref="pgc_pymes_572"/>

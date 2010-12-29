@@ -11,6 +11,8 @@
         <field name="context">{'type':'opportunity'}</field>
         <field name="help">Create specific stages that will help your sales better organise their sales pipeline by maintaining them to their sales opportunities. It will allow them to easily track how is positioned a specific opportunity in the sales cycle.</field>
     </record>
+    
+
 
      <menuitem action="crm_opportunity_stage_act" id="menu_crm_opportunity_stage_act" name="Stages"
         groups="base.group_extended" sequence="0"
@@ -39,14 +41,15 @@
                             </group>
                             <field name="user_id"/>
 
-                            <button name="action_makeMeeting" type="object"
-                            string="Schedule Meeting" icon="gtk-redo" />
+                            <button string="Schedule/Log Call"
+                            name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
 
                             <field name="planned_revenue"/>
                             <field name="probability"/>
                             <field name="date_deadline"/>
-                            <button string="Schedule/Log Call"
-                            name="%(opportunity2phonecall_act)d" icon="terp-call-start" type="action" groups="base.group_extended"/>
+
+                            <button name="action_makeMeeting" type="object"
+                            string="Schedule Meeting" icon="gtk-redo" />
                             <newline/>
                             <field name="date_action"/>
                             <field name="title_action"/>

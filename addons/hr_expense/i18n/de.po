@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-09 11:24+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-28 14:36+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:33+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_expense
@@ -119,6 +119,44 @@ msgstr "Bemerkungen"
 #: field:hr.expense.expense,invoice_id:0
 msgid "Employee's Invoice"
 msgstr "Spesenabrechnung Mitarbeiter"
+
+#. module: hr_expense
+#: model:ir.module.module,description:hr_expense.module_meta_information
+msgid ""
+"\n"
+"    This module aims to manage employee's expenses.\n"
+"\n"
+"    The whole workflow is implemented:\n"
+"    * Draft expense\n"
+"    * Confirmation of the sheet by the employee\n"
+"    * Validation by his manager\n"
+"    * Validation by the accountant and invoice creation\n"
+"    * Payment of the invoice to the employee\n"
+"\n"
+"    This module also uses the analytic accounting and is compatible with\n"
+"    the invoice on timesheet module so that you will be able to "
+"automatically\n"
+"    re-invoice your customer's expenses if your work by project.\n"
+"    "
+msgstr ""
+"\n"
+"    Diese Anwendung verwaltet die Spesenabrechnungen von Mitarbeitern.\n"
+"\n"
+"     Der gesamte Vorgang wird über folgenden Workflow umgesetzt:\n"
+"     * Erstellung einer Spesenabrechnung im Entwurf\n"
+"     * Bestätigung der Spesenabrechnung durch den Mitarbeiter\n"
+"     * Prüfung und Freigabe durch den Vorgesetzten\n"
+"     * Prüfung und Buchung durch einen Mitarbeiter der Buchhaltung\n"
+"     * Auszahlung der Spesenerstattung an den Mitarbeiter\n"
+"\n"
+"     Diese Anwendung ist kompatibel mit der Funktionalität zur  "
+"Mitarbeiterzeitabrechnung\n"
+"     und nutzt somit ebenfalls die Möglichkeit analytischer Konten für eine "
+"Weiterberechnung\n"
+"     an Kunden, z.B. bei projektbezogener Abrechnung von Zeiten und "
+"Aufwendungen.\n"
+"     eine automatische Weiterberechnung an Kunden\n"
+"    "
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -328,6 +366,12 @@ msgid "Reimbursement"
 msgstr "Erstattung"
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a Home address"
+msgstr "Der Mitarbeiter muss eine private Anschrift haben."
+
+#. module: hr_expense
 #: view:hr.expense.report:0
 msgid "    Month-1    "
 msgstr "    Monat-1    "
@@ -387,12 +431,6 @@ msgstr "Monat"
 #: field:hr.expense.report,currency_id:0
 msgid "Currency"
 msgstr "Währung"
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
-#, python-format
-msgid "The employee must have a working address"
-msgstr "Der Mitarbeiter muss eine gültige Anschrift hinterlegt haben."
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -861,6 +899,10 @@ msgstr "Weiterberechnung"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
+#, python-format
+#~ msgid "The employee must have a contact address"
+#~ msgstr "Der Mitarbeiter benötigt eine Kontakt Adresse."
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -916,6 +958,10 @@ msgstr "Weiterberechnung"
 #~ msgstr ""
 #~ "Fehler: Verkaufseinheit sollte in einer anderen Kategorie sein als "
 #~ "Mengeneinheit (ME)"
+
+#, python-format
+#~ msgid "The employee must have a working address"
+#~ msgstr "Der Mitarbeiter muss eine gültige Anschrift hinterlegt haben."
 
 #~ msgid ""
 #~ "Error: The default UOM and the purchase UOM must be in the same category."

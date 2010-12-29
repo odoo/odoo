@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-09 11:30+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-28 19:26+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:36+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_operations
@@ -426,6 +426,68 @@ msgid "Started"
 msgstr "Start Datum"
 
 #. module: mrp_operations
+#: model:ir.module.module,description:mrp_operations.module_meta_information
+msgid ""
+"\n"
+"     This module adds state, date_start,date_stop in production order "
+"operation lines\n"
+"     (in the \"Work Centers\" tab)\n"
+"     State: draft, confirm, done, cancel\n"
+"     When finishing/confirming,cancelling production orders set all state "
+"lines to the according state\n"
+"     Create menus:\n"
+"         Production Management > All Operations\n"
+"         Production Management > All Operations > Operations To Do "
+"(state=\"confirm\")\n"
+"     Which is a view on \"Work Centers\" lines in production order,\n"
+"     editable tree\n"
+"\n"
+"    Add buttons in the form view of production order under workcenter tab:\n"
+"    * start (set state to confirm), set date_start\n"
+"    * done (set state to done), set date_stop\n"
+"    * set to draft (set state to draft)\n"
+"    * cancel set state to cancel\n"
+"\n"
+"    When the production order becomes \"ready to produce\", operations must\n"
+"    become 'confirmed'. When the production order is done, all operations\n"
+"    must become done.\n"
+"\n"
+"    The field delay is the delay(stop date - start date).\n"
+"    So that we can compare the theoretic delay and real delay.\n"
+"\n"
+"    "
+msgstr ""
+"\n"
+"     Diese Anwendung erweitert die Fertigungsaufträge um Status, Start Datum "
+"und Ende Datum für Fertigungsvorgänge\n"
+"     (im Aktenreiter Arbeitsaufträge)\n"
+"      Status: Entwurf, Bestätigt, Fertig, Abgebrochen\n"
+"      Bei Klick auf Beendigen, Bestätigen oder  Abbrechen wird zunächst auch "
+"der Status geändert.\n"
+"      Erstellte Menüs:\n"
+"      Fertigung/Fertigung/Arbeitsaufträge\n"
+"      Fertigung/Fertigungsterminierung/Arbeitsaufträge\n"
+"\n"
+"      Im Formular eines Fertigungsauftrags wurden beim Aktenreiter "
+"\"Arbeitsaufträge\" folgende Buttons für den\n"
+"      Workflow ergänzt:\n"
+"      * Start (setze Status auf Bestätigen),\n"
+"      * Erledigt (setze Status auf Beenden),\n"
+"      * Setze auf Entwurf (Setze Status auf Entwurf)\n"
+"      * Abbrechen Statusänderung\n"
+"\n"
+"Zum Zeitpunkt, zu dem der Fertigungsauftrag \"Startbereit fü sitr die "
+"Fertigung\", wurden scheinbar alle\n"
+"Vorgänge bestätigt. Wenn der Produktionsauftrag erledigt wurde, mussten alle "
+"Vorgänge erledigt sein.\n"
+"\n"
+"Das Feld \"Zeitverzug\" ist der Verzug (Stop Datum - Ende Datum).\n"
+"Somit können wir den theoretischen Verzug und den tatsächlichen V ertug "
+"geändert.\n"
+"\n"
+"    "
+
+#. module: mrp_operations
 #: selection:mrp.workorder,month:0
 msgid "June"
 msgstr "Juni"
@@ -613,7 +675,7 @@ msgstr "Barcode Fertigungsstelle"
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Sie müssen zwingend eine Losnummer für dieses Produkt angeben"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -784,12 +846,13 @@ msgstr "Dauer"
 #. module: mrp_operations
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "Bestellmengen können nicht negativ oder '0' sein !"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
+"Sie versuchen eine Losnummer ohne Bezug zu diesem Produkt zuzuweisen."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -811,6 +874,9 @@ msgstr ""
 
 #~ msgid "Work Order Events Using Bar Codes"
 #~ msgstr "Arbeitsauftragsvorgänge mit Barcodes"
+
+#~ msgid "Date Planned"
+#~ msgstr "Plandatum"
 
 #~ msgid "Start - Stop Codes"
 #~ msgstr "Kurzbezeichnung (Start / Stop)"
@@ -852,6 +918,9 @@ msgstr ""
 #~ msgid "Production start Operation"
 #~ msgstr "Auftragsstart Vorgang"
 
+#~ msgid "Graph view in hours by workcenter"
+#~ msgstr "Graph. Ansicht Stunden Arbeitsplatz"
+
 #~ msgid "Work Orders to Do"
 #~ msgstr "Auftragsliste"
 
@@ -890,6 +959,14 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#, python-format
+#~ msgid ""
+#~ "Operation has already started !' 'You  can either Pause /Finish/Cancel the "
+#~ "operation"
+#~ msgstr ""
+#~ "Fertigungsvorgang wurde bereits gestartet !' ' Sie können fortfahren mit "
+#~ "entweder Pause / Ende / Abbruch"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

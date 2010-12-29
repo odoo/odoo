@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-10-30 13:43+0000\n"
 "Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -277,11 +277,6 @@ msgid "Max Discount(%)"
 msgstr ""
 
 #. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Output Operation"
-msgstr ""
-
-#. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
 msgid "Cash register management"
 msgstr ""
@@ -452,6 +447,11 @@ msgstr "Descipció línia"
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Codes"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Output Operation"
 msgstr ""
 
 #. module: point_of_sale
@@ -789,6 +789,13 @@ msgid "Draft Invoice"
 msgstr "Factura esborrany"
 
 #. module: point_of_sale
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Product for expenses"
 msgstr ""
@@ -808,11 +815,6 @@ msgstr ""
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
-
-#. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_bankcard_journal
-msgid "Bancontact Journal"
 msgstr ""
 
 #. module: point_of_sale
@@ -1177,6 +1179,22 @@ msgid "Connected Salesman"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.module.module,description:point_of_sale.module_meta_information
+msgid ""
+"\n"
+"Main features :\n"
+" - Fast encoding of the sale.\n"
+" - Allow to choose one payment mode (the quick way) or to split the payment "
+"between several payment mode.\n"
+" - Computation of the amount of money to return.\n"
+" - Create and confirm picking list automatically.\n"
+" - Allow the user to create invoice automatically.\n"
+" - Allow to refund former sales.\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: point_of_sale
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr ""
@@ -1265,11 +1283,6 @@ msgstr "Nombre de copies"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
-
-#. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
 msgstr ""
 
 #. module: point_of_sale
@@ -1823,11 +1836,6 @@ msgid "Discount "
 msgstr ""
 
 #. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_visa_journal
-msgid "Visa Journal"
-msgstr ""
-
-#. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Factura de proveïdor"
@@ -1959,6 +1967,11 @@ msgstr "Dependent"
 #: selection:report.pos.order,state:0
 msgid "Invoiced"
 msgstr "Facturat"
+
+#. module: point_of_sale
+#: report:pos.invoice:0
+msgid "Must be after setLang()"
+msgstr ""
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
@@ -2345,6 +2358,9 @@ msgstr ""
 #~ msgid "Detail of Sales"
 #~ msgstr "Detall de vendes"
 
+#~ msgid "Operation N° :"
+#~ msgstr "Operació Num. :"
+
 #~ msgid "Refund Orders"
 #~ msgstr "Devolucions"
 
@@ -2362,6 +2378,15 @@ msgstr ""
 
 #~ msgid "Date :"
 #~ msgstr "Data :"
+
+#~ msgid "Disc :"
+#~ msgstr "Desc. :"
+
+#~ msgid "User :"
+#~ msgstr "Usuari :"
+
+#~ msgid "Total :"
+#~ msgstr "Total :"
 
 #~ msgid "Point of Sale journal configuration."
 #~ msgstr "Configuració Terminal Punt de Venda"
@@ -2393,6 +2418,9 @@ msgstr ""
 #~ msgid "Define default journals"
 #~ msgstr "Defineix diaris per defecte"
 
+#~ msgid "Tel :"
+#~ msgstr "Tel :"
+
 #~ msgid "Default rebate journal"
 #~ msgstr "Diari de devolucions per defecte"
 
@@ -2407,6 +2435,9 @@ msgstr ""
 
 #~ msgid "Sales of the day"
 #~ msgstr "Vendes del dia"
+
+#~ msgid "."
+#~ msgstr "."
 
 #~ msgid "Discount"
 #~ msgstr "Descompte"
@@ -2437,6 +2468,10 @@ msgstr ""
 
 #~ msgid "Refund order :"
 #~ msgstr "Devolució :"
+
+#, python-format
+#~ msgid "Cannot delete a point of sale which is already confirmed !"
+#~ msgstr "No es pot eliminar una venda que ja està confirmada!"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -2471,6 +2506,9 @@ msgstr ""
 #~ msgid "D_iscount"
 #~ msgstr "D_escompte"
 
+#~ msgid "Ce bon est valide jusqu'au"
+#~ msgstr "Aquest bitllet és vàlid fins"
+
 #~ msgid "Payment Term"
 #~ msgstr "Termini de pagament"
 
@@ -2483,11 +2521,19 @@ msgstr ""
 #~ msgid "Company:"
 #~ msgstr "Companyia:"
 
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "No es pot crear una factura sense una empresa."
+
 #~ msgid "Payment Name"
 #~ msgstr "Descripció pagament"
 
 #~ msgid "Piece Number"
 #~ msgstr "Número ref."
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Error de l'usuari"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de model no vàlid en la definició de l'acció."

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-17 05:46+0000\n"
-"Last-Translator: Magnus Brandt (mba), Aspirix AB <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 14:16+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-18 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -146,6 +146,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr "Fel ! Kategorier kan inte vara rekursiva"
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "Tangentbord"
@@ -196,7 +203,6 @@ msgid "PriceList"
 msgstr "Prislista"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "Enhet"
@@ -257,11 +263,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "Products: "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Fel: Säljenhet måste tillhöra en annan kategori än standardenhet"
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -478,6 +479,13 @@ msgid "Codes"
 msgstr "Produktids"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Kvantitet-4"
@@ -687,14 +695,24 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr "Moderkort ASUStek A7N8X"
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Nytt pris ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
-msgstr "Anger sorteringsordningen när prislisteposter visas."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
+msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -1159,6 +1177,30 @@ msgid "Unit of Sale"
 msgstr "Försäljningsenhet"
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1291,6 +1333,14 @@ msgstr "Tillverka för lager"
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Prislisteversion"
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -1602,6 +1652,11 @@ msgid "Make to Order"
 msgstr "Tillverka på order"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr "Totalt antal produkter som får plats på en pall eller i en låda."
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Varianter"
@@ -1706,9 +1761,9 @@ msgid "Name of this kind of price."
 msgstr "Namn på denna pristyp"
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
-msgstr "Totalt antal produkter som får plats på en pall eller i en låda."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
+msgstr ""
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1798,11 +1853,6 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Prislistenamn"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr "Leverantörens enhet"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -2021,15 +2071,6 @@ msgid ""
 msgstr ""
 "Leverantörens produktnamn  används vid utskrift av offertförfrågningar, "
 "Lämna tomt för att använda den interna."
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
-msgstr ""
-"Den minsta kvantitet som skall vid inköp från denna leverantör, uttryckt i "
-"standard enheten."
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2287,10 +2328,11 @@ msgstr ""
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Set a category of product if this rule only apply to products of a category "
-"and his childs. Keep empty for all products"
+"and his children. Keep empty for all products"
 msgstr ""
-"Bestäm en produktkategori om denna regel endast tillämpas på produkter i en "
-"kategori och barnprodukter. Håll tomt för alla produkter"
+
+#~ msgid "Rentable product"
+#~ msgstr "Hyrbar produkt"
 
 #~ msgid "Procure Method"
 #~ msgstr "Inköpsmetod"
@@ -2410,6 +2452,15 @@ msgstr ""
 #~ msgid "Rate"
 #~ msgstr "Taxa"
 
+#~ msgid ""
+#~ "Used by companies that manages two unit of measure: invoicing and inventory "
+#~ "management. For example, in food industries, you will manage a stock of ham "
+#~ "but invoice in Kg. Keep empty to use the default UOM."
+#~ msgstr ""
+#~ "Används av företag som förvaltar olika måttenheter vid fakturering och "
+#~ "lagerhantering. Till exempel i livsmedelsindustrin, kommer du att klara ett "
+#~ "lager med skinka utan faktura i kg. Vid tomt används standardmåttenheten."
+
 #~ msgid "Purchase UoM"
 #~ msgstr "Inköpsenhet"
 
@@ -2468,6 +2519,13 @@ msgstr ""
 #~ "Detta är den genomsnittliga tiden mellan bekräftelsen av kundens beställning "
 #~ "och leverans av färdiga produkter. Det är den tid du lovar att dina kunder."
 
+#~ msgid ""
+#~ "Coefficient to convert UOM to UOS\n"
+#~ " uom = uos * coeff"
+#~ msgstr ""
+#~ "Koefficient att konvertera UOM till uos\n"
+#~ " UOM = uos * coeff"
+
 #~ msgid "Prices & Suppliers"
 #~ msgstr "Priser och leverantörer"
 
@@ -2510,6 +2568,13 @@ msgstr ""
 #~ msgstr ""
 #~ "Standardmåttenhet som används för inköpsorder. Den måste finnas i samma "
 #~ "kategori som standardmåttenheten."
+
+#~ msgid ""
+#~ "Set a category of product if this rule only apply to products of a category "
+#~ "and his childs. Keep empty for all products"
+#~ msgstr ""
+#~ "Bestäm en produktkategori om denna regel endast tillämpas på produkter i en "
+#~ "kategori och barnprodukter. Håll tomt för alla produkter"
 
 #~ msgid "KGM"
 #~ msgstr "KGM"
@@ -2580,3 +2645,19 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ogiltigt modellnamn i åtgärdsdefinitionen."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Fel: Säljenhet måste tillhöra en annan kategori än standardenhet"
+
+#~ msgid "Supplier Product UoM."
+#~ msgstr "Leverantörens enhet"
+
+#~ msgid "Gives the sequence order when displaying a list of pricelist items."
+#~ msgstr "Anger sorteringsordningen när prislisteposter visas."
+
+#~ msgid ""
+#~ "The minimal quantity to purchase to this supplier, expressed in the default "
+#~ "unit of measure."
+#~ msgstr ""
+#~ "Den minsta kvantitet som skall vid inköp från denna leverantör, uttryckt i "
+#~ "standard enheten."

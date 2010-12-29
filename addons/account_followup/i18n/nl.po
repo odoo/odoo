@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:04+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-03 07:42+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
@@ -81,10 +81,18 @@ msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: account_followup
-#: view:res.company:0
-#: field:res.company,follow_up_msg:0
-msgid "Follow-up Message"
-msgstr "Aanmaningsbericht"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
+msgstr ""
+"\n"
+"\n"
+"E-mail met succes verstuurd naar de volgende relaties:\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -174,6 +182,12 @@ msgstr "Totaal debet"
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: Titel boekingsregel"
+
+#. module: account_followup
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr "Aanmaningsbericht"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
@@ -801,8 +815,28 @@ msgstr ""
 #~ msgid "Amount In Currency"
 #~ msgstr "Bedrag in valuta"
 
+#, python-format
+#~ msgid ""
+#~ "Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Mail niet gestuurd naar onderstaande relaties: Email niet beschikbaar!\n"
+#~ "\n"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor weergave!"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Mail sent to following Partners successfully, !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Mail succesvol verstuurd naar de volgende relaties, !\n"
+#~ "\n"
 
 #~ msgid ""
 #~ "\n"
@@ -836,6 +870,14 @@ msgstr ""
 #~ "\n"
 #~ "Met vriendelijke groet,\n"
 #~ "\t\t\t"
+
+#, python-format
+#~ msgid ""
+#~ "All emails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Alle emails zijn succesvol verzonden naar de relaties:\n"
+#~ "\n"
 
 #~ msgid "%(line)s: Account Move lines"
 #~ msgstr "%(line)s: Boekingsregels"
@@ -950,17 +992,12 @@ msgstr ""
 #~ msgid "Print Follow Ups & Send Mails"
 #~ msgstr "Print aanmaningen & verstuur e-mails"
 
-#, python-format
 #~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "E-Mail sent to following Partners successfully. !\n"
-#~ "\n"
+#~ "Do not change message text, if you want to send email in partner language, "
+#~ "or configre from company"
 #~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "E-mail met succes verstuurd naar de volgende relaties:\n"
-#~ "\n"
+#~ "Wijzig de berichttekst niet als u email wilt versturen in de taal van de "
+#~ "relatie of in wilt stellen vanaf het bedrijf."
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fout ! U kunt geen recursief menu maken."

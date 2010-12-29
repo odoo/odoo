@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:19+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:19+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44:07+0000\n"
+"PO-Revision-Date: 2010-12-21 19:44:07+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,12 +44,17 @@ msgstr ""
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Set to Draft"
+msgid "POP"
 msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,user:0
+msgid "User Name"
 msgstr ""
 
 #. module: fetchmail
@@ -86,12 +91,12 @@ msgstr ""
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "POP"
+msgid "# of emails"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,user:0
-msgid "User Name"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+msgid "Email History"
 msgstr ""
 
 #. module: fetchmail
@@ -115,7 +120,6 @@ msgid "Password"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: view:mailgate.message:0
 msgid "Emails"
 msgstr ""
@@ -146,15 +150,24 @@ msgid "Mailgateway Message"
 msgstr ""
 
 #. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+msgid "POP Servers"
+msgstr ""
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Set to Draft"
+msgstr ""
+
+#. module: fetchmail
 #: field:email.server,message_ids:0
 #: model:ir.actions.act_window,name:fetchmail.action_view_mail_message_emails
 msgid "Messages"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Email Servers"
+msgid "Fetchmail Services"
 msgstr ""
 
 #. module: fetchmail

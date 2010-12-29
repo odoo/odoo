@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-11-30 14:12+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-28 13:44+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:04+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -648,6 +648,23 @@ msgid ""
 "event or per event category in:\n"
 "                Events / Reporting\n"
 msgstr ""
+"Organisation und Verwaltung von Veranstaltungen.\n"
+"\n"
+"    Durch dieses Modul können Sie unter anderem ...\n"
+"         * Veranstaltungen terminieren und Anmeldungen verwalten\n"
+"         * automatisch EMails für die Annahme und Bestätigung von "
+"Anmeldungen versenden \n"
+"         * ...\n"
+"     Eine Pinnwand für Organisationen mit folgenden Inhalten:\n"
+"        * Anmeldungen je Veranstaltung (Grafik)\n"
+"    Beachten Sie bitte folgendes:\n"
+"        - Sie können neue Veranstaltungstypen unter folgendem Menü "
+"definieren ...\n"
+"                               "
+"Veranstaltungen/Konfiguration/Veranstaltungstypen\n"
+"        - Vordefinierte Auswertungen über die Anzahl angemeldeter Benutzer "
+"nach Veranstaltung und Kategorie erhalten Sie hier:\n"
+"                               Veranstaltungen/Auswertungen\n"
 
 #. module: event
 #: field:event.confirm.registration,msg:0
@@ -701,7 +718,7 @@ msgstr ""
 #. module: event
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
 
 #. module: event
 #: view:event.make.invoice:0
@@ -1096,6 +1113,11 @@ msgid "_Subcribe"
 msgstr "Anmelden"
 
 #. module: event
+#: model:ir.model,name:event.model_partner_event_registration
+msgid "  event Registration "
+msgstr "  Anmeldung zu Veranstaltung "
+
+#. module: event
 #: help:event.event,date_begin:0
 #: help:partner.event.registration,start_date:0
 msgid "Beginning Date of Event"
@@ -1345,6 +1367,10 @@ msgstr "Bestätigte Referenten"
 #~ msgid "Confirmed Events"
 #~ msgstr "Bestätige Veranstaltungen"
 
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Fehler!"
+
 #~ msgid "Badge Name"
 #~ msgstr "Etikett Name"
 
@@ -1353,6 +1379,9 @@ msgstr "Bestätigte Referenten"
 
 #~ msgid "Badge Partner"
 #~ msgstr "Etikett Partner"
+
+#~ msgid "Error ! You can not create recursive sections."
+#~ msgstr "Fehler! Sie können keine rekursiven Werte eintragen."
 
 #~ msgid "Badge Title"
 #~ msgstr "Etikett Name"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-09 09:55+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-28 08:47+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: survey
@@ -397,6 +397,8 @@ msgstr "Texto"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"La compañía seleccionada no está en las compañías permitidas para este "
+"usuario"
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -440,7 +442,7 @@ msgstr "Retrasado"
 #. module: survey
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "¡No puede tener dos usuarios con el mismo identificador de usuario!"
 
 #. module: survey
 #: field:survey.send.invitation,mail_from:0
@@ -568,6 +570,21 @@ msgstr "No puede responder a esta encuesta más de '%s' veces"
 #: model:ir.actions.act_window,name:survey.act_survey_answer
 msgid "Answers"
 msgstr "Respuestas"
+
+#. module: survey
+#: model:ir.module.module,description:survey.module_meta_information
+msgid ""
+"\n"
+"    This module is used for surveying. It depends on the answers or reviews "
+"of some questions by different users.\n"
+"    A survey may have multiple pages. Each page may contain multiple "
+"questions and each question may have multiple answers.\n"
+"    Different users may give different answers of question and according to "
+"that survey is done. \n"
+"    Partners are also sent mails with user name and password for the "
+"invitation of the survey\n"
+"    "
+msgstr ""
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:0
@@ -766,13 +783,13 @@ msgstr ""
 #. module: survey
 #: field:survey.answer,response:0
 msgid "#Answer"
-msgstr ""
+msgstr "#Respuesta"
 
 #. module: survey
 #: field:survey.print,without_pagebreak:0
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
-msgstr ""
+msgstr "Imprimir sin saltos de página"
 
 #. module: survey
 #: view:survey:0
@@ -780,6 +797,8 @@ msgstr ""
 #: view:survey.question:0
 msgid "When the comment is an invalid format, display this error message"
 msgstr ""
+"Mostrar este mensaje de error cuando el comentario esté en un formato no "
+"válido"
 
 #. module: survey
 #: code:addons/survey/wizard/survey_selection.py:0
@@ -788,6 +807,8 @@ msgid ""
 "You can not give more response. Please contact the author of this survey for "
 "further assistance."
 msgstr ""
+"No puede dar más respuestas. Póngase en contacto con el autor de esta "
+"encuesta para obtener más ayuda."
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.act_survey_page_question
@@ -798,7 +819,7 @@ msgstr "Preguntas"
 #. module: survey
 #: help:survey,response_user:0
 msgid "Set to one if  you require only one Answer per user"
-msgstr ""
+msgstr "Establecer en uno si requiere solo una Respuesta por usuario"
 
 #. module: survey
 #: field:survey,users:0
@@ -856,6 +877,8 @@ msgstr "Registro (Log)"
 #: view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
 msgstr ""
+"Mostrar este mensaje de error cuando las selecciones no totalicen "
+"correctamente"
 
 #. module: survey
 #: field:survey,date_close:0
@@ -910,7 +933,7 @@ msgstr "Cerrada"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Drop-down Menus"
-msgstr ""
+msgstr "Matriz de menús desplegables"
 
 #. module: survey
 #: view:survey:0
@@ -991,7 +1014,7 @@ msgstr "Imprimir respuesta"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes"
-msgstr ""
+msgstr "Cuadros de texto múltiples"
 
 #. module: survey
 #: selection:survey.print,orientation:0
@@ -1018,7 +1041,7 @@ msgstr ""
 #. module: survey
 #: view:survey.question.column.heading:0
 msgid "Menu Choices (each choice on separate lines)"
-msgstr ""
+msgstr "Opciones de menú (cada opción en líneas separadas)"
 
 #. module: survey
 #: field:survey.response,response_type:0
@@ -1041,7 +1064,7 @@ msgstr "Esperando respuesta"
 #: selection:survey.question,comment_valid_type:0
 #: selection:survey.question,validation_type:0
 msgid "Must Be A Decimal Number"
-msgstr ""
+msgstr "Debe ser un número decimal"
 
 #. module: survey
 #: field:res.users,survey_id:0
@@ -1080,7 +1103,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.response.line,state:0
 msgid "Skiped"
-msgstr ""
+msgstr "Omitido"
 
 #. module: survey
 #: field:survey.print,paper_size:0
@@ -1108,7 +1131,7 @@ msgstr ""
 #: code:addons/survey/wizard/survey_selection.py:0
 #, python-format
 msgid "You can not give response for this survey more than %s times"
-msgstr ""
+msgstr "No puede responder esta encuesta más de %s veces"
 
 #. module: survey
 #: model:ir.actions.report.xml,name:survey.report_survey_form
@@ -1156,6 +1179,8 @@ msgstr "Historial"
 msgid ""
 "If this field is empty, all answers of the selected survey will be print."
 msgstr ""
+"Si este campo está vacío, se imprimirán todas las respuestas de la encuesta "
+"seleccionada."
 
 #. module: survey
 #: field:survey.type,code:0
@@ -1293,7 +1318,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Matrix of Choices (Multiple Answers Per Row)"
-msgstr ""
+msgstr "Matriz de opciones (Múltiples respuestas por fila)"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_view_survey_name
@@ -1324,7 +1349,7 @@ msgstr ""
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Comment/Essay Box"
-msgstr ""
+msgstr "Caja de comentarios/redacción"
 
 #. module: survey
 #: field:survey.answer,type:0
@@ -1478,7 +1503,7 @@ msgstr "Nombre"
 #. module: survey
 #: view:survey.page:0
 msgid "#Questions"
-msgstr ""
+msgstr "#Preguntas"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
@@ -1522,7 +1547,7 @@ msgstr ""
 #. module: survey
 #: field:survey.answer,menu_choice:0
 msgid "Menu Choices"
-msgstr ""
+msgstr "Opciones de menú"
 
 #. module: survey
 #: field:survey,page_ids:0
@@ -1573,7 +1598,7 @@ msgstr ""
 #. module: survey
 #: view:survey.answer:0
 msgid "Menu Choices (each choice on separate by lines)"
-msgstr ""
+msgstr "Opciones de menú (cada opción en líneas separadas)"
 
 #. module: survey
 #: selection:survey.answer,type:0
@@ -1629,13 +1654,13 @@ msgstr "Suma de todas las elecciones"
 #: selection:survey.question,type:0
 #: view:survey.response.line:0
 msgid "Table"
-msgstr ""
+msgstr "Tabla"
 
 #. module: survey
 #: code:addons/survey/survey.py:0
 #, python-format
 msgid "You cannot duplicate the resource!"
-msgstr ""
+msgstr "¡No puede duplicar el recurso!"
 
 #. module: survey
 #: field:survey.question,comment_minimum_date:0

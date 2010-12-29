@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-14 21:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-28 20:12+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -327,6 +327,8 @@ msgid ""
 "You can not open a Cashbox for \"%s\".\n"
 "Please close its related cash register."
 msgstr ""
+"Sie können keine Barkasse für das Konto \"%s\" eröffnen.\n"
+"Bitte beenden Sie zuerst das zugehörige Kassenkonto."
 
 #. module: point_of_sale
 #: help:pos.order,user_salesman_id:0
@@ -453,6 +455,11 @@ msgid "Codes"
 msgstr "Kurzbez."
 
 #. module: point_of_sale
+#: view:pos.box.out:0
+msgid "Output Operation"
+msgstr "Hauptkasse"
+
+#. module: point_of_sale
 #: view:all.closed.cashbox.of.the.day:0
 #: view:pos.details:0
 #: view:pos.payment.report:0
@@ -555,7 +562,7 @@ msgstr "Barkassen sind bereits abgeschlossen."
 #. module: point_of_sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fehler: Falscher EAN code"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
@@ -791,6 +798,15 @@ msgid "Draft Invoice"
 msgstr "Entwurf Rechnung"
 
 #. module: point_of_sale
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+"Der Betrag des Zahlungsbelegs sollte mit dem Betrag der Position auf dem "
+"Bankauszug übereinstimmen."
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Product for expenses"
 msgstr "Produkt für Ausgaben"
@@ -811,11 +827,6 @@ msgstr "Steuerzuordnung Anmerkung"
 #: selection:report.pos.order,month:0
 msgid "September"
 msgstr "September"
-
-#. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_bankcard_journal
-msgid "Bancontact Journal"
-msgstr "Journal EC Cash Verfahren"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1179,6 +1190,33 @@ msgid "Connected Salesman"
 msgstr "Unser Verkäufer"
 
 #. module: point_of_sale
+#: model:ir.module.module,description:point_of_sale.module_meta_information
+msgid ""
+"\n"
+"Main features :\n"
+" - Fast encoding of the sale.\n"
+" - Allow to choose one payment mode (the quick way) or to split the payment "
+"between several payment mode.\n"
+" - Computation of the amount of money to return.\n"
+" - Create and confirm picking list automatically.\n"
+" - Allow the user to create invoice automatically.\n"
+" - Allow to refund former sales.\n"
+"\n"
+"    "
+msgstr ""
+"\n"
+"Hauptfunktionen der Point-of-Sale Anwendung sind folgende:\n"
+"- Schnellerfassung von Verkäufen\n"
+"- Möglichkeit der Auswahl eines Bezahlungsmodus (Schnellauswahl) oder einer "
+"Aufsplittung in verschiedene Zahlungsarten.\n"
+"- Berechnung des restlichen Wechselgeldes bei Bargeldzahlung.\n"
+"- Automatische Erstellung und Bestätigung eines Lieferauftrags.\n"
+"- Möglichkeit zur automatischen Erstellung einer Rechnung.\n"
+"- Möglichkeit zur Rückgabe vorheriger Verkäufe.\n"
+"\n"
+"    "
+
+#. module: point_of_sale
 #: field:pos.order,price_type:0
 msgid "Price method"
 msgstr "Inkl. / Exkl. UST"
@@ -1268,11 +1306,6 @@ msgstr "Anzahl der Drucke"
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
 msgstr "Point Of Sale Zahlung"
-
-#. module: point_of_sale
-#: view:pos.box.out:0
-msgid "Sortie de caisse"
-msgstr "Hauptkasse"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1414,6 +1447,8 @@ msgid ""
 "Person who uses the the cash register. It could be a reliever, a student or "
 "an interim employee."
 msgstr ""
+"Verantwortlicher Mitarbeiter für das Kassenregister. Dieses könnte eine "
+"Aushilfe, Student oder ein befristeter Mitarbeiter sein."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
@@ -1568,11 +1603,14 @@ msgstr "Ja"
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
+"Es ist kein Erlöskonto für das folgende Produkt definiert:: \"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: view:pos.make.payment:0
 msgid "The cash register must be opened to be able to execute a payment."
 msgstr ""
+"Das Kassenkonto muss zuerst geöffnet werden, um  aktuell eine Zahlung "
+"vorzunehmen."
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -1610,7 +1648,7 @@ msgstr "Verkäufe nach Benutzer"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
 msgid "Open Cash Register"
-msgstr ""
+msgstr "Öffne Barkasse"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -1672,6 +1710,9 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
+"Konnte keine Preisliste passend zu Produkt und Menge finden.\n"
+"\n"
+"Sie können nun entweder das Produkt, die Menge oder die Preisliste ändern."
 
 #. module: point_of_sale
 #: field:pos.order.line,serial_number:0
@@ -1764,7 +1805,7 @@ msgstr "Hinzuf. Rabatt"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
 msgid "Close Cash Register"
-msgstr ""
+msgstr "Beende Kasse"
 
 #. module: point_of_sale
 #: field:pos.order.line,qty_rfd:0
@@ -1817,17 +1858,12 @@ msgstr "Verkäufe"
 #. module: point_of_sale
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
 
 #. module: point_of_sale
 #: field:pos.discount,discount:0
 msgid "Discount "
 msgstr "Rabatt "
-
-#. module: point_of_sale
-#: model:account.journal,name:point_of_sale.pos_visa_journal
-msgid "Visa Journal"
-msgstr "Visa Journal"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1869,6 +1905,8 @@ msgstr "Kassenausgabe"
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
 msgstr ""
+"Die Journalkurzbezeichnung sollte innerhalb eines Unternehmens eindeutig "
+"sein !"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -1963,6 +2001,11 @@ msgid "Invoiced"
 msgstr "Berechnet"
 
 #. module: point_of_sale
+#: report:pos.invoice:0
+msgid "Must be after setLang()"
+msgstr "Sollte nach setLang() folgen"
+
+#. module: point_of_sale
 #: view:pos.close.statement:0
 #: view:pos.confirm:0
 #: view:pos.open.statement:0
@@ -2017,6 +2060,7 @@ msgstr "Bitte Partner für Verkauf definieren"
 msgid ""
 "There is no receivable account defined for this journal: \"%s\" (id:%d)"
 msgstr ""
+"Es existiert kein Konto für Verbindlichkeiten dieses Journals \"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: field:pos.order,user_salesman_id:0
@@ -2101,7 +2145,7 @@ msgstr "Bestelldatum"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_close_statement
 msgid "Close Cash Registers"
-msgstr ""
+msgstr "Beenden Barkasse"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -2137,7 +2181,7 @@ msgstr "Zwischensumme w/o Steuer"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Add product"
-msgstr ""
+msgstr "Produkt hinzufügen"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
@@ -2349,6 +2393,9 @@ msgstr "Jahr"
 #~ msgid "Detail of Sales"
 #~ msgstr "Details Verkauf"
 
+#~ msgid "Operation N° :"
+#~ msgstr "Vorgangsnummer"
+
 #~ msgid "Refund Orders"
 #~ msgstr "Gutschriften"
 
@@ -2366,6 +2413,15 @@ msgstr "Jahr"
 
 #~ msgid "Date :"
 #~ msgstr "Datum:"
+
+#~ msgid "Disc :"
+#~ msgstr "Rabatt:"
+
+#~ msgid "User :"
+#~ msgstr "Benutzer:"
+
+#~ msgid "Total :"
+#~ msgstr "Summe :"
 
 #~ msgid "Point of Sale journal configuration."
 #~ msgstr "POS Journal Konfiguration"
@@ -2397,6 +2453,9 @@ msgstr "Jahr"
 #~ msgid "Define default journals"
 #~ msgstr "Definiere (Standard-) Journal"
 
+#~ msgid "Tel :"
+#~ msgstr "Tel.:"
+
 #~ msgid "Default rebate journal"
 #~ msgstr "(Standard-) Journal Rabatte"
 
@@ -2411,6 +2470,9 @@ msgstr "Jahr"
 
 #~ msgid "Sales of the day"
 #~ msgstr "Verkäufe des Tages"
+
+#~ msgid "."
+#~ msgstr "."
 
 #~ msgid "Discount"
 #~ msgstr "Rabatt (%)"
@@ -2441,6 +2503,10 @@ msgstr "Jahr"
 
 #~ msgid "Refund order :"
 #~ msgstr "Gutschrift Nummer"
+
+#, python-format
+#~ msgid "Cannot delete a point of sale which is already confirmed !"
+#~ msgstr "Kann keine Buchung stornieren die bereits gebucht ist !"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -2475,6 +2541,9 @@ msgstr "Jahr"
 #~ msgid "D_iscount"
 #~ msgstr "Rabatt"
 
+#~ msgid "Ce bon est valide jusqu'au"
+#~ msgstr "Dieser Gutschein ist gültig bis"
+
 #~ msgid "Payment Term"
 #~ msgstr "Zahlungsbedingung"
 
@@ -2487,11 +2556,19 @@ msgstr "Jahr"
 #~ msgid "Company:"
 #~ msgstr "Firma:"
 
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "Kann keine Rechnung ohne Partner erzeugen"
+
 #~ msgid "Payment Name"
 #~ msgstr "Bezeichnung Zahlung"
 
 #~ msgid "Piece Number"
 #~ msgstr "Anzahl Stücke"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Benutzer Fehler"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "ungültiger Modelnamme in der Aktionsdefinition"
@@ -2522,6 +2599,9 @@ msgstr "Jahr"
 #~ "Mitarbeiter der die Kasse benutzt, z.B. Aushilfspersonal, oder "
 #~ "Leihmitarbeiter."
 
+#~ msgid "Sortie de caisse"
+#~ msgstr "Hauptkasse"
+
 #~ msgid "Register management"
 #~ msgstr "Kassenblätter verwalten"
 
@@ -2541,8 +2621,21 @@ msgstr "Jahr"
 #~ msgid "Register"
 #~ msgstr "Barkasse"
 
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product\" \\n                   "
+#~ " \" and quantity.\n"
+#~ "You have to change either the product,\"                    \" the quantity "
+#~ "or the pricelist."
+#~ msgstr ""
+#~ "Konnte keinen gültigen Preis passend zu diesem Produkt\"\\n    \"und der "
+#~ "Verkaufsmenge ermitteln\" \\n Entweder wechseln Sie auf ein anderes "
+#~ "Produkt\"\\n    \"oder passen Ihre Preisliste an."
+
 #~ msgid "Error: Invalid Bvr Number (wrong checksum)."
 #~ msgstr "Fehler: Ungültige Steuernummer (falsche checksum)"
+
+#~ msgid "Bancontact Journal"
+#~ msgstr "Journal EC Cash Verfahren"
 
 #~ msgid "Error: BVR reference is required."
 #~ msgstr "Fehler: VAT Referenz wird benötigt"
@@ -2612,6 +2705,9 @@ msgstr "Jahr"
 
 #~ msgid "Registers"
 #~ msgstr "Kassen"
+
+#~ msgid "Visa Journal"
+#~ msgstr "Visa Journal"
 
 #, python-format
 #~ msgid "Registers are already closed."

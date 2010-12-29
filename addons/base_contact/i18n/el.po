@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-15 05:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-28 17:16+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:09+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -47,7 +47,7 @@ msgstr "Ημερομηνία έναρξης εργασίας"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Select the Option for Addresses Migration"
-msgstr ""
+msgstr "Επιλέξτε αυτήν την Επιλογή για Μετάπτωση Διευθύνσεων"
 
 #. module: base_contact
 #: help:res.partner.job,function:0
@@ -132,6 +132,32 @@ msgid ""
 "If the active field is set to False,                 it will allow you to "
 "hide the partner contact without removing it."
 msgstr ""
+"Εάν το ενεργό πεδίο είναι Λάθος(False), σας επιτρέπει να αποκρύψετε την "
+"επαφή συναργάτη χωρίς να την διαγράψετε."
+
+#. module: base_contact
+#: model:ir.module.module,description:base_contact.module_meta_information
+msgid ""
+"\n"
+"        This module allows you to manage your contacts entirely.\n"
+"\n"
+"    It lets you define\n"
+"        *contacts unrelated to a partner,\n"
+"        *contacts working at several addresses (possibly for different "
+"partners),\n"
+"        *contacts with possibly different functions for each of its job's "
+"addresses\n"
+"\n"
+"    It also adds new menu items located in\n"
+"        Partners \\ Contacts\n"
+"        Partners \\ Functions\n"
+"\n"
+"    Pay attention that this module converts the existing addresses into "
+"\"addresses + contacts\". It means that some fields of the addresses will be "
+"missing (like the contact name), since these are supposed to be defined in "
+"an other object.\n"
+"    "
+msgstr ""
 
 #. module: base_contact
 #: model:ir.module.module,shortdesc:base_contact.module_meta_information
@@ -160,6 +186,8 @@ msgid ""
 "Order of importance                 of this job title in the list of job "
 "title of the linked partner"
 msgstr ""
+"Σειρά σπουδαιότητας αυτού του τίτλου εργασίας στην λίστα τιτλων εργασιω΄ν "
+"του συνδεδεμένου συνεργάτη"
 
 #. module: base_contact
 #: field:res.partner.job,extension:0
@@ -238,7 +266,7 @@ msgstr "Διευθύνσεις Συνεργάτη"
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Address's Migration to Contacts"
-msgstr ""
+msgstr "Μετάπτωση Διευθύνσεων σε Επαφές"
 
 #. module: base_contact
 #: field:res.partner.job,sequence_contact:0
@@ -302,7 +330,7 @@ msgstr "Αλλιώς οι λεπτομέρεις δεν θα είναι ορατ
 #. module: base_contact
 #: view:base.contact.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Παραμετροποίηση"
 
 #. module: base_contact
 #: field:res.partner.contact,email:0
@@ -445,7 +473,7 @@ msgstr "Εθνικότητα"
 #. module: base_contact
 #: model:ir.actions.act_window,name:base_contact.act_res_partner_jobs
 msgid "Open Jobs"
-msgstr ""
+msgstr "Ανοιχτές Εργασίες"
 
 #. module: base_contact
 #: field:base.contact.installer,name:0
@@ -456,6 +484,7 @@ msgstr "Όνομα"
 #: view:base.contact.installer:0
 msgid "You can migrate Partner's current addresses to the contact."
 msgstr ""
+"Μπορείτε να μεταπτώσετε τις τρέχουσες διεύθυνσεις του Συνεργάτη στην επαφή."
 
 #. module: base_contact
 #: field:res.partner.contact,partner_id:0

@@ -82,7 +82,6 @@
                     <group colspan="4" col="4" attrs="{'invisible': [('type','!=','ressource')]}">
                         <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"
                             attrs="{'required': [('type','=','ressource')] }"/>
-                        <field name="resource_find_all" groups="base.group_extended" />
                         <newline/>
                         <field name="resource_field"     domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
                         <field name="ressource_tree"/>
@@ -92,6 +91,9 @@
                     <group colspan="4" col="4">
                         <field name="ressource_parent_type_id"/>
                         <field name="ressource_id" select="2" readonly="1"/>
+                    </group>
+                    <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('resource_parent_type_id','=',False)]}">
+                        <field name="resource_find_all" groups="base.group_extended" />
                     </group>
 
                 </page>
@@ -309,13 +311,14 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
+                <xpath expr="/search/group[@string='Group By...']" position="attributes">
+                    <attribute name="groups">base.group_extended</attribute>
+                </xpath>
                 <filter string="Owner" position="replace">
                     <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-partner" domain="[]"
-
-                       context="{'group_by':'partner_id'}"  groups="base.group_extended"/>
+                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
-                 </filter>
+                </filter>
             </field>
     </record>
 

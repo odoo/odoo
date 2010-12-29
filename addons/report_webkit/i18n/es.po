@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-19 10:20+0000\n"
-"Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-28 08:00+0000\n"
+"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:53+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_webkit
@@ -270,6 +270,45 @@ msgid ""
 "Web client WYSIWYG\n"
 "                    "
 msgstr ""
+"Este módulo añade un nuevo motor de informes basado en la librería WebKit "
+"(wkhtmltopdf) para soportar informes diseñados en HTML + CSS.\n"
+"La estructura del módulo y parte del código se inspira en el módulo "
+"report_openoffice.\n"
+"El módulo permite:\n"
+"    -Definición del informe HTML\n"
+"    -Soporte múltiples cabeceras\n"
+"    -Múltiples logos\n"
+"    -Soporte multicompañía\n"
+"    -Soporte HTML y CSS-3 (limitado por la versión actual de Webkit)\n"
+"    -Soporte javascript\n"
+"    -Depurador HTML Raw\n"
+"    -Capacidad de impresión de libros\n"
+"    -Definición de márgenes\n"
+"    -Definición de formatos de página\n"
+"y mucho más\n"
+"\n"
+"Se pueden definir múltiples cabeceras y logos por compañía.\n"
+"El estilo CSS, el encabezado y el pie de página se definen por compañía.\n"
+"\n"
+"La librería a instalar se puede encontrar en:\n"
+"http://code.google.com/p/wkhtmltopdf/\n"
+"Las librerías del sistema están disponibles para Linux, Mac OS X i386 y "
+"Windows 32.\n"
+"\n"
+"Después de instalar la biblioteca wkhtmltopdf en el servidor de OpenERP, es "
+"necesario establecer la\n"
+"ruta de acceso al archivo ejecutable wkthtmltopdf en la compañía.\n"
+"\n"
+"Para obtener un informe de ejemplo véase también el módulo "
+"webkit_report_sample, y este vídeo:\n"
+"    http://files.me.com/nbessi/06n92k.mov\n"
+"\n"
+"Para implementar:\n"
+"Soporte de activación y desactivación de JavaScript\n"
+"Soporte del formato book y collated\n"
+"Zip para PDF separados\n"
+"Editor WYSIWYG para cliente web\n"
+"                    "
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
@@ -374,9 +413,9 @@ msgid "Portrait"
 msgstr "Horizontal"
 
 #. module: report_webkit
-#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
-msgid "ir.actions.report.xml"
-msgstr "ir.acciones.informe.xml"
+#: selection:ir.header_webkit,orientation:0
+msgid "Landscape"
+msgstr "Apaisado"
 
 #. module: report_webkit
 #: view:ir.header_webkit:0
@@ -469,6 +508,24 @@ msgid "A3  8   297 x 420 mm"
 msgstr "A3 8 297 x 420 mm"
 
 #. module: report_webkit
+#: code:addons/report_webkit/webkit_report.py:0
+#, python-format
+msgid ""
+"'))\n"
+"        header = report_xml.webkit_header.html\n"
+"        footer = report_xml.webkit_header.footer_html\n"
+"        if not header and report_xml.header:\n"
+"          raise except_osv(\n"
+"                _('No header defined for this Webkit report!"
+msgstr ""
+"'))\n"
+"        header = report_xml.webkit_header.html\n"
+"        footer = report_xml.webkit_header.footer_html\n"
+"        if not header and report_xml.header:\n"
+"          raise except_osv(\n"
+"                _('Cabecera no definida para este reporte Webkit!"
+
+#. module: report_webkit
 #: help:res.company,lib_path:0
 msgid "Complete (Absolute) path to the wkhtmltopdf executable."
 msgstr "Ruta completa (absoluta) al ejecutable wkhtmltopdf."
@@ -557,9 +614,9 @@ msgid "B9  23  33 x 62 mm"
 msgstr "B9 23 33 x 62 mm"
 
 #. module: report_webkit
-#: selection:ir.header_webkit,orientation:0
-msgid "Landscape"
-msgstr "Apaisado"
+#: model:ir.model,name:report_webkit.model_ir_actions_report_xml
+msgid "ir.actions.report.xml"
+msgstr "ir.acciones.informe.xml"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de la acción"

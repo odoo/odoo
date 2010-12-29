@@ -47,7 +47,66 @@ AVAILABLE_PRIORITIES = [
 class crm_case(object):
     """A simple python class to be used for common functions """
 
+    def _find_lost_stage(self, cr, uid, type, section_id):
+        return self._find_percent_stage(cr, uid, 0.0, type, section_id)
+        
+    def _find_won_stage(self, cr, uid, type, section_id):
+        return self._find_percent_stage(cr, uid, 100.0, type, section_id)
+
+    def _find_percent_stage(self, cr, uid, percent, type, section_id):
+        """
+            Return the first stage with a probability == percent
+        """
+        stage_pool = self.pool.get('crm.case.stage')
+        if section_id :
+            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("type", 'like', type), ("section_ids", 'in', [section_id])])
+        else : 
+            ids = stage_pool.search(cr, uid, [("probability", '=', percent), ("type", 'like', type)])
+            
+        if ids:
+            return ids[0]
+        return False
+            
+        
+    def _find_first_stage(self, cr, uid, type, section_id):
+        """
+            return the first stage that has a sequence number equal or higher than sequence
+        """
+        stage_pool = self.pool.get('crm.case.stage')
+        if section_id :
+            ids = stage_pool.search(cr, uid, [("sequence", '>', 0), ("type", 'like', type), ("section_ids", 'in', [section_id])])
+        else : 
+            ids = stage_pool.search(cr, uid, [("sequence", '>', 0), ("type", 'like', type)])
+            
+        if ids:
+            stages = stage_pool.browse(cr, uid, ids)
+            stage_min = stages[0]
+            for stage in stages:
+                if stage_min.sequence > stage.sequence:
+                    stage_min = stage
+            return stage_min.id
+        else : 
+            return False
+        
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+
+        """ @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param ids: List of stage’s IDs
+            @stage_id: change state id on run time """
+            
+        if not stage_id:
+            return {'value':{}}
+
+        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
+
+        if not stage.on_change:
+            return {'value':{}}
+        return {'value':{'probability': stage.probability}}
+
     def _get_default_partner_address(self, cr, uid, context=None):
+
         """Gives id of default address for current user
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -147,8 +206,10 @@ class crm_case(object):
         next_stage = stage_pool.browse(cr, uid, next_stage_id, context=context)
         if not next_stage:
             return False
-            
         next_seq = next_stage.sequence
+        if not current_seq :
+            current_seq = 0
+
         if (abs(next_seq - current_seq)) >= 1:
             return next_stage
         else :
@@ -161,13 +222,15 @@ class crm_case(object):
         stage_type = context and context.get('stage_type','')
         current_seq = False
         next_stage_id = False
+
         for case in self.browse(cr, uid, ids, context=context):
             next_stage = False
-            data = {}
+            value = {}
+            if case.section_id.id : 
+                domain = [('type', '=', stage_type),('section_ids', '=', case.section_id.id)]
+            else :
+                domain = [('type', '=', stage_type)]
 
-            domain = [('type', '=', stage_type),('section_ids', '=', case.section_id.id)]
-            if case.section_id and case.section_id.stage_ids:
-                domain.append(('id', 'in', map(lambda x: x.id, case.section_id.stage_ids)))
             
             stages = stage_pool.search(cr, uid, domain, order=order)
             current_seq = case.stage_id.sequence
@@ -176,14 +239,16 @@ class crm_case(object):
                 index = stages.index(case.stage_id.id)
 
             next_stage = self._find_next_stage(cr, uid, stages, index, current_seq, stage_pool, context=context)
+    
             if next_stage:
                 next_stage_id = next_stage.id
-                data = {'stage_id': next_stage.id}
+                value.update({'stage_id': next_stage.id})
                 if next_stage.on_change:
-                    data.update({'probability': next_stage.probability})
-            self.write(cr, uid, [case.id], data, context=context)
+                    value.update({'probability': next_stage.probability})
+            self.write(cr, uid, [case.id], value, context=context)
             
-        return next_stage_id
+     
+        return next_stage_id #FIXME should return a list of all id
         
         
     def stage_next(self, cr, uid, ids, context=None):
@@ -194,7 +259,6 @@ class crm_case(object):
         @param uid: the current user’s ID for security checks,
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
-        
        
         return self.stage_change(cr, uid, ids, context=context, order='sequence')
         
@@ -257,6 +321,7 @@ class crm_case(object):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
+        
         cases = self.browse(cr, uid, ids)
         self._history(cr, uid, cases, _('Open'))
         for case in cases:
@@ -264,7 +329,9 @@ class crm_case(object):
             if not case.user_id:
                 data['user_id'] = uid
             self.write(cr, uid, case.id, data)
-        self._action(cr, uid, cases, 'open')
+            
+            
+        self._action(cr, uid, cases, 'open')           
         return True
 
     def case_close(self, cr, uid, ids, *args):
@@ -483,6 +550,12 @@ class crm_case_stage(osv.osv):
     _description = "Stage of case"
     _rec_name = 'name'
     _order = "sequence"
+    
+    
+    
+    def _get_type_value(self, cr, user, context):
+        return [('lead','Lead'),('opportunity','Opportunity')]
+
 
     _columns = {
         'name': fields.char('Stage Name', size=64, required=True, translate=True),
@@ -491,9 +564,10 @@ class crm_case_stage(osv.osv):
         'on_change': fields.boolean('Change Probability Automatically', \
                          help="Change Probability on next and previous stages."),
         'requirements': fields.text('Requirements'),
-        'type': fields.selection([('lead','Lead'),('opportunity','Opportunity'),('claim','Claim'), ('fundraising','Fundraising')], 'Type'),
+        'type': fields.selection(_get_type_value, 'Type'),
     }
-
+    
+    
     def _find_stage_type(self, cr, uid, context=None):
         """Finds type of stage according to object.
         @param self: The object pointer
