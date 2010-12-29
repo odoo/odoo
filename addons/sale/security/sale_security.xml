@@ -8,6 +8,9 @@
     <record id="base.group_sale_salesman" model="res.groups">
         <field name="name">Sales / User</field>
     </record>
+    <record id="base.group_sale_salesman_all_leads" model="res.groups">
+        <field name="name">Sales / User - See All Leads</field>
+    </record>
 
     <record model="ir.ui.menu" id="base.menu_base_partner">
         <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>
@@ -17,19 +20,28 @@
         <field eval="[(4, ref('base.group_sale_manager'))]" name="groups_id"/>
     </record>
 
+    <!-- Multi - Company Rules -->
+
     <record model="ir.rule" id="sale_order_comp_rule">
         <field name="name">Sale Order multi-company</field>
         <field name="model_id" ref="model_sale_order"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
     </record>
-
     <record model="ir.rule" id="sale_order_line_comp_rule">
         <field name="name">Sale Order Line multi-company</field>
         <field name="model_id" ref="model_sale_order_line"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
     </record>
+    <record model="ir.rule" id="sale_order_line_comp_rule">
+        <field name="name">Sale Shop multi-company</field>
+        <field name="model_id" ref="model_sale_shop"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <!-- Multi - Salesmen sales order assignation rules -->
 
     <record id="sale_order_personal_rule" model="ir.rule">
         <field name="name">Personal Orders</field>
@@ -37,6 +49,13 @@
         <field name="domain_force">['|',('user_id','=',user.id),('user_id','=',False)]</field>
         <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
     </record>
+    <record id="sale_order_see_all" model="ir.rule">
+        <field name="name">All Orders</field>
+        <field ref="model_sale_order" name="model_id"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
+    </record>
+
 
     <record id="sale_order_line_personal_rule" model="ir.rule">
         <field name="name">Personal Order Lines</field>
@@ -45,11 +64,11 @@
         <field name="groups" eval="[(4, ref('base.group_sale_salesman'))]"/>
     </record>
 
-    <record model="ir.rule" id="sale_order_line_comp_rule">
-        <field name="name">Sale Shop multi-company</field>
-        <field name="model_id" ref="model_sale_shop"/>
-        <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('company_id','=',False),('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
+    <record id="sale_order_line_see_all" model="ir.rule">
+        <field name="name">All Orders Lines</field>
+        <field ref="model_sale_order_line" name="model_id"/>
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
     </record>
 
 </data>

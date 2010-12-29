@@ -386,7 +386,7 @@ class abstracted_fs(object):
     def rename(self, src, datacr):
         """ Renaming operation, the effect depends on the src:
             * A file: read, create and remove
-            * A directory: change the parent and reassign childs to ressource
+            * A directory: change the parent and reassign children to ressource
         """
         cr = datacr[0]
         try:

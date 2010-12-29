@@ -82,12 +82,13 @@
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
                         <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended"/>
-                        <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
+                        <field name="company_id" on_change="on_change_company(company_id)" select="2" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                         <field name="type" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
                             <field name="partner_id" select="1"/>
+                            <field name="currency_id" select="1"/>
                             <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>
@@ -112,7 +113,9 @@
             <field name="view_id" ref="view_account_analytic_account_tree"/>
             <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
         </record>
-        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account" parent="menu_analytic_accounting" groups="analytic.group_analytic_accounting,group_account_manager"/>
+        <menuitem action="action_account_analytic_account_form" id="account_analytic_def_account"
+            parent="menu_analytic_accounting"
+            groups="analytic.group_analytic_accounting"/>
 
         <record id="act_account_renew_view" model="ir.actions.act_window">
             <field name="name">Accounts to Renew</field>
@@ -133,7 +136,9 @@
             <field name="help">The normal chart of accounts has a structure defined by the legal requirement of the country. The analytic chart of account structure should reflect your own business needs in term of costs/revenues reporting. They are usually structured by contracts, projects, products or departements. Most of the OpenERP operations (invoices, timesheets, expenses, etc) generate analytic entries on the related account.</field>
         </record>
 
-        <menuitem groups="analytic.group_analytic_accounting,group_account_manager,group_account_user" id="next_id_40" name="Analytic" parent="account.menu_finance_generic_reporting" sequence="4"/>
+        <menuitem groups="analytic.group_analytic_accounting" id="next_id_40" 
+            name="Analytic" parent="account.menu_finance_generic_reporting"
+            sequence="4"/>
 
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
@@ -340,7 +345,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_analytic_journal_search" />
         </record>
-        <menuitem groups="analytic.group_analytic_accounting,group_account_manager" action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" sequence="5"/>
+        <menuitem groups="analytic.group_analytic_accounting" action="action_account_analytic_journal_form" id="account_def_analytic_journal" parent="menu_analytic_accounting" sequence="5"/>
 
         #
         # Open journal entries
@@ -352,7 +357,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem groups="analytic.group_analytic_accounting,group_account_manager,group_account_user" action="action_account_analytic_journal_open_form" id="account_analytic_journal_entries" parent="menu_finance_entries"/>
+        <menuitem groups="analytic.group_analytic_accounting"
+            action="action_account_analytic_journal_open_form"
+            id="account_analytic_journal_entries"
+            parent="menu_finance_entries"/>
 
         #
         # Reporting
@@ -364,7 +372,9 @@
             <field name="view_type">tree</field>
             <field name="help">To print an analytics (or costs) journal for a given period. The report give code, move name, account number, general amount and analytic amount.</field>
         </record>
-        <menuitem groups="analytic.group_analytic_accounting,group_account_manager,group_account_user" action="action_account_analytic_journal_tree" id="account_analytic_journal_print" parent="account.next_id_40"/>
+        <menuitem groups="analytic.group_analytic_accounting"
+            action="action_account_analytic_journal_tree" 
+            id="account_analytic_journal_print" parent="account.next_id_40"/>
 
         #
         # Statistics
