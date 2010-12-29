@@ -131,25 +131,25 @@
   <story>
   <pto>
   <pto_header>
-    <blockTable colWidths="180.0,85.0,71.0,71.0,57.0,71.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+    <blockTable colWidths="180.0,70.0,60.0,80.0,60.0,85.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Description</para>
+          <para style="terp_tblheader_General">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Taxes</para>
+          <para style="terp_tblheader_General">Taxes</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Date Req.</para>
+          <para style="terp_tblheader_General">Date Req.</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Qty</para>
+          <para style="terp_tblheader_General_Right">Qty</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Unit Price</para>
+          <para style="terp_tblheader_General_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Net Price</para>
+          <para style="terp_tblheader_General_Right">Net Price</para>
         </td>
       </tr>
     </blockTable>
@@ -251,31 +251,31 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="180.0,85.0,71.0,71.0,57.0,71.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
+    <blockTable colWidths="180.0,70.0,60.0,80.0,60.0,85.0" repeatRows="1" style="Table_Header_Pur_ord_Line">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Description</para>
+          <para style="terp_tblheader_General">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Taxes</para>
+          <para style="terp_tblheader_General">Taxes</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Date Req.</para>
+          <para style="terp_tblheader_General">Date Req.</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Qty</para>
+          <para style="terp_tblheader_General_Right">Qty</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Unit Price</para>
+          <para style="terp_tblheader_General_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Net Price</para>
+          <para style="terp_tblheader_General_Right">Net Price</para>
         </td>
       </tr>
     </blockTable>
     <section>
       <para style="terp_default_8">[[repeatIn(o.order_line,'line')]]</para>
-      <blockTable colWidths="179.0,85.0,71.0,71.0,57.0,71.0" style="Table_Order_Pur_line_Content">
+      <blockTable colWidths="180.0,70.0,60.0,80.0,60.0,85.0" style="Table_Order_Pur_line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ line.name ]]</para>
@@ -284,7 +284,7 @@
             <para style="terp_default_9">[[ ', '.join(map(lambda x: x.name, line.taxes_id)) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ formatLang( line.date_planned, date=True) ]]</para>
+            <para style="terp_default_9">[[ formatLang( line.date_planned, date=True) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.product_qty ) ]] [[ line.product_uom.name ]] </para>
@@ -328,7 +328,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="394.0,55.0,85.0" style="Table_All_Total_Detail">
+    <blockTable colWidths="375.0,60.0,100.0" style="Table_All_Total_Detail">
       <tr>
         <td>
           <para style="terp_default_9">

@@ -1,17 +1,16 @@
 -
-  In order to test the PDF reports defined on Products, we will print a Products Pricelists Report
-- 
+ Print the Products Pricelists Report through the wizard
+-
   !python {model: product.product}: |
-    import netsvc, tools, os
-    data_dict = {'model': 'product.product'}
-    data_dict['form'] = {
-        'qty1': 1,
+    ctx={}
+    ctx.update({'model': 'product.product','active_ids': [ref('product.product_product_pc1'), ref('product.product_product_pc3')]})
+    data_dict = {'qty1': 1,
         'qty2': 5,
         'qty3': 10,
         'qty4': 0,
         'qty5': 0,
-        'price_list':ref('product.list0')
-    }
-    (data, format) = netsvc.LocalService('report.product.pricelist').create(cr, uid, [ref('product.product_product_pc1'), ref('product.product_product_pc3')], data_dict, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'product-product_pricelist'+format), 'wb+').write(data)
+        'price_list':ref('product.list0')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_product_price_list',wiz_data=data_dict, context=ctx, our_module='product')
+
+
