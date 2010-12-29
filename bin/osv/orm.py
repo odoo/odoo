@@ -516,8 +516,7 @@ class orm_template(object):
             self._table = self._name.replace('.', '_')
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
-        """
-        Fetch records as objects allowing to use dot notation to browse fields and relations
+        """Fetch records as objects allowing to use dot notation to browse fields and relations
 
         :param cr: database cursor
         :param user: current user id
