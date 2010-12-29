@@ -165,15 +165,15 @@ class product_pricelist(osv.osv):
 
         # product.pricelist.version:
         if pricelist_ids:
-            pricelist_version_ids = pricelist_ids
+            plversions_search_ids = pricelist_ids
         else:
             # all pricelists:
-            pricelist_version_ids = product_pricelist_version_obj.search(cr, uid, [])
+            plversions_search_ids = product_pricelist_version_obj.search(cr, uid, [])
 
-        pricelist_version_ids = list(set(pricelist_version_ids))
+        plversions_search_ids = list(set(plversions_search_ids))
 
         plversions_search_args = [
-            ('pricelist_id', 'in', pricelist_version_ids),
+            ('pricelist_id', 'in', plversions_search_ids),
             '|',
             ('date_start', '=', False),
             ('date_start', '<=', date),
@@ -182,8 +182,9 @@ class product_pricelist(osv.osv):
             ('date_end', '>=', date),
         ]
 
-        plversion_ids = product_pricelist_version_obj.search(cr, uid, plversions_search_args)
-        if len(pricelist_version_ids) != len(plversion_ids):
+        pricelist_version_ids = product_pricelist_version_obj.search(cr, uid, plversions_search_args)
+        
+        if len(plversions_search_ids) != len(pricelist_version_ids):
             msg = "At least one pricelist has no active version !\nPlease create or activate one."
             raise osv.except_osv(_('Warning !'), _(msg))
 
@@ -200,7 +201,7 @@ class product_pricelist(osv.osv):
 
         results = {}
         for product_id, qty, partner in products_by_qty_by_partner:
-            for pricelist_id in pricelist_version_ids:
+            for pricelist_id in plversions_search_ids:
                 price = False
 
                 tmpl_id = products_dict[product_id].product_tmpl_id and products_dict[product_id].product_tmpl_id.id or False
@@ -223,7 +224,7 @@ class product_pricelist(osv.osv):
                         'AND (min_quantity IS NULL OR min_quantity <= %s) '
                         'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
                     'ORDER BY sequence',
-                    (tmpl_id, product_id, plversion_ids[0], qty))
+                    (tmpl_id, product_id, pricelist_version_ids[0], qty))
                 res1 = cr.dictfetchall()
                 uom_price_already_computed = False
                 for res in res1:
