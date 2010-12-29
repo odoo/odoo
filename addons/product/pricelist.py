@@ -223,7 +223,7 @@ class product_pricelist(osv.osv):
                         'AND (min_quantity IS NULL OR min_quantity <= %s) '
                         'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
                     'ORDER BY sequence',
-                    (tmpl_id, product_id, pricelist_id, qty))
+                    (tmpl_id, product_id, plversion_ids[0], qty))
                 res1 = cr.dictfetchall()
                 uom_price_already_computed = False
                 for res in res1:
