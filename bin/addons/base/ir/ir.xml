@@ -937,7 +937,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
-                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
@@ -1144,11 +1144,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Fields">
-                    <filter icon="terp-camera_test"
+                    <filter icon="terp-gnome-cpu-frequency-applet+"
                         string="Required"
                         domain="[('required', '=', True)]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-stock_align_left_24"
+                    <filter icon="terp-dialog-close"
                         string="Readonly"
                         domain="[('readonly', '=', True)]"/>
                     <separator orientation="vertical"/>
@@ -1264,7 +1264,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Translations">
-                    <filter icon="terp-document-new"
+                    <filter icon="terp-gdu-smart-failing"
                         string="Untranslated"
                         domain="['|',('value', '=', False),('value','=','')]"/>
                     <separator orientation="vertical"/>
