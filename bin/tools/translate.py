@@ -772,6 +772,8 @@ def trans_generate(lang, modules, dbname=None):
             if module in installed_modules:
                 frelativepath = str("addons" + frelativepath)
             ite = re_dquotes.finditer(code_string)
+            code_offset = 0
+            code_line = 1
             for i in ite:
                 src = i.group(1)
                 if src.startswith('""'):
@@ -779,11 +781,18 @@ def trans_generate(lang, modules, dbname=None):
                     src = src[2:-2]
                 else:
                     src = join_dquotes.sub(r'\1', src)
+                # try to count the lines from the last pos to our place:
+                code_line += code_string[code_offset:i.start(1)].count('\n')
                 # now, since we did a binary read of a python source file, we
                 # have to expand pythonic escapes like the interpreter does.
                 src = src.decode('string_escape')
-                push_translation(module, terms_type, frelativepath, 0, encode(src))
+                push_translation(module, terms_type, frelativepath, code_line, encode(src))
+                code_line += i.group(1).count('\n')
+                code_offset = i.end() # we have counted newlines up to the match end
+
             ite = re_quotes.finditer(code_string)
+            code_offset = 0 #reset counters
+            code_line = 1
             for i in ite:
                 src = i.group(1)
                 if src.startswith("''"):
@@ -791,8 +800,11 @@ def trans_generate(lang, modules, dbname=None):
                     src = src[2:-2]
                 else:
                     src = join_quotes.sub(r'\1', src)
+                code_line += code_string[code_offset:i.start(1)].count('\n')
                 src = src.decode('string_escape')
-                push_translation(module, terms_type, frelativepath, 0, encode(src))
+                push_translation(module, terms_type, frelativepath, code_line, encode(src))
+                code_line += i.group(1).count('\n')
+                code_offset = i.end() # we have counted newlines up to the match end
 
     for path in path_list:
         logger.debug("Scanning files of modules at %s", path)
