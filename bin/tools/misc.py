@@ -44,6 +44,7 @@ from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
 from email import Encoders
 from itertools import islice, izip
+from lxml import etree
 from which import which
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
@@ -59,6 +60,10 @@ from config import config
 from lru import LRU
 
 _logger = logging.getLogger('tools')
+
+# List of etree._Element subclasses that we choose to ignore when parsing XML.
+# We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
+SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
 # initialize a database with base/base.sql
 def init_db(cr):

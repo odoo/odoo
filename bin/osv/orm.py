@@ -59,8 +59,10 @@ from query import Query
 import tools
 from tools.safe_eval import safe_eval as eval
 
-regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+# List of etree._Element subclasses that we choose to ignore when parsing XML.
+from tools import SKIPPED_ELEMENT_TYPES
 
+regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -69,10 +71,6 @@ POSTGRES_CONFDELTYPES = {
     'SET NULL': 'n',
     'SET DEFAULT': 'd',
 }
-
-# List of etree._Element subclasses that we choose to ignore when parsing view architecture.
-# We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
-SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
 def last_day_of_current_month():
     today = datetime.date.today()
