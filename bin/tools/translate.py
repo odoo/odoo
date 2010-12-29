@@ -33,12 +33,11 @@ import tarfile
 import tempfile
 import threading
 from os.path import join
-import logging
 
 from datetime import datetime
 from lxml import etree
 
-import tools, pooler
+import tools
 import netsvc
 from tools.misc import UpdateableStr
 
@@ -159,7 +158,7 @@ class GettextAlias(object):
         # find current DB based on thread/worker db name (see netsvc)
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            return pooler.get_db_only(dbname)
+            return pooler.get_db_only(db_name)
 
     def _get_cr(self, frame):
         is_new_cr = False
