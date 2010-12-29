@@ -25,7 +25,6 @@ import logging
 import optparse
 import sys
 import xmlrpclib
-import email
 
 class rpc_proxy(object):
     def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='openerp'):

@@ -22,8 +22,6 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from lxml import etree
-
 from osv import osv, fields
 from tools.translate import _
 
