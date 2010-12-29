@@ -42,7 +42,7 @@ class account_open_closed_fiscalyear(osv.osv_memory):
         ids_move = move_obj.search(cr, uid, [('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
         if ids_move:
             cr.execute('delete from account_move where id IN %s', (tuple(ids_move),))
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_open_closed_fiscalyear()
 

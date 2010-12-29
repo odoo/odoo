@@ -39,11 +39,11 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             context = {}
         statement_id = context.get('statement_id', False)
         if not statement_id:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
         data =  self.read(cr, uid, ids, context=context)[0]
         line_ids = data['line_ids']
         if not line_ids:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
         line_obj = self.pool.get('account.move.line')
         statement_obj = self.pool.get('account.bank.statement')
@@ -115,7 +115,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'voucher_id': voucher_id,
                 'date': time.strftime('%Y-%m-%d'), #time.strftime('%Y-%m-%d'), #line.date_maturity or,
             }, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_statement_from_invoice_lines()
 

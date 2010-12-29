@@ -90,7 +90,7 @@ class wiz_auc_lots_buyer_map(osv.osv_memory):
             for lots in lots_obj.browse(cr, uid, rec_ids, context=context):
                 if lots.ach_login == current.ach_login:
                     lots_obj.write(cr, uid, [lots.id], {'ach_uid': current.ach_uid.id}, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', 
                         context=None, toolbar=False, submenu=False):

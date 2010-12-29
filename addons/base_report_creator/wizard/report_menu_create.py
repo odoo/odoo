@@ -49,7 +49,7 @@ class report_menu_create(osv.osv_memory):
         if context_id:
             data = self.browse(cr, uid, ids, context=context)
             if not data:
-                return {}
+                return {'type': 'ir.actions.act_window_close'}
             data = data[0]
 
             board = obj_board.browse(cr, uid, context_id, context=context)
@@ -77,7 +77,7 @@ class report_menu_create(osv.osv_memory):
                 'action': 'ir.actions.act_window, ' + str(action_id)
                 }, context=context)
             obj_board.write(cr, uid, context_id, {'menu_id': menu_id})
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 report_menu_create()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

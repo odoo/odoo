@@ -78,7 +78,7 @@ class calendar_event_edit_all(osv.osv_memory):
                 model = context.get('model', False)
                 model_obj = self.pool.get(model)
                 model_obj.modify_all(cr, uid, [context_id], datas, context=context)
-                return {}
+                return {'type': 'ir.actions.act_window_close'}
 
     _name = "calendar.event.edit.all"
     _description = "Calendar Edit all event"

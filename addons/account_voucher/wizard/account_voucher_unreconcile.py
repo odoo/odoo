@@ -55,7 +55,7 @@ class account_voucher_unreconcile(osv.osv_memory):
 #                wf_service = netsvc.LocalService("workflow")
 #                wf_service.trg_validate(uid, 'account.voucher', context.get('active_id'), 'cancel_voucher', cr)
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_voucher_unreconcile()
 

@@ -37,7 +37,7 @@ class account_payment_make_payment(osv.osv_memory):
 #        obj_act = self.pool.get('ir.actions.act_window')
 #        order = obj_payment_order.browse(cr, uid, context['active_id'], context)
         obj_payment_order.set_done(cr, uid, [context['active_id']], context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 #        t = order.mode and order.mode.type.code or 'manual'
 #        if t == 'manual':
 #            obj_payment_order.set_done(cr,uid,context['active_id'],context)
