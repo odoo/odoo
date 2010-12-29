@@ -400,7 +400,7 @@ class sale_order(osv.osv):
                     inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
         inv = {
-            'name': order.origin or order.client_order_ref or order.name,
+            'name': order.origin or order.client_order_ref or '',
             'origin': order.name,
             'type': 'out_invoice',
             'reference': "P%dSO%d" % (order.partner_id.id, order.id),

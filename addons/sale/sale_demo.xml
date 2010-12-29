@@ -8,10 +8,10 @@
             <field name="shop_id" ref="shop"/>
             <field model="product.pricelist" name="pricelist_id" search="[]"/>
             <field name="user_id" ref="base.user_root"/>
-            <field model="res.partner" name="partner_id" search="[]"/>
-            <field model="res.partner.address" name="partner_invoice_id" search="[]"/>
-            <field model="res.partner.address" name="partner_shipping_id" search="[]"/>
-            <field model="res.partner.address" name="partner_order_id" search="[]"/>
+            <field ref="base.res_partner_agrolait" name="partner_id"/>
+            <field ref="base.res_partner_address_8" name="partner_invoice_id"/>
+            <field ref="base.res_partner_address_8" name="partner_shipping_id"/>
+            <field ref="base.res_partner_address_8" name="partner_order_id"/>
         </record>
 
         <!--Resource: sale.order.line-->
@@ -182,17 +182,17 @@
         <function model="procurement.order" name="run_scheduler"/>
 
         <!-- sale advance demo.. -->
-		<!-- Demo Data for Product -->
-		
-		<record id="advance_product_0" model="product.product">
-			<field name="name">Advance Product</field>
-			<field name="categ_id" ref="product.cat1"/>
-			<field name="type">service</field>
-			<field name="list_price">150.0</field>
-			<field name="standard_price">100.0</field>
-			<field name="uom_id" ref="product.product_uom_unit"/>
-			<field name="uom_po_id" ref="product.product_uom_unit"/>
-		</record>
+        <!-- Demo Data for Product -->
+        
+        <record id="advance_product_0" model="product.product">
+            <field name="name">Advance Product</field>
+            <field name="categ_id" ref="product.cat1"/>
+            <field name="type">service</field>
+            <field name="list_price">150.0</field>
+            <field name="standard_price">100.0</field>
+            <field name="uom_id" ref="product.product_uom_unit"/>
+            <field name="uom_po_id" ref="product.product_uom_unit"/>
+        </record>
 
     <record id="base.user_demo" model="res.users">
         <field eval="[(4, ref('base.group_sale_salesman'))]" name="groups_id"/>

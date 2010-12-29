@@ -79,7 +79,8 @@ class account_aged_trial_balance(osv.osv_memory):
                 }
                 start = stop + relativedelta(days=1)
         data['form'].update(res)
-        if data.get('form',False):data['ids']=[data['form'].get('chart_account_id',False)]
+        if data.get('form',False):
+            data['ids']=[data['form'].get('chart_account_id',False)]
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.aged_trial_balance',
