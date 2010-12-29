@@ -32,9 +32,6 @@
                             <separator string="Description" colspan="2"/>
                             <field name="note" colspan="4" nolabel="1"/>
                         </page>
-                        <page string="Contracts" groups="base.group_extended">
-                            <field name="contracts_ids" colspan="4" nolabel="1"/>
-                        </page>
                     </notebook>
                 </form>
             </field>
@@ -109,63 +106,9 @@
                             <field name="medic_exam" select="1" string="Medical Examination"/>
                         </group>
                     </page>
-                    <page string="Contracts" groups="base.group_extended">
-                        <field colspan="4" mode="form,tree" name="contract_ids" nolabel="1">
-                            <tree string="Contracts">
-                                <field name="name"/>
-                                <field name="job_id"/>
-                                <field name="date_start"/>
-                                <field name="date_end"/>
-                                <field name="working_hours"/>
-                                <field name="wage_type_id"/>
-                                <field name="wage"/>
-                            </tree>
-                            <form string="Contracts">
-                                <group colspan="4" col="6">
-                                    <field name="name" select="1"/>
-                                    <field name="job_id"/>
-                                    <newline/>
-                                    <field name="wage"/>
-                                    <field name="wage_type_id" widget="selection"/>
-                                    <field name="type_id" widget="selection"/>
-                                </group>
-                                <notebook colspan="4">
-                                    <page string="Contract Details">
-                                        <group col="2" colspan="2">
-                                            <separator colspan="2" string="Duration"/>
-                                            <field name="date_start" select="1"/>
-                                            <field name="date_end" select="1"/>
-                                            <field name="working_hours"/>
-                                        </group>
-                                        <group col="2" colspan="2">
-                                            <separator colspan="2" string="Advantages"/>
-                                            <field name="struct_id" select="1"/>
-                                            <field name="advantages_gross"/>
-                                            <field name="advantages_net"/>
-                                            <field name="advantages" nolabel="1" colspan="2"/>
-                                        </group>
-                                    </page>
-                                    <page string="Work Permit">
-                                        <group col="2" colspan="2">
-                                            <separator colspan="2" string="Passport"/>
-                                            <field name="passport_id" domain="[('employee_id','=',parent.id)]"/>
-                                        </group>
-                                        <group col="2" colspan="2">
-                                            <separator colspan="2" string="Valid for"/>
-                                            <field name="visa_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                                            <field name="permit_no" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                                            <field name="visa_expire" attrs="{'required': [('passport_id','!=',False), ]}"/>
-                                        </group>
-                                    </page>
-                                    <separator colspan="4" string="Notes"/>
-                                    <field colspan="4" name="notes" nolabel="1"/>
-                                </notebook>
-                            </form>
-                        </field>
-                    </page>
                 </xpath>
                 <xpath expr="/form/notebook/page[@string='Notes']" position="before">
-                    <page string="Salary Structure" groups="base.group_extended">
+                    <page string="Salary Structure" groups="base.group_hr_manager">
                         <group col="10" colspan="4">
                             <separator string="Salary Computation" colspan="10"/>
                             <field name="basic"/>
