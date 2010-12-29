@@ -560,19 +560,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="7">
                         <field name="name" string="Reference"/>
                         <field name="date_planned"/>
                         <field name="origin"/>
+                        <newline/>
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
-                        <group colspan="2" col="4">
                         <field name="product_uom"/>
                         <button type="action"
                             icon="terp-accessories-archiver+"
                             name="%(mrp.action_change_production_qty)d"
                             string="Change Qty" states="ready,confirmed" />
-                        </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
@@ -631,6 +630,7 @@
                             <group col="9" colspan="4">
                                 <field name="state"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
+                                <button name="action_compute" states="draft" string="Compute Data" type="object" icon="terp-stock_format-scientific"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
                                 <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
@@ -677,10 +677,6 @@
                                </field>
                         </page>
                         <page string="Work Orders" groups="base.group_extended">
-                            <button name="action_compute" states="draft"
-                                string="Compute Data" type="object"
-                                icon="terp-stock_format-scientific"
-                                colspan="4" />
                             <field colspan="4" name="workcenter_lines" nolabel="1">
                                 <form string="Production Work Centers">
                                     <field colspan="4" name="name"/>
@@ -699,10 +695,6 @@
                             </field>
                         </page>
                         <page string="Scheduled Products">
-                            <button name="action_compute" states="draft"
-                                string="Compute Data" type="object"
-                                icon="terp-stock_format-scientific"
-                                colspan="4" />
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
