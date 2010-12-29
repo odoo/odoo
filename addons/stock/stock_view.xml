@@ -231,7 +231,7 @@
         </record>
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
-            groups="base.group_extended,group_stock_user"
+            groups="base.group_extended"
             parent="menu_traceability"/>
 
         <record id="lot_line_tree" model="ir.ui.view">
@@ -551,7 +551,10 @@
             <field name="view_id" ref="view_location_tree"/>
             <field name="help">This is the structure of your company's warehouses and locations. You can click on a location to get the list of the products and their stock level in this particular location and all its children.</field>
         </record>
-        <menuitem action="action_location_tree" id="menu_action_location_tree" parent="menu_stock_inventory_control" groups="base.group_extended,group_stock_manager" sequence="20"/>
+        <menuitem action="action_location_tree"
+            id="menu_action_location_tree"
+            parent="menu_stock_inventory_control"
+            sequence="20"/>
 
         <record id="view_warehouse" model="ir.ui.view">
             <field name="name">stock.warehouse</field>
