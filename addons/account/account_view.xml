@@ -2445,12 +2445,14 @@
                           <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name ="code_digits" groups="base.group_extended"/>
+                    <field name="company_id" widget="selection"/> <!--always visible because we assume that this wizard will be ran by administrators only and because it was source of blocking form with 'correct red fields' message without displaying the field -->
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
+                    <newline/>
+                    <field name ="code_digits" groups="base.group_extended"/>
                     <field name ="seq_journal" groups="base.group_extended"/>
-                  <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
-                  <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                    <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <newline/>
                     <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
                         <form string="Bank Information">
                             <field name="acc_name"/>
