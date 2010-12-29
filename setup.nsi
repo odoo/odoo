@@ -30,16 +30,24 @@
 !include 'Sections.nsh'
 
 !define PUBLISHER 'OpenERP S.A.'
-!define MAJOR_VERSION '6.0'
-!define MINOR_VERSION '0.0'
-!define REVISION_VERSION 'RC2-test'
-!ifndef REVISION_VERSION
-    !define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}"
-!else
-    !define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}-${REVISION_VERSION}"
+
+!ifndef MAJOR_VERSION
+    !define MAJOR_VERSION '6'
 !endif
+!ifndef MINOR_VERSION
+    !define MINOR_VERSION '0'
+!endif
+!ifndef REVISION_VERSION
+    !define REVISION_VERSION '0'
+!endif
+!ifndef BUILD_VERSION
+    !define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}"
+!else
+    !define VERSION "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}-${BUILD_VERSION}"
+!endif
+
 !define PRODUCT_NAME "OpenERP Server"
-!define DISPLAY_NAME "${PRODUCT_NAME} ${MAJOR_VERSION}"
+!define DISPLAY_NAME "${PRODUCT_NAME} ${MAJOR_VERSION}.${MINOR_VERSION}"
 
 !define UNINSTALL_REGISTRY_ROOT HKLM
 !define UNINSTALL_REGISTRY_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${DISPLAY_NAME}"
@@ -60,20 +68,20 @@ ShowInstDetails show
 
 XPStyle on
 
-InstallDir "$PROGRAMFILES\OpenERP ${MAJOR_VERSION}\Server"
+InstallDir "$PROGRAMFILES\OpenERP ${MAJOR_VERSION}.${MINOR_VERSION}\Server"
 InstallDirRegKey HKCU "${REGISTRY_KEY}" ""
 
 BrandingText '${PRODUCT_NAME} ${VERSION}'
 
 RequestExecutionLevel admin
 
-VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
-VIAddVersionKey "CompanyName" "${PUBLISHER}"
-VIAddVersionKey "FileDescription" "Installer of ${DISPLAY_NAME}" 
-VIAddVersionKey "LegalCopyright" "${PUBLISHER}"
-VIAddVersionKey "LegalTrademark" "OpenERP is a trademark of ${PUBLISHER}"
-VIAddVersionKey "FileVersion" "${MAJOR_VERSION}"
-VIProductVersion "${VERSION}"
+#VIAddVersionKey "ProductName" "${PRODUCT_NAME}"
+#VIAddVersionKey "CompanyName" "${PUBLISHER}"
+#VIAddVersionKey "FileDescription" "Installer of ${DISPLAY_NAME}" 
+#VIAddVersionKey "LegalCopyright" "${PUBLISHER}"
+#VIAddVersionKey "LegalTrademark" "OpenERP is a trademark of ${PUBLISHER}"
+#VIAddVersionKey "FileVersion" "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}"
+#VIProductVersion "${MAJOR_VERSION}.${MINOR_VERSION}.${REVISION_VERSION}"
 
 !insertmacro GetParameters
 !insertmacro GetOptions
@@ -216,11 +224,11 @@ Section -Post
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
     WriteRegExpandStr HKLM "${UNINSTALL_REGISTRY_KEY}" "InstallLocation" "$INSTDIR"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayName" "${DISPLAY_NAME}"
-    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${MAJOR_VERSION}"
+    WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "DisplayVersion" "${MAJOR_VERSION}.${MINOR_VERSION}"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "Publisher" "${PUBLISHER}"
     WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "Version" "${VERSION}"
-    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMajor" "${MAJOR_VERSION}"
-    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMinor" "${MINOR_VERSION}"
+    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMajor" "${MAJOR_VERSION}.${MINOR_VERSION}"
+    WriteRegDWORD HKLM     "${UNINSTALL_REGISTRY_KEY}" "VersionMinor" "${REVISION_VERSION}"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpLink" "support@openerp.com"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "HelpTelephone" "+32.81.81.37.00"
     WriteRegStr HKLM       "${UNINSTALL_REGISTRY_KEY}" "URLInfoAbout" "http://www.openerp.com"
