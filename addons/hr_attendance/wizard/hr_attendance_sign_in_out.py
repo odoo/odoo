@@ -68,7 +68,7 @@ class hr_sign_in_out(osv.osv_memory):
     _columns = {
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
         'state': fields.char('Current state', size=32, required=True, readonly=True),
-        'emp_id': fields.char('Empoyee ID', size=32, required=True, readonly=True),
+        'emp_id': fields.char('Employee ID', size=32, required=True, readonly=True),
                 }
 
     def _get_empid(self, cr, uid, context=None):

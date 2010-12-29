@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-11-30 16:05+0000\n"
+"PO-Revision-Date: 2010-12-28 14:40+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:39+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -214,6 +214,9 @@ msgid ""
 "You cannot validate leaves for category %s while there are too few remaining "
 "leave days."
 msgstr ""
+"Sie können die Abwesenheitstage für die Kategorie %s nicht prüfen und "
+"freigeben, wenn nicht ausreichend verfügbare Abwesenheitstage hinterlegt "
+"wurden."
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -448,6 +451,7 @@ msgstr "Weiss"
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
+"Fehler ! Das Start Datum für die Abwesenheit muss vor dem Ende Datum liegen !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -489,7 +493,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:available.holidays.report:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Monat -1    "
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -518,6 +522,8 @@ msgid ""
 "You cannot validate leaves for employee %s while there are too few remaining "
 "leave days."
 msgstr ""
+"Sie können die Abwesenheitstage für den Mitarbeiter %s nicht freigeben, da "
+"seine verfügbaren Tage nicht ausreichen."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
