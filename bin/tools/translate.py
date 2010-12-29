@@ -468,12 +468,16 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     _process(format, modules, trans, buffer, lang, newlang)
     del trans
 
+# We'd better not import orm here, so copy this from osv.orm:
+SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
 def trans_parse_xsl(de):
     res = []
     for n in de:
         if n.get("t"):
-            for m in [j for j in n if j.text]:
+            for m in n:
+                if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+                    continue
                 l = m.text.strip().replace('\n',' ')
                 if len(l):
                     res.append(l.encode("utf8"))
@@ -483,7 +487,9 @@ def trans_parse_xsl(de):
 def trans_parse_rml(de):
     res = []
     for n in de:
-        for m in [j for j in n if j.text]:
+        for m in n:
+            if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+                continue
             string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
             for s in string_list:
                 if s:
