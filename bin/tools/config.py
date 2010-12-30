@@ -96,7 +96,7 @@ class configmanager(object):
             'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
         }
         
-        self.blacklist_for_save = set(["publisher_warranty_url"])
+        self.blacklist_for_save = set(["publisher_warranty_url", "load_language"])
 
         self.misc = {}
         self.config_file = fname
