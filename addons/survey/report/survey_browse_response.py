@@ -198,7 +198,6 @@ class survey_browse_response(report_rml):
 
         surv_resp_line_obj = pooler.get_pool(cr.dbname).get('survey.response.line')
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
-        surv_ans_obj = pooler.get_pool(cr.dbname).get('survey.answer')
 
         for response in surv_resp_obj.browse(cr, uid, response_id):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
