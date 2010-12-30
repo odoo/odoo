@@ -86,7 +86,7 @@ class wiki_create_menu(osv.osv_memory):
                         'action': 'ir.actions.act_window,'+ str(action_id),
                         }, context)
         obj_wiki_group.write(cr, uid, [group_id], {'menu_id':menu_id})        
-        return {}
+        return {'type':  'ir.actions.act_window_close'}
 
 
 wiki_create_menu()

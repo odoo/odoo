@@ -23,8 +23,6 @@ from osv import fields, osv
 
 from _common import rounding
 import time
-from tools import config
-from tools.misc import ustr
 from tools.translate import _
 import decimal_precision as dp
 

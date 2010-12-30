@@ -48,7 +48,7 @@ class invoice_directly(osv.osv_memory):
                 'type': 'ir.actions.act_window',
                 'target': 'new',
             }
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 invoice_directly()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

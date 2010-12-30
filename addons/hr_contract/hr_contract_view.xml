@@ -57,7 +57,7 @@
             <field name="search_view_id" ref="hr_contract_wage_type_view_search"/>
         </record>
 
-        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_management" sequence="5" groups="base.group_hr_manager"/>
+        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_management" sequence="5"/>
         <menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56" sequence="7"/>
 
         <record id="hr_contract_wage_type_period_view_form" model="ir.ui.view">
@@ -120,24 +120,10 @@
                         <field name="medic_exam" />
                         </group>
                     </page>
-                    <page string="Contracts">
-                        <field colspan="4" name="contract_ids" nolabel="1"/>
-                    </page>
                 </page>
             </field>
         </record>
 
-        <record id="hr_employee_view_form3" model="ir.ui.view">
-            <field name="name">hr.employee.view.form3</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="parent_id" position="after">
-                    <field name="contract_id"/>
-                </field>
-            </field>
-        </record>
 
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
@@ -281,7 +267,7 @@
         </record>
 
         <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56" sequence="6"/>
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_hr_manager,base.group_hr_user"/>
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_hr_manager"/>
 
         <!-- Contracts Button on Employee Form -->
         <act_window 
@@ -289,7 +275,8 @@
         id="act_hr_employee_2_hr_contract" 
         name="Contracts" 
         res_model="hr.contract" 
-        src_model="hr.employee"/>
+        src_model="hr.employee"
+        groups="base.group_hr_manager"/>
 
     </data>
 </openerp>

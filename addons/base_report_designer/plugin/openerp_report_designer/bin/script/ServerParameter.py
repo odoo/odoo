@@ -140,27 +140,15 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             ErrorDialog("Connection Refuse...","Please enter valid Login/Password")
             self.win.endExecute()
         try:
-
-            ids  = self.sock.execute(sDatabase,UID,sPassword, 'res.groups' ,  'search', [('name','=','OpenOfficeReportDesigner')])
             ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
-            dict_groups =self.sock.execute(sDatabase, UID,sPassword, 'res.groups' , 'read',ids,['users'])
         except :
             import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ServerParameter', LOG_ERROR, info)
 
-        if not len(ids) :
-            ErrorDialog("Group Not Found!!!  Create a group  named  \n\n"'"OpenOfficeReportDesigner"'"  \n\n  ","","Group Name Error")
-            self.logobj.log_write('Group Error',LOG_WARNING, ':Create a  group OpenOfficeReportDesigner   using database %s' % (sDatabase))
-            self.win.endExecute()
         if not len(ids_module):
             ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
             self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
-            self.win.endExecute()
-
-        if UID not in dict_groups[0]['users']:
-            ErrorDialog("Connection Refuse...","You have not access these Report Designer")
-            self.logobj.log_write('Connection Refuse',LOG_WARNING, " Not Access Report Designer ")
             self.win.endExecute()
         else:
             desktop=getDesktop()
