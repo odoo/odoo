@@ -158,7 +158,7 @@ class ir_translation(osv.osv):
                        WHERE lang=%s 
                         AND type in %s 
                         AND src=%s"""
-            params = (lang or '', types, source)
+            params = (lang or '', types, tools.ustr(source))
             if name:
                 query += " AND name=%s"
                 params += (tools.ustr(name),)
