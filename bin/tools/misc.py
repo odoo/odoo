@@ -262,7 +262,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
             return fo
     if os.path.splitext(name)[1] == '.rml':
         raise IOError, 'Report %s doesn\'t exist or deleted : ' %str(name)
-    raise IOError, 'File not found : '+str(name)
+    raise IOError, 'File not found : %s' % name
 
 
 #----------------------------------------------------------

@@ -47,8 +47,8 @@ import logging
 
 logger = netsvc.Logger()
 
-_ad = os.path.abspath(opj(tools.config['root_path'], 'addons'))     # default addons path (base)
-ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
+_ad = os.path.abspath(opj(tools.ustr(tools.config['root_path']), u'addons'))     # default addons path (base)
+ad_paths= map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
 
 sys.path.insert(1, _ad)
 
