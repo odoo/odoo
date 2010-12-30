@@ -35,8 +35,8 @@
                     <field name="name"/>
                     <field name="amount"/>
                     <field name="state"/>
-                    <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-                    <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager"/>
+                    <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
+                    <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager,base.group_hr_user"/>
                 </tree>
             </field>
         </record>
@@ -54,8 +54,8 @@
                     <field name="name"/>
                     <field name="amount"/>
                     <field name="state"/>
-                    <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-                    <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager"/>
+                    <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
+                    <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager,base.group_hr_user"/>
                 </tree>
             </field>
         </record>
@@ -101,11 +101,11 @@
                             </field>
                             <field name="state"/>
                             <group col="6" colspan="2">
-                                <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert" groups="base.group_hr_manager"/>
-                                <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager" />
-                                <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply" groups="base.group_hr_user,base.group_hr_manager"/>
-                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-go-forward" groups="base.group_hr_manager"/>
-                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward" groups="base.group_hr_manager"/>
+                                <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert" groups="base.group_hr_manager,base.group_hr_user"/>
+                                <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_manager,base.group_hr_user" />
+                                <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
+                                <button name="invoice" states="accepted" string="Invoice" type="workflow" icon="gtk-go-forward" groups="base.group_hr_manager,base.group_hr_user"/>
+                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward" groups="base.group_hr_manager,base.group_hr_user"/>
                             </group>
                         </page>
                         <page string="Other Info" groups="base.group_extended">
