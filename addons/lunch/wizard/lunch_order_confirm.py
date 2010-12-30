@@ -48,7 +48,7 @@ class lunch_order_confirm(osv.osv_memory):
 
         for confirm_obj in self.read(cr, uid, ids):
             order_ref.confirm(cr, uid, data, confirm_obj['confirm_cashbox'], context)
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
 lunch_order_confirm()
 

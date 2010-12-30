@@ -13,9 +13,8 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                 '\n',
                 output.index(self.ADD_ATTACHMENT_BUTTON)) + 1
         output = output[:form_opener_insertion] + \
-                 '''<a href="#" id="add-pad" class="button-a"
-                       style="float: right; line-height: 13px; margin-right: 3px;"
-                       >${_("Pad")}</a>\n''' + \
+                 '''<a href="#" id="add-pad" class="button-a
+                 attachment-button">${_(" Add pad")}</a>\n''' + \
                  output[form_opener_insertion:]
         return output
 

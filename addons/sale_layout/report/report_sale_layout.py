@@ -41,7 +41,6 @@ class sale_order_1(report_sxw.rml_parse):
     def sale_order_lines(self, sale_order):
         result = []
         sub_total = {}
-        info = []
         order_lines = []
         res = {}
         obj_order_line = self.pool.get('sale.order.line')

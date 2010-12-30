@@ -121,7 +121,7 @@ class mrp_track_move(osv.osv_memory):
                     new_prodlot = prodlot_obj.create(cr, uid, {'name': 'PRODUCTION:%d:LOT:%d' % (record_id, idx+1), 'product_id': move.product_id.id})
                     update_val['prodlot_id'] = new_prodlot
                     move_obj.write(cr, uid, [current_move], update_val)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 mrp_track_move()
 

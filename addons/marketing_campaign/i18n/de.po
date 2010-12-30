@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-09 09:35+0000\n"
+"PO-Revision-Date: 2010-12-28 16:02+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: marketing_campaign
@@ -202,7 +202,7 @@ msgstr "Zurücksetzen"
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "Wählen Sie die Ressource auf die sich die Kampagne beziehen soll."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
@@ -620,7 +620,7 @@ msgstr "Kampagnen Analyse"
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
 msgid "The interval must be positive or zero"
-msgstr ""
+msgstr "Das Intervall sollte positiv oder mindestens Null sein."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -630,7 +630,7 @@ msgstr "Test in Echtzeit"
 #. module: marketing_campaign
 #: sql_constraint:email.template:0
 msgid "The template name must be unique !"
-msgstr ""
+msgstr "Die Vorlagenbezeichnung muss eindeutig sein !"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -645,7 +645,7 @@ msgstr "Verzeichnis"
 #. module: marketing_campaign
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -686,6 +686,35 @@ msgid ""
 "application as it depends on CRM Leads.\n"
 "    "
 msgstr ""
+"\n"
+"Diese Anwendung ermöglicht eine automatisierte Generierung neuer "
+"Vertriebskontakte durch die Anwendung von Kampagnen (Faktisch können "
+"Kampagnen für alle Ressourcen in OpenERP definiert werden, nicht nur für die "
+"CRM Leads Ressource).\n"
+"        Der Kampagnenablauf erfolgt dynamisch und kann dabei verschiedene "
+"Absatzkanäle gleichzeitig zu nutzen. Der Prozess einer Kampagne verläuft wie "
+"folgt:\n"
+"         * Erstellen Sie den Ablauf einer Marketing Kampagne, inklusive der "
+"Medien zu einzelnen Vorgangsschritten, wie z.B. EMailvorlagen, Briefvorlagen "
+"für EMail, Postversand u .a.\n"
+"        * Definieren Sie Auswahllisten für die Filterung der entsprechenden "
+"Kontakte als Zielgruppe der durchzuführenden Kampagne (z.B. die "
+"Kontaktadresse eines bestimmten Landes).\n"
+"        *  Simulieren Sie Ihre Kampagne zu Testzwecken in Echtzeit oder "
+"sofort in einem Zug und nehmen Sie letzte Feineinstellungen vor.\n"
+"        *  Sie können alternativ die tatsächliche Kampagne im manuellen "
+"Betriebsmodus starten, wodurch dann jede einzelne Aktion per Hand bestätigt "
+"werden müsste.\n"
+"      * Für den endgültigen Kampagnenstart öffnen Sie dann Ihre Kampagne und "
+"beobachten die Statistik, vor allem da alle Vorgänge der Kampagne "
+"automatisch erfolgen.\n"
+"     Während die Kampagne läuft, können Sie weiterhin problemlos die "
+"Parameter einer Kampagne justieren, z.B. Filtereinstellungen, Abfolge etc.\n"
+"\n"
+"    Hinweis: Wenn Sie Demo Daten benötigen, könnten Sie hierzu die Anwendung "
+"marketing_campaign_crm_demo installieren, wodurch dann auch die CRM "
+"Anwendung aufgrund seiner Abhängigkeiten installiert wird.\n"
+"    "
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0

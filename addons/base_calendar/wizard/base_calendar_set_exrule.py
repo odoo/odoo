@@ -150,7 +150,7 @@ class base_calendar_set_exrule(osv.osv_memory):
                                 + enddate + monthstring + yearstring
 
             model_obj.write(cr, uid, ex_id,{'exrule': exrule_string})
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
         _defaults = {
          'freq': lambda *x: 'None',

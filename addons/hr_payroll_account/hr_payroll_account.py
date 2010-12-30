@@ -256,6 +256,10 @@ class hr_payslip(osv.osv):
         period_pool = self.pool.get('account.period')
 
         for slip in self.browse(cr, uid, ids, context=context):
+            if not slip.bank_journal_id or not slip.journal_id:
+                # Call super method to process sheet if journal_id or bank_journal_id are not specified.
+                super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
+                continue
             line_ids = []
             partner = False
             partner_id = False
@@ -411,6 +415,10 @@ class hr_payslip(osv.osv):
         payslip_pool = self.pool.get('hr.payslip.line')
 
         for slip in self.browse(cr, uid, ids, context=context):
+            if not slip.journal_id:
+                # Call super method to verify sheet if journal_id is not specified.
+                super(hr_payslip, self).verify_sheet(cr, uid, [slip.id], context=context)
+                continue
             total_deduct = 0.0
 
             line_ids = []
