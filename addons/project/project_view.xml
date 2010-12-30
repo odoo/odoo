@@ -153,11 +153,25 @@
             </field>
         </record>
 
+       <record id="view_project_project_gantt" model="ir.ui.view">
+            <field name="name">project.project.gantt</field>
+            <field name="model">project.project</field>
+            <field name="type">gantt</field>
+            <field name="arch" type="xml">
+                <gantt color="user_id" date_delay="planned_hours" date_start="date_start" string="Projects">
+                    <level object="project.project" link="id" domain="[]">
+                        <field name="complete_name"/>
+                    </level>
+                </gantt>
+            </field>
+        </record>
+
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
+            <field name="view_mode">tree,form,gantt</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current':1}</field>
