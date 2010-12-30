@@ -477,7 +477,7 @@ class stock_tracking(osv.osv):
         sequence = self.pool.get('ir.sequence').get(cr, uid, 'stock.lot.tracking')
         try:
             return sequence + str(self.checksum(sequence))
-        except Exception, e:
+        except Exception:
             return sequence
 
     _columns = {
