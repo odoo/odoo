@@ -82,12 +82,13 @@
                         <field name="name" select="1" colspan="4"/>
                         <field name="code" select="1"/>
                         <field name="parent_id" on_change="on_change_parent(parent_id)" groups="base.group_extended"/>
-                        <field name="company_id" select="2" widget="selection" groups="base.group_multi_company"/>
+                        <field name="company_id" on_change="on_change_company(company_id)" select="2" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                         <field name="type" select="2"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Account Data">
                             <field name="partner_id" select="1"/>
+                            <field name="currency_id" select="1"/>
                             <newline/>
                             <field name="date_start"/>
                             <field name="date" select="2"/>

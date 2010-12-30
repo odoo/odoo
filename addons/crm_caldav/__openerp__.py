@@ -21,11 +21,11 @@
 
 
 {
-    'name': 'Extened Module to Add CalDav future on Meeting',
+    'name': 'Extended Module to Add CalDav feature on Meeting',
     'version': '1.1',
     'category': 'Generic Modules/CRM & SRM',
     'description': """
-    New Futures in Meeting:
+    New Features in Meeting:
         *  Share meeting with other calendar clients like sunbird
 """,
     'author': 'OpenERP SA',

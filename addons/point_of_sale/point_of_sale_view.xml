@@ -19,6 +19,8 @@
                         <field name="shop_id" widget="selection"/>
                         <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
                         <field name="contract_number" groups="base.group_extended"/>
+			<button name="%(point_of_sale.action_pos_scan_product)d" string="Scan Barcode" type="action" states="draft,advance"/>
+			<button name="%(point_of_sale.action_add_product)d" string="Add Product" type="action" states="draft,advance"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Sale Order">
