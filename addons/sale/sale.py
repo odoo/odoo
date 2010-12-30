@@ -400,7 +400,7 @@ class sale_order(osv.osv):
                     inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
         inv = {
-            'name': order.client_order_ref or order.name,
+            'name': order.client_order_ref or '',
             'origin': order.name,
             'type': 'out_invoice',
             'reference': "P%dSO%d" % (order.partner_id.id, order.id),
@@ -1200,11 +1200,11 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-            if o.step == 'one':
+            if o.step == 'two':
                 md = self.pool.get('ir.model.data')
                 location_id = md.get_object_reference(cr, uid, 'stock', 'stock_location_output')
                 location_id = location_id and location_id[1] or False
-                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
+                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'manual'})
 
 sale_config_picking_policy()
 

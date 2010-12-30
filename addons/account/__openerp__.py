@@ -133,7 +133,9 @@ module named account_voucher.
         'test/account_bank_statement.yml',
         'test/account_cash_statement.yml',
         'test/account_report.yml',
-    ],
+        
+
+            ],
     'installable': True,
     'active': False,
     'certificate': '0080331923549',

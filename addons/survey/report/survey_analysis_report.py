@@ -118,7 +118,7 @@ class survey_analysis(report_rml):
 
         for survey in surv_obj.browse(cr, uid, ids):
             rml += """<story>
-                    <para style="Title">Answer Summary</para>
+                    <para style="Title">Answers Summary</para>
                     <para style="Standard"><font></font></para>
                     <para style="P2">
                       <font color="white"> </font>
