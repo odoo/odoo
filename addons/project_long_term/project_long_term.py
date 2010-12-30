@@ -144,13 +144,6 @@ class project_phase(osv.osv):
             result['date_start'] = project_id.date_start
         return {'value': result}
 
-    def onchange_days(self, cr, uid, ids, project, context=None):
-        result = {}
-        for id in ids:
-            project_id = self.browse(cr, uid, id, context=context)
-            newdate = datetime.strptime(project_id.date_start, '%Y-%m-%d') + relativedelta(days=project_id.duration or 0.0)
-            result['date_end'] = newdate.strftime('%Y-%m-%d')
-        return {'value': result}
 
     def _check_date_start(self, cr, uid, phase, date_end, context=None):
        """
