@@ -324,14 +324,24 @@ class ir_model_access(osv.osv):
             r = cr.fetchone()[0]
 
         if not r and raise_exception:
+            cr.execute('''select
+                    g.name
+                from
+                    ir_model_access a 
+                    left join ir_model m on (a.model_id=m.id) 
+                    left join res_groups g on (a.group_id=g.id)
+                where
+                    m.model=%s and
+                    a.group_id is not null and perm_''' + mode, (model_name, ))
+            groups = ', '.join(map(lambda x: x[0], cr.fetchall())) or '/'
             msgs = {
-                'read':   _('You can not read this document! (%s)'),
-                'write':  _('You can not write in this document! (%s)'),
-                'create': _('You can not create this kind of document! (%s)'),
-                'unlink': _('You can not delete this document! (%s)'),
+                'read':   _("You can not read this document (%s) ! Be sure your user belongs to one of these groups: %s."),
+                'write':  _("You can not write in this document (%s) ! Be sure your user belongs to one of these groups: %s."),
+                'create': _("You can not create this document (%s) ! Be sure your user belongs to one of these groups: %s."),
+                'unlink': _("You can not delete this document (%s) ! Be sure your user belongs to one of these groups: %s."),
             }
 
-            raise except_orm(_('AccessError'), msgs[mode] % model_name )
+            raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
         return r
 
     check = tools.cache()(check)

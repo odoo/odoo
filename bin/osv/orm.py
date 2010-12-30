@@ -59,8 +59,10 @@ from query import Query
 import tools
 from tools.safe_eval import safe_eval as eval
 
-regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+# List of etree._Element subclasses that we choose to ignore when parsing XML.
+from tools import SKIPPED_ELEMENT_TYPES
 
+regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -69,10 +71,6 @@ POSTGRES_CONFDELTYPES = {
     'SET NULL': 'n',
     'SET DEFAULT': 'd',
 }
-
-# List of etree._Element subclasses that we choose to ignore when parsing view architecture.
-# We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
-SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
 
 def last_day_of_current_month():
     today = datetime.date.today()
@@ -518,8 +516,7 @@ class orm_template(object):
             self._table = self._name.replace('.', '_')
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
-        """
-        Fetch records as objects allowing to use dot notation to browse fields and relations
+        """Fetch records as objects allowing to use dot notation to browse fields and relations
 
         :param cr: database cursor
         :param user: current user id
@@ -687,8 +684,10 @@ class orm_template(object):
         :param filename: optional file to store partial import state for recovery
         :rtype: tuple
 
-        This method is used when importing data via client menu
-        Example of fields to import for a sale.order
+        This method is used when importing data via client menu.
+
+        Example of fields to import for a sale.order::
+
             .id,                         (=database_id)
             partner_id,                  (=name_search)
             order_line/.id,              (=database_id)
@@ -3907,7 +3906,9 @@ class orm(orm_template):
                 order_field = order_split[0].strip()
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
-                if order_field in self._columns:
+                if order_field == 'id':
+                    order_by_clause = '"%s"."%s"' % (self._table, order_field)
+                elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
                         inner_clause = '"%s"."%s"' % (self._table, order_field)

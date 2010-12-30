@@ -76,13 +76,15 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Change Password">
-	                <field name="current_password" password="True" readonly="0" colspan="4"/>
-	                <field name="new_password" password="True" readonly="0" colspan="4"/>
-	                <field name="confirm_password" password="True" readonly="0" colspan="4"/>
+                    <field name="current_password" password="True" readonly="0" colspan="4"/>
+                    <field name="new_password" password="True" readonly="0" colspan="4"/>
+                    <field name="confirm_password" password="True" readonly="0" colspan="4"/>
+                    <label colspan="1" string=""/>
+                    <label colspan="3" string="You must logout and login again after changing your password."/>
                     <separator colspan="4" />
                     <label align="0.0" colspan="2" string=""/>
                     <button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button colspan="1" icon="gtk-execute" name="change_password" string="Change" type="object"/>
+                    <button colspan="1" icon="gtk-ok" name="change_password" string="Change" type="object"/>
                 </form>
             </field>
         </record>
@@ -106,7 +108,7 @@
                     <notebook colspan="4">
                         <page string="Current Activity">
                             <field name="company_id" widget="selection" readonly="0"
-                                    context="{'user_id': self, 'user_preference': 1}" groups="base.group_multi_company"
+                                    groups="base.group_multi_company"
                                     on_change="on_change_company_id(company_id)" />
                             <field name="view" readonly="0"/>
                             <label string="" colspan="2"/>
@@ -116,8 +118,6 @@
                          <page string="Preferences">
                             <field name="context_lang" completion="1" readonly="0"/>
                             <field name="context_tz" completion="1" readonly="0"/>
-                            <label string="" colspan="1"/>
-                            <label colspan="3" string="You must logout and login again after changing your password."/>
                             <field name="menu_tips" colspan="2" readonly="0"/>
                             <label string="" colspan="1"/>
                             <button name="%(action_view_change_password_form)d" string="Change Password" type="action" icon="gtk-execute"/>
@@ -146,7 +146,7 @@
                             <group colspan="1" col="2">
                                 <separator string="Contact" colspan="2"/>
                                 <field name="company_id" required="1"
-                                    context="{'user_id': self, 'user_preference': 1}"
+                                    context="{'user_preference': 0}"
                                     groups="base.group_multi_company"
                                     />
                                 <field name="address_id"/>

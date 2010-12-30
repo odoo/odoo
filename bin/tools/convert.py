@@ -45,9 +45,11 @@ import netsvc
 import osv
 import pooler
 from config import config
-from osv.orm import except_orm, SKIPPED_ELEMENT_TYPES
 from tools.translate import _
 from yaml_import import convert_yaml_import
+
+# List of etree._Element subclasses that we choose to ignore when parsing XML.
+from tools import SKIPPED_ELEMENT_TYPES
 
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
@@ -865,7 +867,7 @@ form: module.record_id""" % (xml_id,)
                             self.__logger.error('Parse error in %s:%d: \n%s',
                                                 rec.getroottree().docinfo.URL,
                                                 rec.sourceline,
-                                                etree.tostring(rec).strip())
+                                                etree.tostring(rec).strip(), exc_info=True)
                             self.cr.rollback()
                             raise
         return True
@@ -945,7 +947,7 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
     result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
     if result < 0:
         # Report failed import and abort module install
-        raise except_orm(_('Module loading failed'), _('Loading %s/%s failed:\n %s') % (module, fname, warning_msg))
+        raise Exception(_('Module loading failed: file %s/%s could not be processed:\n %s') % (module, fname, warning_msg))
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
         data[fname_partial] = 0

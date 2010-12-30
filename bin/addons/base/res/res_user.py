@@ -578,8 +578,8 @@ class change_user_password(osv.osv_memory):
     _name = 'change.user.password'
     _columns = {
         'current_password':fields.char('Current Password', size=64, required=True, help="Enter your current password."),
-        'new_password': fields.char('New Password', size=64, required=True, help="Enter new password."),
-        'confirm_password': fields.char('Confirm Password', size=64, required=True, help="Enter new password again for confirmation."),
+        'new_password': fields.char('New Password', size=64, required=True, help="Enter the new password."),
+        'confirm_password': fields.char('Confirm Password', size=64, required=True, help="Enter the new password again for confirmation."),
     }
     _defaults={
         'current_password' : '',
@@ -588,16 +588,22 @@ class change_user_password(osv.osv_memory):
     }
 
     def change_password(self, cr, uid, ids, context=None):
-        user_obj = self.pool.get('res.users')
-        if ids:
-            current_password = user_obj.browse(cr, uid, uid, context).password
-            password_rec = self.browse(cr, uid, ids[0], context)
+        for form_id in ids:
+            password_rec = self.browse(cr, uid, form_id, context)
             if password_rec.new_password != password_rec.confirm_password:
-                raise osv.except_osv(_('Warning !'), _('New password and confirm password does not match !'))
-            elif current_password != password_rec.current_password:
-                raise osv.except_osv(_('Warning !'), _('Current password does not match !'))
-            else:
-                user_obj.write(cr, uid, [uid], {'password': password_rec.new_password}, context)
+                raise osv.except_osv(_('Error !'), _('The new and confirmation passwords do not match, please double-check them.'))
+
+            # Validate current password without reading it from database,
+            # as it could be stored differently (LDAP, encrypted/hashed, etc.)
+            is_correct_password = False
+            try:
+                user_obj = self.pool.get('res.users')
+                is_correct_password = user_obj.check(cr.dbname, uid, password_rec.current_password)
+            except Exception:
+                pass
+            if not is_correct_password:
+                raise osv.except_osv(_('Error !'), _('The current password does not match, please double-check it.'))
+            user_obj.write(cr, uid, [uid], {'password': password_rec.new_password}, context=context)
         return {}
 
 change_user_password()

@@ -475,7 +475,7 @@ class module(osv.osv):
                 categs = categs[1:]
             self.write(cr, uid, [mod_browse.id], {'category_id': p_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
+    def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
         logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
@@ -495,15 +495,23 @@ class module(osv.osv):
             for lang in filter_lang:
                 iso_lang = tools.get_iso_codes(lang)
                 f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
+                context2 = context and context.copy() or {}
+                if f and '_' in iso_lang:
+                    iso_lang2 = iso_lang.split('_')[0]
+                    f2 = addons.get_module_resource(mod.name, 'i18n', iso_lang2 + '.po')
+                    if f2:
+                        logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
+                        tools.trans_load(cr.dbname, f2, lang, verbose=False, context=context)
+                        context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
                 # like "en".
                 if (not f) and '_' in iso_lang:
-                    f = addons.get_module_resource(mod.name, 'i18n', iso_lang.split('_')[0] + '.po')
                     iso_lang = iso_lang.split('_')[0]
+                    f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
                 if f:
-                    logger.info('module %s: loading translation file for language %s', mod.name, iso_lang)
-                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
+                    logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
+                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context2)
                 elif iso_lang != 'en':
                     logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
 

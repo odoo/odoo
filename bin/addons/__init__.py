@@ -47,8 +47,8 @@ import logging
 
 logger = netsvc.Logger()
 
-_ad = os.path.abspath(opj(tools.config['root_path'], 'addons'))     # default addons path (base)
-ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
+_ad = os.path.abspath(opj(tools.ustr(tools.config['root_path']), u'addons'))     # default addons path (base)
+ad_paths= map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
 
 sys.path.insert(1, _ad)
 
@@ -819,11 +819,17 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = tools.assertion_report()
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
+        if 'base' in tools.config['update']:
+            cr.execute("update ir_module_module set state=%s where name=%s", ('to upgrade', 'base'))
         graph = create_graph(cr, ['base'], force)
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
         has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report, skip_cleanup=True)
+
+        if tools.config['load_language']:
+            for lang in tools.config['load_language'].split(','):
+                tools.load_language(cr, lang)
 
         if update_module:
             modobj = pool.get('ir.module.module')

@@ -65,7 +65,7 @@ def _open_image(filename, path=None):
         except IOError:
             pass
     raise IOError("File %s cannot be found in image path" % filename)
-    
+
 class NumberedCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
         canvas.Canvas.__init__(self, *args, **kwargs)
@@ -243,7 +243,8 @@ class _rml_doc(object):
             for font in node.findall('registerFont'):
                 name = font.get('fontName').encode('ascii')
                 fname = font.get('fontFile').encode('ascii')
-                pdfmetrics.registerFont(TTFont(name, fname ))
+                if name not in pdfmetrics._fonts:
+                    pdfmetrics.registerFont(TTFont(name, fname))
                 addMapping(name, 0, 0, name)    #normal
                 addMapping(name, 0, 1, name)    #italic
                 addMapping(name, 1, 0, name)    #bold
@@ -254,7 +255,8 @@ class _rml_doc(object):
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
 
-        pdfmetrics.registerFont(TTFont(fontname, filename ))
+        if fontname not in pdfmetrics._fonts:
+            pdfmetrics.registerFont(TTFont(fontname, filename))
         if (mode == 'all'):
             addMapping(face, 0, 0, fontname)    #normal
             addMapping(face, 0, 1, fontname)    #italic
@@ -899,7 +901,7 @@ class _rml_template(object):
             ps = map(lambda x:x.strip(), node.get('pageSize').replace(')', '').replace('(', '').split(','))
             pageSize = ( utils.unit_get(ps[0]),utils.unit_get(ps[1]) )
 
-        self.doc_tmpl = TinyDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','title':'str','author':'str'}))
+        self.doc_tmpl = TinyDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','rotation':'int','title':'str','author':'str'}))
         self.page_templates = []
         self.styles = doc.styles
         self.doc = doc

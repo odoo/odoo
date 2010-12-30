@@ -33,14 +33,14 @@ import tarfile
 import tempfile
 import threading
 from os.path import join
-import logging
 
 from datetime import datetime
 from lxml import etree
 
-import tools, pooler
+import tools
 import netsvc
 from tools.misc import UpdateableStr
+from tools.misc import SKIPPED_ELEMENT_TYPES
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
@@ -159,7 +159,7 @@ class GettextAlias(object):
         # find current DB based on thread/worker db name (see netsvc)
         db_name = getattr(threading.currentThread(), 'dbname', None)
         if db_name:
-            return pooler.get_db_only(dbname)
+            return pooler.get_db_only(db_name)
 
     def _get_cr(self, frame):
         is_new_cr = False
@@ -219,6 +219,7 @@ class GettextAlias(object):
                 logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:
             logger.debug('translation went wrong for "%r", skipped', source)
+                # if so, double-check the root/base translations filenames
         finally:
             if cr and is_new_cr:
                 cr.close()
@@ -468,12 +469,13 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     _process(format, modules, trans, buffer, lang, newlang)
     del trans
 
-
 def trans_parse_xsl(de):
     res = []
     for n in de:
         if n.get("t"):
-            for m in [j for j in n if j.text]:
+            for m in n:
+                if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+                    continue
                 l = m.text.strip().replace('\n',' ')
                 if len(l):
                     res.append(l.encode("utf8"))
@@ -483,7 +485,9 @@ def trans_parse_xsl(de):
 def trans_parse_rml(de):
     res = []
     for n in de:
-        for m in [j for j in n if j.text]:
+        for m in n:
+            if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+                continue
             string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
             for s in string_list:
                 if s:
@@ -749,6 +753,10 @@ def trans_generate(lang, modules, dbname=None):
     else :
         path_list = [root_path,] + apaths
 
+    # Also scan these non-addon paths
+    for bin_path in ['osv', 'report' ]:
+        path_list.append(os.path.join(tools.config['root_path'], bin_path))
+
     logger.debug("Scanning modules at paths: ", path_list)
 
     mod_paths = []
@@ -768,6 +776,8 @@ def trans_generate(lang, modules, dbname=None):
             if module in installed_modules:
                 frelativepath = str("addons" + frelativepath)
             ite = re_dquotes.finditer(code_string)
+            code_offset = 0
+            code_line = 1
             for i in ite:
                 src = i.group(1)
                 if src.startswith('""'):
@@ -775,11 +785,18 @@ def trans_generate(lang, modules, dbname=None):
                     src = src[2:-2]
                 else:
                     src = join_dquotes.sub(r'\1', src)
+                # try to count the lines from the last pos to our place:
+                code_line += code_string[code_offset:i.start(1)].count('\n')
                 # now, since we did a binary read of a python source file, we
                 # have to expand pythonic escapes like the interpreter does.
                 src = src.decode('string_escape')
-                push_translation(module, terms_type, frelativepath, 0, encode(src))
+                push_translation(module, terms_type, frelativepath, code_line, encode(src))
+                code_line += i.group(1).count('\n')
+                code_offset = i.end() # we have counted newlines up to the match end
+
             ite = re_quotes.finditer(code_string)
+            code_offset = 0 #reset counters
+            code_line = 1
             for i in ite:
                 src = i.group(1)
                 if src.startswith("''"):
@@ -787,8 +804,11 @@ def trans_generate(lang, modules, dbname=None):
                     src = src[2:-2]
                 else:
                     src = join_quotes.sub(r'\1', src)
+                code_line += code_string[code_offset:i.start(1)].count('\n')
                 src = src.decode('string_escape')
-                push_translation(module, terms_type, frelativepath, 0, encode(src))
+                push_translation(module, terms_type, frelativepath, code_line, encode(src))
+                code_line += i.group(1).count('\n')
+                code_offset = i.end() # we have counted newlines up to the match end
 
     for path in path_list:
         logger.debug("Scanning files of modules at %s", path)
@@ -900,7 +920,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=
                 args.append(('res_id', '=', dic['res_id']))
             ids = trans_obj.search(cr, uid, args)
             if ids:
-                if context.get('overwrite'):
+                if context.get('overwrite') and dic['value']:
                     trans_obj.write(cr, uid, ids, {'value': dic['value']})
             else:
                 trans_obj.create(cr, uid, dic)
@@ -951,6 +971,19 @@ def resetlocale():
             return locale.setlocale(locale.LC_ALL, ln)
         except locale.Error:
             continue
+
+def load_language(cr, lang):
+    """Loads a translation terms for a language.
+    Used mainly to automate language loading at db initialization.
+    
+    :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
+    :type lang: str
+    """
+    pool = pooler.get_pool(cr.dbname)
+    language_installer = pool.get('base.language.install')
+    uid = 1
+    oid = language_installer.create(cr, uid, {'lang': lang})
+    language_installer.lang_install(cr, uid, [oid], context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
