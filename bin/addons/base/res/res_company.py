@@ -98,13 +98,7 @@ class res_company(osv.osv):
             context = {}
         user_preference = context.get('user_preference', False)
         if user_preference:
-            # TODO: improve this as soon as the client sends the proper
-            # combination of active_id and active_model we'll be able to
-            # use active_id here to restrict to the user being modified instead
-            # of current user.
-            user_id = context.get('user_id', uid)
-
-            user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
         return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
