@@ -192,55 +192,6 @@ class project_phase(osv.osv):
        dt_end = work_times[-1][1].strftime('%Y-%m-%d')
        self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d'), 'date_end': dt_end}, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None):
-        resource_calendar_obj = self.pool.get('resource.calendar')
-        resource_obj = self.pool.get('resource.resource')
-        uom_obj = self.pool.get('product.uom')
-        if context is None:
-            context = {}
-        res = super(project_phase, self).write(cr, uid, ids, vals, context=context)
-        if context.get('scheduler',False):
-            return res
-        # Consider calendar and efficiency if the phase is performed by a resource
-        # otherwise consider the project's working calendar
-
-        #TOCHECK : why need this ?
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        default_uom_id = self._get_default_uom_id(cr, uid)
-        for phase in self.browse(cr, uid, ids, context=context):
-            calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
-            resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)],context=context)
-            if resource_id:
-                cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
-                if cal_id:
-                    calendar_id = cal_id
-
-            avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-            # Change the date_start and date_end
-            # for previous and next phases respectively based on valid condition
-            if vals.get('date_start', False) and vals['date_start'] < phase.date_start:
-                dt_start = datetime.strptime(vals['date_start'], '%Y-%m-%d')
-                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
-                if work_times:
-                    vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d')
-                for prv_phase in phase.previous_phase_ids:
-                    if prv_phase.id == phase.id:
-                        continue
-                    self._check_date_start(cr, uid, prv_phase, dt_start, context=context)
-
-            if vals.get('date_end', False) and vals['date_end'] > phase.date_end:
-                dt_end = datetime.strptime(vals['date_end'], '%Y-%m-%d')
-                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
-                if work_times:
-                    vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d')
-                for next_phase in phase.next_phase_ids:
-                    if next_phase.id == phase.id:
-                        continue
-                    self._check_date_end(cr, uid, next_phase, dt_end, context=context)
-
-        return res
-
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -511,6 +462,7 @@ class project_task(osv.osv):
         """
         Schedule the tasks according to resource available and priority.
         """
+        resource_pool = self.pool.get('resource.resource')
         if not ids:
             return False
         if context is None:
