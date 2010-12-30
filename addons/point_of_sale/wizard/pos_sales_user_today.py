@@ -47,7 +47,6 @@ class pos_sales_user_today(osv.osv_memory):
         res = self.read(cr, uid, ids, ['user_id'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
-
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.sales.user.today',
