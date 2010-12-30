@@ -292,7 +292,7 @@
             <field name="help">With the Requests for Quotation menu you can create new requests for quotations, review existing ones or turn them into a purchase order once the supplier offer is approved. When you confirm a RfQ, OpenERP will convert it to a Purchase Order and generate the next steps: draft reception of the products, draft invoice to control.</field>
         </record>
         <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management"
-                sequence="6" groups="group_purchase_manager,group_purchase_user"/>
+                sequence="6"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
@@ -440,6 +440,7 @@
             context="{'search_default_partner_id': [active_id]}"
             id="act_res_partner_2_purchase_order"
             name="Purchase Orders"
+            groups="purchase.group_purchase_user"
             res_model="purchase.order"
             src_model="res.partner"/>
 
@@ -449,7 +450,7 @@
             name="Purchases"
             res_model="purchase.order.line"
             src_model="product.product"
-            groups="base.group_extended"/>
+            groups="purchase.group_purchase_user"/>
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">

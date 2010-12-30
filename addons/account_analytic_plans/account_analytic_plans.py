@@ -171,7 +171,7 @@ class account_analytic_plan_instance(osv.osv):
     """% (tools.to_xml(plan_id.name), wiz_id[0])
                 for line in plan_id.plan_ids:
                     res['arch']+="""
-                    <field name="account%d_ids" string="%s" colspan="4">
+                    <field name="account%d_ids" string="%s" nolabel="1" colspan="4">
                     <tree string="%s" editable="bottom">
                         <field name="rate"/>
                         <field name="analytic_account_id" domain="[('parent_id','child_of',[%d])]" groups="base.group_extended"/>

@@ -19,19 +19,14 @@
         type_id: hr_contract.hr_contract_type_emp
     country_id: base.in
     department_id: hr.dep_it
-    employee_account: account.a_recv
     gender: male
     marital: hr.hr_employee_marital_status_single
     name: Richie
-    pg_joining: '2009-12-01'
-    property_bank_account: account.cash
-    salary_account: account.a_recv
     vehicle_distance: 0.0
 -
   I create a new payment advice record
 -
   !record {model: hr.payroll.advice, id: hr_payroll_advice_advice0}:
-    account_id: account.cash
     line_ids:
       - amount: 5500.0
         bysal: 5000.0
@@ -56,7 +51,7 @@
 
 -
   Print Payroll Advice
-- 
+-
   !python {model: hr.payroll.advice}: |
     import netsvc, tools, os
     (data, format) = netsvc.LocalService('report.payroll.advice').create(cr, uid, [ref('hr_payroll_advice_advice0')], {}, {})

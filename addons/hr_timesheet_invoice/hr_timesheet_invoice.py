@@ -77,6 +77,19 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
+    
+    def set_close(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'close'}, context=context)
+    
+    def set_cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+    
+    def set_open(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'open'}, context=context)
+      
+    def set_pending(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'pending'}, context=context)
+
 account_analytic_account()
 
 
