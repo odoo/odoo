@@ -299,11 +299,15 @@ class resource_resource(osv.osv):
             leave_list.sort()
         return leave_list
 
-    def compute_working_calendar(self, cr, uid, calendar_id, context=None):
+    def compute_working_calendar(self, cr, uid, calendar_id=False, context=None):
         """
         Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
         @param calendar_id : working calendar of the project
         """
+        if not calendar_id:
+            # Calendar is not specified: working days: 24/7
+            return [('fri', '1:0-12:0','12:0-24:0'), ('thu', '1:0-12:0','12:0-24:0'), ('wed', '1:0-12:0','12:0-24:0'), 
+                   ('mon', '1:0-12:0','12:0-24:0'), ('tue', '1:0-12:0','12:0-24:0'), ('sat', '1:0-12:0','12:0-24:0'), ('sun', '1:0-12:0','12:0-24:0')]
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""

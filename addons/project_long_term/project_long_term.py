@@ -291,9 +291,10 @@ class project_phase(osv.osv):
         if context is None:
             context = {}
         resource_pool = self.pool.get('resource.resource')
+        data_pool = self.pool.get('ir.model.data')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         uom_pool = self.pool.get('product.uom')
-        default_uom_id = self._get_default_uom_id(cr, uid)
+        data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
         for phase in self.browse(cr, uid, ids, context=context):
             if not phase.responsible_id:
                 raise osv.except_osv(_('No responsible person assigned !'),_("You must assign a responsible person for phase '%s' !") % (phase.name,))
@@ -302,8 +303,8 @@ class project_phase(osv.osv):
                 start_date = phase.project_id.date_start or phase.date_start or datetime.now().strftime("%Y-%m-%d")
                 start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d") 
             phase_resource_obj = resource_pool.generate_resources(cr, uid, [phase.responsible_id.id], calendar_id, context=context)
-            avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-            duration = str(avg_hours) + 'H'
+            avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
+            duration = str(avg_days) + 'd'
             # Create a new project for each phase
             def Project():
                 # If project has working calendar then that
@@ -311,14 +312,17 @@ class project_phase(osv.osv):
                 start = start_date
                 minimum_time_unit = 1
                 resource = phase_resource_obj
+                working_hours_per_day = 24
+                vacation = []
                 if calendar_id:
-                    working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+                    working_hours_per_day = 8 #TODO: it should be come from calendars
                     vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id))
-
+                working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
                 def phase():
                     effort = duration
 
             project = Task.BalancedProject(Project)
+
             s_date = project.phase.start.to_datetime()
             e_date = project.phase.end.to_datetime()
             # Recalculate date_start and date_end
@@ -537,9 +541,12 @@ class project_task(osv.osv):
             except:
                 raise osv.except_osv(_('Error'), _('Should have Resources Allocation or Project Members!'))
             minimum_time_unit = 1
-            if calendar_id:            # If project has working calendar
-                working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+            working_hours_per_day = 24
+            vacation = []
+            if calendar_id:
+                working_hours_per_day = 8 #TODO: it should be come from calendars
                 vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context))
+            working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
             # Dynamic creation of tasks
             task_number = 0
             for openobect_task in self.browse(cr, uid, ids, context=context):
