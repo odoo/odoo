@@ -524,9 +524,9 @@ class product_product(osv.osv):
             if sellers:
                 for s in sellers:
                     mydict = {
-                              'id': product.id, 
-                              'name': s.product_name or product.name, 
-                              'default_code': s.product_code or product.default_code, 
+                              'id': product.id,
+                              'name': s.product_name or product.name,
+                              'default_code': s.product_code or product.default_code,
                               'variants': product.variants
                               }
                     result.append(_name_get(mydict))
@@ -724,7 +724,8 @@ class product_supplierinfo(osv.osv):
         'qty': lambda *a: 0.0,
         'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
+        'product_uom': _get_uom_id,
     }
     def _check_uom(self, cr, uid, ids, context=None):
         for supplier_info in self.browse(cr, uid, ids, context=context):
