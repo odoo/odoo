@@ -49,8 +49,9 @@ account_move_line()
 
 class account_voucher(osv.osv):
 
-    def _get_type(self, cr, uid, ids, context=None):
-        if context is None: context = {}
+    def _get_type(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         return context.get('type', False)
 
     def _get_period(self, cr, uid, context=None):

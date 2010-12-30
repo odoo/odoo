@@ -174,9 +174,8 @@
             <field name="view_id" ref="view_project_issue_report_graph"/>
             <field name="act_window_id" ref="action_project_issue_report"/>
         </record>
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
-        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
-        <menuitem action="action_project_issue_report" id="menu_project_issue_report_tree" parent="base.menu_project_report" groups="project.group_project_manager"/>
+        <menuitem action="action_project_issue_report" id="menu_project_issue_report_tree"
+            parent="base.menu_project_report"/>
 
 
   </data>
