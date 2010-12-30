@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
-
 from osv import osv, fields
 from tools.translate import _
 
@@ -32,36 +30,45 @@ class account_bs_report(osv.osv_memory):
     _inherit = "account.common.account.report"
     _description = 'Account Balance Sheet Report'
 
+    def _get_def_reserve_account(self, cr, uid, context=None):
+        chart_id = self._get_account(cr, uid, context=context)
+        res = self.onchange_chart_id(cr, uid, [], chart_id, context=context)
+        if not res:
+            return False
+        return res['value']['reserve_account_id']
+
     _columns = {
         'display_type': fields.boolean("Landscape Mode"),
-        'reserve_account_id': fields.many2one('account.account', 'Reserve & Profit/Loss Account',required = True,
-                                      help='This Account is used for trasfering Profit/Loss(If It is Profit: Amount will be added, Loss : Amount will be duducted.), Which is calculated from Profilt & Loss Report', domain = [('type','=','payable')]),
+        'reserve_account_id': fields.many2one('account.account', 'Reserve & Profit/Loss Account',
+                                      required=True,
+                                      help='This Account is used for transfering Profit/Loss ' \
+                                           '(Profit: Amount will be added, Loss: Amount will be duducted), ' \
+                                           'which is calculated from Profilt & Loss Report',
+                                      domain = [('type','=','payable')]),
     }
 
     _defaults={
         'display_type': True,
         'journal_ids': [],
+        'reserve_account_id': _get_def_reserve_account,
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(account_bs_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        doc = etree.XML(res['arch'])
-        nodes = doc.xpath("//field[@name='journal_ids']")
-        for node in nodes:
-            node.set('readonly', '1')
-            node.set('required', '0')
-        res['arch'] = etree.tostring(doc)
-        return res
+    def onchange_chart_id(self, cr, uid, ids, chart_id, context=None):
+        if not chart_id:
+            return {}
+        account = self.pool.get('account.account').browse(cr, uid, chart_id , context=context)
+        if not account.company_id.property_reserve_and_surplus_account:
+            return {'value': {'reserve_account_id': False}}
+        return {'value': {'reserve_account_id': account.company_id.property_reserve_and_surplus_account.id}}
+
 
     def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        data = self.pre_print_report(cr, uid, ids, data, context=context)
-        account = self.pool.get('account.account').browse(cr, uid, data['form']['chart_account_id'], context=context)
-        if not account.company_id.property_reserve_and_surplus_account:
+        data['form'].update(self.read(cr, uid, ids, ['display_type','reserve_account_id'])[0])
+        if not data['form']['reserve_account_id']:
             raise osv.except_osv(_('Warning'),_('Please define the Reserve and Profit/Loss account for current user company !'))
-        data['form']['reserve_account_id'] = account.company_id.property_reserve_and_surplus_account.id
-        data['form'].update(self.read(cr, uid, ids, ['display_type'])[0])
+        data = self.pre_print_report(cr, uid, ids, data, context=context)
         if data['form']['display_type']:
             return {
                 'type': 'ir.actions.report.xml',

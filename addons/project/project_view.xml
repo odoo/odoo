@@ -41,7 +41,8 @@
                             </group>
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
-                                <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
+                                <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                                 <field name="warn_manager"/>
                             </group>
                             <newline/>

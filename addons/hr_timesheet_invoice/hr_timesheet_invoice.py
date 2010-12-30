@@ -52,7 +52,6 @@ class account_analytic_account(osv.osv):
             account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
 
         for account in self.browse(cr, uid, ids, context=context):
-            invoiced = {}
             invoice_ids = filter(None, list(set(account_to_invoice_map.get(account.id, []))))
             for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
                 res.setdefault(account.id, 0.0)
@@ -77,6 +76,19 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
+    
+    def set_close(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'close'}, context=context)
+    
+    def set_cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+    
+    def set_open(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'open'}, context=context)
+      
+    def set_pending(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'pending'}, context=context)
+
 account_analytic_account()
 
 

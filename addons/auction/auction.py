@@ -186,7 +186,7 @@ class aie_category(osv.osv):
        'name': fields.char('Name', size=64, required=True),
        'code':fields.char('Code', size=64),
        'parent_id': fields.many2one('aie.category', 'Parent aie Category', ondelete='cascade'),
-       'child_ids': fields.one2many('aie.category', 'parent_id', help="Childs aie category")
+       'child_ids': fields.one2many('aie.category', 'parent_id', help="children aie category")
     }
 
     def name_get(self, cr, uid, ids, context=None):
