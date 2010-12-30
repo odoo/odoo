@@ -282,10 +282,10 @@ class project_phase(osv.osv):
             res[phase.id] = resource_objs
         return res
 
-    def generate_schedule(self, cr, uid, ids, start_date, calendar_id=False, context=None):
+    def generate_schedule(self, cr, uid, ids, start_date=False, calendar_id=False, context=None):
         """
         Schedule phase with the start date till all the next phases are completed.
-        @param: start_dsate : start date for the phase
+        @param: start_date (datetime.datetime) : start date for the phase. It would be either Start date of phase or start date of project or system current date
         @param: calendar_id : working calendar of the project
         """
         if context is None:
@@ -298,6 +298,9 @@ class project_phase(osv.osv):
             if not phase.responsible_id:
                 raise osv.except_osv(_('No responsible person assigned !'),_("You must assign a responsible person for phase '%s' !") % (phase.name,))
 
+            if not start_date:
+                start_date = phase.project_id.date_start or phase.date_start or datetime.now().strftime("%Y-%m-%d")
+                start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d") 
             phase_resource_obj = resource_pool.generate_resources(cr, uid, [phase.responsible_id.id], calendar_id, context=context)
             avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
             duration = str(avg_hours) + 'H'
@@ -440,12 +443,9 @@ class project(osv.osv):
                                                   ('state', 'in', ['draft', 'open', 'pending']),
                                                   ('previous_phase_ids', '=', False)
                                                   ])
-            start_date = project.date_start
-            if not start_date:
-                start_date = datetime.now().strftime("%Y-%m-%d")
-            start_dt = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d %H:%M")
             calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
-            phase_pool.generate_schedule(cr, uid, phase_ids, start_dt, calendar_id, context=context)
+            start_date = False
+            phase_pool.generate_schedule(cr, uid, phase_ids, start_date, calendar_id, context=context)
         return True
 
     def schedule_tasks(self, cr, uid, ids, context=None):
