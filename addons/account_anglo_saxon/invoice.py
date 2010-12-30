@@ -21,7 +21,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
