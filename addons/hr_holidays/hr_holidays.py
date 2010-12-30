@@ -21,7 +21,6 @@
 #
 ##############################################################################
 
-import time
 import datetime
 from itertools import groupby
 from operator import itemgetter

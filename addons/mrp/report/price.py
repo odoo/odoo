@@ -18,8 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
-import ir
 import pooler
 from report.interface import report_rml
 from report.interface import toxml
@@ -52,7 +50,6 @@ class report_custom(report_rml):
             prod_name = bom['name']
             prod_qtty = factor * bom['product_qty']
             product_uom = product_uom_pool.browse(cr, uid, bom['product_uom'], context=context)
-            level = 1
             main_sp_price, main_sp_name , main_strd_price = '','',''
             sellers, sellers_price = '',''
 
