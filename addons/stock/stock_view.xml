@@ -232,6 +232,7 @@
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
             groups="base.group_extended"
+            sequence="6"
             parent="menu_traceability"/>
 
         <record id="lot_line_tree" model="ir.ui.view">
@@ -389,7 +390,9 @@
             <field name="context">{'full':'1',"search_default_available":1}</field>
             <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot. By default, the list is filtred on the serial numbers that are available in your warehouse but you can uncheck the 'Available' button to get all the lots you produced, received or delivered to customers.</field>
         </record>
-        <menuitem action="action_production_lot_form" id="menu_action_production_lot_form" parent="menu_traceability" groups="base.group_extended"/>
+        <menuitem action="action_production_lot_form" id="menu_action_production_lot_form" 
+            parent="menu_traceability" groups="base.group_extended"
+            sequence="1"/>
 
         #
         # Lot composition (history)
@@ -1482,7 +1485,7 @@
             <field name="context">{'search_default_Available':1}</field>
             <field name="help">This menu gives you the full traceability of inventory operations on a specific product. You can filter on the product to see all the past or future movements for the product.</field>
         </record>
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="1"/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
 
         ====================================
         Reception Picking (By Stock Move)
