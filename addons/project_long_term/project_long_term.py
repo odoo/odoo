@@ -105,8 +105,8 @@ class project_phase(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
-        'date_start': fields.date('Start Date', help="Starting Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'date_end': fields.date('End Date', help="Ending Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'date_start': fields.date('Start Date', help="It's computed according to the phases order : the start date of the 1st phase is set by you while the other start dates depend on the end date of their previous phases", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'date_end': fields.date('End Date', help=" It's computed by the scheduler according to the start date and the duration.", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'constraint_date_start': fields.date('Minimum Start Date', help='force the phase to start after this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'constraint_date_end': fields.date('Deadline', help='force the phase to finish before this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'project_id': fields.many2one('project.project', 'Project', required=True),
@@ -484,7 +484,7 @@ class project_task(osv.osv):
             try:
                 resource = reduce(operator.or_, resources)
             except:
-                raise osv.except_osv(_('Error'), _('Should have Resources Allocation or Project Members!'))
+                raise osv.except_osv(_('Error'), _('Resources should be allocated to your phases and Members should be assigned to your Project!'))
             minimum_time_unit = 1
             working_hours_per_day = 24
             vacation = []
