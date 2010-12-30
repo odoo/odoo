@@ -115,7 +115,7 @@
                        <separator orientation="vertical"/>
                        <field name="name" string="Project Name"/>
                        <field name="user_id" string="Project Manager">
-                            <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manage" icon="terp-personal"/>
+                            <filter domain="[('user_id','=',uid)]" help="Projects in which I am a manager" icon="terp-personal"/>
                        </field>
                        <field name="partner_id" string="Partner"/>
                    </group>
@@ -160,7 +160,7 @@
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current':1}</field>
-            <field name="help">A project contains a set of tasks or issues that will be performed by your assigned personnel. A project can be put into a hierarchy, as a child of a Parent Project. This allows you to design large project structure with different phases spread over the project's duration cycle. Each user can set his default project in his own preferences, in order to filter automatically the tasks or issues he usually works on. If you have personalized your Project application in order to invoice the time spent on a task, you can choose to invoice or not one project in the billing section.</field>
+            <field name="help">A project contains a set of tasks or issues that will be performed by your resources assigned to it. A project can be hierarchically structured, as a child of a Parent Project. This allows you to design large project structures with different phases spread over the project duration cycle. Each user can set his default project in his own preferences to automatically filter the tasks or issues he usually works on. If you choose to invoice the time spent on a project task, you can find project tasks to be invoiced in the billing section.</field>
         </record>
         <menuitem action="open_view_project_all" id="menu_open_view_project_all" parent="menu_project_management" sequence="1"/>
 
@@ -428,7 +428,7 @@
             <field name="view_id" ref="view_task_tree2"/>
             <field name="context">{"search_default_user_id":uid, "search_default_current": 1}</field>
             <field name="search_view_id" ref="view_task_search_form"/>
-            <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to antoher user. If you delegate a task to another user, you get a new task in pending state, which will be re-opened when you have to review the work achieved. If you install the project_timesheet module, tasks works can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
+            <field name="help">A task represents a work that has to be done. Each user works in his own list of tasks where he can record his task work in hours. He can work and close the task itself or delegate it to another user. If you delegate a task to another user, you get a new task in pending state, which will be reopened when you have to review the work achieved. If you install the project_timesheet module, task work can be invoiced based on the project configuration. With the project_mrp module, sales orders can create tasks automatically when they are confirmed.</field>
         </record>
         <menuitem action="action_view_task" id="menu_action_view_task" parent="project.menu_project_management" sequence="3"/>
 
@@ -492,7 +492,7 @@
             <field name="res_model">project.task.type</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="task_type_tree"/>
-            <field name="help">Define here the steps that will be used on the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress of the resolution of a task or an issue.</field>
+            <field name="help">Define the steps that will be used in the project from the creation of the task, up to the closing of the task or issue. You will use these stages in order to track the progress in solving a task or an issue.</field>
         </record>
 
         <menuitem id="menu_tasks_config" name="Tasks" parent="project.menu_definitions" sequence="1"/>

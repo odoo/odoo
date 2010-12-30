@@ -8,13 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-21 14:15+0000\n"
-"Last-Translator: Carlos-smile <Unknown>\n"
+"PO-Revision-Date: 2010-12-27 18:12+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-22 05:42+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -47,6 +48,8 @@ msgstr "Agrupar por..."
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Draft procurement of the product and location of that orderpoint"
 msgstr ""
+"Abastecimiento borrador del producto y ubicación para esta regla de stock "
+"mínimo"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:0
@@ -198,7 +201,7 @@ msgstr "Preparado"
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
-msgstr "Pedido automático"
+msgstr "Regla de stock mínimo automática"
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -238,7 +241,7 @@ msgstr ""
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "Órdenes de abastecimiento a procesar"
 
 #. module: procurement
 #: constraint:res.company:0
@@ -446,11 +449,14 @@ msgid ""
 "    This is the module for computing Procurements.\n"
 "    "
 msgstr ""
+"\n"
+"    Este es el módulo para calcular abastecimientos.\n"
+"    "
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
 msgid "Related Procurement Orders"
-msgstr ""
+msgstr "Órdenes de abastecimiento relacionadas"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
@@ -483,8 +489,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
-"Si el campo activo es falso, le permitirá ocultar el punto de pedido sin "
-"eliminarlo."
+"Si el campo activo se desmarca, permite ocultar la regla de stock mínimo sin "
+"eliminarla."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -554,6 +560,17 @@ msgid ""
 "others require manual intervention (those are identified by a specific error "
 "message)"
 msgstr ""
+"Las órdenes de abastecimiento representan la necesidad de una determinada "
+"cantidad de productos, en un momento dado, en una ubicación determinada. Los "
+"pedidos de venta son una fuente típica de las órdenes de abastecimiento "
+"(pero estos son documentos distintos). Dependiendo de los parámetros de "
+"abastecimiento y la configuración de productos, el motor de abastecimientos "
+"tratará de satisfacer la necesidad de reservar los productos del stock, u "
+"ordenar productos de un proveedor, o crear una orden de producción, etc. Se "
+"produce una excepción de abastecimiento cuando el sistema no puede encontrar "
+"una manera de cumplir un abastecimiento. Algunas excepciones se resolverán "
+"de forma automática, pero otras requieren intervención manual (las que se "
+"identifican con un mensaje de error específico)."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -610,7 +627,7 @@ msgstr "Ord. abastecimiento automática: %s"
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_orderpoint_compute
 msgid "Automatic Order Point"
-msgstr "Orden automática"
+msgstr "Regla de stock mínimo automática"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
@@ -930,7 +947,7 @@ msgstr "Muy urgente"
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
 msgid "Automatic Orderpoint"
-msgstr "Punto de pedido automático"
+msgstr "Regla de stock mínimo automática"
 
 #. module: procurement
 #: view:procurement.order:0

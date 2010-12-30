@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-11-29 07:27+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-12-27 17:10+0000\n"
+"Last-Translator: Grzegorz Grzelak (Cirrus.pl) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-22 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Variation Account is not specified for Product Category: %s"
-msgstr ""
+msgstr "Nie zdefiniowano konta wyceny dla kategorii produktu: %s"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -866,7 +866,7 @@ msgstr "Zaplanowana data"
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Search"
-msgstr "Wyzzukiwanie pobrań"
+msgstr "Wyszukiwanie pobrań"
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -1202,6 +1202,10 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"Dzienniki magazynowe pozwalają powiązać każda operację magazynową do "
+"konkretnego dziennika w zależności od typu operacji lub osób wykonujących "
+"operację. Przykłady dzienników magazynowych, to kontrola jakości, listy "
+"pobrań, pakowanie itp."
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1577,7 +1581,7 @@ msgstr "Przesunięcia zapasów"
 #: selection:stock.location,chained_picking_type:0
 #: selection:stock.picking,type:0
 msgid "Sending Goods"
-msgstr "Wysyłanie towarów"
+msgstr "Wydania zewnętrzne"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1631,7 +1635,7 @@ msgstr "Raport zapasów wg partii magazynowych"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Delivered Qty"
-msgstr "Ilość dostarczona"
+msgstr "Ilość bieżąca"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.track_line
@@ -1872,7 +1876,7 @@ msgstr "Brak konta przyjęć dla produktu lub jego kategorii: \"%s\" (id: %d)"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Received Qty"
-msgstr "Otrzymana ilość"
+msgstr "Ilość bieżąca"
 
 #. module: stock
 #: field:stock.production.lot,ref:0
@@ -1959,7 +1963,7 @@ msgstr ""
 #. module: stock
 #: help:stock.move,tracking_id:0
 msgid "Logistical shipping unit: pallet, box, pack ..."
-msgstr ""
+msgstr "Logistyczna jednostka magazynowa: paleta, kontener, karton..."
 
 #. module: stock
 #: view:stock.change.product.qty:0
@@ -2189,12 +2193,12 @@ msgstr "Konsola magazynu"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Future Qty"
-msgstr "Przyszła ilość"
+msgstr "Ilość planowana"
 
 #. module: stock
 #: field:product.category,property_stock_variation:0
 msgid "Stock Variation Account"
-msgstr "Konto odchyleń zapasów"
+msgstr "Konto wyceny zapasów"
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2289,7 +2293,7 @@ msgstr "Spodziewana data wykonania pobrania"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "P&L Qty"
-msgstr "Ilość Zysk/Strata"
+msgstr "Ilość bieżąca"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -2311,6 +2315,11 @@ msgid ""
 "current inventory value, and the stock input and stock output account will "
 "hold the counterpart moves for incoming and outgoing products."
 msgstr ""
+"Jeśli bieżąca wycena jest włączona dla produktu, to system będzie "
+"automatycznie dokonywał zapisów księgowych dla przesunięć zapasów. Konto "
+"wyceny zapasów ustawiane w kategorii produktów reprezentuje bieżącą wartość, "
+"a konta zapasów wchodzących i wychodzących są kontami przeciwstawnymi dla "
+"niego."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_inventory_report
@@ -2523,6 +2532,8 @@ msgstr "Data wykonania"
 msgid ""
 "By unchecking the active field, you may hide a pack without deleting it."
 msgstr ""
+"Odznaczając pole aktywności możesz ukryć pobranie bez konieczności usuwania "
+"go."
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -3016,7 +3027,7 @@ msgstr "Partie"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "New pack"
-msgstr ""
+msgstr "Nowe pobranie"
 
 #. module: stock
 #: view:stock.move:0
@@ -3067,7 +3078,7 @@ msgstr "Suma przyjmowanych ilości"
 #. module: stock
 #: field:report.stock.move,product_qty_out:0
 msgid "Out Qty"
-msgstr ""
+msgstr "Ilość wydawana"
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
@@ -3084,7 +3095,7 @@ msgstr "Wiadomość !"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Put in current pack"
-msgstr ""
+msgstr "Wstaw do bieżącego pobrania"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -3142,7 +3153,7 @@ msgstr "Błąd!"
 msgid ""
 "There is no inventory variation account defined on the product category: "
 "\"%s\" (id: %d)"
-msgstr ""
+msgstr "Brak definicji konta wyceny dla kategorii produktu: \"%s\" (id: %d)"
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -3167,6 +3178,7 @@ msgstr "Typ związanej strefy"
 #: help:stock.picking,move_type:0
 msgid "It specifies goods to be delivered all at once or by direct delivery"
 msgstr ""
+"To określa, że produkty mają być wydawane wszystkie naraz lub bezpośrednio."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
@@ -3179,7 +3191,7 @@ msgstr ""
 #: selection:stock.location,chained_picking_type:0
 #: selection:stock.picking,type:0
 msgid "Getting Goods"
-msgstr "Przyjęcie towarów"
+msgstr "Przyjęcia zewnętrzne"
 
 #. module: stock
 #: help:stock.location,chained_location_type:0
@@ -3260,6 +3272,8 @@ msgstr ""
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
 msgstr ""
+"Zaznacz tę opcję, aby ta strefa mogła zawierać uszkodzone/wybrakowane "
+"produkty."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
@@ -3312,7 +3326,7 @@ msgstr ""
 #. module: stock
 #: view:stock.split.into:0
 msgid "Quantity to leave in the current pack"
-msgstr ""
+msgstr "Ilość do zostawienia w bieżącym pobraniu"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
@@ -3327,6 +3341,8 @@ msgid ""
 "get the up-stream or down-stream traceability of the products contained in "
 "the pack."
 msgstr ""
+"To jest lista pobrań. Wybierając pobranie możesz sprawdzić przepływ "
+"produktów z pobrania wstecz i wprzód."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -3354,6 +3370,11 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
+"jeśli cena kosztowa zostanie zwiększona, to konto wyceny będzie zapisane po "
+"stronie Winien, a konto zapasów wychodzących po stronie Ma wartością = "
+"(różnica wartości * ilość bieżąca).\n"
+"Jeśli cena kosztowa jest zmniejszana, to konto wyceny będzie zapisane po "
+"stronie Ma a konto zapasów wchodzących po stronie Winien."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -3609,7 +3630,7 @@ msgstr "Nie zdefiniowano dziennika w kategorii produktu: \"%s\" (id: %d)"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Unplanned Qty"
-msgstr "Ilość nieplanowana"
+msgstr "Ilość bieżąca"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -3742,7 +3763,7 @@ msgstr "Strefa docelowa"
 #: help:stock.move,product_packaging:0
 msgid ""
 "It specifies attributes of packaging like type, quantity of packaging,etc."
-msgstr ""
+msgstr "To określa atrybuty pakowania jak typ, ilość w paczce itp."
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -3836,7 +3857,7 @@ msgstr ""
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Produced Qty"
-msgstr "Ilość wyprodukowana"
+msgstr "Ilość bieżąca"
 
 #. module: stock
 #: field:product.category,property_stock_account_output_categ:0

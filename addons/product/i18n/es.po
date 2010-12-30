@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-16 17:20+0000\n"
-"Last-Translator: Carlos-smile <Unknown>\n"
+"PO-Revision-Date: 2010-12-27 18:02+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-22 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -155,6 +156,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"La cantidad mínima para disparar esta regla, expresada en la UdM del "
+"proveedor si existe o en la UdM por defecto del producto en caso contrario."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -489,6 +492,8 @@ msgid ""
 "Choose here the Unit of Measure in which the prices and quantities are "
 "expressed below."
 msgstr ""
+"Seleccione aquí la unidad de medida en que se expresarán los precios y las "
+"cantidades listadas."
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -503,7 +508,7 @@ msgstr "Ventas & Compras"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
-msgstr "Tiempo trabajo"
+msgstr "Horario de trabajo"
 
 #. module: product
 #: help:product.product,active:0
@@ -706,6 +711,8 @@ msgid ""
 "Product UoM if not empty, in the default unit of measure of the product "
 "otherwise."
 msgstr ""
+"La cantidad mínima a comprar a este proveedor, expresada en la UdM del "
+"proveedor si existe o en la UdM por defecto del producto en caso contrario."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -718,6 +725,8 @@ msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
 msgstr ""
+"Este precio se considerará como el precio para la UdM del proveedor si "
+"existe o en la UdM por defecto del producto en caso contrario."
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -1218,6 +1227,25 @@ msgid ""
 "    Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"    Este es el módulo base para gestionar productos y tarifas en OpenERP.\n"
+"\n"
+"    Los productos soportan variantes, distintos métodos de precios, "
+"información\n"
+"    de proveedor, obtener para stock/pedido, distintas unidades de medida,\n"
+"    empaquetado y propiedades.\n"
+"\n"
+"    Soporte de tarifas:\n"
+"    * Múltiple-nivel de descuento (por producto, categoría, cantidades)\n"
+"    * Cálculo del precio basado en distintos criterios:\n"
+"        * Otra tarifa,\n"
+"        * Precio coste,\n"
+"        * Precio lista,\n"
+"        * Precio proveedor, ...\n"
+"    Preferencias de tarifas por producto y/o empresas.\n"
+"\n"
+"    Imprimir etiquetas de productos con códigos de barras.\n"
+"    "
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1370,6 +1398,9 @@ msgid ""
 "gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
+"Indica el orden en que los elementos de la tarifa serán comprobados. En la "
+"evaluación se da máxima prioridad a la secuencia más baja y se detiene tan "
+"pronto como se encuentra un elemento coincidente."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1809,7 +1840,7 @@ msgstr "Nombre de este tipo de precio."
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr ""
+msgstr "UdM proveedor"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0

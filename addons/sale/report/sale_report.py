@@ -99,9 +99,10 @@ class sale_report(osv.osv):
                         sum(l.product_uom_qty*l.price_unit) as price_total,
                         pt.categ_id, l.order_id
                     from
-                     sale_order_line l
-                     left join product_uom u on (u.id=l.product_uom)
-                     left join product_template pt on (pt.id=l.product_id)
+                     sale_order_line l ,product_uom u, product_product p, product_template pt
+                     where u.id = l.product_uom
+                     and pt.id = p.product_tmpl_id
+                     and p.id = l.product_id
                       group by l.id, l.order_id, l.product_id, u.name, pt.categ_id, u.uom_type, u.category_id) el
                 where s.id = el.order_id
                 group by el.id,
