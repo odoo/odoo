@@ -105,8 +105,8 @@ class project_phase(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
-        'date_start': fields.date('Start Date', help="Starting Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'date_end': fields.date('End Date', help="Ending Date of the phase", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'date_start': fields.date('Start Date', help="It's computed according to the phases order : the start date of the 1st phase is set by you while the other start dates depend on the end date of their previous phases", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'date_end': fields.date('End Date', help=" It's computed by the scheduler according to the start date and the duration.", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'constraint_date_start': fields.date('Minimum Start Date', help='force the phase to start after this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'constraint_date_end': fields.date('Deadline', help='force the phase to finish before this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'project_id': fields.many2one('project.project', 'Project', required=True),
@@ -144,13 +144,6 @@ class project_phase(osv.osv):
             result['date_start'] = project_id.date_start
         return {'value': result}
 
-    def onchange_days(self, cr, uid, ids, project, context=None):
-        result = {}
-        for id in ids:
-            project_id = self.browse(cr, uid, id, context=context)
-            newdate = datetime.strptime(project_id.date_start, '%Y-%m-%d') + relativedelta(days=project_id.duration or 0.0)
-            result['date_end'] = newdate.strftime('%Y-%m-%d')
-        return {'value': result}
 
     def _check_date_start(self, cr, uid, phase, date_end, context=None):
        """
@@ -191,55 +184,6 @@ class project_phase(osv.osv):
        work_times = cal_obj.interval_get(cr, uid, calendar_id, date_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
        dt_end = work_times[-1][1].strftime('%Y-%m-%d')
        self.write(cr, uid, [phase.id], {'date_start': date_start.strftime('%Y-%m-%d'), 'date_end': dt_end}, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        resource_calendar_obj = self.pool.get('resource.calendar')
-        resource_obj = self.pool.get('resource.resource')
-        uom_obj = self.pool.get('product.uom')
-        if context is None:
-            context = {}
-        res = super(project_phase, self).write(cr, uid, ids, vals, context=context)
-        if context.get('scheduler',False):
-            return res
-        # Consider calendar and efficiency if the phase is performed by a resource
-        # otherwise consider the project's working calendar
-
-        #TOCHECK : why need this ?
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        default_uom_id = self._get_default_uom_id(cr, uid)
-        for phase in self.browse(cr, uid, ids, context=context):
-            calendar_id = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
-            resource_id = resource_obj.search(cr, uid, [('user_id', '=', phase.responsible_id.id)],context=context)
-            if resource_id:
-                cal_id = resource_obj.browse(cr, uid, resource_id[0], context=context).calendar_id.id
-                if cal_id:
-                    calendar_id = cal_id
-
-            avg_hours = uom_obj._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-            # Change the date_start and date_end
-            # for previous and next phases respectively based on valid condition
-            if vals.get('date_start', False) and vals['date_start'] < phase.date_start:
-                dt_start = datetime.strptime(vals['date_start'], '%Y-%m-%d')
-                work_times = resource_calendar_obj.interval_get(cr, uid, calendar_id, dt_start, avg_hours or 0.0, resource_id and resource_id[0] or False)
-                if work_times:
-                    vals['date_end'] = work_times[-1][1].strftime('%Y-%m-%d')
-                for prv_phase in phase.previous_phase_ids:
-                    if prv_phase.id == phase.id:
-                        continue
-                    self._check_date_start(cr, uid, prv_phase, dt_start, context=context)
-
-            if vals.get('date_end', False) and vals['date_end'] > phase.date_end:
-                dt_end = datetime.strptime(vals['date_end'], '%Y-%m-%d')
-                work_times = resource_calendar_obj.interval_min_get(cr, uid, calendar_id, dt_end, avg_hours or 0.0, resource_id and resource_id[0] or False)
-                if work_times:
-                    vals['date_start'] = work_times[0][0].strftime('%Y-%m-%d')
-                for next_phase in phase.next_phase_ids:
-                    if next_phase.id == phase.id:
-                        continue
-                    self._check_date_end(cr, uid, next_phase, dt_end, context=context)
-
-        return res
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
@@ -282,25 +226,29 @@ class project_phase(osv.osv):
             res[phase.id] = resource_objs
         return res
 
-    def generate_schedule(self, cr, uid, ids, start_date, calendar_id=False, context=None):
+    def generate_schedule(self, cr, uid, ids, start_date=False, calendar_id=False, context=None):
         """
         Schedule phase with the start date till all the next phases are completed.
-        @param: start_dsate : start date for the phase
+        @param: start_date (datetime.datetime) : start date for the phase. It would be either Start date of phase or start date of project or system current date
         @param: calendar_id : working calendar of the project
         """
         if context is None:
             context = {}
         resource_pool = self.pool.get('resource.resource')
+        data_pool = self.pool.get('ir.model.data')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         uom_pool = self.pool.get('product.uom')
-        default_uom_id = self._get_default_uom_id(cr, uid)
+        data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
         for phase in self.browse(cr, uid, ids, context=context):
             if not phase.responsible_id:
                 raise osv.except_osv(_('No responsible person assigned !'),_("You must assign a responsible person for phase '%s' !") % (phase.name,))
 
+            if not start_date:
+                start_date = phase.project_id.date_start or phase.date_start or datetime.now().strftime("%Y-%m-%d")
+                start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d") 
             phase_resource_obj = resource_pool.generate_resources(cr, uid, [phase.responsible_id.id], calendar_id, context=context)
-            avg_hours = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, default_uom_id)
-            duration = str(avg_hours) + 'H'
+            avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
+            duration = str(avg_days) + 'd'
             # Create a new project for each phase
             def Project():
                 # If project has working calendar then that
@@ -308,14 +256,17 @@ class project_phase(osv.osv):
                 start = start_date
                 minimum_time_unit = 1
                 resource = phase_resource_obj
+                working_hours_per_day = 24
+                vacation = []
                 if calendar_id:
-                    working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+                    working_hours_per_day = 8 #TODO: it should be come from calendars
                     vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id))
-
+                working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
                 def phase():
                     effort = duration
 
             project = Task.BalancedProject(Project)
+
             s_date = project.phase.start.to_datetime()
             e_date = project.phase.end.to_datetime()
             # Recalculate date_start and date_end
@@ -440,12 +391,9 @@ class project(osv.osv):
                                                   ('state', 'in', ['draft', 'open', 'pending']),
                                                   ('previous_phase_ids', '=', False)
                                                   ])
-            start_date = project.date_start
-            if not start_date:
-                start_date = datetime.now().strftime("%Y-%m-%d")
-            start_dt = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d %H:%M")
             calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
-            phase_pool.generate_schedule(cr, uid, phase_ids, start_dt, calendar_id, context=context)
+            start_date = False
+            phase_pool.generate_schedule(cr, uid, phase_ids, start_date, calendar_id, context=context)
         return True
 
     def schedule_tasks(self, cr, uid, ids, context=None):
@@ -507,6 +455,7 @@ class project_task(osv.osv):
         """
         Schedule the tasks according to resource available and priority.
         """
+        resource_pool = self.pool.get('resource.resource')
         if not ids:
             return False
         if context is None:
@@ -535,11 +484,14 @@ class project_task(osv.osv):
             try:
                 resource = reduce(operator.or_, resources)
             except:
-                raise osv.except_osv(_('Error'), _('Should have Resources Allocation or Project Members!'))
+                raise osv.except_osv(_('Error'), _('Resources should be allocated to your phases and Members should be assigned to your Project!'))
             minimum_time_unit = 1
-            if calendar_id:            # If project has working calendar
-                working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+            working_hours_per_day = 24
+            vacation = []
+            if calendar_id:
+                working_hours_per_day = 8 #TODO: it should be come from calendars
                 vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context))
+            working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
             # Dynamic creation of tasks
             task_number = 0
             for openobect_task in self.browse(cr, uid, ids, context=context):
