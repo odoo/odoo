@@ -1213,6 +1213,8 @@ class stock_picking(osv.osv):
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
 
+                        if not move.returned_price:
+                            move_obj.write(cr, uid, [move.id], {'returned_price': move.price_unit})
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
@@ -1533,6 +1535,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
+        'returned_price': fields.float('Returned product price', digits=(16,2)),
     }
     _constraints = [
         (_check_tracking,
