@@ -263,11 +263,11 @@
     <paraStyle name="terp_header_Centre" fontName="Helvetica-Bold" fontSize="15.0" leading="19" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_address" fontName="Helvetica" fontSize="10.0" leading="13" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Bold_8" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_7" fontName="Helvetica-Bold" fontSize="7.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_8" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_2" fontName="Helvetica" fontSize="2.0" leading="3" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="terp_default_Bold_8_Right" fontName="Helvetica-Bold" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="terp_default_Bold_7_Right" fontName="Helvetica-Bold" fontSize="7.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Heading 3" fontName="Helvetica-Bold" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <images/>
   </stylesheet>
@@ -313,7 +313,7 @@
 	          <para style="terp_tblheader_Details_Right">Currency</para>
 	        </td>
 	      </tr>
-	    </blockTable>  
+	    </blockTable>
   		<blockTable colWidths="45.0,35.0,30.0,105.0,80.0,55.0,130.0,95.0,65.0,65.0,75.0" style="Table10">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
 	      <tr>
 	        <td>
@@ -496,19 +496,19 @@
       <blockTable rowHeights="0.55cm" colWidths="490.0,65.0,65.0,75.0,75.0" style="Table8">[[data['form']['amount_currency'] == True or removeParentNode('blockTable')]]
         <tr>
           <td>
-            <para style="terp_default_Bold_8"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para>
+            <para style="terp_default_Bold_7"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8_Right">[[ formatLang(sum_debit_account(o), digits=get_digits(dp='Account')) ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_debit_account(o), digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8_Right">[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8_Right">[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account')) + o.currency_id.code or '' ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account')) + o.currency_id.code or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -526,7 +526,7 @@
               <para style="terp_default_7">[[ line['lcode'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_7">[[ strip_name(line['partner_name'],21) ]]</para>
+              <para style="terp_default_7">[[ strip_name(line['partner_name'],20) ]]</para>
             </td>
             <td>
               <para style="terp_default_7">[[ strip_name(line['lref'],17) ]]</para>
@@ -535,7 +535,7 @@
               <para style="terp_default_7">[[ line['move'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_7">[[ strip_name(line['lname'],26) ]]</para>
+              <para style="terp_default_7">[[ strip_name(line['lname'],22) ]]</para>
             </td>
             <td>
               <para style="terp_default_7">[[ strip_name(line['line_corresp'],18) ]]</para>
@@ -598,16 +598,16 @@
       <blockTable rowHeights="0.55cm" colWidths="575.0,65.0,65.0,75.0" style="Table11">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
-            <para style="terp_default_Bold_8"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para>
+            <para style="terp_default_Bold_7"><font color="white">[[ '..'*(o.level-1) ]]</font>[[ o.code ]] [[ o.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8_Right">[[ formatLang(sum_debit_account(o), digits=get_digits(dp='Account')) ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_debit_account(o), digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8_Right">[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_credit_account(o), digits=get_digits(dp='Account')) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_8_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Bold_7_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -625,7 +625,7 @@
               <para style="terp_default_7">[[ line['lcode'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_7">[[ strip_name(line['partner_name'],25) ]]</para>
+              <para style="terp_default_7">[[ strip_name(line['partner_name'],24) ]]</para>
             </td>
             <td>
               <para style="terp_default_7">[[ strip_name(line['lref'],21) ]]</para>
@@ -634,7 +634,7 @@
               <para style="terp_default_7">[[ line['move'] ]]</para>
             </td>
             <td>
-              <para style="terp_default_7">[[ strip_name(line['lname'],35) ]]</para>
+              <para style="terp_default_7">[[ strip_name(line['lname'],28) ]]</para>
             </td>
             <td>
               <para style="terp_default_7">[[ strip_name(line['line_corresp'],23) ]]</para>

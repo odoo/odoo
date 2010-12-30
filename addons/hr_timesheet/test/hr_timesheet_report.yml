@@ -1,23 +1,21 @@
 -
- In order to test the PDF reports defined on Employee, we will print Timesheet of a User
+ Print the HR Timesheet By Employee report through the wizard
 -
   !python {model: hr.employee}: |
     import netsvc, tools, os, time
-    month = time.gmtime()[1]
-    year = time.gmtime()[0]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'month': month, 'year' : year, 'employee_id' : ref('hr.employee1') }}
-    (data, format) = netsvc.LocalService('report.hr.analytical.timesheet').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet-user_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'hr.employee','active_ids': []})
+    data_dict = {'month': time.gmtime()[1], 'year': time.gmtime()[0], 'employee_id' : ref('hr.employee1')}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_timesheet_my',wiz_data=data_dict, context=ctx, our_module='hr_timesheet')
 
 -
- In order to test the PDF reports defined on Employee, we will print Timesheet of Users
+ Print the HR Timesheet By Employee report through the wizard
 -
   !python {model: hr.employee}: |
     import netsvc, tools, os, time
-    month = time.gmtime()[1]
-    year = time.gmtime()[0]
-    data_dict = {'model': 'ir.ui.menu', 'form': {'month': month, 'year' : year, 'employee_ids' : [ref('hr.employee1')] }}
-    (data, format) = netsvc.LocalService('report.hr.analytical.timesheet_users').create(cr, uid, [], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_timesheet-users_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'hr.employee','active_ids': []})
+    data_dict = {'month': time.gmtime()[1], 'year': time.gmtime()[0], 'employee_ids' : [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')])]}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_timesheet_users',wiz_data=data_dict, context=ctx, our_module='hr_timesheet')
