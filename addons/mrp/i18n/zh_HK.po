@@ -29,6 +29,11 @@ msgid "No. Of Cycles"
 msgstr "週期數"
 
 #. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid "Number of iterations this work center has to do in the specified operation of the routing."
+msgstr ""
+
+#. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
 msgstr ""
@@ -40,7 +45,7 @@ msgstr ""
 
 #. module: mrp
 #: view:report.workcenter.load:0
-msgid "Work Centers load"
+msgid "Work Center Loads"
 msgstr ""
 
 #. module: mrp
@@ -501,7 +506,7 @@ msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
-msgid "Specify Cost of Workcenter per hour."
+msgid "Specify Cost of Work center per hour."
 msgstr ""
 
 #. module: mrp
@@ -553,7 +558,7 @@ msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Workcenter per cycle."
+msgid "Specify Cost of Work center per cycle."
 msgstr ""
 
 #. module: mrp
@@ -646,7 +651,7 @@ msgstr "就緒"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
-msgid "Time in hours for doing one cycle."
+msgid "Time in hours for this work center to achieve the operation of the specified routing."
 msgstr "一個循環所須的小時數"
 
 #. module: mrp
@@ -1065,7 +1070,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
-"Gives the sequence order when displaying a list of routing workcenters."
+"Gives the sequence order when displaying a list of routing work centers."
 msgstr ""
 
 #. module: mrp
@@ -1706,8 +1711,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
-"Description of the workcenter. Explain here what's a cycle according to this "
-"workcenter."
+"Description of the work center. Explain here what's a cycle according to this "
+"work center."
 msgstr "工作中心之描述。在此說明此工作中心是依據那個週期。"
 
 #. module: mrp
@@ -1790,9 +1795,9 @@ msgstr ""
 #. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
 
@@ -1825,7 +1830,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
-"Number of operations this workcenter can do in parallel. If this workcenter "
+"Number of operations this work center can do in parallel. If this work center "
 "represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
 
@@ -2263,9 +2268,9 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
 
