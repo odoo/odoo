@@ -72,7 +72,7 @@ class wiki_create_menu(osv.osv_memory):
             value['view_type'] = 'form'
             value['view_mode'] = 'tree,form'
         elif group.method == 'tree':
-            view_id = obj_view.search(cr, uid, [('name', '=', 'wiki.wiki.tree.childs')])
+            view_id = obj_view.search(cr, uid, [('name', '=', 'wiki.wiki.tree.children')])
             value['view_id'] = view_id
             value['domain'] = [('group_id', '=', group.id), ('parent_id', '=', False)]
             value['view_type'] = 'tree'
@@ -86,7 +86,7 @@ class wiki_create_menu(osv.osv_memory):
                         'action': 'ir.actions.act_window,'+ str(action_id),
                         }, context)
         obj_wiki_group.write(cr, uid, [group_id], {'menu_id':menu_id})        
-        return {}
+        return {'type':  'ir.actions.act_window_close'}
 
 
 wiki_create_menu()

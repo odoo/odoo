@@ -38,6 +38,6 @@ class auction_lots_enable(osv.osv_memory):
         if context is None: 
             context = {}
         self.pool.get('auction.lots').write(cr, uid, context.get('active_id',False), {'ach_emp':False})
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
 auction_lots_enable()

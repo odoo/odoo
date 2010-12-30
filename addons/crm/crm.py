@@ -47,13 +47,12 @@ AVAILABLE_PRIORITIES = [
 class crm_case(object):
     """A simple python class to be used for common functions """
 
-    
     def _find_lost_stage(self, cr, uid, type, section_id):
         return self._find_percent_stage(cr, uid, 0.0, type, section_id)
         
     def _find_won_stage(self, cr, uid, type, section_id):
         return self._find_percent_stage(cr, uid, 100.0, type, section_id)
-    
+
     def _find_percent_stage(self, cr, uid, percent, type, section_id):
         """
             Return the first stage with a probability == percent
@@ -105,7 +104,6 @@ class crm_case(object):
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
-    
 
     def _get_default_partner_address(self, cr, uid, context=None):
 
@@ -208,7 +206,6 @@ class crm_case(object):
         next_stage = stage_pool.browse(cr, uid, next_stage_id, context=context)
         if not next_stage:
             return False
-            
         next_seq = next_stage.sequence
         if not current_seq :
             current_seq = 0
@@ -221,10 +218,8 @@ class crm_case(object):
     def stage_change(self, cr, uid, ids, context=None, order='sequence'):
         if context is None:
             context = {}
-            
         stage_pool = self.pool.get('crm.case.stage')
         stage_type = context and context.get('stage_type','')
-        
         current_seq = False
         next_stage_id = False
 

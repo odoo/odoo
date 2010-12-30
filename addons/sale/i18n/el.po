@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-20 14:38+0000\n"
+"PO-Revision-Date: 2010-12-28 08:59+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:26+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -215,6 +215,8 @@ msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
+"Το τιμολόγιο δημιουργείται αυτόματα εάν η πολιτική αποστολής είναι "
+"'Τιμολόγιο από παραλαβή' ή 'Τιμολόγιο με παραγγελία μετά την παραλαβή'."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -254,7 +256,7 @@ msgstr "Συσκευασία"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "Από παραγγελία πώλησης"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -308,7 +310,7 @@ msgstr ""
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Παραμετροποίηση"
 
 #. module: sale
 #: constraint:stock.move:0
@@ -330,7 +332,7 @@ msgstr "Ιούνιος"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel this sales order !"
-msgstr ""
+msgstr "Δεν μπορεί να κυρωθεί αυτή η παραγγελία πώλησης !"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -340,7 +342,7 @@ msgstr "Στατιστικά Πωλήσεων Παραγγελιών"
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "Ο αναλυτικός λογαριασμός που σχετίζεται με την παραγγελία πώλησης"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -350,12 +352,12 @@ msgstr "Οκτώβριος"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr ""
+msgstr "Διέυθυνση αποστολής για την τρέχουσα παραγγελία πώλησης."
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "Τιμοκατάλογος για την τρέχουσα παραγγελία πώλησης."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -1485,7 +1487,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr ""
+msgstr "Ημερομηνία στην οποία η παραγγελία πώλησης επιβεβαιώνεται."
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -1517,6 +1519,8 @@ msgstr "Εξαίρεση Τιμολογίου"
 msgid ""
 "This is a list of picking that has been generated for this sales order."
 msgstr ""
+"Αυτή είναι μια λίστα παραλαβών που δημιουργήθηκε γι' αυτήν την παραγγελία "
+"πώλησης."
 
 #. module: sale
 #: help:sale.installer,sale_margin:0
@@ -1555,12 +1559,12 @@ msgstr "   Μήνας   "
 #: view:sale.report:0
 #: field:sale.report,uom_name:0
 msgid "Default UoM"
-msgstr ""
+msgstr "Προεπιλεγμένη ΜΜ"
 
 #. module: sale
 #: field:sale.report,date_confirm:0
 msgid "Date Confirm"
-msgstr ""
+msgstr "Ημερομηνία Επιβεβαίωσης"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_line_invoice.py:0
@@ -1812,7 +1816,7 @@ msgstr "Απευθείας Παράδοση"
 #. module: sale
 #: field:sale.installer,sale_journal:0
 msgid "Invoicing journals"
-msgstr ""
+msgstr "Ημερολόγια Τιμολόγησης"
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -1836,6 +1840,8 @@ msgstr "Το Τιμολόγιό σας δημιουργήθηκε επιτυχώ
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr ""
+"Πρέπει πρώτα να ακυρώσεις όλα τα τιμολόγια που συνδέονται με αυτήν την "
+"παραγγελία πώλησης."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1889,7 +1895,7 @@ msgstr "Ημερομηνία Παραγγελίας"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "Confirmed sales order to invoice."
-msgstr ""
+msgstr "Επιβεβαιωμένη παραγγελία πώλησης για τιμολόγηση."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1901,7 +1907,7 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
-msgstr ""
+msgstr "Η παραγγελία πώλησης '%s' είναι σε κατάσταση πρόχειρη."
 
 #. module: sale
 #: selection:sale.order.line,type:0

@@ -35,15 +35,15 @@ class account_statement_from_invoice_lines(osv.osv_memory):
     }
 
     def populate_statement(self, cr, uid, ids, context=None):
-        if context is None: 
+        if context is None:
             context = {}
         statement_id = context.get('statement_id', False)
         if not statement_id:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
         data =  self.read(cr, uid, ids, context=context)[0]
         line_ids = data['line_ids']
         if not line_ids:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
         line_obj = self.pool.get('account.move.line')
         statement_obj = self.pool.get('account.bank.statement')
@@ -75,7 +75,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                     statement.currency.id, amount, context=ctx)
 
             context.update({'move_line_ids': [line.id]})
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'), context=context)
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'), date=time.strftime('%Y-%m-%d'), context=context)
             voucher_res = { 'type':(amount < 0 and 'payment' or 'receipt'),
                             'name': line.name,
                             'partner_id': line.partner_id.id,
@@ -115,7 +115,7 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'voucher_id': voucher_id,
                 'date': time.strftime('%Y-%m-%d'), #time.strftime('%Y-%m-%d'), #line.date_maturity or,
             }, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_statement_from_invoice_lines()
 
@@ -135,7 +135,7 @@ class account_statement_from_invoice(osv.osv_memory):
     }
 
     def search_invoices(self, cr, uid, ids, context=None):
-        if context is None: 
+        if context is None:
             context = {}
         line_obj = self.pool.get('account.move.line')
         statement_obj = self.pool.get('account.bank.statement')

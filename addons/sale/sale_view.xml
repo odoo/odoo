@@ -81,7 +81,7 @@
             <field name="type">tree</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" colors="grey:state=='done'">
+                <tree string="Sales Orders" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
                     <field name="name"/>
                     <field name="date_order"/>
                     <field name="client_order_ref" groups="base.group_extended"/>
@@ -514,6 +514,7 @@
         context="{'search_default_partner_id': [active_id]}"
         id="act_res_partner_2_sale_order"
         name="Sales"
+        groups="base.group_sale_salesman"
         res_model="sale.order"
         src_model="res.partner"/>
 
@@ -523,7 +524,7 @@
         name="Product sales"
         res_model="sale.order.line"
         src_model="product.product"
-        groups="base.group_extended"/>
+        groups="base.group_sale_salesman"/>
 
         <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"
             groups="base.group_extended"/>

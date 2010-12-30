@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-09 10:16+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2010-12-28 09:05+0000\n"
+"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:41+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -105,7 +104,7 @@ msgstr "Procesos productivos"
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr ""
+msgstr "Producto centro de producción"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -128,6 +127,8 @@ msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
 msgstr ""
+"Número de iteraciones que debe realizar este centro de producción en la "
+"operación indicada de la ruta."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -244,6 +245,8 @@ msgid ""
 "Fill this product to track easily your production costs in the analytic "
 "accounting."
 msgstr ""
+"Introduzca este producto para realizar fácilmente un seguimiento de sus "
+"costes de producción en la contabilidad analítica."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -520,7 +523,7 @@ msgid ""
 "centers."
 msgstr ""
 "La lista de materiales está vinculada a una ruta, es decir, la sucesión de "
-"centros de trabajo."
+"centros de producción."
 
 #. module: mrp
 #: constraint:product.product:0
@@ -530,7 +533,7 @@ msgstr "Error: Código EAN no válido"
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Workcenter per hour."
-msgstr "Indica coste del centro de trabajo por hora."
+msgstr "Indica el coste del centro de producción por hora."
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -582,7 +585,7 @@ msgstr "Marzo"
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Workcenter per cycle."
-msgstr "Especifique el coste por centro de prodcción"
+msgstr "Indica el coste del centro de producción por ciclo."
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -780,6 +783,8 @@ msgid ""
 "Add more functionalities to the core Manufacturing Application with the "
 "following addons."
 msgstr ""
+"Añada más funcionalidades en el núcleo de la aplicación de fabricación con "
+"los siguientes módulos."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -833,7 +838,7 @@ msgstr "Urgente"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Workcenter Usage"
-msgstr "Uso centro de trabajo"
+msgstr "Uso centro de producción"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -862,6 +867,8 @@ msgid ""
 "Time in hours for this work center to achieve the operation of the specified "
 "routing."
 msgstr ""
+"Tiempo en horas para este centro de producción para realizar la operación de "
+"la ruta indicada."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1093,7 +1100,7 @@ msgstr "Nombre"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "MRP Application Configuration"
-msgstr ""
+msgstr "Configuración aplicación MRP"
 
 #. module: mrp
 #: help:mrp.installer,mrp_jit:0
@@ -1128,7 +1135,7 @@ msgid ""
 "Gives the sequence order when displaying a list of routing workcenters."
 msgstr ""
 "Indica el orden de secuencia cuando se muestra una lista de rutas de centros "
-"de trabajo."
+"de producción."
 
 #. module: mrp
 #: constraint:mrp.production:0
@@ -1173,6 +1180,43 @@ msgid ""
 "    * List of procurement in exception\n"
 "    "
 msgstr ""
+"\n"
+"    Este es el módulo base para gestionar el proceso de fabricación en "
+"OpenERP.\n"
+"\n"
+"    Características:\n"
+"    * Obtener para stock / Obtener bajo pedido (por línea)\n"
+"    * Listas de materiales (LdM) multi-nivel, sin límite\n"
+"    * Rutas multi-nivel, sin límite\n"
+"    * Rutas y centro de producción integrado con contabilidad analítica\n"
+"    * Cálculo de la planificación periódica / Módulo Just In Time\n"
+"    * Multi-TPV, multi-almacén\n"
+"    * Distintas políticas de volver a pedir\n"
+"    * Método de coste por producto: precio estándar, precio promedio\n"
+"    * Fácil análisis de problemas o necesidades\n"
+"    * Muy flexible\n"
+"    * Permite mostrar Listas de Materiales en una estructura completa\n"
+"        que incluye LdMs hijas y fantasmas\n"
+"    Soporta la integración y planificación completa de productos "
+"almacenables,\n"
+"    consumibles o servicios. Los servicios están completamente integrados "
+"con el resto\n"
+"    de la aplicación. Por ejemplo, puede configurar un servicio de sub-"
+"contratación\n"
+"    en una LdM para automáticamente comprar bajo pedido el montaje de su "
+"producción.\n"
+"\n"
+"    Informes que proporciona este módulo:\n"
+"    * Estructura y componentes de la Lista de Material\n"
+"    * Previsión de carga en los centros de producción\n"
+"    * Imprimir una orden de producción\n"
+"    * Previsiones de stock\n"
+"    Tableros que proporciona este módulo:\n"
+"    * Lista de las próximas órdenes de producción\n"
+"    * Lista de envíos (albaranes de salida)\n"
+"    * Gráfico de la carga del centro de producción\n"
+"    * Lista de abastecimientos en excepción\n"
+"    "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1355,6 +1399,7 @@ msgstr "Revisiones"
 #: view:mrp.installer:0
 msgid "Configure Your Manufacturing Resource Planning Application"
 msgstr ""
+"Configure su aplicación de planificación de recursos de fabricación (MRP)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -1469,9 +1514,9 @@ msgid ""
 "of one or several people and/or machines that can be considered as a unit "
 "for capacity and planning forecasting."
 msgstr ""
-"Los centros de trabajo permiten crear y manejar unidades de fabricación "
+"Los centros de producción permiten crear y manejar unidades de fabricación "
 "compuestas por una o varias personas y/o máquinas que pueden ser "
-"consideradas como una unidad a efectos de capacidad y prevision de "
+"consideradas como una unidad a efectos de capacidad y previsión de "
 "planificación."
 
 #. module: mrp
@@ -1483,7 +1528,7 @@ msgstr "ID activo no se encuentra"
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Search for mrp workcenter"
-msgstr "Buscar por centro de trabajo mrp"
+msgstr "Buscar por centro de producción mrp"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1525,7 +1570,7 @@ msgstr "Abastecer productos"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
 msgid "Work Center Loads"
-msgstr "Cargas centro de trabajo"
+msgstr "Cargas centro de producción"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_action
@@ -1726,7 +1771,7 @@ msgstr "Análisis de producción"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Copy"
-msgstr ""
+msgstr "Copiar"
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
@@ -1828,7 +1873,7 @@ msgstr ""
 #: view:mrp.production:0
 #: report:mrp.production.order:0
 msgid "Work Orders"
-msgstr "Órdenes de producción"
+msgstr "Órdenes de trabajo"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1903,11 +1948,11 @@ msgid ""
 "operations and to plan future loads on workcenters based on production "
 "plannification."
 msgstr ""
-"La lista de las operaciones (lista de los centros de trabajo) para producir "
-"el producto terminado. La ruta se utiliza principalmente para calcular los "
-"costes del centro de trabajo durante las operaciones y para planificar las "
-"futuras cargas en centros de trabajo basado en planificación de la "
-"producción."
+"La lista de las operaciones (lista de los centros de producción) para "
+"producir el producto terminado. La ruta se utiliza principalmente para "
+"calcular los costes del centro de producción durante las operaciones y para "
+"planificar las futuras cargas en centros de producción basado en "
+"planificación de la producción."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
@@ -2015,7 +2060,7 @@ msgstr "Redondeo del producto"
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr "Orden de entrega"
+msgstr "Orden de trabajo"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_mrp_production_order
@@ -2135,7 +2180,7 @@ msgstr "Proceso productivo padre"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
@@ -2280,9 +2325,9 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (workcenters) "
 "will be automatically pre-completed."
 msgstr ""
-"La ruta indica todos los centros de trabajo utilizados, por cuánto tiempo "
+"La ruta indica todos los centros de producción utilizados, por cuánto tiempo "
 "y/o ciclos. Si se indica la ruta, entonces la tercera pestaña de una orden "
-"de producción (Centros de trabajo) será automáticamente pre-completada."
+"de producción (centros de producción) será automáticamente pre-completada."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
@@ -2413,11 +2458,11 @@ msgid ""
 "operations and to plan future loads on workcenters based on production "
 "planning."
 msgstr ""
-"La lista de las operaciones (lista de los centros de trabajo) para producir "
-"el producto terminado. La ruta se utiliza principalmente para calcular los "
-"costes del centro de trabajo durante las operaciones y para planificar las "
-"futuras cargas en los centros de trabajo basado en la planificación de la "
-"producción."
+"La lista de las operaciones (lista de los centros de producción) para "
+"producir el producto terminado. La ruta se utiliza principalmente para "
+"calcular los costes del centro de producción durante las operaciones y para "
+"planificar las futuras cargas en los centros de producción basado en la "
+"planificación de la producción."
 
 #. module: mrp
 #: view:board.board:0
@@ -2436,9 +2481,9 @@ msgid ""
 "specified period. It is expressed in number of hours and machine related "
 "cycles."
 msgstr ""
-"\"Carga de los centros de trabajo\" muestra un pronóstico de la carga de los "
-"centros de trabajo respecto a un periodo específico. Está expresado en "
-"número de horas y ciclos de máquina relacionados."
+"Las cargas de los centros de producción muestran un pronóstico de la carga "
+"de los centros de producción respecto a un periodo determinado. Está "
+"expresado en número de horas y ciclos de máquina relacionados."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
@@ -2518,6 +2563,8 @@ msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
 msgstr ""
+"Indique la cantidad de productos a producir o comprar. El informe de la "
+"estructura de costes se muestra basándose en esta cantidad."
 
 #. module: mrp
 #: selection:mrp.bom,method:0

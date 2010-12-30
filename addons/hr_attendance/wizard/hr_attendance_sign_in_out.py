@@ -68,7 +68,7 @@ class hr_sign_in_out(osv.osv_memory):
     _columns = {
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
         'state': fields.char('Current state', size=32, required=True, readonly=True),
-        'emp_id': fields.char('Empoyee ID', size=32, required=True, readonly=True),
+        'emp_id': fields.char('Employee ID', size=32, required=True, readonly=True),
                 }
 
     def _get_empid(self, cr, uid, context=None):
@@ -160,7 +160,7 @@ class hr_sign_in_out(osv.osv_memory):
             success = self.pool.get('hr.employee').attendance_action_change(cr, uid, [emp_id], 'sign_in')
         except:
             raise osv.except_osv(_('UserError'), _('A sign-in must be right after a sign-out !'))
-        return {} # To do: Return Success message
+        return {'type': 'ir.actions.act_window_close'} # To do: Return Success message
 
     def sign_out(self, cr, uid, data, context=None):
         emp_id = data['emp_id']
@@ -172,7 +172,7 @@ class hr_sign_in_out(osv.osv_memory):
             success = self.pool.get('hr.employee').attendance_action_change(cr, uid, [emp_id], 'sign_out')
         except:
             raise osv.except_osv(_('UserError'), _('A sign-out must be right after a sign-in !'))
-        return {} # To do: Return Success message
+        return {'type': 'ir.actions.act_window_close'} # To do: Return Success message
 
 hr_sign_in_out()
 

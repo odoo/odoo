@@ -156,7 +156,7 @@ class crm_send_new_email(osv.osv_memory):
                 act = 'case_' + obj.state
                 getattr(case_pool, act)(cr, uid, [case.id])
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def default_get(self, cr, uid, fields, context=None):
         """
@@ -217,7 +217,7 @@ class crm_send_new_email(osv.osv_memory):
 
             # In the case where the crm.case does not exist in the database
             if not model:
-                return {}
+                return {'type': 'ir.actions.act_window_close'}
 
             model_pool = self.pool.get(model)
             res_id = hist.res_id
