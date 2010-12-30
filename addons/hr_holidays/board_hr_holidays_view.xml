@@ -10,52 +10,16 @@
             parent="base.menu_hr_dasboard"
             sequence="4"/>
 
-      <record model="ir.ui.view" id="view_holiday_allocation_leave_tree">
-            <field name="name">hr.holidays.allocation.leave.tree</field>
-            <field name="model">hr.holidays</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Leaves" >
-                    <field name="name"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
-                    <field name="holiday_status_id"/>
-                </tree>
-            </field>
-        </record>
-        <record id="action_view_holiday_status_board" model="ir.actions.act_window">
-            <field name="name">My Leaves</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.holidays</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','in',('confirm', 'validate')),('user_id','=',uid)]</field>
-            <field name="view_id" ref="view_holiday_allocation_leave_tree"/>
-        </record>
-
-        <record id="board_hr_holidays_form" model="ir.ui.view">
-            <field name="name">board.hr.holidays.form</field>
-            <field name="model">board.board</field>
-            <field name="inherit_id" ref="hr.board_hr_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child1" position="inside">
-                    <action colspan="4" height="220" name="%(action_view_holiday_status_board)d" string="My Leaves"/>
-                </xpath>
-            </field>
-        </record>
-
             <!-- Need to merge in above view -->
 
-        <record id="action_hr_holidays_leaves_by_month" model="ir.actions.act_window">
-            <field name="name">Leaves by Month</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">available.holidays.report</field>
+        <record model="ir.actions.act_window" id="action_hr_holidays_leaves_by_month">
+            <field name="name">My Leaves</field>
+            <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('user_id','=',uid)]</field>
-            <field name="context">{'group_by':['holiday_status_id'],'group_by_no_leaf':1}</field>
-            <field name="view_id" ref="hr_holidays.view_hr_available_holidays_report_graph"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
         </record>
         <record id="board_hr_holidays_leave_by_month_form" model="ir.ui.view">
             <field name="name">board.hr.holidays.leave.month.form</field>
@@ -64,7 +28,7 @@
             <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/hpaned/child2" position="inside">
-                 <action colspan="4" height="220" name="%(action_hr_holidays_leaves_by_month)d" string="Leaves By Month" />
+                 <action colspan="4" height="220" name="%(action_hr_holidays_leaves_by_month)d" string="Leaves" />
                 </xpath>
             </field>
         </record>
