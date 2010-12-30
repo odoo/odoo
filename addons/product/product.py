@@ -350,7 +350,7 @@ class product_product(osv.osv):
 
     def _product_price(self, cr, uid, ids, name, arg, context={}):
         res = {}
-        quantity = context.get('quantity', 1)
+        quantity = context.get('quantity', 1) or 1.0
         pricelist = context.get('pricelist', False)
         if pricelist:
             for id in ids:
