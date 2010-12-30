@@ -16,7 +16,7 @@
 
     <record id="ir_rule_readpublicdirectories0" model="ir.rule">
         <field name="model_id" ref="document.model_document_directory"/>
-        <field name="domain_force">['|','|',('group_ids','in',[g.id for g in user.groups_id]), ('user_id', '=', user.id), '&amp;', ('user_id', '=', False), ('group_ids','=',False),  '|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">['|','|',('group_ids','in',[g.id for g in user.groups_id]), ('user_id', '=', user.id), '&amp;', ('user_id', '=', False), ('group_ids','=',False),  '|','|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
         <field name="name">Read public directories</field>
         <field eval="0" name="global"/>
         <field eval="[(6,0,[ref('base.group_user')])]" name="groups"/>
@@ -28,7 +28,7 @@
     
     <record id="ir_rule_documentmodifyowndirectories0" model="ir.rule">
         <field name="model_id" ref="document.model_document_directory"/>
-        <field name="domain_force">[ '|', ('user_id', '=', user.id), '&amp;', ('group_ids','in',[g.id for g in user.groups_id]), ('user_id','=',False), '|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id])]</field>
+        <field name="domain_force">[ '|', ('user_id', '=', user.id), '&amp;', ('group_ids','in',[g.id for g in user.groups_id]), ('user_id','=',False), '|','|', ('company_id','=',False), ('company_id','child_of',[user.company_id.id]),('company_id.child_ids','child_of',[user.company_id.id])]</field>
         <field name="name">Document modify own directories</field>
         <field eval="0" name="global"/>
         <field eval="[(6,0,[ref('base.group_document_user')])]" name="groups"/>
