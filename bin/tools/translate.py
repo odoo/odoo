@@ -346,7 +346,7 @@ class TinyPoFile(object):
 
         if name is None:
             if not fuzzy:
-                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s', 
+                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s',
                         self.cur_line(), source[:30])
             return self.next()
         return type, name, res_id, source, trad
@@ -537,9 +537,9 @@ def trans_generate(lang, modules, dbname=None):
 
     query = 'SELECT name, model, res_id, module'    \
             '  FROM ir_model_data'
-            
-    query_models = """SELECT m.id, m.model, imd.module 
-            FROM ir_model AS m, ir_model_data AS imd 
+
+    query_models = """SELECT m.id, m.model, imd.module
+            FROM ir_model AS m, ir_model_data AS imd
             WHERE m.id = imd.res_id AND imd.model = 'ir.model' """
 
     if 'all_installed' in modules:
@@ -841,42 +841,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=
 
         if not ids:
             # lets create the language with locale information
-            fail = True
-            for ln in get_locales(lang):
-                try:
-                    locale.setlocale(locale.LC_ALL, str(ln))
-                    fail = False
-                    break
-                except locale.Error:
-                    continue
-            if fail:
-                lc = locale.getdefaultlocale()[0]
-                msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
-                logger.warning(msg, lang, lc)
-
-            if not lang_name:
-                lang_name = tools.get_languages().get(lang, lang)
-
-            def fix_xa0(s):
-                if s == '\xa0':
-                    return '\xc2\xa0'
-                return s
-
-            lang_info = {
-                'code': lang,
-                'iso_code': iso_lang,
-                'name': lang_name,
-                'translatable': 1,
-                'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
-                'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
-                'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
-            }
-
-            try:
-                lang_obj.create(cr, uid, lang_info)
-            finally:
-                resetlocale()
+            lang_obj.load_lang(cr, 1, lang=lang, lang_name=lang_name)
 
 
         # now, the serious things: we read the language file
