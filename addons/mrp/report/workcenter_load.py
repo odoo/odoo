@@ -21,7 +21,6 @@
 
 from report.render import render
 from report.interface import report_int
-from pychart import *
 import time
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -124,7 +123,7 @@ class report_custom(report_int):
             x_index.append((dates[date]['name'], date))
         pdf_string = StringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
-        can.set_title("Work Centers Load")
+        can.set_title("Work Center Loads")
         chart_object.set_defaults(line_plot.T, line_style=None)
         if datas['form']['measure_unit'] == 'cycles':
             y_label = "Load (Cycles)"
@@ -132,7 +131,7 @@ class report_custom(report_int):
             y_label = "Load (Hours)"
 
         # For add the report header on the top of the report.
-        tb = text_box.T(loc=(300, 500), text="/hL/15/bWork Centers Load", line_style=None)
+        tb = text_box.T(loc=(300, 500), text="/hL/15/bWork Center Loads", line_style=None)
         tb.draw()
         ar = area.T(legend = legend.T(),
                     x_grid_style = line_style.gray70_dash1,

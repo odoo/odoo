@@ -73,7 +73,7 @@ class crm_merge_opportunity(osv.osv_memory):
 
             for this in self.browse(cr, uid, ids, context=context):
                 for opp in this.opportunity_ids:
-                    opp_obj.write(cr, uid, opp.id, {
+                    opp_obj.write(cr, uid, [opp.id], {
                                     'stage_id': opp.stage_id.id or current_opp.stage_id.id or False,
                                     'priority': opp.priority or current_opp.priority,
                                     'email_from': opp.email_from or current_opp.email_from,

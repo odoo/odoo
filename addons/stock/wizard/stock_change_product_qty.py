@@ -21,14 +21,15 @@
 
 from osv import fields, osv
 from tools.translate import _
-import time
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
     _description = "Change Product Quantity"
     _columns = {
-        'new_quantity': fields.float('Quantity', required=True, help='This quantity is expressed in the Default UoM of the product.'), 
-        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade", domain="[('usage', '=', 'internal')]"), 
+        'product_id' : fields.many2one('product.product', 'Product'),
+        'new_quantity': fields.float('Quantity', required=True, help='This quantity is expressed in the Default UoM of the product.'),
+        'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
 
     def default_get(self, cr, uid, fields, context):
@@ -40,10 +41,13 @@ class stock_change_product_qty(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary which of fields with values.
         """
+        product_id = context and context.get('active_id', False) or False
         res = super(stock_change_product_qty, self).default_get(cr, uid, fields, context=context)
 
         if 'new_quantity' in fields:
             res.update({'new_quantity': 1})
+        if 'product_id' in fields:
+            res.update({'product_id': product_id})
         return res
 
     def change_product_qty(self, cr, uid, ids, context=None):
@@ -58,7 +62,6 @@ class stock_change_product_qty(osv.osv_memory):
         if context is None:
             context = {}
 
-        move_ids = []
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')
 
@@ -70,18 +73,27 @@ class stock_change_product_qty(osv.osv_memory):
         for data in self.browse(cr, uid, ids, context=context):
             inventory_id = inventry_obj.create(cr , uid, {'name': _('INV: ') + str(res_original.name)}, context=context)
             line_data ={
-                'inventory_id' : inventory_id, 
-                'product_qty' : data.new_quantity, 
-                'location_id' : data.location_id.id, 
-                'product_id' : rec_id, 
-                'product_uom' : res_original.uom_id.id, 
+                'inventory_id' : inventory_id,
+                'product_qty' : data.new_quantity,
+                'location_id' : data.location_id.id,
+                'product_id' : rec_id,
+                'product_uom' : res_original.uom_id.id,
+                'prod_lot_id' : data.prodlot_id.id
             }
-            line_id = inventry_line_obj.create(cr , uid, line_data, context=context)
-    
+            inventry_line_obj.create(cr , uid, line_data, context=context)
+
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)
-            
-        return {}
+
+        return {
+            'domain': "[('id','=', %s)]" % (inventory_id),
+            'name' : _('Physical Inventories'),
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'stock.inventory',
+            'context': context,
+            'type': 'ir.actions.act_window',
+        }
 
 stock_change_product_qty()
 

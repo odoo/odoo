@@ -1382,12 +1382,11 @@ def OpenPartnerForm(txtProcessor,*args):
     try:
     	partner_text = ustr(mail.SenderName).encode('iso-8859-1')
         sender_mail = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
-
     except Exception:
     	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Error in reading email.>")
     	pass
     vals = NewConn.SearchPartner(sender_mail)
-    if vals == True:
+    if vals:
         win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Their is contact related to "+str(partner_text)+"  email address, but no partner is linked to contact>")
         txtProcessor.init_done=True
         return
