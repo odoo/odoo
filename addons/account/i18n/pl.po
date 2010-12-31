@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-11-29 07:48+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-12-29 20:05+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -104,6 +104,8 @@ msgid ""
 "The Profit and Loss report gives you an overview of your company profit and "
 "loss in a single document"
 msgstr ""
+"Raport zysków i strat pokaże ci obraz zysków i strat twojej firmy w jednym "
+"dokumencie"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -181,7 +183,7 @@ msgstr ""
 #: code:addons/account/invoice.py:0
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Uwaga!"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -375,7 +377,7 @@ msgstr ""
 #: view:account.installer:0
 #: view:account.installer.modules:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguruj"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -554,7 +556,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr ""
+msgstr "Konto stosowane w tym dzienniku"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -869,6 +871,8 @@ msgid ""
 "Can not %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only Refund this invoice"
 msgstr ""
+"Nie można %s faktury, która jest uzgodniona. Trzeba najpierw skasować "
+"uzgodnienie. Możesz korygować tylko takie faktury."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -962,7 +966,7 @@ msgstr "Rozszerzone filtry..."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr ""
+msgstr "Dziennik scentralizowany"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -986,6 +990,9 @@ msgid ""
 "amount.If the tax account is base tax code, this field will contain the "
 "basic amount(without tax)."
 msgstr ""
+"Jeśli konto podatku jest kontem rejestru podatku, to pole zawiera wartość "
+"podatku. Jeśli konto jest kontem rejestru podstawy, to pole zawiera wartość "
+"podstawy (bez podatku)."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1073,11 +1080,13 @@ msgid ""
 "These types are defined according to your country. The type contains more "
 "information about the account and its specificities."
 msgstr ""
+"Te typy definiuje się zależnie od kraju. Typ zawiera więcej informacji o "
+"koncie i jego specyfice."
 
 #. module: account
 #: view:account.tax:0
 msgid "Applicability Options"
-msgstr ""
+msgstr "Opcje stosowania"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1433,6 +1442,7 @@ msgstr "Faktury korygujące od dostawców"
 msgid ""
 "Example: at 14 net days 2 percents, remaining amount at 30 days end of month."
 msgstr ""
+"Przykład: w ciągu 14 dni 2 procent, pozostałość do 30 dni od końca miesiąca."
 
 #. module: account
 #: code:addons/account/invoice.py:0
@@ -1442,6 +1452,8 @@ msgid ""
 "The payment term defined gives a computed amount greater than the total "
 "invoiced amount."
 msgstr ""
+"Nie można utworzyć faktury !\n"
+"Warunki płatności generują wartość przekraczającą wartość faktury."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree1
@@ -1450,11 +1462,13 @@ msgid ""
 "customers. OpenERP generates draft of invoices automatically so that you "
 "only have to confirm them before sending them to your customers."
 msgstr ""
+"OpenERP generuje projekty faktur automatycznie, abyś mógł tylko je "
+"potwierdzać przed wysłaniem do klientów."
 
 #. module: account
 #: field:account.installer.modules,account_anglo_saxon:0
 msgid "Anglo-Saxon Accounting"
-msgstr ""
+msgstr "Ksiągowość anglosaska"
 
 #. module: account
 #: selection:account.account,type:0
@@ -1550,7 +1564,7 @@ msgstr "Pozycje wyciągu"
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
 msgid "Date/Code"
-msgstr ""
+msgstr "Data/Kod"
 
 #. module: account
 #: field:account.analytic.line,general_account_id:0
@@ -1578,7 +1592,7 @@ msgstr "Faktura"
 #: model:process.node,note:account.process_node_analytic0
 #: model:process.node,note:account.process_node_analyticcost0
 msgid "Analytic costs to invoice"
-msgstr ""
+msgstr "Koszt analityczny do fakturowania"
 
 #. module: account
 #: view:ir.sequence:0
@@ -1603,7 +1617,7 @@ msgstr "Suma częściowa :"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
 msgid "Sales by Account Type"
-msgstr ""
+msgstr "Sprzedaż wg typów kont"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -1611,6 +1625,8 @@ msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
 msgstr ""
+"Anulowanie faktury: Tworzy fakturę korygującą, zatwierdza ją i uzgadnia, aby "
+"wyzerować bieżącą fakturę."
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1641,7 +1657,7 @@ msgstr ""
 #. module: account
 #: view:account.change.currency:0
 msgid "This wizard will change the currency of the invoice"
-msgstr ""
+msgstr "Ten kreator zmieni walutę faktury"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_chart
@@ -1654,7 +1670,7 @@ msgstr ""
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! You cannot define overlapping fiscal years"
-msgstr ""
+msgstr "Błąd! Nie możesz tworzyć lat podatkowych zachodzących na siebie"
 
 #. module: account
 #: code:addons/account/account_move_line.py:0
@@ -1774,7 +1790,7 @@ msgstr ""
 #. module: account
 #: view:res.company:0
 msgid "Reserve And Profit/Loss Account"
-msgstr ""
+msgstr "Konto rezerwy i zysków/strat"
 
 #. module: account
 #: sql_constraint:account.move.line:0
@@ -1786,7 +1802,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_invoice_report_all
 #: model:ir.ui.menu,name:account.menu_action_account_invoice_report_all
 msgid "Invoices Analysis"
-msgstr ""
+msgstr "Analiza faktur"
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -1832,7 +1848,7 @@ msgstr ""
 #. module: account
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1870,7 +1886,7 @@ msgstr ""
 #. module: account
 #: field:account.bs.report,reserve_account_id:0
 msgid "Reserve & Profit/Loss Account"
-msgstr ""
+msgstr "Konto rezerwy i zysków/strat"
 
 #. module: account
 #: help:account.bank.statement,balance_end:0
@@ -1987,7 +2003,7 @@ msgstr ""
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
 msgid "Import from invoice"
-msgstr ""
+msgstr "Importuj z faktury"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -2234,7 +2250,7 @@ msgstr "Otwarty"
 #: model:process.node,note:account.process_node_draftinvoices0
 #: model:process.node,note:account.process_node_supplierdraftinvoices0
 msgid "Draft state of an invoice"
-msgstr ""
+msgstr "Stan projekt faktury"
 
 #. module: account
 #: help:account.account,reconcile:0
@@ -2247,7 +2263,7 @@ msgstr ""
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr ""
+msgstr "Uzgoenienie partnera"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2274,7 +2290,7 @@ msgstr "Rejestr podstawy"
 #. module: account
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
-msgstr ""
+msgstr "Określa kolejność wyświetlania podatków w listach"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
@@ -2390,7 +2406,7 @@ msgstr ""
 #. module: account
 #: constraint:product.category:0
 msgid "Error ! You can not create recursive categories."
-msgstr ""
+msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych kategorii."
 
 #. module: account
 #: model:account.account.type,name:account.account_type_tax
@@ -2451,12 +2467,12 @@ msgstr ""
 #. module: account
 #: report:account.journal.period.print:0
 msgid "Label"
-msgstr ""
+msgstr "Etykieta"
 
 #. module: account
 #: view:account.tax:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Informacje księgowe"
 
 #. module: account
 #: view:account.tax:0
@@ -3125,12 +3141,12 @@ msgstr "Rejestry podatkowe"
 #. module: account
 #: view:account.journal:0
 msgid "Search Account Journal"
-msgstr ""
+msgstr "Przeszukaj dziennik"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
 msgid "Pending Invoice"
-msgstr ""
+msgstr "Oczekujące faktury"
 
 #. module: account
 #: selection:account.subscription,period_type:0
@@ -3223,7 +3239,7 @@ msgstr ""
 #. module: account
 #: report:account.general.ledger:0
 msgid "Counterpart"
-msgstr ""
+msgstr "Strona przeciwna"
 
 #. module: account
 #: view:account.journal:0
@@ -3420,7 +3436,7 @@ msgstr "Budżety"
 #: selection:account.report.general.ledger,filter:0
 #: selection:account.vat.declaration,filter:0
 msgid "No Filters"
-msgstr ""
+msgstr "Brak filtrów"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -3457,7 +3473,7 @@ msgstr "Il."
 #. module: account
 #: field:account.invoice.report,address_contact_id:0
 msgid "Contact Address Name"
-msgstr ""
+msgstr "Nazwa adresu"
 
 #. module: account
 #: field:account.move.line,blocked:0
@@ -3467,7 +3483,7 @@ msgstr "Spór sądowy"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Search Analytic Lines"
-msgstr ""
+msgstr "Przeszukaj pozycje analityczne"
 
 #. module: account
 #: field:res.partner,property_account_payable:0
@@ -3848,7 +3864,7 @@ msgstr "Pozycje podatkowe"
 #. module: account
 #: field:account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr ""
+msgstr "Rejstr główny"
 
 #. module: account
 #: help:account.move,state:0
@@ -3903,12 +3919,12 @@ msgstr "Wszystkie zaksięgowane zapisy"
 #: code:addons/account/account_bank_statement.py:0
 #, python-format
 msgid "Statement %s is confirmed, journal items are created."
-msgstr ""
+msgstr "Wyciąg %s jest potwierdzony, zapisy zostały utworzone."
 
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! The duration of the Fiscal Year is invalid. "
-msgstr ""
+msgstr "Błąd! Długość roku podatkowego jest niedozwolona. "
 
 #. module: account
 #: field:report.aged.receivable,name:0
@@ -3978,7 +3994,7 @@ msgstr "Podaj nazwę nowych zapisów"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr ""
+msgstr "Statystyka faktur"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderreconcilation0
