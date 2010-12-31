@@ -11,7 +11,7 @@
         <menuitem id="menu_stock_product" name="Product" parent="menu_stock_root" sequence="6"/>
         <menuitem action="product.product_normal_action" id="menu_stock_products_menu" parent="menu_stock_product" sequence="1"/>
         <menuitem id="menu_stock_configuration" name="Configuration" parent="menu_stock_root" sequence="15" groups="group_stock_manager"/>
-        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1" groups="group_stock_manager"/>
+        <menuitem id="menu_warehouse_config" name="Warehouse Management" parent="menu_stock_configuration" sequence="1"/>
         <menuitem id="menu_stock_inventory_control" name="Inventory Control" parent="menu_stock_root" sequence="4"/>
 
         <record id="stock_inventory_line_tree" model="ir.ui.view">
@@ -389,7 +389,7 @@
             <field name="context">{'full':'1',"search_default_available":1}</field>
             <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot.</field>
         </record>
-        <menuitem action="action_production_lot_form" id="menu_action_production_lot_form" parent="menu_traceability" groups="group_stock_user,group_stock_manager,base.group_extended"/>
+        <menuitem action="action_production_lot_form" id="menu_action_production_lot_form" parent="menu_traceability" groups="base.group_extended"/>
 
         #
         # Lot composition (history)
@@ -529,7 +529,7 @@
             <field name="context">{'full':1, 'search_default_in_location':1}</field>
             <field name="help">Define your locations to reflect your warehouse structure and organization. OpenERP is able to manage physical locations (warehouses, shelves, bin, etc), partner locations (customers, suppliers) and virtual locations which are the counterpart of the stock operations like the manufacturing orders consumptions, inventories, etc. Every stock operation in OpenERP moves the products from one location to another one. For instance, if you receive products from a supplier, OpenERP will move products from the Supplier location to the Stock location. Each report can be performed on physical, partner or virtual locations.</field>
         </record>
-        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config" groups="group_stock_manager"/>
+        <menuitem action="action_location_form" id="menu_action_location_form" parent="menu_warehouse_config"/>
 
         <record id="view_location_tree" model="ir.ui.view">
             <field name="name">stock.location.tree</field>
@@ -594,7 +594,7 @@
             <field name="view_id" ref="view_warehouse_tree"/>
             <field name="help">Create and manage your warehouses and assign them a location from here</field>
         </record>
-        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config" groups="group_stock_manager"/>
+        <menuitem action="action_warehouse_form" id="menu_action_warehouse_form" parent="menu_warehouse_config"/>
 
         <record model="ir.ui.view" id="stock_picking_calendar">
             <field name="name">stock.picking.calendar</field>
@@ -623,7 +623,7 @@
                     <field name="invoice_state"/>
                     <field name="stock_journal_id" groups="base.group_extended" widget="selection"/>
                     <field name="state"/>
-                    <button name="action_process" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_process" states="confirmed,assigned" groups="stock.group_stock_user" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
         </record>
@@ -749,7 +749,7 @@
                                 <button name="draft_validate" states="draft" string="Process Now" type="object" icon="gtk-media-play"/>
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
-                                <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                                <button name="action_process" states="assigned" string="Process"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
                                 <button states="done" name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" />
                             </group>
                         </page>
@@ -1446,7 +1446,7 @@
                         <field name="date"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Extended Filters..." colspan="4" col="8">
+                    <group expand="0" string="Extended Filters..." colspan="4" col="8" groups="base.group_extended">
                             <field name="origin"/>
                             <field name="picking_id"/>
                             <field name="prodlot_id"/>
@@ -1454,7 +1454,7 @@
                             <field name="state"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
                         <filter string="Product" name="by_product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                         <filter string="Picking" name="groupby_picking_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'picking_id'}"/>
                         <filter string="Lot" name="groupby_prodlot_id" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'prodlot_id'}"/>
@@ -1645,7 +1645,7 @@
                        <field name="tracking_id" context="{'tracking': self}" filter_domain="[]" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
@@ -1668,7 +1668,8 @@
                     <group col="8" colspan="4">
                         <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be received"/>
+                        <filter icon="terp-gtk-go-back-rtl" name="receive" string="To Do" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (available or not)"/>
+                        <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
                         <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
                         <separator orientation="vertical"/>
                         <field name="origin"/>
@@ -1680,7 +1681,7 @@
                        <field name="tracking_id" context="{'tracking': self}" filter_domain="[]" />
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="4" col="8">
+                    <group expand="0" string="Group By..." colspan="4" col="8" groups="base.group_extended">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
@@ -1901,7 +1902,7 @@
         <menuitem
             action="action_stock_journal_form"
             id="menu_action_stock_journal_form"
-            groups="group_stock_manager,base.group_extended"
+            groups="base.group_extended"
             parent="menu_warehouse_config" />
 
     </data>

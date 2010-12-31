@@ -210,7 +210,7 @@
           <para style="terp_default_Centre_8">[[ o.date_prefered == 'fixed' and 'Fixed date' or removeParentNode('para') ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ get_company_currency() ]]</para>
+          <para style="terp_default_Centre_8">[[ o.user_id and o.user_id.company_id and o.user_id.company_id.currency_id and o.user_id.company_id.currency_id.name or '' ]]</para>
         </td>
       </tr>
     </blockTable>

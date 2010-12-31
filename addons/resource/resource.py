@@ -299,7 +299,7 @@ class resource_resource(osv.osv):
             leave_list.sort()
         return leave_list
 
-    def compute_working_calendar(cr, uid, calendar_id, context=None):
+    def compute_working_calendar(self, cr, uid, calendar_id, context=None):
         """
         Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
         @param calendar_id : working calendar of the project
@@ -321,8 +321,8 @@ class resource_resource(osv.osv):
             if week_days.has_key(week['dayofweek']):
                 day = week_days[week['dayofweek']]
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
-            hour_from_str = convert_timeformat(cr, uid, week['hour_from'])
-            hour_to_str = convert_timeformat(cr, uid, week['hour_to'])
+            hour_from_str = convert_timeformat(week['hour_from'])
+            hour_to_str = convert_timeformat(week['hour_to'])
             res_str = hour_from_str + '-' + hour_to_str
             wktime_list.append((day, res_str))
         # Convert into format like [('mon', '8:00-12:00', '13:00-18:00')]
