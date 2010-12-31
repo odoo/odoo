@@ -85,7 +85,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
         This converts Opportunity to Phonecall and opens Phonecall view
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
+        @param uid: the current user's ID for security checks,
         @param ids: List of Opportunity to Phonecall IDs
         @param context: A standard dictionary for contextual values
 

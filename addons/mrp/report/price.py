@@ -18,9 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import pooler
 from report.interface import report_rml
-from report.interface import toxml
+#from report.interface import toxml
 from tools import to_xml
 from report import report_sxw
 from datetime import datetime
