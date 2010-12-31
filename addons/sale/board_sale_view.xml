@@ -10,7 +10,7 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Manager Dashboard">
+                <form string="Sales Dashboard">
                     <hpaned position="100">
                         <child1>
                             <action  name="%(sale.action_quotation_for_sale)d" string="Quotations"/>
@@ -27,7 +27,7 @@
         </record>
 
         <record id="open_board_sales_manager" model="ir.actions.act_window">
-            <field name="name">Sales Manager Dashboard</field>
+            <field name="name">Sales Dashboard</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
