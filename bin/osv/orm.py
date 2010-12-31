@@ -1259,15 +1259,12 @@ class orm_template(object):
                                 node.addprevious(child)
                             node.getparent().remove(node)
                     else:
-                        sib = node.getnext()
                         for child in node2:
                             if pos == 'inside':
                                 node.append(child)
                             elif pos == 'after':
-                                if sib is None:
-                                    node.addnext(child)
-                                else:
-                                    sib.addprevious(child)
+                                node.addnext(child)
+                                node = child
                             elif pos == 'before':
                                 node.addprevious(child)
                             else:
