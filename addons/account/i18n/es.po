@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-28 19:28+0000\n"
+"PO-Revision-Date: 2010-12-30 13:19+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:25+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -91,7 +91,7 @@ msgstr "Definición hijos"
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
 msgid "Aged Receivable Till Today"
-msgstr "Efectos a cobrar vencidos hasta hoy"
+msgstr "A cobrar vencidos hasta hoy"
 
 #. module: account
 #: field:account.partner.ledger,reconcil:0
@@ -105,7 +105,7 @@ msgid ""
 "loss in a single document"
 msgstr ""
 "El informe de pérdidas y ganancias (P&G) le da una visión global de las "
-"pérdidas y ganancias realizadas por su empresa en un único documento"
+"pérdidas y ganancias de su empresa en un único documento"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -141,7 +141,7 @@ msgstr "Asientos contables"
 #: code:addons/account/account.py:0
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr "¡No puede eliminar el movimiento fijado: \"%s\"!"
+msgstr "¡No puede eliminar el movimiento asentado: \"%s\"!"
 
 #. module: account
 #: field:account.invoice.line,origin:0
@@ -244,7 +244,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr "seleccionar conciliar línea movimiento"
+msgstr "Seleccionar conciliación línea movimiento"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -275,7 +275,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "Asientos contables son una entrada para la conciliación."
+msgstr "Los asientos contables son una entrada de la conciliación."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -359,7 +359,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr "Contabilidad. Romper conciliación"
+msgstr "Desconciliar cuenta"
 
 #. module: account
 #: view:product.product:0
@@ -406,12 +406,12 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
 msgid "account.tax.template"
-msgstr "account.tax.template"
+msgstr "cuenta.impuesto.plantilla"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_accounts_wizard
 msgid "account.bank.accounts.wizard"
-msgstr "account.banco.cuentas.asistente"
+msgstr "cuenta.banco.cuentas.asistente"
 
 #. module: account
 #: field:account.move.line,date_created:0
@@ -451,7 +451,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,default_debit_account_id:0
 msgid "Default Debit Account"
-msgstr "Cuenta debe por defecto"
+msgstr "Cuenta deudora por defecto"
 
 #. module: account
 #: view:account.move:0
@@ -609,7 +609,7 @@ msgstr "Transacciones no conciliadas"
 #: code:addons/account/account_cash_statement.py:0
 #, python-format
 msgid "CashBox Balance is not matching with Calculated Balance !"
-msgstr "¡El saldo del diario de caja no concuerda con el saldo calculado!"
+msgstr "¡El saldo de caja no coincide con el saldo calculado!"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -621,7 +621,7 @@ msgstr "Mapeo impuestos"
 #. module: account
 #: model:ir.model,name:account.model_account_installer_modules
 msgid "account.installer.modules"
-msgstr "account.instalador.módulos"
+msgstr "cuenta.instalador.módulos"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close_state
@@ -661,9 +661,9 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disable"
 msgstr ""
-"Si rompe una conciliación de transacciones, debe verificar también todas las "
-"acciones relacionadas con esas transacciones debido a que no serán "
-"deshabilitadas."
+"Si rompe la conciliación de las transacciones, también debe verificar todas "
+"las acciones que están relacionadas con estas transacciones, ya que no se "
+"desactivarán."
 
 #. module: account
 #: view:analytic.entries.report:0
@@ -700,7 +700,7 @@ msgstr "Importe código impuesto"
 #: code:addons/account/installer.py:0
 #, python-format
 msgid "SAJ"
-msgstr "VENTA"
+msgstr "VEN"
 
 #. module: account
 #: help:account.bank.statement,balance_end_real:0
@@ -2628,7 +2628,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 msgid "Aged Partner Balance"
-msgstr "Balance de empresa anterior"
+msgstr "Saldos vencidos de empresa"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_entriesreconcile0
@@ -2659,11 +2659,11 @@ msgid ""
 "Note that journal entries that are automatically created by the system are "
 "always skipping that state."
 msgstr ""
-"Marque esta opción si no desea que los nuevos asientos pasen por el estado "
-"'Borrador' y por tanto vayan directamente al estado 'Fijado' sin ninguna "
+"Marque esta opción si no desea que los nuevos apuntes pasen por el estado "
+"'Borrador' y por tanto vayan directamente al estado 'Asentado' sin ninguna "
 "validación manual. \n"
-"Tenga en cuenta que los asientos creados automáticamente por el sistema "
-"siempre se saltan ese estado."
+"Tenga en cuenta que los apuntes creados automáticamente por el sistema "
+"siempre obvian ese estado."
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
@@ -3266,7 +3266,7 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
-"Todos los asientos seleccionados serán validados y fijados. Esto significa "
+"Todos los apuntes seleccionadas serán validados y asentados. Esto significa "
 "que ya no podrá modificar sus campos contables."
 
 #. module: account
@@ -3695,7 +3695,7 @@ msgstr "Nombre"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr "Contabilidad. Informe de sumas y saldos anterior"
+msgstr "Informe de balance de comprobación de vencimientos"
 
 #. module: account
 #: field:account.move.line,date:0
@@ -4009,11 +4009,11 @@ msgid ""
 "the system on document validation (invoices, bank statements...) and will be "
 "created in 'Posted' state."
 msgstr ""
-"Todas los nuevos asientos creados manualmente están, por lo general, en "
-"estado 'No fijado', pero puede configurar la opción de omitir ese estado en "
-"el diario relacionado. En ese caso, se comportan como asientos creados "
+"Todos los apuntes creadas manualmente están, por lo general, en el estado "
+"'No asentado', pero puede configurar la opción de omitir ese estado en el "
+"diario correspondiente. En ese caso, se comportan como apuntes creados "
 "automáticamente por el sistema en la validación de documentos (facturas, "
-"extractos bancarios, ...) y se crearán en estado 'Fijado'."
+"extractos bancarios, ...) y se crearán en estado 'Asentado'."
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:0
@@ -4052,7 +4052,7 @@ msgstr "Descripción impuesto"
 #: selection:account.tax.chart,target_move:0
 #: selection:account.vat.declaration,target_move:0
 msgid "All Posted Entries"
-msgstr "Todos los asientos fijados"
+msgstr "Todos los apuntes asentados"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
@@ -4308,7 +4308,7 @@ msgstr "Considerar asientos conciliados."
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Fijar asientos contables"
+msgstr "Asentar apuntes"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -4659,7 +4659,7 @@ msgid ""
 "You should set the journal to allow cancelling entries if you want to do "
 "that."
 msgstr ""
-"¡No se puede modificar un asiento introducido este diario!\n"
+"¡No se puede modificar una apunte asentado de este diario!\n"
 "Debe configurar el diario para permitir la cancelación de los asientos si "
 "quiere hacerlo."
 
@@ -5157,7 +5157,7 @@ msgstr "Cantidad de productos"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Unposted"
-msgstr "No fijado"
+msgstr "No asentado"
 
 #. module: account
 #: view:account.change.currency:0
@@ -5340,7 +5340,7 @@ msgstr "Válido hasta"
 #. module: account
 #: view:board.board:0
 msgid "Aged Receivables"
-msgstr "A cobrar antiguos"
+msgstr "A cobrar vencidos"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
@@ -6680,6 +6680,12 @@ msgid ""
 "you request an interval of 30 days OpenERP generates an analysis of "
 "creditors for the past month, past two months, and so on. "
 msgstr ""
+"Saldos vencidos de empresa es un informe más detallado de sus efectos a "
+"cobrar por intervalos. Al abrir el informe, OpenERP pregunta por el nombre "
+"de la compañía, el periodo fiscal, y el tamaño del intervalo a analizar (en "
+"días). Luego OpenERP calcula una tabla del saldo deudor por periodo. Así que "
+"si solicita un intervalo de 30 días, OpenERP genera un análisis de todos los "
+"deudores para el mes pasado, últimos dos meses, etc. "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_view
@@ -7302,7 +7308,7 @@ msgstr "Código"
 #. module: account
 #: view:validate.account.move:0
 msgid "Post Journal Entries of a Journal"
-msgstr "Fijar asientos de un diario"
+msgstr "Asentar apuntes de un diario"
 
 #. module: account
 #: view:product.product:0
@@ -7579,6 +7585,13 @@ msgid ""
 "daily transactions, a company may keep several  types of specialized "
 "journals such as a cash journal, purchases journal, and sales journal."
 msgstr ""
+"Cree y gestione los diarios financieros de su compañía desde este menú. Un "
+"diario es un histórico del negocio en el que se anotan todos los datos, "
+"relacionados con gestiones financieras de la empresa, del día a día, usando "
+"un sistema de doble entrada para el mantenimiento del libro. Dependiendo de "
+"la naturaleza de sus actividades, y del número de transacciones diarias, una "
+"compañía puede tener varios tipos de diarios especializados, como un diario "
+"de caja, diario de compras y diario de ventas."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
@@ -8111,6 +8124,10 @@ msgid ""
 "expense account or payable account. From this view, you can create and "
 "manage the account types you need to be used for your company management."
 msgstr ""
+"Un tipo de cuenta es un nombre o código asignado a una cuenta que indica su "
+"propósito. Por ejemplo, el tipo de cuenta podría estar asociado a una cuenta "
+"de activos, de gastos o a pagar. Desde esta vista, puede crear y gestionar "
+"los tipos de cuenta que necesite usar para la gestión de su compañía."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
@@ -8294,6 +8311,16 @@ msgid ""
 "* The 'Paid' state is set automatically when invoice is paid.            \n"
 "* The 'Cancelled' state is used when user cancel invoice."
 msgstr ""
+" * El estado 'Borrador' se utiliza cuando un usuario está introduciendo una "
+"nueva factura sin confirmar.             \n"
+"* El estado 'Pro-forma' se utiliza cuando la factura es una Pro-forma sin "
+"número de factura.             \n"
+"* El estado 'Abierto' se utiliza cuando el usuario confirma una factura; se "
+"genera automáticamente un número de factura. Permanece en estado abierto "
+"mientras el usuario no paga la factura.             \n"
+"* El estado 'Pagado' se establece automáticamente cuando se paga la factura. "
+"           \n"
+"* El estado 'Cancelado' se utiliza cuando el usuario cancela la factura."
 
 #. module: account
 #: field:account.invoice.refund,period:0
@@ -9056,6 +9083,15 @@ msgid ""
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
 msgstr ""
+"Un periodo es una plazo de tiempo fiscal durante la cual se deben registrar "
+"en asientos las actividades relacionadas con la contabilidad. Lo normal es "
+"un periodo mensual pero, dependiendo del país y las necesidades de su "
+"compañía, podría usar también periodos trimestrales (por ejemplo en España "
+"las PYMES habitualmente usan periodos trimestrales). Cerrar un periodo "
+"impide registrar nuevos asientos, cualquier nuevo asiento deberá anotarse en "
+"el siguiente periodo abierto. Cierre un periodo cuando no vaya a escribir "
+"nuevos asientos y desee bloquear este periodo por motivos relacionados con "
+"el cálculo de impuestos."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -9324,6 +9360,8 @@ msgid ""
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
 msgstr ""
+"El proceso de validación de apuntes, también llamado 'asentar', transfiere "
+"los importes del debe y haber de la anotación original a un libro mayor."
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -9795,7 +9833,7 @@ msgstr "Cuenta fin."
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
 #: view:report.aged.receivable:0
 msgid "Aged Receivable"
-msgstr "A cobrar anteriores"
+msgstr "A cobrar vencido"
 
 #. module: account
 #: field:account.tax,applicable_type:0

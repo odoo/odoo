@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-28 08:28+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2010-12-29 20:01+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -28,11 +28,6 @@ msgid "No. Of Cycles"
 msgstr "Liczba cykli"
 
 #. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
-msgid "Number of iterations this work center has to do in the specified operation of the routing."
-msgstr "Liczba operacji, którą to centrum może wykonać."
-
-#. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
 msgstr "Strefa, w której system będzie oczekiwał komponentów."
@@ -44,7 +39,7 @@ msgstr "Wykorzystanie centrum roboczego"
 
 #. module: mrp
 #: view:report.workcenter.load:0
-msgid "Work Center Loads"
+msgid "Work Centers load"
 msgstr "Obłożenie centrum roboczego"
 
 #. module: mrp
@@ -109,7 +104,7 @@ msgstr "Marszruty"
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
 msgid "Work Center Product"
-msgstr ""
+msgstr "Produkt centrum roboczego"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -132,6 +127,8 @@ msgid ""
 "Number of iterations this work center has to do in the specified operation "
 "of the routing."
 msgstr ""
+"Liczba iteracji, które to centrum musi wykonać dla danej operacji w "
+"marszrucie."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -241,6 +238,7 @@ msgid ""
 "Fill this product to track easily your production costs in the analytic "
 "accounting."
 msgstr ""
+"Wprowadź produkt do wyliczania kosztów produkcji na koncie analitycznym."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -331,7 +329,7 @@ msgstr "Sierpień"
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Próbujesz powiązać z numerem partii z innego produktu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_order
@@ -519,11 +517,11 @@ msgstr ""
 #. module: mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Błąd: Niedozwolony kod EAN"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
-msgid "Specify Cost of Work center per hour."
+msgid "Specify Cost of Workcenter per hour."
 msgstr "Podaj godzinowy koszt centrum roboczego"
 
 #. module: mrp
@@ -575,7 +573,7 @@ msgstr "Marzec"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Work center per cycle."
+msgid "Specify Cost of Workcenter per cycle."
 msgstr "Podaj koszt centrum roboczego na cykl"
 
 #. module: mrp
@@ -668,7 +666,7 @@ msgstr "Gotowe"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
-msgid "Time in hours for this work center to achieve the operation of the specified routing."
+msgid "Time in hours for doing one cycle."
 msgstr "Czas wykonania jednego cyklu w godzinach"
 
 #. module: mrp
@@ -1095,7 +1093,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
-"Gives the sequence order when displaying a list of routing work centers."
+"Gives the sequence order when displaying a list of routing workcenters."
 msgstr "Ustala kolejność wyświetlania na liście centrów roboczych."
 
 #. module: mrp
@@ -1510,12 +1508,12 @@ msgstr "Dodatkowe informacje"
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Zmień ilość produktów"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
 msgid "Drives the procurement orders for raw material."
-msgstr ""
+msgstr "Sporządza zapotrzebowania na materiały do produkcji."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1570,6 +1568,8 @@ msgid ""
 "This will change the price of parent products also according to the BoM "
 "structure specified for the product."
 msgstr ""
+"To zmieni cenę produktów nadrzędnych w zależności od struktury zestawienia "
+"materiałowego przypisanego do tego produktu."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -1580,7 +1580,7 @@ msgstr "Zamówienia produkcji do rozpoczęcia"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
-msgstr ""
+msgstr "Nie można usuwać zamówień produkcji, które są w stanie %s !"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -1671,7 +1671,7 @@ msgstr "Analiza produkcji"
 #: code:addons/mrp/mrp.py:0
 #, python-format
 msgid "Copy"
-msgstr ""
+msgstr "Kopiuj"
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
@@ -1726,7 +1726,7 @@ msgstr "Kategorie właściwości"
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
+msgstr "Określa kolejność wyświetlania operacji w listach."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1747,8 +1747,8 @@ msgstr "Zużycie materiałów w produkcji"
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
-"Description of the work center. Explain here what's a cycle according to this "
-"work center."
+"Description of the workcenter. Explain here what's a cycle according to this "
+"workcenter."
 msgstr "Opis centrum roboczego. Opisz co jest cyklem dla tego centrum."
 
 #. module: mrp
@@ -1831,9 +1831,9 @@ msgstr "Zamówienie produkcji"
 #. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
-"The list of operations (list of work centers) to produce the finished "
-"product. The routing is mainly used to compute work center costs during "
-"operations and to plan future loads on work centers based on production "
+"The list of operations (list of workcenters) to produce the finished "
+"product. The routing is mainly used to compute workcenter costs during "
+"operations and to plan future loads on workcenters based on production "
 "plannification."
 msgstr ""
 
@@ -1866,7 +1866,7 @@ msgstr "Struktura Zest. Mat."
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
-"Number of operations this work center can do in parallel. If this work center "
+"Number of operations this workcenter can do in parallel. If this workcenter "
 "represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
 
@@ -1883,7 +1883,7 @@ msgstr "Zwykłe zestawienie materiałowe"
 #. module: mrp
 #: field:res.company,manufacturing_lead:0
 msgid "Manufacturing Lead Time"
-msgstr ""
+msgstr "Czas wyprodukowania"
 
 #. module: mrp
 #: field:mrp.bom,product_uos_qty:0
@@ -1912,12 +1912,12 @@ msgstr "Potwierdź"
 #. module: mrp
 #: field:mrp.bom,product_efficiency:0
 msgid "Manufacturing Efficiency"
-msgstr ""
+msgstr "Efektywność produkcji"
 
 #. module: mrp
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -1935,7 +1935,7 @@ msgstr "Zaokrąglenie ilości"
 #: model:ir.model,name:mrp.model_mrp_production_workcenter_line
 #: field:mrp.production.workcenter.line,name:0
 msgid "Work Order"
-msgstr ""
+msgstr "Operacja"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_mrp_production_order
@@ -1947,7 +1947,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume Only"
-msgstr ""
+msgstr "Tylko rozchód"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -2030,7 +2030,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
 msgid "Assignment from Production or Purchase Order."
-msgstr ""
+msgstr "Przypisanie z Produkcji lub z Zamówienia zakupu"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2040,7 +2040,7 @@ msgstr "Nadrzędna marszruta"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguruj"
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
@@ -2050,12 +2050,12 @@ msgstr "Czas dla tego kroku w godzinach"
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "December"
-msgstr ""
+msgstr "Grudzień"
 
 #. module: mrp
 #: field:mrp.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Obraz"
 
 #. module: mrp
 #: field:mrp.bom.revision,bom_id:0
@@ -2108,7 +2108,7 @@ msgstr "Tydzień"
 #. module: mrp
 #: field:mrp.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Postęp konfiguracji"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -2119,24 +2119,24 @@ msgstr "Normalne"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
 msgid "Manufacturing Steps."
-msgstr ""
+msgstr "Kroki produkcji."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:0
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
-msgstr ""
+msgstr "Struktura kosztów"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
 msgid "Consume & Produce"
-msgstr ""
+msgstr "Rozchód i Przychód"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "November"
-msgstr ""
+msgstr "Listopad"
 
 #. module: mrp
 #: field:mrp.bom,bom_id:0
@@ -2151,7 +2151,7 @@ msgstr "Jednostka miary wielkości"
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "January"
-msgstr ""
+msgstr "Styczeń"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
@@ -2168,7 +2168,7 @@ msgstr "Błąd"
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Wybierz ilość"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -2233,7 +2233,7 @@ msgstr "Marszruta"
 #. module: mrp
 #: field:mrp.installer,mrp_operations:0
 msgid "Manufacturing Operations"
-msgstr ""
+msgstr "Operacje produkcyjne"
 
 #. module: mrp
 #: help:mrp.production,origin:0
@@ -2244,7 +2244,7 @@ msgstr ""
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Musisz podać nr partii dla tego produktu"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -2255,7 +2255,7 @@ msgstr "Produkcja"
 #. module: mrp
 #: view:board.board:0
 msgid "Procurements in Exception"
-msgstr ""
+msgstr "Zapotrzebowania w wyjątkach"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_minimumstockprocure0
@@ -2265,7 +2265,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
 msgid "Product Price"
-msgstr ""
+msgstr "Cena produktu"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_installer
@@ -2275,12 +2275,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_split
 msgid "Split in Production lots"
-msgstr ""
+msgstr "Podziel na partie produkcyjne"
 
 #. module: mrp
 #: view:change.production.qty:0
 msgid "Change Quantity"
-msgstr ""
+msgstr "Zmień ilość"
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -2304,21 +2304,21 @@ msgstr "Opis"
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid ""
-"The list of operations (list of work centers) to produce the finished "
-"product. The routing is mainly used to compute work center costs during "
-"operations and to plan future loads on work centers based on production "
+"The list of operations (list of workcenters) to produce the finished "
+"product. The routing is mainly used to compute workcenter costs during "
+"operations and to plan future loads on workcenters based on production "
 "planning."
 msgstr ""
 
 #. module: mrp
 #: view:board.board:0
 msgid "Manufacturing board"
-msgstr ""
+msgstr "Konsola produkcji"
 
 #. module: mrp
 #: field:mrp.production,date_planned_end:0
 msgid "Scheduled End Date"
-msgstr ""
+msgstr "zaplanowana data zakończenia"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_workcenter_load_tree
@@ -2331,7 +2331,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
 msgid "The way to procurement depends on the product type."
-msgstr ""
+msgstr "Sposób zależności zapotrzebowania od typu produktu"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
@@ -2346,7 +2346,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "February"
-msgstr ""
+msgstr "Luty"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
@@ -2357,7 +2357,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "April"
-msgstr ""
+msgstr "Kwiecień"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0
@@ -2374,7 +2374,7 @@ msgstr "Czas czyszczenia w godzinach"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
 msgid "Automatic RFQ"
-msgstr ""
+msgstr "Automatyczne zapytanie ofertowe"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemto0
@@ -2414,7 +2414,7 @@ msgstr "Numeracja"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Niebecności zasobu"
 
 #. module: mrp
 #: help:mrp.bom,sequence:0
@@ -2427,13 +2427,13 @@ msgstr ""
 #: report:mrp.production.order:0
 #: field:mrp.production.order,products_to_consume:0
 msgid "Products to Consume"
-msgstr ""
+msgstr "Produkty do zużycia"
 
 #. module: mrp
 #: view:mrp.production.order:0
 #: field:mrp.production.order,year:0
 msgid "Year"
-msgstr ""
+msgstr "Rok"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
@@ -2756,9 +2756,9 @@ msgstr ""
 #~ msgstr "plus"
 
 #~ msgid ""
-#~ "The list of operations (list of work centers) to produce the finished "
-#~ "product. The routing is mainly used to compute work center costs during "
-#~ "operations and to plan futur loads on work centers based on production "
+#~ "The list of operations (list of workcenters) to produce the finished "
+#~ "product. The routing is mainly used to compute workcenter costs during "
+#~ "operations and to plan futur loads on workcenters based on production "
 #~ "plannification."
 #~ msgstr ""
 #~ "Lista operacji (lista centrów roboczych) do wyprodukowania produktu "
