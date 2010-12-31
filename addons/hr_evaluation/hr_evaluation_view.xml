@@ -142,7 +142,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <page string="Notes" position="before">
-                    <page string="Evaluation">
+                    <page string="Evaluation" groups="base.group_hr_user">
                         <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
                         <field name="evaluation_date"/>
                     </page>

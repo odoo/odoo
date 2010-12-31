@@ -31,6 +31,7 @@ based on geolocalization.
     'author': 'OpenERP SA',
     'depends': ['crm'],
     'update_xml': [
+        'security/ir.model.access.csv',
         'res_partner_view.xml',
         'wizard/crm_forward_to_partner_view.xml',
         'crm_lead_view.xml',

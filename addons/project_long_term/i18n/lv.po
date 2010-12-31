@@ -1,0 +1,613 @@
+# Latvian translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-30 22:20+0000\n"
+"Last-Translator: Vladimirs Kuzmins <Unknown>\n"
+"Language-Team: Latvian <lv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: project_long_term
+#: model:ir.module.module,shortdesc:project_long_term.module_meta_information
+msgid "Long Term Project Management"
+msgstr "Ilgtermiņa projektu vadība"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+msgid "Compute Scheduling of Phases"
+msgstr "Aprēķināt fāžu grafiku"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,next_phase_ids:0
+msgid "Next Phases"
+msgstr "Nākamās fāzes"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Project's Tasks"
+msgstr "Projekta uzdevumi"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_project_phases
+msgid "Phases"
+msgstr "Fāzes"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: view:project.resource.allocation:0
+msgid "Group By..."
+msgstr "Grupēt pēc..."
+
+#. module: project_long_term
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr "Kļūda! Projekta sākuma datumam jābūt mazākam nekā beigu."
+
+#. module: project_long_term
+#: view:project.resource.allocation:0
+msgid "Resources Allocation"
+msgstr "Resursu iedalīšana"
+
+#. module: project_long_term
+#: field:project.compute.phases,target_project:0
+msgid "Schedule"
+msgstr "Grafiks"
+
+#. module: project_long_term
+#: model:ir.module.module,description:project_long_term.module_meta_information
+msgid ""
+"\n"
+"\n"
+"        Long Term Project management module that tracks planning, "
+"scheduling, resources allocation.\n"
+"        Mainly used with Big project management.\n"
+"            - Project Phases will be maintained by Manager of the project\n"
+"            - Compute Phase Scheduling: Compute start date and end date of "
+"the phases which are in draft,open and pending state of the project given.\n"
+"                                        If no project given then all the "
+"draft,open and pending state phases will be taken\n"
+"            - Compute Task Scheduling: This works same as the scheduler "
+"button on project.phase. It takes the project as argument and computes all "
+"the open,draft and pending tasks\n"
+"            - Schedule Tasks: All the tasks which are in draft,pending and "
+"open state are scheduled with taking the phase's start date\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: project_long_term
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Kļūda! Nedrīkst veidot rekursīvus uzdevumus."
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
+#: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
+msgid "Resource Allocations"
+msgstr "Resursu iedalīšanas"
+
+#. module: project_long_term
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr "Kļūda! Nedrīkst piešķirt eskalāciju uz to pašu projektu!"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "Day"
+msgstr "Diena"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_task
+msgid "Task"
+msgstr "Uzdevums"
+
+#. module: project_long_term
+#: selection:project.compute.phases,target_project:0
+msgid "Compute a Single Project"
+msgstr "Aprēķināt vienu projektu"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,previous_phase_ids:0
+msgid "Previous Phases"
+msgstr "Iepriekš. fāzes"
+
+#. module: project_long_term
+#: help:project.phase,product_uom:0
+msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
+msgstr "Mērv. (mērvienība) ir ilguma mērvienība"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_project
+#: field:project.compute.phases,project_id:0
+#: field:project.compute.tasks,project_id:0
+#: view:project.phase:0
+#: field:project.phase,project_id:0
+#: view:project.resource.allocation:0
+#: field:project.resource.allocation,project_id:0
+#: view:project.task:0
+msgid "Project"
+msgstr "Projekts"
+
+#. module: project_long_term
+#: code:addons/project_long_term/wizard/project_compute_phases.py:0
+#, python-format
+msgid "Error!"
+msgstr "Kļūda!"
+
+#. module: project_long_term
+#: selection:project.phase,state:0
+msgid "Cancelled"
+msgstr "Atcelts"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "No tasks to compute for Project '%s'."
+msgstr "Projektam '%s' nav uzdevumu ko aprēķināt."
+
+#. module: project_long_term
+#: help:project.resource.allocation,date_end:0
+msgid "Ending Date"
+msgstr "Beigu Datums"
+
+#. module: project_long_term
+#: help:project.phase,date_end:0
+msgid "Ending Date of the phase"
+msgstr "Fāzes beigu datums"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Planning"
+msgstr "Plānošana"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_end:0
+msgid "Deadline"
+msgstr "Termiņš"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "_Cancel"
+msgstr "_Atcelt"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
+#: model:ir.ui.menu,name:project_long_term.menu_compute_phase
+msgid "Compute Phase Scheduling"
+msgstr "Aprēķināt fāzes grafiku"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid " (copy)"
+msgstr " (kopija)"
+
+#. module: project_long_term
+#: view:project.resource.allocation:0
+#: field:project.resource.allocation,useability:0
+msgid "Availability"
+msgstr "Pieejamība"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,state:0
+msgid "State"
+msgstr "Stāvoklis"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "C_ompute"
+msgstr "A_prēķināt"
+
+#. module: project_long_term
+#: view:project.compute.phases:0
+msgid "Compute Scheduling of phases for all or specified project"
+msgstr "Aprēķināt fāžu grafiku visiem vai norādītajam projektam"
+
+#. module: project_long_term
+#: field:project.phase,product_uom:0
+msgid "Duration UoM"
+msgstr "Ilguma mērv."
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
+#: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
+msgid "Compute Task Scheduling"
+msgstr "Aprēķināt uzdevumu grafiku"
+
+#. module: project_long_term
+#: field:project.phase,constraint_date_start:0
+msgid "Minimum Start Date"
+msgstr "Minimālais sākuma datums"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_resource_allocation
+#: view:project.phase:0
+#: view:project.resource.allocation:0
+msgid "Project Resource Allocation"
+msgstr "Projekta resursu iedalīšana"
+
+#. module: project_long_term
+#: view:project.compute.tasks:0
+msgid "Compute Scheduling of Task"
+msgstr "Aprēķināt uzdevumu grafiku"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_project_resource
+#: model:ir.ui.menu,name:project_long_term.menu_pm_resources_project1
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource
+#: view:project.resource.allocation:0
+msgid "Resources"
+msgstr "Resursi"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
+msgid ""
+"To schedule phases of all or a specified project. It then open a gantt "
+"view.\n"
+"\t           "
+msgstr ""
+
+#. module: project_long_term
+#: help:project.resource.allocation,date_start:0
+msgid "Starting Date"
+msgstr "Sākuma Datums"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+msgid "Related Tasks"
+msgstr "Saistītie uzdevumi"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Dates"
+msgstr "Datumi"
+
+#. module: project_long_term
+#: help:project.resource.allocation,useability:0
+msgid ""
+"Availability of this resource for this project phase in percentage (=50%)"
+msgstr "Šī resursa pieejamība šai projekta fāzei procentos (piem., 50%)"
+
+#. module: project_long_term
+#: help:project.phase,constraint_date_start:0
+msgid "force the phase to start after this date"
+msgstr "uzspiest fāzei sākties pēc šī datuma"
+
+#. module: project_long_term
+#: field:project.phase,task_ids:0
+msgid "Project Tasks"
+msgstr "Projekta uzdevumi"
+
+#. module: project_long_term
+#: field:project.phase,resource_ids:0
+msgid "Project Resources"
+msgstr "Projekta resursi"
+
+#. module: project_long_term
+#: view:project.schedule.tasks:0
+msgid "_Ok"
+msgstr "_Labi"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Month"
+msgstr "Mēnesis"
+
+#. module: project_long_term
+#: constraint:project.phase:0
+msgid "Phase start-date must be lower than phase end-date."
+msgstr "Fāzes sākuma datumam jābūt mazākam par fāzes beigu datumu."
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_schedule_tasks
+msgid "project.schedule.tasks"
+msgstr "project.schedule.tasks"
+
+#. module: project_long_term
+#: field:project.phase,date_start:0
+#: field:project.resource.allocation,date_start:0
+msgid "Start Date"
+msgstr "Sākuma datums"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Resource Allocation"
+msgstr "Resursu iedalīšana"
+
+#. module: project_long_term
+#: help:project.phase,constraint_date_end:0
+msgid "force the phase to finish before this date"
+msgstr "uzspiest fāzei beigties pirms šī datuma"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Draft"
+msgstr "Melnraksts"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.act_project_phase
+msgid ""
+"A project can be split into the different phases. For each phase, you can "
+"define your resources allocation, describe different tasks and link your "
+"phase to previous and next ones, add date constraints for the automated "
+"scheduling. Use the long term planning in order to planify your available "
+"human resources, convert your phases into a series of tasks when you start "
+"working on it."
+msgstr ""
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Pending"
+msgstr "Neizlemts"
+
+#. module: project_long_term
+#: field:project.resource.allocation,name:0
+msgid "unknown"
+msgstr "nezināms"
+
+#. module: project_long_term
+#: field:project.resource.allocation,user_id:0
+msgid "User"
+msgstr "Lietotājs"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Task Detail"
+msgstr "Uzdevuma informācija"
+
+#. module: project_long_term
+#: help:project.project,resource_calendar_id:0
+msgid "Timetable working hours to adjust the gantt diagram report"
+msgstr "Darba laika saraksts, ar ko pielāgot Ganta diagrammas atskaiti"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_compute_tasks
+msgid "Project Compute Tasks"
+msgstr "Projekts - aprēķināt uzdevumus"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "No responsible person assigned !"
+msgstr "Nav nozīmēta atbildīgā persona!"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "Error"
+msgstr "Kļūda"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "You must assign a responsible person for phase '%s' !"
+msgstr "Fāzei '%s' jānozīmē atbildīgo personu!"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "Should have Resources Allocation or Project Members!"
+msgstr "Nepieciešama resursu iedalīšana vai projekta dalībnieki!"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Constraints"
+msgstr "Ierobežojumi"
+
+#. module: project_long_term
+#: help:project.phase,sequence:0
+msgid "Gives the sequence order when displaying a list of phases."
+msgstr "Fāžu sarakstā attēlo secībā pēc kārtas."
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.act_project_phase
+#: model:ir.actions.act_window,name:project_long_term.act_project_phase_list
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase
+#: model:ir.ui.menu,name:project_long_term.menu_project_phase_list
+#: view:project.phase:0
+#: field:project.project,phase_ids:0
+msgid "Project Phases"
+msgstr "Projekta fāzes"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "Done"
+msgstr "Pabeigts"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Cancel"
+msgstr "Atcelt"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: selection:project.phase,state:0
+msgid "In Progress"
+msgstr "Progresā"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Remaining Hours"
+msgstr "Atlikušās Stundas"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Other Info"
+msgstr "Cita informācija"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,responsible_id:0
+msgid "Responsible"
+msgstr "Atbildīgais"
+
+#. module: project_long_term
+#: field:project.project,resource_calendar_id:0
+msgid "Working Time"
+msgstr "Darba Laiks"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Current"
+msgstr "Pašreizējā"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Start Phase"
+msgstr "Sākt fāzi"
+
+#. module: project_long_term
+#: code:addons/project_long_term/wizard/project_compute_phases.py:0
+#, python-format
+msgid "Please Specify Project to be schedule"
+msgstr "Lūdzu, norādiet plānojamo projektu"
+
+#. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,total_hours:0
+msgid "Total Hours"
+msgstr "Stundas Kopā"
+
+#. module: project_long_term
+#: view:project.schedule.tasks:0
+msgid "Task Scheduling completed successfully."
+msgstr "Uzdevumu grafika veidošana bija veiksmīga"
+
+#. module: project_long_term
+#: view:project.compute.tasks:0
+msgid "Compute Scheduling of Task for specified project."
+msgstr "Aprēķināt uzdevumu grafiku norādītajām projektam."
+
+#. module: project_long_term
+#: view:project.resource.allocation:0
+msgid "Phase"
+msgstr "Fāze"
+
+#. module: project_long_term
+#: help:project.phase,date_start:0
+msgid "Starting Date of the phase"
+msgstr "Fāzes sākuma datums"
+
+#. module: project_long_term
+#: help:project.phase,state:0
+msgid ""
+"If the phase is created the state 'Draft'.\n"
+" If the phase is started, the state becomes 'In Progress'.\n"
+" If review is needed the phase is in 'Pending' state.                        "
+"          \n"
+" If the phase is over, the states is set to 'Done'."
+msgstr ""
+
+#. module: project_long_term
+#: field:project.phase,date_end:0
+#: field:project.resource.allocation,date_end:0
+msgid "End Date"
+msgstr "Beigu datums"
+
+#. module: project_long_term
+#: view:project.resource.allocation:0
+#: field:project.resource.allocation,resource_id:0
+msgid "Resource"
+msgstr "Resurss"
+
+#. module: project_long_term
+#: field:project.phase,name:0
+msgid "Name"
+msgstr "Nosaukums"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
+msgid "Working Period"
+msgstr "Darba laiks"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_resource_resource
+msgid "Resource Detail"
+msgstr "Resursa informācija"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
+#: view:project.phase:0
+msgid "Scheduling"
+msgstr "Plānošana"
+
+#. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:0
+#, python-format
+msgid "No tasks to compute for Phase '%s'."
+msgstr "Fāzei '%s' nav uzdevumu ko aprēķināt"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_phase
+#: view:project.phase:0
+#: field:project.resource.allocation,phase_id:0
+#: view:project.task:0
+#: field:project.task,phase_id:0
+msgid "Project Phase"
+msgstr "Projekta fāze"
+
+#. module: project_long_term
+#: model:ir.model,name:project_long_term.model_project_compute_phases
+msgid "Project Compute Phases"
+msgstr "Projekts: aprēķināt fāzes"
+
+#. module: project_long_term
+#: field:project.schedule.tasks,msg:0
+msgid "Message"
+msgstr "Ziņa"
+
+#. module: project_long_term
+#: constraint:project.phase:0
+msgid "Loops in phases not allowed"
+msgstr "Cilpas fāzēs nav atļautas"
+
+#. module: project_long_term
+#: field:project.phase,sequence:0
+msgid "Sequence"
+msgstr "Secība"
+
+#. module: project_long_term
+#: selection:project.compute.phases,target_project:0
+msgid "Compute All Projects"
+msgstr "Aprēķināt visus projektus"
+
+#. module: project_long_term
+#: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
+msgid "Resource Leaves"
+msgstr "Resursu lapas"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.action_project_schedule_tasks
+#: view:project.phase:0
+#: view:project.schedule.tasks:0
+msgid "Schedule Tasks"
+msgstr "Ieplānot uzdevumus"
+
+#. module: project_long_term
+#: help:project.phase,duration:0
+msgid "By default in days"
+msgstr "Pēc noklusējuma dienās"
+
+#. module: project_long_term
+#: field:project.phase,duration:0
+msgid "Duration"
+msgstr "Ilgums"

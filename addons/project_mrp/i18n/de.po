@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-01 08:06+0000\n"
+"PO-Revision-Date: 2010-12-29 08:54+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_mrp
@@ -49,7 +49,7 @@ msgstr ""
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursiven Aufgaben definieren."
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
@@ -59,7 +59,7 @@ msgstr "Produkt"
 #. module: project_mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fehler: Falscher EAN code"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -125,6 +125,30 @@ msgid ""
 "automatically created via sale orders.\n"
 "\n"
 msgstr ""
+"\n"
+"Diese Anwendung erstellt die Verlinkung zwischen Beschaffungsaufträgen für \n"
+"Produkte der Art \"Dienstleistung\" und Aufgaben für das Projektmanagement.\n"
+"\n"
+"Durch die Installation der Anwendung wird für jede einzelne Position eines "
+"Dienstleistungsprodukts \n"
+"in Beschaffungsaufträgen automatisch eine neue Aufgabe für das "
+"Projektmanagement erstellt, \n"
+"wenn folgende Kriterien erfüllt werden:\n"
+"  * Produktart = Dienstleistung\n"
+"  * Dispositionsmethode = Disponiere von Auftrag\n"
+"  * Einkaufsmethode = Produziere\n"
+"\n"
+"Die neue Aufgabe wird zunächst ohne Projektbezug erstellt, Sie können\n"
+"ein Projekt ergänzen.\n"
+"\n"
+"Wenn die Aufgabe abgeschlossen oder abgebrochen wird, wird über den\n"
+"Workflow dann auch die korrespondierende Position des Beschaffungsauftrags "
+"aktualisiert.\n"
+"\n"
+"Diese Anwendung ist insbesondere hilfreich, wenn auf Basis von erledigten "
+"Aufgaben \n"
+"auch eine Abrechnung der geleisteten Arbeiten an den Kunden erfolgt.\n"
+"\n"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0

@@ -40,14 +40,14 @@ class l10n_chart_it_report_libroIVA (osv.osv):
 
     _columns = {
         'name': fields.char('Fiscal year',size=64),
-	'company_id': fields.many2one('res.company', 'Company'),
+        'company_id': fields.many2one('res.company', 'Company'),
     }
 
     def init (self, cr) :
         cr.execute("""DROP VIEW IF EXISTS account_report_libroiva""")
-	cr.execute("""
-		CREATE VIEW account_report_libroiva AS (
-			SELECT  id, name, company_id FROM account_fiscalyear
+        cr.execute("""
+                CREATE VIEW account_report_libroiva AS (
+                        SELECT  id, name, company_id FROM account_fiscalyear
         )""")
 l10n_chart_it_report_libroIVA()
 

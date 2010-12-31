@@ -193,16 +193,16 @@ class report_creator(osv.osv):
         if context is None:
             context = {}
         data = context.get('report_id', False)
+        res = super(report_creator, self).read(cr, user, ids, fields, context, load)
         if (not context) or 'report_id' not in context:
-            return super(report_creator, self).read(cr, user, ids, fields, context, load)
-        ctx = context or {}
+            return res
         wp = ''
-        if data:
+        for data in res:
+            if not data.get('sql_query'):
+                return res
             if self.model_set_id:
                 wp = [self._id_get(cr, user, data, context) + (' in (%s)' % (','.join(map(lambda x: "'" + str(x) + "'", ids))))]
-            report = self._sql_query_get(cr, user, [data], 'sql_query', None, ctx, where_plus = wp)
-            sql_query = report[data]
-            cr.execute(sql_query)
+            cr.execute(data['sql_query'])
             res = cr.dictfetchall()
             fields_get = self.fields_get(cr, user, None, context)
             for r in res:
@@ -216,7 +216,7 @@ class report_creator(osv.osv):
                         related_name = self.pool.get(field_dict.get('relation')).name_get(cr, user, [r[k]], context)[0]
                         r[k] = related_name
 
-            return res
+        return res
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """
@@ -253,9 +253,8 @@ class report_creator(osv.osv):
                     newargs += [("count(*) " + a[1] +" " + str(a[2]))]
             ctx = context or {}
             ctx['getid'] = True
-            report = self._sql_query_get(cr, user, [context_id], 'sql_query', None, ctx, where_plus = newargs, limit=limit, offset=offset)
-            query = report[context_id]
-            cr.execute(query, newargs2)
+            sql_query = report.sql_query
+            cr.execute(sql_query, newargs2)
             result = cr.fetchall()
             return map(lambda x: x[0], result)
 
