@@ -1049,7 +1049,7 @@ class property(function):
         brs = properties.browse(cr, uid, nids, context=context)
         for prop in brs:
             value = properties.get_by_record(cr, uid, prop, context=context)
-            avil_id = obj.pool.get(value._name).search(cr, uid, [('id','=',value.id)], context=context)
+            avil_id = obj.pool.get(value._name).exists(cr, uid, value.id)
             res[prop.res_id.id][prop.fields_id.name] = (avil_id and value) and value or False
             if value and (prop.type == 'many2one'):
                 replaces.setdefault(value._name, {})
