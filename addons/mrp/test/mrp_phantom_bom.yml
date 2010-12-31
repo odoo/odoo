@@ -230,7 +230,7 @@
     assert purch_ids, _('No Purchase Orders were made!')
     wf_service = netsvc.LocalService("workflow")
     for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
+        wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
 -
   I see two incoming pickings for Orange and Sugar.
 -
