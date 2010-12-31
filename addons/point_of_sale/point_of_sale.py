@@ -33,6 +33,7 @@ class pos_config_journal(osv.osv):
     """ Point of Sale journal configuration"""
     _name = 'pos.config.journal'
     _description = "Journal Configuration"
+    
     _columns = {
         'name': fields.char('Description', size=64),
         'code': fields.char('Code', size=64),
@@ -41,9 +42,11 @@ class pos_config_journal(osv.osv):
 
 pos_config_journal()
 
+
 class pos_company_discount(osv.osv):
     """ Company Discount and Cashboxes """
     _inherit = 'res.company'
+    
     _columns = {
         'company_discount': fields.float('Max Discount(%)', digits_compute=dp.get_precision('Point Of Sale')),
         'max_diff': fields.float('Max Difference for Cashboxes', digits_compute=dp.get_precision('Point Of Sale Discount')),
@@ -173,21 +176,23 @@ class pos_order(osv.osv):
                             (1-(line.discount or 0.0)/100.0), line.qty),
                             res[order.id]['amount_tax'])
                 elif line.qty != 0.0:
-                    for c in tax_obj.compute_all(cr, uid, line.product_id.taxes_id, line.price_unit * (1-(line.discount or 0.0)/100.0), line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
+                    for c in tax_obj.compute_all(cr, uid, line.product_id.taxes_id, \
+                                                 line.price_unit * (1-(line.discount or 0.0)/100.0), \
+                                                 line.qty,  line.product_id, line.order_id.partner_id)['taxes']:
                         val += c.get('amount', 0.0)
             res[order.id]['amount_tax'] = cur_obj.round(cr, uid, cur, val)
             res[order.id]['amount_total'] = res[order.id]['amount_tax'] + cur_obj.round(cr, uid, cur, val1)
         return res
 
     def _sale_journal_get(self, cr, uid, context=None):
-        """ To get  sale journal for this order"
+        """ To get  sale journal for this order
         @return: journal  """
         journal_obj = self.pool.get('account.journal')
         res = journal_obj.search(cr, uid, [('type', '=', 'sale')], limit=1)
         return res and res[0] or False
 
     def _shop_get(self, cr, uid, context=None):
-        """ To get  Shop  for this order"
+        """ To get  Shop  for this order
         @return: Shop id  """
         res = self.pool.get('sale.shop').search(cr, uid, [])
         return res and res[0] or False
@@ -207,7 +212,7 @@ class pos_order(osv.osv):
         })
         return super(pos_order, self).copy(cr, uid, id, default, context=context)
 
-    def _get_v( self, cr, uid, ids, *a):
+    def _get_v( self, cr, uid, ids, *args):
         """ Changed the Validation state of order
         @return: State  """
         res_obj = self.pool.get('res.users')
@@ -243,8 +248,13 @@ class pos_order(osv.osv):
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True,
             states={'draft': [('readonly', False)]}, readonly=True),
         'date_order': fields.datetime('Date Ordered', readonly=True),
-        'date_validation': fields.function(_get_date_payment, method=True, string='Validation Date', type='date', store=True),
-        'date_payment': fields.function(_get_date_payment2, method=True, string='Payment Date', type='date', store=True),
+        'date_validation': fields.function(_get_date_payment,
+                                           method=True,
+                                           string='Validation Date',
+                                           type='date', store=True),
+        'date_payment': fields.function(_get_date_payment2, method=True,
+                                        string='Payment Date',
+                                        type='date', store=True),
         'date_validity': fields.date('Validity Date', required=True),
         'user_id': fields.many2one('res.users', 'Connected Salesman', help="Person who uses the the cash register. It could be a reliever, a student or an interim employee."),
         'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True, help="User who is logged into the system."),
@@ -285,7 +295,7 @@ class pos_order(osv.osv):
     }
 
     def _select_pricelist(self, cr, uid, context=None):
-        """ To get default pricelist for the order"
+        """ To get default pricelist for the order
         @param name: Names of fields.
         @return: pricelist ID
         """
@@ -293,7 +303,7 @@ class pos_order(osv.osv):
         return pricelist and pricelist[0] or False
 
     def _journal_default(self, cr, uid, context=None):
-        """ To get default pricelist for the order"
+        """ To get default pricelist for the order
         @param name: Names of fields.
         @return: journal ID
         """
@@ -319,7 +329,7 @@ class pos_order(osv.osv):
 
 
     def test_order_lines(self, cr, uid, order, context=None):
-        """ Test order line is created or not for the order "
+        """ Test order line is created or not for the order 
         @param name: Names of fields.
         @return: True
         """
@@ -452,7 +462,7 @@ class pos_order(osv.osv):
                         location_id, stock_dest_id = stock_dest_id, location_id
 
                     move_obj.create(cr, uid, {
-                            'name': 'Stock move (POS %d)' % (order.id, ),
+                            'name': '(POS %d)' % (order.id, ),
                             'product_uom': line.product_id.uom_id.id,
                             'product_uos': line.product_id.uom_id.id,
                             'picking_id': picking_id,
@@ -506,7 +516,7 @@ class pos_order(osv.osv):
 
     def add_payment(self, cr, uid, order_id, data, context=None):
         """Create a new payment for the order"""
-        statement_obj= self.pool.get('account.bank.statement')
+        statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
         prod_obj = self.pool.get('product.product')
         property_obj = self.pool.get('ir.property')
@@ -524,12 +534,15 @@ class pos_order(osv.osv):
         if 'payment_name' in data.keys():
             args['name'] = data['payment_name'] + ' ' + order.name
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
-        args['account_id'] = order.partner_id and order.partner_id.property_account_receivable and order.partner_id.property_account_receivable.id or account_def.id or curr_c.account_receivable.id
+        args['account_id'] = order.partner_id and order.partner_id.property_account_receivable \
+                             and order.partner_id.property_account_receivable.id or account_def.id or curr_c.account_receivable.id
         if data.get('is_acc', False):
             args['is_acc'] = data['is_acc']
-            args['account_id'] = prod_obj.browse(cr, uid, data['product_id'], context=context).property_account_income and prod_obj.browse(cr, uid, data['product_id'], context=context).property_account_income.id
+            args['account_id'] = prod_obj.browse(cr, uid, data['product_id'], context=context).property_account_income \
+                                 and prod_obj.browse(cr, uid, data['product_id'], context=context).property_account_income.id
             if not args['account_id']:
-                raise osv.except_osv(_('Error'), _('Please provide an account for the product: %s')%(prod_obj.browse(cr, uid, data['product_id'], context=context).name))
+                raise osv.except_osv(_('Error'), _('Please provide an account for the product: %s')% \
+                                     (prod_obj.browse(cr, uid, data['product_id'], context=context).name))
         args['partner_id'] = order.partner_id and order.partner_id.id or None
         args['ref'] = order.contract_number or None
 
@@ -545,6 +558,8 @@ class pos_order(osv.osv):
         args['statement_id'] = statement_id
         args['pos_statement_id'] = order_id
         args['journal_id'] = data['journal']
+        args['type'] = 'customer'
+        args['ref'] = order.name
         statement_line_obj.create(cr, uid, args, context=context)
         ids_new.append(statement_id)
 
@@ -555,7 +570,9 @@ class pos_order(osv.osv):
         return statement_id
 
     def add_product(self, cr, uid, order_id, product_id, qty, context=None):
+        
         """Create a new order line the order"""
+        
         line_obj = self.pool.get('pos.order.line')
         values = self.read(cr, uid, order_id, ['partner_id', 'pricelist_id'])
 
@@ -576,7 +593,9 @@ class pos_order(osv.osv):
         return order_line_id, price
 
     def refund(self, cr, uid, ids, context=None):
+        
         """Create a copy of order  for refund order"""
+        
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
 
@@ -601,7 +620,9 @@ class pos_order(osv.osv):
         return clone_list
 
     def action_invoice(self, cr, uid, ids, context=None):
+        
         """Create a invoice of order  """
+        
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
@@ -644,10 +665,10 @@ class pos_order(osv.osv):
                 inv_line.update(inv_line_ref.product_id_change(cr, uid, [],
                                                                line.product_id.id,
                                                                line.product_id.uom_id.id,
-                                                               line.qty, partner_id = order.partner_id.id, fposition_id=order.partner_id.property_account_position.id)['value'])
+                                                               line.qty, partner_id = order.partner_id.id,
+                                                               fposition_id=order.partner_id.property_account_position.id)['value'])
                 inv_line['price_unit'] = line.price_unit
                 inv_line['discount'] = line.discount
-                inv_line['account_id'] = acc
                 inv_line['name'] = inv_name
                 inv_line['invoice_line_tax_id'] = ('invoice_line_tax_id' in inv_line)\
                     and [(6, 0, inv_line['invoice_line_tax_id'])] or []

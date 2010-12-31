@@ -529,7 +529,6 @@ class stock_warehouse_orderpoint(osv.osv):
     }
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
-        ('product_location_uniq', 'unique(product_id, location_id)', 'Only one order point per location is allowed!'),
     ]
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context=None):

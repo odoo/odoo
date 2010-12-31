@@ -14,8 +14,14 @@
                         <field name="to_invoice" widget="selection" />
                         <field name="amount_max"/>
                         <field name="amount_invoiced"/>
-                        <separator colspan="4" string="State"/>
-                        <field name="state"/>
+                        <separator colspan="4"/>
+                        <group col="9" colspan="8">
+	                        <field name="state" readonly="1"/>
+	                        <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
+	                        <button name="set_open" string="Reactivate Account" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
+	                        <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
+	                        <button name="set_close" string="Close" type="object" states="open,pending" icon="terp-dialog-close"/>
+                        </group>
                     </group>
                 </field>
             </field>
@@ -78,13 +84,12 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
-                <filter name="others" position="after">
-                    <separator orientation="vertical"/>
+                <field name="date" position="before">
                     <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
-                </filter>
+                    <separator orientation="vertical"/>
+                </field>
             </field>
         </record>
-	
 
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>

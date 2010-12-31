@@ -684,43 +684,43 @@
             <para style="terp_tblheader_Details">[[ get_monthly_total()[0] ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[1]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[1], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[2], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[3], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[4], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[5], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[6], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[7], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[8], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[9], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[10], dp='Account']) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[11], dp='Account']) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[12], dp='Account']) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[2]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[3]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[4]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[5]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[6]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[7]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[8]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[9]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[10]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[11]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[12]) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_General_Right">[[ formatLang(get_total()) ]][[ company.currency_id.symbol ]]</para>
+            <para style="terp_tblheader_General_Right">[[ formatLang(get_total(), dp='Account') ]][[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>

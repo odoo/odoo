@@ -150,6 +150,7 @@ class hr_employee(osv.osv):
         'partner_id': fields.related('address_home_id', 'partner_id', type='many2one', relation='res.partner', readonly=True, help="Partner that is related to the current employee. Accounting transaction will be written on this partner belongs to employee."),
         'bank_account_id':fields.many2one('res.partner.bank', 'Bank Account', domain="[('partner_id','=',partner_id)]", help="Employee bank salary account"),
         'work_phone': fields.char('Work Phone', size=32, readonly=False),
+        'mobile_phone': fields.char('Mobile', size=32, readonly=False),
         'work_email': fields.char('Work E-mail', size=240),
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
@@ -221,7 +222,7 @@ class hr_department(osv.osv):
     _inherit = 'hr.department'
     _columns = {
         'manager_id': fields.many2one('hr.employee', 'Manager'),
-        'member_ids': fields.one2many('hr.employee', 'department_id', 'Members'),
+        'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
 
 hr_department()

@@ -32,12 +32,14 @@
             <field name="name">Partner Locations</field>
             <field name="usage">view</field>
             <field name="icon">terp-partner</field>
+            <field name="posz">1</field>
             <field name="company_id"></field>
         </record>
         <record id="stock_location_locations_virtual" model="stock.location">
             <field name="name">Virtual Locations</field>
             <field name="usage">view</field>
             <field name="icon">terp-mrp</field>
+            <field name="posz">1</field>
             <field name="company_id"></field>
         </record>
         <record id="stock_location_scrapped" model="stock.location">
@@ -92,6 +94,7 @@
             <field name="location_id" ref="stock_location_company"/>
             <field name="usage">internal</field>
             <field name="chained_location_type">customer</field>
+            <field name="chained_auto_packing">transparent</field>
             <field name="chained_picking_type">out</field>
             <field name="chained_journal_id" ref="journal_delivery"/>
         </record>
