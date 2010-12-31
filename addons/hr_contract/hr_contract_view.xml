@@ -102,7 +102,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <page string="Personal Information" position="after">
-                    <page string="Miscellaneous">
+                    <page string="Miscellaneous" groups="base.group_hr_user">
                         <group colspan="2" col="2">
                         <separator string="Personal Info" colspan="2"/>
                         <field name="bank_account_id"/>

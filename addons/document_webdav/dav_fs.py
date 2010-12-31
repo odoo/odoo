@@ -277,9 +277,7 @@ class openerp_dav_handler(dav_interface):
         ua = self.parent.headers.get('User-Agent', False)
         ctx = {}
         if ua:
-            print ua
             if 'iPhone' in ua:
-                print "iphone"
                 ctx['DAV-client'] = 'iPhone'
             elif 'Konqueror' in ua:
                 ctx['DAV-client'] = 'GroupDAV'
@@ -376,7 +374,7 @@ class openerp_dav_handler(dav_interface):
                     cr.close()
         return self.db_name_list
 
-    def get_children(self,uri, filters=None):
+    def get_childs(self,uri, filters=None):
         """ return the child objects as self.baseuris for the given URI """
         self.parent.log_message('get children: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri, allow_last=True)

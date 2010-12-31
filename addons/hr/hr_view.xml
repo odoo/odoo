@@ -37,14 +37,14 @@
                     </group>
                     <notebook colspan="6">
                         <page string="Personal Information">
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" groups="base.group_hr_user">
                                 <separator colspan="2" string="Social IDs"/>
                                 <field name="ssnid"/>
                                 <field name="sinid" groups="base.group_extended"/>
                                 <field name="identification_id" groups="base.group_extended"/>
                                 <field name="passport_id"/>
                             </group>
-                            <group col="2" colspan="2">
+                            <group col="2" colspan="2" groups="base.group_hr_user">
                                 <separator string="Status" colspan="2"/>
                                 <field name="gender"/>
                                 <field name="marital" widget="selection"/>
@@ -57,6 +57,7 @@
                                 <field name="partner_id" invisible="1" />
                                 <field name="address_id" colspan="2" on_change="onchange_address_id(address_id)" domain="[('partner_id', '=', partner_id)]"/>
                                 <field name="work_phone"/>
+                                <field name="mobile_phone"/>
                                 <field name="work_email" widget="email" />
                                 <field name="work_location"/>
                             </group>
@@ -66,10 +67,10 @@
                                 <field name="coach_id" />
                             </group>
                         </page>
-                        <page string="Categories">
+                        <page string="Categories" groups="base.group_hr_user">
                             <field name="category_ids" nolabel="1"/>
                         </page>
-                        <page string="Notes">
+                        <page string="Notes" groups="base.group_hr_user">
                             <field colspan="4" nolabel="1" name="notes"/>
                         </page>
                     </notebook>
@@ -86,8 +87,8 @@
                 <tree string="Employees">
                     <field name="name"/>
                     <field name="work_phone"/>
+                    <field name="work_email"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="work_email" invisible="1"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="parent_id"/>
@@ -402,7 +403,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_job_filter"/>
             <field name="context">{"search_default_Current":1,"search_default_department_id": department_id}</field>
-            <field name="help">JJob Positions is used to define jobs and their requirements. You can attach a survey to a job position. This survey will be used in the recruitment process to evaluate the applicants for this job position.</field>
+            <field name="help">Job Positions are used to define jobs and their requirements. You can keep track of the number of employees you have per job position and how many you expect in the future. You can also attach a survey to a job position that will be used in the recruitment process to evaluate the applicants for this job position.</field>
         </record>
 
         <menuitem name="Recruitment" id="base.menu_crm_case_job_req_main" parent="menu_hr_root" groups="base.group_hr_user"/>
