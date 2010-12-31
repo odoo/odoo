@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-29 02:26+0000\n"
+"POT-Creation-Date: 2010-12-29 18:06+0000\n"
+"PO-Revision-Date: 2010-12-30 02:25+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:40+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:22+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -41,6 +41,14 @@ msgid "DateTime"
 msgstr "日期时间"
 
 #. module: base
+#: code:addons/fields.py:534
+#, python-format
+msgid ""
+"The second argument of the many2many field %s must be a SQL table !You used "
+"%s, which is not a valid SQL table name."
+msgstr "many2many 字段的第二个参数 %s 必须是数据库表。您所使用的 %s 不是一个有效的数据库表名。"
+
+#. module: base
 #: view:ir.values:0
 #: field:ir.values,meta_unpickle:0
 msgid "Metadata"
@@ -51,12 +59,6 @@ msgstr "Meta信息"
 #: field:ir.ui.view.custom,arch:0
 msgid "View Architecture"
 msgstr "视图结构"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not create this kind of document! (%s)"
-msgstr "您不能创建 (%s) 类型的文档！"
 
 #. module: base
 #: field:base.language.import,code:0
@@ -109,6 +111,14 @@ msgid "Created Views"
 msgstr "已创建的视图"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:339
+#, python-format
+msgid ""
+"You can not write in this document (%s) ! Be sure your user belongs to one "
+"of these groups: %s."
+msgstr "您不能写入单据 (%s)！请确保您的帐号属于用户组：%s"
+
+#. module: base
 #: field:res.partner,ref:0
 msgid "Reference"
 msgstr "引用"
@@ -124,11 +134,10 @@ msgid "South Korea"
 msgstr "韩国"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_workflow_transition_form
-#: model:ir.ui.menu,name:base.menu_workflow_transition
-#: view:workflow.activity:0
-msgid "Transitions"
-msgstr "转换"
+#: code:addons/osv.py:133
+#, python-format
+msgid "Constraint Error"
+msgstr "约束错误"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -141,12 +150,19 @@ msgid "Swaziland"
 msgstr "史瓦济兰"
 
 #. module: base
+#: code:addons/orm.py:1993
+#: code:addons/orm.py:3653
+#, python-format
+msgid "created."
+msgstr "已创建"
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
 msgid "Wood Suppliers"
 msgstr "木材供应商"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:303
 #, python-format
 msgid ""
 "Some installed modules depend on the module you plan to Uninstall :\n"
@@ -175,13 +191,13 @@ msgid "Search Partner"
 msgstr "搜索业务伙伴"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:132
 #, python-format
 msgid "\"smtp_server\" needs to be set to send mails to users"
 msgstr "需要设置 \"smtp_server\" 给用户发邮件"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:60
 #, python-format
 msgid "new"
 msgstr "新建"
@@ -212,7 +228,7 @@ msgid "Contact Name"
 msgstr "联系人姓名"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:56
 #, python-format
 msgid ""
 "Save this document to a %s file and edit it with a specific software or a "
@@ -233,6 +249,12 @@ msgstr "有效"
 #: field:ir.actions.wizard,wiz_name:0
 msgid "Wizard Name"
 msgstr "向导名称"
+
+#. module: base
+#: code:addons/orm.py:2160
+#, python-format
+msgid "Invalid group_by"
+msgstr "无效的 group_by"
 
 #. module: base
 #: field:res.partner,credit_limit:0
@@ -266,7 +288,6 @@ msgstr "ir.ui.view_sc"
 
 #. module: base
 #: field:res.widget.user,widget_id:0
-#: field:res.widget.wizard,widget_id:0
 msgid "Widget"
 msgstr "窗口控件"
 
@@ -317,7 +338,7 @@ msgid "Netherlands Antilles"
 msgstr "荷属安德列斯岛"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -340,16 +361,17 @@ msgid "Bosnian / bosanski jezik"
 msgstr "波斯尼亚语 / bosanski jezik"
 
 #. module: base
-#: field:ir.ui.menu,web_icon_data:0
-msgid "Web Icons"
-msgstr "Web图标"
-
-#. module: base
 #: help:ir.actions.report.xml,attachment_use:0
 msgid ""
 "If you check this, then the second time the user prints with same attachment "
 "name, it returns the previous report."
 msgstr "如果您选中此处，当下次用户使用相同的附件名称打印时将返回以前的报表。"
+
+#. module: base
+#: code:addons/orm.py:904
+#, python-format
+msgid "The read method is not implemented on this object !"
+msgstr "该对象的“read”方法尚未实现！"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -376,6 +398,12 @@ msgstr "哥伦比亚"
 #: view:ir.module.module:0
 msgid "Schedule Upgrade"
 msgstr "定期升级"
+
+#. module: base
+#: code:addons/orm.py:838
+#, python-format
+msgid "Key/value '%s' not found in selection field '%s'"
+msgstr "键/值对 '%s' 并未包含在选定的字段 '%s' 中"
 
 #. module: base
 #: help:res.country,code:0
@@ -420,7 +448,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "其他供应商"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:216
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "自定义的字段名称必须以“x_”开始！"
@@ -668,6 +696,12 @@ msgid ""
 msgstr "设置该用户使用的界面语言"
 
 #. module: base
+#: code:addons/orm.py:1043
+#, python-format
+msgid "The unlink method is not implemented on this object !"
+msgstr "此对象尚未实现“unlink”方法！"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: view:wizard.ir.model.menu.create:0
 msgid "Create Menu"
@@ -732,6 +766,16 @@ msgid "Type"
 msgstr "类型"
 
 #. module: base
+#: code:addons/orm.py:210
+#, python-format
+msgid ""
+"Language with code \"%s\" is not defined in your system !\n"
+"Define it through the Administration menu."
+msgstr ""
+"在您的系统有“%s“编码的语言未定义！\n"
+"请通过管理菜单设定它。"
+
+#. module: base
 #: model:res.country,name:base.gu
 msgid "Guam (USA)"
 msgstr "关岛（美属）"
@@ -756,6 +800,19 @@ msgstr "无效的 XML 视图结构"
 #: model:res.country,name:base.ky
 msgid "Cayman Islands"
 msgstr "开曼群岛"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_workflow_transition_form
+#: model:ir.ui.menu,name:base.menu_workflow_transition
+#: view:workflow.activity:0
+msgid "Transitions"
+msgstr "转换"
+
+#. module: base
+#: code:addons/orm.py:4018
+#, python-format
+msgid "Record #%d of %s not found, cannot copy!"
+msgstr "记录 #%d %s 无法找到，不能复制！"
 
 #. module: base
 #: field:ir.module.module,contributors:0
@@ -862,6 +919,16 @@ msgid "Search"
 msgstr "搜索"
 
 #. module: base
+#: code:addons/osv.py:136
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+
+#. module: base
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical AND operator"
@@ -916,13 +983,13 @@ msgid "ir.exports"
 msgstr "ir.exports"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "不存在代码为“%s”的语言"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr "当与发布者保障服务器通信时发生错误。"
@@ -953,6 +1020,12 @@ msgid ""
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
 msgstr "下面将帮助您注册一个合同到系统中, 成功后, 您可以直接将问题反馈到OpenERP公司."
+
+#. module: base
+#: code:addons/orm.py:1744
+#, python-format
+msgid "The search method is not implemented on this object !"
+msgstr "该对象尚未实现“search”方法！"
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1001,7 +1074,7 @@ msgid "On Create"
 msgstr "创建"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:461
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1115,12 +1188,6 @@ msgid "Day: %(day)s"
 msgstr "天：%(day)s"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not read this document! (%s)"
-msgstr "您不能读取文档 %s！"
-
-#. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
 msgid ""
 "List all certified modules available to configure your OpenERP. Modules that "
@@ -1161,8 +1228,8 @@ msgid ""
 msgstr "动作执行前所做的条件判断，如：object.list_price > object.cost_price"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
-#: code:addons/base/res/res_company.py:0
+#: code:addons/base/res/partner/partner.py:155
+#: code:addons/base/res/res_company.py:66
 #, python-format
 msgid " (copy)"
 msgstr " (副本)"
@@ -1240,7 +1307,7 @@ msgid "Formula"
 msgstr "公式"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid "Can not remove root user!"
 msgstr "不能删除根用户！"
@@ -1251,7 +1318,8 @@ msgid "Malawi"
 msgstr "马拉维"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:51
+#: code:addons/base/res/res_user.py:397
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (副本)"
@@ -1300,7 +1368,6 @@ msgstr "树形列表"
 
 #. module: base
 #: help:res.config.users,password:0
-#: help:res.users,password:0
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
 msgstr "如果您不想让该用户连接到本系统的话请保持为空。"
@@ -1326,6 +1393,12 @@ msgid ""
 "When using CSV format, please also check that the first line of your file is "
 "one of the following:"
 msgstr "如果用CSV格式文件导入，请确定文件首行如下："
+
+#. module: base
+#: code:addons/fields.py:114
+#, python-format
+msgid "Not implemented search_memory method !"
+msgstr "尚未实现“search_memory”方法！"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_log_act_window
@@ -1378,7 +1451,7 @@ msgid "Bahamas"
 msgstr "巴哈马"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
@@ -1398,6 +1471,12 @@ msgstr "爱尔兰"
 #: field:base.module.update,update:0
 msgid "Number of modules updated"
 msgstr "已更新的模块数"
+
+#. module: base
+#: code:addons/fields.py:100
+#, python-format
+msgid "Not implemented set_memory method !"
+msgstr "尚未实现“set_memory”方法!"
 
 #. module: base
 #: view:workflow.activity:0
@@ -1477,6 +1556,12 @@ msgid ""
 msgstr "逗号分隔的视图模式列表，如：'form', 'tree', 'calendar', 等(默认: tree,form)"
 
 #. module: base
+#: code:addons/orm.py:3147
+#, python-format
+msgid "A document was modified since you last viewed it (%s:%d)"
+msgstr ""
+
+#. module: base
 #: view:workflow:0
 msgid "Workflow Editor"
 msgstr "工作流编辑器"
@@ -1546,7 +1631,7 @@ msgid "Madagascar"
 msgstr "马达加斯加"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:94
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -1632,12 +1717,6 @@ msgid "French (BE) / Français (BE)"
 msgstr "法语（比利时）/ Français (BE)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not write in this document! (%s)"
-msgstr "您不能写入此文档 %s！"
-
-#. module: base
 #: view:ir.actions.server:0
 #: field:workflow.activity,action_id:0
 msgid "Server Action"
@@ -1708,6 +1787,12 @@ msgid ""
 msgstr "作业运行时需要调用的方法所在的对象名 如res.partner"
 
 #. module: base
+#: code:addons/orm.py:1040
+#, python-format
+msgid "The perm_read method is not implemented on this object !"
+msgstr "该对象尚未实现“perm_read”方法！"
+
+#. module: base
 #: view:res.lang:0
 msgid "%y - Year without century [00,99]."
 msgstr "%y - 两位数年份"
@@ -1718,12 +1803,18 @@ msgid "Slovenia"
 msgstr "斯洛文尼亚"
 
 #. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Invalid Object Architecture!"
+msgstr "无效的对象架构！"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_email_gateway_form
 msgid "Messages"
 msgstr "信件"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "Error!"
 msgstr "错误！"
@@ -1752,6 +1843,14 @@ msgstr "结束日期"
 #: model:res.country,name:base.nz
 msgid "New Zealand"
 msgstr "新西兰"
+
+#. module: base
+#: code:addons/orm.py:3366
+#, python-format
+msgid ""
+"One of the records you are trying to modify has already been deleted "
+"(Document type: %s)."
+msgstr "您正尝试修改的记录已经被删除（单据类型：%s）."
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -1803,18 +1902,12 @@ msgid "Valid"
 msgstr "有效"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not delete this document! (%s)"
-msgstr "您不能删除文档：%s！"
-
-#. module: base
 #: selection:ir.translation,type:0
 msgid "XSL"
 msgstr "XSL"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:322
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "不能升级模块 “%s“，因为它尚未安装。"
@@ -1926,6 +2019,15 @@ msgid "HR sector"
 msgstr "人力资源部门"
 
 #. module: base
+#: code:addons/orm.py:3817
+#, python-format
+msgid ""
+"Invalid \"order\" specified. A valid \"order\" specification is a comma-"
+"separated list of valid field names (optionally followed by asc/desc for the "
+"direction)"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
 msgstr "模块相关性"
@@ -1977,6 +2079,11 @@ msgstr "依附关系"
 #: field:multi_company.default,company_id:0
 msgid "Main Company"
 msgstr "母公司"
+
+#. module: base
+#: field:ir.ui.menu,web_icon_hover:0
+msgid "Web Icon File (hover)"
+msgstr "Web 图标文件（悬停）"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2064,9 +2171,10 @@ msgid "Sir"
 msgstr "先生"
 
 #. module: base
-#: view:base.module.import:0
-msgid "Select module package to import (.zip file):"
-msgstr "选择要导入的模块包（.zip 文件）："
+#: code:addons/orm.py:1622
+#, python-format
+msgid "There is no view of type '%s' defined for the structure!"
+msgstr "类型 '%s' 没有为该结构定义视图"
 
 #. module: base
 #: field:ir.default,ref_id:0
@@ -2164,7 +2272,7 @@ msgid "Mayotte"
 msgstr "马约特"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:593
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr "请指定要启动的动作！"
@@ -2189,6 +2297,12 @@ msgid "Filters"
 msgstr "过滤"
 
 #. module: base
+#: code:addons/orm.py:758
+#, python-format
+msgid "Please check that all your lines have %d columns."
+msgstr "请确保所有行都有 %d 列。"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
 #: view:ir.cron:0
 #: model:ir.ui.menu,name:base.menu_ir_cron_act
@@ -2205,10 +2319,16 @@ msgstr "称谓"
 #. module: base
 #: help:ir.property,res_id:0
 msgid "If not set, acts as a default value for new resources"
-msgstr ""
+msgstr "倘若没有设置，则作为新资源的默认值"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:3448
+#, python-format
+msgid "Recursivity Detected."
+msgstr "检测到循环。"
+
+#. module: base
+#: code:addons/base/module/module.py:262
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "模块的依赖包含循环错误！"
@@ -2232,6 +2352,11 @@ msgid ""
 "Value Added Tax number. Check the box if the partner is subjected to the "
 "VAT. Used by the VAT legal statement."
 msgstr "增值税编号，如该业务伙伴适用于增值税，请选择。用于增值税申报。"
+
+#. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr "maintenance.contract"
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -2286,11 +2411,6 @@ msgid "VAT"
 msgstr "增值税"
 
 #. module: base
-#: field:ir.ui.menu,web_icon_hover_data:0
-msgid "Web Icons Hover"
-msgstr "Web 鼠标悬停图标"
-
-#. module: base
 #: view:res.lang:0
 msgid "12. %w              ==> 5 ( Friday is the 6th day)"
 msgstr "12. %w ==> 5 ( 星期五是第六天)"
@@ -2326,7 +2446,7 @@ msgid "M."
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:429
 #, python-format
 msgid ""
 "Can not create the module file:\n"
@@ -2336,12 +2456,20 @@ msgstr ""
 " %s"
 
 #. module: base
+#: code:addons/orm.py:2973
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: read, Document type: %s)."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
 msgstr "瑙鲁"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:200
 #, python-format
 msgid "The certificate ID of the module must be unique !"
 msgstr "模块的认证ID必须唯一"
@@ -2382,7 +2510,7 @@ msgid ""
 "If you need another language than the official ones available, you can "
 "import a language pack from here. Other OpenERP languages than the official "
 "ones can be found on launchpad."
-msgstr ""
+msgstr "如果您需要使用其他官方支持的语言，您可以在此处导入语言包。其他官方尚未支持的语言可以在 launchpad.net 上下载。"
 
 #. module: base
 #: view:ir.module.module:0
@@ -2416,6 +2544,12 @@ msgstr "发送SMS"
 #: field:res.partner,ean13:0
 msgid "EAN13"
 msgstr "条形码（EAN13）"
+
+#. module: base
+#: code:addons/orm.py:1622
+#, python-format
+msgid "Invalid Architecture!"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.pt
@@ -2474,7 +2608,7 @@ msgid "Ecuador"
 msgstr "厄瓜多尔"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:52
 #, python-format
 msgid ""
 "Save this document to a .CSV file and open it with your favourite "
@@ -2540,7 +2674,7 @@ msgid "Action to Trigger"
 msgstr "待触发动作"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:136
 #, python-format
 msgid "\"email_from\" needs to be set to send welcome mails to users"
 msgstr ""
@@ -2736,17 +2870,12 @@ msgid "FYROM"
 msgstr "马其顿共和国"
 
 #. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Advanced Search"
-msgstr "高级搜索"
-
-#. module: base
 #: view:res.lang:0
 msgid "%c - Appropriate date and time representation."
 msgstr "%c - 日期时间表示"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:422
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -2795,7 +2924,7 @@ msgid "Rules"
 msgstr "规则"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:216
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr "您试图删除一个已安装或正要安装的模块"
@@ -2863,7 +2992,7 @@ msgid "Lesotho"
 msgstr "莱索托"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:112
 #, python-format
 msgid "You can not remove the model '%s' !"
 msgstr "您不能删除模型“%s”！"
@@ -2892,6 +3021,12 @@ msgstr "Abkhazian / аҧсуа"
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
 msgstr "系统配置完成"
+
+#. module: base
+#: code:addons/orm.py:929
+#, python-format
+msgid "Error occurred while validating the field(s) %s: %s"
+msgstr "验证字段 %s 时发生错误：%s"
 
 #. module: base
 #: view:ir.property:0
@@ -2924,7 +3059,7 @@ msgid "Benin"
 msgstr "贝宁"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
 #, python-format
 msgid "That contract is already registered in the system."
 msgstr "该合同已经注册到系统中了。"
@@ -2953,6 +3088,14 @@ msgstr "RML 页眉"
 #: field:partner.sms.send,app_id:0
 msgid "API ID"
 msgstr "API ID"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:340
+#, python-format
+msgid ""
+"You can not create this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -3199,6 +3342,12 @@ msgstr "res.users"
 #: model:res.country,name:base.ni
 msgid "Nicaragua"
 msgstr "尼加拉瓜"
+
+#. module: base
+#: code:addons/orm.py:1046
+#, python-format
+msgid "The write method is not implemented on this object !"
+msgstr "该对象尚未实现“write”方法！"
 
 #. module: base
 #: view:res.partner.event:0
@@ -3478,7 +3627,8 @@ msgid "Bank Type"
 msgstr "银行类型"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:58
+#: code:addons/base/res/res_user.py:67
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "用户组的名称不能以“-”开始"
@@ -3500,7 +3650,7 @@ msgid "Gujarati / ગુજરાતી"
 msgstr "古吉拉特语  / ગુજરાતી"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:257
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
@@ -3518,7 +3668,7 @@ msgid "Flow Start"
 msgstr "工作流开始"
 
 #. module: base
-#: code:addons/__init__.py:0
+#: code:addons/__init__.py:827
 #, python-format
 msgid "module base cannot be loaded! (hint: verify addons-path)"
 msgstr "模块库不能装载!(提示:检查addons路径)"
@@ -3550,7 +3700,9 @@ msgid "Guadeloupe (French)"
 msgstr "瓜德卢普（法属）"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
+#: code:addons/base/res/res_lang.py:88
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid "User Error"
 msgstr "用户错误"
@@ -3626,6 +3778,11 @@ msgid "Cape Verde"
 msgstr "佛得角"
 
 #. module: base
+#: view:base.module.import:0
+msgid "Select module package to import (.zip file):"
+msgstr "选择要导入的模块包（.zip 文件）："
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
@@ -3637,6 +3794,12 @@ msgstr "事件"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.url"
 msgstr "ir.actions.url"
+
+#. module: base
+#: code:addons/orm.py:156
+#, python-format
+msgid "Wrong ID for the browse record, got %r, expected an integer."
+msgstr "%r 错误的浏览记录标识符，其应该为一个整数。"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_addess_tree
@@ -3671,9 +3834,10 @@ msgid "French / Français"
 msgstr "法语 / Français"
 
 #. module: base
-#: view:ir.module.module:0
-msgid "Created Menus"
-msgstr "已创建菜单"
+#: code:addons/orm.py:1049
+#, python-format
+msgid "The create method is not implemented on this object !"
+msgstr "该对象尚未实现“create”方法！"
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
@@ -3924,6 +4088,14 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
+#: code:addons/orm.py:3533
+#, python-format
+msgid ""
+"You cannot perform this operation. New Record Creation is not allowed for "
+"this object as this object is for reporting purpose."
+msgstr ""
+
+#. module: base
 #: view:base.language.import:0
 msgid "- module,type,name,res_id,src,value"
 msgstr "- module,type,name,res_id,src,value"
@@ -3961,9 +4133,9 @@ msgid "Project"
 msgstr "项目"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
-msgid "maintenance.contract"
-msgstr "maintenance.contract"
+#: field:ir.ui.menu,web_icon_hover_data:0
+msgid "Web Icon Image (hover)"
+msgstr "Web 图标图片（悬停）"
 
 #. module: base
 #: view:base.module.import:0
@@ -3992,12 +4164,9 @@ msgid "Serial Key"
 msgstr "产品密钥"
 
 #. module: base
-#: field:res.partner,customer:0
-#: view:res.partner.address:0
-#: field:res.partner.address,is_customer_add:0
-#: model:res.partner.category,name:base.res_partner_category_0
-msgid "Customer"
-msgstr "客户"
+#: model:ir.ui.menu,name:base.menu_audit
+msgid "Audit"
+msgstr "审核"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -4106,6 +4275,18 @@ msgid "Signature"
 msgstr "签名"
 
 #. module: base
+#: code:addons/fields.py:456
+#: code:addons/fields.py:654
+#: code:addons/fields.py:656
+#: code:addons/fields.py:658
+#: code:addons/fields.py:660
+#: code:addons/fields.py:662
+#: code:addons/fields.py:664
+#, python-format
+msgid "Not Implemented"
+msgstr "尚未实现"
+
+#. module: base
 #: model:ir.model,name:base.model_res_widget_user
 msgid "res.widget.user"
 msgstr "res.widget.user"
@@ -4126,7 +4307,7 @@ msgid "False means for every user"
 msgstr "False 表示作用于每个用户"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:198
 #, python-format
 msgid "The name of the module must be unique !"
 msgstr "模块名必须唯一！"
@@ -4167,9 +4348,11 @@ msgid "Contacts"
 msgstr "联系人"
 
 #. module: base
-#: model:res.country,name:base.fo
-msgid "Faroe Islands"
-msgstr "法罗群岛"
+#: code:addons/orm.py:3199
+#, python-format
+msgid ""
+"Unable to delete this document because it is used as a default property"
+msgstr "不能删除该单据，因为它被作为默认属性使用"
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -4197,6 +4380,12 @@ msgstr "捷克共和国"
 #: view:res.widget.wizard:0
 msgid "Widget Wizard"
 msgstr "部件向导"
+
+#. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Insufficient fields for Calendar View!"
+msgstr "日历视图缺少字段！"
 
 #. module: base
 #: selection:ir.property,type:0
@@ -4242,15 +4431,9 @@ msgid "Mongolia"
 msgstr "蒙古"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
-#: code:addons/base/ir/ir_model.py:0
-#: code:addons/base/module/module.py:0
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
-#: code:addons/base/res/res_currency.py:0
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "Error"
-msgstr "错误"
+#: view:ir.module.module:0
+msgid "Created Menus"
+msgstr "已创建菜单"
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -4365,11 +4548,6 @@ msgid "Password"
 msgstr "密码"
 
 #. module: base
-#: field:ir.ui.menu,web_icon:0
-msgid "Icon File"
-msgstr "图标文件"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: view:ir.model:0
 #: field:ir.model,field_id:0
@@ -4468,7 +4646,7 @@ msgid "Change My Preferences"
 msgstr "更改我的首选项"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:160
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr "动作定义中使用了无效的模式名称。"
@@ -4536,7 +4714,7 @@ msgid "Raphaël Valyi's tweets"
 msgstr "Raphaël Valyi 的推"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:384
 #, python-format
 msgid ""
 "\n"
@@ -4617,7 +4795,13 @@ msgid "Client Actions"
 msgstr "客户端动作"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:1806
+#, python-format
+msgid "The exists method is not implemented on this object !"
+msgstr "该对象尚未实现“exists”方法 !"
+
+#. module: base
+#: code:addons/base/module/module.py:336
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -4690,7 +4874,7 @@ msgid "ir.server.object.lines"
 msgstr "ir.server.object.lines"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:530
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
 msgstr "模块 %s：无效的证书号"
@@ -4737,6 +4921,11 @@ msgstr "发送手机短信"
 #: field:res.company,user_ids:0
 msgid "Accepted Users"
 msgstr "接受的用户"
+
+#. module: base
+#: field:ir.ui.menu,web_icon_data:0
+msgid "Web Icon Image"
+msgstr "Web 图标图片"
 
 #. module: base
 #: view:ir.values:0
@@ -4853,6 +5042,14 @@ msgid "Nepal"
 msgstr "尼泊尔"
 
 #. module: base
+#: code:addons/orm.py:2307
+#, python-format
+msgid ""
+"Invalid value for reference field \"%s\" (last part must be a non-zero "
+"integer): \"%s\""
+msgstr ""
+
+#. module: base
 #: help:ir.cron,args:0
 msgid "Arguments to be passed to the method. e.g. (uid,)"
 msgstr "参数传送给方法,如(uid,)"
@@ -4881,14 +5078,14 @@ msgid "Update Modules List"
 msgstr "更新模块列表"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:255
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
 msgstr "不能升级模块 %s, 因为找不到外部依赖：%s"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:241
 #, python-format
 msgid ""
 "Please keep in mind that documents currently displayed may not be relevant "
@@ -4906,6 +5103,12 @@ msgstr "继续"
 #: selection:base.language.install,lang:0
 msgid "Thai / ภาษาไทย"
 msgstr "泰国语 / ภาษาไทย"
+
+#. module: base
+#: code:addons/orm.py:158
+#, python-format
+msgid "Object %s does not exists"
+msgstr "对象%s不存在"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5038,6 +5241,13 @@ msgid "Iteration"
 msgstr "反复"
 
 #. module: base
+#: code:addons/orm.py:3448
+#: code:addons/orm.py:3532
+#, python-format
+msgid "UserError"
+msgstr "用户错误"
+
+#. module: base
 #: model:res.country,name:base.ae
 msgid "United Arab Emirates"
 msgstr "阿拉伯联合酋长国"
@@ -5075,7 +5285,12 @@ msgid "Solomon Islands"
 msgstr "所罗门群岛"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:344
+#: code:addons/orm.py:1897
+#: code:addons/orm.py:2972
+#: code:addons/orm.py:3165
+#: code:addons/orm.py:3365
+#: code:addons/orm.py:3817
 #, python-format
 msgid "AccessError"
 msgstr "访问错误"
@@ -5086,7 +5301,7 @@ msgid "Waiting"
 msgstr "等待中"
 
 #. module: base
-#: code:addons/__init__.py:0
+#: code:addons/__init__.py:827
 #, python-format
 msgid "Could not load base module"
 msgstr "不能载入基本模块"
@@ -5095,6 +5310,12 @@ msgstr "不能载入基本模块"
 #: view:res.lang:0
 msgid "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 msgstr "8.  %I:%M:%S %p ==> 06:25:20 PM"
+
+#. module: base
+#: code:addons/orm.py:1803
+#, python-format
+msgid "The copy method is not implemented on this object !"
+msgstr "该对象尚未实现“copy”方法！"
 
 #. module: base
 #: field:res.log,create_date:0
@@ -5213,7 +5434,7 @@ msgid "ir.actions.todo"
 msgstr "ir.actions.todo"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:94
 #, python-format
 msgid "Couldn't find previous ir.actions.todo"
 msgstr "找不到上一个 ir.actions.todo"
@@ -5287,16 +5508,22 @@ msgid "res.widget"
 msgstr "res.widget"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:219
 #, python-format
 msgid "Model %s does not exist!"
 msgstr "模型 %s 不存在！"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:88
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
 msgstr "不能删除用户的首先语言."
+
+#. module: base
+#: code:addons/fields.py:103
+#, python-format
+msgid "Not implemented get_memory method !"
+msgstr "该对象尚未实现“get_memory“方法！"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -5306,7 +5533,7 @@ msgid "Python Code"
 msgstr "Python 语言代码"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Can not create the module file: %s !"
 msgstr "无法创建模块文件：%s！"
@@ -5425,10 +5652,10 @@ msgid ""
 msgstr "视图类型：设为“tree”来使用树形控件显示层次数据，或者设为“form”使用其他类型视图。"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:421
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
-msgstr ""
+msgstr "请单击“继续”按钮配置下一个模块..."
 
 #. module: base
 #: field:ir.actions.server,record_id:0
@@ -5464,7 +5691,7 @@ msgid ""
 msgstr "选择动作（读、写、创建）执行所在之对象。"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:625
 #, python-format
 msgid "Please specify server option --email-from !"
 msgstr "请指定服务器选项,email from!"
@@ -5676,7 +5903,7 @@ msgid "Afghanistan, Islamic State of"
 msgstr "阿富汗伊斯兰国"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -5696,6 +5923,12 @@ msgstr "间隔单位"
 #: field:workflow.activity,kind:0
 msgid "Kind"
 msgstr "类别"
+
+#. module: base
+#: code:addons/orm.py:3775
+#, python-format
+msgid "This method does not exist anymore"
+msgstr "该方法不存在"
 
 #. module: base
 #: field:res.bank,fax:0
@@ -5953,6 +6186,14 @@ msgid "To browse official translations, you can start with these links:"
 msgstr "浏览官方的翻译，从这些连接开始:"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:338
+#, python-format
+msgid ""
+"You can not read this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
+
+#. module: base
 #: view:res.bank:0
 #: field:res.config.users,address_id:0
 #: view:res.partner.address:0
@@ -5960,11 +6201,6 @@ msgstr "浏览官方的翻译，从这些连接开始:"
 #: field:res.users,address_id:0
 msgid "Address"
 msgstr "地址"
-
-#. module: base
-#: field:ir.ui.menu,web_icon_hover:0
-msgid "Icon hover File"
-msgstr "鼠标悬停图标文件"
 
 #. module: base
 #: field:ir.module.module,latest_version:0
@@ -6044,7 +6280,7 @@ msgid "Saint Kitts & Nevis Anguilla"
 msgstr "圣基茨和尼维斯"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:0
+#: code:addons/base/res/res_currency.py:100
 #, python-format
 msgid ""
 "No rate found \n"
@@ -6128,7 +6364,7 @@ msgid "Samoa"
 msgstr "萨摩亚"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid ""
 "You cannot delete the language which is Active !\n"
@@ -6149,10 +6385,18 @@ msgid "Child IDs"
 msgstr "下级标识符"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "设置服务器动作的“记录标识符”时出错！"
+
+#. module: base
+#: code:addons/orm.py:2306
+#: code:addons/orm.py:2316
+#, python-format
+msgid "ValidateError"
+msgstr "验证错误"
 
 #. module: base
 #: view:base.module.import:0
@@ -6201,6 +6445,16 @@ msgid "Home Action"
 msgstr "主页动作"
 
 #. module: base
+#: code:addons/custom.py:558
+#, python-format
+msgid ""
+"The sum of the data (2nd field) is null.\n"
+"We can't draw a pie chart !"
+msgstr ""
+"这些数据的总和（第二个字段）为空。\n"
+"我们无法绘制饼图！"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_lunch_reporting
 #: model:ir.ui.menu,name:base.menu_project_report
 #: model:ir.ui.menu,name:base.menu_report_association
@@ -6228,10 +6482,9 @@ msgid "Stop All"
 msgstr "全部停止"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
-#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
-#: view:publisher_warranty.contract.wizard:0
-msgid "Register a Contract"
+#: code:addons/orm.py:412
+#, python-format
+msgid "The read_group method is not implemented on this object !"
 msgstr ""
 
 #. module: base
@@ -6282,7 +6535,7 @@ msgid "Start update"
 msgstr "开始更新"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:144
 #, python-format
 msgid "Contract validation error"
 msgstr ""
@@ -6340,7 +6593,7 @@ msgid "HR Manager Dashboard"
 msgstr "人事经理仪表盘"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:253
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
@@ -6392,7 +6645,7 @@ msgid "Module Update"
 msgstr "模块更新"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#: code:addons/base/module/wizard/base_module_upgrade.py:97
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
 msgstr "一下模块不能安装或未知:'%s'"
@@ -6473,7 +6726,14 @@ msgid "The new user's real name, used for searching and most listings"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/osv.py:154
+#: code:addons/osv.py:156
+#, python-format
+msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:189
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr "字段的长度不小于1"
@@ -6512,6 +6772,12 @@ msgid "Arguments"
 msgstr "参数"
 
 #. module: base
+#: code:addons/orm.py:716
+#, python-format
+msgid "Database ID doesn't exist: %s : %s"
+msgstr ""
+
+#. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 2"
 msgstr "GPL Version 2"
@@ -6522,14 +6788,29 @@ msgid "GPL Version 3"
 msgstr "GPL Version 3"
 
 #. module: base
+#: code:addons/orm.py:836
+#, python-format
+msgid "key '%s' not found in selection field '%s'"
+msgstr ""
+
+#. module: base
 #: view:partner.wizard.ean.check:0
 msgid "Correct EAN13"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_audit
-msgid "Audit"
-msgstr "审核"
+#: code:addons/orm.py:2317
+#, python-format
+msgid "The value \"%s\" for the field \"%s\" is not in the selection"
+msgstr "字段 %s 的值 %s 不在选择之内"
+
+#. module: base
+#: field:res.partner,customer:0
+#: view:res.partner.address:0
+#: field:res.partner.address,is_customer_add:0
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Customer"
+msgstr "客户"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6634,7 +6915,7 @@ msgid "Copy Object"
 msgstr "复制对象"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:551
 #, python-format
 msgid ""
 "Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
@@ -6686,6 +6967,15 @@ msgid "Object"
 msgstr "对象"
 
 #. module: base
+#: code:addons/osv.py:151
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "ir.default"
 msgstr "ir.default"
@@ -6720,7 +7010,7 @@ msgid "User Ref."
 msgstr "用户参照"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:550
 #, python-format
 msgid "Warning !"
 msgstr "警告 !"
@@ -6861,7 +7151,7 @@ msgid "workflow.triggers"
 msgstr "workflow.triggers"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:60
 #, python-format
 msgid "Invalid search criterions"
 msgstr "无效搜索规则"
@@ -6917,7 +7207,7 @@ msgid "Action Type"
 msgstr "动作类型"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:268
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -7021,9 +7311,21 @@ msgid "workflow.instance"
 msgstr "workflow.instance"
 
 #. module: base
+#: code:addons/orm.py:278
+#, python-format
+msgid "Unknown attribute %s in %s "
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "10. %S              ==> 20"
 msgstr "10. %S ==> 20"
+
+#. module: base
+#: code:addons/fields.py:106
+#, python-format
+msgid "undefined get method !"
+msgstr "未定义“get”方法！"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7200,6 +7502,11 @@ msgid "Menu Action"
 msgstr "菜单动作"
 
 #. module: base
+#: model:res.country,name:base.fo
+msgid "Faroe Islands"
+msgstr "法罗群岛"
+
+#. module: base
 #: selection:base.language.export,state:0
 msgid "choose"
 msgstr "选择"
@@ -7336,7 +7643,7 @@ msgid "China"
 msgstr "中国"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:486
 #, python-format
 msgid ""
 "--\n"
@@ -7534,7 +7841,7 @@ msgid "Account No."
 msgstr "科目号"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
 msgstr "不能删除基础语言 'en_US'!"
@@ -7577,6 +7884,14 @@ msgstr "翻译"
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
 msgstr "安提瓜和巴布达"
+
+#. module: base
+#: code:addons/orm.py:3166
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: %s, Document type: %s)."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.zr
@@ -7636,7 +7951,7 @@ msgid "Auto-Refresh"
 msgstr "自动刷新"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:60
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr "osv_memory 字段仅用 = 和 != 操作符作比较."
@@ -7645,6 +7960,11 @@ msgstr "osv_memory 字段仅用 = 和 != 操作符作比较."
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
 msgstr "图表"
+
+#. module: base
+#: model:res.country,name:base.wf
+msgid "Wallis and Futuna Islands"
+msgstr "瓦利斯和富图纳群岛"
 
 #. module: base
 #: help:multi_company.default,name:0
@@ -7701,6 +8021,35 @@ msgstr "银行代码"
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "土库曼斯坦"
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:593
+#: code:addons/base/ir/ir_actions.py:625
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
+#: code:addons/base/ir/ir_model.py:112
+#: code:addons/base/ir/ir_model.py:197
+#: code:addons/base/ir/ir_model.py:216
+#: code:addons/base/ir/ir_model.py:219
+#: code:addons/base/module/module.py:215
+#: code:addons/base/module/module.py:258
+#: code:addons/base/module/module.py:262
+#: code:addons/base/module/module.py:268
+#: code:addons/base/module/module.py:303
+#: code:addons/base/module/module.py:321
+#: code:addons/base/module/module.py:336
+#: code:addons/base/module/module.py:429
+#: code:addons/base/module/module.py:530
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
+#: code:addons/base/res/res_currency.py:100
+#: code:addons/base/res/res_user.py:57
+#: code:addons/base/res/res_user.py:66
+#: code:addons/custom.py:558
+#: code:addons/orm.py:3199
+#, python-format
+msgid "Error"
+msgstr "错误"
 
 #. module: base
 #: model:res.country,name:base.pm
@@ -7830,7 +8179,7 @@ msgid "Internal Header/Footer"
 msgstr "内部页眉／页脚"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:59
 #, python-format
 msgid ""
 "Save this document to a .tgz file. This archive containt UTF-8 %s files and "
@@ -7870,6 +8219,14 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr "Serbian (Cyrillic) / српски"
 
 #. module: base
+#: code:addons/orm.py:2161
+#, python-format
+msgid ""
+"Invalid group_by specification: \"%s\".\n"
+"A group_by specification must be a list of valid fields."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
 msgstr "沙特阿拉伯"
@@ -7892,7 +8249,7 @@ msgid "Event Logs"
 msgstr "事件日志"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_configuration.py:0
+#: code:addons/base/module/wizard/base_module_configuration.py:37
 #, python-format
 msgid "System Configuration done"
 msgstr "系统配置已完成"
@@ -7939,10 +8296,17 @@ msgid "Low"
 msgstr "低"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:0
+#: code:addons/base/ir/ir_ui_menu.py:305
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr "错误！您不能创建递归的菜单。"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
+#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
+#: view:publisher_warranty.contract.wizard:0
+msgid "Register a Contract"
+msgstr ""
 
 #. module: base
 #: view:ir.rule:0
@@ -7952,7 +8316,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:145
 #, python-format
 msgid "Please check your publisher warranty contract name and validity."
 msgstr ""
@@ -8106,7 +8470,7 @@ msgid "View Auto-Load"
 msgstr "自动加载视图"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:197
 #, python-format
 msgid "You cannot remove the field '%s' !"
 msgstr "您不能删除字段 '%s' !"
@@ -8119,6 +8483,11 @@ msgid "Resource"
 msgstr "资源"
 
 #. module: base
+#: field:ir.ui.menu,web_icon:0
+msgid "Web Icon File"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Persian / فارس"
 msgstr "Persian / فارس"
@@ -8129,7 +8498,7 @@ msgid "View Ordering"
 msgstr "视图顺序"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#: code:addons/base/module/wizard/base_module_upgrade.py:97
 #, python-format
 msgid "Unmet dependency !"
 msgstr "未满足依赖."
@@ -8140,6 +8509,14 @@ msgid ""
 "Supported file formats: *.csv (Comma-separated values) or *.po (GetText "
 "Portable Objects)"
 msgstr "支持的文件格式：*.csv (逗号分隔值) 和 *.po (GetText 可一直对象)"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:341
+#, python-format
+msgid ""
+"You can not delete this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
@@ -8265,7 +8642,7 @@ msgid "Azerbaijan"
 msgstr "阿塞拜疆"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid "Warning"
 msgstr "警告"
@@ -8292,9 +8669,9 @@ msgid "Czech / Čeština"
 msgstr "捷克语 / Čeština"
 
 #. module: base
-#: model:res.country,name:base.wf
-msgid "Wallis and Futuna Islands"
-msgstr "瓦利斯和富图纳群岛"
+#: selection:ir.model.fields,select_level:0
+msgid "Advanced Search"
+msgstr "高级搜索"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_wizard_screen
@@ -8594,7 +8971,7 @@ msgid "Account Owner"
 msgstr "帐号所有者"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:240
 #, python-format
 msgid "Company Switch Warning"
 msgstr "切换公司警告"
@@ -8654,7 +9031,7 @@ msgid "Workflow Instances"
 msgstr "工作流实例"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:261
 #, python-format
 msgid "Partners: "
 msgstr "业务伙伴： "
@@ -9025,6 +9402,10 @@ msgstr "俄语 / русский язык"
 #~ msgid "Choose a language to install:"
 #~ msgstr "选择要安装的语言："
 
+#, python-format
+#~ msgid "You can not create this kind of document! (%s)"
+#~ msgstr "您不能创建 (%s) 类型的文档！"
+
 #~ msgid "%j - Day of the year as a decimal number [001,366]."
 #~ msgstr "%j - 十进制表示的该年中的天数 [001,366]."
 
@@ -9056,10 +9437,6 @@ msgstr "俄语 / русский язык"
 #~ "请在“简化界面”和扩展界面之间选择。\n"
 #~ "如果您是第一次测试或使用 OpenERP，我们建议您使用简化界面，它的选项和字段更少更容易理解。以后您可以切换到扩展视图方式。\n"
 #~ "            "
-
-#, python-format
-#~ msgid "The unlink method is not implemented on this object !"
-#~ msgstr "此对象尚未实现“unlink”方法！"
 
 #~ msgid "%y - Year without century as a decimal number [00,99]."
 #~ msgstr "%y - 不包含世纪的十进制年份数 [00,99]。"
@@ -9126,10 +9503,6 @@ msgstr "俄语 / русский язык"
 #~ msgid "June"
 #~ msgstr "六月"
 
-#, python-format
-#~ msgid "The read method is not implemented on this object !"
-#~ msgstr "该对象的“read”方法尚未实现！"
-
 #~ msgid "STOCK_MEDIA_REWIND"
 #~ msgstr "STOCK_MEDIA_REWIND"
 
@@ -9176,14 +9549,6 @@ msgstr "俄语 / русский язык"
 #~ msgid "You try to bypass an access rule (Document type: %s)."
 #~ msgstr "您尝试跳过访问规则（文档类型：%s）。"
 
-#, python-format
-#~ msgid ""
-#~ "The sum of the data (2nd field) is null.\n"
-#~ "We can't draw a pie chart !"
-#~ msgstr ""
-#~ "这些数据的总和（第二个字段）为空。\n"
-#~ "我们无法绘制饼图！"
-
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
 
@@ -9224,6 +9589,10 @@ msgstr "俄语 / русский язык"
 #~ msgid "Simple domain setup"
 #~ msgstr "简单域设置"
 
+#, python-format
+#~ msgid "You can not read this document! (%s)"
+#~ msgstr "您不能读取文档 %s！"
+
 #~ msgid "STOCK_FIND_AND_REPLACE"
 #~ msgstr "STOCK_FIND_AND_REPLACE"
 
@@ -9248,19 +9617,11 @@ msgstr "俄语 / русский язык"
 #~ msgid "STOCK_CLEAR"
 #~ msgstr "STOCK_CLEAR"
 
-#, python-format
-#~ msgid "Not implemented search_memory method !"
-#~ msgstr "尚未实现“search_memory”方法！"
-
 #~ msgid "STOCK_PROPERTIES"
 #~ msgstr "STOCK_PROPERTIES"
 
 #~ msgid "Year without century: %(y)s"
 #~ msgstr "不包含世纪的年数：%(y)s"
-
-#, python-format
-#~ msgid "Not implemented set_memory method !"
-#~ msgstr "尚未实现“set_memory”方法!"
 
 #~ msgid "Maintenance contract added !"
 #~ msgstr "维护合同已添加！"
@@ -9289,15 +9650,15 @@ msgstr "俄语 / русский язык"
 #~ msgid "Configure User"
 #~ msgstr "用户设置"
 
+#, python-format
+#~ msgid "You can not write in this document! (%s)"
+#~ msgstr "您不能写入此文档 %s！"
+
 #~ msgid "left"
 #~ msgstr "左对齐"
 
 #~ msgid "STOCK_PRINT_PREVIEW"
 #~ msgstr "STOCK_PRINT_PREVIEW"
-
-#, python-format
-#~ msgid "The perm_read method is not implemented on this object !"
-#~ msgstr "该对象尚未实现“perm_read”方法！"
 
 #~ msgid "STOCK_MEDIA_PLAY"
 #~ msgstr "STOCK_MEDIA_PLAY"
@@ -9313,6 +9674,10 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "right"
 #~ msgstr "右对齐"
+
+#, python-format
+#~ msgid "You can not delete this document! (%s)"
+#~ msgstr "您不能删除文档：%s！"
 
 #~ msgid "Others Partners"
 #~ msgstr "其他业务伙伴"
@@ -9350,14 +9715,6 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "STOCK_JUSTIFY_RIGHT"
 #~ msgstr "STOCK_JUSTIFY_RIGHT"
-
-#, python-format
-#~ msgid "Please check that all your lines have %d columns."
-#~ msgstr "请确保所有行都有 %d 列。"
-
-#, python-format
-#~ msgid "Recursivity Detected."
-#~ msgstr "检测到循环。"
 
 #~ msgid "terp-account"
 #~ msgstr "terp-account"
@@ -9404,10 +9761,6 @@ msgstr "俄语 / русский язык"
 #~ msgid "Subscribed"
 #~ msgstr "已订阅"
 
-#, python-format
-#~ msgid "The create method is not implemented on this object !"
-#~ msgstr "该对象尚未实现“create”方法！"
-
 #~ msgid "Partner Address"
 #~ msgstr "业务伙伴地址"
 
@@ -9448,10 +9801,6 @@ msgstr "俄语 / русский язык"
 #~ "to change this, later, through the Administration menu."
 #~ msgstr "如果您是初次使用系统建议选择简单模式，这样会减少或隐藏一些设置。以后您可以通过管理菜单修改。"
 
-#, python-format
-#~ msgid "Error occurred while validating the field(s) %s: %s"
-#~ msgstr "验证字段 %s 时发生错误：%s"
-
 #~ msgid "The rule is satisfied if all test are True (AND)"
 #~ msgstr "如果所有测试都为真的话该规则将满足条件（“与”运算）"
 
@@ -9479,10 +9828,6 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "Groups are used to defined access rights on each screen and menu."
 #~ msgstr "用户组用于为每个屏幕和菜单定义访问权限。"
-
-#, python-format
-#~ msgid "The write method is not implemented on this object !"
-#~ msgstr "该对象尚未实现“write”方法！"
 
 #~ msgid ""
 #~ "You have to import a .CSV file wich is encoded in UTF-8.  Please check that "
@@ -9519,10 +9864,6 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "STOCK_MEDIA_STOP"
 #~ msgstr "STOCK_MEDIA_STOP"
-
-#, python-format
-#~ msgid "Wrong ID for the browse record, got %r, expected an integer."
-#~ msgstr "%r 错误的浏览记录标识符，其应该为一个整数。"
 
 #~ msgid "STOCK_DND_MULTIPLE"
 #~ msgstr "STOCK_DND_MULTIPLE"
@@ -9591,10 +9932,6 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "Calculate Count"
 #~ msgstr "计算数量"
-
-#, python-format
-#~ msgid "Not Implemented"
-#~ msgstr "尚未实现"
 
 #~ msgid "Maintenance"
 #~ msgstr "维护"
@@ -9675,16 +10012,8 @@ msgstr "俄语 / русский язык"
 #~ msgid "terp-stock"
 #~ msgstr "terp-stock"
 
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "用户错误"
-
 #~ msgid "STOCK_MEDIA_RECORD"
 #~ msgstr "STOCK_MEDIA_RECORD"
-
-#, python-format
-#~ msgid "The copy method is not implemented on this object !"
-#~ msgstr "该对象尚未实现“copy”方法！"
 
 #~ msgid "STOCK_UNINDENT"
 #~ msgstr "STOCK_UNINDENT"
@@ -9707,10 +10036,6 @@ msgstr "俄语 / русский язык"
 #, python-format
 #~ msgid "You cannot perform this operation."
 #~ msgstr "您无法执行此项操作。"
-
-#, python-format
-#~ msgid "Not implemented get_memory method !"
-#~ msgstr "该对象尚未实现“get_memory“方法！"
 
 #, python-format
 #~ msgid "Please specify server option --smtp-from !"
@@ -9750,10 +10075,6 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "terp-hr"
 #~ msgstr "terp-hr"
-
-#, python-format
-#~ msgid "This method does not exist anymore"
-#~ msgstr "该方法不存在"
 
 #~ msgid "Manual"
 #~ msgstr "手工"
@@ -9810,10 +10131,6 @@ msgstr "俄语 / русский язык"
 #~ msgid "Ok"
 #~ msgstr "确定"
 
-#, python-format
-#~ msgid "ValidateError"
-#~ msgstr "验证错误"
-
 #~ msgid "STOCK_DISCONNECT"
 #~ msgstr "STOCK_DISCONNECT"
 
@@ -9843,10 +10160,6 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "sxw"
 #~ msgstr "SXW"
-
-#, python-format
-#~ msgid "The value \"%s\" for the field \"%s\" is not in the selection"
-#~ msgstr "字段 %s 的值 %s 不在选择之内"
 
 #~ msgid "Manual domain setup"
 #~ msgstr "手动域设置"
@@ -9892,10 +10205,6 @@ msgstr "俄语 / русский язык"
 #, python-format
 #~ msgid "Your can't submit bug reports due to uncovered modules: %s"
 #~ msgstr "您无法提交错误报告，因为您没有为模块 %s 签订技术服务协议"
-
-#, python-format
-#~ msgid "undefined get method !"
-#~ msgstr "未定义“get”方法！"
 
 #~ msgid "ir.report.custom"
 #~ msgstr "ir.report.custom"
@@ -10057,10 +10366,6 @@ msgstr "俄语 / русский язык"
 #~ msgid "Add Maintenance Contract"
 #~ msgstr "添加技术维护合同"
 
-#, python-format
-#~ msgid "The search method is not implemented on this object !"
-#~ msgstr "该对象尚未实现“search”方法！"
-
 #~ msgid "STOCK_MEDIA_PREVIOUS"
 #~ msgstr "STOCK_MEDIA_PREVIOUS"
 
@@ -10221,10 +10526,6 @@ msgstr "俄语 / русский язык"
 #~ "You can not escalate this case.\n"
 #~ "You are already at the top level."
 #~ msgstr "您不能提升已在最高层次的案例。"
-
-#, python-format
-#~ msgid "Key/value '%s' not found in selection field '%s'"
-#~ msgstr "键/值对 '%s' 并未包含在选定的字段 '%s' 中"
 
 #, python-format
 #~ msgid "Can't connect instance %s"
@@ -10742,14 +11043,6 @@ msgstr "俄语 / русский язык"
 #~ msgstr "无法发送邮件因为任务 %s 的联系人信息不包含电子邮件地址！"
 
 #, python-format
-#~ msgid ""
-#~ "Language with code \"%s\" is not defined in your system !\n"
-#~ "Define it through the Administration menu."
-#~ msgstr ""
-#~ "在您的系统有“%s“编码的语言未定义！\n"
-#~ "请通过管理菜单设定它。"
-
-#, python-format
 #~ msgid "Login failed!"
 #~ msgstr "登录失败！"
 
@@ -11187,10 +11480,6 @@ msgstr "俄语 / русский язык"
 #~ msgstr "请选择至少2个盘存"
 
 #, python-format
-#~ msgid "The exists method is not implemented on this object !"
-#~ msgstr "该对象尚未实现“exists”方法 !"
-
-#, python-format
 #~ msgid ""
 #~ "Please fill in the partner and pricelist field '\n"
 #~ "                        'in the analytic account:\n"
@@ -11322,10 +11611,6 @@ msgstr "俄语 / русский язык"
 #, python-format
 #~ msgid "The Total Should be Between %s and %s"
 #~ msgstr "合计应该在%s和%s之间"
-
-#, python-format
-#~ msgid "Object %s does not exists"
-#~ msgstr "对象%s不存在"
 
 #, python-format
 #~ msgid "Could not cancel this sale order !"
@@ -11736,3 +12021,15 @@ msgstr "俄语 / русский язык"
 
 #~ msgid "terp-camera_test"
 #~ msgstr "terp-camera_test"
+
+#~ msgid "Web Icons"
+#~ msgstr "Web图标"
+
+#~ msgid "Icon File"
+#~ msgstr "图标文件"
+
+#~ msgid "Web Icons Hover"
+#~ msgstr "Web 鼠标悬停图标"
+
+#~ msgid "Icon hover File"
+#~ msgstr "鼠标悬停图标文件"
