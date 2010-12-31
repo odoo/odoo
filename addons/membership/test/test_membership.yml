@@ -6,12 +6,16 @@
   !record {model: product.product, id: product_product_membershipproduct0}:
     categ_id: product.cat1
     membership: 1
-    membership_date_from: !eval datetime.today().strftime("%Y-%m-%d")
-    membership_date_to: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+6,datetime.now().day)"
+    membership_date_from: !eval time.strftime('%Y-%m-%d')
+    membership_date_to: !eval time.strftime('%Y-%m-%d')
     name: Golden Membership
     type: service
     list_price: 80.00
-
+-
+  !python {model: product.product}: |
+    from datetime import datetime
+    from dateutil.relativedelta import *
+    self.write(cr, uid, [ref("product_product_membershipproduct0")], {'membership_date_to': datetime.now() + relativedelta(months=3)})
 - |
   "Mark Johnson" want to join "Golden Membership".
 - |
@@ -102,13 +106,19 @@
   !record {model: product.product, id: product_product_membershipproduct1}:
     categ_id: product.cat1
     membership: 1
-    membership_date_from: !eval datetime.today().strftime("%Y-%m-%d")
-    membership_date_to: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+6,datetime.now().day)"
+    membership_date_from: !eval time.strftime('%Y-%m-%d')
+    membership_date_to: !eval time.strftime('%Y-%m-%d')
     name: Silver Membership
     type: service
     list_price: 50.00
 - |
   I'm making invoice of "Mark Johnson" member on joining new membership "Silver Membership".
+-
+-
+  !python {model: product.product}: |
+    from datetime import datetime
+    from dateutil.relativedelta import *
+    self.write(cr, uid, [ref("product_product_membershipproduct1")], {'membership_date_to': datetime.now() + relativedelta(months=3)})
 -
   !python {model: res.partner}: |
     self.create_membership_invoice(cr, uid, [ref("res_partner_markjohnson0")], product_id=ref("product_product_membershipproduct1"), datas={"amount":50.00})

@@ -271,7 +271,7 @@
     categ_id: product_category_computer0
     cost_method: standard
     mes_type: fixed
-    list_price: 1000.0    
+    list_price: 1000.0
     name: HP Pavilion Desktop PCs
     procure_method: make_to_stock
     seller_ids:
@@ -290,7 +290,7 @@
   !record {model: pos.order, id: pos_order_pos0}:
     company_id: base.main_company
     date_order: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    date_validity: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+6,datetime.now().day)"
+    date_validity: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     lines:
       - company_id: base.main_company
         name: Order Line/01
@@ -305,27 +305,32 @@
     sale_journal: account.sales_journal
     shop_id: sale.shop
     user_salesman_id: base.user_root
-- 
-  I add discount. 
-- 
+-
+  !python {model: pos.order}: |
+    from datetime import datetime
+    from dateutil.relativedelta import *
+    self.write(cr, uid, [ref("pos_order_pos0")], {'date_validity': datetime.now() + relativedelta(months=3)})
+-
+  I add discount.
+-
   !record {model: pos.discount, id: pos_discount_0}:
     discount: 5.0
     discount_notes: More then 5 product
-- 
-  I Apply the discount. 
-- 
+-
+  I Apply the discount.
+-
   !python {model: pos.discount}: |
     self.apply_discount(cr, uid, [ref("pos_discount_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz": False, "active_id":
       ref("pos_order_pos0"), })
-- 
+-
   I open the register.
-- 
+-
   !record {model: pos.open.statement, id: pos_open_statement_0}:
     {}
-- 
+-
   I open the statement.
-- 
+-
   !python {model: pos.open.statement}: |
     jou_obj = self.pool.get('account.journal')
     statement_obj = self.pool.get('account.bank.statement')
@@ -339,8 +344,8 @@
           "ir.ui.menu", "active_ids": [ref("point_of_sale.menu_open_statement")], "tz":
           False, "active_id": ref("point_of_sale.menu_open_statement"), })
 -
-  I click on the "Make Payment" wizard.  
-- 
+  I click on the "Make Payment" wizard.
+-
   !record {model: pos.make.payment, id: pos_make_payment_0}:
     amount: 1615.0
     journal: 7
@@ -349,9 +354,9 @@
     product_id: product_product_hppaviliondesktoppcs0
     pricelist_id: product.list0
     partner_id: base.res_partner_agrolait
-- 
+-
   I make the payment.
-- 
+-
   !python {model: pos.make.payment}: |
     self.check(cr, uid, [ref("pos_make_payment_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("point_of_sale.pos_order_pos0")], "tz":
@@ -361,48 +366,48 @@
 -
   !python {model: pos.order}: |
    order=self.browse(cr,uid,ref("pos_order_pos0"))
-   assert(order.statement_ids!=[]), "Statement lines not created"    
+   assert(order.statement_ids!=[]), "Statement lines not created"
 -
   When I click on Return picking button , I get three option.
 -
   1. Cancel 2.Return Goods and Exchange 3.Return without Refund
 -
-  When I click on  Return Goods and Exchange.  
--  
-  Then it allows me to define the quantity of products, which will return to the stock. 
-- 
+  When I click on  Return Goods and Exchange.
+-
+  Then it allows me to define the quantity of products, which will return to the stock.
+-
   I click on Return Picking button.
-- 
+-
   !record {model: pos.return, id: pos_return_0}:
    {}
-- 
+-
   I Return the product.
-- 
+-
   !python {model: pos.return}: |
     self.create_returns(cr, uid, [ref("pos_return_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("point_of_sale.pos_order_pos0")], "tz":
       False, "active_id": ref("point_of_sale.pos_order_pos0"), })
-- 
+-
   Then it allows me to define the quantity of products, which will return to the stock.
 -
-  I select the  HP Pavilion Desktop PCs for exchange.   
-- 
+  I select the  HP Pavilion Desktop PCs for exchange.
+-
   !record {model: pos.add.product, id: pos_add_product_0}:
     product_id: product_product_hppaviliondesktoppcs0
     quantity: 5.0
--    
+-
   I click on close button.
-- 
+-
   !python {model: pos.add.product}: |
     return_obj = self.pool.get('pos.return')
-    context['active_ids'] = [ref("pos_order_pos0")] 
+    context['active_ids'] = [ref("pos_order_pos0")]
     return_obj.view_init(cr, uid, [],context=context)
     self.close_action(cr, uid, [ref("pos_add_product_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz": False, "active_id": ref("pos_order_pos0"),
       })
--    
+-
   I create payment.
-- 
+-
   !record {model: pos.make.payment, id: pos_make_payment_1}:
     amount: 680.0
     journal: 7
@@ -411,40 +416,40 @@
     product_id: product_product_hppaviliondesktoppcs0
     pricelist_id: product.list0
     partner_id: base.res_partner_agrolait
-- 
-  For payment, I click on  Make Payment. 
-- 
+-
+  For payment, I click on  Make Payment.
+-
   !python {model: pos.make.payment}: |
     self.check(cr, uid, [ref("pos_make_payment_1")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz":
-      False, "active_id": ref("pos_order_pos0"), })    
-- 
+      False, "active_id": ref("pos_order_pos0"), })
+-
   To check the Return without Refund . I click button "Return without Refund ".
-- 
+-
   !record {model: pos.return, id: pos_return_0}:
    {}
 -
   The quantity which is selected in Return lines wizard is refunded.
-- 
+-
   !python {model: pos.return}: |
     self.create_returns2(cr, uid, [ref("pos_return_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz":
       False, "active_id": ref("pos_order_pos0"), })
-- 
+-
   To Close order, I use the wizard "Sale Confirm".
-- 
+-
   !record {model: pos.confirm, id: pos_confirm_0}:
     {}
-- 
+-
   I close this order.
-- 
+-
   !python {model: pos.confirm}: |
     self.action_confirm(cr, uid, [ref("pos_confirm_0")], {"lang": "en_US", "active_model":
       "pos.order", "active_ids": [ref("pos_order_pos0")], "tz": False, "active_id": ref("pos_order_pos0"),
       })
-- 
+-
   I check order state is done.
-- 
+-
   !python {model: pos.order}: |
-    order=self.browse(cr,uid,ref("pos_order_pos0"))    
-    assert(order.state=='done'), "Order is not done"    
+    order=self.browse(cr,uid,ref("pos_order_pos0"))
+    assert(order.state=='done'), "Order is not done"

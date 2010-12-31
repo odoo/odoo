@@ -93,7 +93,7 @@
     journal_id: account_journal_cash0
     line_ids:
         - name: statement
-          date: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+5,datetime.now().day)"
+          date: !eval time.strftime('%Y-%m-%d')
           type: customer
           account_id: account_pos_account_sales
           amount: 100
@@ -105,9 +105,12 @@
 -
   !python {model: account.bank.statement}: |
     import netsvc, tools, os, time
+    from datetime import datetime
+    from dateutil.relativedelta import *
     (data, format) = netsvc.LocalService('report.account.statement').create(cr, uid, [ref('point_of_sale.account_bank_statement_st0')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'point_of_sale-account_statement_report'+format), 'wb+').write(data)
+    self.write(cr, uid, [ref("account_bank_statement_st0")], {'date': datetime.now() + relativedelta(months=3)})
 -
   In order to test the PDF reports defined on a Point Of Sale, we will print a POS User Product Report
 -
