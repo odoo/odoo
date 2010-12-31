@@ -32,7 +32,9 @@ class lang(osv.osv):
     _description = "Languages"
 
     def install_lang(self, cr, uid, **args):
-        self.load_lang(cr, uid, tools.config.get('lang'))
+        avil_ids = self.search(cr, uid, [('code','=', tools.config.get('lang'))])
+        if not avil_ids:
+            self.load_lang(cr, uid, tools.config.get('lang'))
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
