@@ -7,16 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-01 07:03+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-29 17:38+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: users_ldap
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
+
+#. module: users_ldap
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"Das ausgewählte Unternehmen gehört nicht zu den zulässigen Unternehmen für "
+"diesen Benutzer"
+
+#. module: users_ldap
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAP Parameter"
 
 #. module: users_ldap
 #: view:res.company:0
@@ -39,11 +56,6 @@ msgid "Model used for user creation"
 msgstr "Modul für effektive Benutzer Verwaltung"
 
 #. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_company
-msgid "Companies"
-msgstr "Unternehmen"
-
-#. module: users_ldap
 #: field:res.company.ldap,company:0
 msgid "Company"
 msgstr "Unternehmen"
@@ -54,24 +66,19 @@ msgid "LDAP Server address"
 msgstr "LDAP Server"
 
 #. module: users_ldap
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: users_ldap
-#: model:ir.module.module,shortdesc:users_ldap.module_meta_information
-msgid "Authenticate users with ldap server"
-msgstr "Authentifiziere LDAP Benutzer an LDAP Server"
-
-#. module: users_ldap
 #: field:res.company.ldap,ldap_server_port:0
 msgid "LDAP Server port"
 msgstr "LDAP Server Port"
 
 #. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_company_ldap
-msgid "res.company.ldap"
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
 msgstr ""
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company
+msgid "Companies"
+msgstr "Unternehmen"
 
 #. module: users_ldap
 #: field:res.company.ldap,ldap_password:0
@@ -79,19 +86,14 @@ msgid "LDAP password"
 msgstr "LDAP Passwort"
 
 #. module: users_ldap
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: model:ir.model,name:users_ldap.model_res_company_ldap
+msgid "res.company.ldap"
 msgstr ""
 
 #. module: users_ldap
-#: field:res.company,ldaps:0
-msgid "LDAP Parameters"
-msgstr "LDAP Parameter"
-
-#. module: users_ldap
-#: field:res.company.ldap,user:0
-msgid "Model User"
-msgstr "LDAP Benutzer Modul"
+#: model:ir.module.module,description:users_ldap.module_meta_information
+msgid "Adds support for authentication by ldap server"
+msgstr ""
 
 #. module: users_ldap
 #: field:res.company.ldap,sequence:0
@@ -99,13 +101,23 @@ msgid "Sequence"
 msgstr "Sequenz"
 
 #. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_users
-msgid "res.users"
-msgstr ""
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Sie können nicht zwei identische Benutzeranmeldungen definieren!"
 
 #. module: users_ldap
-#: field:res.company.ldap,ldap_base:0
-msgid "LDAP base"
+#: model:ir.module.module,shortdesc:users_ldap.module_meta_information
+msgid "Authenticate users with ldap server"
+msgstr "Authentifiziere LDAP Benutzer an LDAP Server"
+
+#. module: users_ldap
+#: field:res.company.ldap,user:0
+msgid "Model User"
+msgstr "LDAP Benutzer Modul"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_users
+msgid "res.users"
 msgstr ""
 
 #. module: users_ldap
@@ -117,11 +129,6 @@ msgstr "LDAP Filter"
 #: field:res.company.ldap,create_user:0
 msgid "Create user"
 msgstr "Erzeuge Benutzer"
-
-#. module: users_ldap
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

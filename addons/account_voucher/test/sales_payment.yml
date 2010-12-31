@@ -42,7 +42,7 @@
     import netsvc
     vals = {}
     journal_id = self.default_get(cr, uid, ['journal_id']).get('journal_id',None)
-    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), journal_id, 0.0, 1, ttype='receipt')
+    res = self.onchange_partner_id(cr, uid, [], ref("base.res_partner_seagate"), journal_id, 0.0, 1, ttype='receipt', date=False)
     vals = {
         'account_id': ref('account.cash'),
         'amount': 450.0,

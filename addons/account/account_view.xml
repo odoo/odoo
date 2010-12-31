@@ -77,7 +77,7 @@
             <field name="res_model">account.fiscalyear</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Define your company's fiscal year depending on the period you have chosen to follow. A fiscal year is a 1 year period over which a company budgets its spending. It may run over any period of 12 months. The fiscal year is referred to by the date in which it ends. For example, if a company's fiscal year ends November 30, 2011, then everything between December 1, 2010 and November 30, 2011  would be referred to as FY 2011. Not using the actual calendar year gives many companies an advantage, allowing them to close their books at a time which is most convenient for them.</field>
+            <field name="help">Define your company's financial year according to your needs. A financial year is a period at the end of which a company's accounts are made up (usually 12 months). The financial year is usually referred to by the date in which it ends. For example, if a company's financial year ends November 30, 2011, then everything between December 1, 2010 and November 30, 2011  would be referred to as FY 2011. You are not obliged to follow the actual calendar year.</field>
         </record>
         <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_accounting" sequence="8" />
         <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
@@ -145,7 +145,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_draft': 1}</field>
-            <field name="help">Here, you can define a period, an interval of time between successive closings of the books of your company. An accounting period typically is a month or a quarter, corresponding to the tax year used by the business. Create and manage them from here and decide whether a period should be left open or closed depending on your company's activities over a specific period.</field>
+            <field name="help">Here you can define a financial period, an interval of time in your company's financial year. An accounting period typically is a month or a quarter. It usually corresponds to the periods of the tax declaration. Create and manage periods from here and decide whether a period should be closed or left open depending on your company's activities over a specific period.</field>
         </record>
         <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23"/>
 
@@ -256,7 +256,7 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="search_view_id" ref="view_account_search"/>
             <field name="view_id" ref="view_account_list"/>
-            <field name="help">Create and manage accounts you will need to record financial entries in. Accounts are financial records of your company that register all financial transactions. Companies present their annual accounts in two main parts: the balance sheet and the income statement (profit and loss account). The annual accounts of a company are required by law to disclose a certain amount of information. They have to be certified by an external auditor yearly.</field>
+            <field name="help">Create and manage the accounts you need to record journal entries. An account is part of a ledger allowing your company to register all kinds of debit and credit transactions. Companies present their annual accounts in two main parts: the balance sheet and the income statement (profit and loss account). The annual accounts of a company are required by law to disclose a certain amount of information. They have to be certified by an external auditor annually.</field>
         </record>
         <menuitem id="account_account_menu" name="Accounts" parent="menu_finance_accounting"/>
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
@@ -276,6 +276,7 @@
                     <field name="company_currency_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="type"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -354,7 +355,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_journal_view_search"/>
-            <field name="help">Here you can personalize and create each view of your financial journals by selecting the fields you want to appear and the sequence they will appear.</field>
+            <field name="help">Here you can customize an existing journal view or create a new view. Journal views determine the way you can record entries in your journal. Select the fields you want to appear in a journal and determine the sequence in which they will appear. Then you can create a new journal and link your view to it.</field>
         </record>
 
         <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_journals"/>
@@ -411,7 +412,7 @@
                     <group colspan="4" col="6">
                         <field name="name" select="1"/>
                         <field name="code" select="1"/>
-                        <field name="type" on_change="onchange_type(type, currency)"/>
+                        <field name="type" on_change="onchange_type(type, currency, context)"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
@@ -467,7 +468,7 @@
             <field name="res_model">account.journal</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Create and manage your company's financial journals from this menu. A journal is a business diary in which all financial data related to the day to day business transactions of your company is recorded using double-entry book keeping system. Depending on the nature of its activities and number of daily transactions, a company may keep several  types of specialized journals such as a cash journal, purchases journal, and sales journal.</field>
+            <field name="help">Create and manage your company's journals from this menu. A journal is used to record transactions of all accounting data related to the day-to-day business of your company using double-entry bookkeeping system. Depending on the nature of its activities and the number of daily transactions, a company may keep several types of specialized journals such as a cash journal, purchase journal, sales journal...</field>
         </record>
         <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="menu_journals"/>
 
@@ -653,7 +654,7 @@
             <field name="domain">[('journal_id.type', '=', 'bank')]</field>
             <field name="context">{'journal_type':'bank'}</field>
             <field name="search_view_id" ref="view_bank_statement_search"/>
-            <field name="help">A bank statement is a summary of all financial transactions occurring over a given period of time on a deposit account, a credit card, or any other type of account. Start by encoding the starting and closing balance, then record all lines of your statement. When you are in the Payment column of the a line, you can press F1 to open the reconciliation form.</field>
+            <field name="help">A bank statement is a summary of all financial transactions occurring over a given period of time on a deposit account, a credit card or any other type of financial account. The starting balance will be proposed automatically and the closing balance is to be found on your statement. When you are in the Payment column of a line, you can press F1 to open the reconciliation form.</field>
         </record>
         <record model="ir.actions.act_window.view" id="action_bank_statement_tree_bank">
             <field name="sequence" eval="1"/>
@@ -760,9 +761,9 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_type_search"/>
-            <field name="help">An account type is a name or code given to an account that indicates its purpose. For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need to be used for your company management.</field>
+            <field name="help">An account type is used to determine how an account is used in each journal. The deferral method of an account type determines the process for the annual closing. Reports such as the Balance Sheet and the Profit and Loss report use the category (profit/loss or balance sheet). For example, the account type could be linked to an asset account, expense account or payable account. From this view, you can create and manage the account types you need for your company.</field>
         </record>
-        <menuitem action="action_account_type_form" groups="base.group_extended,group_account_manager" sequence="6" id="menu_action_account_type_form" parent="account_account_menu"/>
+        <menuitem action="action_account_type_form" sequence="6" id="menu_action_account_type_form" parent="account_account_menu"/>
         <!--
     Entries
     -->
@@ -873,7 +874,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_tax_code_tree"/>
             <field name="search_view_id" ref="view_tax_code_search"/>
-            <field name="help">A tax code is a reference of a tax that will be taken out of a gross income depending on the country and sometimes industry sector. OpenERP allows you to define and manage them from this menu.</field>
+            <field name="help">The tax code definition depends on the tax declaration of your country. OpenERP allows you to define the tax structure and manage it from this menu. You can define both numeric and alphanumeric tax codes.</field>
         </record>
        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_accounting"/>
        <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12"/>
@@ -984,7 +985,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_tax_code_tree"/>
-            <field name="help">The chart of taxes is used to generate your periodic tax statement. You will see here the taxes with codes related to your legal statement according to your country.</field>
+            <field name="help">The chart of taxes is used to generate your periodical tax statement. You will see the taxes with codes related to your legal statement according to your country.</field>
         </record>
 
         <!--
@@ -1218,7 +1219,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_posted': 1}</field>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
-            <field name="help">This view is used by accountants in order to record entries massively in OpenERP. If you want to record a supplier invoice, start by recording the line of the expense account, OpenERP will propose to you automatically the Tax related to this account and the counter-part "Account Payable".</field>
+            <field name="help">This view can be used by accountants in order to quickly record entries in OpenERP. If you want to record a supplier invoice, start by recording the line of the expense account. OpenERP will propose to you automatically the Tax related to this account and the counterpart "Account Payable".</field>
         </record>
 
         <menuitem
@@ -1227,7 +1228,7 @@
             id="menu_action_account_moves_all"
             parent="account.menu_finance_entries"
             sequence="1"
-            groups="group_account_user,group_account_manager"
+            groups="group_account_user"
         />
 
         <record id="action_move_line_select" model="ir.actions.act_window">
@@ -1467,7 +1468,7 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
-            <field name="help">A journal entry consists of several journal items, each of which is either a debit or a credit. OpenERP creates automatically one journal entry per accounting document: invoices, refund, supplier payment, bank statements, etc.</field>
+            <field name="help">A journal entry consists of several journal items, each of which is either a debit or a credit transaction. OpenERP automatically creates one journal entry per accounting document: invoice, refund, supplier payment, bank statements, etc.</field>
         </record>
 
         <menuitem
@@ -1475,7 +1476,7 @@
             action="action_move_journal_line"
             id="menu_action_move_journal_line_form"
             parent="account.menu_finance_entries"
-            groups="group_account_user,group_account_manager"
+            groups="group_account_user"
             sequence="5"/>
 
         <record id="action_move_line_form" model="ir.actions.act_window">
@@ -1634,7 +1635,7 @@
             <field name="name">Journals</field>
             <field name="res_model">account.journal.period</field>
             <field name="view_type">tree</field>
-            <field name="help">You can look up individual account entries by searching for useful information. To search for account entries, open a journal, then select a record line.</field>
+            <field name="help">You can search for individual account entries through useful information. To search for account entries, open a journal, then select a record line.</field>
         </record>
 
         <!--
@@ -1742,7 +1743,7 @@
         </record>
         <menuitem
             action="action_model_form" id="menu_action_model_form" sequence="5"
-            parent="account.menu_configuration_misc" groups="base.group_extended,group_account_manager"/>
+            parent="account.menu_configuration_misc" groups="base.group_extended"/>
 
         <!--
             # Payment Terms
@@ -1842,8 +1843,7 @@
             <field name="search_view_id" ref="view_payment_term_search"/>
         </record>
         <menuitem action="action_payment_term_form"
-            id="menu_action_payment_term_form" parent="menu_configuration_misc"
-            groups="group_account_manager"/>
+            id="menu_action_payment_term_form" parent="menu_configuration_misc"/>
 
         <!--
         # Account Subscriptions
@@ -1954,11 +1954,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_subscription_search"/>
-            <field name="help">A recurring entry is a payment related entry that occurs on a recurrent basis from a specific date corresponding to the signature of a contract or an agreement with a customer or a supplier. With Define Recurring Entries, you can create them in the system in order to automate their entries in the system.</field>
+            <field name="help">A recurring entry is a miscellaneous entry that occurs on a recurrent basis from a specific date, i.e. corresponding to the signature of a contract or an agreement with a customer or a supplier. With Define Recurring Entries, you can create such entries to automate the postings in the system.</field>
         </record>
         <menuitem
             name="Define Recurring Entries" action="action_subscription_form"
-            groups="base.group_extended,group_account_manager,group_account_user"
+            groups="base.group_extended"
             id="menu_action_subscription_form" sequence="1"
             parent="account.menu_finance_recurrent_entries"/>
 
@@ -2063,7 +2063,7 @@
 
         <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
 
-        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>
@@ -2095,17 +2095,17 @@
             id="account_template_folder"
             name="Templates"
             parent="menu_finance_accounting"
-            groups="base.group_multi_company,group_account_manager"/>
+            groups="base.group_multi_company"/>
         <menuitem
             id="account_template_taxes"
             name="Taxes"
             parent="account_template_folder"
-            groups="base.group_multi_company,group_account_manager" sequence="2"/>
+            sequence="2"/>
         <menuitem
             id="account_template_accounts"
             name="Accounts"
             parent="account_template_folder"
-            groups="base.group_multi_company,group_account_manager" sequence="1"/>
+            sequence="1"/>
 
 
         <record id="view_account_template_form" model="ir.ui.view">
@@ -2731,7 +2731,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             <field name="search_view_id" ref="view_account_bank_statement_filter"/>
             <field name="domain">[('journal_id.type', '=', 'cash')]</field>
             <field name="context">{'journal_type':'cash'}</field>
-            <field name="help">Cash Register allows you to manage cash entries in your cash journals.</field>
+            <field name="help">A Cash Register allows you to manage cash entries in your cash journals. This feature provides an easy way to follow up cash payments on a daily basis. You can enter the coins that are in your cash box, and then post entries when money comes in or goes out of the cash box.</field>
         </record>
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="1"/>
@@ -2751,8 +2751,8 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             <field name="view_id" ref="account_cash_statement_graph"/>
             <field name="act_window_id" ref="action_view_bank_statement_tree"/>
         </record>
-        <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines" parent="menu_finance_bank_and_cash"
-            groups="group_account_user,group_account_manager"/>
+        <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines"
+            parent="menu_finance_bank_and_cash"/>
 
         <record id="action_partner_all" model="ir.actions.act_window">
             <field name="name">Partners</field>
@@ -2762,11 +2762,13 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             <field name="filter" eval="True"/>
         </record>
 
-        <menuitem id="menu_partners_partners"
-                name="Partners"
-                parent="menu_partners"
-                action="action_partner_all"
-                sequence="1"/>
+        <menuitem id="menu_account_customer" name="Customers"
+            parent="menu_finance_receivables"
+            action="base.action_partner_customer_form" sequence="100"/>
+
+        <menuitem id="menu_account_supplier" name="Suppliers"
+            parent="menu_finance_payables"
+            action="base.action_partner_supplier_form" sequence="100"/>
 
     </data>
 </openerp>

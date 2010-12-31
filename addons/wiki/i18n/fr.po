@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-20 03:53+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-29 07:16+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
@@ -204,11 +203,9 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #. module: wiki
-#: help:wiki.groups,home:0
-msgid "Required to select home page if display method is Home Page"
-msgstr ""
-"Nécessite la sélection d'une page si la méthode d'affichage est Page "
-"d'accueil"
+#: field:wiki.wiki,create_date:0
+msgid "Created on"
+msgstr "Créé le"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -263,15 +260,32 @@ msgid "Meta Information"
 msgstr "Méta-information"
 
 #. module: wiki
-#: field:wiki.wiki,create_date:0
-msgid "Created on"
-msgstr "Créé le"
+#: model:ir.module.module,description:wiki.module_meta_information
+msgid ""
+"\n"
+"The base module to manage documents(wiki)\n"
+"\n"
+"keep track for the wiki groups, pages, and history\n"
+"    "
+msgstr ""
+"\n"
+"Module de base de gestion documentaire ( wiki )\n"
+"\n"
+"suivi des groupes wiki , des pages, et historisation\n"
+"    "
 
 #. module: wiki
 #: view:wiki.groups:0
 #: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Notes"
+
+#. module: wiki
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
+"Nécessite la sélection d'une page si la méthode d'affichage est Page "
+"d'accueil"
 
 #. module: wiki
 #: selection:wiki.groups,method:0
@@ -504,6 +518,10 @@ msgstr "Page de recherche"
 
 #~ msgid "Tags"
 #~ msgstr "Balises"
+
+#, python-format
+#~ msgid "No action found"
+#~ msgstr "Aucune Action trouvée"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom du Modèle non valide dans la définition de l'action."

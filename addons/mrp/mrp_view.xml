@@ -11,10 +11,9 @@
 
 
         <menuitem name="Master Data"
-                  id="menu_mrp_bom"
-                  parent="base.menu_mrp_root"
-                  groups="mrp.group_mrp_manager,mrp.group_mrp_user"
-                  sequence="5" />
+            id="menu_mrp_bom"
+            parent="base.menu_mrp_root"
+            sequence="5" />
 
         <!--
         Property / Property Group
@@ -39,7 +38,7 @@
             <field name="res_model">mrp.property.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">Define specific property groups that can be assigned to the properties of your bills of materials.</field>
+            <field name="help">Define specific property groups that can be assigned to the properties of your bill of materials.</field>
         </record>
         <menuitem
             id="menu_mrp_configuration"
@@ -102,7 +101,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_mrp_property_search"/>
-            <field name="help">The Properties in OpenERP are used to select the right bill of material in order to manufacture a product, when you have different ways of building the same product. You can assign several properties to each Bill of Materials. When a sales person creates a sales order, he can relate it to several properties and OpenERP will select automatically the BoM to use according the the needs.</field>
+            <field name="help">The Properties in OpenERP are used to select the right bill of materials for manufacturing a product when you have different ways of building the same product. You can assign several properties to each Bill of Materials. When a sales person creates a sales order, he can relate it to several properties and OpenERP will automatically select the BoM to use according the the needs.</field>
         </record>
         <menuitem name="Master Bill of Materials"
             id="menu_mrp_property"
@@ -112,12 +111,11 @@
         <menuitem
             action="mrp_property_action"
             id="menu_mrp_property_action"
-            parent="menu_mrp_property"
-            groups="base.group_extended" />
+            parent="menu_mrp_property"/>
         <menuitem
             action="mrp_property_group_action"
-            id="menu_mrp_property_group_action"
-            parent="menu_mrp_property"/>
+            parent="menu_mrp_property"
+            id="menu_mrp_property_group_action"/>
 
         <!--
         Work Centers
@@ -189,9 +187,9 @@
                    <group col='15' colspan='4'>
                         <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
                         <separator orientation="vertical"/>
-	                    <field name="code"/>
-	                    <field name="name"/>
-	                    <field name="resource_type"/>
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="resource_type"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20" groups="base.group_extended">
@@ -305,7 +303,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_routing_tree_view"/>
             <field name="search_view_id" ref="mrp_routing_search_view"/>
-            <field name="help">Routings allows you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.</field>
+            <field name="help">Routings allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.</field>
         </record>
         <menuitem action="mrp_routing_action" id="menu_mrp_routing_action" parent="mrp.menu_mrp_property" groups="base.group_extended" sequence="30"/>
 
@@ -421,7 +419,7 @@
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','=',False)]</field>
             <field name="search_view_id" ref="view_mrp_bom_filter"/>
-            <field name="help">Master Bill of Materials allows you to create and manage the list of necessary raw materials used to make a finished product. OpenERP will use these BoM in order to propose automatically manufacturing orders according to products' needs. You can either create a bill of materials to define specific production steps or define a single multi-level bill of materials.</field>
+            <field name="help">Master Bills of Materials allow you to create and manage the list of necessary raw materials used to make a finished product. OpenERP will use these BoMs to automatically propose manufacturing orders according to product needs. You can either create a bill of materials to define specific production steps or define a single multi-level bill of materials.</field>
         </record>
         <record id="mrp_bom_form_action2" model="ir.actions.act_window">
             <field name="name">Bill of Material Components</field>
@@ -429,7 +427,7 @@
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
             <field name="domain">[('bom_id','!=',False)]</field>
-            <field name="help">Bills of materials Components are components and sub-products used to create master bills of materials. Use this menu to search in which BoM is used a specific component.</field>
+            <field name="help">Bills of materials components are components and sub-products used to create master bills of materials. Use this menu to search in which BoM a specific component is used.</field>
         </record>
 
         <!-- BOM menus -->
@@ -438,7 +436,6 @@
             action="mrp_bom_form_action"
             id="menu_mrp_bom_form_action"
             parent="menu_mrp_bom"
-            groups="mrp.group_mrp_user,mrp.group_mrp_manager"
             sequence="10"/>
         <menuitem
             action="mrp_bom_form_action2"
@@ -564,19 +561,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="7">
                         <field name="name" string="Reference"/>
                         <field name="date_planned"/>
                         <field name="origin"/>
+                        <newline/>
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
-                        <group colspan="2" col="4">
                         <field name="product_uom"/>
                         <button type="action"
                             icon="terp-accessories-archiver+"
                             name="%(mrp.action_change_production_qty)d"
                             string="Change Qty" states="ready,confirmed" />
-                        </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
@@ -602,6 +598,11 @@
                                         string="Consume Products" type="action"
                                         icon="gtk-go-forward" context="{'consume': True}"
                                         states="draft,waiting,confirmed,assigned" />
+                                    <button
+                                           name="%(stock.track_line)d"
+                                           string="Split in production lots"
+                                           type="action" icon="gtk-justify-fill"
+                                           states="draft,waiting,confirmed,assigned" />
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -619,11 +620,6 @@
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
-                                       <button
-                                           name="%(stock.track_line)d"
-                                           string="Split in production lots"
-                                           type="action" icon="gtk-justify-fill"
-                                           states="done,cancel" />
                                        <button
                                            name="%(stock.move_scrap)d"
                                            string="Scrap Products" type="action"
@@ -730,12 +726,15 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group col='9' colspan='4'>
-                       <filter icon="terp-camera_test" string="Ready"
+                       <filter icon="terp-gtk-media-pause" string="Pending" name="pending"
+                           domain="[('state','=','confirmed')]"
+                           help="Manufacturing Orders which are waiting for raw materials."/>
+                       <filter icon="terp-camera_test" string="Ready" name="ready"
                            domain="[('state','=','ready')]"
-                           help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-check" string="Current" name="current"
-                           domain="[('state','in',('confirmed','ready','exception','in_production'))]"
-                           help="Manufacturing Orders which are waiting for raw materials, confirmed, ready to start or currently in production."/>
+                           help="Manufacturing Orders which are ready to start production."/>
+                       <filter icon="terp-check" string="In Production" name="inprogress"
+                           domain="[('state','=','in_production')]"
+                           help="Manufacturing Orders which are currently in production."/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
@@ -747,7 +746,7 @@
                        <field name="origin"/>
                     </group>
                     <newline/>
-                    <group expand="0" string="Group By..." colspan="10" col="8">
+                    <group expand="0" string="Group By..." colspan="10" col="8" groups="base.group_extended">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <separator orientation="vertical"/>
                         <filter string="Routing" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'routing_id'}" groups="base.group_extended"/>
@@ -767,10 +766,11 @@
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
-            <field name="context">{'search_default_current':1}</field>
-            <field name="help">Manufacturing Orders are usually proposed automatically by OpenERP based on the bill of materials and the procurement rules, but you can also create manufacturing orders manually. OpenERP will handle the consumation of the raw materials (stock decrease) and the production of the finished products (stock increase) when the order is processed.</field>
+            <field name="context">{'search_default_ready':1}</field>
+            <field name="help">Manufacturing Orders are usually proposed automatically by OpenERP based on the bill of materials and the procurement rules, but you can also create manufacturing orders manually. OpenERP will handle the consumption of the raw materials (stock decrease) and the production of the finished products (stock increase) when the order is processed.</field>
         </record>
-        <menuitem action="mrp_production_action" id="menu_mrp_production_action" parent="menu_mrp_manufacturing" groups="mrp.group_mrp_user,mrp.group_mrp_manager" sequence="1"/>
+        <menuitem action="mrp_production_action" id="menu_mrp_production_action"
+            parent="menu_mrp_manufacturing" sequence="1"/>
 
         <record id="mrp_production_action_planning" model="ir.actions.act_window">
             <field name="name">Manufacturing Orders</field>
@@ -779,7 +779,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">calendar,tree,form,graph</field>
             <field name="domain">[('state','in',('ready','confirmed','in_production'))]</field>
-            <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each stage of production. You use specifications (bills of materials or BoM) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, OpenERP becomes capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
+            <field name="help">Manufacturing Orders describe the operations that need to be carried out and the raw materials usage for each production stage. You use specifications (bills of materials or BoM) to work out the raw material requirements and the manufacturing orders needed for the finished products. Once the bills of materials have been defined, OpenERP is capable of automatically deciding on the manufacturing route depending on the needs of the company.</field>
         </record>
 
         <record id="mrp_production_action2" model="ir.actions.act_window">
@@ -909,7 +909,7 @@
             view_id="mrp_bom_tree_view"
             res_model="mrp.bom"
             src_model="product.product"
-            groups="base.group_extended"/>
+            groups="mrp.group_mrp_user"/>
 
         <act_window
             domain="[('bom_id','=',False)]"
@@ -917,7 +917,8 @@
             id="act_product_product_2_mrp_bom"
             name="Bill of Materials"
             res_model="mrp.bom"
-            src_model="product.product"/>
+            src_model="product.product"
+            groups="mrp.group_mrp_user"/>
 
         <!-- Menu for Resource for MRP-->
 
@@ -928,7 +929,7 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_workcenter_tree_view"/>
             <field name="search_view_id" ref="view_mrp_workcenter_search"/>
-            <field name="help">Work Centers allows you to create and manage manufacturing units consisting of one or several people and/or machines that can be considered as a unit for capacity and planning forecasting.</field>
+            <field name="help">Work Centers allow you to create and manage manufacturing units consisting of one or more persons and/or machines that can be considered as a unit for capacity and planning forecasting.</field>
         </record>
 
         <menuitem id="menu_pm_resources_config" name="Resources" parent="menu_mrp_configuration"/>
@@ -939,12 +940,11 @@
         <!-- Planning -->
 
         <menuitem id="menu_mrp_planning" name="Planning"
-		        parent="base.menu_mrp_root" sequence="2"
-		        groups="base.group_extended"/>
-		<menuitem action="mrp.mrp_production_action_planning"
-		        id="menu_mrp_production_order_action"
-		        parent="menu_mrp_planning" sequence="1"
-		        groups="base.group_extended"/>
+                parent="base.menu_mrp_root" sequence="2"
+                groups="base.group_extended"/>
+        <menuitem action="mrp.mrp_production_action_planning"
+                id="menu_mrp_production_order_action"
+                parent="menu_mrp_planning" sequence="1"/>
 
     </data>
 </openerp>

@@ -25,6 +25,7 @@ from StringIO import StringIO
 import base64
 import pooler
 import addons
+import sys 
 
 class report_xml(osv.osv):
     _inherit = 'ir.actions.report.xml'
@@ -59,6 +60,8 @@ class report_xml(osv.osv):
 
     def report_get(self, cr, uid, report_id, context=None):
         report = self.browse(cr, uid, report_id, context=context)
+        reload(sys) 
+        sys.setdefaultencoding( "latin-1" )    
         return {
             'file_type' : report.report_type, 
             'report_sxw_content': report.report_sxw_content and base64.encodestring(report.report_sxw_content) or False, 

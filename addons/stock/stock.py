@@ -61,6 +61,7 @@ class stock_journal(osv.osv):
     }
 
 stock_journal()
+
 #----------------------------------------------------------
 # Stock Location
 #----------------------------------------------------------
@@ -69,7 +70,7 @@ class stock_location(osv.osv):
     _description = "Location"
     _parent_name = "location_id"
     _parent_store = True
-    _parent_order = 'name'
+    _parent_order = 'posz,name'
     _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
@@ -474,7 +475,10 @@ class stock_tracking(osv.osv):
 
     def make_sscc(self, cr, uid, context=None):
         sequence = self.pool.get('ir.sequence').get(cr, uid, 'stock.lot.tracking')
-        return sequence + str(self.checksum(sequence))
+        try:
+            return sequence + str(self.checksum(sequence))
+        except Exception:
+            return sequence
 
     _columns = {
         'name': fields.char('Pack Reference', size=64, required=True, select=True),
@@ -973,7 +977,7 @@ class stock_picking(osv.osv):
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
-            partner = (picking.purchase_id and picking.purchase_id.partner_id) or (picking.sale_id and picking.sale_id.partner_id) or (picking.address_id and picking.address_id.partner_id)
+            partner =  picking.address_id and picking.address_id.partner_id
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
@@ -1212,6 +1216,8 @@ class stock_picking(osv.osv):
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
 
+                        if not move.returned_price:
+                            move_obj.write(cr, uid, [move.id], {'returned_price': move.price_unit})
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
@@ -1520,9 +1526,9 @@ class stock_move(osv.osv):
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
-        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
-                                  help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
-                                  \nThe state is \'Waiting\' if the move is waiting for another one.'),
+        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Not Available'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+              help='When the stock move is created it is in the \'Draft\' state.\n After that, it is set to \'Not Available\' state if the scheduler did not find the products.\n When products are reserved it is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
+              \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
         'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -1532,6 +1538,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
+        'returned_price': fields.float('Returned product price', digits_compute= dp.get_precision('Sale Price')),
     }
     _constraints = [
         (_check_tracking,
@@ -2299,14 +2306,12 @@ class stock_move(osv.osv):
             context = {}
         if quantity <= 0:
             raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
-
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
             if move_qty <= 0:
                 raise osv.except_osv(_('Error!'), _('Can not consume a move with negative or zero quantity !'))
             quantity_rest = move.product_qty
-
             quantity_rest -= quantity
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
             if quantity_rest <= 0:
@@ -2323,7 +2328,7 @@ class stock_move(osv.osv):
                     'product_uos_qty': uos_qty,
                     'location_id': location_id or move.location_id.id,
                 }
-                if move.product_id.track_production and location_id:
+                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
                     # IF product has checked track for production lot, move lines will be split by 1
                     res += self.action_split(cr, uid, [move.id], quantity, split_by_qty=1, context=context)
                 else:
@@ -2337,7 +2342,7 @@ class stock_move(osv.osv):
             else:
                 quantity_rest = quantity
                 uos_qty_rest =  uos_qty
-                if move.product_id.track_production and location_id:
+                if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
                     res += self.action_split(cr, uid, [move.id], quantity_rest, split_by_qty=1, context=context)
                 else:
                     res += [move.id]
@@ -2486,7 +2491,8 @@ class stock_inventory(osv.osv):
         'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', states={'done': [('readonly', True)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
         'state': fields.selection( (('draft', 'Draft'), ('done', 'Done'), ('confirm','Confirmed'),('cancel','Cancelled')), 'State', readonly=True, select=True),
-        'company_id': fields.many2one('res.company','Company',required=True,select=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
+
     }
     _defaults = {
         'date': time.strftime('%Y-%m-%d %H:%M:%S'),

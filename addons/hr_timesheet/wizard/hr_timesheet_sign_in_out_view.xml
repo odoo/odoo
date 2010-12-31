@@ -26,7 +26,7 @@
                 <form string="Sign In/Out By Project">
                     <group colspan="4" >
                         <separator string="Sign in" colspan="4"/>
-                           <field name="name" readonly="True" />
+                        <field name="name" readonly="True" />
                         <field name="state" readonly="True" />
                         <field name="server_date"/>
                         <label string="(local time on the server side)" colspan="2"/>
@@ -51,12 +51,6 @@
             <field name="help">Employees can encode their time spent on the different projects. A project is an analytic account and the time spent on a project generate costs on the analytic account. This feature allows to record at the same time the attendance and the timesheet.</field>
         </record>
 
-        <menuitem action="action_hr_timesheet_sign_in"
-            id="menu_hr_timesheet_sign_in"
-            groups="base.group_extended"
-            parent="hr_attendance.menu_hr_attendance"
-            sequence="5" />
-
         <record id="view_hr_timesheet_sign_out" model="ir.ui.view">
             <field name="name">hr.sign.out.project.form</field>
             <field name="model">hr.sign.out.project</field>
@@ -70,7 +64,7 @@
                         <field name="date_start"/>
                         <field name="server_date"/>
                         <separator string="Work done in the last period" colspan="4" />
-                        <field name="account_id" colspan="2" groups="analytic.group_analytic_accounting"/>
+                        <field name="account_id" colspan="2"/>
                         <field name="info" colspan="2"/>
                         <field name="date"/>
                         <label string="(Keep empty for current_time)" colspan="2"/>

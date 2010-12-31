@@ -1,12 +1,17 @@
 -
-    In order to test the document_ftp functionality
+    In order to test the document_webdav functionality
 -
     I open the HTTP port and perform an OPTIONS request to the server
 -
     !python {model: ir.attachment}: |
         from document_webdav import test_davclient as te
         reload(te) # reload..
-        dc = te.DAVClient()
+        dc = te.DAVClient(timeout=2.0)
+        # have a small timeout, enough for any heavily-loaded test server to
+        # respond, but small so that this test won't block further loading.
+        # Don't catch the exception, so that the whole YAML test will abort
+        # if the WebDAV service is not available (eg. during an upgrade from
+        # command line).
         dc.gd_options()
         dc.get_creds(self, cr, uid)
         dc.gd_options(path=cr.dbname, expect={'DAV': ['1',]})

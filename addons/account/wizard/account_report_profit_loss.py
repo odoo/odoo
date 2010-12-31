@@ -40,21 +40,6 @@ class account_pl_report(osv.osv_memory):
         'target_move': False
     }
 
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        mod_obj = self.pool.get('ir.model.data')
-        res = super(account_pl_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
-        doc = etree.XML(res['arch'])
-        nodes = doc.xpath("//field[@name='journal_ids']")
-        for node in nodes:
-            node.set('readonly', '1')
-            node.set('required', '0')
-        nodes = doc.xpath("//field[@name='target_move']")
-        for node in nodes:
-            node.set('readonly', '1')
-            node.set('required', '0')
-        res['arch'] = etree.tostring(doc)
-        return res
-
     def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}

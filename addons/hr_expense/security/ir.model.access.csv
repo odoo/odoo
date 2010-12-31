@@ -1,6 +1,8 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_hr_expense_expense_user","hr.expense.expense.user","model_hr_expense_expense","base.group_hr_user",1,1,1,1
+"access_hr_expense_expense_employee","hr.expense.expense.employee","model_hr_expense_expense","base.group_user",1,1,1,1
 "access_hr_expense_line_user","hr.expense.line.user","model_hr_expense_line","base.group_hr_user",1,1,1,1
+"access_hr_expense_line_employee","hr.expense.line.employee","model_hr_expense_line","base.group_user",1,1,1,1
 "access_hr_expense_report_manager","hr.expense.report.manager","model_hr_expense_report","base.group_hr_manager",1,1,1,1
 "access_product_product_hr_expense_user","product.product.hr.expense.user","product.model_product_product","base.group_hr_user",1,1,1,1
 "access_product_template_hr_expense_user","product.template.hr.expense.user","product.model_product_template","base.group_hr_user",1,1,1,1
@@ -17,3 +19,5 @@
 "access_account_move_line_user","account.move.line.user","account.model_account_move_line","base.group_hr_user",1,1,1,1
 "access_account_analytic_line_user","account.ianalytic.line.user","account.model_account_analytic_line","base.group_hr_user",1,1,1,1
 "access_account_journal_period_manager","account.journal.period.manager","account.model_account_journal_period","base.group_hr_manager",1,1,1,1
+"hr.access_account_journal_view_hruser","account.journal.view hruser","account.model_account_journal_view","base.group_hr_user",1,0,0,0
+"hr.access_account_journal_column_hruser","account.journal.column hruser","account.model_account_journal_column","base.group_hr_user",1,0,0,0

@@ -35,6 +35,7 @@ class account_analytic_account(osv.osv):
         res = dict([(i, {}) for i in ids])
 
         parent_ids = tuple(self.search(cr, uid, [('parent_id', 'child_of', ids)], context=context))
+        res.update(dict([(i, {}) for i in parent_ids]))
         accounts = self.browse(cr, uid, ids, context=context)
 
         for f in fields:
@@ -383,7 +384,7 @@ class account_analytic_account(osv.osv):
         'ca_to_invoice': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Uninvoiced Amount',
             help="If invoice from analytic account, the remaining amount you can invoice to the customer based on the total costs.",
             digits_compute=dp.get_precision('Account')),
-        'ca_theorical': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Theorical Revenue',
+        'ca_theorical': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Theoretical Revenue',
             help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist.",
             digits_compute=dp.get_precision('Account')),
         'hours_quantity': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Hours Tot',
@@ -409,7 +410,7 @@ class account_analytic_account(osv.osv):
         'real_margin': fields.function(_real_margin_calc, method=True, type='float', string='Real Margin',
             help="Computed using the formula: Invoiced Amount - Total Costs.",
             digits_compute=dp.get_precision('Account')),
-        'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theorical Margin',
+        'theorical_margin': fields.function(_theorical_margin_calc, method=True, type='float', string='Theoretical Margin',
             help="Computed using the formula: Theorial Revenue - Total Costs",
             digits_compute=dp.get_precision('Account')),
         'real_margin_rate': fields.function(_real_margin_rate_calc, method=True, type='float', string='Real Margin Rate (%)',

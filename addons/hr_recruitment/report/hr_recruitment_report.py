@@ -21,6 +21,8 @@
 import tools
 from osv import fields,osv
 from hr_recruitment import hr_recruitment
+from decimal_precision import decimal_precision as dp
+
 
 AVAILABLE_STATES = [
     ('draft','New'),
@@ -56,9 +58,9 @@ class hr_recruitment_report(osv.osv):
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
         'department_id': fields.many2one('hr.department','Department',readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
-        'salary_prop': fields.float("Salary Proposed"),
-        'salary_prop_avg': fields.float("Avg Salary Proposed", group_operator="avg"),
-        'salary_exp': fields.float("Salary Expected"),
+        'salary_prop' : fields.float("Salary Proposed", digits_compute=dp.get_precision('Account')),
+        'salary_prop_avg' : fields.float("Avg Salary Proposed", group_operator="avg", digits_compute=dp.get_precision('Account')),
+        'salary_exp' : fields.float("Salary Expected", digits_compute=dp.get_precision('Account')),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact Name',readonly=True),
         'available': fields.float("Availability"),
@@ -66,7 +68,6 @@ class hr_recruitment_report(osv.osv):
                                        help="Number of Days to close the project issue"),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
-
     }
     _order = 'date desc'
     def init(self, cr):

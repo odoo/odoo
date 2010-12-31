@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 17:21+0000\n"
-"PO-Revision-Date: 2010-12-16 22:07+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-27 09:11+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:36+0000\n"
+"X-Launchpad-Export-Date: 2010-12-28 04:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -167,7 +168,7 @@ msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
 "¡Error! No puede seleccionar un departamento que tenga el empleado como "
-"director."
+"responsable."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
@@ -270,11 +271,6 @@ msgid "Office Location"
 msgstr "Dirección oficina"
 
 #. module: hr
-#: field:hr.employee,passport_id:0
-msgid "Passport"
-msgstr "Pasaporte"
-
-#. module: hr
 #: view:hr.employee:0
 #: view:hr.job:0
 #: model:ir.model,name:hr.model_hr_employee
@@ -337,6 +333,8 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"Puede mejorar la aplicación de recursos humanos base mediante la instalación "
+"de algunas funcionalidades relacionadas con RRHH."
 
 #. module: hr
 #: view:hr.employee:0
@@ -567,6 +565,25 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: hr
+#: model:ir.module.module,description:hr.module_meta_information
+msgid ""
+"\n"
+"    Module for human resource management. You can manage:\n"
+"    * Employees and hierarchies : You can define your employee with User and "
+"display hierarchies\n"
+"    * HR Departments\n"
+"    * HR Jobs\n"
+"    "
+msgstr ""
+"\n"
+"    Módulo para la gestión de recursos humanos. Puede gestionar:\n"
+"    * Empleados y jerarquías: Puede definir su empleado asociado a un "
+"usuario y mostrar jerarquías\n"
+"    * Departamentos RRHH\n"
+"    * Trabajos RRHH\n"
+"    "
+
+#. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
 msgid ""
 "In the Employee form, there are different kind of information like Contact "
@@ -642,6 +659,11 @@ msgid "Personal Information"
 msgstr "Información personal"
 
 #. module: hr
+#: field:hr.employee,passport_id:0
+msgid "Passport No"
+msgstr "Número de pasaporte"
+
+#. module: hr
 #: view:res.users:0
 msgid "Current Activity"
 msgstr "Actividad actual"
@@ -678,7 +700,6 @@ msgstr "Dirección particular"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
-#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "Asistencias"
 
@@ -970,6 +991,9 @@ msgstr "Subordinados"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Passport"
+#~ msgstr "Pasaporte"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "¡Error! No puede crear menús recursivos."

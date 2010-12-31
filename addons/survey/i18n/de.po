@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-09 09:18+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-29 17:26+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:46+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: survey
@@ -405,6 +405,8 @@ msgstr "Text"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Das ausgewählte Unternehmen gehört nicht zu den zulässigen Unternehmen für "
+"diesen Benutzer"
 
 #. module: survey
 #: selection:survey.print,paper_size:0
@@ -448,7 +450,7 @@ msgstr "Spät"
 #. module: survey
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Sie können nicht zwei identische Benutzeranmeldungen definieren!"
 
 #. module: survey
 #: field:survey.send.invitation,mail_from:0
@@ -576,6 +578,31 @@ msgstr "Sie können diese Umfrage nicht mehr als %s  mal beantworten"
 #: model:ir.actions.act_window,name:survey.act_survey_answer
 msgid "Answers"
 msgstr "Antworten"
+
+#. module: survey
+#: model:ir.module.module,description:survey.module_meta_information
+msgid ""
+"\n"
+"    This module is used for surveying. It depends on the answers or reviews "
+"of some questions by different users.\n"
+"    A survey may have multiple pages. Each page may contain multiple "
+"questions and each question may have multiple answers.\n"
+"    Different users may give different answers of question and according to "
+"that survey is done. \n"
+"    Partners are also sent mails with user name and password for the "
+"invitation of the survey\n"
+"    "
+msgstr ""
+"\n"
+"    Diese Anwendung wird allgemein für Umfragen verwendet. Es besteht bei "
+"dieser Anwendung eine Abhängigkeit zur \n"
+"     Anzahl möglicher Antworten aus diversen Modulen. Eine Umfrage "
+"beinhaltet immer zuerst eine multidimensionale Seite. \n"
+"    Jede Seite kann sich dabei aus Antworten zusammensetzen, je nachdem wie "
+"Ihre Fragestellungen definiert werden. \n"
+"    Partner können desweiteren, außer den selbst zu schreibenden Emails "
+"keine neuen weiteren Lieferauftrag erstellen.\n"
+"    "
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:0
@@ -828,7 +855,7 @@ msgstr "Nachricht"
 #: view:survey:0
 #: view:survey.request:0
 msgid "MY"
-msgstr ""
+msgstr "MJ"
 
 #. module: survey
 #: field:survey.question,maximum_req_ans:0
@@ -1482,6 +1509,8 @@ msgid ""
 "than the number of answer.                                    Please use a "
 "number that is smaller than %d."
 msgstr ""
+"# Die Angabe der erforderlichen Anzahl Antworten ist grösser als die Anzahl "
+"der verfügbaren Antworten. Bitte tragen Sie eine Anzahl kleiner als %d ein."
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:0
@@ -1543,6 +1572,8 @@ msgid ""
 "greater than the number of answer.                                    Please "
 "use a number that is smaller than %d."
 msgstr ""
+"Minimal erforderliche Antworten übersteigt die Anzahl vorhandener Fragen. "
+"Bitte tragen Sie eine Anzahl kleiner als %d ein."
 
 #. module: survey
 #: field:survey.answer,menu_choice:0
@@ -1563,6 +1594,8 @@ msgid ""
 "Maximum Required Answer is greater                                     than "
 "Minimum Required Answer"
 msgstr ""
+"Die maximale Anzahl der Antworten übersteigt die minimal erforderliche "
+"Antwortanzahl."
 
 #. module: survey
 #: view:survey.send.invitation.log:0

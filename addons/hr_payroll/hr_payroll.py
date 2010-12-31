@@ -27,6 +27,7 @@ from datetime import timedelta
 
 import netsvc
 from osv import fields, osv
+import tools
 from tools.translate import _
 import decimal_precision as dp
 
@@ -1058,7 +1059,7 @@ class hr_payslip(osv.osv):
                 update.update({
                     'basic': round(0.0),
                     'basic_before_leaves': round(0.0),
-                    'name':'Salary Slip of %s for %s' % (slip.employee_id.name, ttyme.strftime('%B-%Y')),
+                    'name':'Salary Slip of %s for %s' % (slip.employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
                     'state':'draft',
                     'contract_id':False,
                     'company_id':slip.employee_id.company_id.id
@@ -1181,7 +1182,7 @@ class hr_payslip(osv.osv):
                 'number':number,
                 'basic': round(basic),
                 'basic_before_leaves': round(basic),
-                'name':'Salary Slip of %s for %s' % (slip.employee_id.name, ttyme.strftime('%B-%Y')),
+                'name':'Salary Slip of %s for %s' % (slip.employee_id.name, tools.ustr(ttyme.strftime('%B-%Y'))),
                 'state':'draft',
                 'contract_id':contract.id,
                 'company_id':slip.employee_id.company_id.id

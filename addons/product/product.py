@@ -53,7 +53,7 @@ def check_ean(eancode):
             evensum += int(finalean[i])
     total=(oddsum * 3) + evensum
 
-    check = int(10 - math.ceil(total % 10.0))
+    check = int(10 - math.ceil(total % 10.0)) %10
 
     if check != int(eancode[-1]):
         return False
@@ -461,7 +461,7 @@ class product_product(osv.osv):
     _description = "Product"
     _table = "product_product"
     _inherits = {'product.template': 'product_tmpl_id'}
-    _order = 'default_code'
+    _order = 'default_code,name_template'
     _columns = {
         'qty_available': fields.function(_product_qty_available, method=True, type='float', string='Real Stock'),
         'virtual_available': fields.function(_product_virtual_available, method=True, type='float', string='Virtual Stock'),
@@ -480,6 +480,7 @@ class product_product(osv.osv):
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Sale Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Sale Price')),
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
+        'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
     }
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
@@ -523,14 +524,20 @@ class product_product(osv.osv):
             if sellers:
                 for s in sellers:
                     mydict = {
-                              'id': product.id, 
-                              'name': s.product_name or product.name, 
-                              'default_code': s.product_code or product.default_code, 
+                              'id': product.id,
+                              'name': s.product_name or product.name,
+                              'default_code': s.product_code or product.default_code,
                               'variants': product.variants
                               }
                     result.append(_name_get(mydict))
             else:
-                result.append(_name_get(self.read(cr, user, product.id, ['variants','name','default_code'], context=context)))
+                mydict = {
+                          'id': product.id,
+                          'name': product.name,
+                          'default_code': product.default_code,
+                          'variants': product.variants
+                          }
+                result.append(_name_get(mydict))
         return result
 
     def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
@@ -717,7 +724,8 @@ class product_supplierinfo(osv.osv):
         'qty': lambda *a: 0.0,
         'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
+        'product_uom': _get_uom_id,
     }
     def _check_uom(self, cr, uid, ids, context=None):
         for supplier_info in self.browse(cr, uid, ids, context=context):
@@ -798,5 +806,4 @@ class res_users(osv.osv):
     _defaults = {
         'groups_id': _get_group,
     }
-
 res_users()

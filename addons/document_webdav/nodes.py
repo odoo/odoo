@@ -22,14 +22,14 @@
 
 from document import nodes
 from tools.safe_eval import safe_eval as eval
+import time
+import urllib
+import uuid
 try:
     from tools.dict_tools import dict_filter
 except ImportError:
     from document.dict_tools import dict_filter
 
-import urllib
-
-    
 class node_acl_mixin(object):
     def _get_dav_owner(self, cr):
         return self.uuser
@@ -116,6 +116,153 @@ class node_acl_mixin(object):
                 return val
         return None
 
+    def _dav_lock_hlpr(self, cr, lock_data, par_class, prop_model,
+                            prop_ref_field, res_id):
+        """ Helper, which uses the dav properties table for placing locks
+        
+        @param lock_data a dictionary of input to this function.
+        @return list of tuples, DAV:activelock _contents_ structure.
+                See webdav.py:class Prop2Xml() for semantics
+        
+        Note: although the DAV response shall be an <activelock/>, this
+        function will only return the elements inside the activelock,
+        because the calling function needs to append the <lockroot/> in
+        it. See webdav.py:mk_lock_response()
+        
+        In order to reuse code, this function can be called with 
+        lock_data['unlock_mode']=True, in order to unlock.
+        
+        @return bool in unlock mode, (davstruct, prop_id, token) in lock/refresh,
+                    or (False, prop_id, token) if already locked,
+                    or (False, False, False) if lock not found to refresh
+        """
+        assert prop_model
+        assert res_id
+        assert isinstance(lock_data, dict), '%r' % lock_data
+        propobj = self.context._dirobj.pool.get(prop_model)
+        uid = self.context.uid
+        ctx = self.context.context.copy()
+        ctx.update(self.dctx)
+        ctx.update({'uid': uid, 'dbname': self.context.dbname })
+        ctx['node_classname'] = "%s.%s" % (self.__class__.__module__, self.__class__.__name__)
+        dict_filter(self.context.extra_ctx, ['username', 'groupname', 'webdav_path'], ctx)
+        sdomain = [(prop_ref_field, '=', res_id), ('namespace', '=', 'DAV:'),
+                    ('name','=', 'lockdiscovery')]
+        props_to_delete = []
+        lock_found = False
+        lock_val = None
+        tmout2 = int(lock_data.get('timeout', 3*3600))
+        
+        prop_ids = propobj.search(cr, uid, sdomain, context=ctx)
+        if prop_ids:
+            for pbro in propobj.browse(cr, uid, prop_ids, context=ctx):
+                val = pbro.value
+                if pbro.do_subst:
+                    if val.startswith("('") and val.endswith(")"):
+                        glbls = { 'urlquote': urllib.quote, }
+                        val = eval(val, glbls, ctx)
+                    else:
+                        # all locks should be at "subst" format
+                        continue
+                if not (val and isinstance(val, tuple) 
+                        and val[0:2] == ( 'activelock','DAV:')):
+                    # print "Value is not activelock:", val
+                    continue
+                
+                old_token = False
+                old_owner = False
+                try:
+                    # discover the timeout. If anything goes wrong, delete
+                    # the lock (cleanup)
+                    tmout = False
+                    for parm in val[2]:
+                        if parm[1] != 'DAV:':
+                            continue
+                        if parm[0] == 'timeout':
+                            if isinstance(parm[2], basestring) \
+                                    and parm[2].startswith('Second-'):
+                                tmout = int(parm[2][7:])
+                        elif parm[0] == 'locktoken':
+                            if isinstance(parm[2], basestring):
+                                old_token = parm[2]
+                            elif isinstance(parm[2], tuple) and \
+                                parm[2][0:2] == ('href','DAV:'):
+                                    old_token = parm[2][2]
+                            else:
+                                # print "Mangled token in DAV property: %r" % parm[2]
+                                props_to_delete.append(pbro.id)
+                                continue
+                        elif parm[0] == 'owner':
+                            old_owner = parm[2] # not used yet
+                    if tmout:
+                        mdate = pbro.write_date or pbro.create_date
+                        mdate = time.mktime(time.strptime(mdate,'%Y-%m-%d %H:%M:%S'))
+                        if mdate + tmout < time.time():
+                            props_to_delete.append(pbro.id)
+                            continue
+                    else:
+                        props_to_delete.append(pbro.id)
+                        continue
+                except ValueError:
+                    props_to_delete.append(pbro.id)
+                    continue
+                
+                # A valid lock is found here
+                if lock_data.get('refresh', False):
+                    if old_token != lock_data.get('token'):
+                        continue
+                    # refresh mode. Just touch anything and the ORM will update
+                    # the write uid+date, won't it?
+                    # Note: we don't update the owner, because incoming refresh
+                    # wouldn't have a body, anyway.
+                    propobj.write(cr, uid, [pbro.id,], { 'name': 'lockdiscovery'})
+                elif lock_data.get('unlock_mode', False):
+                    if old_token != lock_data.get('token'):
+                        continue
+                    props_to_delete.append(pbro.id)
+                
+                lock_found = pbro.id
+                lock_val = val
+
+        if tmout2 > 3*3600: # 3 hours maximum
+            tmout2 = 3*3600
+        elif tmout2 < 300:
+            # 5 minutes minimum, but an unlock request can always
+            # break it at any time. Ensures no negative values, either.
+            tmout2 = 300
+        
+        if props_to_delete:
+            # explicitly delete, as admin, any of the ids we have identified.
+            propobj.unlink(cr, 1, props_to_delete)
+        
+        if lock_data.get('unlock_mode', False):
+            return lock_found and True
+        elif (not lock_found) and not (lock_data.get('refresh', False)):
+            # Create a new lock, attach and return it.
+            new_token = uuid.uuid4().urn
+            lock_val = ('activelock', 'DAV:', 
+                    [ ('locktype', 'DAV:', (lock_data.get('locktype',False) or 'write','DAV:')),
+                      ('lockscope', 'DAV:', (lock_data.get('lockscope',False) or 'exclusive','DAV:')),
+                      # ? ('depth', 'DAV:', lock_data.get('depth','0') ),
+                      ('timeout','DAV:', 'Second-%d' % tmout2),
+                      ('locktoken', 'DAV:', ('href', 'DAV:', new_token)),
+                      # ('lockroot', 'DAV: ..., we don't store that, appended by caller
+                    ])
+            new_owner = lock_data.get('lockowner',False) or ctx.get('username', False)
+            if new_owner:
+                lock_val[2].append( ('owner', 'DAV:',  new_owner) )
+            prop_id = propobj.create(cr, uid, { prop_ref_field: res_id,
+                    'namespace': 'DAV:', 'name': 'lockdiscovery',
+                    'do_subst': True, 'value': repr(lock_val) })
+            return (lock_val[2], prop_id, new_token )
+        elif not lock_found: # and refresh
+            return (False, False, False)
+        elif lock_found and not lock_data.get('refresh', False):
+            # already locked
+            return (False, lock_found, old_token)
+        else:
+            return (lock_val[2], lock_found, old_token )
+
 class node_dir(node_acl_mixin, nodes.node_dir):
     """ override node_dir and add DAV functionality
     """
@@ -141,7 +288,8 @@ class node_dir(node_acl_mixin, nodes.node_dir):
 class node_file(node_acl_mixin, nodes.node_file):
     DAV_PROPS = { "DAV:": ('owner', 'group', 
                             'supported-privilege-set', 
-                            'current-user-privilege-set'), 
+                            'current-user-privilege-set',
+                            ), 
                 }
     DAV_M_NS = { "DAV:" : '_get_dav',}
     http_options = { 'DAV': ['access-control', ] }
@@ -152,10 +300,45 @@ class node_file(node_acl_mixin, nodes.node_file):
 
     def get_dav_props(self, cr):
         return self._get_dav_props_hlpr(cr, nodes.node_dir, 
-                None, 'file_id', self.file_id)
-                #'document.webdav.dir.property', 'dir_id', self.dir_id)
+                'document.webdav.file.property', 'file_id', self.file_id)
 
-    #def get_dav_eprop(self, cr, ns, prop):
+    def dav_lock(self, cr, lock_data):
+        """ Locks or unlocks the node, using DAV semantics.
+        
+        Unlocking will be done when lock_data['unlock_mode'] == True
+        
+        See _dav_lock_hlpr() for calling details.
+        
+        It is fundamentally OK to use this function from non-DAV endpoints,
+        but they will all have to emulate the tuple-in-list structure of
+        the DAV lock data. RFC if this translation should be done inside
+        the _dav_lock_hlpr (to ease other protocols).
+        """
+        return self._dav_lock_hlpr(cr, lock_data, nodes.node_file, 
+                'document.webdav.file.property', 'file_id', self.file_id)
+
+    def dav_unlock(self, cr, token):
+        """Releases the token lock held for the node
+        
+        This is a utility complement of dav_lock()
+        """
+        lock_data = { 'token': token, 'unlock_mode': True }
+        return self._dav_lock_hlpr(cr, lock_data, nodes.node_file, 
+                'document.webdav.file.property', 'file_id', self.file_id)
+
+    def get_dav_eprop(self, cr, ns, prop):
+        if ns == 'DAV:' and prop == 'supportedlock':
+            return [ ('lockentry', 'DAV:', 
+                        [ ('lockscope','DAV:', ('shared', 'DAV:')),
+                          ('locktype','DAV:', ('write', 'DAV:')),
+                        ]),
+                   ('lockentry', 'DAV:', 
+                        [ ('lockscope','DAV:', ('exclusive', 'DAV:')),
+                          ('locktype','DAV:', ('write', 'DAV:')),
+                        ] )
+                   ]
+        return self._get_dav_eprop_hlpr(cr, ns, prop, nodes.node_file,
+                'document.webdav.file.property', 'file_id', self.file_id)
 
 class node_database(nodes.node_database):
     def get_dav_resourcetype(self, cr):

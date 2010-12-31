@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-09 08:28+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-31 00:21+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:30+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
@@ -286,9 +287,56 @@ msgid "Confirm"
 msgstr "Bestätigen"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
-msgid "Timesheet lines"
-msgstr "Zeiterfassung Positionen"
+#: model:ir.module.module,description:hr_timesheet_sheet.module_meta_information
+msgid ""
+"\n"
+"This module helps you to easily encode and validate timesheet and "
+"attendances\n"
+"within the same view. The upper part of the view is for attendances and\n"
+"track (sign in/sign out) events. The lower part is for timesheet.\n"
+"\n"
+"Other tabs contains statistics views to help you analyse your\n"
+"time or the time of your team:\n"
+"* Time spent by day (with attendances)\n"
+"* Time spent by project\n"
+"\n"
+"This module also implements a complete timesheet validation process:\n"
+"* Draft sheet\n"
+"* Confirmation at the end of the period by the employee\n"
+"* Validation by the project manager\n"
+"\n"
+"The validation can be configured in the company:\n"
+"* Period size (day, week, month, year)\n"
+"* Maximal difference between timesheet and attendances\n"
+"    "
+msgstr ""
+"\n"
+"Diese Anwendung hilft bei der Erfassung, Prüfung und Genehmigung von "
+"Anwesenheit und\n"
+"Arbeitszeit innerhalb einer einzigen Ansicht. Im oberen Teil der Ansicht "
+"sehen Sie die Anwesenheit, die\n"
+"durch Anmelden und Abmelden erfasst wird. Der untere Bereich ist für die "
+"Zeiterfassung vorgesehen.\n"
+"\n"
+"Der zweite Aktenreiter beinhaltet eine Statistik zur Prüfung der "
+"vollständigen Erfassung von Zeiten einzelner\n"
+"Mitarbeiter oder des Teams:\n"
+"* Anwesenheitszeit je Tag\n"
+"* Arbeitszeit je Tag (nach Projekten, Konten etc.)\n"
+"\n"
+"Ausserdem ermöglicht die Anwendung einen komplett durchgängigen Vorgang für "
+"die Eingabe von Zeiten \n"
+"bis hin zur Prüfung und Freigabe:\n"
+"* Regelmässige Zeiterfassung durch den Mitarbeiter während der Periode "
+"(Status Entwurf)\n"
+"* Bestätigung der erfassten Zeiten durch den Mitarbeiter zum Periodenende\n"
+"* Prüfung und Freigabe durch den Projektmanager\n"
+"\n"
+"Die Eingabe, Prüfung und Freigabe kann dabei je Unternehmen individualisiert "
+"werden:\n"
+"* Periodendauer des Unternehmens (Tag, Woche, Monat, Jahr)\n"
+"* Maximal akzeptierte Abweichung zwischen Anwesenheit und Arbeitszeit u.a.\n"
+"    "
 
 #. module: hr_timesheet_sheet
 #: constraint:res.company:0
@@ -317,6 +365,12 @@ msgstr "Mitarbeiter"
 #: selection:timesheet.report,state:0
 msgid "New"
 msgstr "Neu"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot duplicate a timesheet !"
+msgstr "Sie können Zeiterfassung nicht duplizieren!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
@@ -420,7 +474,7 @@ msgstr "Gesamte Projektzeit"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Available Attendance"
-msgstr ""
+msgstr "Anwesenheitszeit"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -627,12 +681,9 @@ msgid "Timesheet range"
 msgstr "Zeiterfassung Zeitraum"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr ""
-"Sie können keinen Eintrag einer bereits bestätigten Zeiterfassung "
-"modifizieren !"
+#: field:hr_timesheet_sheet.sheet,timesheet_ids:0
+msgid "Timesheet lines"
+msgstr "Zeiterfassung Positionen"
 
 #. module: hr_timesheet_sheet
 #: view:board.board:0
@@ -691,8 +742,10 @@ msgstr "Periode"
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
-msgid "You cannot duplicate a timesheet !"
-msgstr "Sie können Zeiterfassung nicht duplizieren!"
+msgid "You can not modify an entry in a confirmed timesheet !"
+msgstr ""
+"Sie können keinen Eintrag einer bereits bestätigten Zeiterfassung "
+"modifizieren !"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -734,6 +787,12 @@ msgstr "Öffnen"
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
 msgstr "Zeiterfassung nach Konten"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:0
+#, python-format
+msgid "Open Timesheet"
+msgstr "Zeiterfassung"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -1128,6 +1187,10 @@ msgstr "Journal"
 
 #~ msgid "Create Analytic cost"
 #~ msgstr "Erzeuge Analytische Buchung"
+
+#, python-format
+#~ msgid "You can not duplicate a timesheet !"
+#~ msgstr "Arbeitszeitaufzeichung können nicht dupliziert werden"
 
 #~ msgid "hr_timesheet_sheet.sheet"
 #~ msgstr "hr_timesheet_sheet.sheet"

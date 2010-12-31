@@ -29,14 +29,10 @@
         type_id: hr_contract.hr_contract_type_emp
     country_id: base.in
     department_id: hr.dep_it
-    employee_account: account.a_recv
     gender: male
     marital: hr.hr_employee_marital_status_single
     name: Richard
-    pg_joining: '2009-12-01'
-    property_bank_account: account.cash
     bank_account_id: res_partner_bank_0
-    salary_account: account.a_recv
     vehicle_distance: 0.0
 -
   I create a new payroll structure for software developer
@@ -44,8 +40,7 @@
   !record {model: hr.payroll.structure, id: hr_payroll_structure_softwaredeveloper0}:
     code: SD
     line_ids:
-      - account_id: account.a_expense
-        amount: 0.40000000000000002
+      - amount: 0.40000000000000002
         amount_type: per
         category_id: hr_payroll.HRA
         code: HRA
@@ -54,8 +49,7 @@
         sequence: 5
         total: 0.0
         type: allowance
-      - account_id: account.a_expense
-        amount: 10000.0
+      - amount: 10000.0
         amount_type: fix
         category_id: hr_payroll.CA
         code: CA
@@ -64,8 +58,7 @@
         sequence: 10
         total: 0.0
         type: allowance
-      - account_id: account.a_pay
-        amount: 10000.0
+      - amount: 10000.0
         amount_type: fix
         category_id: hr_payroll.PT
         code: PT
@@ -74,8 +67,7 @@
         sequence: 15
         total: 0.0
         type: deduction
-      - account_id: account.a_pay
-        amount: 0.125
+      - amount: 0.125
         amount_type: per
         category_id: hr_payroll.PF
         code: PF
@@ -89,9 +81,8 @@
   I create a employee payslip record
 -
   !record {model: hr.payslip, id: hr_payslip_0}:
-    bank_journal_id: account.bank_journal
     employee_id: hr_payroll.hr_employee_richard0
-    journal_id: account.expenses_journal
+
 -
   I click on 'Compute Sheet' button
 -
