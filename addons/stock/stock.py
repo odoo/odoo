@@ -61,6 +61,7 @@ class stock_journal(osv.osv):
     }
 
 stock_journal()
+
 #----------------------------------------------------------
 # Stock Location
 #----------------------------------------------------------
@@ -69,7 +70,7 @@ class stock_location(osv.osv):
     _description = "Location"
     _parent_name = "location_id"
     _parent_store = True
-    _parent_order = 'name'
+    _parent_order = 'posz,name'
     _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
@@ -1212,6 +1213,8 @@ class stock_picking(osv.osv):
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
 
+                        if not move.returned_price:
+                            move_obj.write(cr, uid, [move.id], {'returned_price': move.price_unit})
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
@@ -1520,9 +1523,9 @@ class stock_move(osv.osv):
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
-        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
-                                  help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
-                                  \nThe state is \'Waiting\' if the move is waiting for another one.'),
+        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Not Available'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+              help='When the stock move is created it is in the \'Draft\' state.\n After that, it is set to \'Not Available\' state if the scheduler did not find the products.\n When products are reserved it is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
+              \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
         'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -1532,6 +1535,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
+        'returned_price': fields.float('Returned product price', digits=(16,2)),
     }
     _constraints = [
         (_check_tracking,

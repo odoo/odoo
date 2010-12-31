@@ -237,27 +237,23 @@ class hr_timesheet_sheet(osv.osv):
                 self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
         return True
 
-    def sign_in(self, cr, uid, ids, context=None):
+    def sign(self, cr, uid, ids, typ, context=None):
         emp_obj = self.pool.get('hr.employee')
+        sheet = self.browse(cr, uid, ids, context=context)[0]
         if context is None:
             context = {}
-        if not self.browse(cr, uid, ids, context=context)[0].date_current == time.strftime('%Y-%m-%d'):
+        if not sheet.date_current == time.strftime('%Y-%m-%d'):
             raise osv.except_osv(_('Error !'), _('You can not sign in from an other date than today'))
-        emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        emp_id = sheet.employee_id.id
         context['sheet_id']=ids[0]
-        emp_obj.attendance_action_change(cr, uid, emp_ids, type='sign_in', context=context,)
+        emp_obj.attendance_action_change(cr, uid, [emp_id], type=typ, context=context,)
         return True
 
+    def sign_in(self, cr, uid, ids, context=None):
+        return self.sign(cr,uid,ids,'sign_in',context=None)
+
     def sign_out(self, cr, uid, ids, context=None):
-        emp_obj = self.pool.get('hr.employee')
-        if context is None:
-            context = {}
-        if not self.browse(cr, uid, ids, context=context)[0].date_current == time.strftime('%Y-%m-%d'):
-            raise osv.except_osv(_('Error !'), _('You can not sign out from an other date than today'))
-        emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)])
-        context['sheet_id']=ids[0]
-        emp_obj.attendance_action_change(cr, uid, emp_ids, type='sign_out', context=context,)
-        return True
+        return self.sign(cr,uid,ids,'sign_out',context=None)
 
     _columns = {
         'name': fields.char('Description', size=64, select=1,

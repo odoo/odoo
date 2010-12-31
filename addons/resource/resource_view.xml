@@ -26,7 +26,7 @@
                         <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
-                        <filter string="Working Time" icon="terp-go-today" domain="[]" context="{'group_by':'calendar_id'}"/>
+                        <filter string="Working Period" icon="terp-go-today" domain="[]" context="{'group_by':'calendar_id'}"/>
                     </group>
                </search>
             </field>
@@ -57,7 +57,7 @@
                        <field name="name" string="Reason"/>
                        <field name="resource_id" string="Resource"/>
                        <field name="company_id" string="Company" widget="selection" groups="base.group_multi_company"/>
-                       <field name="calendar_id" string="Working Time" widget="selection"/>
+                       <field name="calendar_id" string="Working Period" widget="selection"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
@@ -179,7 +179,7 @@
                    </group>
                    <notebook colspan="4">
                      <page string="General Information">
-                       <field name="calendar_id" widget="selection"/>
+                       <field name="calendar_id" />
                        <field name="time_efficiency" groups="base.group_extended"/>
                      </page>
 	           </notebook>
@@ -197,7 +197,7 @@
                     <field name="user_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="resource_type" />
-                    <field name="calendar_id" />
+                    <field name="calendar_id" string="Working Period"/>
                     <field name="time_efficiency" groups="base.group_extended"/>
                 </tree>
             </field>
@@ -225,7 +225,7 @@
                        </group>
                        <group colspan="2" col="2">
                            <field name="date_from"/>
-                           <field name="calendar_id"/>
+                           <field name="calendar_id" string="Working Period"/>
                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                        </group>
                        <group colspan="2" col="2">

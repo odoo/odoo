@@ -114,6 +114,7 @@
             parent="menu_mrp_property"/>
         <menuitem
             action="mrp_property_group_action"
+            parent="menu_mrp_property"
             id="menu_mrp_property_group_action"/>
 
         <!--
@@ -758,7 +759,7 @@
             <field name="view_mode">tree,form,calendar,graph,gantt</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
-            <field name="context">{'search_default_current':1}</field>
+            <field name="context">{'search_default_ready':1}</field>
             <field name="help">Manufacturing Orders are usually proposed automatically by OpenERP based on the bill of materials and the procurement rules, but you can also create manufacturing orders manually. OpenERP will handle the consumption of the raw materials (stock decrease) and the production of the finished products (stock increase) when the order is processed.</field>
         </record>
         <menuitem action="mrp_production_action" id="menu_mrp_production_action"

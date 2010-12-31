@@ -9,6 +9,7 @@
             parent="base.menu_purchase_root" sequence="1" />
 
         <menuitem id="menu_purchase_config_purchase" name="Configuration"
+            groups="group_purchase_manager"
             parent="base.menu_purchase_root" sequence="100"/>
 
         <menuitem 
@@ -132,7 +133,7 @@
                 </calendar>
             </field>
         </record>
-        <record model="ir.ui.view" id="view_purchase_order_graph">
+        <record model="ir.ui.view" id="purchase_order_graph">
             <field name="name">purchase.order.graph</field>
             <field name="model">purchase.order</field>
             <field name="type">graph</field>
@@ -289,10 +290,11 @@
             <field name="context">{'search_default_draft': 1}</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help">With the Requests for Quotation menu you can create new requests for quotations, review existing ones or turn them into a purchase order once the supplier offer is approved. When you confirm a RfQ, OpenERP will convert it to a Purchase Order and generate the next steps: draft reception of the products, draft invoice to control.</field>
+            <field name="help">You can create a request for quotation when you want to buy products to a supplier but the purchase is not confirmed yet. Use also this menu to review requests for quotation created automatically based on your logistic rules (minimum stock, MTO, etc). You can convert the request for quotation into a purchase order once the order is confirmed. If you use the extended interface (from user's preferences), you can select the way to control your supplier invoices: based on the order, based on the receptions or manual encoding.</field>
         </record>
-        <menuitem action="purchase_rfq" id="menu_purchase_rfq" parent="menu_procurement_management"
-                sequence="6"/>
+        <menuitem action="purchase_rfq" id="menu_purchase_rfq" 
+            parent="menu_procurement_management"
+            sequence="6"/>
 
         <record id="purchase_form_action" model="ir.actions.act_window">
             <field name="name">Purchase Orders</field>
@@ -301,8 +303,7 @@
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="context">{'search_default_approved': 1,'search_default_create_uid':uid}</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
-            <field name="help">From the Purchase Orders menu, you can track the status of your orders: products received, invoice received and controlled.
-</field>
+            <field name="help">Use this menu to search within your purchase orders by references, supplier, products, etc. For each purchase order, you can track the products received, and control the supplier invoices.</field>
         </record>
         <menuitem action="purchase_form_action" id="menu_purchase_form_action" parent="menu_procurement_management" />
 
