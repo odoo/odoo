@@ -553,7 +553,7 @@ class many2many(_column):
                       DeprecationWarning, stacklevel=2)
         obj = obj.pool.get(self._obj)
 
-        # static domains are lists, and are evaluated both here and on client-side, while string 
+        # static domains are lists, and are evaluated both here and on client-side, while string
         # domains supposed by dynamic and evaluated on client-side only (thus ignored here)
         # FIXME: make this distinction explicit in API!
         domain = isinstance(self._domain, list) and self._domain or []
@@ -1049,7 +1049,8 @@ class property(function):
         brs = properties.browse(cr, uid, nids, context=context)
         for prop in brs:
             value = properties.get_by_record(cr, uid, prop, context=context)
-            res[prop.res_id.id][prop.fields_id.name] = value or False
+            avil_id = obj.pool.get(value._name).search(cr, uid, [('id','=',value.id)], context=context)
+            res[prop.res_id.id][prop.fields_id.name] = (avil_id and value) and value or False
             if value and (prop.type == 'many2one'):
                 replaces.setdefault(value._name, {})
                 replaces[value._name][value.id] = True
