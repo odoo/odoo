@@ -63,7 +63,7 @@
                     <field name="resource_id"/>
                     <field name="phase_id"/>
                     <field name="project_id"/>
-                    <field name="useability"/>
+                    <field name="useability" string="Availability"/>
                 </tree>
             </field>
         </record>
@@ -127,14 +127,14 @@
                             <field colspan="4" name="resource_ids" nolabel="1">
                                  <tree editable="bottom" string="Project Resource Allocation">
                                     <field name="resource_id" context="{'project_id':parent.project_id}"/>
-                                    <field name="date_start"/>
-                                    <field name="date_end"/>
-                                    <field name="useability"/>
+                                    <field name="date_start" readonly="1"/>
+                                    <field name="date_end" readonly="1"/>
+                                    <field name="useability" string="Availability"/>
                                   </tree>
                                   <form string="Project Resource Allocation">
                                     <field name="resource_id" context="{'project_id':parent.project_id}"/>
-                                    <field name="date_start"/>
-                                    <field name="date_end"/>
+                                    <field name="date_start" readonly="1"/> 
+                                    <field name="date_end" readonly="1"/>
                                     <field name="useability" string="Availability"/>
                                   </form>
                              </field>

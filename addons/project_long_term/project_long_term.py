@@ -319,7 +319,7 @@ class project_phase(osv.osv):
                 start_date = datetime.now().strftime("%Y-%m-%d")
             resources = resources_list.get(phase.id, [])
             calendar_id = phase.project_id.resource_calendar_id.id
-            task_ids = map(lambda x : x.id, (filter(lambda x : x.state in ['open', 'draft', 'pending'] , phase.task_ids)))
+            task_ids = map(lambda x : x.id, (filter(lambda x : x.state in ['draft'] , phase.task_ids))) #reassign only task not yet started
             if task_ids:
                 task_pool.generate_schedule(cr, uid, task_ids, resources, calendar_id, start_date, context=context)
 

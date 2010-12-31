@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-28 17:28+0000\n"
+"PO-Revision-Date: 2010-12-29 12:29+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:41+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -27,11 +27,6 @@ msgstr "Buchung erzeugt"
 #: report:mrp.production.order:0
 msgid "No. Of Cycles"
 msgstr "Anzahl Zyklen"
-
-#. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
-msgid "Number of iterations this work center has to do in the specified operation of the routing."
-msgstr "Maximale Anzahl an Fertigungsvorgängen dieser Fertigungsstelle."
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -540,7 +535,7 @@ msgstr "Fehler: Falscher EAN code"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
-msgid "Specify Cost of Work center per hour."
+msgid "Specify Cost of Workcenter per hour."
 msgstr "Spezifiziere Stundensatz der Fertigungsstelle."
 
 #. module: mrp
@@ -592,7 +587,7 @@ msgstr "März"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Work center per cycle."
+msgid "Specify Cost of Workcenter per cycle."
 msgstr "Spezifiziere Kosten der Fertigungsstelle pro Zyklus"
 
 #. module: mrp
@@ -685,7 +680,7 @@ msgstr "Fertig"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
-msgid "Time in hours for this work center to achieve the operation of the specified routing."
+msgid "Time in hours for doing one cycle."
 msgstr "Zeit in Stunden für einen Auftragszyklus"
 
 #. module: mrp
@@ -1140,7 +1135,7 @@ msgstr "]"
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
-"Gives the sequence order when displaying a list of routing work centers."
+"Gives the sequence order when displaying a list of routing workcenters."
 msgstr "Reihenfolge bei Anzeige der Liste für Fertigungsstellen"
 
 #. module: mrp
@@ -1858,8 +1853,8 @@ msgstr "Fertigprodukte Verbrauch"
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
-"Description of the work center. Explain here what's a cycle according to this "
-"work center."
+"Description of the workcenter. Explain here what's a cycle according to this "
+"workcenter."
 msgstr ""
 "Beschreibung der Fertigungsstelle. Beschreibe hier den Fertigungszyklus aus "
 "der Perspektive dieser Fertigungsstelle."
@@ -1952,9 +1947,9 @@ msgstr "Fertigungsauftrag"
 #. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
-"The list of operations (list of work centers) to produce the finished "
-"product. The routing is mainly used to compute work center costs during "
-"operations and to plan future loads on work centers based on production "
+"The list of operations (list of workcenters) to produce the finished "
+"product. The routing is mainly used to compute workcenter costs during "
+"operations and to plan future loads on workcenters based on production "
 "plannification."
 msgstr ""
 "Liste der Fertigungsvorgänge (Liste Fertigungsstellen) für die Produktion "
@@ -1991,7 +1986,7 @@ msgstr "Stückliste Struktur"
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
-"Number of operations this work center can do in parallel. If this work center "
+"Number of operations this workcenter can do in parallel. If this workcenter "
 "represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
 "Anzahl Fertigungsvorgänge die bei einer Fertigungsstelle parallel bearbeitet "
@@ -2466,9 +2461,9 @@ msgstr "Beschreibung"
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid ""
-"The list of operations (list of work centers) to produce the finished "
-"product. The routing is mainly used to compute work center costs during "
-"operations and to plan future loads on work centers based on production "
+"The list of operations (list of workcenters) to produce the finished "
+"product. The routing is mainly used to compute workcenter costs during "
+"operations and to plan future loads on workcenters based on production "
 "planning."
 msgstr ""
 "Fertigungsvorgänge (Arbeitsauftragsliste) für die Herstellung des "
@@ -3358,9 +3353,9 @@ msgstr "Jahr"
 #~ "geändert werden"
 
 #~ msgid ""
-#~ "The list of operations (list of work centers) to produce the finished "
-#~ "product. The routing is mainly used to compute work center costs during "
-#~ "operations and to plan futur loads on work centers based on production "
+#~ "The list of operations (list of workcenters) to produce the finished "
+#~ "product. The routing is mainly used to compute workcenter costs during "
+#~ "operations and to plan futur loads on workcenters based on production "
 #~ "plannification."
 #~ msgstr ""
 #~ "Arbeitsplätze, an denen Fertigprodukte produziert werden. Das \"Routing\" "

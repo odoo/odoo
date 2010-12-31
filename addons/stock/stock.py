@@ -475,7 +475,10 @@ class stock_tracking(osv.osv):
 
     def make_sscc(self, cr, uid, context=None):
         sequence = self.pool.get('ir.sequence').get(cr, uid, 'stock.lot.tracking')
-        return sequence + str(self.checksum(sequence))
+        try:
+            return sequence + str(self.checksum(sequence))
+        except Exception:
+            return sequence
 
     _columns = {
         'name': fields.char('Pack Reference', size=64, required=True, select=True),
@@ -1535,7 +1538,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
-        'returned_price': fields.float('Returned product price', digits=(16,2)),
+        'returned_price': fields.float('Returned product price', digits_compute= dp.get_precision('Sale Price')),
     }
     _constraints = [
         (_check_tracking,
