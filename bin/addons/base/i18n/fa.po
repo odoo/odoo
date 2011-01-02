@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2010-12-29 18:06+0000\n"
 "PO-Revision-Date: 2010-12-16 08:41+0000\n"
 "Last-Translator: avion <nat@sethack.com>\n"
 "Language-Team: OpenERP Iran <info@openerp-iran.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-23 04:56+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: IRAN, ISLAMIC REPUBLIC OF\n"
 "X-Poedit-Language: Persian\n"
@@ -39,6 +39,14 @@ msgid "DateTime"
 msgstr ""
 
 #. module: base
+#: code:addons/fields.py:534
+#, python-format
+msgid ""
+"The second argument of the many2many field %s must be a SQL table !You used "
+"%s, which is not a valid SQL table name."
+msgstr ""
+
+#. module: base
 #: view:ir.values:0
 #: field:ir.values,meta_unpickle:0
 msgid "Metadata"
@@ -49,12 +57,6 @@ msgstr "فراداده"
 #: field:ir.ui.view.custom,arch:0
 msgid "View Architecture"
 msgstr "ساختمان نما"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not create this kind of document! (%s)"
-msgstr "شما نمی‌توانید این نوع از سند را پدید آورید! (%s)"
 
 #. module: base
 #: field:base.language.import,code:0
@@ -107,6 +109,14 @@ msgid "Created Views"
 msgstr "نماهای پدیدآمده"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:339
+#, python-format
+msgid ""
+"You can not write in this document (%s) ! Be sure your user belongs to one "
+"of these groups: %s."
+msgstr ""
+
+#. module: base
 #: field:res.partner,ref:0
 msgid "Reference"
 msgstr ""
@@ -122,11 +132,10 @@ msgid "South Korea"
 msgstr "کره جنوبی"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_workflow_transition_form
-#: model:ir.ui.menu,name:base.menu_workflow_transition
-#: view:workflow.activity:0
-msgid "Transitions"
-msgstr "گذارها"
+#: code:addons/osv.py:133
+#, python-format
+msgid "Constraint Error"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -139,12 +148,19 @@ msgid "Swaziland"
 msgstr "سوازیلند"
 
 #. module: base
+#: code:addons/orm.py:1993
+#: code:addons/orm.py:3653
+#, python-format
+msgid "created."
+msgstr ""
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
 msgid "Wood Suppliers"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:303
 #, python-format
 msgid ""
 "Some installed modules depend on the module you plan to Uninstall :\n"
@@ -175,13 +191,13 @@ msgid "Search Partner"
 msgstr "جستجوی همکار"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:132
 #, python-format
 msgid "\"smtp_server\" needs to be set to send mails to users"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:60
 #, python-format
 msgid "new"
 msgstr "تازه"
@@ -212,7 +228,7 @@ msgid "Contact Name"
 msgstr "نام تماس"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:56
 #, python-format
 msgid ""
 "Save this document to a %s file and edit it with a specific software or a "
@@ -235,6 +251,12 @@ msgstr "فعال"
 #: field:ir.actions.wizard,wiz_name:0
 msgid "Wizard Name"
 msgstr "نام تردست"
+
+#. module: base
+#: code:addons/orm.py:2160
+#, python-format
+msgid "Invalid group_by"
+msgstr ""
 
 #. module: base
 #: field:res.partner,credit_limit:0
@@ -268,7 +290,6 @@ msgstr "ir.ui.view_sc"
 
 #. module: base
 #: field:res.widget.user,widget_id:0
-#: field:res.widget.wizard,widget_id:0
 msgid "Widget"
 msgstr ""
 
@@ -319,7 +340,7 @@ msgid "Netherlands Antilles"
 msgstr "آنتیل هلند"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -345,11 +366,6 @@ msgid "Bosnian / bosanski jezik"
 msgstr "بوسنیایی / bosanski jezik"
 
 #. module: base
-#: field:ir.ui.menu,web_icon_data:0
-msgid "Web Icons"
-msgstr ""
-
-#. module: base
 #: help:ir.actions.report.xml,attachment_use:0
 msgid ""
 "If you check this, then the second time the user prints with same attachment "
@@ -357,6 +373,12 @@ msgid ""
 msgstr ""
 "اگر شما این را تیک بزنید، دومین باری که کاربر پیوستی با همان نام را چاپ "
 "می‌کند، گزارش پیشین بازگردانده می‌شود."
+
+#. module: base
+#: code:addons/orm.py:904
+#, python-format
+msgid "The read method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -383,6 +405,12 @@ msgstr "کلمبیا"
 #: view:ir.module.module:0
 msgid "Schedule Upgrade"
 msgstr "ارتقا زمان‌بندی شده"
+
+#. module: base
+#: code:addons/orm.py:838
+#, python-format
+msgid "Key/value '%s' not found in selection field '%s'"
+msgstr ""
 
 #. module: base
 #: help:res.country,code:0
@@ -427,7 +455,7 @@ msgid "Miscellaneous Suppliers"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:216
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "نام فیلدهای دلخواه باید با 'x_' آغاز شوند!"
@@ -675,6 +703,12 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:1043
+#, python-format
+msgid "The unlink method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: view:wizard.ir.model.menu.create:0
 msgid "Create Menu"
@@ -739,6 +773,14 @@ msgid "Type"
 msgstr "نوع"
 
 #. module: base
+#: code:addons/orm.py:210
+#, python-format
+msgid ""
+"Language with code \"%s\" is not defined in your system !\n"
+"Define it through the Administration menu."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gu
 msgid "Guam (USA)"
 msgstr "گوام (آمریکا)"
@@ -763,6 +805,19 @@ msgstr "XML برای ساختمان نما معتبر نیست!"
 #: model:res.country,name:base.ky
 msgid "Cayman Islands"
 msgstr "جزایر کِیمَن"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_workflow_transition_form
+#: model:ir.ui.menu,name:base.menu_workflow_transition
+#: view:workflow.activity:0
+msgid "Transitions"
+msgstr "گذارها"
+
+#. module: base
+#: code:addons/orm.py:4018
+#, python-format
+msgid "Record #%d of %s not found, cannot copy!"
+msgstr ""
 
 #. module: base
 #: field:ir.module.module,contributors:0
@@ -872,6 +927,16 @@ msgid "Search"
 msgstr "جستجو"
 
 #. module: base
+#: code:addons/osv.py:136
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+
+#. module: base
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical AND operator"
@@ -926,13 +991,13 @@ msgid "ir.exports"
 msgstr "ir.exports"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr ""
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr ""
@@ -964,6 +1029,12 @@ msgid ""
 "This wizard helps you register a publisher warranty contract in your OpenERP "
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:1744
+#, python-format
+msgid "The search method is not implemented on this object !"
 msgstr ""
 
 #. module: base
@@ -1013,7 +1084,7 @@ msgid "On Create"
 msgstr "در هنگام پدیدن"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:461
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1118,12 +1189,6 @@ msgid "Day: %(day)s"
 msgstr "روز: %(day)s"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not read this document! (%s)"
-msgstr "شما نمی‌توانید این سند را بخوانید! (%s)"
-
-#. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
 msgid ""
 "List all certified modules available to configure your OpenERP. Modules that "
@@ -1164,8 +1229,8 @@ msgstr ""
 "object.cost_price"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
-#: code:addons/base/res/res_company.py:0
+#: code:addons/base/res/partner/partner.py:155
+#: code:addons/base/res/res_company.py:66
 #, python-format
 msgid " (copy)"
 msgstr " STOCK_COPY"
@@ -1245,7 +1310,7 @@ msgid "Formula"
 msgstr "فرمول"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid "Can not remove root user!"
 msgstr "نمی‌توانید کاربر ریشه را بردارید!"
@@ -1256,7 +1321,8 @@ msgid "Malawi"
 msgstr "مالاوی"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:51
+#: code:addons/base/res/res_user.py:397
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1308,7 +1374,6 @@ msgstr "درخت"
 
 #. module: base
 #: help:res.config.users,password:0
-#: help:res.users,password:0
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
 msgstr ""
@@ -1335,6 +1400,12 @@ msgstr "حالت نمایش"
 msgid ""
 "When using CSV format, please also check that the first line of your file is "
 "one of the following:"
+msgstr ""
+
+#. module: base
+#: code:addons/fields.py:114
+#, python-format
+msgid "Not implemented search_memory method !"
 msgstr ""
 
 #. module: base
@@ -1388,7 +1459,7 @@ msgid "Bahamas"
 msgstr "باهاماس"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
@@ -1409,6 +1480,12 @@ msgstr "ایرلند"
 #: field:base.module.update,update:0
 msgid "Number of modules updated"
 msgstr "تعداد پیمانه‌های بروزرسانده"
+
+#. module: base
+#: code:addons/fields.py:100
+#, python-format
+msgid "Not implemented set_memory method !"
+msgstr ""
 
 #. module: base
 #: view:workflow.activity:0
@@ -1486,6 +1563,12 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:3147
+#, python-format
+msgid "A document was modified since you last viewed it (%s:%d)"
+msgstr ""
+
+#. module: base
 #: view:workflow:0
 msgid "Workflow Editor"
 msgstr ""
@@ -1557,7 +1640,7 @@ msgid "Madagascar"
 msgstr "ماداگاسکار"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:94
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -1647,12 +1730,6 @@ msgid "French (BE) / Français (BE)"
 msgstr "فرانسوی (بلژیک) / Français (BE)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not write in this document! (%s)"
-msgstr "شما نمی‌توانید در این سند بنویسید! (%s)"
-
-#. module: base
 #: view:ir.actions.server:0
 #: field:workflow.activity,action_id:0
 msgid "Server Action"
@@ -1723,6 +1800,12 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:1040
+#, python-format
+msgid "The perm_read method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "%y - Year without century [00,99]."
 msgstr ""
@@ -1733,12 +1816,18 @@ msgid "Slovenia"
 msgstr "اسلوونی"
 
 #. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Invalid Object Architecture!"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_email_gateway_form
 msgid "Messages"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -1767,6 +1856,14 @@ msgstr "تاریخ پایان"
 #: model:res.country,name:base.nz
 msgid "New Zealand"
 msgstr "زلاند نو"
+
+#. module: base
+#: code:addons/orm.py:3366
+#, python-format
+msgid ""
+"One of the records you are trying to modify has already been deleted "
+"(Document type: %s)."
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country
@@ -1818,18 +1915,12 @@ msgid "Valid"
 msgstr "معتبر"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not delete this document! (%s)"
-msgstr "نمی‌توانید این سند را بردارید! (%s)"
-
-#. module: base
 #: selection:ir.translation,type:0
 msgid "XSL"
 msgstr "XSL"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:322
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "نمی‌توانید پیمانه '%s' را ارتقا دهید زیرا برپاسازی نشده است."
@@ -1941,6 +2032,15 @@ msgid "HR sector"
 msgstr "بخش منابع انسانی"
 
 #. module: base
+#: code:addons/orm.py:3817
+#, python-format
+msgid ""
+"Invalid \"order\" specified. A valid \"order\" specification is a comma-"
+"separated list of valid field names (optionally followed by asc/desc for the "
+"direction)"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
 msgstr "وابستگی پیمانه"
@@ -1992,6 +2092,11 @@ msgstr "وابستگی‌ها"
 #: field:multi_company.default,company_id:0
 msgid "Main Company"
 msgstr "شرکت اصلی"
+
+#. module: base
+#: field:ir.ui.menu,web_icon_hover:0
+msgid "Web Icon File (hover)"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2081,8 +2186,9 @@ msgid "Sir"
 msgstr "آقا"
 
 #. module: base
-#: view:base.module.import:0
-msgid "Select module package to import (.zip file):"
+#: code:addons/orm.py:1622
+#, python-format
+msgid "There is no view of type '%s' defined for the structure!"
 msgstr ""
 
 #. module: base
@@ -2181,7 +2287,7 @@ msgid "Mayotte"
 msgstr "مایوت"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:593
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr "لطفا کُنشی را برای اجرا مشخص کنید!"
@@ -2206,6 +2312,12 @@ msgid "Filters"
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:758
+#, python-format
+msgid "Please check that all your lines have %d columns."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
 #: view:ir.cron:0
 #: model:ir.ui.menu,name:base.menu_ir_cron_act
@@ -2225,7 +2337,13 @@ msgid "If not set, acts as a default value for new resources"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:3448
+#, python-format
+msgid "Recursivity Detected."
+msgstr "تودرتویی پیدا شده"
+
+#. module: base
+#: code:addons/base/module/module.py:262
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "خطای تودرتویی در وابستگی‌های پیمانه‌ها!"
@@ -2252,6 +2370,11 @@ msgstr ""
 "شماره‌ی مالیات بر ارزش افزوده. جای خالی را در صورتی که همکار تجاری موضوعِ "
 "مالیات بر ارزش افزوده است،تیک بزنید. این شماره در احکام قانونی مالیات بر "
 "ارزش افزوده بکارگرفته می‌شود."
+
+#. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -2306,11 +2429,6 @@ msgid "VAT"
 msgstr "مالیات بر ارزش افزوده"
 
 #. module: base
-#: field:ir.ui.menu,web_icon_hover_data:0
-msgid "Web Icons Hover"
-msgstr ""
-
-#. module: base
 #: view:res.lang:0
 msgid "12. %w              ==> 5 ( Friday is the 6th day)"
 msgstr "12. %w              ==> ۵ (جمعه ششمین روز است)"
@@ -2346,7 +2464,7 @@ msgid "M."
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:429
 #, python-format
 msgid ""
 "Can not create the module file:\n"
@@ -2356,12 +2474,20 @@ msgstr ""
 "%s"
 
 #. module: base
+#: code:addons/orm.py:2973
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: read, Document type: %s)."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
 msgstr "نائورو"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:200
 #, python-format
 msgid "The certificate ID of the module must be unique !"
 msgstr ""
@@ -2438,6 +2564,12 @@ msgid "EAN13"
 msgstr "بارکد"
 
 #. module: base
+#: code:addons/orm.py:1622
+#, python-format
+msgid "Invalid Architecture!"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.pt
 msgid "Portugal"
 msgstr "پرتغال"
@@ -2494,7 +2626,7 @@ msgid "Ecuador"
 msgstr "اکوادور"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:52
 #, python-format
 msgid ""
 "Save this document to a .CSV file and open it with your favourite "
@@ -2565,7 +2697,7 @@ msgid "Action to Trigger"
 msgstr "کنش برای رهاساز"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:136
 #, python-format
 msgid "\"email_from\" needs to be set to send welcome mails to users"
 msgstr ""
@@ -2763,17 +2895,12 @@ msgid "FYROM"
 msgstr "FYROM"
 
 #. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Advanced Search"
-msgstr "جستجوی پیشرفته"
-
-#. module: base
 #: view:res.lang:0
 msgid "%c - Appropriate date and time representation."
 msgstr "%c - چگونگی نمایش مناسب تاریخ و ساعت"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:422
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -2819,7 +2946,7 @@ msgid "Rules"
 msgstr "قواعد"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:216
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr ""
@@ -2890,7 +3017,7 @@ msgid "Lesotho"
 msgstr "لسوتو"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:112
 #, python-format
 msgid "You can not remove the model '%s' !"
 msgstr "شما نمی‌توانید مدل '%s' را بردارید!"
@@ -2918,6 +3045,12 @@ msgstr ""
 #. module: base
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:929
+#, python-format
+msgid "Error occurred while validating the field(s) %s: %s"
 msgstr ""
 
 #. module: base
@@ -2951,7 +3084,7 @@ msgid "Benin"
 msgstr "بنین"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
 #, python-format
 msgid "That contract is already registered in the system."
 msgstr ""
@@ -2980,6 +3113,14 @@ msgstr "آغازه RML"
 #: field:partner.sms.send,app_id:0
 msgid "API ID"
 msgstr "شناسه API"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:340
+#, python-format
+msgid ""
+"You can not create this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -3230,6 +3371,12 @@ msgstr "res.users"
 #: model:res.country,name:base.ni
 msgid "Nicaragua"
 msgstr "نیکاراگوئه"
+
+#. module: base
+#: code:addons/orm.py:1046
+#, python-format
+msgid "The write method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: view:res.partner.event:0
@@ -3509,7 +3656,8 @@ msgid "Bank Type"
 msgstr "نوع بانک"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:58
+#: code:addons/base/res/res_user.py:67
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "نام گروه نمی‌تواند با \"-\" آغاز شود"
@@ -3531,7 +3679,7 @@ msgid "Gujarati / ગુજરાતી"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:257
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
@@ -3549,7 +3697,7 @@ msgid "Flow Start"
 msgstr "آغاز گردش"
 
 #. module: base
-#: code:addons/__init__.py:0
+#: code:addons/__init__.py:827
 #, python-format
 msgid "module base cannot be loaded! (hint: verify addons-path)"
 msgstr ""
@@ -3581,7 +3729,9 @@ msgid "Guadeloupe (French)"
 msgstr "گویان فرانسه"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
+#: code:addons/base/res/res_lang.py:88
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid "User Error"
 msgstr ""
@@ -3657,6 +3807,11 @@ msgid "Cape Verde"
 msgstr "کیپ ورد"
 
 #. module: base
+#: view:base.module.import:0
+msgid "Select module package to import (.zip file):"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
@@ -3668,6 +3823,12 @@ msgstr "رویدادها"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.url"
 msgstr "ir.actions.url"
+
+#. module: base
+#: code:addons/orm.py:156
+#, python-format
+msgid "Wrong ID for the browse record, got %r, expected an integer."
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_addess_tree
@@ -3702,9 +3863,10 @@ msgid "French / Français"
 msgstr "فرانسوی / Français"
 
 #. module: base
-#: view:ir.module.module:0
-msgid "Created Menus"
-msgstr "منوهای پدیدآمده"
+#: code:addons/orm.py:1049
+#, python-format
+msgid "The create method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
@@ -3955,6 +4117,14 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
+#: code:addons/orm.py:3533
+#, python-format
+msgid ""
+"You cannot perform this operation. New Record Creation is not allowed for "
+"this object as this object is for reporting purpose."
+msgstr ""
+
+#. module: base
 #: view:base.language.import:0
 msgid "- module,type,name,res_id,src,value"
 msgstr ""
@@ -3994,8 +4164,8 @@ msgid "Project"
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
-msgid "maintenance.contract"
+#: field:ir.ui.menu,web_icon_hover_data:0
+msgid "Web Icon Image (hover)"
 msgstr ""
 
 #. module: base
@@ -4025,12 +4195,9 @@ msgid "Serial Key"
 msgstr ""
 
 #. module: base
-#: field:res.partner,customer:0
-#: view:res.partner.address:0
-#: field:res.partner.address,is_customer_add:0
-#: model:res.partner.category,name:base.res_partner_category_0
-msgid "Customer"
-msgstr "مشتری"
+#: model:ir.ui.menu,name:base.menu_audit
+msgid "Audit"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -4139,6 +4306,18 @@ msgid "Signature"
 msgstr "امضا"
 
 #. module: base
+#: code:addons/fields.py:456
+#: code:addons/fields.py:654
+#: code:addons/fields.py:656
+#: code:addons/fields.py:658
+#: code:addons/fields.py:660
+#: code:addons/fields.py:662
+#: code:addons/fields.py:664
+#, python-format
+msgid "Not Implemented"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_widget_user
 msgid "res.widget.user"
 msgstr ""
@@ -4159,7 +4338,7 @@ msgid "False means for every user"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:198
 #, python-format
 msgid "The name of the module must be unique !"
 msgstr ""
@@ -4200,9 +4379,11 @@ msgid "Contacts"
 msgstr "تماس‌ها"
 
 #. module: base
-#: model:res.country,name:base.fo
-msgid "Faroe Islands"
-msgstr "جزایر فارو"
+#: code:addons/orm.py:3199
+#, python-format
+msgid ""
+"Unable to delete this document because it is used as a default property"
+msgstr ""
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -4229,6 +4410,12 @@ msgstr "جمهوری چک"
 #. module: base
 #: view:res.widget.wizard:0
 msgid "Widget Wizard"
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Insufficient fields for Calendar View!"
 msgstr ""
 
 #. module: base
@@ -4275,15 +4462,9 @@ msgid "Mongolia"
 msgstr "مغولستان"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
-#: code:addons/base/ir/ir_model.py:0
-#: code:addons/base/module/module.py:0
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
-#: code:addons/base/res/res_currency.py:0
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "Error"
-msgstr "خطا"
+#: view:ir.module.module:0
+msgid "Created Menus"
+msgstr "منوهای پدیدآمده"
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -4398,11 +4579,6 @@ msgid "Password"
 msgstr "گذرواژه"
 
 #. module: base
-#: field:ir.ui.menu,web_icon:0
-msgid "Icon File"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: view:ir.model:0
 #: field:ir.model,field_id:0
@@ -4501,7 +4677,7 @@ msgid "Change My Preferences"
 msgstr "تغییر ترجیحات من"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:160
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr "نام مدل در تعریف کنش نامعتبر است."
@@ -4569,7 +4745,7 @@ msgid "Raphaël Valyi's tweets"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:384
 #, python-format
 msgid ""
 "\n"
@@ -4647,7 +4823,13 @@ msgid "Client Actions"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:1806
+#, python-format
+msgid "The exists method is not implemented on this object !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:336
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -4723,7 +4905,7 @@ msgid "ir.server.object.lines"
 msgstr "ir.server.object.lines"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:530
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
 msgstr "پیمانه %s: گواهینامه کیفیت نامعتبر"
@@ -4773,6 +4955,11 @@ msgstr ""
 #: field:res.company,user_ids:0
 msgid "Accepted Users"
 msgstr "کاربران پذیرفته"
+
+#. module: base
+#: field:ir.ui.menu,web_icon_data:0
+msgid "Web Icon Image"
+msgstr ""
 
 #. module: base
 #: view:ir.values:0
@@ -4890,6 +5077,14 @@ msgid "Nepal"
 msgstr "نپال"
 
 #. module: base
+#: code:addons/orm.py:2307
+#, python-format
+msgid ""
+"Invalid value for reference field \"%s\" (last part must be a non-zero "
+"integer): \"%s\""
+msgstr ""
+
+#. module: base
 #: help:ir.cron,args:0
 msgid "Arguments to be passed to the method. e.g. (uid,)"
 msgstr ""
@@ -4918,14 +5113,14 @@ msgid "Update Modules List"
 msgstr "بروزرسانی فهرست پیمانه‌ها"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:255
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:241
 #, python-format
 msgid ""
 "Please keep in mind that documents currently displayed may not be relevant "
@@ -4943,6 +5138,12 @@ msgstr "ادامه"
 #: selection:base.language.install,lang:0
 msgid "Thai / ภาษาไทย"
 msgstr "تایلندی / ภาษาไทย"
+
+#. module: base
+#: code:addons/orm.py:158
+#, python-format
+msgid "Object %s does not exists"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5075,6 +5276,13 @@ msgid "Iteration"
 msgstr "تکرار"
 
 #. module: base
+#: code:addons/orm.py:3448
+#: code:addons/orm.py:3532
+#, python-format
+msgid "UserError"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ae
 msgid "United Arab Emirates"
 msgstr "امارات متحده عربی"
@@ -5112,7 +5320,12 @@ msgid "Solomon Islands"
 msgstr "جزایر سلیمان"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:344
+#: code:addons/orm.py:1897
+#: code:addons/orm.py:2972
+#: code:addons/orm.py:3165
+#: code:addons/orm.py:3365
+#: code:addons/orm.py:3817
 #, python-format
 msgid "AccessError"
 msgstr "خطای دسترسی"
@@ -5123,7 +5336,7 @@ msgid "Waiting"
 msgstr ""
 
 #. module: base
-#: code:addons/__init__.py:0
+#: code:addons/__init__.py:827
 #, python-format
 msgid "Could not load base module"
 msgstr ""
@@ -5132,6 +5345,12 @@ msgstr ""
 #: view:res.lang:0
 msgid "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 msgstr "8.  %I:%M:%S %p  ==> 06:25:20 PM"
+
+#. module: base
+#: code:addons/orm.py:1803
+#, python-format
+msgid "The copy method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: field:res.log,create_date:0
@@ -5250,7 +5469,7 @@ msgid "ir.actions.todo"
 msgstr "ir.actions.todo"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:94
 #, python-format
 msgid "Couldn't find previous ir.actions.todo"
 msgstr ""
@@ -5324,15 +5543,21 @@ msgid "res.widget"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:219
 #, python-format
 msgid "Model %s does not exist!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:88
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
+msgstr ""
+
+#. module: base
+#: code:addons/fields.py:103
+#, python-format
+msgid "Not implemented get_memory method !"
 msgstr ""
 
 #. module: base
@@ -5343,7 +5568,7 @@ msgid "Python Code"
 msgstr "کد پایتون"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Can not create the module file: %s !"
 msgstr "ناتوانی در پدیدن پرونده پیمانه: %s!"
@@ -5462,7 +5687,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:421
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr ""
@@ -5501,7 +5726,7 @@ msgid ""
 msgstr "شیی را که کُنش روی آن کار خواهد کرد برگزینید (خواندن،‌نوشتن، پدیدن)."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:625
 #, python-format
 msgid "Please specify server option --email-from !"
 msgstr ""
@@ -5713,7 +5938,7 @@ msgid "Afghanistan, Islamic State of"
 msgstr "افغانستان (ولایت اسلامی)"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Error !"
 msgstr "خطا!"
@@ -5733,6 +5958,12 @@ msgstr "یکای بازه"
 #: field:workflow.activity,kind:0
 msgid "Kind"
 msgstr "گونه"
+
+#. module: base
+#: code:addons/orm.py:3775
+#, python-format
+msgid "This method does not exist anymore"
+msgstr ""
 
 #. module: base
 #: field:res.bank,fax:0
@@ -5992,6 +6223,14 @@ msgid "To browse official translations, you can start with these links:"
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:338
+#, python-format
+msgid ""
+"You can not read this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
+
+#. module: base
 #: view:res.bank:0
 #: field:res.config.users,address_id:0
 #: view:res.partner.address:0
@@ -5999,11 +6238,6 @@ msgstr ""
 #: field:res.users,address_id:0
 msgid "Address"
 msgstr "نشانی"
-
-#. module: base
-#: field:ir.ui.menu,web_icon_hover:0
-msgid "Icon hover File"
-msgstr ""
 
 #. module: base
 #: field:ir.module.module,latest_version:0
@@ -6083,7 +6317,7 @@ msgid "Saint Kitts & Nevis Anguilla"
 msgstr "سنت کیتس و نویس انگیلا"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:0
+#: code:addons/base/res/res_currency.py:100
 #, python-format
 msgid ""
 "No rate found \n"
@@ -6169,7 +6403,7 @@ msgid "Samoa"
 msgstr "ساموا"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid ""
 "You cannot delete the language which is Active !\n"
@@ -6190,10 +6424,18 @@ msgid "Child IDs"
 msgstr "شناسه‌های فرزند"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "ایراد در پیکربندی 'شناسه رکورد' در کُنش سمت کارپذیر!"
+
+#. module: base
+#: code:addons/orm.py:2306
+#: code:addons/orm.py:2316
+#, python-format
+msgid "ValidateError"
+msgstr ""
 
 #. module: base
 #: view:base.module.import:0
@@ -6242,6 +6484,14 @@ msgid "Home Action"
 msgstr "کنش خانه"
 
 #. module: base
+#: code:addons/custom.py:558
+#, python-format
+msgid ""
+"The sum of the data (2nd field) is null.\n"
+"We can't draw a pie chart !"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_lunch_reporting
 #: model:ir.ui.menu,name:base.menu_project_report
 #: model:ir.ui.menu,name:base.menu_report_association
@@ -6269,10 +6519,9 @@ msgid "Stop All"
 msgstr "توقف همه"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
-#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
-#: view:publisher_warranty.contract.wizard:0
-msgid "Register a Contract"
+#: code:addons/orm.py:412
+#, python-format
+msgid "The read_group method is not implemented on this object !"
 msgstr ""
 
 #. module: base
@@ -6323,7 +6572,7 @@ msgid "Start update"
 msgstr ""
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:144
 #, python-format
 msgid "Contract validation error"
 msgstr ""
@@ -6381,7 +6630,7 @@ msgid "HR Manager Dashboard"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:253
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
@@ -6433,7 +6682,7 @@ msgid "Module Update"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#: code:addons/base/module/wizard/base_module_upgrade.py:97
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
 msgstr ""
@@ -6514,7 +6763,14 @@ msgid "The new user's real name, used for searching and most listings"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/osv.py:154
+#: code:addons/osv.py:156
+#, python-format
+msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:189
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr ""
@@ -6553,6 +6809,12 @@ msgid "Arguments"
 msgstr "نشانوندها"
 
 #. module: base
+#: code:addons/orm.py:716
+#, python-format
+msgid "Database ID doesn't exist: %s : %s"
+msgstr ""
+
+#. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 2"
 msgstr ""
@@ -6563,14 +6825,29 @@ msgid "GPL Version 3"
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:836
+#, python-format
+msgid "key '%s' not found in selection field '%s'"
+msgstr ""
+
+#. module: base
 #: view:partner.wizard.ean.check:0
 msgid "Correct EAN13"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_audit
-msgid "Audit"
+#: code:addons/orm.py:2317
+#, python-format
+msgid "The value \"%s\" for the field \"%s\" is not in the selection"
 msgstr ""
+
+#. module: base
+#: field:res.partner,customer:0
+#: view:res.partner.address:0
+#: field:res.partner.address,is_customer_add:0
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Customer"
+msgstr "مشتری"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6675,7 +6952,7 @@ msgid "Copy Object"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:551
 #, python-format
 msgid ""
 "Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
@@ -6727,6 +7004,15 @@ msgid "Object"
 msgstr "شی"
 
 #. module: base
+#: code:addons/osv.py:151
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "ir.default"
 msgstr "ir.default"
@@ -6761,7 +7047,7 @@ msgid "User Ref."
 msgstr "مرجع کاربر"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:550
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -6902,7 +7188,7 @@ msgid "workflow.triggers"
 msgstr "workflow.triggers"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:60
 #, python-format
 msgid "Invalid search criterions"
 msgstr ""
@@ -6960,7 +7246,7 @@ msgid "Action Type"
 msgstr "نوع واکنش"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:268
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -7064,9 +7350,21 @@ msgid "workflow.instance"
 msgstr "workflow.instance"
 
 #. module: base
+#: code:addons/orm.py:278
+#, python-format
+msgid "Unknown attribute %s in %s "
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "10. %S              ==> 20"
 msgstr "10. %S              ==> 20"
+
+#. module: base
+#: code:addons/fields.py:106
+#, python-format
+msgid "undefined get method !"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7245,6 +7543,11 @@ msgid "Menu Action"
 msgstr "منوی کنش"
 
 #. module: base
+#: model:res.country,name:base.fo
+msgid "Faroe Islands"
+msgstr "جزایر فارو"
+
+#. module: base
 #: selection:base.language.export,state:0
 msgid "choose"
 msgstr "گزینش"
@@ -7381,7 +7684,7 @@ msgid "China"
 msgstr "چین"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:486
 #, python-format
 msgid ""
 "--\n"
@@ -7579,7 +7882,7 @@ msgid "Account No."
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
 msgstr ""
@@ -7622,6 +7925,14 @@ msgstr "مقدار برگردان"
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
 msgstr "اَنتیگا و باربودا"
+
+#. module: base
+#: code:addons/orm.py:3166
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: %s, Document type: %s)."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.zr
@@ -7681,7 +7992,7 @@ msgid "Auto-Refresh"
 msgstr "نوسازی خودکار"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:60
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
@@ -7690,6 +8001,11 @@ msgstr ""
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
 msgstr ""
+
+#. module: base
+#: model:res.country,name:base.wf
+msgid "Wallis and Futuna Islands"
+msgstr "جزایر والیس و فوتونا"
 
 #. module: base
 #: help:multi_company.default,name:0
@@ -7746,6 +8062,35 @@ msgstr "کد شناسه بانک"
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "ترکمنستان"
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:593
+#: code:addons/base/ir/ir_actions.py:625
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
+#: code:addons/base/ir/ir_model.py:112
+#: code:addons/base/ir/ir_model.py:197
+#: code:addons/base/ir/ir_model.py:216
+#: code:addons/base/ir/ir_model.py:219
+#: code:addons/base/module/module.py:215
+#: code:addons/base/module/module.py:258
+#: code:addons/base/module/module.py:262
+#: code:addons/base/module/module.py:268
+#: code:addons/base/module/module.py:303
+#: code:addons/base/module/module.py:321
+#: code:addons/base/module/module.py:336
+#: code:addons/base/module/module.py:429
+#: code:addons/base/module/module.py:530
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
+#: code:addons/base/res/res_currency.py:100
+#: code:addons/base/res/res_user.py:57
+#: code:addons/base/res/res_user.py:66
+#: code:addons/custom.py:558
+#: code:addons/orm.py:3199
+#, python-format
+msgid "Error"
+msgstr "خطا"
 
 #. module: base
 #: model:res.country,name:base.pm
@@ -7876,7 +8221,7 @@ msgid "Internal Header/Footer"
 msgstr "سرنویس/پانویس داخلی"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:59
 #, python-format
 msgid ""
 "Save this document to a .tgz file. This archive containt UTF-8 %s files and "
@@ -7918,6 +8263,14 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:2161
+#, python-format
+msgid ""
+"Invalid group_by specification: \"%s\".\n"
+"A group_by specification must be a list of valid fields."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
 msgstr "عربستان سعودی"
@@ -7943,7 +8296,7 @@ msgid "Event Logs"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_configuration.py:0
+#: code:addons/base/module/wizard/base_module_configuration.py:37
 #, python-format
 msgid "System Configuration done"
 msgstr ""
@@ -7990,9 +8343,16 @@ msgid "Low"
 msgstr "پایین"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:0
+#: code:addons/base/ir/ir_ui_menu.py:305
 #, python-format
 msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
+#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
+#: view:publisher_warranty.contract.wizard:0
+msgid "Register a Contract"
 msgstr ""
 
 #. module: base
@@ -8003,7 +8363,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:145
 #, python-format
 msgid "Please check your publisher warranty contract name and validity."
 msgstr ""
@@ -8157,7 +8517,7 @@ msgid "View Auto-Load"
 msgstr "نمایش بارگذاری خودکار"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:197
 #, python-format
 msgid "You cannot remove the field '%s' !"
 msgstr ""
@@ -8170,6 +8530,11 @@ msgid "Resource"
 msgstr "منبع"
 
 #. module: base
+#: field:ir.ui.menu,web_icon:0
+msgid "Web Icon File"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Persian / فارس"
 msgstr ""
@@ -8180,7 +8545,7 @@ msgid "View Ordering"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#: code:addons/base/module/wizard/base_module_upgrade.py:97
 #, python-format
 msgid "Unmet dependency !"
 msgstr ""
@@ -8190,6 +8555,14 @@ msgstr ""
 msgid ""
 "Supported file formats: *.csv (Comma-separated values) or *.po (GetText "
 "Portable Objects)"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:341
+#, python-format
+msgid ""
+"You can not delete this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
 msgstr ""
 
 #. module: base
@@ -8316,7 +8689,7 @@ msgid "Azerbaijan"
 msgstr "آذربایجان"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid "Warning"
 msgstr "هشدار"
@@ -8343,9 +8716,9 @@ msgid "Czech / Čeština"
 msgstr "چک / Čeština"
 
 #. module: base
-#: model:res.country,name:base.wf
-msgid "Wallis and Futuna Islands"
-msgstr "جزایر والیس و فوتونا"
+#: selection:ir.model.fields,select_level:0
+msgid "Advanced Search"
+msgstr "جستجوی پیشرفته"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_wizard_screen
@@ -8648,7 +9021,7 @@ msgid "Account Owner"
 msgstr "دارنده حساب"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:240
 #, python-format
 msgid "Company Switch Warning"
 msgstr ""
@@ -8708,7 +9081,7 @@ msgid "Workflow Instances"
 msgstr "وهله‌های کارگردش"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:261
 #, python-format
 msgid "Partners: "
 msgstr "همکاران: "
@@ -9102,10 +9475,6 @@ msgstr "روسی / русский язык"
 
 #~ msgid "Import language"
 #~ msgstr "درونش زبان"
-
-#, python-format
-#~ msgid "Recursivity Detected."
-#~ msgstr "تودرتویی پیدا شده"
 
 #~ msgid "terp-account"
 #~ msgstr "terp-account"
@@ -10024,6 +10393,10 @@ msgstr "روسی / русский язык"
 #~ msgstr "زبانی را برای برپاسازی برگزینید:"
 
 #, python-format
+#~ msgid "You can not create this kind of document! (%s)"
+#~ msgstr "شما نمی‌توانید این نوع از سند را پدید آورید! (%s)"
+
+#, python-format
 #~ msgid "Password mismatch !"
 #~ msgstr "گذرواژه جور نیست!"
 
@@ -10045,6 +10418,10 @@ msgstr "روسی / русский язык"
 #, python-format
 #~ msgid "Model %s Does not Exist !"
 #~ msgstr "مدل %s پیدا نشد!"
+
+#, python-format
+#~ msgid "You can not read this document! (%s)"
+#~ msgstr "شما نمی‌توانید این سند را بخوانید! (%s)"
 
 #~ msgid ""
 #~ "Would your payment have been carried out after this mail was sent, please "
@@ -10077,8 +10454,16 @@ msgstr "روسی / русский язык"
 #~ msgid "Enter at least one field !"
 #~ msgstr "دست‌کم یک فیلد را وارد کنید!"
 
+#, python-format
+#~ msgid "You can not write in this document! (%s)"
+#~ msgstr "شما نمی‌توانید در این سند بنویسید! (%s)"
+
 #~ msgid "My Closed Requests"
 #~ msgstr "درخواست‌های بسته من"
+
+#, python-format
+#~ msgid "You can not delete this document! (%s)"
+#~ msgstr "نمی‌توانید این سند را بردارید! (%s)"
 
 #~ msgid "Bank List"
 #~ msgstr "فهرست بانک"
