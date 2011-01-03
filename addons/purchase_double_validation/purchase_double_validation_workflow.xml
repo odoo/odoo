@@ -1,46 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-         <record id="act_waiting" model="workflow.activity">
-            <field name="wkf_id" ref="purchase.purchase_order"/>
-            <field name="name">waiting</field>
-            <field name="kind">function</field>
-            <field name="action">write({'state':'wait'})</field>
-        </record>
 
-         <record id="act_router1" model="workflow.activity">
-            <field name="wkf_id" ref="purchase.purchase_order"/>
-            <field name="name">router1</field>
-            <field name="split_mode">OR</field>
-            <field name="kind">dummy</field>
-         </record>
-
-        <record id="trans_draft_router1" model="workflow.transition">
-            <field name="act_from" ref="purchase.act_draft"/>
-            <field name="act_to" ref="act_router1"/>
-            <field name="condition">True</field>
-            <field name="signal">draft_router1</field>
-        </record>
-
-        <record id="trans_router1_waiting" model="workflow.transition">
-            <field name="act_from" ref="act_router1"/>
-            <field name="act_to" ref="act_waiting"/>
-            <field name="condition">True</field>
-        </record>
-
-
-         <record id="purchase.trans_draft_confirmed" model="workflow.transition">
-            <field name="act_from" ref="act_router1"/>
-            <field name="act_to" ref="purchase.act_confirmed"/>
-            <field name="condition">True</field>
-            <field name="signal">waiting_confirmed</field>
+         <record id="purchase.trans_confirmed_router" model="workflow.transition">
+            <field name="condition">amount_untaxed &gt;= 1000</field>
+            <field name="signal">purchase_approve</field>
+            <field name="group_id" ref="purchase.group_purchase_manager"/>
         </record>
 
         <record id="trans_waiting_confirmed" model="workflow.transition">
-            <field name="act_from" ref="act_waiting"/>
-            <field name="act_to" ref="purchase.act_confirmed"/>
-            <field name="condition">True</field>
-            <field name="signal">waiting_confirmed</field>
+            <field name="act_from" ref="purchase.act_confirmed"/>
+            <field name="act_to" ref="purchase.act_router"/>
+            <field name="condition">amount_untaxed &lt; 1000</field>
         </record>
 
     </data>

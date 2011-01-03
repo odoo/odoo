@@ -281,7 +281,7 @@ class hr_evaluation_interview(osv.osv):
     _columns = {
         'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
         'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
-        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluation Type'),
+        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluation Form'),
     }
     _defaults = {
         'is_evaluation': True,

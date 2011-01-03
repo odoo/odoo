@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-09 10:21+0000\n"
+"PO-Revision-Date: 2010-12-31 00:02+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:00+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:23+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -26,13 +26,14 @@ msgstr "Verfolge Warenversand"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_upload
 msgid "Stock ups upload"
-msgstr ""
+msgstr "Aktualisierung Lagerbestand"
 
 #. module: stock
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Variation Account is not specified for Product Category: %s"
 msgstr ""
+"Bestandsveränderungskonto ist nicht hinterlegt bei der Produktkategorie: %s"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -183,7 +184,7 @@ msgstr ""
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Missing partial picking data for move #%s"
-msgstr ""
+msgstr "Fehlender Teillieferauftrag für die Lieferung #%s"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_move
@@ -211,7 +212,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Nicht abzurechnen"
 
 #. module: stock
 #: help:stock.tracking,serial:0
@@ -275,7 +276,7 @@ msgstr ""
 #. module: stock
 #: constraint:product.category:0
 msgid "Error ! You can not create recursive categories."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Kategorien definieren."
 
 #. module: stock
 #: help:stock.fill.inventory,set_stock_zero:0
@@ -664,6 +665,7 @@ msgstr "Pakete"
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
+"Sie versuchen eine Losnummer ohne Bezug zu diesem Produkt zuzuweisen."
 
 #. module: stock
 #: view:res.partner:0
@@ -682,6 +684,10 @@ msgid ""
 "customers. You can process the deliveries directly from this list, line by "
 "or line or through the Delivery Orders menu."
 msgstr ""
+"Das Menü 'Produktabgänge' zeigt alle an Kunden auszuliefernden "
+"Produktpositionen. Sie können die Auslieferung entweder direkt über diese "
+"Liste positionsweise ausführen oder über das Menü Warenversand gesamte "
+"Lieferaufträge bearbeiten."
 
 #. module: stock
 #: field:product.template,property_stock_procurement:0
@@ -815,7 +821,7 @@ msgstr "Zwischenlager für  Lieferungen zwischen internen Unternehmen"
 #: model:ir.model,name:stock.model_stock_change_product_qty
 #: view:stock.change.product.qty:0
 msgid "Change Product Quantity"
-msgstr ""
+msgstr "Ändere Produktanzahl"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -964,7 +970,7 @@ msgstr "Hauptlager Li"
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Delivery Information"
-msgstr ""
+msgstr "Lieferinformationen"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:0
@@ -975,7 +981,7 @@ msgstr "Inventur wurde abgeschlossen"
 #. module: stock
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fehler: Falscher EAN code"
 
 #. module: stock
 #: code:addons/stock/product.py:0
@@ -983,6 +989,8 @@ msgstr ""
 msgid ""
 "There is no stock output account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"Es wurde noch kein Konto für den Warenversand bei dem folgenden Produkt "
+"definiert:  \"%s\" (id: %d)"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -1224,6 +1232,11 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"Die Systematik der Lagerjournale ermöglicht eine Zuweisung von "
+"Lieferaufträgen zu bestimmten Lagerjournalen in Abhängigkeit des\r\n"
+"jeweiligen Vorgangs, der im Lager durchzuführen ist. Als Beispiele können "
+"genannt werden: Wareneingangskontrolle, Kommissionierung, Verpackung, "
+"Versand etc."
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1242,6 +1255,9 @@ msgid ""
 "Can not create Journal Entry, Output Account defined on this product and "
 "Variant account on category of this product are same."
 msgstr ""
+"Es kann keine Buchung im Journal vorgenommen werden, da das Konto für den "
+"Warenversand und das Bestandsveränderungskonto beim Produkt bzw. der "
+"Produktkategorie identisch sind."
 
 #. module: stock
 #: code:addons/stock/stock.py:0
@@ -1374,7 +1390,7 @@ msgstr "Generic IT Suppliers"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Picking List:"
-msgstr ""
+msgstr "Packauftrag:"
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1417,13 +1433,13 @@ msgstr "Fehlerhafte Aktion"
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Receive Information"
-msgstr ""
+msgstr "Information Wareneingang"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview
 #: report:lot.stock.overview:0
 msgid "Location Inventory Overview"
-msgstr ""
+msgstr "Übersicht Lagerbestände"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement
@@ -1449,7 +1465,7 @@ msgstr "Auswertung Rückverfolgung"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:0
 #, python-format
 msgid "No Invoices were created"
-msgstr ""
+msgstr "Es wurden keine Rechnungen erzeugt"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_company
@@ -1460,7 +1476,7 @@ msgstr "OpenERP S.A."
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Receive"
-msgstr ""
+msgstr "Wareneingang"
 
 #. module: stock
 #: help:stock.incoterms,active:0
@@ -1695,7 +1711,7 @@ msgstr "Datum"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Extended Filters..."
-msgstr "Filter auf Datenfelder..."
+msgstr "Erweiterter Filter..."
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
@@ -1818,6 +1834,9 @@ msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
 "Variant account on category of this product are same."
 msgstr ""
+"Es kann keine Buchung im Journal vorgenommen werden, da das Konto für den "
+"Wareneingang und das Bestandsveränderungskonto beim Produkt bzw. der "
+"Produktkategorie identisch sind."
 
 #. module: stock
 #: view:stock.change.standard.price:0
@@ -1872,6 +1891,10 @@ msgid ""
 "moves. Use this report when you want to analyse the different routes taken "
 "by your products and inventory management performance."
 msgstr ""
+"Die Auswertung Statistik Lagerbuchungen ermöglicht eine einfache Prüfung und "
+"Analyse von Lagerbuchungen. Benutzen Sie diese Statistik, wenn Sie "
+"verschiedene Routen beim Warenfluss Ihrer Produkte auswerten möchten oder "
+"die Produktivität in Ihrem Lager analysieren wollen."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -2088,7 +2111,7 @@ msgstr "Lagerbuchhaltung"
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "Partial Delivery"
-msgstr ""
+msgstr "Lieferung von Teilmenge"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2128,7 +2151,7 @@ msgstr "Letztes Inventurdatum"
 #: view:stock.picking:0
 #: view:stock.production.lot:0
 msgid "Group By..."
-msgstr "Gruppiert je..."
+msgstr "Gruppierung..."
 
 #. module: stock
 #: view:stock.location:0
@@ -2369,6 +2392,8 @@ msgstr "Revisionen"
 #: view:stock.picking:0
 msgid "This operation will cancel the shipment. Do you want to continue?"
 msgstr ""
+"Dieser Vorgang wird die Auslieferung abbrechen. Möchten Sie wirklich "
+"fortfahren?"
 
 #. module: stock
 #: help:product.product,valuation:0
@@ -2520,6 +2545,11 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
+"Anzeige der zuletzt durchgeführten Produktinventuren mit verschiedenen "
+"Möglichkeiten zur Filterung, Sortierung und Gruppierung. Wenn Sie permant "
+"über das Geschäftsjahr Inventuren für Produkte vornehmen, werden Sie diesen "
+"Bericht zwingend benötigen, um festzustellen, welche Produkte während des "
+"Jahres bereits gezählt wurden."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
@@ -2652,12 +2682,16 @@ msgstr "Auftragsrückstand"
 msgid ""
 "There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"Es wurde noch kein Konto für den Wareneingang für folgendes Produkt "
+"definiert: \"%s\" (id: %d)"
 
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Can not consume a move with negative or zero quantity !"
 msgstr ""
+"Es kann keine Lieferung mit einer Menge von Null oder einer negativen Menge "
+"vorgenommen werden."
 
 #. module: stock
 #: field:stock.location,stock_real:0
@@ -2674,6 +2708,8 @@ msgstr "Auffüllen Bestände"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Fehler: Die Standard Mengeneinheit sowie die Mengeneinheit für die "
+"Beschaffung muss in derselben Kategorie sein."
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -2719,6 +2755,8 @@ msgstr "Menge (UOS)"
 msgid ""
 "You are moving %.2f %s products but only %.2f %s available in this lot."
 msgstr ""
+"Sie buchen eine Lieferung von %.2f %s Produkten, es sind aber nur %.2f %s "
+"für diese Losnummer vorhanden."
 
 #. module: stock
 #: view:stock.move:0
@@ -3001,7 +3039,7 @@ msgstr "Verbrauche Produkte"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Insufficient Stock in Lot !"
-msgstr ""
+msgstr "Fehlerhafter Bestand bei Fertigungslos !"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -3038,7 +3076,7 @@ msgstr "Gesamt Wert"
 #. module: stock
 #: field:stock.move.memory,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "Assistent"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -3087,7 +3125,7 @@ msgstr "Mengeneinheit"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Total"
-msgstr ""
+msgstr "Summe"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_intermediatelocation0
@@ -3200,7 +3238,7 @@ msgstr "Begründung"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Delivery Order:"
-msgstr ""
+msgstr "Lieferauftrag"
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3368,11 +3406,12 @@ msgstr "Bestände zusammenführen"
 #: help:stock.change.product.qty,new_quantity:0
 msgid "This quantity is expressed in the Default UoM of the product."
 msgstr ""
+"Die Anzahl wird in der Standard Mengeneinheit für das Produkt angezeigt."
 
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Reception:"
-msgstr ""
+msgstr "Zugang:"
 
 #. module: stock
 #: help:stock.location,scrap_location:0
@@ -3565,6 +3604,11 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"Das Menü Wareneingang beinhaltet eine Liste aller anstehenden Lieferaufträge "
+"bei Lieferanten. Ein Lieferauftrag für den Wareneingang beinhaltet eine "
+"Liste mit Produkten, die für den Wareneingang bezüglich noch offener "
+"Beschaffungsaufträge erwartet werden. Sie können Auftragsbezogen für den "
+"Warenzugang Teillieferungen oder Komplettlieferungen buchen."
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -3574,7 +3618,7 @@ msgstr "Automatisch Genehmigen"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Weight"
-msgstr ""
+msgstr "Gewicht"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
@@ -3595,16 +3639,18 @@ msgstr "Automatische Bewegung"
 #: help:stock.production.lot,name:0
 msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
 msgstr ""
+"Einheitliche Fertigungsseriennummer, die gemäß folgender Logik angezeigt "
+"wird: PREFIX/SERIAL [INT_REF]"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Return Products"
-msgstr ""
+msgstr "Retourelieferung für Produkte"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Bestandsbuchung durchführen"
 
 #. module: stock
 #: help:stock.move,price_currency_id:0
@@ -3695,7 +3741,7 @@ msgstr ""
 #. module: stock
 #: view:board.board:0
 msgid "Outgoing Products Delay"
-msgstr ""
+msgstr "Verzögerung Warenversand"
 
 #. module: stock
 #: field:stock.move.split.lines,use_exist:0
@@ -3820,7 +3866,7 @@ msgstr "XML Datei"
 #. module: stock
 #: view:stock.change.product.qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Wähle Anzahl"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:0
@@ -3874,6 +3920,8 @@ msgid ""
 "Total quantity after split exceeds the quantity to split for this product: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Die gesamte Anzahl kann für dieses Produkt in verschiedene Anteile "
+"aufgeteilt werden: \"%s\" (id:%d)"
 
 #. module: stock
 #: view:stock.move:0
@@ -3909,7 +3957,7 @@ msgstr ""
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Sie müssen zwingend eine Losnummer für dieses Produkt angeben"
 
 #. module: stock
 #: view:stock.move:0
@@ -3965,7 +4013,7 @@ msgstr "Mai"
 #: code:addons/stock/wizard/stock_partial_move.py:0
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Ausliefern"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0

@@ -142,7 +142,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <page string="Notes" position="before">
-                    <page string="Evaluation">
+                    <page string="Evaluation" groups="base.group_hr_user">
                         <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
                         <field name="evaluation_date"/>
                     </page>
@@ -170,7 +170,26 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Appraisal">
-                            <field name="survey_request_ids" context="{'phase_id': phase_id}" nolabel="1" colspan="4" widget="one2many"/>
+                            <field name="survey_request_ids" context="{'phase_id': phase_id}" nolabel="1" colspan="4" widget="one2many">
+                                <form string="Interview Evaluation">
+                                    <group col="4" colspan="4">
+                                        <field name="survey_id"/>
+                                        <group col="2" colspan="2">
+                                            <button name="%(survey.action_view_survey_question_message)d" string="Interview Question" type="action" states="waiting_answer,done,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
+                                            <button name="%(survey.survey_browse_response)d" string="Print Interview" type="action" states="done" icon="gtk-print" context="{'survey_id': survey_id, 'response_id' : [response], 'response_no':0,}" attrs="{'readonly':[('response','=',False)]}" />
+                                        </group>
+                                        <field name="date_deadline"/>
+                                        <field name="response" readonly="1"/>
+                                        <field name="user_to_review_id"/>
+                                        <field name="user_id" string="Interviewer"/>
+                                    </group>
+                                    <newline/>
+                                    <separator string="State" colspan="4"/>
+                                    <group colspan="4" col="6">
+                                         <field name="state"/>
+                                    </group>
+                                </form>
+                            </field>
                         </page>
                         <page string="Internal Notes">
                             <field name="note_action" colspan="4" nolabel="1"

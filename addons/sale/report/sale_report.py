@@ -89,12 +89,15 @@ class sale_report(osv.osv):
                 sale_order s,
                     (
                     select l.id as id,
-                         l.product_id as product_id,
-                         u.name as uom_name,
-                         sum(l.product_uom_qty * u.factor) as product_uom_qty,
-                         sum(l.product_uom_qty*l.price_unit) as price_total,
-                         (sum(l.product_uom_qty*l.price_unit)/sum(nullif(l.product_uom_qty * u.factor,0))*count(l.product_id))::decimal(16,2) as price_average,
-                         pt.categ_id, l.order_id
+                        l.product_id as product_id,
+                        (case when u.uom_type not in ('reference') then
+                            (select name from product_uom where uom_type='reference' and category_id=u.category_id)
+                        else
+                            u.name
+                        end) as uom_name,
+                        sum(l.product_uom_qty * u.factor) as product_uom_qty,
+                        sum(l.product_uom_qty * l.price_unit) as price_total,
+                        pt.categ_id, l.order_id
                     from
                      sale_order_line l ,product_uom u, product_product p, product_template pt
                      where u.id = l.product_uom
@@ -108,7 +111,6 @@ class sale_report(osv.osv):
                     el.product_uom_qty,
                     el.price_total,
                     el.categ_id,
-                    el.price_average,
                     el.order_id,
                     s.date_order,
                     s.date_confirm,
