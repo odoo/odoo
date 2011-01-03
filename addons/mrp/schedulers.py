@@ -185,7 +185,10 @@ class mrp_procurement(osv.osv):
         if automatic:
             self.create_automatic_op(cr, uid, context=context)
         while ids:
-            ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
+            ids = orderpoint_obj.search(cr, uid, [
+                ('product_id.active', '=', True),
+                ('product_id.purchase_ok', '=', True),
+            ], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids):
                 if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
                     continue
