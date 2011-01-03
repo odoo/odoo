@@ -631,7 +631,6 @@
                             <group col="9" colspan="4">
                                 <field name="state"/>
                                 <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
-                                <button name="action_compute" states="draft" string="Compute Data" type="object" icon="terp-stock_format-scientific"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
                                 <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
@@ -678,6 +677,10 @@
                                </field>
                         </page>
                         <page string="Work Orders" groups="base.group_extended">
+                            <button name="action_compute" states="draft"
+                                string="Compute Data" type="object"
+                                icon="terp-stock_format-scientific"
+                                colspan="4" />
                             <field colspan="4" name="workcenter_lines" nolabel="1">
                                 <form string="Production Work Centers">
                                     <field colspan="4" name="name"/>
@@ -696,6 +699,10 @@
                             </field>
                         </page>
                         <page string="Scheduled Products">
+                            <button name="action_compute" states="draft"
+                                string="Compute Data" type="object"
+                                icon="terp-stock_format-scientific"
+                                colspan="4" />
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">
@@ -719,15 +726,15 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group col='9' colspan='4'>
-                   	   <filter icon="terp-gtk-media-pause" string="Pending" name="pending"
+                       <filter icon="terp-gtk-media-pause" string="Pending" name="pending"
                            domain="[('state','=','confirmed')]"
                            help="Manufacturing Orders which are waiting for raw materials."/>
-					   <filter icon="terp-check" string="In Production" name="inprogress"
-                           domain="[('state','=','in_production')]"
-                           help="Manufacturing Orders which are currently in production."/>
                        <filter icon="terp-camera_test" string="Ready" name="ready"
                            domain="[('state','=','ready')]"
                            help="Manufacturing Orders which are ready to start production."/>
+                       <filter icon="terp-check" string="In Production" name="inprogress"
+                           domain="[('state','=','in_production')]"
+                           help="Manufacturing Orders which are currently in production."/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"

@@ -25,13 +25,12 @@ from osv import fields, osv
 class purchase_double_validation_installer(osv.osv_memory):
     _name = 'purchase.double.validation.installer'
     _inherit = 'res.config'
-
     _columns = {
-        'limit_amount': fields.integer('Limit Amount', required=True, help="Minimum amount after which validation of purchase is required."),
+        'limit_amount': fields.integer('Maximum Purchase Amount', required=True, help="Maximum amount after which validation of purchase is required."),
     }
 
     _defaults = {
-        'limit_amount': 1000,
+        'limit_amount': 5000,
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -41,12 +40,12 @@ class purchase_double_validation_installer(osv.osv_memory):
         amt = data[0]['limit_amount']
         data_pool = self.pool.get('ir.model.data')
         transition_obj = self.pool.get('workflow.transition')
-        waiting = data_pool._get_id(cr, uid, 'purchase_double_validation', 'trans_router1_waiting')
+        waiting = data_pool._get_id(cr, uid, 'purchase', 'trans_confirmed_router')
         waiting_id = data_pool.browse(cr, uid, waiting, context=context).res_id
-        confirm = data_pool._get_id(cr, uid, 'purchase', 'trans_draft_confirmed')
+        confirm = data_pool._get_id(cr, uid, 'purchase_double_validation', 'trans_waiting_confirmed')
         confirm_id = data_pool.browse(cr, uid, confirm, context=context).res_id
-        transition_obj.write(cr, uid, waiting_id, {'condition': 'amount_total>%s' % (amt), 'signal': False})
-        transition_obj.write(cr, uid, confirm_id, {'condition': 'amount_total<=%s' % (amt), 'signal': False})
+        transition_obj.write(cr, uid, waiting_id, {'condition': 'amount_total>=%s' % (amt)})
+        transition_obj.write(cr, uid, confirm_id, {'condition': 'amount_total<%s' % (amt)})
         return {}
 
 purchase_double_validation_installer()

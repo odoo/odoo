@@ -950,11 +950,11 @@
                                   <field groups="base.group_extended" colspan="4" name="child_ids">
                                       <tree string="Account Tax">
                                           <field name="sequence"/>
-					                      <field name="name"/>
-					                      <field name="price_include" groups="base.group_extended"/>
-					                      <field name="description"/>
-					                 </tree>
-					             </field>
+                                          <field name="name"/>
+                                          <field name="price_include" groups="base.group_extended"/>
+                                          <field name="description"/>
+                                     </tree>
+                                 </field>
                           </group>
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
@@ -963,8 +963,11 @@
                             <field name="domain"/>
                             <separator colspan="4" string="Applicable Code (if type=code)"/>
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
-                            <separator colspan="4" string="Compute Code (if type=code)"/>
-                            <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                            <separator colspan="2" string="Compute Code"/>
+                            <separator colspan="2" string="Reverse Compute Code"/>
+                            <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                            <field colspan="2" name="python_compute_inv" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
+
                         </page>
                     </notebook>
                 </form>

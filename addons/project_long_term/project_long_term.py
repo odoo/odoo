@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from tools.translate import _
 from osv import fields, osv
@@ -246,8 +246,10 @@ class project_phase(osv.osv):
             if not start_date:
                 start_date = phase.project_id.date_start or phase.date_start or datetime.now().strftime("%Y-%m-%d")
                 start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d") 
-            phase_resource_obj = resource_pool.generate_resources(cr, uid, [phase.responsible_id.id], calendar_id, context=context)
+            phase_resource_obj = self.generate_resources(cr, uid, [phase.id], context=context)[phase.id]
             avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
+            if not phase_resource_obj: #TOCHECK: why need this ?
+                avg_days = avg_days - 1
             duration = str(avg_days) + 'd'
             # Create a new project for each phase
             def Project():
@@ -295,10 +297,10 @@ class project_phase(osv.osv):
                                         'date_end': end_date.strftime('%Y-%m-%d')
                                     }, context=ctx)
             # Recursive call till all the next phases scheduled
-            for phase in phase.next_phase_ids:
-               if phase.state in ['draft', 'open', 'pending']:
-                   id_cal = phase.project_id.resource_calendar_id and phase.project_id.resource_calendar_id.id or False
-                   self.generate_schedule(cr, uid, [phase.id], date_start, id_cal, context=context)
+            for next_phase in phase.next_phase_ids:
+               if next_phase.state in ['draft', 'open', 'pending']:
+                   id_cal = next_phase.project_id.resource_calendar_id and next_phase.project_id.resource_calendar_id.id or False
+                   self.generate_schedule(cr, uid, [next_phase.id], date_start+timedelta(days=1), id_cal, context=context)
                else:
                    continue
         return True
@@ -319,7 +321,7 @@ class project_phase(osv.osv):
                 start_date = datetime.now().strftime("%Y-%m-%d")
             resources = resources_list.get(phase.id, [])
             calendar_id = phase.project_id.resource_calendar_id.id
-            task_ids = map(lambda x : x.id, (filter(lambda x : x.state in ['open', 'draft', 'pending'] , phase.task_ids)))
+            task_ids = map(lambda x : x.id, (filter(lambda x : x.state in ['draft'] , phase.task_ids))) #reassign only task not yet started
             if task_ids:
                 task_pool.generate_schedule(cr, uid, task_ids, resources, calendar_id, start_date, context=context)
 

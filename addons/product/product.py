@@ -789,21 +789,3 @@ class pricelist_partnerinfo(osv.osv):
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-class res_users(osv.osv):
-    _inherit = 'res.users'
-    def _get_group(self, cr, uid, context=None):
-        result = super(res_users, self)._get_group(cr, uid, context=context)
-        dataobj = self.pool.get('ir.model.data')
-        try:
-            dummy,group_id = dataobj.get_object_reference(cr, 1, 'product', 'group_product_manager')
-            result.append(group_id)
-        except ValueError:
-            # If these groups does not exists anymore
-            pass
-        return result
-
-    _defaults = {
-        'groups_id': _get_group,
-    }
-res_users()
