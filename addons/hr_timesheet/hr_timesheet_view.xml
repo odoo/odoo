@@ -106,7 +106,7 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <page string="Categories" position="after">
-                    <page string="Timesheets">
+                    <page string="Timesheets" groups="base.group_hr_user">
                         <field name="product_id" domain="[('type','=','service')]"/>
                         <field name="journal_id" widget="selection"/>
                     </page>

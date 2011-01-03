@@ -53,7 +53,7 @@ def check_ean(eancode):
             evensum += int(finalean[i])
     total=(oddsum * 3) + evensum
 
-    check = int(10 - math.ceil(total % 10.0))
+    check = int(10 - math.ceil(total % 10.0)) %10
 
     if check != int(eancode[-1]):
         return False
@@ -524,9 +524,9 @@ class product_product(osv.osv):
             if sellers:
                 for s in sellers:
                     mydict = {
-                              'id': product.id, 
-                              'name': s.product_name or product.name, 
-                              'default_code': s.product_code or product.default_code, 
+                              'id': product.id,
+                              'name': s.product_name or product.name,
+                              'default_code': s.product_code or product.default_code,
                               'variants': product.variants
                               }
                     result.append(_name_get(mydict))
@@ -724,7 +724,8 @@ class product_supplierinfo(osv.osv):
         'qty': lambda *a: 0.0,
         'sequence': lambda *a: 1,
         'delay': lambda *a: 1,
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c)
+        'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'product.supplierinfo', context=c),
+        'product_uom': _get_uom_id,
     }
     def _check_uom(self, cr, uid, ids, context=None):
         for supplier_info in self.browse(cr, uid, ids, context=context):
@@ -788,21 +789,3 @@ class pricelist_partnerinfo(osv.osv):
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
-class res_users(osv.osv):
-    _inherit = 'res.users'
-    def _get_group(self, cr, uid, context=None):
-        result = super(res_users, self)._get_group(cr, uid, context=context)
-        dataobj = self.pool.get('ir.model.data')
-        try:
-            dummy,group_id = dataobj.get_object_reference(cr, 1, 'product', 'group_product_manager')
-            result.append(group_id)
-        except ValueError:
-            # If these groups does not exists anymore
-            pass
-        return result
-
-    _defaults = {
-        'groups_id': _get_group,
-    }
-res_users()

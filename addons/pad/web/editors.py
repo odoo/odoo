@@ -14,7 +14,7 @@ class SidebarTemplateEditor(openobject.templating.TemplateEditor):
                 output.index(self.ADD_ATTACHMENT_BUTTON)) + 1
         output = output[:form_opener_insertion] + \
                  '''<a href="#" id="add-pad" class="button-a
-                 attachment-button">${_(" Add pad")}</a>\n''' + \
+                 attachment-button">${_("Write")}</a>\n''' + \
                  output[form_opener_insertion:]
         return output
 
