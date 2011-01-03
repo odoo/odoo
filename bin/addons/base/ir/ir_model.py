@@ -185,6 +185,26 @@ class ir_model_fields(osv.osv):
         'selectable': lambda *a: 1,
     }
     _order = "name"
+
+    def _check_selection(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context=context)
+        try:
+            temp = eval(obj.selection)
+        except Exception:
+            raise except_orm(_('Error'), _("Given key and value in not allowed!"))
+
+        if (not isinstance(temp,list)) or (isinstance(temp,list) and not temp):
+            return False
+        elif temp:
+            for tpl in temp:
+                 if not isinstance(tpl,tuple) or (isinstance(tpl,tuple) and len(tpl) != 2):
+                    return False
+        return True
+
+    _constraints = [
+        (_check_selection, 'Wrong format specified for a field of type selection, it should be [(key,value)]', ['selection'])
+    ]
+
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
         return _('Size of the field can never be less than 1 !')
 
