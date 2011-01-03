@@ -46,7 +46,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
-            <field name="help">If you have more than one shops reselling your company products, you can create and manage them from here. Whenever you will record a new quotation or sale order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sale.</field>
+            <field name="help">If you have more than one shop reselling your company products, you can create and manage that from here. Whenever you will record a new quotation or sales order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sales.</field>
         </record>
 
         <menuitem action="action_shop_form" id="menu_action_shop_form"
@@ -81,7 +81,7 @@
             <field name="type">tree</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" colors="grey:state=='done'">
+                <tree string="Sales Orders" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
                     <field name="name"/>
                     <field name="date_order"/>
                     <field name="client_order_ref" groups="base.group_extended"/>
@@ -293,7 +293,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="context">{"search_default_user_id":uid}</field>
-            <field name="help">Sales Orders helps you manage quotations and orders done with your customers. OpenERP suggests that you to start by creating a quotation. Once the order is confirmed, the quotation is converted into a Sale Order. OpenERP can handle several types of products so that a sales order can trigger tasks, delivery orders, manufacturing orders, purchases and so on. Based on the configuration of the sale order, a draft invoice will be generated so that you just have to confirm it when you want to bill your customer.</field>
+            <field name="help">Sales Orders help you manage quotations and orders from your customers. OpenERP suggests that you start by creating a quotation. Once it is confirmed, the quotation will be converted into a Sales Order. OpenERP can handle several types of products so that a sales order may trigger tasks, delivery orders, manufacturing orders, purchases and so on. Based on the configuration of the sales order, a draft invoice will be generated so that you just have to confirm it when you want to bill your customer.</field>
         </record>
         <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
@@ -497,7 +497,7 @@
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
-            <field name="help">Here is a list of each sales order line to be invoiced. This view allows you to invoice sales orders partially, by lines of sales order. You don't need this list if you invoice based on the delivery orders or if you invoice sales totally.</field>
+            <field name="help">Here is a list of each sales order line to be invoiced. You can invoice sales orders partially, by lines of sales order. You do not need this list if you invoice from the delivery orders or if you invoice sales totally.</field>
         </record>
 
         <record id="action_order_line_tree3" model="ir.actions.act_window">
@@ -514,6 +514,7 @@
         context="{'search_default_partner_id': [active_id]}"
         id="act_res_partner_2_sale_order"
         name="Sales"
+        groups="base.group_sale_salesman"
         res_model="sale.order"
         src_model="res.partner"/>
 
@@ -523,7 +524,7 @@
         name="Product sales"
         res_model="sale.order.line"
         src_model="product.product"
-        groups="base.group_extended"/>
+        groups="base.group_sale_salesman"/>
 
         <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"
             groups="base.group_extended"/>

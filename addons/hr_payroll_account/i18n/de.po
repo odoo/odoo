@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-11-09 08:04+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-29 10:20+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:48+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_payroll_account
@@ -95,6 +96,7 @@ msgstr "Bestätigen Sie alle Spesenrechnungen zwecks Erstattung"
 #, python-format
 msgid "Please defined partner in bank account for %s !"
 msgstr ""
+"Bitte definieren Sie den Geschäftspartner für die Bankkontodaten von %s !"
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -105,7 +107,22 @@ msgstr "Finanzen Informationen"
 #: code:addons/hr_payroll_account/hr_payroll_account.py:0
 #, python-format
 msgid "Please defined bank account for %s !"
+msgstr "Bitte definieren Sie ein Bankkonto für %s !"
+
+#. module: hr_payroll_account
+#: model:ir.module.module,description:hr_payroll_account.module_meta_information
+msgid ""
+"Generic Payroll system Integrated with Accountings\n"
+"    * Expanse Encoding\n"
+"    * Payment Encoding\n"
+"    * Comany Contribution Managemet\n"
+"    "
 msgstr ""
+"Basis Personalabrechnung mit integrierter Personalbuchhaltung.\n"
+"    * Aufwandserfassung Arbeitszeiten\n"
+"    * Lohn- und Gehaltszahlung an Mitarbeiter\n"
+"    * Verwaltung von Arbeitsgeberanteilen.\n"
+"    "
 
 #. module: hr_payroll_account
 #: model:ir.module.module,shortdesc:hr_payroll_account.module_meta_information
@@ -138,6 +155,7 @@ msgstr "Aufwandskonto, welches gebucht wird bei Vergütungsabrechnung"
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
+"Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
 
 #. module: hr_payroll_account
 #: view:hr.payslip:0
@@ -145,6 +163,7 @@ msgid "Account Lines"
 msgstr "Buchungspositionen"
 
 #. module: hr_payroll_account
+#: field:hr.contibution.register,account_id:0
 #: field:hr.holidays.status,account_id:0
 #: field:hr.payroll.advice,account_id:0
 msgid "Account"
@@ -161,20 +180,6 @@ msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: hr_payroll_account
-#: model:ir.module.module,description:hr_payroll_account.module_meta_information
-msgid ""
-"Generic Payroll system Integrated with Accountings\n"
-"    * Expense Encoding\n"
-"    * Payment Encoding\n"
-"    * Company Contribution Management\n"
-"    "
-msgstr ""
-"Basis Integration Personalbuchhaltung\n"
-"   * Buchung von Mitarbeitervergütungen   * Buchung von Auszahlungen an "
-"Mitarbeiter   * Buchung von Arbeitgeber- und Arbeitnehmeranteilen\n"
-"    "
-
-#. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payslip_line
 msgid "Payslip Line"
 msgstr "Abrechnungsposition"
@@ -189,6 +194,8 @@ msgstr "Buchungsbelege"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Fehler ! Sie können keine Abteilung auswählen, für die dieser Mitarbeiter "
+"die Leitung ausübt."
 
 #. module: hr_payroll_account
 #: help:hr.payroll.register,period_id:0
@@ -259,7 +266,7 @@ msgstr "Abwesenheitstyp"
 #: code:addons/hr_payroll_account/hr_payroll_account.py:0
 #, python-format
 msgid "Fiscal Year is not defined for slip date %s"
-msgstr ""
+msgstr "Geschäftsjahr wurde für die Abrechnung %s nicht definiert"
 
 #. module: hr_payroll_account
 #: field:hr.contibution.register,analytic_account_id:0
@@ -300,7 +307,7 @@ msgstr "Jahr"
 #: code:addons/hr_payroll_account/hr_payroll_account.py:0
 #, python-format
 msgid "Period is not defined for slip date %s"
-msgstr ""
+msgstr "Die Periode wurde nicht für das Abrechnungsdatum %s definiert."
 
 #. module: hr_payroll_account
 #: view:hr.employee:0
@@ -518,6 +525,18 @@ msgstr "Integritätsfehler !"
 #~ msgstr ""
 #~ "Die Objektbezeichnung muss mit x_ beginnen und darf keine Sonderzeichen "
 #~ "beinhalten!"
+
+#~ msgid ""
+#~ "Generic Payroll system Integrated with Accountings\n"
+#~ "    * Expense Encoding\n"
+#~ "    * Payment Encoding\n"
+#~ "    * Company Contribution Management\n"
+#~ "    "
+#~ msgstr ""
+#~ "Basis Integration Personalbuchhaltung\n"
+#~ "   * Buchung von Mitarbeitervergütungen   * Buchung von Auszahlungen an "
+#~ "Mitarbeiter   * Buchung von Arbeitgeber- und Arbeitnehmeranteilen\n"
+#~ "    "
 
 #, python-format
 #~ msgid ""

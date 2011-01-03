@@ -61,6 +61,7 @@ class stock_journal(osv.osv):
     }
 
 stock_journal()
+
 #----------------------------------------------------------
 # Stock Location
 #----------------------------------------------------------
@@ -69,7 +70,7 @@ class stock_location(osv.osv):
     _description = "Location"
     _parent_name = "location_id"
     _parent_store = True
-    _parent_order = 'name'
+    _parent_order = 'posz,name'
     _order = 'parent_left'
 
     def name_get(self, cr, uid, ids, context=None):
@@ -474,7 +475,10 @@ class stock_tracking(osv.osv):
 
     def make_sscc(self, cr, uid, context=None):
         sequence = self.pool.get('ir.sequence').get(cr, uid, 'stock.lot.tracking')
-        return sequence + str(self.checksum(sequence))
+        try:
+            return sequence + str(self.checksum(sequence))
+        except Exception:
+            return sequence
 
     _columns = {
         'name': fields.char('Pack Reference', size=64, required=True, select=True),
@@ -973,7 +977,7 @@ class stock_picking(osv.osv):
             if picking.invoice_state != '2binvoiced':
                 continue
             payment_term_id = False
-            partner = (picking.purchase_id and picking.purchase_id.partner_id) or (picking.sale_id and picking.sale_id.partner_id) or (picking.address_id and picking.address_id.partner_id)
+            partner =  picking.address_id and picking.address_id.partner_id
             if not partner:
                 raise osv.except_osv(_('Error, no partner !'),
                     _('Please put a partner on the picking list if you want to generate invoice.'))
@@ -1212,6 +1216,8 @@ class stock_picking(osv.osv):
                                 {'price_unit': product_price,
                                  'price_currency_id': product_currency})
 
+                        if not move.returned_price:
+                            move_obj.write(cr, uid, [move.id], {'returned_price': move.price_unit})
 
             for move in too_few:
                 product_qty = move_product_qty[move.id]
@@ -1520,9 +1526,9 @@ class stock_move(osv.osv):
         'move_history_ids2': fields.many2many('stock.move', 'stock_move_history_ids', 'child_id', 'parent_id', 'Move History (parent moves)'),
         'picking_id': fields.many2one('stock.picking', 'Reference', select=True,states={'done': [('readonly', True)]}),
         'note': fields.text('Notes'),
-        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Confirmed'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
-                                  help='When the stock move is created it is in the \'Draft\' state.\n After that it is set to \'Confirmed\' state.\n If stock is available state is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
-                                  \nThe state is \'Waiting\' if the move is waiting for another one.'),
+        'state': fields.selection([('draft', 'Draft'), ('waiting', 'Waiting'), ('confirmed', 'Not Available'), ('assigned', 'Available'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', readonly=True, select=True,
+              help='When the stock move is created it is in the \'Draft\' state.\n After that, it is set to \'Not Available\' state if the scheduler did not find the products.\n When products are reserved it is set to \'Available\'.\n When the picking is done the state is \'Done\'.\
+              \nThe state is \'Waiting\' if the move is waiting for another one.'),
         'price_unit': fields.float('Unit Price', digits_compute= dp.get_precision('Account'), help="Technical field used to record the product cost set by the user during a picking confirmation (when average price costing method is used)"),
         'price_currency_id': fields.many2one('res.currency', 'Currency for average price', help="Technical field used to record the currency chosen by the user during a picking confirmation (when average price costing method is used)"),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True),
@@ -1532,6 +1538,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
+        'returned_price': fields.float('Returned product price', digits_compute= dp.get_precision('Sale Price')),
     }
     _constraints = [
         (_check_tracking,
@@ -1780,7 +1787,6 @@ class stock_move(osv.osv):
                                 'date': picking.date,
                             })
         return pick_id
-
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms stock move.
         @return: List of ids.
@@ -1830,10 +1836,9 @@ class stock_move(osv.osv):
                 if pickid:
                     wf_service.trg_validate(uid, 'stock.picking', pickid, 'button_confirm', cr)
             if new_moves:
-                new_moves += create_chained_picking(self, cr, uid, new_moves, context)
-            return new_moves
-        all_moves = create_chained_picking(self, cr, uid, moves, context)
-        return all_moves
+                create_chained_picking(self, cr, uid, new_moves, context)
+        create_chained_picking(self, cr, uid, moves, context)
+        return []
 
     def action_assign(self, cr, uid, ids, *args):
         """ Changes state to confirmed or waiting.
@@ -2073,6 +2078,7 @@ class stock_move(osv.osv):
 
         todo = []
         for move in self.browse(cr, uid, ids, context=context):
+            #print 'DONE MOVE', move.id, move.product_id.name, move.move_dest_id.id, move.state, move.move_dest_id and move.move_dest_id.state
             if move.state=="draft":
                 todo.append(move.id)
         if todo:
@@ -2086,9 +2092,10 @@ class stock_move(osv.osv):
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
-                self.write(cr, uid, [move.id], {'stock_move_history_ids': [(4, move.move_dest_id.id)]}, context=context)
+                self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
+                #cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
                 if move.move_dest_id.state in ('waiting', 'confirmed'):
-                    self.action_assign(cr, uid, [move.move_dest_id.id])
+                    self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
                     if move.move_dest_id.picking_id:
                         wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
                     if move.move_dest_id.auto_validate:
@@ -2274,18 +2281,7 @@ class stock_move(osv.osv):
                 self.write(cr, uid, [current_move], update_val)
         return res
 
-    def trigger_move_state(self, cr, uid, move, state, context=None):
-        if isinstance(move, (int, long)):
-            move = [move]
-        res = []
-        if state == 'confirm':
-            res = self.action_confirm(cr, uid, move, context=context)
-        if state == 'assigned':
-            self.check_assign(cr, uid, move, context=context)
-            self.force_assign(cr, uid, move, context=context)
-        return res
-
-    def action_consume(self, cr, uid, ids, quantity, location_id=False,  context=None):
+    def action_consume(self, cr, uid, ids, quantity, location_id=False, context=None):
         """ Consumed product with specific quatity from specific source location
         @param cr: the database cursor
         @param uid: the user id
@@ -2313,12 +2309,12 @@ class stock_move(osv.osv):
                 quantity = move.product_qty
 
             uos_qty = quantity / move_qty * move.product_uos_qty
-            state = (move.state in ('confirm', 'assign') and move.state) or 'confirm'
 
             if quantity_rest > 0:
                 default_val = {
                     'product_qty': quantity,
                     'product_uos_qty': uos_qty,
+                    'state': move.state,
                     'location_id': location_id or move.location_id.id,
                 }
                 if (not move.prodlot_id.id) and (move.product_id.track_production and location_id):
@@ -2351,8 +2347,6 @@ class stock_move(osv.osv):
                 for (id, name) in product_obj.name_get(cr, uid, [new_move.product_id.id]):
                     message = _('Product ') + " '" + name + "' "+ _("is consumed with") + " '" + str(new_move.product_qty) + "' "+ _("quantity.")
                     self.log(cr, uid, new_move.id, message)
-
-            self.trigger_move_state(cr, uid, res, state, context=context)
         self.action_done(cr, uid, res)
 
         return res

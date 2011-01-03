@@ -52,7 +52,7 @@ class purchase_report(osv.osv):
         'date_approve':fields.date('Date Approved', readonly=True),
         'expected_date':fields.date('Expected Date', readonly=True),
         'validator' : fields.many2one('res.users', 'Validated By', readonly=True),
-        'product_uom' : fields.many2one('product.uom', 'Product UoM', required=True),
+        'product_uom' : fields.many2one('product.uom', 'Reference UoM', required=True),
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
         'delay':fields.float('Days to Validate', digits=(16,2), readonly=True),
@@ -92,19 +92,21 @@ class purchase_report(osv.osv):
                     s.company_id as company_id,
                     l.product_id,
                     t.categ_id as category_id,
-                    l.product_uom as product_uom,
+                    (case when u.uom_type not in ('reference') then
+                            (select id from product_uom where uom_type='reference' and category_id = 1)
+                    else
+                        u.id
+                    end) as product_uom,
                     s.location_id as location_id,
-                    sum(l.product_qty*u.factor) as quantity,
+                    sum(l.product_qty/u.factor) as quantity,
                     extract(epoch from age(s.date_approve,s.date_order))/(24*60*60)::decimal(16,2) as delay,
                     extract(epoch from age(l.date_planned,s.date_order))/(24*60*60)::decimal(16,2) as delay_pass,
                     count(*) as nbr,
                     (l.price_unit*l.product_qty*u.factor)::decimal(16,2) as price_total,
-                    avg(case when t.standard_price <= 0 then (l.price_unit*l.product_qty*u.factor)
-                    else
-                    (100.0 * (l.price_unit*l.product_qty*u.factor) / (t.standard_price*l.product_qty*u.factor))
-                    end) as negociation,
+                    avg(100.0 * (l.price_unit*l.product_qty*u.factor) / NULLIF(t.standard_price*l.product_qty*u.factor, 0.0))::decimal(16,2) as negociation,
+
                     sum(t.standard_price*l.product_qty*u.factor)::decimal(16,2) as price_standard,
-                    (sum(l.product_qty*l.price_unit)/sum(l.product_qty*u.factor))::decimal(16,2) as price_average
+                    (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty*u.factor),0.0))::decimal(16,2) as price_average
                 from purchase_order s
                     left join purchase_order_line l on (s.id=l.order_id)
                         left join product_product p on (l.product_id=p.id)
@@ -134,7 +136,10 @@ class purchase_report(osv.osv):
                     to_char(s.date_order, 'MM'),
                     to_char(s.date_order, 'YYYY-MM-DD'),
                     s.state,
-                    s.warehouse_id
+                    s.warehouse_id,
+                    u.uom_type, 
+                    u.category_id,
+                    u.id
             )
         """)
 purchase_report()

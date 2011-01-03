@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-09 09:26+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-31 10:39+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:41+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_location
@@ -50,6 +50,7 @@ msgid "Parameters"
 msgstr "Parameter"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
 msgstr "Lagerort (Quelle)"
@@ -70,7 +71,7 @@ msgstr "Warenfluss durch Pull Regeln"
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Sie müssen zwingend eine Losnummer für dieses Produkt angeben"
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
@@ -95,7 +96,6 @@ msgstr ""
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
-#: field:product.pulled.flow,location_id:0
 msgid "Location"
 msgstr "Lagerort"
 
@@ -104,6 +104,11 @@ msgstr "Lagerort"
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
 msgstr "Status Rechnung"
+
+#. module: stock_location
+#: help:product.pulled.flow,name:0
+msgid "This field will fill the packing Origin and the name of its moves"
+msgstr "Verweis auf Lieferauftrag und Lieferscheine"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -126,6 +131,11 @@ msgstr ""
 "erstellen."
 
 #. module: stock_location
+#: model:ir.module.module,shortdesc:stock_location.module_meta_information
+msgid "Warehouse Locations Paths"
+msgstr "Lieferketten im Zentrallager"
+
+#. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
 msgstr "Bedingungen"
@@ -134,11 +144,6 @@ msgstr "Bedingungen"
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
 msgstr "Packzone"
-
-#. module: stock_location
-#: field:product.pulled.flow,name:0
-msgid "Name"
-msgstr "Bezeichnung"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
@@ -166,9 +171,9 @@ msgid "Dispatch Zone"
 msgstr "Versandzone"
 
 #. module: stock_location
-#: model:ir.module.module,shortdesc:stock_location.module_meta_information
-msgid "Warehouse Locations Paths"
-msgstr "Lieferketten im Zentrallager"
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Lieferauftrag"
 
 #. module: stock_location
 #: view:product.product:0
@@ -182,14 +187,9 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "Lieferauftrag"
-
-#. module: stock_location
-#: model:ir.model,name:stock_location.model_procurement_order
-msgid "Procurement"
-msgstr "Beschaffung"
+#: view:product.product:0
+msgid "Logistics Flows"
+msgstr "Lieferabfolge"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -230,9 +230,188 @@ msgid "Number of days to do this transition"
 msgstr "Anzahl Tage für diese Lieferkette"
 
 #. module: stock_location
-#: help:product.pulled.flow,name:0
-msgid "This field will fill the packing Origin and the name of its moves"
-msgstr "Verweis auf Lieferauftrag und Lieferscheine"
+#: model:ir.module.module,description:stock_location.module_meta_information
+msgid ""
+"\n"
+"This module supplements the Warehouse application by adding support for per-"
+"product\n"
+"location paths, effectively implementing Push and Pull inventory flows.\n"
+"\n"
+"Typically this could be used to:\n"
+"* Manage product manufacturing chains\n"
+"* Manage default locations per product\n"
+"* Define routes within your warehouse according to business needs, such as:\n"
+"   - Quality Control\n"
+"   - After Sales Services\n"
+"   - Supplier Returns\n"
+"* Help rental management, by generating automated return moves for rented "
+"products\n"
+"\n"
+"Once this module is installed, an additional tab appear on the product form, "
+"where you can add\n"
+"Push and Pull flow specifications. The demo data of  CPU1 product for that "
+"push/pull :\n"
+"\n"
+"Push flows\n"
+"----------\n"
+"Push flows are useful when the arrival of certain products in a given "
+"location should always\n"
+"be followed by a corresponding move to another location, optionally after a "
+"certain delay.\n"
+"The original Warehouse application already supports such Push flow "
+"specifications on the\n"
+"Locations themselves, but these cannot be refined per-product.\n"
+"\n"
+"A push flow specification indicates which location is chained with which "
+"location, and with\n"
+"what parameters. As soon as a given quantity of products is moved in the "
+"source location,\n"
+"a chained move is automatically foreseen according to the parameters set on "
+"the flow specification\n"
+"(destination location, delay, type of move, journal, etc.) The new move can "
+"be automatically\n"
+"processed, or require a manual confirmation, depending on the parameters.\n"
+"\n"
+"Pull flows\n"
+"----------\n"
+"Pull flows are a bit different from Pull flows, in the sense that they are "
+"not related to\n"
+"the processing of product moves, but rather to the processing of procurement "
+"orders.\n"
+"What is being pulled is a need, not directly products.\n"
+"A classical example of Push flow is when you have an Outlet company, with a "
+"parent Company\n"
+"that is responsible for the supplies of the Outlet.\n"
+"\n"
+"  [ Customer ] <- A - [ Outlet ]  <- B -  [ Holding ] <~ C ~ [ Supplier ]\n"
+"\n"
+"When a new procurement order (A, coming from the confirmation of a Sale "
+"Order for example) arrives\n"
+"in the Outlet, it is converted into another procurement (B, via a Push flow "
+"of type 'move')\n"
+"requested from the Holding. When procurement order B is processed by the "
+"Holding company, and\n"
+"if the product is out of stock, it can be converted into a Purchase Order "
+"(C) from the Supplier\n"
+"(Push flow of type Purchase). The result is that the procurement order, the "
+"need, is pushed\n"
+"all the way between the Customer and Supplier.\n"
+"\n"
+"Technically, Pull flows allow to process procurement orders differently, not "
+"only depending on\n"
+"the product being considered, but also depending on which location holds the "
+"\"need\" for that\n"
+"product (i.e. the destination location of that procurement order).\n"
+"\n"
+"Use-Case\n"
+"--------\n"
+"\n"
+"You can use the demo data as follow:\n"
+"  CPU1: Sell some CPU1 from Shop 1 and run the scheduler\n"
+"     - Warehouse: delivery order, Shop 1: reception\n"
+"  CPU3:\n"
+"     - When receiving the product, it goes to Quality Control location then "
+"stored to shelf 2.\n"
+"     - When delivering the customer: Pick List -> Packing -> Delivery Order "
+"from Gate A\n"
+"    "
+msgstr ""
+"\n"
+"Dieses Modul ergänzt die Anwendung für das Lager durch Erweiterung der "
+"Möglichkeit zur\n"
+"Festlegung produktbezogener Lieferketten, zwecks effektiver Umsetzung von "
+"Push- und Pull-Lieferketten.\n"
+"\n"
+"Typischerweise könnten folgende Anwendungen für diese Funktion in Frage "
+"kommen:\n"
+"* Verwaltung von Lieferketten zwischen Fertigungsstellen\n"
+"* Verwaltung von produktbezogenen Standardlagerorten\n"
+"* Vordefinierte Lieferketten innerhalb eines Lagers aufgrund bestimmter "
+"geschäftlichen Anforderungen, wie z.B.:\n"
+"   - Qualitätskontrolle in Wareneingang und Warenversand\n"
+"   - Technischer Kundendienst im Anschluss an einen Verkauf\n"
+"   - Rücksendung defekter Warenlieferungen an Lieferanten\n"
+"* Unterstützung bei der Verwaltung von Mietprodukten, z.B. durch Generierung "
+"von Lieferaufträgen für die Warenrückgabe\n"
+"\n"
+"Sobald diese Anwendung installiert ist, finden Sie einen zusätzlichen "
+"Aktenreiter in der Formularansicht für Produkte, \n"
+"auf dem Sie dann Ihre individuellen Push- und Pull-Lieferketten-"
+"Spezifikation hinterlegen können. \n"
+"\n"
+"Die Demo-Daten beinhalten ein Beispiel der Push / Pull Lieferkette für das "
+"CPU1 Produkt:\n"
+"\n"
+"Push Lieferkette\n"
+"-----------------------\n"
+"Push Lieferketten sind nützlich, wenn einer eingehenden Lieferung bestimmter "
+"Produkte an einen bestimmten Ort immer\n"
+"eine weitere entsprechende Folgelieferung an einen anderen Lagerort folgen "
+"soll, gegebenenfalls nach einer gewissen \n"
+"zeitlichen Verzögerung. Die ursprüngliche Anwendung für das Lager "
+"unterstützt bereits solche Push-Lieferketten \n"
+"durch eine Konfiguration beim Lagerort selbst, aber diese Lieferkette konnte "
+"bislang nicht pro-Produkt verfeinert werden. \n"
+"\n"
+"Eine Push-Lieferketten-Spezifikation gibt somit an, welcher Lagerort an "
+"einen anderen gekettet ist, mit den entsprechen\n"
+"Angaben zu den Lagerorten und weiteren Parametern. Wenn also eine bestimmte "
+"Anzahl von Produkten an einem \n"
+"Lagerort geliefert wird, der auch als Quelle bei einer definierten "
+"Lieferkette hinterlegt ist, wird automatisch ein weiterer Lieferauftrag \n"
+"gemäss der Parametern der jeweiligen Lieferketten-Spezifikation festgelegt "
+"(Zielort, zeitliche Verzögerung, Art der Lieferung, Lagerjournal, etc.) Der "
+"hierdurch neu enstandene Lieferauftrag wird entweder automatisch verarbeitet "
+"oder erfordert eine manuelle Bestätigung der Lieferung, je nach "
+"Parametrisierung.\n"
+"\n"
+"Pull-Lieferkette\n"
+"----------------------\n"
+"Eine Pull-Lieferkette funktioniert ein wenig anders als Push-Lieferungen und "
+"zwar in dem Sinne, dass sie sich nicht nur auf die\n"
+"die Produktlieferung als solche bezieht, sondern auch die Verarbeitung von "
+"Beschaffungsaufträgen modifiziert.\n"
+"Die Angabe welcher Vorgang eine Pull-Lieferkette auslöst ist hierbei "
+"wichtiger, als das Produkt selbst.\n"
+"Ein klassisches Beispiel für eine Pull-Lieferkette wäre, wenn Sie ein "
+"eigenes Unternehmen für Verkäufe in einem Outlet Store definiert haben, mit "
+"einer übergeordneten Muttergesellschaft, die seinerseits die Verantwortung "
+"für die Beschaffung der benötigten Produkte hat.\n"
+"\n"
+"  [Kunden] <- A - [Outlet Store] <- B - [Muttergesellschaft] <~ C ~ "
+"[Lieferant]\n"
+"\n"
+"Ausgangspunkt ist ein Beschaffungsauftrag (A, zum Beispiel aus der "
+"Bestätigung eines Verkaufsauftrags) der\n"
+"im Outlet Store entsteht und automatisch in einen anderen "
+"Beschaffungsauftrag (B, über eine Push-Lieferkette des Typs 'Interne "
+"Umlagerung') und somit in einen Bedarf der Muttergesellschaft konvertiert "
+"wird. Wenn der Beschaffungsauftrag B durch die Muttergesellschaft "
+"verarbeitet wird und das Produkt dort nicht vorrätig ist, kann es in eine "
+"Bestellung (C) an den Lieferanten umgewandelt werden (Push-Lieferkette vom "
+"Typ Beschaffung). Im Ergebnis wird der gesamte Beschaffungsauftrag, "
+"respektive der Warenbedarf vom Kunden über die gesamte Lieferkette bis hin "
+"zum Lieferanten der Muttergesellschaft verschoben.\n"
+"\n"
+"Technisch ausgedrückt ermöglichen Pull-Lieferketten einen modifizierten "
+"Beschaffungprozess, nicht nur aus der Perspektive\n"
+"des zu betrachtenden Produkts, sondern auch unter Berücksichtigung des "
+"Lagerorts der die \"Notwendigkeit\" für das\n"
+"Produkt hat (d.h. der Ziellagerort des Beschaffungsauftrags).\n"
+"\n"
+"Use-Case\n"
+"-------------\n"
+"\n"
+"Sie können die Demo-Daten wie folgt nachvollziehen:\n"
+"  CPU1: Kaufen Sie einige Stück CPU1 vom Shop 1 und starten Sie einen "
+"Beschaffungsvorschlag\n"
+"     - Zentrallager: Auslieferauftrag, Shop 1: Wareneingangslieferung\n"
+"  CPU3:\n"
+"     - Beim Wareneingang, geht die Ware zuerst in den Lagerort "
+"Qualitätssicherung und erst dann in das Regal 2.\n"
+"     - Beim Warenversand: Kommissionierung der Ware -> Verpackung der Ware -"
+"> Warenversand vom Gate A\n"
+"    "
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
@@ -246,9 +425,9 @@ msgstr ""
 "Unternehmen zu dem diese Lieferaufträge und Bestandsbuchungen gehören"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flow"
-msgstr ""
+#: field:product.pulled.flow,name:0
+msgid "Name"
+msgstr "Bezeichnung"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -315,7 +494,7 @@ msgstr "Qualitätskontrolle"
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Nicht abzurechnen"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -353,13 +532,15 @@ msgstr ""
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
+"Sie versuchen eine Losnummer ohne Bezug zu diesem Produkt zuzuweisen."
 
 #. module: stock_location
-#: field:product.pulled.flow,location_src_id:0
-msgid "Location Source"
-msgstr "Lagerort (Anfang)"
+#: model:ir.model,name:stock_location.model_procurement_order
+msgid "Procurement"
+msgstr "Beschaffung"
 
 #. module: stock_location
+#: field:product.pulled.flow,location_id:0
 #: field:stock.location.path,location_dest_id:0
 msgid "Destination Location"
 msgstr "Lagerort (Ziel)"
@@ -384,7 +565,7 @@ msgstr "Aktionstyp"
 #. module: stock_location
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fehler: Falscher EAN code"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -452,6 +633,9 @@ msgstr "Abgerechnet"
 
 #~ msgid "Not from Picking"
 #~ msgstr "Rechnung nicht durch Lieferung"
+
+#~ msgid "Location Source"
+#~ msgstr "Lagerort (Anfang)"
 
 #~ msgid "Qty Multiple must be greater than zero."
 #~ msgstr "Multiple Menge muss grösser 0 sein."

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-11-30 16:20+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-29 10:38+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mail_gateway
@@ -74,7 +74,7 @@ msgstr "Gruppierung..."
 #. module: mail_gateway
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
 
 #. module: mail_gateway
 #: help:mailgate.message,message_id:0
@@ -125,6 +125,11 @@ msgstr " schreibe zu "
 #: field:mailgate.message,message:0
 msgid "Description"
 msgstr "Beschreibung"
+
+#. module: mail_gateway
+#: field:mailgate.message,email_to:0
+msgid "To"
+msgstr "An"
 
 #. module: mail_gateway
 #: help:mailgate.message,references:0
@@ -182,9 +187,10 @@ msgid "Stage"
 msgstr "Stufe"
 
 #. module: mail_gateway
-#: field:mailgate.message,email_to:0
-msgid "To"
-msgstr "An"
+#: code:addons/mail_gateway/mail_gateway.py:0
+#, python-format
+msgid " added note on "
+msgstr " hinzugefügter Hinweis "
 
 #. module: mail_gateway
 #: help:mailgate.message,email_from:0

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-11-19 07:50+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-29 10:19+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_claim
@@ -129,6 +129,11 @@ msgid "Preventive"
 msgstr "Προληπτικά"
 
 #. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Fixed"
+msgstr "Σταθερό"
+
+#. module: crm_claim
 #: field:crm.claim,partner_address_id:0
 msgid "Partner Contact"
 msgstr "Επαφή Συνεργάτη"
@@ -163,7 +168,7 @@ msgstr "Επαναφορά σε Πρόχειρο"
 #: field:crm.claim,date_deadline:0
 #: field:crm.claim.report,date_deadline:0
 msgid "Deadline"
-msgstr "Προθεσμεία"
+msgstr "Προσθεσμία"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -294,7 +299,6 @@ msgid "Stages"
 msgstr "Στάδια"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr ""
@@ -441,6 +445,11 @@ msgid "User"
 msgstr "Χρήστης"
 
 #. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Awaiting Response"
+msgstr "Σε αναμονή Ανταπόκρισης"
+
+#. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
 msgid "Claim Categories"
 msgstr "Κατηγορίες Απαιτήσεων"
@@ -471,6 +480,17 @@ msgid "October"
 msgstr "Οκτώβριος"
 
 #. module: crm_claim
+#: model:ir.module.module,description:crm_claim.module_meta_information
+msgid ""
+"\n"
+"This modules allows you to track your customers/suppliers claims and "
+"flames.\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr "Ιανουάριος"
@@ -489,6 +509,7 @@ msgstr "Οι παρακάτω θα λάβουνε το email"
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
@@ -643,16 +664,6 @@ msgid "Report a Claim"
 msgstr "Αναφορά Απαίτησης"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Actions Done"
-msgstr ""
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Actions Defined"
-msgstr ""
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
 msgstr ""
@@ -741,6 +752,9 @@ msgstr "Έτος"
 #~ msgid "References"
 #~ msgstr "Αναφορές"
 
+#~ msgid "Cases"
+#~ msgstr "Υποθέσεις"
+
 #~ msgid "Planned Revenue"
 #~ msgstr "Προβλεπόμενα Έσοδα"
 
@@ -765,8 +779,8 @@ msgstr "Έτος"
 #~ msgid "Active"
 #~ msgstr "Ενεργή"
 
-#~ msgid "Awaiting Response"
-#~ msgstr "Σε αναμονή Ανταπόκρισης"
+#~ msgid "Invalid"
+#~ msgstr "Μη έγκυρο"
 
 #~ msgid "Date"
 #~ msgstr "Ημερομηνία"
@@ -788,9 +802,6 @@ msgstr "Έτος"
 
 #~ msgid "Name"
 #~ msgstr "Όνομα"
-
-#~ msgid "Fixed"
-#~ msgstr "Σταθερό"
 
 #~ msgid "Claim Info"
 #~ msgstr "Πληρ. Απαίτησης"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-11-29 10:40+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-29 09:00+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_planning
@@ -54,7 +54,7 @@ msgstr "Ressourcenplanung"
 #. module: project_planning
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursiven Aufgaben definieren."
 
 #. module: project_planning
 #: view:board.board:0
@@ -176,7 +176,7 @@ msgstr ""
 #. module: project_planning
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
 
 #. module: project_planning
 #: field:report_account_analytic.planning.account,plan_open:0
@@ -192,7 +192,7 @@ msgstr "Von"
 #. module: project_planning
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
 
 #. module: project_planning
 #: field:report_account_analytic.planning.account,account_id:0
@@ -404,6 +404,42 @@ msgid "Total Remaining Tasks"
 msgstr "Gesamtverfügbare Zeit"
 
 #. module: project_planning
+#: model:ir.module.module,description:project_planning.module_meta_information
+msgid ""
+"\n"
+"This module helps you to manage your plannings.\n"
+"\n"
+"This module is based on the analytic accounting and is totally integrated "
+"with\n"
+"* the timesheets encoding\n"
+"* the holidays management\n"
+"* the project management\n"
+"\n"
+"So that, each department manager can know if someone in his team has still "
+"unallocated time for a given planning (taking in consideration the validated "
+"leaves) or if he still needs to encode tasks.\n"
+"\n"
+"At the end of the month, the planning manager can also check if the encoded "
+"timesheets are respecting the planned time on each analytic account.\n"
+msgstr ""
+"\n"
+"Diese Anwendung hilft Ihnen bei der Planung Ihrer Ressourcen.\n"
+"\n"
+"Das Modul basiert auf der Analytischen Buchhaltung und ist vollständig "
+"integriert mit\n"
+"* der Zeiterfassung\n"
+"* der Urlaubsplanung\n"
+"* dem Projektmanagement\n"
+"\n"
+"Somit weiss jeder Projektmanager zu jeder Zeit, ob ein Mitarbeiter seiner "
+"Arbeitsgruppe noch freie Zeitressourcen hat\n"
+"und somit für Projekte oder andere Aufgaben disponiert werden kann. \n"
+"\n"
+"Zum Monatsende kann der Projektmanager dann überprüfen, inwieweit die "
+"geplanten Zeiten mit tatsächlich erfassten (und abrechenbaren) Zeiten "
+"übereinstimmen oder in welcher Höhe eine Abweichung vorliegt.\n"
+
+#. module: project_planning
 #: model:ir.model,name:project_planning.model_res_company
 msgid "Companies"
 msgstr "Unternehmen"
@@ -573,3 +609,25 @@ msgid ""
 msgstr ""
 "Dieser Wert repräsentiert die Summe der verplanten Zeitressource durch "
 "zugewiesene Aufgaben."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Quellcode für diese Ansicht !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Der Name des Moduls muss eindeutig sein."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

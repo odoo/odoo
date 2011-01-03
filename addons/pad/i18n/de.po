@@ -7,14 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-11-16 09:08+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-29 11:13+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: pad
@@ -30,6 +31,11 @@ msgid "Name"
 msgstr "Bezeichnung"
 
 #. module: pad
+#: help:res.company,pad_index:0
+msgid "The root URL of the company's pad instance"
+msgstr "Die root URL für die Pad Instanz"
+
+#. module: pad
 #: model:ir.model,name:pad.model_res_company
 msgid "Companies"
 msgstr "Unternehmen"
@@ -37,12 +43,24 @@ msgstr "Unternehmen"
 #. module: pad
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
 
 #. module: pad
-#: help:res.company,pad_index:0
-msgid "The root URL of the company's pad instance"
-msgstr "Die root URL für die Pad Instanz"
+#: model:ir.module.module,description:pad.module_meta_information
+msgid ""
+"\n"
+"Adds enhanced support for (Ether)Pad attachments in the web client, lets "
+"the\n"
+"company customize which Pad installation should be used to link to new pads\n"
+"(by default, pad.openerp.com)\n"
+"    "
+msgstr ""
+"\n"
+"Ermöglicht Arbeit mit Etherpad Dokumenten im Webclient. Durch die Angabe der "
+"URL zur Pad Instanz des Unternehmens (im Standard ist dieses \n"
+"pad.openerp.com)\n"
+"können dann Pad Dokumente in OpenERP verlinkt werden.\n"
+"    "
 
 #. module: pad
 #: field:res.company,pad_index:0
@@ -69,21 +87,6 @@ msgstr "Unterstützung für (Ether) Pad Anhänge"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
-
-#~ msgid ""
-#~ "\n"
-#~ "Adds enhanced support for (Ether)Pad attachments in the web client, lets "
-#~ "the\n"
-#~ "company customize which Pad installation should be used to link to new pads\n"
-#~ "(by default, pad.openerp.com)\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Ermöglicht Arbeit mit Etherpad Dokumenten im Webclient. Durch die Angabe der "
-#~ "URL zur Pad Instanz des Unternehmens (im Standard ist dieses \n"
-#~ "pad.openerp.com)\n"
-#~ "können dann Pad Dokumente in OpenERP verlinkt werden.\n"
-#~ "    "
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
-"PO-Revision-Date: 2010-12-09 11:36+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-31 10:19+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_planning
@@ -22,6 +22,8 @@ msgstr ""
 msgid ""
 "No forecasts for selected period or no products in selected category !"
 msgstr ""
+"Aucune prévision pour la période sélectionnée ou aucun produit dans la "
+"catégorie sélectionnée !"
 
 #. module: stock_planning
 #: help:stock.planning,stock_only:0
@@ -34,12 +36,12 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
 msgid "Maximum Rule"
-msgstr ""
+msgstr "Règle du stock maximum"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
 msgid "This Copmany Period1"
-msgstr ""
+msgstr "Période 1 de cette société"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -53,12 +55,14 @@ msgid ""
 "Forecast value which will be converted to Product Quantity according to "
 "prices."
 msgstr ""
+"Valeur de la prévision qui sera convertie en quantité de produit en fonction "
+"des prix."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
 msgid "Incoming Left must be greater than 0 !"
-msgstr ""
+msgstr "Le reste à venir doit être plus grand que 0 !"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_before:0
@@ -582,8 +586,11 @@ msgid "Start Date"
 msgstr ""
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period2_per_user:0
-msgid "This User Period2"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Already Out: "
 msgstr ""
 
 #. module: stock_planning
@@ -1036,6 +1043,11 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
+msgstr ""
+
+#. module: stock_planning
+#: field:stock.sale.forecast,analyzed_period2_per_user:0
+msgid "This User Period2"
 msgstr ""
 
 #. module: stock_planning

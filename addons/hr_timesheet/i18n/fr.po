@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-16 17:44+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:26+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #~ msgid "Error: UOS must be in a different category than the UOM"
@@ -278,6 +278,22 @@ msgstr "Catégories"
 #: selection:hr.analytical.timesheet.users,month:0
 msgid "novembre"
 msgstr "novembre"
+
+#. module: hr_timesheet
+#: model:ir.module.module,description:hr_timesheet.module_meta_information
+msgid ""
+"\n"
+"This module implements a timesheet system. Each employee can encode and\n"
+"track their time spent on the different projects. A project is an\n"
+"analytic account and the time spent on a project generates costs on\n"
+"the analytic account.\n"
+"\n"
+"Lots of reporting on time and employee tracking are provided.\n"
+"\n"
+"It is completely integrated with the cost accounting module. It allows you\n"
+"to set up a management by affair.\n"
+"    "
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -707,6 +723,15 @@ msgstr "Changer de travail"
 msgid "septembre"
 msgstr "septembre"
 
+#~ msgid "Employees timesheet"
+#~ msgstr "Timesheet des employés"
+
+#~ msgid "Consultancy - Senior Developper"
+#~ msgstr "Consultance – Développeur senior"
+
+#~ msgid "Print my timesheet"
+#~ msgstr "Imprimer ma feuille de présence"
+
 #~ msgid "Day"
 #~ msgstr "Jour"
 
@@ -715,6 +740,10 @@ msgstr "septembre"
 
 #~ msgid "Timesheet Process"
 #~ msgstr "Traiter les feuilles de temps"
+
+#, python-format
+#~ msgid "ValidateError"
+#~ msgstr "Erreur de Validation"
 
 #~ msgid "Sum"
 #~ msgstr "Somme"
@@ -772,3 +801,12 @@ msgstr "septembre"
 #~ msgstr ""
 #~ "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
 #~ "catégorie."
+
+#, python-format
+#~ msgid ""
+#~ "No analytic journal available for this employee.\n"
+#~ "Define an employee for the selected user and assign an analytic journal."
+#~ msgstr ""
+#~ "Aucun journal analytique disponible pour cet employé.\n"
+#~ "Définissez un employé pour l'utilisateur sélectionné et assignez lui un "
+#~ "journal analytique."

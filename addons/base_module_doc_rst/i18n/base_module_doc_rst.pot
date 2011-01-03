@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05:03+0000\n"
-"PO-Revision-Date: 2010-12-15 15:05:03+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43:48+0000\n"
+"PO-Revision-Date: 2010-12-21 19:43:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -41,8 +41,13 @@ msgid "Please choose a file where the Technical Guide will be written."
 msgstr ""
 
 #. module: base_module_doc_rst
-#: model:ir.model,name:base_module_doc_rst.model_ir_module_module
-msgid "Module"
+#: model:ir.module.module,description:base_module_doc_rst.module_meta_information
+msgid "\n"
+"    * This module generates the Technical Guides of selected modules in Restructured Text format (RST)\n"
+"    * It uses the Sphinx (http://sphinx.pocoo.org) implementation of RST\n"
+"    * It creates a tarball (.tgz file suffix) containing an index file and one file per module\n"
+"    * Generates Relationship Graph\n"
+"    "
 msgstr ""
 
 #. module: base_module_doc_rst
@@ -65,6 +70,11 @@ msgstr ""
 #: view:ir.module.module:0
 #: field:ir.module.module,file_graph:0
 msgid "Relationship Graph"
+msgstr ""
+
+#. module: base_module_doc_rst
+#: model:ir.model,name:base_module_doc_rst.model_ir_module_module
+msgid "Module"
 msgstr ""
 
 #. module: base_module_doc_rst

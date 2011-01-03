@@ -185,7 +185,7 @@ class sale_order(osv.osv):
         for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
         return result.keys()
-
+    
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True,
             readonly=True, states={'draft': [('readonly', False)]}, select=True),
@@ -274,6 +274,9 @@ class sale_order(osv.osv):
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
     }
+    _sql_constraints = [
+        ('name_uniq', 'unique(name)', 'Order Reference must be unique !'),
+    ]
     _order = 'name desc'
 
     # Form filling
@@ -397,7 +400,7 @@ class sale_order(osv.osv):
                     inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
         inv = {
-            'name': order.client_order_ref or order.name,
+            'name': order.client_order_ref or '',
             'origin': order.name,
             'type': 'out_invoice',
             'reference': "P%dSO%d" % (order.partner_id.id, order.id),
@@ -702,6 +705,7 @@ class sale_order(osv.osv):
                         #'state': 'waiting',
                         'note': line.notes,
                         'company_id': order.company_id.id,
+                        'returned_price': line.price_unit,
                     })
 
                 if line.product_id:
@@ -878,7 +882,8 @@ class sale_order_line(osv.osv):
         'invoiced': 0,
         'state': 'draft',
         'type': 'make_to_stock',
-        'product_packaging': False
+        'product_packaging': False,
+        'price_unit': 0.0,
     }
 
     def invoice_line_create(self, cr, uid, ids, context=None):
@@ -1197,11 +1202,11 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-            if o.step == 'one':
+            if o.step == 'two':
                 md = self.pool.get('ir.model.data')
                 location_id = md.get_object_reference(cr, uid, 'stock', 'stock_location_output')
                 location_id = location_id and location_id[1] or False
-                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
+                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'manual'})
 
 sale_config_picking_policy()
 

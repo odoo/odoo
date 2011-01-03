@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-11-30 16:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-29 11:04+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:34+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -214,6 +214,9 @@ msgid ""
 "You cannot validate leaves for category %s while there are too few remaining "
 "leave days."
 msgstr ""
+"Sie können die Abwesenheitstage für die Kategorie %s nicht prüfen und "
+"freigeben, wenn nicht ausreichend verfügbare Abwesenheitstage hinterlegt "
+"wurden."
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -448,6 +451,7 @@ msgstr "Weiss"
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
+"Fehler ! Das Start Datum für die Abwesenheit muss vor dem Ende Datum liegen !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -487,6 +491,11 @@ msgstr ""
 "Vorgesetzten, z.B. Projektmanager oder Personalleiter genehmigt werden."
 
 #. module: hr_holidays
+#: view:available.holidays.report:0
+msgid "    Month-1    "
+msgstr "    Monat -1    "
+
+#. module: hr_holidays
 #: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "Erwarte Genehmigung"
@@ -513,6 +522,8 @@ msgid ""
 "You cannot validate leaves for employee %s while there are too few remaining "
 "leave days."
 msgstr ""
+"Sie können die Abwesenheitstage für den Mitarbeiter %s nicht freigeben, da "
+"seine verfügbaren Tage nicht ausreichen."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -1126,6 +1137,9 @@ msgstr ""
 #~ msgid "Holidays Status"
 #~ msgstr "Urlaub Status"
 
+#~ msgid "Holidays Allowed"
+#~ msgstr "Urlaub erlaubt"
+
 #~ msgid "Define holiday status"
 #~ msgstr "Definiere Urlaubsstatus"
 
@@ -1217,8 +1231,14 @@ msgstr ""
 #~ msgid "My Awaiting Confirmation Holidays Requests"
 #~ msgstr "Meine Warteliste mit Urlaubsanfragen"
 
+#~ msgid "My Holidays Request Waiting confirmation"
+#~ msgstr "Meine Urlaubsanfragen (Genehmigung)"
+
 #~ msgid "Approved Request"
 #~ msgstr "Bestätigte Urlaubsanfrage"
+
+#~ msgid "History"
+#~ msgstr "Historie"
 
 #~ msgid "Holidays Request"
 #~ msgstr "Urlaubsanfrage"
@@ -1262,6 +1282,17 @@ msgstr ""
 #~ msgid "Holiday Request ID"
 #~ msgstr "Uraubsantrag ID"
 
+#~ msgid "Log Holidays"
+#~ msgstr "Protokoll Urlaube"
+
+#, python-format
+#~ msgid ""
+#~ "You can not cancel this holiday request. first You have to make its case in "
+#~ "draft state."
+#~ msgstr ""
+#~ "Dieser Urlaubantrag kann so nicht storniert werden. Er muss zuerst in den "
+#~ "Entwurfsstatus versetzt werden."
+
 #~ msgid "Holidays user"
 #~ msgstr "Urlaube Benutzer"
 
@@ -1294,6 +1325,9 @@ msgstr ""
 
 #~ msgid "Document for employee"
 #~ msgstr "Dokument für Mitarbeiter"
+
+#~ msgid "General Information"
+#~ msgstr "Allgemeine Informationen"
 
 #~ msgid "Holiday per user"
 #~ msgstr "Urlaub je Mitarbeiter"

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-01 08:42+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-31 10:31+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:34+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -193,7 +193,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Validation"
-msgstr ""
+msgstr "Convalida"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
@@ -208,6 +208,8 @@ msgid ""
 "You cannot validate leaves for category %s while there are too few remaining "
 "leave days."
 msgstr ""
+"Non è possibile convalidare i permessi per la categoria %s mentre ci sono "
+"troppo pochi giorni di permesso rimanenti."
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
@@ -407,6 +409,7 @@ msgstr "Beige"
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
+"Errore! La data inizio permesso deve essere minori di quella della fine."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -429,7 +432,7 @@ msgstr "Permessi rimanenti per tipo e utente"
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
-msgstr ""
+msgstr "Cerca tipo di permesso"
 
 #. module: hr_holidays
 #: selection:available.holidays.report,month:0
@@ -442,6 +445,11 @@ msgid ""
 "If its True then its Allocation/Request have to be validated by second "
 "validator"
 msgstr ""
+
+#. module: hr_holidays
+#: view:available.holidays.report:0
+msgid "    Month-1    "
+msgstr "    Mese-1    "
 
 #. module: hr_holidays
 #: selection:hr.holidays,state:0
@@ -461,7 +469,7 @@ msgstr " Mese "
 #. module: hr_holidays
 #: view:board.board:0
 msgid "Leaves By Month"
-msgstr ""
+msgstr "Permessi per mese"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:0
@@ -470,6 +478,8 @@ msgid ""
 "You cannot validate leaves for employee %s while there are too few remaining "
 "leave days."
 msgstr ""
+"Non è possibile convalidare permessi per l'impiegato %s mentra ci sono "
+"troppo pochi giorni di permesso rimanenti."
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -1027,6 +1037,9 @@ msgstr ""
 #~ msgid "My Holidays Requests"
 #~ msgstr "Le Mie Richieste di Ferie"
 
+#~ msgid "My Holidays Request Waiting confirmation"
+#~ msgstr "Le Mie Richieste di Ferie in attesa di conferma"
+
 #~ msgid "Ok"
 #~ msgstr "Ok"
 
@@ -1132,6 +1145,20 @@ msgstr ""
 #~ msgid "hr.holidays.log"
 #~ msgstr "hr.holidays.log"
 
+#~ msgid "Log Holidays"
+#~ msgstr "Log ferie"
+
+#, python-format
+#~ msgid ""
+#~ "You can not cancel this holiday request. first You have to make its case in "
+#~ "draft state."
+#~ msgstr ""
+#~ "Non è possibile cancellare questa richiesta di ferie. Si deve impostare "
+#~ "questo caso in stato di bozza."
+
+#~ msgid "History"
+#~ msgstr "Cronologia"
+
 #~ msgid "Holidays Process"
 #~ msgstr "Processo di ferie"
 
@@ -1170,6 +1197,9 @@ msgstr ""
 
 #~ msgid "The holiday is set in the calendar"
 #~ msgstr "Le ferie sono state impostate nel calendario"
+
+#~ msgid "Holidays Allowed"
+#~ msgstr "Ferie Accordate"
 
 #~ msgid "Define holiday status"
 #~ msgstr "Definisci lo Stato delle Ferie"
@@ -1277,6 +1307,9 @@ msgstr ""
 
 #~ msgid "Print Summary of Holidays"
 #~ msgstr "Stampa Riepilogo delle Ferie"
+
+#~ msgid "General Information"
+#~ msgstr "Informazione Generale"
 
 #~ msgid "Holidays def Request"
 #~ msgstr "Definizione Richiesta di Ferie"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-12-15 23:51+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:25+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -147,6 +147,13 @@ msgid "Error ! You can not create recursive categories."
 msgstr ""
 
 #. module: product
+#: help:pricelist.partnerinfo,min_quantity:0
+msgid ""
+"The minimal quantity to trigger this rule, expressed in the supplier UoM if "
+"any or in the default UoM of the product otherrwise."
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
 msgstr "Bàn phím"
@@ -197,7 +204,6 @@ msgid "PriceList"
 msgstr "Bảng giá"
 
 #. module: product
-#: field:product.supplierinfo,product_uom:0
 #: view:product.template:0
 msgid "UOM"
 msgstr "ĐVĐ"
@@ -256,11 +262,6 @@ msgstr ""
 #, python-format
 msgid "Products: "
 msgstr "Sản phẩm: "
-
-#. module: product
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -477,6 +478,13 @@ msgid "Codes"
 msgstr "Mã"
 
 #. module: product
+#: help:product.supplierinfo,product_uom:0
+msgid ""
+"Choose here the Unit of Measure in which the prices and quantities are "
+"expressed below."
+msgstr ""
+
+#. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
 msgstr "Số lượng-4"
@@ -678,13 +686,23 @@ msgid "Mainboard ASUStek A7N8X"
 msgstr ""
 
 #. module: product
+#: help:product.supplierinfo,min_qty:0
+msgid ""
+"The minimal quantity to purchase to this supplier, expressed in the supplier "
+"Product UoM if not empty, in the default unit of measure of the product "
+"otherwise."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
 msgstr "Giá mới ="
 
 #. module: product
-#: help:product.pricelist.item,sequence:0
-msgid "Gives the sequence order when displaying a list of pricelist items."
+#: help:pricelist.partnerinfo,price:0
+msgid ""
+"This price will be considered as a price for the supplier UoM if any or the "
+"default Unit of Measure of the product otherwise"
 msgstr ""
 
 #. module: product
@@ -1139,6 +1157,30 @@ msgid "Unit of Sale"
 msgstr "Đơn vị bán"
 
 #. module: product
+#: model:ir.module.module,description:product.module_meta_information
+msgid ""
+"\n"
+"    This is the base module for managing products and pricelists in "
+"OpenERP.\n"
+"\n"
+"    Products support variants, different pricing methods, suppliers\n"
+"    information, make to stock/order, different unit of measures,\n"
+"    packaging and properties.\n"
+"\n"
+"    Pricelists support:\n"
+"    * Multiple-level of discount (by product, category, quantities)\n"
+"    * Compute price based on different criteria:\n"
+"        * Other pricelist,\n"
+"        * Cost price,\n"
+"        * List price,\n"
+"        * Supplier price, ...\n"
+"    Pricelists preferences by product and/or partners.\n"
+"\n"
+"    Print product labels with barcode.\n"
+"    "
+msgstr ""
+
+#. module: product
 #: help:product.template,seller_delay:0
 msgid ""
 "This is the average delay in days between the purchase order confirmation "
@@ -1270,6 +1312,14 @@ msgstr "Sản xuất theo nhu cầu dự báo"
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
 msgstr "Phiên bản bảng giá"
+
+#. module: product
+#: help:product.pricelist.item,sequence:0
+msgid ""
+"Gives the order in which the pricelist items will be checked. The evaluation "
+"gives highest priority to lowest sequence and stops as soon as a matching "
+"item is found."
+msgstr ""
 
 #. module: product
 #: selection:product.template,type:0
@@ -1575,6 +1625,11 @@ msgid "Make to Order"
 msgstr "Sản xuất theo đơn đặt hàng"
 
 #. module: product
+#: help:product.packaging,qty:0
+msgid "The total number of products you can put by pallet or box."
+msgstr ""
+
+#. module: product
 #: field:product.product,variants:0
 msgid "Variants"
 msgstr "Biến thể"
@@ -1680,8 +1735,8 @@ msgid "Name of this kind of price."
 msgstr "Tên của loại giá này."
 
 #. module: product
-#: help:product.packaging,qty:0
-msgid "The total number of products you can put by pallet or box."
+#: field:product.supplierinfo,product_uom:0
+msgid "Supplier UoM"
 msgstr ""
 
 #. module: product
@@ -1770,11 +1825,6 @@ msgstr ""
 #: field:product.pricelist,name:0
 msgid "Pricelist Name"
 msgstr "Tên bảng giá"
-
-#. module: product
-#: help:product.supplierinfo,product_uom:0
-msgid "Supplier Product UoM."
-msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_version
@@ -1987,13 +2037,6 @@ msgstr "Max. Price Margin"
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
-
-#. module: product
-#: help:product.supplierinfo,min_qty:0
-msgid ""
-"The minimal quantity to purchase to this supplier, expressed in the default "
-"unit of measure."
 msgstr ""
 
 #. module: product
@@ -2247,13 +2290,23 @@ msgstr ""
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Set a category of product if this rule only apply to products of a category "
-"and his childs. Keep empty for all products"
+"and his children. Keep empty for all products"
 msgstr ""
-"Thiết lập một chủng loại sản phẩm nếu quy tắc này chỉ áp dụng cho các sản "
-"phẩm của một chủng loại. Để trống cho tất cả sản phẩm."
 
 #~ msgid "Customer Price"
 #~ msgstr "Giá bán"
+
+#~ msgid "Supplier of Product"
+#~ msgstr "Nhà cung cấp sản phẩm"
+
+#~ msgid "Rentable product"
+#~ msgstr "Sản phẩm có thể cho thuê"
+
+#~ msgid "Childs Categories"
+#~ msgstr "Danh mục con"
+
+#~ msgid "Price Max. Margin"
+#~ msgstr "Lợi nhuận tối đa"
 
 #~ msgid "Number of Layer"
 #~ msgstr "Số lớp"
@@ -2270,8 +2323,15 @@ msgstr ""
 #~ msgid "Price list"
 #~ msgstr "Bảng giá"
 
+#~ msgid "Packagings"
+#~ msgstr "Đóng gói"
+
 #~ msgid "Cancel"
 #~ msgstr "Hủy"
+
+#, python-format
+#~ msgid "%d units"
+#~ msgstr "%d đơn vị"
 
 #~ msgid "Supplier Info"
 #~ msgstr "Thông tin nhà cung cấp"
@@ -2574,6 +2634,13 @@ msgstr ""
 #~ "Default Unit of Measure used for purchase orders. It must in the same "
 #~ "category than the default unit of measure."
 #~ msgstr "Đơn vị đo mặc định dùng trong các đơn đặt hàng."
+
+#~ msgid ""
+#~ "Set a category of product if this rule only apply to products of a category "
+#~ "and his childs. Keep empty for all products"
+#~ msgstr ""
+#~ "Thiết lập một chủng loại sản phẩm nếu quy tắc này chỉ áp dụng cho các sản "
+#~ "phẩm của một chủng loại. Để trống cho tất cả sản phẩm."
 
 #~ msgid "KGM"
 #~ msgstr "KGM"

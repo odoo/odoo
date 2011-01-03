@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-17 15:23+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2011-01-01 09:13+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-18 05:04+0000\n"
+"X-Launchpad-Export-Date: 2011-01-02 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
@@ -38,7 +37,7 @@ msgstr "Besoin de services"
 #. module: crm
 #: selection:crm.meeting,rrule_type:0
 msgid "Monthly"
-msgstr "Mensuel"
+msgstr "Mensuelle"
 
 #. module: crm
 #: view:crm.opportunity2phonecall:0
@@ -48,7 +47,7 @@ msgstr "Planifier un appel"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
-msgstr "Etape des cas"
+msgstr "Etape de cas"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -83,6 +82,7 @@ msgid "Select Opportunities"
 msgstr "Sélectionnez des opportunités"
 
 #. module: crm
+#: view:crm.phonecall2opportunity:0
 #: view:crm.phonecall2phonecall:0
 #: view:crm.send.mail:0
 msgid " "
@@ -121,7 +121,7 @@ msgstr "Jour"
 #. module: crm
 #: sql_constraint:crm.case.section:0
 msgid "The code of the sales team must be unique !"
-msgstr ""
+msgstr "Le code de l'équipe de vente doit être unique !"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
@@ -139,11 +139,6 @@ msgstr "La piste '%s' a été clôturée."
 #: selection:crm.meeting,freq:0
 msgid "No Repeat"
 msgstr "Aucune répetition"
-
-#. module: crm
-#: field:crm.case.section,resource_calendar_id:0
-msgid "Resource's Calendar"
-msgstr "Calendrier de ressource"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_lead_to_opportunity.py:0
@@ -333,6 +328,8 @@ msgid ""
 "Create specific phone call categories to better sort the type of calls "
 "tracked in the system."
 msgstr ""
+"Créer une catégorie d'appels téléphoniques spécifique pour mieux trier le "
+"suivi des types d'appels dans le système."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_categ_action
@@ -384,6 +381,7 @@ msgstr "Contact"
 #: view:crm.installer:0
 msgid "Enhance your core CRM Application with additional functionalities."
 msgstr ""
+"Ajoutez des fonctionnalités supplémentaires à votre application de CRM."
 
 #. module: crm
 #: field:crm.case.stage,on_change:0
@@ -548,7 +546,7 @@ msgstr "Créer une opportunité"
 #. module: crm
 #: view:crm.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurer"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -669,12 +667,12 @@ msgstr ""
 #. module: crm
 #: selection:crm.case.stage,type:0
 msgid "Claim"
-msgstr ""
+msgstr "Réclamation"
 
 #. module: crm
 #: constraint:base.action.rule:0
 msgid "Error: The mail is not well formated"
-msgstr ""
+msgstr "Erreur : email mal formé."
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -751,6 +749,11 @@ msgid ""
 msgstr ""
 "Définit une règle ou un intervalle de temps récurrent qu'il faut exclure de "
 "la règle récurrente."
+
+#. module: crm
+#: field:crm.case.section,resource_calendar_id:0
+msgid "Working Time"
+msgstr "Temps de travail"
 
 #. module: crm
 #: view:crm.segmentation.line:0
@@ -1093,7 +1096,7 @@ msgstr "L'opportunité \"%s\" a été fermée."
 #. module: crm
 #: field:crm.lead,day_open:0
 msgid "Days to Open"
-msgstr ""
+msgstr "Jours pour ouvrir"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1196,6 +1199,8 @@ msgstr "_Annuler"
 #, python-format
 msgid "Closed/Cancelled Phone Call Could not convert into Opportunity"
 msgstr ""
+"Les appels téléphoniques fermés ou annulés ne peuvent pas être convertis en "
+"opportunités."
 
 #. module: crm
 #: view:crm.segmentation:0
@@ -1730,6 +1735,11 @@ msgid ""
 "mainly used by the sales manager in order to do the periodic review with the "
 "teams of the sales pipeline."
 msgstr ""
+"L'analyse des opportunités donne un accès instantané à vos opportunités avec "
+"des informations telles que les recettes attendues, les coûts prévus, les "
+"dépassements de délais ou le nombre d'interactions par opportunités. Ce "
+"rapport est principalement utilisé par le directeur des ventes pour les "
+"revues de compte périodiques avec les équipes commerciales."
 
 #. module: crm
 #: field:crm.case.categ,name:0
@@ -1748,6 +1758,10 @@ msgid ""
 "contact you get with a partner. From the call record, you can trigger a "
 "request for another call, a meeting or a business opportunity."
 msgstr ""
+"L'outil \"Appels entrants\" enregistre les appels entrants à la volée. "
+"Chaque appel vous apparaîtra sur le formulaire du partenaire afin de tracer "
+"chaque contact obtenu. A partir de l'appel enregidté, on peut programmer un "
+"nouvel appel, une réunion ou une opportunité d'affaires."
 
 #. module: crm
 #: field:crm.meeting,alarm_id:0
@@ -1993,6 +2007,10 @@ msgid ""
 "opportunities. You can also synchronize meetings with your mobile phone "
 "using the caldav interface."
 msgstr ""
+"Le calendrier des réunions est partagé entre les équipes de vente et "
+"pleinement intégré avec d'autres applications comme les congés ou les "
+"opportunités d'affaires. On peut également synchroniser des réunions avec "
+"les téléphones mobiles en utilisant l'interface CalDAV."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2opportunity
@@ -2299,6 +2317,8 @@ msgstr "Note"
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"La société choisie ne fait pas partie des sociétés autorisées pour cet "
+"utilisateur"
 
 #. module: crm
 #: selection:crm.lead,priority:0
@@ -2542,6 +2562,10 @@ msgid ""
 "your partners to better manage your interactions with them. The segmentation "
 "tool will assign categories to partners based on defined criteria."
 msgstr ""
+"Créer des catégories de partenaires que vous serez alors en mesure "
+"d'affecter à vos partenaires afin de mieux gérer les interactions avec eux. "
+"L'outil de segmentation affecte des catégories aux partenaires en fonction "
+"des critères définis"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor8
@@ -2784,7 +2808,7 @@ msgstr "Continuer le processus"
 #. module: crm
 #: view:crm.installer:0
 msgid "Configure Your CRM Application"
-msgstr ""
+msgstr "Configurer l'application CRM"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2partner
@@ -2997,6 +3021,8 @@ msgid ""
 "'Meeting Invitations' allows you to create and manage the meeting "
 "invitations sent/to be sent to your colleagues/partners."
 msgstr ""
+"\"Invitations à réunion\"  permet de créer et de gérer les invitations aux "
+"réunions envoyées ou à envoyer aux collaborateurs et aux partenaires."
 
 #. module: crm
 #: view:board.board:0
@@ -3028,6 +3054,10 @@ msgid ""
 "several criteria and drill down the information, by adding more groups in "
 "the report."
 msgstr ""
+"A partir de ce rapport, vous pouvez analyser les performances de votre "
+"équipe de ventes, selon leurs appels téléphoniques. Vous pouvez grouper ou "
+"filtrer les informations en fonction de plusieurs critères et extraire les "
+"informations, en ajoutant plus de groupes dans le rapport."
 
 #. module: crm
 #: help:crm.segmentation,som_interval_decrease:0
@@ -3227,7 +3257,7 @@ msgstr ""
 #. module: crm
 #: field:crm.lead,state_id:0
 msgid "Fed. State"
-msgstr ""
+msgstr "Etat fédéral"
 
 #. module: crm
 #: model:process.transition,note:crm.process_transition_leadopportunity0
@@ -3291,11 +3321,6 @@ msgstr "de"
 #: selection:crm.meeting,rrule_type:0
 msgid "Daily"
 msgstr "Journalier"
-
-#. module: crm
-#: model:res.request.link,name:crm.request_link_meeting
-msgid "Case Meeting"
-msgstr "Réunion à propos du cas"
 
 #. module: crm
 #: model:crm.case.stage,name:crm.stage_lead2
@@ -3460,7 +3485,7 @@ msgstr ""
 #. module: crm
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de membres associés récursifs."
 
 #. module: crm
 #: field:crm.partner2opportunity,probability:0
@@ -3498,6 +3523,7 @@ msgstr "De"
 #: view:crm.phonecall:0
 #: model:ir.model,name:crm.model_crm_meeting
 #: model:process.node,name:crm.process_node_meeting0
+#: model:res.request.link,name:crm.request_link_meeting
 #, python-format
 msgid "Meeting"
 msgstr "Rendez-vous"
@@ -3634,7 +3660,7 @@ msgstr "A besoin de consultation"
 #. module: crm
 #: constraint:crm.segmentation:0
 msgid "Error ! You can not create recursive profiles."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer des profils récursifs."
 
 #. module: crm
 #: code:addons/crm/crm_lead.py:0
@@ -3658,6 +3684,7 @@ msgstr "Date de l'identifiant récurrent"
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr ""
+"Vous ne pouvez pas avoir deux utilisateurs avec le même identifiant !"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:0
@@ -3985,11 +4012,29 @@ msgstr "Lettre d'information"
 #~ msgid "Delay After Trigger Date:"
 #~ msgstr "Délai après la date de déclenchement:"
 
+#~ msgid "My Draft "
+#~ msgstr "Mes brouillons "
+
+#~ msgid "Add Last Mail for Replying"
+#~ msgstr "Ajouter le dernier courrier pour réponse"
+
 #~ msgid "All Cases"
 #~ msgstr "Tous les cas"
 
 #~ msgid "Remind Partner"
 #~ msgstr "Rappeler le partenaire"
+
+#~ msgid "Update The Proposed Menus To Be Created"
+#~ msgstr "Mettre à jour les Menus Proposés pour qu'ils soient créés"
+
+#~ msgid "Base Information"
+#~ msgstr "Information de Base"
+
+#~ msgid "All Open "
+#~ msgstr "Tous les ouverts "
+
+#~ msgid "Create menus for a case section"
+#~ msgstr "Création des menus pour cette section de cas"
 
 #~ msgid "Template of Email to Send"
 #~ msgstr "Modèle de l'Email à envoyer"
@@ -4009,11 +4054,17 @@ msgstr "Lettre d'information"
 #~ msgid "Add watchers (Cc)"
 #~ msgstr "Ajouter en copie"
 
+#~ msgid "My "
+#~ msgstr "Mes "
+
 #~ msgid "Cases"
 #~ msgstr "Cas"
 
 #~ msgid "Watchers Emails"
 #~ msgstr "E-mails en copie"
+
+#~ msgid "Create menu Entries"
+#~ msgstr "Créer les entrées du menu"
 
 #~ msgid "Case history"
 #~ msgstr "Historique du cas"
@@ -4026,6 +4077,9 @@ msgstr "Lettre d'information"
 
 #~ msgid "None"
 #~ msgstr "Aucune"
+
+#~ msgid "All Unclosed and Unassigned "
+#~ msgstr "Tous les Fermés et Non Assignés "
 
 #~ msgid ""
 #~ "Check this if you want the rule to send a reminder by email to the partner."
@@ -4054,6 +4108,12 @@ msgstr "Lettre d'information"
 #~ msgid "%(case_subject)s = Case subject"
 #~ msgstr "%(case_subject)s = Sujet du cas"
 
+#~ msgid "My Open "
+#~ msgstr "Mes ouverts "
+
+#~ msgid "Select Views (empty for default)"
+#~ msgstr "Sélectionne les Vues (vide par défaut)"
+
 #~ msgid "Case State"
 #~ msgstr "État du cas"
 
@@ -4081,17 +4141,35 @@ msgstr "Lettre d'information"
 #~ msgid "Cases Histories"
 #~ msgstr "Historiques des cas"
 
+#~ msgid "My cases"
+#~ msgstr "Mes cas"
+
+#~ msgid "All Draft "
+#~ msgstr "Tous les brouillons "
+
 #~ msgid "%(partner_email)s = Partner email"
 #~ msgstr "%(partner_email)s = email partenaire"
 
 #~ msgid "Last Action Date"
 #~ msgstr "Date de la dernière action"
 
+#~ msgid "My Open Cases"
+#~ msgstr "Mes cas ouverts"
+
 #~ msgid "Remind with attachment"
 #~ msgstr "Rappel avec attachement"
 
+#~ msgid "All Late "
+#~ msgstr "Tous les en retards "
+
+#~ msgid "My Late "
+#~ msgstr "Mes en retard "
+
 #~ msgid "Open cases"
 #~ msgstr "Cas ouverts"
+
+#~ msgid "My Unclosed "
+#~ msgstr "Mes non clos "
 
 #~ msgid "Created"
 #~ msgstr "Date de création"
@@ -4101,6 +4179,12 @@ msgstr "Lettre d'information"
 
 #~ msgid "Mail to responsible"
 #~ msgstr "Mail au responsable"
+
+#~ msgid "My Pending "
+#~ msgstr "Mes en attente "
+
+#~ msgid "New Form"
+#~ msgstr "Nouveau formulaire"
 
 #~ msgid "Set responsible to"
 #~ msgstr "Assigner au responsable"
@@ -4138,6 +4222,13 @@ msgstr "Lettre d'information"
 #~ msgid "Log"
 #~ msgstr "Historique"
 
+#~ msgid ""
+#~ "These people will receive a copy of the futur communication between partner "
+#~ "and users by email"
+#~ msgstr ""
+#~ "Ces personnes recevrons une copie des futures communication entre partenaire "
+#~ "et utilisateurs par email"
+
 #, python-format
 #~ msgid "Historize"
 #~ msgstr "Faire une historique"
@@ -4145,8 +4236,17 @@ msgstr "Lettre d'information"
 #~ msgid "%(partner)s = Partner name"
 #~ msgstr "%(partner)s = Nom du partenaire"
 
+#~ msgid "New With Calendar"
+#~ msgstr "Nouveau avec calendrier"
+
+#~ msgid "List With Calendar"
+#~ msgstr "Liste avec calendirer"
+
 #~ msgid "Action Information"
 #~ msgstr "Infos sur l'action"
+
+#~ msgid "Calendar View"
+#~ msgstr "Vue calendrier"
 
 #~ msgid "%(case_user_phone)s = Responsible phone"
 #~ msgstr "%(case_user_phone)s = Téléphone du responsable"
@@ -4184,6 +4284,9 @@ msgstr "Lettre d'information"
 #~ msgid "draft"
 #~ msgstr "brouillon"
 
+#~ msgid "Created Menus"
+#~ msgstr "Menus Créés"
+
 #~ msgid ""
 #~ "Check this if you want that all documents attached to the case be attached "
 #~ "to the reminder email sent."
@@ -4198,8 +4301,23 @@ msgstr "Lettre d'information"
 #~ msgid "Parent Section"
 #~ msgstr "Section parent"
 
+#~ msgid "Parent Menu"
+#~ msgstr "Menu Parent"
+
 #~ msgid "%(case_id)s = Case ID"
 #~ msgstr "%(case_id)s = ID du cas"
+
+#~ msgid "Don't Create"
+#~ msgstr "Ne pas créer"
+
+#~ msgid "Base Menu Name"
+#~ msgstr "Nom du Menu de Base"
+
+#~ msgid "All Unassigned "
+#~ msgstr "Tous les non assignés "
+
+#~ msgid "All Unclosed "
+#~ msgstr "Tous les non fermés "
 
 #~ msgid "%(case_user_email)s = Responsible email"
 #~ msgstr "%(case_user_email)s = Email du responsable"
@@ -4210,8 +4328,14 @@ msgstr "Lettre d'information"
 #~ msgid "Send Reminder"
 #~ msgstr "Envoyer rappel"
 
+#~ msgid "Complete this if you use the mail gateway."
+#~ msgstr "Complétez ceci si vous utilisez la passerelle mail"
+
 #~ msgid "Business Opportunities"
 #~ msgstr "Opportunités d'affaire"
+
+#~ msgid "Tree View"
+#~ msgstr "Vue en arbre"
 
 #~ msgid "Conditions on Case Partner"
 #~ msgstr "Condition sur le cas partenaire"
@@ -4228,11 +4352,17 @@ msgstr "Lettre d'information"
 #~ msgid "General Description"
 #~ msgstr "Description générale"
 
+#~ msgid "Create Menus For Cases"
+#~ msgstr "Créer des Menus pour les Cas"
+
 #~ msgid "Mail to partner"
 #~ msgstr "Mail au partenaire"
 
 #~ msgid "Partner Email"
 #~ msgstr "E-mail partenaire"
+
+#~ msgid "All Pending "
+#~ msgstr "Tous les en attentes "
 
 #~ msgid "Set priority to"
 #~ msgstr "Mettre la priorité à"
@@ -4240,6 +4370,9 @@ msgstr "Lettre d'information"
 #, python-format
 #~ msgid "open"
 #~ msgstr "ouvrir"
+
+#~ msgid "All Canceled "
+#~ msgstr "Tous les annulés "
 
 #~ msgid "Mail body"
 #~ msgstr "Corps du mail"
@@ -4270,11 +4403,26 @@ msgstr "Lettre d'information"
 #~ "Si le partenaire n'a pas acheté pendant une période, diminue l'état d'esprit "
 #~ "par ce facteur. C'est une multiplication"
 
+#~ msgid "All "
+#~ msgstr "Tous "
+
 #~ msgid "E-Mail Actions"
 #~ msgstr "Action par Email"
 
+#~ msgid "List"
+#~ msgstr "Liste"
+
+#~ msgid "Send Partner & Historize"
+#~ msgstr "Envoi le partenaire et ajoute à l'historique"
+
 #~ msgid "User Responsible"
 #~ msgstr "Utilisateur responsable"
+
+#~ msgid "All Histories"
+#~ msgstr "Tous les historiques"
+
+#~ msgid "My Canceled "
+#~ msgstr "Mes annulés "
 
 #~ msgid "Latest E-Mail"
 #~ msgstr "Dernier e-mail"
@@ -4294,6 +4442,9 @@ msgstr "Lettre d'information"
 #~ msgid "Logs History"
 #~ msgstr "Historique"
 
+#~ msgid "Form View"
+#~ msgstr "Vue Formulaire"
+
 #~ msgid "Conditions on Timing"
 #~ msgstr "Condition sur le temps"
 
@@ -4302,6 +4453,12 @@ msgstr "Lettre d'information"
 
 #~ msgid "Case Description"
 #~ msgstr "Description des cas"
+
+#~ msgid "Mail to watchers (Cc)"
+#~ msgstr "Mail aux Cc"
+
+#~ msgid "crm.case.section.open"
+#~ msgstr "crm.case.section.open"
 
 #~ msgid "Actions"
 #~ msgstr "Actions"
@@ -5245,3 +5402,9 @@ msgstr "Lettre d'information"
 #~ msgstr ""
 #~ "Ceci peut aider les associations dans leur procédure de collecte de fonds et "
 #~ "de suivi."
+
+#~ msgid "Case Meeting"
+#~ msgstr "Réunion à propos du cas"
+
+#~ msgid "Resource's Calendar"
+#~ msgstr "Calendrier de ressource"

@@ -111,8 +111,8 @@ class mrp_routing_workcenter(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of routing work centers."),
         'cycle_nbr': fields.float('Number of Cycles', required=True,
-            help="Number of iterations this work Center has to do in the specified operation of the routing."),
-        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this work Center to achieve the operation of the specified routing."),
+            help="Number of iterations this work center has to do in the specified operation of the routing."),
+        'hour_nbr': fields.float('Number of Hours', required=True, help="Time in hours for this work center to achieve the operation of the specified routing."),
         'routing_id': fields.many2one('mrp.routing', 'Parent Routing', select=True, ondelete='cascade',
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
@@ -664,6 +664,8 @@ class mrp_production(osv.osv):
         """
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
+        
+        final_product_todo = []
 
         produced_qty = 0
         if production_mode == 'consume_produce':
@@ -704,7 +706,11 @@ class mrp_production(osv.osv):
                             stock_mov_obj.action_consume(cr, uid, [raw_product.id], consumed_qty, production.location_src_id.id, context=context)
 
         if production_mode == 'consume_produce':
-
+            # To produce remaining qty of final product
+            vals = {'state':'confirmed'}
+            final_product_todo = [x.id for x in production.move_created_ids]
+            #stock_mov_obj.write(cr, uid, final_product_todo, vals)
+            stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)
             produced_products = {}
             for produced_product in production.move_created_ids2:
                 if produced_product.scrapped:

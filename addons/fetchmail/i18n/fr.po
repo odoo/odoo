@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
-"PO-Revision-Date: 2010-12-19 22:23+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2011-01-01 08:23+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-20 04:52+0000\n"
+"X-Launchpad-Export-Date: 2011-01-02 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: fetchmail
@@ -23,6 +22,9 @@ msgid ""
 "Warning! Record for selected Model can not be created\n"
 "Please choose valid Model"
 msgstr ""
+"Avertissement! l'enregistrement pour le modèle sélectionné ne peut être "
+"créer\n"
+"Veuillez choisir un modèle valide"
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -32,12 +34,12 @@ msgstr "Confirmé"
 #. module: fetchmail
 #: view:email.server:0
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmer"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grouper par ..."
 
 #. module: fetchmail
 #: view:email.server:0
@@ -47,8 +49,8 @@ msgstr "État"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Set to Draft"
-msgstr "Mettre à l'état \"Brouillon\""
+msgid "POP"
+msgstr "POP"
 
 #. module: fetchmail
 #: selection:email.server,state:0
@@ -56,9 +58,14 @@ msgid "Not Confirmed"
 msgstr "Non confirmé"
 
 #. module: fetchmail
+#: field:email.server,user:0
+msgid "User Name"
+msgstr "Nom de l'utilisateur"
+
+#. module: fetchmail
 #: view:email.server:0
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -82,6 +89,8 @@ msgid ""
 "OpenObject Model. Generates a record of this model.\n"
 "Select Object with message_new attrbutes."
 msgstr ""
+"Model OpenObject. Générer un enregistrement pour ce modèle.\n"
+"Sélectionner un objet avec l'attribut message_new"
 
 #. module: fetchmail
 #: field:email.server,attach:0
@@ -90,13 +99,13 @@ msgstr "Ajouter des pièces jointes ?"
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "POP"
-msgstr ""
+msgid "# of emails"
+msgstr "# de courriels"
 
 #. module: fetchmail
-#: field:email.server,user:0
-msgid "User Name"
-msgstr "Nom de l'utilisateur"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+msgid "Email History"
+msgstr "Historique des courriels"
 
 #. module: fetchmail
 #: field:email.server,user_id:0
@@ -119,15 +128,14 @@ msgid "Password"
 msgstr "Mot de passe"
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
 #: view:mailgate.message:0
 msgid "Emails"
-msgstr ""
+msgstr "Courriels"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Search Email Servers"
-msgstr ""
+msgstr "Rechercher des serveurs de mail"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -150,16 +158,25 @@ msgid "Mailgateway Message"
 msgstr "Message pour la passerelle de courriel"
 
 #. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+msgid "POP Servers"
+msgstr "Serveurs POP"
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Set to Draft"
+msgstr "Mettre à l'état \"Brouillon\""
+
+#. module: fetchmail
 #: field:email.server,message_ids:0
 #: model:ir.actions.act_window,name:fetchmail.action_view_mail_message_emails
 msgid "Messages"
-msgstr ""
+msgstr "Messages"
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
 #: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
-msgid "Email Servers"
-msgstr ""
+msgid "Fetchmail Services"
+msgstr "Services Fetchmail"
 
 #. module: fetchmail
 #: field:email.server,server:0
@@ -169,12 +186,12 @@ msgstr "Serveur"
 #. module: fetchmail
 #: field:email.server,active:0
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #. module: fetchmail
 #: view:email.server:0
 msgid "Process Parameter"
-msgstr ""
+msgstr "Paramètre du processus"
 
 #. module: fetchmail
 #: field:email.server,is_ssl:0
@@ -195,7 +212,7 @@ msgstr "Modèle"
 #. module: fetchmail
 #: view:email.server:0
 msgid "IMAP"
-msgstr ""
+msgstr "IMAP"
 
 #. module: fetchmail
 #: view:email.server:0
@@ -207,6 +224,7 @@ msgstr "Serveur POP/IMAP"
 #: constraint:email.server:0
 msgid "Warning! Can't have duplicate server configuration!"
 msgstr ""
+"Avertissement! vous ne pouvez pas dupliquer une configuration de serveur!"
 
 #. module: fetchmail
 #: field:email.server,type:0
@@ -227,7 +245,7 @@ msgstr "Information du serveur"
 #. module: fetchmail
 #: help:email.server,attach:0
 msgid "Fetches mail with attachments if true."
-msgstr ""
+msgstr "Récupérer les mails avec attachements si vrai"
 
 #. module: fetchmail
 #: selection:email.server,type:0
@@ -262,7 +280,7 @@ msgstr ""
 #. module: fetchmail
 #: view:email.server:0
 msgid "SSL"
-msgstr ""
+msgstr "SSL"
 
 #. module: fetchmail
 #: help:email.server,action_id:0
@@ -270,6 +288,8 @@ msgid ""
 "An Email Server Action. It will be run whenever an e-mail is fetched from "
 "server."
 msgstr ""
+"Un courriel du Server Action. Il sera lancé lorsqu'un email sera récupérer "
+"sur le serveur."
 
 #. module: fetchmail
 #: help:email.server,priority:0
@@ -279,7 +299,7 @@ msgstr "Priorité entre 0 et 10, qui définit l'ordre de traitement"
 #. module: fetchmail
 #: field:email.server,action_id:0
 msgid "Email Server Action"
-msgstr ""
+msgstr "Courriel du Server Action"
 
 #. module: fetchmail
 #: field:email.server,priority:0

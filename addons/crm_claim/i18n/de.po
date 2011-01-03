@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:05+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-12-15 13:01+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 05:49+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_claim
@@ -133,6 +133,11 @@ msgstr "Abgebrochen"
 #: model:crm.case.resource.type,name:crm_claim.type_claim2
 msgid "Preventive"
 msgstr "Schadensprävention"
+
+#. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim2
+msgid "Fixed"
+msgstr "Schaden behoben"
 
 #. module: crm_claim
 #: field:crm.claim,partner_address_id:0
@@ -303,7 +308,6 @@ msgid "Stages"
 msgstr "Stufen"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_report_crm_claim_tree
 msgid "Claims Analysis"
 msgstr "Statistik Reklamationen"
@@ -453,6 +457,11 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: crm_claim
+#: model:crm.case.stage,name:crm_claim.stage_claim5
+msgid "Awaiting Response"
+msgstr "Erwarte Antwort"
+
+#. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
 msgid "Claim Categories"
 msgstr "Reklamation Kategorien"
@@ -483,6 +492,23 @@ msgid "October"
 msgstr "Oktober"
 
 #. module: crm_claim
+#: model:ir.module.module,description:crm_claim.module_meta_information
+msgid ""
+"\n"
+"This modules allows you to track your customers/suppliers claims and "
+"flames.\n"
+"It is fully integrated with the email gateway so that you can create\n"
+"automatically new claims based on incoming emails.\n"
+"    "
+msgstr ""
+"\n"
+"Dieses Modul ermöglicht die Bearbeitung und Verfolgung von "
+"Reklamationenabhängig von der Perspektive für Kunden und Lieferanten.\n"
+"Es ist vollständig eingebunden in das EMail Management und kann automatisch\n"
+"neue Vorgänge auf Basis eingehender EMail definieren.\n"
+"    "
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "January"
 msgstr "Januar"
@@ -501,6 +527,7 @@ msgstr "Diese Personen erhalten EMails"
 #. module: crm_claim
 #: view:crm.claim:0
 #: view:crm.claim.report:0
+#: model:ir.actions.act_window,name:crm_claim.action_report_crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_case_categ_claim0
 #: model:ir.ui.menu,name:crm_claim.menu_crm_case_claims
 msgid "Claims"
@@ -662,16 +689,6 @@ msgid "Report a Claim"
 msgstr "Erstelle Reklamation"
 
 #. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim2
-msgid "Actions Done"
-msgstr "Vorgang beendet"
-
-#. module: crm_claim
-#: model:crm.case.stage,name:crm_claim.stage_claim5
-msgid "Actions Defined"
-msgstr "Vorgang beschrieben"
-
-#. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
 msgstr "Vorgangsverfolgung"
@@ -758,14 +775,30 @@ msgstr "Jahr"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Fehlerhafter Modellname in der Definition der Aktion"
 
+#~ msgid "This Year"
+#~ msgstr "Aktuelles Jahr"
+
 #~ msgid "Cases"
 #~ msgstr "Vorgänge"
+
+#~ msgid ""
+#~ "The channels represent the different communicationmodes available with the "
+#~ "customer. With each commercial opportunity, you can indicate thecanall which "
+#~ "is this opportunity source."
+#~ msgstr ""
+#~ "Der Vertriebskanal repräsentiert die unterschiedlichen Möglichkeiten der "
+#~ "Kommunikation mit Kunden. Bei der Erfassung von Verkaufschancen , können Sie "
+#~ "ergänzend auch den Kanal angeben, z.B. um eine Aussage über deren "
+#~ "Vertriebseffezienz zu bekommen."
 
 #~ msgid "Mobile"
 #~ msgstr "Mobile"
 
-#~ msgid "Fixed"
-#~ msgstr "Schaden behoben"
+#~ msgid "Claim Type"
+#~ msgstr "Reklamations Typ"
+
+#~ msgid "My Case"
+#~ msgstr "Mein Vorgang"
 
 #~ msgid "Extra Info"
 #~ msgstr "Zusatzinformation"
@@ -776,8 +809,14 @@ msgstr "Jahr"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter XML Qu. für die Ansicht"
 
+#~ msgid "Stage: "
+#~ msgstr "Stufe: "
+
 #~ msgid "Channel"
 #~ msgstr "Kanal"
+
+#~ msgid "Claim Resource Type"
+#~ msgstr "Rekl.  Ressource Typ"
 
 #~ msgid "Status and Categorization"
 #~ msgstr "Status und Kategorisierung"
@@ -791,14 +830,32 @@ msgstr "Jahr"
 #~ msgid "Planned Costs"
 #~ msgstr "Geplante Kosten"
 
+#~ msgid ""
+#~ "These email addresses will be added to the CC field of all inbound and "
+#~ "outbound emails for this record before being sent. Separate multiple "
+#~ "emailaddresses differs with a comma"
+#~ msgstr ""
+#~ "Diese EMail Anschriften werden als CC Adressen für alle ein- und ausgehenden "
+#~ "Emails ergänzt. Für die Angabe mehrererEamil Anschriften, trennen Sie diese "
+#~ "durch ein Kommazeichen"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fehler ! Sie können keinen rekursiven Menüeintrag generieren"
 
-#~ msgid "Awaiting Response"
-#~ msgstr "Erwarte Antwort"
+#~ msgid "7 Days"
+#~ msgstr "7 Tage"
+
+#~ msgid "Type of Action"
+#~ msgstr "Typ Aktion"
+
+#~ msgid "Resource Type"
+#~ msgstr "Ressource Typ"
 
 #~ msgid "Date"
 #~ msgstr "Datum"
+
+#~ msgid "Invalid"
+#~ msgstr "Fehlerhaft"
 
 #~ msgid "Claim Info"
 #~ msgstr "Reklamation Info"
@@ -819,8 +876,14 @@ msgstr "Jahr"
 #~ msgid "Employee's Name"
 #~ msgstr "Mitarbeiter Name"
 
+#~ msgid "This Month"
+#~ msgstr "Dieser Monat"
+
 #~ msgid "Name"
 #~ msgstr "Bezeichnung"
+
+#~ msgid "Communication history"
+#~ msgstr "Kommunikation Historie"
 
 #~ msgid "References"
 #~ msgstr "Referenzen"
@@ -843,3 +906,9 @@ msgstr "Jahr"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Grösse des Feldes darf nie kleiner als 1 sein !"
+
+#~ msgid "Actions Defined"
+#~ msgstr "Vorgang beschrieben"
+
+#~ msgid "Actions Done"
+#~ msgstr "Vorgang beendet"

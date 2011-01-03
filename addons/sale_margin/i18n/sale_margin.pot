@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-15 15:06:21+0000\n"
-"PO-Revision-Date: 2010-12-15 15:06:21+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45:10+0000\n"
+"PO-Revision-Date: 2010-12-21 19:45:10+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -52,8 +52,11 @@ msgid "State"
 msgstr ""
 
 #. module: sale_margin
-#: view:stock.picking:0
-msgid "Create Invoice"
+#: model:ir.module.module,description:sale_margin.module_meta_information
+msgid " \n"
+"    This module adds the 'Margin' on sales order,\n"
+"    which gives the profitability by calculating the difference between the Unit Price and Cost Price\n"
+"    "
 msgstr ""
 
 #. module: sale_margin
@@ -73,13 +76,13 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale_margin
-#: field:report.account.invoice.product,type:0
-msgid "Type"
+#: help:sale.order,margin:0
+msgid "It gives profitability by calculating the difference between the Unit Price and Cost Price."
 msgstr ""
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_sale_order_line
-msgid "Sale Order Line"
+#: field:report.account.invoice.product,type:0
+msgid "Type"
 msgstr ""
 
 #. module: sale_margin
@@ -171,11 +174,6 @@ msgid "Categories"
 msgstr ""
 
 #. module: sale_margin
-#: help:sale.order,margin:0
-msgid "It gives profitability by calculating the difference between the Unit Price and Cost Price"
-msgstr ""
-
-#. module: sale_margin
 #: field:account.invoice.line,cost_price:0
 #: field:report.account.invoice.product,cost_price:0
 #: field:sale.order.line,purchase_price:0
@@ -188,19 +186,14 @@ msgid "October"
 msgstr ""
 
 #. module: sale_margin
-#: view:report.account.invoice.product:0
-#: field:report.account.invoice.product,year:0
-msgid "Year"
-msgstr ""
-
-#. module: sale_margin
 #: selection:report.account.invoice.product,month:0
 msgid "January"
 msgstr ""
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_sale_order
-msgid "Sale Order"
+#: view:report.account.invoice.product:0
+#: field:report.account.invoice.product,year:0
+msgid "Year"
 msgstr ""
 
 #. module: sale_margin
@@ -313,6 +306,11 @@ msgid "Partner"
 msgstr ""
 
 #. module: sale_margin
+#: model:ir.model,name:sale_margin.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: sale_margin
 #: selection:report.account.invoice.product,state:0
 msgid "Open"
 msgstr ""
@@ -320,5 +318,10 @@ msgstr ""
 #. module: sale_margin
 #: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_report
 msgid "Invoice Analysis"
+msgstr ""
+
+#. module: sale_margin
+#: model:ir.model,name:sale_margin.model_sale_order_line
+msgid "Sales Order Line"
 msgstr ""
 
