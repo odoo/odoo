@@ -82,12 +82,10 @@ class base_module_upgrade(osv.osv_memory):
         return {'module_info': '\n'.join(map(lambda x: x['name']+' : '+x['state'], res))}
 
     def upgrade_module(self, cr, uid, ids, context=None):
-        pool = pooler.get_pool(cr.dbname)
         mod_obj = self.pool.get('ir.module.module')
-        data_obj = self.pool.get('ir.model.data')
         ids = mod_obj.search(cr, uid, [('state', 'in', ['to upgrade', 'to remove', 'to install'])])
         unmet_packages = []
-        mod_dep_obj = pool.get('ir.module.module.dependency')
+        mod_dep_obj = self.pool.get('ir.module.module.dependency')
         for mod in mod_obj.browse(cr, uid, ids):
             depends_mod_ids = mod_dep_obj.search(cr, uid, [('module_id', '=', mod.id)])
             for dep_mod in mod_dep_obj.browse(cr, uid, depends_mod_ids):
@@ -97,8 +95,9 @@ class base_module_upgrade(osv.osv_memory):
             raise osv.except_osv(_('Unmet dependency !'), _('Following modules are not installed or unknown: %s') % ('\n\n' + '\n'.join(unmet_packages)))
         mod_obj.download(cr, uid, ids, context=context)
         cr.commit()
-        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
+        _db, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
+        data_obj = pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'base', 'view_base_module_upgrade_install')
         if id2:
             id2 = data_obj.browse(cr, uid, id2, context=context).res_id
