@@ -32,9 +32,9 @@ class lang(osv.osv):
     _description = "Languages"
 
     def install_lang(self, cr, uid, **args):
-        avil_ids = self.search(cr, uid, [('code','=', tools.config.get('lang'))])
-        if not avil_ids:
-            self.load_lang(cr, uid, tools.config.get('lang'))
+        lang_ids = self.search(cr, uid, [('code','=', tools.config.get('lang'))])
+        if not lang_ids:
+            lang_id = self.load_lang(cr, uid, tools.config.get('lang'))
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
@@ -73,12 +73,13 @@ class lang(osv.osv):
             'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
             'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
         }
-
+        lang_id = False
         try:
-            self.create(cr, uid, lang_info)
+            lang_id = self.create(cr, uid, lang_info)
+            self.pool.get('ir.values').set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
         finally:
             tools.resetlocale()
-        return True
+        return lang_id
 
     def _get_default_date_format(self,cursor,user,context={}):
         return '%m/%d/%Y'
