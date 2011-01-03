@@ -140,13 +140,6 @@ class StockMove(osv.osv):
                 res.append(new_move)
         return {}
 
-    def trigger_move_state(self, cr, uid, move, state, context=None):
-        new_moves = super(StockMove, self).trigger_move_state(cr, uid, move, state, context=context)
-        if state == 'confirm':
-            new_moves =[x.id for x in new_moves]
-            self.write(cr, uid, new_moves, {'production_id': False}, context=context)
-        return new_moves
-
 StockMove()
 
 
