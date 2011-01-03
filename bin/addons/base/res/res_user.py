@@ -478,7 +478,7 @@ class users(osv.osv):
 
     def change_password(self, cr, uid, ids, old_passwd, new_passwd):
         if self.browse(cr, uid, uid).password != old_passwd:
-            raise  osv.except_osv(_('AccessDenied'), 'The current password does not match !')
+            raise  osv.except_osv(_('AccessDenied'), 'The old password does not match !')
         else:
             self.write(cr, uid, uid, {'password': new_passwd})
         return True
