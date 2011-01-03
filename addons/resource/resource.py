@@ -229,7 +229,7 @@ class resource_resource(osv.osv):
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
         'time_efficiency' : fields.float('Efficiency factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
-        'calendar_id' : fields.many2one("resource.calendar", "Working time", help="Define the schedule of resource"),
+        'calendar_id' : fields.many2one("resource.calendar", "Working Period", help="Define the schedule of resource"),
     }
     _defaults = {
         'resource_type' : 'user',
@@ -299,11 +299,15 @@ class resource_resource(osv.osv):
             leave_list.sort()
         return leave_list
 
-    def compute_working_calendar(self, cr, uid, calendar_id, context=None):
+    def compute_working_calendar(self, cr, uid, calendar_id=False, context=None):
         """
         Change the format of working calendar from 'Openerp' format to bring it into 'Faces' format.
         @param calendar_id : working calendar of the project
         """
+        if not calendar_id:
+            # Calendar is not specified: working days: 24/7
+            return [('fri', '1:0-12:0','12:0-24:0'), ('thu', '1:0-12:0','12:0-24:0'), ('wed', '1:0-12:0','12:0-24:0'), 
+                   ('mon', '1:0-12:0','12:0-24:0'), ('tue', '1:0-12:0','12:0-24:0'), ('sat', '1:0-12:0','12:0-24:0'), ('sun', '1:0-12:0','12:0-24:0')]
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
         non_working = ""

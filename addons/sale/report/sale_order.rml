@@ -334,7 +334,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed , digits=get_digits(dp='Sale Price')) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed, dp='Sale Price') ]] [[ o.pricelist_id.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -347,7 +347,7 @@
           <para style="terp_default_9">Taxes :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax , digits=get_digits(dp='Sale Price')) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, dp='Sale Price') ]] [[ o.pricelist_id.currency_id.symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -360,7 +360,7 @@
           <para style="terp_default_Bold_9">Total :</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total , digits=get_digits(dp='Sale Price')) ]] [[ o.pricelist_id.currency_id. symbol ]] </para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total, dp='Sale Price') ]] [[ o.pricelist_id.currency_id.symbol ]] </para>
         </td>
       </tr>
     </blockTable>

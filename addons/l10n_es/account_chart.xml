@@ -33,13 +33,13 @@
             <field name="code">terceros</field>
             <field name="close_method">balance</field>
         </record>
-        <record id="terceros - rec" model="account.account.type">
+        <record id="terceros_-_rec" model="account.account.type">
             <field name="name">Terceros - A Cobrar</field>
             <field name="code">terceros - rec</field>
             <field name="report_type">asset</field>
             <field name="close_method">balance</field>
         </record>
-        <record id="terceros - pay" model="account.account.type">
+        <record id="terceros_-_pay" model="account.account.type">
             <field name="name">Terceros - A Pagar</field>
             <field name="code">terceros - pay</field>
             <field name="report_type">liability</field>
@@ -3883,7 +3883,7 @@
             <field name="parent_id" ref="pgc_4"/>
             <field name="type">view</field>
             <field name="name">Proveedores</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_400" model="account.account.template">
             <field name="code">400</field>
@@ -3891,7 +3891,7 @@
             <field name="parent_id" ref="pgc_40"/>
             <field name="type">view</field>
             <field name="name">Proveedores</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4000" model="account.account.template">
             <field name="code">4000</field>
@@ -3899,7 +3899,7 @@
             <field name="parent_id" ref="pgc_400"/>
             <field name="type">view</field>
             <field name="name">Proveedores (euros)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4000_child" model="account.account.template">
             <field name="code">4000</field>
@@ -3907,7 +3907,7 @@
             <field name="parent_id" ref="pgc_4000"/>
             <field name="type">payable</field>
             <field name="name">Proveedores (euros)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4004" model="account.account.template">
             <field name="code">4004</field>
@@ -3915,7 +3915,7 @@
             <field name="parent_id" ref="pgc_400"/>
             <field name="type">view</field>
             <field name="name">Proveedores (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4004_child" model="account.account.template">
             <field name="code">4004</field>
@@ -3923,7 +3923,7 @@
             <field name="parent_id" ref="pgc_4004"/>
             <field name="type">payable</field>
             <field name="name">Proveedores (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4009" model="account.account.template">
             <field name="code">4009</field>
@@ -3931,7 +3931,7 @@
             <field name="parent_id" ref="pgc_400"/>
             <field name="type">view</field>
             <field name="name">Proveedores, facturas pendientes de recibir o de formalizar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4009_child" model="account.account.template">
             <field name="code">4009</field>
@@ -3939,7 +3939,7 @@
             <field name="parent_id" ref="pgc_4009"/>
             <field name="type">payable</field>
             <field name="name">Proveedores, facturas pendientes de recibir o de formalizar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_401" model="account.account.template">
             <field name="code">401</field>
@@ -3947,7 +3947,7 @@
             <field name="parent_id" ref="pgc_40"/>
             <field name="type">view</field>
             <field name="name">Proveedores, efectos comerciales a pagar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_401_child" model="account.account.template">
             <field name="code">401</field>
@@ -3955,7 +3955,7 @@
             <field name="parent_id" ref="pgc_401"/>
             <field name="type">other</field>
             <field name="name">Proveedores, efectos comerciales a pagar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_403" model="account.account.template">
             <field name="code">403</field>
@@ -3963,7 +3963,7 @@
             <field name="parent_id" ref="pgc_40"/>
             <field name="type">view</field>
             <field name="name">Proveedores, empresas del grupo</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4030" model="account.account.template">
             <field name="code">4030</field>
@@ -3971,7 +3971,7 @@
             <field name="parent_id" ref="pgc_403"/>
             <field name="type">view</field>
             <field name="name">Proveedores, empresas del grupo (euros)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4030_child" model="account.account.template">
             <field name="code">4030</field>
@@ -3979,7 +3979,7 @@
             <field name="parent_id" ref="pgc_4030"/>
             <field name="type">payable</field>
             <field name="name">Proveedores, empresas del grupo (euros)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4031" model="account.account.template">
             <field name="code">4031</field>
@@ -3987,7 +3987,7 @@
             <field name="parent_id" ref="pgc_403"/>
             <field name="type">view</field>
             <field name="name">Efectos comerciales a pagar, empresas del grupo</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4031_child" model="account.account.template">
             <field name="code">4031</field>
@@ -3995,7 +3995,7 @@
             <field name="parent_id" ref="pgc_4031"/>
             <field name="type">payable</field>
             <field name="name">Efectos comerciales a pagar, empresas del grupo</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4034" model="account.account.template">
             <field name="code">4034</field>
@@ -4003,7 +4003,7 @@
             <field name="parent_id" ref="pgc_403"/>
             <field name="type">view</field>
             <field name="name">Proveedores, empresas del grupo (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4034_child" model="account.account.template">
             <field name="code">4034</field>
@@ -4011,7 +4011,7 @@
             <field name="parent_id" ref="pgc_4034"/>
             <field name="type">payable</field>
             <field name="name">Proveedores, empresas del grupo (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4036" model="account.account.template">
             <field name="code">4036</field>
@@ -4019,7 +4019,7 @@
             <field name="parent_id" ref="pgc_403"/>
             <field name="type">view</field>
             <field name="name">Envases y embalajes a devolver a proveedores, empresas del grupo</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4036_child" model="account.account.template">
             <field name="code">4036</field>
@@ -4027,7 +4027,7 @@
             <field name="parent_id" ref="pgc_4036"/>
             <field name="type">payable</field>
             <field name="name">Envases y embalajes a devolver a proveedores, empresas del grupo</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4039" model="account.account.template">
             <field name="code">4039</field>
@@ -4035,7 +4035,7 @@
             <field name="parent_id" ref="pgc_403"/>
             <field name="type">view</field>
             <field name="name">Proveedores, empresas del grupo, facturas pendientes de recibir o de formalizar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4039_child" model="account.account.template">
             <field name="code">4039</field>
@@ -4043,7 +4043,7 @@
             <field name="parent_id" ref="pgc_4039"/>
             <field name="type">payable</field>
             <field name="name">Proveedores, empresas del grupo, facturas pendientes de recibir o de formalizar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_404" model="account.account.template">
             <field name="code">404</field>
@@ -4051,7 +4051,7 @@
             <field name="parent_id" ref="pgc_40"/>
             <field name="type">view</field>
             <field name="name">Proveedores, empresas asociadas</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_404_child" model="account.account.template">
             <field name="code">404</field>
@@ -4059,7 +4059,7 @@
             <field name="parent_id" ref="pgc_404"/>
             <field name="type">other</field>
             <field name="name">Proveedores, empresas asociadas</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_405" model="account.account.template">
             <field name="code">405</field>
@@ -4067,7 +4067,7 @@
             <field name="parent_id" ref="pgc_40"/>
             <field name="type">view</field>
             <field name="name">Proveedores, otras partes vinculadas</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_405_child" model="account.account.template">
             <field name="code">405</field>
@@ -4075,7 +4075,7 @@
             <field name="parent_id" ref="pgc_405"/>
             <field name="type">other</field>
             <field name="name">Proveedores, otras partes vinculadas</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_406" model="account.account.template">
             <field name="code">406</field>
@@ -4083,7 +4083,7 @@
             <field name="parent_id" ref="pgc_40"/>
             <field name="type">view</field>
             <field name="name">Envases y embalajes a devolver a proveedores</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_406_child" model="account.account.template">
             <field name="code">406</field>
@@ -4091,7 +4091,7 @@
             <field name="parent_id" ref="pgc_406"/>
             <field name="type">other</field>
             <field name="name">Envases y embalajes a devolver a proveedores</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_407" model="account.account.template">
             <field name="code">407</field>
@@ -4099,7 +4099,7 @@
             <field name="parent_id" ref="pgc_40"/>
             <field name="type">view</field>
             <field name="name">Anticipos a proveedores</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_407_child" model="account.account.template">
             <field name="code">407</field>
@@ -4107,7 +4107,7 @@
             <field name="parent_id" ref="pgc_407"/>
             <field name="type">other</field>
             <field name="name">Anticipos a proveedores</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_41" model="account.account.template">
             <field name="code">41</field>
@@ -4115,7 +4115,7 @@
             <field name="parent_id" ref="pgc_4"/>
             <field name="type">view</field>
             <field name="name">Acreedores varios</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_410" model="account.account.template">
             <field name="code">410</field>
@@ -4123,7 +4123,7 @@
             <field name="parent_id" ref="pgc_41"/>
             <field name="type">view</field>
             <field name="name">Acreedores por prestaciones de servicios</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4100" model="account.account.template">
             <field name="code">4100</field>
@@ -4131,7 +4131,7 @@
             <field name="parent_id" ref="pgc_410"/>
             <field name="type">view</field>
             <field name="name">Acreedores por prestaciones de servicios (euros)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4100_child" model="account.account.template">
             <field name="code">4100</field>
@@ -4139,7 +4139,7 @@
             <field name="parent_id" ref="pgc_4100"/>
             <field name="type">payable</field>
             <field name="name">Acreedores por prestaciones de servicios (euros)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4104" model="account.account.template">
             <field name="code">4104</field>
@@ -4147,7 +4147,7 @@
             <field name="parent_id" ref="pgc_410"/>
             <field name="type">view</field>
             <field name="name">Acreedores por prestaciones de servicios (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4104_child" model="account.account.template">
             <field name="code">4104</field>
@@ -4155,7 +4155,7 @@
             <field name="parent_id" ref="pgc_4104"/>
             <field name="type">payable</field>
             <field name="name">Acreedores por prestaciones de servicios (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4109" model="account.account.template">
             <field name="code">4109</field>
@@ -4163,7 +4163,7 @@
             <field name="parent_id" ref="pgc_410"/>
             <field name="type">view</field>
             <field name="name">Acreedores por prestaciones de servicios, facturas pendientes de recibir o de formalizar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_4109_child" model="account.account.template">
             <field name="code">4109</field>
@@ -4171,7 +4171,7 @@
             <field name="parent_id" ref="pgc_4109"/>
             <field name="type">payable</field>
             <field name="name">Acreedores por prestaciones de servicios, facturas pendientes de recibir o de formalizar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_411" model="account.account.template">
             <field name="code">411</field>
@@ -4179,7 +4179,7 @@
             <field name="parent_id" ref="pgc_41"/>
             <field name="type">view</field>
             <field name="name">Acreedores, efectos comerciales a pagar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_411_child" model="account.account.template">
             <field name="code">411</field>
@@ -4187,7 +4187,7 @@
             <field name="parent_id" ref="pgc_411"/>
             <field name="type">other</field>
             <field name="name">Acreedores, efectos comerciales a pagar</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_419" model="account.account.template">
             <field name="code">419</field>
@@ -4195,7 +4195,7 @@
             <field name="parent_id" ref="pgc_41"/>
             <field name="type">view</field>
             <field name="name">Acreedores por operaciones en común</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_419_child" model="account.account.template">
             <field name="code">419</field>
@@ -4203,7 +4203,7 @@
             <field name="parent_id" ref="pgc_419"/>
             <field name="type">other</field>
             <field name="name">Acreedores por operaciones en común</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_43" model="account.account.template">
             <field name="code">43</field>
@@ -4211,7 +4211,7 @@
             <field name="parent_id" ref="pgc_4"/>
             <field name="type">view</field>
             <field name="name">Clientes</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_430" model="account.account.template">
             <field name="code">430</field>
@@ -4219,7 +4219,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Clientes</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4300" model="account.account.template">
             <field name="code">4300</field>
@@ -4227,7 +4227,7 @@
             <field name="parent_id" ref="pgc_430"/>
             <field name="type">view</field>
             <field name="name">Clientes (euros)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4300_child" model="account.account.template">
             <field name="code">4300</field>
@@ -4235,7 +4235,7 @@
             <field name="parent_id" ref="pgc_4300"/>
             <field name="type">receivable</field>
             <field name="name">Clientes (euros)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4304" model="account.account.template">
             <field name="code">4304</field>
@@ -4243,7 +4243,7 @@
             <field name="parent_id" ref="pgc_430"/>
             <field name="type">view</field>
             <field name="name">Clientes (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4304_child" model="account.account.template">
             <field name="code">4304</field>
@@ -4251,7 +4251,7 @@
             <field name="parent_id" ref="pgc_4304"/>
             <field name="type">receivable</field>
             <field name="name">Clientes (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4309" model="account.account.template">
             <field name="code">4309</field>
@@ -4259,7 +4259,7 @@
             <field name="parent_id" ref="pgc_430"/>
             <field name="type">view</field>
             <field name="name">Clientes, facturas pendientes de recibir o de formalizar</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4309_child" model="account.account.template">
             <field name="code">4309</field>
@@ -4267,7 +4267,7 @@
             <field name="parent_id" ref="pgc_4309"/>
             <field name="type">receivable</field>
             <field name="name">Clientes, facturas pendientes de recibir o de formalizar</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_431" model="account.account.template">
             <field name="code">431</field>
@@ -4275,7 +4275,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Clientes, efectos comerciales a cobrar</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4310" model="account.account.template">
             <field name="code">4310</field>
@@ -4283,7 +4283,7 @@
             <field name="parent_id" ref="pgc_431"/>
             <field name="type">view</field>
             <field name="name">Efectos comerciales en cartera</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4310_child" model="account.account.template">
             <field name="code">4310</field>
@@ -4291,7 +4291,7 @@
             <field name="parent_id" ref="pgc_4310"/>
             <field name="type">receivable</field>
             <field name="name">Efectos comerciales en cartera</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4311" model="account.account.template">
             <field name="code">4311</field>
@@ -4299,7 +4299,7 @@
             <field name="parent_id" ref="pgc_431"/>
             <field name="type">view</field>
             <field name="name">Efectos comerciales descontados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4311_child" model="account.account.template">
             <field name="code">4311</field>
@@ -4307,7 +4307,7 @@
             <field name="parent_id" ref="pgc_4311"/>
             <field name="type">receivable</field>
             <field name="name">Efectos comerciales descontados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4312" model="account.account.template">
             <field name="code">4312</field>
@@ -4315,7 +4315,7 @@
             <field name="parent_id" ref="pgc_431"/>
             <field name="type">view</field>
             <field name="name">Efectos comerciales en gestión de cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4312_child" model="account.account.template">
             <field name="code">4312</field>
@@ -4323,7 +4323,7 @@
             <field name="parent_id" ref="pgc_4312"/>
             <field name="type">receivable</field>
             <field name="name">Efectos comerciales en gestión de cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4315" model="account.account.template">
             <field name="code">4315</field>
@@ -4331,7 +4331,7 @@
             <field name="parent_id" ref="pgc_431"/>
             <field name="type">view</field>
             <field name="name">Efectos comerciales impagados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4315_child" model="account.account.template">
             <field name="code">4315</field>
@@ -4339,7 +4339,7 @@
             <field name="parent_id" ref="pgc_4315"/>
             <field name="type">receivable</field>
             <field name="name">Efectos comerciales impagados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_432" model="account.account.template">
             <field name="code">432</field>
@@ -4347,7 +4347,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Clientes, operaciones de factoring</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_432_child" model="account.account.template">
             <field name="code">432</field>
@@ -4355,7 +4355,7 @@
             <field name="parent_id" ref="pgc_432"/>
             <field name="type">other</field>
             <field name="name">Clientes, operaciones de factoring</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_433" model="account.account.template">
             <field name="code">433</field>
@@ -4363,7 +4363,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Clientes, empresas del grupo</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4330" model="account.account.template">
             <field name="code">4330</field>
@@ -4371,7 +4371,7 @@
             <field name="parent_id" ref="pgc_433"/>
             <field name="type">view</field>
             <field name="name">Clientes empresas del grupo (euros)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4330_child" model="account.account.template">
             <field name="code">4330</field>
@@ -4379,7 +4379,7 @@
             <field name="parent_id" ref="pgc_4330"/>
             <field name="type">receivable</field>
             <field name="name">Clientes empresas del grupo (euros)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4331" model="account.account.template">
             <field name="code">4331</field>
@@ -4387,7 +4387,7 @@
             <field name="parent_id" ref="pgc_433"/>
             <field name="type">view</field>
             <field name="name">Efectos comerciales a cobrar, empresas del grupo</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4331_child" model="account.account.template">
             <field name="code">4331</field>
@@ -4395,7 +4395,7 @@
             <field name="parent_id" ref="pgc_4331"/>
             <field name="type">receivable</field>
             <field name="name">Efectos comerciales a cobrar, empresas del grupo</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4332" model="account.account.template">
             <field name="code">4332</field>
@@ -4403,7 +4403,7 @@
             <field name="parent_id" ref="pgc_433"/>
             <field name="type">view</field>
             <field name="name">Clientes empresas del grupo, operaciones de factoring</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4332_child" model="account.account.template">
             <field name="code">4332</field>
@@ -4411,7 +4411,7 @@
             <field name="parent_id" ref="pgc_4332"/>
             <field name="type">receivable</field>
             <field name="name">Clientes empresas del grupo, operaciones de factoring</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4334" model="account.account.template">
             <field name="code">4334</field>
@@ -4419,7 +4419,7 @@
             <field name="parent_id" ref="pgc_433"/>
             <field name="type">view</field>
             <field name="name">Clientes empresas del grupo (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4334_child" model="account.account.template">
             <field name="code">4334</field>
@@ -4427,7 +4427,7 @@
             <field name="parent_id" ref="pgc_4334"/>
             <field name="type">receivable</field>
             <field name="name">Clientes empresas del grupo (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4336" model="account.account.template">
             <field name="code">4336</field>
@@ -4435,7 +4435,7 @@
             <field name="parent_id" ref="pgc_433"/>
             <field name="type">view</field>
             <field name="name">Clientes empresas del grupo de dudoso cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4336_child" model="account.account.template">
             <field name="code">4336</field>
@@ -4443,7 +4443,7 @@
             <field name="parent_id" ref="pgc_4336"/>
             <field name="type">receivable</field>
             <field name="name">Clientes empresas del grupo de dudoso cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4337" model="account.account.template">
             <field name="code">4337</field>
@@ -4451,7 +4451,7 @@
             <field name="parent_id" ref="pgc_433"/>
             <field name="type">view</field>
             <field name="name">Envases y embalajes a devolver a clientes, empresas del grupo</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4337_child" model="account.account.template">
             <field name="code">4337</field>
@@ -4459,7 +4459,7 @@
             <field name="parent_id" ref="pgc_4337"/>
             <field name="type">receivable</field>
             <field name="name">Envases y embalajes a devolver a clientes, empresas del grupo</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4339" model="account.account.template">
             <field name="code">4339</field>
@@ -4467,7 +4467,7 @@
             <field name="parent_id" ref="pgc_433"/>
             <field name="type">view</field>
             <field name="name">Clientes empresas del grupo, facturas pendientes de formalizar</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4339_child" model="account.account.template">
             <field name="code">4339</field>
@@ -4475,7 +4475,7 @@
             <field name="parent_id" ref="pgc_4339"/>
             <field name="type">receivable</field>
             <field name="name">Clientes empresas del grupo, facturas pendientes de formalizar</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_434" model="account.account.template">
             <field name="code">434</field>
@@ -4483,7 +4483,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Clientes, empresas asociadas</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_434_child" model="account.account.template">
             <field name="code">434</field>
@@ -4491,7 +4491,7 @@
             <field name="parent_id" ref="pgc_434"/>
             <field name="type">other</field>
             <field name="name">Clientes, empresas asociadas</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_435" model="account.account.template">
             <field name="code">435</field>
@@ -4499,7 +4499,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Clientes, otras partes vinculadas</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_435_child" model="account.account.template">
             <field name="code">435</field>
@@ -4507,7 +4507,7 @@
             <field name="parent_id" ref="pgc_435"/>
             <field name="type">other</field>
             <field name="name">Clientes, otras partes vinculadas</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_436" model="account.account.template">
             <field name="code">436</field>
@@ -4515,7 +4515,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Clientes de dudoso cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_436_child" model="account.account.template">
             <field name="code">436</field>
@@ -4523,7 +4523,7 @@
             <field name="parent_id" ref="pgc_436"/>
             <field name="type">other</field>
             <field name="name">Clientes de dudoso cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_437" model="account.account.template">
             <field name="code">437</field>
@@ -4531,7 +4531,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Envases y embalajes a devolver por clientes</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_437_child" model="account.account.template">
             <field name="code">437</field>
@@ -4539,7 +4539,7 @@
             <field name="parent_id" ref="pgc_437"/>
             <field name="type">other</field>
             <field name="name">Envases y embalajes a devolver por clientes</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_438" model="account.account.template">
             <field name="code">438</field>
@@ -4547,7 +4547,7 @@
             <field name="parent_id" ref="pgc_43"/>
             <field name="type">view</field>
             <field name="name">Anticipos de clientes</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_438_child" model="account.account.template">
             <field name="code">438</field>
@@ -4555,7 +4555,7 @@
             <field name="parent_id" ref="pgc_438"/>
             <field name="type">other</field>
             <field name="name">Anticipos de clientes</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_44" model="account.account.template">
             <field name="code">44</field>
@@ -4563,7 +4563,7 @@
             <field name="parent_id" ref="pgc_4"/>
             <field name="type">view</field>
             <field name="name">Deudores varios</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_440" model="account.account.template">
             <field name="code">440</field>
@@ -4571,7 +4571,7 @@
             <field name="parent_id" ref="pgc_44"/>
             <field name="type">view</field>
             <field name="name">Deudores</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4400" model="account.account.template">
             <field name="code">4400</field>
@@ -4579,7 +4579,7 @@
             <field name="parent_id" ref="pgc_440"/>
             <field name="type">view</field>
             <field name="name">Deudores (euros)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4400_child" model="account.account.template">
             <field name="code">4400</field>
@@ -4587,7 +4587,7 @@
             <field name="parent_id" ref="pgc_4400"/>
             <field name="type">receivable</field>
             <field name="name">Deudores (euros)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4404" model="account.account.template">
             <field name="code">4404</field>
@@ -4595,7 +4595,7 @@
             <field name="parent_id" ref="pgc_440"/>
             <field name="type">view</field>
             <field name="name">Deudores (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4404_child" model="account.account.template">
             <field name="code">4404</field>
@@ -4603,7 +4603,7 @@
             <field name="parent_id" ref="pgc_4404"/>
             <field name="type">receivable</field>
             <field name="name">Deudores (moneda extranjera)</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4409" model="account.account.template">
             <field name="code">4409</field>
@@ -4611,7 +4611,7 @@
             <field name="parent_id" ref="pgc_440"/>
             <field name="type">view</field>
             <field name="name">Deudores, facturas pendientes de formalizar</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4409_child" model="account.account.template">
             <field name="code">4409</field>
@@ -4619,7 +4619,7 @@
             <field name="parent_id" ref="pgc_4409"/>
             <field name="type">receivable</field>
             <field name="name">Deudores, facturas pendientes de formalizar</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_441" model="account.account.template">
             <field name="code">441</field>
@@ -4627,7 +4627,7 @@
             <field name="parent_id" ref="pgc_44"/>
             <field name="type">view</field>
             <field name="name">Deudores, efectos comerciales a cobrar</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4410" model="account.account.template">
             <field name="code">4410</field>
@@ -4635,7 +4635,7 @@
             <field name="parent_id" ref="pgc_441"/>
             <field name="type">view</field>
             <field name="name">Deudores, efectos comerciales en cartera</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4410_child" model="account.account.template">
             <field name="code">4410</field>
@@ -4643,7 +4643,7 @@
             <field name="parent_id" ref="pgc_4410"/>
             <field name="type">receivable</field>
             <field name="name">Deudores, efectos comerciales en cartera</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4411" model="account.account.template">
             <field name="code">4411</field>
@@ -4651,7 +4651,7 @@
             <field name="parent_id" ref="pgc_441"/>
             <field name="type">view</field>
             <field name="name">Deudores, efectos comerciales descontados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4411_child" model="account.account.template">
             <field name="code">4411</field>
@@ -4659,7 +4659,7 @@
             <field name="parent_id" ref="pgc_4411"/>
             <field name="type">receivable</field>
             <field name="name">Deudores, efectos comerciales descontados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4412" model="account.account.template">
             <field name="code">4412</field>
@@ -4667,7 +4667,7 @@
             <field name="parent_id" ref="pgc_441"/>
             <field name="type">view</field>
             <field name="name">Deudores, efectos comerciales en gestión de cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4412_child" model="account.account.template">
             <field name="code">4412</field>
@@ -4675,7 +4675,7 @@
             <field name="parent_id" ref="pgc_4412"/>
             <field name="type">receivable</field>
             <field name="name">Deudores, efectos comerciales en gestión de cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4415" model="account.account.template">
             <field name="code">4415</field>
@@ -4683,7 +4683,7 @@
             <field name="parent_id" ref="pgc_441"/>
             <field name="type">view</field>
             <field name="name">Deudores, efectos comerciales impagados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_4415_child" model="account.account.template">
             <field name="code">4415</field>
@@ -4691,7 +4691,7 @@
             <field name="parent_id" ref="pgc_4415"/>
             <field name="type">receivable</field>
             <field name="name">Deudores, efectos comerciales impagados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_446" model="account.account.template">
             <field name="code">446</field>
@@ -4699,7 +4699,7 @@
             <field name="parent_id" ref="pgc_44"/>
             <field name="type">view</field>
             <field name="name">Deudores de dudoso cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_446_child" model="account.account.template">
             <field name="code">446</field>
@@ -4707,7 +4707,7 @@
             <field name="parent_id" ref="pgc_446"/>
             <field name="type">other</field>
             <field name="name">Deudores de dudoso cobro</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_449" model="account.account.template">
             <field name="code">449</field>
@@ -4715,7 +4715,7 @@
             <field name="parent_id" ref="pgc_44"/>
             <field name="type">view</field>
             <field name="name">Deudores por operaciones en común</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_449_child" model="account.account.template">
             <field name="code">449</field>
@@ -4723,7 +4723,7 @@
             <field name="parent_id" ref="pgc_449"/>
             <field name="type">other</field>
             <field name="name">Deudores por operaciones en común</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_46" model="account.account.template">
             <field name="code">46</field>
@@ -4739,7 +4739,7 @@
             <field name="parent_id" ref="pgc_46"/>
             <field name="type">view</field>
             <field name="name">Anticipos de remuneraciones</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_460_child" model="account.account.template">
             <field name="code">460</field>
@@ -4747,7 +4747,7 @@
             <field name="parent_id" ref="pgc_460"/>
             <field name="type">other</field>
             <field name="name">Anticipos de remuneraciones</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_465" model="account.account.template">
             <field name="code">465</field>
@@ -4755,7 +4755,7 @@
             <field name="parent_id" ref="pgc_46"/>
             <field name="type">view</field>
             <field name="name">Remuneraciones pendientes de pago</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_465_child" model="account.account.template">
             <field name="code">465</field>
@@ -4763,7 +4763,7 @@
             <field name="parent_id" ref="pgc_465"/>
             <field name="type">other</field>
             <field name="name">Remuneraciones pendientes de pago</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_466" model="account.account.template">
             <field name="code">466</field>
@@ -4771,7 +4771,7 @@
             <field name="parent_id" ref="pgc_46"/>
             <field name="type">view</field>
             <field name="name">Remuneraciones mediante sistemas de aportación definida pendientes de pago</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_466_child" model="account.account.template">
             <field name="code">466</field>
@@ -4779,7 +4779,7 @@
             <field name="parent_id" ref="pgc_466"/>
             <field name="type">other</field>
             <field name="name">Remuneraciones mediante sistemas de aportación definida pendientes de pago</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_47" model="account.account.template">
             <field name="code">47</field>
@@ -5059,7 +5059,7 @@
             <field name="parent_id" ref="pgc_48"/>
             <field name="type">view</field>
             <field name="name">Gastos anticipados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_480_child" model="account.account.template">
             <field name="code">480</field>
@@ -5067,7 +5067,7 @@
             <field name="parent_id" ref="pgc_480"/>
             <field name="type">other</field>
             <field name="name">Gastos anticipados</field>
-            <field name="user_type" ref="terceros - rec"/>
+            <field name="user_type" ref="terceros_-_rec"/>
         </record>
         <record id="pgc_485" model="account.account.template">
             <field name="code">485</field>
@@ -5075,7 +5075,7 @@
             <field name="parent_id" ref="pgc_48"/>
             <field name="type">view</field>
             <field name="name">Ingresos anticipados</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_485_child" model="account.account.template">
             <field name="code">485</field>
@@ -5083,7 +5083,7 @@
             <field name="parent_id" ref="pgc_485"/>
             <field name="type">other</field>
             <field name="name">Ingresos anticipados</field>
-            <field name="user_type" ref="terceros - pay"/>
+            <field name="user_type" ref="terceros_-_pay"/>
         </record>
         <record id="pgc_49" model="account.account.template">
             <field name="code">49</field>
