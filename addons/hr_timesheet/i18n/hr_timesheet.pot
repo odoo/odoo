@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:16+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:16+0000\n"
+"POT-Creation-Date: 2011-01-03 09:14:57+0000\n"
+"PO-Revision-Date: 2011-01-03 09:14:57+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,8 @@ msgid "Service on Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:42
+#: code:addons/hr_timesheet/report/users_timesheet.py:76
 #, python-format
 msgid "Wed"
 msgstr ""
@@ -33,7 +33,7 @@ msgid "(Keep empty for current_time)"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "No employee defined for your user !"
 msgstr ""
@@ -87,8 +87,8 @@ msgid "janvier"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:42
+#: code:addons/hr_timesheet/report/users_timesheet.py:76
 #, python-format
 msgid "Mon"
 msgstr ""
@@ -141,26 +141,28 @@ msgid "Print Employees Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
+#: code:addons/hr_timesheet/hr_timesheet.py:174
+#: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
 msgid "Warning !"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:132
 #, python-format
 msgid "UserError"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:77
 #, python-format
 msgid "No cost unit defined for this employee !"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:42
+#: code:addons/hr_timesheet/report/users_timesheet.py:76
 #, python-format
 msgid "Tue"
 msgstr ""
@@ -171,7 +173,7 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
+#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:42
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -188,22 +190,17 @@ msgid "Sign In/Out By Project"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:42
+#: code:addons/hr_timesheet/report/users_timesheet.py:76
 #, python-format
 msgid "Sat"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:42
+#: code:addons/hr_timesheet/report/users_timesheet.py:76
 #, python-format
 msgid "Sun"
-msgstr ""
-
-#. module: hr_timesheet
-#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-msgid "Working Hours allows you to log your working hours by project every day."
 msgstr ""
 
 #. module: hr_timesheet
@@ -229,8 +226,8 @@ msgid "Monthly Employees Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "July"
 msgstr ""
@@ -253,6 +250,11 @@ msgid "novembre"
 msgstr ""
 
 #. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid "Through Working Hours you can register your working hours by project every day."
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.module.module,description:hr_timesheet.module_meta_information
 msgid "\n"
 "This module implements a timesheet system. Each employee can encode and\n"
@@ -268,8 +270,8 @@ msgid "\n"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "March"
 msgstr ""
@@ -286,8 +288,8 @@ msgid "décembre"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "September"
 msgstr ""
@@ -332,13 +334,12 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
-#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_sign_in
 msgid "Sign in / Sign out by project"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:42
+#: code:addons/hr_timesheet/report/users_timesheet.py:76
 #, python-format
 msgid "Fri"
 msgstr ""
@@ -349,7 +350,7 @@ msgid "Sign in / Sign out"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
+#: code:addons/hr_timesheet/hr_timesheet.py:174
 #, python-format
 msgid "Analytic journal is not defined for employee %s \n"
 "Define an employee for the selected user and assign an analytic journal!"
@@ -377,15 +378,15 @@ msgid "août"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "August"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "June"
 msgstr ""
@@ -407,8 +408,8 @@ msgid "Date"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "November"
 msgstr ""
@@ -424,15 +425,15 @@ msgid "Closing Date"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "October"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "January"
 msgstr ""
@@ -443,8 +444,8 @@ msgid "Key dates"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:42
+#: code:addons/hr_timesheet/report/users_timesheet.py:76
 #, python-format
 msgid "Thu"
 msgstr ""
@@ -481,8 +482,8 @@ msgid "Analysis summary"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "December"
 msgstr ""
@@ -554,8 +555,8 @@ msgid "Invoicing"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "May"
 msgstr ""
@@ -589,8 +590,8 @@ msgid "Sign In By Project"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "February"
 msgstr ""
@@ -617,14 +618,14 @@ msgid "octobre"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: code:addons/hr_timesheet/report/user_timesheet.py:39
+#: code:addons/hr_timesheet/report/users_timesheet.py:72
 #, python-format
 msgid "April"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/hr_timesheet.py:0
+#: code:addons/hr_timesheet/hr_timesheet.py:176
 #, python-format
 msgid "No analytic account defined on the project.\n"
 "Please set one or we can not automatically fill the timesheet."
@@ -653,7 +654,7 @@ msgid "Stats by user"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
+#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:42
 #, python-format
 msgid "No employee defined for this user"
 msgstr ""

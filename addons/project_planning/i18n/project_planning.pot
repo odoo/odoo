@@ -6,14 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45:00+0000\n"
-"PO-Revision-Date: 2010-12-21 19:45:00+0000\n"
+"POT-Creation-Date: 2011-01-03 09:15:39+0000\n"
+"PO-Revision-Date: 2011-01-03 09:15:39+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: project_planning
+#: constraint:account.analytic.account:0
+msgid "Error! The currency has to be the same as the currency of the selected company"
+msgstr ""
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -65,6 +70,16 @@ msgstr ""
 #. module: project_planning
 #: model:ir.module.module,shortdesc:project_planning.module_meta_information
 msgid "Planning Management Module"
+msgstr ""
+
+#. module: project_planning
+#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
+msgid "With its global system to schedule all resources of a company (people and material), OpenERP allows you to encode and then automatically compute tasks and phases scheduling, track resource allocation and availability."
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Total planned tasks"
 msgstr ""
 
 #. module: project_planning
@@ -124,11 +139,6 @@ msgid "Planning By Account"
 msgstr ""
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "Time without"
-msgstr ""
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Current Plannings"
 msgstr ""
@@ -149,8 +159,8 @@ msgid "Extra Info"
 msgstr ""
 
 #. module: project_planning
-#: field:report_account_analytic.planning,total_planned:0
-msgid "Total Planned"
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
 msgstr ""
 
 #. module: project_planning
@@ -171,8 +181,9 @@ msgid "Time Allocation without Tasks"
 msgstr ""
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "From"
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+msgid "Planning Lines"
 msgstr ""
 
 #. module: project_planning
@@ -227,6 +238,11 @@ msgid "Planning"
 msgstr ""
 
 #. module: project_planning
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr ""
+
+#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Time Encoding"
 msgstr ""
@@ -234,12 +250,6 @@ msgstr ""
 #. module: project_planning
 #: field:report_account_analytic.planning.user,free:0
 msgid "Unallocated Time"
-msgstr ""
-
-#. module: project_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
-#: view:report_account_analytic.planning:0
-msgid "Planning by Account"
 msgstr ""
 
 #. module: project_planning
@@ -253,13 +263,23 @@ msgid "Delegate"
 msgstr ""
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
+#: help:report_account_analytic.planning.user,free:0
+msgid "Computed as Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holiday Leaves)"
 msgstr ""
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
 msgid "Set here the number of working days within this planning for one person full time"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "["
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "From :"
 msgstr ""
 
 #. module: project_planning
@@ -280,13 +300,13 @@ msgid "Planning By Account (in Days)"
 msgstr ""
 
 #. module: project_planning
-#: field:report_account_analytic.planning,date_from:0
-msgid "Start Date"
+#: report:report_account_analytic.planning.print:0
+msgid "Time without tasks"
 msgstr ""
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "Total Planned Tasks"
+#: field:report_account_analytic.planning,date_from:0
+msgid "Start Date"
 msgstr ""
 
 #. module: project_planning
@@ -300,13 +320,8 @@ msgid "This value is given by the sum of time allocation with the checkbox 'Assi
 msgstr ""
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "tasks"
-msgstr ""
-
-#. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid "Computed as Business Days - (Time Allocation of Tasks + Time Allocation without Tasks + Holiday Leaves)"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
 msgstr ""
 
 #. module: project_planning
@@ -326,9 +341,9 @@ msgid "Draft"
 msgstr ""
 
 #. module: project_planning
-#: view:account.analytic.account:0
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
 #: view:report_account_analytic.planning:0
-msgid "Planning Lines"
+msgid "Planning by Account"
 msgstr ""
 
 #. module: project_planning
@@ -461,18 +476,12 @@ msgstr ""
 
 #. module: project_planning
 #: field:report_account_analytic.planning,user_id:0
-#: report:report_account_analytic.planning.print:0
 msgid "Responsible"
 msgstr ""
 
 #. module: project_planning
 #: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat
 msgid "Planning stat"
-msgstr ""
-
-#. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "To"
 msgstr ""
 
 #. module: project_planning
@@ -483,11 +492,6 @@ msgstr ""
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
 msgid "Summary by user"
-msgstr ""
-
-#. module: project_planning
-#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
-msgid "With its commun system for scheduling all resources of a company (people and materials), OpenERP allows you to encode then compute automatically tasks and phases scheduling, track resources allocation and availibility."
 msgstr ""
 
 #. module: project_planning
@@ -518,6 +522,16 @@ msgstr ""
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
 msgid "Summary by project"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Responsible :"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "]"
 msgstr ""
 
 #. module: project_planning

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45:09+0000\n"
-"PO-Revision-Date: 2010-12-21 19:45:09+0000\n"
+"POT-Creation-Date: 2011-01-03 09:15:48+0000\n"
+"PO-Revision-Date: 2011-01-03 09:15:48+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,18 +26,13 @@ msgid "The type of journal used for sales and picking."
 msgstr ""
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
 msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
-
-#. module: sale_journal
-#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
-msgid "Invoice types are used on partners, sales order and delivery orders. You can create journal to group your invoicing according to customer's needs: daily, each wednesday, monthly, etc."
 msgstr ""
 
 #. module: sale_journal
@@ -103,8 +98,18 @@ msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: sale_journal
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid "Invoice types are used for partners, sales orders and delivery orders. You can create a specific invoicing journal to group your invoicing according to your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr ""
+
+#. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
 msgstr ""
 
 #. module: sale_journal

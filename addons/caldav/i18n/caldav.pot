@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43:54+0000\n"
-"PO-Revision-Date: 2010-12-21 19:43:54+0000\n"
+"POT-Creation-Date: 2011-01-03 09:14:38+0000\n"
+"PO-Revision-Date: 2011-01-03 09:14:38+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -80,7 +80,7 @@ msgid "Ok"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/calendar.py:861
 #, python-format
 msgid "Please provide proper configuration of \"%s\" in Calendar Lines"
 msgstr ""
@@ -91,14 +91,15 @@ msgid "File name"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/wizard/calendar_event_subscribe.py:0
+#: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Error!"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:0
-#: code:addons/caldav/wizard/calendar_event_import.py:0
+#: code:addons/caldav/calendar.py:772
+#: code:addons/caldav/calendar.py:861
+#: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -114,7 +115,7 @@ msgid "Use the field"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/calendar.py:772
 #, python-format
 msgid "Can not create line \"%s\" more than once"
 msgstr ""
@@ -174,17 +175,12 @@ msgid "Type"
 msgstr ""
 
 #. module: caldav
-#: field:basic.calendar,description:0
-msgid "description"
-msgstr ""
-
-#. module: caldav
 #: help:calendar.event.export,name:0
 msgid "Save in .ics format"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/calendar.py:1275
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -256,13 +252,12 @@ msgid "Calendar"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:0
-#, python-format
-msgid "Please install python-vobject from http://vobject.skyhouseconsulting.com/"
+#: view:basic.calendar:0
+msgid "Todo"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/wizard/calendar_event_import.py:0
+#: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Invalid format of the ics, file can not be imported"
 msgstr ""
@@ -296,7 +291,7 @@ msgid "Calendar Collections"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/calendar.py:798
 #: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
@@ -321,12 +316,17 @@ msgid "Collection"
 msgstr ""
 
 #. module: caldav
+#: field:basic.calendar,write_date:0
+msgid "Write Date"
+msgstr ""
+
+#. module: caldav
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/wizard/calendar_event_subscribe.py:0
+#: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Please provide Proper URL !"
 msgstr ""
@@ -389,6 +389,7 @@ msgstr ""
 
 #. module: caldav
 #: view:basic.calendar:0
+#: field:basic.calendar,description:0
 msgid "Description"
 msgstr ""
 
@@ -403,13 +404,14 @@ msgid "Mapping"
 msgstr ""
 
 #. module: caldav
-#: view:calendar.event.import:0
-msgid "_Import"
+#: code:addons/caldav/wizard/calendar_event_import.py:86
+#, python-format
+msgid "Import Sucessful"
 msgstr ""
 
 #. module: caldav
-#: field:basic.calendar,write_date:0
-msgid "Modifided Date"
+#: view:calendar.event.import:0
+msgid "_Import"
 msgstr ""
 
 #. module: caldav
@@ -451,7 +453,7 @@ msgid "basic.calendar.alarm"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/calendar.py:1275
 #, python-format
 msgid "Attendee must have an Email Id"
 msgstr ""
@@ -462,7 +464,7 @@ msgid "Export .ics File"
 msgstr ""
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:0
+#: code:addons/caldav/calendar.py:41
 #, python-format
 msgid "vobject Import Error!"
 msgstr ""
@@ -493,8 +495,9 @@ msgid "Color"
 msgstr ""
 
 #. module: caldav
-#: view:basic.calendar:0
-msgid "Todo"
+#: code:addons/caldav/calendar.py:41
+#, python-format
+msgid "Please install python-vobject from http://vobject.skyhouseconsulting.com/"
 msgstr ""
 
 #. module: caldav

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:43+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:43+0000\n"
+"POT-Creation-Date: 2011-01-03 09:15:21+0000\n"
+"PO-Revision-Date: 2011-01-03 09:15:21+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,7 +35,7 @@ msgid "mrp_operations.operation.code"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:133
 #, python-format
 msgid "Production Order Cannot start in [%s] state"
 msgstr ""
@@ -116,7 +116,7 @@ msgid "Creation of the work order"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid "You cannot Pause the Operation other then Start/Resume state !"
 msgstr ""
@@ -134,7 +134,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:133
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:477
+#: code:addons/mrp_operations/mrp_operations.py:480
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -214,7 +218,7 @@ msgid "* When a work order is created it is set in 'Draft' state.\n"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:470
 #, python-format
 msgid "You cannot finish the operation without Starting/Resuming it !"
 msgstr ""
@@ -225,7 +229,7 @@ msgid "Planned Date"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "There is no Operation to be cancelled !"
 msgstr ""
@@ -252,6 +256,11 @@ msgid "Status"
 msgstr ""
 
 #. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid "To manufacture or assemble products, and use raw materials and finished products you must also handle manufacturing operations. Manufacturing operations are often called Work Orders. The various operations will have different impacts on the costs of manufacturing and planning depending on the available workload."
+msgstr ""
+
+#. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
 msgid "Order Date"
 msgstr ""
@@ -262,7 +271,7 @@ msgid "Future Work Orders"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:457
 #, python-format
 msgid "Operation has already started !You  can either Pause /Finish/Cancel the operation"
 msgstr ""
@@ -376,7 +385,7 @@ msgid "Production Operation Code"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:465
 #, python-format
 msgid " You cannot Resume the operation other then Pause state !"
 msgstr ""
@@ -426,7 +435,7 @@ msgid "June"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:480
 #, python-format
 msgid "Operation is already finished !"
 msgstr ""
@@ -483,7 +492,7 @@ msgid "Finish the operation."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:450
 #, python-format
 msgid "Operation is not started yet !"
 msgstr ""
@@ -494,7 +503,10 @@ msgid "Information from the production order."
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:450
+#: code:addons/mrp_operations/mrp_operations.py:457
+#: code:addons/mrp_operations/mrp_operations.py:470
+#: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid "Sorry!"
 msgstr ""
@@ -511,14 +523,9 @@ msgid "Code"
 msgstr ""
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid "Operation is Already Cancelled  !"
-msgstr ""
-
-#. module: mrp_operations
-#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
-msgid "To manufacture or assemble products, as well as using raw materials and finished product you must also handle manufacturing operations. Manufacturing operations are often called work orders. The different operations will have different impacts on the costs of manufacture and planning depending on the available workload."
 msgstr ""
 
 #. module: mrp_operations

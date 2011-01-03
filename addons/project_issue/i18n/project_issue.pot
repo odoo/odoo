@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:57+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:57+0000\n"
+"POT-Creation-Date: 2011-01-03 09:15:36+0000\n"
+"PO-Revision-Date: 2011-01-03 09:15:36+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -84,7 +84,7 @@ msgid "Days to Open"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:360
 #, python-format
 msgid "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
@@ -154,7 +154,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:360
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -203,7 +203,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:464
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -211,11 +211,6 @@ msgstr ""
 #. module: project_issue
 #: view:project.issue:0
 msgid "Previous"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid "Issues such as system bugs, client complains, material breakdowns are collected here. You can define the stages assigned to the resolution of the issue on the project. (analysis, development, done) Using the mailgateway module, the issues can be integrated to an email address (example: support@mycompany.com)"
 msgstr ""
 
 #. module: project_issue
@@ -404,7 +399,7 @@ msgid "You can use the issues tracker in OpenERP to handle bugs in the software 
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:283
 #, python-format
 msgid "Tasks"
 msgstr ""
@@ -447,7 +442,7 @@ msgid "project.issue.report"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:362
 #: view:project.issue:0
 #, python-format
 msgid "Escalate"
@@ -739,6 +734,11 @@ msgid "Current"
 msgstr ""
 
 #. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid "Issues such as system bugs, customer complaints, and material breakdowns are collected here. You can define the stages assigned when solving the project issue (analysis, development, done). With the mailgateway module, issues can be integrated through an email address (example: support@mycompany.com)"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Details"
 msgstr ""
@@ -815,7 +815,7 @@ msgid "February"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:61
 #, python-format
 msgid "Issue '%s' has been opened."
 msgstr ""
@@ -841,7 +841,7 @@ msgid "Month-1"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:76
 #, python-format
 msgid "Issue '%s' has been closed."
 msgstr ""
@@ -867,7 +867,7 @@ msgid "ID"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:377
 #, python-format
 msgid "No Title"
 msgstr ""

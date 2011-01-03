@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:56+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:56+0000\n"
+"POT-Creation-Date: 2011-01-03 09:15:35+0000\n"
+"PO-Revision-Date: 2011-01-03 09:15:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,18 +46,13 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "No timebox child of this one !"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
-msgid "Timeboxes are defined in the \"Getting Things Done\" methodology. It defines a period of time in order to categorize your tasks: today, this week, this month, long term."
-msgstr ""
-
-#. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:112
 #, python-format
 msgid "GTD"
 msgstr ""
@@ -96,7 +91,7 @@ msgid "Set to Timebox"
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -115,6 +110,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
 #: view:project.timebox.empty:0
 msgid "Empty Timebox"
+msgstr ""
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
+msgid "Timeboxes are defined in the \"Getting Things Done\" methodology. A timebox defines a period of time in order to categorize your tasks: today, this week, this month, long term."
 msgstr ""
 
 #. module: project_gtd
@@ -212,7 +212,7 @@ msgid "_Ok"
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:110
 #, python-format
 msgid "Getting Things Done"
 msgstr ""
@@ -226,11 +226,6 @@ msgstr ""
 #: field:project.gtd.context,sequence:0
 #: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
-msgstr ""
-
-#. module: project_gtd
-#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
-msgid "Contexts are defined in the \"Getting Things Done\" methodology. It allows you to categorize your tasks according to the context in which they have to be done: at office, at home, when I take my car, etc."
 msgstr ""
 
 #. module: project_gtd
@@ -249,7 +244,7 @@ msgid "Tasks selection"
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:111
 #, python-format
 msgid "Inbox"
 msgstr ""
@@ -267,6 +262,11 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
+msgstr ""
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
+msgid "Contexts are defined in the \"Getting Things Done\" methodology. It allows you to categorize your tasks according to the context in which they have to be done: at the office, at home, when I take my car, etc."
 msgstr ""
 
 #. module: project_gtd

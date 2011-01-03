@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45:07+0000\n"
-"PO-Revision-Date: 2010-12-21 19:45:07+0000\n"
+"POT-Creation-Date: 2011-01-03 09:15:46+0000\n"
+"PO-Revision-Date: 2011-01-03 09:15:46+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -45,8 +45,6 @@ msgstr ""
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
 msgid "Working Time"
 msgstr ""
 
@@ -122,6 +120,11 @@ msgid "Day of week"
 msgstr ""
 
 #. module: resource
+#: help:resource.calendar.attendance,hour_to:0
+msgid "Working time will end at"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting date"
 msgstr ""
@@ -150,11 +153,6 @@ msgstr ""
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
-msgstr ""
-
-#. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
-msgid "Resources allows you to create and manage resources that should be involved in a specific project phase. It also allows you to set their efficiency level and workload based on their weekly working hours"
 msgstr ""
 
 #. module: resource
@@ -204,6 +202,9 @@ msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar.leaves:0
+#: view:resource.resource:0
+#: field:resource.resource,calendar_id:0
 msgid "Working Period"
 msgstr ""
 
@@ -269,7 +270,6 @@ msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
-#: field:resource.resource,calendar_id:0
 msgid "Working time"
 msgstr ""
 
@@ -285,8 +285,8 @@ msgid "General Information"
 msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid "Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours."
 msgstr ""
 
 #. module: resource
@@ -295,7 +295,7 @@ msgid "Inactive"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/faces/resource.py:0
+#: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
 msgstr ""
@@ -321,7 +321,7 @@ msgid "Start Date"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/resource.py:0
+#: code:addons/resource/resource.py:246
 #, python-format
 msgid " (copy)"
 msgstr ""
