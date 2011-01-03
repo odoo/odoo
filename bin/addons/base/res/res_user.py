@@ -476,6 +476,13 @@ class users(osv.osv):
         finally:
             cr.close()
 
+    def change_password(self, cr, uid, ids, old_passwd, new_passwd):
+        if self.browse(cr, uid, uid).password != old_passwd:
+            raise  osv.except_osv(_('AccessDenied'), 'The current password does not match !')
+        else:
+            self.write(cr, uid, uid, {'password': new_passwd})
+        return True
+
 users()
 
 class config_users(osv.osv_memory):
@@ -574,39 +581,4 @@ class res_config_view(osv.osv_memory):
 
 res_config_view()
 
-class change_user_password(osv.osv_memory):
-    _name = 'change.user.password'
-    _columns = {
-        'current_password':fields.char('Current Password', size=64, required=True, help="Enter your current password."),
-        'new_password': fields.char('New Password', size=64, required=True, help="Enter the new password."),
-        'confirm_password': fields.char('Confirm Password', size=64, required=True, help="Enter the new password again for confirmation."),
-    }
-    _defaults={
-        'current_password' : '',
-        'new_password' : '',
-        'confirm_password' : '',
-    }
-
-    def change_password(self, cr, uid, ids, context=None):
-        for form_id in ids:
-            password_rec = self.browse(cr, uid, form_id, context)
-            if password_rec.new_password != password_rec.confirm_password:
-                raise osv.except_osv(_('Error !'), _('The new and confirmation passwords do not match, please double-check them.'))
-
-            # Validate current password without reading it from database,
-            # as it could be stored differently (LDAP, encrypted/hashed, etc.)
-            is_correct_password = False
-            try:
-                user_obj = self.pool.get('res.users')
-                is_correct_password = user_obj.check(cr.dbname, uid, password_rec.current_password)
-            except Exception:
-                pass
-            if not is_correct_password:
-                raise osv.except_osv(_('Error !'), _('The current password does not match, please double-check it.'))
-            user_obj.write(cr, uid, [uid], {'password': password_rec.new_password}, context=context)
-        return {}
-
-change_user_password()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

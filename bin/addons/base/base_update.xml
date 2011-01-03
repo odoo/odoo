@@ -70,34 +70,6 @@
     ======================
     -->
 
-        <record id="view_change_user_password_form" model="ir.ui.view">
-            <field name="name">change.user.password</field>
-            <field name="model">change.user.password</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Change Password">
-                    <field name="current_password" password="True" readonly="0" colspan="4"/>
-                    <field name="new_password" password="True" readonly="0" colspan="4"/>
-                    <field name="confirm_password" password="True" readonly="0" colspan="4"/>
-                    <label colspan="1" string=""/>
-                    <label colspan="3" string="You must logout and login again after changing your password."/>
-                    <separator colspan="4" />
-                    <label align="0.0" colspan="2" string=""/>
-                    <button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    <button colspan="1" icon="gtk-ok" name="change_password" string="Change" type="object"/>
-                </form>
-            </field>
-        </record>
-
-        <record id="action_view_change_password_form" model="ir.actions.act_window">
-            <field name="name">Change Password</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">change.user.password</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>
-
         <record id="view_users_form_simple_modif" model="ir.ui.view">
             <field name="name">res.users.form.modif</field>
             <field name="model">res.users</field>
@@ -119,8 +91,6 @@
                             <field name="context_lang" completion="1" readonly="0"/>
                             <field name="context_tz" completion="1" readonly="0"/>
                             <field name="menu_tips" colspan="2" readonly="0"/>
-                            <label string="" colspan="1"/>
-                            <button name="%(action_view_change_password_form)d" string="Change Password" type="action" icon="gtk-execute"/>
                             <separator string="Email &amp; Signature" colspan="4"/>
                             <group colspan="4"><field name="user_email" widget="email" readonly="0"/></group>
                             <field colspan="4" name="signature" readonly="0" nolabel="1"/>
