@@ -49,8 +49,9 @@ account_move_line()
 
 class account_voucher(osv.osv):
 
-    def _get_type(self, cr, uid, ids, context=None):
-        if context is None: context = {}
+    def _get_type(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         return context.get('type', False)
 
     def _get_period(self, cr, uid, context=None):
@@ -775,7 +776,7 @@ class account_voucher(osv.osv):
                     'date': inv.date,
                     'credit': diff > 0 and diff or 0.0,
                     'debit': diff < 0 and -diff or 0.0,
-		    'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
+                    'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
                     'currency_id': company_currency <> current_currency and current_currency or False,
                     'analytic_account_id': inv.analytic_id.id,
                 }

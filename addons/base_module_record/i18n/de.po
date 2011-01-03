@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-11-30 17:15+0000\n"
+"PO-Revision-Date: 2010-12-31 09:44+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:13+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_record
@@ -113,7 +113,7 @@ msgstr "Module Aufzeichnung"
 #: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_objects
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_objects
 msgid "Export Customizations As a Module"
-msgstr "Kundenanpassung als Modul exportieren"
+msgstr "Export Personalisierung als Modul"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save:0
@@ -208,7 +208,7 @@ msgstr "Fortsetzen"
 #: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_data
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_data
 msgid "Export Customizations As Data File"
-msgstr "Exportiere Personalisierung as Datei"
+msgstr "Export Personalisierung als Datei"
 
 #. module: base_module_record
 #: code:addons/base_module_record/wizard/base_module_save.py:0
@@ -230,7 +230,7 @@ msgstr "OK"
 #. module: base_module_record
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_mod_rec
 msgid "Module Creation"
-msgstr "Modul Erzeugung"
+msgstr "Export Personalisierung"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,data_kind:0
@@ -297,6 +297,34 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht die einfache Erstellung eines neuen Moduls ohne "
+"Quellcode zu schreiben.\n"
+"Es werden alle Vorgänge zu ausgewählten Objekten während einer aktiven "
+"Sitzung aufgezeichnet, um\n"
+"dann ein Modul in Form eines .zip Archivs zu exportieren. Somit können Sie "
+"sehr einfach Ihr eigenes \n"
+"Modul mit Hilfe des OpenERP Clients erstellen.\n"
+"\n"
+"Aufgezeichnet werden neu erstellte und/oder geänderte Datensätze. Außerdem "
+"werden \n"
+"abhängige Daten sowie existierende Verbindungen aktualisiert (many2one "
+"Widgets, many2many Widgets, ...). \n"
+"Workflows und Demo/Update Daten werden ebenfalls im Rahmen dieses Moduls "
+"unterstützt.\n"
+"\n"
+"Diese Funktion hilft Ihnen z.B. dabei wiederverwendbare Module zu erstellen "
+"und auf diesem Wege individuelle\n"
+"Konfigurationen zu erstellen und diese für Demos bzw. den realen Einsatz zu "
+"nutzen. \n"
+"\n"
+"Wie sollte das Modul angewendet werden? Starten Sie den Assistenten über das "
+"Menü: \n"
+"Administration/Personalisierung/Export Personalisierung/Export "
+"Personalisierung als Modul\n"
+"Wählen Sie dann eine Datum/Zeit Einstellung für den Export der "
+"aufgezeichneten Personalisierung.\n"
+"    "
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

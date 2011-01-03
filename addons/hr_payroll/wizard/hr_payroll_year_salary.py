@@ -64,6 +64,7 @@ class hr_payroll_year_salary(osv.osv_memory):
         res = self.read(cr, uid, ids, ['employee_ids',  'date_from', 'date_to', 'salary_on'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
+        datas['ids'] = res.get('employee_ids',[])
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'year.salary',

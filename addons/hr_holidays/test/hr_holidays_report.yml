@@ -1,14 +1,22 @@
 -
- In order to test the PDF reports defined on a HR Holidays, we will print HR Holidays
+ Print the HR Holidays(Summary Department) Report through the wizard
 -
   !python {model: hr.holidays}: |
-    import netsvc, tools, os, time
-    data_dict = {'model': 'ir.ui.menu', 'form': {'date_from': time.strftime('%Y-%m-01'), 'depts' : [ref('hr.dep_sales')],'holiday_type' : 'Validated' }}
-    (data, format) = netsvc.LocalService('report.holidays.summary').create(cr, uid, [], data_dict, {'active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_holidays-dept_summary_report.'+format), 'wb+').write(data)
-    
-    data_dict = {'model': 'hr.employee', 'form': {'date_from': time.strftime('%Y-%m-01'), 'depts' : [ref('hr.dep_sales')],'holiday_type' : 'Validated','emp':[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')] }}
-    (data, format) = netsvc.LocalService('report.holidays.summary').create(cr, uid, [], data_dict, {'active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'hr_holidays-employee_summary_report.'+format), 'wb+').write(data)
+    import time
+    ctx={}
+    ctx.update({'model': 'hr.department','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
+    data_dict = {'date_from': time.strftime('%Y-%m-01'), 'depts' : [(6,0,[ref('hr.dep_sales')])],'holiday_type' : 'Validated'}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_holidays_summary_dept',wiz_data=data_dict, context=ctx, our_module='hr_holidays')
+
+-
+ Print the HR Holidays(Summary Employee) Report through the wizard
+-
+  !python {model: hr.holidays}: |
+    import time
+    ctx={}
+    ctx.update({'model': 'hr.employee','active_ids': [ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')]})
+    data_dict = {'date_from': time.strftime('%Y-%m-01'), 'emp' : [(6,0,[ref('hr.employee1'),ref('hr.employee2'),ref('hr.employee3')])],'holiday_type' : 'Validated'}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_hr_holidays_summary_employee',wiz_data=data_dict, context=ctx, our_module='hr_holidays')
+

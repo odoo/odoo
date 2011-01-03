@@ -25,6 +25,7 @@ from report.interface import report_rml
 from tools import to_xml
 import tools
 import time
+from report import report_sxw
 
 class survey_browse_response(report_rml):
     def create(self, cr, uid, ids, datas, context):
@@ -176,6 +177,7 @@ class survey_browse_response(report_rml):
                     <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="12" spaceBefore="0.0" spaceAfter="1.0"/>
                     <paraStyle name="terp_tblheader_Details" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="terp_default_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+                    <paraStyle name="terp_default_9_Bold" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
                     <paraStyle name="terp_tblheader_General_Centre_simple" fontName="Helvetica" fontSize="10.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="terp_tblheader_General_Centre" fontName="Helvetica-Bold" fontSize="10.0" leading="10" alignment="LEFT" spaceBefore="6.0" spaceAfter="6.0"/>
                     <paraStyle name="terp_tblheader_General_right_simple" fontName="Helvetica" fontSize="10.0" leading="10" alignment="RIGHT" spaceBefore="6.0" spaceAfter="6.0"/>
@@ -186,6 +188,7 @@ class survey_browse_response(report_rml):
                   <images/>
                   <story>"""
         surv_resp_obj = pooler.get_pool(cr.dbname).get('survey.response')
+        rml_obj=report_sxw.rml_parse(cr, uid, surv_resp_obj._name,context)
         if datas.has_key('form') and datas['form'].has_key('response_ids'):
             response_id = datas['form']['response_ids']
         elif context.has_key('response_id') and context['response_id']:
@@ -195,20 +198,26 @@ class survey_browse_response(report_rml):
 
         surv_resp_line_obj = pooler.get_pool(cr.dbname).get('survey.response.line')
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
-        surv_ans_obj = pooler.get_pool(cr.dbname).get('survey.answer')
 
         for response in surv_resp_obj.browse(cr, uid, response_id):
             for survey in surv_obj.browse(cr, uid, [response.survey_id.id]):
                 tbl_width = float(_tbl_widths.replace('cm', ''))
-                colwidth =  "4.6cm,5cm," + str(tbl_width - 16.4) +"cm,4cm,3cm"
+                colwidth =  "2.5cm,4.8cm," + str(tbl_width - 15.0) +"cm,3.2cm,4.5cm"
                 resp_create = tools.ustr(time.strftime('%d-%m-%Y %I:%M:%S %p', time.strptime(response.date_create.split('.')[0], '%Y-%m-%d %H:%M:%S')))
                 rml += """<blockTable colWidths='""" + colwidth + """' style="Table_heading">
                           <tr>
-                            <td><para style="terp_tblheader_General_Centre">Answer Create Date:- </para></td>
-                            <td><para style="terp_tblheader_General_Centre_simple">""" + to_xml(resp_create) +  """</para></td>
-                            <td><para style="terp_tblheader_General_Centre"></para></td>
-                            <td><para style="terp_tblheader_General_right">Answer By:- </para></td>
-                            <td><para style="terp_tblheader_General_right_simple">""" + to_xml(response.user_id.login or '') + """</para></td>
+                            <td><para style="terp_default_9_Bold">Print Date : </para></td>
+                            <td><para style="terp_default_9">""" + to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True)) + """</para></td>
+                            <td><para style="terp_default_9"></para></td>
+                            <td><para style="terp_default_9_Bold">Answered by : </para></td>
+                            <td><para style="terp_default_9">""" + to_xml(response.user_id.login or '') + """</para></td>
+                          </tr>
+                          <tr>
+                            <td><para style="terp_default_9"></para></td>
+                            <td><para style="terp_default_9"></para></td>
+                            <td><para style="terp_default_9"></para></td>
+                            <td><para style="terp_default_9_Bold">Answer Date : </para></td>
+                            <td><para style="terp_default_9">""" + to_xml(resp_create) +  """</para></td>
                           </tr>
                         </blockTable><para style="P2"></para>"""
 

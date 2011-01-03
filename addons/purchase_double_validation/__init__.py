@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,10 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-__name__ = "Change signs of old holiday requests"
 
-def migrate(cr, version):
-    cr.execute("DELETE FROM hr_holidays WHERE number_of_days < 0")
-    cr.execute("UPDATE hr_holidays SET number_of_days = -number_of_days, type ='remove'")
+import purchase_double_validation_installer
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

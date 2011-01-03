@@ -276,6 +276,7 @@
                     <field name="company_currency_id"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="type"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -949,11 +950,11 @@
                                   <field groups="base.group_extended" colspan="4" name="child_ids">
                                       <tree string="Account Tax">
                                           <field name="sequence"/>
-					                      <field name="name"/>
-					                      <field name="price_include" groups="base.group_extended"/>
-					                      <field name="description"/>
-					                 </tree>
-					             </field>
+                                          <field name="name"/>
+                                          <field name="price_include" groups="base.group_extended"/>
+                                          <field name="description"/>
+                                     </tree>
+                                 </field>
                           </group>
                         </page>
                         <page groups="base.group_extended" string="Special Computation">
@@ -962,8 +963,11 @@
                             <field name="domain"/>
                             <separator colspan="4" string="Applicable Code (if type=code)"/>
                             <field colspan="4" name="python_applicable" nolabel="1" attrs="{'readonly':[('applicable_type','=','true')], 'required':[('applicable_type','=','code')]}"/>
-                            <separator colspan="4" string="Compute Code (if type=code)"/>
-                            <field colspan="4" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                            <separator colspan="2" string="Compute Code"/>
+                            <separator colspan="2" string="Reverse Compute Code"/>
+                            <field colspan="2" name="python_compute" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
+                            <field colspan="2" name="python_compute_inv" nolabel="1" attrs="{'readonly':[('type','!=','code')],'required':[('type','=','code')]}"/>
+
                         </page>
                     </notebook>
                 </form>
@@ -2062,7 +2066,7 @@
 
         <act_window context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id]}" domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="act_account_partner_account_move_all" name="Receivables &amp; Payables" res_model="account.move.line" src_model="res.partner" groups="base.group_extended"/>
 
-        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner"/>
+        <act_window context="{'search_default_partner_id':[active_id]}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
 
         <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
             <field name="name">Create Account</field>
@@ -2763,11 +2767,13 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
             <field name="filter" eval="True"/>
         </record>
 
-        <menuitem id="menu_partners_partners"
-                name="Partners"
-                parent="menu_partners"
-                action="action_partner_all"
-                sequence="1"/>
+        <menuitem id="menu_account_customer" name="Customers"
+            parent="menu_finance_receivables"
+            action="base.action_partner_customer_form" sequence="100"/>
+
+        <menuitem id="menu_account_supplier" name="Suppliers"
+            parent="menu_finance_payables"
+            action="base.action_partner_supplier_form" sequence="100"/>
 
     </data>
 </openerp>

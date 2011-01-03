@@ -13,10 +13,10 @@
     product_id: product.product_product_pc1
     product_qty: 5.0
     product_uom: product.product_uom_unit
-    product_uos_qty: 0.0
-- 
+    product_uos_qty: 5.0
+-
   I am computing the data.
-- 
+-
   !python {model: mrp.production}: |
     self.action_compute(cr, uid, [ref("mrp_production_mo0")], {"lang": "en_US", "tz":
       False, "search_default_current": 1, "active_model": "ir.ui.menu", "active_ids":
