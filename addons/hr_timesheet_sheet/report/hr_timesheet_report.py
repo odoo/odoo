@@ -21,6 +21,8 @@
 
 import tools
 from osv import fields,osv
+from decimal_precision import decimal_precision as dp
+
 
 class hr_timesheet_report(osv.osv):
     _name = "hr.timesheet.report"
@@ -40,7 +42,7 @@ class hr_timesheet_report(osv.osv):
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
         'company_id': fields.many2one('res.company', 'Company',readonly=True),
-        'cost': fields.float('Cost',readonly=True),
+        'cost': fields.float('Cost',readonly=True, digits_compute=dp.get_precision('Account')),
         'quantity': fields.float('Quantity',readonly=True),
     }
 

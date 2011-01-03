@@ -561,19 +561,18 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Manufacturing Orders">
-                    <group colspan="4" col="6">
+                    <group colspan="4" col="7">
                         <field name="name" string="Reference"/>
                         <field name="date_planned"/>
                         <field name="origin"/>
+                        <newline/>
                         <field name="product_id" on_change="product_id_change(product_id)"/>
                         <field name="product_qty"/>
-                        <group colspan="2" col="4">
                         <field name="product_uom"/>
                         <button type="action"
                             icon="terp-accessories-archiver+"
                             name="%(mrp.action_change_production_qty)d"
                             string="Change Qty" states="ready,confirmed" />
-                        </group>
                         <label string="" colspan="2"/>
                         <field name="product_uos_qty" groups="product.group_uos"/>
                         <field name="product_uos" groups="product.group_uos"/>
@@ -599,6 +598,11 @@
                                         string="Consume Products" type="action"
                                         icon="gtk-go-forward" context="{'consume': True}"
                                         states="draft,waiting,confirmed,assigned" />
+                                    <button
+                                           name="%(stock.track_line)d"
+                                           string="Split in production lots"
+                                           type="action" icon="gtk-justify-fill"
+                                           states="draft,waiting,confirmed,assigned" />
                                     <button name="%(stock.move_scrap)d"
                                         string="Scrap Products" type="action"
                                         icon="gtk-convert" context="{'scrap': True}"
@@ -616,11 +620,6 @@
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
-                                       <button
-                                           name="%(stock.track_line)d"
-                                           string="Split in production lots"
-                                           type="action" icon="gtk-justify-fill"
-                                           states="done,cancel" />
                                        <button
                                            name="%(stock.move_scrap)d"
                                            string="Scrap Products" type="action"
@@ -727,12 +726,15 @@
             <field name="arch" type="xml">
                 <search string="Search Production">
                    <group col='9' colspan='4'>
+                       <filter icon="terp-gtk-media-pause" string="Pending" name="pending"
+                           domain="[('state','=','confirmed')]"
+                           help="Manufacturing Orders which are waiting for raw materials."/>
                        <filter icon="terp-camera_test" string="Ready" name="ready"
                            domain="[('state','=','ready')]"
-                           help="Non confirmed manufacturing orders"/>
-                       <filter icon="terp-check" string="Current" name="current"
-                           domain="[('state','in',('confirmed','ready','exception','in_production'))]"
-                           help="Manufacturing Orders which are waiting for raw materials, confirmed, ready to start or currently in production."/>
+                           help="Manufacturing Orders which are ready to start production."/>
+                       <filter icon="terp-check" string="In Production" name="inprogress"
+                           domain="[('state','=','in_production')]"
+                           help="Manufacturing Orders which are currently in production."/>
                        <separator orientation="vertical"/>
                        <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
                            domain="['&amp;', ('date_planned::date','&lt;', current_date), ('state', 'in', ('draft', 'confirmed', 'ready'))]"
