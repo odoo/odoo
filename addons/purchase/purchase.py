@@ -455,6 +455,7 @@ class purchase_order(osv.osv):
                         'state': 'draft',
                         'purchase_line_id': order_line.id,
                         'company_id': order.company_id.id,
+                        'price_unit': order_line.price_unit
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
@@ -672,7 +673,7 @@ class purchase_order_line(osv.osv):
         seller_delay = 0
 
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
-        res = {} 
+        res = {}
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay
