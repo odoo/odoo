@@ -187,7 +187,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                          0.0
                         end) as amount_currency,
                 '' AS currency_code,
-                NULL AS currency_id,
+                a.currency_id AS currency_id,
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,
                 '' AS partner_name
                 FROM account_move_line l
@@ -198,6 +198,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                 LEFT JOIN account_invoice i on (m.id =i.move_id)
                 JOIN account_journal j on (l.journal_id=j.id)
                 WHERE %s AND m.state IN %s AND l.account_id = %%s
+                GROUP BY a.currency_id
             """ %(self.init_query, tuple(move_state))
             self.cr.execute(sql, (account.id,))
             res_init = self.cr.dictfetchall()
