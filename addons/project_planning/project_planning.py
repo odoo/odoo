@@ -64,12 +64,12 @@ class report_account_analytic_planning(osv.osv):
             ids_dept = obj_dept.search(cr, uid, [('id', 'child_of', mgnt_dept_ids)], context=context)
             if ids_dept:
                 data_dept = obj_dept.read(cr, uid, ids_dept, ['member_ids'], context=context)
-                childs = map(lambda x: x['member_ids'], data_dept)
-                childs = tools.flatten(childs)
-                childs = obj_user.search(cr, uid, [('id', 'in', childs),('active', '=', True)], context=context)
-                if user_id in childs:
-                    childs.remove(user_id)
-                child_ids.extend(tools.flatten(childs))
+                children = map(lambda x: x['member_ids'], data_dept)
+                children = tools.flatten(children)
+                children = obj_user.search(cr, uid, [('id', 'in', children),('active', '=', True)], context=context)
+                if user_id in children:
+                    children.remove(user_id)
+                child_ids.extend(tools.flatten(children))
                 set = {}
                 map(set.__setitem__, child_ids, [])
                 child_ids = set.keys()

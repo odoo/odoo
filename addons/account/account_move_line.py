@@ -309,7 +309,7 @@ class account_move_line(osv.osv):
             context = {}
         c = context.copy()
         c['initital_bal'] = True
-        sql = """SELECT l2.id, SUM(l1.debit-l1.credit) 
+        sql = """SELECT l2.id, SUM(l1.debit-l1.credit)
                     FROM account_move_line l1, account_move_line l2
                     WHERE l2.account_id = l1.account_id
                       AND l1.id <= l2.id
@@ -318,8 +318,7 @@ class account_move_line(osv.osv):
                 " GROUP BY l2.id"
 
         cr.execute(sql, [tuple(ids)])
-        res = dict(cr.fetchall())
-        return res
+        return dict(cr.fetchall())
 
     def _invoice(self, cursor, user, ids, name, arg, context=None):
         invoice_obj = self.pool.get('account.invoice')

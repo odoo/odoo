@@ -199,15 +199,15 @@ class hr_evaluation(osv.osv):
         for evaluation in self.browse(cr, uid, ids, context=context):
             wait = False
             for phase in evaluation.plan_id.phase_ids:
-                childs = []
+                children = []
                 if phase.action == "bottom-up":
-                    childs = evaluation.employee_id.child_ids
+                    children = evaluation.employee_id.child_ids
                 elif phase.action in ("top-down", "final"):
                     if evaluation.employee_id.parent_id:
-                        childs = [evaluation.employee_id.parent_id]
+                        children = [evaluation.employee_id.parent_id]
                 elif phase.action == "self":
-                    childs = [evaluation.employee_id]
-                for child in childs:
+                    children = [evaluation.employee_id]
+                for child in children:
 #                    if not child.user_id:
 #                        continue
 
@@ -281,7 +281,7 @@ class hr_evaluation_interview(osv.osv):
     _columns = {
         'request_id': fields.many2one('survey.request','Request_id', ondelete='cascade', required=True),
         'user_to_review_id': fields.many2one('hr.employee', 'Employee to Interview'),
-        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluation Type'),
+        'evaluation_id': fields.many2one('hr_evaluation.evaluation', 'Evaluation Form'),
     }
     _defaults = {
         'is_evaluation': True,

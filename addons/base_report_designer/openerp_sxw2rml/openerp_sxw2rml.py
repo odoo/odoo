@@ -26,7 +26,7 @@ OpenERP SXW2RML - The OpenERP's report engine
 
 OpenERP SXW2RML is part of the OpenERP Report Project.
 OpenERP Report is a module that allows you to render high quality PDF document
-from an OpenOffice template (.sxw) and any relationnal database.
+from an OpenOffice template (.sxw) and any relationl database.
 """
 __version__ = '0.9'
 
@@ -251,8 +251,8 @@ class DomApi(DomApiGeneral):
             parent = self.style_dict[style_name].getAttribute("style:parent-style-name").encode("utf-8")
             res = self.getStylePropertiesDict(parent)
 
-        childs = self.style_dict[style_name].childNodes
-        for c in childs:
+        children = self.style_dict[style_name].childNodes
+        for c in children:
             if c.nodeType == c.ELEMENT_NODE and c.nodeName.find("properties")>0 :
                 for attr in c._attrs.keys():
                     res[attr] = c.getAttribute(attr).encode("utf-8")

@@ -48,7 +48,7 @@
 
     <xsl:template name="story">
 		<spacer length="1cm" />
-		<para style="title" t="1">Timesheet</para>
+		<para style="title" t="1">Timesheet by Employee</para>
 		<spacer length="1cm" />
 		<para style="employee"><xsl:value-of select="/report/employee" /></para>
 		<spacer length="1cm" />

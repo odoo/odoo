@@ -42,7 +42,6 @@
   I allocate leave request for employee "Phil Graves".
 -
   !record {model: hr.holidays, id: hr_holidays_allocateleaveforuser0}:
-    allocation_type: employee
     employee_id: 'hr_employee_philgraves0'
     holiday_status_id: hr_holidays_status_sick0
     name: Sick Leaves for Phil Graves
@@ -64,7 +63,6 @@
   I connect as "test_holiday_user1", and create a new leave request for employee "Phil Graves".
 -
   !record {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
-    allocation_type: employee
     date_from: '2010-05-20 11:48:00'
     date_to: '2010-05-21 11:48:00'
     employee_id: 'hr_employee_philgraves0'

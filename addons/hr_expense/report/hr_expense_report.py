@@ -21,6 +21,7 @@
 
 import tools
 from osv import fields,osv
+from decimal_precision import decimal_precision as dp
 
 
 class hr_expense_report(osv.osv):
@@ -47,11 +48,11 @@ class hr_expense_report(osv.osv):
         'company_id':fields.many2one('res.company', 'Company', readonly=True),
         'user_id':fields.many2one('res.users', 'Validation User', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'price_total':fields.float('Total Price', readonly=True),
+        'price_total':fields.float('Total Price', readonly=True, digits_compute=dp.get_precision('Account')),
         'delay_valid':fields.float('Delay to Valid', readonly=True),
         'delay_confirm':fields.float('Delay to Confirm', readonly=True),
         'analytic_account': fields.many2one('account.analytic.account','Analytic account',readonly=True),
-        'price_average':fields.float('Average Price', readonly=True),
+        'price_average':fields.float('Average Price', readonly=True, digits_compute=dp.get_precision('Account')),
         'nbr':fields.integer('# of Lines', readonly=True),
         'no_of_products':fields.integer('# of Products', readonly=True),
         'no_of_account':fields.integer('# of Accounts', readonly=True),

@@ -94,7 +94,8 @@
                         icon="terp-partner"
                         name="%(action_crm_phonecall2partner)d"
                         type="action"
-                        attrs="{'invisible':[('partner_id','!=',False)]}" />
+                        attrs="{'invisible':[('partner_id','!=',False)]}"
+                        groups="base.group_partner_manager" />
                     <newline/>
                     <field name="partner_address_id"
                         on_change="onchange_partner_address_id(partner_address_id, email_from)" />

@@ -913,6 +913,8 @@
        <field name="action">sign_out</field>
        <field name="employee_id" ref="employee2" />
     </record>
-
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4,ref('auction.group_auction_manager'))]"/> 
+    </record>
     </data>
 </openerp>

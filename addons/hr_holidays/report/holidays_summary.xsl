@@ -244,7 +244,6 @@
                     <td>
                             <para>
                             <xsl:attribute name="style">digits</xsl:attribute>
-                                <xsl:value-of select="attribute::id"/>
                             </para>
                     </td>
                     <td>

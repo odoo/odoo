@@ -40,7 +40,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_stock_period_search" model="ir.ui.view">
             <field name="name">stock.period.search</field>
             <field name="model">stock.period</field>
@@ -178,10 +178,10 @@
                 </graph>
             </field>
         </record>
-        
+
         <!-- Forecast section -->
-        
-        <menuitem id="menu_stock_sale_forecast" name="Sales Forecasts" 
+
+        <menuitem id="menu_stock_sale_forecast" name="Sales Forecasts"
                 parent="base.menu_base_partner" sequence="6" groups="base.group_extended"/>
 
         <record id="view_stock_sale_forecast_filter" model="ir.ui.view">
@@ -224,7 +224,7 @@
                   action="action_view_stock_sale_forecast_form"/>
 
         <!-- Planning section -->
-        
+
         <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
 
         <record id="view_stock_planning_form" model="ir.ui.view">
@@ -319,6 +319,7 @@
             <field name="arch" type="xml">
                 <tree string="Master Procurement Schedule" colors ="blue:line_time=='Past';black:line_time=='Future'">
                     <field name="period_id"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="product_id" on_change="product_id_change(product_id)" />
                     <field name="product_uom"/>
                     <field name="warehouse_forecast" string="Forecast"/>

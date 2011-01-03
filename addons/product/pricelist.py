@@ -23,8 +23,6 @@ from osv import fields, osv
 
 from _common import rounding
 import time
-from tools import config
-from tools.misc import ustr
 from tools.translate import _
 import decimal_precision as dp
 
@@ -223,7 +221,7 @@ class product_pricelist(osv.osv):
                         'AND (min_quantity IS NULL OR min_quantity <= %s) '
                         'AND i.price_version_id = v.id AND v.pricelist_id = pl.id '
                     'ORDER BY sequence',
-                    (tmpl_id, product_id, pricelist_id, qty))
+                    (tmpl_id, product_id, plversion_ids[0], qty))
                 res1 = cr.dictfetchall()
                 uom_price_already_computed = False
                 for res in res1:
@@ -541,7 +539,7 @@ class product_pricelist_item(osv.osv):
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Set a template if this rule only apply to a template of product. Keep empty for all products"),
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Set a product if this rule only apply to one product. Keep empty for all products"),
-        'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"),
+        'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his children. Keep empty for all products"),
 
         'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only applies if the partner buys/sells more than this quantity."),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),

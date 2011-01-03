@@ -41,7 +41,7 @@
                             </group>
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
-                                <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                                <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="warn_manager"/>
                             </group>
                             <newline/>
@@ -73,6 +73,7 @@
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
                             <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Invoice Address"/>
                             <field name="warn_customer"/>
+                            <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
                             <group colspan="4" col="4" groups="base.group_extended">
                                 <separator colspan="2" string="Mail Header"/>

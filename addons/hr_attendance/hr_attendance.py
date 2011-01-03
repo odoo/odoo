@@ -137,7 +137,7 @@ class hr_employee(osv.osv):
 
             res = {'action': type, 'employee_id': emp['id']}
             if dt:
-                res['name'] = dt
+                res['name'] = dt   
         id = obj_attendance.create(cr, uid, res, context=context)
 
         if type != 'action':

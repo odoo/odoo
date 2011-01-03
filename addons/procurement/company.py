@@ -27,7 +27,7 @@ class company(osv.osv):
         'schedule_range': fields.float('Scheduler Range Days', required=True,
             help="This is the time frame analysed by the scheduler when "\
             "computing procurements. All procurements that are not between "\
-            "today and today+range are skipped for futur computation."),
+            "today and today+range are skipped for future computation."),
     }
     _defaults = {
         'schedule_range': 80.0,

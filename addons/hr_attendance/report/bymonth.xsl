@@ -29,7 +29,7 @@
 
     <xsl:template name="story">
 		<spacer length="1cm" />
-		<para style="terp_header_Centre" t="1">Attendance By Month</para>
+		<para style="terp_header_Centre" t="1">Attendances By Month</para>
 		<spacer length="1cm" />
         <blockTable>
 			<xsl:attribute name="style">week</xsl:attribute>

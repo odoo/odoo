@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2010-12-15 15:05+0000\n"
 "PO-Revision-Date: 2010-10-30 09:28+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:03+0000\n"
+"X-Launchpad-Export-Date: 2010-12-17 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -28,6 +28,11 @@ msgid "No. Of Cycles"
 msgstr "Tsükklite No."
 
 #. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid "Number of iterations this work center has to do in the specified operation of the routing."
+msgstr ""
+
+#. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
 msgstr ""
@@ -39,7 +44,7 @@ msgstr ""
 
 #. module: mrp
 #: view:report.workcenter.load:0
-msgid "Work Centers load"
+msgid "Work Center Loads"
 msgstr ""
 
 #. module: mrp
@@ -100,11 +105,6 @@ msgid "Routings"
 msgstr "Tarnimised"
 
 #. module: mrp
-#: field:mrp.workcenter,product_id:0
-msgid "Work Center Product"
-msgstr ""
-
-#. module: mrp
 #: view:mrp.bom:0
 msgid "Search Bill Of Material"
 msgstr ""
@@ -117,13 +117,6 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_stockproduction0
 msgid "To Produce"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
-msgid ""
-"Number of iterations this work center has to do in the specified operation "
-"of the routing."
 msgstr ""
 
 #. module: mrp
@@ -221,13 +214,6 @@ msgstr "Mõõtühik"
 msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bills of materials."
-msgstr ""
-
-#. module: mrp
-#: help:mrp.workcenter,product_id:0
-msgid ""
-"Fill this product to track easily your production costs in the analytic "
-"accounting."
 msgstr ""
 
 #. module: mrp
@@ -500,7 +486,7 @@ msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
-msgid "Specify Cost of Workcenter per hour."
+msgid "Specify Cost of Work center per hour."
 msgstr ""
 
 #. module: mrp
@@ -551,8 +537,13 @@ msgid "March"
 msgstr ""
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_workcenter_load
+msgid "Workcenter Load"
+msgstr "Töökeskkonna Koormus"
+
+#. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Workcenter per cycle."
+msgid "Specify Cost of Work center per cycle."
 msgstr ""
 
 #. module: mrp
@@ -565,6 +556,13 @@ msgstr ""
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.product_price,number:0
+msgid ""
+"Specify quantity of products to produce or buy. Report of Cost structure "
+"will be displayed base on this qunatity."
 msgstr ""
 
 #. module: mrp
@@ -611,7 +609,6 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workcenter_load_wizard
-#: model:ir.model,name:mrp.model_mrp_workcenter_load
 #: model:ir.model,name:mrp.model_report_workcenter_load
 msgid "Work Center Load"
 msgstr ""
@@ -639,13 +636,14 @@ msgid "Planning"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Ready"
-msgstr "Valmis"
+#: view:mrp.workcenter:0
+msgid "Costing Information"
+msgstr ""
 
 #. module: mrp
+#: help:mrp.routing.workcenter,hour_nbr:0
 #: help:mrp.workcenter,time_cycle:0
-msgid "Time in hours for doing one cycle."
+msgid "Time in hours for this work center to achieve the operation of the specified routing."
 msgstr "Aeg tundides mis kulub ühes tsükklis."
 
 #. module: mrp
@@ -807,13 +805,6 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.routing.workcenter,hour_nbr:0
-msgid ""
-"Time in hours for this work center to achieve the operation of the specified "
-"routing."
 msgstr ""
 
 #. module: mrp
@@ -1064,51 +1055,12 @@ msgstr ""
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
-"Gives the sequence order when displaying a list of routing workcenters."
+"Gives the sequence order when displaying a list of routing work centers."
 msgstr ""
 
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
-
-#. module: mrp
-#: model:ir.module.module,description:mrp.module_meta_information
-msgid ""
-"\n"
-"    This is the base module to manage the manufacturing process in OpenERP.\n"
-"\n"
-"    Features:\n"
-"    * Make to Stock / Make to Order (by line)\n"
-"    * Multi-level BoMs, no limit\n"
-"    * Multi-level routing, no limit\n"
-"    * Routing and workcenter integrated with analytic accounting\n"
-"    * Scheduler computation periodically / Just In Time module\n"
-"    * Multi-pos, multi-warehouse\n"
-"    * Different reordering policies\n"
-"    * Cost method by product: standard price, average price\n"
-"    * Easy analysis of troubles or needs\n"
-"    * Very flexible\n"
-"    * Allows to browse Bill of Materials in complete structure\n"
-"        that include child and phantom BoMs\n"
-"    It supports complete integration and planification of stockable goods,\n"
-"    consumable of services. Services are completely integrated with the "
-"rest\n"
-"    of the software. For instance, you can set up a sub-contracting service\n"
-"    in a BoM to automatically purchase on order the assembly of your "
-"production.\n"
-"\n"
-"    Reports provided by this module:\n"
-"    * Bill of Material structure and components\n"
-"    * Load forecast on workcenters\n"
-"    * Print a production order\n"
-"    * Stock forecasts\n"
-"    Dashboard provided by this module::\n"
-"    * List of next production orders\n"
-"    * List of deliveries (out picking)\n"
-"    * Graph of work center load\n"
-"    * List of procurement in exception\n"
-"    "
 msgstr ""
 
 #. module: mrp
@@ -1628,12 +1580,6 @@ msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
-#, python-format
-msgid "Copy"
-msgstr ""
-
-#. module: mrp
 #: view:mrp.production.lot.line:0
 msgid "Production Products"
 msgstr "toodete tootmine"
@@ -1705,8 +1651,8 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
-"Description of the workcenter. Explain here what's a cycle according to this "
-"workcenter."
+"Description of the work center. Explain here what's a cycle according to this "
+"work center."
 msgstr ""
 "Töökeskonna kirjeldus. selgita siin mis tsükklid kuuluvad sellele "
 "töökeskonnale."
@@ -1791,9 +1737,9 @@ msgstr "Tootmiskorraldus"
 #. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
 
@@ -1826,7 +1772,7 @@ msgstr ""
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
-"Number of operations this workcenter can do in parallel. If this workcenter "
+"Number of operations this work center can do in parallel. If this work center "
 "represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
 
@@ -1973,11 +1919,6 @@ msgid "Number of Hours"
 msgstr ""
 
 #. module: mrp
-#: view:mrp.workcenter:0
-msgid "Costing Information"
-msgstr ""
-
-#. module: mrp
 #: model:process.node,name:mrp.process_node_purchaseprocure0
 msgid "Procurement Orders"
 msgstr ""
@@ -2054,6 +1995,7 @@ msgid "BoM Revisions"
 msgstr ""
 
 #. module: mrp
+#: view:mrp.production:0
 #: selection:mrp.production,state:0
 #: selection:mrp.production.order,state:0
 msgid "Draft"
@@ -2264,9 +2206,9 @@ msgstr ""
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
 
@@ -2352,13 +2294,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: help:mrp.product_price,number:0
-msgid ""
-"Specify quantity of products to produce or buy. Report of Cost structure "
-"will be displayed base on this quantity."
-msgstr ""
-
-#. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Stock"
 msgstr ""
@@ -2413,14 +2348,6 @@ msgstr ""
 #~ msgid "Origin"
 #~ msgstr "Allikas"
 
-#, python-format
-#~ msgid "No supplier defined for this product !"
-#~ msgstr "Sellele tootele pole defineeritud tarnijat !"
-
-#, python-format
-#~ msgid "Product name"
-#~ msgstr "Toote nimi"
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Vigane XML vaate arhitektuurile!"
 
@@ -2442,10 +2369,6 @@ msgstr ""
 #~ msgid "Do nothing"
 #~ msgstr "Ära tee midagi"
 
-#, python-format
-#~ msgid "products"
-#~ msgstr "tooted"
-
 #~ msgid "Internal Ref."
 #~ msgstr "Sisemine viide"
 
@@ -2455,26 +2378,14 @@ msgstr ""
 #~ msgid "Stockable Production Order"
 #~ msgstr "Tootmiskorraldus lattu"
 
-#, python-format
-#~ msgid "Workcenter name"
-#~ msgstr "Töökeskkonna nimi"
-
 #~ msgid "Production Orders"
 #~ msgstr "Tootmiskorraldused"
-
-#, python-format
-#~ msgid "Product Quantity"
-#~ msgstr "Tootekogus"
 
 #~ msgid "Procurements"
 #~ msgstr "Hanked"
 
 #~ msgid "Details"
 #~ msgstr "Üksikasjad"
-
-#, python-format
-#~ msgid "Product Standard Price"
-#~ msgstr "Toote standardhind"
 
 #~ msgid "product"
 #~ msgstr "toode"
@@ -2490,6 +2401,9 @@ msgstr ""
 
 #~ msgid "Latest error"
 #~ msgstr "Viimane viga"
+
+#~ msgid "Ready"
+#~ msgstr "Valmis"
 
 #~ msgid "Production Orders Planning"
 #~ msgstr "Tootmiskorralduste Planeerimine"
@@ -2508,10 +2422,6 @@ msgstr ""
 
 #~ msgid "If Product type is service"
 #~ msgstr "kui Toote tüüp on teenus"
-
-#, python-format
-#~ msgid "SUBTOTAL"
-#~ msgstr "VAHESUMMA"
 
 #~ msgid "Security Days"
 #~ msgstr "Turvalised Päevad"
@@ -2536,13 +2446,6 @@ msgstr ""
 
 #~ msgid "on order"
 #~ msgstr "tellimisel"
-
-#~ msgid "Create Procurement"
-#~ msgstr "Loo hange"
-
-#, python-format
-#~ msgid "Product uom"
-#~ msgstr "Toote mõõtühik"
 
 #~ msgid "Number of Cycle"
 #~ msgstr "Tsükkli number"
@@ -2673,9 +2576,6 @@ msgstr ""
 
 #~ msgid "Workcenters load"
 #~ msgstr "Töökeskkonna koormus"
-
-#~ msgid "Workcenter Load"
-#~ msgstr "Töökeskkonna Koormus"
 
 #~ msgid "MRP Management - Reporting"
 #~ msgstr "TVP haldus - Aruandlus"

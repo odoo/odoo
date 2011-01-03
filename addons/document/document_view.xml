@@ -311,13 +311,14 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
+                <xpath expr="/search/group[@string='Group By...']" position="attributes">
+                    <attribute name="groups">base.group_extended</attribute>
+                </xpath>
                 <filter string="Owner" position="replace">
                     <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-partner" domain="[]"
-
-                       context="{'group_by':'partner_id'}"  groups="base.group_extended"/>
+                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                     <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
-                 </filter>
+                </filter>
             </field>
     </record>
 

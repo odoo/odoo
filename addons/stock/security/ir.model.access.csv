@@ -9,6 +9,7 @@
 "access_stock_journal_manager","stock.journal.manager","model_stock_journal","stock.group_stock_manager",1,1,1,1
 "access_stock_tracking_user","stock.tracking user","model_stock_tracking","stock.group_stock_user",1,1,1,1
 "access_stock_tracking_manager","stock.tracking manager","model_stock_tracking","stock.group_stock_manager",1,0,0,0
+"access_stock_tracking_sales_user","stock.tracking sales.user","model_stock_tracking","base.group_sale_salesman",1,1,1,0
 "access_stock_picking_user","stock.picking user","model_stock_picking","stock.group_stock_user",1,1,1,1
 "access_stock_picking_manager","stock.picking manager","model_stock_picking","stock.group_stock_manager",1,1,0,0
 "access_stock_production_lot_manager","stock.production.lot manager","model_stock_production_lot","stock.group_stock_manager",1,0,0,0
@@ -21,7 +22,8 @@
 "access_stock_inventory_line_user","stock.inventory.line user","model_stock_inventory_line","stock.group_stock_user",1,1,1,1
 "access_stock_inventory_line_manager","stock.inventory.line manager","model_stock_inventory_line","stock.group_stock_manager",1,0,0,0
 "access_stock_report_prodlots","stock.report.prodlots","model_stock_report_prodlots","stock.group_stock_manager",1,0,0,0
-"access_stock_location_product_manager","stock.location product manager","model_stock_location","product.group_product_manager",1,0,0,0
+"access_stock_location_sale_manager","stock.location sale manager","model_stock_location","base.group_sale_manager",1,0,0,0
+"access_stock_location_stock_manager","stock.location stock manager","model_stock_location","stock.group_stock_manager",1,0,0,0
 "access_stock_lines_date_user","report.stock.lines.date user","model_report_stock_lines_date","stock.group_stock_user",1,0,0,0
 "access_stock_lines_date_manager","report.stock.lines.date manager","model_report_stock_lines_date","stock.group_stock_manager",1,1,1,1
 "access_stock_report_tracklots","stock.report.tracklots","model_stock_report_tracklots","stock.group_stock_user",1,1,1,1
@@ -38,3 +40,22 @@
 "access_account_invoice_tax_user","account.invoice.tax stock user","account.model_account_invoice_tax","stock.group_stock_user",1,1,1,0
 "access_account_journal_user","account.journal stock user","account.model_account_journal","stock.group_stock_user",1,0,0,0
 "access_account_fiscalyear","account.fiscalyear stock user","account.model_account_fiscalyear","stock.group_stock_user",1,0,0,0
+"access_product_pricelist_item_sale_manager","product.pricelist.item salemanager","product.model_product_pricelist_item","base.group_sale_manager",1,1,1,1
+"access_product_uom_categ_stock_manager","product.uom.categ stock_manager","product.model_product_uom_categ","stock.group_stock_manager",1,1,1,1
+"access_product_uom_stock_manager","product.uom stock_manager","product.model_product_uom","stock.group_stock_manager",1,1,1,1
+"access_product_ul_stock_manager","product.ul stock_manager","product.model_product_ul","stock.group_stock_manager",1,1,1,1
+"access_product_category_stock_manager","product.category stock_manager","product.model_product_category","stock.group_stock_manager",1,1,1,1
+"access_product_template_stock_manager","product.template stock_manager","product.model_product_template","stock.group_stock_manager",1,1,1,1
+"access_product_product_stock_manager","product.product stock_manager","product.model_product_product","stock.group_stock_manager",1,1,1,1
+"access_product_packaging_stock_manager","product.packaging stock_manager","product.model_product_packaging","stock.group_stock_manager",1,1,1,1
+"access_product_supplierinfo_stock_manager","product.supplierinfo stock_manager","product.model_product_supplierinfo","stock.group_stock_manager",1,1,1,1
+"access_pricelist_partnerinfo_stock_manager","pricelist.partnerinfo stock_manager","product.model_pricelist_partnerinfo","stock.group_stock_manager",1,1,1,1
+"access_product_price_type_stock_manager","product.price.type stock_manager","product.model_product_price_type","stock.group_stock_manager",1,1,1,1
+"access_product_pricelist_type_stock_manager","product.pricelist.type stock_manager","product.model_product_pricelist_type","stock.group_stock_manager",1,1,1,1
+"access_product_pricelist_stock_manager","product.pricelist stock_manager","product.model_product_pricelist","stock.group_stock_manager",1,1,1,1
+"access_ir_property_group_stock_manager","ir_property group_stock_manager","base.model_ir_property","stock.group_stock_manager",1,1,1,1
+"access_product_group_res_partner_stock_manager","res_partner group_stock_manager","base.model_res_partner","stock.group_stock_manager",1,1,1,1
+"access_product_pricelist_version_stock_manager","product.pricelist.version stock_manager","product.model_product_pricelist_version","stock.group_stock_manager",1,1,1,1
+"access_product_pricelist_item_stock_manager","product.pricelist.item stock_manager","product.model_product_pricelist_item","stock.group_stock_manager",1,1,1,1
+"access_account_account_stock_manager","account.account stock manager","account.model_account_account","stock.group_stock_manager",1,0,0,0
+"access_account_journal_stock_manager","account.journal stock manager","account.model_account_journal","stock.group_stock_manager",1,0,0,0

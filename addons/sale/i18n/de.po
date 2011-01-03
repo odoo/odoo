@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-14 21:47+0000\n"
+"PO-Revision-Date: 2010-12-31 11:02+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:26+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -59,13 +59,13 @@ msgstr "Auftrag stornieren"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sales Order Logistics"
-msgstr ""
+msgstr "Logistik für Verkaufsaufträge konfigurieren"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
-msgstr ""
+msgstr "Das Angebot '%s' wurde in einen Verkaufsauftrag konvertiert."
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -87,6 +87,8 @@ msgstr "USt."
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sales order line."
 msgstr ""
+"Automatische Erstellung von Beschaffungsaufträgen für jede "
+"Verkaufsauftragsposition."
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -183,7 +185,7 @@ msgstr "Beauftragte Menge"
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 #: view:sale.report:0
 msgid "Sales by Salesman"
-msgstr ""
+msgstr "Verkäufe pro Verkäufer"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -232,7 +234,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr ""
+msgstr "Verkauf erstellt Rechnung"
 
 #. module: sale
 #: view:sale.order:0
@@ -267,7 +269,7 @@ msgstr "Produkte Verpackungen"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "Durch einen Verkaufsauftrag"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -309,6 +311,16 @@ msgid ""
 "  - The 'Invoice From The Picking' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
+"Die Abrechnungsbedingung bei einem Auftrag steuert und synchronisiert die "
+"zeitliche Abfolge von Lieferung und Rechnung.\n"
+"  - Durch \"Zahlung vor Lieferung\" wird zuerst die Rechnung generiert, dann "
+"erst erfolgt ein Lieferauftrag aufgrund der Zahlung.\n"
+"  - Durch \"Lieferung & Manuelle Rechnung\" ist der Lieferauftrag "
+"unmittelbar verfügbar. Die Rechnung muss noch manuell erstellt werden.\n"
+"  - Durch \"Rechnung durch Auftrag\" erfolgt eine automatische Rechnung im "
+"Zustand Entwurf, wenn die Lieferung vollständig abgeschlossen wurde.\n"
+"  - Durch \"Rechnung durch Lieferung\" kann bei Abschluss einer Lieferung "
+"die Rechnung gleich mit erstellt werden."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -323,12 +335,13 @@ msgstr ""
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurieren"
 
 #. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
+"Sie versuchen eine Losnummer ohne Bezug zu diesem Produkt zuzuweisen."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -345,7 +358,7 @@ msgstr "Juni"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel this sales order !"
-msgstr ""
+msgstr "Kann diesen Verkaufsauftrag nicht abbrechen."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -355,7 +368,7 @@ msgstr "Statistik Verkaufsauftrag"
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "Das analytische Konto zu diesem Verkaufsauftrag."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -365,12 +378,12 @@ msgstr "Oktober"
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr ""
+msgstr "Lieferadresse für diesen Verkaufsauftrag."
 
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "Preisliste für diesen Verkaufsauftrag."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -423,12 +436,17 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
+"Der Verkäufer bestätigt den Verkaufsauftrag. Der Status des "
+"Verkaufsauftrages wechselt entweder auf  'In Bearbeitung' oder auf  'Manuell "
+"in Bearbeitung'."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
+"Sie müssen zuerst alle Lieferungen für diese Verkaufsauftragsposition "
+"abbrechen."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -458,6 +476,8 @@ msgid ""
 "You cannot make an advance on a sales order                              "
 "that is defined as 'Automatic Invoice after delivery'."
 msgstr ""
+"Sie können keine Anzahlung für Aufträge erfassen, wenn als "
+"Abrechnungsbedingung 'Rechnung durch Lieferung' hinterlegt wurde."
 
 #. module: sale
 #: view:sale.order:0
@@ -470,12 +490,13 @@ msgstr "Bemerkungen"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr ""
+msgstr "Rechnungsadresse für diesen Verkaufsauftrag."
 
 #. module: sale
 #: view:sale.installer:0
 msgid "Enhance your core Sales Application with additional functionalities."
 msgstr ""
+"Erweitern Sie Ihre Anwendung für den Verkauf durch weitere Funktionen."
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
@@ -506,7 +527,7 @@ msgstr "März"
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount."
-msgstr ""
+msgstr "Gesamtsumme."
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -524,11 +545,13 @@ msgid ""
 "For every sales order line, a procurement order is created to supply the "
 "sold product."
 msgstr ""
+"Für jede Verkaufsauftragsposition, wird automatisch ein Beschaffungsauftrag "
+"für den Einkauf des Produkts erstellt."
 
 #. module: sale
 #: view:board.board:0
 msgid "Sales by Customer"
-msgstr ""
+msgstr "Verkäufe pro Kunde"
 
 #. module: sale
 #: help:sale.order,incoterm:0
@@ -536,6 +559,9 @@ msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction."
 msgstr ""
+"Der Begriff Incoterm steht für  'International Commercial terms' und "
+"impliziert eine Reihe von Bedingungen für den Verkauf und die Lieferung im "
+"internationalen Handel."
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -561,18 +587,18 @@ msgstr "# Positionen"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_open_invoice
 msgid "Sales Open Invoice"
-msgstr ""
+msgstr "Offene Ausgangsrechnungen"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Auftragsposition"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Setup your sales workflow and default values."
-msgstr ""
+msgstr "Verkaufsabfolge und Vorgabewerte einrichten"
 
 #. module: sale
 #: field:sale.shop,warehouse_id:0
@@ -663,7 +689,7 @@ msgstr "Alle Angebote"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice On Order After Delivery"
-msgstr ""
+msgstr "Rechnung durch Auftrag nach Lieferung"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -712,7 +738,7 @@ msgstr "Verkäufe nach Monaten"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sales order line!"
-msgstr ""
+msgstr "Konnte Auftragsposition nicht stornieren!"
 
 #. module: sale
 #: field:res.company,security_lead:0
@@ -740,6 +766,9 @@ msgid ""
 "It indicates that the sales order has been delivered. This field is updated "
 "only after the scheduler(s) have been launched."
 msgstr ""
+"Hier wird angezeigt, ob der Auftrag bereits ausgeliefert wurde. Dieses Feld "
+"wird immer nach Durchführung der automatischen Beschaffungsdisposition "
+"aktualisiert."
 
 #. module: sale
 #: view:sale.report:0
@@ -772,12 +801,36 @@ msgid ""
 "    * Graph of cases of the month\n"
 "    "
 msgstr ""
+"\n"
+"    Das Basismodul für die Angebotserstellung und das Management von "
+"Verkaufsaufträgen.\n"
+"\n"
+"     * Verkaufsvorgang über eine schrittweise Abfolge:\n"
+"         - Angebot -> Kundenauftrag -> Rechnung\n"
+"     * Verschiedene Abrechnungsmethoden:\n"
+"         - Rechnung durch Auftrag (vor oder nach der Auslieferung)\n"
+"         - Rechnung durch Lieferung\n"
+"         - Rechnung durch Zeiterfassung\n"
+"         - Anzahlungsrechnung\n"
+"     * Verwaltung der Partner Präferenzen (Versand, Rechnungsstellung, "
+"incoterm, ...)\n"
+"     * Produkte Bestände und Preise\n"
+"     * Lieferbedingungen:\n"
+"         - Komplettlieferung, Teillieferung\n"
+"         - Berechnung von Versandkosten\n"
+"     * Pinnwand für den Verkäufer mit folgenden Inhalten:\n"
+"     * Offene Angebote des Verkäufers\n"
+"     * Top 10 Verkäufe des Monats\n"
+"     * Statistiken zu Vertriebsvorgängen\n"
+"     * Grafik des Umsatz nach Produkten\n"
+"     * Grafik der Vertriebsvorgänge des Monats\n"
+"    "
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_shop
 #: view:sale.shop:0
 msgid "Sales Shop"
-msgstr ""
+msgstr "Verkaufsshop"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_company
@@ -840,6 +893,7 @@ msgstr ""
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced !"
 msgstr ""
+"Sie können keinen Verkaufsauftrag stornieren, der bereits abgerechnet wurde."
 
 #. module: sale
 #: view:sale.order:0
@@ -898,7 +952,7 @@ msgstr "Berechne Umsatzsteuer"
 #: model:ir.actions.act_window,name:sale.action_sales_by_partner
 #: view:sale.report:0
 msgid "Sales by Partner"
-msgstr ""
+msgstr "Verkäufe pro Partner"
 
 #. module: sale
 #: field:sale.order,partner_order_id:0
@@ -958,7 +1012,7 @@ msgstr "Lieferanschrift:"
 #. module: sale
 #: model:process.node,note:sale.process_node_quotation0
 msgid "Draft state of sales order"
-msgstr ""
+msgstr "Entwurf Zustand des Verkaufsauftrags"
 
 #. module: sale
 #: model:process.transition,name:sale.process_transition_deliver0
@@ -998,7 +1052,7 @@ msgstr "Bestätige Angebot"
 #. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
-msgstr ""
+msgstr "Referenz zu Beleg, der den Verkaufsauftrag ausgelöst hat"
 
 #. module: sale
 #: view:sale.order:0
@@ -1079,6 +1133,9 @@ msgid ""
 "The same sales order may have been invoiced in several times (by line for "
 "example)."
 msgstr ""
+"Diese Liste beinhaltet alle Rechnungen für diesen Auftrag. Der gleiche "
+"Auftrag könnte mehrere Rechnungen verursacht haben, z.B. bei bereits "
+"erfolgter Abrechnung einzelner Positionen."
 
 #. module: sale
 #: field:sale.order,order_policy:0
@@ -1088,7 +1145,7 @@ msgstr "Abrechnungsbedingung"
 #. module: sale
 #: help:sale.order,create_date:0
 msgid "Date on which sales order is created."
-msgstr ""
+msgstr "Datum der Auftragserstellung"
 
 #. module: sale
 #: model:ir.model,name:sale.model_stock_move
@@ -1147,7 +1204,7 @@ msgstr "Fehler !"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Could not cancel sales order !"
-msgstr ""
+msgstr "Verkaufsauftrag konnte nicht storniert werden"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1195,7 +1252,7 @@ msgstr "Verkauf"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice From The Picking"
-msgstr ""
+msgstr "Rechnung durch Lieferung"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoice0
@@ -1316,6 +1373,9 @@ msgid ""
 "You have to select a customer in the sales form !\n"
 "Please set one customer before choosing a product."
 msgstr ""
+"Sie sollten eine Kunden im Verkaufsauftrag auswählen ! Bitte wählen Sie "
+"einen Kunden vor der Auswahl\n"
+"einzelner Produkte bei den Auftragspositionen aus."
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -1325,7 +1385,7 @@ msgstr "Lieferauftrag & Auslieferung"
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Belegreferenz"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1345,18 +1405,18 @@ msgstr "Beleg der Auslieferung an Kunden"
 #. module: sale
 #: help:sale.order,amount_untaxed:0
 msgid "The amount without tax."
-msgstr ""
+msgstr "Nettobetrag"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
-msgstr ""
+msgstr "Zuerst müssen Sie alle Lieferungen zu diesem Auftrag stornieren."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr ""
+msgstr "Anzahlungsrechnung"
 
 #. module: sale
 #: field:sale.order,incoterm:0
@@ -1396,6 +1456,16 @@ msgid ""
 "The 'Waiting Schedule' state is set when the invoice is confirmed but "
 "waiting for the scheduler to run on the date 'Ordered Date'."
 msgstr ""
+"Zeigt den Zustand des Verkaufsauftrags:\n"
+"\n"
+"Der Fehlerzustand wird automatisch zugewiesen, wenn bei der "
+"Auftragsabwicklung bei der Erstellung der Lieferbelege oder der Erstellung "
+"von Rechnungsbelegen ein Fehler aufgetreten ist und somit eine vorherige  "
+"Überarbeitung erforderlich ist.\n"
+"\n"
+"Der Wartezustand wird automatisch zugewiesen wenn eine Rechnung bereits "
+"bestätigt wurde, zunächst aber ein weiterer Dispositionslauf für das "
+"Bestelldatum durchgeführt werden sollte."
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1438,11 +1508,12 @@ msgstr "Auftrag"
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
+"Es ist kein Erlöskonto für das folgende Produkt definiert:: \"%s\" (id:%d)"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Ignore Exception"
-msgstr ""
+msgstr "Ignoriere den Ausnahmefehler"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_saleinvoice0
@@ -1452,6 +1523,11 @@ msgid ""
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
 msgstr ""
+"Abhängig vom Abrechnungsumfang eines Verkaufsauftrags, kann die Rechnung auf "
+"Basis der beauftragten Mengen oder der ausgelieferten Mengen erfolgen. "
+"Hierdurch kann die Rechnungserstellung schon bei der Auftragserteilung so "
+"gesteuert werden, dass eine frühestmögliche Abrechnung durch den Vertriebler "
+"optional vorgesehen werden kann."
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1489,6 +1565,8 @@ msgstr "Bruttobetrag"
 #, python-format
 msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
+"Es wurde für das Unternehmen \"%s\" (id:%d) kein explizites Verkaufsjournal "
+"definiert."
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_deliver0
@@ -1505,7 +1583,7 @@ msgstr ""
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
-msgstr ""
+msgstr "Auftragspositionen, die %s sind, können nicht gelöscht werden!"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1523,7 +1601,7 @@ msgstr "Abzurechnen"
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr ""
+msgstr "Datum der Auftragsbestätigung"
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -1555,6 +1633,7 @@ msgstr "Abrechnungsfehler"
 msgid ""
 "This is a list of picking that has been generated for this sales order."
 msgstr ""
+"Diese Liste beinhaltet die Lieferaufträge für diesen Verkaufsauftrag."
 
 #. module: sale
 #: help:sale.installer,sale_margin:0
@@ -1612,7 +1691,7 @@ msgstr "Warnung"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_view_sales_by_month
 msgid "Sales by Month"
-msgstr ""
+msgstr "Verkäufe pro Monat"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
@@ -1624,6 +1703,10 @@ msgid ""
 "\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Sie haben %d Einheiten ausgewählt.\n"
+"Dies passt aber nicht zum ausgewählten Paket.\n"
+"Hier ist ein Vorschlag der zum Paket passt:\n"
+"EAN: %s Anzahl: %s Einheit: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order
@@ -1648,6 +1731,12 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
+"Die Erstellung des Lieferauftrags erfolgt unmittelbar auf eine "
+"Auftragsbestätigung, zeitgleich mit der Erstellung des  "
+"Beschaffungsauftrags. Der Lieferauftrag repräsentiert die zum "
+"Verkaufsauftrag einzupackenden Artikel. Hierzu gibt es einen Packauftrag mit "
+"allen Auftragsposition für den Kunden. Der Zustand des Packauftrags kann "
+"sich je nach der Verfügbarkeit von Teilen verändern."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1662,7 +1751,7 @@ msgstr "Bestätigen"
 #. module: sale
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
 
 #. module: sale
 #: view:sale.order:0
@@ -1720,6 +1809,10 @@ msgid ""
 "1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
 "2.The Sales Order Line is Invoiced!"
 msgstr ""
+"Die Ausgangsrechnung kann für den Verkaufsauftrag aus folgendem Grund "
+"aktuell nicht erstellt werden:\n"
+"1. Der Status ist entweder \"In Entwurf\" oder \"Abgebrochen\"\n"
+"2. Der Verkaufsauftrag wurde bereits abgerechnet"
 
 #. module: sale
 #: field:sale.order.line,th_weight:0
@@ -1752,6 +1845,10 @@ msgid ""
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
 msgstr ""
+"Ein Beschaffungsauftrag wird spätestens dann ausgelöst, wenn ein "
+"Verkaufsauftrag bestätigt wird oder eine Ausgangsrechnung bezahlt wird. "
+"Einkauf und die Fertigung sind dabei abhängig von den Einstellungen beim "
+"Verkaufsauftrag selbst. "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1792,7 +1889,7 @@ msgstr "Anzahlungsrechnung"
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "The sales order '%s' has been cancelled."
-msgstr ""
+msgstr "Der Auftrag '%s' wurde abgebrochen."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1812,16 +1909,26 @@ msgid ""
 "            \n"
 "* The 'Cancelled' state is set when a user cancel the sales order related."
 msgstr ""
+"* Der \"Entwurf\" Zustand wird gesetzt, wenn der entsprechenden "
+"Kundenauftrag im Entwurf Status ist.\n"
+"* Der \"Bestätigt\" Zustand wird gesetzt, wenn ein entsprechender "
+"Kundenauftrag bestätigt wird.\n"
+"* Die \"Ausnahme\" Stand wird gesetzt, wenn die entsprechenden Kundenauftrag "
+"als Ausnahme festgelegt wird.\n"
+"* Die 'Fertig' Zustand wird gesetzt, wenn ein Kundenauftrag fertig verpackt "
+"wurde.\n"
+"* Die 'Abbrechen ' Zustand wird gesetzt, wenn ein Benutzer versucht den "
+"Kundenauftrag und dessen Verbindung abbrechen will."
 
 #. module: sale
 #: help:sale.order,amount_tax:0
 msgid "The tax amount."
-msgstr ""
+msgstr "Steuerbetrag"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Packings"
-msgstr ""
+msgstr "Verpackungen"
 
 #. module: sale
 #: field:sale.config.picking_policy,progress:0
@@ -1878,6 +1985,8 @@ msgstr "Ihre Rechnung wurde erfolgreich generiert!"
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr ""
+"Zuerst sollten Sie alle existierenden Rechnungen zu diesem Verkaufsauftrag "
+"stornieren."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1887,7 +1996,7 @@ msgstr "Januar"
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure Your Sales Management Application"
-msgstr ""
+msgstr "Konfigurieren Sie Ihre Anwendungen für den Verkauf"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree4
@@ -1917,6 +2026,8 @@ msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
 msgstr ""
+"Ein Beschaffungsauftrag je Verkaufsauftragsposition und jede "
+"Produktkomponente."
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_assign0
@@ -1931,19 +2042,19 @@ msgstr "Auftragsdatum"
 #. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "Confirmed sales order to invoice."
-msgstr ""
+msgstr "Bestätigte Verkaufsaufträge zur Abrechnung"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "Cannot delete Sales Order(s) which are already confirmed !"
-msgstr ""
+msgstr "Bereits bestätigte Verkaufsaufträge können nicht gelöscht werden !"
 
 #. module: sale
 #: code:addons/sale/sale.py:0
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
-msgstr ""
+msgstr "Der Auftrag '%s' wurde in den Zustand Entwurf versetzt"
 
 #. module: sale
 #: selection:sale.order.line,type:0
@@ -1974,17 +2085,17 @@ msgstr "Nicht genügend Lagerware!"
 #. module: sale
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Sie müssen zwingend eine Losnummer für dieses Produkt angeben"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
 msgid "Layout Sequence"
-msgstr ""
+msgstr "Reihenfolge Auftragslayout"
 
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr ""
+msgstr "Hier wird angezeigt, ob eine Rechnung bezahlt wurde."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_shop_form
@@ -1994,6 +2105,12 @@ msgid ""
 "or sale order, it has to be linked to a shop. The shop also defines the "
 "warehouse from which the products will be delivered for each particular sale."
 msgstr ""
+"Wenn Sie mehr als einen Verkaufsshop für den Vertrieb Ihrer Produkte "
+"betreiben, können Sie Ihre Verkaufsshops hier erstellen und verwalten. Wann "
+"immer Sie ein Angebot oder einen neuen Verkaufsauftrag erstellen muss dieser "
+"zwingend einem Verkaufsshop zugeordnet sein. Einem Verkaufsshop wird auch "
+"ein Lager zugeordnet,wodurch der Lagerort bestimmt wird, von dem die "
+"Produkte an Kunden ausgeliefert werden."
 
 #. module: sale
 #: report:sale.order:0
@@ -2047,7 +2164,7 @@ msgstr "Finanzbuchhaltung"
 #. module: sale
 #: field:sale.config.picking_policy,step:0
 msgid "Steps To Deliver a Sales Order"
-msgstr ""
+msgstr "Abfolge für die Auslieferung"
 
 #. module: sale
 #: view:sale.order:0
@@ -2058,7 +2175,7 @@ msgstr "Suche Verkaufsaufträge"
 #. module: sale
 #: model:process.node,name:sale.process_node_saleorderprocurement0
 msgid "Sales Order Requisition"
-msgstr ""
+msgstr "Anfrage Verkaufsauftrag"
 
 #. module: sale
 #: report:sale.order:0
@@ -2083,6 +2200,12 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"Diese Auswertung analysiert Ihre Angebote und Verkaufsaufträge. Hierbei "
+"werden Ihre Verkaufsumsätze  ausgewertet und nach verschiedenen Kriterien "
+"gruppiert (Verkäufer, Partner, Produkt, etc). Benutzen Sie diese Auswertung "
+"außerdem, um noch nicht in Rechnung gestellte Verkaufsaufträge zu "
+"analysieren. Wenn Sie Ihren Umsatz analysieren möchten, nutzen Sie bitte die "
+"Statistik für die Umsatzerlöse in der Finanzbuchhaltung."
 
 #. module: sale
 #: report:sale.order:0

@@ -79,5 +79,12 @@
             <field name="category_ids" eval="[(6, 0, [ref('category_trainee')])]"/>
         </record>
 
+        <record id="ir_ui_view_sc_employees_demo" model="ir.ui.view_sc">
+            <field name="name">Employees</field>
+            <field name="resource">ir.ui.menu</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
+        </record>
+
     </data>
 </openerp>

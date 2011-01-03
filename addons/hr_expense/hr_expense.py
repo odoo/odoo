@@ -142,7 +142,7 @@ class hr_expense_expense(osv.osv):
                 else:
                     acc = property_obj.get(cr, uid, 'property_account_expense_categ', 'product.category')
                     if not acc:
-                        raise osv.except_osv(_('Error !'), _('Please configure Default Expanse account for Product purchase, `property_account_expense_categ`'))
+                        raise osv.except_osv(_('Error !'), _('Please configure Default Expense account for Product purchase, `property_account_expense_categ`'))
 
                 lines.append((0, False, {
                     'name': l.name,

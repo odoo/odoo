@@ -1,12 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="0">
-
-    <record model="document.directory.content.type" id="pdf">
-        <field name="code">.pdf</field>
-        <field name="name">PDF Report</field>
-        <field name="mimetype">application/pdf</field>
-    </record>
+<data noupdate="1">
     
     <record model="document.storage" id="storage_default">
         <field name="name">Database storage</field>
@@ -27,6 +21,14 @@
         <field name="user_id" ref="base.user_root"/>
         <field name="ressource_id">0</field>
  
+    </record>
+</data>
+
+<data noupdate="0">
+    <record model="document.directory.content.type" id="pdf">
+        <field name="code">.pdf</field>
+        <field name="name">PDF Report</field>
+        <field name="mimetype">application/pdf</field>
     </record>
 
     <record model="document.directory" id="dir_partner_category">

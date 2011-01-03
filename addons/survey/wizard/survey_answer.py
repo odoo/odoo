@@ -65,7 +65,10 @@ class survey_question_wiz(osv.osv_memory):
             context = {}
         if view_type in ['form']:
             wiz_id = 0
-            if not context.has_key('sur_name_id'):
+            sur_name_rec = None
+            if 'sur_name_id' in context:
+                sur_name_rec = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
+            elif 'survey_id' in context:
                 res_data = {
                     'survey_id': context.get('survey_id', False),
                     'page_no': -1,
@@ -76,16 +79,14 @@ class survey_question_wiz(osv.osv_memory):
                 wiz_id = surv_name_wiz.create(cr, uid, res_data)
                 sur_name_rec = surv_name_wiz.browse(cr, uid, wiz_id, context=context)
                 context.update({'sur_name_id' :wiz_id})
-            else:
-                sur_name_rec = surv_name_wiz.browse(cr, uid, context['sur_name_id'], context=context)
-
+  
             if context.has_key('active_id'):
                 context.pop('active_id')
 
             survey_id = context.get('survey_id', False)
             if not survey_id:
                 # Try one more time to find it
-                if sur_name_rec.survey_id:
+                if sur_name_rec and sur_name_rec.survey_id:
                     survey_id = sur_name_rec.survey_id[0]
                 else:
                     # raise osv.except_osv(_('Error!'), _("Cannot locate survey for the question wizard!"))

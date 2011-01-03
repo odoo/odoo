@@ -248,7 +248,7 @@
           <para style="terp_tblheader_Details_Centre">Lot</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">State</para>
+          <para style="terp_tblheader_Details">State</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Location</para>
@@ -259,7 +259,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_2">[[ repeatIn([line for line in picking.move_lines if (line.state == 'confirmed' or line.state=='done' or line.state=='assigned')],'move_lines') ]]</para>
+      <para style="terp_default_2">[[ repeatIn([line for line in picking.move_lines if ((line.state == 'confirmed' or line.state=='done' or line.state=='assigned') and not line.scrapped)],'move_lines') ]]</para>
       <para style="terp_default_2">[[ (picking.move_lines!=[] and removeParentNode('para')) or removeParentNode('section')]]</para>
       <blockTable colWidths="256.0,74.0,58.0,60.0,73.0" style="Move_Line_Contect_Assign_State">
         <tr>

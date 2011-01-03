@@ -3,53 +3,33 @@
     <data>
 
         <record id="action_view_holiday_status_manager_board" model="ir.actions.act_window">
-            <field name="name">All Employee Leaves</field>
+            <field name="name">Leaves To Validate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','in',('confirm', 'validate'))]</field>
+            <field name="domain">[('state','in',('confirm', 'validate', 'validate1'))]</field>
             <field name="view_id" ref="hr_holidays.view_holiday_allocation_tree"/>
         </record>
-        
-		<record id="action_hr_holidays_remaining_leaves_empoloyee_all" model="ir.actions.act_window">
-	        <field name="name">Remaining Leaves by User</field>
-	        <field name="type">ir.actions.act_window</field>
-	        <field name="res_model">hr.holidays.remaining.leaves.user</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">graph,tree</field>
-	        <field name="view_id" ref="hr_holidays.view_hr_holidays_remaining_leaves_user_graph"/>
-		</record>
 
         <record id="board_hr_holidays_manager_form" model="ir.ui.view">
             <field name="name">board.hr.holidays.manager.form</field>
             <field name="model">board.board</field>
-			<field name="inherit_id" ref="hr.board_hr_manager_form"/>              
+            <field name="inherit_id" ref="hr.board_hr_manager_form"/>              
             <field name="type">form</field>
             <field name="arch" type="xml">
-	      		<xpath expr="/form/hpaned/child1" position="inside"> 
-					<action colspan="4" height="220" name="%(action_view_holiday_status_manager_board)d" string="All Employee Leaves"/>
-				</xpath>
+                  <xpath expr="/form/hpaned/child1" position="inside"> 
+                    <action colspan="4" height="220" name="%(action_view_holiday_status_manager_board)d" string="All Employee Leaves"/>
+                </xpath>
             </field>
         </record>
-        
-		<record id="board_hr_holidays_manager_remaining_form" model="ir.ui.view">
-            <field name="name">board.hr.holidays.manager.remaining.form</field>
-            <field name="model">board.board</field>
- 			<field name="type">form</field>            
-			<field name="inherit_id" ref="hr.board_hr_manager_form"/>           
-            <field name="arch" type="xml">
-	      		<xpath expr="/form/hpaned/child2" position="inside">            
-				 <action colspan="4" height="220" name="%(action_hr_holidays_remaining_leaves_empoloyee_all)d" string="Remaining Leave by Type and User" />
-				</xpath>  
-            </field>
-        </record>
+
         <menuitem
             action="hr.open_board_hr_manager"
             icon="terp-graph"
             id="base.menu_hr_manager"
             parent="base.menu_hr_dasboard"
             groups = "base.group_hr_manager"
-            sequence="5"/>        
+            sequence="5"/> 
     </data>
 </openerp>

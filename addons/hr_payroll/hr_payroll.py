@@ -721,7 +721,7 @@ class company_contribution(osv.osv):
             ('per','Percentage'),
             ('func','Function Calculation'),
         ],'Amount Type', select=True),
-        'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
+        'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'active':fields.boolean('Active', required=False),
         'note': fields.text('Description'),

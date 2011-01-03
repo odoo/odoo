@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-09 08:20+0000\n"
+"PO-Revision-Date: 2010-12-29 13:16+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -122,6 +122,8 @@ msgid ""
 "This number of months will be used to schedule the first evaluation date of "
 "the employee when selecting an evaluation plan. "
 msgstr ""
+"Die Anzahl in Monaten, nach der die erste Beurteilung des Mitarbeiters nach "
+"der Zuweisung eines Beurteilungsverfahrens erfolgen soll. "
 
 #. module: hr_evaluation
 #: view:hr.employee:0
@@ -138,6 +140,8 @@ msgstr "Beurteilungsanfrage"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Fehler ! Sie können keine Abteilung auswählen, für die dieser Mitarbeiter "
+"die Leitung ausübt."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -181,7 +185,7 @@ msgstr "Juli"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
 msgid "Periodicity of Evaluations (months)"
-msgstr ""
+msgstr "Beurteilungsfrequenz (in Monaten)"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:0
@@ -199,7 +203,7 @@ msgstr "Enddatum"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_first:0
 msgid "First Evaluation in (months)"
-msgstr ""
+msgstr "Erste Beurteilung nach (Monaten)"
 
 #. module: hr_evaluation
 #: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
@@ -276,7 +280,7 @@ msgstr " Monat "
 msgid ""
 "The number of month that depicts the delay between each evaluation of this "
 "plan (after the first one)."
-msgstr ""
+msgstr "Anzahl Monate zwischen den regelmäßigen Beurteilungen"
 
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
@@ -305,6 +309,19 @@ msgid ""
 "          in the form of.Implements a dashboard for My Current Evaluations\n"
 "         "
 msgstr ""
+"\n"
+"          Anwendung für die Mitarbeiterbeurteilung.\n"
+"           Eine Mitarbeiterbeurteilung kann dabei sowohl für Vorgsetzte "
+"durch die Mitarbeiter,\n"
+"           als auch für Mitarbeiter durch deren Abteilungs- oder "
+"Gruppenleiter erfolgen. Das Vorgehen\n"
+"           einer Beurteilung erfolgt dabei planmäßig durch eine bestimmte "
+"Abfolge verschiedener\n"
+"           Befragungen von Mitarbeitern und Vorgesetzten bis zu einer "
+"abschliessenden Beurteilung.\n"
+"           Alle anstehenden Beurteilungsverfahren sind über die Personal "
+"Pinnwand ersichtlich.\n"
+"         "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -627,6 +644,7 @@ msgstr "Erweiterter Filter..."
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr ""
+"Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -741,7 +759,7 @@ msgstr "Sende alle Antworten an Mitarbeiter"
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
 msgid "Next Evaluation Date"
-msgstr ""
+msgstr "Nächste Beurteilung"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -927,6 +945,8 @@ msgid ""
 "The date of the next evaluation is computed by the evaluation plan's dates "
 "(first evaluation + periodicity)."
 msgstr ""
+"Das Datum für die nächste Beurteilung wird automatisch auf Basis des "
+"zugeordneten Beurteilungsverfahrens errechnet (Erste Bewertung + Frequenz)"
 
 #~ msgid "Information"
 #~ msgstr "Information"

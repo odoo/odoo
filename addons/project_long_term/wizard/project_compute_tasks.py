@@ -50,13 +50,13 @@ class project_compute_tasks(osv.osv_memory):
             context = {}
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        result = mod_obj._get_id(cr, uid, 'project', 'action_view_task')
+        result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_resouce_allocation')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = {}
         if not id:
             return result
         result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['context'] = {"search_default_project_id":data['project_id'], "search_default_user_id":uid, "search_default_current": 1}
+        result['target'] = 'current'
         return result
 
 project_compute_tasks()

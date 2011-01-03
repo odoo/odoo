@@ -196,23 +196,21 @@
 
 <!-- Leads by user and section Action -->
 
-        <record id="action_report_crm_lead" model="ir.actions.act_window">
-            <field name="name">Leads Analysis</field>
-            <field name="res_model">crm.lead.report</field>
-            <field name="view_type">form</field>
-            <field name="context">{'search_default_filter_lead': 1, 'search_default_lead':1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('type', '=', 'lead')]</field>
-            <field name="help">Leads Analysis allows you to check different CRM related information. Check for treatment delays, number of responses given and emails sent. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
-        </record>
-
+       <record id="action_report_crm_lead" model="ir.actions.act_window">
+           <field name="name">Leads Analysis</field>
+           <field name="res_model">crm.lead.report</field>
+           <field name="view_type">form</field>
+           <field name="context">{'search_default_filter_lead': 1, "search_default_user":1, "search_default_this_month":1, 'group_by_no_leaf':1, 'group_by':[]}</field>
+           <field name="view_mode">tree,graph</field>
+           <field name="domain">[]</field>
+           <field name="help">Leads Analysis allows you to check different CRM related information. Check for treatment delays, number of responses given and emails sent. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
+       </record>
        <record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_report_crm_lead_tree"/>
             <field name="act_window_id" ref="action_report_crm_lead"/>
        </record>
-
        <record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>

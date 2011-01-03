@@ -30,11 +30,15 @@ class account_analytic_account(osv.osv):
 
     def _compute_level_tree(self, cr, uid, ids, child_ids, res, field_names, context=None):
         def recursive_computation(account_id, res):
+            currency_obj = self.pool.get('res.currency')
             account = self.browse(cr, uid, account_id)
             for son in account.child_ids:
                 res = recursive_computation(son.id, res)
                 for field in field_names:
-                    res[account.id][field] += res[son.id][field]
+                    if account.currency_id.id == son.currency_id.id:
+                        res[account.id][field] += res[son.id][field]
+                    else:
+                        res[account.id][field] += currency_obj.compute(cr, uid, son.currency_id.id, account.currency_id.id, res[son.id][field], context=context)
             return res
         for account in self.browse(cr, uid, ids, context=context):
             if account.id not in child_ids:
@@ -125,7 +129,7 @@ class account_analytic_account(osv.osv):
         'user_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
         'date': fields.date('Date End'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed'),('template', 'Template')], 'State', required=True,
                                   help='* When an account is created its in \'Draft\' state.\
                                   \n* If any associated partner is there, it can be in \'Open\' state.\
@@ -133,7 +137,7 @@ class account_analytic_account(osv.osv):
                                   \n* And finally when all the transactions are over, it can be in \'Close\' state. \
                                   \n* The project can be in either if the states \'Template\' and \'Running\'.\n If it is template then we can make projects based on the template projects. If its in \'Running\' state it is a normal project.\
                                  \n If it is to be reviewed then the state is \'Pending\'.\n When the project is completed the state is set to \'Done\'.'),
-       'currency_id': fields.related('company_id', 'currency_id', type='many2one', relation='res.currency', string='Account currency', store=True, readonly=True),
+       'currency_id': fields.many2one('res.currency', 'Account currency', required=True),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -142,6 +146,10 @@ class account_analytic_account(osv.osv):
             return user.company_id.id
         return self.pool.get('res.company').search(cr, uid, [('parent_id', '=', False)])[0]
 
+    def _get_default_currency(self, cr, uid, context=None):
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return user.company_id.currency_id.id
+
     _defaults = {
         'type': 'normal',
         'company_id': _default_company,
@@ -149,15 +157,24 @@ class account_analytic_account(osv.osv):
         'user_id': lambda self, cr, uid, ctx: uid,
         'partner_id': lambda self, cr, uid, ctx: ctx.get('partner_id', False),
         'contact_id': lambda self, cr, uid, ctx: ctx.get('contact_id', False),
-        'date_start': lambda *a: time.strftime('%Y-%m-%d')
+        'date_start': lambda *a: time.strftime('%Y-%m-%d'),
+        'currency_id': _get_default_currency,
     }
+
+    def check_currency(self, cr, uid, ids, context=None):
+        obj = self.browse(cr, uid, ids[0], context=context)
+        if obj.company_id:
+            if obj.currency_id.id != self.pool.get('res.company').browse(cr, uid, obj.company_id.id, context=context).currency_id.id:
+                return False
+        return True
 
     def check_recursion(self, cr, uid, ids, parent=None):
         return super(account_analytic_account, self)._check_recursion(cr, uid, ids, parent=parent)
 
     _order = 'date_start desc,parent_id desc,code'
     _constraints = [
-        (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id'])
+        (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
+        (check_currency, 'Error! The currency has to be the same as the currency of the selected company', ['currency_id', 'company_id']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -166,6 +183,12 @@ class account_analytic_account(osv.osv):
         default['code'] = False
         default['line_ids'] = []
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
+
+    def on_change_company(self, cr, uid, id, company_id):
+        if not company_id:
+            return {}
+        currency = self.pool.get('res.company').read(cr, uid, [company_id], ['currency_id'])[0]['currency_id']
+        return {'value': {'currency_id': currency}}
 
     def on_change_parent(self, cr, uid, id, parent_id):
         if not parent_id:

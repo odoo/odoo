@@ -479,7 +479,7 @@
             <para style="terp_default_Bold_9_Right">[[ formatLang(sum_balance_account(o), digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account')) + o.currency_id.code or '' ]]</para>
+            <para style="terp_default_Bold_9_Right">[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account')) + o.currency_id.symbol or '' ]]</para>
           </td>
         </tr>
       </blockTable>

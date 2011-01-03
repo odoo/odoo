@@ -63,14 +63,19 @@ class order(report_sxw.rml_parse):
                     WHERE absl.pos_statement_id = %d"""%(order_id.id)
         self.cr.execute(sql)
         res = self.cr.fetchone()
-        lst.append(res[0])
+        if not res:
+            return ['', 0.0]
+        lst.append(res[0]) # todo: improve
         sql2 = """ select sum(absl.amount) as amt from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                     LEFT JOIN account_journal as aj ON aj.id = abs.journal_id
                     where aj.name = '%s' """%(res[0])
         self.cr.execute(sql2)
         res1 = self.cr.fetchone()
-        lst.append(res1[0])
+        if res1:
+            lst.append(res1[0])
+        else:
+            lst.append(0.0)
         return lst
 
 report_sxw.report_sxw('report.pos.receipt.with.remboursment', 'pos.order', 'addons/point_of_sale/report/pos_receipt_with_remboursment.rml', parser=order, header=False)

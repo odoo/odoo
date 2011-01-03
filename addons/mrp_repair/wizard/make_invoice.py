@@ -27,7 +27,7 @@ class make_invoice(osv.osv_memory):
     _description = 'Make Invoice'
 
     _columns = {
-	   'group': fields.boolean('Group by partner invoice address'),
+           'group': fields.boolean('Group by partner invoice address'),
     }
 
     def make_invoices(self, cr, uid, ids, context=None):

@@ -196,8 +196,8 @@
             <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9" groups="group_product_manager,base.group_sale_salesman"/>
-        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager,group_product_manager"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
+        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>

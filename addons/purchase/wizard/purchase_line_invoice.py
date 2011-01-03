@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import netsvc
-import ir
 from osv import osv
 from tools.translate import _
 
@@ -52,7 +50,6 @@ class purchase_line_invoice(osv.osv_memory):
             invoices = {}
             invoice_obj=self.pool.get('account.invoice')
             purchase_line_obj=self.pool.get('purchase.order.line')
-            purchase_obj = self.pool.get('purchase.order')
             property_obj=self.pool.get('ir.property')
             account_fiscal_obj=self.pool.get('account.fiscal.position')
             invoice_line_obj=self.pool.get('account.invoice.line')

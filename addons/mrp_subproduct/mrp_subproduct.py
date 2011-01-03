@@ -60,7 +60,6 @@ class mrp_bom(osv.osv):
 mrp_bom()
 
 class mrp_production(osv.osv):
-    _name = 'mrp.production'
     _description = 'Production'
     _inherit= 'mrp.production'
 

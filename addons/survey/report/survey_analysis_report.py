@@ -118,7 +118,7 @@ class survey_analysis(report_rml):
 
         for survey in surv_obj.browse(cr, uid, ids):
             rml += """<story>
-                    <para style="Title">Answer Summary</para>
+                    <para style="Title">Answers Summary</para>
                     <para style="Standard"><font></font></para>
                     <para style="P2">
                       <font color="white"> </font>
@@ -317,7 +317,6 @@ class survey_analysis(report_rml):
                                     rating_weight_sum += int(col_weight[1]) * tot_res
                                     tot_per = round((float(tot_res) * 100) / int(res_count), 2)
                                 else:
-                                    tor_res = 0
                                     tot_per = 0.0
                                 if tot_res:
                                     rml += """<td><para style="answer_bold">""" + tools.ustr(tot_per) + "%(" + tools.ustr(tot_res) + """)</para></td>"""

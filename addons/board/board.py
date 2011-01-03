@@ -120,7 +120,6 @@ class board_board(osv.osv):
         @return: Dictionary of Fields, arch and toolbar.
         """
 
-
         res = {}
         res = super(board_board, self).fields_view_get(cr, user, view_id, view_type,\
                                  context, toolbar=toolbar, submenu=submenu)
@@ -131,9 +130,31 @@ class board_board(osv.osv):
             view_id = vids[0]
             arch = self.pool.get('ir.ui.view.custom').browse(cr, user, view_id, context=context)
             res['arch'] = arch.arch
-
+        res['arch'] = self._arch_preprocessing(cr, user, res['arch'], context=context)
         res['toolbar'] = {'print': [], 'action': [], 'relate': []}
         return res
+    
+    
+    def _arch_preprocessing(self, cr, user, arch, context=None): 
+        from lxml import etree                               
+        def remove_unauthorized_children(node):
+            for child in node.iterchildren():
+                if child.tag=='action' and child.get('invisible'):
+                    node.remove(child)
+                else:
+                    child=remove_unauthorized_children(child)
+            return node
+        
+        def encode(s):
+            if isinstance(s, unicode):
+                return s.encode('utf8')
+            return s
+            
+        archnode = etree.fromstring(encode(arch))        
+        return etree.tostring(remove_unauthorized_children(archnode),pretty_print=True)
+        
+        
+    
 
     _columns = {
         'name': fields.char('Dashboard', size=64, required=True),

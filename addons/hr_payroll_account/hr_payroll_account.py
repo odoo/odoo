@@ -64,7 +64,7 @@ class hr_employee(osv.osv):
             method=True,
             domain="[('type', '=', 'liquidity')]",
             view_load=True,
-            help="Select Bank Account from where Salary Expanse will be Paid"),
+            help="Select Bank Account from where Salary Expense will be Paid"),
         'salary_account':fields.property(
             'account.account',
             type='many2one',
@@ -73,7 +73,7 @@ class hr_employee(osv.osv):
             method=True,
             domain="[('type', '=', 'other')]",
             view_load=True,
-            help="Expanse account when Salary Expanse will be recorded"),
+            help="Expense account when Salary Expense will be recorded"),
         'employee_account':fields.property(
             'account.account',
             type='many2one',
@@ -99,7 +99,7 @@ class payroll_register(osv.osv):
     _description = 'Payroll Register'
 
     _columns = {
-        'journal_id': fields.many2one('account.journal', 'Expanse Journal'),
+        'journal_id': fields.many2one('account.journal', 'Expense Journal'),
         'bank_journal_id': fields.many2one('account.journal', 'Bank Journal'),
         'period_id': fields.many2one('account.period', 'Force Period', domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
     }
@@ -213,7 +213,7 @@ class hr_payslip(osv.osv):
     _description = 'Pay Slip'
 
     _columns = {
-        'journal_id': fields.many2one('account.journal', 'Expanse Journal'),
+        'journal_id': fields.many2one('account.journal', 'Expense Journal'),
         'bank_journal_id': fields.many2one('account.journal', 'Bank Journal'),
         'move_ids':fields.one2many('hr.payslip.account.move', 'slip_id', 'Accounting vouchers'),
         'move_line_ids':fields.many2many('account.move.line', 'payslip_lines_rel', 'slip_id', 'line_id', 'Accounting Lines', readonly=True),
@@ -256,6 +256,10 @@ class hr_payslip(osv.osv):
         period_pool = self.pool.get('account.period')
 
         for slip in self.browse(cr, uid, ids, context=context):
+            if not slip.bank_journal_id or not slip.journal_id:
+                # Call super method to process sheet if journal_id or bank_journal_id are not specified.
+                super(hr_payslip, self).process_sheet(cr, uid, [slip.id], context=context)
+                continue
             line_ids = []
             partner = False
             partner_id = False
@@ -332,7 +336,7 @@ class hr_payslip(osv.osv):
                     name = '[%s]-%s' % (slip.number, line.name)
                     invoice_pool.pay_and_reconcile(cr, uid, invids, amount, acc_id, period_id, journal_id, False, period_id, False, context, name)
                     other_pay -= amount
-                    #TODO: link this account entries to the Payment Lines also Expanse Entries to Account Lines
+                    #TODO: link this account entries to the Payment Lines also Expense Entries to Account Lines
                     l_ids = movel_pool.search(cr, uid, [('name','=',name)], context=context)
                     line_ids += l_ids
 
@@ -411,6 +415,10 @@ class hr_payslip(osv.osv):
         payslip_pool = self.pool.get('hr.payslip.line')
 
         for slip in self.browse(cr, uid, ids, context=context):
+            if not slip.journal_id:
+                # Call super method to verify sheet if journal_id is not specified.
+                super(hr_payslip, self).verify_sheet(cr, uid, [slip.id], context=context)
+                continue
             total_deduct = 0.0
 
             line_ids = []

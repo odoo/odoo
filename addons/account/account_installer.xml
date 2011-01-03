@@ -24,11 +24,11 @@
                     <attribute name='string'></attribute>
                 </xpath>
                 <group colspan="8">
-                    <group colspan="4" height="450" width="600">
+                    <group colspan="4" width="600">
                         <field name="charts"/>
                             <group colspan="4" groups="base.group_extended">
                                 <separator col="4" colspan="4" string="Configure Fiscal Year"/>
-                                <field name="company_id" colspan="4" widget="selection" groups="base.group_multi_company"/>
+                                <field name="company_id" colspan="4" widget="selection"/> <!--always visible because we assume that this wizard will be ran by administrators only and because it was source of blocking form with 'correct red fields' message without displaying the field -->
                                 <field name="date_start" on_change="on_change_start_date(date_start)"/>
                                 <field name="date_stop"/>
                                 <field name="period" colspan="4"/>
