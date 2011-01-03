@@ -53,8 +53,10 @@ class stock_return_picking(osv.osv_memory):
                     res['invoice_state'] = 'none'
             for line in pick.move_lines:
                 return_id = 'return%s'%(line.id)
+                return_price = 'return_price%s'%(line.id)
                 if return_id in fields:
                     res[return_id] = line.product_qty
+                    res[return_price]=line.price_unit
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
@@ -86,8 +88,11 @@ class stock_return_picking(osv.osv_memory):
                         valid_lines += 1
                         if 'return%s'%(m.id) not in self._columns:
                             self._columns['return%s'%(m.id)] = fields.float(string=m.name, required=True)
+                        if 'return_price%s'%(m.id) not in self._columns:
+                            self._columns['return_price%s'%(m.id)] = fields.float(string=m.name, required=True)
                         if 'invoice_state' not in self._columns:
                             self._columns['invoice_state'] = fields.selection([('2binvoiced', 'To be refunded/invoiced'), ('none', 'No invoicing')], string='Invoicing', required=True)
+
             if not valid_lines:
                 raise osv.except_osv(_('Warning !'), _("There are no products to return (only lines in Done state and not fully returned yet can be returned)!"))
         return res
@@ -121,6 +126,10 @@ class stock_return_picking(osv.osv_memory):
                 if m.state=='done' and quantity > return_history[m.id]:
                     arch_lst.append('<field name="return%s"/>\n<newline/>' % (m.id,))
                     res['fields']['return%s' % m.id]={'string':m.name, 'type':'float', 'required':True}
+
+                    if m.product_id.cost_method == 'average' and pick.type == 'in':
+                        arch_lst.append('<field name="return_price%s"/>\n<newline/>' % (m.id,))
+                        res['fields']['return_price%s' % m.id]={'string':'Price', 'type':'float', 'required':True}
                     res.setdefault('returns', []).append(m.id)
             arch_lst.append('<field name="invoice_state"/>\n<newline/>')
             res['fields']['invoice_state']={'string':_('Invoicing'), 'type':'selection','required':True, 'selection':[('2binvoiced', _('To be refunded/invoiced')), ('none', _('No invoicing'))]}
@@ -133,7 +142,7 @@ class stock_return_picking(osv.osv_memory):
         return res
 
     def create_returns(self, cr, uid, ids, context=None):
-        """ 
+        """
          Creates return picking.
          @param self: The object pointer.
          @param cr: A database cursor
@@ -143,13 +152,13 @@ class stock_return_picking(osv.osv_memory):
          @return: A dictionary which of fields with values.
         """
         if context is None:
-            context = {} 
+            context = {}
         record_id = context and context.get('active_id', False) or False
         move_obj = self.pool.get('stock.move')
         pick_obj = self.pool.get('stock.picking')
         uom_obj = self.pool.get('product.uom')
         wf_service = netsvc.LocalService("workflow")
-    
+
         pick = pick_obj.browse(cr, uid, record_id, context=context)
         data = self.read(cr, uid, ids[0])
         new_picking = None
@@ -171,6 +180,7 @@ class stock_return_picking(osv.osv_memory):
             new_location=move.location_dest_id.id
             if move.state=='done':
                 new_qty = data['return%s' % move.id]
+                price_unit = data['return_price%s' % move.id]
                 returned_qty = move.product_qty
 
                 for rec in move.move_history_ids2:
@@ -178,7 +188,6 @@ class stock_return_picking(osv.osv_memory):
 
                 if returned_qty != new_qty:
                     set_invoice_state_to_none = False
-
                 if new_qty:
                     returned_lines += 1
                     new_move=move_obj.copy(cr, uid, move.id, {
@@ -187,7 +196,8 @@ class stock_return_picking(osv.osv_memory):
                             new_qty, move.product_uos.id),
                         'picking_id':new_picking, 'state':'draft',
                         'location_id':new_location, 'location_dest_id':move.location_id.id,
-                        'date':date_cur,})
+                        'date':date_cur,
+                        'price_unit':price_unit})
                     move_obj.write(cr, uid, [move.id], {'move_history_ids2':[(4,new_move)]})
 
         if not returned_lines:

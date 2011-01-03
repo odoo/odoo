@@ -91,7 +91,7 @@
             <field name="arch" type="xml">
             <data>
                 <xpath expr="/form/notebook/page[@string='Personal Information']" position="after">
-                    <page string="Miscellaneous">
+                    <page string="Miscellaneous" groups="base.group_hr_user">
                         <group colspan="2" col="2">
                             <separator string="Personal Info" colspan="2"/>
                             <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
@@ -934,7 +934,7 @@
             </field>
         </record>
         <record id="action_contibution_register_form" model="ir.actions.act_window">
-            <field name="name">Contibution Register</field>
+            <field name="name">Contribution Register</field>
             <field name="res_model">hr.contibution.register</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="hr_contibution_register_tree"/>
@@ -960,13 +960,17 @@
             </field>
         </record>
 
+
+
         <!--  Shortcuts -->
         <act_window name="Payslips"
             domain="[('employee_id', '=', active_id)]"
             res_model="hr.payslip"
             src_model="hr.employee"
             view_id ="view_hr_payslip_tree"
-            id="act_hr_employee_payslip_list"/>
+            id="act_hr_employee_payslip_list"
+            groups="base.group_hr_manager"/>
+
     </data>
 </openerp>
 

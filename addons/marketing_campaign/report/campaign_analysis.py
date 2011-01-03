@@ -20,6 +20,8 @@
 ##############################################################################
 import tools
 from osv import fields, osv
+from decimal_precision import decimal_precision as dp
+
 
 class campaign_analysis(osv.osv):
     _name = "campaign.analysis"
@@ -61,8 +63,8 @@ class campaign_analysis(osv.osv):
         'country_id': fields.related('partner_id','address', 'country_id',
                     type='many2one', relation='res.country',string='Country'),
         'total_cost' : fields.function(_total_cost, string='Cost', method=True,
-                                    type="float" ),
-        'revenue': fields.float('Revenue',digits=(16,2),readonly=True),
+                                    type="float", digits_compute=dp.get_precision('Purchase Price')),
+        'revenue': fields.float('Revenue', readonly=True, digits_compute=dp.get_precision('Sale Price')),
         'count' : fields.integer('# of Actions', readonly=True),
         'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),

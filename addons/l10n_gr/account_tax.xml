@@ -213,11 +213,11 @@
         <field name="ref_tax_code_id" ref="vat_code_input_S"/> -->
     </record>
 
-    <!-- *-* revise the ΦΠΑ.. -->
+    <!-- revise the tax.. -->
 
     <record id="ovat19" model="account.tax.template">
         <field name="chart_template_id" ref="l10n_gr_chart_template"/>
-        <field name="name">Εκροές 19</field>
+        <field name="name">Outputs 19</field>
         <field eval="0.19" name="amount"/>
         <field name="type">percent</field>
     	<field name="type_tax_use">purchase</field>

@@ -24,8 +24,6 @@ UninstallDisplayIcon={app}\*
 VersionInfoVersion=1.0
 VersionInfoCompany=OpenERP
 VersionInfoDescription=OpenERP Outlook Addin
-VersionInfoProductName=OpenERP
-VersionInfoProductVersion=1.0
 ChangesAssociations=true
 
 [Languages]
@@ -52,7 +50,7 @@ Name: "slovenian"; MessagesFile: "compiler:Languages\Slovenian.isl"
 Name: "spanish"; MessagesFile: "compiler:Languages\Spanish.isl"
 
 [Files]
-Source: "C:\workspace\openerp-outlook-plugin\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\openerp-outlook-plugin\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Messages]

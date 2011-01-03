@@ -155,13 +155,13 @@
             <para style="terp_default_Right_9">[[ formatLang(line_ids['qty']) ]] [[line_ids['uom'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['discount']) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['discount'], dp='Sale Price') ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit']) ]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['price_unit'], dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line_ids['total']) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line_ids['total'], dp='Sale Price') ]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -177,7 +177,7 @@
           <para style="terp_tblheader_General_Right">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(pos_payment_date_total(data['form'])) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(pos_payment_date_total(data['form']), dp='Sale Price') or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>

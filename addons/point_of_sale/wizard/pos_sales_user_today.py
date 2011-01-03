@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
 
 
 class pos_sales_user_today(osv.osv_memory):
