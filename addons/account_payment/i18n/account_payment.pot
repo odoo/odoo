@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43:25+0000\n"
-"PO-Revision-Date: 2010-12-21 19:43:25+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56:52+0000\n"
+"PO-Revision-Date: 2011-01-03 16:56:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -246,7 +246,7 @@ msgid "Choose an option for the Payment Order:'Fixed' stands for a date specifie
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
+#: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -394,7 +394,7 @@ msgid "The successor message of Communication."
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
+#: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "No partner defined on entry line"
 msgstr ""
@@ -448,6 +448,12 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order.create:0
 msgid "Search"
+msgstr ""
+
+#. module: account_payment
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+msgid "Payment Order"
 msgstr ""
 
 #. module: account_payment
@@ -552,9 +558,8 @@ msgid "Information"
 msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid "A payment order is a payment request from your company to pay a supplier invoice or a customer credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for."
 msgstr ""
 
 #. module: account_payment
@@ -660,11 +665,6 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid "A payment order is a payment request that your company does in order to pay a supplier invoice or a customer credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for."
 msgstr ""
 
 #. module: account_payment
