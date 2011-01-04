@@ -45,6 +45,7 @@ Features.
           'test/schedule_project_tasks.yml',
           'test/schedule_phase_tasks.yml',
           'test/test_schedule_phases_case1.yml',
+          'test/test_schedule_phases_case2.yml',
     ],
     "update_xml": [
         "security/ir.model.access.csv",
