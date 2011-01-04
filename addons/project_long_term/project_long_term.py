@@ -23,7 +23,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from tools.translate import _
 from osv import fields, osv
-from resource.faces import task as Task
+from resource.faces import task as Task 
 import operator
 from new import classobj
 import types
@@ -219,13 +219,11 @@ class project_phase(osv.osv):
         """
         Return a list of  Resource Class objects for the resources allocated to the phase.
         """
+        
         res = {}
         resource_pool = self.pool.get('resource.resource')
         for phase in self.browse(cr, uid, ids, context=context):
-            user_ids = map(lambda x:x.resource_id.user_id.id, phase.resource_ids)
-            project = phase.project_id
-            calendar_id  = project.resource_calendar_id and project.resource_calendar_id.id or False
-            resource_objs = resource_pool.generate_resources(cr, uid, user_ids, calendar_id, context=context)
+            resource_objs = map(lambda x:x.resource_id.name, phase.resource_ids)
             res[phase.id] = resource_objs
         return res
 
@@ -239,17 +237,17 @@ class project_phase(osv.osv):
         uom_pool = self.pool.get('product.uom')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
         for phase in self.browse(cr, uid, ids, context=context)[::-1]:
-            phase_resource_obj = self.generate_resources(cr, uid, [phase.id], context=context)[phase.id]
             avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
-            if not phase_resource_obj: #TOCHECK: why need this ?
-                avg_days = avg_days - 1
             duration = str(avg_days) + 'd'
             # Create a new project for each phase
+            str_resource = ('%s,'*len(phase.resource_ids))[:-1]
+            str_vals = str_resource % tuple(map(lambda x: 'Resource_%s'%x.resource_id.id, phase.resource_ids))
+            # Phases Defination for the Project
             s = '''
     def Phase_%s():
         effort = \'%s\'
         resource = %s
-'''%(phase.id, duration, phase_resource_obj)
+'''%(phase.id, duration, str_vals or False)
             if parent:
                 start = 'up.Phase_%s.end' % (parent.id)
                 s += '''
@@ -302,8 +300,22 @@ class project_phase(osv.osv):
             working_days_per_year = 200
             vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id))
         working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+        
+        #Creating resources using the member of the Project
+        u_ids = [i.id for i in root_phase.project_id.members]
+        resource_objs = resource_pool.generate_resources(cr, uid, u_ids, calendar_id, context=context)
+        cls_str = ''
+        # Creating Resources for the Project
+        for key, vals in resource_objs.items():
+            cls_str +='''
+    class Resource_%s(Resource):
+        vacation = %s
+        efficiency = %s
+'''%(key,  vals.get('vacation', False), vals.get('efficiency', False))
+        
         # Create a new project for each phase
         func_str += '''
+
 def Project_%d():
     # If project has working calendar then that
     # else the default one would be considered
@@ -315,16 +327,25 @@ def Project_%d():
     working_days_per_year = %s
     vacation = %s
     working_days =  %s
+    from resource.faces import Resource
 '''%(root_phase.project_id.id, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+        func_str += cls_str
         phases, phase_ids = self.generate_phase(cr, uid, [root_phase.id], func_str, context=context)
+        #Temp File to test the Code for the Allocation
+#        fn = '/home/tiny/Desktop/plt.py'
+#        fp = open(fn, 'w')
+#        fp.writelines(phases)
+#        fp.close()
+        # Allocating Memory for the required Project and Pahses and Resources
         exec(phases)
         Project = eval('Project_%d' % root_phase.project_id.id)
         project = Task.BalancedProject(Project)
+        
         for phase_id in phase_ids:
             phase = eval("project.Phase_%d" % phase_id)
             start_date = phase.start.to_datetime()
             end_date = phase.end.to_datetime()
-            print start_date, end_date
+#            print phase_id,"\n\n****Phases *********", phase.resource
             # Recalculate date_start and date_end
             # according to constraints on date start and date end on phase
 #            if phase.constraint_date_start and str(s_date) < phase.constraint_date_start:
