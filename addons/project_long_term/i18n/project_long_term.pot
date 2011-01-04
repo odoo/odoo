@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:58+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:58+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58:18+0000\n"
+"PO-Revision-Date: 2011-01-03 16:58:18+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -58,6 +58,11 @@ msgid "Resources Allocation"
 msgstr ""
 
 #. module: project_long_term
+#: view:project.phase:0
+msgid "Displaying settings"
+msgstr ""
+
+#. module: project_long_term
 #: field:project.compute.phases,target_project:0
 msgid "Schedule"
 msgstr ""
@@ -94,7 +99,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:0
+#: code:addons/project_long_term/project_long_term.py:130
 #, python-format
 msgid "Day"
 msgstr ""
@@ -121,6 +126,17 @@ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
 msgstr ""
 
 #. module: project_long_term
+#: code:addons/project_long_term/project_long_term.py:489
+#, python-format
+msgid "Resources should be allocated to your phases and Members should be assigned to your Project!"
+msgstr ""
+
+#. module: project_long_term
+#: help:project.phase,date_end:0
+msgid " It's computed by the scheduler according to the start date and the duration."
+msgstr ""
+
+#. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
 #: field:project.compute.phases,project_id:0
 #: field:project.compute.tasks,project_id:0
@@ -133,7 +149,7 @@ msgid "Project"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:0
+#: code:addons/project_long_term/wizard/project_compute_phases.py:50
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -144,7 +160,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:0
+#: code:addons/project_long_term/project_long_term.py:426
 #, python-format
 msgid "No tasks to compute for Project '%s'."
 msgstr ""
@@ -152,11 +168,6 @@ msgstr ""
 #. module: project_long_term
 #: help:project.resource.allocation,date_end:0
 msgid "Ending Date"
-msgstr ""
-
-#. module: project_long_term
-#: help:project.phase,date_end:0
-msgid "Ending Date of the phase"
 msgstr ""
 
 #. module: project_long_term
@@ -182,12 +193,13 @@ msgid "Compute Phase Scheduling"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:0
+#: code:addons/project_long_term/project_long_term.py:192
 #, python-format
 msgid " (copy)"
 msgstr ""
 
 #. module: project_long_term
+#: view:project.phase:0
 #: view:project.resource.allocation:0
 #: field:project.resource.allocation,useability:0
 msgid "Availability"
@@ -294,6 +306,11 @@ msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
+msgid "Schedule and Display info"
+msgstr ""
+
+#. module: project_long_term
+#: view:project.phase:0
 msgid "Month"
 msgstr ""
 
@@ -305,6 +322,11 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
 msgid "project.schedule.tasks"
+msgstr ""
+
+#. module: project_long_term
+#: model:ir.actions.act_window,help:project_long_term.act_project_phase
+msgid "A project can be split into the different phases. For each phase, you can define your resources allocation, describe different tasks and link your phase to previous and next phases, add date constraints for the automated scheduling. Use the long term planning in order to planify your available human resources, convert your phases into a series of tasks when you start working on the project."
 msgstr ""
 
 #. module: project_long_term
@@ -330,11 +352,6 @@ msgid "Draft"
 msgstr ""
 
 #. module: project_long_term
-#: model:ir.actions.act_window,help:project_long_term.act_project_phase
-msgid "A project can be split into the different phases. For each phase, you can define your resources allocation, describe different tasks and link your phase to previous and next ones, add date constraints for the automated scheduling. Use the long term planning in order to planify your available human resources, convert your phases into a series of tasks when you start working on it."
-msgstr ""
-
-#. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Pending"
@@ -348,6 +365,11 @@ msgstr ""
 #. module: project_long_term
 #: field:project.resource.allocation,user_id:0
 msgid "User"
+msgstr ""
+
+#. module: project_long_term
+#: help:project.phase,date_start:0
+msgid "It's computed according to the phases order : the start date of the 1st phase is set by you while the other start dates depend on the end date of their previous phases"
 msgstr ""
 
 #. module: project_long_term
@@ -366,27 +388,21 @@ msgid "Project Compute Tasks"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:0
+#: code:addons/project_long_term/project_long_term.py:244
 #, python-format
 msgid "No responsible person assigned !"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:0
+#: code:addons/project_long_term/project_long_term.py:489
 #, python-format
 msgid "Error"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:0
+#: code:addons/project_long_term/project_long_term.py:244
 #, python-format
 msgid "You must assign a responsible person for phase '%s' !"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:0
-#, python-format
-msgid "Should have Resources Allocation or Project Members!"
 msgstr ""
 
 #. module: project_long_term
@@ -433,11 +449,6 @@ msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
-msgid "Other Info"
-msgstr ""
-
-#. module: project_long_term
-#: view:project.phase:0
 #: field:project.phase,responsible_id:0
 msgid "Responsible"
 msgstr ""
@@ -458,7 +469,7 @@ msgid "Start Phase"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:0
+#: code:addons/project_long_term/wizard/project_compute_phases.py:50
 #, python-format
 msgid "Please Specify Project to be schedule"
 msgstr ""
@@ -482,11 +493,6 @@ msgstr ""
 #. module: project_long_term
 #: view:project.resource.allocation:0
 msgid "Phase"
-msgstr ""
-
-#. module: project_long_term
-#: help:project.phase,date_start:0
-msgid "Starting Date of the phase"
 msgstr ""
 
 #. module: project_long_term
@@ -515,6 +521,11 @@ msgid "Name"
 msgstr ""
 
 #. module: project_long_term
+#: view:project.phase:0
+msgid "Tasks Details"
+msgstr ""
+
+#. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
 msgid "Working Period"
 msgstr ""
@@ -526,12 +537,11 @@ msgstr ""
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
-#: view:project.phase:0
 msgid "Scheduling"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:0
+#: code:addons/project_long_term/project_long_term.py:329
 #, python-format
 msgid "No tasks to compute for Phase '%s'."
 msgstr ""

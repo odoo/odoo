@@ -883,7 +883,8 @@ class sale_order_line(osv.osv):
         'invoiced': 0,
         'state': 'draft',
         'type': 'make_to_stock',
-        'product_packaging': False
+        'product_packaging': False,
+        'price_unit': 0.0,
     }
 
     def invoice_line_create(self, cr, uid, ids, context=None):
