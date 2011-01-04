@@ -574,8 +574,8 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
