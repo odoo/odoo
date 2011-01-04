@@ -4175,27 +4175,47 @@ class orm(orm_template):
                     return False
         return True
 
+    def get_xml_ids(self, cr, uid, ids, *args, **kwargs):
+        """Find out the XML ID(s) of any database record.
+
+        **Synopsis**: ``_get_xml_ids(cr, uid, ids) -> { 'id': ['module.xml_id'] }``
+
+        :return: map of ids to the list of their fully qualified XML IDs
+                 (empty list when there's none).
+        """
+        model_data_obj = self.pool.get('ir.model.data')
+        data_ids = model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
+        data_results = model_data_obj.read(cr, uid, data_ids, ['module', 'name', 'res_id'])
+        result = {}
+        for id in ids:
+            # can't use dict.fromkeys() as the list would be shared!
+            result[id] = []
+        for record in data_results:
+            result[record['res_id']].append('%(module)s.%(name)s' % record)
+        return result
+
     def get_xml_id(self, cr, uid, ids, *args, **kwargs):
         """Find out the XML ID of any database record, if there
         is one. This method works as a possible implementation
         for a function field, to be able to add it to any
         model object easily, referencing it as ``osv.osv.get_xml_id``.
 
+        When multiple XML IDs exist for a record, only one
+        of them is returned (randomly).
+
         **Synopsis**: ``get_xml_id(cr, uid, ids) -> { 'id': 'module.xml_id' }``
 
-        :return: the fully qualified XML ID of the given object,
+        :return: map of ids to their fully qualified XML ID,
                  defaulting to an empty string when there's none
                  (to be usable as a function field).
         """
-        result = dict.fromkeys(ids, '')
-        model_data_obj = self.pool.get('ir.model.data')
-        data_ids = model_data_obj.search(cr, uid,
-                [('model', '=', self._name), ('res_id', 'in', ids)])
-        data_results = model_data_obj.read(cr, uid, data_ids,
-                ['name', 'module', 'res_id'])
-        for record in data_results:
-            result[record['res_id']] = '%(module)s.%(name)s' % record
-        return result
+        results = self.get_xml_ids(cr, uid, ids)
+        for k, v in results.items():
+            if results[k]:
+                results[k] = v[0]
+            else:
+                results[k] = ''
+        return results
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
