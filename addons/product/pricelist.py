@@ -130,7 +130,8 @@ class product_pricelist(osv.osv):
             'date': Date of the pricelist (%Y-%m-%d),
         }
         '''
-        context = context or {}
+        if context is None:
+            context = {}
         currency_obj = self.pool.get('res.currency')
         product_obj = self.pool.get('product.product')
         supplierinfo_obj = self.pool.get('product.supplierinfo')
@@ -202,7 +203,7 @@ class product_pricelist(osv.osv):
                     else:
                         price_tmp = self.price_get(cr, uid,
                                 [res['base_pricelist_id']], prod_id,
-                                qty)[res['base_pricelist_id']]
+                                qty, context=context)[res['base_pricelist_id']]
                         ptype_src = self.browse(cr, uid,
                                 res['base_pricelist_id']).currency_id.id
                         price = currency_obj.compute(cr, uid, ptype_src,
