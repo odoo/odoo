@@ -231,4 +231,16 @@ class res_partner(osv.osv):
                 context=context)
 res_partner()
 
+class account_analytic_line(osv.osv):
+   _inherit = "account.analytic.line"
+   def on_change_account_id(self, cr, uid, ids, account_id):
+       res = {}
+       if not account_id:
+           return res
+       res.setdefault('value',{})
+       acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
+       st = acc.to_invoice.id
+       res['value']['to_invoice'] = st or False
+       return res  
+account_analytic_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
