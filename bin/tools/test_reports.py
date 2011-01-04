@@ -79,8 +79,8 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None):
             res_text = tools.ustr(fp.read())
             os.unlink(rfname)
         except Exception:
-            log.warning("Cannot extract report's text:", exc_info=True)
-        
+            log.debug("Unable to parse PDF report: install pdftotext to perform automated tests.")
+
         if res_text is not False:
             for line in res_text.split('\n'):
                 if ('[[' in line) or ('[ [' in line):
