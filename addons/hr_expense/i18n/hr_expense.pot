@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:11+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:11+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:37+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:37+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -222,12 +222,6 @@ msgid "Gives the sequence order when displaying a list of expense lines."
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
-#, python-format
-msgid "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
-msgstr ""
-
-#. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
 #: view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
@@ -247,6 +241,12 @@ msgid "State"
 msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:145
+#, python-format
+msgid "Please configure Default Expense account for Product purchase, `property_account_expense_categ`"
+msgstr ""
+
+#. module: hr_expense
 #: report:hr.expense:0
 #: view:hr.expense.expense:0
 #: field:hr.expense.expense,employee_id:0
@@ -261,7 +261,6 @@ msgid "Qty"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0
 #: view:hr.expense.report:0
 #: field:hr.expense.report,price_total:0
 msgid "Total Price"
@@ -273,7 +272,8 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
+#: code:addons/hr_expense/hr_expense.py:145
+#: code:addons/hr_expense/hr_expense.py:158
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -332,7 +332,7 @@ msgid "Reimbursement"
 msgstr ""
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
+#: code:addons/hr_expense/hr_expense.py:158
 #, python-format
 msgid "The employee must have a Home address"
 msgstr ""
@@ -666,6 +666,11 @@ msgstr ""
 #. module: hr_expense
 #: field:hr.expense.line,unit_quantity:0
 msgid "Quantities"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0
+msgid "Price"
 msgstr ""
 
 #. module: hr_expense

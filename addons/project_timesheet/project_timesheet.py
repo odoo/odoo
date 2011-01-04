@@ -111,7 +111,7 @@ class project_work(osv.osv):
 
                 # Compute based on pricetype
                 amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
-                    prod_id, amount, False, unit, context=context)
+                    prod_id, amount, False, unit, vals_line['journal_id'], context=context)
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     updv = { 'amount': amount_unit['value']['amount'] }
                     obj_timesheet.write(cr, uid, [timeline_id], updv, context=context)
@@ -158,7 +158,7 @@ class project_work(osv.osv):
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
                     prod_id=prod_id, company_id=False,
-                    unit_amount=vals_line['unit_amount'], unit=False, context=context)
+                    unit_amount=vals_line['unit_amount'], unit=False, journal_id=vals_line['journal_id'], context=context)
 
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     vals_line['amount'] = amount_unit['value']['amount']
@@ -231,4 +231,16 @@ class res_partner(osv.osv):
                 context=context)
 res_partner()
 
+class account_analytic_line(osv.osv):
+   _inherit = "account.analytic.line"
+   def on_change_account_id(self, cr, uid, ids, account_id):
+       res = {}
+       if not account_id:
+           return res
+       res.setdefault('value',{})
+       acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
+       st = acc.to_invoice.id
+       res['value']['to_invoice'] = st or False
+       return res  
+account_analytic_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
