@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:05+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:05+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:30+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:30+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,27 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: document_webdav
+#: field:document.webdav.dir.property,create_date:0
+#: field:document.webdav.file.property,create_date:0
+msgid "Date Created"
+msgstr ""
+
+#. module: document_webdav
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr ""
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
+msgid "Search Document properties"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
 #: field:document.webdav.dir.property,namespace:0
+#: view:document.webdav.file.property:0
+#: field:document.webdav.file.property,namespace:0
 msgid "Namespace"
 msgstr ""
 
@@ -32,7 +46,13 @@ msgid "DAV properties"
 msgstr ""
 
 #. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_file_property
+msgid "document.webdav.file.property"
+msgstr ""
+
+#. module: document_webdav
 #: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
 msgid "Group By..."
 msgstr ""
 
@@ -42,9 +62,20 @@ msgid "These properties will be added to WebDAV requests"
 msgstr ""
 
 #. module: document_webdav
-#: code:addons/document_webdav/webdav.py:0
+#: model:ir.ui.menu,name:document_webdav.menu_file_props
+msgid "DAV properties for documents"
+msgstr ""
+
+#. module: document_webdav
+#: code:addons/document_webdav/webdav.py:37
 #, python-format
 msgid "PyWebDAV Import Error!"
+msgstr ""
+
+#. module: document_webdav
+#: view:document.webdav.file.property:0
+#: field:document.webdav.file.property,file_id:0
+msgid "Document"
 msgstr ""
 
 #. module: document_webdav
@@ -88,7 +119,7 @@ msgid "The directory name must be unique !"
 msgstr ""
 
 #. module: document_webdav
-#: code:addons/document_webdav/webdav.py:0
+#: code:addons/document_webdav/webdav.py:37
 #, python-format
 msgid "Please install PyWebDAV from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/"
 msgstr ""
@@ -101,11 +132,13 @@ msgstr ""
 #. module: document_webdav
 #: view:document.directory:0
 #: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
 msgid "Properties"
 msgstr ""
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,name:0
+#: field:document.webdav.file.property,name:0
 msgid "Name"
 msgstr ""
 
@@ -116,6 +149,7 @@ msgstr ""
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,value:0
+#: field:document.webdav.file.property,value:0
 msgid "Value"
 msgstr ""
 
@@ -126,8 +160,26 @@ msgid "Directory"
 msgstr ""
 
 #. module: document_webdav
+#: field:document.webdav.dir.property,write_uid:0
+#: field:document.webdav.file.property,write_uid:0
+msgid "Last Modification User"
+msgstr ""
+
+#. module: document_webdav
 #: view:document.webdav.dir.property:0
 msgid "Dir"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,write_date:0
+#: field:document.webdav.file.property,write_date:0
+msgid "Date Modified"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,create_uid:0
+#: field:document.webdav.file.property,create_uid:0
+msgid "Creator"
 msgstr ""
 
 #. module: document_webdav
@@ -141,12 +193,8 @@ msgid "Directory must have a parent or a storage"
 msgstr ""
 
 #. module: document_webdav
-#: view:document.webdav.dir.property:0
-msgid "Search Document storage"
-msgstr ""
-
-#. module: document_webdav
 #: field:document.webdav.dir.property,do_subst:0
+#: field:document.webdav.file.property,do_subst:0
 msgid "Substitute"
 msgstr ""
 
