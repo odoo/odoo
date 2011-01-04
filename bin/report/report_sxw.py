@@ -518,7 +518,14 @@ class report_sxw(report_rml, preprocess.report):
         context = context.copy()
         report_type = report_xml.report_type
         context['parents'] = sxw_parents
-        sxw_io = StringIO.StringIO(report_xml.report_sxw_content)
+
+        # if binary content was passed as unicode, we must
+        # re-encode it as a 8-bit string using the pass-through
+        # 'latin1' encoding, to restore the original byte values.
+        # See also osv.fields.sanitize_binary_value()
+        binary_report_content = report_xml.report_sxw_content.encode("latin1")
+
+        sxw_io = StringIO.StringIO(binary_report_content)
         sxw_z = zipfile.ZipFile(sxw_io, mode='r')
         rml = sxw_z.read('content.xml')
         meta = sxw_z.read('meta.xml')
