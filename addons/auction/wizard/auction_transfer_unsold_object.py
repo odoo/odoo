@@ -82,6 +82,6 @@ class auction_transfer_unsold_object(osv.osv):
                                                                                                 'ach_inv_id':None,
                                                                                                 'sel_inv_id':None,
                                                                                                 'state':'draft'})
-            return {}    
+            return {'type': 'ir.actions.act_window_close'}    
         
 auction_transfer_unsold_object()

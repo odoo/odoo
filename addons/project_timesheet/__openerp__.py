@@ -31,7 +31,7 @@
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['project', 'hr_timesheet_sheet', 'hr_timesheet_invoice'],
-    'init_xml': [],
+    'init_xml': ['project_timesheet_data.xml'],
     'update_xml': ["security/ir.model.access.csv","process/project_timesheet_process.xml", "report/task_report_view.xml", "project_timesheet_view.xml"],
     'demo_xml': ["project_timesheet_demo.xml"],
     'test': [

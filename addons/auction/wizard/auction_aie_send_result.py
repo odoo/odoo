@@ -137,7 +137,7 @@ class auction_lots_pay(osv.osv_memory):
         lots = service.execute(cr.dbname, uid, 'auction.lots', 'read', context['active_ids'],  ['obj_num','obj_price'])
         args = pickle.dumps(lots)
         self._catalog_send(datas['uname'], datas['password'], datas['dates'], args)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
 auction_lots_pay()
 

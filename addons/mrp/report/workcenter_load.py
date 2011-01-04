@@ -21,7 +21,6 @@
 
 from report.render import render
 from report.interface import report_int
-from pychart import *
 import time
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta

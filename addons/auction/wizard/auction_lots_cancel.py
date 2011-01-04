@@ -49,7 +49,7 @@ class auction_lots_cancel(osv.osv):
                     supplier_refund_inv_id = invoice_obj.refund(cr, uid, [lot.ach_inv_id.id])
             if lot.sel_inv_id:
                     customer_refund_inv_id = invoice_obj.refund(cr, uid, [lot.sel_inv_id.id])
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
                 
         _columns = {
         }

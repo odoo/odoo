@@ -100,7 +100,7 @@ def _record_objects(self, cr, uid, data, context):
         for s_id in search_ids:
              args=(cr.dbname,uid,obj_name,'copy',s_id,{},context)
              mod.recording_data.append(('query',args, {}, s_id))
-    return {}
+    return {'type': 'ir.actions.act_window_close'}
 
 def _check(self, cr, uid, data, context):
      pool = pooler.get_pool(cr.dbname)
