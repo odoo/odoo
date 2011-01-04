@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:06+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:06+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:31+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:31+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,21 +26,17 @@ msgid "Email Account Configuration"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:195
 #, python-format
 msgid "Emails for multiple items saved in outbox."
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:59
+#: code:addons/email_template/wizard/email_template_send_wizard.py:60
 #, python-format
 msgid "No personal email accounts are configured for you. \n"
 "Either ask admin to enforce an account for this template or get yourself a personal email account."
-msgstr ""
-
-#. module: email_template
-#: model:ir.actions.act_window,help:email_template.action_email_template_mailbox
-msgid "An email template is an email document that will be sent as part of a marketing campaign. You can personalize it based on specific customer profile fields so that their names or other partner related information can be automatically inserted in it."
 msgstr ""
 
 #. module: email_template
@@ -84,7 +80,7 @@ msgid "Body"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
+#: code:addons/email_template/email_template.py:304
 #, python-format
 msgid "Deletion of Record failed"
 msgstr ""
@@ -163,7 +159,7 @@ msgid "Email Account"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:201
 #, python-format
 msgid "Email sending failed for one or more objects."
 msgstr ""
@@ -265,7 +261,7 @@ msgid "From Email"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
+#: code:addons/email_template/email_template.py:304
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -305,7 +301,7 @@ msgid "Subject"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:256
 #, python-format
 msgid "Reason: %s"
 msgstr ""
@@ -322,7 +318,7 @@ msgid "Template"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:367
 #, python-format
 msgid "Mail from Account %s failed. Probable Reason: Server Send Error\n"
 " Description: %s"
@@ -376,13 +372,13 @@ msgid "Resource"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:255
 #, python-format
 msgid "Out going connection test failed"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:371
 #, python-format
 msgid "Mail from Account %s successfully Sent."
 msgstr ""
@@ -404,7 +400,7 @@ msgid "The text version of the mail"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
+#: code:addons/email_template/email_template.py:449
 #, python-format
 msgid " (Email Attachment)"
 msgstr ""
@@ -445,7 +441,7 @@ msgid "Attach my signature to mail"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:255
 #: view:email.template:0
 #, python-format
 msgid "Report"
@@ -573,7 +569,7 @@ msgid "Mail Details"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:235
 #, python-format
 msgid "SMTP SERVER or PORT not specified"
 msgstr ""
@@ -697,7 +693,7 @@ msgid "Outgoing"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:427
 #, python-format
 msgid "Datetime Extraction failed.Date:%s                       	Error:%s"
 msgstr ""
@@ -757,7 +753,7 @@ msgid "Save in Drafts"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:362
 #, python-format
 msgid "Mail from Account %s failed. Probable Reason:MIME Error\n"
 "Description: %s"
@@ -774,10 +770,16 @@ msgid "Language"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/email_template_account.py:275
+#: code:addons/email_template/email_template_account.py:280
+#: code:addons/email_template/email_template_account.py:362
+#: code:addons/email_template/email_template_account.py:371
+#: code:addons/email_template/email_template_account.py:374
+#: code:addons/email_template/email_template_account.py:424
+#: code:addons/email_template/wizard/email_template_send_wizard.py:201
 #: model:ir.ui.menu,name:email_template.menu_email_template
 #: model:ir.ui.menu,name:email_template.menu_email_template_config_tools
+#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #: model:ir.ui.menu,name:email_template.menu_email_template_tools
 #, python-format
 msgid "Email Template"
@@ -805,7 +807,7 @@ msgid "Only users from these groups will be allowed to send mails from this Temp
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
+#: code:addons/email_template/email_template.py:284
 #, python-format
 msgid "Send Mail (%s)"
 msgstr ""
@@ -852,7 +854,7 @@ msgid "Text, otherwise HTML"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
+#: code:addons/email_template/email_template.py:319
 #, python-format
 msgid "Copy of template "
 msgstr ""
@@ -873,7 +875,7 @@ msgid "Close"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:0
+#: code:addons/email_template/email_template_mailbox.py:48
 #, python-format
 msgid "Error sending mail: %s"
 msgstr ""
@@ -889,7 +891,7 @@ msgid "Body (HTML-Web Client Only)"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:253
 #, python-format
 msgid "%s (Email Attachment)"
 msgstr ""
@@ -897,6 +899,11 @@ msgstr ""
 #. module: email_template
 #: selection:email_template.mailbox,state:0
 msgid "Sending"
+msgstr ""
+
+#. module: email_template
+#: model:ir.actions.act_window,help:email_template.action_email_template_mailbox
+msgid "An email template is an email document that will be sent as part of a marketing campaign. You can personalize it according to specific customer profile fields, so that a partner name or other partner related information may be inserted automatically."
 msgstr ""
 
 #. module: email_template
@@ -915,7 +922,13 @@ msgid "User Information"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: view:email.template:0
+msgid "Actions"
+msgstr ""
+
+#. module: email_template
+#: code:addons/email_template/email_template_account.py:363
+#: code:addons/email_template/email_template_account.py:368
 #, python-format
 msgid "Server Send Error\n"
 "Description: %s"
@@ -927,8 +940,8 @@ msgid "Name of the generated report file. Placeholders can be used in the filena
 msgstr ""
 
 #. module: email_template
-#: field:email_template.mailbox,folder:0
-msgid "Folder"
+#: help:email_template.mailbox,date_mail:0
+msgid "Date on which Email Sent or Received"
 msgstr ""
 
 #. module: email_template
@@ -938,25 +951,25 @@ msgid "Trash"
 msgstr ""
 
 #. module: email_template
-#: help:email_template.mailbox,date_mail:0
-msgid "Date on which Email Sent or Received"
+#: model:ir.model,name:email_template.model_email_template_mailbox
+msgid "Email Mailbox"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_mailbox.py:0
+#: code:addons/email_template/email_template_mailbox.py:103
 #, python-format
 msgid "Sending of Mail %s failed. Probable Reason:Could not login to server\n"
 "Error: %s"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:60
 #, python-format
 msgid "Missing mail account"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:250
 #, python-format
 msgid "SMTP Test Connection Was Successful"
 msgstr ""
@@ -1003,11 +1016,6 @@ msgid "Null Value"
 msgstr ""
 
 #. module: email_template
-#: model:ir.model,name:email_template.model_email_template_mailbox
-msgid "Email Mailbox"
-msgstr ""
-
-#. module: email_template
 #: field:email.template,template_language:0
 msgid "Templating Language"
 msgstr ""
@@ -1048,7 +1056,6 @@ msgstr ""
 
 #. module: email_template
 #: view:email_template.mailbox:0
-#: model:ir.ui.menu,name:email_template.menu_email_template_configuration
 #: model:ir.ui.menu,name:email_template.menu_email_template_mails_tools
 msgid "Emails"
 msgstr ""
@@ -1122,7 +1129,7 @@ msgid "Model"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:236
 #, python-format
 msgid "Core connection for the given ID does not exist"
 msgstr ""
@@ -1133,7 +1140,7 @@ msgid "Corporate"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:275
 #, python-format
 msgid "Mail from Account %s failed on login. Probable Reason:Could not login to server\n"
 "Error: %s"
@@ -1160,8 +1167,8 @@ msgid "Mail Format"
 msgstr ""
 
 #. module: email_template
-#: view:email.template:0
-msgid "Actions"
+#: field:email_template.mailbox,folder:0
+msgid "Folder"
 msgstr ""
 
 #. module: email_template
@@ -1175,13 +1182,15 @@ msgid "Enter port number, eg: 25 or 587"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/wizard/email_template_send_wizard.py:59
 #, python-format
 msgid "email-template"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template_account.py:0
+#: code:addons/email_template/email_template_account.py:280
+#: code:addons/email_template/email_template_account.py:374
+#: code:addons/email_template/email_template_account.py:375
 #, python-format
 msgid "Mail from Account %s failed. Probable Reason:Account not approved"
 msgstr ""
@@ -1197,8 +1206,8 @@ msgid "Has Attachments"
 msgstr ""
 
 #. module: email_template
-#: code:addons/email_template/email_template.py:0
-#: code:addons/email_template/wizard/email_template_send_wizard.py:0
+#: code:addons/email_template/email_template.py:452
+#: code:addons/email_template/wizard/email_template_send_wizard.py:256
 #, python-format
 msgid "No Description"
 msgstr ""
