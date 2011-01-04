@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-29 18:06+0000\n"
-"PO-Revision-Date: 2011-01-01 23:14+0000\n"
-"Last-Translator: Tamás Dénes <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-02 11:46+0000\n"
+"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: Hungarian <openerp-hungarian-team@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-02 05:00+0000\n"
+"X-Launchpad-Export-Date: 2011-01-04 14:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -47,8 +47,6 @@ msgid ""
 "The second argument of the many2many field %s must be a SQL table !You used "
 "%s, which is not a valid SQL table name."
 msgstr ""
-"The second argument of the many2many field %s must be a SQL table !You used "
-"%s, which is not a valid SQL table name."
 
 #. module: base
 #: view:ir.values:0
@@ -80,7 +78,7 @@ msgstr "Munkafolyamat"
 #. module: base
 #: view:partner.sms.send:0
 msgid "SMS - Gateway: clickatell"
-msgstr "SMS - Gateway: clickatell"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -105,7 +103,7 @@ msgstr "Workflow On"
 #. module: base
 #: field:ir.actions.act_window,display_menu_tip:0
 msgid "Display Menu Tips"
-msgstr "Display Menu Tips"
+msgstr ""
 
 #. module: base
 #: view:ir.module.module:0
@@ -163,7 +161,7 @@ msgstr "created."
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
 msgid "Wood Suppliers"
-msgstr ""
+msgstr "Fa beszállítók"
 
 #. module: base
 #: code:addons/base/module/module.py:303
@@ -296,6 +294,7 @@ msgstr "ir.ui.view_sc"
 
 #. module: base
 #: field:res.widget.user,widget_id:0
+#: field:res.widget.wizard,widgets_list:0
 msgid "Widget"
 msgstr "Widget"
 
@@ -458,7 +457,7 @@ msgstr "Varázslók"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_miscellaneoussuppliers0
 msgid "Miscellaneous Suppliers"
-msgstr ""
+msgstr "Egyéb beszállítók"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:216
@@ -522,7 +521,7 @@ msgstr "leírás"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_action_rule
 msgid "Automated Actions"
-msgstr ""
+msgstr "Automatizált műveletek"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_actions
@@ -601,7 +600,7 @@ msgstr "Albánia"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr ""
+msgstr "Lehetőségek"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -832,7 +831,7 @@ msgid "Transitions"
 msgstr "Átmenetek"
 
 #. module: base
-#: code:addons/orm.py:4018
+#: code:addons/orm.py:4020
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr "Record #%d of %s not found, cannot copy!"
@@ -986,7 +985,7 @@ msgstr ""
 #. module: base
 #: model:ir.ui.menu,name:base.menu_purchase_root
 msgid "Purchases"
-msgstr ""
+msgstr "Beszerzés"
 
 #. module: base
 #: model:res.country,name:base.md
@@ -1171,8 +1170,6 @@ msgid ""
 "Do not display this log if it belongs to the same object the user is working "
 "on"
 msgstr ""
-"Do not display this log if it belongs to the same object the user is working "
-"on"
 
 #. module: base
 #: model:res.country,name:base.tp
@@ -1196,6 +1193,19 @@ msgid ""
 "%(user_signature)s\n"
 "%(company_name)s"
 msgstr ""
+"Dátum: %(date)s\n"
+"\n"
+"Kedves %(partner_name)s,\n"
+"\n"
+"Emlékeztetőként a mellékelt file-ban találja a jelenleg kiegyenlítetlen "
+"számláinak összesítését, melyek összege:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Köszönettel,\n"
+"\n"
+"%(user_signature)s\n"
+"%(company_name)s"
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1450,8 +1460,6 @@ msgid "Not implemented search_memory method !"
 msgstr "Not implemented search_memory method !"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_log_act_window
-#: model:ir.ui.menu,name:base.menu_res_log_act_window
 #: view:res.log:0
 msgid "Logs"
 msgstr "Logs"
@@ -1543,6 +1551,11 @@ msgid ""
 msgstr ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
+
+#. module: base
+#: field:change.user.password,new_password:0
+msgid "New Password"
+msgstr "Új jelszó"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
@@ -1870,6 +1883,11 @@ msgid "Slovenia"
 msgstr "Slovenia"
 
 #. module: base
+#: model:res.country,name:base.pk
+msgid "Pakistan"
+msgstr "Pakistan"
+
+#. module: base
 #: code:addons/orm.py:1350
 #, python-format
 msgid "Invalid Object Architecture!"
@@ -1928,9 +1946,6 @@ msgid ""
 "partner records. You can create or delete countries to make sure the ones "
 "you are working on will be maintained."
 msgstr ""
-"Display and manage the list of all countries that can be assigned to your "
-"partner records. You can create or delete countries to make sure the ones "
-"you are working on will be maintained."
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
@@ -1946,11 +1961,6 @@ msgstr "Norfolk Island"
 #: selection:base.language.install,lang:0
 msgid "Korean (KR) / 한국어 (KR)"
 msgstr "Korean (KR) / 한국어 (KR)"
-
-#. module: base
-#: model:res.widget,title:base.matrixise_twitter_widget
-msgid "Stéphane Wirtel's tweets"
-msgstr ""
 
 #. module: base
 #: field:ir.actions.server,action_id:0
@@ -1988,6 +1998,11 @@ msgstr "Can not upgrade module '%s'. It is not installed."
 #: model:res.country,name:base.cu
 msgid "Cuba"
 msgstr "Cuba"
+
+#. module: base
+#: model:res.widget,title:base.facebook_widget
+msgid "Facebook"
+msgstr "Facebook"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -2088,7 +2103,7 @@ msgstr "Signal (subflow.*)"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_17
 msgid "HR sector"
-msgstr ""
+msgstr "HR szektor"
 
 #. module: base
 #: code:addons/orm.py:3817
@@ -2513,6 +2528,11 @@ msgid "%x - Appropriate date representation."
 msgstr "%x - Appropriate date representation."
 
 #. module: base
+#: model:ir.model,name:base.model_change_user_password
+msgid "change.user.password"
+msgstr "change.user.password"
+
+#. module: base
 #: view:res.lang:0
 msgid "%d - Day of the month [01,31]."
 msgstr "%d - Day of the month [01,31]."
@@ -2852,12 +2872,17 @@ msgstr "XML ID"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
 msgid "Telecom sector"
-msgstr ""
+msgstr "Telekommunikációs szektor"
 
 #. module: base
 #: field:workflow.transition,trigger_model:0
 msgid "Trigger Object"
 msgstr "Trigger Object"
+
+#. module: base
+#: help:change.user.password,confirm_password:0
+msgid "Enter the new password again for confirmation."
+msgstr "Enter the new password again for confirmation."
 
 #. module: base
 #: view:res.users:0
@@ -2878,7 +2903,7 @@ msgstr "Suriname"
 #. module: base
 #: model:ir.ui.menu,name:base.marketing_menu
 msgid "Marketing"
-msgstr ""
+msgstr "Marketing"
 
 #. module: base
 #: view:res.partner.bank:0
@@ -3077,7 +3102,7 @@ msgstr "tree_but_action, client_print_multi"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_retailers0
 msgid "Retailers"
-msgstr ""
+msgstr "Kiskereskedők"
 
 #. module: base
 #: help:ir.cron,priority:0
@@ -3118,7 +3143,7 @@ msgstr "Event"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom_reports
 msgid "Custom Reports"
-msgstr ""
+msgstr "Egyedi jelentések"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -3380,13 +3405,6 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
-"If set to true, the action will not be displayed on the right toolbar of a "
-"form view."
-
-#. module: base
-#: model:res.country,name:base.al
-msgid "Albania"
-msgstr "Albania"
 
 #. module: base
 #: view:ir.attachment:0
@@ -3425,7 +3443,7 @@ msgstr "Előzmények"
 #. module: base
 #: field:ir.attachment,create_uid:0
 msgid "Creator"
-msgstr ""
+msgstr "Létrehozó"
 
 #. module: base
 #: model:res.company,overdue_msg:base.main_company
@@ -3446,7 +3464,7 @@ msgstr "Mexico"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config_plugins
 msgid "Plugins"
-msgstr ""
+msgstr "Bővítmények"
 
 #. module: base
 #: field:res.company,child_ids:0
@@ -3538,6 +3556,25 @@ msgid "%w - Weekday number [0(Sunday),6]."
 msgstr "%w - Weekday number [0(Sunday),6]."
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_partner_form
+msgid ""
+"A customer is an entity you do business with, like a company or an "
+"organization. A customer can have several contacts or addresses which are "
+"the people working for this company. You can use the history tab, to follow "
+"all transactions related to a customer: sales order, emails, opportunities, "
+"claims, etc. If you use the email gateway, the Outlook or the Thunderbird "
+"plugin, don't forget to register emails to each contact so that the gateway "
+"will automatically attach incoming emails to the right partner."
+msgstr ""
+"A customer is an entity you do business with, like a company or an "
+"organization. A customer can have several contacts or addresses which are "
+"the people working for this company. You can use the history tab, to follow "
+"all transactions related to a customer: sales order, emails, opportunities, "
+"claims, etc. If you use the email gateway, the Outlook or the Thunderbird "
+"plugin, don't forget to register emails to each contact so that the gateway "
+"will automatically attach incoming emails to the right partner."
+
+#. module: base
 #: field:ir.actions.report.xml,name:0
 #: field:ir.actions.todo,name:0
 #: field:ir.cron,name:0
@@ -3571,8 +3608,6 @@ msgid ""
 "If set to true, the action will not be displayed on the right toolbar of a "
 "form view"
 msgstr ""
-"If set to true, the action will not be displayed on the right toolbar of a "
-"form view"
 
 #. module: base
 #: model:res.country,name:base.ms
@@ -3717,7 +3752,7 @@ msgstr "Write Id"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_product
 msgid "Products"
-msgstr ""
+msgstr "Termékek"
 
 #. module: base
 #: field:ir.actions.act_window,domain:0
@@ -3916,6 +3951,7 @@ msgstr "Select module package to import (.zip file):"
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
+#: model:res.widget,title:base.events_widget
 msgid "Events"
 msgstr "Események"
 
@@ -3924,6 +3960,11 @@ msgstr "Események"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.url"
 msgstr "ir.actions.url"
+
+#. module: base
+#: model:res.widget,title:base.currency_converter_widget
+msgid "Currency Converter"
+msgstr "Currency Converter"
 
 #. module: base
 #: code:addons/orm.py:156
@@ -3973,6 +4014,11 @@ msgstr "The create method is not implemented on this object !"
 #: field:workflow.triggers,workitem_id:0
 msgid "Workitem"
 msgstr "Workitem"
+
+#. module: base
+#: view:ir.actions.todo:0
+msgid "Set as Todo"
+msgstr "Set as Todo"
 
 #. module: base
 #: field:ir.actions.act_window.view,act_window_id:0
@@ -4265,7 +4311,7 @@ msgstr "Source Term"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_main_pm
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: base
 #: field:ir.ui.menu,web_icon_hover_data:0
@@ -4328,6 +4374,11 @@ msgstr "Employee"
 #: field:ir.model.access,perm_create:0
 msgid "Create Access"
 msgstr "Create Access"
+
+#. module: base
+#: field:change.user.password,current_password:0
+msgid "Current Password"
+msgstr "Current Password"
 
 #. module: base
 #: field:res.partner.address,state_id:0
@@ -4456,7 +4507,7 @@ msgstr "Mozambique"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_long_term
 msgid "Long Term Planning"
-msgstr ""
+msgstr "Hosszútávú tervezés"
 
 #. module: base
 #: field:ir.actions.server,message:0
@@ -4517,6 +4568,17 @@ msgstr "Czech Republic"
 #: view:res.widget.wizard:0
 msgid "Widget Wizard"
 msgstr "Widget Wizard"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
+msgid ""
+"The configuration wizards are used to help you configure a new instance of "
+"OpenERP. They are launched during the installation of new modules, but you "
+"can choose to restart some wizards manually from this menu."
+msgstr ""
+"The configuration wizards are used to help you configure a new instance of "
+"OpenERP. They are launched during the installation of new modules, but you "
+"can choose to restart some wizards manually from this menu."
 
 #. module: base
 #: code:addons/orm.py:1350
@@ -4855,11 +4917,6 @@ msgid "Dutch / Nederlands"
 msgstr "Dutch / Nederlands"
 
 #. module: base
-#: model:res.widget,title:base.rvalyi_twitter_widget
-msgid "Raphaël Valyi's tweets"
-msgstr ""
-
-#. module: base
 #: code:addons/base/res/res_config.py:384
 #, python-format
 msgid ""
@@ -5086,6 +5143,12 @@ msgid "Values for Event Type"
 msgstr "Values for Event Type"
 
 #. module: base
+#: code:addons/base/res/res_user.py:605
+#, python-format
+msgid "The current password does not match, please double-check it."
+msgstr "The current password does not match, please double-check it."
+
+#. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Always Searchable"
 msgstr "Always Searchable"
@@ -5194,11 +5257,6 @@ msgid "Choose between the simplified interface and the extended one"
 msgstr "Choose between the simplified interface and the extended one"
 
 #. module: base
-#: model:res.widget,title:base.odony_twitter_widget
-msgid "Olivier Dony's tweets"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.np
 msgid "Nepal"
 msgstr "Nepal"
@@ -5261,10 +5319,6 @@ msgid ""
 "sure to save and close all forms before switching to a different company. "
 "(You can click on Cancel in the User Preferences now)"
 msgstr ""
-"Please keep in mind that documents currently displayed may not be relevant "
-"after switching to another company. If you have unsaved changes, please make "
-"sure to save and close all forms before switching to a different company. "
-"(You can click on Cancel in the User Preferences now)"
 
 #. module: base
 #: view:ir.actions.configuration.wizard:0
@@ -5427,7 +5481,7 @@ msgstr "United Arab Emirates"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
 msgid "Recruitment"
-msgstr ""
+msgstr "Toborzás"
 
 #. module: base
 #: model:res.country,name:base.re
@@ -5442,7 +5496,7 @@ msgid "Global"
 msgstr "Global"
 
 #. module: base
-#: view:res.users:0
+#: view:change.user.password:0
 msgid "You must logout and login again after changing your password."
 msgstr "You must logout and login again after changing your password."
 
@@ -5725,6 +5779,7 @@ msgstr "The kernel of OpenERP, needed for all installation."
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
+#: view:change.user.password:0
 #: view:partner.clear.ids:0
 #: view:partner.sms.send:0
 #: view:partner.wizard.spam:0
@@ -5754,9 +5809,14 @@ msgid "Current"
 msgstr "Current"
 
 #. module: base
+#: help:change.user.password,new_password:0
+msgid "Enter the new password."
+msgstr "Enter the new password."
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
 msgid "Components Supplier"
-msgstr ""
+msgstr "Részegység beszállítók"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users
@@ -5808,7 +5868,7 @@ msgstr "Week of the year: %(woy)s"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
 msgid "Bad customers"
-msgstr ""
+msgstr "Rossz vevők"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -5851,7 +5911,6 @@ msgstr "Honduras"
 msgid ""
 "Check out this box if you want to always display tips on each menu action"
 msgstr ""
-"Check out this box if you want to always display tips on each menu action"
 
 #. module: base
 #: model:res.country,name:base.eg
@@ -5934,8 +5993,6 @@ msgid ""
 "It gives the status if the tip has to be displayed or not when a user "
 "executes an action"
 msgstr ""
-"It gives the status if the tip has to be displayed or not when a user "
-"executes an action"
 
 #. module: base
 #: view:ir.model:0
@@ -5960,6 +6017,7 @@ msgstr "Liberia"
 #: view:res.groups:0
 #: view:res.partner:0
 #: field:res.partner,comment:0
+#: model:res.widget,title:base.note_widget
 msgid "Notes"
 msgstr "Jegyzetek"
 
@@ -6033,6 +6091,11 @@ msgid "Sequence Codes"
 msgstr "Sequence Codes"
 
 #. module: base
+#: field:change.user.password,confirm_password:0
+msgid "Confirm Password"
+msgstr "Confirm Password"
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (CO) / Español (CO)"
 msgstr "Spanish (CO) / Español (CO)"
@@ -6089,6 +6152,8 @@ msgstr "Afghanistan, Islamic State of"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_import.py:67
+#: code:addons/base/res/res_user.py:594
+#: code:addons/base/res/res_user.py:605
 #, python-format
 msgid "Error !"
 msgstr "Error !"
@@ -6163,7 +6228,7 @@ msgstr "Todo"
 #. module: base
 #: field:ir.attachment,datas:0
 msgid "File Content"
-msgstr ""
+msgstr "File tartalom"
 
 #. module: base
 #: model:res.country,name:base.pa
@@ -6202,6 +6267,14 @@ msgstr "Service Name"
 #: model:res.country,name:base.pn
 msgid "Pitcairn Island"
 msgstr "Pitcairn Island"
+
+#. module: base
+#: code:addons/base/res/res_user.py:594
+#, python-format
+msgid ""
+"The new and confirmation passwords do not match, please double-check them."
+msgstr ""
+"The new and confirmation passwords do not match, please double-check them."
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -6288,6 +6361,11 @@ msgstr "Other Actions"
 #: view:res.config.users:0
 msgid "Done"
 msgstr "Done"
+
+#. module: base
+#: view:change.user.password:0
+msgid "Change"
+msgstr "Change"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -6467,7 +6545,7 @@ msgstr "Default Value"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_tools
 msgid "Tools"
-msgstr ""
+msgstr "Eszközök"
 
 #. module: base
 #: model:res.country,name:base.kn
@@ -6549,14 +6627,15 @@ msgid "Or"
 msgstr "Or"
 
 #. module: base
-#: model:res.country,name:base.pk
-msgid "Pakistan"
-msgstr "Pakistan"
+#: model:ir.actions.act_window,name:base.res_log_act_window
+#: model:ir.ui.menu,name:base.menu_res_log_act_window
+msgid "Client Logs"
+msgstr "Client Logs"
 
 #. module: base
-#: view:ir.actions.todo:0
-msgid "Set as Todo"
-msgstr "Set as Todo"
+#: model:res.country,name:base.al
+msgid "Albania"
+msgstr "Albania"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -6793,7 +6872,7 @@ msgstr "This field is used to set/get locales for user"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_2
 msgid "OpenERP Partners"
-msgstr ""
+msgstr "OpenERP partnerek"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_hr_manager
@@ -6858,7 +6937,7 @@ msgid "Module Update"
 msgstr "Module Update"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:97
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
 msgstr "Following modules are not installed or unknown: %s"
@@ -6905,7 +6984,7 @@ msgstr "Ms."
 #. module: base
 #: model:res.country,name:base.ch
 msgid "Switzerland"
-msgstr "Switzerland"
+msgstr "Svájc"
 
 #. module: base
 #: model:res.country,name:base.gd
@@ -6946,6 +7025,11 @@ msgid "Integrity Error"
 msgstr "Integrity Error"
 
 #. module: base
+#: model:ir.model,name:base.model_ir_wizard_screen
+msgid "ir.wizard.screen"
+msgstr "ir.wizard.screen"
+
+#. module: base
 #: code:addons/base/ir/ir_model.py:189
 #, python-format
 msgid "Size of the field can never be less than 1 !"
@@ -6964,7 +7048,7 @@ msgstr "Terminated"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
 msgid "Important customers"
-msgstr ""
+msgstr "Fontos vevők"
 
 #. module: base
 #: view:res.lang:0
@@ -7091,7 +7175,7 @@ msgstr "Tunisia"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_mrp_root
 msgid "Manufacturing"
-msgstr ""
+msgstr "Gyártás"
 
 #. module: base
 #: view:base.language.export:0
@@ -7233,6 +7317,11 @@ msgstr "Felhasználó ref."
 #, python-format
 msgid "Warning !"
 msgstr "Warning !"
+
+#. module: base
+#: model:res.widget,title:base.google_maps_widget
+msgid "Google Maps"
+msgstr "Google Maps"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -7386,8 +7475,6 @@ msgid ""
 "If set to true, the wizard will not be displayed on the right toolbar of a "
 "form view."
 msgstr ""
-"If set to true, the wizard will not be displayed on the right toolbar of a "
-"form view."
 
 #. module: base
 #: view:base.language.import:0
@@ -7408,6 +7495,13 @@ msgstr "View Ref."
 #: selection:ir.translation,type:0
 msgid "Selection"
 msgstr "Selection"
+
+#. module: base
+#: view:change.user.password:0
+#: model:ir.actions.act_window,name:base.action_view_change_password_form
+#: view:res.users:0
+msgid "Change Password"
+msgstr "Change Password"
 
 #. module: base
 #: field:res.company,rml_header1:0
@@ -7472,14 +7566,6 @@ msgstr "SMS"
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
 msgstr "Costa Rica"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_partner_supplier_form
-msgid ""
-"With the Suppliers menu, you have access to all informations regarding your "
-"suppliers, including an history to track event (crm) and his accounting "
-"properties."
-msgstr ""
 
 #. module: base
 #: view:workflow.activity:0
@@ -7604,7 +7690,7 @@ msgstr "Occitan (FR, post 1500) / Occitan"
 #: model:ir.ui.menu,name:base.menu_emails
 #: model:ir.ui.menu,name:base.menu_mail_gateway
 msgid "Emails"
-msgstr ""
+msgstr "Emailek"
 
 #. module: base
 #: model:res.country,name:base.cd
@@ -7667,6 +7753,11 @@ msgstr "Trigger Date"
 #: selection:base.language.install,lang:0
 msgid "Croatian / hrvatski jezik"
 msgstr "Croatian / hrvatski jezik"
+
+#. module: base
+#: help:change.user.password,current_password:0
+msgid "Enter your current password."
+msgstr "Enter your current password."
 
 #. module: base
 #: field:base.language.install,overwrite:0
@@ -7847,7 +7938,7 @@ msgstr "Preferences"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_consumers0
 msgid "Consumers"
-msgstr ""
+msgstr "Fogyasztók"
 
 #. module: base
 #: view:res.config:0
@@ -8101,15 +8192,6 @@ msgstr "Dependencies :"
 #: field:ir.model.fields,field_description:0
 msgid "Field Label"
 msgstr "Field Label"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_partner_form
-msgid ""
-"The Address book manages your customers list. The form for customer allows "
-"you to record detailed on your customers (address, contacts, pricelist, "
-"account, etc.). With the history tab, you can follow all moves transactions "
-"related to a customer, like sales order, claims."
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -8585,11 +8667,6 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: base
-#: model:res.widget,title:base.albertnan_twitter_widget
-msgid "Albert Cervera Areny's tweets"
-msgstr ""
-
-#. module: base
 #: field:ir.cron,active:0
 #: field:ir.sequence,active:0
 #: field:res.bank,active:0
@@ -8754,7 +8831,7 @@ msgid "View Ordering"
 msgstr "View Ordering"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:97
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Unmet dependency !"
 msgstr "Unmet dependency !"
@@ -8865,7 +8942,7 @@ msgstr "Bulgarian / български език"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_aftersale
 msgid "After-Sale Services"
-msgstr ""
+msgstr "Értékesítés utáni szolgáltatások"
 
 #. module: base
 #: view:ir.actions.todo:0
@@ -8938,9 +9015,17 @@ msgid "Advanced Search"
 msgstr "Advanced Search"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_wizard_screen
-msgid "ir.wizard.screen"
-msgstr "ir.wizard.screen"
+#: model:ir.actions.act_window,help:base.action_partner_supplier_form
+msgid ""
+"You can access all information regarding your suppliers from the supplier "
+"form: accounting data, history of emails, meetings, purchases, etc. You can "
+"uncheck the 'Suppliers' filter button in order to search in all your "
+"partners, including customers and prospects."
+msgstr ""
+"You can access all information regarding your suppliers from the supplier "
+"form: accounting data, history of emails, meetings, purchases, etc. You can "
+"uncheck the 'Suppliers' filter button in order to search in all your "
+"partners, including customers and prospects."
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -9033,7 +9118,7 @@ msgstr "Kategória neve"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_15
 msgid "IT sector"
-msgstr ""
+msgstr "IT szektor"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -9212,11 +9297,6 @@ msgid "Seychelles"
 msgstr "Seychelles"
 
 #. module: base
-#: model:res.widget,title:base.nhomar_twitter_widget
-msgid "Nhomar Hernandez's tweets"
-msgstr ""
-
-#. module: base
 #: model:ir.model,name:base.model_res_partner_bank
 #: view:res.partner.bank:0
 msgid "Bank Accounts"
@@ -9333,7 +9413,7 @@ msgstr "BIC/Swift code"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Prospect"
-msgstr ""
+msgstr "Érdeklődő"
 
 #. module: base
 #: selection:base.language.install,lang:0

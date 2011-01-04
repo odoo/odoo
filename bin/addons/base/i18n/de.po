@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-29 18:06+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2011-01-01 06:52+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,7 +15,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-02 05:00+0000\n"
+"X-Launchpad-Export-Date: 2011-01-04 14:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -299,6 +299,7 @@ msgstr "ir.ui.view_sc"
 
 #. module: base
 #: field:res.widget.user,widget_id:0
+#: field:res.widget.wizard,widgets_list:0
 msgid "Widget"
 msgstr "Widget"
 
@@ -834,7 +835,7 @@ msgid "Transitions"
 msgstr "Verbindungen"
 
 #. module: base
-#: code:addons/orm.py:4018
+#: code:addons/orm.py:4020
 #, python-format
 msgid "Record #%d of %s not found, cannot copy!"
 msgstr ""
@@ -1473,8 +1474,6 @@ msgid "Not implemented search_memory method !"
 msgstr "Nicht implementierte search_memory Methode !"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_log_act_window
-#: model:ir.ui.menu,name:base.menu_res_log_act_window
 #: view:res.log:0
 msgid "Logs"
 msgstr "Protokolle"
@@ -1567,6 +1566,11 @@ msgid ""
 msgstr ""
 "Beispiel: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
+
+#. module: base
+#: field:change.user.password,new_password:0
+msgid "New Password"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
@@ -1896,6 +1900,11 @@ msgid "Slovenia"
 msgstr "Slowenien"
 
 #. module: base
+#: model:res.country,name:base.pk
+msgid "Pakistan"
+msgstr "Pakistan"
+
+#. module: base
 #: code:addons/orm.py:1350
 #, python-format
 msgid "Invalid Object Architecture!"
@@ -1975,11 +1984,6 @@ msgid "Korean (KR) / 한국어 (KR)"
 msgstr "Korean (KR) / 한국어 (KR)"
 
 #. module: base
-#: model:res.widget,title:base.matrixise_twitter_widget
-msgid "Stéphane Wirtel's tweets"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.server,action_id:0
 #: selection:ir.actions.server,state:0
 msgid "Client Action"
@@ -2015,6 +2019,11 @@ msgstr "Kann Modul '%s' nicht upgraden. Es ist gar nicht installiert."
 #: model:res.country,name:base.cu
 msgid "Cuba"
 msgstr "Kuba"
+
+#. module: base
+#: model:res.widget,title:base.facebook_widget
+msgid "Facebook"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.am
@@ -2538,6 +2547,11 @@ msgid "%x - Appropriate date representation."
 msgstr "%x - Anvisierte Datenpräsentation."
 
 #. module: base
+#: model:ir.model,name:base.model_change_user_password
+msgid "change.user.password"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "%d - Day of the month [01,31]."
 msgstr "%d - Tag des Monats [01,31]."
@@ -2886,6 +2900,11 @@ msgstr "Telekom Sektor"
 #: field:workflow.transition,trigger_model:0
 msgid "Trigger Object"
 msgstr "Trigger Objekt"
+
+#. module: base
+#: help:change.user.password,confirm_password:0
+msgid "Enter the new password again for confirmation."
+msgstr ""
 
 #. module: base
 #: view:res.users:0
@@ -3413,11 +3432,6 @@ msgstr ""
 "eines Formulares angezeigt."
 
 #. module: base
-#: model:res.country,name:base.al
-msgid "Albania"
-msgstr "Albanien"
-
-#. module: base
 #: view:ir.attachment:0
 msgid "Attached To"
 msgstr "Zuweisung an:"
@@ -3572,6 +3586,18 @@ msgstr "Kasachstan"
 #: view:res.lang:0
 msgid "%w - Weekday number [0(Sunday),6]."
 msgstr "%w - Wochentagnummer [0(Sunday),6]."
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_partner_form
+msgid ""
+"A customer is an entity you do business with, like a company or an "
+"organization. A customer can have several contacts or addresses which are "
+"the people working for this company. You can use the history tab, to follow "
+"all transactions related to a customer: sales order, emails, opportunities, "
+"claims, etc. If you use the email gateway, the Outlook or the Thunderbird "
+"plugin, don't forget to register emails to each contact so that the gateway "
+"will automatically attach incoming emails to the right partner."
+msgstr ""
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -3953,6 +3979,7 @@ msgstr "Wählen Sie das Module (zip Datei) für den Import"
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
+#: model:res.widget,title:base.events_widget
 msgid "Events"
 msgstr "Ereignisse"
 
@@ -3961,6 +3988,11 @@ msgstr "Ereignisse"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.url"
 msgstr "ir.actions.url"
+
+#. module: base
+#: model:res.widget,title:base.currency_converter_widget
+msgid "Currency Converter"
+msgstr ""
 
 #. module: base
 #: code:addons/orm.py:156
@@ -4013,6 +4045,11 @@ msgstr ""
 #: field:workflow.triggers,workitem_id:0
 msgid "Workitem"
 msgstr "Arbeitsvorgang"
+
+#. module: base
+#: view:ir.actions.todo:0
+msgid "Set as Todo"
+msgstr "Als \"Zu erledigen\" setzen"
 
 #. module: base
 #: field:ir.actions.act_window.view,act_window_id:0
@@ -4372,6 +4409,11 @@ msgid "Create Access"
 msgstr "Erzeuge Zugriff"
 
 #. module: base
+#: field:change.user.password,current_password:0
+msgid "Current Password"
+msgstr ""
+
+#. module: base
 #: field:res.partner.address,state_id:0
 msgid "Fed. State"
 msgstr "Bundesländer"
@@ -4560,6 +4602,14 @@ msgstr "Tschechische Republik"
 #: view:res.widget.wizard:0
 msgid "Widget Wizard"
 msgstr "Assistent Widgets"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
+msgid ""
+"The configuration wizards are used to help you configure a new instance of "
+"OpenERP. They are launched during the installation of new modules, but you "
+"can choose to restart some wizards manually from this menu."
+msgstr ""
 
 #. module: base
 #: code:addons/orm.py:1350
@@ -4899,11 +4949,6 @@ msgid "Dutch / Nederlands"
 msgstr "Dutch / Nederlands"
 
 #. module: base
-#: model:res.widget,title:base.rvalyi_twitter_widget
-msgid "Raphaël Valyi's tweets"
-msgstr ""
-
-#. module: base
 #: code:addons/base/res/res_config.py:384
 #, python-format
 msgid ""
@@ -5130,6 +5175,12 @@ msgid "Values for Event Type"
 msgstr "Werte für Ereignisart"
 
 #. module: base
+#: code:addons/base/res/res_user.py:605
+#, python-format
+msgid "The current password does not match, please double-check it."
+msgstr ""
+
+#. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Always Searchable"
 msgstr "immer eine Suche anzeigen"
@@ -5236,11 +5287,6 @@ msgstr "Das nächste geplante Ausführungsdatum"
 #: help:res.users,view:0
 msgid "Choose between the simplified interface and the extended one"
 msgstr "Wählen Sie zwischen einfacher und erweiterter Schnittstelle"
-
-#. module: base
-#: model:res.widget,title:base.odony_twitter_widget
-msgid "Olivier Dony's tweets"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.np
@@ -5487,7 +5533,7 @@ msgid "Global"
 msgstr "Global"
 
 #. module: base
-#: view:res.users:0
+#: view:change.user.password:0
 msgid "You must logout and login again after changing your password."
 msgstr "Nach dem Ändern das Passwortes müssen Sie Aus- und wieder Einloggen."
 
@@ -5773,6 +5819,7 @@ msgstr "Der Kern von OpenERP, wird für alle Installationen gebraucht"
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
+#: view:change.user.password:0
 #: view:partner.clear.ids:0
 #: view:partner.sms.send:0
 #: view:partner.wizard.spam:0
@@ -5800,6 +5847,11 @@ msgstr "Benutzerdefiniert"
 #: view:res.request:0
 msgid "Current"
 msgstr "Aktuell"
+
+#. module: base
+#: help:change.user.password,new_password:0
+msgid "Enter the new password."
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
@@ -6004,6 +6056,7 @@ msgstr "Liberien"
 #: view:res.groups:0
 #: view:res.partner:0
 #: field:res.partner,comment:0
+#: model:res.widget,title:base.note_widget
 msgid "Notes"
 msgstr "Notizen"
 
@@ -6077,6 +6130,11 @@ msgid "Sequence Codes"
 msgstr "Sequenzcode"
 
 #. module: base
+#: field:change.user.password,confirm_password:0
+msgid "Confirm Password"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (CO) / Español (CO)"
 msgstr "Spanish (CO) / Español (CO)"
@@ -6133,6 +6191,8 @@ msgstr "Afghanistan"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_import.py:67
+#: code:addons/base/res/res_user.py:594
+#: code:addons/base/res/res_user.py:605
 #, python-format
 msgid "Error !"
 msgstr "Fehler !"
@@ -6251,6 +6311,13 @@ msgid "Pitcairn Island"
 msgstr "Pitcairninseln"
 
 #. module: base
+#: code:addons/base/res/res_user.py:594
+#, python-format
+msgid ""
+"The new and confirmation passwords do not match, please double-check them."
+msgstr ""
+
+#. module: base
 #: view:base.module.upgrade:0
 msgid ""
 "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."
@@ -6336,6 +6403,11 @@ msgstr "Andere Aktionen"
 #: view:res.config.users:0
 msgid "Done"
 msgstr "Erledigt"
+
+#. module: base
+#: view:change.user.password:0
+msgid "Change"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -6599,14 +6671,15 @@ msgid "Or"
 msgstr "Oder"
 
 #. module: base
-#: model:res.country,name:base.pk
-msgid "Pakistan"
-msgstr "Pakistan"
+#: model:ir.actions.act_window,name:base.res_log_act_window
+#: model:ir.ui.menu,name:base.menu_res_log_act_window
+msgid "Client Logs"
+msgstr ""
 
 #. module: base
-#: view:ir.actions.todo:0
-msgid "Set as Todo"
-msgstr "Als \"Zu erledigen\" setzen"
+#: model:res.country,name:base.al
+msgid "Albania"
+msgstr "Albanien"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -6908,7 +6981,7 @@ msgid "Module Update"
 msgstr "Module aktualisieren"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:97
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
 msgstr "Folgende Module sind nicht installiert oder unbekannt: %s"
@@ -6994,6 +7067,11 @@ msgstr "Der Name des Benutzer, verwendet für Suche und Listen."
 #, python-format
 msgid "Integrity Error"
 msgstr "Datenintegritäts Fehler"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_wizard_screen
+msgid "ir.wizard.screen"
+msgstr "ir.wizard.screen"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:189
@@ -7286,6 +7364,11 @@ msgid "Warning !"
 msgstr "Warnung !"
 
 #. module: base
+#: model:res.widget,title:base.google_maps_widget
+msgid "Google Maps"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
 #: model:ir.ui.menu,name:base.menu_config
 #: model:ir.ui.menu,name:base.menu_event_config
@@ -7461,6 +7544,13 @@ msgid "Selection"
 msgstr "Auswahl"
 
 #. module: base
+#: view:change.user.password:0
+#: model:ir.actions.act_window,name:base.action_view_change_password_form
+#: view:res.users:0
+msgid "Change Password"
+msgstr ""
+
+#. module: base
 #: field:res.company,rml_header1:0
 msgid "Report Header"
 msgstr "Report Kopf (Header)"
@@ -7524,17 +7614,6 @@ msgstr "SMS"
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
 msgstr "Costa Rica"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_partner_supplier_form
-msgid ""
-"With the Suppliers menu, you have access to all informations regarding your "
-"suppliers, including an history to track event (crm) and his accounting "
-"properties."
-msgstr ""
-"Durch das Menü Lieferanten, haben Sie Zugriff auf alle Informationen zu "
-"Ihren Lieferanten, inklusive der Historie zu Vorgängen sowie den "
-"hinterlegten Eigenschaften für die Finanzbuchhaltung."
 
 #. module: base
 #: view:workflow.activity:0
@@ -7722,6 +7801,11 @@ msgstr "Trigger Datum"
 #: selection:base.language.install,lang:0
 msgid "Croatian / hrvatski jezik"
 msgstr "Croatian / hrvatski jezik"
+
+#. module: base
+#: help:change.user.password,current_password:0
+msgid "Enter your current password."
+msgstr ""
 
 #. module: base
 #: field:base.language.install,overwrite:0
@@ -8155,20 +8239,6 @@ msgstr "Abhängikeiten :"
 #: field:ir.model.fields,field_description:0
 msgid "Field Label"
 msgstr "Feldbeschreibung"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_partner_form
-msgid ""
-"The Address book manages your customers list. The form for customer allows "
-"you to record detailed on your customers (address, contacts, pricelist, "
-"account, etc.). With the history tab, you can follow all moves transactions "
-"related to a customer, like sales order, claims."
-msgstr ""
-"Das Adressbuch verwaltet Ihre Kunden. Das Eingabeformular für Kunden "
-"ermöglicht Ihnen ausserdem die Aufzeichnung bestimmter Vorgänge und Daten "
-"zum Kunden (Adresse, Ansprechpartner, Preislisten, Finanzkonten, etc.). Über "
-"den Aktenreiter Historie sehen Sie auch Transaktionen, wie Verkäufe, "
-"Lieferscheine, Tickets aus dem CRM Modul etc."
 
 #. module: base
 #: model:res.country,name:base.dj
@@ -8646,11 +8716,6 @@ msgid "Phone"
 msgstr "Tel"
 
 #. module: base
-#: model:res.widget,title:base.albertnan_twitter_widget
-msgid "Albert Cervera Areny's tweets"
-msgstr ""
-
-#. module: base
 #: field:ir.cron,active:0
 #: field:ir.sequence,active:0
 #: field:res.bank,active:0
@@ -8814,7 +8879,7 @@ msgid "View Ordering"
 msgstr "Ansicht Sortierung"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:97
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Unmet dependency !"
 msgstr "Nicht erfüllte Abhängigkeit !"
@@ -8999,9 +9064,13 @@ msgid "Advanced Search"
 msgstr "Erweiterte Suche"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_wizard_screen
-msgid "ir.wizard.screen"
-msgstr "ir.wizard.screen"
+#: model:ir.actions.act_window,help:base.action_partner_supplier_form
+msgid ""
+"You can access all information regarding your suppliers from the supplier "
+"form: accounting data, history of emails, meetings, purchases, etc. You can "
+"uncheck the 'Suppliers' filter button in order to search in all your "
+"partners, including customers and prospects."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -9274,11 +9343,6 @@ msgstr "Vorlauf (Prefix) einer Sequenz"
 #: model:res.country,name:base.sc
 msgid "Seychelles"
 msgstr "Seychellen"
-
-#. module: base
-#: model:res.widget,title:base.nhomar_twitter_widget
-msgid "Nhomar Hernandez's tweets"
-msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_partner_bank
@@ -11249,6 +11313,27 @@ msgstr "Russian / русский язык"
 #~ msgid "Your can't submit bug reports due to uncovered modules: %s"
 #~ msgstr ""
 #~ "Sie können keine Fehlermeldung für nicht unterstützte Module absetzen: %s"
+
+#~ msgid ""
+#~ "With the Suppliers menu, you have access to all informations regarding your "
+#~ "suppliers, including an history to track event (crm) and his accounting "
+#~ "properties."
+#~ msgstr ""
+#~ "Durch das Menü Lieferanten, haben Sie Zugriff auf alle Informationen zu "
+#~ "Ihren Lieferanten, inklusive der Historie zu Vorgängen sowie den "
+#~ "hinterlegten Eigenschaften für die Finanzbuchhaltung."
+
+#~ msgid ""
+#~ "The Address book manages your customers list. The form for customer allows "
+#~ "you to record detailed on your customers (address, contacts, pricelist, "
+#~ "account, etc.). With the history tab, you can follow all moves transactions "
+#~ "related to a customer, like sales order, claims."
+#~ msgstr ""
+#~ "Das Adressbuch verwaltet Ihre Kunden. Das Eingabeformular für Kunden "
+#~ "ermöglicht Ihnen ausserdem die Aufzeichnung bestimmter Vorgänge und Daten "
+#~ "zum Kunden (Adresse, Ansprechpartner, Preislisten, Finanzkonten, etc.). Über "
+#~ "den Aktenreiter Historie sehen Sie auch Transaktionen, wie Verkäufe, "
+#~ "Lieferscheine, Tickets aus dem CRM Modul etc."
 
 #~ msgid "Sr."
 #~ msgstr "Hr."
