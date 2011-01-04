@@ -63,6 +63,7 @@ class email_template_mailbox(osv.osv):
         return True
     
     def send_this_mail(self, cr, uid, ids=None, context=None):
+        #previous method to send email (link with email account can be found at the revision 4172 and below
         result = True
         attachment_pool = self.pool.get('ir.attachment')
         for id in (ids or []):
