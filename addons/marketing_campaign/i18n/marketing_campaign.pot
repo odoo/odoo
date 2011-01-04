@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:38+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:38+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58:00+0000\n"
+"PO-Revision-Date: 2011-01-03 16:58:00+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,7 +26,7 @@ msgid "Previous Activity"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:772
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr ""
@@ -37,7 +37,7 @@ msgid "The To/From Activity of transition must be of the same Campaign "
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:144
 #, python-format
 msgid "The campaign cannot be started: it doesn't have any starting activity (or any activity with a signal and no previous activity)"
 msgstr ""
@@ -53,7 +53,7 @@ msgid "Custom Action"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:139
 #, python-format
 msgid "The campaign cannot be started: the email account is missing in email activity '%s'"
 msgstr ""
@@ -139,7 +139,7 @@ msgid "This Year"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:772
 #, python-format
 msgid "No preview"
 msgstr ""
@@ -182,7 +182,7 @@ msgid "Year(s)"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:209
 #, python-format
 msgid "Sorry, campaign duplication is not supported at the moment."
 msgstr ""
@@ -512,12 +512,6 @@ msgid "Campaign Statistics"
 msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,res_id:0
-msgid "Resource ID"
-msgstr ""
-
-#. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
 msgid "The action to perform when this activity is activated"
 msgstr ""
@@ -664,7 +658,7 @@ msgid "October"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:141
 #, python-format
 msgid "The campaign cannot be started: the email account is not approved in email activity '%s'"
 msgstr ""
@@ -701,7 +695,11 @@ msgid "This folder is used to store the generated reports"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:125
+#: code:addons/marketing_campaign/marketing_campaign.py:139
+#: code:addons/marketing_campaign/marketing_campaign.py:141
+#: code:addons/marketing_campaign/marketing_campaign.py:144
+#: code:addons/marketing_campaign/marketing_campaign.py:154
 #, python-format
 msgid "Error"
 msgstr ""
@@ -713,7 +711,7 @@ msgid "Action"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:488
 #, python-format
 msgid "Automatic transition"
 msgstr ""
@@ -735,7 +733,7 @@ msgid "Process"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:490
 #: selection:marketing.campaign.transition,trigger:0
 #, python-format
 msgid "Cosmetic"
@@ -744,6 +742,11 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign.transition,trigger:0
 msgid "How is the destination workitem triggered"
+msgstr ""
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid "A marketing campaign is an event or activity that will help you manage and reach your partners with specific messages. A campaign can have many activities that will be triggered from a specific situation. One action could be sending an email template that has previously been created in the system."
 msgstr ""
 
 #. module: marketing_campaign
@@ -756,7 +759,7 @@ msgid "Done"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:209
 #, python-format
 msgid "Operation not supported"
 msgstr ""
@@ -783,14 +786,15 @@ msgid "Synchronize Manually"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:154
 #, python-format
 msgid "The campaign cannot be marked as done before all segments are done"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
-msgid "A marketing campaign is an event or activity that will help you manage and reach your partners with specific messages. A campaign can have many activities that will be triggered based on a specific situation. One possible action could be sending an email template that has previously been created in the system."
+#: view:marketing.campaign.workitem:0
+#: field:marketing.campaign.workitem,res_id:0
+msgid "Resource ID"
 msgstr ""
 
 #. module: marketing_campaign
@@ -858,7 +862,7 @@ msgid "Running"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:489
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr ""
@@ -895,7 +899,7 @@ msgid "Fixed cost for running this campaign. You may also specify variable cost 
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:746
 #, python-format
 msgid "Email Preview"
 msgstr ""
@@ -906,7 +910,7 @@ msgid "Signal"
 msgstr ""
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:0
+#: code:addons/marketing_campaign/marketing_campaign.py:125
 #, python-format
 msgid "The campaign cannot be started: there are no activities in it"
 msgstr ""
