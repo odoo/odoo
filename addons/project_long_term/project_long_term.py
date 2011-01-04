@@ -220,6 +220,7 @@ class project_phase(osv.osv):
         resource_pool = self.pool.get('resource.resource')
         for phase in self.browse(cr, uid, ids, context=context):
             user_ids = map(lambda x:x.resource_id.user_id.id, phase.resource_ids)
+            
             project = phase.project_id
             calendar_id  = project.resource_calendar_id and project.resource_calendar_id.id or False
             resource_objs = resource_pool.generate_resources(cr, uid, user_ids, calendar_id, context=context)
@@ -240,12 +241,13 @@ class project_phase(osv.osv):
         uom_pool = self.pool.get('product.uom')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
         for phase in self.browse(cr, uid, ids, context=context):
+            if not phase.previous_phase_ids:
+                start_date = False
             if not phase.responsible_id:
                 raise osv.except_osv(_('No responsible person assigned !'),_("You must assign a responsible person for phase '%s' !") % (phase.name,))
-
             if not start_date:
                 start_date = phase.project_id.date_start or phase.date_start or datetime.now().strftime("%Y-%m-%d")
-                start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d") 
+                start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d")
             phase_resource_obj = self.generate_resources(cr, uid, [phase.id], context=context)[phase.id]
             avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
             if not phase_resource_obj: #TOCHECK: why need this ?
@@ -277,6 +279,7 @@ class project_phase(osv.osv):
                 start_date = datetime.strptime(phase.constraint_date_start, '%Y-%m-%d')
             else:
                 start_date = s_date
+                
             if phase.constraint_date_end and str(e_date) > phase.constraint_date_end:
                 end_date= datetime.strptime(phase.constraint_date_end, '%Y-%m-%d')
                 date_start = phase.constraint_date_end
