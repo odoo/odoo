@@ -105,7 +105,7 @@ class project_phase(osv.osv):
 
     _columns = {
         'name': fields.char("Name", size=64, required=True),
-        'date_start': fields.date('Start Date', help="It's computed according to the phases order : the start date of the 1st phase is set by you while the other start dates depend on the end date of their previous phases", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'date_start': fields.date('Start Date', help="It's computed by the scheduler according the project date or the end date of the previous phase.", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'date_end': fields.date('End Date', help=" It's computed by the scheduler according to the start date and the duration.", states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'constraint_date_start': fields.date('Minimum Start Date', help='force the phase to start after this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'constraint_date_end': fields.date('Deadline', help='force the phase to finish before this date', states={'done':[('readonly',True)], 'cancelled':[('readonly',True)]}),
