@@ -181,10 +181,10 @@
                 <para style="terp_default_Right_9">[[formatLang( p['prod_qty']) ]] [[ p['uom'] ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(p['price']) ]]</para>
+                <para style="terp_default_Right_9">[[ formatLang(p['price'], dp='Account') ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(p['price_value']) ]] [[ o.company_id.currency_id.symbol]]</para>
+                <para style="terp_default_Right_9">[[ formatLang(p['price_value'], dp='Account') ]] [[ o.company_id.currency_id.symbol]]</para>
               </td>
             </tr>
           </blockTable>
@@ -198,7 +198,7 @@
               <para style="terp_default_Bold_9">Total:</para>
             </td>
             <td>
-              <para style="terp_tblheader_Details_Right">[[ formatLang(price_total()) ]] [[ o.company_id.currency_id.symbol ]]</para>
+              <para style="terp_tblheader_Details_Right">[[ formatLang(price_total(), dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
             </td>
           </tr>
         </blockTable>
@@ -215,7 +215,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(grand_total_price()) ]] [[ o.company_id.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(grand_total_price(), dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>

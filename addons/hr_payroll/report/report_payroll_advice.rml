@@ -257,10 +257,10 @@
             <para style="terp_default_9">[[ line['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['amount' ]) ]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['amount'], dp='Account') ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['bysal']) ]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['bysal'], dp='Account') ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ line['acc_no'] ]]</para>
@@ -282,10 +282,10 @@
           <para style="terp_tblheader_Details">Total:</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(get_total()) ]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(get_total(), dp='Account') ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(get_bysal_total()) ]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(get_bysal_total(), dp='Account') ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">

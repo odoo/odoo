@@ -1,0 +1,134 @@
+# Latvian translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2011-01-01 22:15+0000\n"
+"Last-Translator: Vladimirs Kuzmins <Unknown>\n"
+"Language-Team: Latvian <lv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-01-02 05:01+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_procuretasktask0
+msgid "For each product, on type service and on order"
+msgstr "Katram produktam uz tipu pakalpojumus un pasūtījumu"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_procuretask0
+msgid "Procurement Task"
+msgstr "Sagādes uzdevums"
+
+#. module: project_mrp
+#: model:ir.module.module,shortdesc:project_mrp.module_meta_information
+msgid "Procurement and Project Management integration"
+msgstr "Sagādes un projektu vadības integrācija"
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_createtask0
+msgid "Product type is service, then its creates the task."
+msgstr "Produkta tips ir pakalpojums, tad tas veido uzdevumu."
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_procuretask0
+msgid "if product type is 'service' then it creates the task."
+msgstr "Produkta tips ir pakalpojums, tad tas veido uzdevumu."
+
+#. module: project_mrp
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Kļūda! Nedrīkst veidot rekursīvus uzdevumus."
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_product_product
+msgid "Product"
+msgstr "Produkts"
+
+#. module: project_mrp
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Kļūda: nederīgs EAN kods"
+
+#. module: project_mrp
+#: field:product.product,project_id:0
+msgid "Project"
+msgstr "Projekts"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_procurement_order
+#: field:project.task,procurement_id:0
+msgid "Procurement"
+msgstr "Sagāde"
+
+#. module: project_mrp
+#: model:ir.model,name:project_mrp.model_project_task
+#: model:process.node,name:project_mrp.process_node_mrptask0
+#: model:process.node,name:project_mrp.process_node_procuretasktask0
+#: field:procurement.order,task_id:0
+msgid "Task"
+msgstr "Uzdevums"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_mrptask0
+msgid "A task is created to provide the service."
+msgstr "Ir izveidots uzdevums, lai nodrošinātu pakalpojumu."
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_ordertask0
+msgid "Order Task"
+msgstr "Pasūtījuma uzdevums"
+
+#. module: project_mrp
+#: model:process.node,name:project_mrp.process_node_saleordertask0
+msgid "Sale Order Task"
+msgstr "Klienta pasūtījuma uzdevums"
+
+#. module: project_mrp
+#: model:process.transition,name:project_mrp.process_transition_createtask0
+msgid "Create Task"
+msgstr "Izveidot uzdevumu"
+
+#. module: project_mrp
+#: model:ir.module.module,description:project_mrp.module_meta_information
+msgid ""
+"\n"
+"This module creates a link between procurement orders\n"
+"containing \"service\" lines and project management tasks.\n"
+"\n"
+"When installed, this module will automatically create a new task\n"
+"for each procurement order line, when the corresponding product\n"
+"meets the following characteristics:\n"
+"  * Type = Service\n"
+"  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+"  * Supply/Procurement method = Produce\n"
+"\n"
+"The new task is created outside of any existing project, but\n"
+"can be added to a project manually.\n"
+"\n"
+"When the project task is completed or cancelled, the workflow of the "
+"corresponding\n"
+"procurement line is updated accordingly.\n"
+"\n"
+"This module is useful to be able to invoice services based on tasks\n"
+"automatically created via sale orders.\n"
+"\n"
+msgstr ""
+
+#. module: project_mrp
+#: model:process.transition,note:project_mrp.process_transition_ordertask0
+msgid "If procurement method is Make to order and supply method is produce"
+msgstr ""
+"Ja sagādes metode ir veidot uz pasūtījuma un piegādes metode ir ražot"
+
+#. module: project_mrp
+#: model:process.node,note:project_mrp.process_node_saleordertask0
+msgid "In case you sell services on sale order"
+msgstr "Gadījumā, ja tiek pārdoti pakalpojumi uz klientu pasūtījumu"

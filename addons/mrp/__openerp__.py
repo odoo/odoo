@@ -34,7 +34,7 @@
     * Make to Stock / Make to Order (by line)
     * Multi-level BoMs, no limit
     * Multi-level routing, no limit
-    * Routing and workcenter integrated with analytic accounting
+    * Routing and work center integrated with analytic accounting
     * Scheduler computation periodically / Just In Time module
     * Multi-pos, multi-warehouse
     * Different reordering policies

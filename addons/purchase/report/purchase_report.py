@@ -104,6 +104,7 @@ class purchase_report(osv.osv):
                     count(*) as nbr,
                     (l.price_unit*l.product_qty*u.factor)::decimal(16,2) as price_total,
                     avg(100.0 * (l.price_unit*l.product_qty*u.factor) / NULLIF(t.standard_price*l.product_qty*u.factor, 0.0))::decimal(16,2) as negociation,
+
                     sum(t.standard_price*l.product_qty*u.factor)::decimal(16,2) as price_standard,
                     (sum(l.product_qty*l.price_unit)/NULLIF(sum(l.product_qty*u.factor),0.0))::decimal(16,2) as price_average
                 from purchase_order s

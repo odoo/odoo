@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-26 07:43+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2011-01-01 06:56+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:45+0000\n"
+"X-Launchpad-Export-Date: 2011-01-02 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -7157,7 +7157,7 @@ msgstr "Impossible d'avoir deux registres ouverts pour le même journal"
 #. module: account
 #: report:account.invoice:0
 msgid "Must be after setLang()"
-msgstr ""
+msgstr "Doit être après setlang ()"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -7964,7 +7964,7 @@ msgstr ""
 #. module: account
 #: field:account.account.type,report_type:0
 msgid "P&L / BS Category"
-msgstr ""
+msgstr "P&L / BS Category"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -8085,6 +8085,8 @@ msgstr "Fournisseurs"
 msgid ""
 "You cannot create more than one move per period on centralized journal"
 msgstr ""
+"Vous ne pouvez pas créer plus d'une écriture par période sur un journal "
+"centralisé"
 
 #. module: account
 #: view:account.journal:0
@@ -8281,6 +8283,7 @@ msgstr ""
 #: model:process.transition,note:account.process_transition_validentries0
 msgid "Accountant validates the accounting entries coming from the invoice."
 msgstr ""
+"Le comptable valide les écritures comptables provenant de la facture."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
@@ -8335,7 +8338,7 @@ msgstr "Journal des écritures d'ouverture"
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
 msgid "Draft invoices are checked, validated and printed."
-msgstr ""
+msgstr "Les brouillons de facture sont vérifiés, validés et imprimés."
 
 #. module: account
 #: help:account.chart.template,property_reserve_and_surplus_account:0
@@ -8493,6 +8496,9 @@ msgid ""
 "depending on the country and sometimes industry sector. OpenERP allows you "
 "to define and manage them from this menu."
 msgstr ""
+"Un code de taxe est une référence à une taxe qui sera prise sur un revenu "
+"brut selon les pays voire un secteur industriel. OpenERP permet de les "
+"définir et les gérer depuis ce menu."
 
 #. module: account
 #: report:account.overdue:0
@@ -8772,6 +8778,12 @@ msgid ""
 "the income account. OpenERP will propose to you automatically the Tax "
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
+"Cette vue est utilisée par les comptables afin d'enregistrer massivement les "
+"écritures dans OpenERP. Si vous voulez enregistrer une facture client, "
+"sélectionnez le journal et la période dans la barre de recherche. Alors, "
+"commencez par l'enregistrement de la ligne de saisie du compte des revenus. "
+"OpenERP vous proposera automatiquement la taxe afférente à ce compte et la "
+"contre-partie \"Compte à recevoir\"."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:0
@@ -9264,6 +9276,8 @@ msgid ""
 "Refund invoice base on this type. You can not Modify and Cancel if the "
 "invoice is already reconciled"
 msgstr ""
+"Remboursement facture de base sur ce type. Vous ne pouvez pas modifier ou "
+"annuler si la facture est déjà réconciliés"
 
 #. module: account
 #: help:account.installer.modules,account_analytic_plans:0
@@ -9448,6 +9462,7 @@ msgstr "Ceci est un modèle pour des écritures comptable récurrentes"
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
+"Il n'y a pas de compte de revenu défini pour ce produit : \"%s\" (id : %d)."
 
 #. module: account
 #: report:account.general.ledger:0
@@ -9616,7 +9631,7 @@ msgstr "Traitement des écarts de règlement"
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
 msgid "Invoice's state is Done"
-msgstr ""
+msgstr "L'état de la facture est \"Terminé\""
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_sales
@@ -9761,7 +9776,7 @@ msgstr "Imprimer les journaux analytiques"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Fin.Account"
-msgstr ""
+msgstr "Fin.Account"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
