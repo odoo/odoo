@@ -705,17 +705,12 @@ def GetSearchText(txtProcessor,*args):
     b = check()
     if not b:
         return
-    # Get the selected mail and set the default value for search_text_control to mail.SenderEmailAddress
-    ex = txtProcessor.window.manager.outlook.ActiveExplorer()
-    assert ex.Selection.Count == 1
-    mail = ex.Selection.Item(1)
     try:
         global objects_with_match
         list_hwnd = win32gui.GetDlgItem(txtProcessor.window.hwnd, txtProcessor.other_ids[1])
         objects_with_match = NewConn.SearchPartners()
         setList(list_hwnd)
     except Exception,e:
-        msg=getMessage(e)
         win32ui.MessageBox('Document can not be loaded.\n'+str(e), "Push", flag_error)
     txtProcessor.init_done=True
 

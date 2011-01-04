@@ -4,7 +4,14 @@
   !record {model: project.project, id: project_project_worldbanksproject0}:
     name: "World Bank's Project"
     priority: 4
-    
+    members:
+      - project.res_users_analyst
+      - project.res_users_project_manager
+      - project.res_users_technical_leader
+      - project.res_users_developer
+      - project.res_users_designer
+      - project.res_users_tester
+
 - 
   Create a project phase 'Defining Client's Basic Idea of Project'
 - 
@@ -14,8 +21,7 @@
     name: "Defining Client's Basic Idea of Project"
     product_uom: product.uom_day
     project_id: project_project_worldbanksproject0
-    
-    
+
 - 
   Create project phase 'Establishing Project Feasibility'
 - 
@@ -25,7 +31,21 @@
     name: Establishing Project Feasibility
     product_uom: product.uom_day
     project_id: project_project_worldbanksproject0
+    
+-
+ Resource1
+-
+  !record {model: project.resource.allocation, id: res_phase0}:
+    resource_id: project_long_term.resource_project_manager
+    phase_id: project_phase_definingclientsbasicideaofproject0
 
+-
+ Resource2
+-
+  !record {model: project.resource.allocation, id: res_phase2}:
+    resource_id: project_long_term.resource_analyst
+    phase_id: project_phase_definingclientsbasicideaofproject0
+    
 - 
   Create project phase 'Preparation of Engineering Designs'
 - 
