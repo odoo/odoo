@@ -25,6 +25,9 @@ from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task
 import operator
+from new import classobj
+import types
+import new
 
 class project_phase(osv.osv):
     _name = "project.phase"
@@ -226,12 +229,51 @@ class project_phase(osv.osv):
             res[phase.id] = resource_objs
         return res
 
-    def generate_schedule(self, cr, uid, ids, start_date=False, calendar_id=False, context=None):
+    def generate_phase(self, cr, uid, ids, f, parent=False, context=None):
+        if context is None:
+            context = {}
+        phase_ids = []
+        resource_pool = self.pool.get('resource.resource')
+        data_pool = self.pool.get('ir.model.data')
+        resource_allocation_pool = self.pool.get('project.resource.allocation')
+        uom_pool = self.pool.get('product.uom')
+        data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
+        for phase in self.browse(cr, uid, ids, context=context)[::-1]:
+            phase_resource_obj = self.generate_resources(cr, uid, [phase.id], context=context)[phase.id]
+            avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
+            if not phase_resource_obj: #TOCHECK: why need this ?
+                avg_days = avg_days - 1
+            duration = str(avg_days) + 'd'
+            # Create a new project for each phase
+            s = '''
+    def Phase_%s():
+        effort = \'%s\'
+        resource = %s
+'''%(phase.id, duration, phase_resource_obj)
+            if parent:
+                start = 'up.Phase_%s.end' % (parent.id)
+                s += '''
+        start = %s
+'''%(start)
+            f += s + '\n'
+            phase_ids.append(phase.id)
+            # Recursive call till all the next phases scheduled
+            for next_phase in phase.next_phase_ids:
+                if next_phase.state in ['draft', 'open', 'pending']:
+                    rf, rphase_ids = self.generate_phase(cr, uid, [next_phase.id], f = '', parent=phase, context=context)
+                    f += rf +'\n'
+                    phase_ids += rphase_ids
+                else:   
+                    continue
+        return f, phase_ids
+
+    def generate_schedule(self, cr, uid, root_phase, start_date=False, calendar_id=False, context=None):
         """
         Schedule phase with the start date till all the next phases are completed.
         @param: start_date (datetime.datetime) : start date for the phase. It would be either Start date of phase or start date of project or system current date
         @param: calendar_id : working calendar of the project
         """
+        func_str = ''
         if context is None:
             context = {}
         resource_pool = self.pool.get('resource.resource')
@@ -239,71 +281,76 @@ class project_phase(osv.osv):
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         uom_pool = self.pool.get('product.uom')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
-        for phase in self.browse(cr, uid, ids, context=context):
-            if not phase.responsible_id:
-                raise osv.except_osv(_('No responsible person assigned !'),_("You must assign a responsible person for phase '%s' !") % (phase.name,))
+        
 
-            if not start_date:
-                start_date = phase.project_id.date_start or phase.date_start or datetime.now().strftime("%Y-%m-%d")
-                start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d") 
-            phase_resource_obj = self.generate_resources(cr, uid, [phase.id], context=context)[phase.id]
-            avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
-            if not phase_resource_obj: #TOCHECK: why need this ?
-                avg_days = avg_days - 1
-            duration = str(avg_days) + 'd'
-            # Create a new project for each phase
-            def Project():
-                # If project has working calendar then that
-                # else the default one would be considered
-                start = start_date
-                minimum_time_unit = 1
-                resource = phase_resource_obj
-                working_hours_per_day = 24
-                vacation = []
-                if calendar_id:
-                    working_hours_per_day = 8 #TODO: it should be come from calendars
-                    vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id))
-                working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
-                def phase():
-                    effort = duration
+        if not start_date:
+            start_date = root_phase.project_id.date_start or root_phase.date_start or datetime.now().strftime("%Y-%m-%d")
+            start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d")
 
-            project = Task.BalancedProject(Project)
-
-            s_date = project.phase.start.to_datetime()
-            e_date = project.phase.end.to_datetime()
+        start = start_date
+        minimum_time_unit = 1
+        working_hours_per_day = 24
+        working_days_per_week = 7
+        working_days_per_month = 30
+        working_days_per_year = 365
+        
+        vacation = []
+        if calendar_id:
+            working_hours_per_day = 8 #TODO: it should be come from calendars
+            working_days_per_week = 5
+            working_days_per_month = 20
+            working_days_per_year = 200
+            vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id))
+        working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
+        # Create a new project for each phase
+        func_str += '''
+def Project_%d():
+    # If project has working calendar then that
+    # else the default one would be considered
+    start = \'%s\'
+    minimum_time_unit = %s
+    working_hours_per_day = %s
+    working_days_per_week = %s
+    working_days_per_month = %s
+    working_days_per_year = %s
+    vacation = %s
+    working_days =  %s
+'''%(root_phase.project_id.id, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+        phases, phase_ids = self.generate_phase(cr, uid, [root_phase.id], func_str, context=context)
+        exec(phases)
+        Project = eval('Project_%d' % root_phase.project_id.id)
+        project = Task.BalancedProject(Project)
+        for phase_id in phase_ids:
+            phase = eval("project.Phase_%d" % phase_id)
+            start_date = phase.start.to_datetime()
+            end_date = phase.end.to_datetime()
+            print start_date, end_date
             # Recalculate date_start and date_end
             # according to constraints on date start and date end on phase
-            if phase.constraint_date_start and str(s_date) < phase.constraint_date_start:
-                start_date = datetime.strptime(phase.constraint_date_start, '%Y-%m-%d')
-            else:
-                start_date = s_date
-            if phase.constraint_date_end and str(e_date) > phase.constraint_date_end:
-                end_date= datetime.strptime(phase.constraint_date_end, '%Y-%m-%d')
-                date_start = phase.constraint_date_end
-            else:
-                end_date = e_date
-                date_start = end_date
-            # Write the calculated dates back
-            ctx = context.copy()
-            ctx.update({'scheduler': True})
-            self.write(cr, uid, [phase.id], {
+#            if phase.constraint_date_start and str(s_date) < phase.constraint_date_start:
+#                start_date = datetime.strptime(phase.constraint_date_start, '%Y-%m-%d')
+#            else:
+#                start_date = s_date
+#            if phase.constraint_date_end and str(e_date) > phase.constraint_date_end:
+#                end_date= datetime.strptime(phase.constraint_date_end, '%Y-%m-%d')
+#                date_start = phase.constraint_date_end
+#            else:
+#                end_date = e_date
+#                date_start = end_date
+#            # Write the calculated dates back
+#            ctx = context.copy()
+#            ctx.update({'scheduler': True})
+            self.write(cr, uid, [phase_id], {
                                           'date_start': start_date.strftime('%Y-%m-%d'),
                                           'date_end': end_date.strftime('%Y-%m-%d')
-                                        }, context=ctx)
+                                        }, context=context)
             # write dates into Resources Allocation
-            for resource in phase.resource_ids:
-                resource_allocation_pool.write(cr, uid, [resource.id], {
-                                        'date_start': start_date.strftime('%Y-%m-%d'),
-                                        'date_end': end_date.strftime('%Y-%m-%d')
-                                    }, context=ctx)
-            # Recursive call till all the next phases scheduled
-            for next_phase in phase.next_phase_ids:
-               if next_phase.state in ['draft', 'open', 'pending']:
-                   id_cal = next_phase.project_id.resource_calendar_id and next_phase.project_id.resource_calendar_id.id or False
-                   self.generate_schedule(cr, uid, [next_phase.id], date_start+timedelta(days=1), id_cal, context=context)
-               else:
-                   continue
-        return True
+#            for resource in phase.resource_ids:
+#                resource_allocation_pool.write(cr, uid, [resource.id], {
+#                                        'date_start': start_date.strftime('%Y-%m-%d'),
+#                                        'date_end': end_date.strftime('%Y-%m-%d')
+#                                    }, context=context)
+#            # Recursive call till all the next phases scheduled
 
     def schedule_tasks(self, cr, uid, ids, context=None):
         """
@@ -395,7 +442,8 @@ class project(osv.osv):
                                                   ])
             calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
             start_date = False
-            phase_pool.generate_schedule(cr, uid, phase_ids, start_date, calendar_id, context=context)
+            for phase in phase_pool.browse(cr, uid, phase_ids, context=context):
+                phase_pool.generate_schedule(cr, uid, phase, start_date, calendar_id, context=context)
         return True
 
     def schedule_tasks(self, cr, uid, ids, context=None):
@@ -489,9 +537,15 @@ class project_task(osv.osv):
                 raise osv.except_osv(_('Error'), _('Resources should be allocated to your phases and Members should be assigned to your Project!'))
             minimum_time_unit = 1
             working_hours_per_day = 24
+            working_days_per_week = 7
+            working_days_per_month = 30
+            working_days_per_year = 365
             vacation = []
             if calendar_id:
                 working_hours_per_day = 8 #TODO: it should be come from calendars
+                working_days_per_week = 5
+                working_days_per_month = 20
+                working_days_per_year = 200
                 vacation = tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context))
             working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
             # Dynamic creation of tasks
