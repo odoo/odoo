@@ -90,7 +90,7 @@ def _record_objects(self, cr, uid, data, context):
         for s_id in search_ids:
              args=(cr.dbname,uid,obj_name,'copy',s_id,{},context)
              mod.recording_data.append(('query',args, {}, s_id))
-    return {}
+    return {'type': 'ir.actions.act_window_close'}
 
 def inter_call(self,cr,uid,data,context):
     res=base_module_save._create_module(self,cr, uid, data, context)

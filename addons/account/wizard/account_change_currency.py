@@ -72,7 +72,7 @@ class account_change_currency(osv.osv_memory):
                 new_price = (line.price_unit / old_rate ) * rate
             obj_inv_line.write(cr, uid, [line.id], {'price_unit': new_price})
         obj_inv.write(cr, uid, [invoice.id], {'currency_id': new_currency}, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_change_currency()
 

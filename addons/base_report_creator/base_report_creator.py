@@ -196,7 +196,6 @@ class report_creator(osv.osv):
         res = super(report_creator, self).read(cr, user, ids, fields, context, load)
         if (not context) or 'report_id' not in context:
             return res
-        ctx = context or {}
         wp = ''
         for data in res:
             if not data.get('sql_query'):
