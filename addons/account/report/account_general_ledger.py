@@ -103,8 +103,8 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
 
     def get_children_accounts(self, account):
         res = []
-        ids_acc = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account.id)
         currency_obj = self.pool.get('res.currency')
+        ids_acc = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account.id)
         currency = account.currency_id and account.currency_id or account.company_id.currency_id
         for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc, context=self.context):
             sql = """
