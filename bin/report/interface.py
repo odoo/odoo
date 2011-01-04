@@ -39,7 +39,7 @@ def toxml(val):
     if isinstance(val, str):
         str_utf8 = val
     elif isinstance(val, unicode):
-        str_utf8 = val.encode('utf-8')
+        str_utf8 = tools.ustr(val)
     else:
         str_utf8 = str(val)
     return str_utf8.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;')
