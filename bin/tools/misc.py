@@ -69,8 +69,12 @@ SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.Com
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
-    cr.execute(file_open(f).read())
-    cr.commit()
+    base_sql_file = file_open(f)
+    try:
+        cr.execute(base_sql_file.read())
+        cr.commit()
+    finally:
+        base_sql_file.close()
 
     for i in addons.get_modules():
         mod_path = addons.get_module_path(i)

@@ -681,9 +681,13 @@ def trans_generate(lang, modules, dbname=None):
                 report_type = "xsl"
             if fname and obj.report_type in ('pdf', 'xsl'):
                 try:
-                    d = etree.parse(tools.file_open(fname))
-                    for t in parse_func(d.iter()):
-                        push_translation(module, report_type, name, 0, t)
+                    report_file = tools.file_open(fname)
+                    try:
+                        d = etree.parse(report_file)
+                        for t in parse_func(d.iter()):
+                            push_translation(module, report_type, name, 0, t)
+                    finally:
+                        report_file.close()
                 except (IOError, etree.XMLSyntaxError):
                     logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
@@ -772,7 +776,11 @@ def trans_generate(lang, modules, dbname=None):
         is_mod_installed = module in installed_modules
         if (('all' in modules) or (module in modules)) and is_mod_installed:
             logger.debug("Scanning code of %s at module: %s", frelativepath, module)
-            code_string = tools.file_open(fabsolutepath, subdir='').read()
+            src_file = tools.file_open(fabsolutepath, subdir='')
+            try:
+                code_string = src_file.read()
+            finally:
+                src_file.close()
             if module in installed_modules:
                 frelativepath = str("addons" + frelativepath)
             ite = re_dquotes.finditer(code_string)

@@ -55,11 +55,15 @@ class report_xml(osv.osv):
         for report in self.browse(cursor, user, ids, context=context):
             data = report[name + '_data']
             if not data and report[name[:-8]]:
+                fp = None
                 try:
                     fp = tools.file_open(report[name[:-8]], mode='rb')
                     data = fp.read()
                 except:
                     data = False
+                finally:
+                    if fp:
+                        fp.close()
             res[report.id] = data
         return res
 

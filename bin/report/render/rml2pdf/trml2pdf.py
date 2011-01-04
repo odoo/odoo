@@ -477,24 +477,26 @@ class _rml_canvas(object):
                 else:
                     self._logger.debug("Open image file %s ", nfile)
                     s = _open_image(nfile, path=self.path)
-        img = ImageReader(s)
-        (sx,sy) = img.getSize()
-        self._logger.debug("Image is %dx%d", sx, sy)
-
-        args = { 'x': 0.0, 'y': 0.0 }
-        for tag in ('width','height','x','y'):
-            if node.get(tag):
-                args[tag] = utils.unit_get(node.get(tag))
-        if ('width' in args) and (not 'height' in args):
-            args['height'] = sy * args['width'] / sx
-        elif ('height' in args) and (not 'width' in args):
-            args['width'] = sx * args['height'] / sy
-        elif ('width' in args) and ('height' in args):
-            if (float(args['width'])/args['height'])>(float(sx)>sy):
-                args['width'] = sx * args['height'] / sy
-            else:
+        try:
+            img = ImageReader(s)
+            (sx,sy) = img.getSize()
+            self._logger.debug("Image is %dx%d", sx, sy)
+            args = { 'x': 0.0, 'y': 0.0 }
+            for tag in ('width','height','x','y'):
+                if node.get(tag):
+                    args[tag] = utils.unit_get(node.get(tag))
+            if ('width' in args) and (not 'height' in args):
                 args['height'] = sy * args['width'] / sx
-        self.canvas.drawImage(img, **args)
+            elif ('height' in args) and (not 'width' in args):
+                args['width'] = sx * args['height'] / sy
+            elif ('width' in args) and ('height' in args):
+                if (float(args['width'])/args['height'])>(float(sx)>sy):
+                    args['width'] = sx * args['height'] / sy
+                else:
+                    args['height'] = sy * args['width'] / sx
+            self.canvas.drawImage(img, **args)
+        finally:
+            s.close()
 #        self.canvas._doc.SaveToFile(self.canvas._filename, self.canvas)
 
     def _path(self, node):

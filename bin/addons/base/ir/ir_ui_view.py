@@ -33,12 +33,15 @@ def _check_xml(self, cr, uid, ids, context=None):
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch.encode('utf8'))
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
-        relaxng_doc = etree.parse(frng)
-        relaxng = etree.RelaxNG(relaxng_doc)
-        if not relaxng.validate(eview):
-            for error in relaxng.error_log:
-                logger.error(tools.ustr(error))
-            return False
+        try:
+            relaxng_doc = etree.parse(frng)
+            relaxng = etree.RelaxNG(relaxng_doc)
+            if not relaxng.validate(eview):
+                for error in relaxng.error_log:
+                    logger.error(tools.ustr(error))
+                return False
+        finally:
+            frng.close()
     return True
 
 class view_custom(osv.osv):
