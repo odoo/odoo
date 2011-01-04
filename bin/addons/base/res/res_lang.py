@@ -33,8 +33,12 @@ class lang(osv.osv):
 
     def install_lang(self, cr, uid, **args):
         lang_ids = self.search(cr, uid, [('code','=', tools.config.get('lang'))])
+        values_obj = self.pool.get('ir.values')
         if not lang_ids:
             lang_id = self.load_lang(cr, uid, tools.config.get('lang'))
+        default_value = values_obj.get(cr, uid, 'default', False, 'res.partner')
+        if not default_value:
+            values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], tools.config.get('lang'))
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
@@ -76,7 +80,6 @@ class lang(osv.osv):
         lang_id = False
         try:
             lang_id = self.create(cr, uid, lang_info)
-            self.pool.get('ir.values').set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
         finally:
             tools.resetlocale()
         return lang_id
