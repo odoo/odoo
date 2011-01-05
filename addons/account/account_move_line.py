@@ -676,6 +676,7 @@ class account_move_line(osv.osv):
             company_list.append(line.company_id.id)
 
         for line in self.browse(cr, uid, ids, context=context):
+            company_currency_id = line.company_id.currency_id
             if line.reconcile_id:
                 raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
             if line.reconcile_partial_id:
@@ -688,8 +689,7 @@ class account_move_line(osv.osv):
             else:
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
-
-        if not total:
+        if self.pool.get('res.currency').is_zero(cr, uid, company_currency_id, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context)
             return res
         r_id = move_rec_obj.create(cr, uid, {
