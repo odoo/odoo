@@ -63,6 +63,18 @@ class ir_model(osv.osv):
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
         return [('id', 'in', [id for id in is_osv_mem if bool(is_osv_mem[id]) == value])]
 
+    def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
+        res = osv.osv.get_xml_ids(self, cr, uid, ids)
+        for k,v in res.iteritems():
+            res[k]=', '.join(map(lambda x: x.split('.')[0],v))
+        return res
+
+    def _view_ids(self, cr, uid, ids, field_name, arg, context=None):
+        models=self.browse(cr,uid,ids)
+        res={}
+        for model in models:
+            res[model.id]=self.pool.get("ir.ui.view").search(cr, uid, [('model', '=', model.name)])
+        return res
 
     _columns = {
         'name': fields.char('Object Name', size=64, translate=True, required=True),
@@ -73,7 +85,9 @@ class ir_model(osv.osv):
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, method=True, string='In-memory model', type='boolean',
             fnct_search=_search_osv_memory,
-            help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)")
+            help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)"),
+        'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the object is defined'),
+        'view_ids': fields.function(_view_ids, method=True, type='one2many', obj='ir.ui.view', string='Views'),
     }
     
     _defaults = {
@@ -150,6 +164,13 @@ ir_model()
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
     _description = "Fields"
+
+    def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
+        res = osv.osv.get_xml_ids(self, cr, uid, ids)
+        for k,v in res.iteritems():
+            res[k]=', '.join(map(lambda x: x.split('.')[0],v))
+        return res
+
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
         'model': fields.char('Object Name', size=64, required=True, select=1),
@@ -170,6 +191,7 @@ class ir_model_fields(osv.osv):
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
+        'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
     }
     _rec_name='field_description'
     _defaults = {

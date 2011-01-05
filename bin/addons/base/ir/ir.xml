@@ -967,6 +967,7 @@
                         <field name="model"/>
                         <field name="osv_memory"/>
                         <field name="state"/>
+                        <field name="modules" colspan="4"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Fields">
@@ -981,29 +982,26 @@
                                     <field name="state"/>
                                 </tree>
                                 <form string="Fields Description">
-                                    <group colspan="4" col="4">
-                                        <field name="name" select="1"/>
-                                        <field colspan="4" name="field_description" select="2"/>
-                                    </group>
+                                    <field name="name" select="1"/>
+                                    <field name="field_description" select="2"/>
+                                    <field name="state"/>
 
+                                    <separator string="Properties" colspan="4"/>
                                     <group colspan="2" col="2">
-                                        <separator string="Field Type" colspan="2"/>
                                         <field name="ttype" select="2"/>
                                         <field name="relation" attrs="{'required': [('ttype','in',['many2one','one2many','many2many'])],'readonly': [('ttype','!=','one2many'), ('ttype','!=','many2one'), ('ttype','!=','many2many')]}"/>
                                         <field name="relation_field" attrs="{'required': [('ttype','=','one2many')], 'readonly': [('ttype','!=','one2many')]}"/>
                                         <field name="selection" attrs="{'required': [('ttype','in',['selection','reference'])], 'readonly': [('ttype','not in',['selection','reference'])]}"/>
                                         <field name="size" attrs="{'required': [('ttype','in',['char','reference'])], 'readonly': [('ttype','not in',['char','reference'])]}"/>
-                                        <field name="state"/>
                                         <field name="domain" attrs="{'readonly': [('relation','=','')]}"/>
                                     </group>
-
                                     <group colspan="2" col="2">
-                                        <separator string="Properties" colspan="2"/>
                                         <field name="required" select="2"/>
                                         <field name="readonly" select="2"/>
                                         <field name="select_level"/>
                                         <field name="translate"/>
                                         <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
+                                        <field name="modules"/>
                                     </group>
                                     <separator string="Groups" colspan="4"/>
                                     <field name="groups" colspan="4" nolabel="1"/>
@@ -1031,6 +1029,9 @@
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="info" nolabel="1"/>
+                        </page>
+                        <page string="Views">
+                            <field colspan="4" name="view_ids" nolabel="1"/>
                         </page>
                     </notebook>
                 </form>
@@ -1094,7 +1095,7 @@
                         <field name="model_id" attrs="{'readonly': [('state','!=', 'manual')]}"/>
                         <field name="field_description"/>
                         <field name="state"/>
-                          </group>
+                    </group>
                     <notebook colspan="4">
                         <page string="Properties">
                             <group colspan="2" col="2">
@@ -1113,6 +1114,7 @@
                                 <field name="select_level"/>
                                 <field name="translate"/>
                                 <field name="on_delete" attrs="{'readonly': [('ttype','!=','many2one')]}"/>
+                                <field name="modules"/>
                             </group>
                         </page>
                         <page string="Security">
