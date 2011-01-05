@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.6\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-11-26 09:12:09+0000\n"
-"PO-Revision-Date: 2009-11-26 09:12:09+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:15+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:15+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,22 +16,49 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: base_crypt
-#: model:ir.module.module,description:base_crypt.module_meta_information
-msgid "Module for password encryption."
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: base_crypt
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.model,name:base_crypt.model_res_users
+msgid "res.users"
+msgstr ""
+
+#. module: base_crypt
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: base_crypt
+#: code:addons/base_crypt/crypt.py:134
+#, python-format
+msgid "Please specify the password !"
 msgstr ""
 
 #. module: base_crypt
 #: model:ir.module.module,shortdesc:base_crypt.module_meta_information
-msgid "Base"
+msgid "Base - Password Encryption"
 msgstr ""
 
 #. module: base_crypt
-#: field:res.users,input_pw:0
-msgid "Password"
+#: code:addons/base_crypt/crypt.py:134
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: base_crypt
+#: model:ir.module.module,description:base_crypt.module_meta_information
+msgid "This module replaces the cleartext password in the database with a password hash,\n"
+"preventing anyone from reading the original password.\n"
+"For your existing user base, the removal of the cleartext passwords occurs the first time\n"
+"a user logs into the database, after installing base_crypt.\n"
+"After installing this module it won't be possible to recover a forgotten password for your\n"
+"users, the only solution is for an admin to set a new password.\n"
+"\n"
+"Note: installing this module does not mean you can ignore basic security measures,\n"
+"as the password is still transmitted unencrypted on the network (by the client),\n"
+"unless you are using a secure protocol such as XML-RPCS.\n"
+"                    "
 msgstr ""
 
