@@ -3,10 +3,10 @@
   and check its effects on Work orders.
 -
   I create a production order.
-- 
+-
   !record {model: mrp.production, id: mrp_production_mo0}:
     company_id: base.main_company
-    date_planned: '2010-05-25 11:17:34'
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
     name: MO/00002
@@ -71,13 +71,13 @@
     prod_order_ids = self.search(cr, uid, [('state','=','ready')])
     for po in prod_order_ids:
         wf_service.trg_validate(uid, 'mrp.production', po, 'button_produce', cr)
-- 
+-
   I am creating a mrp.product.produce record
 -
   !record {model: mrp.product.produce, id: mrp_product_produce_0}:
     mode: consume_produce
     product_qty: 5.0
-- 
+-
   I produce the product CPU_GEN.
 -
   !python {model: mrp.product.produce}: |
@@ -106,17 +106,17 @@
   I check that both internal pickings are done.
 -
   !python {model: stock.picking}: |
-    from tools.translate import _    
+    from tools.translate import _
     pick_ids = self.search(cr, uid, [('state','=','done'),('type','=','internal')])
     assert pick_ids, _('Internal pickings are not done!')
 -
   Now I start my first production order.
 -
-  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}      
+  !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
 -
-  I check that the related work order is in progress state.    
+  I check that the related work order is in progress state.
 -
-  !python {model: mrp.production.workcenter.line}: |    
+  !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','startworking')])
     assert order_id, _('Work order not started yet!')
@@ -126,7 +126,7 @@
   !record {model: mrp.product.produce, id: mrp_product_produce_0}:
     mode: consume_produce
     product_qty: 5.0
-- 
+-
   I produce the product PC1.
 -
   !python {model: mrp.product.produce}: |
@@ -138,7 +138,7 @@
 -
   I check the related work order is done.
 -
-  !python {model: mrp.production.workcenter.line}: |    
+  !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
     order_id = self.search(cr, uid, [('production_id','=', ref('mrp_production_mo0')),('state','=','done')])
-    assert order_id, _('Work order not done yet!')   
+    assert order_id, _('Work order not done yet!')

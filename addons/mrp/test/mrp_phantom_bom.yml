@@ -1,5 +1,5 @@
 -
-  In order to test the mrp phantom bom type in OpenERP, I will create products 
+  In order to test the mrp phantom bom type in OpenERP, I will create products
   and then I will create Phantom bom structure for those products.
 -
   I create the products required to produce some orange juices with Oranges, Sugar and Water.
@@ -8,10 +8,10 @@
     category_id: product.product_uom_categ_kgm
     factor: 1.0
     name: Litre
-    rounding: 0.01 
+    rounding: 0.01
 -
   I create record for product Orange Juice.
-- 
+-
   !record {model: product.product, id: product_product_orangejuice0}:
     categ_id: product.cat1
     name: Orange Juice
@@ -25,7 +25,7 @@
     property_stock_production: stock.location_production
 -
   I create record for product Orange.
-- 
+-
   !record {model: product.product, id: product_product_orange0}:
     categ_id: product.cat1
     name: Orange
@@ -44,7 +44,7 @@
     property_stock_production: stock.location_production
 -
   I create record for product Sugar.
-- 
+-
   !record {model: product.product, id: product_product_sugar0}:
     categ_id: product.cat1
     name: Sugar
@@ -63,7 +63,7 @@
     property_stock_production: stock.location_production
 -
   I create record for product Water.
-- 
+-
   !record {model: product.product, id: product_product_water0}:
     categ_id: product.cat1
     name: Water
@@ -82,7 +82,7 @@
     property_stock_production: stock.location_production
 -
   I define the BoM to produce an orange juice.
-- 
+-
   !record {model: mrp.bom, id: mrp_bom_orangejuice0}:
     company_id: base.main_company
     name: Orange Juice
@@ -93,7 +93,7 @@
     type: phantom
 -
   I create bom lines for BoM for Orange Juice.
-- 
+-
   !record {model: mrp.bom, id: mrp_bom_orangejuice0}:
     bom_lines:
       - bom_id: mrp_bom_orangejuice0
@@ -122,7 +122,7 @@
         type: normal
 -
   I define Minimum stock rules for my stockable product "Orange".
-- 
+-
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
     company_id: base.main_company
     location_id: stock.stock_location_stock
@@ -136,7 +136,7 @@
     warehouse_id: stock.warehouse0
 -
   I define Minimum stock rules for my stockable product "Sugar".
-- 
+-
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op1}:
     company_id: base.main_company
     location_id: stock.stock_location_stock
@@ -149,27 +149,27 @@
     qty_multiple: 1
     warehouse_id: stock.warehouse0
 -
-  I want to produce 100 litres of Orange juice. I am creating a manufacturing order for this. 
-  I want to see how much quantities of sub products I need, to produce the Orange juice. 
+  I want to produce 100 litres of Orange juice. I am creating a manufacturing order for this.
+  I want to see how much quantities of sub products I need, to produce the Orange juice.
 -
-  I compute the data. I get the bill of material of Orange juice and list of 
+  I compute the data. I get the bill of material of Orange juice and list of
   scheduled products according to my bom.
-- 
+-
   !record {model: mrp.production, id: mrp_production_mo0}:
     company_id: base.main_company
-    date_planned: '2010-04-16 15:53:36'
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_output
     location_src_id: stock.stock_location_stock
     product_id: product_product_orangejuice0
     product_qty: 100.0
     product_uom: product_uom_litre0
-- 
+-
   Creating an mrp.production record. Computing Bills of materials.
-- 
+-
   !record {model: mrp.production, id: mrp_production_mo0}:
     bom_id: mrp.mrp_bom_orangejuice0
     company_id: base.main_company
-    date_planned: '2010-04-16 15:53:36'
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_output
     location_src_id: stock.stock_location_stock
     name: MO/00002
@@ -194,7 +194,7 @@
     product_uom: mrp.product_uom_litre0
 -
   I confirm the order.
-- 
+-
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo0}
 -
   I am checking Procurement orders. There are 3 orders generated for Oranges, Sugar and Water.
@@ -210,7 +210,7 @@
     - model: procurement.order
       search: "[]"
 -
-  I am checking Internal picking. I see one picking for Orange juice and its 
+  I am checking Internal picking. I see one picking for Orange juice and its
   stock moves for Oranges, Sugar and Water made correctly.
 -
   !python {model: stock.picking}: |
@@ -218,7 +218,7 @@
     pick_ids = self.search(cr, uid, [('type','=','internal')])
     assert pick_ids, _('No Internal Pickings!')
 -
-  According to minimum stock rules. I have 2 purchase orders for 
+  According to minimum stock rules. I have 2 purchase orders for
   Sugar with 6 Kg from Axelor and Orange 60 Kg from ASUStek.
 -
   I confirm the purchase order of Sugar and Orange.
@@ -244,7 +244,7 @@
   I create record for the incoming picking wizard.
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
-    date: '2010-04-30 16:53:36'
+    date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 -
   I make my pickings done.
 -
@@ -253,7 +253,7 @@
      picking_ids = pick_obj.search(cr, uid, [('type','=','in'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
-            'delivery_date': partial.date         
+            'delivery_date': partial.date
      }
      for pick in pick_obj.browse(cr, uid, picking_ids):
         for m in pick.move_lines:
@@ -262,8 +262,8 @@
                     'product_qty': m.product_qty,
                     'product_uom': m.product_uom.id
            }
-           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):   
-                    partial_datas['move%s'%(m.id)].update({             
+           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
+                    partial_datas['move%s'%(m.id)].update({
                         'product_price': m.product_price,
                         'product_currency': m.product_currency
                     })
@@ -292,5 +292,5 @@
   I start the production order.
 -
   !workflow {model: mrp.production, action: button_produce, ref: mrp_production_mo0}
-    
-    
+
+
