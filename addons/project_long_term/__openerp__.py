@@ -40,9 +40,9 @@ Features.
     "init_xml": [],
     "demo_xml": ["project_long_term_demo.xml"],
     "test": [
-          'test/test_project_long_term.yml',  
           'test/schedule_project_phases.yml',
           'test/schedule_project_tasks.yml',
+          'test/test_project_long_term.yml', 
           'test/schedule_phase_tasks.yml',
           'test/test_schedule_phases_case1.yml',
           'test/test_schedule_phases_case2.yml',
