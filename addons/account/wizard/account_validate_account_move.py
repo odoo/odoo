@@ -38,7 +38,7 @@ class validate_account_move(osv.osv_memory):
         if not ids_move:
             raise osv.except_osv(_('Warning'), _('Specified Journal does not have any account move entries in draft state for this period'))
         obj_move.button_validate(cr, uid, ids_move, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 validate_account_move()
 
@@ -60,7 +60,7 @@ class validate_account_move_lines(osv.osv_memory):
         if not move_ids:
             raise osv.except_osv(_('Warning'), _('Selected Entry Lines does not have any account move enties in draft state'))
         obj_move.button_validate(cr, uid, move_ids, context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 validate_account_move_lines()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

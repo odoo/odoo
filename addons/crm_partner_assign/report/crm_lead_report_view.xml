@@ -86,7 +86,20 @@
             </field>
         </record>
 
+<!-- Crm Lead Assign report Graph View -->
 
+        <record id="view_report_crm_lead_assign_graph" model="ir.ui.view">
+            <field name="name">crm.lead.assign.graph</field>
+            <field name="model">crm.lead.report.assign</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Lead Assign" type="bar">
+                    <field name="state"/>
+                    <field name="nbr" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
 
         <record id="view_report_crm_opportunity_assign_tree" model="ir.ui.view">
             <field name="name">crm.lead.assign.report.tree</field>
@@ -139,6 +152,13 @@
             <field name="view_id" ref="view_report_crm_opportunity_assign_tree"/>
             <field name="act_window_id" ref="action_report_crm_opportunity_assign"/>
        </record>
+       
+       <record model="ir.actions.act_window.view" id="action_report_crm_lead_assign_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_lead_assign_graph"/>
+            <field name="act_window_id" ref="action_report_crm_opportunity_assign"/>
+       </record>       
 
        <menuitem id="menu_report_crm_opportunities_assign_tree"
            groups="base.group_extended"

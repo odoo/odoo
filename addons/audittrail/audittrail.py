@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
-from osv.osv import osv_pool
+from osv.osv import osv_pool, object_proxy
 from tools.translate import _
 import ir
 import pooler
@@ -184,7 +184,7 @@ class audittrail_log_line(osv.osv):
 audittrail_log_line()
 
 
-class audittrail_objects_proxy(osv_pool):
+class audittrail_objects_proxy(object_proxy):
     """ Uses Object proxy for auditing changes on object of subscribed Rules"""
 
     def get_value_text(self, cr, uid, field_name, values, model, context=None):

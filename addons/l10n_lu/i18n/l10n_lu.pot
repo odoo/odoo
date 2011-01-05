@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:32+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:32+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:54+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,24 +21,13 @@ msgid "Print Tax Statements"
 msgstr ""
 
 #. module: l10n_lu
-#: model:ir.actions.act_window,name:l10n_lu.action_vat_report
-#: model:ir.model,name:l10n_lu.model_vat_declaration_report
-msgid "VAT Declaration Report"
-msgstr ""
-
-#. module: l10n_lu
 #: field:vat.declaration.report,tax_code_id:0
 msgid "Company"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_income
-msgid "Income"
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_cash_moves
-msgid "Cash"
+#: field:vat.declaration.report,period_id:0
+msgid "Period"
 msgstr ""
 
 #. module: l10n_lu
@@ -57,12 +46,7 @@ msgid "\n"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_liability
-msgid "Liability"
-msgstr ""
-
-#. module: l10n_lu
-#: code:addons/l10n_lu/wizard/print_vat.py:0
+#: code:addons/l10n_lu/wizard/print_vat.py:65
 #, python-format
 msgid "pdf not created !"
 msgstr ""
@@ -73,24 +57,9 @@ msgid "VAT Declaration"
 msgstr ""
 
 #. module: l10n_lu
-#: field:vat.declaration.report,period_id:0
-msgid "Period"
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_asset
-msgid "Asset"
-msgstr ""
-
-#. module: l10n_lu
-#: code:addons/l10n_lu/wizard/print_vat.py:0
+#: code:addons/l10n_lu/wizard/print_vat.py:65
 #, python-format
 msgid "Please check if package pdftk is installed!"
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_cash_equity
-msgid "Equity"
 msgstr ""
 
 #. module: l10n_lu
@@ -104,17 +73,8 @@ msgid "Luxembourg - Plan Comptable Minimum Normalise"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_expense
-msgid "Expense"
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_creances
-msgid "Créances"
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_root
-msgid "View"
+#: model:ir.actions.act_window,name:l10n_lu.action_vat_report
+#: model:ir.model,name:l10n_lu.model_vat_declaration_report
+msgid "VAT Declaration Report"
 msgstr ""
 

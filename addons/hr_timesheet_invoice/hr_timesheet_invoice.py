@@ -52,7 +52,6 @@ class account_analytic_account(osv.osv):
             account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
 
         for account in self.browse(cr, uid, ids, context=context):
-            invoiced = {}
             invoice_ids = filter(None, list(set(account_to_invoice_map.get(account.id, []))))
             for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
                 res.setdefault(account.id, 0.0)

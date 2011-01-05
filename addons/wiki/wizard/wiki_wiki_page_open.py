@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 
 class wiki_wiki_page_open(osv.osv_memory):
     """ wizard Open Page """

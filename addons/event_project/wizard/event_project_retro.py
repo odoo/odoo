@@ -76,7 +76,7 @@ class event_project(osv.osv_memory):
                     })
             event_obj.write(cr, uid, [event.id], {'project_id': duplicate_project_id })
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 event_project()
 

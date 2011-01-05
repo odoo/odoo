@@ -80,7 +80,7 @@
                     <filter string="Unposted" icon="terp-document-new" domain="[('move_state','=','draft')]" help = "entries"/>
                     <filter string="Posted" icon="terp-camera_test" domain="[('move_state','=','posted')]" help = "Posted entries"/>
                     <separator orientation="vertical"/>
-                    <filter string="Unreconciled" icon="terp-dolar_ok!" domain="[('reconcile_id','=',False)]" help = "Unreconciled entries"/>
+                    <filter string="Unreconciled" icon="terp-dolar_ok!" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help = "Unreconciled entries"/>
                     <filter string="Reconciled" icon="terp-dolar" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
                     <separator orientation="vertical"/>
                     <field name="account_id"/>

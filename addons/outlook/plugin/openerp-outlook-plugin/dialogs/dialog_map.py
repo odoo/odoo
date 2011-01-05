@@ -705,17 +705,12 @@ def GetSearchText(txtProcessor,*args):
     b = check()
     if not b:
         return
-    # Get the selected mail and set the default value for search_text_control to mail.SenderEmailAddress
-    ex = txtProcessor.window.manager.outlook.ActiveExplorer()
-    assert ex.Selection.Count == 1
-    mail = ex.Selection.Item(1)
     try:
         global objects_with_match
         list_hwnd = win32gui.GetDlgItem(txtProcessor.window.hwnd, txtProcessor.other_ids[1])
         objects_with_match = NewConn.SearchPartners()
         setList(list_hwnd)
     except Exception,e:
-        msg=getMessage(e)
         win32ui.MessageBox('Document can not be loaded.\n'+str(e), "Push", flag_error)
     txtProcessor.init_done=True
 
@@ -1382,12 +1377,11 @@ def OpenPartnerForm(txtProcessor,*args):
     try:
     	partner_text = ustr(mail.SenderName).encode('iso-8859-1')
         sender_mail = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
-
     except Exception:
     	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Error in reading email.>")
     	pass
     vals = NewConn.SearchPartner(sender_mail)
-    if vals == True:
+    if vals:
         win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Their is contact related to "+str(partner_text)+"  email address, but no partner is linked to contact>")
         txtProcessor.init_done=True
         return

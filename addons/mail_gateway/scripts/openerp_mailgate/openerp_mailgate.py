@@ -25,7 +25,6 @@ import logging
 import optparse
 import sys
 import xmlrpclib
-import email
 
 class rpc_proxy(object):
     def __init__(self, uid, passwd, host='localhost', port=8069, path='object', dbname='openerp'):
@@ -56,11 +55,10 @@ class email_parser(object):
             # pass message as bytes because we don't know its encoding until we parse its headers
             # and hence can't convert it to utf-8 for transport
             res_id = self.rpc('email.server.tools', 'process_email', self.model, xmlrpclib.Binary(message), custom_values)
-        except Exception, e:
+        except Exception:
             logger = logging.getLogger('mail-gateway')
             logger.warning('Failed to process incoming email. Source of the failed mail is available at debug level.', exc_info=True)
             logger.debug('Source of the mail that failed to parse:', message)
-            res_id = False
 
 if __name__ == '__main__':
     parser = optparse.OptionParser(usage='usage: %prog [options]', version='%prog v1.0')
