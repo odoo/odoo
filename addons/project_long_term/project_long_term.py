@@ -620,10 +620,10 @@ def Project_%d():
                 task_ids.append(task.id)
 
             #Temp File to test the Code for the Allocation
-            fn = '/home/hmo/Desktop/plt.py'
-            fp = open(fn, 'w')
-            fp.writelines(func_str)
-            fp.close()
+#            fn = '/home/hmo/Desktop/plt.py'
+#            fp = open(fn, 'w')
+#            fp.writelines(func_str)
+#            fp.close()
     
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
