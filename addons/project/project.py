@@ -126,7 +126,7 @@ class project(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
-        'priority': fields.integer('Sequence', help="Gives the sequence order when displaying a list of task"),
+        'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'parent_id': fields.many2one('project.project', 'Parent Project'),
