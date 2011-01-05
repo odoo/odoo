@@ -409,7 +409,7 @@ class TinyPoFile(object):
 
 # Methods to export the translation file
 
-def trans_export(lang, modules, buffer, format, dbname=None):
+def trans_export(lang, modules, buffer, format, cr):
 
     def _process(format, modules, rows, buffer, lang, newlang):
         if format == 'csv':
@@ -461,7 +461,7 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     newlang = not bool(lang)
     if newlang:
         lang = 'en_US'
-    trans = trans_generate(lang, modules, dbname)
+    trans = trans_generate(lang, modules, cr)
     if newlang and format!='csv':
         for trx in trans:
             trx[-1] = ''
@@ -524,17 +524,13 @@ def in_modules(object_name, modules):
     module = module_dict.get(module, module)
     return module in modules
 
-def trans_generate(lang, modules, dbname=None):
+def trans_generate(lang, modules, cr):
     logger = logging.getLogger('i18n')
-    if not dbname:
-        dbname=tools.config['db_name']
-        if not modules:
-            modules = ['all']
+    dbname = cr.dbname
 
     pool = pooler.get_pool(dbname)
     trans_obj = pool.get('ir.translation')
     model_data_obj = pool.get('ir.model.data')
-    cr = pooler.get_db(dbname).cursor()
     uid = 1
     l = pool.obj_pool.items()
     l.sort()
@@ -834,16 +830,15 @@ def trans_generate(lang, modules, dbname=None):
         trans = trans_obj._get_source(cr, uid, name, type, lang, source)
         out.append([module, type, name, id, source, encode(trans) or ''])
 
-    cr.close()
     return out
 
-def trans_load(db_name, filename, lang, verbose=True, context=None):
+def trans_load(cr, filename, lang, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     try:
         fileobj = open(filename,'r')
         logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(db_name, fileobj, fileformat, lang, verbose=verbose, context=context)
+        r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
@@ -851,12 +846,13 @@ def trans_load(db_name, filename, lang, verbose=True, context=None):
             logger.error("couldn't read translation file %s", filename)
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
+def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     if verbose:
         logger.info('loading translation file for language %s', lang)
     if context is None:
         context = {}
+    db_name = cr.dbname
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -864,7 +860,6 @@ def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=
     iso_lang = tools.get_iso_codes(lang)
     try:
         uid = 1
-        cr = pooler.get_db(db_name).cursor()
         ids = lang_obj.search(cr, uid, [('code','=', lang)])
 
         if not ids:
@@ -967,8 +962,6 @@ def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=
                     trans_obj.write(cr, uid, ids, {'value': dic['value']})
             else:
                 trans_obj.create(cr, uid, dic)
-            cr.commit()
-        cr.close()
         if verbose:
             logger.info("translation file loaded succesfully")
     except IOError:

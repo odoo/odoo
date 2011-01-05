@@ -144,7 +144,10 @@ if tools.config["translate_out"]:
 
     fileformat = os.path.splitext(tools.config["translate_out"])[-1][1:].lower()
     buf = file(tools.config["translate_out"], "w")
-    tools.trans_export(tools.config["language"], tools.config["translate_modules"], buf, fileformat)
+    dbname = tools.config['db_name']
+    cr = pooler.get_db(dbname).cursor()
+    tools.trans_export(tools.config["language"], tools.config["translate_modules"] or ["all"], buf, fileformat, cr)
+    cr.close()
     buf.close()
 
     logger.info('translation file written successfully')
@@ -152,10 +155,14 @@ if tools.config["translate_out"]:
 
 if tools.config["translate_in"]:
     context = {'overwrite': tools.config["overwrite_existing_translations"]}
-    tools.trans_load(tools.config["db_name"], 
+    dbname = tools.config['db_name']
+    cr = pooler.get_db(dbname).cursor()
+    tools.trans_load(cr,
                      tools.config["translate_in"], 
                      tools.config["language"],
                      context=context)
+    cr.commit()
+    cr.close()
     sys.exit(0)
 
 #----------------------------------------------------------------------------------
