@@ -36,8 +36,8 @@
    I fill proper data for that meeting and save it
 -
   !record {model: crm.meeting, id: crm_meeting_abcfuelcounits0}:
-    date: '2010-04-16 00:00:00'
-    date_deadline: '2010-04-16 08:00:00'
+    date: !eval time.strftime('%Y-%m-%d 00:00:00')
+    date_deadline: !eval time.strftime('%Y-%m-%d 08:00:00')
     duration: 8.0
     email_from: info@balmerinc.be
     name: 'ABC FUEL CO 829264 - 10002 units'
@@ -51,7 +51,7 @@
   I click on "schedule call" button and select planned date for the call.
 -
   !record {model: crm.opportunity2phonecall, id: crm_opportunity2phonecall_abcfuelcounits0}:
-    date: '2010-04-17 11:15:00'
+    date: !eval "'%s-%s-%s 11:15:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
     name: 'ABC FUEL CO 829264 - 10002 units'
     section_id: crm.section_sales_department
     user_id: base.user_demo
@@ -72,7 +72,7 @@
   I can see phonecall record after click on "Schedule call" wizard.
 -
   !record {model: crm.phonecall, id: crm_phonecall_abcfuelcounits0}:
-    date: '2010-04-17 11:15:00'
+    date: !eval "'%s-%s-%s 11:15:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
     duration: 3.0
     name: 'ABC FUEL CO 829264 - 10002 units'
     partner_address_id:  base.res_partner_address_1

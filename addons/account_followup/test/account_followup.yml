@@ -66,7 +66,7 @@
   I create a send followup record
 -
   !record {model: account.followup.print, id: account_followup_print_0}:
-    date: '2010-06-08'
+    date: !eval "'%s-06-08' %(datetime.now().year)"
     followup_id: account_followup_followup_testfollowups0
 
 
@@ -99,5 +99,5 @@
   !python {model: account.followup.print.all}: |
     self.do_print(cr, uid, [ref("account_followup_print_all_0")], {"lang": 'en_US',
       "active_model": "ir.ui.menu", "active_ids": [ref("account_followup.account_followup_print_menu")],
-      "tz": False, "date": "2010-06-08", "followup_id": ref("account_followup_followup_testfollowups0"), "active_id": ref("account_followup.account_followup_print_menu"),
+      "tz": False, "date": "2011-06-08", "followup_id": ref("account_followup_followup_testfollowups0"), "active_id": ref("account_followup.account_followup_print_menu"),
       })
