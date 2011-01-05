@@ -416,7 +416,7 @@ class account_bank_statement_line(osv.osv):
                 type = 'supplier'
             if part.customer == True :
                 type = 'customer'
-        return type
+        return {'value': {'type': type}}
 
     def onchange_type(self, cr, uid, line_id, partner_id, type, context=None):
         res = {'value': {}}
@@ -428,7 +428,7 @@ class account_bank_statement_line(osv.osv):
         account_id = False
         line = self.browse(cr, uid, line_id, context=context)
         type=self.onchange_partner_id(cr, uid, partner_id=partner_id, type=type)
-        res.update({'value': {'type':type}})
+        res.update({'value': {'type':type['value']['type']}})
         if not line or (line and not line[0].account_id):
             part = obj_partner.browse(cr, uid, partner_id, context=context)
             if type == 'supplier':
