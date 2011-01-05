@@ -771,6 +771,19 @@ class account_move_line(osv.osv):
                 libelle = context['comment']
             else:
                 libelle = _('Write-Off')
+
+            cur_obj = self.pool.get('res.currency')
+            cur_id = False
+            amount_currency_writeoff = 0.0
+            if context.get('company_currency_id',False) != context.get('currency_id',False):
+                cur_id = context.get('currency_id',False)
+                for line in unrec_lines:
+                    if line.currency_id and line.currency_id.id == context.get('currency_id',False):
+                        amount_currency_writeoff += line.amount_currency
+                    else:
+                        tmp_amount = cur_obj.compute(cr, uid, line.account_id.company_id.currency_id.id, context.get('currency_id',False), abs(line.debit-line.credit), context={'date': line.date})
+                        amount_currency_writeoff += (line.debit > 0) and tmp_amount or -tmp_amount
+
             writeoff_lines = [
                 (0, 0, {
                     'name': libelle,
@@ -779,8 +792,8 @@ class account_move_line(osv.osv):
                     'account_id': account_id,
                     'date': date,
                     'partner_id': partner_id,
-                    'currency_id': account.currency_id.id or False,
-                    'amount_currency': account.currency_id.id and -currency or 0.0
+                    'currency_id': cur_id or (account.currency_id.id or False),
+                    'amount_currency': amount_currency_writeoff and -1 * amount_currency_writeoff or (account.currency_id.id and -1 * currency or 0.0)
                 }),
                 (0, 0, {
                     'name': libelle,
@@ -789,7 +802,9 @@ class account_move_line(osv.osv):
                     'account_id': writeoff_acc_id,
                     'analytic_account_id': context.get('analytic_id', False),
                     'date': date,
-                    'partner_id': partner_id
+                    'partner_id': partner_id,
+                    'currency_id': cur_id or (account.currency_id.id or False),
+                    'amount_currency': amount_currency_writeoff and amount_currency_writeoff or (account.currency_id.id and currency or 0.0)
                 })
             ]
 
@@ -802,6 +817,8 @@ class account_move_line(osv.osv):
             })
 
             writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
+            if account_id == writeoff_acc_id:
+                writeoff_line_ids = [writeoff_line_ids[1]]
             ids += writeoff_line_ids
 
         r_id = move_rec_obj.create(cr, uid, {
