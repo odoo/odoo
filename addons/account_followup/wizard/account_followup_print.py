@@ -219,8 +219,8 @@ class account_followup_print_all(osv.osv_memory):
             partners = []
             dict_lines = {}
             for line in move_lines:
-                partners.append(line.name)
-                dict_lines[line.name.id] =line
+                partners.append(line.partner_id)
+                dict_lines[line.partner_id.id] =line
             for partner in partners:
                 ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
                 data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
