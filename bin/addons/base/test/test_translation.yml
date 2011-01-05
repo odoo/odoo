@@ -1,0 +1,15 @@
+-   |
+    Test the translation mechanism by synchronizing a dummy language and
+    checking its views.
+-
+    Install dummy language xx_XX
+-
+    !python {model: base.language.install }: |
+        import tools.test_translate
+        tools.test_translate.install_dummy_language(cr, uid)
+-
+    Check views using dummy language xx_XX
+-
+    !python {model: res.lang }: |
+        import tools.test_translate
+        tools.test_translate.check_all_views(cr, uid)

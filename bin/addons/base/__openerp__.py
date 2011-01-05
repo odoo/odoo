@@ -90,6 +90,7 @@
         'test/test_context.xml',
         'test/bug_lp541545.xml',
         'test/test_osv_expression.yml',
+        'test/test_translation.yml',
     ],
     'installable': True,
     'active': True,
