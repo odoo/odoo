@@ -361,17 +361,23 @@ class procurement_order(osv.osv):
         """
         ok = True
         if procurement.move_id:
+            message = False
             id = procurement.move_id.id
             if not (procurement.move_id.state in ('done','assigned','cancel')):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 cr.execute('select count(id) from stock_warehouse_orderpoint where product_id=%s', (procurement.product_id.id,))
-                if not cr.fetchone()[0]:
-                    cr.execute('update procurement_order set message=%s where id=%s',
-                            (_('Not enough stock and no minimum orderpoint rule defined.'),
-                            procurement.id))
-                    message = _("Procurement '%s' is in exception: not enough stock.") % \
-                            (procurement.name,)
-                    self.log(cr, uid, procurement.id, message)
+                res = cr.fetchone()[0]
+                if not res and not ok:
+                     message = _("Not enough stock and no minimum orderpoint rule defined.")
+                elif not res:
+                    message = _("No minimum orderpoint rule defined for '%s'.") % \
+                            (procurement.move_id.product_id.name,)
+                elif not ok:
+                    message = _("Not enough stock for '%s'.") % (procurement.move_id.product_id.name,)
+
+                if message:
+                    self.log(cr, uid, procurement.id, _("Procurement '%s' is in exception: ") % (procurement.name) + message)
+                    cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
