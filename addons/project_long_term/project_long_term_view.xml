@@ -116,10 +116,10 @@
                             <field name="responsible_id"/>
                         </group>
                         <group colspan="6" col="6">
-                            <field name="date_start"/>
+                            <field name="date_start" readonly="1"/>
                             <field name="duration"/>
                             <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
-                            <field name="date_end"/>
+                            <field name="date_end" readonly="1"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -228,6 +228,7 @@
                     <field name="date_end"/>
                     <field name="duration"/>
                     <field name="state"/>
+                     <button name="%(action_project_schedule_tasks)d" string="Schedule Tasks" type="action" icon="gtk-jump-to"/>
                 </tree>
             </field>
         </record>
