@@ -565,7 +565,7 @@
                                     <field name="date" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
@@ -574,12 +574,12 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
+                                    <field name="ref"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
-                                    <field name="ref"/>
                                     <field name="sequence" readonly="0"/>
                                     <separator colspan="4" string="Notes"/>
                                     <field colspan="4" name="note" nolabel="1"/>
@@ -2633,7 +2633,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                     <field name="date" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
@@ -2642,12 +2642,12 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
+                                    <field name="ref"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
-                                    <field name="ref"/>
                                     <field name="sequence"/>
                                     <separator colspan="4" string="Notes"/>
                                     <field colspan="4" name="note" nolabel="1"/>

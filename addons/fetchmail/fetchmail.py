@@ -84,9 +84,11 @@ class email_server(osv.osv):
     def check_model(self, cr, uid, ids, context = None):
         if context is None:
             context = {}
-        current_rec = self.read(cr, uid, ids, context)[0]
+        current_rec = self.read(cr, uid, ids, context)
         if current_rec:
-            model = self.pool.get(current_rec.get('object_id')[1])
+            current_rec = current_rec[0]
+            model_name = self.pool.get('ir.model').browse(cr, uid, current_rec.get('object_id')[0]).model
+            model = self.pool.get(model_name)
             if hasattr(model, 'message_new'):
                 return True
         return False

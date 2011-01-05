@@ -87,7 +87,7 @@ class wiki_make_index(osv.osv_memory):
             for rs in result:
                 wiki_pool.write(cr, uid, [rs[1]], {'section':rs[0]})
 
-        return {}
+        return {'type':  'ir.actions.act_window_close'}
 
 wiki_make_index()
 

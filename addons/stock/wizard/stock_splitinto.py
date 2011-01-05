@@ -79,6 +79,6 @@ class stock_split_into(osv.osv_memory):
                         inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, current_move)]}, context=context)
 
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 stock_split_into()
 

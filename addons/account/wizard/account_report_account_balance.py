@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
-
 from osv import osv
 
 class account_balance_report(osv.osv_memory):

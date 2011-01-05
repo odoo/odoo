@@ -103,7 +103,9 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
 
     def get_children_accounts(self, account):
         res = []
+        currency_obj = self.pool.get('res.currency')
         ids_acc = self.pool.get('account.account')._get_children_and_consol(self.cr, self.uid, account.id)
+        currency = account.currency_id and account.currency_id or account.company_id.currency_id
         for child_account in self.pool.get('account.account').browse(self.cr, self.uid, ids_acc, context=self.context):
             sql = """
                 SELECT count(id)
@@ -119,7 +121,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                     res.append(child_account)
             elif self.display_account == 'bal_solde':
                 if child_account.type != 'view' and num_entry <> 0:
-                    if ( sold_account <> 0.0):
+                    if currency_obj.is_zero(self.cr, self.uid, currency, sold_account) != 0:
                         res.append(child_account)
             else:
                 res.append(child_account)
@@ -179,26 +181,19 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
         if res_lines and self.init_balance:
             #FIXME: replace the label of lname with a string translatable
             sql = """
-                SELECT 0 AS lid, '' AS ldate, '' AS lcode, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
+                SELECT 0 AS lid, '' AS ldate, '' AS lcode, COALESCE(SUM(l.amount_currency),0.0) AS amount_currency, '' AS lref, 'Initial Balance' AS lname, COALESCE(SUM(l.debit),0.0) AS debit, COALESCE(SUM(l.credit),0.0) AS credit, '' AS lperiod_id, '' AS lpartner_id,
                 '' AS move_name, '' AS mmove_id, '' AS period_code,
-                sum(case when a.currency_id is not null then
-                         l.amount_currency
-                        else
-                         0.0
-                        end) as amount_currency,
                 '' AS currency_code,
-                a.currency_id AS currency_id,
+                NULL AS currency_id,
                 '' AS invoice_id, '' AS invoice_type, '' AS invoice_number,
                 '' AS partner_name
                 FROM account_move_line l
                 LEFT JOIN account_move m on (l.move_id=m.id)
-                LEFT JOIN account_account a ON (l.account_id=a.id)
                 LEFT JOIN res_currency c on (l.currency_id=c.id)
                 LEFT JOIN res_partner p on (l.partner_id=p.id)
                 LEFT JOIN account_invoice i on (m.id =i.move_id)
                 JOIN account_journal j on (l.journal_id=j.id)
                 WHERE %s AND m.state IN %s AND l.account_id = %%s
-                GROUP BY a.currency_id
             """ %(self.init_query, tuple(move_state))
             self.cr.execute(sql, (account.id,))
             res_init = self.cr.dictfetchall()
@@ -216,8 +211,6 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                     l['amount_currency'] = abs(l['amount_currency']) * -1
             if l['amount_currency'] != None:
                 self.tot_currency = self.tot_currency + l['amount_currency']
-            self.cr.execute("select distinct currency_id from account_invoice")
-            l['cur_id']=self.cr.fetchall()
         return res
 
     def _sum_debit_account(self, account):

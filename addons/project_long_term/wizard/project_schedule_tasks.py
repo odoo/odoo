@@ -44,7 +44,7 @@ class project_schedule_task(osv.osv_memory):
         if context is None:
             context = {}
         if not 'active_id' in context:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
         return phase_pool.schedule_tasks(cr, uid, [context['active_id']], context=context)
 project_schedule_task()
 

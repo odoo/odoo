@@ -550,7 +550,7 @@
               <para style="terp_default_Right_7">[[ formatLang(line['progress'], digits=get_digits(dp='Account')) ]] [[ company.currency_id.symbol ]]</para>
             </td>
             <td>
-              <para style="terp_default_Right_7"><font>[[ (len(line['cur_id'])==1 and o.currency_id.id==line['currency_id'] and formatLang(line['amount_currency'])) or removeParentNode('font') ]] [[  line['currency_code'] or '']]</font></para>
+              <para style="terp_default_Right_7">[[ (line.has_key('currency_id') and line['currency_id']==None or line['amount_currency']==None) and removeParentNode('font') ]] [[ formatLang(line['amount_currency'])]] [[ line['currency_code'] or '']]</para>
             </td>
           </tr>
         </blockTable>

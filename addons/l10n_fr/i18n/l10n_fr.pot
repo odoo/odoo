@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:28+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:28+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:52+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,42 +16,9 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_receivable
-msgid "Receivable"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_income
-msgid "Income"
-msgstr ""
-
-#. module: l10n_fr
-#: model:ir.module.module,description:l10n_fr.module_meta_information
-msgid "This is the module to manage the accounting chart for France in OpenERP.\n"
-"\n"
-"Credits: Sistheo Zeekom CrysaLEAD\n"
-""
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_immobilisations
-msgid "Immobilisations"
-msgstr ""
-
-#. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_1
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_5
 msgid "France"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_asset
-msgid "Asset"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_equity
-msgid "Equity"
 msgstr ""
 
 #. module: l10n_fr
@@ -66,8 +33,11 @@ msgid "Account Bilan Report"
 msgstr ""
 
 #. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_l10n_fr_report
-msgid "Report for l10n_fr"
+#: model:ir.module.module,description:l10n_fr.module_meta_information
+msgid "This is the module to manage the accounting chart for France in OpenERP.\n"
+"\n"
+"Credits: Sistheo Zeekom CrysaLEAD\n"
+""
 msgstr ""
 
 #. module: l10n_fr
@@ -76,23 +46,8 @@ msgid "Zone Euro"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_expense
-msgid "Expense"
-msgstr ""
-
-#. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_account_cdr_report
 msgid "Account CDR Report"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_provision
-msgid "Provisions"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_payable
-msgid "Payable"
 msgstr ""
 
 #. module: l10n_fr
@@ -101,18 +56,13 @@ msgid "Compte de resultant"
 msgstr ""
 
 #. module: l10n_fr
-#: field:l10n.fr.line,report_id:0
-msgid "Report"
+#: sql_constraint:l10n.fr.report:0
+msgid "The code report must be unique !"
 msgstr ""
 
 #. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
 msgid "Hors Euro"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_commitment
-msgid "Engagements"
 msgstr ""
 
 #. module: l10n_fr
@@ -142,28 +92,13 @@ msgid "Compte de resultat Report"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stock
-msgid "Stocks"
-msgstr ""
-
-#. module: l10n_fr
 #: field:l10n.fr.report,line_ids:0
 msgid "Lines"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_cash
-msgid "Cash"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_special
-msgid "Comptes spéciaux"
-msgstr ""
-
-#. module: l10n_fr
-#: sql_constraint:l10n.fr.report:0
-msgid "The code report must be unique !"
+#: field:l10n.fr.line,report_id:0
+msgid "Report"
 msgstr ""
 
 #. module: l10n_fr
@@ -173,18 +108,8 @@ msgid "Fiscal Year"
 msgstr ""
 
 #. module: l10n_fr
-#: field:l10n.fr.report,code:0
-msgid "Code"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_dettes
-msgid "Dettes long terme"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_view
-msgid "View"
+#: model:ir.model,name:l10n_fr.model_l10n_fr_report
+msgid "Report for l10n_fr"
 msgstr ""
 
 #. module: l10n_fr
@@ -193,8 +118,8 @@ msgid "The variable name must be unique !"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stocks
-msgid "Actif circulant"
+#: field:l10n.fr.report,code:0
+msgid "Code"
 msgstr ""
 
 #. module: l10n_fr
@@ -214,11 +139,6 @@ msgid "France - Plan Comptable Général"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_fr
 #: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_3
 msgid "DOM-TOM"
 msgstr ""
@@ -227,11 +147,6 @@ msgstr ""
 #: view:account.bilan.report:0
 #: view:account.cdr.report:0
 msgid "Cancel"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_cloture
-msgid "Cloture"
 msgstr ""
 
 #. module: l10n_fr

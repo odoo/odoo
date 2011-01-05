@@ -2,10 +2,10 @@
 -
   In order to test the purchase requisition module, I will do a sale order -> purchase_requisition ->
   purchase flow and I will buy the required products at two different suppliers.
-- 
+-
   I start by creating a new product 'Laptop ACER', which is purchased at Asustek, in MTO,
   with the generation of purchase requisitions.
-- 
+-
   !record {model: product.product, id: product_product_laptopacer0}:
     categ_id: product.product_category_3
     cost_method: standard
@@ -26,12 +26,12 @@
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
-    list_price: 100.0    
-- 
+    list_price: 100.0
+-
   Then I sell 5 Laptop ACER to the customer Agrolait, sale order TEST/TENDER/0001.
-- 
+-
   !record {model: sale.order, id: sale_order_testtender0}:
-    date_order: '2010-05-10'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: TEST/TENDER/0001
     order_line:
@@ -53,43 +53,43 @@
     picking_policy: direct
     pricelist_id: product.list0
     shop_id: sale.shop
-- 
+-
   I confirm the sale order.
-- 
+-
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_testtender0}
-- 
+-
   I launch the scheduler to compute all procurements, and specify all requisitions orders.
-- 
+-
   !python {model: procurement.order.compute.all}: |
     proc_obj = self.pool.get('procurement.order')
     proc_obj._procure_confirm(cr,uid)
 -
   On the purchase requisition, I create a new purchase order for the supplier 'DistriPC' by clicking on
-  the button 'New RfQ'. This opens a window to ask me the supplier and I set DistriPC . 
-- 
+  the button 'New RfQ'. This opens a window to ask me the supplier and I set DistriPC .
+-
   !record {model: purchase.requisition.partner, id: purchase_requisition_partner_0}:
     partner_address_id: base.res_partner_address_7
     partner_id: base.res_partner_4
-- 
+-
   I create a new purchase order.
-- 
+-
   !python {model: purchase.requisition.partner}: |
     req_obj = self.pool.get('purchase.requisition')
     ids =req_obj.search(cr, uid, [('origin','=','Laptop ACER')])
     self.create_order(cr, uid, [ref("purchase_requisition_partner_0")], {"lang":
       'en_US', "active_model": "purchase.requisition", "tz": False, "record_id":
       1, "active_ids": ids, "active_id": ids[0], })
-    
+
 -
- I check that I have two purchase orders on the purchase requisition.  
+ I check that I have two purchase orders on the purchase requisition.
 -
  !python {model: purchase.order}: |
-    from tools.translate import _ 
+    from tools.translate import _
     order_ids =self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
     ids=len(order_ids)
-    assert(ids == 2), _('Purchase Order not Created') 
+    assert(ids == 2), _('Purchase Order not Created')
 
-- 
+-
  I set the purchase requisition as 'Not Exclusive'.
 -
  !python {model: purchase.requisition}: |
@@ -98,49 +98,49 @@
 -
   I change the quantities so that the purchase order for DistriPC includes 3 pieces and the
   purchase order for Asustek includes 2 pieces.
-- 
+-
   !python {model: purchase.order}: |
-    line_obj=self.pool.get('purchase.order.line')  
-    partner_obj=self.pool.get('res.partner')    
+    line_obj=self.pool.get('purchase.order.line')
+    partner_obj=self.pool.get('res.partner')
     requistion_obj=self.pool.get('purchase.requisition')
-    requistion_ids =requistion_obj.search(cr, uid, [('origin','=','Laptop ACER')])    
-    partner_id1=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0] 
-    partner_id2=partner_obj.search(cr,uid,[('name','=','Distrib PC')])[0]   
+    requistion_ids =requistion_obj.search(cr, uid, [('origin','=','Laptop ACER')])
+    partner_id1=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0]
+    partner_id2=partner_obj.search(cr,uid,[('name','=','Distrib PC')])[0]
     purchase_id1= self.search(cr, uid, [('partner_id','=',partner_id1),('requisition_id','in',requistion_ids)])
     purchase_id2= self.search(cr, uid, [('partner_id','=',partner_id2),('requisition_id','in',requistion_ids)])
     order_line1=self.browse(cr, uid, purchase_id1, context)[0].order_line[0].id
     order_line2=self.browse(cr, uid, purchase_id2, context)[0].order_line[0].id
     line_obj.write(cr, uid, order_line1, {'product_qty':2})
-    line_obj.write(cr, uid, order_line2, {'product_qty':3})  
+    line_obj.write(cr, uid, order_line2, {'product_qty':3})
 -
   I confirm and validate both purchase orders.
 -
   !python {model: purchase.order}: |
    order_ids= self.search(cr, uid, [])
    import netsvc
-   wf_service = netsvc.LocalService("workflow")  
-   for id in order_ids:    
-      wf_service.trg_validate(uid, 'purchase.order',id,'purchase_confirm', cr)    
-      wf_service.trg_validate(uid, 'purchase.order',id,'purchase_approve', cr) 
+   wf_service = netsvc.LocalService("workflow")
+   for id in order_ids:
+      wf_service.trg_validate(uid, 'purchase.order',id,'purchase_confirm', cr)
+      wf_service.trg_validate(uid, 'purchase.order',id,'purchase_approve', cr)
 -
   I check that the delivery order of the customer is in state 'Waiting Goods'.
 -
   !python {model: stock.picking }: |
-    from tools.translate import _   
+    from tools.translate import _
     picking_id = self.search(cr, uid, [('origin','=','TEST/TENDER/0001')])
     if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
       assert (pick.state =='confirmed'),_('Picking  is  not in confirm state.')
-      assert (pick.move_lines[0].state == 'waiting'), _('Stock Move is  not Waiting state.') 
-      
+      assert (pick.move_lines[0].state == 'waiting'), _('Stock Move is  not Waiting state.')
+
 -
   I receive the order of the supplier Asustek from the Incoming Products menu.
 -
   !python {model: stock.picking }: |
    import time
-   partner_obj=self.pool.get('res.partner')    
+   partner_obj=self.pool.get('res.partner')
    order_obj=self.pool.get('purchase.order')
-   partner_id=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0]    
+   partner_id=partner_obj.search(cr,uid,[('name','=','ASUStek')])[0]
    picking_id = self.search(cr, uid, [('address_id.partner_id','=',partner_id),('type','=','in')])
    if picking_id:
      pick=self.browse(cr,uid,picking_id[0])
@@ -154,14 +154,14 @@
        'product_id': move.product_id.id,
        'product_qty': move.product_qty,
        'product_uom': move.product_uom.id,
-      } 
+      }
      self.do_partial(cr, uid, picking_id,partial_datas)
 -
  I receive the order of the supplier DistriPC from the Incoming Shipments menu.
--   
+-
   !python {model: stock.picking }: |
    import time
-   partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]     
+   partner_id=self.pool.get('res.partner').search(cr,uid,[('name','=','Distrib PC')])[0]
    picking_id = self.search(cr, uid, [('address_id.partner_id','=',partner_id),('type','=','in')])
    if picking_id:
       pick=self.browse(cr,uid,picking_id[0])
@@ -175,7 +175,7 @@
           'product_id': move.product_id.id,
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
-      } 
+      }
       self.do_partial(cr, uid, picking_id,partial_datas)
 -
   I check that the delivery order of the customer is in the state Available.

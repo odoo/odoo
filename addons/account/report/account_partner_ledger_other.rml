@@ -593,7 +593,9 @@
             <para style="terp_default_Bold_9_Right">[[ formatLang((sum_debit_partner(p) - sum_credit_partner(p))) ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Bold_9_Right">[[ o.currency_id and formatLang(sum_currency_amount_account(o), digits=get_digits(dp='Account')) + o.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_Bold_9_Right">
+              <font color="white"> </font>
+            </para>
           </td>
         </tr>
       </blockTable>

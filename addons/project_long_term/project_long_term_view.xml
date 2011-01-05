@@ -154,6 +154,8 @@
                                     <field name="sequence"/>
                                     <field name="name"/>
                                     <field name="user_id"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end" />
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="project_id" invisible="1"/>
                                     <field name="total_hours" sum='Total Hours'/>
@@ -172,6 +174,7 @@
                                             <group colspan="2" col="2">
                                                   <separator string="Dates" colspan="2"/>
                                                   <field name="date_start"/>
+                                                  <field name="date_end" />
                                                   <field name="date_deadline"/>
                                             </group>
                                             <group colspan="2" col="2">
@@ -190,14 +193,14 @@
                              </field>
                                <button name="%(action_project_schedule_tasks)d" string="Schedule Tasks" type="action" icon="gtk-jump-to"/>
                         </page>
-                        <page string="Other Info">
+                        <page string="Schedule and Display info">
                            <group colspan="2" col="2">
                                 <separator string="Constraints" colspan="2"/>
                                 <field name="constraint_date_start"/>
                                 <field name="constraint_date_end"/>
                             </group>
                             <group colspan="2" col="2">
-                                <separator string="Scheduling" colspan="2"/>
+                                <separator string="Displaying settings" colspan="2"/>
                                 <field name="sequence"/>
                             </group>
                            <separator colspan="4" string="Previous Phases"/>

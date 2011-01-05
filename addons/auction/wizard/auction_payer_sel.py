@@ -29,7 +29,7 @@ class auction_payer(osv.osv_memory):
         if context is None: 
             context = {}
         self.pool.get('auction.lots').write(cr, uid, context.get('active_ids', []), {'is_ok':True, 'state':'paid'})
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
 auction_payer()
 
@@ -50,7 +50,7 @@ class auction_payer_sel(osv.osv_memory):
         if context is None: 
             context = {}
         self.pool.get('auction.lots').write(cr, uid, context.get('active_ids', []), {'paid_vnd':True})
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
 auction_payer_sel()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

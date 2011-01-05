@@ -50,7 +50,7 @@
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
                      <field name="account_id" position="replace">
-                    <field name="account_id" string="Project" />
+                    <field name="account_id" string="Analytic account/project" />
                 </field>
             </field>
          </record>
@@ -72,7 +72,7 @@
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
-                    <field name="account_id" string="Project"/>
+                    <field name="account_id" string="Analytic account/project"/>
                 </field>
             </field>
         </record>
@@ -98,7 +98,12 @@
                   parent="base.menu_main_pm" sequence="5"/>
         <menuitem id="menu_project_billing_line" name="Invoice Tasks Work"
             parent="menu_project_billing" action="action_project_timesheet_bill_task"/>
-        <menuitem id="base.menu_project_management_time_tracking" name="Time Tracking"
-                parent="base.menu_main_pm" sequence="5"/>
+            
+        <!--
+            Time Tracking menu in project Management
+        -->
+        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
+        <menuitem id="menu_project_working_hours" parent="base.menu_project_management_time_tracking" action="hr_timesheet.act_hr_timesheet_line_evry1_all_form"/>
+        
     </data>
 </openerp>

@@ -178,7 +178,7 @@ class auction_lots_numerotate(osv.osv_memory):
         for rec_id in rec_ids:
             lots_obj.write(cr, uid, [rec_id.id], {'obj_num':nbr})
             nbr+=1
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
 auction_lots_numerotate()
 

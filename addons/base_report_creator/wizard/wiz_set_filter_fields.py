@@ -145,7 +145,7 @@ def _set_filter_value(self, cr, uid, data, context):
                            'condition' : form_data['condition']
                            }
             pooler.get_pool(cr.dbname).get('base_report_creator.report.filter').create(cr,uid,create_dict,context)
-    return {}
+    return {'type': 'ir.actions.act_window_close'}
 
 def _set_form_value(self, cr, uid, data, context):
     field_id = data['form']['field_id']
@@ -199,7 +199,7 @@ def _set_operator(self, cr, uid, data, context):
     elif field.ttype in ('boolean', 'selection'):
         operator.append(('=','Equals'))
         operator.append(('<>','Not Equals'))
-    return {}
+    return {'type': 'ir.actions.act_window_close'}
 
 class set_filter_fields(wizard.interface):
     states = {

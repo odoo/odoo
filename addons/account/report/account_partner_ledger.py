@@ -47,7 +47,6 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'get_fiscalyear': self._get_fiscalyear,
             'get_journal': self._get_journal,
             'get_partners':self._get_partners,
-            'sum_currency_amount_account': self._sum_currency_amount_account,
             'get_intial_balance':self._get_intial_balance,
             'display_initial_balance':self._display_initial_balance,
             'display_currency':self._display_currency,
@@ -126,7 +125,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             return new
         else:
             return self.comma_me(new)
-        
+
     def lines(self, partner):
         move_state = ['draft','posted']
         if self.target_move == 'posted':
@@ -138,9 +137,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         else:
             RECONCILE_TAG = "AND l.reconcile_id IS NULL"
         self.cr.execute(
-            "SELECT l.id, l.date, j.code, acc.code as a_code, acc.name as a_name, l.ref, m.name as move_name, l.name, l.debit, l.credit," \
-            "sum(case when acc.currency_id is not null then l.amount_currency else 0.0 end) as amount_currency," \
-            "l.currency_id, c.symbol AS currency_code " \
+            "SELECT l.id, l.date, j.code, acc.code as a_code, acc.name as a_name, l.ref, m.name as move_name, l.name, l.debit, l.credit, l.amount_currency,l.currency_id, c.symbol AS currency_code " \
             "FROM account_move_line l " \
             "LEFT JOIN account_journal j " \
                 "ON (l.journal_id = j.id) " \
@@ -152,7 +149,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
                 "AND l.account_id IN %s AND " + self.query +" " \
                 "AND m.state IN %s " \
                 " " + RECONCILE_TAG + " "\
-                "GROUP BY l.id, l.date, j.code, acc.code, acc.name, l.ref, m.name, l.name, l.debit, l.credit, l.currency_id, c.symbol ORDER BY l.date",
+                "ORDER BY l.date",
                 (partner.id, tuple(self.account_ids), tuple(move_state)))
         res = self.cr.dictfetchall()
         sum = 0.0
@@ -161,8 +158,6 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
         for r in res:
             sum += r['debit'] - r['credit']
             r['progress'] = sum
-            self.cr.execute("select distinct currency_id from account_invoice")
-            r['cur_id'] = self.cr.fetchall()
             full_account.append(r)
         return full_account
 
@@ -395,10 +390,16 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             return 'Receivable and Payable Accounts'
         return ''
 
-    def _sum_currency_amount_account(self, account):
+    def _sum_currency_amount_account(self, account, form):
+        self._set_get_account_currency_code(account.id)
         self.cr.execute("SELECT sum(aml.amount_currency) FROM account_move_line as aml,res_currency as rc WHERE aml.currency_id = rc.id AND aml.account_id= %s ", (account.id,))
         total = self.cr.fetchone()
-        return total[0] or 0.0
+        if self.account_currency:
+            return_field = str(total[0]) + self.account_currency
+            return return_field
+        else:
+            currency_total = self.tot_currency = 0.0
+            return currency_total
 
     def _display_initial_balance(self, data):
          if self.initial_balance:

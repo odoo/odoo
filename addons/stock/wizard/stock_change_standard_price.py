@@ -113,6 +113,6 @@ class change_standard_price(osv.osv_memory):
             'stock_journal' : res[0].stock_journal.id
         }
         prod_obj.do_change_standard_price(cr, uid, [rec_id], datas, context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 change_standard_price()
