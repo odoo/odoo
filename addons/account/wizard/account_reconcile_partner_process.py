@@ -83,7 +83,7 @@ class account_partner_reconcile_process(osv.osv_memory):
             res_partner_obj.write(cr, uid, partner_id[0], {'last_reconciliation_date': time.strftime('%Y-%m-%d')}, context)
         #TODO: we have to find a way to update the context of the current tab (we could open a new tab with the context but it's not really handy)
         #TODO: remove that comments when the client side dev is done
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     _columns = {
         'to_reconcile': fields.float('Remaining Partners', readonly=True, help='This is the remaining partners for who you should check if there is something to reconcile or not. This figure already count the current partner as reconciled.'),

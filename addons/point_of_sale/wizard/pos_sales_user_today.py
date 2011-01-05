@@ -21,6 +21,7 @@
 
 from osv import osv, fields
 
+
 class pos_sales_user_today(osv.osv_memory):
     _name = 'pos.sales.user.today'
     _description = 'Sales User Today'

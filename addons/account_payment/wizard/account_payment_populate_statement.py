@@ -65,7 +65,7 @@ class account_payment_populate_statement(osv.osv_memory):
         data = self.read(cr, uid, ids, [], context=context)[0]
         line_ids = data['lines']
         if not line_ids:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
         statement = statement_obj.browse(cr, uid, context['active_id'], context=context)
 

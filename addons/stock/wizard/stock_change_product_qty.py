@@ -21,7 +21,6 @@
 
 from osv import fields, osv
 from tools.translate import _
-import time
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
@@ -43,7 +42,6 @@ class stock_change_product_qty(osv.osv_memory):
          @return: A dictionary which of fields with values.
         """
         product_id = context and context.get('active_id', False) or False
-        prod_obj =self.pool.get('product.product')
         res = super(stock_change_product_qty, self).default_get(cr, uid, fields, context=context)
 
         if 'new_quantity' in fields:
@@ -64,7 +62,6 @@ class stock_change_product_qty(osv.osv_memory):
         if context is None:
             context = {}
 
-        move_ids = []
         rec_id = context and context.get('active_id', False)
         assert rec_id, _('Active ID is not set in Context')
 
@@ -83,7 +80,7 @@ class stock_change_product_qty(osv.osv_memory):
                 'product_uom' : res_original.uom_id.id,
                 'prod_lot_id' : data.prodlot_id.id
             }
-            line_id = inventry_line_obj.create(cr , uid, line_data, context=context)
+            inventry_line_obj.create(cr , uid, line_data, context=context)
 
             inventry_obj.action_confirm(cr, uid, [inventory_id], context=context)
             inventry_obj.action_done(cr, uid, [inventory_id], context=context)

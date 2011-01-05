@@ -78,7 +78,7 @@ class board_menu_create(osv.osv_memory):
                 'action': 'ir.actions.act_window,' + str(action_id)
                 }, context=context)
         #End Loop
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     _name = "board.menu.create"
     _description = "Menu Create"
