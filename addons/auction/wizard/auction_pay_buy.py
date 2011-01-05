@@ -100,7 +100,7 @@ class auction_pay_buy(osv.osv_memory):
                         })
                     for lot in lots:
                         lot_obj.write(cr, uid, [lot.id], {'statement_id':[(4, new_id)]})
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 auction_pay_buy()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

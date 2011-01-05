@@ -29,14 +29,6 @@
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
 -
-  In order to test the PDF reports defined on Account Move, we will print the Voucher Report
--
-  !python {model: account.move}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.move.voucher').create(cr, uid, [ref('account.account_move_0')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'account-voucher-report.'+format), 'wb+').write(data)
--
   Print the Aged Partner Balance Report
 -
   !python {model: account.account}: |
@@ -44,7 +36,7 @@
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
     data_dict = {'chart_account_id':ref('account.chart0')}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_aged_balance_view',wiz_data=data_dict, context=ctx, our_module='account') 
+    test_reports.try_report_action(cr, uid, 'action_account_aged_balance_view',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Account Balance Sheet in Horizontal mode
 -
@@ -53,7 +45,7 @@
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'),'display_type': True}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')    
+    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Account Balance Sheet in Normal mode
 -
@@ -62,7 +54,7 @@
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'),'display_type': False}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account') 
+    test_reports.try_report_action(cr, uid, 'action_account_bs_report',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Account Balance Report in Normal mode through the wizard - From Account Chart
 -
@@ -157,7 +149,7 @@
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'),'display_type': False}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')    
+    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')
 -
   Print the Profit-Loss Report in Horizontal Mode
 -
@@ -166,7 +158,7 @@
     ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'),'display_type': True}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account') 
+    test_reports.try_report_action(cr, uid, 'action_account_pl_report',wiz_data=data_dict, context=ctx, our_module='account')
 -
  Print the Analytic Balance Report through the wizard
 -
@@ -215,4 +207,4 @@
     ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
     data_dict = {}
     from tools import test_reports
-    test_reports.try_report_action(cr, uid, 'action_account_analytic_invert_balance',wiz_data=data_dict, context=ctx, our_module='account')   
+    test_reports.try_report_action(cr, uid, 'action_account_analytic_invert_balance',wiz_data=data_dict, context=ctx, our_module='account')

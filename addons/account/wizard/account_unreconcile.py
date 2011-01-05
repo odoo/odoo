@@ -31,7 +31,7 @@ class account_unreconcile(osv.osv_memory):
             context = {}
         if context.get('active_ids', False):
             obj_move_line._remove_move_reconcile(cr, uid, context['active_ids'], context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_unreconcile()
 
@@ -46,7 +46,7 @@ class account_unreconcile_reconcile(osv.osv_memory):
         rec_ids = context['active_ids']
         if rec_ids:
             obj_move_reconcile.unlink(cr, uid, rec_ids, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_unreconcile_reconcile()
 

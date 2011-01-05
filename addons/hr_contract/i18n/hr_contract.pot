@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44:10+0000\n"
-"PO-Revision-Date: 2010-12-21 19:44:10+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:35+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:35+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -36,8 +36,8 @@ msgid "Trial Start Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function Arguments"
+#: view:hr.contract:0
+msgid "Passport"
 msgstr ""
 
 #. module: hr_contract
@@ -66,8 +66,8 @@ msgid "Current"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
 msgstr ""
 
 #. module: hr_contract
@@ -81,8 +81,8 @@ msgid "Wage Types"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Calculations"
+#: field:hr.contract,department_id:0
+msgid "Department"
 msgstr ""
 
 #. module: hr_contract
@@ -95,12 +95,6 @@ msgstr ""
 #: field:hr.contract,employee_id:0
 #: model:ir.model,name:hr_contract.model_hr_employee
 msgid "Employee"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
 msgstr ""
 
 #. module: hr_contract
@@ -119,29 +113,12 @@ msgid "Hours in the period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function"
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Description"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -150,19 +127,13 @@ msgid "Contracts"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
+#: view:hr.employee:0
+msgid "Personal Info"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Passport"
 msgstr ""
 
 #. module: hr_contract
@@ -194,19 +165,16 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,advantages:0
-#: view:hr.employee:0
 msgid "Advantages"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Valid for"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Work Permit"
 msgstr ""
 
@@ -222,8 +190,12 @@ msgid "Contract Types"
 msgstr ""
 
 #. module: hr_contract
+#: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Wage Type"
 msgstr ""
 
 #. module: hr_contract
@@ -254,22 +226,12 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,notes:0
-#: view:hr.employee:0
 msgid "Notes"
 msgstr ""
 
 #. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
 msgstr ""
 
 #. module: hr_contract
@@ -295,8 +257,9 @@ msgid "Search Wage Period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Computation"
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
 msgstr ""
 
 #. module: hr_contract
@@ -317,14 +280,8 @@ msgid "Job Title"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
 msgstr ""
 
 #. module: hr_contract
@@ -333,8 +290,13 @@ msgid "Start Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Company contribution"
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
 msgstr ""
 
 #. module: hr_contract
@@ -348,8 +310,9 @@ msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
 msgstr ""
 
 #. module: hr_contract
@@ -363,23 +326,14 @@ msgid "Period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Employee specific allowances and deductions"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Contract Details"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Structure"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
+msgid "Wage period"
 msgstr ""
 
 #. module: hr_contract
@@ -389,13 +343,7 @@ msgid "This field is used by the timesheet system to compute the price of an hou
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr ""
-
-#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Duration"
 msgstr ""
 

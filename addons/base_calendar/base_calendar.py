@@ -1150,8 +1150,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                 ('weekly', 'Weeks'),
                                 ('monthly', 'Months'),
                                 ('yearly', 'Years'), ], 'Frequency'),
-                                
-        'interval': fields.integer('Interval', help="Repeat every (Days/Week/Month/Year)"),
+          
+        'end_type' : fields.selection([('forever', 'Forever'), ('count', 'Fix amout of times'), ('end_date','End date')], 'Way to end reccurency'),
+        'interval': fields.integer('Repeat every', help="Repeat every (Days/Week/Month/Year)"),
         'count': fields.integer('Repeat', help="Repeat x times"),
         'mo': fields.boolean('Mon'),
         'tu': fields.boolean('Tue'),
@@ -1189,6 +1190,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         return res
 
     _defaults = {
+            'end_type' : 'forever',
             'state': 'tentative',
             'class': 'public',
             'show_as': 'busy',

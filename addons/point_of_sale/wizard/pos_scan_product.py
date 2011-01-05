@@ -20,7 +20,7 @@
 ##############################################################################
 
 from osv import osv,fields
-from tools.translate import _
+
 
 class pos_scan_product(osv.osv_memory):
     _name = 'pos.scan.product'
@@ -43,7 +43,7 @@ class pos_scan_product(osv.osv_memory):
             context = {}
         data=self.read(cr, uid, ids)[0]
         record_id = context and context.get('active_id', False)
-        result =self. pool.get('pos.order.line')._scan_product(cr, uid, data['gencod'], 1, record_id)
+        self. pool.get('pos.order.line')._scan_product(cr, uid, data['gencod'], 1, record_id)
         return {'gencod': False}
 
 pos_scan_product()

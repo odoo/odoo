@@ -112,7 +112,7 @@ class crm_make_sale(osv.osv_memory):
             if make.close:
                 case_obj.case_close(cr, uid, data)
             if not new_ids:
-                return {}
+                return {'type': 'ir.actions.act_window_close'}
             if len(new_ids)<=1:
                 value = {
                     'domain': str([('id', 'in', new_ids)]),
