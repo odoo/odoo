@@ -95,6 +95,8 @@ class account_entries_report(osv.osv):
             context=context, count=count)
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        if context is None:
+            context = {}
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         period_obj = self.pool.get('account.period')
         if context.get('period', False) == 'current_period':
