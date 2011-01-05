@@ -429,6 +429,7 @@ class project(osv.osv):
         if type(ids) in (long, int,):
             ids = [ids]
         phase_pool = self.pool.get('project.phase')
+        task_pool = self.pool.get('project.task')        
         resource_pool = self.pool.get('resource.resource')
         data_pool = self.pool.get('ir.model.data')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
@@ -497,21 +498,35 @@ def Project_%d():
                 func_str += phases
                 phase_ids += child_phase_ids
             #Temp File to test the Code for the Allocation
-#            fn = '/home/tiny/Desktop/plt.py'
-#            fp = open(fn, 'w')
-#            fp.writelines(func_str)
-#            fp.close()
+            fn = '/home/tiny/Desktop/plt.py'
+            fp = open(fn, 'w')
+            fp.writelines(func_str)
+            fp.close()
         
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
             project = Task.BalancedProject(Project)
-        
+
             for phase_id in phase_ids:
+                act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
+                print "============",act_phase
                 phase = eval("project.Phase_%d" % phase_id)
                 start_date = phase.start.to_datetime()
                 end_date = phase.end.to_datetime()
-
+                if act_phase.task_ids:
+                    for task in act_phase.task_ids:
+                        vals = {}
+                        #Getting values of the Tasks
+                        temp = eval("phase.Task_%s"%task.id)
+                        vals.update({'date_start' : temp.start.strftime('%Y-%m-%d %H:%M:%S')})
+#                        vals.update({'date_end' : temp.end.strftime('%Y-%m-%d %H:%M:%S')})
+                        vals.update({'planned_hours' : str(temp._Task__calc_duration().strftime('%H.%M'))})
+                        vals.update({'date_deadline' : str(temp._Task__calc_end().strftime('%Y-%m-%d %H:%M:%S'))})
+                        task_pool.write(cr, uid, task.id, vals, context=context)
+                        print ">>>>>",dir(temp)                        
+                        print ">>>><<<<<<<<<<<<<<<<>",temp.booked_resource
+                        
                 # Recalculate date_start and date_end
                 # according to constraints on date start and date end on phase
 
@@ -613,16 +628,15 @@ def Project_%d():
                 task_ids.append(task.id)
 
             #Temp File to test the Code for the Allocation
-#            fn = '/home/tiny/Desktop/plt_1.py'
-#            fp = open(fn, 'w')
-#            fp.writelines(func_str)
-#            fp.close()
+            fn = '/home/tiny/Desktop/plt_1.py'
+            fp = open(fn, 'w')
+            fp.writelines(func_str)
+            fp.close()
     
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
             project = Task.BalancedProject(Project)
-        
             for task_id in task_ids:
                 task = eval("project.Task_%d" % task_id)
                 start_date = task.start.to_datetime()
@@ -655,6 +669,9 @@ class project_task(osv.osv):
     _columns = {
         'phase_id': fields.many2one('project.phase', 'Project Phase'),
     }
+    _defaults = {
+        'user_id' : False
+    }
 
     def generate_task(self, cr, uid, task_id, parent=False, flag=False, context=None):
         if context is None:
@@ -663,10 +680,12 @@ class project_task(osv.osv):
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         task = self.browse(cr, uid, task_id, context=context)
         duration = str(task.planned_hours )+ 'H'
-        resource_ids = self.search(cr, uid, [('user_id', '=', task.user_id.id)], context=context)
         resource = False
-        if len(resource_ids):
-            resource = 'Resource_%s'%resource_ids[0]
+        if task.user_id:
+            resource_ids = self.search(cr, uid, [('user_id', '=', task.user_id.id),('resource_type','=','user')], context=context)
+            print "\n\n==========", task.user_id.name, resource_ids
+            if len(resource_ids):
+                resource = 'Resource_%s'%resource_ids[0]
         # Phases Defination for the Project 
         if not flag:
             s = '''
