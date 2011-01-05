@@ -265,6 +265,7 @@ class resource_resource(osv.osv):
                 if resource_cal:
                     leaves = self.compute_vacation(cr, uid, calendar_id, resource.id, resource_cal, context=context)
                 temp = {
+                         'name' : resource.name,
                          'vacation': tuple(leaves),
                          'efficiency': resource_eff,
                       }

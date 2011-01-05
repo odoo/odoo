@@ -13,6 +13,15 @@
       - project.res_users_tester
 
 - 
+  Create a Resource Calendar Leaves 'Leave for the Anayst resource'
+- 
+  !record {model: resource.calendar.leaves, id: resource_analysts_leaves}:
+    date_from: '2010-06-02 10:00:00'
+    date_to: '2010-06-03 19:00:00'
+    name: "For Personal reason"
+    resource_id: project_long_term.resource_analyst        
+
+- 
   Create a project phase 'Defining Client's Basic Idea of Project'
 - 
   !record {model: project.phase, id: project_phase_definingclientsbasicideaofproject0}:
@@ -21,6 +30,8 @@
     name: "Defining Client's Basic Idea of Project"
     product_uom: product.uom_day
     project_id: project_project_worldbanksproject0
+
+
 
 - 
   Create project phase 'Establishing Project Feasibility'
@@ -66,7 +77,29 @@
     name: Procurement of Works and Goods
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
-    
+
+
+- 
+  Create the phase task 'Develop GUI for Server Configuration'
+- 
+  !record {model: project.task, id: project_task_t0}:
+    name: Develop GUI for Server Configuration
+    planned_hours: 20.0
+    remaining_hours: 20.0
+    state: draft
+    phase_id:  project_phase_definingclientsbasicideaofproject0
+    project_id: project_project_worldbanksproject0
+
+- 
+  Create the phase task 'Develop GUI for Modules Configuration'
+- 
+  !record {model: project.task, id: project_task_t1}:
+    name: Develop GUI for Modules Configuration
+    planned_hours: 25.0
+    remaining_hours: 25.0
+    state: draft
+    phase_id:  project_phase_definingclientsbasicideaofproject0
+    project_id: project_project_worldbanksproject0
     
 - 
   Create project phase 'Project Construction'

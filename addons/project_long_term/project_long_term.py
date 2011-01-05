@@ -223,6 +223,7 @@ class project_phase(osv.osv):
         data_pool = self.pool.get('ir.model.data')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         uom_pool = self.pool.get('product.uom')
+        task_pool = self.pool.get('project.task')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
         for phase in self.browse(cr, uid, ids, context=context):
             avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
@@ -233,19 +234,36 @@ class project_phase(osv.osv):
             # Phases Defination for the Project
             s = '''
     def Phase_%s():
+        title = \"%s\"
         effort = \'%s\'
         resource = %s
-'''%(phase.id, duration, str_vals or False)
+'''%(phase.id, phase.name, duration, str_vals or False)
             if parent:
                 start = 'up.Phase_%s.end' % (parent.id)
-            else:
-                start = phase.project_id.date_start or phase.date_start
-                #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
-            s += '''
+                s += '''
         start = %s
 '''%(start)
-            f += s + '\n'
+            else:
+                start = phase.project_id.date_start or phase.date_start
+                s += '''
+        start = \"%s\"
+'''%(start)
+                #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
+            
+            
             phase_ids.append(phase.id)
+            parent = False
+            task_ids = []
+            todo_task_ids = task_pool.search(cr, uid, [('id', 'in', map(lambda x : x.id, phase.task_ids)),
+                                              ('state', 'in', ['draft', 'open', 'pending'])
+                                              ], order='sequence')
+            for task in task_pool.browse(cr, uid, todo_task_ids, context=context):
+                s += task_pool.generate_task(cr, uid, task.id, parent=parent, flag=False, context=context)
+                if not parent:
+                    parent = task
+                task_ids.append(task.id)
+            
+            f += s + '\n'
             # Recursive call till all the next phases scheduled
             for next_phase in phase.next_phase_ids:
                 if next_phase.state in ['draft', 'open', 'pending']:
@@ -255,36 +273,6 @@ class project_phase(osv.osv):
                 else:   
                     continue
         return f, phase_ids
-
-    
-
-    def schedule_tasks(self, cr, uid, ids, context=None):
-        """
-        Schedule the tasks according to resource available and priority.
-        """
-        task_pool = self.pool.get('project.task')
-        resource_pool = self.pool.get('resource.resource')
-        resources_list = self.generate_resources(cr, uid, ids, context=context)
-        return_msg = {}
-        for phase in self.browse(cr, uid, ids, context=context):
-            start_date = phase.date_start
-            if not start_date and phase.project_id.date_start:
-                start_date = phase.project_id.date_start
-            if not start_date:
-                start_date = datetime.now().strftime("%Y-%m-%d")
-            resources = resources_list.get(phase.id, [])
-            calendar_id = phase.project_id.resource_calendar_id.id
-            task_ids = map(lambda x : x.id, (filter(lambda x : x.state in ['draft'] , phase.task_ids))) #reassign only task not yet started
-            if task_ids:
-                task_pool.generate_schedule(cr, uid, task_ids, resources, calendar_id, start_date, context=context)
-
-            if not task_ids:
-                warning_msg = _("No tasks to compute for Phase '%s'.") % (phase.name)
-                if "warning" not in return_msg:
-                    return_msg["warning"] =  warning_msg
-                else:
-                    return_msg["warning"] = return_msg["warning"] + "\n" + warning_msg
-        return return_msg
 
     def schedule_tasks(self, cr, uid, ids, context=None):
         """
@@ -300,9 +288,6 @@ class project_phase(osv.osv):
         resource_allocation_pool = self.pool.get('project.resource.allocation')
 
         for phase in self.browse(cr, uid, ids, context=context):
-            task_ids = task_pool.search(cr, uid, [('id', 'in', map(lambda x : x.id, phase.task_ids)),
-                                              ('state', 'in', ['draft', 'open', 'pending'])
-                                              ], order='sequence')
             project = phase.project_id
             calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
             start_date = project.date_start
@@ -334,14 +319,16 @@ class project_phase(osv.osv):
             for key, vals in resource_objs.items():
                 cls_str +='''
     class Resource_%s(Resource):
+        title = \"%s\"
         vacation = %s
         efficiency = %s
-'''%(key,  vals.get('vacation', False), vals.get('efficiency', False))
+'''%(key,  vals.get('name',False), vals.get('vacation', False), vals.get('efficiency', False))
     
             # Create a new project for each phase
             func_str += '''
 def Phase_%d():
     from resource.faces import Resource
+    title = \"%s\"
     start = \'%s\'
     minimum_time_unit = %s
     working_hours_per_day = %s
@@ -350,21 +337,24 @@ def Phase_%d():
     working_days_per_year = %s
     vacation = %s
     working_days =  %s
-'''%(phase.id, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+'''%(phase.id, phase.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
             func_str += cls_str
             parent = False
             task_ids = []
-            for task in task_pool.browse(cr, uid, task_ids, context=context):
-                func_str += task_pool.generate_task(cr, uid, task.id, parent=parent, context=context)
+            todo_task_ids = task_pool.search(cr, uid, [('id', 'in', map(lambda x : x.id, phase.task_ids)),
+                                              ('state', 'in', ['draft', 'open', 'pending'])
+                                              ], order='sequence')
+            for task in task_pool.browse(cr, uid, todo_task_ids, context=context):
+                func_str += task_pool.generate_task(cr, uid, task.id, parent=parent, flag=True, context=context)
                 if not parent:
                     parent = task
                 task_ids.append(task.id)
 
             #Temp File to test the Code for the Allocation
-            #fn = '/home/hmo/Desktop/plt.py'
-            #fp = open(fn, 'w')
-            #fp.writelines(func_str)
-            #fp.close()
+#            fn = '/home/hmo/Desktop/plt.py'
+#            fp = open(fn, 'w')
+#            fp.writelines(func_str)
+#            fp.close()
     
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
@@ -439,6 +429,7 @@ class project(osv.osv):
         if type(ids) in (long, int,):
             ids = [ids]
         phase_pool = self.pool.get('project.phase')
+        task_pool = self.pool.get('project.task')        
         resource_pool = self.pool.get('resource.resource')
         data_pool = self.pool.get('ir.model.data')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
@@ -476,20 +467,21 @@ class project(osv.osv):
 
             working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
             
-            
             cls_str = ''
             # Creating Resources for the Project
             for key, vals in resource_objs.items():
                 cls_str +='''
     class Resource_%s(Resource):
+        title = \"%s\"
         vacation = %s
         efficiency = %s
-'''%(key,  vals.get('vacation', False), vals.get('efficiency', False))
+'''%(key,  vals.get('name',False), vals.get('vacation', False), vals.get('efficiency', False))
         
             # Create a new project for each phase
             func_str += '''
 def Project_%d():
     from resource.faces import Resource
+    title = \"%s\"
     start = \'%s\'
     minimum_time_unit = %s
     working_hours_per_day = %s
@@ -498,7 +490,7 @@ def Project_%d():
     working_days_per_year = %s
     vacation = %s
     working_days =  %s
-'''%(project.id, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+'''%(project.id, project.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
             func_str += cls_str
             phase_ids = []
             for root_phase in phase_pool.browse(cr, uid, root_phase_ids, context=context):
@@ -506,21 +498,35 @@ def Project_%d():
                 func_str += phases
                 phase_ids += child_phase_ids
             #Temp File to test the Code for the Allocation
-            #fn = '/home/hmo/Desktop/plt.py'
-            #fp = open(fn, 'w')
-            #fp.writelines(func_str)
-            #fp.close()
+            fn = '/home/tiny/Desktop/plt.py'
+            fp = open(fn, 'w')
+            fp.writelines(func_str)
+            fp.close()
         
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
             project = Task.BalancedProject(Project)
-        
+
             for phase_id in phase_ids:
+                act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
+                print "============",act_phase
                 phase = eval("project.Phase_%d" % phase_id)
                 start_date = phase.start.to_datetime()
                 end_date = phase.end.to_datetime()
-    
+                if act_phase.task_ids:
+                    for task in act_phase.task_ids:
+                        vals = {}
+                        #Getting values of the Tasks
+                        temp = eval("phase.Task_%s"%task.id)
+                        vals.update({'date_start' : temp.start.strftime('%Y-%m-%d %H:%M:%S')})
+#                        vals.update({'date_end' : temp.end.strftime('%Y-%m-%d %H:%M:%S')})
+                        vals.update({'planned_hours' : str(temp._Task__calc_duration().strftime('%H.%M'))})
+                        vals.update({'date_deadline' : str(temp._Task__calc_end().strftime('%Y-%m-%d %H:%M:%S'))})
+                        task_pool.write(cr, uid, task.id, vals, context=context)
+                        print ">>>>>",dir(temp)                        
+                        print ">>>><<<<<<<<<<<<<<<<>",temp.booked_resource
+                        
                 # Recalculate date_start and date_end
                 # according to constraints on date start and date end on phase
 
@@ -560,9 +566,6 @@ def Project_%d():
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
 
         for project in self.browse(cr, uid, ids, context=context):
-            task_ids = task_pool.search(cr, uid, [('project_id', '=', project.id),
-                                              ('state', 'in', ['draft', 'open', 'pending'])
-                                              ], order='sequence')
             calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
             start_date = project.date_start
             #Creating resources using the member of the Project
@@ -593,14 +596,16 @@ def Project_%d():
             for key, vals in resource_objs.items():
                 cls_str +='''
     class Resource_%s(Resource):
+        title = \"%s\"
         vacation = %s
         efficiency = %s
-'''%(key,  vals.get('vacation', False), vals.get('efficiency', False))
+'''%(key,  vals.get('name',False), vals.get('vacation', False), vals.get('efficiency', False))
     
             # Create a new project for each phase
             func_str += '''
 def Project_%d():
     from resource.faces import Resource
+    title = \"%s\"
     start = \'%s\'
     minimum_time_unit = %s
     working_hours_per_day = %s
@@ -609,12 +614,15 @@ def Project_%d():
     working_days_per_year = %s
     vacation = %s
     working_days =  %s
-'''%(project.id, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+'''%(project.id, project.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
             func_str += cls_str
             parent = False
             task_ids = []
-            for task in task_pool.browse(cr, uid, task_ids, context=context):
-                func_str += task_pool.generate_task(cr, uid, task.id, parent=parent, context=context)
+            todo_task_ids = task_pool.search(cr, uid, [('project_id', '=', project.id),
+                                              ('state', 'in', ['draft', 'open', 'pending'])
+                                              ], order='sequence')
+            for task in task_pool.browse(cr, uid, todo_task_ids, context=context):
+                func_str += task_pool.generate_task(cr, uid, task.id, parent=parent, flag=True,context=context)
                 if not parent:
                     parent = task
                 task_ids.append(task.id)
@@ -624,12 +632,12 @@ def Project_%d():
 #            fp = open(fn, 'w')
 #            fp.writelines(func_str)
 #            fp.close()
+
     
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
             project = Task.BalancedProject(Project)
-        
             for task_id in task_ids:
                 task = eval("project.Task_%d" % task_id)
                 start_date = task.start.to_datetime()
@@ -662,30 +670,47 @@ class project_task(osv.osv):
     _columns = {
         'phase_id': fields.many2one('project.phase', 'Project Phase'),
     }
+    _defaults = {
+        'user_id' : False
+    }
 
-    def generate_task(self, cr, uid, task_id, parent=False, context=None):
+    def generate_task(self, cr, uid, task_id, parent=False, flag=False, context=None):
         if context is None:
             context = {}
         resource_pool = self.pool.get('resource.resource')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         task = self.browse(cr, uid, task_id, context=context)
         duration = str(task.planned_hours )+ 'H'
-        resource_ids = self.search(cr, uid, [('user_id', '=', task.user_id.id)], context=context)
         resource = False
-        if len(resource_ids):
-            resource = 'Resource_%s'%resource_ids[0]
-        # Phases Defination for the Project
-        s = '''
+        if task.user_id:
+            resource_ids = self.search(cr, uid, [('user_id', '=', task.user_id.id),('resource_type','=','user')], context=context)
+            print "\n\n==========", task.user_id.name, resource_ids
+            if len(resource_ids):
+                resource = 'Resource_%s'%resource_ids[0]
+        # Phases Defination for the Project 
+        if not flag:
+            s = '''
+        def Task_%s():
+            title = \"%s\"
+            effort = \'%s\'
+            resource = %s
+'''%(task.id, task.name, duration, resource)
+            if parent:
+                start = 'up.Task_%s.end' % (parent.id)
+                s += '''
+            start = %s
+'''%(start)
+            #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
+        else:
+            s = '''
     def Task_%s():
+        title = \"%s\"
         effort = \'%s\'
         resource = %s
-'''%(task.id, duration, resource)
-        if parent:
-            start = 'up.Task_%s.end' % (parent.id)
-        else:
-            start = task.project_id.date_start or task.date_start
-            #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
-        s += '''
+'''%(task.id, task.name, duration, resource)
+            if parent:
+                start = 'up.Task_%s.end' % (parent.id)
+                s += '''
         start = %s
 '''%(start)
         s += '\n'
