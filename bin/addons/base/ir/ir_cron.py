@@ -91,9 +91,10 @@ class ir_cron(osv.osv, netsvc.Agent):
                 f(cr, uid, *args)
             except Exception, e:
                 cr.rollback()
-                self._logger.notifyChannel('timers', netsvc.LOG_ERROR, "Job call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (model, func, args))
-                self._logger.notifyChannel('timers', netsvc.LOG_ERROR, tools.exception_to_unicode(e))
-
+                self._logger.notifyChannel('timers', netsvc.LOG_ERROR,
+                                           "Job call of self.pool.get('%s').%s(cr, uid, *%r) failed\n%s" %
+                                           (model, func, args, tools.exception_to_unicode(e)))
+                self._logger.notifyChannel('timers', netsvc.LOG_DEBUG, traceback.format_exc())
 
     def _poolJobs(self, db_name, check=False):
         try:
