@@ -30,6 +30,8 @@ from report.misc import choice_colors
 import random
 import StringIO
 
+from pychart import *
+
 
 theme.use_color = 1
 random.seed(0)
