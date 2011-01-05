@@ -124,7 +124,6 @@ class account_analytic_line(osv.osv):
         result = round(amount, prec)
         if not flag:
             result *= -1
-
         return {'value': {
             'amount': result,
             'general_account_id': a,
