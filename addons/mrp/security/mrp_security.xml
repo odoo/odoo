@@ -9,11 +9,6 @@
         <field name="name">Manufacturing / User</field>
     </record>
 
-    <!-- restrict access to menu -->
-    <record model='ir.ui.menu' id="mrp_Sched_all">
-        <field eval="[(6,0,[ref('group_mrp_manager')])]" name="groups_id"/>
-    </record>
-
 <!-- Multi -->
     <record model="ir.rule" id="mrp_production_rule">
         <field name="name">mrp_production multi-company</field>
