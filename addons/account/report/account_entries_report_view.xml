@@ -70,11 +70,11 @@
                 <group colspan="10" col="12">
                     <filter icon="terp-go-year" string="This F.Year"
                             name="thisyear"
-                            domain="[('period_id','in','current_year')]"
+                            context="{'year':'current_year'}"
                             help="Journal Entries with period in current year"/>
                     <filter icon="terp-go-month" string="This Period"
                             name="period"
-                            domain="[('period_id','in','current_period')]"
+                            context="{'period':'current_period'}"
                             help="Journal Entries with period in current period"/>
                     <separator orientation="vertical"/>
                     <filter string="Unposted" icon="terp-document-new" domain="[('move_state','=','draft')]" help = "entries"/>
