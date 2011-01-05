@@ -686,7 +686,7 @@ class account_voucher(osv.osv):
                 'date': inv.date,
                 'date_maturity': inv.date_due
             }
-            master_line = move_line_pool.create(cr, uid, move_line)
+            move_line_pool.create(cr, uid, move_line)
             rec_list_ids = []
             line_total = debit - credit
             if inv.type == 'sale':
