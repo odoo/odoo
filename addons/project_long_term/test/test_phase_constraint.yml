@@ -1,0 +1,127 @@
+- 
+  I have a project 'Develop yaml Project Module'  starting on 01/05/2010.
+- 
+  !record {model: project.project, id: project_project_developyamlproject0}:
+    name: "Develop Yaml Project Module"
+    date_start: '2010-01-05'
+    
+- 
+  I have set Working Time  "from Monday to  Friday, from 9am to 17pm".
+- 
+  !record {model: resource.calendar, id: resource_calendar_hoursweeks0}:
+    attendance_ids:
+      - dayofweek: '0'
+        hour_from: 9.0
+        hour_to: 17.0
+        name: Monday
+      - dayofweek: '1'
+        hour_from: 9.0
+        hour_to: 17.0
+        name: tuesday
+      - dayofweek: '2'
+        hour_from: 9.0
+        hour_to: 17.0
+        name: Wednesday
+      - dayofweek: '3'
+        hour_from: 9.0
+        hour_to: 17.0
+        name: Thursday
+      - dayofweek: '4'
+        hour_from: 9.0
+        hour_to: 17.0
+        name: Friday
+    name: 40 hours/weeks     
+    
+- 
+  Creating 3 consecutive 5-days phases.
+  For that Creating a Analyst Human resource to analyst Project Yaml.
+- 
+  !record {model: resource.resource, id: resource_resource_analyst1}:
+    calendar_id: project_long_term.resource_calendar_hoursweeks0
+    name: Analyst
+    resource_type: user
+    time_efficiency: 1.0
+    user_id: base.user_admin
+    
+- 
+  Creating Developer Human resource who develop Yaml
+- 
+  !record {model: resource.resource, id: resource_resource_develop0}:
+    calendar_id: project_long_term.resource_calendar_hoursweeks0
+    name: Developer
+    resource_type: user
+    time_efficiency: 1.0
+    user_id: base.user_admin
+- 
+  Creating a Tester Human resource for testing Yaml
+- 
+  !record {model: resource.resource, id: resource_resource_tester1}:
+    calendar_id: project_long_term.resource_calendar_hoursweeks0
+    name: tester
+    resource_type: user
+    time_efficiency: 1.0
+    user_id: base.user_admin
+    
+- 
+  Create 3 a project phase and NO one  depends on other one.
+  so,they should start on the same day. 
+  Creating First 'Analysis Flow for Yaml' Project Phase.
+- 
+  !record {model: project.phase, id: project_phase_analysisflowforyaml0}:
+    date_start: '2010-01-05'
+    duration: 5.0
+    name: "Analysis Flow for Yaml"
+    product_uom: product.uom_day
+    project_id: project_project_developyamlproject0
+    responsible_id: project.res_users_analyst
+    state: draft
+    resource_ids:
+      - resource_id: resource_resource_analyst1  
+    
+- 
+  Create project phase 'Develop yaml' with constraint date.
+- 
+  !record {model: project.phase, id: project_phase_developyaml0}:
+    date_start: '2010-01-05'
+    constraint_date_start: '2010-01-07'
+    duration: 5.0
+    name: Develop Yaml
+    product_uom: product.uom_day
+    project_id: project_project_developyamlproject0
+    resource_ids: 
+      - resource_id: resource_resource_develop0  
+- 
+  Create project phase 'Test Yaml'
+- 
+  !record {model: project.phase, id: project_phase_testyaml0}:
+    date_start: '2010-01-05'
+    duration: 5.0
+    name: Testing Yaml
+    product_uom: product.uom_day
+    project_id: project_project_developyamlproject0
+    resource_ids: 
+      - resource_id: resource_resource_tester1     
+    
+- 
+  Compute Schedule of phases For One project 
+- 
+  !record {model: project.compute.phases, id: project_compute_phases_0}:
+    project_id: project_project_developyamlproject0
+    target_project: one
+    
+- 
+  Schedule project phases using "Compute Phase Scheduling"
+- 
+  !python {model: project.project}: |
+    self.schedule_phases(cr, uid, [ref("project_project_developyamlproject0")])
+      
+-
+  After  scheduling,check that 
+  Phase "Analysis Flow for Yaml" and "Test Yaml" Phase should start on the project start date while "Develop yaml" Phase should respect the constraint. 
+-
+  !python {model: project.project}: |
+     proj=self.browse(cr, uid, [ref("project_project_developyamlproject0")])[0]
+     for phase in proj.phase_ids:
+        for phase1 in proj.phase_ids:
+             if phase1.id != phase.id and phase.constraint_date_start == phase1.date_start:
+               raise AssertionError("Phases not scheduled")      
