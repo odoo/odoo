@@ -229,7 +229,7 @@ class project_phase(osv.osv):
             avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
             duration = str(avg_days) + 'd'
             # Create a new project for each phase
-            str_resource = ('%s,'*len(phase.resource_ids))[:-1]
+            str_resource = ('%s | '*len(phase.resource_ids))[:-2]
             str_vals = str_resource % tuple(map(lambda x: 'Resource_%s'%x.resource_id.id, phase.resource_ids))
             # Phases Defination for the Project
             s = '''
@@ -249,8 +249,7 @@ class project_phase(osv.osv):
         start = \"%s\"
 '''%(start)
                 #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
-            
-            
+
             phase_ids.append(phase.id)
             parent = False
             task_ids = []
@@ -510,8 +509,8 @@ def Project_%d():
 
             for phase_id in phase_ids:
                 act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
-                print "============",act_phase
                 phase = eval("project.Phase_%d" % phase_id)
+
                 start_date = phase.start.to_datetime()
                 end_date = phase.end.to_datetime()
                 if act_phase.task_ids:
@@ -524,7 +523,9 @@ def Project_%d():
                         vals.update({'planned_hours' : str(temp._Task__calc_duration().strftime('%H.%M'))})
                         vals.update({'date_deadline' : str(temp._Task__calc_end().strftime('%Y-%m-%d %H:%M:%S'))})
                         task_pool.write(cr, uid, task.id, vals, context=context)
-                        print ">>>>>",dir(temp)                        
+
+                        for i in dir(temp):
+                            print "i**********", i,eval("project.Phase_%d.Task_%s.%s"%(phase_id,task.id,i))
                         print ">>>><<<<<<<<<<<<<<<<>",temp.booked_resource
                         
                 # Recalculate date_start and date_end
@@ -684,7 +685,6 @@ class project_task(osv.osv):
         resource = False
         if task.user_id:
             resource_ids = self.search(cr, uid, [('user_id', '=', task.user_id.id),('resource_type','=','user')], context=context)
-            print "\n\n==========", task.user_id.name, resource_ids
             if len(resource_ids):
                 resource = 'Resource_%s'%resource_ids[0]
         # Phases Defination for the Project 
