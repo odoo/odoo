@@ -22,6 +22,8 @@
     product_uom: product.uom_day
     project_id: project_project_worldbanksproject0
 
+
+
 - 
   Create project phase 'Establishing Project Feasibility'
 - 
@@ -66,6 +68,33 @@
     name: Procurement of Works and Goods
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
+
+
+- 
+  Create the phase task 'Develop GUI for Server Configuration'
+- 
+  !record {model: project.task, id: project_task_t0}:
+    name: Develop GUI for Server Configuration
+    planned_hours: 20.0
+    remaining_hours: 20.0
+    state: draft
+    phase_id: project_phase_procurementofworksandgoods0
+    project_id: project_project_worldbanksproject0
+    user_id: project.res_users_analyst
+
+- 
+  Create the phase task 'Develop GUI for Modules Configuration'
+- 
+  !record {model: project.task, id: project_task_t1}:
+    name: Develop GUI for Modules Configuration
+    planned_hours: 25.0
+    remaining_hours: 25.0
+    state: draft
+    phase_id: project_phase_procurementofworksandgoods0
+    project_id: project_project_worldbanksproject0
+    user_id: project.res_users_developer
+
+
     
     
 - 
