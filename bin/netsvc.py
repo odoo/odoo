@@ -473,10 +473,10 @@ def replace_request_password(args):
     return args
 
 class OpenERPDispatcher:
-    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=2):
+    def log(self, title, msg, channel=logging.DEBUG_RPC, depth=None):
         logger = logging.getLogger(title)
         if logger.isEnabledFor(channel):
-            for line in pformat(msg, depth=100).split('\n'):
+            for line in pformat(msg, depth=depth).split('\n'):
                 logger.log(channel, line)
 
     def dispatch(self, service_name, method, params):
@@ -484,10 +484,10 @@ class OpenERPDispatcher:
             logger = logging.getLogger('result')
             self.log('service', service_name)
             self.log('method', method)
-            self.log('params', replace_request_password(params), depth=(logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) and 3 or 1))
+            self.log('params', replace_request_password(params), depth=(logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) and None or 1))
             auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
-            self.log('result', result, channel=logging.DEBUG_RPC_ANSWER, depth=(logger.isEnabledFor(logging.DEBUG_SQL) and 5 or 3))
+            self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
             return result
         except Exception, e:
             self.log('exception', tools.exception_to_unicode(e))
