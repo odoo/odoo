@@ -257,12 +257,14 @@ class ir_ui_menu(osv.osv):
     def read_image(self, path):
         path_info = path.split(',')
         icon_path = addons.get_module_resource(path_info[0],path_info[1])
-        icon_file = tools.file_open(icon_path,'rb')
-        try:
-            icon = icon_file.read()
-            return base64.encodestring(icon)
-        finally:
-            icon_file.close()
+        icon_image = False
+        if icon_path:
+            try:
+                icon_file = tools.file_open(icon_path,'rb')
+                icon_image = base64.encodestring(icon_file.read())
+            finally:
+                icon_file.close()
+        return icon_image
 
     def _get_image_icon(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -304,7 +306,7 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.server', 'ir.actions.server'),
             ]),
     }
-    
+
     def _rec_message(self, cr, uid, ids, context=None):
         return _('Error ! You can not create recursive Menu.')
 

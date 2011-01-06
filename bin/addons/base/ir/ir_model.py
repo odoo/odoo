@@ -19,14 +19,16 @@
 #
 ##############################################################################
 import logging
+import re
+import time
 from operator import itemgetter
+
 from osv import fields,osv
-import ir, re
+import ir
 import netsvc
 from osv.orm import except_orm, browse_record
-
-import time
 import tools
+from tools.safe_eval import safe_eval as eval
 from tools import config
 from tools.translate import _
 import pooler
@@ -152,21 +154,29 @@ class ir_model_fields(osv.osv):
     _description = "Fields"
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
-        'model': fields.char('Object Name', size=64, required=True, select=1),
-        'relation': fields.char('Object Relation', size=64),
-        'relation_field': fields.char('Relation Field', size=64),
-        'model_id': fields.many2one('ir.model', 'Object ID', required=True, select=True, ondelete='cascade'),
+        'model': fields.char('Object Name', size=64, required=True, select=1,
+            help="The technical name of the model this field belongs to"),
+        'relation': fields.char('Object Relation', size=64,
+            help="For relationship fields, the technical name of the target model"),
+        'relation_field': fields.char('Relation Field', size=64,
+            help="For one2many fields, the field on the target model that implement the opposite many2one relationship"),
+        'model_id': fields.many2one('ir.model', 'Model', required=True, select=True, ondelete='cascade',
+            help="The model this field belongs to"),
         'field_description': fields.char('Field Label', required=True, size=256),
         'ttype': fields.selection(_get_fields_type, 'Field Type',size=64, required=True),
-        'selection': fields.char('Field Selection',size=128),
+        'selection': fields.char('Selection Options',size=128, help="List of options for a selection field, "
+            "specified as a Python expression defining a list of (key, label) pairs. "
+            "For example: [('blue','Blue'),('yellow','Yellow')]"),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
-        'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
-        'translate': fields.boolean('Translate'),
+        'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
+        'translate': fields.boolean('Translate', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
         'size': fields.integer('Size'),
         'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
-        'domain': fields.char('Domain', size=256),
+        'domain': fields.char('Domain', size=256, help="The optional domain to restrict possible values for relationship fields, "
+            "specified as a Python expression defining a list of triplets. "
+            "For example: [('color','=','red')]"),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
@@ -174,7 +184,7 @@ class ir_model_fields(osv.osv):
     _rec_name='field_description'
     _defaults = {
         'view_load': lambda *a: 0,
-        'selection': lambda *a: "[]",
+        'selection': lambda *a: "[('key','label')]",
         'domain': lambda *a: "[]",
         'name': lambda *a: 'x_',
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
@@ -185,6 +195,25 @@ class ir_model_fields(osv.osv):
         'selectable': lambda *a: 1,
     }
     _order = "name"
+
+    def _check_selection(self, cr, uid, ids, context=None):
+        selection_field = self.browse(cr, uid, ids[0], context=context)
+        try:
+            selection_list = eval(selection_field.selection)
+        except Exception:
+            logging.getLogger('ir.model').error('Invalid selection list definition for fields.selection %s', selection_field.name , exc_info=True)
+            return False
+        if not (isinstance(selection_list, list) and selection_list):
+            return False
+        for selection_item in selection_list:
+             if not (isinstance(selection_item, (tuple,list)) and len(selection_item) == 2):
+                return False
+        return True
+
+    _constraints = [
+        (_check_selection, "Wrong list of values specified for a field of type selection, it should be written as [('key','value')]", ['selection'])
+    ]
+
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
         return _('Size of the field can never be less than 1 !')
 

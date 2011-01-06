@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -50,8 +50,8 @@ class db(netsvc.ExportService):
         self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
 
     def dispatch(self, method, auth, params):
-        if method in [ 'create', 'get_progress', 'drop', 'dump', 
-            'restore', 'rename', 
+        if method in [ 'create', 'get_progress', 'drop', 'dump',
+            'restore', 'rename',
             'change_admin_password', 'migrate_databases' ]:
             passwd = params[0]
             params = params[1:]
@@ -64,7 +64,7 @@ class db(netsvc.ExportService):
             raise KeyError("Method not found: %s" % method)
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
-    
+
     def new_dispatch(self,method,auth,params):
         pass
     def _create_empty_database(self, name):
@@ -93,6 +93,7 @@ class db(netsvc.ExportService):
                     serv.actions[id]['progress'] = 0
                     cr = sql_db.db_connect(db_name).cursor()
                     tools.init_db(cr)
+                    tools.config['lang'] = lang
                     cr.commit()
                     cr.close()
                     cr = None
@@ -392,7 +393,7 @@ class common(_ObjectService):
             security.check_super(passwd)
         else:
             raise Exception("Method not found: %s" % method)
-        
+
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
 
@@ -568,7 +569,7 @@ GNU Public Licence.
 
     def exp_check_connectivity(self):
         return bool(sql_db.db_connect('template1'))
-        
+
     def exp_get_os_time(self):
         return os.times()
 
@@ -598,7 +599,7 @@ class objects_proxy(netsvc.ExportService):
         res = fn(db, uid, *params)
         return res
 
-    
+
     def new_dispatch(self,method,auth,params):
         pass
 
@@ -634,7 +635,7 @@ class wizard(netsvc.ExportService):
         fn = getattr(self, 'exp_'+method)
         res = fn(db, uid, *params)
         return res
-    
+
     def new_dispatch(self,method,auth,params):
         pass
 
@@ -697,7 +698,7 @@ class report_spool(netsvc.ExportService):
         res = fn(db, uid, *params)
         return res
 
-    
+
     def new_dispatch(self,method,auth,params):
         pass
 
@@ -728,7 +729,7 @@ class report_spool(netsvc.ExportService):
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
             except Exception, exception:
-                
+
                 tb = sys.exc_info()
                 tb_s = "".join(traceback.format_exception(*tb))
                 logger = netsvc.Logger()

@@ -24,9 +24,65 @@ from locale import localeconv
 import tools
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
+import locale
+import logging
+
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
+
+    def install_lang(self, cr, uid, **args):
+        lang_ids = self.search(cr, uid, [('code','=', tools.config.get('lang'))])
+        values_obj = self.pool.get('ir.values')
+        if not lang_ids:
+            lang_id = self.load_lang(cr, uid, tools.config.get('lang'))
+        default_value = values_obj.get(cr, uid, 'default', False, 'res.partner')
+        if not default_value:
+            values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], tools.config.get('lang'))
+        return True
+
+    def load_lang(self, cr, uid, lang, lang_name=None):
+        # create the language with locale information
+        fail = True
+        logger = logging.getLogger('i18n')
+        iso_lang = tools.get_iso_codes(lang)
+        for ln in tools.get_locales(lang):
+            try:
+                locale.setlocale(locale.LC_ALL, str(ln))
+                fail = False
+                break
+            except locale.Error:
+                continue
+        if fail:
+            lc = locale.getdefaultlocale()[0]
+            msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
+            logger.warning(msg, lang, lc)
+
+        if not lang_name:
+            lang_name = tools.get_languages().get(lang, lang)
+
+
+        def fix_xa0(s):
+            if s == '\xa0':
+                return '\xc2\xa0'
+            return s
+
+        lang_info = {
+            'code': lang,
+            'iso_code': iso_lang,
+            'name': lang_name,
+            'translatable': 1,
+            'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
+            'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
+            'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
+            'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
+        }
+        lang_id = False
+        try:
+            lang_id = self.create(cr, uid, lang_info)
+        finally:
+            tools.resetlocale()
+        return lang_id
 
     def _get_default_date_format(self,cursor,user,context={}):
         return '%m/%d/%Y'
@@ -69,7 +125,7 @@ class lang(osv.osv):
         thousands_sep = lang_obj.thousands_sep or conv[monetary and 'mon_thousands_sep' or 'thousands_sep']
         decimal_point = lang_obj.decimal_point
         grouping = lang_obj.grouping
-        return (grouping, thousands_sep, decimal_point)        
+        return (grouping, thousands_sep, decimal_point)
 
     def write(self, cr, uid, ids, vals, context=None):
         for lang_id in ids :
@@ -95,19 +151,19 @@ class lang(osv.osv):
 
     def _group(self, cr, uid, ids, s, monetary=False, grouping=False, thousands_sep=''):
         grouping = eval(grouping)
-        
+
         if not grouping:
             return (s, 0)
 
         result = ""
         seps = 0
         spaces = ""
-        
+
         if s[-1] == ' ':
             sp = s.find(' ')
             spaces = s[sp:]
             s = s[:sp]
-            
+
         while s and grouping:
             # if grouping is -1, we are done
             if grouping[0] == -1:
@@ -139,7 +195,7 @@ class lang(osv.osv):
         if percent[0] != '%':
             raise ValueError("format() must be given exactly one %char format specifier")
 
-        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0], monetary)        
+        lang_grouping, thousands_sep, decimal_point = self._lang_data_get(cr, uid, ids[0], monetary)
 
         formatted = percent % value
         # floats and decimal ints need special action!
