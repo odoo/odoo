@@ -219,8 +219,8 @@ class account_followup_print_all(osv.osv_memory):
             partners = []
             dict_lines = {}
             for line in move_lines:
-                partners.append(line.name)
-                dict_lines[line.name.id] =line
+                partners.append(line.partner_id)
+                dict_lines[line.partner_id.id] =line
             for partner in partners:
                 ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable'])])
                 data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
@@ -275,8 +275,11 @@ class account_followup_print_all(osv.osv_memory):
                 sub = tools.ustr(data['email_subject'])
                 msg = ''
                 if dest:
-                    tools.email_send(src,dest,sub,body)
-                    msg_sent += partner.name + '\n'
+                    try:
+                        tools.email_send(src, dest, sub, body)
+                        msg_sent += partner.name + '\n'
+                    except Exception, e:
+                        raise osv.except_osv('Error !', e )
                 else:
                     msg += partner.name + '\n'
                     msg_unsent += msg
@@ -301,7 +304,7 @@ class account_followup_print_all(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             'nodestroy': True
-                    }
+            }
 
     def do_print(self, cr, uid, ids, context=None):
         if context is None:

@@ -89,13 +89,13 @@
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" context="{'invoice_currency':currency_id}" string="Supplier"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
                             string="Payment Method"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="account_id"
@@ -152,13 +152,13 @@
                 <form string="Bill Payment">
                     <group col="6" colspan="4">
                         <field name="partner_id" domain="[('supplier','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" context="{'invoice_currency':currency_id}" string="Supplier"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
                             string="Payment Method"/>
-                        <field name="amount" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="account_id"
@@ -199,9 +199,9 @@
                             <group col="2" colspan="1">
                                 <group col="2" colspan="1">
                                     <separator string="Payment Options" colspan="2"/>
+                                    <field name="payment_option" required="1"/>
                                     <field name="writeoff_amount"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"/>
-                                    <field name="payment_option" required="1"/>
                                     <field name="writeoff_acc_id"
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')], 'required':[('payment_option','=','with_writeoff')]}"
                                            domain="[('type','=','other')]"/>
@@ -211,6 +211,7 @@
                                            attrs="{'invisible':[('payment_option','!=','with_writeoff')]}"
                                            groups="analytic.group_analytic_accounting"/>
                                 </group>
+                                <separator string="Other Information" colspan="2"/>
                                 <group col="4" colspan="1">
                                   <field name="currency_id" invisible="True"/>
                                   <field name="number"/>
@@ -236,6 +237,8 @@
                                    <field name="credit"/>
                                    <field name="state"/>
                                    <field name="reconcile_id"/>
+                                   <field name="amount_currency"/>
+                                   <field name="currency_id"/>
                                </tree>
                             </field>
                         </page>
@@ -286,15 +289,15 @@
                 <form string="Customer Payment">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)" string="Customer"/>
-                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="amount"
+                            string="Paid Amount"
+                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="journal_id"
                             domain="[('type','in',['bank', 'cash'])]"
                             widget="selection" select="1"
                             on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"
                             string="Payment Method"/>
-                        <field name="amount"
-                            string="Paid Amount"
-                            on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date)"/>
+                        <field name="date" select="1" on_change="onchange_date(partner_id, journal_id, amount, currency_id, type, date)"/>
                         <field name="reference" select="1" string="Payment Ref"/>
                         <field name="name" colspan="2"/>
                         <field name="account_id"
@@ -373,6 +376,8 @@
                                    <field name="credit"/>
                                    <field name="state"/>
                                    <field name="reconcile_id"/>
+                                   <field name="amount_currency"/>
+                                   <field name="currency_id"/>
                                </tree>
                             </field> 
                         </page>
