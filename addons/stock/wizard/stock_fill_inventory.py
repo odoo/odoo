@@ -66,7 +66,7 @@ class stock_fill_inventory(osv.osv_memory):
         if ids and len(ids): 
             ids = ids[0]
         else:
-             return {}    
+             return {'type': 'ir.actions.act_window_close'}    
         fill_inventory = self.browse(cr, uid, ids, context=context)
         res = {}
         res_location = {}
@@ -113,7 +113,7 @@ class stock_fill_inventory(osv.osv_memory):
 
         if(len(product_ids) == 0):
             raise osv.except_osv(_('Message !'), _('No product in this location.'))
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_fill_inventory()
 

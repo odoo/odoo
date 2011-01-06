@@ -48,7 +48,7 @@ class crm_lead2opportunity(osv.osv_memory):
         """
         record_id = context and context.get('active_id') or False
         if not record_id:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
         leads = self.pool.get('crm.lead')
         models_data = self.pool.get('ir.model.data')

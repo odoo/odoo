@@ -57,7 +57,7 @@ class account_fiscalyear_close_state(osv.osv_memory):
             fy_pool = self.pool.get('account.fiscalyear')
             fy_code = fy_pool.browse(cr, uid, fy_id, context=context).code
             fy_pool.log(cr, uid, fy_id, "Fiscal year '%s' is closed, no more modification allowed." % (fy_code))
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
 account_fiscalyear_close_state()
 

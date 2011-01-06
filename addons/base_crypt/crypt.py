@@ -40,9 +40,7 @@ from random import seed, sample
 from string import letters, digits
 from osv import fields,osv
 import pooler
-import tools
 from tools.translate import _
-from service import security
 
 magic_md5 = '$1$'
 
