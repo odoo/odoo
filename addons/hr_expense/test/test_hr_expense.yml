@@ -47,11 +47,11 @@
   !record {model: hr.expense.expense, id: hr_expense_expense_september0}:
     company_id: base.main_company
     currency_id: base.EUR
-    date: '2010-05-05'
+    date: !eval "'%s-05-05' %(datetime.now().year)"
     employee_id: hr.employee1
     name: September Expenses
     line_ids:
-      - date_value: '2010-05-27'
+      - date_value: !eval "'%s-05-27' %(datetime.now().year)"
         name: Travel
         product_id: 'product_product_travel0'
         sequence: 0.0

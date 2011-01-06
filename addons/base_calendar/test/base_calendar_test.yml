@@ -3,8 +3,8 @@
 -
     !record {model: calendar.event, id: calendar_event_technicalpresentation0}:
         class: private
-        date: '2010-04-30 16:00:00'
-        date_deadline: '2010-04-30 18:30:00'
+        date: !eval "'%s-04-30 16:00:00' %(datetime.now().year)"
+        date_deadline: !eval "'%s-04-30 18:30:00' %(datetime.now().year)"
         description: The Technical Presentation will cover following topics:\n* Creating OpenERP
           class\n* Views\n* Wizards\n* Workflows
         duration: 2.5
@@ -27,16 +27,16 @@
     I will search for one of the recurrent event and count the number of events
 -
     !python {model: calendar.event}: |
-     ids = self.search(cr, uid, [('date', '>=', '2010-04-30 16:00:00'), ('date', '<=', '2010-05-31 00:00:00')] )
-     assert len(ids) == 10
+     ids = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')] )
+     assert len(ids) == 9
 -   |
     Now I will make All day event and test it
 -
     !record {model: calendar.event, id: calendar_event_alldaytestevent0}:
         allday: 1
         class: confidential
-        date: '2010-04-30 00:00:00'
-        date_deadline: '2010-04-30 00:00:00'
+        date: !eval "'%s-04-30 00:00:00' %(datetime.now().year)"
+        date_deadline: !eval "'%s-04-30 00:00:00' %(datetime.now().year)"
         description: 'All day technical test '
         location: School
         name: All day test event
