@@ -10,7 +10,7 @@
   Create task 'Technical Training' for this project
 -
   !record {model: project.task, id: project_task_technicaltraining0}:
-    date_start: '2010-05-31 11:48:38'
+    date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: Technical Training
     planned_hours: 30.0
     project_id: project_project_openerptrainingprogramme0
@@ -20,7 +20,7 @@
   Create task 'Functional Training' for this project
 -
   !record {model: project.task, id: project_task_functionaltraining0}:
-    date_start: '2010-05-31 11:49:11'
+    date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: Functional Training
     planned_hours: 30.0
     project_id: project_project_openerptrainingprogramme0
@@ -136,7 +136,7 @@
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
-      - date: '2010-05-31 15:04:22'
+      - date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
         hours: 10.0
         name: Training on OpenERP modules, models and classes
         user_id: base.user_root
@@ -151,7 +151,7 @@
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
-      - date: '2010-06-01 15:04:46'
+      - date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
         hours: 10.0
         name: Training on OpenERP xml views
         user_id: base.user_root
@@ -166,7 +166,7 @@
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
-      - date: '2010-06-02 15:05:24'
+      - date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
         hours: 10.0
         name: Training on workflows
         user_id: base.user_root
@@ -202,7 +202,7 @@
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
-      - date: '2010-05-31 15:08:40'
+      - date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
         hours: 10.0
         name: Training on reports and wizards
         user_id: base.user_root
@@ -253,7 +253,7 @@
 -
   !record {model: project.task, id: project_task_technicaltraining0, context:{'no_analytic_entry':True}}:
     work_ids:
-      - date: '2010-05-31 16:55:27'
+      - date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
         hours: 5.0
         name: Training on yml
         user_id: base.user_root

@@ -26,7 +26,7 @@
 			<field eval="0" name="reconciled"/>
 			<field eval="450.0" name="residual"/>
 			<field name="move_name">/</field>
-			<field name="date_invoice">2010-10-07</field>
+			<field name="date_invoice">time.strftime('%Y-%m-%d')</field>
 			<field name="period_id" ref="account.period_10"/>
 			<field eval="450.0" name="amount_untaxed"/>
 			<field model="account.move" name="move_id" search="[('name', '=', u'SAJ/2010/010')]"/>
@@ -53,7 +53,7 @@
 			<field name="date_validity">2011-04-07</field>
 			<field name="shop_id" ref="sale.shop"/>
 			<field name="user_salesman_id" ref="base.user_root"/>
-			<field name="date_order">2010-10-07 16:53:11</field>
+			<field name="date_order">time.strftime('%Y-%m-%d %H:%M:%S')</field>
 			<field name="partner_id" ref="base.res_partner_agrolait"/>
 			<field eval="1" name="nb_print"/>
 			<field name="user_id" ref="base.user_root"/>
@@ -62,7 +62,7 @@
 			<field name="state">paid</field>
 			<field name="sale_manager" ref="base.user_root"/>
 			<field name="pricelist_id" ref="product.list0"/>
-			<field name="date_validation">2010-10-07</field>
+			<field name="date_validation">time.strftime('%Y-%m-%d')</field>
 			<field name="name">POS/019</field>
 			<field name="price_type">tax_excluded</field>
 			<field model="account.invoice" name="invoice_id" search="[('name', '=', u'Invoice from POS: POS/019')]"/>
@@ -76,7 +76,7 @@
 			<field name="journal_id" ref="account.sales_journal"/>
 			<field name="company_id" ref="base.main_company"/>
 			<field name="period_id" ref="account.period_10"/>
-			<field name="date">2010-10-07</field>
+			<field name="date">time.strftime('%Y-%m-%d')</field>
 		</record>
 		<record id="account_bank_statement_line_paymentpos0" model="account.bank.statement.line">
 			<field name="partner_id" ref="base.res_partner_agrolait"/>
@@ -87,7 +87,7 @@
 			<field name="account_id" ref="account.a_recv"/>
 			<field name="journal_id">Cash Journal - (test)</field>
 			<field eval="[(6,0,[])]" name="move_ids"/>
-			<field name="date">2010-10-07</field>
+			<field name="date">time.strftime('%Y-%m-%d')</field>
 			<field eval="450.0" name="amount"/>
 			<field eval="0" name="is_acc"/>
 			<field eval="0" name="am_out"/>
@@ -98,18 +98,18 @@
 		<record id="stock_picking_out0" model="stock.picking">
 			<field name="origin">POS/019</field>
 			<field model="pos.order" name="pos_order" search="[('name', '=', u'POS/019')]"/>
-			<field name="date_done">2010-10-07 16:53:46</field>
+			<field name="date_done">time.strftime('%Y-%m-%d %H:%M:%S')</field>
 			<field eval="1" name="auto_picking"/>
 			<field name="move_type">direct</field>
 			<field name="company_id" ref="base.main_company"/>
 			<field name="note">POS notes </field>
 			<field name="state">done</field>
 			<field name="type">out</field>
-			<field name="min_date">2010-10-07 16:53:46</field>
-			<field name="date">2010-10-07 16:33:30</field>
+			<field name="min_date">time.strftime('%Y-%m-%d %H:%M:%S')</field>
+			<field name="date">time.strftime('%Y-%m-%d %H:%M:%S')</field>
 			<field name="name">OUT/00019</field>
 			<field name="invoice_state">none</field>
-			<field name="max_date">2010-10-07 16:53:46</field>
+			<field name="max_date">time.strftime('%Y-%m-%d %H:%M:%S')</field>
 		</record>
 		<record id="stock_move_stockmovepos0" model="stock.move">
 			<field name="origin">POS/019</field>
@@ -123,12 +123,12 @@
 			<field name="company_id" ref="base.main_company"/>
 			<field name="state">done</field>
 			<field eval="[(6,0,[])]" name="move_history_ids"/>
-			<field name="date_expected">2010-10-07 16:33:30</field>
-			<field name="date">2010-10-07 16:33:30</field>
+			<field name="date_expected">time.strftime('%Y-%m-%d %H:%M:%S')</field>
+			<field name="date">time.strftime('%Y-%m-%d %H:%M:%S')</field>
 			<field name="name">Stock move (POS 12)</field>
 			<field eval="[(6,0,[])]" name="move_history_ids2"/>
 			<field name="product_id" ref="product.product_product_pc1"/>
-			<field name="date_planned">2010-10-07 16:53:46</field>
+			<field name="date_planned">time.strftime('%Y-%m-%d %H:%M:%S')</field>
 			<field name="location_dest_id" ref="stock.stock_location_customers"/>
 			<field model="stock.picking" name="picking_id" search="[('name', '=', u'OUT/00019')]"/>
 		</record>
@@ -166,7 +166,7 @@
 		
 		<record id="line1_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos1"/>
-            <field name="date_planned">2010/09/15</field>
+            <field name="date_planned">time.strftime('%Y-%m-%d')</field>
             <field name="name">[PC3] Medium PC</field>
             <field name="product_id" ref="product.product_product_pc3"/>
             <field model="res.company" name="company_id" search="[]"/>
@@ -178,7 +178,7 @@
         
         <record id="line12_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos1"/>
-            <field name="date_planned">2010/09/15</field>
+            <field name="date_planned">time.strftime('%Y-%m-%d')</field>
             <field name="name">[PC2] Basic+ PC (assembly on order)</field>
             <field name="product_id" ref="product.product_product_pc2"/>
             <field model="res.company" name="company_id" search="[]"/>
@@ -190,7 +190,7 @@
         
         <record id="line2_pos" model="pos.order.line">
             <field name="order_id" ref="order_pos2"/>
-            <field name="date_planned">2010/09/15</field>
+            <field name="date_planned">time.strftime('%Y-%m-%d')</field>
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
             <field model="res.company" name="company_id" search="[]"/>
