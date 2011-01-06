@@ -846,6 +846,9 @@ def trans_load(cr, filename, lang, verbose=True, context=None):
             logger.error("couldn't read translation file %s", filename)
         return None
 
+# Populates the ir_translation table. Fixing the res_ids so that they point
+# correctly to ir_model_data is done in a separate step, using the
+# 'trans_update_res_ids' function below.
 def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     if verbose:
@@ -936,17 +939,13 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
             try:
                 dic['res_id'] = dic['res_id'] and int(dic['res_id']) or 0
+                dic['module'] = False
+                dic['xml_id'] = False
             except:
-                model_data_ids = model_data_obj.search(cr, uid, [
-                    ('model', '=', dic['name'].split(',')[0]),
-                    ('module', '=', dic['res_id'].split('.', 1)[0]),
-                    ('name', '=', dic['res_id'].split('.', 1)[1]),
-                    ])
-                if model_data_ids:
-                    dic['res_id'] = model_data_obj.browse(cr, uid,
-                            model_data_ids[0]).res_id
-                else:
-                    dic['res_id'] = False
+                splitted = dic['res_id'].split('.', 1)
+                dic['module'] = splitted[0]
+                dic['xml_id'] = splitted[1]
+                dic['res_id'] = False
 
             args = [
                 ('lang', '=', lang),
@@ -967,6 +966,17 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
         logger.exception("couldn't read translation file %s", filename)
+
+def trans_update_res_ids(cr):
+    cr.execute("""\
+update ir_translation
+set res_id = ir_model_data.res_id
+from ir_model_data
+where ir_translation.module = ir_model_data.module
+and ir_translation.xml_id = ir_model_data.name
+and ir_translation.module is not null
+and ir_translation.xml_id is not null;
+    """)
 
 def get_locales(lang=None):
     if lang is None:

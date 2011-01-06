@@ -61,6 +61,8 @@ class ir_translation(osv.osv):
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
+        'module': fields.char('Module', size=64), # TODO foreign key to ir_model_data
+        'xml_id': fields.char('XML Id', size=128), # idem
     }
 
     def _auto_init(self, cr, context={}):
@@ -88,7 +90,10 @@ class ir_translation(osv.osv):
             cr.execute('CREATE INDEX ir_translation_ltn ON ir_translation (name, lang, type)')
             cr.commit()
 
-
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_mx',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_translation_mx ON ir_translation (module, xml_id)')
+            cr.commit()
 
     @tools.cache(skiparg=3, multi='ids')
     def _get_ids(self, cr, uid, name, tt, lang, ids):
