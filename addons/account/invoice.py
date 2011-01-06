@@ -88,32 +88,14 @@ class account_invoice(osv.osv):
         return [('none', _('Free Reference'))]
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        if context is None:
-            context = {}
-
-        cur_obj = self.pool.get('res.currency')
-        data_inv = self.browse(cr, uid, ids, context=context)
-        for inv in data_inv:
-            if inv.reconciled:
-                res[inv.id] = 0.0
-                continue
-            inv_total = inv.amount_total
-            context_unreconciled = context.copy()
-            for lines in inv.move_lines:
-                if lines.currency_id and lines.currency_id.id == inv.currency_id.id:
-                    if inv.type in ('out_invoice','in_refund'):
-                        inv_total += lines.amount_currency
-                    else:
-                        inv_total -= lines.amount_currency
-                else:
-                   context_unreconciled.update({'date': lines.date})
-                   amount_in_invoice_currency = cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id,abs(lines.debit-lines.credit),round=False,context=context_unreconciled)
-                   inv_total -= amount_in_invoice_currency
-
-            result = inv_total
-            res[inv.id] =  self.pool.get('res.currency').round(cr, uid, inv.currency_id, result)
-        return res
+        result = {}
+        for invoice in self.browse(cr, uid, ids, context=context):
+            result[invoice.id] = 0.0
+            if invoice.move_id:
+                for m in invoice.move_id.line_id:
+                    if m.account_id.type in ('receivable','payable'):
+                        result[invoice.id] = m.amount_residual_currency
+        return result
 
     # Give Journal Items related to the payment reconciled to this invoice
     # Return ids of partial and total payments related to the selected invoices
