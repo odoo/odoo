@@ -60,11 +60,8 @@ class report_xml(osv.osv):
 
     def report_get(self, cr, uid, report_id, context=None):
         report = self.browse(cr, uid, report_id, context=context)
-        try:
-            sxw_data=(report.report_sxw_content).encode("iso-8859-1", "replace")
-            rml_data= (report.report_rml_content).encode("iso-8859-1", "replace")
-        except :
-            pass
+        sxw_data=(report.report_sxw_content).encode("iso-8859-1", "replace")
+        rml_data= (report.report_rml_content).encode("iso-8859-1", "replace")
         return {
             'file_type' : report.report_type, 
             'report_sxw_content': report.report_sxw_content and base64.encodestring(sxw_data) or False, 
