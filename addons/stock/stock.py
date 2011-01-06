@@ -874,8 +874,7 @@ class stock_picking(osv.osv):
         @return {'contact': address, 'invoice': address} for invoice
         """
         partner_obj = self.pool.get('res.partner')
-        partner = (picking.purchase_id and picking.purchase_id.partner_id) or (picking.sale_id and picking.sale_id.partner_id) or picking.address_id.partner_id
-
+        partner = picking.address_id.partner_id
         return partner_obj.address_get(cr, uid, [partner.id],
                 ['contact', 'invoice'])
 
@@ -970,6 +969,7 @@ class stock_picking(osv.osv):
 
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
+        address_obj = self.pool.get('res.partner.address')
         invoices_group = {}
         res = {}
         inv_type = type
@@ -993,6 +993,7 @@ class stock_picking(osv.osv):
 
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cr, uid, picking).values()
+            address = address_obj.browse(cr, uid, address_contact_id, context=context)
 
             comment = self._get_comment_invoice(cr, uid, picking)
             if group and partner.id in invoices_group:
@@ -1012,7 +1013,7 @@ class stock_picking(osv.osv):
                     'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'type': inv_type,
                     'account_id': account_id,
-                    'partner_id': partner.id,
+                    'partner_id': address.partner_id.id,
                     'address_invoice_id': address_invoice_id,
                     'address_contact_id': address_contact_id,
                     'comment': comment,
