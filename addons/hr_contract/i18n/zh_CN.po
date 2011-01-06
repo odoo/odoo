@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-16 05:32+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:37+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_contract
@@ -37,9 +37,9 @@ msgid "Trial Start Date"
 msgstr "使用期开始日期"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function Arguments"
-msgstr ""
+#: view:hr.contract:0
+msgid "Passport"
+msgstr "护照"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -67,9 +67,9 @@ msgid "Current"
 msgstr "当前的"
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "部门"
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "每小时成本系数"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -82,9 +82,9 @@ msgid "Wage Types"
 msgstr "工资类型"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Calculations"
-msgstr "计算"
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "部门"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -97,12 +97,6 @@ msgstr "基本信息"
 #: model:ir.model,name:hr_contract.model_hr_employee
 msgid "Employee"
 msgstr "员工"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "工作安排"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -120,29 +114,12 @@ msgid "Hours in the period"
 msgstr "周期的小时数"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function"
-msgstr "职能"
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
+msgstr "通勤距离"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "分组于"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Description"
-msgstr "描述"
-
-#. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "出生地"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -151,20 +128,14 @@ msgid "Contracts"
 msgstr "合同"
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "是否是经理"
+#: view:hr.employee:0
+msgid "Personal Info"
+msgstr "个人信息"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
 msgstr "工作"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Passport"
-msgstr "护照"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -196,19 +167,16 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,advantages:0
-#: view:hr.employee:0
 msgid "Advantages"
 msgstr "优点"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Valid for"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Work Permit"
 msgstr ""
 
@@ -224,9 +192,13 @@ msgid "Contract Types"
 msgstr "合同类型"
 
 #. module: hr_contract
+#: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr "搜索薪酬类型"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Wage Type"
+msgstr "工资类型"
 
 #. module: hr_contract
 #: constraint:hr.employee:0
@@ -256,7 +228,6 @@ msgstr "单位：千米"
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,notes:0
-#: view:hr.employee:0
 msgid "Notes"
 msgstr "备注"
 
@@ -265,15 +236,6 @@ msgstr "备注"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "工资类型"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -298,9 +260,10 @@ msgid "Search Wage Period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Computation"
-msgstr "薪酬计算"
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "工作安排"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -320,15 +283,9 @@ msgid "Job Title"
 msgstr "职位"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "工资周期"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "通勤距离"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "是否是经理"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
@@ -336,9 +293,14 @@ msgid "Start Date"
 msgstr "开始日期"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Company contribution"
-msgstr "公司贡献"
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
+msgstr "搜索薪酬类型"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
@@ -351,9 +313,10 @@ msgid "Trial End Date"
 msgstr "试用期截至日期"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "每小时成本系数"
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "分组于"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
@@ -366,24 +329,15 @@ msgid "Period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
-msgstr ""
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "出生地"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Employee specific allowances and deductions"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Contract Details"
-msgstr "合同明细"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Structure"
-msgstr "薪酬结构"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
+msgid "Wage period"
+msgstr "工资周期"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -394,13 +348,7 @@ msgid ""
 msgstr "这字段使用时间表系统来计算合同员工的每小时工价"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "个人信息"
-
-#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Duration"
 msgstr ""
 
@@ -495,5 +443,26 @@ msgstr "搜索合同类型"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "在动作定义使用了无效的模块名。"
 
+#~ msgid "Function"
+#~ msgstr "职能"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效的视图结构xml文件!"
+
+#~ msgid "Calculations"
+#~ msgstr "计算"
+
+#~ msgid "Description"
+#~ msgstr "描述"
+
+#~ msgid "Contract Details"
+#~ msgstr "合同明细"
+
+#~ msgid "Salary Structure"
+#~ msgstr "薪酬结构"
+
+#~ msgid "Company contribution"
+#~ msgstr "公司贡献"
+
+#~ msgid "Salary Computation"
+#~ msgstr "薪酬计算"

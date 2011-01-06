@@ -102,9 +102,9 @@ class account_move_line(osv.osv):
 
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
         """
-           This function returns the residual amount on a receivable or payable account.move.line. 
-           By default, it returns an amount in the currency of this journal entry (maybe different 
-           of the company currency), but if you pass 'residual_in_company_currency' = True in the 
+           This function returns the residual amount on a receivable or payable account.move.line.
+           By default, it returns an amount in the currency of this journal entry (maybe different
+           of the company currency), but if you pass 'residual_in_company_currency' = True in the
            context then the returned amount will be in company currency.
         """
         res = {}
@@ -116,13 +116,13 @@ class account_move_line(osv.osv):
                 'amount_residual': 0.0,
                 'amount_residual_currency': 0.0,
             }
- 
+
             if move_line.reconcile_id:
                 continue
             if not move_line.account_id.type in ('payable', 'receivable'):
                 #this function does not suport to be used on move lines not related to payable or receivable accounts
                 continue
-            
+
             if move_line.currency_id:
                 move_line_total = move_line.amount_currency
                 sign = move_line.amount_currency < 0 and -1 or 1

@@ -89,11 +89,11 @@
   !record {model: account.bank.statement, id: account_bank_statement_st0}:
     name: St.05/19
     balance_end_real: 0.0
-    date: '2010-05-19'
+    date: !eval time.strftime('%Y-%m-%d')
     journal_id: account_journal_cash0
     line_ids:
         - name: statement
-          date: "2010-10-13"
+          date: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+5,datetime.now().day)"
           type: customer
           account_id: account_pos_account_sales
           amount: 100

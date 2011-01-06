@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-21 14:52+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-04 15:57+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:28+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:07+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
@@ -72,6 +71,17 @@ msgid ""
 "    The managers can obtain an easy view on best ideas from all the users.\n"
 "    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"    Ce module permet à vos utilisateurs de participer facilement et "
+"efficacement à l'innovation de l'entreprise.\n"
+"    Il permet à n'importe qui d'émettre des idées sur différents sujets.\n"
+"    Ensuite, d'autres utilisateurs peuvent commenter ces idées et voter pour "
+"certaines idées.\n"
+"    Chaque idée a un score basé sur les différents votes.\n"
+"    Les managers peuvent obtenir une vue simplifiée des meilleures idées des "
+"utilisateurs.\n"
+"    Après installation, accédez au menu 'Idées' dans le menu principal "
+"'Outils'."
 
 #. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
@@ -84,7 +94,7 @@ msgid "March"
 msgstr "Mars"
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
+#: code:addons/idea/wizard/idea_post_vote.py:92
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr ""
@@ -130,8 +140,9 @@ msgid "Category of ideas"
 msgstr "Catégories d'Idée"
 
 #. module: idea
-#: code:addons/idea/idea.py:0
-#: code:addons/idea/wizard/idea_post_vote.py:0
+#: code:addons/idea/idea.py:253
+#: code:addons/idea/wizard/idea_post_vote.py:89
+#: code:addons/idea/wizard/idea_post_vote.py:92
 #, python-format
 msgid "Warning !"
 msgstr "Avertissement !"
@@ -176,7 +187,7 @@ msgid "# of Lines"
 msgstr "Nb. de lignes"
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
+#: code:addons/idea/wizard/idea_post_vote.py:89
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
 msgstr "Vous ne pouvez pas voter pour cette idée plus de %s fois"
@@ -608,7 +619,7 @@ msgid "Refused"
 msgstr "Refusée"
 
 #. module: idea
-#: code:addons/idea/idea.py:0
+#: code:addons/idea/idea.py:253
 #, python-format
 msgid "Draft/Accepted/Cancelled ideas Could not be voted"
 msgstr ""
