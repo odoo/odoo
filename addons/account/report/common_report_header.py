@@ -64,8 +64,8 @@ class common_report_header(object):
     def _get_target_move(self, data):
         if data.get('form', False) and data['form'].get('target_move', False):
             if data['form']['target_move'] == 'all':
-                return 'All Entries'
-            return 'All Posted Entries'
+                return _('All Entries')
+            return _('All Posted Entries')
         return ''
 
     def _get_end_date(self, data):
@@ -94,10 +94,10 @@ class common_report_header(object):
     def _get_filter(self, data):
         if data.get('form', False) and data['form'].get('filter', False):
             if data['form']['filter'] == 'filter_date':
-                return 'Date'
+                return _('Date')
             elif data['form']['filter'] == 'filter_period':
-                return 'Periods'
-        return 'No Filter'
+                return _('Periods')
+        return _('No Filter')
 
     def _sum_debit_period(self, period_id, journal_id=None):
         journals = journal_id or self.journal_ids
