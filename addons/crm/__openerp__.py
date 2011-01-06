@@ -125,6 +125,7 @@ Create dashboard for CRM that includes:
             'test/test_crm_meeting.yml',
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml',
+            'test/test_crm_recurrent_meeting.yml',
              ],
     'installable': True,
     'active': False,
