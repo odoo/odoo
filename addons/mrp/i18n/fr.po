@@ -45,6 +45,11 @@ msgid "No. Of Cycles"
 msgstr "Nombre de Cycles"
 
 #. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid "Number of iterations this work center has to do in the specified operation of the routing."
+msgstr "Nombre d'opérations simultanées du poste de charge"
+
+#. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
 msgstr "Emplacement des composants"
@@ -454,7 +459,7 @@ msgstr "Date planifiée"
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
-msgstr "Nomenclature des Matériaux"
+msgstr "Nomenclature"
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -475,7 +480,7 @@ msgstr "Variation de la valeur de stock"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
 msgid "Bill of Materials Structure"
-msgstr "Structure de la nomenclature"
+msgstr "Structure des nomenclatures"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
@@ -540,7 +545,7 @@ msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
-msgid "Specify Cost of Workcenter per hour."
+msgid "Specify Cost of Work center per hour."
 msgstr "Précisez le coût horaire du centre de charge"
 
 #. module: mrp
@@ -572,7 +577,7 @@ msgstr "Valeur du stock"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
 msgid "Product BoM Structure"
-msgstr "Structure de la Nomenclature des Produits"
+msgstr "Structure des nomenclatures"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -592,7 +597,7 @@ msgstr "Mars"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Workcenter per cycle."
+msgid "Specify Cost of Work center per cycle."
 msgstr "Précisez le coût par cycle du poste de charge"
 
 #. module: mrp
@@ -685,7 +690,7 @@ msgstr "Prêt"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
-msgid "Time in hours for doing one cycle."
+msgid "Time in hours for this work center to achieve the operation of the specified routing."
 msgstr "Temps nécessaire à la réalisation d'un cycle"
 
 #. module: mrp
@@ -1772,8 +1777,8 @@ msgstr "Consommation en production de produit"
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
-"Description of the workcenter. Explain here what's a cycle according to this "
-"workcenter."
+"Description of the work center. Explain here what's a cycle according to this "
+"work center."
 msgstr ""
 "Description du centre de travail. Expliquez ici ce qu'est le cycle d'après "
 "le centre de travail."
@@ -1862,9 +1867,9 @@ msgstr "Ordre de Production"
 #. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
 "La liste des opérations (liste des postes de charge) pour fabriquer le "
@@ -1901,7 +1906,7 @@ msgstr "Structure de la Nomenclature"
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
-"Number of operations this workcenter can do in parallel. If this workcenter "
+"Number of operations this work center can do in parallel. If this work center "
 "represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
 "Nombre d'opérations que ce poste de charge peut réaliser en parallèle. Si ce "
@@ -2223,7 +2228,7 @@ msgstr "Sélectionner quantité"
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
 #: field:product.product,bom_ids:0
 msgid "Bill of Materials"
-msgstr "Nomenclature"
+msgstr "Nomenclatures"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,routing_id:0
@@ -2352,9 +2357,9 @@ msgstr "Description"
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
 "La liste des opérations (liste des postes de charge) pour fabriquer le "
@@ -3159,9 +3164,9 @@ msgstr ""
 #~ msgstr "Ordres de production en cours"
 
 #~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan futur loads on workcenters based on production "
+#~ "The list of operations (list of work centers) to produce the finished "
+#~ "product. The routing is mainly used to compute work center costs during "
+#~ "operations and to plan futur loads on work centers based on production "
 #~ "plannification."
 #~ msgstr ""
 #~ "La liste des opérations pour fabriquer le produit fini. La gammeest "

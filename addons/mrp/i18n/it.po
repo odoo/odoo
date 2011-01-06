@@ -28,6 +28,11 @@ msgid "No. Of Cycles"
 msgstr "N. Cicli di Lavoro"
 
 #. module: mrp
+#: help:mrp.routing.workcenter,cycle_nbr:0
+msgid "Number of iterations this work center has to do in the specified operation of the routing."
+msgstr "Numero di operazioni che questo centro di lavoro può fare."
+
+#. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
 msgstr "Punto di stoccaggio dove il sistema cercherà i componenti"
@@ -516,7 +521,7 @@ msgstr "Errore: codice EAN non valido"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
-msgid "Specify Cost of Workcenter per hour."
+msgid "Specify Cost of Work center per hour."
 msgstr "Specificare il costo orario per il centro di lavoro."
 
 #. module: mrp
@@ -568,7 +573,7 @@ msgstr "Marzo"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Workcenter per cycle."
+msgid "Specify Cost of Work center per cycle."
 msgstr "Specificare il costo per ciclo per il centro di lavoro."
 
 #. module: mrp
@@ -661,7 +666,7 @@ msgstr "Pronto"
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
-msgid "Time in hours for doing one cycle."
+msgid "Time in hours for this work center to achieve the operation of the specified routing."
 msgstr "Tempo in ore per completare un ciclo."
 
 #. module: mrp
@@ -1083,7 +1088,7 @@ msgstr "]"
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
-"Gives the sequence order when displaying a list of routing workcenters."
+"Gives the sequence order when displaying a list of routing work centers."
 msgstr ""
 
 #. module: mrp
@@ -1726,8 +1731,8 @@ msgstr "Utilizzo Prodotti in Produzione"
 #. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
-"Description of the workcenter. Explain here what's a cycle according to this "
-"workcenter."
+"Description of the work center. Explain here what's a cycle according to this "
+"work center."
 msgstr ""
 
 #. module: mrp
@@ -1810,9 +1815,9 @@ msgstr "Ordine di Produzione"
 #. module: mrp
 #: help:mrp.production,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
 
@@ -1845,7 +1850,7 @@ msgstr "Struttura Distinta Base"
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
 msgid ""
-"Number of operations this workcenter can do in parallel. If this workcenter "
+"Number of operations this work center can do in parallel. If this work center "
 "represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
 "Numero di operazioni che questo centro di lavoro può fare in parallelo. Se "
@@ -2292,9 +2297,9 @@ msgstr "Descrizione"
 #. module: mrp
 #: help:mrp.bom,routing_id:0
 msgid ""
-"The list of operations (list of workcenters) to produce the finished "
-"product. The routing is mainly used to compute workcenter costs during "
-"operations and to plan future loads on workcenters based on production "
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
 
@@ -2662,9 +2667,9 @@ msgstr "Anno"
 #~ msgstr "Ciclo di lavoro del materiale"
 
 #~ msgid ""
-#~ "The list of operations (list of workcenters) to produce the finished "
-#~ "product. The routing is mainly used to compute workcenter costs during "
-#~ "operations and to plan futur loads on workcenters based on production "
+#~ "The list of operations (list of work centers) to produce the finished "
+#~ "product. The routing is mainly used to compute work center costs during "
+#~ "operations and to plan futur loads on work centers based on production "
 #~ "plannification."
 #~ msgstr ""
 #~ "La lista delle lavorazioni (lista dei centri di lavoro) per ottenere il "

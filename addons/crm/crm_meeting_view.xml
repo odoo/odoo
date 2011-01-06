@@ -44,7 +44,7 @@
                     <field name="alarm_id" string="Reminder"
                         widget="selection" />
                     <group colspan="2" col="4" >
-                           <field name="recurrency"/>      
+                           <field name="recurrency"/>
                            <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
                                 on_change="onchange_edit_all(rrule_type,edit_all)"/>
                     </group>

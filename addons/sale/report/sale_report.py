@@ -95,8 +95,8 @@ class sale_report(osv.osv):
                         else
                             u.name
                         end) as uom_name,
-                        sum(l.product_uom_qty/u.factor) as product_uom_qty,
-                        sum(l.product_uom_qty*l.price_unit) as price_total,
+                        sum(l.product_uom_qty * u.factor) as product_uom_qty,
+                        sum(l.product_uom_qty * l.price_unit) as price_total,
                         pt.categ_id, l.order_id
                     from
                      sale_order_line l ,product_uom u, product_product p, product_template pt

@@ -220,7 +220,7 @@ class auction_lots_send_aie(osv.osv_memory):
     def send_pdf(self, cr, uid, ids, context=None):
         threaded_calculation = threading.Thread(target=self._send, args=(cr, uid, ids, context))
         threaded_calculation.start()
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 auction_lots_send_aie()
 

@@ -260,7 +260,7 @@ class sale_order(osv.osv):
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you want your invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
-        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True)
+        'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True)
     }
     _defaults = {
         'picking_policy': 'direct',
@@ -400,7 +400,7 @@ class sale_order(osv.osv):
                     inv_line_id = obj_invoice_line.copy(cr, uid, preline.id, {'invoice_id': False, 'price_unit': -preline.price_unit})
                     lines.append(inv_line_id)
         inv = {
-            'name': order.client_order_ref or order.name,
+            'name': order.client_order_ref or '',
             'origin': order.name,
             'type': 'out_invoice',
             'reference': "P%dSO%d" % (order.partner_id.id, order.id),
@@ -705,6 +705,7 @@ class sale_order(osv.osv):
                         #'state': 'waiting',
                         'note': line.notes,
                         'company_id': order.company_id.id,
+                        'returned_price': line.price_unit,
                     })
 
                 if line.product_id:
@@ -881,7 +882,8 @@ class sale_order_line(osv.osv):
         'invoiced': 0,
         'state': 'draft',
         'type': 'make_to_stock',
-        'product_packaging': False
+        'product_packaging': False,
+        'price_unit': 0.0,
     }
 
     def invoice_line_create(self, cr, uid, ids, context=None):
@@ -1200,11 +1202,11 @@ class sale_config_picking_policy(osv.osv_memory):
             ir_values_obj = self.pool.get('ir.values')
             ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], o.picking_policy)
             ir_values_obj.set(cr, uid, 'default', False, 'order_policy', ['sale.order'], o.order_policy)
-            if o.step == 'one':
+            if o.step == 'two':
                 md = self.pool.get('ir.model.data')
                 location_id = md.get_object_reference(cr, uid, 'stock', 'stock_location_output')
                 location_id = location_id and location_id[1] or False
-                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'transparent'})
+                self.pool.get('stock.location').write(cr, uid, [location_id], {'chained_auto_packing': 'manual'})
 
 sale_config_picking_policy()
 

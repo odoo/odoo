@@ -139,7 +139,7 @@ class purchase_requisition_partner(osv.osv_memory):
                             'order_id': purchase_id
                         })
                     order_line_obj.create(cr,uid,order_line)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 purchase_requisition_partner()
 

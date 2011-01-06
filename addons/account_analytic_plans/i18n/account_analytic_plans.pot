@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43:20+0000\n"
-"PO-Revision-Date: 2010-12-21 19:43:20+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56:47+0000\n"
+"PO-Revision-Date: 2011-01-03 16:56:47+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -64,6 +64,12 @@ msgstr ""
 #: view:account.analytic.plan.line:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#, python-format
+msgid "User Error"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -152,7 +158,7 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
 #: view:analytic.plan.create.model:0
 #, python-format
 msgid "Distribution Model Saved"
@@ -174,13 +180,13 @@ msgid "Percentage"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:201
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "No analytic plan defined !"
 msgstr ""
@@ -198,9 +204,8 @@ msgid "Analytic Plans"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:0
-#, python-format
-msgid "User Error"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Perc(%)"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -264,7 +269,8 @@ msgid "To Date"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:321
+#: code:addons/account_analytic_plans/account_analytic_plans.py:462
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr ""
@@ -359,8 +365,9 @@ msgid "Root account of this plan."
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "Error"
 msgstr ""
@@ -376,7 +383,7 @@ msgid "Quantity"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #, python-format
 msgid "Please put a name and a code before saving the model !"
 msgstr ""
@@ -387,7 +394,8 @@ msgid "Print Crossovered Analytic"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:321
+#: code:addons/account_analytic_plans/account_analytic_plans.py:462
 #, python-format
 msgid "No Analytic Journal !"
 msgstr ""
@@ -424,7 +432,7 @@ msgid "Analytic Distribution Lines"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:214
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr ""
@@ -501,7 +509,7 @@ msgid "The name of the journal must be unique per company !"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:214
 #, python-format
 msgid "Value Error"
 msgstr ""

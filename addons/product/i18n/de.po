@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-09 11:04+0000\n"
+"PO-Revision-Date: 2010-12-31 09:46+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:29+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 05:03+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -157,6 +157,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"Minimalbestand für den Anstoss dieser Regel, ausgedrückt in der Einheit des "
+"Lieferanten oder alternativ in der Standard Mengeneinheit."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -496,6 +498,8 @@ msgid ""
 "Choose here the Unit of Measure in which the prices and quantities are "
 "expressed below."
 msgstr ""
+"Wählen Sie die Maßeinheit in der Preise und Stückzahlen unten angezeigt "
+"werden sollen."
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -518,6 +522,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the product "
 "without removing it."
 msgstr ""
+"Wenn dieses Feld deaktiviert ist, können Produkte ausgeblendet werden."
 
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
@@ -711,6 +716,8 @@ msgid ""
 "Product UoM if not empty, in the default unit of measure of the product "
 "otherwise."
 msgstr ""
+"Die minimale Anzeige für die Bestellung beim Lieferanten, ausgedrückt in der "
+"Produkt Mengeneinheit des Lieferanten."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -723,6 +730,8 @@ msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
 msgstr ""
+"Der Preis wird als Standard Preis für einzelne verschiedene Mengeneinheiten "
+"hinterlegt"
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -969,10 +978,10 @@ msgstr ""
 "Verkaufspreis für alle Partner oder Produkte (oder deren Kategorien) die der "
 "Liste zugeordnet sind zu berechnen. Preislisten können aus mehreren "
 "Versionen (2010, 2011, Promotion Februar 2010, etc.) bestehen und jede "
-"Version hat eigene Regeln. \r\n"
-"Beispiel: Der Verkaufspreis für Produkte der Produktkategorie "
-"\"Büromaterial\" basiert auf dem Einkaufspreis multipliziert mit 1.80 und "
-"gilt nur für Kunden der Kategorie \"Norddeutschland\"."
+"Version hat eigene Regeln. Beispiel: Der Verkaufspreis für Produkte der "
+"Produktkategorie \"Büromaterial\" basiert auf dem Einkaufspreis "
+"multipliziert mit 1.80 und gilt nur für Kunden der Kategorie "
+"\"Norddeutschland\"."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1228,6 +1237,28 @@ msgid ""
 "    Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"    Dies Anwendung ist das Basis-Modul für die Verwaltung von Produkten und "
+"Preislisten in OpenERP.\n"
+"\n"
+"     Das Produkt Modul unterstützt Varianten, unterschiedliche Preislisten, "
+"Lieferanten\n"
+"     Informationen, verschiedene Dispositionsverfahren vom Lager / vom "
+"Auftrag, verschiedene Mengeneinheiten,\n"
+"     verschiedene Produktverpackungen sowie die Definition von "
+"Produkteigenschaften.\n"
+"\n"
+"     Das Preislistenmanagement unterstützt folgende Anforderungen:\n"
+"     * Mehrstufige Rabatte (nach Produkt, Kategorie, Menge)\n"
+"     * Preisberechnung auf Basis verschiedener Kriterien:\n"
+"         * Andere Preisliste,\n"
+"         * Produktkosten,\n"
+"         * Listenpreis,\n"
+"         * Lieferantenpreis, ...\n"
+"     Preislisten Präferenzen für Produkte und / oder Partnern.\n"
+"\n"
+"     Druck von Artikeldatenblättern oder von Produktetiketten mit Barcode.\n"
+"    "
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1296,7 +1327,7 @@ msgstr "Partner"
 #. module: product
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Sie können nicht zwei identische Benutzeranmeldungen definieren!"
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1332,7 +1363,7 @@ msgstr "Weitere ME"
 #: code:addons/product/product.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fehler !"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1379,6 +1410,10 @@ msgid ""
 "gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
+"Konfiguration der Reihenfolge, nach der verschiedene Preislistenpositionen "
+"sukzessiv überprüft werden. Die Prüfung erfolgt von der höchsten Priorität "
+"bis zur niedrigsten Priorität  der Reihenfolge und stoppt an der Stelle, wo "
+"der passende Artikel gefunden wird."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1449,6 +1484,9 @@ msgid ""
 "Conversion from Product UoM m to Default UoM PCE is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"Umrechnung der Produkt Mengeneinheit zur Standard Mengeneinheit Stk ist "
+"nicht möglich, wenn die Mengeneinheiten zu unterschiedlichen Kategorien "
+"zugeordnet sind."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1489,7 +1527,7 @@ msgstr "Basic PC"
 msgid ""
 "If the active field is set to False, it will allow you to hide the pricelist "
 "without removing it."
-msgstr ""
+msgstr "Durch Deaktivierung können Sie die Preisliste ausblenden."
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -1518,6 +1556,8 @@ msgstr ""
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"Das ausgewählte Unternehmen gehört nicht zu den zulässigen Unternehmen für "
+"diesen Benutzer"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1813,7 +1853,7 @@ msgstr "Bezeichnung für diese Preisart."
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr ""
+msgstr "Mengeneinheit bei Lieferanten"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -2088,7 +2128,7 @@ msgstr "Gewichte"
 #. module: product
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fehler! Sie können keine rekursiven Elemente anlegen"
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
@@ -2393,18 +2433,17 @@ msgid ""
 msgstr ""
 "Es kann mehr als eine Version einer Preisliste geben. Wenn Sie weitere "
 "Versionen einer Preisliste benötigen, können Sie hier erstellen und "
-"Verwalten. \r\n"
-"Ein paar Beispiele: 2010, 2011, Promotion Februar 2010, etc."
+"Verwalten. Ein paar Beispiele: 2010, 2011, Promotion Februar 2010, etc."
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
 msgid ""
 "Set a category of product if this rule only apply to products of a category "
-"and his childs. Keep empty for all products"
+"and his children. Keep empty for all products"
 msgstr ""
-"Definiere eine Produkt Kategorie, wenn diese Regel nur auf die Produkte "
-"einer Kategorie und seinen zugeordneten Produkten angewendet werden soll. "
-"Lasse den Eintrag leer für alle Produkte."
+"Definieren Sie eine Produktkategorie, nach der diese Regel nur für diese "
+"Kategorie und dessen untergeordnete Element gilt. Bitte lassen Sie dieses "
+"Feld konsequenterweise dann auch für alle anderen Produkte frei."
 
 #~ msgid "Price Min. Margin"
 #~ msgstr "Min. Preisspanne"
@@ -2849,6 +2888,14 @@ msgstr ""
 #~ msgstr ""
 #~ "Die minimale Bestellmenge bei einem Lieferanten, angezeigt in der Standard "
 #~ "Mengeneinheit für dieses Produkt."
+
+#~ msgid ""
+#~ "Set a category of product if this rule only apply to products of a category "
+#~ "and his childs. Keep empty for all products"
+#~ msgstr ""
+#~ "Definiere eine Produkt Kategorie, wenn diese Regel nur auf die Produkte "
+#~ "einer Kategorie und seinen zugeordneten Produkten angewendet werden soll. "
+#~ "Lasse den Eintrag leer für alle Produkte."
 
 #~ msgid "Shortcut for this menu already exists!"
 #~ msgstr "Die Verknüpfung existiert bereits für dieses Menü!"

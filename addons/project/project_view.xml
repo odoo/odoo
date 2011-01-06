@@ -21,7 +21,7 @@
                 <form string="Project">
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
-                        <field name="parent_id" domain="[('id','!=',active_id)]"/>
+                        <field name="parent_id" string="Parent Project" domain="[('id','!=',active_id)]" context="{'current_model': 'project.project'}"/>
                         <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
@@ -42,7 +42,6 @@
                             <group col="2" colspan="2" name="misc">
                                 <separator colspan="2" string="Miscelleanous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
-                                <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                                 <field name="warn_manager"/>
                             </group>
                             <newline/>
@@ -74,6 +73,7 @@
                             <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"/>
                             <field domain="[('partner_id','=',partner_id)]" name="contact_id" string="Invoice Address"/>
                             <field name="warn_customer"/>
+                            <field name="currency_id" select="1" groups="base.group_multi_company" required="1"/>
                             <newline/>
                             <group colspan="4" col="4" groups="base.group_extended">
                                 <separator colspan="2" string="Mail Header"/>
@@ -143,7 +143,7 @@
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
-                    <field name="parent_id" invisible="1"/>
+                    <field name="parent_id" string="Parent Project" invisible="1"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
@@ -153,11 +153,25 @@
             </field>
         </record>
 
+       <record id="view_project_project_gantt" model="ir.ui.view">
+            <field name="name">project.project.gantt</field>
+            <field name="model">project.project</field>
+            <field name="type">gantt</field>
+            <field name="arch" type="xml">
+                <gantt color="user_id" date_delay="planned_hours" date_start="date_start" string="Projects">
+                    <level object="project.project" link="id" domain="[]">
+                        <field name="complete_name"/>
+                    </level>
+                </gantt>
+            </field>
+        </record>
+
         <record id="open_view_project_all" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
             <field name="view_type">form</field>
             <field name="domain">[]</field>
+            <field name="view_mode">tree,form,gantt</field>
             <field name="view_id" ref="view_project"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{'search_default_Current':1}</field>

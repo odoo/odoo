@@ -113,7 +113,7 @@ class make_delivery(osv.osv_memory):
                     'type': 'make_to_stock'
                 })
     
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 make_delivery()
 

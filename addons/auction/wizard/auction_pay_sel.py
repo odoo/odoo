@@ -52,6 +52,6 @@ class auction_pay_sel(osv.osv_memory):
             journal_id = datas.get('journal_id', False)
             if lot.sel_inv_id:
                 p = invoice_obj.pay_and_reconcile(['lot.sel_inv_id.id'], datas['amount'], datas['dest_account_id'], journal_id, account_id, period_id, journal_id, context)
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
 auction_pay_sel()
