@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2009-01-30 15:04+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Thai <th@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:41+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -53,15 +53,19 @@ msgid "Human Resources"
 msgstr ""
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work E-mail"
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements. You can keep "
+"track of the number of employees you have per job position and how many you "
+"expect in the future. You can also attach a survey to a job position that "
+"will be used in the recruitment process to evaluate the applicants for this "
+"job position."
 msgstr ""
 
 #. module: hr
@@ -170,6 +174,14 @@ msgid "Employee Passport Information"
 msgstr ""
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Department Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Position"
 msgstr ""
@@ -271,6 +283,11 @@ msgstr ""
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
 msgstr ""
 
 #. module: hr
@@ -484,14 +501,6 @@ msgid "Status"
 msgstr ""
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"Your Company's Departments Structure is used to manage all documents related "
-"to employees by departments: expenses and timesheet validation, leaves "
-"management, recruitements, etc."
-msgstr ""
-
-#. module: hr
 #: view:hr.installer:0
 msgid "Configure"
 msgstr ""
@@ -655,6 +664,7 @@ msgstr ""
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr ""
 
@@ -688,6 +698,11 @@ msgstr ""
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Mobile"
 msgstr ""
 
 #. module: hr
@@ -792,7 +807,6 @@ msgid "Expenses"
 msgstr ""
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
@@ -807,14 +821,6 @@ msgstr ""
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"JJob Positions is used to define jobs and their requirements. You can attach "
-"a survey to a job position. This survey will be used in the recruitment "
-"process to evaluate the applicants for this job position."
 msgstr ""
 
 #. module: hr
