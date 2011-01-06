@@ -350,7 +350,7 @@ def Phase_%d():
                 task_ids.append(task.id)
 
             #Temp File to test the Code for the Allocation
-#            fn = '/home/hmo/Desktop/plt.py'
+#            fn = '/home/tiny/Desktop/plt.py'
 #            fp = open(fn, 'w')
 #            fp.writelines(func_str)
 #            fp.close()
@@ -509,25 +509,24 @@ def Project_%d():
 
             for phase_id in phase_ids:
                 act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
+                resources = act_phase.resource_ids
                 phase = eval("project.Phase_%d" % phase_id)
-
                 start_date = phase.start.to_datetime()
                 end_date = phase.end.to_datetime()
+                if resources:
+                    for res in resources:
+                        vals = {}
+                        vals.update({'date_start' :  start_date })
+                        vals.update({'date_end' :  end_date})
+                        resource_allocation_pool.write(cr, uid, res.id, vals)
                 if act_phase.task_ids:
                     for task in act_phase.task_ids:
                         vals = {}
                         #Getting values of the Tasks
                         temp = eval("phase.Task_%s"%task.id)
                         vals.update({'date_start' : temp.start.strftime('%Y-%m-%d %H:%M:%S')})
-#                        vals.update({'date_end' : temp.end.strftime('%Y-%m-%d %H:%M:%S')})
-                        vals.update({'planned_hours' : str(temp._Task__calc_duration().strftime('%H.%M'))})
-                        vals.update({'date_deadline' : str(temp._Task__calc_end().strftime('%Y-%m-%d %H:%M:%S'))})
+                        vals.update({'date_end' : temp.end.strftime('%Y-%m-%d %H:%M:%S')})
                         task_pool.write(cr, uid, task.id, vals, context=context)
-
-                        for i in dir(temp):
-                            print "i**********", i,eval("project.Phase_%d.Task_%s.%s"%(phase_id,task.id,i))
-                        print ">>>><<<<<<<<<<<<<<<<>",temp.booked_resource
-                        
                 # Recalculate date_start and date_end
                 # according to constraints on date start and date end on phase
 
@@ -550,6 +549,13 @@ def Project_%d():
                                       'date_end': end_date.strftime('%Y-%m-%d')
                                     }, context=context)
         return True            
+
+    #TODO: DO Resource allocation and compute availability
+    def compute_allocation(self, rc, uid, ids, start_date, end_date, context=None):
+        if context ==  None:
+            contex = {}
+        allocation = {}
+        return allocation
 
     def schedule_tasks(self, cr, uid, ids, context=None):
         """
@@ -629,12 +635,11 @@ def Project_%d():
                 task_ids.append(task.id)
 
             #Temp File to test the Code for the Allocation
-#            fn = '/home/hmo/Desktop/plt.py'
+#            fn = '/home/tiny/Desktop/plt.py'
 #            fp = open(fn, 'w')
 #            fp.writelines(func_str)
 #            fp.close()
 
-    
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
@@ -684,7 +689,7 @@ class project_task(osv.osv):
         duration = str(task.planned_hours )+ 'H'
         resource = False
         if task.user_id:
-            resource_ids = self.search(cr, uid, [('user_id', '=', task.user_id.id),('resource_type','=','user')], context=context)
+            resource_ids = self.search(cr, uid, [('user_id', '=', task.user_id.id)], context=context)
             if len(resource_ids):
                 resource = 'Resource_%s'%resource_ids[0]
         # Phases Defination for the Project 
