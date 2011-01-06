@@ -1,0 +1,263 @@
+-
+  In order to test scheduling of tasks, I create four tasks with different sequences and schedule them.
+- 
+  I create address for first user.
+- 
+  !record {model: res.partner.address, id: res_partner_address_user0}:
+    name: User 1
+- 
+  I create address for second user.
+- 
+  !record {model: res.partner.address, id: res_partner_address_user1}:
+    name: User 2    
+- 
+  I create first user.
+- 
+  !record {model: res.users, id: res_users_user0}:
+    address_id: res_partner_address_user0
+    company_id: base.main_company
+    context_lang: en_US
+    groups_id:
+      - base.group_partner_manager
+      - base.group_user
+    login: user1
+    name: User 1
+    password: user1
+- 
+  I create second user.
+- 
+  !record {model: res.users, id: res_users_user1}:
+    address_id: res_partner_address_user1
+    company_id: base.main_company
+    context_lang: en_US
+    groups_id:
+      - base.group_partner_manager
+      - base.group_user
+    login: user2
+    name: User 2
+    password: user2    
+- 
+  I create a Project.
+- 
+  !record {model: project.project, id: project_project_projecta0}:
+    balance: 0.0
+    credit: 0.0
+    currency_id: base.EUR
+    debit: 0.0
+    effective_hours: 0.0
+    name: Project A
+    members:
+      - res_users_user0
+      - res_users_user1
+    phase_ids:
+      - date_start: '2011-01-06'
+        duration: 2.0
+        name: Phase A
+        product_uom: product.uom_day
+        state: draft
+        task_ids:
+          - delay_hours: 0.0
+            effective_hours: 0.0
+            name: Task D
+            planned_hours: 5.0
+            remaining_hours: 5.0
+            state: draft
+            total_hours: 5.0
+          - delay_hours: 0.0
+            effective_hours: 0.0
+            name: Task C
+            planned_hours: 5.0
+            remaining_hours: 5.0
+            sequence: 11
+            state: draft
+            total_hours: 5.0
+          - delay_hours: 0.0
+            effective_hours: 0.0
+            name: Task B
+            planned_hours: 5.0
+            remaining_hours: 5.0
+            sequence: 13
+            state: draft
+            total_hours: 5.0
+          - delay_hours: 0.0
+            effective_hours: 0.0
+            name: Task A
+            planned_hours: 5.0
+            remaining_hours: 5.0
+            sequence: 14
+            state: draft
+            total_hours: 5.0
+    planned_hours: 20.0
+    progress_rate: 0.0
+    quantity: 0.0
+    quantity_max: 0.0
+    state: open
+    tasks:
+      - delay_hours: 0.0
+        effective_hours: 0.0
+        name: Task D
+        planned_hours: 5.0
+        remaining_hours: 5.0
+        state: draft
+        total_hours: 5.0
+      - delay_hours: 0.0
+        effective_hours: 0.0
+        name: Task C
+        planned_hours: 5.0
+        remaining_hours: 5.0
+        sequence: 11
+        state: draft
+        total_hours: 5.0
+      - delay_hours: 0.0
+        effective_hours: 0.0
+        name: Task B
+        planned_hours: 5.0
+        remaining_hours: 5.0
+        sequence: 13
+        state: draft
+        total_hours: 5.0
+      - delay_hours: 0.0
+        effective_hours: 0.0
+        name: Task A
+        planned_hours: 5.0
+        remaining_hours: 5.0
+        sequence: 14
+        state: draft
+        total_hours: 5.0
+    total_hours: 15.0
+- 
+  I create first task with highest sequence.
+- 
+  !record {model: project.task, id: project_task_taska0}:
+    delay_hours: 0.0
+    effective_hours: 0.0
+    name: Task A
+    planned_hours: 5.0
+    project_id: project_project_projecta0
+    remaining_hours: 5.0
+    sequence: 14
+    state: draft
+    total_hours: 5.0
+- 
+  I create second task.
+- 
+  !record {model: project.task, id: project_task_taskb0}:
+    delay_hours: 0.0
+    effective_hours: 0.0
+    name: Task B
+    planned_hours: 5.0
+    project_id: project_project_projecta0
+    remaining_hours: 5.0
+    sequence: 13
+    state: draft
+    total_hours: 5.0
+- 
+  I create third task.
+- 
+  !record {model: project.task, id: project_task_taskc0}:
+    delay_hours: 0.0
+    effective_hours: 0.0
+    name: Task C
+    planned_hours: 5.0
+    project_id: project_project_projecta0
+    remaining_hours: 5.0
+    sequence: 11
+    state: draft
+    total_hours: 5.0
+-
+  I create fourth task with lowest sequence.
+- 
+  !record {model: project.task, id: project_task_taskd0}:
+    delay_hours: 0.0
+    effective_hours: 0.0
+    name: Task D
+    planned_hours: 5.0
+    project_id: project_project_projecta0
+    remaining_hours: 5.0
+    state: draft
+    total_hours: 5.0
+- 
+  Now I create a resource for first user.
+- 
+  !record {model: resource.resource, id: resource_resource_user0}:
+    name: User 1
+    resource_type: user
+    time_efficiency: 1.0
+    user_id: res_users_user0
+- 
+  I create a resource for second user.
+- 
+  !record {model: resource.resource, id: resource_resource_user1}:
+    name: User 2
+    resource_type: user
+    time_efficiency: 1.0
+    user_id: res_users_user1
+- 
+  Now I create one phase for the project.
+- 
+  !record {model: project.phase, id: project_phase_phasea0}:
+    date_start: '2011-01-06'
+    duration: 2.0
+    name: Phase A
+    product_uom: product.uom_day
+    project_id: project_project_projecta0
+    resource_ids:
+      - project_id: project_project_projecta0
+        resource_id: resource_resource_user0
+      - project_id: project_project_projecta0
+        resource_id: resource_resource_user1
+    state: draft
+    task_ids:
+      - delay_hours: 0.0
+        effective_hours: 0.0
+        name: Task D
+        planned_hours: 5.0
+        project_id: project_project_projecta0
+        remaining_hours: 5.0
+        state: draft
+        total_hours: 5.0
+      - delay_hours: 0.0
+        effective_hours: 0.0
+        name: Task C
+        planned_hours: 5.0
+        project_id: project_project_projecta0
+        remaining_hours: 5.0
+        sequence: 11
+        state: draft
+        total_hours: 5.0
+      - delay_hours: 0.0
+        effective_hours: 0.0
+        name: Task B
+        planned_hours: 5.0
+        project_id: project_project_projecta0
+        remaining_hours: 5.0
+        sequence: 13
+        state: draft
+        total_hours: 5.0
+      - delay_hours: 0.0
+        effective_hours: 0.0
+        name: Task A
+        planned_hours: 5.0
+        project_id: project_project_projecta0
+        remaining_hours: 5.0
+        sequence: 14
+        state: draft
+        total_hours: 5.0
+-
+  Now I create a record to schedule the tasks of project.
+-
+  !record {model: project.compute.tasks, id: project_compute_tasks0}:
+    project_id: project_project_projecta0
+-
+  I schedule the tasks.
+-
+  !python {model: project.compute.tasks}: |
+    self.compute_date(cr, uid, [ref("project_compute_tasks0")])
+-
+  I check that whether the tasks now allocated to respected resources or not.
+-
+  !python {model: project.task}: |
+    task_ids = self.search(cr, uid, [('project_id','=',ref('project_project_projecta0'))])
+    for task in self.browse(cr, uid, task_ids):
+      if (not task.user_id) or (not task.date_start) or (not task.date_end):
+        raise AssertionError("Tasks are not scheduled.")

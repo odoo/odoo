@@ -42,12 +42,13 @@ Features.
     "test": [
           'test/schedule_project_phases.yml',
           'test/project_schedule_consecutive_day.yml',
-          'test/project_schedule_without_wroking_hour.yml'
+          'test/project_schedule_without_wroking_hour.yml',
 #          'test/schedule_project_tasks.yml',
 #          'test/test_project_long_term.yml', 
 #          'test/schedule_phase_tasks.yml',
 #          'test/test_schedule_phases_case1.yml',
 #          'test/test_schedule_phases_case2.yml',
+        'test/test_schedule_tasks_case1.yml',
     ],
     "update_xml": [
         "security/ir.model.access.csv",
