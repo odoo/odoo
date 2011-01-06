@@ -161,6 +161,7 @@ if tools.config["translate_in"]:
                      tools.config["translate_in"], 
                      tools.config["language"],
                      context=context)
+    tools.trans_update_res_ids(cr)
     cr.commit()
     cr.close()
     sys.exit(0)

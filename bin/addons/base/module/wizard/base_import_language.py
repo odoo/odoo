@@ -57,6 +57,7 @@ class base_language_import(osv.osv_memory):
         fileobj.seek(0)
 
         tools.trans_load_data(cr, fileobj, fileformat, import_data.code, lang_name=import_data.name)
+        tools.trans_update_res_ids(cr)
         fileobj.close()
         return {}
 
