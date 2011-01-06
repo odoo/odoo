@@ -8,36 +8,36 @@
   In order to test the 'Post Journal Entries' wizard in OpenERP, I created an account move
 -
   !record {model: account.move, id: account_move_0}:
-    date: '2010-06-07'
+    date: !eval time.strftime('%Y-%m-%d')
     journal_id: account.bank_journal
     line_id:
       - account_id: account.cash
         amount_currency: 0.0
         credit: 2000.0
-        date: '2010-06-07'
+        date: !eval time.strftime('%Y-%m-%d')
         debit: 0.0
         journal_id: account.bank_journal
         name: Basic Computer
         partner_id: base.res_partner_desertic_hispafuentes
         period_id: account.period_6
-        ref: '2010010'
+        ref: '2011010'
         tax_amount: 0.0
       - journal_id: account.bank_journal
         period_id: account.period_6
-        ref: '2010010'
+        ref: '2011010'
         tax_code_id: account_tax_code_0      
         tax_amount: 0.0
         account_id: account.a_recv
         amount_currency: 0.0
         credit: 0.0
-        date: '2010-06-07'
+        date: !eval time.strftime('%Y-%m-%d')
         debit: 2000.0
         name: Basic Computer
         partner_id: base.res_partner_desertic_hispafuentes
         quantity: 0.0
     name: /
     period_id: account.period_6
-    ref: '2010010'
+    ref: '2011010'
     state: draft
 
 -

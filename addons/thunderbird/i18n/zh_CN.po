@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-15 13:07+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-02 15:42+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: thunderbird
@@ -24,18 +24,18 @@ msgid "Thunderbird Plug-in"
 msgstr "Thunderbird 插件"
 
 #. module: thunderbird
-#: help:thunderbird.installer,thunderbird:0
-msgid ""
-"Allows you to select an object that you’d like to add to your email and its "
-"attachments."
-msgstr ""
-
-#. module: thunderbird
 #: help:thunderbird.installer,plugin_file:0
 msgid ""
 "Thunderbird plug-in file. Save as this file and install this plug-in in "
 "thunderbird."
 msgstr "Thunderbird 插件。存为文件并在 Thunderbird 里安装这个插件。"
+
+#. module: thunderbird
+#: help:thunderbird.installer,thunderbird:0
+msgid ""
+"Allows you to select an object that you would like to add to your email and "
+"its attachments."
+msgstr ""
 
 #. module: thunderbird
 #: help:thunderbird.installer,pdf_file:0
@@ -58,31 +58,14 @@ msgid "Installation Manual"
 msgstr "安装手册"
 
 #. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Configure"
-msgstr "设置"
+#: field:thunderbird.installer,description:0
+msgid "Description"
+msgstr "描述"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "title"
 msgstr "标题"
-
-#. module: thunderbird
-#: model:ir.module.module,description:thunderbird.module_meta_information
-msgid ""
-"\n"
-"      This module is required for the thuderbird plug-in to work\n"
-"      properly.\n"
-"      The Plugin allows you archive email and its attachments to the "
-"selected \n"
-"      OpenERP objects. You can select a partner, a task, a project, an "
-"analytical\n"
-"      account,or any other object and attach selected mail as .eml file in \n"
-"      attachment of selected record. You can create Documents for crm Lead,\n"
-"      HR Applicant and project issue from selected mails.\n"
-"\n"
-"      "
-msgstr ""
 
 #. module: thunderbird
 #: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
@@ -114,19 +97,14 @@ msgid "File name"
 msgstr "文件名"
 
 #. module: thunderbird
-#: field:thunderbird.installer,progress:0
-msgid "Configuration Progress"
-msgstr "设置进度"
-
-#. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "Installation and Configuration Steps"
 msgstr "安装和设置步骤"
 
 #. module: thunderbird
-#: field:thunderbird.installer,description:0
-msgid "Description"
-msgstr "描述"
+#: field:thunderbird.installer,progress:0
+msgid "Configuration Progress"
+msgstr "设置进度"
 
 #. module: thunderbird
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
@@ -138,7 +116,12 @@ msgstr "Thunderbird 插件设置"
 #. module: thunderbird
 #: model:ir.model,name:thunderbird.model_thunderbird_partner
 msgid "Thunderbid Plugin Tools"
-msgstr ""
+msgstr "Thunderbird 插件工具"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
+msgid "Configure"
+msgstr "设置"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
@@ -149,6 +132,23 @@ msgstr "略过"
 #: field:thunderbird.installer,config_logo:0
 msgid "Image"
 msgstr "图片"
+
+#. module: thunderbird
+#: model:ir.module.module,description:thunderbird.module_meta_information
+msgid ""
+"\n"
+"      This module is required for the thuderbird plug-in to work\n"
+"      properly.\n"
+"      The Plugin allows you archive email and its attachments to the "
+"selected \n"
+"      OpenERP objects. You can select a partner, a task, a project, an "
+"analytical\n"
+"      account,or any other object and attach selected mail as eml file in \n"
+"      attachment of selected record. You can create Documents for crm Lead,\n"
+"      HR Applicant and project issue from selected mails.\n"
+"\n"
+"      "
+msgstr ""
 
 #~ msgid "Reference"
 #~ msgstr "参考"

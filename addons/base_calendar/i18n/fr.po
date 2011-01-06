@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-21 02:51+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -66,9 +66,15 @@ msgid "Invited User"
 msgstr "Invité"
 
 #. module: base_calendar
-#: view:base.calendar.set.exrule:0
-msgid "Select range to Exclude"
-msgstr "Sélectionner une plage à exclure"
+#: view:calendar.attendee:0
+msgid "Invitation"
+msgstr "Invitation"
+
+#. module: base_calendar
+#: help:calendar.event,recurrency:0
+#: help:calendar.todo,recurrency:0
+msgid "Recurrent Meeting"
+msgstr ""
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -103,12 +109,6 @@ msgid "Fourth"
 msgstr "Quatrième"
 
 #. module: base_calendar
-#: help:calendar.event,count:0
-#: help:calendar.todo,count:0
-msgid "Repeat max that times"
-msgstr "Nombre de répétitions maximales"
-
-#. module: base_calendar
 #: field:calendar.event,show_as:0
 #: field:calendar.todo,show_as:0
 msgid "Show as"
@@ -131,12 +131,9 @@ msgid "Public"
 msgstr "Publique"
 
 #. module: base_calendar
-#: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-#: selection:res.alarm,trigger_interval:0
-msgid "Hours"
-msgstr "Heures"
+#: view:calendar.event:0
+msgid " "
+msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -146,7 +143,7 @@ msgid "March"
 msgstr "Mars"
 
 #. module: base_calendar
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:0
+#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Warning !"
 msgstr "Avertissement !"
@@ -185,9 +182,9 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr "Indique si une réponse est souhaitée"
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
-msgstr "Alarme simple"
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -195,10 +192,9 @@ msgid "The users that the original request was delegated to"
 msgstr "L' utilisateur à qui la demande initiale a été adressée"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: field:calendar.attendee,delegated_to:0
-msgid "Delegated To"
-msgstr "Délégué à"
+#: field:calendar.attendee,ref:0
+msgid "Event Ref"
+msgstr "Réf. de l'événement"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,we:0
@@ -220,16 +216,17 @@ msgid "Tue"
 msgstr "Mar"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
-
-#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Annuellement"
+
+#. module: base_calendar
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
+msgstr "Fin de l'événement"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -263,9 +260,11 @@ msgid "Invitation Detail"
 msgstr "Détail de l'invitation"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:0
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:0
+#: code:addons/base_calendar/base_calendar.py:1354
+#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
+#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
+#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
+#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:136
 #, python-format
 msgid "Error!"
 msgstr "Erreur!"
@@ -276,14 +275,9 @@ msgid "Chair Person"
 msgstr "Responsable"
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "Exclude range"
-msgstr "Plage à exclure"
-
-#. module: base_calendar
-#: view:calendar.event:0
-msgid "Select data for Custom Rule"
-msgstr "Sélectionner les données pour la règle personnalisée"
+#: selection:calendar.alarm,action:0
+msgid "Procedure"
+msgstr "Procédure"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -293,8 +287,6 @@ msgstr "Annulée"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Minutes"
 msgstr "Minutes"
@@ -320,10 +312,11 @@ msgid "Secondly"
 msgstr "Deuxièmement"
 
 #. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
-msgstr "Fin de l'événement"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
+msgstr "Date de l'événement"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -337,9 +330,19 @@ msgid "Provide external email address who will receive this invitation."
 msgstr "Indiquez le courriel de la personne qui doit recevoir l'invitation"
 
 #. module: base_calendar
-#: help:calendar.attendee,partner_id:0
-msgid "Partner related to contact"
-msgstr "Partenaire associé au contact"
+#: model:ir.module.module,description:base_calendar.module_meta_information
+msgid ""
+"Full featured calendar system that supports:\n"
+"    - Calendar of events\n"
+"    - Alerts (create requests)\n"
+"    - Recurring events\n"
+"    - Invitations to people"
+msgstr ""
+"Un système d'agenda complet :\n"
+"    - Évènement\n"
+"    - Rappels (création de demande de rappel)\n"
+"    - Évènements récurrents\n"
+"    - Invitations"
 
 #. module: base_calendar
 #: help:calendar.attendee,cutype:0
@@ -364,27 +367,26 @@ msgid "Optional Participation"
 msgstr "Participation facultative"
 
 #. module: base_calendar
-#: help:calendar.event,interval:0
-#: help:calendar.todo,interval:0
-msgid "Repeat every x"
-msgstr "Répéter tous les x"
-
-#. module: base_calendar
 #: field:calendar.event,date_deadline:0
 #: field:calendar.todo,date_deadline:0
 msgid "Deadline"
 msgstr "Echéance"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: code:addons/base_calendar/base_calendar.py:385
+#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Warning!"
 msgstr "Avertissement!"
 
 #. module: base_calendar
-#: view:base.calendar.set.exrule:0
-msgid "_Cancel"
-msgstr "_Annuler"
+#: help:calendar.event,active:0
+#: help:calendar.todo,active:0
+msgid ""
+"If the active field is set to          true, it will allow you to hide the "
+"event alarm information without removing it."
+msgstr ""
 
 #. module: base_calendar
 #: model:ir.module.module,shortdesc:base_calendar.module_meta_information
@@ -400,12 +402,24 @@ msgid "Organizer"
 msgstr "Agenda"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+#: field:calendar.event,user_id:0
+#: field:calendar.todo,user_id:0
+msgid "Responsible"
+msgstr "Responsable"
+
+#. module: base_calendar
 #: view:calendar.event:0
 #: model:res.request.link,name:base_calendar.request_link_meeting
-#, python-format
 msgid "Event"
 msgstr "Évènement"
+
+#. module: base_calendar
+#: help:calendar.event,edit_all:0
+#: help:calendar.todo,edit_all:0
+msgid "Edit all Occurrences  of recurrent Meeting."
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_occurs:0
@@ -455,6 +469,11 @@ msgid "Invite Type"
 msgstr "Type d'invitation"
 
 #. module: base_calendar
+#: help:calendar.attendee,partner_id:0
+msgid "Partner related to contact"
+msgstr "Partenaire associé au contact"
+
+#. module: base_calendar
 #: view:res.alarm:0
 msgid "Reminder details"
 msgstr "Détails du rappel"
@@ -502,9 +521,10 @@ msgid "Run"
 msgstr "Démarrer"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_calendar_alarm
-msgid "Event alarm information"
-msgstr "Information sur l'alarme de l'évènement"
+#: field:calendar.event,exdate:0
+#: field:calendar.todo,exdate:0
+msgid "Exception Date/Times"
+msgstr "Date/heure en exception"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
@@ -520,10 +540,11 @@ msgid "Repeat Until"
 msgstr "Répéter jusqu'au"
 
 #. module: base_calendar
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "Seconds"
-msgstr "Secondes"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid ""
+"Create specific calendar alarms that may be assigned to calendar events or "
+"meetings."
+msgstr ""
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -540,6 +561,11 @@ msgstr "Réponse obligatoire?"
 #: field:calendar.todo,base_calendar_url:0
 msgid "Caldav URL"
 msgstr "URL caldav"
+
+#. module: base_calendar
+#: view:base.calendar.set.exrule:0
+msgid "Select range to Exclude"
+msgstr "Sélectionner une plage à exclure"
 
 #. module: base_calendar
 #: field:calendar.event,recurrent_uid:0
@@ -583,6 +609,11 @@ msgid "Participation required"
 msgstr "Participation requise"
 
 #. module: base_calendar
+#: view:base.calendar.set.exrule:0
+msgid "_Cancel"
+msgstr "_Annuler"
+
+#. module: base_calendar
 #: field:calendar.event,create_date:0
 #: field:calendar.todo,create_date:0
 msgid "Created"
@@ -602,7 +633,7 @@ msgid "Daily"
 msgstr "Quotidien"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: code:addons/base_calendar/base_calendar.py:385
 #, python-format
 msgid "Can not Duplicate"
 msgstr "Ne peut pas dupliquer"
@@ -707,6 +738,12 @@ msgid "Individual"
 msgstr "Individuel"
 
 #. module: base_calendar
+#: help:calendar.event,count:0
+#: help:calendar.todo,count:0
+msgid "Repeat x times"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.alarm,user_id:0
 msgid "Owner"
 msgstr "Propriétaire"
@@ -761,7 +798,8 @@ msgid "Group"
 msgstr "Groupe"
 
 #. module: base_calendar
-#: view:calendar.event:0
+#: field:calendar.event,edit_all:0
+#: field:calendar.todo,edit_all:0
 msgid "Edit All"
 msgstr "Tout modifier"
 
@@ -783,7 +821,15 @@ msgid "Fri"
 msgstr "Ven"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+#: selection:res.alarm,trigger_interval:0
+msgid "Hours"
+msgstr "Heures"
+
+#. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Count can not be Negative"
 msgstr "Le décompte ne peut pas être négatif"
@@ -822,6 +868,11 @@ msgstr "Invitation de"
 
 #. module: base_calendar
 #: view:calendar.event:0
+msgid "End of recurrency"
+msgstr ""
+
+#. module: base_calendar
+#: view:calendar.event:0
 #: field:calendar.event.edit.all,alarm_id:0
 msgid "Reminder"
 msgstr "Rappel"
@@ -853,6 +904,8 @@ msgstr "Courriel des invités"
 
 #. module: base_calendar
 #: field:calendar.alarm,repeat:0
+#: field:calendar.event,count:0
+#: field:calendar.todo,count:0
 #: field:res.alarm,repeat:0
 msgid "Repeat"
 msgstr "Répéter"
@@ -894,11 +947,9 @@ msgid "June"
 msgstr "Juin"
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
-msgstr "Date de l'événement"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
+msgstr "Alarme simple"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -949,8 +1000,6 @@ msgstr "Lun"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,count:0
-#: field:calendar.event,count:0
-#: field:calendar.todo,count:0
 msgid "Count"
 msgstr "Nombre"
 
@@ -1015,7 +1064,7 @@ msgid "Wednesday"
 msgstr "Mercredi"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: code:addons/base_calendar/base_calendar.py:1090
 #, python-format
 msgid "Interval can not be Negative"
 msgstr "L'intervalle ne peut pas être négatif"
@@ -1035,9 +1084,9 @@ msgid "Active"
 msgstr "Actif"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-msgid "Invitation"
-msgstr "Invitation"
+#: view:calendar.event:0
+msgid "Choose day in the month where repeat the meeting"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1070,9 +1119,10 @@ msgid "Participation role for the calendar user"
 msgstr "Rôle de l'utilisateur vis à vis de l'agenda"
 
 #. module: base_calendar
-#: field:calendar.attendee,ref:0
-msgid "Event Ref"
-msgstr "Réf. de l'événement"
+#: view:calendar.attendee:0
+#: field:calendar.attendee,delegated_to:0
+msgid "Delegated To"
+msgstr "Délégué à"
 
 #. module: base_calendar
 #: help:calendar.alarm,action:0
@@ -1085,6 +1135,11 @@ msgid "Search Events"
 msgstr "Chercher des événements"
 
 #. module: base_calendar
+#: view:calendar.event:0
+msgid "Recurrency Option"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
@@ -1093,8 +1148,6 @@ msgstr "Hebdomadaire"
 
 #. module: base_calendar
 #: help:calendar.alarm,active:0
-#: help:calendar.event,active:0
-#: help:calendar.todo,active:0
 #: help:res.alarm,active:0
 msgid ""
 "If the active field is set to true, it will allow you to hide the event "
@@ -1147,6 +1200,12 @@ msgid "Done"
 msgstr "Terminé"
 
 #. module: base_calendar
+#: help:calendar.event,interval:0
+#: help:calendar.todo,interval:0
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr ""
+
+#. module: base_calendar
 #: view:base_calendar.invite.attendee:0
 #: field:base_calendar.invite.attendee,user_ids:0
 msgid "Users"
@@ -1154,7 +1213,6 @@ msgstr "Utilisateurs"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: view:calendar.event:0
 msgid "of"
 msgstr "de"
 
@@ -1176,11 +1234,6 @@ msgstr "res.users"
 #: selection:calendar.todo,week_list:0
 msgid "Tuesday"
 msgstr "Mardi"
-
-#. module: base_calendar
-#: selection:calendar.alarm,action:0
-msgid "Procedure"
-msgstr "Procédure"
 
 #. module: base_calendar
 #: help:calendar.alarm,description:0
@@ -1218,15 +1271,12 @@ msgid "Tentative"
 msgstr "Provisoire"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-#: field:calendar.event,user_id:0
-#: field:calendar.todo,user_id:0
-msgid "Responsible"
-msgstr "Responsable"
+#: field:calendar.event,recurrency:0
+#: field:calendar.todo,recurrency:0
+msgid "Recurrent"
+msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
 #: field:calendar.event,rrule_type:0
 #: field:calendar.todo,rrule_type:0
 msgid "Recurrency"
@@ -1244,12 +1294,6 @@ msgstr "Invitations"
 #: selection:calendar.todo,week_list:0
 msgid "Thursday"
 msgstr "Jeudi"
-
-#. module: base_calendar
-#: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,rrule_type:0
-msgid "Custom"
-msgstr "Personnalisé"
 
 #. module: base_calendar
 #: field:calendar.event,exrule:0
@@ -1288,9 +1332,10 @@ msgid "Month"
 msgstr "Mois"
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
-msgstr "Courriel externe"
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
+msgstr "Inviter les personnes"
 
 #. module: base_calendar
 #: help:calendar.event,rrule:0
@@ -1354,12 +1399,6 @@ msgid "ir.values"
 msgstr "ir.values"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
-msgstr "Inviter les personnes"
-
-#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Objects"
 msgstr "Objets"
@@ -1378,19 +1417,9 @@ msgid "Sat"
 msgstr "Sam"
 
 #. module: base_calendar
-#: model:ir.module.module,description:base_calendar.module_meta_information
-msgid ""
-"Full featured calendar system that supports:\n"
-"    - Calendar of events\n"
-"    - Alerts (create requests)\n"
-"    - Recurring events\n"
-"    - Invitations to people"
+#: view:calendar.event:0
+msgid "Choose day where repeat the meeting"
 msgstr ""
-"Un système d'agenda complet :\n"
-"    - Évènement\n"
-"    - Rappels (création de demande de rappel)\n"
-"    - Évènements récurrents\n"
-"    - Invitations"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
@@ -1432,10 +1461,9 @@ msgid "Name"
 msgstr "Nom"
 
 #. module: base_calendar
-#: field:calendar.event,exdate:0
-#: field:calendar.todo,exdate:0
-msgid "Exception Date/Times"
-msgstr "Date/heure en exception"
+#: model:ir.model,name:base_calendar.model_calendar_alarm
+msgid "Event alarm information"
+msgstr "Information sur l'alarme de l'évènement"
 
 #. module: base_calendar
 #: help:calendar.alarm,name:0
@@ -1453,7 +1481,7 @@ msgid "Alarm"
 msgstr "Alarme"
 
 #. module: base_calendar
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:0
+#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Please Apply Recurrency before applying Exception Rule."
 msgstr ""
@@ -1465,11 +1493,21 @@ msgid "Sent By User"
 msgstr "Envoyé par l'utilisateur"
 
 #. module: base_calendar
+#: view:calendar.event:0
+msgid "Repeat interval"
+msgstr ""
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
 msgid "April"
 msgstr "Avril"
+
+#. module: base_calendar
+#: view:calendar.event:0
+msgid "Recurrency period"
+msgstr ""
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,week_list:0
@@ -1592,12 +1630,9 @@ msgid "Duration"
 msgstr "Durée"
 
 #. module: base_calendar
-#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
-msgid ""
-"Create specific calendar alarms that can be assigned to calendar events or "
-"meetings."
-msgstr ""
-"Créer des alarmes associées à des événements de l'agenda ou à des réunions."
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
+msgstr "Courriel externe"
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
@@ -1622,6 +1657,24 @@ msgstr ""
 msgid "Fifth"
 msgstr "Cinquième"
 
+#~ msgid "Select data for Custom Rule"
+#~ msgstr "Sélectionner les données pour la règle personnalisée"
+
+#~ msgid "Exclude range"
+#~ msgstr "Plage à exclure"
+
+#~ msgid "Repeat max that times"
+#~ msgstr "Nombre de répétitions maximales"
+
+#~ msgid "Seconds"
+#~ msgstr "Secondes"
+
+#~ msgid "Custom"
+#~ msgstr "Personnalisé"
+
+#~ msgid "Repeat every x"
+#~ msgstr "Répéter tous les x"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nom de modèle incorrect dans la définition de l'action"
 
@@ -1633,3 +1686,9 @@ msgstr "Cinquième"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Erreur ! Vous ne pouvez pas créer de menu récursif."
+
+#~ msgid ""
+#~ "Create specific calendar alarms that can be assigned to calendar events or "
+#~ "meetings."
+#~ msgstr ""
+#~ "Créer des alarmes associées à des événements de l'agenda ou à des réunions."
