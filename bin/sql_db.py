@@ -133,7 +133,7 @@ class Cursor(object):
             raise
         except Exception:
             if log_exceptions or self.sql_log:
-                self.__logger.exception("bad query: %s", self._obj.query or query)
+                self.__logger.error("bad query: %s", self._obj.query or query)
             raise
 
         if self.sql_log:
