@@ -68,7 +68,7 @@ send an Email to Invited Person')
         model = False
         context_id = context and context.get('active_id', False) or False
         if not context or not context.get('model'):
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
         else:
             model = context.get('model')
 
@@ -89,7 +89,7 @@ send an Email to Invited Person')
                 if context_id:
                     ref = {'ref': '%s,%s' % (model, base_calendar.base_calendar_id2real_id(context_id))}
                 else:
-                    return {}
+                    return {'type': 'ir.actions.act_window_close'}
             if type == 'internal':
                 
                 if not datas.get('user_ids'):
@@ -144,7 +144,7 @@ send an Email to Invited Person')
                 att_obj._send_mail(cr, uid, attendees, mail_to, \
                        email_from = current_user.user_email or tools.config.get('email_from', False))
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, *args, **argv):

@@ -17,11 +17,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import time
 
 from osv import fields, osv
-import pooler
-from tools import config
 import tools
 
 class sale_receipt_report(osv.osv):

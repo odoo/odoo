@@ -30,7 +30,7 @@ class event_confirm(osv.osv_memory):
 
     def confirm(self, cr, uid, ids, context=None):
         self.pool.get('event.event').do_confirm(cr, uid, context.get('event_ids', []), context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 event_confirm()
 

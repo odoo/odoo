@@ -174,7 +174,7 @@ class stock_partial_picking(osv.osv_memory):
                                                     'product_currency': p_moves[move.id].currency.id,
                                                     })
         pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
         
    

@@ -53,7 +53,7 @@ class analytic_plan_create_model(osv.osv_memory):
                 'target': 'new',
             }
         else:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
 analytic_plan_create_model()
 

@@ -65,7 +65,7 @@ class payment_order_create(osv.osv_memory):
         data = self.read(cr, uid, ids, [], context=context)[0]
         line_ids = data['entries']
         if not line_ids:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
         payment = order_obj.browse(cr, uid, context['active_id'], context=context)
         t = None
@@ -90,7 +90,7 @@ class payment_order_create(osv.osv_memory):
                 'date': date_to_pay,
                 'currency': line.invoice and line.invoice.currency_id.id or False,
                 }, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def search_entries(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.move.line')
