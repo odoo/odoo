@@ -5,9 +5,9 @@
 -
   !record {model: product.category, id: product_category_allproductssellable0}:
     name: Mobile Products Sellable
-- 
-  I define product category Mobile Services. 
-- 
+-
+  I define product category Mobile Services.
+-
   !record {model: product.category, id: product_category_services0}:
     name: Mobile Services
 -
@@ -64,7 +64,7 @@
 -
   !record {model: sale.order, id: sale_order_so0}:
     client_order_ref: ref1
-    date_order: '2010-08-4'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: Test_SO001
     order_line:

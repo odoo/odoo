@@ -10,8 +10,8 @@
     invoice_state: 2binvoiced
     move_lines:
       - company_id: base.main_company
-        date_expected: '2010-08-03 11:05:47'
-        date: '2010-08-03 11:05:47'
+        date_expected: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+        date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
         location_id: stock.stock_location_stock
         product_id: product.product_product_pc1
         product_qty: 3.0
@@ -37,19 +37,19 @@
       1, "tz": False, "active_model": "ir.ui.menu", "contact_display": "partner",
       "active_ids": [ref("stock.menu_action_picking_tree")], "active_id": ref("stock.menu_action_picking_tree"),
       })
-- 
+-
   I create a record for partial picking.
-- 
+-
   !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: '2010-08-03 11:25:58'
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
 -
   I make picking order Done.
-- 
+-
   !python {model: stock.partial.picking}: |
      pick_obj = self.pool.get('stock.picking')
      partial = self.browse(cr, uid, ref('stock_partial_picking_0'), context)
      partial_datas = {
-            'delivery_date' : partial.date         
+            'delivery_date' : partial.date
      }
      for pick in pick_obj.browse(cr, uid, [ref('stock_picking_out0')]):
         for m in pick.move_lines:
@@ -59,13 +59,13 @@
                     'product_uom' : m.product_uom.id
            }
      pick_obj.do_partial(cr, uid, [ref('stock_picking_out0')], partial_datas, context=context)
-- 
+-
   As the Invoice state of the picking order is To be invoiced. I create invoice for my outgoing picking order.
-- 
+-
   !python {model: stock.invoice.onshipping}: |
     wiz_id = self.create(cr, uid, {'invoice_date': '2010-08-04', 'journal_id': ref('account.bank_journal')},
       {'active_ids': [ref("stock_picking_out0")]})
-    self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US", 
+    self.create_invoice(cr, uid, [wiz_id], {"lang": "en_US",
       "search_default_available": 1, "tz": False, "active_model": "stock.picking",
       "contact_display": "partner", "active_ids": [ref("stock_picking_out0")], "active_id": ref("stock_picking_out0")})
 -
@@ -77,4 +77,4 @@
     partner = picking[0].address_id.partner_id.id
     inv_ids = self.search(cr, uid, [('type','=','out_invoice'),('partner_id','=',partner)])
     assert inv_ids, 'No Invoice is generated!'
-    
+

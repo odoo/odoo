@@ -88,32 +88,14 @@ class account_invoice(osv.osv):
         return [('none', _('Free Reference'))]
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        if context is None:
-            context = {}
-
-        cur_obj = self.pool.get('res.currency')
-        data_inv = self.browse(cr, uid, ids, context=context)
-        for inv in data_inv:
-            if inv.reconciled:
-                res[inv.id] = 0.0
-                continue
-            inv_total = inv.amount_total
-            context_unreconciled = context.copy()
-            for lines in inv.move_lines:
-                if lines.currency_id and lines.currency_id.id == inv.currency_id.id:
-                    if inv.type in ('out_invoice','in_refund'):
-                        inv_total += lines.amount_currency
-                    else:
-                        inv_total -= lines.amount_currency
-                else:
-                   context_unreconciled.update({'date': lines.date})
-                   amount_in_invoice_currency = cur_obj.compute(cr, uid, inv.company_id.currency_id.id, inv.currency_id.id,abs(lines.debit-lines.credit),round=False,context=context_unreconciled)
-                   inv_total -= amount_in_invoice_currency
-
-            result = inv_total
-            res[inv.id] =  self.pool.get('res.currency').round(cr, uid, inv.currency_id, result)
-        return res
+        result = {}
+        for invoice in self.browse(cr, uid, ids, context=context):
+            result[invoice.id] = 0.0
+            if invoice.move_id:
+                for m in invoice.move_id.line_id:
+                    if m.account_id.type in ('receivable','payable'):
+                        result[invoice.id] = m.amount_residual_currency
+        return result
 
     # Give Journal Items related to the payment reconciled to this invoice
     # Return ids of partial and total payments related to the selected invoices
@@ -1009,15 +991,13 @@ class account_invoice(osv.osv):
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
+        context = {} # TODO: Use context from arguments
         account_move_obj = self.pool.get('account.move')
         invoices = self.read(cr, uid, ids, ['move_id', 'payment_ids'])
+        move_ids = [] # ones that we will need to remove
         for i in invoices:
             if i['move_id']:
-                account_move_obj.button_cancel(cr, uid, [i['move_id'][0]])
-                # delete the move this invoice was pointing to
-                # Note that the corresponding move_lines and move_reconciles
-                # will be automatically deleted too
-                account_move_obj.unlink(cr, uid, [i['move_id'][0]])
+                move_ids.append(i['move_id'][0])
             if i['payment_ids']:
                 account_move_line_obj = self.pool.get('account.move.line')
                 pay_ids = account_move_line_obj.browse(cr, uid, i['payment_ids'])
@@ -1025,7 +1005,15 @@ class account_invoice(osv.osv):
                     if move_line.reconcile_partial_id and move_line.reconcile_partial_id.line_partial_ids:
                         raise osv.except_osv(_('Error !'), _('You cannot cancel the Invoice which is Partially Paid! You need to unreconcile concerned payment entries!'))
 
+        # First, set the invoices as cancelled and detach the move ids
         self.write(cr, uid, ids, {'state':'cancel', 'move_id':False})
+        if move_ids:
+            # second, invalidate the move(s)
+            account_move_obj.button_cancel(cr, uid, move_ids, context=context)
+            # delete the move this invoice was pointing to
+            # Note that the corresponding move_lines and move_reconciles
+            # will be automatically deleted too
+            account_move_obj.unlink(cr, uid, move_ids, context=context)
         self._log_event(cr, uid, ids, -1.0, 'Cancel Invoice')
         return True
 

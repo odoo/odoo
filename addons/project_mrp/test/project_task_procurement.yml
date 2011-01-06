@@ -19,7 +19,7 @@
   I create a sale order for product Partners Training which has type 'Service'.
 - 
   !record {model: sale.order, id: sale_order_so0}:
-    date_order: '2010-05-21'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: SO006
     order_policy: manual
