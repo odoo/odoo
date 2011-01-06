@@ -23,14 +23,37 @@ from osv import osv, fields
 from tools import config
 import base64
 import addons
+from tools.translate import _
 
 class caldav_browse(osv.osv_memory):
+    
+    __doc = {'other' : _("""
+  * Webdav server that provides remote access to calendar
+  * Synchronisation of calendar using WebDAV
+  * Customize calendar event and todo attribute with any of OpenERP model
+  * Provides iCal Import/Export functionality
+
+    To access Calendars using CalDAV clients, point them to:
+        http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c
+
+    To access OpenERP Calendar using WebCal to remote site use the URL like:
+        http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics
+
+      Where,
+        HOSTNAME: Host on which OpenERP server(With webdav) is running
+        PORT : Port on which OpenERP server is running (By Default : 8069)
+        DATABASE_NAME: Name of database on which OpenERP Calendar is created
+        CALENDAR_NAME: Name of calendar to access
+     """),
+     'iphone' : _("""It's complicated""")}
+    
+    
     _name = 'caldav.browse'
     _description = 'Caldav Browse'
 
     _columns = {
-        'url' : fields.char('Caldav Server', size=264, required=True),
-        'caldav_doc_file':fields.binary('Caldav Document', readonly=True, help="Caldav Document ile."),
+        'url' : fields.char('Caldav Server', size=264, required=True, help="Url of the caldav server, use for synchronization"),
+        'caldav_doc_file':fields.binary('Caldav Document', readonly=True, help="download full caldav Documentation."),
         'description':fields.text('Description', readonly=True)
     }
 
@@ -59,29 +82,16 @@ class caldav_browse(osv.osv_memory):
         current_user = user_pool.browse(cr, uid, uid, context=context)
         pref_obj = self.pool.get('user.preference')
         pref_ids = pref_obj.browse(cr, uid ,context.get('rec_id',False), context=context)
+        #TODO write documentation
+        res['description'] = self.__doc['other']
         if pref_ids:
            pref_ids = pref_ids[0] 
-           url = host + ':' + str(port) + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendar/'+ 'users/'+ current_user.login + '/'+ pref_ids.collection.name+ '/'+ pref_ids.calendar.name
+           url = host + ':' + str(port) + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendars/'+ 'users/'+ current_user.login + '/'+ pref_ids.collection.name+ '/'+ pref_ids.calendar.name
+           res['description'] = self.__doc.get(pref_ids.device , self.__doc['other'])
         file = open(addons.get_module_resource('caldav','doc', 'Caldav_doc.pdf'),'rb')
         res['caldav_doc_file'] = base64.encodestring(file.read())
-        res['description'] = """
-  * Webdav server that provides remote access to calendar
-  * Synchronisation of calendar using WebDAV
-  * Customize calendar event and todo attribute with any of OpenERP model
-  * Provides iCal Import/Export functionality
-
-    To access Calendars using CalDAV clients, point them to:
-        http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c
-
-    To access OpenERP Calendar using WebCal to remote site use the URL like:
-        http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics
-
-      Where,
-        HOSTNAME: Host on which OpenERP server(With webdav) is running
-        PORT : Port on which OpenERP server is running (By Default : 8069)
-        DATABASE_NAME: Name of database on which OpenERP Calendar is created
-        CALENDAR_NAME: Name of calendar to access
-     """
+        
+        
         res['url'] = prefix+url
         return res
 
@@ -94,16 +104,38 @@ caldav_browse()
 class user_preference(osv.osv_memory):
     
     _name = 'user.preference'
-    _description = 'User preference FOrm'
+    _description = 'User preference Form'
 
     _columns = {
                'collection' :fields.many2one('document.directory', "Calendar Collection", required=True, domain = [('calendar_collection', '=', True)]),
                'calendar' :fields.many2one('basic.calendar', 'Calendar', required=True),
-               'service': fields.selection([('webdav','WEBDAV'),('vdir','VDIR')], "Services")
-    }    
+               'service': fields.selection([('webdav','CalDAV')], "Services"),
+               'device' : fields.selection([('other', 'Other'), ('iphone', 'iPhone'), ('android', 'Android based device'),('thunderbird', 'Sunbird/Thunderbird'), ('evolution','Evolution')], "Software/Devices")
+    }
+    
+    def _get_default_calendar(self, cr, uid, context):
+        if context == None:
+            context = {}
+        name = context.get('cal_name')
+        
+        collection_obj = self.pool.get('basic.calendar')
+        ids = collection_obj.search(cr, uid, [('name', '=', name)])
+        return ids[0]
+       
+        
+    def _get_default_collection(self, cr, uid, context):
+        collection_obj = self.pool.get('document.directory')
+        ids = collection_obj.search(cr, uid, [('name', '=', 'c')])
+        return ids[0]
+    
+        
     _defaults={
-              'service': lambda *a: 'webdav' 
-   }    
+              'service': 'webdav',
+              'collection' : _get_default_collection,
+              'calendar' : _get_default_calendar,
+              'device' : 'other'
+    }    
+   
     def open_window(self, cr, uid, ids, context=None):
         obj_model = self.pool.get('ir.model.data')
         model_data_ids = obj_model.search(cr,uid,[('model','=','ir.ui.view'),('name','=','caldav_Browse')])
