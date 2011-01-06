@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-23 10:23+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-04 16:06+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_issue
@@ -45,7 +45,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue.report,opening_date:0
 msgid "Date of Opening"
-msgstr ""
+msgstr "Date d'ouverture"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -85,7 +85,7 @@ msgid "Days to Open"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:360
 #, python-format
 msgid ""
 "You cannot escalate this issue.\n"
@@ -156,7 +156,7 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:360
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -211,7 +211,7 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:464
 #, python-format
 msgid " (copy)"
 msgstr " (copie)"
@@ -219,16 +219,6 @@ msgstr " (copie)"
 #. module: project_issue
 #: view:project.issue:0
 msgid "Previous"
-msgstr ""
-
-#. module: project_issue
-#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
-msgid ""
-"Issues such as system bugs, client complains, material breakdowns are "
-"collected here. You can define the stages assigned to the resolution of the "
-"issue on the project. (analysis, development, done) Using the mailgateway "
-"module, the issues can be integrated to an email address (example: "
-"support@mycompany.com)"
 msgstr ""
 
 #. module: project_issue
@@ -249,7 +239,7 @@ msgstr ""
 #. module: project_issue
 #: field:project.issue.version,name:0
 msgid "Version Number"
-msgstr ""
+msgstr "Numéro de la version"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -423,7 +413,7 @@ msgid ""
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:283
 #, python-format
 msgid "Tasks"
 msgstr ""
@@ -466,7 +456,7 @@ msgid "project.issue.report"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:362
 #: view:project.issue:0
 #, python-format
 msgid "Escalate"
@@ -762,6 +752,15 @@ msgid "Current"
 msgstr ""
 
 #. module: project_issue
+#: model:ir.actions.act_window,help:project_issue.project_issue_categ_act0
+msgid ""
+"Issues such as system bugs, customer complaints, and material breakdowns are "
+"collected here. You can define the stages assigned when solving the project "
+"issue (analysis, development, done). With the mailgateway module, issues can "
+"be integrated through an email address (example: support@mycompany.com)"
+msgstr ""
+
+#. module: project_issue
 #: view:project.issue:0
 msgid "Details"
 msgstr ""
@@ -842,7 +841,7 @@ msgid "February"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:61
 #, python-format
 msgid "Issue '%s' has been opened."
 msgstr ""
@@ -870,7 +869,7 @@ msgid "Month-1"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:76
 #, python-format
 msgid "Issue '%s' has been closed."
 msgstr ""
@@ -896,7 +895,7 @@ msgid "ID"
 msgstr ""
 
 #. module: project_issue
-#: code:addons/project_issue/project_issue.py:0
+#: code:addons/project_issue/project_issue.py:377
 #, python-format
 msgid "No Title"
 msgstr ""

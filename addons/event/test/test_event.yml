@@ -18,8 +18,8 @@
   I'm creating one Event "Conference on OpenERP Business" which will last from 1st of this month to 10th of this month.
 -
   !record {model: event.event, id: event_event_conference0}:
-    date_begin: 2010-08-01
-    date_end: 2010-08-10
+    date_begin: !eval time.strftime('%Y-%m-01')
+    date_end: !eval time.strftime('%Y-%m-10')
     name: Conference on OpenERP Business.
     product_id: 'product_product_ticketforconcert0'
     type: 'event_type_conference0'

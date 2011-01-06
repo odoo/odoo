@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-20 13:50+0000\n"
-"Last-Translator: Aline (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-04 16:06+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 04:57+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 04:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -25,12 +25,25 @@ msgstr "Tâches assignées"
 #: help:project.task.delegate,new_task_description:0
 msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
+"Inclure de nouveau la description de la tâche dans la tâche de l'utilisateur"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:657
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "La tâche '%s' a été déléguée à %s."
+
+#. module: project
+#: help:res.company,project_time_mode_id:0
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects (project_timesheet module), "
+"don't forget to setup the right unit of measure in your employees."
+msgstr ""
+"Ceci fixe l'unité de mesure utilisée dans les projets et tâches.\n"
+"Si vous utilisez les feuilles de temps couplés aux projets "
+"(project_timesheet module), n'oubliez pas de fixer la bonne unité de mesure "
+"de vos employés."
 
 #. module: project
 #: constraint:res.users:0
@@ -48,13 +61,17 @@ msgid "Deadlines"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:121
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "Opération non permises !"
 
 #. module: project
-#: code:addons/project/wizard/project_task_delegate.py:0
+#: code:addons/project/wizard/project_task_delegate.py:55
+#: code:addons/project/wizard/project_task_delegate.py:56
+#: code:addons/project/wizard/project_task_delegate.py:63
+#: code:addons/project/wizard/project_task_delegate.py:64
+#: code:addons/project/wizard/project_task_delegate.py:67
 #, python-format
 msgid "CHECK: "
 msgstr "VALIDATION: "
@@ -62,7 +79,7 @@ msgstr "VALIDATION: "
 #. module: project
 #: field:project.installer,project_issue:0
 msgid "Issues Tracker"
-msgstr ""
+msgstr "Suivi des incidents"
 
 #. module: project
 #: field:project.installer,hr_timesheet_sheet:0
@@ -92,9 +109,11 @@ msgid ""
 "Total remaining time, can be re-estimated periodically by the assignee of "
 "the task."
 msgstr ""
+"Le total du temps restant peut être réévalué périodiquement par le "
+"prescripteur de la tâche."
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:86
 #, python-format
 msgid "Task '%s' Closed"
 msgstr "Tâche '%s' terminée"
@@ -142,8 +161,8 @@ msgid ""
 "Header added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
-"L'en-tête ajouté au début de l'email pour le message d'avertissement envoyé "
-"au client quand une tâche est terminée."
+"En-tête ajouté au début du courriel contenant le message d'avertissement "
+"envoyé au client quand une tâche est terminée."
 
 #. module: project
 #: view:project.task:0
@@ -153,7 +172,7 @@ msgstr "Mes tâches"
 #. module: project
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de tâches récursives"
 
 #. module: project
 #: field:project.task,company_id:0
@@ -171,7 +190,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_planned_total_hours_graph
 msgid "Projects: Planned Vs Total hours"
-msgstr ""
+msgstr "Projets: temps planifié vs temps total"
 
 #. module: project
 #: view:project.task.close:0
@@ -205,7 +224,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Change Stage"
-msgstr ""
+msgstr "Changer l'étape"
 
 #. module: project
 #: view:project.project:0
@@ -236,7 +255,7 @@ msgid "Day"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:570
 #, python-format
 msgid "The task '%s' is done"
 msgstr "La tâche '%s' est terminée"
@@ -275,7 +294,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr ""
+msgstr "Avancement sur une tâche de projet"
 
 #. module: project
 #: view:project.project:0
@@ -287,7 +306,7 @@ msgstr "Notes"
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs remaining hours"
-msgstr ""
+msgstr "Projet/temps restant"
 
 #. module: project
 #: view:project.project:0
@@ -302,7 +321,7 @@ msgstr "Résumé de la tâche"
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr ""
+msgstr "Pas une tâche modèle"
 
 #. module: project
 #: view:project.task:0
@@ -315,12 +334,14 @@ msgid ""
 "Helps generate invoices based on time spent on tasks, if activated on the "
 "project."
 msgstr ""
+"Aide à générer les factures basées sur le temps passé sur les tâches si "
+"c'est configuré dans ce sens au niveau du projet"
 
 #. module: project
 #: view:project.task:0
 #: field:project.task,parent_ids:0
 msgid "Parent Tasks"
-msgstr ""
+msgstr "Tâche parente"
 
 #. module: project
 #: view:project.project:0
@@ -348,12 +369,12 @@ msgstr "Mes tâches ouvertes"
 #: view:project.project:0
 #: field:project.project,warn_header:0
 msgid "Mail Header"
-msgstr "Entête du mail"
+msgstr "En-tête de l'email"
 
 #. module: project
 #: view:project.installer:0
 msgid "Configure Your Project Management Application"
-msgstr ""
+msgstr "Configurer votre application de gestion de projets"
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
@@ -363,7 +384,7 @@ msgstr "Tâche terminée"
 #. module: project
 #: help:project.task.delegate,prefix:0
 msgid "Title for your validation task"
-msgstr ""
+msgstr "Titre de votre tâche de validation"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -411,7 +432,7 @@ msgid ""
 "propose a message to send by email to the customer."
 msgstr ""
 "Si vous cochez cette option, l'utilisateur qui clôture une tâche se verra "
-"proposer l'envoi d'une notification par e-mail au client (partenaire) "
+"proposer l'envoi d'une notification par courriel au client (partenaire) "
 "associé."
 
 #. module: project
@@ -428,14 +449,15 @@ msgstr ""
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
 msgstr ""
+"Temps estimé pour que l'utilisateur à qui est déléguée cette tâche la clôture"
 
 #. module: project
 #: view:project.project:0
 msgid "Reactivate Project"
-msgstr "Ré-activé le projet"
+msgstr "Ré-activer le projet"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:552
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Tâche '%s' fermée"
@@ -452,12 +474,9 @@ msgid "Done by"
 msgstr "Assigné à"
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_task_type_form
-msgid ""
-"Define here the steps that will be used on the project from the creation of "
-"the task, up to the closing of the task or issue. You will use these stages "
-"in order to track the progress of the resolution of a task or an issue."
-msgstr ""
+#: view:project.task:0
+msgid "Planning"
+msgstr "Planning"
 
 #. module: project
 #: view:project.task:0
@@ -488,14 +507,10 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:224
+#: code:addons/project/project.py:245
 #, python-format
 msgid " (copy)"
-msgstr ""
-
-#. module: project
-#: field:project.task,user_id:0
-msgid "Responsible"
 msgstr ""
 
 #. module: project
@@ -521,14 +536,20 @@ msgid "Reevaluate Task"
 msgstr "Réévaluer la tâche"
 
 #. module: project
+#: field:report.project.task.user,user_id:0
+msgid "Assigned To"
+msgstr "Assigné à"
+
+#. module: project
 #: view:project.project:0
 msgid "Date Stop: %(date)s"
-msgstr ""
+msgstr "Date de fin : %(date)s"
 
 #. module: project
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr ""
+"Vous ne pouvez pas avoir deux utilisateurs avec le même identifiant !"
 
 #. module: project
 #: view:project.project:0
@@ -563,7 +584,7 @@ msgstr ""
 #. module: project
 #: model:process.transition,note:project.process_transition_draftopentask0
 msgid "From draft state, it will come into the open state."
-msgstr "Depuis l'état brouillon, il deviendra dans l'état ouvert"
+msgstr "De l'état brouillon, il passera à l'état ouvert"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -578,6 +599,9 @@ msgid ""
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
 msgstr ""
+"Ce champ est mis à jour automatiquement et aura le même comportement que le "
+"champ 'actif' : si la tâche est liée à un modèle ou à un projet inactif, "
+"elle sera masquée sauf si son affichage est explicitement demandé."
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -586,17 +610,10 @@ msgstr ""
 "Pourcentage des tâches fermés en accord avec le total des tâches à faire."
 
 #. module: project
-#: model:ir.actions.act_window,help:project.action_view_task
-msgid ""
-"A task represents a work that has to be done. Each user works in his own "
-"list of tasks where he can record his task work in hours. He can work and "
-"close the task itself or delegate it to antoher user. If you delegate a task "
-"to another user, you get a new task in pending state, which will be re-"
-"opened when you have to review the work achieved. If you install the "
-"project_timesheet module, tasks works can be invoiced based on the project "
-"configuration. With the project_mrp module, sales orders can create tasks "
-"automatically when they are confirmed."
-msgstr ""
+#: view:project.task.delegate:0
+#: field:project.task.delegate,new_task_description:0
+msgid "New Task Description"
+msgstr "Description de la nouvelle tâche"
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
@@ -616,7 +633,7 @@ msgstr "Calculer comme: Temps passé + Temps restant"
 #. module: project
 #: help:project.task.close,partner_email:0
 msgid "Email Address of Customer"
-msgstr ""
+msgstr "Adresse email du client"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -635,15 +652,15 @@ msgid "Reevaluate"
 msgstr "Réévaluer"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:530
 #, python-format
 msgid "Send Email after close task"
-msgstr "Envoyer courriel après avoir fermé la tâche"
+msgstr "Envoyer un email après avoir fermé la tâche"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "OverPass delay"
-msgstr ""
+msgstr "Échéance dépassée"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -680,12 +697,12 @@ msgstr "Temps planifié"
 #. module: project
 #: help:project.task.close,manager_warn:0
 msgid "Warn Manager by Email"
-msgstr "Avertir le manager par courriel"
+msgstr "Avertir le responsable par email"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Non Assigned Tasks to users"
-msgstr ""
+msgstr "Tâches non-assignées à un utilisateur"
 
 #. module: project
 #: help:project.project,planned_hours:0
@@ -729,7 +746,7 @@ msgid "Starting Date"
 msgstr "Démarrage du projet"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:266
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -746,12 +763,19 @@ msgid "Stage"
 msgstr ""
 
 #. module: project
-#: field:report.project.task.user,user_id:0
-msgid "Assigned To"
-msgstr "Assigné à"
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid ""
+"Define the steps that will be used in the project from the creation of the "
+"task, up to the closing of the task or issue. You will use these stages in "
+"order to track the progress in solving a task or an issue."
+msgstr ""
+"Définit les étapes qui seront utilisées dans le projet de la création "
+"jusqu'à la fermeture de la tâche ou de l'incident. Vous utiliserez ces "
+"étapes afin de suivre la progression de la résolution d'une tâche ou d'un "
+"incident."
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:621
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "La tâche '%s' est ouverte."
@@ -777,11 +801,13 @@ msgid ""
 "Various OpenERP applications are available to manage your projects with "
 "different level of control and flexibility."
 msgstr ""
+"Diverses applications OpenERP sont disponibles pour gérer vos projets avec "
+"différents niveaux de contrôle et de flexibilité."
 
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
-msgstr ""
+msgstr "Projet vs. heures prévues et totales"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
@@ -839,7 +865,7 @@ msgstr "Projet"
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "_Evaluate"
-msgstr ""
+msgstr "_Evaluer"
 
 #. module: project
 #: view:board.board:0
@@ -847,7 +873,7 @@ msgid "My Board"
 msgstr "Mon Tableau"
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:79
 #, python-format
 msgid "Please specify the email address of Project Manager."
 msgstr "Merci de renseigner le courriel du responsable du projet"
@@ -867,7 +893,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:0
 msgid "Project Task Delegate"
-msgstr ""
+msgstr "Déléguer une tâche"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -889,7 +915,30 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
+msgstr "Déléguer une tâche"
+
+#. module: project
+#: model:ir.actions.act_window,help:project.action_view_task
+msgid ""
+"A task represents a work that has to be done. Each user works in his own "
+"list of tasks where he can record his task work in hours. He can work and "
+"close the task itself or delegate it to another user. If you delegate a task "
+"to another user, you get a new task in pending state, which will be reopened "
+"when you have to review the work achieved. If you install the "
+"project_timesheet module, task work can be invoiced based on the project "
+"configuration. With the project_mrp module, sales orders can create tasks "
+"automatically when they are confirmed."
 msgstr ""
+"Une tâche représente un travail qui doit être fait. Chaque utilisateur "
+"travaille dans sa propre liste de tâches pour lesquelles il peut enregistrer "
+"le travail réalisé (en heures). Il peut travailler et fermer la tâche  ou la "
+"déléguer à un autre utilisateur. Si vous déléguez une tâche à un autre "
+"utilisateur, vous obtenez une nouvelle tâche dans l'état 'attente'  qui sera "
+"rouverte lorsque vous devrez examiner le travail accompli. Si vous installez "
+"le module project_timesheet, les travaux d'une tâche peuvent être facturés "
+"en fonction de la manière dont le projet est facturé. Avec le module "
+"project_mrp, les commandes clients peuvent créer des tâches automatiquement "
+"quand elles sont confirmées."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -920,6 +969,11 @@ msgid ""
 "         \n"
 " If the task is over, the states is set to 'Done'."
 msgstr ""
+"Si la tâche est créée, le statut est 'Brouillon'.\n"
+" Si la tâche est démarrée, le statut devient 'En cours'.\n"
+" Si une revue est nécessaire, la tâche est en statut 'En attente'.           "
+"                       \n"
+" Si la tâche est terminée, le statut est 'Effectuée'."
 
 #. module: project
 #: help:project.task,progress:0
@@ -941,7 +995,7 @@ msgstr "Tâches de projet"
 #: model:ir.model,name:project.model_project_task_type
 #: view:project.task.type:0
 msgid "Task Stage"
-msgstr ""
+msgstr "Étape de tâche"
 
 #. module: project
 #: field:project.task,planned_hours:0
@@ -976,20 +1030,12 @@ msgstr ""
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying a list of task"
-msgstr ""
+msgstr "Donne la séquence à l'affichage d'une liste de tâches"
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"assigned personnel. A project can be put into a hierarchy, as a child of a "
-"Parent Project. This allows you to design large project structure with "
-"different phases spread over the project's duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on. If you have personalized your "
-"Project application in order to invoice the time spent on a task, you can "
-"choose to invoice or not one project in the billing section."
-msgstr ""
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "Avertir le partenaire"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1009,7 +1055,7 @@ msgstr "Information"
 #. module: project
 #: help:project.installer,account_budget:0
 msgid "Helps accountants manage analytic and crossover budgets."
-msgstr ""
+msgstr "Aide les comptables à gérer les budgets analytiques et transversaux"
 
 #. module: project
 #: field:project.task,priority:0
@@ -1072,7 +1118,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_tree_deadline
 msgid "My Task's Deadlines"
-msgstr "Les Dates Limites de mes Tâches"
+msgstr "Les dates limites de mes tâches"
 
 #. module: project
 #: view:project.project:0
@@ -1095,7 +1141,7 @@ msgstr "En attente"
 #. module: project
 #: view:project.task:0
 msgid "Task Edition"
-msgstr ""
+msgstr "Edition d'une tâche"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
@@ -1120,13 +1166,8 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
-"Nouvel état de votre tâche. 'En attente' sera réouvert automatiquement, une "
+"Nouvel état de votre tâche. 'En attente' sera rouvert automatiquement, une "
 "fois que la tâche déléguée sera fermée."
-
-#. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "Avertir le partenaire"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1139,12 +1180,14 @@ msgid ""
 "Implements and tracks the concepts and task types defined in the SCRUM "
 "methodology."
 msgstr ""
+"Installe et suit les concepts et les types de tâches définis dans la "
+"méthodologie SCRUM"
 
 #. module: project
 #: view:report.project.task.user:0
 #: field:report.project.task.user,closing_days:0
 msgid "Days to Close"
-msgstr ""
+msgstr "Jours avant clôture"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_board_project
@@ -1153,7 +1196,7 @@ msgid "Project Dashboard"
 msgstr "Tableau de bord de projet"
 
 #. module: project
-#: view:project.project:0
+#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Projet parent"
 
@@ -1183,7 +1226,7 @@ msgid "Customer Email"
 msgstr "Courriel client"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:189
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "Le projet '%s' a été fermé."
@@ -1206,7 +1249,7 @@ msgstr "Tâches ouvertes"
 #. module: project
 #: field:project.task.close,manager_email:0
 msgid "Manager Email"
-msgstr "Courriel manager"
+msgstr "Email du responsable"
 
 #. module: project
 #: help:project.project,active:0
@@ -1225,10 +1268,10 @@ msgstr ""
 #. module: project
 #: model:process.transition,note:project.process_transition_opendonetask0
 msgid "When task is completed, it will come into the done state."
-msgstr "Quand une tâche est complète, elle passera à l'état terminé"
+msgstr "Quand une tâche sera finie, elle passera à l'état terminé"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:211
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "Le projet '%s' a été ouvert."
@@ -1244,19 +1287,19 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: project
-#: help:res.company,project_time_mode_id:0
+#: constraint:account.analytic.account:0
 msgid ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
+"Error! The currency has to be the same as the currency of the selected "
+"company"
 msgstr ""
-"Ceci fixe l'unité de mesure utilisée dans les projets et tâches.\n"
-"Si vous utilisez les feuilles de temps couplés aux projets "
-"(project_timesheet module), n'oubliez pas de fixer la bonne unité de mesure "
-"de vos employés."
+"Erreur! La monnaie doit être la même que la monnaie de la société "
+"sélectionnée"
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:79
+#: code:addons/project/wizard/project_task_close.py:82
+#: code:addons/project/wizard/project_task_close.py:91
+#: code:addons/project/wizard/project_task_close.py:111
 #, python-format
 msgid "Error"
 msgstr "Erreur"
@@ -1277,12 +1320,12 @@ msgid "_Delegate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:91
 #, python-format
 msgid "Couldn't send mail because your email address is not configured!"
 msgstr ""
-"Impossible d'envoyer un mail parce que votre adresse mail n'est pas "
-"configuré!"
+"Impossible d'envoyer un email parce que votre adresse email n'est pas "
+"configurée!"
 
 #. module: project
 #: help:report.project.task.user,opening_days:0
@@ -1329,6 +1372,13 @@ msgid ""
 "    * Members list of project\n"
 "    "
 msgstr ""
+"Le module gestion de projets gère les projets et les tâches multi-niveaux,\n"
+"le travail effectué sur des tâches, etc. Le module permet d'éditer des "
+"plannings, la liste séquencée des tâches, etc.\n"
+" Un tableau de bord est proposé aux membres du projet, qui inclut : \n"
+"    - Une liste des tâches en cours\n"
+"    - La liste des participants du projet\n"
+"    "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
@@ -1360,12 +1410,16 @@ msgid ""
 "users. You can analyse the quantities of tasks, the hours spent compared to "
 "the planned hours, the average number of days to open or close a task, etc."
 msgstr ""
+"Ce rapport vous permet d'analyser la performance de vos projets et "
+"utilisateurs. Vous pouvez analyser les tâches, les heures consommées par "
+"rapport aux heures prévues, le nombre moyen de jours pour démarrer ou fermer "
+"une tâche, etc."
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:581
 #, python-format
 msgid "Task '%s' set in progress"
-msgstr ""
+msgstr "Tâche '%s' mise \"en cours\""
 
 #. module: project
 #: view:project.project:0
@@ -1415,7 +1469,7 @@ msgid "Open"
 msgstr "Ouvert"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:121
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1437,7 +1491,7 @@ msgid "In Progress"
 msgstr "En cours"
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:82
 #, python-format
 msgid "Please specify the email address of Customer."
 msgstr "Merci de renseigner le courriel du client"
@@ -1459,15 +1513,14 @@ msgid "Current Activity"
 msgstr ""
 
 #. module: project
-#: view:project.task.delegate:0
-#: field:project.task.delegate,new_task_description:0
-msgid "New Task Description"
-msgstr "Description de la nouvelle tâche"
+#: field:project.task,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
 msgid "Search Project"
-msgstr ""
+msgstr "Chercher un projet"
 
 #. module: project
 #: help:project.installer,project_gtd:0
@@ -1479,7 +1532,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_vs_hours
 msgid " Project vs  hours"
-msgstr ""
+msgstr " Projet vs heures"
 
 #. module: project
 #: view:project.project:0
@@ -1493,11 +1546,6 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Very Low"
 msgstr "Très basse"
-
-#. module: project
-#: view:project.task:0
-msgid "Planning"
-msgstr "Planning"
 
 #. module: project
 #: field:project.project,warn_manager:0
@@ -1525,6 +1573,8 @@ msgid ""
 "Computed as difference of the time estimated by the project manager and the "
 "real time to close the task."
 msgstr ""
+"Calcul correspondant à la différence entre le temps estimé par le "
+"Responsable Projet et le temps réel pour fermer la tâche"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_reevaluate
@@ -1537,6 +1587,8 @@ msgid ""
 "Enables long-term projects tracking, including multiple-phase projects and "
 "resource allocation handling."
 msgstr ""
+"Permet le suivi de projets long terme, incluant la gestion de projets à "
+"multiple phases et l'allocation des ressources"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_development
@@ -1546,7 +1598,7 @@ msgstr ""
 #. module: project
 #: field:project.installer,project_timesheet:0
 msgid "Bill Time on Tasks"
-msgstr ""
+msgstr "Facturer le temps de travail"
 
 #. module: project
 #: view:board.board:0
@@ -1604,7 +1656,7 @@ msgstr "Tâche: %(name)s"
 #: model:ir.actions.act_window,name:project.action_project_installer
 #: view:project.installer:0
 msgid "Project Application Configuration"
-msgstr ""
+msgstr "Configuration de l'application Gestion de projets"
 
 #. module: project
 #: field:project.task.delegate,user_id:0
@@ -1678,11 +1730,13 @@ msgid "Task By Days"
 msgstr "Tâches par jour"
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:111
 #, python-format
 msgid ""
 "Couldn't send mail! Check the email ids and smtp configuration settings"
 msgstr ""
+"N'a pas envoyer cet email ! Merci de vérifier l'adresse utilisée et/ou les "
+"paramètres smtp"
 
 #. module: project
 #: field:project.task.close,partner_warn:0
@@ -1713,7 +1767,7 @@ msgstr "Nb de jours pour effectuer la tâche"
 #. module: project
 #: view:board.board:0
 msgid "My Projects: Planned vs Total Hours"
-msgstr ""
+msgstr "Mes projets : heures prévues / heures totales"
 
 #. module: project
 #: model:ir.model,name:project.model_project_installer
@@ -1752,7 +1806,7 @@ msgid "Spent Hours"
 msgstr "Heures consommées"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:664
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "La tâche '%s' est en attente."
@@ -1768,7 +1822,7 @@ msgstr "Total des heures"
 #. module: project
 #: help:project.project,sequence:0
 msgid "Gives the sequence order when displaying a list of Projects."
-msgstr ""
+msgstr "Définit l'ordre utilisé pour afficher une liste de projets"
 
 #. module: project
 #: field:project.task,id:0
@@ -1783,7 +1837,7 @@ msgstr ""
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
 msgid "Overpassed Tasks"
-msgstr ""
+msgstr "Tâches en dépassement"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
@@ -1806,6 +1860,19 @@ msgstr ""
 "d'avertissement envoyé au client lorsque la tâche est fermée"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"resources assigned to it. A project can be hierarchically structured, as a "
+"child of a Parent Project. This allows you to design large project "
+"structures with different phases spread over the project duration cycle. "
+"Each user can set his default project in his own preferences to "
+"automatically filter the tasks or issues he usually works on. If you choose "
+"to invoice the time spent on a project task, you can find project tasks to "
+"be invoiced in the billing section."
+msgstr ""
+
+#. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
 msgstr "Temps total"
@@ -1816,7 +1883,7 @@ msgid "Validation State"
 msgstr "État de Validation"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:601
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Tâche '%s' annulée"
@@ -1846,7 +1913,7 @@ msgid "Create Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:609
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "La tâche '%s' est annulée."
@@ -1875,12 +1942,13 @@ msgstr ""
 #: help:project.installer,project_issue:0
 msgid "Automatically synchronizes project tasks and crm cases."
 msgstr ""
+"Synchronise automatiquement les tâches d'un projet et les évènements du CRM"
 
 #. module: project
 #: view:project.project:0
 #: field:project.project,type_ids:0
 msgid "Tasks Stages"
-msgstr ""
+msgstr "Etapes des tâches"
 
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0

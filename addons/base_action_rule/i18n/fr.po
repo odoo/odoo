@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2011-01-01 12:38+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-05 19:25+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-02 05:02+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -75,7 +76,12 @@ msgid "Days"
 msgstr "Jours"
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr "Dernière exécution"
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:313
 #, python-format
 msgid "Error!"
 msgstr "Erreur !"
@@ -113,20 +119,6 @@ msgstr ""
 "au partenaire."
 
 #. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
-msgid ""
-"Create actions automatically triggered based on a user activity in the "
-"system.E.g.: an opportunity created by a specific user can be automatically "
-"maintained with a specific sales team, or an opportunity which still has "
-"status pending after 14 days triggers an automatic reminder email."
-msgstr ""
-"Créer des actions déclenchées automatiquement en fonction des activités de "
-"l'utilisateur dans le système. Ex : une opportunité créée par un utilisateur "
-"donné peut être automatiquement maintenue avec une équipe de vente donnée, "
-"ou encore : une opportunité  avec un status toujours \"en attente\" après 14 "
-"jours déclenche automatiquement un courriel de rappel."
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr "Conditions sur le partenaire du modèle"
@@ -160,6 +152,15 @@ msgstr "Mots-clés spéciaux à utiliser dans le corps du texte"
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Status"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Use automated actions to automatically trigger actions for various screens. "
+"Example: a lead created by a specific user may be automatically set to a "
+"specific sales team, or an opportunity which still has status pending after "
+"14 days might trigger an automatic reminder email."
+msgstr ""
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
@@ -329,7 +330,7 @@ msgid "Active"
 msgstr "Actif"
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: code:addons/base_action_rule/base_action_rule.py:314
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
 msgstr "Pas de courriel défini dans l'adresse de votre société"
@@ -532,3 +533,15 @@ msgstr "Conditions sur les états"
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Date de déclenchement"
+
+#~ msgid ""
+#~ "Create actions automatically triggered based on a user activity in the "
+#~ "system.E.g.: an opportunity created by a specific user can be automatically "
+#~ "maintained with a specific sales team, or an opportunity which still has "
+#~ "status pending after 14 days triggers an automatic reminder email."
+#~ msgstr ""
+#~ "Créer des actions déclenchées automatiquement en fonction des activités de "
+#~ "l'utilisateur dans le système. Ex : une opportunité créée par un utilisateur "
+#~ "donné peut être automatiquement maintenue avec une équipe de vente donnée, "
+#~ "ou encore : une opportunité  avec un status toujours \"en attente\" après 14 "
+#~ "jours déclenche automatiquement un courriel de rappel."
