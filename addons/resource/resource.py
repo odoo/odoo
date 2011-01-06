@@ -328,6 +328,7 @@ class resource_resource(osv.osv):
         # and create a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
         for week in weeks:
             res_str = ""
+            day = None
             if week_days.has_key(week['dayofweek']):
                 day = week_days[week['dayofweek']]
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
@@ -353,6 +354,13 @@ class resource_resource(osv.osv):
         if non_working:
             wktime_cal.append((non_working[:-1], time_range))
         return wktime_cal
+
+    #TODO: Write optimized alogrothem for resource availability. : Method Yet not implemented
+    def check_availability(self, cr, uid, ids, start, end, context=None):
+        if context ==  None:
+            contex = {}
+        allocation = {}
+        return allocation
 
 resource_resource()
 
