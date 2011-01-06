@@ -548,9 +548,9 @@
           <field name="inherit_id" ref="base.view_users_form"/>
           <field eval="18" name="priority"/>
           <field name="arch" type="xml">
-              <field name="password" position="after">
+              <xpath expr="/form/notebook" position="before">
                    <field name="context_project_id"/>
-              </field>
+              </xpath>
           </field>
      </record>
 
