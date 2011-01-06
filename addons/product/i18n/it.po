@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-12-12 07:22+0000\n"
 "Last-Translator: Lorenzo Battistini - agilebg.com "
 "<lorenzo.battistini@agilebg.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:53+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:08+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -114,7 +114,9 @@ msgid "Fixed"
 msgstr "Fisso"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:186
+#: code:addons/product/pricelist.py:339
+#: code:addons/product/pricelist.py:357
 #, python-format
 msgid "Warning !"
 msgstr "Attenzione !"
@@ -265,7 +267,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  ad es.: 1 * (questa unità) = rapporto * (unità di riferimento)"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:378
 #, python-format
 msgid "Products: "
 msgstr "Prodotti "
@@ -412,6 +414,15 @@ msgid "Medium PC"
 msgstr "PC Medio"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains detailed "
+"information about your products related to procurement logistics, sales "
+"price, product category, suppliers and so on."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
 msgstr "Ricerca prezzo prodotti"
@@ -508,6 +519,16 @@ msgid "Working Time"
 msgstr "Tempo di lavorazione"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A price list contains rules to be evaluated in order to compute the purchase "
+"or sales price for all the partners assigned to a price list. Price lists "
+"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
+"each version has several rules. Example: the customer price of a product "
+"category will be based on the supplier price multiplied by 1.80."
+msgstr ""
+
+#. module: product
 #: help:product.product,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the product "
@@ -522,7 +543,7 @@ msgid "Metal Cleats"
 msgstr "Asticelle di metallo"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:340
 #, python-format
 msgid ""
 "No active version for the selected pricelist !\n"
@@ -697,11 +718,6 @@ msgid "To Purchase"
 msgstr "Da comprare"
 
 #. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Mainboard ASUStek A7N8X"
-
-#. module: product
 #: help:product.supplierinfo,min_qty:0
 msgid ""
 "The minimal quantity to purchase to this supplier, expressed in the supplier "
@@ -811,6 +827,12 @@ msgstr ""
 "prodotto. Lasciare vuoto per tutti i prodotti."
 
 #. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Stoccaggio"
+
+#. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr "Progetto cucina"
@@ -880,10 +902,12 @@ msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
 msgstr "  ad es.: 1 * (unità di riferimento) = rapporto * (questa unità)"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Stoccaggio"
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate between several Units of Measure within the "
+"same category."
+msgstr ""
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -953,19 +977,12 @@ msgstr ""
 "calcolo automatico degli ordini di acquisto."
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action
 msgid ""
-"A pricelist contains rules to be evaluated in order to compute the purchase "
-"or sale price for all the partners assigned to a pricelist. Pricelists have "
-"several versions (2010, 2011, Promotion of February 2010, etc.) and each "
-"version has several rules. Example: the customer price of this category of "
-"product will be based on the supplier price multiplied by 1.80."
+"There can be more than one version of a pricelist. Here you can create and "
+"manage new versions of a price list. Some examples of versions: 2010, 2011, "
+"Summer Promotion, etc."
 msgstr ""
-"Un listino contiene regole utilizzate per calcolare il prezzo di acquisto o "
-"di vendita per tutti i partner associati al listino. I listini hanno diverse "
-"versioni (2010, 2011, promozione di febbraio 2010, ecc.) e ogni versione ha "
-"diverse regole. Esempio: il prezzo cliente di questa categoria di prodotti "
-"sarà basato sul prezzo fornitore moltplicato per 1,8"
 
 #. module: product
 #: selection:product.template,type:0
@@ -998,25 +1015,6 @@ msgid "Partner Information"
 msgstr "Informazioni Partner"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-msgid ""
-"You must define a Product for everything you buy or sell. They can be raw "
-"materials, stockable products, consumables or services. The Product form "
-"contains a detailed information of your products related to procurement "
-"logistics, sales price, product category, suppliers and so on."
-msgstr ""
-"E' necessario definire un prodotto per ogni cosa si compri o si venda. Siano "
-"materiali grezzi, prodotti stoccabili, consumabili o servizi. Il form del "
-"prodotto contiene informazioni dettagliate relative alla logistica degli "
-"approvvigionamenti, prezzi di vendita, categorie prodotti, fornitori e così "
-"via."
-
-#. module: product
-#: model:ir.model,name:product.model_res_users
-msgid "res.users"
-msgstr "res.users"
-
-#. module: product
 #: selection:product.ul,type:0
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
@@ -1044,6 +1042,15 @@ msgid "Price List Items"
 msgstr "Oggetti Listino"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measure are in the same category, they can "
+"be converted to each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr ""
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr "Più grande dell'U.M. di riferimento"
@@ -1069,15 +1076,9 @@ msgid "Price Surcharge"
 msgstr "Ricarico Prezzo"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"Create and manage the units of measure you want to be used in your system. "
-"You can define a conversion rate to be used between the several Unit of "
-"Measure within the same category."
-msgstr ""
-"Crea e gestisce le unità di misura che si vogliono usare nel sistema. E' "
-"possibile definire un tasso di conversione da usare fra le varie unità di "
-"misura all'interno della stessa categoria."
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
+msgstr "Mainboard ASUStek A7N8X"
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1090,6 +1091,7 @@ msgstr "Unità logistica"
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
 #: view:product.product:0
+#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom,name:0
@@ -1106,6 +1108,15 @@ msgstr "Stoccabile"
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
 msgstr "Architrave di legno 4m"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+msgid ""
+"You must define a Product for everything you buy or sell. Products can be "
+"raw materials, stockable products, consumables or services. The Product form "
+"contains detailed information about your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1274,7 +1285,7 @@ msgid "Pallet Dimension"
 msgstr "Dimensioni Pallet"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:603
 #, python-format
 msgid " (copy)"
 msgstr " (copia)"
@@ -1283,11 +1294,6 @@ msgstr " (copia)"
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Partners"
-
-#. module: product
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Non è possibile avere due utenti con lo stesso login !"
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1300,26 +1306,13 @@ msgstr ""
 "la consegna dei prodotti finiti. E' il tempo promesso ai clienti."
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid ""
-"Create and manage the units of measure categories you want to be used in "
-"your system. If several units of measures are in the same category, they can "
-"be converted within each other. For example, in the unit of measure category "
-"\"Time\", you will have the following UoM: Hours, Days."
-msgstr ""
-"Crea e gestisce le categorie di unità di misura da usare nel sistema. Se "
-"nella stessa categoria ci sono diverse unità di misura, esse possono essere "
-"convertite le une con le altre. Per esempio, nella categoria \"Tempo\", si "
-"potranno avere le seguenti U.M.: Ore, Giorni."
-
-#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Second UoM"
 msgstr "Unità di misura secondaria"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:142
 #, python-format
 msgid "Error !"
 msgstr "Errore !"
@@ -1406,20 +1399,17 @@ msgid "Purchase Unit of Measure"
 msgstr "Unità di misura di acquisto"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_category_action
-msgid ""
-"Here is a list of all your products classified by category. You can click on "
-"a category to get the list of all products linked to this category or to a "
-"child of this category."
-msgstr ""
-"Qui c'è una lista di tutti i prodotti classificati per categoria. E' "
-"possibile cliccare su una categoria per ottenere la lista di tutti i "
-"prodotti collegati a questa categoria o a una sua figlia."
-
-#. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
 msgstr "Metodo Rifornimento"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click a "
+"category to get the list of all products linked to this category or to a "
+"child of this category."
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1432,7 +1422,7 @@ msgid "Regular processor config"
 msgstr "Consueta Configurazione Processore"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:142
 #, python-format
 msgid ""
 "Conversion from Product UoM m to Default UoM PCE is not possible as they "
@@ -1506,11 +1496,6 @@ msgstr ""
 "trovarsi nella stessa categoria"
 
 #. module: product
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "L'azienda scelta non è nelle aziende permesse per questo utente"
-
-#. module: product
 #: field:product.uom,rounding:0
 msgid "Rounding Precision"
 msgstr "Precisione Arrotondamento"
@@ -1581,6 +1566,7 @@ msgstr "Campo Prodotto"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
+#: model:ir.ui.menu,name:product.menu_product_pricelist_type_action2
 msgid "Pricelists Types"
 msgstr "Tipi Listini"
 
@@ -1613,20 +1599,6 @@ msgstr "PC Personalizzabile"
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
 msgstr "Prezzo unitario"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_puchased
-msgid ""
-"Products can be purchased and/or sold. They can be raw materials, stockable "
-"products, consumables or services. The Product form contains a detailed "
-"information on your  products related to procurement logistics, sales price, "
-"product category, suppliers and so on."
-msgstr ""
-"I prodotti possono essere comprati e/o venduti. Possono essere materiali "
-"grezzi, prodotti stoccabili, consumabili o servizi. Il form del prodotto "
-"contiene informazioni dettagliate sui prodotti relative alla logistica degli "
-"approvvigionamenti, i prezzi di vendita, le categorie prodotti, fornitori e "
-"così via."
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1668,6 +1640,13 @@ msgstr "Imballo per strato"
 #: field:product.template,warranty:0
 msgid "Warranty (months)"
 msgstr "Garanzia (mesi)"
+
+#. module: product
+#: help:product.pricelist.item,categ_id:0
+msgid ""
+"Set a category of product if this rule only apply to products of a category "
+"and his children. Keep empty for all products"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1794,7 +1773,7 @@ msgstr ""
 "listino prezzi."
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:515
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Sezione del partner per il form del prodotto"
@@ -2237,7 +2216,7 @@ msgid "Description"
 msgstr "Descrizione"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:358
 #, python-format
 msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
@@ -2286,7 +2265,7 @@ msgid "Shelves"
 msgstr "Scaffali"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:514
 #, python-format
 msgid "Other Pricelist"
 msgstr "Altro listino prezzi"
@@ -2365,32 +2344,14 @@ msgstr ""
 " U.V. = U.M. * coeff"
 
 #. module: product
-#: field:product.pricelist.item,price_discount:0
-msgid "Price Discount"
-msgstr "Sconto Prezzo"
-
-#. module: product
 #: help:product.template,volume:0
 msgid "The volume in m3."
 msgstr "Il volume in mc"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"There can be more than one version of a pricelist. If you need to create new "
-"versions of a pricelist, you can do it and manage them from here. Some "
-"examples of versions: 2010, 2011, Promotion of February 2010, etc."
-msgstr ""
-"Ci può essere più di una versione di listino. Se c'è bisogno di creare nuove "
-"versioni di listino, è possibile gestirle da qui. Alcuni esempi di versioni: "
-"2010, 2011, Promozione di febbraio 2010, ecc."
-
-#. module: product
-#: help:product.pricelist.item,categ_id:0
-msgid ""
-"Set a category of product if this rule only apply to products of a category "
-"and his children. Keep empty for all products"
-msgstr ""
+#: field:product.pricelist.item,price_discount:0
+msgid "Price Discount"
+msgstr "Sconto Prezzo"
 
 #~ msgid ""
 #~ "This is the average time between the confirmation of the customer order and "
@@ -2813,8 +2774,45 @@ msgstr ""
 #~ msgstr ""
 #~ "Stabilisce la sequenza quando di visualizza una lista di elementi di listino."
 
+#~ msgid ""
+#~ "A pricelist contains rules to be evaluated in order to compute the purchase "
+#~ "or sale price for all the partners assigned to a pricelist. Pricelists have "
+#~ "several versions (2010, 2011, Promotion of February 2010, etc.) and each "
+#~ "version has several rules. Example: the customer price of this category of "
+#~ "product will be based on the supplier price multiplied by 1.80."
+#~ msgstr ""
+#~ "Un listino contiene regole utilizzate per calcolare il prezzo di acquisto o "
+#~ "di vendita per tutti i partner associati al listino. I listini hanno diverse "
+#~ "versioni (2010, 2011, promozione di febbraio 2010, ecc.) e ogni versione ha "
+#~ "diverse regole. Esempio: il prezzo cliente di questa categoria di prodotti "
+#~ "sarà basato sul prezzo fornitore moltplicato per 1,8"
+
+#~ msgid ""
+#~ "You must define a Product for everything you buy or sell. They can be raw "
+#~ "materials, stockable products, consumables or services. The Product form "
+#~ "contains a detailed information of your products related to procurement "
+#~ "logistics, sales price, product category, suppliers and so on."
+#~ msgstr ""
+#~ "E' necessario definire un prodotto per ogni cosa si compri o si venda. Siano "
+#~ "materiali grezzi, prodotti stoccabili, consumabili o servizi. Il form del "
+#~ "prodotto contiene informazioni dettagliate relative alla logistica degli "
+#~ "approvvigionamenti, prezzi di vendita, categorie prodotti, fornitori e così "
+#~ "via."
+
+#~ msgid "res.users"
+#~ msgstr "res.users"
+
 #~ msgid "Shortcut for this menu already exists!"
 #~ msgstr "Esiste già una scorciatoia per questo menu!"
+
+#~ msgid ""
+#~ "Create and manage the units of measure you want to be used in your system. "
+#~ "You can define a conversion rate to be used between the several Unit of "
+#~ "Measure within the same category."
+#~ msgstr ""
+#~ "Crea e gestisce le unità di misura che si vogliono usare nel sistema. E' "
+#~ "possibile definire un tasso di conversione da usare fra le varie unità di "
+#~ "misura all'interno della stessa categoria."
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Le regole non sono supportate dagli oggetti osv_memory !"
@@ -2822,8 +2820,40 @@ msgstr ""
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Il nome del modulo deve essere unico !"
 
+#~ msgid ""
+#~ "Create and manage the units of measure categories you want to be used in "
+#~ "your system. If several units of measures are in the same category, they can "
+#~ "be converted within each other. For example, in the unit of measure category "
+#~ "\"Time\", you will have the following UoM: Hours, Days."
+#~ msgstr ""
+#~ "Crea e gestisce le categorie di unità di misura da usare nel sistema. Se "
+#~ "nella stessa categoria ci sono diverse unità di misura, esse possono essere "
+#~ "convertite le une con le altre. Per esempio, nella categoria \"Tempo\", si "
+#~ "potranno avere le seguenti U.M.: Ore, Giorni."
+
+#~ msgid ""
+#~ "Here is a list of all your products classified by category. You can click on "
+#~ "a category to get the list of all products linked to this category or to a "
+#~ "child of this category."
+#~ msgstr ""
+#~ "Qui c'è una lista di tutti i prodotti classificati per categoria. E' "
+#~ "possibile cliccare su una categoria per ottenere la lista di tutti i "
+#~ "prodotti collegati a questa categoria o a una sua figlia."
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Errore ! Non è possibile creare menu ricorsivi."
+
+#~ msgid ""
+#~ "Products can be purchased and/or sold. They can be raw materials, stockable "
+#~ "products, consumables or services. The Product form contains a detailed "
+#~ "information on your  products related to procurement logistics, sales price, "
+#~ "product category, suppliers and so on."
+#~ msgstr ""
+#~ "I prodotti possono essere comprati e/o venduti. Possono essere materiali "
+#~ "grezzi, prodotti stoccabili, consumabili o servizi. Il form del prodotto "
+#~ "contiene informazioni dettagliate sui prodotti relative alla logistica degli "
+#~ "approvvigionamenti, i prezzi di vendita, le categorie prodotti, fornitori e "
+#~ "così via."
 
 #~ msgid "Rule must have at least one checked access right !"
 #~ msgstr "La regola deve avere almeno un diritto di accesso verificato !"
@@ -2850,3 +2880,18 @@ msgstr ""
 
 #~ msgid "Only one value can be defined for each given usage!"
 #~ msgstr "Può essere definito solamente un valore per ogni utilizzo!"
+
+#~ msgid ""
+#~ "There can be more than one version of a pricelist. If you need to create new "
+#~ "versions of a pricelist, you can do it and manage them from here. Some "
+#~ "examples of versions: 2010, 2011, Promotion of February 2010, etc."
+#~ msgstr ""
+#~ "Ci può essere più di una versione di listino. Se c'è bisogno di creare nuove "
+#~ "versioni di listino, è possibile gestirle da qui. Alcuni esempi di versioni: "
+#~ "2010, 2011, Promozione di febbraio 2010, ecc."
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Non è possibile avere due utenti con lo stesso login !"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "L'azienda scelta non è nelle aziende permesse per questo utente"

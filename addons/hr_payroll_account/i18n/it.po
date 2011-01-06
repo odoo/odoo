@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2011-01-01 17:08+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-02 09:42+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-02 05:02+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_payroll_account
@@ -44,6 +44,12 @@ msgid "Analytic Account for Salary Analysis"
 msgstr ""
 
 #. module: hr_payroll_account
+#: field:hr.payroll.register,journal_id:0
+#: field:hr.payslip,journal_id:0
+msgid "Expense Journal"
+msgstr ""
+
+#. module: hr_payroll_account
 #: field:hr.contibution.register.line,period_id:0
 msgid "Period"
 msgstr "Periodo"
@@ -59,15 +65,14 @@ msgid "Other Informations"
 msgstr "Altre informazioni"
 
 #. module: hr_payroll_account
-#: field:hr.payroll.register,journal_id:0
-#: field:hr.payslip,journal_id:0
-msgid "Expanse Journal"
-msgstr ""
-
-#. module: hr_payroll_account
 #: field:hr.employee,salary_account:0
 msgid "Salary Account"
 msgstr "Conto stipendio"
+
+#. module: hr_payroll_account
+#: help:hr.employee,property_bank_account:0
+msgid "Select Bank Account from where Salary Expense will be Paid"
+msgstr ""
 
 #. module: hr_payroll_account
 #: model:ir.model,name:hr_payroll_account.model_hr_payroll_register
@@ -85,14 +90,14 @@ msgid "Description"
 msgstr "Descrizione"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:330
 #, python-format
 msgid "Please Confirm all Expense Invoice appear for Reimbursement"
 msgstr ""
 "Per favore confermare tutte le fatture di spesa che compaiono nei rimborsi"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:432
 #, python-format
 msgid "Please defined partner in bank account for %s !"
 msgstr ""
@@ -103,7 +108,12 @@ msgid "Accounting Informations"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: help:hr.employee,salary_account:0
+msgid "Expense account when Salary Expense will be recorded"
+msgstr ""
+
+#. module: hr_payroll_account
+#: code:addons/hr_payroll_account/hr_payroll_account.py:429
 #, python-format
 msgid "Please defined bank account for %s !"
 msgstr "Per favore definire il conto banca per %s!"
@@ -130,19 +140,16 @@ msgid "Payment Lines"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:273
+#: code:addons/hr_payroll_account/hr_payroll_account.py:444
 #, python-format
 msgid "Please define fiscal year for perticular contract"
 msgstr ""
 
 #. module: hr_payroll_account
-#: help:hr.employee,property_bank_account:0
-msgid "Select Bank Account from where Salary Expanse will be Paid"
-msgstr ""
-
-#. module: hr_payroll_account
-#: help:hr.employee,salary_account:0
-msgid "Expanse account when Salary Expanse will be recorded"
+#: field:hr.payslip.account.move,slip_id:0
+#: model:ir.model,name:hr_payroll_account.model_hr_payslip
+msgid "Pay Slip"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -212,7 +219,13 @@ msgid "Accounting vouchers"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:273
+#: code:addons/hr_payroll_account/hr_payroll_account.py:280
+#: code:addons/hr_payroll_account/hr_payroll_account.py:283
+#: code:addons/hr_payroll_account/hr_payroll_account.py:330
+#: code:addons/hr_payroll_account/hr_payroll_account.py:444
+#: code:addons/hr_payroll_account/hr_payroll_account.py:451
+#: code:addons/hr_payroll_account/hr_payroll_account.py:454
 #, python-format
 msgid "Warning !"
 msgstr "Attenzione!"
@@ -238,12 +251,6 @@ msgid "Sequence"
 msgstr "Sequenza"
 
 #. module: hr_payroll_account
-#: field:hr.payslip.account.move,slip_id:0
-#: model:ir.model,name:hr_payroll_account.model_hr_payslip
-msgid "Pay Slip"
-msgstr ""
-
-#. module: hr_payroll_account
 #: field:hr.payroll.register,period_id:0
 #: field:hr.payslip,period_id:0
 msgid "Force Period"
@@ -255,7 +262,8 @@ msgid "Leave Type"
 msgstr "Tipo di permesso"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:280
+#: code:addons/hr_payroll_account/hr_payroll_account.py:451
 #, python-format
 msgid "Fiscal Year is not defined for slip date %s"
 msgstr ""
@@ -285,7 +293,7 @@ msgid "Salary Structure"
 msgstr "Struttura stipendio"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:550
 #, python-format
 msgid "Please Configure Partners Receivable Account!!"
 msgstr ""
@@ -296,14 +304,10 @@ msgid "Year"
 msgstr "Anno"
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:283
+#: code:addons/hr_payroll_account/hr_payroll_account.py:454
 #, python-format
 msgid "Period is not defined for slip date %s"
-msgstr ""
-
-#. module: hr_payroll_account
-#: view:hr.employee:0
-msgid "Accounting"
 msgstr ""
 
 #. module: hr_payroll_account
@@ -312,13 +316,16 @@ msgid "Accounting Details"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:533
 #, python-format
 msgid "Please Configure Partners Payable Account!!"
 msgstr ""
 
 #. module: hr_payroll_account
-#: code:addons/hr_payroll_account/hr_payroll_account.py:0
+#: code:addons/hr_payroll_account/hr_payroll_account.py:429
+#: code:addons/hr_payroll_account/hr_payroll_account.py:432
+#: code:addons/hr_payroll_account/hr_payroll_account.py:533
+#: code:addons/hr_payroll_account/hr_payroll_account.py:550
 #, python-format
 msgid "Integrity Error !"
 msgstr "Errore di Integrità!"

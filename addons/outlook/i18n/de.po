@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-12-29 11:37+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,13 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: outlook
-#: field:outlook.installer,plugin_file:0
-msgid "Outlook Plug-in"
-msgstr "Outlook Plug-in"
 
 #. module: outlook
 #: field:outlook.installer,doc_file:0
@@ -29,9 +24,9 @@ msgid "Installation Manual"
 msgstr "Installation Beschreibung"
 
 #. module: outlook
-#: view:outlook.installer:0
-msgid "Configure"
-msgstr "Konfiguration"
+#: field:outlook.installer,plugin_file:0
+msgid "Outlook Plug-in"
+msgstr "Outlook Plug-in"
 
 #. module: outlook
 #: field:outlook.installer,description:0
@@ -46,8 +41,8 @@ msgstr "Outlook Plug-In"
 
 #. module: outlook
 #: view:outlook.installer:0
-msgid "title"
-msgstr ""
+msgid "Skip"
+msgstr "Überspringen"
 
 #. module: outlook
 #: model:ir.module.module,shortdesc:outlook.module_meta_information
@@ -99,6 +94,11 @@ msgid "The documentation file :- how to install Outlook Plug-in."
 msgstr "Die Dokumentationsdatei :- Wie wird das Outlook Plug-in installiert."
 
 #. module: outlook
+#: model:ir.model,name:outlook.model_outlook_installer
+msgid "outlook.installer"
+msgstr ""
+
+#. module: outlook
 #: model:ir.actions.act_window,name:outlook.action_outlook_installer
 #: model:ir.actions.act_window,name:outlook.action_outlook_wizard
 #: view:outlook.installer:0
@@ -106,17 +106,9 @@ msgid "Outlook Plug-In Configuration"
 msgstr "Outlook Plug-In Konfiguration"
 
 #. module: outlook
-#: help:outlook.installer,outlook:0
-msgid ""
-"Allows you to select an object that you’d like to add to your email and its "
-"attachments."
-msgstr ""
-"Sie können ein Objekt auswählen und als Anhang zu Ihren EMails hinzufügen."
-
-#. module: outlook
-#: model:ir.model,name:outlook.model_outlook_installer
-msgid "outlook.installer"
-msgstr ""
+#: field:outlook.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Abfolge Konfiguration"
 
 #. module: outlook
 #: view:outlook.installer:0
@@ -130,9 +122,16 @@ msgstr ""
 "durch eine Outlook Email in OpenERP erstellen."
 
 #. module: outlook
+#: help:outlook.installer,outlook:0
+msgid ""
+"Allows you to select an object that you would like to add to your email and "
+"its attachments."
+msgstr ""
+
+#. module: outlook
 #: view:outlook.installer:0
-msgid "Skip"
-msgstr "Überspringen"
+msgid "title"
+msgstr ""
 
 #. module: outlook
 #: view:outlook.installer:0
@@ -158,9 +157,9 @@ msgstr ""
 "dann als plug-in in Outlook."
 
 #. module: outlook
-#: field:outlook.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Abfolge Konfiguration"
+#: view:outlook.installer:0
+msgid "Configure"
+msgstr "Konfiguration"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -170,6 +169,12 @@ msgstr "Abfolge Konfiguration"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid ""
+#~ "Allows you to select an object that you’d like to add to your email and its "
+#~ "attachments."
+#~ msgstr ""
+#~ "Sie können ein Objekt auswählen und als Anhang zu Ihren EMails hinzufügen."
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."

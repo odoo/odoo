@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-24 21:03+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-05 08:47+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-25 04:52+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: thunderbird
@@ -24,15 +24,6 @@ msgid "Thunderbird Plug-in"
 msgstr "Module pour Thunderbird"
 
 #. module: thunderbird
-#: help:thunderbird.installer,thunderbird:0
-msgid ""
-"Allows you to select an object that you’d like to add to your email and its "
-"attachments."
-msgstr ""
-"Vous permet de sélectionner un objet que vous souhaitez ajouter à votre "
-"courriel et ses pièces jointes."
-
-#. module: thunderbird
 #: help:thunderbird.installer,plugin_file:0
 msgid ""
 "Thunderbird plug-in file. Save as this file and install this plug-in in "
@@ -40,6 +31,15 @@ msgid ""
 msgstr ""
 "Fichier du module pour Thunderbird. Enregistrer ce fichier sur votre "
 "ordinateur et installer ce module dans Thunderbird."
+
+#. module: thunderbird
+#: help:thunderbird.installer,thunderbird:0
+msgid ""
+"Allows you to select an object that you would like to add to your email and "
+"its attachments."
+msgstr ""
+"Vous permet de sélectionner un objet que vous souhaitez ajouter à votre "
+"courriel et ses pièces jointes."
 
 #. module: thunderbird
 #: help:thunderbird.installer,pdf_file:0
@@ -63,31 +63,14 @@ msgid "Installation Manual"
 msgstr "Manuel d'installation"
 
 #. module: thunderbird
-#: view:thunderbird.installer:0
-msgid "Configure"
-msgstr "Configurer"
+#: field:thunderbird.installer,description:0
+msgid "Description"
+msgstr "Description"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "title"
 msgstr "titre"
-
-#. module: thunderbird
-#: model:ir.module.module,description:thunderbird.module_meta_information
-msgid ""
-"\n"
-"      This module is required for the thuderbird plug-in to work\n"
-"      properly.\n"
-"      The Plugin allows you archive email and its attachments to the "
-"selected \n"
-"      OpenERP objects. You can select a partner, a task, a project, an "
-"analytical\n"
-"      account,or any other object and attach selected mail as .eml file in \n"
-"      attachment of selected record. You can create Documents for crm Lead,\n"
-"      HR Applicant and project issue from selected mails.\n"
-"\n"
-"      "
-msgstr ""
 
 #. module: thunderbird
 #: model:ir.ui.menu,name:thunderbird.menu_base_config_plugins_thunderbird
@@ -122,19 +105,14 @@ msgid "File name"
 msgstr "Nom du fichier"
 
 #. module: thunderbird
-#: field:thunderbird.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Avancement de la configuration"
-
-#. module: thunderbird
 #: view:thunderbird.installer:0
 msgid "Installation and Configuration Steps"
 msgstr "Étapes d'installation et de configuration"
 
 #. module: thunderbird
-#: field:thunderbird.installer,description:0
-msgid "Description"
-msgstr "Description"
+#: field:thunderbird.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Avancement de la configuration"
 
 #. module: thunderbird
 #: model:ir.actions.act_window,name:thunderbird.action_thunderbird_installer
@@ -150,6 +128,11 @@ msgstr "Outillage à greffons pour Thunderbid"
 
 #. module: thunderbird
 #: view:thunderbird.installer:0
+msgid "Configure"
+msgstr "Configurer"
+
+#. module: thunderbird
+#: view:thunderbird.installer:0
 msgid "Skip"
 msgstr "Passer"
 
@@ -157,6 +140,37 @@ msgstr "Passer"
 #: field:thunderbird.installer,config_logo:0
 msgid "Image"
 msgstr "Image"
+
+#. module: thunderbird
+#: model:ir.module.module,description:thunderbird.module_meta_information
+msgid ""
+"\n"
+"      This module is required for the thuderbird plug-in to work\n"
+"      properly.\n"
+"      The Plugin allows you archive email and its attachments to the "
+"selected \n"
+"      OpenERP objects. You can select a partner, a task, a project, an "
+"analytical\n"
+"      account,or any other object and attach selected mail as eml file in \n"
+"      attachment of selected record. You can create Documents for crm Lead,\n"
+"      HR Applicant and project issue from selected mails.\n"
+"\n"
+"      "
+msgstr ""
+"\n"
+"      Ce module est requis pour que le greffon pour Thunderbird fonctionne\n"
+"      correctement.\n"
+"      Le module vous permet d'archiver des courriels et leurs pièces jointes "
+"à des objets OpenERP\n"
+"      sélectionnés. Vous pouvez sélectionner un partenaire, une tâche, un "
+"projet, un compte\n"
+"      analytique, ou tout autre objet et y attacher le courriel sélectionné "
+"en fichier eml.\n"
+"      Vous pouvez créer des documents pour les pistes CRM,\n"
+"      les candidats et les problèmes sur les projets depuis les courriels "
+"sélectionnés.\n"
+"\n"
+"      "
 
 #~ msgid "Copy To"
 #~ msgstr "Copier vers"
@@ -197,3 +211,10 @@ msgstr "Image"
 
 #~ msgid "Thunderbid mails"
 #~ msgstr "Courriels Thunderbird"
+
+#~ msgid ""
+#~ "Allows you to select an object that you’d like to add to your email and its "
+#~ "attachments."
+#~ msgstr ""
+#~ "Vous permet de sélectionner un objet que vous souhaitez ajouter à votre "
+#~ "courriel et ses pièces jointes."

@@ -6,21 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-08-03 06:27+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:34+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
 #: constraint:hr_timesheet_sheet.sheet:0
 #, python-format
 msgid ""
@@ -45,7 +45,7 @@ msgid "Service"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:0
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "No employee defined for your user !"
 msgstr "Δεν έχει οριστεί υπάλληλος για το χρήστη σας!"
@@ -82,7 +82,7 @@ msgid "Today"
 msgstr "Σήμερα"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:199
 #, python-format
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f !"
@@ -157,7 +157,8 @@ msgid "Total Cost"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:608
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:624
 #, python-format
 msgid "UserError"
 msgstr "UserError"
@@ -169,7 +170,8 @@ msgid "Refuse"
 msgstr "Απόρριψη"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:608
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:624
 #, python-format
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates!"
@@ -187,7 +189,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:246
 #, python-format
 msgid "You can not sign in from an other date than today"
 msgstr ""
@@ -205,7 +207,7 @@ msgid "Validation"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:199
 #, python-format
 msgid "Warning !"
 msgstr "Προσοχή!"
@@ -223,11 +225,6 @@ msgstr ""
 #: field:timesheet.report,account_id:0
 msgid "Analytic Account"
 msgstr "Αναλυτικός Λογαριασμός"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
-msgid "Project Timesheet"
-msgstr "Φύλλο Xρόνου Eργασίας Έργου"
 
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
@@ -332,7 +329,7 @@ msgid "New"
 msgstr "Νέο"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:174
 #, python-format
 msgid "You cannot duplicate a timesheet !"
 msgstr ""
@@ -343,8 +340,16 @@ msgid "My Total Attendances By Week"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:174
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:179
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:186
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:246
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:604
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:631
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "Error !"
 msgstr "Σφάλμα!"
@@ -381,7 +386,8 @@ msgid "No employee defined"
 msgstr "Δεν ορίστηκε υπάλληλος!"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:372
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:374
 #, python-format
 msgid "Invalid action !"
 msgstr "Μη επιτρεπόμενη ενέργεια!"
@@ -403,7 +409,8 @@ msgid "Configuration"
 msgstr "Ρυθμίσεις"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:179
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:186
 #, python-format
 msgid ""
 "You cannot create a timesheet for an employee that does not have any user "
@@ -429,6 +436,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_timesheet:0
 #: field:hr_timesheet_sheet.sheet,total_timesheet_day:0
+#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Total Timesheet"
 msgstr "Συνολικός Xρόνος Eργασίας"
 
@@ -539,12 +547,6 @@ msgid "Timesheet allowed difference(Hours)"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
-#, python-format
-msgid "You can not sign out from an other date than today"
-msgstr "Δεν μπορείτε να αποχωρήσετε άλλη ημέρα παρά μόνο σήμερα!"
-
-#. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "The invoice is created based on the timesheet."
 msgstr ""
@@ -583,7 +585,8 @@ msgid "Current Status"
 msgstr "Παρούσα Κατάσταση"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:604
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:631
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet !"
 msgstr ""
@@ -648,6 +651,14 @@ msgid "October"
 msgstr ""
 
 #. module: hr_timesheet_sheet
+#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
+msgid ""
+"Check your timesheets for a specific period. You can also encode time spent "
+"on a project (i.e. an analytic account) thus generating costs in the "
+"analytic account concerned."
+msgstr ""
+
+#. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "January"
@@ -690,7 +701,8 @@ msgid "Period"
 msgstr "Περίοδος"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:480
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid "You can not modify an entry in a confirmed timesheet !"
 msgstr ""
@@ -728,9 +740,9 @@ msgid "Validated"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: view:hr.timesheet.current.open:0
-msgid "Open"
-msgstr ""
+#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
+msgid "Invoice on Work"
+msgstr "Τιμολόγηση με βάση την εργασία"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
@@ -738,13 +750,13 @@ msgid "Timesheet by Accounts"
 msgstr "Φύλλο Xρόνου Eργασίας ανά Λογαριασμό"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:0
+#: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:51
 #, python-format
 msgid "Open Timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:372
 #, python-format
 msgid "Cannot delete Sheet(s) which are already confirmed !"
 msgstr "Τα επιβεβαιωμένα φύλλα δεν μπορούν να διαγραφούν!"
@@ -778,7 +790,7 @@ msgid "Search Timesheet"
 msgstr ""
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:170
 #, python-format
 msgid ""
 "The timesheet cannot be validated as it does not contain equal no. of sign "
@@ -834,7 +846,7 @@ msgid "Sign Out"
 msgstr "Αποχώρηση"
 
 #. module: hr_timesheet_sheet
-#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:374
 #, python-format
 msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
 msgstr ""
@@ -900,11 +912,6 @@ msgid "Invoice rate"
 msgstr "Τιμή χρέωσης τιμολογίου"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
-msgid "Invoice on Work"
-msgstr "Τιμολόγηση με βάση την εργασία"
-
-#. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Approve"
 msgstr ""
@@ -924,14 +931,6 @@ msgstr ""
 #: view:timesheet.report:0
 #: field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
-msgstr ""
-
-#. module: hr_timesheet_sheet
-#: model:ir.actions.act_window,help:hr_timesheet_sheet.act_hr_timesheet_sheet_form
-msgid ""
-"This view allows you to check timesheet sheets following a specific period. "
-"You can also encode time spent on a project that is an analytic account and "
-"the time spent on a project generate costs on the analytic account."
 msgstr ""
 
 #. module: hr_timesheet_sheet
@@ -958,6 +957,11 @@ msgstr ""
 #: field:timesheet.report,year:0
 msgid "Year"
 msgstr "Έτος"
+
+#. module: hr_timesheet_sheet
+#: view:hr.timesheet.current.open:0
+msgid "Open"
+msgstr ""
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -1075,6 +1079,10 @@ msgstr ""
 
 #~ msgid "Timesheets To Confirm"
 #~ msgstr "Φύλλα Xρόνου Eργασίας προς Επιβεβαίωση"
+
+#, python-format
+#~ msgid "You can not sign out from an other date than today"
+#~ msgstr "Δεν μπορείτε να αποχωρήσετε άλλη ημέρα παρά μόνο σήμερα!"
 
 #~ msgid "Status"
 #~ msgstr "Κατάσταση"
