@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-12-17 22:23+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
@@ -15,8 +15,15 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:58+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: project_planning
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -73,6 +80,19 @@ msgstr "Feuille de temps"
 #: model:ir.module.module,shortdesc:project_planning.module_meta_information
 msgid "Planning Management Module"
 msgstr "Module de gestion des plannings"
+
+#. module: project_planning
+#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
+msgid ""
+"With its global system to schedule all resources of a company (people and "
+"material), OpenERP allows you to encode and then automatically compute tasks "
+"and phases scheduling, track resource allocation and availability."
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Total planned tasks"
+msgstr ""
 
 #. module: project_planning
 #: field:report_account_analytic.planning.stat,account_id:0
@@ -134,11 +154,6 @@ msgid "Planning By Account"
 msgstr "Planning par compte"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "Time without"
-msgstr "Marge libre"
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Current Plannings"
 msgstr "Plannings actuels"
@@ -159,9 +174,9 @@ msgid "Extra Info"
 msgstr "Informations supplémentaires"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,total_planned:0
-msgid "Total Planned"
-msgstr "Total Plannifié"
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr ""
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,timesheet:0
@@ -185,9 +200,10 @@ msgid "Time Allocation without Tasks"
 msgstr "Allocation des temps sans tâches"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "From"
-msgstr "De"
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+msgid "Planning Lines"
+msgstr "Lignes du planning"
 
 #. module: project_planning
 #: constraint:res.company:0
@@ -245,6 +261,11 @@ msgid "Planning"
 msgstr "Planning"
 
 #. module: project_planning
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Total Plannifié"
+
+#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Time Encoding"
 msgstr "Saisie des temps"
@@ -253,12 +274,6 @@ msgstr "Saisie des temps"
 #: field:report_account_analytic.planning.user,free:0
 msgid "Unallocated Time"
 msgstr "Temps non alloué"
-
-#. module: project_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
-#: view:report_account_analytic.planning:0
-msgid "Planning by Account"
-msgstr "Planning par Compte"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.user,plan_open:0
@@ -275,9 +290,13 @@ msgid "Delegate"
 msgstr "Déléguer"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Analyse des plannings"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"Calculé en tant que : [jours ouvrés - (temps alloués à des tâches + temps "
+"alloués sans tâches + congés déposés)]"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -286,6 +305,16 @@ msgid ""
 "time"
 msgstr ""
 "Planifiez ici le nombre de jours de travail d'une personne à plein temps"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "["
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "From :"
+msgstr ""
 
 #. module: project_planning
 #: field:report_account_analytic.planning,planning_user_ids:0
@@ -305,14 +334,14 @@ msgid "Planning By Account (in Days)"
 msgstr "Planning par compte (en jours)"
 
 #. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Time without tasks"
+msgstr ""
+
+#. module: project_planning
 #: field:report_account_analytic.planning,date_from:0
 msgid "Start Date"
 msgstr "Date de début"
-
-#. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "Total Planned Tasks"
-msgstr "Total des tâches planifiées"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,total_free:0
@@ -329,18 +358,9 @@ msgstr ""
 "coche 'Affecté à une tâche' est à VRAI."
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "tasks"
-msgstr "tâches"
-
-#. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
-msgstr ""
-"Calculé en tant que : [jours ouvrés - (temps alloués à des tâches + temps "
-"alloués sans tâches + congés déposés)]"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Analyse des plannings"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -359,10 +379,10 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: project_planning
-#: view:account.analytic.account:0
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
 #: view:report_account_analytic.planning:0
-msgid "Planning Lines"
-msgstr "Lignes du planning"
+msgid "Planning by Account"
+msgstr "Planning par Compte"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -502,7 +522,6 @@ msgstr "Ré-activer"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,user_id:0
-#: report:report_account_analytic.planning.print:0
 msgid "Responsible"
 msgstr "Responsable"
 
@@ -510,11 +529,6 @@ msgstr "Responsable"
 #: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat
 msgid "Planning stat"
 msgstr "Statistiques de planification"
-
-#. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "To"
-msgstr "À"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.account,plan_tasks:0
@@ -525,14 +539,6 @@ msgstr "Allocation des temps des tâches"
 #: report:report_account_analytic.planning.print:0
 msgid "Summary by user"
 msgstr "Résumé par utilisateur"
-
-#. module: project_planning
-#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
-msgid ""
-"With its commun system for scheduling all resources of a company (people and "
-"materials), OpenERP allows you to encode then compute automatically tasks "
-"and phases scheduling, track resources allocation and availibility."
-msgstr ""
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -565,6 +571,16 @@ msgid "Summary by project"
 msgstr "Résumé par projet"
 
 #. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Responsible :"
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "]"
+msgstr ""
+
+#. module: project_planning
 #: field:res.company,planning_time_mode_id:0
 msgid "Planning Time Unit"
 msgstr "Unité de temps pour le planning"
@@ -588,11 +604,26 @@ msgstr ""
 "Cette valeur, exprimée en jour, est le résultat de la somme des temps "
 "alloués qui sont liés à des tâches."
 
+#~ msgid "From"
+#~ msgstr "De"
+
+#~ msgid "Total Planned Tasks"
+#~ msgstr "Total des tâches planifiées"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Erreur! Vous ne pouvez pas créer de menu récursif."
+
+#~ msgid "tasks"
+#~ msgstr "tâches"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
 #~ "spécial !"
+
+#~ msgid "To"
+#~ msgstr "À"
+
+#~ msgid "Time without"
+#~ msgstr "Marge libre"

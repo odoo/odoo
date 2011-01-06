@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
 "PO-Revision-Date: 2010-12-11 11:56+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
@@ -68,6 +68,12 @@ msgstr "Analysjournal"
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Line"
 msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#, python-format
+msgid "User Error"
+msgstr "Användarfel"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
@@ -157,7 +163,7 @@ msgid "Sales Order Line"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
 #: view:analytic.plan.create.model:0
 #, python-format
 msgid "Distribution Model Saved"
@@ -179,13 +185,13 @@ msgid "Percentage"
 msgstr "Procent"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:201
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "En model som har detta namn och kod finns redan!"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "No analytic plan defined !"
 msgstr ""
@@ -203,10 +209,9 @@ msgid "Analytic Plans"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:0
-#, python-format
-msgid "User Error"
-msgstr "Användarfel"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Perc(%)"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
@@ -271,7 +276,8 @@ msgid "To Date"
 msgstr "Till datum:"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:321
+#: code:addons/account_analytic_plans/account_analytic_plans.py:462
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "Du måste skapa en analysjournal för '%s' jpurnalen!"
@@ -370,8 +376,9 @@ msgid "Root account of this plan."
 msgstr "Root konto för denna plan"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "Error"
 msgstr "Fel"
@@ -387,7 +394,7 @@ msgid "Quantity"
 msgstr "Antal"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #, python-format
 msgid "Please put a name and a code before saving the model !"
 msgstr "Vänligen skriv ett namn och en kod innan du sparar modellen !"
@@ -398,7 +405,8 @@ msgid "Print Crossovered Analytic"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:321
+#: code:addons/account_analytic_plans/account_analytic_plans.py:462
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Ingen analysjournal !"
@@ -435,7 +443,7 @@ msgid "Analytic Distribution Lines"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:214
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "Totalen borde vara mellan %s och %s"
@@ -512,7 +520,7 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Journalnamnet måste vara unikt per företag!"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:214
 #, python-format
 msgid "Value Error"
 msgstr "Värdefel"

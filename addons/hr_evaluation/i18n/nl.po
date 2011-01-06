@@ -7,15 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-02 07:21+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Plan In Progress"
+msgstr "Plan loopt"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,wait:0
@@ -42,11 +48,6 @@ msgid "Progress"
 msgstr "Voortgang"
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,evaluation_id:0
-msgid "Evaluation Type"
-msgstr "Beoordelingsoort"
-
-#. module: hr_evaluation
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_evaluation_tree
 msgid "My Evaluation Remaining"
@@ -58,7 +59,7 @@ msgid "Legend"
 msgstr "Bijschrift"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:311
 #, python-format
 msgid "You cannot start evaluation without Evaluation."
 msgstr "U kunt de beoordeling niet starten zonder beoordeling?!"
@@ -80,7 +81,8 @@ msgid "Appreciation"
 msgstr "Waardering"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:242
+#: code:addons/hr_evaluation/hr_evaluation.py:311
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing !"
@@ -107,6 +109,11 @@ msgstr "Beoordelingsformulier"
 #: field:hr.evaluation.report,day:0
 msgid "Day"
 msgstr "Dag"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,evaluation_id:0
+msgid "Evaluation Form"
+msgstr ""
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -182,7 +189,7 @@ msgid "Periodicity of Evaluations (months)"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:242
 #, python-format
 msgid ""
 "You cannot change state, because some appraisal in waiting answer or draft "
@@ -202,22 +209,7 @@ msgid "First Evaluation in (months)"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
-msgid ""
-"Each employee can be assigned to an evaluation plan. These plans define the "
-"frequency and the way you manage your periodic personnal evaluation. You "
-"will be able to define steps and attach interview forms to each step. "
-"OpenERP manages all kind of evaluations: bottom-up, top-down, self "
-"evaluation and final evaluation by the manager."
-msgstr ""
-"Elke medewerker kan worden toegewezen aan een beoordelingsplan. Deze plannen "
-"definiëren de frequentie en manier waarop periodieke beoordelingen "
-"plaatsvinden. U kunt stappen definiëren en vragenformulieren toewijzen aan "
-"elke stap. OpenERP beheert allerlei soorten beoordelingen: bottom-up, top-"
-"down, zelfbeoordeling en eindbeoordeling door manager."
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:81
 #, python-format
 msgid ""
 "\n"
@@ -308,7 +300,7 @@ msgid "(date)s: Current Date"
 msgstr "(date)s: Actuele datum"
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:80
 #, python-format
 msgid "Regarding "
 msgstr "Betreffend "
@@ -365,10 +357,9 @@ msgid "Send all answers to the manager"
 msgstr "Alle antwoorden naar de manager versturen"
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,state:0
-#: selection:hr_evaluation.evaluation,state:0
-msgid "Plan In Progress"
-msgstr "Plan loopt"
+#: view:hr.evaluation.report:0
+msgid "    Month-1    "
+msgstr "    Maand-1    "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -382,6 +373,7 @@ msgstr "Beoordelings einddatum"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Print Interview"
 msgstr "Gesprek afdrukken"
 
@@ -410,9 +402,14 @@ msgid "Evaluations"
 msgstr "Beoordelingen"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-msgid "    Month-1    "
-msgstr "    Maand-1    "
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"Each employee may be assigned an evaluation plan. Such a plan defines the "
+"frequency and the way you manage your periodic personnel evaluation. You "
+"will be able to define steps and attach interviews to each step. OpenERP "
+"manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
+"final evaluation by the manager."
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -489,6 +486,7 @@ msgstr "Medewerker voor gesprek"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Interview Question"
 msgstr "Gespreksvraag"
 
@@ -510,18 +508,6 @@ msgid ""
 msgstr ""
 "Vink aan als u wilt dat alle voorgaande stadia zijn afgesloten voordat dit "
 "stadium start."
-
-#. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
-msgid ""
-"Interview Requests are generated automatically by OpenERP according to "
-"employees evaluation plan. Each user receives automatic emails and requests "
-"to perform evaluation of their collegues periodically."
-msgstr ""
-"Gespreksaanvragen worden automatisch door OpenERP gegenereerd volgens het "
-"beoordelingsplan van de medewerker. Elke gebruiker ontvangt automatisch e-"
-"mails en aanvragen om periodiek beoordelingen  van hun collega's uit te "
-"voeren."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -579,6 +565,11 @@ msgstr "Augustus"
 #: view:hr_evaluation.evaluation:0
 msgid "Start Evaluation"
 msgstr "Begin beoordeling"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "To Do"
+msgstr "Te doen"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -646,6 +637,7 @@ msgstr "Een anonieme samenvatting naar de manager versturen"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Interview Evaluation"
 msgstr "Beoordelingsgesprek"
 
@@ -704,6 +696,7 @@ msgstr "Te laat"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Interviewer"
 msgstr "Ondervrager"
 
@@ -762,9 +755,12 @@ msgid "In Progress"
 msgstr "Loopt"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-msgid "To Do"
-msgstr "Te doen"
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to an "
+"employee's evaluation plan. Each user receives automatic emails and requests "
+"to evaluate their colleagues periodically."
+msgstr ""
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0
@@ -1035,6 +1031,9 @@ msgstr ""
 #~ msgid "Employee Evaluation Quote"
 #~ msgstr "Citaat evaluatie werknemer"
 
+#~ msgid "Evaluation Type"
+#~ msgstr "Beoordelingsoort"
+
 #~ msgid "Next Evaluation"
 #~ msgstr "Volgende beoordeling"
 
@@ -1105,3 +1104,26 @@ msgstr ""
 
 #~ msgid "Rule must have at least one checked access right !"
 #~ msgstr "Regel moet tenminste één toegangsrecht aangevinkt hebben !"
+
+#~ msgid ""
+#~ "Interview Requests are generated automatically by OpenERP according to "
+#~ "employees evaluation plan. Each user receives automatic emails and requests "
+#~ "to perform evaluation of their collegues periodically."
+#~ msgstr ""
+#~ "Gespreksaanvragen worden automatisch door OpenERP gegenereerd volgens het "
+#~ "beoordelingsplan van de medewerker. Elke gebruiker ontvangt automatisch e-"
+#~ "mails en aanvragen om periodiek beoordelingen  van hun collega's uit te "
+#~ "voeren."
+
+#~ msgid ""
+#~ "Each employee can be assigned to an evaluation plan. These plans define the "
+#~ "frequency and the way you manage your periodic personnal evaluation. You "
+#~ "will be able to define steps and attach interview forms to each step. "
+#~ "OpenERP manages all kind of evaluations: bottom-up, top-down, self "
+#~ "evaluation and final evaluation by the manager."
+#~ msgstr ""
+#~ "Elke medewerker kan worden toegewezen aan een beoordelingsplan. Deze plannen "
+#~ "definiëren de frequentie en manier waarop periodieke beoordelingen "
+#~ "plaatsvinden. U kunt stappen definiëren en vragenformulieren toewijzen aan "
+#~ "elke stap. OpenERP beheert allerlei soorten beoordelingen: bottom-up, top-"
+#~ "down, zelfbeoordeling en eindbeoordeling door manager."
