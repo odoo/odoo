@@ -13,15 +13,6 @@
       - project.res_users_tester
 
 - 
-  Create a Resource Calendar Leaves 'Leave for the Anayst resource'
-- 
-  !record {model: resource.calendar.leaves, id: resource_analysts_leaves}:
-    date_from: '2010-06-02 10:00:00'
-    date_to: '2010-06-03 19:00:00'
-    name: "For Personal reason"
-    resource_id: project_long_term.resource_analyst        
-
-- 
   Create a project phase 'Defining Client's Basic Idea of Project'
 - 
   !record {model: project.phase, id: project_phase_definingclientsbasicideaofproject0}:
@@ -30,8 +21,6 @@
     name: "Defining Client's Basic Idea of Project"
     product_uom: product.uom_day
     project_id: project_project_worldbanksproject0
-
-
 
 - 
   Create project phase 'Establishing Project Feasibility'
