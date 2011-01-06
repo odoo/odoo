@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#
 # vim: sw=4:expandtab:foldmethod=marker
 #
 # Copyright (c) 2006, Mathieu Fenniak
@@ -39,7 +40,9 @@ It may be a solid base for future PDF file work in Python.
 __author__ = "Mathieu Fenniak"
 __author_email__ = "biziqe@mathieu.fenniak.net"
 
+import math
 import struct
+from sys import version_info
 try:
     from cStringIO import StringIO
 except ImportError:
@@ -50,6 +53,14 @@ import utils
 import warnings
 from generic import *
 from utils import readNonWhitespace, readUntilWhitespace, ConvertFunctionsToVirtualList
+
+if version_info < ( 2, 4 ):
+   from sets import ImmutableSet as frozenset
+
+if version_info < ( 2, 5 ):
+    from md5 import md5
+else:
+    from hashlib import md5
 
 ##
 # This class supports writing PDF files out, given pages produced by another
@@ -93,6 +104,21 @@ class PdfFileWriter(object):
         return self._objects[ido.idnum - 1]
 
     ##
+    # Common method for inserting or adding a page to this PDF file.
+    #
+    # @param page The page to add to the document.  This argument should be
+    #             an instance of {@link #PageObject PageObject}.
+    # @param action The function which will insert the page in the dictionnary.
+    #               Takes: page list, page to add.
+    def _addPage(self, page, action):
+        assert page["/Type"] == "/Page"
+        page[NameObject("/Parent")] = self._pages
+        page = self._addObject(page)
+        pages = self.getObject(self._pages)
+        action(pages["/Kids"], page)
+        pages[NameObject("/Count")] = NumberObject(pages["/Count"] + 1)
+
+    ##
     # Adds a page to this PDF file.  The page is usually acquired from a
     # {@link #PdfFileReader PdfFileReader} instance.
     # <p>
@@ -101,12 +127,64 @@ class PdfFileWriter(object):
     # @param page The page to add to the document.  This argument should be
     #             an instance of {@link #PageObject PageObject}.
     def addPage(self, page):
-        assert page["/Type"] == "/Page"
-        page[NameObject("/Parent")] = self._pages
-        page = self._addObject(page)
+        self._addPage(page, list.append)
+
+    ##
+    # Insert a page in this PDF file.  The page is usually acquired from a
+    # {@link #PdfFileReader PdfFileReader} instance.
+    #
+    # @param page The page to add to the document.  This argument should be
+    #             an instance of {@link #PageObject PageObject}.
+    # @param index Position at which the page will be inserted.
+    def insertPage(self, page, index=0):
+        self._addPage(page, lambda l, p: l.insert(index, p))
+
+    ##
+    # Retrieves a page by number from this PDF file.
+    # @return Returns a {@link #PageObject PageObject} instance.
+    def getPage(self, pageNumber):
         pages = self.getObject(self._pages)
-        pages["/Kids"].append(page)
-        pages[NameObject("/Count")] = NumberObject(pages["/Count"] + 1)
+        # XXX: crude hack
+        return pages["/Kids"][pageNumber].getObject()
+
+    ##
+    # Return the number of pages.
+    # @return The number of pages.
+    def getNumPages(self):
+        pages = self.getObject(self._pages)
+        return int(pages[NameObject("/Count")])
+
+    ##
+    # Append a blank page to this PDF file and returns it. If no page size
+    # is specified, use the size of the last page; throw
+    # PageSizeNotDefinedError if it doesn't exist.
+    # @param width The width of the new page expressed in default user
+    # space units.
+    # @param height The height of the new page expressed in default user
+    # space units.
+    def addBlankPage(self, width=None, height=None):
+        page = PageObject.createBlankPage(self, width, height)
+        self.addPage(page)
+        return page
+
+    ##
+    # Insert a blank page to this PDF file and returns it. If no page size
+    # is specified, use the size of the page in the given index; throw
+    # PageSizeNotDefinedError if it doesn't exist.
+    # @param width  The width of the new page expressed in default user
+    #               space units.
+    # @param height The height of the new page expressed in default user
+    #               space units.
+    # @param index  Position to add the page.
+    def insertBlankPage(self, width=None, height=None, index=0):
+        if width is None or height is None and \
+                (self.getNumPages() - 1) >= index:
+            oldpage = self.getPage(index)
+            width = oldpage.mediaBox.getWidth()
+            height = oldpage.mediaBox.getHeight()
+        page = PageObject.createBlankPage(self, width, height)
+        self.insertPage(page, index)
+        return page
 
     ##
     # Encrypt this PDF file with the PDF Standard encryption handler.
@@ -119,7 +197,7 @@ class PdfFileWriter(object):
     # encryption.  When false, 40bit encryption will be used.  By default, this
     # flag is on.
     def encrypt(self, user_pwd, owner_pwd = None, use_128bit = True):
-        import md5, time, random
+        import time, random
         if owner_pwd == None:
             owner_pwd = user_pwd
         if use_128bit:
@@ -133,8 +211,8 @@ class PdfFileWriter(object):
         # permit everything:
         P = -1
         O = ByteStringObject(_alg33(owner_pwd, user_pwd, rev, keylen))
-        ID_1 = md5.new(repr(time.time())).digest()
-        ID_2 = md5.new(repr(random.random())).digest()
+        ID_1 = md5(repr(time.time())).digest()
+        ID_2 = md5(repr(random.random())).digest()
         self._ID = ArrayObject((ByteStringObject(ID_1), ByteStringObject(ID_2)))
         if rev == 2:
             U, key = _alg34(user_pwd, O, P, ID_1)
@@ -160,9 +238,28 @@ class PdfFileWriter(object):
     # @param stream An object to write the file to.  The object must support
     # the write method, and the tell method, similar to a file object.
     def write(self, stream):
-        import struct, md5
+        import struct
 
         externalReferenceMap = {}
+
+        # PDF objects sometimes have circular references to their /Page objects
+        # inside their object tree (for example, annotations).  Those will be
+        # indirect references to objects that we've recreated in this PDF.  To
+        # address this problem, PageObject's store their original object
+        # reference number, and we add it to the external reference map before
+        # we sweep for indirect references.  This forces self-page-referencing
+        # trees to reference the correct new object location, rather than
+        # copying in a new copy of the page object.
+        for objIndex in xrange(len(self._objects)):
+            obj = self._objects[objIndex]
+            if isinstance(obj, PageObject) and obj.indirectRef != None:
+                data = obj.indirectRef
+                if not externalReferenceMap.has_key(data.pdf):
+                    externalReferenceMap[data.pdf] = {}
+                if not externalReferenceMap[data.pdf].has_key(data.generation):
+                    externalReferenceMap[data.pdf][data.generation] = {}
+                externalReferenceMap[data.pdf][data.generation][data.idnum] = IndirectObject(objIndex + 1, 0, self)
+
         self.stack = []
         self._sweepIndirectReferences(externalReferenceMap, self._root)
         del self.stack
@@ -181,7 +278,7 @@ class PdfFileWriter(object):
                 pack2 = struct.pack("<i", 0)[:2]
                 key = self._encrypt_key + pack1 + pack2
                 assert len(key) == (len(self._encrypt_key) + 5)
-                md5_hash = md5.new(key).digest()
+                md5_hash = md5(key).digest()
                 key = md5_hash[:min(16, len(self._encrypt_key) + 5)]
             obj.writeToStream(stream, key)
             stream.write("\nendobj\n")
@@ -487,7 +584,7 @@ class PdfFileReader(object):
     pages = property(lambda self: ConvertFunctionsToVirtualList(self.getNumPages, self.getPage),
             None, None)
 
-    def _flatten(self, pages=None, inherit=None):
+    def _flatten(self, pages=None, inherit=None, indirectRef=None):
         inheritablePageAttributes = (
             NameObject("/Resources"), NameObject("/MediaBox"),
             NameObject("/CropBox"), NameObject("/Rotate")
@@ -504,14 +601,17 @@ class PdfFileReader(object):
                 if pages.has_key(attr):
                     inherit[attr] = pages[attr]
             for page in pages["/Kids"]:
-                self._flatten(page.getObject(), inherit)
+                addt = {}
+                if isinstance(page, IndirectObject):
+                    addt["indirectRef"] = page
+                self._flatten(page.getObject(), inherit, **addt)
         elif t == "/Page":
             for attr,value in inherit.items():
                 # if the page has it's own value, it does not inherit the
                 # parent's value:
                 if not pages.has_key(attr):
                     pages[attr] = value
-            pageObj = PageObject(self)
+            pageObj = PageObject(self, indirectRef)
             pageObj.update(pages)
             self.flattenedPages.append(pageObj)
 
@@ -554,12 +654,12 @@ class PdfFileReader(object):
             if not hasattr(self, '_decryption_key'):
                 raise Exception, "file has not been decrypted"
             # otherwise, decrypt here...
-            import struct, md5
+            import struct
             pack1 = struct.pack("<i", indirectReference.idnum)[:3]
             pack2 = struct.pack("<i", indirectReference.generation)[:2]
             key = self._decryption_key + pack1 + pack2
             assert len(key) == (len(self._decryption_key) + 5)
-            md5_hash = md5.new(key).digest()
+            md5_hash = md5(key).digest()
             key = md5_hash[:min(16, len(self._decryption_key) + 5)]
             retval = self._decryptObject(retval, key)
 
@@ -890,11 +990,46 @@ def createRectangleAccessor(name, fallback):
 ##
 # This class represents a single page within a PDF file.  Typically this object
 # will be created by accessing the {@link #PdfFileReader.getPage getPage}
-# function of the {@link #PdfFileReader PdfFileReader} class.
+# function of the {@link #PdfFileReader PdfFileReader} class, but it is
+# also possible to create an empty page with the createBlankPage static
+# method.
+# @param pdf PDF file the page belongs to (optional, defaults to None).
 class PageObject(DictionaryObject):
-    def __init__(self, pdf):
+    def __init__(self, pdf=None, indirectRef=None):
         DictionaryObject.__init__(self)
         self.pdf = pdf
+        # Stores the original indirect reference to this object in its source PDF
+        self.indirectRef = indirectRef
+
+    ##
+    # Returns a new blank page.
+    # If width or height is None, try to get the page size from the
+    # last page of pdf. If pdf is None or contains no page, a
+    # PageSizeNotDefinedError is raised.
+    # @param pdf    PDF file the page belongs to
+    # @param width  The width of the new page expressed in default user
+    #               space units.
+    # @param height The height of the new page expressed in default user
+    #               space units.
+    def createBlankPage(pdf=None, width=None, height=None):
+        page = PageObject(pdf)
+
+        # Creates a new page (cf PDF Reference  7.7.3.3)
+        page.__setitem__(NameObject('/Type'), NameObject('/Page'))
+        page.__setitem__(NameObject('/Parent'), NullObject())
+        page.__setitem__(NameObject('/Resources'), DictionaryObject())
+        if width is None or height is None:
+            if pdf is not None and pdf.getNumPages() > 0:
+                lastpage = pdf.getPage(pdf.getNumPages() - 1)
+                width = lastpage.mediaBox.getWidth()
+                height = lastpage.mediaBox.getHeight()
+            else:
+                raise utils.PageSizeNotDefinedError()
+        page.__setitem__(NameObject('/MediaBox'),
+            RectangleObject([0, 0, width, height]))
+
+        return page
+    createBlankPage = staticmethod(createBlankPage)
 
     ##
     # Rotates a page clockwise by increments of 90 degrees.
@@ -931,7 +1066,7 @@ class PageObject(DictionaryObject):
                 renameRes[key] = newname
                 newRes[newname] = page2Res[key]
             elif not newRes.has_key(key):
-                newRes[key] = page2Res[key]
+                newRes[key] = page2Res.raw_get(key)
         return newRes, renameRes
     _mergeResources = staticmethod(_mergeResources)
 
@@ -957,6 +1092,26 @@ class PageObject(DictionaryObject):
         return stream
     _pushPopGS = staticmethod(_pushPopGS)
 
+    def _addTransformationMatrix(contents, pdf, ctm):
+        # adds transformation matrix at the beginning of the given
+        # contents stream.
+        a, b, c, d, e, f = ctm
+        contents = ContentStream(contents, pdf)
+        contents.operations.insert(0, [[FloatObject(a), FloatObject(b),
+            FloatObject(c), FloatObject(d), FloatObject(e),
+            FloatObject(f)], " cm"])
+        return contents
+    _addTransformationMatrix = staticmethod(_addTransformationMatrix)
+
+    ##
+    # Returns the /Contents object, or None if it doesn't exist.
+    # /Contents is optionnal, as described in PDF Reference  7.7.3.3
+    def getContents(self):
+      if self.has_key("/Contents"):
+        return self["/Contents"].getObject()
+      else:
+        return None
+
     ##
     # Merges the content streams of two pages into one.  Resource references
     # (i.e. fonts) are maintained from both pages.  The mediabox/cropbox/etc
@@ -968,7 +1123,23 @@ class PageObject(DictionaryObject):
     # @param page2 An instance of {@link #PageObject PageObject} to be merged
     #              into this one.
     def mergePage(self, page2):
+        self._mergePage(page2)
 
+    ##
+    # Actually merges the content streams of two pages into one. Resource
+    # references (i.e. fonts) are maintained from both pages. The
+    # mediabox/cropbox/etc of this page are not altered. The parameter page's
+    # content stream will be added to the end of this page's content stream,
+    # meaning that it will be drawn after, or "on top" of this page.
+    #
+    # @param page2 An instance of {@link #PageObject PageObject} to be merged
+    #              into this one.
+    # @param page2transformation A fuction which applies a transformation to
+    #                            the content stream of page2. Takes: page2
+    #                            contents stream. Must return: new contents
+    #                            stream. If omitted, the content stream will
+    #                            not be modified.
+    def _mergePage(self, page2, page2transformation=None):
         # First we work on merging the resource dictionaries.  This allows us
         # to find out what symbols in the content streams we might need to
         # rename.
@@ -978,7 +1149,7 @@ class PageObject(DictionaryObject):
         originalResources = self["/Resources"].getObject()
         page2Resources = page2["/Resources"].getObject()
 
-        for res in "/ExtGState", "/Font", "/XObject", "/ColorSpace", "/Pattern", "/Shading":
+        for res in "/ExtGState", "/Font", "/XObject", "/ColorSpace", "/Pattern", "/Shading", "/Properties":
             new, newrename = PageObject._mergeResources(originalResources, page2Resources, res)
             if new:
                 newResources[NameObject(res)] = new
@@ -993,16 +1164,190 @@ class PageObject(DictionaryObject):
 
         newContentArray = ArrayObject()
 
-        originalContent = self["/Contents"].getObject()
-        newContentArray.append(PageObject._pushPopGS(originalContent, self.pdf))
+        originalContent = self.getContents()
+        if originalContent is not None:
+            newContentArray.append(PageObject._pushPopGS(
+                  originalContent, self.pdf))
 
-        page2Content = page2['/Contents'].getObject()
-        page2Content = PageObject._contentStreamRename(page2Content, rename, self.pdf)
-        page2Content = PageObject._pushPopGS(page2Content, self.pdf)
-        newContentArray.append(page2Content)
+        page2Content = page2.getContents()
+        if page2Content is not None:
+            if page2transformation is not None:
+                page2Content = page2transformation(page2Content)
+            page2Content = PageObject._contentStreamRename(
+                page2Content, rename, self.pdf)
+            page2Content = PageObject._pushPopGS(page2Content, self.pdf)
+            newContentArray.append(page2Content)
 
         self[NameObject('/Contents')] = ContentStream(newContentArray, self.pdf)
         self[NameObject('/Resources')] = newResources
+
+    ##
+    # This is similar to mergePage, but a transformation matrix is
+    # applied to the merged stream.
+    #
+    # @param page2 An instance of {@link #PageObject PageObject} to be merged.
+    # @param ctm   A 6 elements tuple containing the operands of the
+    #              transformation matrix
+    def mergeTransformedPage(self, page2, ctm):
+        self._mergePage(page2, lambda page2Content:
+            PageObject._addTransformationMatrix(page2Content, page2.pdf, ctm))
+
+    ##
+    # This is similar to mergePage, but the stream to be merged is scaled
+    # by appling a transformation matrix.
+    #
+    # @param page2 An instance of {@link #PageObject PageObject} to be merged.
+    # @param factor The scaling factor
+    def mergeScaledPage(self, page2, factor):
+        # CTM to scale : [ sx 0 0 sy 0 0 ]
+        return self.mergeTransformedPage(page2, [factor, 0,
+                                                 0,      factor,
+                                                 0,      0])
+
+    ##
+    # This is similar to mergePage, but the stream to be merged is rotated
+    # by appling a transformation matrix.
+    #
+    # @param page2 An instance of {@link #PageObject PageObject} to be merged.
+    # @param rotation The angle of the rotation, in degrees
+    def mergeRotatedPage(self, page2, rotation):
+        rotation = math.radians(rotation)
+        return self.mergeTransformedPage(page2,
+            [math.cos(rotation),  math.sin(rotation),
+             -math.sin(rotation), math.cos(rotation),
+             0,                   0])
+
+    ##
+    # This is similar to mergePage, but the stream to be merged is translated
+    # by appling a transformation matrix.
+    #
+    # @param page2 An instance of {@link #PageObject PageObject} to be merged.
+    # @param tx    The translation on X axis
+    # @param tx    The translation on Y axis
+    def mergeTranslatedPage(self, page2, tx, ty):
+        return self.mergeTransformedPage(page2, [1,  0,
+                                                 0,  1,
+                                                 tx, ty])
+
+    ##
+    # This is similar to mergePage, but the stream to be merged is rotated
+    # and scaled by appling a transformation matrix.
+    #
+    # @param page2 An instance of {@link #PageObject PageObject} to be merged.
+    # @param rotation The angle of the rotation, in degrees
+    # @param factor The scaling factor
+    def mergeRotatedScaledPage(self, page2, rotation, scale):
+        rotation = math.radians(rotation)
+        rotating = [[math.cos(rotation), math.sin(rotation),0],
+                    [-math.sin(rotation),math.cos(rotation), 0],
+                    [0,                  0,                  1]]
+        scaling = [[scale,0,    0],
+                   [0,    scale,0],
+                   [0,    0,    1]]
+        ctm = utils.matrixMultiply(rotating, scaling)
+
+        return self.mergeTransformedPage(page2,
+                                         [ctm[0][0], ctm[0][1],
+                                          ctm[1][0], ctm[1][1],
+                                          ctm[2][0], ctm[2][1]])
+
+    ##
+    # This is similar to mergePage, but the stream to be merged is translated
+    # and scaled by appling a transformation matrix.
+    #
+    # @param page2 An instance of {@link #PageObject PageObject} to be merged.
+    # @param scale The scaling factor
+    # @param tx    The translation on X axis
+    # @param tx    The translation on Y axis
+    def mergeScaledTranslatedPage(self, page2, scale, tx, ty):
+        translation = [[1, 0, 0],
+                       [0, 1, 0],
+                       [tx,ty,1]]
+        scaling = [[scale,0,    0],
+                   [0,    scale,0],
+                   [0,    0,    1]]
+        ctm = utils.matrixMultiply(scaling, translation)
+
+        return self.mergeTransformedPage(page2, [ctm[0][0], ctm[0][1],
+                                                 ctm[1][0], ctm[1][1],
+                                                 ctm[2][0], ctm[2][1]])
+
+    ##
+    # This is similar to mergePage, but the stream to be merged is translated,
+    # rotated and scaled by appling a transformation matrix.
+    #
+    # @param page2 An instance of {@link #PageObject PageObject} to be merged.
+    # @param tx    The translation on X axis
+    # @param ty    The translation on Y axis
+    # @param rotation The angle of the rotation, in degrees
+    # @param scale The scaling factor
+    def mergeRotatedScaledTranslatedPage(self, page2, rotation, scale, tx, ty):
+        translation = [[1, 0, 0],
+                       [0, 1, 0],
+                       [tx,ty,1]]
+        rotation = math.radians(rotation)
+        rotating = [[math.cos(rotation), math.sin(rotation),0],
+                    [-math.sin(rotation),math.cos(rotation), 0],
+                    [0,                  0,                  1]]
+        scaling = [[scale,0,    0],
+                   [0,    scale,0],
+                   [0,    0,    1]]
+        ctm = utils.matrixMultiply(rotating, scaling)
+        ctm = utils.matrixMultiply(ctm, translation)
+
+        return self.mergeTransformedPage(page2, [ctm[0][0], ctm[0][1],
+                                                 ctm[1][0], ctm[1][1],
+                                                 ctm[2][0], ctm[2][1]])
+
+    ##
+    # Applys a transformation matrix the page.
+    #
+    # @param ctm   A 6 elements tuple containing the operands of the
+    #              transformation matrix
+    def addTransformation(self, ctm):
+        originalContent = self.getContents()
+        if originalContent is not None:
+            newContent = PageObject._addTransformationMatrix(
+                originalContent, self.pdf, ctm)
+            newContent = PageObject._pushPopGS(newContent, self.pdf)
+            self[NameObject('/Contents')] = newContent
+
+    ##
+    # Scales a page by the given factors by appling a transformation
+    # matrix to its content and updating the page size.
+    #
+    # @param sx The scaling factor on horizontal axis
+    # @param sy The scaling factor on vertical axis
+    def scale(self, sx, sy):
+        self.addTransformation([sx, 0,
+                                0,  sy,
+                                0,  0])
+        self.mediaBox = RectangleObject([
+            float(self.mediaBox.getLowerLeft_x()) * sx,
+            float(self.mediaBox.getLowerLeft_y()) * sy,
+            float(self.mediaBox.getUpperRight_x()) * sx,
+            float(self.mediaBox.getUpperRight_y()) * sy])
+
+    ##
+    # Scales a page by the given factor by appling a transformation
+    # matrix to its content and updating the page size.
+    #
+    # @param factor The scaling factor
+    def scaleBy(self, factor):
+        self.scale(factor, factor)
+
+    ##
+    # Scales a page to the specified dimentions by appling a
+    # transformation matrix to its content and updating the page size.
+    #
+    # @param width The new width
+    # @param height The new heigth
+    def scaleTo(self, width, height):
+        sx = width / (self.mediaBox.getUpperRight_x() -
+                      self.mediaBox.getLowerLeft_x ())
+        sy = height / (self.mediaBox.getUpperRight_y() -
+                       self.mediaBox.getLowerLeft_x ())
+        self.scale(sx, sy)
 
     ##
     # Compresses the size of this page by joining all content streams and
@@ -1012,10 +1357,11 @@ class PageObject(DictionaryObject):
     # However, it is possible that this function will perform no action if
     # content stream compression becomes "automatic" for some reason.
     def compressContentStreams(self):
-        content = self["/Contents"].getObject()
-        if not isinstance(content, ContentStream):
-            content = ContentStream(content, self.pdf)
-        self[NameObject("/Contents")] = content.flateEncode()
+        content = self.getContents()
+        if content is not None:
+            if not isinstance(content, ContentStream):
+                content = ContentStream(content, self.pdf)
+            self[NameObject("/Contents")] = content.flateEncode()
 
     ##
     # Locate all text drawing commands, in the order they are provided in the
@@ -1369,8 +1715,8 @@ def _alg32(password, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encr
     password = (password + _encryption_padding)[:32]
     # 2. Initialize the MD5 hash function and pass the result of step 1 as
     # input to this function.
-    import md5, struct
-    m = md5.new(password)
+    import struct
+    m = md5(password)
     # 3. Pass the value of the encryption dictionary's /O entry to the MD5 hash
     # function.
     m.update(owner_entry)
@@ -1394,7 +1740,7 @@ def _alg32(password, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encr
     # /Length entry.
     if rev >= 3:
         for i in range(50):
-            md5_hash = md5.new(md5_hash[:keylen]).digest()
+            md5_hash = md5(md5_hash[:keylen]).digest()
     # 9. Set the encryption key to the first n bytes of the output from the
     # final MD5 hash, where n is always 5 for revision 2 but, for revision 3 or
     # greater, depends on the value of the encryption dictionary's /Length
@@ -1436,14 +1782,13 @@ def _alg33_1(password, rev, keylen):
     password = (password + _encryption_padding)[:32]
     # 2. Initialize the MD5 hash function and pass the result of step 1 as
     # input to this function.
-    import md5
-    m = md5.new(password)
+    m = md5(password)
     # 3. (Revision 3 or greater) Do the following 50 times: Take the output
     # from the previous MD5 hash and pass it as input into a new MD5 hash.
     md5_hash = m.digest()
     if rev >= 3:
         for i in range(50):
-            md5_hash = md5.new(md5_hash).digest()
+            md5_hash = md5(md5_hash).digest()
     # 4. Create an RC4 encryption key using the first n bytes of the output
     # from the final MD5 hash, where n is always 5 for revision 2 but, for
     # revision 3 or greater, depends on the value of the encryption
@@ -1473,8 +1818,7 @@ def _alg35(password, rev, keylen, owner_entry, p_entry, id1_entry, metadata_encr
     key = _alg32(password, rev, keylen, owner_entry, p_entry, id1_entry)
     # 2. Initialize the MD5 hash function and pass the 32-byte padding string
     # shown in step 1 of Algorithm 3.2 as input to this function. 
-    import md5
-    m = md5.new()
+    m = md5()
     m.update(_encryption_padding)
     # 3. Pass the first element of the file's file identifier array (the value
     # of the ID entry in the document's trailer dictionary; see Table 3.13 on
