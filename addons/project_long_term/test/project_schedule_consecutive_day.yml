@@ -1,5 +1,5 @@
 - 
-  Create a project 'Develop yaml Project Module'  starting on 01/05/2010.
+  Create a project 'Develop yaml Project Module'.
 - 
   !record {model: project.project, id: project_project_developyamlproject0}:
     name: "Develop Yaml Project Module"
@@ -72,7 +72,7 @@
   First 'Analysis Flow for Yaml'Project Phase
 - 
   !record {model: project.phase, id: project_phase_analysisflowforyaml0}:
-    date_start: '2010-01-05'
+    date_start: !eval time.strftime('%Y-%m-%d')
     duration: 5.0
     name: "Analysis Flow for Yaml"
     product_uom: product.uom_day
@@ -84,7 +84,6 @@
   Create project phase 'Develop yaml'
 - 
   !record {model: project.phase, id: project_phase_establishingprojectfeasibility0}:
-    date_start: '2010-01-05'
     duration: 5.0
     name: Develop Yaml
     product_uom: product.uom_day
@@ -96,7 +95,6 @@
   Create project phase 'Test Yaml'
 - 
   !record {model: project.phase, id: project_phase_preparationofengineeringdesigns0}:
-    date_start: '2010-01-05'
     duration: 5.0
     name: Testing Yaml
     product_uom: product.uom_day
