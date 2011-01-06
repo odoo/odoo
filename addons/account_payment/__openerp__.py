@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-
 {
     "name": "Payment Management",
     "version": "1.1",
@@ -28,9 +27,9 @@
     "depends": ["account"],
     "init_xml": [],
     "description": """
-    This module provides :
-    * a more efficient way to manage invoice payment.
-    * a basic mechanism to easily plug various automated payment.
+This module provides :
+* a more efficient way to manage invoice payment.
+* a basic mechanism to easily plug various automated payment.
     """,
     'author': 'OpenERP SA',
     'depends': ['account_voucher'],

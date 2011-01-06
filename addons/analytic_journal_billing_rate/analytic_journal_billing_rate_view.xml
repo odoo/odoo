@@ -35,8 +35,8 @@
             <field name="inherit_id" ref="hr_timesheet_invoice.account_analytic_account_form_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='to_invoice']" position="after">
-                    <field name="journal_rate_ids" colspan="4"/>
-                </xpath>
+                    <field name="journal_rate_ids" nolabel="1" colspan="4"/>
+                </xpath>                
             </field>
         </record>
 
@@ -60,7 +60,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/field[@name='account_id']" position="replace">
+                <xpath expr="/form/notebook/page[@string='Information']/group/field[@name='account_id']" position="replace">
                     <field name="account_id"  domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount, journal_id)" select="1"/>
                 </xpath>
             </field>
@@ -72,7 +72,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/field[@name='journal_id']" position="replace">
+                <xpath expr="/form/notebook/page[@string='Information']/group/field[@name='journal_id']" position="replace">
                     <field name="journal_id" select="1" required="1" on_change="on_change_journal_id(journal_id, account_id)"/>
                 </xpath>
             </field>

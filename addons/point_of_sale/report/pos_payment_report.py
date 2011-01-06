@@ -18,14 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import time
 from report import report_sxw
-
 
 class pos_payment_report(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(pos_payment_report, self).__init__(cr, uid, name, context)
+        super(pos_payment_report, self).__init__(cr, uid, name, context=context)
         self.total = 0.0
         self.localcontext.update({
             'time': time,
@@ -38,17 +38,17 @@ class pos_payment_report(report_sxw.rml_parse):
         sql = """ select id from pos_order where id = %d"""%(obj.id)
         self.cr.execute(sql)
         if self.cr.fetchone():
-            self.cr.execute ("select pt.name,pol.qty,pol.discount,pol.price_unit, " \
+            self.cr.execute ("select pt.name,pp.default_code as code,pol.qty,pu.name as uom,pol.discount,pol.price_unit, " \
                                  "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
-                                 "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
-                                 "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
+                                 "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, product_uom as pu " \
+                                 "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  and pu.id=pt.uom_id " \
                                  "and po.state IN ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date and po.id=%d"%(obj.id))
             data=self.cr.dictfetchall()
-        else :
-            self.cr.execute ("select pt.name,pol.qty,pol.discount,pol.price_unit, " \
+        else:
+            self.cr.execute ("select pt.name,pp.default_code as code,pol.qty,pu.name as uom,pol.discount,pol.price_unit, " \
                                  "(pol.price_unit * pol.qty * (1 - (pol.discount) / 100.0)) as total  " \
-                                 "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt " \
-                                 "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id  " \
+                                 "from pos_order as po,pos_order_line as pol,product_product as pp,product_template as pt, product_uom as pu  " \
+                                 "where pt.id=pp.product_tmpl_id and pp.id=pol.product_id and po.id = pol.order_id and pu.id=pt.uom_id  " \
                                  "and po.state IN ('paid','invoiced') and to_char(date_trunc('day',po.date_order),'YYYY-MM-DD')::date = current_date")
             data=self.cr.dictfetchall()
 
@@ -56,17 +56,9 @@ class pos_payment_report(report_sxw.rml_parse):
             self.total += d['price_unit'] * d['qty']
         return data
 
-
     def _pos_payment_total(self,o):
         return self.total
 
-
 report_sxw.report_sxw('report.pos.payment.report', 'pos.order', 'addons/point_of_sale/report/pos_payment_report.rml', parser=pos_payment_report,header='internal')
 
-
-
-
-
-
-
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

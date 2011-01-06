@@ -22,12 +22,12 @@
 import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+
 import pooler
 import tools
 from osv import fields,osv
 
-
-def _code_get(self, cr, uid, context={}):
+def _code_get(self, cr, uid, context=None):
     acc_type_obj = self.pool.get('account.account.type')
     ids = acc_type_obj.search(cr, uid, [])
     res = acc_type_obj.read(cr, uid, ids, ['code', 'name'], context)
@@ -74,7 +74,7 @@ class temp_range(osv.osv):
     _description = 'A Temporary table used for Dashboard view'
 
     _columns = {
-        'name' : fields.char('Range',size=64)
+        'name': fields.char('Range',size=64)
     }
 
 temp_range()
@@ -98,9 +98,9 @@ class report_aged_receivable(osv.osv):
         res = super(report_aged_receivable, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         return res
 
-    def _calc_bal(self, cr, uid, ids, name, args, context):
+    def _calc_bal(self, cr, uid, ids, name, args, context=None):
         res = {}
-        for period in self.read(cr,uid,ids,['name']):
+        for period in self.read(cr, uid, ids, ['name'], context=context):
            date1,date2 = period['name'].split(' to ')
            cr.execute("SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \
@@ -165,7 +165,7 @@ class report_invoice_created(osv.osv):
         'amount_untaxed': fields.float('Untaxed', readonly=True),
         'amount_total': fields.float('Total', readonly=True),
         'currency_id': fields.many2one('res.currency', 'Currency', readonly=True),
-        'date_invoice': fields.date('Date Invoiced', readonly=True),
+        'date_invoice': fields.date('Invoice Date', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'residual': fields.float('Residual', readonly=True),
         'state': fields.selection([
@@ -177,7 +177,7 @@ class report_invoice_created(osv.osv):
             ('cancel','Cancelled')
         ],'State', readonly=True),
         'origin': fields.char('Source Document', size=64, readonly=True, help="Reference of the document that generated this invoice report."),
-        'create_date' : fields.datetime('Create Date', readonly=True)
+        'create_date': fields.datetime('Create Date', readonly=True)
     }
     _order = 'create_date'
 
@@ -284,4 +284,3 @@ class report_account_sales(osv.osv):
 report_account_sales()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

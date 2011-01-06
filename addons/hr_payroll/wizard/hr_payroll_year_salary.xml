@@ -7,16 +7,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
 			   <form string="Year Salary">
-			   <group col="4" colspan="4"  width="600">
-			   <group col="3" colspan="1">
-				    <field name="fiscalyear_id" select="1" colspan="2"/>
+			   <group col="4" colspan="4" >
+			   <group colspan="4">
+	                <field name="date_from" colspan="2"/>
+	                <field name="date_to" colspan="2"/>
 				    <newline/>
 				    <separator string="Employees" colspan="4"/>
-				    <field name="employee_ids"  nolabel="1" colspan="2"/>
+				    <field name="employee_ids"  nolabel="1" colspan="4"/>
 					<newline/>
-			    	<separator string="Salary Deposit Date Option?" colspan="2"/>
-			    	<newline/>
-			    	<field name="salary_on"/>
 				</group>
 			    <newline/>
 			    <group>

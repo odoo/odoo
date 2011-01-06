@@ -7,34 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-06-18 10:59+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-03 00:14+0000\n"
 "Last-Translator: lyyser <Unknown>\n"
 "Language-Team: Estonian <et@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Alamkontod"
-
-#. module: analytic
-#: help:account.analytic.line,amount_currency:0
-msgid ""
-"The amount expressed in the related account currency if not equal to the "
-"company one."
-msgstr ""
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -44,11 +30,6 @@ msgstr "Konto nimi"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
-
-#. module: analytic
-#: help:account.analytic.line,currency_id:0
-msgid "The related account currency if not equal to the company one."
 msgstr ""
 
 #. module: analytic
@@ -129,11 +110,9 @@ msgid "Description"
 msgstr "Kirjeldus"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price."
-msgstr ""
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "Normaalne"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -163,14 +142,21 @@ msgstr "Kuupäev"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
-#: field:account.analytic.line,currency_id:0
 msgid "Account currency"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
-msgstr "Vaade"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Kvantiteet"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -203,15 +189,16 @@ msgid "Balance"
 msgstr "Balanss"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr "Alguskuupäev"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Kvantiteet"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -222,11 +209,6 @@ msgstr "Lõppkuupäev"
 #: field:account.analytic.account,code:0
 msgid "Account Code"
 msgstr "Konto kood"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
-msgstr "Normaalne"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -241,19 +223,19 @@ msgid "Analytic Account"
 msgstr "Analüütiline konto"
 
 #. module: analytic
-#: field:account.analytic.account,company_currency_id:0
-msgid "Currency"
-msgstr "Rahaühik"
-
-#. module: analytic
-#: field:account.analytic.line,amount_currency:0
-msgid "Amount currency"
-msgstr ""
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "Vaade"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
-msgid "Associated Partner"
-msgstr "Seotud partner"
+msgid "Partner"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "Alguskuupäev"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -264,3 +246,14 @@ msgstr "Ava"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Analüütilised kirjed"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
+#~ msgid "Currency"
+#~ msgstr "Rahaühik"
+
+#~ msgid "Associated Partner"
+#~ msgstr "Seotud partner"

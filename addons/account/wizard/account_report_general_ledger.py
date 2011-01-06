@@ -32,15 +32,12 @@ class account_report_general_ledger(osv.osv_memory):
                                           help='It adds initial balance row on report which display previous sum amount of debit/credit/balance'),
         'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
         'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort By', required=True),
-        'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
     }
     _defaults = {
         'landscape': True,
         'amount_currency': True,
         'sortby': 'sort_date',
         'initial_balance': False,
-        'target_move': 'all',
     }
 
     def onchange_fiscalyear(self, cr, uid, ids, fiscalyear=False, context=None):
@@ -53,7 +50,7 @@ class account_report_general_ledger(osv.osv_memory):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'amount_currency', 'sortby', 'target_move'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['landscape',  'initial_balance', 'amount_currency', 'sortby'])[0])
         if not data['form']['fiscalyear_id']:# GTK client problem onchange does not consider in save record
             data['form'].update({'initial_balance': False})
         if data['form']['landscape']:

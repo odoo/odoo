@@ -27,26 +27,30 @@ class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
     _description = "Carrier"
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
+        if context is None:
+            context = {}
         order_id = context.get('order_id',False)
         if not order_id:
             res = super(delivery_carrier, self).name_get(cr, uid, ids, context=context)
         else:
-            order = self.pool.get('sale.order').browse(cr, uid, [order_id])[0]
+            order = self.pool.get('sale.order').browse(cr, uid, order_id, context=context)
             currency = order.pricelist_id.currency_id.name or ''
             res = [(r['id'], r['name']+' ('+(str(r['price']))+' '+currency+')') for r in self.read(cr, uid, ids, ['name', 'price'], context)]
         return res
-    def get_price(self, cr, uid, ids, field_name, arg=None, context={}):
+    def get_price(self, cr, uid, ids, field_name, arg=None, context=None):
         res={}
+        if context is None:
+            context = {}
         sale_obj=self.pool.get('sale.order')
         grid_obj=self.pool.get('delivery.grid')
-        for carrier in self.browse(cr,uid,ids,context):
+        for carrier in self.browse(cr, uid, ids, context=context):
             order_id=context.get('order_id',False)
             price=False
             if order_id:
-              order = sale_obj.browse(cr, uid, [order_id])[0]
+              order = sale_obj.browse(cr, uid, order_id, context=context)
               carrier_grid=self.grid_get(cr,uid,[carrier.id],order.partner_shipping_id.id,context)
               if carrier_grid:
                   price=grid_obj.get_price(cr, uid, carrier_grid, order, time.strftime('%Y-%m-%d'), context)
@@ -60,14 +64,14 @@ class delivery_carrier(osv.osv):
         'product_id': fields.many2one('product.product', 'Delivery Product', required=True),
         'grids_id': fields.one2many('delivery.grid', 'carrier_id', 'Delivery Grids'),
         'price' : fields.function(get_price, method=True,string='Price'),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the delivery carrier without removing it.")
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it.")
     }
     _defaults = {
         'active': lambda *args:1
     }
-    def grid_get(self, cr, uid, ids, contact_id, context={}):
-        contact = self.pool.get('res.partner.address').browse(cr, uid, [contact_id])[0]
-        for carrier in self.browse(cr, uid, ids):
+    def grid_get(self, cr, uid, ids, contact_id, context=None):
+        contact = self.pool.get('res.partner.address').browse(cr, uid, contact_id, context=context)
+        for carrier in self.browse(cr, uid, ids, context=context):
             for grid in carrier.grids_id:
                 get_id = lambda x: x.id
                 country_ids = map(get_id, grid.country_ids)
@@ -96,7 +100,7 @@ class delivery_grid(osv.osv):
         'zip_from': fields.char('Start Zip', size=12),
         'zip_to': fields.char('To Zip', size=12),
         'line_ids': fields.one2many('delivery.grid.line', 'grid_id', 'Grid Line'),
-        'active': fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the delivery grid without removing it."),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery grid without removing it."),
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -104,7 +108,7 @@ class delivery_grid(osv.osv):
     }
     _order = 'sequence'
 
-    def get_price(self, cr, uid, id, order, dt, context):
+    def get_price(self, cr, uid, id, order, dt, context=None):
         total = 0
         weight = 0
         volume = 0
@@ -116,10 +120,10 @@ class delivery_grid(osv.osv):
             volume += (line.product_id.volume or 0.0) * line.product_uom_qty
 
 
-        return self.get_price_from_picking(cr, uid, id, total,weight, volume, context)
+        return self.get_price_from_picking(cr, uid, id, total,weight, volume, context=context)
 
-    def get_price_from_picking(self, cr, uid, id, total, weight, volume, context={}):
-        grid = self.browse(cr, uid, id, context)
+    def get_price_from_picking(self, cr, uid, id, total, weight, volume, context=None):
+        grid = self.browse(cr, uid, id, context=context)
         price = 0.0
         ok = False
 

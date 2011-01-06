@@ -20,6 +20,7 @@
 ##############################################################################
 
 import pooler
+from tools.translate import _
 
 class common_report_header(object):
 
@@ -60,6 +61,13 @@ class common_report_header(object):
             return data['form']['date_from']
         return ''
 
+    def _get_target_move(self, data):
+        if data.get('form', False) and data['form'].get('target_move', False):
+            if data['form']['target_move'] == 'all':
+                return _('All Entries')
+            return _('All Posted Entries')
+        return ''
+
     def _get_end_date(self, data):
         if data.get('form', False) and data['form'].get('date_to', False):
             return data['form']['date_to']
@@ -86,10 +94,10 @@ class common_report_header(object):
     def _get_filter(self, data):
         if data.get('form', False) and data['form'].get('filter', False):
             if data['form']['filter'] == 'filter_date':
-                return 'Date'
+                return _('Date')
             elif data['form']['filter'] == 'filter_period':
-                return 'Periods'
-        return 'No Filter'
+                return _('Periods')
+        return _('No Filter')
 
     def _sum_debit_period(self, period_id, journal_id=None):
         journals = journal_id or self.journal_ids
@@ -129,7 +137,7 @@ class common_report_header(object):
 
     def _get_currency(self, data):
         if data.get('form', False) and data['form'].get('chart_account_id', False):
-            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.code
-        return '' 
+            return pooler.get_pool(self.cr.dbname).get('account.account').browse(self.cr, self.uid, data['form']['chart_account_id']).company_id.currency_id.symbol
+        return ''
 
 #vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

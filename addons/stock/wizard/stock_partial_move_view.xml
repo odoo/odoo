@@ -2,13 +2,75 @@
 <openerp>
     <data>
 
-        <act_window name="Delivery Product"
+        <act_window name="Deliver/Receive Products"
             res_model="stock.partial.move"
             src_model="stock.move"
             view_mode="form"
+            multi="True"
             target="new"
             key2="client_action_multi"
-            id="action_partial_move"/>
-
+            id="action_partial_move">
+        </act_window>
+            
+		<record id="stock_move_memory_tree_in" model="ir.ui.view">
+            <field name="name">stock.move.memory.tree</field>
+            <field name="model">stock.move.memory.in</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Product Moves">
+                	<field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="cost" />
+                    <field name="currency" />
+          		</tree>
+            </field>
+        </record>
+        
+        <record id="stock_move_memory_form_in" model="ir.ui.view">
+            <field name="name">stock.move.memory.form</field>
+            <field name="model">stock.move.memory.in</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                	<field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                    <field name="cost" />
+                    <field name="currency" />
+                 </form>
+            </field>
+        </record>	
+        
+		<record id="stock_move_memory_tree_out" model="ir.ui.view">
+            <field name="name">stock.move.memory.tree</field>
+            <field name="model">stock.move.memory.out</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Product Moves">
+                    <field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]"  groups="base.group_extended" />
+                </tree>
+            </field>
+        </record>
+        
+        <record id="stock_move_memory_form_out" model="ir.ui.view">
+            <field name="name">stock.move.memory.form</field>
+            <field name="model">stock.move.memory.out</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form>
+                	<field name="product_id" />
+                    <field name="quantity" />
+                    <field name="product_uom" />
+                    <field name="prodlot_id" domain="[('product_id', '=', product_id)]" groups="base.group_extended" />
+                </form>
+            </field>
+        </record>  
+      	
     </data>
 </openerp>

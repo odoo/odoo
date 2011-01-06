@@ -7,108 +7,56 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2009-09-08 14:54+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:06+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:30+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet
-#: wizard_view:hr.analytical.timesheet,init:0
-#: wizard_view:hr.analytical.timesheet.my,init:0
-msgid "Choose your month"
-msgstr "월을 선택하십시오."
+#: model:product.template,name:hr_timesheet.product_consultant_product_template
+msgid "Service on Timesheet"
+msgstr ""
 
 #. module: hr_timesheet
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자가 포함되면 안됩니다."
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Wed"
+msgstr "수요일"
 
 #. module: hr_timesheet
-#: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
-msgid "Employee timesheet"
-msgstr "직원 타임시트"
-
-#. module: hr_timesheet
-#: model:ir.actions.wizard,name:hr_timesheet.si_so
-#: model:ir.ui.menu,name:hr_timesheet.menu_si_so
-msgid "Sign in / Sign out by project"
-msgstr "프로젝트 별 Sign in / Sign out"
-
-#. module: hr_timesheet
-#: wizard_button:hr_timesheet.si_so,sign_in,so_result_end:0
-msgid "Stop Working"
-msgstr "작업 중단"
-
-#. module: hr_timesheet
-#: wizard_view:hr_timesheet.si_so,sign_in:0
+#: view:hr.sign.out.project:0
 msgid "(Keep empty for current_time)"
 msgstr "(현재 시간을 이용하려면 비워두십시오)"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
+#, python-format
+msgid "No employee defined for your user !"
+msgstr "귀하의 사용자를 위해 정의된 직원이 없습니다!"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Group By..."
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.action_hr_timesheet_sign_in
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "에러: 디폴트 UOM과 구매 UOM은 동일한 카테고리 속에 있어야 합니다."
-
-#. module: hr_timesheet
-#: wizard_view:hr_timesheet.si_so,sign_in:0
-msgid "Sign in status"
-msgstr "Sign-In 상태"
-
-#. module: hr_timesheet
-#: wizard_view:hr_timesheet.si_so,sign_out:0
-msgid "(Keep empty for current time)"
+"Employees can encode their time spent on the different projects. A project "
+"is an analytic account and the time spent on a project generate costs on the "
+"analytic account. This feature allows to record at the same time the "
+"attendance and the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_out,server_date:0
-msgid "Current Date"
-msgstr "현재 날짜"
-
-#. module: hr_timesheet
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: hr_timesheet
-#: wizard_button:hr.analytical.timesheet,init,report:0
-#: wizard_button:hr.analytical.timesheet.my,init,report:0
-#: wizard_button:hr.analytical.timesheet_users,init,report:0
-msgid "Print"
-msgstr "인쇄"
-
-#. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_in,analytic_amount:0
-msgid "Minimum Analytic Amount"
-msgstr "최소 분석 금액"
-
-#. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_in,server_date:0
-msgid "Current Server Date"
-msgstr "현재 서버 날짜"
-
-#. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_in,date_start:0
-#: wizard_field:hr_timesheet.si_so,sign_out,date:0
-msgid "Starting Date"
-msgstr "시작 날짜"
-
-#. module: hr_timesheet
-#: field:hr.employee,product_id:0
-msgid "Product"
-msgstr "상품"
-
-#. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "août"
+#: view:hr.analytic.timesheet:0
+msgid "Today"
 msgstr ""
 
 #. module: hr_timesheet
@@ -117,13 +65,13 @@ msgid "Analytic Journal"
 msgstr "분석 저널"
 
 #. module: hr_timesheet
-#: model:product.uom,name:hr_timesheet.uom_hour
-msgid "Hour"
-msgstr "시간"
+#: view:hr.sign.out.project:0
+msgid "Stop Working"
+msgstr "작업 중단"
 
 #. module: hr_timesheet
-#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet
-#: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_employee
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_employee
 msgid "Employee Timesheet"
 msgstr ""
 
@@ -133,204 +81,111 @@ msgid "Work done stats"
 msgstr "완료된 작업 통계"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_all_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_today_form
-msgid "Working Hours"
-msgstr "근무 시간"
-
-#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
-msgid "Timesheet Lines"
-msgstr "타임시트 사용자"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total time"
-msgstr "총 시간"
-
-#. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "juillet"
-msgstr ""
-
-#. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
-#: model:ir.ui.menu,name:hr_timesheet.next_id_48
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_reporting_timesheet
 msgid "Timesheet"
 msgstr "타임시트"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
 msgid "janvier"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "juin"
-msgstr ""
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Mon"
+msgstr "월요일"
 
 #. module: hr_timesheet
-#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_my
-#: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet_my
-msgid "Print My Timesheet"
-msgstr ""
-
-#. module: hr_timesheet
-#: wizard_field:hr.analytical.timesheet,init,user_id:0
-#: wizard_field:hr.analytical.timesheet.my,init,user_id:0
-msgid "User"
-msgstr "사용자"
-
-#. module: hr_timesheet
-#: wizard_view:hr_timesheet.si_so,sign_out:0
+#: view:hr.sign.in.project:0
 msgid "Sign in"
 msgstr "출근"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form
-msgid "Working Hours of The Day"
-msgstr "일일 근무시간"
-
-#. module: hr_timesheet
-#: wizard_view:hr_timesheet.si_so,sign_out:0
-msgid "(local time on the server side)"
-msgstr "(서버 사이트의 로컬 타임)"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total cost"
-msgstr "총 원가"
-
-#. module: hr_timesheet
-#: model:product.uom,name:hr_timesheet.uom_day
-msgid "Day"
-msgstr "일"
-
-#. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_in,date:0
-msgid "Closing Date"
-msgstr "마감 날짜"
-
-#. module: hr_timesheet
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
-
-#. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "avril"
+#: view:hr.sign.in.project:0
+msgid ""
+"Employees can encode their time spent on the different projects they are "
+"assigned on. A  project is an analytic account and the time spent on a "
+"project generates costs on the analytic account. This feature allows to "
+"record at the same time the attendance and the timesheet."
 msgstr ""
 
 #. module: hr_timesheet
-#: field:hr.analytic.timesheet,line_id:0
-msgid "Analytic line"
-msgstr "분석 라인"
+#: field:hr.sign.out.project,analytic_amount:0
+msgid "Minimum Analytic Amount"
+msgstr "최소 분석 금액"
 
 #. module: hr_timesheet
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "에러: UOS는 UOM과 다른 카테고리에 속해야 합니다."
-
-#. module: hr_timesheet
-#: wizard_view:hr.analytical.timesheet_users,init:0
-msgid "Choose Users"
-msgstr "사용자 선택"
-
-#. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "novembre"
+#: view:hr.analytical.timesheet.employee:0
+msgid "Monthly Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: wizard_view:hr_timesheet.si_so,sign_out:0
-msgid "Sign in / Sign out"
-msgstr "퇴근"
-
-#. module: hr_timesheet
-#: wizard_view:hr_timesheet.si_so,sign_in:0
+#: view:hr.sign.out.project:0
 msgid "Work done in the last period"
 msgstr "마지막 기간에 완료된 작업"
 
 #. module: hr_timesheet
-#: view:account.analytic.account:0
-msgid "Key dates"
-msgstr "핵심 날짜"
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr ""
 
 #. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_in,state:0
-#: wizard_field:hr_timesheet.si_so,sign_out,state:0
+#: field:hr.sign.in.project,state:0
+#: field:hr.sign.out.project,state:0
 msgid "Current state"
 msgstr "현재 상태"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "octobre"
+#: field:hr.sign.in.project,name:0
+#: field:hr.sign.out.project,name:0
+msgid "Employees name"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:account.analytic.account:0
-msgid "Analysis stats"
-msgstr "분석 통계"
-
-#. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "décembre"
+#: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
+msgid "Print Employees Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_in,info:0
-msgid "Work Description"
-msgstr "작업 설명"
-
-#. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_in,name:0
-#: wizard_field:hr_timesheet.si_so,sign_out,name:0
-msgid "Employee's name"
-msgstr "직원 이름"
-
-#. module: hr_timesheet
-#: model:product.template,name:hr_timesheet.product_consultant_product_template
-msgid "Consultancy - Senior Developer"
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid "Warning !"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_me_all_form
-#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_me_all_form
-msgid "My Working Hours"
-msgstr "내 근무 시간"
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
+#, python-format
+msgid "UserError"
+msgstr "사용자에러"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet line"
-msgstr "타임시트 라인"
+#: code:addons/hr_timesheet/wizard/hr_timesheet_sign_in_out.py:0
+#, python-format
+msgid "No cost unit defined for this employee !"
+msgstr "이 직원에게 정의된 비용 단위가 없습니다!"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-msgid "Sum"
-msgstr "합"
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Tue"
+msgstr "화요일"
 
 #. module: hr_timesheet
-#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form_my
-#: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form_my
-msgid "My Working Hours of The Day"
-msgstr "내 근무시간"
+#: field:hr.sign.out.project,account_id:0
+msgid "Analytic Account"
+msgstr "분석 계정"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.module.module,shortdesc:hr_timesheet.module_meta_information
@@ -338,40 +193,126 @@ msgid "Human Resources (Timesheet encoding)"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "mars"
+#: view:hr.sign.in.project:0
+#: view:hr.sign.out.project:0
+msgid "Sign In/Out By Project"
 msgstr ""
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
-msgid "Total"
-msgstr "합계"
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Sat"
+msgstr "토요일"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "mai"
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Sun"
+msgstr "일요일"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+msgid ""
+"Working Hours allows you to log your working hours by project every day."
 msgstr ""
 
 #. module: hr_timesheet
-#: wizard_button:hr_timesheet.si_so,sign_out,si_result:0
-msgid "Start Working"
-msgstr "근무 시작"
+#: view:hr.analytical.timesheet.employee:0
+#: view:hr.analytical.timesheet.users:0
+msgid "Print"
+msgstr "인쇄"
 
 #. module: hr_timesheet
-#: wizard_button:hr_timesheet.si_so,sign_in,so_result:0
-msgid "Change Work"
-msgstr "작업 변경"
+#: view:hr.analytic.timesheet:0
+msgid "Timesheet Lines"
+msgstr "타임시트 사용자"
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "février"
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "juillet"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytical.timesheet.users:0
+msgid "Monthly Employees Timesheet"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "July"
+msgstr "7월"
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,date:0
+#: field:hr.sign.out.project,date_start:0
+msgid "Starting Date"
+msgstr "시작 날짜"
+
+#. module: hr_timesheet
+#: view:hr.employee:0
+msgid "Categories"
+msgstr ""
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "novembre"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.module.module,description:hr_timesheet.module_meta_information
+msgid ""
+"\n"
+"This module implements a timesheet system. Each employee can encode and\n"
+"track their time spent on the different projects. A project is an\n"
+"analytic account and the time spent on a project generates costs on\n"
+"the analytic account.\n"
+"\n"
+"Lots of reporting on time and employee tracking are provided.\n"
+"\n"
+"It is completely integrated with the cost accounting module. It allows you\n"
+"to set up a management by affair.\n"
+"    "
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "March"
+msgstr "3월"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Total cost"
+msgstr "총 원가"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "décembre"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "September"
+msgstr "9월"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "타임시트 라인"
+
+#. module: hr_timesheet
+#: field:hr.analytical.timesheet.users,employee_ids:0
+msgid "employees"
 msgstr ""
 
 #. module: hr_timesheet
@@ -381,73 +322,15 @@ msgstr "월별 통계"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
-#: wizard_field:hr.analytical.timesheet,init,month:0
-#: wizard_field:hr.analytical.timesheet.my,init,month:0
-#: wizard_field:hr.analytical.timesheet_users,init,month:0
+#: field:hr.analytical.timesheet.employee,month:0
+#: field:hr.analytical.timesheet.users,month:0
 msgid "Month"
 msgstr "월"
 
 #. module: hr_timesheet
-#: wizard_field:hr_timesheet.si_so,sign_in,account_id:0
-msgid "Analytic Account"
-msgstr "분석 계정"
-
-#. module: hr_timesheet
-#: wizard_view:hr_timesheet.si_so,sign_in:0
-msgid "General Information"
-msgstr "일반 정보"
-
-#. module: hr_timesheet
-#: model:process.process,name:hr_timesheet.process_process_timesheetprocess0
-msgid "Timesheet Process"
-msgstr "타임시트 프로세스"
-
-#. module: hr_timesheet
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "에러: 유효하지 않은 EAN 코드"
-
-#. module: hr_timesheet
-#: view:account.analytic.account:0
-msgid "Stats by user"
-msgstr "사용자 별 통계"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Timesheet Line"
-msgstr "타임시트 라인"
-
-#. module: hr_timesheet
-#: view:account.analytic.account:0
-msgid "Analysis summary"
-msgstr "분석 요약"
-
-#. module: hr_timesheet
-#: wizard_field:hr.analytical.timesheet,init,year:0
-#: wizard_field:hr.analytical.timesheet.my,init,year:0
-#: wizard_field:hr.analytical.timesheet_users,init,year:0
-msgid "Year"
-msgstr "년도"
-
-#. module: hr_timesheet
-#: wizard_button:hr.analytical.timesheet,init,end:0
-#: wizard_button:hr.analytical.timesheet.my,init,end:0
-#: wizard_button:hr.analytical.timesheet_users,init,end:0
-#: wizard_button:hr_timesheet.si_so,sign_in,end:0
-#: wizard_button:hr_timesheet.si_so,sign_out,end:0
-msgid "Cancel"
-msgstr "취소"
-
-#. module: hr_timesheet
-#: view:account.analytic.account:0
-#: wizard_field:hr.analytical.timesheet_users,init,user_ids:0
-msgid "Users"
-msgstr "사용자"
-
-#. module: hr_timesheet
-#: model:product.uom.categ,name:hr_timesheet.uom_categ_wtime
-msgid "Working Time"
-msgstr "근무 시간"
+#: field:hr.sign.out.project,info:0
+msgid "Work Description"
+msgstr "작업 설명"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -455,17 +338,40 @@ msgid "To be invoiced"
 msgstr "인보이스 예정"
 
 #. module: hr_timesheet
-#: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
-#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
-#: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet_users
-msgid "Employees Timesheet"
+#: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
+msgid "Employee timesheet"
+msgstr "직원 타임시트"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by project"
+msgstr "프로젝트 별 Sign in / Sign out"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Fri"
+msgstr "금요일"
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:0
+msgid "Sign in / Sign out"
+msgstr "퇴근"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"Analytic journal is not defined for employee %s \n"
+"Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
 
 #. module: hr_timesheet
-#: selection:hr.analytical.timesheet,init,month:0
-#: selection:hr.analytical.timesheet.my,init,month:0
-#: selection:hr.analytical.timesheet_users,init,month:0
-msgid "septembre"
+#: view:hr.sign.in.project:0
+msgid "(Keep empty for current time)"
 msgstr ""
 
 #. module: hr_timesheet
@@ -473,29 +379,337 @@ msgstr ""
 msgid "Timesheets"
 msgstr "타임시트"
 
-#, python-format
-#~ msgid "Wed"
-#~ msgstr "수요일"
+#. module: hr_timesheet
+#: help:hr.employee,product_id:0
+msgid "Specifies employee's designation as a product with type 'service'."
+msgstr ""
 
-#, python-format
-#~ msgid "No employee defined for your user !"
-#~ msgstr "귀하의 사용자를 위해 정의된 직원이 없습니다!"
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "août"
+msgstr ""
 
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
-#~ msgid "Mon"
-#~ msgstr "월요일"
+msgid "August"
+msgstr "8월"
 
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
-#~ msgid "No cost unit defined for this employee !"
-#~ msgstr "이 직원에게 정의된 비용 단위가 없습니다!"
+msgid "June"
+msgstr "6월"
 
-#, python-format
-#~ msgid "Sat"
-#~ msgstr "토요일"
+#. module: hr_timesheet
+#: view:hr.analytical.timesheet.employee:0
+msgid "Print My Timesheet"
+msgstr ""
 
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "mars"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Date"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
 #, python-format
-#~ msgid "Sun"
-#~ msgstr "일요일"
+msgid "November"
+msgstr "11월"
+
+#. module: hr_timesheet
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.out.project,date:0
+msgid "Closing Date"
+msgstr "마감 날짜"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "October"
+msgstr "10월"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "January"
+msgstr "1월"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Key dates"
+msgstr "핵심 날짜"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "Thu"
+msgstr "목요일"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Analysis stats"
+msgstr "분석 통계"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
+msgid "Print Employee Timesheet & Print My Timesheet"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,emp_id:0
+#: field:hr.sign.out.project,emp_id:0
+msgid "Employee ID"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.sign.out.project:0
+msgid "General Information"
+msgstr "일반 정보"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_my
+msgid "My Timesheet"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Analysis summary"
+msgstr "분석 요약"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "December"
+msgstr "12월"
+
+#. module: hr_timesheet
+#: view:hr.analytical.timesheet.employee:0
+#: view:hr.analytical.timesheet.users:0
+#: view:hr.sign.in.project:0
+#: view:hr.sign.out.project:0
+msgid "Cancel"
+msgstr "취소"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
+#: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
+#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
+msgid "Employees Timesheet"
+msgstr ""
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "février"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Information"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytical.timesheet.employee,employee_id:0
+#: model:ir.model,name:hr_timesheet.model_hr_employee
+msgid "Employee"
+msgstr ""
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "avril"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.sign.in.project,server_date:0
+#: field:hr.sign.out.project,server_date:0
+msgid "Current Date"
+msgstr "현재 날짜"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Anlytic account"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytical.timesheet.employee:0
+msgid "This wizard will print monthly timesheet"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+#: field:hr.employee,product_id:0
+msgid "Product"
+msgstr "상품"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Invoicing"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "May"
+msgstr "5월"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Total time"
+msgstr "총 시간"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "juin"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:0
+msgid "(local time on the server side)"
+msgstr "(서버 사이트의 로컬 타임)"
+
+#. module: hr_timesheet
+#: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
+#: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
+#: model:ir.ui.menu,name:hr_timesheet.menu_project_working_hours
+msgid "Working Hours"
+msgstr "근무 시간"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
+msgid "Sign In By Project"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "February"
+msgstr "2월"
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,line_id:0
+msgid "Analytic line"
+msgstr "분석 라인"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
+msgid "Sign Out By Project"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.analytical.timesheet.users:0
+msgid "Employees"
+msgstr ""
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "octobre"
+msgstr ""
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#, python-format
+msgid "April"
+msgstr "4월"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/hr_timesheet.py:0
+#, python-format
+msgid ""
+"No analytic account defined on the project.\n"
+"Please set one or we can not automatically fill the timesheet."
+msgstr ""
+"이 프로젝트에 정의된 분석 계정이 없습니다.\n"
+"하나를 설정하거나, 시스템이 자동적으로 타임시트를 작성할 수 있습니다."
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "mai"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+#: view:hr.analytic.timesheet:0
+msgid "Users"
+msgstr "사용자"
+
+#. module: hr_timesheet
+#: view:hr.sign.in.project:0
+msgid "Start Working"
+msgstr "근무 시작"
+
+#. module: hr_timesheet
+#: view:account.analytic.account:0
+msgid "Stats by user"
+msgstr "사용자 별 통계"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/wizard/hr_timesheet_print_employee.py:0
+#, python-format
+msgid "No employee defined for this user"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytical.timesheet.employee,year:0
+#: field:hr.analytical.timesheet.users,year:0
+msgid "Year"
+msgstr "년도"
+
+#. module: hr_timesheet
+#: view:hr.analytic.timesheet:0
+msgid "Accounting"
+msgstr ""
+
+#. module: hr_timesheet
+#: field:hr.analytic.timesheet,partner_id:0
+msgid "Partner Id"
+msgstr ""
+
+#. module: hr_timesheet
+#: view:hr.sign.out.project:0
+msgid "Change Work"
+msgstr "작업 변경"
+
+#. module: hr_timesheet
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+msgid "septembre"
+msgstr ""
+
+#~ msgid "Working Hours of The Day"
+#~ msgstr "일일 근무시간"
+
+#~ msgid "Day"
+#~ msgstr "일"
+
+#~ msgid "My Working Hours"
+#~ msgstr "내 근무 시간"
 
 #, python-format
 #~ msgid ""
@@ -505,57 +719,29 @@ msgstr "타임시트"
 #~ "이 직원에게 이용할 수 있는 분석 저널이 없습니다.\n"
 #~ "선택한 사용자를 위한 직원을 정의하고, 분석 저널을 할당하십시오."
 
-#, python-format
-#~ msgid "July"
-#~ msgstr "7월"
+#~ msgid "Hour"
+#~ msgstr "시간"
 
-#, python-format
-#~ msgid "Tue"
-#~ msgstr "화요일"
+#~ msgid "Timesheet Process"
+#~ msgstr "타임시트 프로세스"
 
-#, python-format
-#~ msgid "March"
-#~ msgstr "3월"
+#~ msgid "Sum"
+#~ msgstr "합"
 
-#, python-format
-#~ msgid "December"
-#~ msgstr "12월"
+#~ msgid "Choose Users"
+#~ msgstr "사용자 선택"
 
-#, python-format
-#~ msgid "Fri"
-#~ msgstr "금요일"
+#~ msgid "My Working Hours of The Day"
+#~ msgstr "내 근무시간"
 
-#, python-format
-#~ msgid ""
-#~ "No analytic account defined on the project.\n"
-#~ "Please set one or we can not automatically fill the timesheet."
-#~ msgstr ""
-#~ "이 프로젝트에 정의된 분석 계정이 없습니다.\n"
-#~ "하나를 설정하거나, 시스템이 자동적으로 타임시트를 작성할 수 있습니다."
+#~ msgid "Timesheet line"
+#~ msgstr "타임시트 라인"
 
-#, python-format
-#~ msgid "October"
-#~ msgstr "10월"
+#~ msgid "Sign in status"
+#~ msgstr "Sign-In 상태"
 
-#, python-format
-#~ msgid "January"
-#~ msgstr "1월"
-
-#, python-format
-#~ msgid "November"
-#~ msgstr "11월"
-
-#, python-format
-#~ msgid "June"
-#~ msgstr "6월"
-
-#, python-format
-#~ msgid "August"
-#~ msgstr "8월"
-
-#, python-format
-#~ msgid "September"
-#~ msgstr "9월"
+#~ msgid "User"
+#~ msgstr "사용자"
 
 #~ msgid "Print my timesheet"
 #~ msgstr "내 타임시트 인쇄"
@@ -563,29 +749,41 @@ msgstr "타임시트"
 #~ msgid "Employees timesheet"
 #~ msgstr "직원 타임시트"
 
-#, python-format
-#~ msgid "February"
-#~ msgstr "2월"
+#~ msgid "Employee's name"
+#~ msgstr "직원 이름"
 
-#, python-format
-#~ msgid "May"
-#~ msgstr "5월"
+#~ msgid "Choose your month"
+#~ msgstr "월을 선택하십시오."
+
+#~ msgid "Working Time"
+#~ msgstr "근무 시간"
+
+#~ msgid "Current Server Date"
+#~ msgstr "현재 서버 날짜"
 
 #~ msgid "Consultancy - Senior Developper"
 #~ msgstr "컨설팅 - 시니어 개발자"
 
-#, python-format
-#~ msgid "April"
-#~ msgstr "4월"
+#~ msgid "Total"
+#~ msgstr "합계"
 
-#, python-format
-#~ msgid "Thu"
-#~ msgstr "목요일"
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "에러: 유효하지 않은 EAN 코드"
 
 #, python-format
 #~ msgid "ValidateError"
 #~ msgstr "검증에러"
 
-#, python-format
-#~ msgid "UserError"
-#~ msgstr "사용자에러"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "오브젝트 이름은 x_로 시작해야 하며, 특수 문자가 포함되면 안됩니다."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "에러: 디폴트 UOM과 구매 UOM은 동일한 카테고리 속에 있어야 합니다."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "유효하지 않은 뷰 아키텍처를 위한 XML !"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "에러: UOS는 UOM과 다른 카테고리에 속해야 합니다."

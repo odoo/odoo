@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <!--
         Invoices
         -->
@@ -36,11 +35,11 @@
             <field name="arch" type="xml">
                 <tree string="Invoice Line">
                     <field name="name"/>
-                    <field name="account_id" groups="base.group_user"/>
+                    <field name="account_id" groups="account.group_account_user"/>
                     <field name="quantity"/>
                     <field name="uos_id"/>
                     <field name="price_unit"/>
-                    <field name="discount"/>
+                    <field name="discount" groups="base.group_extended"/>
                     <field name="price_subtotal"/>
                 </tree>
             </field>
@@ -55,18 +54,18 @@
                     <notebook>
                         <page string="Line">
                             <field name="product_id" on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
-                            <field name="uos_id"  widget="selection" on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
+                            <field name="uos_id"  on_change="uos_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.address_invoice_id, parent.currency_id, {'company_id': parent.company_id})"/>
                             <field name="quantity"/>
                             <field name="price_unit"/>
-                            <field name="discount"/>
+                            <field name="discount" groups="base.group_extended"/>
                             <field colspan="4" name="name"/>
-                            <field colspan="4" name="origin" groups="base.group_extended"/>
-                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)" groups="base.group_user"/>
+                            <field domain="[('company_id', '=', parent.company_id), ('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id" on_change="onchange_account_id(parent.fiscal_position,account_id)"/>
                             <field domain="[('type','&lt;&gt;','view'), ('company_id', '=', parent.company_id), ('parent_id', '!=', False)]" name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                             <newline/>
-                            <field name="price_subtotal"/>
                             <field name="company_id" groups="base.group_multi_company" readonly="1"/>
-                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"/>
+                            <separator colspan="4" string="Taxes"/>
+                            <field colspan="4" name="invoice_line_tax_id" context="{'type':parent.type}" domain="[('parent_id','=',False),('company_id', '=', parent.company_id)]"
+                            nolabel="1"/>
                         </page>
                         <page string="Notes">
                             <field colspan="4" name="note" nolabel="1"/>
@@ -85,7 +84,7 @@
                     <field name="sequence"/>
                     <field name="manual"/>
                     <field name="name"/>
-                    <field name="account_id" groups="base.group_user"/>
+                    <field name="account_id" groups="base.group_account_user"/>
                     <field name="base"/>
                     <field name="amount"/>
                 </tree>
@@ -100,7 +99,7 @@
                 <form string="Manual Invoice Taxes">
                     <field name="name"/>
                     <field name="sequence"/>
-                    <field name="account_id" groups="base.group_user"/>
+                    <field name="account_id"/>
                     <field name="manual"/>
                     <field name="amount"/>
                     <field name="base" readonly="0"/>
@@ -148,15 +147,15 @@
             <field name="type">form</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <form string="Supplier invoice">
+                <form string="Supplier Invoice">
                     <group col="8" colspan="4">
                         <field name="journal_id" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                         <field name="number" readonly="1"/>
                         <field name="type" invisible="1"/>
-                        <field name="currency_id" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
+                        <field name="currency_id" width="50"/>
                         <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
                         <newline/>
-                        <field name="partner_id" domain="[('supplier','=', 1)]" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" context="{'default_customer': 0}"/>
+                        <field string="Supplier" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"/>
                         <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                         <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                         <newline/>
@@ -211,11 +210,11 @@
                                 <field name="state"/>
                                 <field name="residual"/>
                                 <group col="6" colspan="4">
-                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
-                                    <button name="invoice_open" states="draft,proforma2" string="Approve" icon="terp-camera_test"/>
+                                    <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
                                     <button name="%(action_account_state_open)d" type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
+                                    <button name="invoice_open" states="draft,proforma2" string="Approve" icon="terp-camera_test"/>
                                 </group>
                             </group>
                         </page>
@@ -236,14 +235,14 @@
                         <page string="Payments" groups="base.group_extended">
                             <field name="payment_ids" colspan="4" nolabel="1" >
                                 <tree string="Payments">
-                                    <field name="date"/>
+                                    <field name="date" string="Payment Date"/>
                                     <field name="ref"/>
-                                    <field name="name"/>
+                                    <field name="name" groups="base.group_extended"/>
                                     <field name="journal_id"/>
                                     <field name="debit"/>
                                     <field name="credit"/>
-                                    <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="amount_currency" groups="base.group_extended"/>
+                                    <field name="currency_id" groups="base.group_extended"/>
                                 </tree>
                             </field>
                         </page>
@@ -262,10 +261,10 @@
                     <field name="journal_id" groups="base.group_user" on_change="onchange_journal_id(journal_id)" widget="selection"/>
                     <field name="number"/>
                     <field name="type" invisible="1"/>
-                    <field name="currency_id" on_change="onchange_currency_id(currency_id, company_id)" width="50"/>
+                    <field name="currency_id" width="50"/>
                     <button name="%(action_account_change_currency)d" type="action" icon="terp-stock_effects-object-colorize" string="Change" attrs="{'invisible':[('state','!=','draft')]}" groups="account.group_account_user"/>
                     <newline/>
-                    <field name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" groups="base.group_user"/>
+                    <field string="Customer" name="partner_id" on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)" groups="base.group_user" context="{'search_default_customer': 1}"/>
                     <field domain="[('partner_id','=',partner_id)]" name="address_invoice_id"/>
                     <field name="fiscal_position" groups="base.group_extended" widget="selection"/>
                     <newline/>
@@ -303,14 +302,15 @@
                                 <field name="amount_total"/>
                                 <field name="state"/>
                                 <field name="residual"/>
-                                <group col="7" colspan="4" groups="base.group_user">
+                                <group col="8" colspan="4" groups="base.group_user">
                                     <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" icon="gtk-cancel"/>
                                     <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
 
-                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-gtk-media-pause" groups="account.group_account_user"/>
-                                    <button name="invoice_open" states="draft,proforma2" string="Create" icon="terp-camera_test"/>
                                     <button name="%(action_account_invoice_refund)d" type='action' string='Refund' states='open,paid' icon="gtk-execute"/>
                                     <button name='%(action_account_state_open)d' type='action' string='Re-Open' states='paid' icon="gtk-convert" groups="base.group_no_one"/>
+                                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" icon="terp-gtk-media-pause" groups="account.group_account_user"/>
+                                    <button name="invoice_open" states="draft,proforma2" string="Validate" icon="gtk-go-forward"/>
+                                    <button name="%(account_invoices)d" string="Print Invoice" type="action" icon="gtk-print"/>
                                 </group>
                             </group>
                         </page>
@@ -355,15 +355,15 @@
             <field name="arch" type="xml">
                 <search string="Search Invoice">
                    <group col="10" colspan="4">
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
-                        <filter icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
-                        <filter icon="terp-camera_test" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
+                        <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
+                        <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices"/>
+                        <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
                         <separator orientation="vertical"/>
                         <filter name="unpaid" icon="terp-dolar_ok!" string="Unpaid" domain="[('state','=','open')]" help="Unpaid Invoices"/>
                         <separator orientation="vertical"/>
                         <field name="number"/>
                         <field name="partner_id"/>
-                        <field name="user_id" select="1" default="uid" widget="selection" string="Salesman">
+                        <field name="user_id" select="1" widget="selection" string="Salesman">
                         <filter domain="[('user_id','=',uid)]" help="My invoices" icon="terp-personal" separator="1"/>
                         </field>
                         <field name="origin"/>
@@ -433,8 +433,10 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Most of customer invoices are automatically generated in draft mode by OpenERP flows, following a purchase order for instance. Review, confirm or cancel, pay or refund your customers' invoices here. A manual invoice can be created here.</field>
+            <field name="help">With Customer Invoices you can create and manage sales invoices issued to your customers. OpenERP can also generate draft invoices automatically from sales orders or deliveries. You should only confirm them before sending them to your customers.</field>
+            <field name="groups_id" eval="[(6,0,[ref('account.group_account_manager'),ref('account.group_account_user')])]"/>
         </record>
+
 
         <record id="action_invoice_tree1_view1" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -448,10 +450,11 @@
             <field name="view_id" ref="invoice_form"/>
             <field name="act_window_id" ref="action_invoice_tree1"/>
         </record>
+
         <menuitem action="action_invoice_tree1" id="menu_action_invoice_tree1" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Vendor Invoices</field>
+            <field name="name">Supplier Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -459,7 +462,7 @@
             <field name="domain">[('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice', 'journal_type': 'purchase'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">Proposal for vendor invoices are usually automatically generate by OpenERP, following a procurement order or a production order for instance. To consult and to check for, or to manually create a customer invoice, use this menu. You can review, confirm or cancel, pay or refund an invoice from the view from of the invoices.</field>
+            <field name="help">With Supplier Invoices you can enter and manage invoices issued by your suppliers. OpenERP can also generate draft invoices automatically from purchase orders or receipts. This way, you can control the invoice from your supplier according to what you purchased or received.</field>
         </record>
         <menuitem action="action_invoice_tree2" id="menu_action_invoice_tree2" parent="menu_finance_payables"/>
 
@@ -472,7 +475,7 @@
             <field name="domain">[('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund', 'journal_type': 'sale_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">A customer refund is a credit note to your customer that cancel invoice or a part of it.</field>
+            <field name="help">With Customer Refunds you can manage the credit notes for your customers. A refund is a document that credits an invoice completely or partially. You can easily generate refunds and reconcile them directly from the invoice form.</field>
         </record>
 
         <record id="action_invoice_tree3_view1" model="ir.actions.act_window.view">
@@ -490,7 +493,7 @@
         <menuitem action="action_invoice_tree3" id="menu_action_invoice_tree3" parent="menu_finance_receivables"/>
 
         <record id="action_invoice_tree4" model="ir.actions.act_window">
-            <field name="name">Vendor Refunds</field>
+            <field name="name">Supplier Refunds</field>
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -498,7 +501,7 @@
             <field name="domain">[('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund', 'journal_type': 'purchase_refund'}</field>
             <field name="search_view_id" ref="view_account_invoice_filter"/>
-            <field name="help">A vendor refund is a credit note from your supplier indicating that he refunds part or totality of the invoice sent to you.</field>
+            <field name="help">With Supplier Refunds you can manage the credit notes you receive from your suppliers. A refund is a document that credits an invoice completely or partially. You can easily generate refunds and reconcile them directly from the invoice form.</field>
         </record>
         <menuitem action="action_invoice_tree4" id="menu_action_invoice_tree4" parent="menu_finance_payables"/>
 
@@ -510,21 +513,6 @@
            context="{'search_default_journal_id':active_id, 'search_default_unpaid':1,}"
            res_model="account.invoice"
            src_model="account.journal"/>
-
-        <act_window
-            domain="[('account_id.reconcile', '=', True)]"
-            context="{'search_default_unreconciled':True,'search_default_partner_id':[partner_id]}"
-            id="act_account_invoice_account_move_unreconciled"
-            name="Items to Reconcile"
-            res_model="account.move.line"
-            src_model="account.invoice"/>
-
-        <act_window
-            context="{'search_default_move_id':move_id}"
-            id="act_account_invoice_account_move_invoice_link"
-            name="Invoice Items"
-            res_model="account.move.line"
-            src_model="account.invoice"/>
 
     </data>
 </openerp>

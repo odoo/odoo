@@ -20,26 +20,29 @@
 ##############################################################################
 import pooler
 
-import base64
-import sys
 import os
 import time
-from string import joinfields, split, lower
-
-from service import security
+import errno
 
 import netsvc
 import urlparse
 
-from DAV.constants import COLLECTION, OBJECT
-from DAV.errors import *
-from DAV.iface import *
+from DAV.constants import COLLECTION  #, OBJECT
+from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+from DAV.iface import dav_interface
 import urllib
 
 from DAV.davcmd import copyone, copytree, moveone, movetree, delone, deltree
-from document.nodes import node_res_dir, node_res_obj
 from cache import memoize
 from tools import misc
+
+from webdav import mk_lock_response
+
+try:
+    from tools.dict_tools import dict_merge2
+except ImportError:
+    from document.dict_tools import dict_merge2
+
 CACHE_SIZE=20000
 
 #hack for urlparse: add webdav in the net protocols
@@ -72,6 +75,89 @@ def _str2time(cre):
         cre = cre[:fdot]
     return time.mktime(time.strptime(cre,'%Y-%m-%d %H:%M:%S')) + frac
 
+class BoundStream2(object):
+    """Wraps around a seekable buffer, reads a determined range of data
+    
+        Note that the supplied stream object MUST support a size() which
+        should return its data length (in bytes).
+    
+        A variation of the class in websrv_lib.py
+    """
+    
+    def __init__(self, stream, offset=None, length=None, chunk_size=None):
+        self._stream = stream
+        self._offset = offset or 0
+        self._length = length or self._stream.size()
+        self._rem_length = length
+        assert length and isinstance(length, (int, long))
+        assert length and length >= 0, length
+        self._chunk_size = chunk_size
+        if offset is not None:
+            self._stream.seek(offset)
+
+    def read(self, size=-1):
+        if not self._stream:
+            raise IOError(errno.EBADF, "read() without stream")
+        
+        if self._rem_length == 0:
+            return ''
+        elif self._rem_length < 0:
+            raise EOFError()
+
+        rsize = self._rem_length
+        if size > 0 and size < rsize:
+            rsize = size
+        if self._chunk_size and self._chunk_size < rsize:
+            rsize = self._chunk_size
+        
+        data = self._stream.read(rsize)
+        self._rem_length -= len(data)
+
+        return data
+
+    def __len__(self):
+        return self._length
+
+    def tell(self):
+        res = self._stream.tell()
+        if self._offset:
+            res -= self._offset
+        return res
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        return self.read(65536)
+
+    def seek(self, pos, whence=os.SEEK_SET):
+        """ Seek, computing our limited range
+        """
+        if whence == os.SEEK_SET:
+            if pos < 0 or pos > self._length:
+                raise IOError(errno.EINVAL,"Cannot seek")
+            self._stream.seek(pos - self._offset)
+            self._rem_length = self._length - pos
+        elif whence == os.SEEK_CUR:
+            if pos > 0:
+                if pos > self._rem_length:
+                    raise IOError(errno.EINVAL,"Cannot seek past end")
+                elif pos < 0:
+                    oldpos = self.tell()
+                    if oldpos + pos < 0:
+                        raise IOError(errno.EINVAL,"Cannot seek before start")
+                self._stream.seek(pos, os.SEEK_CUR)
+                self._rem_length -= pos
+        elif whence == os.SEEK_END:
+            if pos > 0:
+                raise IOError(errno.EINVAL,"Cannot seek past end")
+            else:
+                if self._length + pos < 0:
+                    raise IOError(errno.EINVAL,"Cannot seek before start")
+            newpos = self._offset + self._length + pos
+            self._stream.seek(newpos, os.SEEK_SET)
+            self._rem_length = 0 - pos
+
 class openerp_dav_handler(dav_interface):
     """
     This class models a OpenERP interface for the DAV server
@@ -96,8 +182,7 @@ class openerp_dav_handler(dav_interface):
             return props
         node = self.uri2object(cr, uid, pool, uri2)
         if node:
-            props = props.copy()
-            props.update(node.get_dav_props(cr))
+            props = dict_merge2(props, node.get_dav_props(cr))
         cr.close()
         return props
 
@@ -127,7 +212,7 @@ class openerp_dav_handler(dav_interface):
             self.parent.log_error("Cannot %s: %s", opname, err.strerror)
             self.parent.log_message("Exc: %s",traceback.format_exc())
             raise default_exc(err.strerror)
-        except Exception,e:
+        except Exception, e:
             import traceback
             if cr: cr.close()
             self.parent.log_error("Cannot %s: %s", opname, str(e))
@@ -135,9 +220,11 @@ class openerp_dav_handler(dav_interface):
             raise default_exc("Operation failed")
 
     def _get_dav_lockdiscovery(self, uri):
+        """ We raise that so that the node API is used """
         raise DAV_NotFound
 
     def _get_dav_supportedlock(self, uri):
+        """ We raise that so that the node API is used """
         raise DAV_NotFound
 
     def match_prop(self, uri, match, ns, propname):
@@ -186,6 +273,16 @@ class openerp_dav_handler(dav_interface):
             cr.close()
             return ret
 
+    def reduce_useragent(self):
+        ua = self.parent.headers.get('User-Agent', False)
+        ctx = {}
+        if ua:
+            if 'iPhone' in ua:
+                ctx['DAV-client'] = 'iPhone'
+            elif 'Konqueror' in ua:
+                ctx['DAV-client'] = 'GroupDAV'
+        return ctx
+
     def get_prop(self, uri, ns, propname):
         """ return the value of a given property
 
@@ -194,17 +291,23 @@ class openerp_dav_handler(dav_interface):
             pname        -- name of the property
          """
         if self.M_NS.has_key(ns):
-            return dav_interface.get_prop(self, uri, ns, propname)
+            try:
+                # if it's not in the interface class, a "DAV:" property
+                # may be at the node class. So shouldn't give up early.
+                return dav_interface.get_prop(self, uri, ns, propname)
+            except DAV_NotFound:
+                pass
         cr, uid, pool, dbname, uri2 = self.get_cr(uri)
         if not dbname:
             if cr: cr.close()
             raise DAV_NotFound
-        node = self.uri2object(cr, uid, pool, uri2)
-        if not node:
+        try:
+            node = self.uri2object(cr, uid, pool, uri2)
+            if not node:
+                raise DAV_NotFound
+            res = node.get_dav_eprop(cr, ns, propname)
+        finally:
             cr.close()
-            raise DAV_NotFound
-        res = node.get_dav_eprop(cr, ns, propname)
-        cr.close()
         return res
 
     def get_db(self, uri, rest_ret=False, allow_last=False):
@@ -248,7 +351,7 @@ class openerp_dav_handler(dav_interface):
         """ Return the base URI of this request, or even join it with the
             ajoin path elements
         """
-        return self.baseuri+ '/'.join(ajoin)
+        return self.parent.get_baseuri(self) + '/'.join(ajoin)
 
     @memoize(4)
     def db_list(self):
@@ -271,9 +374,9 @@ class openerp_dav_handler(dav_interface):
                     cr.close()
         return self.db_name_list
 
-    def get_childs(self, uri, filters=None):
+    def get_childs(self,uri, filters=None):
         """ return the child objects as self.baseuris for the given URI """
-        self.parent.log_message('get childs: %s' % uri)
+        self.parent.log_message('get children: %s' % uri)
         cr, uid, pool, dbname, uri2 = self.get_cr(uri, allow_last=True)
 
         if not dbname:
@@ -283,26 +386,55 @@ class openerp_dav_handler(dav_interface):
         result = []
         node = self.uri2object(cr, uid, pool, uri2[:])
 
-        if not node:
-            if cr: cr.close()
-            raise DAV_NotFound2(uri2)
-        else:
-            fp = node.full_path()
-            if fp and len(fp):
-                self.parent.log_message('childs: @%s' % fp)
-                fp = '/'.join(fp)
+        try:
+            if not node:
+                raise DAV_NotFound2(uri2)
             else:
-                fp = None
-            domain = None
-            if filters:
-                domain = node.get_domain(cr, filters)
-            for d in node.children(cr, domain):
-                self.parent.log_message('child: %s' % d.path)
-                if fp:
-                    result.append( self.urijoin(dbname,fp,d.path) )
+                fp = node.full_path()
+                if fp and len(fp):
+                    fp = '/'.join(fp)
+                    self.parent.log_message('children for: %s' % fp)
                 else:
-                    result.append( self.urijoin(dbname,d.path) )
-        if cr: cr.close()
+                    fp = None
+                domain = None
+                if filters:
+                    domain = node.get_domain(cr, filters)
+                    
+                    if hasattr(filters, 'getElementsByTagNameNS'):
+                        hrefs = filters.getElementsByTagNameNS('DAV:', 'href')
+                        if hrefs:
+                            ul = self.parent.davpath + self.uri2local(uri)
+                            for hr in hrefs:
+                                turi = ''
+                                for tx in hr.childNodes:
+                                    if tx.nodeType == hr.TEXT_NODE:
+                                        turi += tx.data
+                                if not turi.startswith('/'):
+                                    # it may be an absolute URL, decode to the
+                                    # relative part, because ul is relative, anyway
+                                    uparts=urlparse.urlparse(turi)
+                                    turi=uparts[2]
+                                if turi.startswith(ul):
+                                    result.append( turi[len(self.parent.davpath):])
+                                else:
+                                    self.parent.log_error("ignore href %s because it is not under request path %s", turi, ul)
+                            return result
+                            # We don't want to continue with the children found below
+                            # Note the exceptions and that 'finally' will close the
+                            # cursor
+                for d in node.children(cr, domain):
+                    self.parent.log_message('child: %s' % d.path)
+                    if fp:
+                        result.append( self.urijoin(dbname,fp,d.path) )
+                    else:
+                        result.append( self.urijoin(dbname,d.path) )
+        except DAV_Error:
+            raise
+        except Exception, e:
+            self.parent.log_error("cannot get_children: "+ str(e))
+            raise
+        finally:
+            if cr: cr.close()
         return result
 
     def uri2local(self, uri):
@@ -338,7 +470,8 @@ class openerp_dav_handler(dav_interface):
     def uri2object(self, cr, uid, pool, uri):
         if not uid:
             return None
-        return pool.get('document.directory').get_object(cr, uid, uri)
+        context = self.reduce_useragent()
+        return pool.get('document.directory').get_object(cr, uid, uri, context=context)
 
     def get_data(self,uri, rrange=None):
         self.parent.log_message('GET: %s' % uri)
@@ -349,11 +482,28 @@ class openerp_dav_handler(dav_interface):
             node = self.uri2object(cr, uid, pool, uri2)
             if not node:
                 raise DAV_NotFound2(uri2)
+            # TODO: if node is a collection, for some specific set of
+            # clients ( web browsers; available in node context), 
+            # we may return a pseydo-html page with the directory listing.
             try:
+                res = node.open_data(cr,'r')
                 if rrange:
-                    self.parent.log_error("Doc get_data cannot use range")
-                    raise DAV_Error(409)
-                datas = node.get_data(cr)
+                    assert isinstance(rrange, (tuple,list))
+                    start, end = map(long, rrange)
+                    if not start:
+                        start = 0
+                    assert start >= 0
+                    if end and end < start:
+                        self.parent.log_error("Invalid range for data: %s-%s" %(start, end))
+                        raise DAV_Error(416, "Invalid range for data")
+                    if end:
+                        if end >= res.size():
+                            raise DAV_Error(416, "Requested data exceeds available size")
+                        length = (end + 1) - start
+                    else:
+                        length = res.size() - start
+                    res = BoundStream2(res, offset=start, length=length)
+                
             except TypeError,e:
                 # for the collections that return this error, the DAV standard
                 # says we'd better just return 200 OK with empty data
@@ -366,7 +516,7 @@ class openerp_dav_handler(dav_interface):
                 self.parent.log_error("GET exception: %s",str(e))
                 self.parent.log_message("Exc: %s", traceback.format_exc())
                 raise DAV_Error, 409
-            return str(datas) # FIXME!
+            return res
         finally:
             if cr: cr.close()
 
@@ -537,8 +687,7 @@ class openerp_dav_handler(dav_interface):
             node = False
         
         objname = uri2[-1]
-        ext = objname.find('.') >0 and objname.split('.')[1] or False
-
+        
         ret = None
         if not node:
             dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
@@ -621,7 +770,7 @@ class openerp_dav_handler(dav_interface):
         """
         if uri[-1]=='/':uri=uri[:-1]
         res=delone(self,uri)
-        parent='/'.join(uri.split('/')[:-1])
+        # parent='/'.join(uri.split('/')[:-1])
         return res
 
     def deltree(self, uri):
@@ -633,7 +782,7 @@ class openerp_dav_handler(dav_interface):
         """
         if uri[-1]=='/':uri=uri[:-1]
         res=deltree(self, uri)
-        parent='/'.join(uri.split('/')[:-1])
+        # parent='/'.join(uri.split('/')[:-1])
         return res
 
 
@@ -766,6 +915,91 @@ class openerp_dav_handler(dav_interface):
             pass
         cr.close()
         return result
+
+    def unlock(self, uri, token):
+        """ Unlock a resource from that token 
+        
+        @return True if unlocked, False if no lock existed, Exceptions
+        """
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        if not dbname:
+            if cr: cr.close()
+            raise DAV_Error, 409
+
+        node = self.uri2object(cr, uid, pool, uri2)
+        try:
+            node_fn = node.dav_unlock
+        except AttributeError:
+            # perhaps the node doesn't support locks
+            cr.close()
+            raise DAV_Error(400, 'No locks for this resource')
+
+        res = self._try_function(node_fn, (cr, token), "unlock %s" % uri, cr=cr)
+        cr.commit()
+        cr.close()
+        return res
+
+    def lock(self, uri, lock_data):
+        """ Lock (may create) resource.
+            Data is a dict, may contain:
+                depth, token, refresh, lockscope, locktype, owner
+        """
+        cr, uid, pool, dbname, uri2 = self.get_cr(uri)
+        created = False
+        if not dbname:
+            if cr: cr.close()
+            raise DAV_Error, 409
+
+        try:
+            node = self.uri2object(cr, uid, pool, uri2[:])
+        except Exception:
+            node = False
+        
+        objname = misc.ustr(uri2[-1])
+        
+        if not node:
+            dir_node = self.uri2object(cr, uid, pool, uri2[:-1])
+            if not dir_node:
+                cr.close()
+                raise DAV_NotFound('Parent folder not found')
+
+            # We create a new node (file) but with empty data=None,
+            # as in RFC4918 p. 9.10.4
+            node = self._try_function(dir_node.create_child, (cr, objname, None),
+                    "create %s" % objname, cr=cr)
+            if not node:
+                cr.commit()
+                cr.close()
+                raise DAV_Error(400, "Failed to create resource")
+            
+            created = True
+
+        try:
+            node_fn = node.dav_lock
+        except AttributeError:
+            # perhaps the node doesn't support locks
+            cr.close()
+            raise DAV_Error(400, 'No locks for this resource')
+
+        # Obtain the lock on the node
+        lres, pid, token = self._try_function(node_fn, (cr, lock_data), "lock %s" % objname, cr=cr)
+
+        if not lres:
+            cr.commit()
+            cr.close()
+            raise DAV_Error(423, "Resource already locked")
+        
+        assert isinstance(lres, list), 'lres: %s' % repr(lres)
+        
+        try:
+            data = mk_lock_response(self, uri, lres)
+            cr.commit()
+        except Exception:
+            cr.close()
+            raise
+
+        cr.close()
+        return created, data, token
 
     @memoize(CACHE_SIZE)
     def is_collection(self, uri):

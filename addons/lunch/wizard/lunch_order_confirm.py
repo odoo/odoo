@@ -32,7 +32,7 @@ class lunch_order_confirm(osv.osv_memory):
         'confirm_cashbox':fields.many2one('lunch.cashbox', 'Name of box', required=True),
     }
 
-    def confirm(self, cr, uid, ids, context):
+    def confirm(self, cr, uid, ids, context=None):
         """
         confirm Lunch Order.Create cashmoves in launch cashmoves when state is
                         confirm in lunch order.
@@ -41,12 +41,14 @@ class lunch_order_confirm(osv.osv_memory):
         @param ids: List  Lunch Order confirm’s IDs
         @return: Dictionary {}.
         """
+        if context is None:
+            context = {}
         data = context and context.get('active_ids', []) or []
         order_ref = self.pool.get('lunch.order')
 
         for confirm_obj in self.read(cr, uid, ids):
             order_ref.confirm(cr, uid, data, confirm_obj['confirm_cashbox'], context)
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
 lunch_order_confirm()
 

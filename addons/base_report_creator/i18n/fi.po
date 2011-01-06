@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-03 02:32+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_creator
@@ -26,6 +26,11 @@ msgid ""
 msgstr ""
 "Anna määritelmä kentälle, jonka perusteella haluat suodattaa tietueita.\n"
 " esim. res_partner.id=3 (kumppanin tunniste)"
+
+#. module: base_report_creator
+#: model:ir.model,name:base_report_creator.model_report_menu_create
+msgid "Menu Create"
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_type:0
@@ -48,9 +53,17 @@ msgid "Graph Mode"
 msgstr "Kaavion tila"
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid ""
+"These is/are model(s) (%s) in selection which is/are not related to any "
+"other model"
+msgstr ""
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Legend"
+msgstr ""
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -85,7 +98,7 @@ msgstr "SQL-kysely"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-#: wizard_button:base_report_creator.report.menu.create,init,create_menu:0
+#: view:report.menu.create:0
 msgid "Create Menu"
 msgstr "Luo valikko"
 
@@ -106,13 +119,18 @@ msgid "OR"
 msgstr "TAI"
 
 #. module: base_report_creator
-#: model:ir.ui.menu,name:base_report_creator.menu_base_report_creator_action
-#: model:ir.ui.menu,name:base_report_creator.menu_base_report_creator_action_config
+#: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
 msgid "Custom Reports"
 msgstr "Tilausraportit"
 
 #. module: base_report_creator
-#: wizard_view:base_report_creator.report.menu.create,init:0
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "No Related Models!!"
+msgstr ""
+
+#. module: base_report_creator
+#: view:report.menu.create:0
 msgid "Menu Information"
 msgstr "Valikon tiedot"
 
@@ -120,6 +138,11 @@ msgstr "Valikon tiedot"
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Sum"
 msgstr "Summa"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You must have to give calendar view's color,start date and delay."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,model_ids:0
@@ -138,21 +161,11 @@ msgstr "Raportin tyyppi"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "State"
-msgstr "Tila"
-
-#. module: base_report_creator
-#: selection:base_report_creator.report,state:0
-msgid "Valid"
-msgstr "Validi"
-
-#. module: base_report_creator
-#: view:base_report_creator.report:0
 msgid "Add filter"
 msgstr "Lisää suodin"
 
 #. module: base_report_creator
-#: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
+#: model:ir.actions.act_window,name:base_report_creator.action_report_menu_create
 msgid "Create Menu for Report"
 msgstr "Luo valikko raportille"
 
@@ -164,6 +177,7 @@ msgid "Form"
 msgstr "Lomake"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report,view_type2:0
 #: selection:base_report_creator.report,view_type3:0
 #: selection:base_report_creator.report.fields,calendar_mode:0
 #: selection:base_report_creator.report.fields,graph_mode:0
@@ -171,6 +185,7 @@ msgid "/"
 msgstr "/"
 
 #. module: base_report_creator
+#: view:base_report_creator.report:0
 #: field:base_report_creator.report.fields,report_id:0
 #: field:base_report_creator.report.filter,report_id:0
 #: model:ir.model,name:base_report_creator.model_base_report_creator_report
@@ -183,9 +198,14 @@ msgid "Starting Date"
 msgstr "Aloituspäivämäärä"
 
 #. module: base_report_creator
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Virheellinen XML näkymäarkkitehtuurille!"
+#: view:base_report_creator.report:0
+msgid "Filters on Fields"
+msgstr "Kenttien suodattimet"
+
+#. module: base_report_creator
+#: field:base_report_creator.report,group_ids:0
+msgid "Authorized Groups"
+msgstr "Valtuutetut Ryhmät"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type1:0
@@ -193,11 +213,6 @@ msgstr "Virheellinen XML näkymäarkkitehtuurille!"
 #: selection:base_report_creator.report,view_type3:0
 msgid "Tree"
 msgstr "Puu"
-
-#. module: base_report_creator
-#: field:base_report_creator.report,group_ids:0
-msgid "Authorized Groups"
-msgstr "Valtuutetut Ryhmät"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_orientation:0
@@ -215,7 +230,7 @@ msgid "Security"
 msgstr "Turvallisuus"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report.menu.create,init,menu_name:0
+#: field:report.menu.create,menu_name:0
 msgid "Menu Name"
 msgstr "Valikon nimi"
 
@@ -224,6 +239,11 @@ msgstr "Valikon nimi"
 #: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "AND"
 msgstr "JA"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You can not display field which are not stored in Database."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report.fields,calendar_mode:0
@@ -260,19 +280,9 @@ msgid "Field Name"
 msgstr "Kentän nimi"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report,state:0
-msgid "Draft"
-msgstr "Vedos"
-
-#. module: base_report_creator
 #: wizard_view:base_report_creator.report_filter.fields,set_value_select_field:0
 msgid "Set Filter Values"
 msgstr "Aseta suodattimen arvot"
-
-#. module: base_report_creator
-#: field:base_report_creator.report,state:0
-msgid "Status"
-msgstr "Tila"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
@@ -288,6 +298,11 @@ msgstr "Rivien ja Sarakkeitten raportti"
 #: view:base_report_creator.report:0
 msgid "General Configuration"
 msgstr "Yleinen määritys"
+
+#. module: base_report_creator
+#: help:base_report_creator.report.fields,sequence:0
+msgid "Gives the sequence order when displaying a list of fields."
+msgstr ""
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report_filter.fields,init:0
@@ -326,7 +341,7 @@ msgid "X Axis"
 msgstr "X-akseli"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report.menu.create,init,menu_parent_id:0
+#: field:report.menu.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Päävalikko"
 
@@ -341,7 +356,7 @@ msgid "Filter Name"
 msgstr "Suodattimen nimi"
 
 #. module: base_report_creator
-#: model:ir.actions.wizard,name:base_report_creator.wizard_report_open
+#: view:base_report_creator.report:0
 msgid "Open Report"
 msgstr "Avaa raportti"
 
@@ -357,17 +372,21 @@ msgid "Report Creator"
 msgstr "Raportin luoja"
 
 #. module: base_report_creator
-#: wizard_button:base_report_creator.report.menu.create,init,end:0
 #: wizard_button:base_report_creator.report_filter.fields,init,end:0
 #: wizard_button:base_report_creator.report_filter.fields,set_value_select_field,end:0
+#: view:report.menu.create:0
 msgid "Cancel"
 msgstr "Peruuta"
 
 #. module: base_report_creator
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
+#: constraint:base_report_creator.report:0
+msgid "You can apply aggregate function to the non calculated field."
+msgstr ""
+
+#. module: base_report_creator
+#: field:base_report_creator.report,menu_id:0
+msgid "Menu"
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_type1:0
@@ -385,9 +404,16 @@ msgid "Field"
 msgstr "Kenttä"
 
 #. module: base_report_creator
-#: view:base_report_creator.report:0
-msgid "Filters on Fields"
-msgstr "Kenttien suodattimet"
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Unique Colors"
+msgstr ""
+
+#. module: base_report_creator
+#: help:base_report_creator.report,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the report "
+"without removing it."
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_type:0
@@ -400,28 +426,9 @@ msgid "Third View"
 msgstr "Kolmas näkymä"
 
 #. module: base_report_creator
-#: model:ir.module.module,description:base_report_creator.module_meta_information
-msgid ""
-"This modules allows you to create any statistic\n"
-"report on several object. It's a SQL query builder and browser\n"
-"for and users.\n"
-"\n"
-"After installing the module, it adds a menu to define custom report in\n"
-"the \"Dashboard\" menu.\n"
-msgstr ""
-"Tämä  moduuli antaa sinun luoda kaikenlaisia tilastotieto-\n"
-"raportteja useilla objekteilla. Tämä on SQL -kyselyiden rakentaja ja "
-"selaaja\n"
-"käyttäjille.\n"
-"\n"
-"Moduulin asentamisen jälkeen se lisää valikon joka määrittelee omaehtoisen "
-"raportin\n"
-"\"Dashboard (mittaristo) -valikossa.\n"
-
-#. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Uniq Colors"
-msgstr "Ainutlaatuiset värit"
+msgid "End Date"
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0
@@ -440,8 +447,8 @@ msgstr "Keskiarvo"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "Reports"
-msgstr "Raportit"
+msgid "Use %(uid)s to filter by the connected user"
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
@@ -469,7 +476,7 @@ msgid "Second View"
 msgstr "Toinen näkymä"
 
 #. module: base_report_creator
-#: wizard_view:base_report_creator.report.menu.create,init:0
+#: view:report.menu.create:0
 msgid "Create Menu For This Report"
 msgstr "Luo valikko tälle raportille"
 
@@ -499,3 +506,59 @@ msgstr "Näytettävät kentät"
 #: field:base_report_creator.report,filter_ids:0
 msgid "Filters"
 msgstr "Suodattimet"
+
+#. module: base_report_creator
+#: model:ir.module.module,description:base_report_creator.module_meta_information
+msgid ""
+"This module allows you to create any statistic\n"
+"report on several objects. It's a SQL query builder and browser\n"
+"for and users.\n"
+"\n"
+"After installing the module, it adds a menu to define custom report in\n"
+"the \"Dashboard\" menu.\n"
+msgstr ""
+
+#~ msgid "Valid"
+#~ msgstr "Validi"
+
+#~ msgid "Status"
+#~ msgstr "Tila"
+
+#~ msgid "Draft"
+#~ msgstr "Vedos"
+
+#~ msgid "Reports"
+#~ msgstr "Raportit"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Virheellinen XML näkymäarkkitehtuurille!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
+
+#~ msgid "State"
+#~ msgstr "Tila"
+
+#~ msgid "Uniq Colors"
+#~ msgstr "Ainutlaatuiset värit"
+
+#~ msgid ""
+#~ "This modules allows you to create any statistic\n"
+#~ "report on several object. It's a SQL query builder and browser\n"
+#~ "for and users.\n"
+#~ "\n"
+#~ "After installing the module, it adds a menu to define custom report in\n"
+#~ "the \"Dashboard\" menu.\n"
+#~ msgstr ""
+#~ "Tämä  moduuli antaa sinun luoda kaikenlaisia tilastotieto-\n"
+#~ "raportteja useilla objekteilla. Tämä on SQL -kyselyiden rakentaja ja "
+#~ "selaaja\n"
+#~ "käyttäjille.\n"
+#~ "\n"
+#~ "Moduulin asentamisen jälkeen se lisää valikon joka määrittelee omaehtoisen "
+#~ "raportin\n"
+#~ "\"Dashboard (mittaristo) -valikossa.\n"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"

@@ -80,11 +80,13 @@ class report_custom(report_rml):
                     if attendences and attendences[-1]['action'] == 'sign_in':
                         attendences.append({'name': tomor.strftime('%Y-%m-%d %H:%M:%S'), 'action':'sign_out'})
                     # sum up the attendances' durations
+                    ldt = None
                     for att in attendences:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
-                        if att['action'] == 'sign_out':
+                        if ldt and att['action'] == 'sign_out':
                             wh += (dt - ldt).seconds/60/60
-                        ldt = dt
+                        else:
+                            ldt = dt
                     # Week xml representation
 #                    wh = hour2str(wh)
                     today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, round(wh,2))

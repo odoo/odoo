@@ -7,8 +7,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sign in / Sign out">
+                    <separator colspan="4" string="Sign in / Sign out"/>
+                    <label colspan="4" nolabel="1" string="If you need your staff to sign in when they arrive at work and sign out again at the end of the day, OpenERP allows you to manage this with this tool. If each employee has been linked to a system user, then they can encode their time with this action button."/>
+                    <newline/>
                     <group colspan="4" >
-                    <separator string="You are now ready to sign in or out of the attendance follow up" colspan="4" />
                     <field name="name" />
                     <field name="state" />
                     </group>
@@ -47,7 +49,7 @@
         </record>
 
         <menuitem action="action_hr_attendance_sigh_in_out" id="menu_hr_attendance_sigh_in_out"
-            parent="menu_hr_attendance" sequence="4" groups="base.group_hr_manager,base.group_hr_user,base.group_hr_attendance"/>
+            parent="menu_hr_attendance" sequence="4"/>
 
        <record id="view_hr_attendance_so_ask" model="ir.ui.view">
             <field name="name">hr.sign.in.out.ask.form</field>

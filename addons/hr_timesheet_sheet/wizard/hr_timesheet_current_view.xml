@@ -7,7 +7,7 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="My Timesheet">
-               <separator string="It will open the your current timesheet" colspan="4" />
+               <separator string="It will open your current timesheet" colspan="4" />
                <group colspan="4" col="6">
                     <button  icon="gtk-cancel" special="cancel" string="Cancel"/>
                     <button  icon="terp-camera_test" name="open_timesheet" string="Open" type="object"/>
@@ -23,13 +23,10 @@
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="view_hr_timesheet_current_open"/>
         <field name="target">new</field>
+        <field name="help">My Timesheet opens your timesheet so that you can book your activities into the system. From the same form, you can register your attendances (Sign In/Out) and describe the working hours made on the different projects. At the end of the period defined in the company, the timesheet is confirmed by the user and can be validated by his manager. If required, as defined on the project, you can generate the invoices based on the timesheet.</field>
     </record>
 
     <menuitem action="action_hr_timesheet_current_open" icon="STOCK_NEW" id="menu_act_hr_timesheet_sheet_form_my_current" name="My Timesheet" parent="hr_attendance.menu_hr_time_tracking" sequence="1"/>
-
-    <menuitem action="action_hr_timesheet_current_open"
-        id="menu_act_project_management_timesheet_sheet_form" parent="base.menu_project_management_time_tracking"
-        sequence="5"/>
 
     </data>
 </openerp>

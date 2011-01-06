@@ -17,7 +17,7 @@
                     </graph>
                </field>
           </record>
-          
+
         <record id="view_report_crm_oppor_graph" model="ir.ui.view">
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
@@ -29,7 +29,7 @@
                 </graph>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="crm_case_my_open_oppor">
             <field name="name">Opportunities</field>
             <field name="model">crm.lead</field>
@@ -71,7 +71,7 @@
                <field name="view_mode">tree,form</field>
             <field name="domain">[('user_id','=',uid),('state','=','open'), ('type', '=', 'opportunity')]</field>
           </record>
-        
+
         <record model="ir.actions.act_window.view" id="act_my_oppor_tree_view">
           <field name="sequence" eval="1"/>
           <field name="view_mode">tree</field>
@@ -99,7 +99,8 @@
                <field name="view_type">form</field>
                <field name="view_mode">graph,tree,form</field>
                <field name="view_id" ref="view_report_crm_oppor_graph"/>
-            <field name="domain">['&amp;', '&amp;', ('user_id','=',uid), ('type', '=', 'opportunity'), '!' , '&amp;', ('state', '=', 'done'),  ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+               <field name="domain">['&amp;', '&amp;', ('user_id','=',uid), ('type', '=', 'opportunity'), '!' , '&amp;', ('state', '=', 'done'),  ('date_closed','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]</field>
+               <field name="context">{'search_default_Stage':1}</field>
           </record>
 
           <record model="ir.actions.act_window" id="act_sales_pipeline">
@@ -111,11 +112,11 @@
           </record>
 
           <record model="ir.ui.view" id="board_crm_form">
-               <field name="name">CRM - Dashboard Form</field>
+               <field name="name">Sales Dashboard Form</field>
                <field name="model">board.board</field>
                <field name="type">form</field>
                <field name="arch" type="xml">
-                    <form string="Connecting Dashboard">
+                    <form string="Sales Dashboard">
                          <hpaned>
                               <child1>
                                    <action
@@ -145,19 +146,21 @@
             </field>
         </record>
         <record model="ir.actions.act_window" id="open_board_crm">
-            <field name="name">CRM Dashboard</field>
+            <field name="name">Sales Dashboard</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="usage">menu</field>
             <field name="view_id" ref="board_crm_form"/>
         </record>
-         <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
+        <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
         <menuitem
-            name="Connecting Dashboard" parent="board.menu_dasboard"
+            name="Sales Dashboard" parent="board.menu_dasboard"
             action="open_board_crm"
             sequence="1"
-            id="menu_board_crm" icon="terp-graph"/>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,base.group_partner_manager" action="open_board_crm"/>
+            id="menu_board_crm" icon="terp-graph"
+            groups="base.group_sale_salesman"/>
+
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" action="open_board_crm"/>
     </data>
 </openerp>

@@ -10,16 +10,16 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Manager board">
+                <form string="Sales Dashboard">
                     <hpaned position="100">
                         <child1>
-                            <action  name="%(sale.action_quotation_for_sale)d" string="Top Quotations"/>
-                            <action width="510" name="%(sale.action_view_sales_by_month)d" string="Total Sales By Month"/>
+                            <action  name="%(sale.action_quotation_for_sale)d" string="Quotations"/>
+                            <action width="510" name="%(sale.action_view_sales_by_month)d" string="Sales by Month"/>
                         </child1>
                         <child2>
-                            <action  name="%(sale.action_sales_product_total_price)d" string="Sold products and Total Price"/>
-                            <action  name="%(sale.action_sales_by_partner)d" string="Sales By Partner"/>
-                            <action  name="%(sale.action_sales_by_salesman)d" string="Sales By Salesman"/>
+                            <action  name="%(sale.action_sales_by_salesman)d" string="Sales by Salesman in last 90 days"/>
+                            <action  name="%(sale.action_sales_by_partner)d" string="Sales per Customer in last 90 days"/>
+                            <action  name="%(sale.action_sales_product_total_price)d" string="Sales by Product's Category in last 90 days"/>
                         </child2>
                     </hpaned>
                 </form>
@@ -33,8 +33,9 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_sales_manager_form"/>
         </record>
-		<menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
-        <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_dasboard" sequence="0"/>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,base.group_partner_manager" action="open_board_sales_manager"/>
+
+        <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
+        <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_dasboard" sequence="0" groups="base.group_sale_manager"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" action="open_board_sales_manager"/>
     </data>
 </openerp>

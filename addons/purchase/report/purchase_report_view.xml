@@ -25,6 +25,7 @@
                     <field name="user_id" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="product_id" invisible="1"/>
+                    <field name="category_id" invisible="1"/>
                     <field name="product_uom" invisible="1"/>
                     <field name="day" invisible="1"/>
                     <field name="name" invisible="1"/>
@@ -57,20 +58,20 @@
                 domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                 help="Order in current year"/>
                 <filter icon="terp-go-month" string="   Month   "
-                name="month"
-                domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-%%m-01'))]"
-                help="Order in  current month"/>
+                        name="month"
+                        domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                        help="Order in  current month"/>
                 <filter icon="terp-go-month"
-                 string="    Month-1    "
-                 separator="1"
-                 domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
-                 help="Order in last month"/>
+                         string="    Month-1    "
+                         separator="1"
+                         domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                         help="Order in last month"/>
                 <separator orientation="vertical"/>
                 <filter icon="terp-document-new"
                         string="Quotations"
                         name="quotes"
                         domain="[('state','=','draft')]"/>
-                <filter icon="terp-accessories-archiver"
+                <filter icon="terp-gtk-jump-to-rtl"
                         string="Orders"
                         name="orders"
                         domain="[('state','&lt;&gt;','draft'),('state','&lt;&gt;','cancel')]"/>
@@ -79,7 +80,7 @@
                 <field name="product_id"/>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended filters..." colspan="10" col="12" groups="base.group_extended">
+                <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
                     <field name="user_id"/>
                     <field name="validator"/>
                     <separator orientation="vertical"/>
@@ -99,7 +100,8 @@
                     <filter string="Validated by" icon="terp-personal" context="{'group_by':'validator'}"/>
  					<separator orientation="vertical"/>
                     <filter string="Product" name="group_product_id" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                    <filter string="Product UOM" name="group_product_uom" icon="terp-accessories-archiver" context="{'group_by':'product_uom'}"/>
+                    <filter string="Category" name="group_category_id" icon="terp-accessories-archiver" context="{'group_by':'category_id'}"/>
+                    <filter string="Reference UOM" name="group_product_uom" icon="terp-accessories-archiver" context="{'group_by':'product_uom'}"/>
                     <filter string="Warehouse" icon="terp-go-home" context="{'group_by':'warehouse_id'}" groups="base.group_extended"/>
                     <filter string="Destination" icon="terp-gtk-jump-to-ltr" context="{'group_by':'location_id'}"/>
                     <separator orientation="vertical"/>
@@ -149,6 +151,7 @@
         <field name="view_mode">tree,graph</field>
         <field name="view_id" ref="view_purchase_order_tree"></field>
         <field name="context">{'search_default_month':1,'search_default_group_partner_id':1,'search_default_group_product_id': 1, 'search_default_orders': 1, 'group_by_no_leaf':1,'group_by':[]}</field>
+        <field name="help">Purchase Analysis allows you to easily check and analyse your company purchase history and performance. From this menu you can track your negotiation performance, the delivery performance of your suppliers, etc.</field>
     </record>
 
     <record id="action_purchase_order_report_graph" model="ir.actions.act_window">
@@ -168,7 +171,8 @@
     </record>
 
 
-    <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"/>
+    <menuitem id="base.next_id_73" name="Reporting" parent="base.menu_purchase_root" sequence="8"
+        groups="purchase.group_purchase_manager"/>
     <menuitem action="action_purchase_order_report_all" id="menu_action_purchase_order_report_all" parent="base.next_id_73" sequence="3"/>
 
     <record id="action_stock_move_report_po" model="ir.actions.act_window">
@@ -177,6 +181,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1, 'search_default_group_product':1, 'search_default_group_partner':1, 'search_default_done':1, 'search_default_in': 1, 'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="help">Reception Analysis allows you to easily check and analyse your company order receptions and the performance of your supplier's deliveries.</field>
     </record>
     <menuitem action="action_stock_move_report_po" id="menu_action_stock_move_report_po" parent="base.next_id_73" sequence="8"/>
 

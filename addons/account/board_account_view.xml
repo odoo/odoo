@@ -20,7 +20,22 @@
             <field name="view_mode">graph,tree</field>
             <field name="domain">[('type','=','income')]</field>
         </record>
-
+      <record id="action_company_analysis_tree" model="ir.actions.act_window">
+          <field name="name">Company Analysis</field>
+          <field name="res_model">account.entries.report</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,graph</field>
+          <field name="context">{'group_by':['user_type'], 'group_by_no_leaf':1}</field>
+          <field name="view_id" ref="account.view_account_entries_report_tree"/>
+      </record>
+      <record id="action_treasory_graph" model="ir.actions.act_window">
+          <field name="name">Treasury</field>
+          <field name="res_model">account.account</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">graph,tree</field>
+          <field name="domain">[('type','=','liquidity')]</field>
+          <field name="view_id" ref="account.view_treasory_graph"/>
+      </record>
         <record id="board_account_form" model="ir.ui.view">
             <field name="name">board.account.form</field>
             <field name="model">board.board</field>
@@ -29,11 +44,13 @@
                 <form string="Account Board">
                     <hpaned>
                         <child1>
-                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Draft Customer Invoices" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
+                            <action colspan="4" height="160" width="400" name="%(account.action_invoice_tree1)d" string="Customer Invoices to Approve" domain="[('state','=','draft'),('type','=','out_invoice')]"/>
+                            <action colspan="4" height="160" width="400" name="%(action_company_analysis_tree)d" string="Company Analysis" groups="account.group_account_manager"/>
                         </child1>
                         <child2>
-                            <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged receivables"/>
-                            <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/>
+                            <action colspan="4" height="220" name="%(action_treasory_graph)d" string="Treasury" groups="account.group_account_manager,account.group_account_user"/>
+                            <action colspan="4" height="220" name="%(action_aged_receivable)d" string="Aged Receivables" groups="account.group_account_manager,account.group_account_user"/>
+                            <!--  <action colspan="4" height="220" name="%(action_aged_income)d" string="Aged income"/> -->
                         </child2>
                     </hpaned>
                 </form>
@@ -51,6 +68,8 @@
 
         <menuitem id="menu_dashboard_acc" name="Dashboard" sequence="2" parent="account.menu_finance_reporting" groups="group_account_user,group_account_manager"/>
         <menuitem action="open_board_account" icon="terp-graph" id="menu_board_account" parent="menu_dashboard_acc" sequence="1"/>
-        <menuitem icon="terp-account" id="account.menu_finance" name="Accounting" sequence="13" action="open_board_account"/>
+        <menuitem icon="terp-account" id="account.menu_finance" name="Accounting" sequence="14" action="open_board_account"/>
+
+
     </data>
 </openerp>

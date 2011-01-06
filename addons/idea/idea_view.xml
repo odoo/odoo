@@ -20,10 +20,7 @@
         </field>
     </record>
 
-
-
     <!-- Idea Category Form View -->
-    <menuitem name="Tools" id="base.menu_tools" icon="STOCK_PREFERENCES" sequence="28"/>
         <record model="ir.ui.view" id="view_idea_category_form">
             <field name="name">idea.category.form</field>
             <field name="model">idea.category</field>
@@ -50,6 +47,7 @@
             <field name="arch" type="xml">
                 <tree string="Category of ideas">
                     <field name="name"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -65,7 +63,7 @@
     </record>
 
     <menuitem name="Configuration" parent="base.menu_tools"
-         id="base.menu_lunch_survey_root" sequence="20" groups="base.group_system"/>
+         id="base.menu_lunch_survey_root" sequence="20" groups="base.group_tool_manager"/>
 
     <menuitem name="Ideas" parent="base.menu_lunch_survey_root" id="menu_ideas" sequence="3"/>
 
@@ -90,7 +88,8 @@
 
     <menuitem name="Give Vote" parent="menu_ideas1"
         id="menu_give_vote"
-        action="action_idea_select"/>
+        action="action_idea_select"
+        groups="base.group_tool_user"/>
 
 
     <!-- Open Ideas Action  -->
@@ -290,8 +289,8 @@
         <field name="arch" type="xml">
             <search string="Ideas">
                 <group col="10" colspan="4">
-                    <filter icon="terp-document-new" string="Current" domain="[('state','in', ('draft', 'open'))]" help="Draft and Open Ideas"/>
-                    <filter icon="terp-check" string="Accepted"
+                    <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]" help="Draft and Open Ideas"/>
+                    <filter icon="terp-camera_test" string="Accepted"
                         domain="[('state','=','close')]" help="Accepted Ideas" />
                     <separator orientation="vertical"/>
                     <field name="name" select="1"/>
@@ -382,12 +381,12 @@
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
     </record>
-    <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="6"/>
+    <menuitem name="Reporting" parent="base.menu_tools" id="base.menu_lunch_reporting" sequence="6" groups="base.group_tool_manager,base.group_tool_user"/>
 
     <menuitem name="Idea" parent="base.menu_lunch_reporting" id="menu_idea_reporting" sequence="3"/>
 
     <menuitem name="Vote Statistics" parent="menu_idea_reporting"
-        id="menu_idea_vote_stat" action="action_idea_vote_stat" groups="base.group_tool_manager,base.group_tool_user,base.group_system"/>
+        id="menu_idea_vote_stat" action="action_idea_vote_stat" groups="base.group_tool_user"/>
 
     <!-- Vote For Idea Action  -->
     <record model="ir.actions.act_window" id="action_idea_vote">

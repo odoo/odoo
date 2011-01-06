@@ -13,19 +13,20 @@
 		                    <field name="user_id" colspan="4"/>
 		                    <field name="planned_hours" widget="float_time" colspan="4"/>
 		                    <field name="name" colspan="4"/>
-		                    <field name="new_task_description" colspan="4" />
+                            <separator string="New Task Description" colspan="4"/>
+		                    <field name="new_task_description" colspan="4" nolabel="1"/>
                       </group>
                       <group colspan="2" col="2">
 		                    <separator string="Validation Task" colspan="4"/>
 		                    <field name="planned_hours_me"  widget="float_time" colspan="4"/>
-           	                <field name="prefix" string="Validatation Task Title" colspan="4"/>
+           	                <field name="prefix" string="Validation Task Title" colspan="4"/>
                             <field name="state" colspan="4"/>
 		              </group>
                       <separator string="" colspan="4"/>
                       <group colspan="2" col="2">
                       </group>
 		              <group colspan="2" col="2">
-		            		<button icon="gtk-close" special="cancel" string="_Cancel"/>
+		            		<button icon="gtk-cancel" special="cancel" string="_Cancel"/>
 		            		<button icon="gtk-ok" name="delegate" string="_Delegate" type="object"/>
 		              </group>
 			  	</form>

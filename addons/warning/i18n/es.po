@@ -6,18 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-09-29 06:34+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-28 08:51+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
+#: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
 msgstr "Línea pedido de compra"
@@ -33,6 +34,16 @@ msgid "Message for Purchase Order Line"
 msgstr "Mensaje para la línea del pedido de compra"
 
 #. module: warning
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "¡Error! No puede crear miembros asociados recursivos."
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking
+msgid "Picking List"
+msgstr "Albarán"
+
+#. module: warning
 #: field:product.product,sale_line_warn:0
 msgid "Sale Order Line"
 msgstr "Línea pedido de venta"
@@ -43,12 +54,28 @@ msgid "Warning when Purchasing this Product"
 msgstr "Aviso cuando compra este producto"
 
 #. module: warning
+#: model:ir.model,name:warning.model_product_product
+msgid "Product"
+msgstr "Producto"
+
+#. module: warning
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Avisos"
 
 #. module: warning
+#: selection:product.product,purchase_line_warn:0
+#: selection:product.product,sale_line_warn:0
+#: selection:res.partner,invoice_warn:0
+#: selection:res.partner,picking_warn:0
+#: selection:res.partner,purchase_warn:0
+#: selection:res.partner,sale_warn:0
+msgid "Warning"
+msgstr "Aviso"
+
+#. module: warning
+#: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
@@ -73,11 +100,7 @@ msgid "No Message"
 msgstr "Sin mensaje"
 
 #. module: warning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: warning
+#: model:ir.model,name:warning.model_account_invoice
 #: field:res.partner,invoice_warn:0
 msgid "Invoice"
 msgstr "Factura"
@@ -103,6 +126,7 @@ msgid "Stock Picking"
 msgstr "Empaquetado de stock"
 
 #. module: warning
+#: model:ir.model,name:warning.model_purchase_order
 #: field:res.partner,purchase_warn:0
 msgid "Purchase Order"
 msgstr "Pedido de compra"
@@ -118,12 +142,14 @@ msgid "Message for Purchase Order"
 msgstr "Mensaje para el pedido de compra"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
 #: help:product.product,purchase_line_warn:0
 #: help:product.product,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
+#, python-format
 msgid ""
 "Selecting the \"Warning\" option will notify user with the message, "
 "Selecting \"Blocking Message\" will throw an exception with the message and "
@@ -133,6 +159,12 @@ msgstr ""
 "mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con "
 "el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
 "siguiente campo."
+
+#. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Alert for %s !"
+msgstr "¡Alerta para %s!"
 
 #. module: warning
 #: field:res.partner,invoice_warn_msg:0
@@ -155,21 +187,65 @@ msgid "Warning on the Purchase Order"
 msgstr "Aviso en el pedido de compra"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "Aviso para %s"
+
+#. module: warning
 #: view:res.partner:0
 msgid "Warning on the Sale Order"
 msgstr "Aviso en el pedido de venta"
 
 #. module: warning
-#: selection:product.product,purchase_line_warn:0
-#: selection:product.product,sale_line_warn:0
-#: selection:res.partner,invoice_warn:0
-#: selection:res.partner,picking_warn:0
-#: selection:res.partner,purchase_warn:0
-#: selection:res.partner,sale_warn:0
-msgid "Warning"
-msgstr "Aviso"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Error: Código EAN no válido"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
 msgid "Message for Stock Picking"
 msgstr "Mensaje para empaquetado de stock"
+
+#. module: warning
+#: model:ir.model,name:warning.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
+
+#. module: warning
+#: model:ir.model,name:warning.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea pedido de venta"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#, python-format
+#~ msgid "Alert for ' + product_info.name +' !"
+#~ msgstr "¡Alerta para ' + product_info.name +' !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Error: BVR reference is required."
+#~ msgstr "Error: La referencia BVR es necesaria."
+
+#~ msgid "Error: Invalid Bvr Number (wrong checksum)."
+#~ msgstr "Error: Número BVR no válido (checksum erróneo)."

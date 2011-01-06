@@ -38,7 +38,7 @@
                 <form string="Import Entries">
                     <group colspan="4" expand="1">
                         <separator string="Payable and Receivables" colspan="4"/>
-                        <field height="300" width="700" name="line_ids" colspan="4" nolabel="1" domain="[('account_id.type','in',['receivable','payable']), ('reconcile_id','=',False), ('reconcile_partial_id','=',False)]"/>
+                        <field height="300" width="700" name="line_ids" colspan="4" nolabel="1" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
                     </group>
                     <group colspan="4" col="6">
                         <label string ="" colspan="2"/>
@@ -48,7 +48,7 @@
                </form>
             </field>
         </record>
-        
+
         <record id="action_view_account_statement_from_invoice_lines" model="ir.actions.act_window">
             <field name="name">Import Entries</field>
             <field name="res_model">account.statement.from.invoice.lines</field>

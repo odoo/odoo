@@ -41,8 +41,8 @@ class report_custom(report_rml):
         
         start_date = datetime.strptime(datas['form']['init_date'], '%Y-%m-%d')
         end_date = datetime.strptime(datas['form']['end_date'], '%Y-%m-%d')
-        first_monday = start_date - relativedelta(days=start_date.day_of_week)
-        last_monday = end_date + relativedelta(days=7 - end_date.day_of_week)
+        first_monday = start_date - relativedelta(days=start_date.date().weekday())
+        last_monday = end_date + relativedelta(days=7 - end_date.date().weekday())
         
         if last_monday < first_monday:
             first_monday, last_monday = last_monday, first_monday
@@ -79,11 +79,13 @@ class report_custom(report_rml):
                     if attendances and attendances[-1]['action'] == 'sign_in':
                         attendances.append({'name': n_monday.strftime('%Y-%m-%d %H:%M:%S'), 'action': 'sign_out'})
                     # sum up the attendances' durations
+                    ldt = None
                     for att in attendances:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
-                        if att['action'] == 'sign_out':
-                            week_wh[ldt.day_of_week] = week_wh.get(ldt.day_of_week, 0) + (dt - ldt).hours
-                        ldt = dt
+                        if ldt and att['action'] == 'sign_out':
+                            week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + ((dt - ldt).seconds/3600)
+                        else:
+                            ldt = dt
 
                 # Week xml representation
                 week_repr = ['<week>', '<weekstart>%s</weekstart>' % monday.strftime('%Y-%m-%d'), '<weekend>%s</weekend>' % n_monday.strftime('%Y-%m-%d')]

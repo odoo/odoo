@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-08 13:50+0000\n"
 "Last-Translator: Eugene Babiy <eugene.babiy@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -21,16 +21,6 @@ msgstr ""
 msgid ""
 "Number of hours that can be invoiced plus those that already have been "
 "invoiced."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
-msgid "Hours summary by user"
-msgstr "Сума годин за користувачами"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -44,24 +34,9 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all
-msgid "All Analytic Accounts"
-msgstr "Всі аналітичні рахунки"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_open
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_open
-msgid "My Current Accounts"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильний XML для Архітектури Вигляду!"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_invoice_date:0
-msgid "Date of the last invoice created for this analytic account."
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "AccessError"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -70,27 +45,31 @@ msgid "Theorical Revenue"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: help:account.analytic.account,last_invoice_date:0
+msgid "Date of the last invoice created for this analytic account."
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
+msgid ""
+"\n"
+"This module is for modifying account analytic view to show\n"
+"important data to project manager of services companies.\n"
+"Adds menu to show relevant information to each manager..\n"
+"\n"
+"You can also view the report of account analytic summary\n"
+"user-wise as well as month wise.\n"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
 msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr ""
-
-#. module: account_analytic_analysis
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_new
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_new
-msgid "New Analytic Account"
-msgstr "Новий Аналітичний Рахунок"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -103,17 +82,6 @@ msgid "Real Margin Rate (%)"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_open
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_open
-msgid "Current Analytic Accounts"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr ""
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
@@ -122,7 +90,7 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
-msgid "Invoicing"
+msgid "Billing"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -162,34 +130,13 @@ msgid "User"
 msgstr "Користувач"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_pending
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_pending
-msgid "My Pending Accounts"
+#: field:account.analytic.account,ca_to_invoice:0
+msgid "Uninvoiced Amount"
 msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_my
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_my
-msgid "My Uninvoiced Entries"
-msgstr "Мої незаінвойсовані записи"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
 msgid "Computed using the formula: Invoiced Amount - Total Costs."
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_managed
-msgid "My Accounts"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
-msgid ""
-"Modify account analytic view to show\n"
-"important data for project manager of services companies.\n"
-"Add menu to show relevant information for each manager."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -198,18 +145,18 @@ msgid "Uninvoiced Hours"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Hours Tot"
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
 msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_account
-msgid "Analytic Accounts"
-msgstr "Рахунки аналітики"
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
 msgid "report_account_analytic"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
+msgid "Hours Summary by User"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -218,25 +165,15 @@ msgid "Invoiced Amount"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.next_id_71
-msgid "Financial Project Management"
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "You try to bypass an access rule (Document type: %s)."
 msgstr ""
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_to_invoice:0
-msgid "Uninvoiced Amount"
-msgstr ""
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_pending
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_pending
-msgid "Pending Analytic Accounts"
-msgstr "Аналітичні рахунки в очікуванні"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -312,6 +249,7 @@ msgstr "Місяць"
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Аналітичний рахунок"
 
@@ -328,8 +266,44 @@ msgid "All Uninvoiced Entries"
 msgstr ""
 
 #. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+msgid "Hours Tot"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
+
+#~ msgid "Hours summary by user"
+#~ msgstr "Сума годин за користувачами"
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Всі аналітичні рахунки"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильний XML для Архітектури Вигляду!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Назва об'єкту має починатися з x_ і не містити ніяких спеціальних символів!"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Новий Аналітичний Рахунок"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Мої незаінвойсовані записи"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Рахунки аналітики"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Аналітичні рахунки в очікуванні"

@@ -1,42 +1,49 @@
 # Vietnamese translation for openobject-addons
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Phong Nguyen <phong.nguyen_thanh@yahoo.com>, 2010.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 14:37+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 14:04+0000\n"
+"Last-Translator: Phong Nguyen <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_ics
-#: constraint:ir.model:0
+#: help:document.ics.crm.wizard,claims:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"Manages the supplier and customers claims,including your corrective or "
+"preventive actions."
 msgstr ""
+
+#. module: document_ics
+#: field:document.directory.content,object_id:0
+msgid "Object"
+msgstr "Đối tượng"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "uid"
-msgstr ""
+msgstr "uid"
 
 #. module: document_ics
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
+#: help:document.ics.crm.wizard,fund:0
+msgid ""
+"This may help associations in their fund raising process and tracking."
 msgstr ""
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,jobs:0
 msgid "Jobs Hiring Process"
-msgstr ""
+msgstr "Quy trình tuyển dụng"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
@@ -49,83 +56,36 @@ msgid "Helpdesk"
 msgstr ""
 
 #. module: document_ics
-#: field:document.directory.ics.fields,field_id:0
-msgid "Open ERP Field"
+#: selection:document.directory.ics.fields,fn:0
+msgid "Interval in hours"
 msgstr ""
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "Next"
+#: selection:document.directory.ics.fields,name:0
+msgid "dtstamp"
+msgstr "dtstamp"
+
+#. module: document_ics
+#: help:document.directory.content,fname_field:0
+msgid ""
+"The field of the                         object used in the filename. Has to "
+"be a unique identifier."
 msgstr ""
 
 #. module: document_ics
 #: field:document.directory.ics.fields,content_id:0
 msgid "Content"
-msgstr ""
+msgstr "Nội dung"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,meeting:0
 msgid "Calendar of Meetings"
-msgstr ""
+msgstr "Lịch gặp gỡ"
 
 #. module: document_ics
-#: model:crm.case.section,name:document_ics.section_meeting
-msgid "Shared Calendar Meetings"
-msgstr ""
-
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "url"
-msgstr ""
-
-#. module: document_ics
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: document_ics
-#: help:document.ics.crm.wizard,bugs:0
-msgid "Used by companies to track bugs and support requests on softwares"
-msgstr ""
-
-#. module: document_ics
-#: model:ir.actions.todo,note:document_ics.config_wizard_step_case_section_menu
+#: view:document.ics.crm.wizard:0
 msgid ""
-"This Configuration step use to create Calendars in document for all Case "
-"Sections"
-msgstr ""
-
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtend"
-msgstr ""
-
-#. module: document_ics
-#: help:document.ics.crm.wizard,jobs:0
-msgid ""
-"Help you to organise the jobs hiring process: evaluation, meetings, email "
-"integration..."
-msgstr ""
-
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "description"
-msgstr ""
-
-#. module: document_ics
-#: model:ir.actions.act_window,name:document_ics.action_view_document_ics_config_directories
-msgid "Configure Calendars for Sections "
-msgstr ""
-
-#. module: document_ics
-#: help:document.ics.crm.wizard,opportunity:0
-msgid "Tracks identified business opportunities for your sales pipeline."
-msgstr ""
-
-#. module: document_ics
-#: help:document.ics.crm.wizard,fund:0
-msgid ""
-"This may help associations in their fund raising process and tracking."
+"OpenERP can create and pre-configure a series of integrated calendar for you."
 msgstr ""
 
 #. module: document_ics
@@ -134,18 +94,77 @@ msgid "Manages an Helpdesk service."
 msgstr ""
 
 #. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "dtend"
+msgstr "dtend"
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "summary"
+msgstr "tóm tắt"
+
+#. module: document_ics
+#: model:ir.model,name:document_ics.model_crm_meeting
+msgid "Meeting"
+msgstr "Cuộc gặp"
+
+#. module: document_ics
+#: help:document.ics.crm.wizard,lead:0
+msgid ""
+"Allows you to track and manage leads which are pre-sales requests or "
+"contacts, the very first contact with a customer request."
+msgstr ""
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,name:0
+msgid "description"
+msgstr "mô tả"
+
+#. module: document_ics
+#: field:document.directory.ics.fields,fn:0
+msgid "Function"
+msgstr "Chức năng"
+
+#. module: document_ics
+#: model:ir.actions.act_window,name:document_ics.action_view_document_ics_config_directories
+msgid "Configure Calendars for Sections "
+msgstr "Cấu hình lịch cho các vùng "
+
+#. module: document_ics
+#: help:document.ics.crm.wizard,opportunity:0
+msgid "Tracks identified business opportunities for your sales pipeline."
+msgstr ""
+
+#. module: document_ics
+#: field:document.ics.crm.wizard,progress:0
+msgid "Configuration Progress"
+msgstr ""
+
+#. module: document_ics
+#: help:document.ics.crm.wizard,jobs:0
+msgid ""
+"Helps you to organise the jobs hiring process: evaluation, meetings, email "
+"integration..."
+msgstr ""
+
+#. module: document_ics
+#: view:document.ics.crm.wizard:0
+msgid "title"
+msgstr "tước vị"
+
+#. module: document_ics
 #: field:document.ics.crm.wizard,fund:0
 msgid "Fund Raising Operations"
 msgstr ""
 
 #. module: document_ics
-#: field:document.directory.content,ics_object_id:0
-msgid "Object"
-msgstr ""
+#: model:ir.model,name:document_ics.model_document_directory_content
+msgid "Directory Content"
+msgstr "Nội dung thư mục"
 
 #. module: document_ics
-#: constraint:crm.case.section:0
-msgid "Error ! You cannot create recursive sections."
+#: model:ir.model,name:document_ics.model_document_directory_ics_fields
+msgid "Document Directory ICS Fields"
 msgstr ""
 
 #. module: document_ics
@@ -154,9 +173,23 @@ msgid "Support for iCal based on Document Management System"
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "location"
+#: help:document.ics.crm.wizard,phonecall:0
+msgid ""
+"Helps you to encode the result of a phone call or to plan a list of phone "
+"calls to process."
 msgstr ""
+
+#. module: document_ics
+#: help:document.ics.crm.wizard,document_ics:0
+msgid ""
+" Will allow you to synchronise your Open ERP calendars with your phone, "
+"outlook, Sunbird, ical, ..."
+msgstr ""
+
+#. module: document_ics
+#: field:document.directory.ics.fields,field_id:0
+msgid "OpenERP Field"
+msgstr "Trường OpenERP"
 
 #. module: document_ics
 #: view:document.directory:0
@@ -169,25 +202,28 @@ msgid "ICS Value"
 msgstr ""
 
 #. module: document_ics
-#: model:ir.module.module,description:document_ics.module_meta_information
-msgid "Allows to synchronise calendars with others applications."
+#: selection:document.directory.ics.fields,fn:0
+msgid "Expression as constant"
 msgstr ""
 
 #. module: document_ics
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+#: selection:document.directory.ics.fields,name:0
+msgid "location"
+msgstr "địa điẻm"
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,lead:0
-msgid ""
-"Allows you to track and manage prospects which are pre-sales requests or "
-"contacts, the very first contact with a customer request."
-msgstr ""
+#: selection:document.directory.ics.fields,name:0
+msgid "attendee"
+msgstr "người tham gia"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,name:0
 msgid "Name"
+msgstr "Tên"
+
+#. module: document_ics
+#: help:document.directory.ics.fields,fn:0
+msgid "Alternate method                 of calculating the value"
 msgstr ""
 
 #. module: document_ics
@@ -198,19 +234,17 @@ msgstr ""
 #. module: document_ics
 #: field:document.directory.content,ics_domain:0
 msgid "Domain"
-msgstr ""
+msgstr "Vùng"
 
 #. module: document_ics
-#: help:document.ics.crm.wizard,claims:0
-msgid ""
-"Manages the supplier and customers claims, including your corrective or "
-"preventive actions."
+#: help:document.ics.crm.wizard,bugs:0
+msgid "Used by companies to track bugs and support requests on software"
 msgstr ""
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "last-modified"
-msgstr ""
+msgstr "lần sửa cuối"
 
 #. module: document_ics
 #: view:document.directory:0
@@ -218,35 +252,23 @@ msgid "ICS Mapping"
 msgstr ""
 
 #. module: document_ics
-#: view:crm.case:0
-msgid "Duration(In Hour)"
-msgstr ""
-
-#. module: document_ics
 #: field:document.ics.crm.wizard,document_ics:0
 msgid "Shared Calendar"
-msgstr ""
+msgstr "Lịch chia sẻ"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,claims:0
 msgid "Claims"
-msgstr ""
-
-#. module: document_ics
-#: help:document.ics.crm.wizard,phonecall:0
-msgid ""
-"Help you to encode the result of a phone call or to planify a list of phone "
-"calls to process."
-msgstr ""
+msgstr "Các khiếu nại"
 
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "dtstart"
-msgstr ""
+msgstr "dtstart"
 
 #. module: document_ics
-#: field:document.ics.crm.wizard,phonecall:0
-msgid "Phone Calls"
+#: field:document.directory.ics.fields,expr:0
+msgid "Expression"
 msgstr ""
 
 #. module: document_ics
@@ -257,12 +279,17 @@ msgstr ""
 #. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "categories"
-msgstr ""
+msgstr "Các nhóm"
 
 #. module: document_ics
-#: field:document.ics.crm.wizard,lead:0
-msgid "Prospect"
-msgstr ""
+#: view:document.ics.crm.wizard:0
+msgid "Configure"
+msgstr "Cấu hình"
+
+#. module: document_ics
+#: selection:document.directory.ics.fields,fn:0
+msgid "Use the field"
+msgstr "Sử dụng trường"
 
 #. module: document_ics
 #: view:document.ics.crm.wizard:0
@@ -270,34 +297,66 @@ msgid "Create Pre-Configured Calendars"
 msgstr ""
 
 #. module: document_ics
+#: field:document.directory.content,fname_field:0
+msgid "Filename field"
+msgstr "trường tên tập tin"
+
+#. module: document_ics
+#: field:document.directory.content,obj_iterate:0
+msgid "Iterate object"
+msgstr ""
+
+#. module: document_ics
+#: field:crm.meeting,code:0
+msgid "Calendar Code"
+msgstr "Mã lịch"
+
+#. module: document_ics
+#: model:ir.module.module,description:document_ics.module_meta_information
+msgid "Allows to synchronise calendars with others applications."
+msgstr ""
+
+#. module: document_ics
+#: field:document.ics.crm.wizard,config_logo:0
+msgid "Image"
+msgstr "Hình ảnh"
+
+#. module: document_ics
 #: selection:document.directory.ics.fields,name:0
 msgid "created"
+msgstr "đã được tạo"
+
+#. module: document_ics
+#: help:document.directory.content,obj_iterate:0
+msgid ""
+"If set, a separate                         instance will be created for each "
+"record of Object"
 msgstr ""
 
 #. module: document_ics
-#: field:crm.case,code:0
-msgid "Calendar Code"
-msgstr ""
+#: view:document.ics.crm.wizard:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "summary"
-msgstr ""
+#: field:document.ics.crm.wizard,lead:0
+msgid "Leads"
+msgstr "Nguồn dẫn"
 
 #. module: document_ics
 #: model:ir.model,name:document_ics.model_document_ics_crm_wizard
 msgid "document.ics.crm.wizard"
+msgstr "document.ics.crm.wizard"
+
+#. module: document_ics
+#: model:crm.case.section,name:document_ics.section_meeting
+msgid "Shared Calendar Meetings"
 msgstr ""
 
 #. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "attendee"
-msgstr ""
-
-#. module: document_ics
-#: model:ir.model,name:document_ics.model_document_directory_ics_fields
-msgid "document.directory.ics.fields"
-msgstr ""
+#: field:document.ics.crm.wizard,phonecall:0
+msgid "Phone Calls"
+msgstr "Các cuộc gọi điện thoại"
 
 #. module: document_ics
 #: field:document.directory.content,ics_field_ids:0
@@ -305,16 +364,11 @@ msgid "Fields Mapping"
 msgstr ""
 
 #. module: document_ics
-#: view:document.ics.crm.wizard:0
-msgid "Cancel"
-msgstr ""
+#: selection:document.directory.ics.fields,name:0
+msgid "url"
+msgstr "url"
 
 #. module: document_ics
 #: field:document.ics.crm.wizard,opportunity:0
 msgid "Business Opportunities"
-msgstr ""
-
-#. module: document_ics
-#: selection:document.directory.ics.fields,name:0
-msgid "dtstamp"
-msgstr ""
+msgstr "Các Cơ hội kinh doanh"

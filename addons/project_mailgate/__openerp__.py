@@ -29,11 +29,11 @@
     "depends": ["project", "mail_gateway"],
     "description": """This module is an interface that synchronises mails with OpenERP Project Task.
 
-It allows creating tasks as soon as a new mail arrives in our configured mail server. 
-Moreover, it keeps track of all further communications and task states.  
+It allows creating tasks as soon as a new mail arrives in our configured mail server.
+Moreover, it keeps track of all further communications and task states.
     """,
     "init_xml": [],
-    "update_xml": [
+    "update_xml": ["security/ir.model.access.csv",
         "project_mailgate_view.xml",
     ],
     'demo_xml': [

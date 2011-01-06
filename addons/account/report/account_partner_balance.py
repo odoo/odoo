@@ -20,8 +20,6 @@
 ##############################################################################
 
 import time
-import re
-import copy
 
 from tools.translate import _
 from report import report_sxw
@@ -30,8 +28,6 @@ from common_report_header import common_report_header
 class partner_balance(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
-        if context is None:
-            context = {}
         super(partner_balance, self).__init__(cr, uid, name, context=context)
         self.account_ids = []
         self.localcontext.update( {
@@ -49,6 +45,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_partners':self._get_partners,
+            'get_target_move': self._get_target_move,
         })
 
     def set_context(self, objects, data, ids, report_type=None):
@@ -80,9 +77,8 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
             move_state = ['posted']
 
         full_account = []
-        result_tmp = 0.0
         self.cr.execute(
-            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code ,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
+            "SELECT p.ref,l.account_id,ac.name AS account_name,ac.code AS code,p.name, sum(debit) AS debit, sum(credit) AS credit, " \
                     "CASE WHEN sum(debit) > sum(credit) " \
                         "THEN sum(debit) - sum(credit) " \
                         "ELSE 0 " \
@@ -253,7 +249,7 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s"  \
                     "AND am.state IN %s" \
-                    "AND " + self.query + "" ,
+                    "AND " + self.query + "",
                     (tuple(self.account_ids), tuple(move_state)))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
         return temp_res
@@ -272,12 +268,13 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
                 "JOIN account_move am ON (am.id = l.move_id)" \
                 "WHERE l.account_id IN %s" \
                     "AND am.state IN %s" \
-                    "AND " + self.query + "" ,
+                    "AND " + self.query + "",
                     (tuple(self.account_ids), tuple(move_state)))
         temp_res = float(self.cr.fetchone()[0] or 0.0)
         return temp_res
 
     def _sum_litige(self):
+        #gives the total of move lines with blocked boolean set to TRUE for the report selection
         move_state = ['draft','posted']
         if self.target_move == 'posted':
             move_state = ['posted']
@@ -298,12 +295,15 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
         return temp_res
 
     def _get_partners(self):
+        cr, uid = self.cr, self.uid
+        context = self.localcontext # all of it?
+
         if self.result_selection == 'customer':
-            return 'Receivable Accounts'
+            return _('Receivable Accounts')
         elif self.result_selection == 'supplier':
-            return 'Payable Accounts'
+            return _('Payable Accounts')
         elif self.result_selection == 'customer_supplier':
-            return 'Receivable and Payable Accounts'
+            return _('Receivable and Payable Accounts')
         return ''
 
 report_sxw.report_sxw('report.account.partner.balance', 'res.partner', 'account/report/account_partner_balance.rml',parser=partner_balance, header="internal")

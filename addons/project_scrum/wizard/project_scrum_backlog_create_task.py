@@ -24,7 +24,7 @@ class backlog_create_task(osv.osv_memory):
     _name = 'project.scrum.backlog.create.task'
     _description = 'Create Tasks from Product Backlogs'
     _columns = {
-        'user_id': fields.many2one('res.users', 'Assign To', help="Resposible user who can work on task")
+        'user_id': fields.many2one('res.users', 'Assign To', help="Responsible user who can work on task")
     }
 
     def do_create(self, cr, uid, ids, context=None):
@@ -34,13 +34,11 @@ class backlog_create_task(osv.osv_memory):
         document_pool = self.pool.get('ir.attachment')
         ids_task = []
 
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
         backlogs = backlog_id.browse(cr, uid, context['active_ids'], context=context)
         result = mod_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         id = mod_obj.read(cr, uid, result, ['res_id'])
-        
+
         for backlog in backlogs:
             task_id = task.create(cr, uid, {
                 'product_backlog_id': backlog.id,

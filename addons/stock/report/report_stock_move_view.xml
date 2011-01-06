@@ -13,7 +13,7 @@
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Moves Analysis">
-                <field name="date_planned" invisible="1"/>
+                <field name="date" invisible="1"/>
                 <field name="year" invisible="1" />
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
@@ -24,13 +24,16 @@
                 <field name="location_id" invisible="1"/>
                 <field name="location_dest_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
+                <field name="categ_id" invisible="1"/>
+                <field name="stock_journal" invisible="1"/>
                 <field name="state" invisible="1"/>
-                <field name="product_qty_in"/>
-                <field name="product_qty_out"/>
-                <field name="value"/>
-                <field name="day_diff"/>
+                <field name="product_qty" sum="Total quantity"/>
+                <field name="product_qty_in" sum="Total incoming quantity" />
+                <field name="product_qty_out" sum="Total outgoing quantity"/>
+                <field name="value"  sum="Total value"/>
                 <field name="day_diff1"/>
-                <field name="day_diff2"/>
+                <field name="day_diff"/>
+                <field name="day_diff2" string="Delay(Days)"/>
            </tree>
         </field>
     </record>
@@ -42,7 +45,18 @@
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="product_id"/>
-                 <field name="day_diff2" operator="avg"/>
+                 <field name="day_diff2" operator="+"/>
+             </graph>
+         </field>
+    </record>
+    <record id="view_stock_graph_board" model="ir.ui.view">
+         <field name="name">report.stock.move.graph</field>
+         <field name="model">report.stock.move</field>
+         <field name="type">graph</field>
+         <field name="arch" type="xml">
+             <graph string="Moves Analysis" type="bar">
+                 <field name="day"/>
+                 <field name="day_diff2" operator="+" string="Delay(Days)"/>
              </graph>
          </field>
     </record>
@@ -54,52 +68,53 @@
         <field name="arch" type="xml">
             <search string="Moves Analysis">
                 <group>
-                <filter icon="terp-go-year" string="  Year  "
-                domain="[('date_planned','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_planned','&gt;=',time.strftime('%%Y-01-01'))]"
+                <filter icon="terp-go-year" string="Year"
+                domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                 help="Current year"/>
-                <filter icon="terp-go-month" string="   Month   "
-                name="month"
-                domain="[('date_planned','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_planned','&gt;=',time.strftime('%%Y-%%m-01'))]"
-                help="Current month"/>
                 <filter icon="terp-go-month"
-                 string="    Month-1    "
-                 separator="1"
-                 domain="[('date_planned','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date_planned','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
-                 help="Last month"/>                    
+                 string="Month-1"
+                 name="month-1"
+                 domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                 help="Last month"/>
+                <filter icon="terp-go-month" string="Month"
+                name="month"
+                domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                help="Current month"/>
                 <separator orientation="vertical"/>
-
                 <filter string="Done"
                     name="done"
-                    icon="terp-check"
+                    icon="terp-dialog-close"
                     domain="[('state','=','done')]"
                     help = "Completed Stock-Moves"/>
                 <filter string="Todo"
-                    icon="terp-camera_test"
+                    icon="terp-gtk-go-back-rtl"
                     domain="[('state','in',('assigned','waiting','confirmed'))]"
                     help = "Future Stock-Moves"/>
 
                 <separator orientation="vertical"/>
-                <filter icon="terp-go-home" name="in" string="Receptions" domain="[('type','=','in')]"/>
-                <filter icon="terp-go-home" name="internal" string="Internals" domain="[('type','=','internal')]"/>
-                <filter icon="terp-go-home" name="out" string="Packings" domain="[('type','=','out')]"/>
-                <filter icon="terp-go-home" name="delivery" string="Deliveries" domain="[('type','=','delivery')]"/>
+                <filter icon="terp-go-home" name="in" string="Incoming" domain="[('type','=','in')]"/>
+                <filter icon="terp-go-home" name="internal" string="Internal" domain="[('type','=','internal')]"/>
+                <filter icon="terp-go-home" name="out" string="Outgoing" domain="[('type','=','out')]"/>
                 <separator orientation="vertical"/>
-                <field name="product_id"/>
+                <field name="product_id" default_focus="1"/>
                 <field name="partner_id" context="{'contact_display':'partner'}"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                    <field name="location_id" widget = "selection"/>
-                    <field name="location_dest_id"  widget = "selection"/>
+                    <field name="location_id" />
+                    <field name="location_dest_id" />
+                    <field name="categ_id"/>
+                    <field name="stock_journal"/>
                     <separator orientation="vertical"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company" widget = "selection"/>
                     <newline/>
-                    <field name="date_planned"/>
+                    <field name="date"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
-                    <filter name="group_partner" string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
+                    <filter name="group_partner" string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
+                    <filter name="group_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <separator orientation="vertical"/>
                     <filter name="group_picking" string="Packing" icon="terp-accessories-archiver" context="{'group_by':'picking_id'}"/>
@@ -107,13 +122,14 @@
                     <filter string="Source Location" name="src_location" icon="terp-gtk-jump-to-rtl" context="{'group_by':'location_id'}"/>
                     <filter string="Dest. Location" name="dest_location" icon="terp-gtk-jump-to-ltr"  context="{'group_by':'location_dest_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Type" name="group_type" icon="terp-gtk-jump-to-rtl" context="{'group_by':'type'}" help="Shipping type specify, goods coming in or going out"/>
+                    <filter string="Type" name="group_type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}" help="Shipping type specify, goods coming in or going out"/>
                     <filter string="State" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Stock journal" name="group_stock_journal" icon="terp-folder-orange" context="{'group_by':'stock_journal'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Company" name="group_state" icon="terp-stock_effects-object-colorize" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Day Planned"/>
-                    <filter string="Month" icon="terp-go-month" context="{'group_by':'date_planned'}" help="Month Planned"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'date'}" help="Month Planned"/>
                     <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"  help="Year Planned"/>
                 </group>
             </search>
@@ -126,28 +142,29 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  ref="view_stock_search"/>
-        <field name="context">{'contact_display': 'partner', 'search_default_month':1, 'search_default_group_product':1,'search_default_done':1,'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="context">{'full':'1','contact_display': 'partner','search_default_done':1, 'search_default_month':1, 'search_default_group_type':1, 'group_by': [], 'group_by_no_leaf':1,}</field>
+        <field name="help">Moves Analysis allows you to easily check and analyse your company stock moves. Use this report when you want to analyse the different routes taken by your products and inventory management performance.</field>
     </record>
     <menuitem action="action_stock_move_report" id="menu_action_stock_move_report" parent="next_id_61" sequence="3"/>
 
     <!-- Inventory Control -->
-
     <record id="view_stock_inventory_tree" model="ir.ui.view">
         <field name="name">report.stock.inventory.tree</field>
         <field name="model">report.stock.inventory</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Inventory Analysis">
-                <field name="date_planned" invisible="1"/>
+                <field name="date" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="location_type" invisible="1"/>
                 <field name="location_id" invisible="1"/>
                 <field name="partner_id" invisible="1" context="{'contact_display':'partner'}"/>
+                <field name="product_categ_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="prodlot_id" invisible="1"/>
                 <field name="state" invisible="1"/>
-                <field name="product_qty"/>
-                <field name="value"/>
+                <field name="product_qty" sum="Total quantity"/>
+                <field name="value" sum="Total value"/>
            </tree>
         </field>
     </record>
@@ -173,41 +190,44 @@
                 <group col="16">
                     <filter string="Real"
                         name="real"
-                        icon="terp-dialog-close"
+                        icon="terp-check"
                         domain="[('state','=','done')]"
-                        help="Analysis on real stock."/>
+                        help="Analysis of current inventory (only moves that have already been processed)"/>
 
                     <filter string="Future"
-                        icon="terp-camera_test"
+                        icon="terp-stock"
                         domain="[('state','in',('assigned','done','waiting','confirmed'))]"
-                        help = "Analysis including future operations."/>
+                        help = "Analysis including future moves (similar to virtual stock)"/>
 
                     <separator orientation="vertical"/>
                     <filter icon="terp-go-home" name="location_type_internal" string="Internal" domain="[('location_type','=','internal')]"/>
-                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
                     <separator orientation="vertical"/>
-                    <field name="date_planned"/>
-                    <field name="product_id"/>
-                    <field name="location_id"/>
+                    <field name="product_id" default_focus="1"/>
+                    <field name="location_id" filter_domain="[('location_id', 'child_of', self)]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters..."  groups="base.group_extended">
                     <field name="partner_id" context="{'contact_display':'partner'}"/>
+                    <field name="product_categ_id" />
                     <field name="prodlot_id"/>
                     <field name="state"/>
                     <field name="location_type"/>
+                    <field name="date"/>
+                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
                 </group>
                 <newline/>
                 <group expand="1" string="Group By..." >
-                    <filter string="Partner" name="group_partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Partner" name="group_partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <separator orientation="vertical"/>
+                    <filter name="group_product_categ_id" string="Product Category" icon="terp-stock_symbol-selection" context="{'group_by':'product_categ_id'}"/>
                     <filter name="group_product" string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
+                     <filter name="group_lot" string="Lot" icon="terp-accessories-archiver" context="{'group_by':'prodlot_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter name="group_company" string="Company" context="{'group_by':'company_id'}"/>
-                    <filter name="group_location" string="Location" context="{'group_by':'location_id'}"/>
-                    <filter name="group_lot" string="Lot" context="{'group_by':'prodlot_id'}"/>
+                    <filter name="group_company" string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
+                    <filter name="group_location" string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Date" icon="terp-go-month" context="{'group_by':'date_planned'}"/>
+                    <filter string="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                 </group>
             </search>
@@ -220,9 +240,12 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="search_view_id"  eval="False"/>
-        <field name="context">{'contact_display': 'partner', 'search_default_real':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'search_default_group_location':1,'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="context">{'contact_display': 'partner', 'search_default_real':1, 'search_default_location_type_internal':1,'search_default_group_product':1,'group_by':[], 'group_by_no_leaf':1}</field>
+        <field name="help">Inventory Analysis allows you to easily check and analyse your company stock levels. Sort and group by selection criteria in order to better analyse and manage your company  activities.</field>
     </record>
-    <menuitem action="action_stock_inventory_report" id="menu_action_stock_inventory_report" parent="next_id_61" sequence="4" groups="base.group_system,base.group_user"/>
+    <menuitem action="action_stock_inventory_report"
+        id="menu_action_stock_inventory_report" 
+        parent="next_id_61" sequence="4"/>
 
 
 </data>

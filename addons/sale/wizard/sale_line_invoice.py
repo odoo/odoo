@@ -19,41 +19,41 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 from tools.translate import _
 import netsvc
 
 class sale_order_line_make_invoice(osv.osv_memory):
     _name = "sale.order.line.make.invoice"
     _description = "Sale OrderLine Make_invoice"
-    def make_invoices(self, cr, uid, ids, context):
-        """ 
+    def make_invoices(self, cr, uid, ids, context=None):
+        """
              To make invoices.
-            
+
              @param self: The object pointer.
              @param cr: A database cursor
              @param uid: ID of the user currently logged in
-             @param ids: the ID or list of IDs 
-             @param context: A standard dictionary 
-             
-             @return: A dictionary which of fields with values. 
-        
-        """        
+             @param ids: the ID or list of IDs
+             @param context: A standard dictionary
+
+             @return: A dictionary which of fields with values.
+
+        """
 
         res = False
         invoices = {}
 
     #TODO: merge with sale.py/make_invoice
         def make_invoice(order, lines):
-            """ 
+            """
                  To make invoices.
-                
-                 @param order: 
-                 @param lines: 
-                
-                 @return:  
-            
-            """            
+
+                 @param order:
+                 @param lines:
+
+                 @return:
+
+            """
             a = order.partner_id.property_account_receivable.id
             if order.partner_id and order.partner_id.property_payment_term.id:
                 pay_term = order.partner_id.property_payment_term.id
@@ -68,7 +68,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 'partner_id': order.partner_id.id,
                 'address_invoice_id': order.partner_invoice_id.id,
                 'address_contact_id': order.partner_invoice_id.id,
-                'invoice_line': [(6,0,lines)],
+                'invoice_line': [(6, 0, lines)],
                 'currency_id' : order.pricelist_id.currency_id.id,
                 'comment': order.note,
                 'payment_term': pay_term,
@@ -80,8 +80,8 @@ class sale_order_line_make_invoice(osv.osv_memory):
         sales_order_line_obj = self.pool.get('sale.order.line')
         sales_order_obj = self.pool.get('sale.order')
         wf_service = netsvc.LocalService('workflow')
-        for line in sales_order_line_obj.browse(cr,uid,context['active_ids']):
-            if (not line.invoiced) and (line.state not in ('draft','cancel')):
+        for line in sales_order_line_obj.browse(cr, uid, context.get('active_ids', []), context=context):
+            if (not line.invoiced) and (line.state not in ('draft', 'cancel')):
                 if not line.order_id.id in invoices:
                     invoices[line.order_id.id] = []
                 line_id = sales_order_line_obj.invoice_line_create(cr, uid,
@@ -90,25 +90,27 @@ class sale_order_line_make_invoice(osv.osv_memory):
                     invoices[line.order_id.id].append((line, lid))
                 sales_order_line_obj.write(cr, uid, [line.id],
                         {'invoiced': True})
-            flag = True
-            data_sale = sales_order_obj.browse(cr,uid,line.order_id.id)
-            for line in data_sale.order_line:
-                if not line.invoiced:
-                    flag = False
-                    break
-            if flag:
-                wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
-                sales_order_obj.write(cr,uid,[line.order_id.id],{'state' : 'progress'})
-
-        if not invoices:
-            raise osv.except_osv(_('Warning'),_('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
         for result in invoices.values():
             order = result[0][0].order_id
             il = map(lambda x: x[1], result)
             res = make_invoice(order, il)
             cr.execute('INSERT INTO sale_order_invoice_rel \
                     (order_id,invoice_id) values (%s,%s)', (order.id, res))
-        return {}
+
+            flag = True
+            data_sale = sales_order_obj.browse(cr, uid, line.order_id.id, context=context)
+            for line in data_sale.order_line:
+                if not line.invoiced:
+                    flag = False
+                    break
+            if flag:
+                wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
+                sales_order_obj.write(cr, uid, [line.order_id.id], {'state': 'progress'})
+
+        if not invoices:
+            raise osv.except_osv(_('Warning'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
+
+        return {'type': 'ir.actions.act_window_close'}
 
 sale_order_line_make_invoice()
 

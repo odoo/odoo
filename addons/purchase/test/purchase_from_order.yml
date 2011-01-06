@@ -31,7 +31,6 @@
     date_order: '2010-05-11'
     invoice_method: order
     location_id: stock.stock_location_stock
-    name: PO00003
     order_line:
       - date_planned: '2010-05-13'
         name: iPod
@@ -56,7 +55,7 @@
   I check that the order which was initially in the draft state has transit to confirm state.
 -
   !assert {model: purchase.order, id: purchase_order_po0}:
-    - state == 'confirmed'  
+    - state == 'approved'  
 -
   I check that an entry gets created in the "Lines to Invoice" of Invoice Control on the basis of purchase order line.
 -
@@ -102,10 +101,6 @@
     ids = account_obj.search(cr, uid, [('origin', '=', pur_id1.name)])
     assert ids, _('Pending Invoice is not created!')
 -
-  Supplier approve the purchase order.
--
-  !workflow {model: purchase.order, action: purchase_approve, ref: purchase_order_po0}
--
   I check that the order which was initially in the confirmed state has transit to approved state.
 -
   !assert {model: purchase.order, id: purchase_order_po0}:
@@ -137,8 +132,8 @@
 -
   I check that Traceability moves are created.
 -
-  I check that an invoice_id field of Delivery&Invoices gets bind with the value.  
+  I check that an invoice_ids field of Delivery&Invoices gets bind with the value.  
 -
   !python {model: purchase.order}: |
     pur_id2=self.browse(cr, uid, ref("purchase_order_po0"))
-    assert(pur_id2.invoice_id)
+    assert(pur_id2.invoice_ids)

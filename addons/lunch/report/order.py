@@ -26,18 +26,43 @@ from osv import osv
 
 class order(report_sxw.rml_parse):
 
-    def sum_price(self, orders):
-        res = 0.0
-        for o in orders:
-            res += o.price
-        return res
+    def get_lines(self, user,objects):
+        lines=[]
+        for obj in objects:
+            if user.id==obj.user_id.id:
+                lines.append(obj)
+        return lines
+
+    def get_total(self, user,objects):
+        lines=[]
+        for obj in objects:
+            if user.id==obj.user_id.id:
+                lines.append(obj)
+        total=0.0
+        for line in lines:
+            total+=line.price
+        self.net_total+=total
+        return total
+
+    def get_nettotal(self):
+        return self.net_total
+
+    def get_users(self, objects):
+        users=[]
+        for obj in objects:
+            if obj.user_id not in users:
+                users.append(obj.user_id)
+        return users
 
     def __init__(self, cr, uid, name, context):
         super(order, self).__init__(cr, uid, name, context)
-
+        self.net_total=0.0
         self.localcontext.update({
             'time': time,
-            'sum_price': self.sum_price,
+            'get_lines': self.get_lines,
+            'get_users': self.get_users,
+            'get_total': self.get_total,
+            'get_nettotal': self.get_nettotal,
         })
 
 report_sxw.report_sxw('report.lunch.order', 'lunch.order',

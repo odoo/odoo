@@ -48,12 +48,19 @@
 
       <record model="ir.actions.todo"
             id="config_install_module">
-        <field name="action_id" ref="action_config_install_module"/>
-        <field name="sequence">3</field>
+            <field name="action_id" ref="action_config_install_module"/>
+            <field name="sequence">3</field>
+            <field name="restart">always</field>
       </record>
 
-        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9" groups="base.group_extended"/>
-        <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.menu_association" />
+        <menuitem
+            name="Association"
+            id="base.menu_association"
+            icon="terp-calendar"
+            sequence="9"
+            groups="base.group_extended"
+            web_icon="images/association.png"
+            web_icon_hover="images/association-hover.png"/>
         <menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
         <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
     </data>

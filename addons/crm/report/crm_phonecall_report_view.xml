@@ -9,7 +9,7 @@
             <field name="model">crm.phonecall.report</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-               <tree string="Phone calls">
+                <tree string="Phone calls">
                     <field name="name" invisible="1"/>
                     <field name="month" invisible="1"/>
                     <field name="section_id" invisible="1"/>
@@ -25,28 +25,6 @@
                     <field name="delay_close" avg="Avg Closing Delay"/>
                     <field name="delay_open" sum='Delay to open'/>
               </tree>
-            </field>
-        </record>
-
-<!-- Phone calls by user and section Form View -->
-
-        <record id="view_report_crm_phonecall_form" model="ir.ui.view">
-            <field name="name">crm.phonecall.report.form</field>
-            <field name="model">crm.phonecall.report</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Cases">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="section_id" select="1"/>
-                    <field name="nbr" select="1"/>
-                   <field name="delay_close"/>
-                    <field name="amount_revenue"/>
-                    <field name="amount_revenue_prob"/>
-                    <field name="probability"/>
-                    <field name="state" select="1"/>
-                </form>
             </field>
         </record>
 
@@ -79,15 +57,14 @@
                                help="Phone calls made in current year"/>
 
                        <filter string="   Month   " icon="terp-go-month" name="This Month"
-                           domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                           domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                            help="Phone calls made in current month"/>
 
                        <filter icon="terp-go-month" string="    Month-1    " separator="1"
-                            domain="[('create_date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Phone calls made in last month"/>
-
-                           <separator orientation="vertical" />
-                        <filter icon="terp-check"
+                        <separator orientation="vertical" />
+                        <filter icon="terp-gtk-go-back-rtl"
                             string="Todo"
                             domain="[('state','in',('draft','open'))]"
                             help="Phone calls which are in draft and open state"/>
@@ -99,40 +76,36 @@
                             string="Not Held"
                             domain="[('state','=','pending')]"
                             help="Phone calls which are in pending state"/>
-                      <separator orientation="vertical" />
+                        <separator orientation="vertical" />
                         <field name="section_id" string="Sales Team"
-                            default="context.get('section_id', False)"
-                            context="{'invisible_section': False}">               
-                       <filter icon="terp-personal+"
-                           context="{'invisible_section': False}"
-                           domain="[('section_id.user_id','=',uid)]"
-                           help="My team" />
-                        </field>   
-                          <field name="user_id" string="Salesman" select="1">
+                            context="{'invisible_section': False}">
+                            <filter icon="terp-personal+" groups="base.group_extended"
+                                context="{'invisible_section': False}"
+                                domain="[('section_id.user_id','=',uid)]"
+                                help="My Sales Team(s)" />
+                        </field>
+                        <field name="user_id" string="Salesman" select="1">
                             <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                           </field>
-                   </group>
-                   <newline/>
-                   <group expand="0" string="Extended Filters..."  groups="base.group_extended">
-                      <field name="partner_id"/>
-                        <separator orientation="vertical"/>
-                        <field name="categ_id" widget="selection" string="Type"
-                            domain="[('object_id.model', '=', 'crm.phonecall')]" />
+                        </field>
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Extended Filters..."  groups="base.group_extended">
+                        <field name="partner_id"/>
                         <separator orientation="vertical"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                           <newline/>
+                        <newline/>
                         <field name="creation_date"/>
                         <field name="opening_date"/>
                         <field name="date_closed"/>
-                   </group>
-                   <newline/>
-                   <group expand="1" string="Group By...">
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By...">
                         <filter string="Salesman" name="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
                             context="{'group_by':'section_id'}" />
-                       <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
                         <filter string="Type" icon="terp-stock_symbol-selection"
@@ -150,8 +123,8 @@
                             domain="[]" context="{'group_by':'month'}" help="Month of call"/>
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'name'}" help="Year of call"/>
-                  </group>
-               </search>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -165,10 +138,10 @@
             <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_phonecall_tree"/>
             <field name="search_view_id" ref="view_report_crm_phonecall_filter"/>
-            <field name="help">Get an anlysis of Phone Calls number and delay to close, stage, user suits to different groups for a global or a fine grained analysis.</field>
+            <field name="help">From this report, you can analyse the performance of your sales team, based on their phone calls. You can group or filter the information according to several criteria and drill down the information, by adding more groups in the report.</field>
         </record>
 
-           <record model="ir.actions.act_window.view" id="action_report_crm_phonecall_tree">
+        <record model="ir.actions.act_window.view" id="action_report_crm_phonecall_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_report_crm_phonecall_tree"/>

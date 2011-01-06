@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from mx import DateTime
 from osv import fields, osv, orm
 from tools import config
 from tools.translate import _
@@ -29,8 +28,6 @@ import time
 import tools
 
 def _type_get(self, cr, uid, context=None):
-    if not context:
-        context = {}
     obj = self.pool.get('auction.lot.category')
     ids = obj.search(cr, uid, [])
     res = obj.read(cr, uid, ids, ['name'], context)

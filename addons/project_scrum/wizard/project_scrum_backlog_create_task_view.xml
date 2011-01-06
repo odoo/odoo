@@ -7,8 +7,8 @@
             <field name="model">project.scrum.backlog.create.task</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Convert into Tasks">
-                <separator string="Convert into Tasks" colspan="4"/>
+			<form string="Convert to Task">
+                <separator string="Convert to Task" colspan="4"/>
 			    <field name="user_id"/>
 				<separator colspan="4"/>
                 <group col="2" colspan="2">
@@ -22,7 +22,7 @@
         </record>
 
         <record id="action_scrum_backlog_to_task" model="ir.actions.act_window">
-            <field name="name">Convert into Tasks</field>
+            <field name="name">Convert to Task</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project.scrum.backlog.create.task</field>
             <field name="view_type">form</field>

@@ -8,22 +8,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: account-analytic-default-es\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-11-17 09:38+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Galego <g11n@mancomun.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:09+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_form
-#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_defaul_form
-msgid "Analytic Defaults"
-msgstr "Análise: Valores predefinidos"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
@@ -31,62 +24,85 @@ msgid "Account Analytic Default"
 msgstr "Contas analíticas predefinidas"
 
 #. module: account_analytic_default
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML non válido para a definición da vista!"
+#: help:account.analytic.default,partner_id:0
+msgid ""
+"select a partner which will use analytical account specified in analytic "
+"default (eg. create new cutomer invoice or Sale order if we select this "
+"partner, it will automatically take this as an analytical account)"
+msgstr ""
 
 #. module: account_analytic_default
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
+msgid "Analytic Rules"
+msgstr "Regras analíticas"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,analytic_id:0
+msgid "Analytical Account"
 msgstr ""
-"¡O nome do obxecto debe comezar con x_ y e non conter ningún carácter "
-"especial!"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
-msgid "Seq"
-msgstr "Secuencia"
+msgid "Current"
+msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_stop:0
-msgid "End Date"
-msgstr "Data final"
+#: view:account.analytic.default:0
+msgid "Group By..."
+msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,company_id:0
-msgid "Company"
-msgstr "Compañía"
+#: help:account.analytic.default,date_stop:0
+msgid "Default end date for this Analytical Account"
+msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,sequence:0
-msgid "Sequence"
-msgstr "Secuencia"
+#: model:ir.model,name:account_analytic_default.model_stock_picking
+msgid "Picking List"
+msgstr ""
 
 #. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Conditions"
+msgstr "Condicións"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"select a company which will use analytical account specified in analytic "
+"default (eg. create new cutomer invoice or Sale order if we select this "
+"company, it will automatically take this as an analytical account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,date_start:0
+msgid "Default start date for this Analytical Account"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
 #: field:account.analytic.default,product_id:0
 msgid "Product"
 msgstr "Produto"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,analytic_id:0
-msgid "Analytic Account"
-msgstr "Conta analítica"
-
-#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
-msgid "Analytic Distributions"
-msgstr "Distribucións analíticas"
+msgid "Analytic Distribution"
+msgstr ""
 
 #. module: account_analytic_default
+#: view:account.analytic.default:0
+#: field:account.analytic.default,company_id:0
+msgid "Company"
+msgstr "Compañía"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
 #: field:account.analytic.default,user_id:0
 msgid "User"
 msgstr "Usuario"
-
-#. module: account_analytic_default
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "El nome del modelu nun ye válidu pa la definición de l'aición"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
@@ -94,6 +110,67 @@ msgid "Entries"
 msgstr "Asentos"
 
 #. module: account_analytic_default
+#: field:account.analytic.default,date_stop:0
+msgid "End Date"
+msgstr "Data final"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,user_id:0
+msgid ""
+"select a user which will use analytical account specified in analytic default"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
+#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
+msgid "Analytic Defaults"
+msgstr "Análise: Valores predefinidos"
+
+#. module: account_analytic_default
+#: model:ir.module.module,description:account_analytic_default.module_meta_information
+msgid ""
+"\n"
+"Allows to automatically select analytic accounts based on criterions:\n"
+"* Product\n"
+"* Partner\n"
+"* User\n"
+"* Company\n"
+"* Date\n"
+"    "
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"select a product which will use analytical account specified in analytic "
+"default (eg. create new cutomer invoice or Sale order if we select this "
+"product, it will automatically take this as an analytical account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: field:account.analytic.default,sequence:0
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+#: field:account.analytic.default,analytic_id:0
+msgid "Analytic Account"
+msgstr "Conta analítica"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Accounts"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
 #: field:account.analytic.default,partner_id:0
 msgid "Partner"
 msgstr "Empresa"
@@ -104,13 +181,30 @@ msgid "Start Date"
 msgstr "Data inicial"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Conditions"
-msgstr "Condicións"
+#: help:account.analytic.default,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of analytic distribution"
+msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-msgid "Analytic Rules"
-msgstr "Regras analíticas"
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML non válido para a definición da vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡O nome do obxecto debe comezar con x_ y e non conter ningún carácter "
+#~ "especial!"
+
+#~ msgid "Seq"
+#~ msgstr "Secuencia"
+
+#~ msgid "Analytic Distributions"
+#~ msgstr "Distribucións analíticas"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "El nome del modelu nun ye válidu pa la definición de l'aición"

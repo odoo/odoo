@@ -6,25 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-03 03:08+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:09+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
-#: field:report.deposit.border,total_marge:0
-msgid "Total margin"
-msgstr "Marja totală"
+#: model:ir.ui.menu,name:auction.auction_report_menu
+msgid "Reporting"
+msgstr "Raportare"
 
 #. module: auction
-#: wizard_view:auction.lots.sms_send,init:0
-msgid "SMS - Gateway: clickatell"
-msgstr "Gateway SMS: clickatell"
+#: model:ir.model,name:auction.model_auction_taken
+msgid "Auction taken"
+msgstr ""
 
 #. module: auction
 #: view:auction.lots:0
@@ -32,138 +32,114 @@ msgid "Set to draft"
 msgstr "Setează în ciornă"
 
 #. module: auction
+#: view:auction.deposit:0
 #: field:auction.deposit,partner_id:0
-#: view:auction.lots:0
-#: xsl:report.auction.seller.list:0
-#: field:report.deposit.border,seller:0
-#: field:report.seller.auction,seller:0
-#: field:report.seller.auction2,seller:0
+#: field:auction.lots,seller_id:0
+#: view:report.auction:0
+#: field:report.auction,seller:0
 msgid "Seller"
 msgstr "Vânzător"
 
 #. module: auction
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nume invalid de model în definirea acţiunii"
+#: field:auction.lots,name:0
+msgid "Title"
+msgstr ""
 
 #. module: auction
-#: selection:auction.lots.send.aie,date_ask,numerotation:0
-#: selection:auction.lots.send.aie,init,numerotation:0
-msgid "Provisoire"
-msgstr "Provizoriu"
+#: field:auction.lots.sms.send,text:0
+msgid "SMS Message"
+msgstr "Mesaj SMS"
 
 #. module: auction
-#: selection:auction.lots.send.aie,date_ask,numerotation:0
-#: selection:auction.lots.send.aie,init,numerotation:0
-msgid "Definitive (ordre catalogue)"
-msgstr "Devinitiv (catalog de comenzi)"
+#: view:auction.catalog.flagey:0
+#: view:auction.lots.auction.move:0
+#: view:auction.lots.make.invoice.buyer:0
+msgid " "
+msgstr ""
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_report_auction_object_date_tree1_my
-msgid "My Encoded Objects Per Day"
-msgstr "Obiectele mele înregistrate pe zile"
+#: view:auction.lots.auction.move:0
+msgid "Warning, Erase The Object Adjudication Price and Its Buyer!"
+msgstr ""
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lot_history
-msgid "Lot history"
-msgstr "Istoric lot"
+#: help:auction.pay.buy,statement_id1:0
+msgid "First Bank Statement For Buyer"
+msgstr ""
 
 #. module: auction
-#: field:report.seller.auction,avg_estimation:0
-msgid "Avg estimation"
-msgstr "Medie estimată"
+#: field:auction.bid_line,lot_id:0
+#: field:auction.lot.history,lot_id:0
+msgid "Object"
+msgstr "Obiect"
 
 #. module: auction
 #: field:report.auction.object.date,obj_num:0
-#: field:report.auction.view2,obj_number:0
 msgid "# of Objects"
 msgstr "Nr. de obiecte"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_action_bids_form
-msgid "Bids line"
-msgstr "Rând licitaţie"
+#: view:auction.lots:0
+msgid "Authors"
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Deposit Form"
-msgstr "Formular de depozit"
-
-#. module: auction
-#: rml:auction.bids:0
+#: view:auction.bid:0
+#: report:auction.bids:0
 #: view:auction.lots:0
 #: field:auction.lots,ach_uid:0
-#: wizard_field:auction.lots.buyer_map,check,ach_uid:0
-#: wizard_field:auction.lots.make_invoice_buyer,init,buyer_id:0
-#: wizard_field:auction.pay.buy,init,buyer_id:0
-#: rml:buyer.list:0
-#: model:ir.ui.menu,name:auction.auction_report_buyer_menu
-#: rml:report.auction.buyer.result:0
-#: field:report.buyer.auction,buyer:0
-#: field:report.buyer.auction2,buyer:0
+#: field:auction.lots.buyer_map,ach_uid:0
+#: field:auction.lots.make.invoice.buyer,buyer_id:0
+#: field:auction.pay.buy,buyer_id:0
+#: report:buyer.list:0
+#: view:report.auction:0
+#: field:report.auction,buyer:0
+#: report:report.auction.buyer.result:0
 msgid "Buyer"
 msgstr "Cumpărător"
 
 #. module: auction
-#: field:report.auction.view,nobjects:0
-#: field:report.buyer.auction,object:0
+#: field:report.auction,object:0
 msgid "No of objects"
 msgstr "Nr. de obiecte"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_report_auction_adjudication_tree
-msgid "Adjudication by Auction"
-msgstr "Adjudecare pe licitaţii"
+#: help:auction.lots,paid_vnd:0
+msgid ""
+"When state of Seller Invoice is 'Paid', this field is selected as True."
+msgstr ""
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "# of paid items (based on invoices):"
 msgstr "Nr. de elemente plătite (pe facturi)"
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_numerotate_lot
-msgid "Numerotation (per lot)"
-msgstr "Numerotaţie (pe loturi)"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Books, manuscripts, eso."
-msgstr "Antichităţi/Cărţi, manuscrise, etc."
-
-#. module: auction
 #: view:auction.deposit:0
-#: model:ir.model,name:auction.model_auction_deposit
 msgid "Deposit Border"
 msgstr "Limită depozit"
 
 #. module: auction
-#: wizard_field:auction.lots.make_invoice,init,amount:0
-#: wizard_field:auction.lots.make_invoice_buyer,init,amount:0
+#: field:auction.lots.make.invoice,amount:0
+#: field:auction.lots.make.invoice.buyer,amount:0
 msgid "Invoiced Amount"
 msgstr "Suma facturată"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Tin / Copper wares"
-msgstr "Antichităţi/obiecte din cositor/cupru"
+#: help:auction.lots,name:0
+msgid "Auction object name"
+msgstr ""
 
 #. module: auction
-#: field:auction.lots,paid_ach:0
-msgid "Buyer invoice reconciled"
-msgstr "Factură cumpărător reconciliată"
-
-#. module: auction
-#: model:ir.actions.wizard,name:auction.auction_wizard_able_taken
-msgid "Mark as taken away"
-msgstr "Marcare ca ridicat"
-
-#. module: auction
-#: xsl:report.auction.seller.list:0
-msgid "Inv."
-msgstr "Inv."
+#: model:ir.model,name:auction.model_aie_category
+msgid "aie.category"
+msgstr ""
 
 #. module: auction
 #: field:auction.deposit.cost,amount:0
+#: field:auction.pay.buy,amount:0
+#: field:auction.pay.buy,amount2:0
+#: field:auction.pay.buy,amount3:0
 msgid "Amount"
 msgstr "Sumă"
 
@@ -174,19 +150,16 @@ msgid "Deposit border"
 msgstr "Limită depozit"
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "VAT"
-msgstr "TVA"
+#: view:auction.deposit:0
+msgid "Reference"
+msgstr ""
 
 #. module: auction
-#: view:auction.lots:0
-msgid "Statements"
-msgstr "Declaraţii"
-
-#. module: auction
-#: xsl:flagey.huissier:0
-msgid "Adjudication"
-msgstr "Adjudecare"
+#: help:auction.dates,state:0
+msgid ""
+"When auction starts the state is 'Draft'.\n"
+" At the end of auction, the state becomes 'Closed'."
+msgstr ""
 
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
@@ -194,20 +167,19 @@ msgid "Analytic Account"
 msgstr "Cont analitic"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Unclassifieds"
-msgstr "Neclasificate"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_auction_dates_next_by_auction
-msgid "Objects by Auction"
-msgstr "Obiecte pe licitaţii"
+#: help:auction.pay.buy,amount3:0
+msgid "Amount For Third Bank Statement"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,lot_num:0
-#: field:report.unclassified.objects,lot_num:0
 msgid "List Number"
 msgstr "Număr pe listă"
+
+#. module: auction
+#: report:buyer.list:0
+msgid "Date:"
+msgstr ""
 
 #. module: auction
 #: field:auction.deposit.cost,name:0
@@ -215,83 +187,76 @@ msgid "Cost Name"
 msgstr "Denumire cost"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antiques"
-msgstr "Antichități"
-
-#. module: auction
 #: view:auction.dates:0
+#: field:auction.dates,state:0
+#: view:auction.lots:0
+#: field:auction.lots,state:0
+#: view:report.auction:0
+#: field:report.auction,state:0
 msgid "State"
 msgstr "Stare"
 
 #. module: auction
-#: field:report.auction.estimation.adj.category,lot_type:0
-msgid "Object Type"
-msgstr "Tip obiect"
+#: view:auction.dates:0
+msgid "First Auction Date"
+msgstr ""
 
 #. module: auction
-#: wizard_field:auction.lots.sms_send,init,text:0
-msgid "SMS Message"
-msgstr "Mesaj SMS"
+#: selection:report.auction,month:0
+msgid "January"
+msgstr ""
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Contemporary Art"
-msgstr "Artă contemporană"
+#: help:auction.lot.category,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the auction "
+"lot category without removing it."
+msgstr ""
 
 #. module: auction
 #: view:auction.lots:0
-#: view:report.unclassified.objects:0
 msgid "Ref"
 msgstr "Ref"
 
 #. module: auction
-#: field:report.auction.view,nseller:0
-msgid "No of sellers"
-msgstr "Număr de vânzători"
-
-#. module: auction
-#: selection:auction.lots.send.aie,date_ask,lang:0
-msgid "ned"
-msgstr "ned"
-
-#. module: auction
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#: field:report.auction,total_price:0
+msgid "Total Price"
 msgstr ""
-"Eroare: Intrare (resp. Ieşire) trebuie să urmeze după Ieşire (resp. Intrare)"
 
 #. module: auction
 #: view:auction.lots:0
-#: field:report.buyer.auction,total_price:0
 msgid "Total Adj."
 msgstr "Total adj."
 
 #. module: auction
-#: field:report.auction.view2,obj_margin_procent:0
-msgid "Net margin (%)"
-msgstr "Marjă netă (%)"
+#: view:auction.lots.sms.send:0
+msgid "SMS - Gateway: clickatell','Bulk SMS send"
+msgstr ""
+
+#. module: auction
+#: help:auction.lots,costs:0
+msgid "Deposit cost"
+msgstr ""
 
 #. module: auction
 #: selection:auction.lots,state:0
+#: selection:report.auction,state:0
 #: selection:report.object.encoded,state:0
-#: selection:report.seller.auction,state:0
-#: selection:report.unclassified.objects,state:0
 msgid "Unsold"
 msgstr "Nevândute"
 
 #. module: auction
-#: view:auction.dates:0
-msgid "Dates"
-msgstr "Date"
+#: view:auction.deposit:0
+msgid "Search Auction deposit"
+msgstr ""
 
 #. module: auction
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Eroare: UV  trebuie să fie întro altă categorie decât UM"
+#: help:auction.lots,lot_num:0
+msgid "List number in depositer inventory"
+msgstr ""
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "Items"
 msgstr "Elemente"
 
@@ -312,41 +277,36 @@ msgid "Bids"
 msgstr "Licitări"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.auction_all_objects_menu
-msgid "All objects"
-msgstr "Toate obiectele"
+#: view:auction.lots.buyer_map:0
+msgid "Buyer Map"
+msgstr ""
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting_all2
-msgid "Buyer's auction for all months"
-msgstr "Acţiunile cumpărătorului pe toate lunile"
-
-#. module: auction
-#: field:auction.bid,contact_tel:0
-msgid "Contact"
-msgstr "Contact"
-
-#. module: auction
-#: field:report.auction.view,obj_ret:0
 #: field:report.object.encoded,obj_ret:0
-#: field:report.object.encoded.manager,obj_ret:0
 msgid "# obj ret"
 msgstr "Nr ob. ret."
 
 #. module: auction
-#: wizard_button:auction.lots.sms_send,init,send:0
-msgid "Send SMS"
-msgstr "Trimite SMS"
+#: model:ir.model,name:auction.model_auction_bid
+msgid "Bid Auctions"
+msgstr ""
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Painting"
-msgstr "Artă cont./Pictură"
+#: help:auction.lots,image:0
+msgid "Object Image"
+msgstr ""
 
 #. module: auction
-#: field:auction.lots,sel_inv_id:0
-msgid "Seller Invoice"
-msgstr "Factură vânzător"
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#, python-format
+msgid "No buyer is set for this lot."
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The Buyer \"%s\" has no Invoice Address."
+msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
@@ -354,25 +314,9 @@ msgid "Commissions"
 msgstr "Comisioane"
 
 #. module: auction
-#: wizard_button:auction.lots.numerotate,search,init:0
-msgid "Back"
-msgstr "Înapoi"
-
-#. module: auction
-#: model:ir.actions.act_window,name:auction.action_all_objects_unsold
-msgid "Unsold objects"
-msgstr "Obiecte nevândute"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_sold1
-msgid "Sold Objects"
-msgstr "Obiecte vândute"
-
-#. module: auction
-#: view:report.buyer.auction2:0
-#: view:report.seller.auction2:0
-msgid "Sum net margin"
-msgstr "Marjă sumă netă"
+#: model:ir.model,name:auction.model_auction_deposit_cost
+msgid "Auction Deposit Cost"
+msgstr ""
 
 #. module: auction
 #: view:auction.deposit:0
@@ -380,86 +324,69 @@ msgid "Deposit Border Form"
 msgstr "Formular limită depozit"
 
 #. module: auction
-#: field:auction.bid,bid_lines:0
-#: rml:auction.bids:0
-#: rml:bids.lots:0
-#: model:ir.model,name:auction.model_auction_bid_line
-msgid "Bid"
-msgstr "Licitare"
+#: help:auction.lots,statement_id:0
+msgid "Bank statement line for given buyer"
+msgstr ""
 
 #. module: auction
-#: wizard_field:auction.lots.send.aie,date_ask,lang:0
-msgid "Langage"
-msgstr "Limbaj"
+#: field:auction.lot.category,aie_categ:0
+msgid "Category"
+msgstr ""
 
 #. module: auction
-#: field:auction.bid_line,lot_id:0
-#: field:auction.lot.history,lot_id:0
-#: view:auction.lots:0
-#: model:ir.model,name:auction.model_auction_lots
-msgid "Object"
-msgstr "Obiect"
-
-#. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_map_user
+#: model:ir.actions.act_window,name:auction.action_view_auction_buyer_map
 msgid "Map buyer username to Partners"
 msgstr "Asociere username cu partener"
 
 #. module: auction
-#: wizard_field:auction.lots.numerotate,search,lot_num:0
-msgid "Inventory Number"
-msgstr "Număr de inventar"
+#: view:auction.lots:0
+msgid "Search Auction Lots"
+msgstr ""
 
 #. module: auction
-#: wizard_button:auction.lots.buyer_map,check,end:0
-#: wizard_button:auction.lots.numerotate,not_exist,end:0
-#: wizard_button:auction.lots.numerotate,search,end:0
-#: wizard_button:auction.lots.numerotate_cont,init,end:0
-msgid "Exit"
-msgstr "Ieșire"
-
-#. module: auction
-#: field:report.buyer.auction2,net_revenue:0
+#: field:report.auction,net_revenue:0
 msgid "Net Revenue"
 msgstr "Venit net"
 
 #. module: auction
-#: view:report.buyer.auction:0
-msgid "Auction buyer reporting form view"
-msgstr "Raportare cumpărător licitaţie din afişare"
-
-#. module: auction
-#: field:auction.dates,state:0
-#: field:auction.lots,state:0
 #: field:report.auction.adjudication,state:0
 #: field:report.object.encoded,state:0
-#: field:report.seller.auction,state:0
-#: field:report.unclassified.objects,state:0
 msgid "Status"
 msgstr "Stare"
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_sms
+#: model:ir.actions.act_window,name:auction.action_auction_lots_sms_send
 msgid "SMS Send"
 msgstr "Trimite SMS"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Cartoons"
-msgstr "Antichităţi/Desene"
+#: selection:report.auction,month:0
+msgid "August"
+msgstr ""
 
 #. module: auction
 #: view:auction.lots:0
 #: selection:auction.lots,state:0
-#: selection:report.seller.auction,state:0
-#: selection:report.unclassified.objects,state:0
+#: view:report.auction:0
+#: selection:report.auction,state:0
 msgid "Sold"
 msgstr "Vândut"
 
 #. module: auction
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Eroare ! Nu puteţi crea ierarhii recursive de angajaţi"
+#: selection:report.auction,month:0
+msgid "June"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#, python-format
+msgid "No Lots belong to this Auction Date"
+msgstr ""
+
+#. module: auction
+#: selection:report.auction,month:0
+msgid "October"
+msgstr ""
 
 #. module: auction
 #: field:auction.bid_line,name:0
@@ -482,47 +409,40 @@ msgid "Object Description"
 msgstr "Descriere obiect"
 
 #. module: auction
-#: selection:auction.deposit,method:0
-msgid "Contact the Seller"
-msgstr "Contactare vânzător"
+#: field:auction.lots,artist2_id:0
+msgid "Artist/Author2"
+msgstr ""
 
 #. module: auction
-#: view:auction.lots:0
-msgid "Auction Objects"
-msgstr "Obiecte licitate"
+#: view:auction.pay.buy:0
+msgid "Line1"
+msgstr ""
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
+msgid "Make Invoice for Buyer"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,gross_revenue:0
-#: field:report.auction.view2,gross_revenue:0
-#: field:report.object.encoded.manager,gross_revenue:0
-#: field:report.seller.auction2,gross_revenue:0
+#: field:report.object.encoded,gross_revenue:0
 msgid "Gross revenue"
 msgstr "Venit brut"
 
 #. module: auction
-#: view:report.seller.auction2:0
-msgid "Auction reporting2 form view"
-msgstr "Raportare2 licitaţie în afişare formular"
-
-#. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_pay
+#: model:ir.actions.act_window,name:auction.action_auction_pay_buy
 msgid "Pay objects of the buyer"
 msgstr "Plată obiecte cumpărător"
 
 #. module: auction
-#: view:report.deposit.border:0
-msgid "Depositer's statistics"
-msgstr "Statistici depozitar"
+#: help:auction.dates,auction2:0
+msgid "End date of auction"
+msgstr ""
 
 #. module: auction
-#: view:auction.lots:0
-msgid "Buyer information"
-msgstr "Informaţii cumpărător"
-
-#. module: auction
-#: model:ir.model,name:auction.model_report_seller_auction
-msgid "Auction Reporting on seller view"
-msgstr "Raportare licitaţie în afişare vânzător"
+#: view:auction.lots.sms.send:0
+msgid "Send SMS"
+msgstr "Trimite SMS"
 
 #. module: auction
 #: field:auction.lots,name2:0
@@ -530,51 +450,25 @@ msgid "Short Description (2)"
 msgstr "Scurtă descriere (2)"
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_dates
-msgid "auction.dates"
-msgstr "auction.dates"
-
-#. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 #: model:ir.ui.menu,name:auction.auction_buyers_menu
 msgid "Buyers"
 msgstr "Cumpărători"
 
 #. module: auction
-#: wizard_field:auction.pay.buy,init,amount:0
-#: wizard_field:auction.pay.buy,init,amount2:0
-#: wizard_field:auction.pay.buy,init,amount3:0
-msgid "Amount paid"
-msgstr "Suma plătită"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_report_latest_doposit_tree
-msgid "My Latest Deposits"
-msgstr "Ultimele mele depozite"
-
-#. module: auction
-#: field:auction.lots,lot_est1:0
-#: wizard_field:auction.lots.numerotate,search,lot_est1:0
-#: field:report.auction.estimation.adj.category,lot_est1:0
-#: field:report.auction.view,min_est:0
-#: field:report.unclassified.objects,lot_est1:0
-msgid "Minimum Estimation"
-msgstr "Estimare de minim"
+#: model:account.tax.code,name:auction.account_tax_code_id4
+msgid "VAT 12%"
+msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
-msgid "Accounting"
-msgstr "Contabilitate"
+msgid "Buyer Invoices"
+msgstr ""
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view2
-msgid "Buyer's Revenues"
-msgstr "Venituri cumpărător"
-
-#. module: auction
-#: model:ir.model,name:auction.model_report_auction_adjudication
-msgid "report_auction_adjudication"
-msgstr "report_auction_adjudication"
+#: model:ir.actions.report.xml,name:auction.res_w_buyer
+msgid "Results with buyer"
+msgstr "Rezultate de la cumpărător"
 
 #. module: auction
 #: field:auction.bid_line,price:0
@@ -582,22 +476,27 @@ msgid "Maximum Price"
 msgstr "Preţ maxim"
 
 #. module: auction
-#: selection:auction.lots.send.aie,date_ask,lang:0
-msgid "eng"
-msgstr "eng"
+#: help:auction.dates,auction1:0
+msgid "Start date of auction"
+msgstr ""
 
 #. module: auction
-#: view:report.buyer.auction2:0
-msgid "Auction buyer reporting tree view2"
-msgstr "Raportare cumpărători în afişare arbore2"
+#: model:ir.model,name:auction.model_auction_lots_auction_move
+msgid "Auction Move"
+msgstr ""
 
 #. module: auction
-#: wizard_view:auction.lots.sms_send,init:0
-msgid "Bulk SMS send"
-msgstr "Trimitere pachet SMS-uri"
+#: help:auction.dates,buyer_costs:0
+msgid "Account tax for buyer"
+msgstr ""
 
 #. module: auction
-#: wizard_view:auction.taken,init:0
+#: view:auction.dates:0
+msgid "Next Auction"
+msgstr ""
+
+#. module: auction
+#: view:auction.taken:0
 msgid "Select lots which are Sold"
 msgstr "Selectare loturi vândute"
 
@@ -607,19 +506,10 @@ msgid "Payment"
 msgstr "Plată"
 
 #. module: auction
-#: selection:auction.lots.send.aie,date_ask,lang:0
-msgid "fr"
-msgstr "ro"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Old weapons and militaria"
-msgstr "Antichităţi/Arme vechi şi efecte militare"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Oriental Arts/Chineese furnitures"
-msgstr "Antichităţi/Arte orientale/Mobilă chinezească"
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The object \"%s\" has no buyer assigned."
+msgstr ""
 
 #. module: auction
 #: selection:auction.deposit,method:0
@@ -627,89 +517,77 @@ msgid "Keep until sold"
 msgstr "Păstrare până la vânzare"
 
 #. module: auction
-#: wizard_button:auction.lots.numerotate,init,choice:0
-#: wizard_button:auction.lots.send.aie,init,date_ask:0
-#: wizard_button:auction.lots.send.aie.results,init,date_ask:0
-msgid "Continue"
-msgstr "Continuare"
+#: view:auction.dates:0
+msgid "Last Auction Date"
+msgstr ""
 
 #. module: auction
-#: field:report.object.encoded,obj_num:0
-#: field:report.object.encoded.manager,obj_num:0
-msgid "# of Encoded obj."
-msgstr "Număr de obiecte înscrise"
+#: model:account.tax,name:auction.tax_seller
+msgid "Seller Costs (12%)"
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.vnd_bordereau:0
-msgid "List N."
-msgstr "Borderou"
+#: field:auction.lots,paid_vnd:0
+msgid "Seller Paid"
+msgstr "Vânzător încasator"
 
 #. module: auction
-#: field:report.deposit.border,moy_est:0
-msgid "Avg. Est"
-msgstr "Medie est."
+#: view:board.board:0
+#: view:report.object.encoded:0
+msgid "Objects statistics"
+msgstr "Statistici obiecte"
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "# of sellers:"
 msgstr "Număr de vânzători"
 
 #. module: auction
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Eroare : cod EAN invalid"
+#: field:report.auction,date:0
+#: field:report.object.encoded,date:0
+msgid "Create Date"
+msgstr "Data creării"
 
 #. module: auction
-#: model:ir.module.module,description:auction.module_meta_information
-msgid ""
-"This module provides functionality to \n"
-"     manage artists, articles, sellers, buyers and auction.\n"
-"     Manage bids, track of sold, paid and unpaid objects.\n"
-"     Delivery Management. \n"
-"    "
-msgstr ""
-"Acest modul oferă funcţionalitatea de a \n"
-"     Gestiona artiştii, articolele, vânzătorii, cumpărătorii şi licitaţia.\n"
-"     Gestiona licitările, urmărirea obiectelor vândute, a obiectelor plătite "
-"şi neplătite\n"
-"     Gestiunea livrărilor \n"
-"    "
+#: view:auction.dates:0
+#: selection:report.object.encoded,state:0
+msgid "Invoiced"
+msgstr "Facturat"
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "# of items taken away:"
 msgstr "Număr de obiecte ridicate:"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_auction_allmonth_view1
+#: model:ir.model,name:auction.model_report_auction
+#: view:report.auction:0
 msgid "Auction's Summary"
 msgstr "Rezumatul licitaţiei"
 
 #. module: auction
-#: rml:buyer.list:0
+#: report:buyer.list:0
 msgid "%)"
 msgstr "%)"
 
 #. module: auction
-#: wizard_view:auction.lots.able,init:0
-msgid "Confirmation set taken away"
-msgstr "Ridicare confirmată"
+#: view:auction.lots:0
+msgid "Buyer Information"
+msgstr ""
 
 #. module: auction
-#: wizard_field:auction.lots.make_invoice,init,objects:0
-#: wizard_field:auction.lots.make_invoice_buyer,init,objects:0
-#: wizard_field:auction.lots.send.aie,date_ask,objects:0
-#: wizard_field:auction.lots.send.aie.results,date_ask,objects:0
-#: field:report.deposit.border,nb_obj:0
+#: help:auction.lots,gross_revenue:0
+msgid "Buyer Price - Seller Price"
+msgstr ""
+
+#. module: auction
+#: field:auction.lots.make.invoice,objects:0
+#: field:auction.lots.make.invoice.buyer,objects:0
 msgid "# of objects"
 msgstr "Nr. de obiecte"
 
 #. module: auction
 #: field:auction.lots,lot_est2:0
-#: wizard_field:auction.lots.numerotate,search,lot_est2:0
-#: field:report.auction.estimation.adj.category,lot_est2:0
-#: field:report.auction.view,max_est:0
-#: field:report.unclassified.objects,lot_est2:0
 msgid "Maximum Estimation"
 msgstr "Estimări de maxim"
 
@@ -719,14 +597,9 @@ msgid "Buyer price"
 msgstr "Preţ cumpărător"
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.auction_wizard_payer_sel
-msgid "Mark as paid for seller"
-msgstr "Marcare ca plătit pentru vânzător"
-
-#. module: auction
-#: model:ir.actions.report.xml,name:auction.seller_form_id
-msgid "Seller List"
-msgstr "Listă vânzător"
+#: view:auction.lots:0
+msgid "Bids Details"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,is_ok:0
@@ -735,33 +608,24 @@ msgstr "Plată cumpărător"
 
 #. module: auction
 #: view:auction.dates:0
-msgid "Close + Create all invoices"
-msgstr "Închidere şi creare toate facturile"
+msgid "End of auction"
+msgstr "Sfârşitul licitaţiei"
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.auction_catalog_flagy
+#: model:ir.actions.act_window,name:auction.action_auction_catalog_flagey_wizard
+#: model:ir.model,name:auction.model_auction_catalog_flagey
 msgid "Auction Catalog Flagey"
 msgstr "Catalog de licitaţie Flagey"
 
 #. module: auction
-#: field:auction.lot.history,price:0
-msgid "Withdrawn price"
-msgstr "Preţ de retragere"
+#: selection:report.auction,month:0
+msgid "March"
+msgstr ""
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax4
 msgid "Seller Costs1"
 msgstr "Costuri vânzători1"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Verreries"
-msgstr "Antichităţi / Sticlărie"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Toys"
-msgstr "Antichităţi / Jucării"
 
 #. module: auction
 #: field:auction.deposit,create_uid:0
@@ -770,17 +634,7 @@ msgid "Created by"
 msgstr "Creat de"
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Buyer form"
-msgstr "Formular cumpărător"
-
-#. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Estimate"
-msgstr "Estimare"
-
-#. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "# of buyers:"
 msgstr "Număr de cumpărători"
 
@@ -790,17 +644,19 @@ msgid "Indirect costs"
 msgstr "Costuri indirecte"
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Cat"
-msgstr "Cat"
+#: help:auction.dates,seller_costs:0
+msgid "Account tax for seller"
+msgstr ""
 
 #. module: auction
-#: constraint:account.tax.code:0
-msgid "Error ! You can not create recursive accounts."
-msgstr "Eroare ! Nu puteţi crea conturi recursive."
+#: code:addons/auction/wizard/auction_lots_invoice.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "UserError"
+msgstr ""
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.auction_menu_root
+#: model:ir.module.module,shortdesc:auction.module_meta_information
 msgid "Auction Management"
 msgstr "Management licitaţii"
 
@@ -810,121 +666,69 @@ msgid "Seller Journal"
 msgstr "Jurnal vânzător"
 
 #. module: auction
-#: view:report.buyer.auction:0
-msgid "Auction buyer reporting tree view"
-msgstr "Afişare arbore raport vânzători"
+#: view:auction.dates:0
+#: selection:auction.dates,state:0
+#: view:auction.lots:0
+#: selection:auction.lots,state:0
+#: view:report.auction:0
+#: selection:report.auction,state:0
+#: selection:report.auction.adjudication,state:0
+#: selection:report.object.encoded,state:0
+msgid "Draft"
+msgstr "Ciornă"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_auction_artist
-msgid "Define Artists"
-msgstr "Definire artişti"
+#: help:auction.lots,state:0
+msgid ""
+" * The 'Draft' state is used when a object is encoding as a new object.      "
+"           \n"
+"* The 'Unsold' state is used when object does not sold for long time, user "
+"can also set it as draft state after unsold.                 \n"
+"* The 'Paid' state is used when user pay for the object                 \n"
+"* The 'Sold' state is used when user buy the object."
+msgstr ""
 
 #. module: auction
-#: field:auction.lot.category,name:0
-msgid "Category Name"
-msgstr "Nume categorie"
+#: view:auction.catalog.flagey:0
+msgid "Print"
+msgstr ""
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_report_auction_estimation_adj_category_manager
-#: model:ir.ui.menu,name:auction.menu_report_auction_estimation_adj_category_member
-msgid "Comparison of estimations"
-msgstr "Comparare estimări"
+#: view:auction.lots:0
+#: view:report.auction:0
+msgid "Type"
+msgstr ""
 
 #. module: auction
-#: model:ir.actions.report.xml,name:auction.v_report_barcode_lot
-msgid "Code barres du lot"
-msgstr "Cod de bare al lotului"
+#: help:auction.lots,ach_emp:0
+msgid "When state is Taken Away, this field is marked as True"
+msgstr ""
 
 #. module: auction
-#: wizard_button:auction.lots.numerotate,not_exist,init:0
-msgid "Retry"
-msgstr "Reîncercare"
-
-#. module: auction
-#: field:auction.artists,birth_death_dates:0
-msgid "Birth / Death dates"
-msgstr "Date naştere / deces"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Jewelry"
-msgstr "Antichităţi / Bijuterii"
-
-#. module: auction
-#: model:ir.model,name:auction.model_report_unclassified_objects
-msgid "Unclassified objects "
-msgstr "Obiecte neclasificate "
-
-#. module: auction
-#: wizard_button:auction.lots.numerotate_cont,init,set_number:0
-#: wizard_field:auction.lots.send.aie,date_ask,numerotation:0
-#: wizard_field:auction.lots.send.aie,init,numerotation:0
-msgid "Numerotation"
-msgstr "Numerotare"
-
-#. module: auction
-#: model:ir.actions.act_window,name:auction.act_auction_lot_open_deposit
-msgid "Bordereau de dépôt"
-msgstr "Borderou de depunere"
-
-#. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Document type"
-msgstr "Tip document"
-
-#. module: auction
-#: model:ir.model,name:auction.model_report_auction_estimation_adj_category
-msgid "comparaison estimate/adjudication "
-msgstr "comparare estimat/adjudecat "
-
-#. module: auction
-#: rml:buyer.list:0
-msgid "Adj(EUR)"
-msgstr "Adj(EUR)"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Other Media"
-msgstr "Cont. Art/Alte media"
-
-#. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_emporte
+#: model:ir.actions.act_window,name:auction.action_auction_taken
 msgid "Gestion emporte"
 msgstr "Gestiune intrări"
 
 #. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Cat. N."
-msgstr "Cat. N."
+#: view:auction.bid:0
+#: report:auction.bids:0
+#: view:auction.dates:0
+#: view:auction.lots:0
+#: field:auction.lots,auction_id:0
+#: report:auction.total.rml:0
+#: model:ir.ui.menu,name:auction.auction_menu_root
+#: view:report.auction:0
+msgid "Auction"
+msgstr "Licitație"
 
 #. module: auction
+#: view:auction.lot.category:0
 #: model:ir.ui.menu,name:auction.menu_auction_object_cat
 msgid "Object Categories"
 msgstr "Categorii de obiecte"
 
 #. module: auction
-#: wizard_field:auction.lots.send.aie,date_ask,img_send:0
-msgid "Send Image also ?"
-msgstr "Trimitere imagini deasemenea?"
-
-#. module: auction
-#: view:auction.deposit:0
-msgid "General Informations"
-msgstr "Informaţii generale"
-
-#. module: auction
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid pentru arhitectura machetei de afișare !"
-
-#. module: auction
-#: view:report.auction.view:0
-msgid "Auctions results"
-msgstr "Rezultatele licitaţiei"
-
-#. module: auction
-#: wizard_field:auction.lots.sms_send,init,app_id:0
+#: field:auction.lots.sms.send,app_id:0
 msgid "API ID"
 msgstr "Id API"
 
@@ -935,12 +739,17 @@ msgid "Bid ID"
 msgstr "Id licitare"
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "Min Estimate:"
 msgstr "Estimare minim:"
 
 #. module: auction
-#: field:report.buyer.auction2,net_margin:0
+#: selection:report.auction,month:0
+msgid "September"
+msgstr ""
+
+#. module: auction
+#: field:report.auction,net_margin:0
 msgid "Net Margin"
 msgstr "Marjă netă"
 
@@ -950,21 +759,68 @@ msgid "Net limit ?"
 msgstr "Limitare net?"
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: field:aie.category,child_ids:0
+msgid "unknown"
+msgstr ""
+
+#. module: auction
+#: report:auction.total.rml:0
 msgid "# of commissions:"
 msgstr "Nr comisioane:"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.action_unclassified_objects
-#: model:ir.ui.menu,name:auction.menu_all_objects_unclassified
-#: view:report.unclassified.objects:0
-msgid "Unclassified objects"
-msgstr "Obiecte neclasificate"
+#: field:auction.bid_line,auction:0
+#: field:auction.dates,name:0
+msgid "Auction Name"
+msgstr "Nume licitaţie"
 
 #. module: auction
-#: wizard_view:auction.lots.make_invoice_buyer,init:0
+#: field:report.object.encoded,obj_num:0
+msgid "# of Encoded obj."
+msgstr "Număr de obiecte înscrise"
+
+#. module: auction
+#: field:aie.category,parent_id:0
+msgid "Parent aie Category"
+msgstr ""
+
+#. module: auction
+#: view:report.auction:0
+msgid "Auction Summary"
+msgstr ""
+
+#. module: auction
+#: view:auction.lots.make.invoice:0
+#: view:auction.lots.make.invoice.buyer:0
 msgid "(Keep empty for automatic number)"
 msgstr "Lăsaţi gol pentru numerotare automată"
+
+#. module: auction
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "No Invoice Address"
+msgstr ""
+
+#. module: auction
+#: model:ir.actions.report.xml,name:auction.v_huissier
+msgid "Bailiffs Listing"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "This record does not exist !"
+msgstr ""
+
+#. module: auction
+#: field:auction.pay.buy,total:0
+msgid "Total Amount"
+msgstr ""
+
+#. module: auction
+#: help:auction.pay.buy,amount:0
+msgid "Amount For First Bank Statement"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_auction_object_date
@@ -973,27 +829,23 @@ msgid "Objects per day"
 msgstr "Obiecte pe zi"
 
 #. module: auction
+#: help:auction.lots,author_right:0
+msgid "Account tax for author commission"
+msgstr ""
+
+#. module: auction
 #: model:product.template,name:auction.monproduit_product_template
 msgid "Oeuvres a 21%"
 msgstr "Operaţii la 21%"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Carpet and textilles"
-msgstr "Antichităţi / Covoare şi textile"
-
-#. module: auction
-#: xsl:report.auction.seller.list:0
-#: field:report.object.encoded.manager,adj:0
+#: field:report.object.encoded,adj:0
 msgid "Adj."
 msgstr "Adj."
 
 #. module: auction
 #: field:auction.lot.history,name:0
-#: field:report.attendance,name:0
 #: field:report.auction.adjudication,date:0
-#: xsl:report.auction.deposit:0
-#: field:report.auction.estimation.adj.category,date:0
 msgid "Date"
 msgstr "Data"
 
@@ -1008,14 +860,14 @@ msgid "Extra Costs"
 msgstr "Costuri suplimentare"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_auction_dates_new
-msgid "New Auction Dates"
-msgstr "Date pentru noi licitaţii"
+#: view:auction.lots.buyer_map:0
+msgid "Map "
+msgstr ""
 
 #. module: auction
-#: field:auction.lots,paid_vnd:0
-msgid "Seller Paid"
-msgstr "Vânzător încasator"
+#: field:auction.lots,paid_ach:0
+msgid "Buyer Invoice Reconciled"
+msgstr ""
 
 #. module: auction
 #: field:auction.deposit,date_dep:0
@@ -1033,101 +885,109 @@ msgid "Specific Costs"
 msgstr "Costuri specifice"
 
 #. module: auction
-#: view:report.buyer.auction2:0
-#: view:report.seller.auction2:0
-msgid "Sum adj"
-msgstr "Sumă adj"
+#: report:buyer.list:0
+msgid "To pay ("
+msgstr ""
+
+#. module: auction
+#: model:account.tax,name:auction.tax_buyer
+msgid "Buyer Costs (20%)"
+msgstr ""
+
+#. module: auction
+#: model:ir.ui.menu,name:auction.menu_board_auction
+msgid "Dashboard"
+msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
-#: view:report.auction.view2:0
+#: model:ir.actions.act_window,name:auction.action_auction_dates_next
+#: model:ir.ui.menu,name:auction.auction_date_menu
+#: model:ir.ui.menu,name:auction.menu_auction_dates_next1
 msgid "Auctions"
 msgstr "Licitaţii"
 
 #. module: auction
-#: field:report.seller.auction,object_number:0
-msgid "No of Objects"
-msgstr "Nr de obiecte"
+#: view:board.board:0
+msgid "Total Adjudications"
+msgstr "Total adjudecări"
 
 #. module: auction
+#: model:ir.model,name:auction.model_auction_lots_make_invoice
+msgid "Make invoice"
+msgstr ""
+
+#. module: auction
+#: selection:report.auction,month:0
+msgid "November"
+msgstr ""
+
+#. module: auction
+#: view:auction.dates:0
 #: view:auction.lots:0
 msgid "History"
 msgstr "Istoric"
 
 #. module: auction
-#: field:auction.lot.category,priority:0
-msgid "Priority"
-msgstr "Prioritate"
+#: field:aie.category,code:0
+msgid "Code"
+msgstr ""
 
 #. module: auction
-#: rml:auction.code_bar_lot:0
+#: report:auction.code_bar_lot:0
 msgid "Nr."
 msgstr "Nr."
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Painting"
-msgstr "Antichităţi / Pictură"
+#: model:ir.actions.report.xml,name:auction.v_report_barcode_lot
+msgid "Barcode batch"
+msgstr ""
 
 #. module: auction
-#: field:auction.lot.category,aie_categ:0
-msgid "Aie Category"
-msgstr "Categorie auxiliară"
-
-#. module: auction
-#: xsl:flagey.huissier:0
-#: rml:report.auction.buyer.result:0
-#: xsl:report.auction.deposit:0
+#: report:report.auction.buyer.result:0
 msgid "Num"
 msgstr "Num"
 
 #. module: auction
-#: wizard_button:auction.lots.able,init,end:0
-#: wizard_button:auction.lots.auction_move,init,end:0
-#: wizard_button:auction.lots.enable,init,end:0
-#: wizard_button:auction.lots.make_invoice,init,end:0
-#: wizard_button:auction.lots.make_invoice_buyer,init,end:0
-#: wizard_button:auction.lots.numerotate,init,end:0
-#: wizard_button:auction.lots.send.aie,date_ask,end:0
-#: wizard_button:auction.lots.send.aie,init,end:0
-#: wizard_button:auction.lots.send.aie.results,date_ask,end:0
-#: wizard_button:auction.lots.send.aie.results,init,end:0
-#: wizard_button:auction.lots.sms_send,init,end:0
-#: wizard_button:auction.pay.buy,init,end:0
-#: wizard_button:auction.payer.sel,init,end:0
+#: view:auction.catalog.flagey:0
 msgid "Cancel"
 msgstr "Revocare"
 
 #. module: auction
-#: view:auction.dates:0
-msgid "Beginning of the auction"
-msgstr "Începere licitaţie"
+#: view:auction.lots:0
+msgid "Buyer's Payment History"
+msgstr ""
 
 #. module: auction
+#: view:auction.artists:0
 #: field:auction.artists,biography:0
 msgid "Biography"
 msgstr "Biografie"
 
 #. module: auction
-#: field:auction.lots,lot_local:0
-msgid "Location"
-msgstr "Locație"
+#: view:auction.lots:0
+msgid "Inventory"
+msgstr "Inventar"
 
 #. module: auction
-#: wizard_view:auction.payer.sel,init:0
-msgid "Check payment for seller"
-msgstr "Verificare plată pentru vânzător"
+#: view:auction.pay.buy:0
+msgid "Pay"
+msgstr "Plată"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.view_report_object_by_auction
-msgid "Detailed lots"
-msgstr "Loturi detaliate"
+#: view:auction.lots.make.invoice:0
+msgid "Create Invoices For Seller"
+msgstr ""
 
 #. module: auction
-#: view:report.object.encoded:0
-#: view:report.object.encoded.manager:0
-msgid "Objects statistics"
-msgstr "Statistici obiecte"
+#: field:report.object.encoded,obj_margin:0
+msgid "Net margin"
+msgstr "Marjă netă"
+
+#. module: auction
+#: help:auction.lots,lot_local:0
+msgid "Auction Location"
+msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
@@ -1135,13 +995,14 @@ msgid "Analytic"
 msgstr "Analitic"
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_results
-msgid "Send results to Auction-in-europe.com"
-msgstr "Trimitere rezultate la Auction-in-europe.com"
+#: help:auction.lots,paid_ach:0
+msgid ""
+"When state of Buyer Invoice is 'Paid', this field is selected as True."
+msgstr ""
 
 #. module: auction
-#: rml:bids.lots:0
-#: rml:bids.phones.details:0
+#: report:bids.lots:0
+#: report:bids.phones.details:0
 msgid "Cat.N"
 msgstr "Cat. N"
 
@@ -1153,42 +1014,38 @@ msgstr "Limită descreştere de 10%"
 #. module: auction
 #: field:auction.dates,adj_total:0
 #: field:report.auction.adjudication,adj_total:0
-#: field:report.auction.estimation.adj.category,adj_total:0
 msgid "Total Adjudication"
 msgstr "Total adjudecări"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.action_auction_reporting1
-#: model:ir.actions.act_window,name:auction.action_auction_reporting_all1
-#: model:ir.actions.act_window,name:auction.action_auction_reporting_all2
-msgid "Seller's auction"
-msgstr "Licitaţia vânzătorului"
-
-#. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_invoice_buyer1
+#: model:ir.actions.act_window,name:auction.action_auction_lots_make_invoice_buyer
 msgid "Invoice Buyer objects"
 msgstr "Facturare cumpărători obiecte"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_seller_allmonth_view2
-msgid "Seller's Revenues"
-msgstr "Venituri vânzător"
+#: view:report.auction:0
+msgid "My Auction"
+msgstr ""
 
 #. module: auction
-#: xsl:flagey.huissier:0
+#: help:auction.lots,gross_margin:0
+msgid "(Gross Revenue*100.0)/ Object Price"
+msgstr ""
+
+#. module: auction
+#: field:auction.bid,contact_tel:0
+msgid "Contact Number"
+msgstr ""
+
+#. module: auction
+#: view:auction.lots:0
 msgid "Price"
 msgstr "Preț"
 
 #. module: auction
-#: rml:bids.phones.details:0
+#: report:bids.phones.details:0
 msgid "-"
 msgstr "-"
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Subtotal:"
-msgstr "Subtotal:"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1196,79 +1053,68 @@ msgid "Photos"
 msgstr "Fotografii"
 
 #. module: auction
-#: wizard_field:auction.lots.make_invoice,init,number:0
-#: wizard_field:auction.lots.make_invoice_buyer,init,number:0
+#: field:auction.lots.make.invoice,number:0
+#: field:auction.lots.make.invoice.buyer,number:0
 msgid "Invoice Number"
 msgstr "Numărul facturii"
 
 #. module: auction
-#: field:report.buyer.auction,date:0
-#: field:report.buyer.auction2,date:0
-#: field:report.object.encoded,date:0
-#: field:report.object.encoded.manager,date:0
-#: field:report.seller.auction,date:0
-msgid "Create Date"
-msgstr "Data creării"
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "Active IDs not Found"
+msgstr ""
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_buyer_allmonth_view1
-msgid "Buyer's Summary"
-msgstr "Rezumat cumpărător"
+#: code:addons/auction/wizard/auction_aie_send.py:0
+#: code:addons/auction/wizard/auction_aie_send_result.py:0
+#, python-format
+msgid "Connection to WWW.Auction-in-Europe.com failed !"
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Customer Reference"
-msgstr "Referinţă client"
+#: field:report.auction,gross_revenue:0
+msgid "Gross Revenue"
+msgstr "Venit brut"
 
 #. module: auction
-#: rml:bids.lots:0
+#: model:ir.actions.act_window,name:auction.open_board_auction
+msgid "Auction board"
+msgstr ""
+
+#. module: auction
+#: field:aie.category,name:0
+#: view:auction.artists:0
+#: report:bids.lots:0
 msgid "Name"
 msgstr "Nume"
 
 #. module: auction
 #: field:auction.deposit,name:0
 #: field:auction.lots,bord_vnd_id:0
-#: wizard_field:auction.lots.numerotate,init,bord_vnd_id:0
-#: field:report.deposit.border,bord:0
-#: field:report.unclassified.objects,bord_vnd_id:0
 msgid "Depositer Inventory"
 msgstr "Inventar depozitar"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_report_deposit_tree_m
-#: model:ir.ui.menu,name:auction.menu_report_deposit_tree_member
-msgid "Depositer's Statistics"
-msgstr "Statistici depozitar"
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "The Buyer has no Invoice Address."
+msgstr ""
 
 #. module: auction
-#: view:report.object.encoded.manager:0
+#: view:report.object.encoded:0
 msgid "Total adj."
 msgstr "Total adj"
 
 #. module: auction
-#: wizard_field:auction.lots.send.aie,date_ask,uname:0
-#: wizard_field:auction.lots.send.aie,init,uname:0
-#: wizard_field:auction.lots.send.aie.results,date_ask,uname:0
-#: wizard_field:auction.lots.send.aie.results,init,uname:0
-#: wizard_field:auction.lots.sms_send,init,user:0
+#: field:auction.lots.sms.send,user:0
 msgid "Login"
 msgstr "Username"
 
 #. module: auction
-#: rml:buyer.list:0
-#: xsl:report.auction.seller.list:0
-msgid "To pay"
-msgstr "De plată"
-
-#. module: auction
-#: wizard_button:auction.lots.enable,init,go:0
-msgid "Enable Taken away"
-msgstr "Activare preluare"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Others"
-msgstr "Antichităţi / Altele"
+#: model:ir.model,name:auction.model_report_auction_adjudication
+msgid "report_auction_adjudication"
+msgstr "report_auction_adjudication"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.seller_lots_3
@@ -1277,32 +1123,30 @@ msgstr "Formular vânzător"
 
 #. module: auction
 #: field:auction.lots,lot_type:0
-#: field:report.unclassified.objects,lot_type:0
+#: field:report.auction,lot_type:0
 msgid "Object category"
 msgstr "Categoria obiectului"
 
 #. module: auction
-#: wizard_view:auction.taken,init:0
+#: view:auction.taken:0
 msgid "Mark Lots"
 msgstr "Marcare loturi"
 
 #. module: auction
+#: model:ir.model,name:auction.model_auction_lots
+msgid "Auction Object"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,obj_num:0
-#: wizard_field:auction.lots.enable,init,confirm_en:0
-#: wizard_field:auction.lots.numerotate,search,obj_num:0
-#: field:report.unclassified.objects,obj_num:0
+#: field:auction.lots.enable,confirm_en:0
 msgid "Catalog Number"
 msgstr "Număr de catalog"
 
 #. module: auction
-#: view:report.auction.view2:0
-msgid "Auction Reporting tree view2"
-msgstr "Afişare arbore raport licitaţie2"
-
-#. module: auction
-#: view:report.buyer.auction2:0
-msgid "Auction buyer reporting form view2"
-msgstr "Afişare arbore raport cumpărători licitaţie2"
+#: view:auction.dates:0
+msgid "Accounting"
+msgstr "Contabilitate"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.bid_phone
@@ -1310,28 +1154,12 @@ msgid "Bids phones"
 msgstr "Telefoane de licitare"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.action_report_object_by_auction
-msgid "Auction dates"
-msgstr "Date licitaţii"
+#: field:report.auction,avg_estimation:0
+msgid "Avg estimation"
+msgstr "Medie estimată"
 
 #. module: auction
-#: view:report.seller.auction2:0
-msgid "Auction seller reporting2 graph view"
-msgstr "Afişare graf raport2 vânzător licitaţie"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_report_auction_object_date_tree
-msgid "Encoded Objects Per Day"
-msgstr "Obiecte înregistrate pe zile"
-
-#. module: auction
-#: model:ir.model,name:auction.model_report_buyer_auction
-#: model:ir.model,name:auction.model_report_buyer_auction2
-msgid "Auction Reporting on buyer view"
-msgstr "Raportare licitaţie în afişarecumpărător"
-
-#. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "Debit:"
 msgstr "Debit:"
 
@@ -1341,185 +1169,84 @@ msgid "Author rights"
 msgstr "Drepturi de autor"
 
 #. module: auction
+#: view:auction.bid:0
+#: view:auction.dates:0
+#: view:auction.deposit:0
 #: view:auction.lots:0
-msgid "Payment's history"
-msgstr "Istoric plăţi"
+#: view:report.auction:0
+msgid "Group By..."
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Document"
-msgstr "Document"
+#: help:auction.dates,journal_id:0
+msgid "Account journal for buyer"
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid ", TEL:"
-msgstr ", Tel:"
+#: field:auction.bid,bid_lines:0
+#: report:auction.bids:0
+#: report:bids.lots:0
+#: model:ir.model,name:auction.model_auction_bid_line
+msgid "Bid"
+msgstr "Licitare"
 
 #. module: auction
-#: view:report.auction.view:0
-msgid "Auction results"
-msgstr "Rezultate licitaţie"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_auction_allmonth_view2
-msgid "Auction's Revenues"
-msgstr "Venituri licitaţie"
-
-#. module: auction
-#: view:report.object.encoded.manager:0
+#: view:report.object.encoded:0
 msgid "Total net rev."
 msgstr "Total venit net"
 
 #. module: auction
-#: wizard_button:auction.lots.buyer_map,check,set_buyer:0
+#: view:auction.lots.buyer_map:0
 msgid "Update"
 msgstr "Actualizare"
 
 #. module: auction
-#: rml:auction.total.rml:0
-#: model:ir.ui.menu,name:auction.auction_report_seller_menu
+#: report:auction.total.rml:0
 #: model:ir.ui.menu,name:auction.auction_seller_menu
 msgid "Sellers"
 msgstr "Vânzători"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Metal Ware"
-msgstr "Antichităţi/Feronerie"
+#: help:auction.lots,lot_est2:0
+msgid "Maximum Estimate Price"
+msgstr ""
 
 #. module: auction
-#: model:ir.actions.report.xml,name:auction.res_w_buyer
-msgid "Results with buyer"
-msgstr "Rezultate de la cumpărător"
+#: view:auction.lots:0
+msgid "Notes"
+msgstr ""
 
 #. module: auction
-#: selection:auction.lots.send.aie,date_ask,lang:0
-msgid "de"
-msgstr "de la"
-
-#. module: auction
-#: wizard_button:auction.lots.auction_move,init,set_date:0
+#: view:auction.lots.auction.move:0
 msgid "Move to Auction date"
 msgstr "Mişcare la data licitaţiei"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.action_auction_dates_old
-msgid "Old Auctions"
-msgstr "Licitaţii vechi"
-
-#. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "# of unsold items:"
 msgstr "Număr de obiecte nevândute"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Curiosa"
-msgstr "Artă cont./Curiozităţi"
+#: view:auction.dates:0
+msgid "Create Invoices"
+msgstr ""
 
 #. module: auction
 #: field:auction.bid,auction_id:0
-#: field:auction.lots,auction_id:0
-#: wizard_field:auction.lots.auction_move,init,auction_id:0
-#: wizard_field:auction.lots.send.aie,date_ask,dates:0
-#: wizard_field:auction.lots.send.aie,init,dates:0
-#: wizard_field:auction.lots.send.aie.results,date_ask,dates:0
-#: wizard_field:auction.lots.send.aie.results,init,dates:0
+#: view:auction.dates:0
+#: field:auction.lots.auction.move,auction_id:0
 msgid "Auction Date"
 msgstr "Data licitaţiei"
 
 #. module: auction
-#: rml:auction.code_bar_lot:0
+#: report:auction.code_bar_lot:0
 msgid ", ID"
 msgstr ", Id"
 
 #. module: auction
-#: model:ir.module.module,shortdesc:auction.module_meta_information
-msgid "Auction module"
-msgstr "Modul licitaţii"
-
-#. module: auction
-#: field:auction.bid_line,auction:0
-msgid "Auction Name"
-msgstr "Nume licitaţie"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_report_auction_sign_in_out_manager_tree1
-#: model:ir.ui.menu,name:auction.menu_report_auction_sign_in_out_member_tree1
-msgid "Attendance"
-msgstr "Prezenţă"
-
-#. module: auction
-#: view:auction.lots:0
-msgid "Seller information"
-msgstr "Informaţii vânzător"
-
-#. module: auction
-#: field:auction.lots,ach_login:0
-#: wizard_field:auction.lots.buyer_map,check,ach_login:0
-#: field:report.unclassified.objects,ach_login:0
-msgid "Buyer Username"
-msgstr "Utilizator cumpărător"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Jewelry"
-msgstr "Artă cont./Bijuterii"
-
-#. module: auction
-#: xsl:report.auction.deposit:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Inventory"
-msgstr "Inventar"
-
-#. module: auction
-#: model:ir.actions.act_window,name:auction.action_auction_dates_next
-msgid "Next Auctions"
-msgstr "Licitaţii viitoare"
-
-#. module: auction
-#: rml:buyer.list:0
-#: xsl:report.auction.seller.list:0
-msgid "#"
-msgstr "#"
-
-#. module: auction
-#: field:auction.lots,ach_emp:0
-msgid "Taken Away"
-msgstr "Ridicat"
-
-#. module: auction
-#: view:report.object.encoded.manager:0
-msgid "Total gross rev."
-msgstr "Venit total brut"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Miniatures / Collections"
-msgstr "Antichităţi/Miniaturi/Colecţii"
-
-#. module: auction
-#: wizard_view:auction.lots.numerotate,not_exist:0
-msgid "This lot does not exist !"
-msgstr "Acest lot nu există!"
-
-#. module: auction
-#: view:auction.dates:0
-msgid "End of auction"
-msgstr "Sfârşitul licitaţiei"
-
-#. module: auction
-#: field:auction.bid_line,call:0
-msgid "To be Called"
-msgstr "De apelat"
-
-#. module: auction
-#: model:ir.actions.act_window,name:auction.action_report_auction_estimation_adj_category_manager_tree
-#: model:ir.actions.act_window,name:auction.action_report_auction_estimation_adj_category_member_tree
-#: view:report.auction.estimation.adj.category:0
-msgid "Min est/Adj/Max est"
-msgstr "Min est/Adj/Max est"
+#: report:buyer.list:0
+msgid "Adj.("
+msgstr ""
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.lot_list_inv
@@ -1527,84 +1254,219 @@ msgid "Lots List - Landscape"
 msgstr "Listă loturi - Landscape"
 
 #. module: auction
-#: view:report.seller.auction:0
-msgid "Auction reporting tree view"
-msgstr "Afişare arbore raportare licitaţie"
+#: view:auction.artists:0
+msgid "Author/Artist"
+msgstr ""
 
 #. module: auction
-#: wizard_view:auction.lots.auction_move,init:0
-#: model:ir.actions.wizard,name:auction.wizard_change_auction
+#: field:auction.lots,ach_login:0
+#: field:auction.lots.buyer_map,ach_login:0
+msgid "Buyer Username"
+msgstr "Utilizator cumpărător"
+
+#. module: auction
+#: field:auction.lot.category,priority:0
+msgid "Priority"
+msgstr "Prioritate"
+
+#. module: auction
+#: view:board.board:0
+msgid "Latest objects"
+msgstr "Ultimele obiecte"
+
+#. module: auction
+#: field:auction.lots,lot_local:0
+msgid "Location"
+msgstr "Locație"
+
+#. module: auction
+#: view:report.auction:0
+msgid "Month -1"
+msgstr ""
+
+#. module: auction
+#: help:auction.lots,is_ok:0
+msgid "When buyer pay for bank statement', this field is marked"
+msgstr ""
+
+#. module: auction
+#: field:auction.lots,ach_emp:0
+msgid "Taken Away"
+msgstr "Ridicat"
+
+#. module: auction
+#: view:report.object.encoded:0
+msgid "Total gross rev."
+msgstr "Venit total brut"
+
+#. module: auction
+#: help:auction.lots,lot_est1:0
+msgid "Minimum Estimate Price"
+msgstr ""
+
+#. module: auction
+#: view:auction.deposit:0
+msgid "Deposit Date"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "This lot does not exist !"
+msgstr "Acest lot nu există!"
+
+#. module: auction
+#: selection:report.auction,month:0
+msgid "July"
+msgstr ""
+
+#. module: auction
+#: field:auction.bid_line,call:0
+msgid "To be Called"
+msgstr "De apelat"
+
+#. module: auction
+#: view:auction.lots:0
+#: model:ir.actions.act_window,name:auction.action_report_auction_lots_estimation_adj_category_tree
+msgid "Min est/Adj/Max est"
+msgstr "Min est/Adj/Max est"
+
+#. module: auction
+#: field:auction.lots,lot_est1:0
+msgid "Minimum Estimation"
+msgstr "Estimare de minim"
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lots_sms_send
+msgid "Sms send "
+msgstr ""
+
+#. module: auction
+#: view:auction.lots.auction.move:0
+#: model:ir.actions.act_window,name:auction.action_auction_lots_auction_move
 msgid "Change Auction Date"
 msgstr "Schimbare dată licitaţie"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Photo"
-msgstr "Artă cont./Fotografii"
+#: field:auction.artists,birth_death_dates:0
+msgid "Lifespan"
+msgstr ""
 
 #. module: auction
+#: view:auction.deposit:0
 #: field:auction.deposit,method:0
 msgid "Withdrawned method"
 msgstr "Metodă de retragere"
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: view:auction.dates:0
+msgid "Buyer Commissions"
+msgstr ""
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.action_report_auction
+#: model:ir.ui.menu,name:auction.menu_report_auction
+msgid "Auction Analysis"
+msgstr ""
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "Payment aborted !"
+msgstr ""
+
+#. module: auction
+#: field:auction.lot.history,price:0
+msgid "Withdrawn price"
+msgstr "Preţ de retragere"
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Beginning of the auction"
+msgstr "Începere licitaţie"
+
+#. module: auction
+#: help:auction.pay.buy,statement_id3:0
+msgid "Third Bank Statement For Buyer"
+msgstr ""
+
+#. module: auction
+#: view:report.auction:0
+#: field:report.auction,month:0
+#: field:report.auction.object.date,month:0
+msgid "Month"
+msgstr "Luna"
+
+#. module: auction
+#: report:auction.total.rml:0
 msgid "Max Estimate:"
 msgstr "Maxim estimat:"
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_bid
-msgid "Bid auctions"
-msgstr "Licitaţii licitate"
+#: view:auction.lots:0
+msgid "Statistical"
+msgstr ""
 
 #. module: auction
-#: field:report.auction.view2,obj_margin:0
-msgid "Avg margin"
-msgstr "Marja medie"
+#: model:ir.model,name:auction.model_auction_deposit
+msgid "Auction Deposit Border"
+msgstr ""
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Art from the Ivory Coast"
-msgstr "Antichităţi/Artă din Coasta de Fildeş"
+#: model:ir.actions.act_window,name:auction.action_report_object_encoded_tree
+msgid "Object statistics"
+msgstr ""
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Religiosa"
-msgstr "Antichităţi/Religioase"
+#: help:auction.lots,net_margin:0
+msgid "(Net Revenue * 100)/ Object Price"
+msgstr ""
 
 #. module: auction
-#: wizard_button:auction.lots.make_invoice,init,invoice:0
-#: wizard_button:auction.lots.make_invoice_buyer,init,invoice:0
+#: model:ir.model,name:auction.model_auction_lot_history
+msgid "Lot History"
+msgstr ""
+
+#. module: auction
+#: view:auction.lots.make.invoice:0
+#: view:auction.lots.make.invoice.buyer:0
 msgid "Create invoices"
 msgstr "Generare facturi"
 
 #. module: auction
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+#: model:account.tax.code,name:auction.account_tax_code_id5
+msgid "VAT 5%"
 msgstr ""
-"Eroare: UM implictă şi UM la aprovizionare trebuie să fie în aceeaşi "
-"categorie."
 
 #. module: auction
-#: xsl:report.auction.vnd_bordereau:0
+#: field:auction.dates,expo1:0
+msgid "First Exposition Day"
+msgstr "Prima zi de expunere"
+
+#. module: auction
+#: report:buyer.list:0
 msgid "Lot"
 msgstr "Lot"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_unplanned1
-msgid "Unplanned objects"
-msgstr "Obiecte neplanificate"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Sculpture"
-msgstr "Artă cont./Sculptură"
+#: help:aie.category,child_ids:0
+msgid "children aie category"
+msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
 msgid "auction.artists"
 msgstr "auction.artists"
+
+#. module: auction
+#: field:report.auction,avg_price:0
+msgid "Avg Price."
+msgstr ""
+
+#. module: auction
+#: help:auction.pay.buy,statement_id2:0
+msgid "Second Bank Statement For Buyer"
+msgstr ""
 
 #. module: auction
 #: field:auction.dates,journal_id:0
@@ -1613,28 +1475,15 @@ msgstr "Jurnal cumpărător"
 
 #. module: auction
 #: selection:auction.lots,state:0
-#: xsl:report.auction.ach_bordereau:0
 #: selection:report.object.encoded,state:0
-#: selection:report.unclassified.objects,state:0
 msgid "Paid"
 msgstr "Plătit"
 
 #. module: auction
-#: rml:bids.lots:0
-#: rml:bids.phones.details:0
+#: report:bids.lots:0
+#: report:bids.phones.details:0
 msgid "Phone"
 msgstr "Telefon"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Argenterie"
-msgstr "Antichităţi/Argintărie"
-
-#. module: auction
-#: wizard_button:auction.pay.buy,init,pay:0
-#: wizard_button:auction.payer.sel,init,pay2:0
-msgid "Pay"
-msgstr "Plată"
 
 #. module: auction
 #: field:auction.lot.category,active:0
@@ -1642,20 +1491,22 @@ msgid "Active"
 msgstr "Activ"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Lightings"
-msgstr "Antichităţi/Iluminat"
+#: view:auction.dates:0
+msgid "Exposition Dates"
+msgstr ""
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Sculpture, bronze, eso."
-msgstr "Antichităţi/Sculptură, bronz etc."
+#: model:account.tax,name:auction.auction_tax1
+msgid "TVA"
+msgstr "TVA"
 
 #. module: auction
-#: rml:buyer.list:0
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.seller.list:0
-#: xsl:report.auction.vnd_bordereau:0
+#: field:auction.lots,important:0
+msgid "To be Emphatized"
+msgstr "De subliniat"
+
+#. module: auction
+#: report:buyer.list:0
 msgid "Total:"
 msgstr "Total:"
 
@@ -1670,35 +1521,50 @@ msgid "Objects per Day"
 msgstr "Obiecte pe zile"
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-msgid "Document Number"
-msgstr "Număr document"
+#: field:auction.dates,seller_invoice_history:0
+#: field:auction.lots,sel_inv_id:0
+#: view:auction.lots.make.invoice:0
+msgid "Seller Invoice"
+msgstr "Factură vânzător"
 
 #. module: auction
-#: field:report.object.encoded.manager,obj_margin:0
-#: field:report.seller.auction2,net_margin:0
-msgid "Net margin"
-msgstr "Marjă netă"
+#: view:board.board:0
+msgid "Objects by day"
+msgstr "Obiecte pe zile"
 
 #. module: auction
-#: wizard_button:auction.lots.numerotate,search,set_number:0
-msgid "Numerotate"
-msgstr "Numerotare"
+#: help:auction.dates,expo2:0
+msgid "Last exposition date for auction"
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Buyer, Price"
-msgstr "Cumpărător, preţ"
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "Missed buyer !"
+msgstr ""
 
 #. module: auction
-#: rml:auction.code_bar_lot:0
+#: report:auction.code_bar_lot:0
 msgid "Flagey"
 msgstr "Flagey"
 
 #. module: auction
-#: model:ir.actions.report.xml,name:auction.v_huissier
-msgid "Listing Huissiers"
-msgstr "Listă Huissiers"
+#: view:board.board:0
+msgid "Auction manager "
+msgstr "Managet licitaţie "
+
+#. module: auction
+#: code:addons/auction/wizard/auction_lots_invoice.py:0
+#, python-format
+msgid ""
+"Two different buyers for the same invoice !\n"
+"Please correct this problem before invoicing"
+msgstr ""
+
+#. module: auction
+#: view:auction.dates:0
+msgid "Invoice"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,vnd_lim:0
@@ -1706,59 +1572,39 @@ msgid "Seller limit"
 msgstr "Limită vânzător"
 
 #. module: auction
-#: wizard_view:auction.lots.buyer_map,done:0
-msgid "All objects are assigned to buyers !"
-msgstr "Toate obiectele sunt atribuite cumpărătorilor!"
-
-#. module: auction
-#: wizard_button:auction.lots.able,init,go:0
-msgid "Able Taken away"
-msgstr "Apt de ridicare"
-
-#. module: auction
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ și să nu conțină nici un caracter "
-"special !"
-
-#. module: auction
 #: field:auction.deposit,transfer:0
 msgid "Transfer"
 msgstr "Transfer"
 
 #. module: auction
+#: view:auction.pay.buy:0
+msgid "Line3"
+msgstr ""
+
+#. module: auction
+#: view:auction.pay.buy:0
+msgid "Line2"
+msgstr ""
+
+#. module: auction
+#: help:auction.lots,obj_ret:0
+msgid "Object Ret"
+msgstr ""
+
+#. module: auction
 #: view:report.auction.adjudication:0
-#: field:report.seller.auction,total_price:0
 msgid "Total adjudication"
 msgstr "Total adjudecări"
 
 #. module: auction
-#: field:auction.lots,artist2_id:0
-msgid "Artist/Author 2"
-msgstr "Artist/Autor 2"
+#: selection:auction.deposit,method:0
+msgid "Contact the Seller"
+msgstr "Contactare vânzător"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_seller_allmonth_view1
-msgid "Seller's Summary"
-msgstr "Sumar vânzător"
-
-#. module: auction
-#: view:report.seller.auction:0
-msgid "Auction reporting graph view"
-msgstr "Afişare graf raportare licitaţie"
-
-#. module: auction
-#: wizard_field:auction.taken,init,lot_ids:0
+#: field:auction.taken,lot_ids:0
 msgid "Lots Emportes"
 msgstr "Loturi aduse"
-
-#. module: auction
-#: wizard_button:auction.lots.send.aie,date_ask,send:0
-#: wizard_button:auction.lots.send.aie.results,date_ask,send:0
-msgid "Send on your website"
-msgstr "Trimite pe website"
 
 #. module: auction
 #: field:auction.lots,net_margin:0
@@ -1766,55 +1612,36 @@ msgid "Net Margin (%)"
 msgstr "Marjă netă (%)"
 
 #. module: auction
-#: field:report.auction.object.date,month:0
-msgid "Month"
-msgstr "Luna"
-
-#. module: auction
-#: model:ir.actions.act_window,name:auction.auction_lots_open
-msgid "Simplified lots for adjudication"
-msgstr "Loturi simplificate pentru adjudecare"
-
-#. module: auction
 #: field:auction.lots,product_id:0
 msgid "Product"
 msgstr "Produs"
 
 #. module: auction
-#: model:ir.model,name:auction.model_report_auction_view
-msgid "Auction Reporting on view1"
-msgstr "Raportare licitaţie în afişare1"
+#: report:buyer.list:0
+msgid ")"
+msgstr ""
 
 #. module: auction
-#: field:report.seller.auction2,sum_adj:0
-msgid "Sum Adjustication"
-msgstr "Ajustare sumă"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Porcelain, Ceramics, Glassmaking, ..."
-msgstr "Antichităţi/Porţelanuri, ceramică, sticlărie, ..."
-
-#. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Plate Number:"
-msgstr "Număr de identificare"
+#: view:auction.lots:0
+msgid "Seller Information"
+msgstr ""
 
 #. module: auction
 #: view:auction.deposit:0
 #: field:auction.deposit,lot_id:0
-#: model:ir.ui.menu,name:auction.auction_objects_menu
+#: view:auction.lots:0
+#: model:ir.actions.act_window,name:auction.action_all_objects
+#: model:ir.ui.menu,name:auction.auction_all_objects_menu
 msgid "Objects"
 msgstr "Obiecte"
 
 #. module: auction
-#: wizard_view:auction.lots.numerotate,init:0
-#: wizard_view:auction.lots.numerotate,search:0
-msgid "Object Reference"
-msgstr "Referinţă obiect"
+#: view:auction.dates:0
+msgid "Seller Invoices"
+msgstr ""
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "Paid:"
 msgstr "Platit:"
 
@@ -1824,60 +1651,21 @@ msgid "Allow Negative Amount"
 msgstr "Permite sold negativ"
 
 #. module: auction
-#: rml:auction.bids:0
-#: view:auction.lots:0
-#: rml:auction.total.rml:0
-#: model:ir.ui.menu,name:auction.auction_report_auction_menu
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.deposit:0
-msgid "Auction"
-msgstr "Licitație"
+#: help:auction.pay.buy,amount2:0
+msgid "Amount For Second Bank Statement"
+msgstr ""
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Shows"
-msgstr "Artă cont./Spectacole"
-
-#. module: auction
-#: field:auction.dates,name:0
 #: field:auction.lot.history,auction_id:0
+#: field:report.auction,auction:0
 #: field:report.auction.adjudication,name:0
-#: field:report.auction.view,auction_id:0
-#: field:report.auction.view2,auction:0
-#: field:report.auction.view2,date:0
-#: field:report.buyer.auction,auction:0
-#: field:report.buyer.auction2,auction:0
-#: field:report.seller.auction,auction:0
-#: field:report.seller.auction2,auction:0
-#: field:report.seller.auction2,date:0
-#: field:report.unclassified.objects,auction:0
 msgid "Auction date"
 msgstr "Data licitaţiei"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_unsold
-msgid "Unsold Objects"
-msgstr "Obiecte nevândute"
-
-#. module: auction
-#: field:report.buyer.auction,avg_price:0
-msgid "Avg Adj."
-msgstr "Adjudecare medie"
-
-#. module: auction
-#: model:ir.model,name:auction.model_auction_deposit_cost
-msgid "auction.deposit.cost"
-msgstr "auction.deposit.cost"
-
-#. module: auction
-#: wizard_field:auction.lots.numerotate,search,bord_vnd_id:0
-msgid "Object Inventory"
-msgstr "Incentar obiecte"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Art from the Ivory Coast/African Arts"
-msgstr "Antichităţi/Artă din Coasta de Fildeş/Arte Africane"
+#: view:auction.lots.sms.send:0
+msgid "SMS Text"
+msgstr ""
 
 #. module: auction
 #: field:auction.dates,auction1:0
@@ -1885,19 +1673,9 @@ msgid "First Auction Day"
 msgstr "Prima zi de licitaţie"
 
 #. module: auction
-#: view:report.attendance:0
-msgid "User's pointing"
-msgstr "Opţiunea utilizatorurui"
-
-#. module: auction
-#: view:auction.lot.category:0
-msgid "Lot Category"
-msgstr "Categorie lot"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.auction_report_manager_menu
-msgid "Manager"
-msgstr "Manager"
+#: view:auction.lots.make.invoice.buyer:0
+msgid "Create Invoices For Buyer"
+msgstr ""
 
 #. module: auction
 #: view:auction.dates:0
@@ -1906,14 +1684,19 @@ msgstr "Nume"
 
 #. module: auction
 #: view:auction.artists:0
+#: model:ir.ui.menu,name:auction.menu_auction_artist
 msgid "Artists"
 msgstr "Artiști"
 
 #. module: auction
-#: field:report.attendance,total_attendance:0
-#: xsl:report.auction.ach_bordereau:0
-msgid "Total"
-msgstr "Total"
+#: view:auction.pay.buy:0
+msgid "Pay Objects"
+msgstr ""
+
+#. module: auction
+#: help:auction.dates,expo1:0
+msgid "Beginning exposition date for auction"
+msgstr ""
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_line_open
@@ -1921,9 +1704,14 @@ msgid "Open lots"
 msgstr "Loturi deschise"
 
 #. module: auction
-#: view:report.seller.auction:0
-msgid "Auction reporting form view"
-msgstr "Afişare formular raportare licitaţie"
+#: model:ir.actions.act_window,name:auction.act_auction_lot_open_deposit
+msgid "Deposit slip"
+msgstr ""
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lots_enable
+msgid "Lots Enable"
+msgstr ""
 
 #. module: auction
 #: view:auction.lots:0
@@ -1931,24 +1719,9 @@ msgid "Lots"
 msgstr "Loturi"
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_send
-msgid "Send to website"
-msgstr "Trimite pe website"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_auction_dates_old
-msgid "Old Auction Dates"
-msgstr "Date licitaţii vechi"
-
-#. module: auction
 #: field:auction.lots,seller_price:0
 msgid "Seller price"
 msgstr "Preţ vânzător"
-
-#. module: auction
-#: model:ir.model,name:auction.model_report_seller_auction2
-msgid "Auction Reporting on seller view2"
-msgstr "Raportare licitaţie în afişare vânzător2"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buy_id_list
@@ -1956,21 +1729,22 @@ msgid "Buyer List"
 msgstr "Listă cumpărători"
 
 #. module: auction
-#: rml:buyer.list:0
+#: report:buyer.list:0
 msgid "Buyer costs("
 msgstr "Costuri cumpărători("
 
 #. module: auction
-#: wizard_field:auction.pay.buy,init,statement_id1:0
-#: wizard_field:auction.pay.buy,init,statement_id2:0
-#: wizard_field:auction.pay.buy,init,statement_id3:0
+#: field:auction.pay.buy,statement_id1:0
+#: field:auction.pay.buy,statement_id2:0
+#: field:auction.pay.buy,statement_id3:0
 msgid "Statement"
 msgstr "Declaraţie"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Engravings"
-msgstr "Antichităţi/Gravuri"
+#: help:auction.lots,seller_price:0
+#: help:auction.lots.make.invoice,amount:0
+msgid "Seller Price"
+msgstr ""
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax20
@@ -1979,10 +1753,9 @@ msgid "Frais de vente"
 msgstr "Costuri de vindere"
 
 #. module: auction
-#: wizard_view:auction.lots.numerotate_cont,init:0
-#: wizard_field:auction.lots.numerotate_cont,init,number:0
-msgid "First Number"
-msgstr "Primul număr"
+#: model:account.tax.code,name:auction.account_tax_code_id1
+msgid "VAT 1%"
+msgstr ""
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax
@@ -1990,22 +1763,9 @@ msgid "Droit d'auteur"
 msgstr "Drept de autor"
 
 #. module: auction
-#: model:ir.model,name:auction.model_report_auction_view2
-msgid "Auction Reporting on  view2"
-msgstr "Raportare licitaţie în afişare2"
-
-#. module: auction
-#: field:auction.dates,expo1:0
-msgid "First Exposition Day"
-msgstr "Prima zi de expunere"
-
-#. module: auction
-#: wizard_view:auction.lots.auction_move,init:0
-msgid ""
-"Warning, this will erase the object adjudication price and its buyer !"
+#: model:ir.model,name:auction.model_auction_lots_buyer_map
+msgid "Map Buyer"
 msgstr ""
-"Avertizare, asta va şterge preţul de adjudecare a obiectului şi cumpărătorul "
-"lui !"
 
 #. module: auction
 #: field:report.auction.object.date,name:0
@@ -2013,59 +1773,63 @@ msgid "Created date"
 msgstr "Data creării"
 
 #. module: auction
-#: view:auction.bid:0
-msgid "Bid information"
-msgstr "Informaţii licitare"
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "TEL:"
-msgstr "Tel:"
-
-#. module: auction
-#: field:auction.dates,acc_income:0
-msgid "Income Account"
-msgstr "Cont de venituri"
+#: help:auction.lots,bord_vnd_id:0
+msgid ""
+"Provide deposit information: seller, Withdrawned Method, Object, Deposit "
+"Costs"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,net_revenue:0
-#: field:report.auction.view2,net_revenue:0
-#: field:report.object.encoded.manager,net_revenue:0
-#: field:report.seller.auction2,net_revenue:0
+#: field:report.object.encoded,net_revenue:0
 msgid "Net revenue"
 msgstr "Venit net"
 
 #. module: auction
-#: xsl:report.auction.deposit:0
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Limit"
-msgstr "Limită"
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_report_latest_doposit_tree_manager
-msgid "Latest Deposits"
-msgstr "Ultimele depuneri"
-
-#. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "# of items:"
 msgstr "Nr de obiecte"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Musical Instruments"
-msgstr "Antichităţi/Instrumente muzicale"
+#: model:account.tax,name:auction.tax_buyer_author
+msgid "Author rights (4%)"
+msgstr ""
 
 #. module: auction
 #: field:report.object.encoded,estimation:0
-#: field:report.object.encoded.manager,estimation:0
 msgid "Estimation"
 msgstr "Estimare"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Graphic Arts"
-msgstr "Antichităţi/Arte grafice"
+#: model:ir.module.module,description:auction.module_meta_information
+msgid ""
+"\n"
+"     This module manages the records of the artists,\n"
+"     the articles to be put up for auction,the buyers and\n"
+"     sellers.\n"
+"\n"
+"     It completely manages an auction such as managing bids,\n"
+"     keeping track of the sold articles along with the paid\n"
+"     and unpaid objects including delivery of the articles.\n"
+"     Dashboards for auction that includes:\n"
+"       * My Latest Objects (list)\n"
+"       * My Latest Deposits (list)\n"
+"       * Objects Statistics (list)\n"
+"       * My Objects By Day (list)\n"
+"    "
+msgstr ""
+
+#. module: auction
+#: view:auction.taken:0
+msgid "OK"
+msgstr ""
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buyer_form_id
@@ -2073,29 +1837,20 @@ msgid "Buyer Form"
 msgstr "Formular cumpărător"
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_invoice
-msgid "Invoice Seller objects"
-msgstr "Facturare obiecte vânzător"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Oriental Arts"
-msgstr "Antichităţi/Arte orientale"
-
-#. module: auction
 #: field:auction.bid,partner_id:0
 msgid "Buyer Name"
 msgstr "Nume cumpărător"
 
 #. module: auction
-#: field:report.auction.view2,sum_adj:0
-msgid "Sum of adjudication"
-msgstr "Suma de adjudecare"
+#: view:report.auction:0
+#: field:report.auction,day:0
+msgid "Day"
+msgstr ""
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.auction_wizard_enable_taken
-msgid "Unmark as taken away"
-msgstr "Revocare marcare \"Ridicat\""
+#: model:ir.actions.act_window,name:auction.action_auction_lots_make_invoice
+msgid "Invoice Seller objects"
+msgstr "Facturare obiecte vânzător"
 
 #. module: auction
 #: field:auction.lots,gross_margin:0
@@ -2109,41 +1864,44 @@ msgid "Closed"
 msgstr "Închis"
 
 #. module: auction
+#: view:auction.dates:0
+msgid "Search Next Auction Dates"
+msgstr ""
+
+#. module: auction
+#: view:auction.catalog.flagey:0
+msgid "Print Auction Catalog Flagey Report..."
+msgstr ""
+
+#. module: auction
+#: field:auction.lots,ach_avance:0
+msgid "Buyer Advance"
+msgstr "Avans cumpărător"
+
+#. module: auction
 #: field:auction.lots,obj_comm:0
-#: field:report.unclassified.objects,obj_comm:0
 msgid "Commission"
 msgstr "Comision"
 
 #. module: auction
-#: wizard_field:auction.lots.numerotate,init,lot_num:0
-msgid "Lot Number"
-msgstr "Număr lot"
+#: view:board.board:0
+msgid "Min/Adj/Max"
+msgstr "Min/Adj/Max"
 
 #. module: auction
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr "Codul TVA (CIF) nu pare a fi corect."
+#: view:auction.catalog.flagey:0
+msgid "Catalog Flagey Report"
+msgstr ""
 
 #. module: auction
-#: field:report.attendance,employee_id:0
-msgid "Employee"
-msgstr "Angajat"
+#: help:auction.lots,obj_price:0
+msgid "Object Price"
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.vnd_bordereau:0
-msgid "Adj.(EUR)"
-msgstr "Adj.(EUR)"
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Est."
-msgstr "Est."
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.auction_report_menu
-msgid "Reporting"
-msgstr "Raportare"
+#: view:auction.bid:0
+msgid "Bids Lines"
+msgstr ""
 
 #. module: auction
 #: view:auction.lots:0
@@ -2151,19 +1909,31 @@ msgid "Catalog"
 msgstr "Catalog"
 
 #. module: auction
+#: help:auction.lots,auction_id:0
+msgid "Auction for object"
+msgstr ""
+
+#. module: auction
 #: field:auction.deposit.cost,account:0
 msgid "Destination Account"
 msgstr "Cont destinaţie"
 
 #. module: auction
-#: model:ir.model,name:auction.model_report_deposit_border
-msgid "Report deposit border"
-msgstr "Borderou raportare depozite"
-
-#. module: auction
 #: model:ir.ui.menu,name:auction.auction_config_menu
 msgid "Configuration"
 msgstr "Configurare"
+
+#. module: auction
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid ""
+"You should pay all the total: \"%.2f\" are missing to accomplish the payment."
+msgstr ""
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_pay_buy
+msgid "Pay buy"
+msgstr ""
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_outils_menu
@@ -2181,16 +1951,14 @@ msgid "Last Exposition Day"
 msgstr "Ultima zi de expunere"
 
 #. module: auction
-#: model:ir.actions.act_window,name:auction.action_auction_report_allmonth_view1
-#: model:ir.actions.act_window,name:auction.action_auction_report_allmonth_view2
-#: model:ir.actions.act_window,name:auction.action_auction_report_thismonth_view2
-msgid "Auction report"
-msgstr "Raport licitaţie"
+#: model:ir.model,name:auction.model_auction_lots_able
+msgid "Lots able"
+msgstr ""
 
 #. module: auction
-#: model:ir.model,name:auction.model_auction_lot_category
-msgid "auction.lot.category"
-msgstr "auction.lot.category"
+#: model:account.tax.code,name:auction.account_tax_code_id3
+msgid "VAT 10%"
+msgstr ""
 
 #. module: auction
 #: field:auction.artists,name:0
@@ -2198,14 +1966,35 @@ msgid "Artist/Author Name"
 msgstr "Nume Artist/Autor"
 
 #. module: auction
+#: selection:report.auction,month:0
+msgid "December"
+msgstr ""
+
+#. module: auction
 #: field:auction.lots,image:0
 msgid "Image"
 msgstr "Imagine"
 
 #. module: auction
-#: selection:report.object.encoded,state:0
-msgid "Invoiced"
-msgstr "Facturat"
+#: help:auction.lots,buyer_price:0
+#: help:auction.lots.make.invoice.buyer,amount:0
+msgid "Buyer Price"
+msgstr ""
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_lot_category
+msgid "Auction Lots Category"
+msgstr ""
+
+#. module: auction
+#: model:account.tax.code,name:auction.account_tax_code_id2
+msgid "VAT 20%"
+msgstr ""
+
+#. module: auction
+#: model:ir.model,name:auction.model_auction_payer_sel
+msgid "Auction payment for seller"
+msgstr ""
 
 #. module: auction
 #: view:auction.lots:0
@@ -2214,26 +2003,9 @@ msgid "Taken away"
 msgstr "Ridicat"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Collectible & art objects"
-msgstr "Antichităţi/Colecţii şi obiecte de artă"
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "BID:"
-msgstr "Licitare:"
-
-#. module: auction
-#: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting
-#: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting2
-#: model:ir.actions.act_window,name:auction.action_auction_buyer_reporting_all1
-msgid "Buyer's auction"
-msgstr "Licitaţie cumpărător"
-
-#. module: auction
-#: view:report.seller.auction2:0
-msgid "Auction reporting2 tree view"
-msgstr "Vedere arbore raport2 licitaţie"
+#: model:ir.actions.report.xml,name:auction.seller_form_id
+msgid "Seller List"
+msgstr "Listă vânzător"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2241,89 +2013,70 @@ msgid "Deposit Costs"
 msgstr "Costuri depozite"
 
 #. module: auction
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
+#: field:auction.lot.category,name:0
+msgid "Category Name"
+msgstr "Nume categorie"
 
 #. module: auction
-#: selection:auction.dates,state:0
-#: selection:auction.lots,state:0
-#: selection:report.auction.adjudication,state:0
-#: selection:report.object.encoded,state:0
-#: selection:report.seller.auction,state:0
-#: selection:report.unclassified.objects,state:0
-msgid "Draft"
-msgstr "Ciornă"
-
-#. module: auction
-#: rml:buyer.list:0
+#: report:buyer.list:0
 msgid "........."
 msgstr "........."
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Buyer Cost:"
-msgstr "Cost cumpărător"
+#: view:report.auction:0
+msgid "Auction Summary tree view"
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "NET"
-msgstr "NET"
-
-#. module: auction
-#: rml:report.auction.buyer.result:0
+#: report:report.auction.buyer.result:0
 msgid "Adj"
 msgstr "Adj"
 
 #. module: auction
 #: view:auction.dates:0
-#: model:ir.ui.menu,name:auction.auction_date_menu
+#: model:ir.model,name:auction.model_auction_dates
 msgid "Auction Dates"
 msgstr "Date licitaţii"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Furnitures"
-msgstr "Antichităţi/Mobilier"
+#: model:ir.ui.menu,name:auction.menu_board_auction_open
+msgid "Auction DashBoard"
+msgstr ""
 
 #. module: auction
-#: xsl:report.auction.ach_bordereau:0
-msgid "Customer Contact"
-msgstr "Contact client"
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Inv, Name"
-msgstr "Inv, Nume"
-
-#. module: auction
+#: view:report.auction:0
+#: field:report.auction,user_id:0
 #: field:report.auction.adjudication,user_id:0
-#: field:report.auction.estimation.adj.category,user_id:0
 #: field:report.auction.object.date,user_id:0
 #: field:report.object.encoded,user_id:0
-#: field:report.object.encoded.manager,user_id:0
 msgid "User"
 msgstr "Utilizator"
 
 #. module: auction
-#: view:report.unplanned.object:0
-msgid "Unplanned Objects"
-msgstr "Obiecte neplanificate"
+#: view:auction.pay.buy:0
+msgid "Payment Lines"
+msgstr ""
 
 #. module: auction
-#: field:report.buyer.auction2,gross_revenue:0
-msgid "Gross Revenue"
-msgstr "Venit brut"
+#: code:addons/auction/auction.py:0
+#, python-format
+msgid "Missed Address !"
+msgstr ""
+
+#. module: auction
+#: help:auction.lots,net_revenue:0
+msgid "Buyer Price - Seller Price - Indirect Cost"
+msgstr ""
+
+#. module: auction
+#: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
+msgid "Open Bids"
+msgstr ""
 
 #. module: auction
 #: field:auction.artists,pseudo:0
 msgid "Pseudo"
 msgstr "Pseudo"
-
-#. module: auction
-#: field:auction.lots,important:0
-msgid "To be Emphatized"
-msgstr "De subliniat"
 
 #. module: auction
 #: view:auction.lots:0
@@ -2337,29 +2090,30 @@ msgid "Buyer Costs"
 msgstr "Costuri cumpărător"
 
 #. module: auction
-#: model:ir.actions.wizard,name:auction.wizard_numerotate_automatic
-msgid "Numerotation (automatic)"
-msgstr "Numerotare (automat)"
-
-#. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "Auction Date:"
 msgstr "Data licitaţiei:"
 
 #. module: auction
+#: code:addons/auction/wizard/auction_aie_send.py:0
+#: code:addons/auction/wizard/auction_aie_send_result.py:0
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: auction
+#: field:auction.dates,buyer_invoice_history:0
 #: field:auction.lots,ach_inv_id:0
+#: view:auction.lots.make.invoice.buyer:0
 msgid "Buyer Invoice"
 msgstr "Factură cumpărător"
 
 #. module: auction
-#: rml:auction.bids:0
+#: report:auction.bids:0
 msgid "Tel"
 msgstr "Tel"
-
-#. module: auction
-#: wizard_field:auction.pay.buy,init,total:0
-msgid "Amount to paid"
-msgstr "Sumă de plată"
 
 #. module: auction
 #: field:auction.lots,artist_id:0
@@ -2367,45 +2121,54 @@ msgid "Artist/Author"
 msgstr "Artist/Autor"
 
 #. module: auction
-#: model:account.tax,name:auction.auction_tax1
-msgid "TVA"
-msgstr "TVA"
-
-#. module: auction
 #: model:ir.actions.report.xml,name:auction.total_result1
 msgid "Auction Totals with lists"
 msgstr "Totaluri licitaţii cu liste"
 
 #. module: auction
-#: wizard_button:auction.lots.buyer_map,done,end:0
+#: view:auction.deposit:0
+msgid "General Information"
+msgstr ""
+
+#. module: auction
+#: view:auction.lots.auction.move:0
+#: view:auction.lots.buyer_map:0
+#: view:auction.lots.make.invoice:0
+#: view:auction.lots.make.invoice.buyer:0
+#: view:auction.lots.sms.send:0
+#: view:auction.pay.buy:0
 msgid "Close"
 msgstr "Închidere"
 
 #. module: auction
 #: model:ir.model,name:auction.model_report_object_encoded
-#: model:ir.model,name:auction.model_report_object_encoded_manager
 msgid "Object encoded"
 msgstr "Obiect înregistrat"
 
 #. module: auction
-#: rml:bids.phones.details:0
+#: view:auction.bid:0
+msgid "Search Auction Bid"
+msgstr ""
+
+#. module: auction
+#: report:bids.phones.details:0
 msgid "Est"
 msgstr "Est"
 
 #. module: auction
-#: field:report.auction.view,nbuyer:0
-msgid "No of buyers"
-msgstr "Nr de cumpărători"
+#: view:auction.dates:0
+msgid "Seller Commissions"
+msgstr ""
 
 #. module: auction
-#: field:report.seller.auction,avg_price:0
-msgid "Avg adjudication"
-msgstr "Adjudecare medie"
-
-#. module: auction
-#: view:report.object.encoded.manager:0
+#: view:report.object.encoded:0
 msgid "Object statistic"
 msgstr "Statistică obiecte"
+
+#. module: auction
+#: help:auction.dates,journal_seller_id:0
+msgid "Account journal for seller"
+msgstr ""
 
 #. module: auction
 #: field:auction.dates,auction2:0
@@ -2413,112 +2176,67 @@ msgid "Last Auction Day"
 msgstr "Ultima zi de licitaţie"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_auction_dates_next1
-msgid "Next Auction Dates"
-msgstr "Datele următoare de licitaţie"
+#: view:auction.deposit:0
+msgid "Objects Description"
+msgstr ""
 
 #. module: auction
-#: model:ir.model,name:auction.model_report_attendance
-msgid "Report Sign In/Out"
-msgstr "Raportare acces"
+#: code:addons/auction/wizard/auction_pay_buy.py:0
+#, python-format
+msgid "No auction date for \"%s\": Please set one."
+msgstr ""
 
 #. module: auction
 #: view:auction.deposit:0
 #: field:auction.deposit,info:0
-#: view:auction.lots:0
-#: wizard_field:auction.lots.numerotate,search,obj_desc:0
-#: rml:bids.phones.details:0
-#: xsl:flagey.huissier:0
-#: xsl:report.auction.ach_bordereau:0
-#: xsl:report.auction.deposit:0
-#: xsl:report.auction.lots.list.landscape:0
-#: xsl:report.auction.vnd_bordereau:0
+#: report:bids.phones.details:0
 msgid "Description"
 msgstr "Descriere"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Cont. Art/Arts"
-msgstr "Artă cont./Arte"
+#: selection:report.auction,month:0
+msgid "May"
+msgstr ""
 
 #. module: auction
 #: field:auction.lots,obj_price:0
-#: field:report.auction.view,adj_price:0
-#: field:report.unclassified.objects,obj_price:0
 msgid "Adjudication price"
 msgstr "Preţ de adjudecare"
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.menu_all_objects_to_sell
-msgid "Objects to sell"
-msgstr "Obiecte de vândut"
+#: field:auction.dates,acc_income:0
+msgid "Income Account"
+msgstr "Cont de venituri"
 
 #. module: auction
-#: xsl:flagey.huissier:0
-msgid "Ref."
-msgstr "Ref."
-
-#. module: auction
-#: wizard_field:auction.lots.send.aie,date_ask,password:0
-#: wizard_field:auction.lots.send.aie,init,password:0
-#: wizard_field:auction.lots.send.aie.results,date_ask,password:0
-#: wizard_field:auction.lots.send.aie.results,init,password:0
-#: wizard_field:auction.lots.sms_send,init,password:0
+#: field:auction.lots.sms.send,password:0
 msgid "Password"
 msgstr "Parolă"
 
 #. module: auction
-#: field:auction.lots,ach_avance:0
-msgid "Buyer Advance"
-msgstr "Avans cumpărător"
+#: selection:report.auction,month:0
+msgid "February"
+msgstr ""
 
 #. module: auction
-#: field:auction.lots,name:0
-#: wizard_field:auction.lots.numerotate,search,name:0
-#: field:report.unclassified.objects,name:0
-msgid "Short Description"
-msgstr "Descriere scurtă"
+#: selection:report.auction,month:0
+msgid "April"
+msgstr ""
 
 #. module: auction
-#: model:ir.ui.menu,name:auction.auction_report_employees_menu
-msgid "Employees"
-msgstr "Angajați"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Clocks and watches"
-msgstr "Antichităţi/Ceasuri şi orologii"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Scientific Instruments"
-msgstr "Antichităţi/Instrumente ştiinţifice"
-
-#. module: auction
-#: wizard_view:auction.lots.enable,init:0
-msgid "Confirmation enable taken away"
-msgstr "Confirmare ridicabil"
-
-#. module: auction
-#: wizard_view:auction.pay.buy,init:0
+#: view:auction.pay.buy:0
 msgid "Pay objects"
 msgstr "Plată obiecte"
 
 #. module: auction
 #: view:report.object.encoded:0
-#: view:report.object.encoded.manager:0
 msgid "# objects"
 msgstr "Nr. obiecte"
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "Adjudication:"
 msgstr "Adjudecare:"
-
-#. module: auction
-#: field:report.buyer.auction2,sumadj:0
-msgid "Sum of adjustication"
-msgstr "Sumă de adjudecare"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.details_bids_phones
@@ -2526,8 +2244,7 @@ msgid "Bids per lot (phone)"
 msgstr "Licitări pe lot (telefon)"
 
 #. module: auction
-#: field:report.buyer.auction,buyer_login:0
-#: field:report.buyer.auction2,buyer_login:0
+#: field:report.auction,buyer_login:0
 msgid "Buyer Login"
 msgstr "Utilizator cumpărător"
 
@@ -2537,89 +2254,14 @@ msgid "Expenses"
 msgstr "Cheltuieli"
 
 #. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Wine"
-msgstr "Antichităţi/Vinuri"
+#: model:ir.model,name:auction.model_auction_payer
+msgid "Auction payer"
+msgstr ""
 
 #. module: auction
-#: rml:auction.total.rml:0
+#: report:auction.total.rml:0
 msgid "Auction name:"
 msgstr "Denumire licitaţie:"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/African Arts"
-msgstr "Antichităţi/Arte africane"
-
-#. module: auction
-#: model:ir.actions.report.xml,name:auction.art2
-msgid "Artists Biography"
-msgstr "Biografii artişti"
-
-#. module: auction
-#: selection:auction.lot.category,aie_categ:0
-msgid "Antique/Posters"
-msgstr "Antichităţi/Postere"
-
-#. module: auction
-#: field:auction.lots,history_ids:0
-msgid "Auction history"
-msgstr "Istoric licitaţie"
-
-#. module: auction
-#: xsl:report.auction.lots.list.landscape:0
-msgid "Orders"
-msgstr "Comenzi"
-
-#. module: auction
-#: view:board.board:0
-msgid "Objects by day"
-msgstr "Obiecte pe zile"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_board_auction_manager
-msgid "Auction Manager"
-msgstr "Manager licitaţii"
-
-#. module: auction
-#: view:board.board:0
-msgid "Summary pointing by user"
-msgstr "Indicare rezumat pe utilizatori"
-
-#. module: auction
-#: model:ir.ui.menu,name:auction.menu_board_auction
-msgid "Auction Member"
-msgstr "Membru licitaţie"
-
-#. module: auction
-#: model:ir.actions.act_window,name:auction.open_board_auction
-msgid "Auction member board"
-msgstr "Panou membru licitaţie"
-
-#. module: auction
-#: view:board.board:0
-msgid "Auction manager "
-msgstr "Managet licitaţie "
-
-#. module: auction
-#: model:ir.module.module,shortdesc:auction.module_meta_information
-msgid "Board for Auction"
-msgstr "Panou pentru licitaţie"
-
-#. module: auction
-#: view:board.board:0
-msgid "Estimations/Adjudication"
-msgstr "Estimări/Adjudecări"
-
-#. module: auction
-#: view:board.board:0
-msgid "Total Adjudications"
-msgstr "Total adjudecări"
-
-#. module: auction
-#: view:board.board:0
-msgid "Latest objects"
-msgstr "Ultimele obiecte"
 
 #. module: auction
 #: view:board.board:0
@@ -2627,31 +2269,752 @@ msgid "Latest deposits"
 msgstr "Ultimele depozite"
 
 #. module: auction
-#: view:board.board:0
-msgid "Menu"
-msgstr "Meniu"
+#: model:ir.actions.report.xml,name:auction.art2
+msgid "Artists Biography"
+msgstr "Biografii artişti"
 
 #. module: auction
-#: view:board.board:0
-msgid "My objects By Day"
-msgstr "Obiectele mele pe zile"
+#: view:report.auction:0
+#: field:report.auction,year:0
+msgid "Year"
+msgstr ""
 
 #. module: auction
-#: view:board.board:0
-msgid "My board"
-msgstr "Panoul meu"
+#: field:auction.lots,history_ids:0
+msgid "Auction history"
+msgstr "Istoric licitaţie"
 
-#. module: auction
-#: model:ir.actions.act_window,name:auction.open_board_auction_manager
-msgid "Auction manager board"
-msgstr "Panou manager licitaţie"
+#~ msgid "SMS - Gateway: clickatell"
+#~ msgstr "Gateway SMS: clickatell"
 
-#. module: auction
-#: view:board.board:0
-msgid "Min/Adj/Max"
-msgstr "Min/Adj/Max"
+#~ msgid "Total margin"
+#~ msgstr "Marja totală"
 
-#. module: auction
-#: view:board.board:0
-msgid "My Latest Objects"
-msgstr "Ultimele mele obiecte"
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nume invalid de model în definirea acţiunii"
+
+#~ msgid "My Encoded Objects Per Day"
+#~ msgstr "Obiectele mele înregistrate pe zile"
+
+#~ msgid "Lot history"
+#~ msgstr "Istoric lot"
+
+#~ msgid "Definitive (ordre catalogue)"
+#~ msgstr "Devinitiv (catalog de comenzi)"
+
+#~ msgid "Provisoire"
+#~ msgstr "Provizoriu"
+
+#~ msgid "Adjudication by Auction"
+#~ msgstr "Adjudecare pe licitaţii"
+
+#~ msgid "Antique/Books, manuscripts, eso."
+#~ msgstr "Antichităţi/Cărţi, manuscrise, etc."
+
+#~ msgid "Numerotation (per lot)"
+#~ msgstr "Numerotaţie (pe loturi)"
+
+#~ msgid "Bids line"
+#~ msgstr "Rând licitaţie"
+
+#~ msgid "Deposit Form"
+#~ msgstr "Formular de depozit"
+
+#~ msgid "Buyer invoice reconciled"
+#~ msgstr "Factură cumpărător reconciliată"
+
+#~ msgid "Antique/Tin / Copper wares"
+#~ msgstr "Antichităţi/obiecte din cositor/cupru"
+
+#~ msgid "Inv."
+#~ msgstr "Inv."
+
+#~ msgid "Mark as taken away"
+#~ msgstr "Marcare ca ridicat"
+
+#~ msgid "Adjudication"
+#~ msgstr "Adjudecare"
+
+#~ msgid "VAT"
+#~ msgstr "TVA"
+
+#~ msgid "Statements"
+#~ msgstr "Declaraţii"
+
+#~ msgid "Contemporary Art"
+#~ msgstr "Artă contemporană"
+
+#~ msgid "Object Type"
+#~ msgstr "Tip obiect"
+
+#~ msgid "Antiques"
+#~ msgstr "Antichități"
+
+#~ msgid "Unclassifieds"
+#~ msgstr "Neclasificate"
+
+#~ msgid "Objects by Auction"
+#~ msgstr "Obiecte pe licitaţii"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Eroare: UV  trebuie să fie întro altă categorie decât UM"
+
+#~ msgid "Dates"
+#~ msgstr "Date"
+
+#~ msgid "Net margin (%)"
+#~ msgstr "Marjă netă (%)"
+
+#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#~ msgstr ""
+#~ "Eroare: Intrare (resp. Ieşire) trebuie să urmeze după Ieşire (resp. Intrare)"
+
+#~ msgid "No of sellers"
+#~ msgstr "Număr de vânzători"
+
+#~ msgid "ned"
+#~ msgstr "ned"
+
+#~ msgid "Contact"
+#~ msgstr "Contact"
+
+#~ msgid "Buyer's auction for all months"
+#~ msgstr "Acţiunile cumpărătorului pe toate lunile"
+
+#~ msgid "All objects"
+#~ msgstr "Toate obiectele"
+
+#~ msgid "Cont. Art/Painting"
+#~ msgstr "Artă cont./Pictură"
+
+#~ msgid "Inventory Number"
+#~ msgstr "Număr de inventar"
+
+#~ msgid "Langage"
+#~ msgstr "Limbaj"
+
+#~ msgid "Unsold objects"
+#~ msgstr "Obiecte nevândute"
+
+#~ msgid "Sold Objects"
+#~ msgstr "Obiecte vândute"
+
+#~ msgid "Sum net margin"
+#~ msgstr "Marjă sumă netă"
+
+#~ msgid "Back"
+#~ msgstr "Înapoi"
+
+#~ msgid "Exit"
+#~ msgstr "Ieșire"
+
+#~ msgid "Auction buyer reporting form view"
+#~ msgstr "Raportare cumpărător licitaţie din afişare"
+
+#~ msgid "Antique/Cartoons"
+#~ msgstr "Antichităţi/Desene"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Eroare ! Nu puteţi crea ierarhii recursive de angajaţi"
+
+#~ msgid "Auction Reporting on seller view"
+#~ msgstr "Raportare licitaţie în afişare vânzător"
+
+#~ msgid "Auction Objects"
+#~ msgstr "Obiecte licitate"
+
+#~ msgid "Depositer's statistics"
+#~ msgstr "Statistici depozitar"
+
+#~ msgid "Auction reporting2 form view"
+#~ msgstr "Raportare2 licitaţie în afişare formular"
+
+#~ msgid "Buyer information"
+#~ msgstr "Informaţii cumpărător"
+
+#~ msgid "My Latest Deposits"
+#~ msgstr "Ultimele mele depozite"
+
+#~ msgid "Amount paid"
+#~ msgstr "Suma plătită"
+
+#~ msgid "auction.dates"
+#~ msgstr "auction.dates"
+
+#~ msgid "Buyer's Revenues"
+#~ msgstr "Venituri cumpărător"
+
+#~ msgid "Bulk SMS send"
+#~ msgstr "Trimitere pachet SMS-uri"
+
+#~ msgid "Auction buyer reporting tree view2"
+#~ msgstr "Raportare cumpărători în afişare arbore2"
+
+#~ msgid "Antique/Old weapons and militaria"
+#~ msgstr "Antichităţi/Arme vechi şi efecte militare"
+
+#~ msgid "eng"
+#~ msgstr "eng"
+
+#~ msgid "fr"
+#~ msgstr "ro"
+
+#~ msgid "Antique/Oriental Arts/Chineese furnitures"
+#~ msgstr "Antichităţi/Arte orientale/Mobilă chinezească"
+
+#~ msgid "Continue"
+#~ msgstr "Continuare"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Eroare : cod EAN invalid"
+
+#~ msgid "Confirmation set taken away"
+#~ msgstr "Ridicare confirmată"
+
+#~ msgid "List N."
+#~ msgstr "Borderou"
+
+#~ msgid "Avg. Est"
+#~ msgstr "Medie est."
+
+#~ msgid ""
+#~ "This module provides functionality to \n"
+#~ "     manage artists, articles, sellers, buyers and auction.\n"
+#~ "     Manage bids, track of sold, paid and unpaid objects.\n"
+#~ "     Delivery Management. \n"
+#~ "    "
+#~ msgstr ""
+#~ "Acest modul oferă funcţionalitatea de a \n"
+#~ "     Gestiona artiştii, articolele, vânzătorii, cumpărătorii şi licitaţia.\n"
+#~ "     Gestiona licitările, urmărirea obiectelor vândute, a obiectelor plătite "
+#~ "şi neplătite\n"
+#~ "     Gestiunea livrărilor \n"
+#~ "    "
+
+#~ msgid "Mark as paid for seller"
+#~ msgstr "Marcare ca plătit pentru vânzător"
+
+#~ msgid "Close + Create all invoices"
+#~ msgstr "Închidere şi creare toate facturile"
+
+#~ msgid "Antique/Verreries"
+#~ msgstr "Antichităţi / Sticlărie"
+
+#~ msgid "Buyer form"
+#~ msgstr "Formular cumpărător"
+
+#~ msgid "Error ! You can not create recursive accounts."
+#~ msgstr "Eroare ! Nu puteţi crea conturi recursive."
+
+#~ msgid "Cat"
+#~ msgstr "Cat"
+
+#~ msgid "Estimate"
+#~ msgstr "Estimare"
+
+#~ msgid "Antique/Toys"
+#~ msgstr "Antichităţi / Jucării"
+
+#~ msgid "Auction buyer reporting tree view"
+#~ msgstr "Afişare arbore raport vânzători"
+
+#~ msgid "Define Artists"
+#~ msgstr "Definire artişti"
+
+#~ msgid "Retry"
+#~ msgstr "Reîncercare"
+
+#~ msgid "Code barres du lot"
+#~ msgstr "Cod de bare al lotului"
+
+#~ msgid "Comparison of estimations"
+#~ msgstr "Comparare estimări"
+
+#~ msgid "Unclassified objects "
+#~ msgstr "Obiecte neclasificate "
+
+#~ msgid "Antique/Jewelry"
+#~ msgstr "Antichităţi / Bijuterii"
+
+#~ msgid "Birth / Death dates"
+#~ msgstr "Date naştere / deces"
+
+#~ msgid "Cat. N."
+#~ msgstr "Cat. N."
+
+#~ msgid "Send Image also ?"
+#~ msgstr "Trimitere imagini deasemenea?"
+
+#~ msgid "comparaison estimate/adjudication "
+#~ msgstr "comparare estimat/adjudecat "
+
+#~ msgid "Adj(EUR)"
+#~ msgstr "Adj(EUR)"
+
+#~ msgid "Cont. Art/Other Media"
+#~ msgstr "Cont. Art/Alte media"
+
+#~ msgid "Numerotation"
+#~ msgstr "Numerotare"
+
+#~ msgid "Document type"
+#~ msgstr "Tip document"
+
+#~ msgid "Bordereau de dépôt"
+#~ msgstr "Borderou de depunere"
+
+#~ msgid "Unclassified objects"
+#~ msgstr "Obiecte neclasificate"
+
+#~ msgid "General Informations"
+#~ msgstr "Informaţii generale"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
+
+#~ msgid "Auctions results"
+#~ msgstr "Rezultatele licitaţiei"
+
+#~ msgid "Antique/Carpet and textilles"
+#~ msgstr "Antichităţi / Covoare şi textile"
+
+#~ msgid "New Auction Dates"
+#~ msgstr "Date pentru noi licitaţii"
+
+#~ msgid "Antique/Painting"
+#~ msgstr "Antichităţi / Pictură"
+
+#~ msgid "Sum adj"
+#~ msgstr "Sumă adj"
+
+#~ msgid "No of Objects"
+#~ msgstr "Nr de obiecte"
+
+#~ msgid "Check payment for seller"
+#~ msgstr "Verificare plată pentru vânzător"
+
+#~ msgid "Aie Category"
+#~ msgstr "Categorie auxiliară"
+
+#~ msgid "Detailed lots"
+#~ msgstr "Loturi detaliate"
+
+#~ msgid "Subtotal:"
+#~ msgstr "Subtotal:"
+
+#~ msgid "Seller's auction"
+#~ msgstr "Licitaţia vânzătorului"
+
+#~ msgid "Seller's Revenues"
+#~ msgstr "Venituri vânzător"
+
+#~ msgid "Send results to Auction-in-europe.com"
+#~ msgstr "Trimitere rezultate la Auction-in-europe.com"
+
+#~ msgid "Customer Reference"
+#~ msgstr "Referinţă client"
+
+#~ msgid "Buyer's Summary"
+#~ msgstr "Rezumat cumpărător"
+
+#~ msgid "Depositer's Statistics"
+#~ msgstr "Statistici depozitar"
+
+#~ msgid "Auction buyer reporting form view2"
+#~ msgstr "Afişare arbore raport cumpărători licitaţie2"
+
+#~ msgid "Enable Taken away"
+#~ msgstr "Activare preluare"
+
+#~ msgid "Antique/Others"
+#~ msgstr "Antichităţi / Altele"
+
+#~ msgid "Auction Reporting tree view2"
+#~ msgstr "Afişare arbore raport licitaţie2"
+
+#~ msgid "To pay"
+#~ msgstr "De plată"
+
+#~ msgid "Auction dates"
+#~ msgstr "Date licitaţii"
+
+#~ msgid "Auction seller reporting2 graph view"
+#~ msgstr "Afişare graf raport2 vânzător licitaţie"
+
+#~ msgid "Encoded Objects Per Day"
+#~ msgstr "Obiecte înregistrate pe zile"
+
+#~ msgid "Auction Reporting on buyer view"
+#~ msgstr "Raportare licitaţie în afişarecumpărător"
+
+#~ msgid "Auction results"
+#~ msgstr "Rezultate licitaţie"
+
+#~ msgid ", TEL:"
+#~ msgstr ", Tel:"
+
+#~ msgid "Document"
+#~ msgstr "Document"
+
+#~ msgid "Payment's history"
+#~ msgstr "Istoric plăţi"
+
+#~ msgid "Old Auctions"
+#~ msgstr "Licitaţii vechi"
+
+#~ msgid "de"
+#~ msgstr "de la"
+
+#~ msgid "Auction's Revenues"
+#~ msgstr "Venituri licitaţie"
+
+#~ msgid "Cont. Art/Jewelry"
+#~ msgstr "Artă cont./Bijuterii"
+
+#~ msgid "Seller information"
+#~ msgstr "Informaţii vânzător"
+
+#~ msgid "Auction module"
+#~ msgstr "Modul licitaţii"
+
+#~ msgid "Attendance"
+#~ msgstr "Prezenţă"
+
+#~ msgid "Cont. Art/Curiosa"
+#~ msgstr "Artă cont./Curiozităţi"
+
+#~ msgid "Antique/Miniatures / Collections"
+#~ msgstr "Antichităţi/Miniaturi/Colecţii"
+
+#~ msgid "Next Auctions"
+#~ msgstr "Licitaţii viitoare"
+
+#~ msgid "#"
+#~ msgstr "#"
+
+#~ msgid "Bid auctions"
+#~ msgstr "Licitaţii licitate"
+
+#~ msgid "Avg margin"
+#~ msgstr "Marja medie"
+
+#~ msgid "Antique/Religiosa"
+#~ msgstr "Antichităţi/Religioase"
+
+#~ msgid "Antique/Art from the Ivory Coast"
+#~ msgstr "Antichităţi/Artă din Coasta de Fildeş"
+
+#~ msgid "Auction reporting tree view"
+#~ msgstr "Afişare arbore raportare licitaţie"
+
+#~ msgid "Cont. Art/Photo"
+#~ msgstr "Artă cont./Fotografii"
+
+#~ msgid "Cont. Art/Sculpture"
+#~ msgstr "Artă cont./Sculptură"
+
+#~ msgid "Unplanned objects"
+#~ msgstr "Obiecte neplanificate"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Eroare: UM implictă şi UM la aprovizionare trebuie să fie în aceeaşi "
+#~ "categorie."
+
+#~ msgid "Antique/Argenterie"
+#~ msgstr "Antichităţi/Argintărie"
+
+#~ msgid "Buyer, Price"
+#~ msgstr "Cumpărător, preţ"
+
+#~ msgid "Document Number"
+#~ msgstr "Număr document"
+
+#~ msgid "Numerotate"
+#~ msgstr "Numerotare"
+
+#~ msgid "Antique/Lightings"
+#~ msgstr "Antichităţi/Iluminat"
+
+#~ msgid "Antique/Sculpture, bronze, eso."
+#~ msgstr "Antichităţi/Sculptură, bronz etc."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Numele obiectului trebuie să înceapă cu x_ și să nu conțină nici un caracter "
+#~ "special !"
+
+#~ msgid "Artist/Author 2"
+#~ msgstr "Artist/Autor 2"
+
+#~ msgid "Listing Huissiers"
+#~ msgstr "Listă Huissiers"
+
+#~ msgid "All objects are assigned to buyers !"
+#~ msgstr "Toate obiectele sunt atribuite cumpărătorilor!"
+
+#~ msgid "Able Taken away"
+#~ msgstr "Apt de ridicare"
+
+#~ msgid "Seller's Summary"
+#~ msgstr "Sumar vânzător"
+
+#~ msgid "Send on your website"
+#~ msgstr "Trimite pe website"
+
+#~ msgid "Auction reporting graph view"
+#~ msgstr "Afişare graf raportare licitaţie"
+
+#~ msgid "Simplified lots for adjudication"
+#~ msgstr "Loturi simplificate pentru adjudecare"
+
+#~ msgid "Antique/Porcelain, Ceramics, Glassmaking, ..."
+#~ msgstr "Antichităţi/Porţelanuri, ceramică, sticlărie, ..."
+
+#~ msgid "Auction Reporting on view1"
+#~ msgstr "Raportare licitaţie în afişare1"
+
+#~ msgid "Sum Adjustication"
+#~ msgstr "Ajustare sumă"
+
+#~ msgid "Object Reference"
+#~ msgstr "Referinţă obiect"
+
+#~ msgid "Plate Number:"
+#~ msgstr "Număr de identificare"
+
+#~ msgid "Avg Adj."
+#~ msgstr "Adjudecare medie"
+
+#~ msgid "Unsold Objects"
+#~ msgstr "Obiecte nevândute"
+
+#~ msgid "Cont. Art/Shows"
+#~ msgstr "Artă cont./Spectacole"
+
+#~ msgid "Lot Category"
+#~ msgstr "Categorie lot"
+
+#~ msgid "Manager"
+#~ msgstr "Manager"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "User's pointing"
+#~ msgstr "Opţiunea utilizatorurui"
+
+#~ msgid "Antique/Art from the Ivory Coast/African Arts"
+#~ msgstr "Antichităţi/Artă din Coasta de Fildeş/Arte Africane"
+
+#~ msgid "Object Inventory"
+#~ msgstr "Incentar obiecte"
+
+#~ msgid "auction.deposit.cost"
+#~ msgstr "auction.deposit.cost"
+
+#~ msgid "Old Auction Dates"
+#~ msgstr "Date licitaţii vechi"
+
+#~ msgid "Auction Reporting on seller view2"
+#~ msgstr "Raportare licitaţie în afişare vânzător2"
+
+#~ msgid "Auction reporting form view"
+#~ msgstr "Afişare formular raportare licitaţie"
+
+#~ msgid "Send to website"
+#~ msgstr "Trimite pe website"
+
+#~ msgid "TEL:"
+#~ msgstr "Tel:"
+
+#~ msgid "First Number"
+#~ msgstr "Primul număr"
+
+#~ msgid "Antique/Engravings"
+#~ msgstr "Antichităţi/Gravuri"
+
+#~ msgid "Auction Reporting on  view2"
+#~ msgstr "Raportare licitaţie în afişare2"
+
+#~ msgid "Bid information"
+#~ msgstr "Informaţii licitare"
+
+#~ msgid ""
+#~ "Warning, this will erase the object adjudication price and its buyer !"
+#~ msgstr ""
+#~ "Avertizare, asta va şterge preţul de adjudecare a obiectului şi cumpărătorul "
+#~ "lui !"
+
+#~ msgid "Antique/Musical Instruments"
+#~ msgstr "Antichităţi/Instrumente muzicale"
+
+#~ msgid "Antique/Graphic Arts"
+#~ msgstr "Antichităţi/Arte grafice"
+
+#~ msgid "Limit"
+#~ msgstr "Limită"
+
+#~ msgid "Latest Deposits"
+#~ msgstr "Ultimele depuneri"
+
+#~ msgid "Antique/Oriental Arts"
+#~ msgstr "Antichităţi/Arte orientale"
+
+#~ msgid "Unmark as taken away"
+#~ msgstr "Revocare marcare \"Ridicat\""
+
+#~ msgid "Sum of adjudication"
+#~ msgstr "Suma de adjudecare"
+
+#~ msgid "Employee"
+#~ msgstr "Angajat"
+
+#~ msgid "The VAT doesn't seem to be correct."
+#~ msgstr "Codul TVA (CIF) nu pare a fi corect."
+
+#~ msgid "Lot Number"
+#~ msgstr "Număr lot"
+
+#~ msgid "Report deposit border"
+#~ msgstr "Borderou raportare depozite"
+
+#~ msgid "Est."
+#~ msgstr "Est."
+
+#~ msgid "Adj.(EUR)"
+#~ msgstr "Adj.(EUR)"
+
+#~ msgid "Auction report"
+#~ msgstr "Raport licitaţie"
+
+#~ msgid "Antique/Collectible & art objects"
+#~ msgstr "Antichităţi/Colecţii şi obiecte de artă"
+
+#~ msgid "auction.lot.category"
+#~ msgstr "auction.lot.category"
+
+#~ msgid "Antique/Metal Ware"
+#~ msgstr "Antichităţi/Feronerie"
+
+#~ msgid "NET"
+#~ msgstr "NET"
+
+#~ msgid "Buyer Cost:"
+#~ msgstr "Cost cumpărător"
+
+#~ msgid "Buyer's auction"
+#~ msgstr "Licitaţie cumpărător"
+
+#~ msgid "BID:"
+#~ msgstr "Licitare:"
+
+#~ msgid "Auction reporting2 tree view"
+#~ msgstr "Vedere arbore raport2 licitaţie"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
+
+#~ msgid "Antique/Furnitures"
+#~ msgstr "Antichităţi/Mobilier"
+
+#~ msgid "Unplanned Objects"
+#~ msgstr "Obiecte neplanificate"
+
+#~ msgid "Customer Contact"
+#~ msgstr "Contact client"
+
+#~ msgid "Inv, Name"
+#~ msgstr "Inv, Nume"
+
+#~ msgid "Numerotation (automatic)"
+#~ msgstr "Numerotare (automat)"
+
+#~ msgid "Amount to paid"
+#~ msgstr "Sumă de plată"
+
+#~ msgid "Cont. Art/Arts"
+#~ msgstr "Artă cont./Arte"
+
+#~ msgid "Report Sign In/Out"
+#~ msgstr "Raportare acces"
+
+#~ msgid "No of buyers"
+#~ msgstr "Nr de cumpărători"
+
+#~ msgid "Avg adjudication"
+#~ msgstr "Adjudecare medie"
+
+#~ msgid "Next Auction Dates"
+#~ msgstr "Datele următoare de licitaţie"
+
+#~ msgid "Antique/Scientific Instruments"
+#~ msgstr "Antichităţi/Instrumente ştiinţifice"
+
+#~ msgid "Confirmation enable taken away"
+#~ msgstr "Confirmare ridicabil"
+
+#~ msgid "Antique/Clocks and watches"
+#~ msgstr "Antichităţi/Ceasuri şi orologii"
+
+#~ msgid "Short Description"
+#~ msgstr "Descriere scurtă"
+
+#~ msgid "Employees"
+#~ msgstr "Angajați"
+
+#~ msgid "Ref."
+#~ msgstr "Ref."
+
+#~ msgid "Objects to sell"
+#~ msgstr "Obiecte de vândut"
+
+#~ msgid "Antique/African Arts"
+#~ msgstr "Antichităţi/Arte africane"
+
+#~ msgid "Antique/Wine"
+#~ msgstr "Antichităţi/Vinuri"
+
+#~ msgid "Sum of adjustication"
+#~ msgstr "Sumă de adjudecare"
+
+#~ msgid "Antique/Posters"
+#~ msgstr "Antichităţi/Postere"
+
+#~ msgid "Orders"
+#~ msgstr "Comenzi"
+
+#~ msgid "Auction Manager"
+#~ msgstr "Manager licitaţii"
+
+#~ msgid "Summary pointing by user"
+#~ msgstr "Indicare rezumat pe utilizatori"
+
+#~ msgid "Auction Member"
+#~ msgstr "Membru licitaţie"
+
+#~ msgid "Auction member board"
+#~ msgstr "Panou membru licitaţie"
+
+#~ msgid "Board for Auction"
+#~ msgstr "Panou pentru licitaţie"
+
+#~ msgid "Estimations/Adjudication"
+#~ msgstr "Estimări/Adjudecări"
+
+#~ msgid "Menu"
+#~ msgstr "Meniu"
+
+#~ msgid "My objects By Day"
+#~ msgstr "Obiectele mele pe zile"
+
+#~ msgid "My board"
+#~ msgstr "Panoul meu"
+
+#~ msgid "Auction manager board"
+#~ msgstr "Panou manager licitaţie"
+
+#~ msgid "My Latest Objects"
+#~ msgstr "Ultimele mele obiecte"

@@ -136,7 +136,7 @@
             <field ref="cas" name="parent_id"/>
             <field name="type">receivable</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account_type_asset"/>
+            <field name="user_type" ref="account_type_receivable"/>
         </record>
 
         <record id="ova" model="account.account">
@@ -186,7 +186,7 @@
             <field ref="cli" name="parent_id"/>
             <field name="type">payable</field>
             <field eval="True" name="reconcile"/>
-            <field name="user_type" ref="account_type_liability"/>
+            <field name="user_type" ref="account_type_payable"/>
         </record>
 
         <record id="iva" model="account.account">
@@ -201,7 +201,7 @@
             <field name="code">X1113</field>
             <field name="name">Reserve and Profit/Loss - (test)</field>
             <field ref="cli" name="parent_id"/>
-            <field name="type">payable</field>
+            <field name="type">other</field>
             <field name="user_type" ref="account_type_liability"/>
         </record>
 
@@ -342,7 +342,7 @@
 
         <record id="sales_journal" model="account.journal">
             <field name="name">Sales Journal - (test)</field>
-            <field name="code">SAJ</field>
+            <field name="code">TSAJ</field>
             <field name="type">sale</field>
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
@@ -353,11 +353,11 @@
         </record>
         <record id="refund_sales_journal" model="account.journal">
             <field name="name">Sales Credit Note Journal - (test)</field>
-            <field name="code">SCNJ</field>
+            <field name="code">TSCNJ</field>
             <field name="type">sale_refund</field>
             <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
-            <field name="sequence_id" ref="sequence_sale_journal"/>
+            <field name="sequence_id" ref="sequence_refund_sales_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
             <field name="analytic_journal_id" ref="cose_journal_sale"/>
@@ -366,7 +366,7 @@
 
         <record id="expenses_journal" model="account.journal">
             <field name="name">Expenses Journal - (test)</field>
-            <field name="code">EXJ</field>
+            <field name="code">TEXJ</field>
             <field name="type">purchase</field>
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
@@ -377,11 +377,11 @@
         </record>
         <record id="refund_expenses_journal" model="account.journal">
             <field name="name">Expenses Credit Notes Journal - (test)</field>
-            <field name="code">ECNJ</field>
+            <field name="code">TECNJ</field>
             <field name="type">purchase_refund</field>
             <field eval="True" name="refund_journal"/>
             <field name="view_id" ref="account_sp_refund_journal_view"/>
-            <field name="sequence_id" ref="sequence_purchase_journal"/>
+            <field name="sequence_id" ref="sequence_refund_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
             <field name="analytic_journal_id" ref="exp"/>
@@ -390,10 +390,10 @@
 
         <record id="bank_journal" model="account.journal">
             <field name="name">Bank Journal - (test)</field>
-            <field name="code">BNK</field>
+            <field name="code">TBNK</field>
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
+            <field name="sequence_id" ref="sequence_bank_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="sit"/>
@@ -401,10 +401,10 @@
         </record>
         <record id="check_journal" model="account.journal">
             <field name="name">Checks Journal - (test)</field>
-            <field name="code">CHK</field>
+            <field name="code">TCHK</field>
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
+            <field name="sequence_id" ref="sequence_check_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="sit"/>
@@ -412,10 +412,10 @@
         </record>
         <record id="cash_journal" model="account.journal">
             <field name="name">Cash Journal - (test)</field>
-            <field name="code">CSH</field>
+            <field name="code">TCSH</field>
             <field name="type">cash</field>
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field name="sequence_id" ref="sequence_journal"/>
+            <field name="sequence_id" ref="sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
             <field name="analytic_journal_id" ref="sit"/>
@@ -438,6 +438,5 @@
             <field eval="'account.account,'+str(ref('account.a_sale'))" model="account.account" name="value"/>
             <field name="company_id" ref="base.main_company"/>
         </record>
-
     </data>
 </openerp>

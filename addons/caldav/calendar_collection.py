@@ -18,9 +18,11 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import osv, fields
 from tools.translate import _
 import caldav_node
+import logging
 
 class calendar_collection(osv.osv):
     _inherit = 'document.directory' 
@@ -30,7 +32,8 @@ class calendar_collection(osv.osv):
     }
     _default = {
         'calendar_collection' : False,
-    }   
+    }
+    
     def _get_root_calendar_directory(self, cr, uid, context=None):
         objid = self.pool.get('ir.model.data')
         try:
@@ -40,23 +43,28 @@ class calendar_collection(osv.osv):
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
             root_cal_dir = self.browse(cr,uid, root_id, context=context) 
             return root_cal_dir.name
-        except Exception, e:
-            import netsvc
-            logger = netsvc.Logger()
-            logger.notifyChannel("document", netsvc.LOG_WARNING, 'Cannot set root directory for Calendars:'+ str(e))
+        except Exception:
+            logger = logging.getLogger('document')
+            logger.warning('Cannot set root directory for Calendars:', exc_info=True)
             return False
         return False
 
-    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
-        """ try to locate the node in uri,
-            Return a tuple (node_dir, remaining_path)
-        """
-        return (caldav_node.node_database(context=ncontext), uri)
+    def get_node_class(self, cr, uid, ids, dbro=None, dynamic=False, context=None):
+        if dbro is None:
+            dbro = self.browse(cr, uid, ids, context=context)
+
+        if dbro.calendar_collection:
+            if dynamic:
+                return caldav_node.node_calendar_res_col
+            else:
+                return caldav_node.node_calendar_collection
+        else:
+            return super(calendar_collection, self).\
+                    get_node_class(cr, uid, ids, dbro=dbro,dynamic=dynamic, 
+                                    context=context)
 
     def get_description(self, cr, uid, ids, context=None):
         #TODO : return description of all calendars
-        if not context:
-            context = {}
         return False
 
     def get_schedule_inbox_URL(self, cr, uid, ids, context=None):

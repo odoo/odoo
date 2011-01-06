@@ -6,28 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 09:24+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-10-30 14:43+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:10+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: hr\n"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0
-msgid "Visible Columns"
-msgstr "Vidljivi Stupci"
-
-#. module: project_gtd
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: help:project.task,timebox_id:0
+msgid "Time-laps during which task has to be treated"
 msgstr ""
-"Naziv objekta mora početi sa x_ i ne smije sadržavati specijalne znakove !"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -35,74 +28,64 @@ msgid "project.gtd.timebox"
 msgstr "project.gtd.timebox"
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_deadline_open
-msgid "My Deadlines"
-msgstr "Moji Krajnji Rokovi"
+#: view:project.task:0
+msgid "Reactivate"
+msgstr ""
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,type:0
-msgid "Monthly"
-msgstr "Mjesečno"
+#: help:project.gtd.timebox,sequence:0
+msgid "Gives the sequence order when displaying a list of timebox."
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,parent_id:0
-msgid "Parent Timebox"
-msgstr "Ishodni Timebox"
+#: model:project.gtd.context,name:project_gtd.context_travel
+msgid "Travel"
+msgstr ""
 
 #. module: project_gtd
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za Arhitekturu Prikaza!"
+#: view:project.timebox.empty:0
+msgid "Timebox Empty Process Completed Successfully."
+msgstr ""
 
 #. module: project_gtd
-#: wizard_field:project.gtd.timebox.fill,init,task_ids:0
-msgid "Tasks selection"
-msgstr "Odabir zadataka"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#, python-format
+msgid "No timebox child of this one !"
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,col_priority:0
-msgid "Priority"
-msgstr "Prioritet"
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
+msgid ""
+"Timeboxes are defined in the \"Getting Things Done\" methodology. It defines "
+"a period of time in order to categorize your tasks: today, this week, this "
+"month, long term."
+msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_inbox
-#: model:ir.ui.menu,name:project_gtd.menu_open_time_myinbox
-msgid "My Inbox"
-msgstr "Moj Inbox"
+#: code:addons/project_gtd/project_gtd.py:0
+#, python-format
+msgid "GTD"
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.context,project_default_id:0
-msgid "Default Project"
-msgstr "Zadani Projekt"
+#: model:project.gtd.timebox,name:project_gtd.timebox_lt
+msgid "Long Term"
+msgstr ""
 
 #. module: project_gtd
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nepravilno ime modela u definiciji radnje."
+#: model:ir.model,name:project_gtd.model_project_timebox_empty
+msgid "Project Timebox Empty"
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,context4_id:0
-msgid "Context 4"
-msgstr "Kontekst 4"
-
-#. module: project_gtd
-#: wizard_field:project.gtd.timebox.fill,init,timebox_to_id:0
-msgid "Set to Timebox"
-msgstr "Postavi na Timebox"
-
-#. module: project_gtd
-#: selection:project.gtd.timebox,type:0
-msgid "Other"
-msgstr "Drugo"
-
-#. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
-msgid "Inbox Tasks"
-msgstr "Zadaci u Inboxu"
+#: model:project.gtd.timebox,name:project_gtd.timebox_daily
+msgid "Today"
+msgstr ""
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
 #: field:project.gtd.timebox,name:0
+#: view:project.task:0
 #: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Timebox"
@@ -113,114 +96,103 @@ msgid "Getting Things Done - Time Management Module"
 msgstr "Getting Things Done - Modul za upravljanje vremenom"
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks
-msgid "Timebox Tasks"
-msgstr "Zadaci u Timeboxu"
+#: field:project.timebox.fill.plan,timebox_to_id:0
+msgid "Set to Timebox"
+msgstr "Postavi na Timebox"
 
 #. module: project_gtd
-#: wizard_view:project.gtd.timebox.fill,init:0
-msgid "Timebox tasks selection"
-msgstr "Odabir zadataka u Timeboxu"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#, python-format
+msgid "Error !"
+msgstr "Greška !"
 
 #. module: project_gtd
-#: field:project.gtd.timebox,type:0
-msgid "Type"
-msgstr "Vrsta"
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,col_effective_hours:0
-msgid "Effective Hours"
-msgstr "Efektivni Sati"
+#: view:project.timebox.fill.plan:0
+msgid "_Cancel"
+msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.wizard,name:project_gtd.open_gtd_timebox_empty
+#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
+#: view:project.timebox.empty:0
 msgid "Empty Timebox"
 msgstr "Prazan Timebox"
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_pending
-msgid "My Pending Tasks"
-msgstr "Moji Neriješeni Zadaci"
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr ""
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0
-msgid "Timebox Definition"
-msgstr "Definicija Timeboxa"
+#: model:project.gtd.timebox,name:project_gtd.timebox_monthly
+msgid "This Month"
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,user_id:0
-msgid "User"
-msgstr "Korisnik"
+#: field:project.gtd.timebox,icon:0
+msgid "Icon"
+msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.wizard,name:project_gtd.open_gtd_timebox_daily
-#: model:ir.ui.menu,name:project_gtd.menu_open_time_daily_inbox
-msgid "My Daily Timebox"
-msgstr "Moj dnevni Timebox"
+#: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
+msgid "Project Timebox Fill"
+msgstr ""
 
 #. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_context
-msgid "project.gtd.context"
-msgstr "project.gtd.context"
+#: model:ir.model,name:project_gtd.model_project_task
+msgid "Task"
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,context1_id:0
-msgid "Context 1"
-msgstr "Kontekst 1"
-
-#. module: project_gtd
-#: field:project.gtd.timebox,context2_id:0
-msgid "Context 2"
-msgstr "Kontekst 2"
-
-#. module: project_gtd
-#: field:project.gtd.timebox,context3_id:0
-msgid "Context 3"
-msgstr "Kontekst 3"
-
-#. module: project_gtd
-#: wizard_button:project.gtd.timebox.fill,init,process:0
+#: view:project.timebox.fill.plan:0
 msgid "Add to Timebox"
 msgstr "Dodaj u Timebox"
 
 #. module: project_gtd
-#: field:project.gtd.timebox,context5_id:0
-msgid "Context 5"
-msgstr "Kontekst 5"
-
-#. module: project_gtd
-#: field:project.gtd.timebox,context6_id:0
-msgid "Context 6"
-msgstr "Kontekst 6"
+#: field:project.timebox.empty,name:0
+msgid "Name"
+msgstr ""
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
-#: view:project.gtd.timebox:0
 msgid "Contexts"
 msgstr "Konteksti"
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,type:0
-msgid "Daily"
-msgstr "Dnevno"
+#: model:project.gtd.context,name:project_gtd.context_car
+msgid "Car"
+msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.wizard,name:project_gtd.open_gtd_timebox_fill
+#: model:ir.module.module,description:project_gtd.module_meta_information
+msgid ""
+"\n"
+"This module implements all concepts defined by the Getting Things Done\n"
+"methodology. This world-wide used methodology is used for personal\n"
+"time management improvement.\n"
+"\n"
+"Getting Things Done (commonly abbreviated as GTD) is an action management\n"
+"method created by David Allen, and described in a book of the same name.\n"
+"\n"
+"GTD rests on the principle that a person needs to move tasks out of the mind "
+"by\n"
+"recording them externally. That way, the mind is freed from the job of\n"
+"remembering everything that needs to be done, and can concentrate on "
+"actually\n"
+"performing those tasks.\n"
+"    "
+msgstr ""
+
+#. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
+#: view:project.timebox.fill.plan:0
 msgid "Plannify Timebox"
 msgstr "Postavi planiranje u Timebox"
-
-#. module: project_gtd
-#: field:project.gtd.timebox,col_project:0
-msgid "Project"
-msgstr "Projekt"
-
-#. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_all
-#: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree_my
-#: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_my_timeboxes
-msgid "My Timeboxes"
-msgstr "Moji Timeboxovi"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
@@ -230,11 +202,7 @@ msgid "Timeboxes"
 msgstr "Timeboxovi"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Planned"
-msgstr "Planirano"
-
-#. module: project_gtd
+#: model:ir.model,name:project_gtd.model_project_gtd_context
 #: view:project.gtd.context:0
 #: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
@@ -242,74 +210,203 @@ msgid "Context"
 msgstr "Kontekst"
 
 #. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_open
-msgid "My Open Tasks"
-msgstr "Moji Otvoreni Zadaci"
-
-#. module: project_gtd
-#: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time
-#: model:ir.ui.menu,name:project_gtd.menu_open_time
-msgid "Time Management"
-msgstr "Upravljanje Vremenom"
-
-#. module: project_gtd
 #: view:project.task:0
+msgid "Next"
+msgstr ""
+
+#. module: project_gtd
+#: view:project.timebox.empty:0
+msgid "_Ok"
+msgstr ""
+
+#. module: project_gtd
+#: code:addons/project_gtd/project_gtd.py:0
+#, python-format
 msgid "Getting Things Done"
 msgstr "Getting Things Done"
 
 #. module: project_gtd
-#: field:project.gtd.timebox,task1_ids:0
-#: field:project.gtd.timebox,task2_ids:0
-#: field:project.gtd.timebox,task3_ids:0
-#: field:project.gtd.timebox,task4_ids:0
-#: field:project.gtd.timebox,task5_ids:0
-#: field:project.gtd.timebox,task6_ids:0
-#: field:project.gtd.timebox,task_ids:0
-#: view:project.task:0
-msgid "Tasks"
-msgstr "Zadaci"
+#: model:project.gtd.context,name:project_gtd.context_office
+msgid "Office"
+msgstr ""
 
 #. module: project_gtd
 #: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Redoslijed"
 
 #. module: project_gtd
-#: field:project.gtd.timebox,child_ids:0
-msgid "Child Timeboxes"
-msgstr "Ishodni Timeboxovi"
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
+msgid ""
+"Contexts are defined in the \"Getting Things Done\" methodology. It allows "
+"you to categorize your tasks according to the context in which they have to "
+"be done: at office, at home, when I take my car, etc."
+msgstr ""
 
 #. module: project_gtd
-#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
-msgid "All My Timeboxes"
-msgstr "Svi moji Timeboxovi"
+#: help:project.gtd.context,sequence:0
+msgid "Gives the sequence order when displaying a list of contexts."
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,col_deadline:0
-msgid "Deadline"
-msgstr "Krajnji Rok"
+#: view:project.gtd.timebox:0
+msgid "Timebox Definition"
+msgstr "Definicija Timeboxa"
 
 #. module: project_gtd
-#: wizard_field:project.gtd.timebox.fill,init,timebox_id:0
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Odabir zadataka"
+
+#. module: project_gtd
+#: code:addons/project_gtd/project_gtd.py:0
+#, python-format
+msgid "Inbox"
+msgstr ""
+
+#. module: project_gtd
+#: field:project.timebox.fill.plan,timebox_id:0
 msgid "Get from Timebox"
 msgstr "Uzmi iz Timeboxa"
 
 #. module: project_gtd
-#: wizard_button:project.gtd.timebox.fill,init,end:0
-msgid "Cancel"
-msgstr "Poništi"
+#: help:project.task,context_id:0
+msgid "The context place where user has to treat task"
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,col_date_start:0
-msgid "Date Start"
-msgstr "Datum Početka"
+#: model:project.gtd.context,name:project_gtd.context_home
+msgid "Home"
+msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.timebox,col_planned_hours:0
-msgid "Planned Hours"
-msgstr "Planirani Sati"
+#: view:project.task:0
+msgid "Previous"
+msgstr ""
 
-#. module: project_gtd
-#: selection:project.gtd.timebox,type:0
-msgid "Weekly"
-msgstr "Tjedno"
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta mora početi sa x_ i ne smije sadržavati specijalne znakove !"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za Arhitekturu Prikaza!"
+
+#~ msgid "Monthly"
+#~ msgstr "Mjesečno"
+
+#~ msgid "Visible Columns"
+#~ msgstr "Vidljivi Stupci"
+
+#~ msgid "Other"
+#~ msgstr "Drugo"
+
+#~ msgid "Priority"
+#~ msgstr "Prioritet"
+
+#~ msgid "Effective Hours"
+#~ msgstr "Efektivni Sati"
+
+#~ msgid "Default Project"
+#~ msgstr "Zadani Projekt"
+
+#~ msgid "User"
+#~ msgstr "Korisnik"
+
+#~ msgid "project.gtd.context"
+#~ msgstr "project.gtd.context"
+
+#~ msgid "Type"
+#~ msgstr "Vrsta"
+
+#~ msgid "Context 3"
+#~ msgstr "Kontekst 3"
+
+#~ msgid "Context 1"
+#~ msgstr "Kontekst 1"
+
+#~ msgid "Context 2"
+#~ msgstr "Kontekst 2"
+
+#~ msgid "Daily"
+#~ msgstr "Dnevno"
+
+#~ msgid "Context 5"
+#~ msgstr "Kontekst 5"
+
+#~ msgid "Context 6"
+#~ msgstr "Kontekst 6"
+
+#~ msgid "Project"
+#~ msgstr "Projekt"
+
+#~ msgid "Time Management"
+#~ msgstr "Upravljanje Vremenom"
+
+#~ msgid "Tasks"
+#~ msgstr "Zadaci"
+
+#~ msgid "My Open Tasks"
+#~ msgstr "Moji Otvoreni Zadaci"
+
+#~ msgid "Planned"
+#~ msgstr "Planirano"
+
+#~ msgid "Date Start"
+#~ msgstr "Datum Početka"
+
+#~ msgid "Planned Hours"
+#~ msgstr "Planirani Sati"
+
+#~ msgid "Weekly"
+#~ msgstr "Tjedno"
+
+#~ msgid "Cancel"
+#~ msgstr "Poništi"
+
+#~ msgid "My Deadlines"
+#~ msgstr "Moji Krajnji Rokovi"
+
+#, python-format
+#~ msgid "Eff. Hours"
+#~ msgstr "Efektivni Sati"
+
+#~ msgid "Context 4"
+#~ msgstr "Kontekst 4"
+
+#~ msgid "My Pending Tasks"
+#~ msgstr "Moji Neriješeni Zadaci"
+
+#~ msgid "Deadline"
+#~ msgstr "Krajnji Rok"
+
+#~ msgid "Parent Timebox"
+#~ msgstr "Ishodni Timebox"
+
+#~ msgid "My Inbox"
+#~ msgstr "Moj Inbox"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nepravilno ime modela u definiciji radnje."
+
+#~ msgid "Inbox Tasks"
+#~ msgstr "Zadaci u Inboxu"
+
+#~ msgid "Timebox Tasks"
+#~ msgstr "Zadaci u Timeboxu"
+
+#~ msgid "Timebox tasks selection"
+#~ msgstr "Odabir zadataka u Timeboxu"
+
+#~ msgid "My Daily Timebox"
+#~ msgstr "Moj dnevni Timebox"
+
+#~ msgid "My Timeboxes"
+#~ msgstr "Moji Timeboxovi"
+
+#~ msgid "Child Timeboxes"
+#~ msgstr "Ishodni Timeboxovi"
+
+#~ msgid "All My Timeboxes"
+#~ msgstr "Svi moji Timeboxovi"

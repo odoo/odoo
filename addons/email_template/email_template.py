@@ -23,25 +23,20 @@
 import base64
 import random
 import netsvc
+import logging
 import re
-
-LOGGER = netsvc.Logger()
 
 TEMPLATE_ENGINES = []
 
 from osv import osv, fields
 from tools.translate import _
-from mako.template import Template  #For backward combatibility
+
 try:
     from mako.template import Template as MakoTemplate
-    from mako import exceptions
     TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))
-except:
-    LOGGER.notifyChannel(
-         _("Email Template"),
-         netsvc.LOG_WARNING,
-         _("Mako templates not installed")
-    )
+except ImportError:
+    logging.getLogger('init').warning("module email_template: Mako templates not installed")
+    
 try:
     from django.template import Context, Template as DjangoTemplate
     #Workaround for bug:
@@ -50,12 +45,8 @@ try:
     settings.configure()
     #Workaround ends
     TEMPLATE_ENGINES.append(('django', 'Django Template'))
-except:
-    LOGGER.notifyChannel(
-         _("Email Template"),
-         netsvc.LOG_WARNING,
-         _("Django templates not installed")
-    )
+except ImportError:
+    logging.getLogger('init').warning("module email_template: Django templates not installed")
 
 import tools
 import pooler
@@ -79,9 +70,9 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
     if message:
         try:
             message = tools.ustr(message)
-            object = pool.get(template.model_int_name).browse(cursor, user, recid, context)
+            object = pool.get(template.model_int_name).browse(cursor, user, recid, context=context)
             env = {
-                'user':pool.get('res.users').browse(cursor, user, user, context),
+                'user':pool.get('res.users').browse(cursor, user, user, context=context),
                 'db':cursor.dbname
                    }
             if template.template_language == 'mako':
@@ -104,7 +95,7 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
 
 class email_template(osv.osv):
     "Templates for sending Email"
-    
+
     _name = "email.template"
     _description = 'Email Templates for Models'
 
@@ -132,7 +123,7 @@ class email_template(osv.osv):
         'def_to':fields.char(
                  'Recipient (To)',
                  size=250,
-                 help="The Recipient of email. " 
+                 help="The Recipient of email. "
                  "Placeholders can be used here. "
                  "e.g. ${object.email_to}"),
         'def_cc':fields.char(
@@ -147,20 +138,20 @@ class email_template(osv.osv):
                   help="Blind Carbon Copy address(es), comma-separated."
                     " Placeholders can be used here. "
                     "e.g. ${object.email_bcc}"),
-        'reply_to':fields.char('Reply-To', 
-                    size=250, 
+        'reply_to':fields.char('Reply-To',
+                    size=250,
                     help="The address recipients should reply to,"
                     " if different from the From address."
                     " Placeholders can be used here. "
                     "e.g. ${object.email_reply_to}"),
-        'message_id':fields.char('Message-ID', 
-                    size=250, 
+        'message_id':fields.char('Message-ID',
+                    size=250,
                     help="Specify the Message-ID SMTP header to use in outgoing emails. Please note that this overrides the Resource tracking option! Placeholders can be used here."),
         'track_campaign_item':fields.boolean('Resource Tracking',
                                 help="Enable this is you wish to include a special \
 tracking marker in outgoing emails so you can identify replies and link \
 them back to the corresponding resource record. \
-This is useful for CRM leads for example"), 
+This is useful for CRM leads for example"),
         'lang':fields.char(
                    'Language',
                    size=250,
@@ -183,7 +174,7 @@ This is useful for CRM leads for example"),
                     translate=True),
         'use_sign':fields.boolean(
                   'Signature',
-                  help="the signature from the User details" 
+                  help="the signature from the User details"
                   " will be appended to the mail"),
         'file_name':fields.char(
                 'Report Filename',
@@ -200,16 +191,16 @@ This is useful for CRM leads for example"),
                     'attachment_id',
                     'Attached Files',
                     help="You may attach existing files to this template, "
-                         "so they will be added in all emails created from this template"), 
+                         "so they will be added in all emails created from this template"),
         'ref_ir_act_window':fields.many2one(
                     'ir.actions.act_window',
                     'Window Action',
-                    help="Action that will open this email template on Resource records", 
+                    help="Action that will open this email template on Resource records",
                     readonly=True),
         'ref_ir_value':fields.many2one(
                    'ir.values',
                    'Wizard Button',
-                   help="Button in the side bar of the form view of this Resource that will invoke the Window Action", 
+                   help="Button in the side bar of the form view of this Resource that will invoke the Window Action",
                    readonly=True),
         'allowed_groups':fields.many2many(
                   'res.groups',
@@ -266,14 +257,16 @@ This is useful for CRM leads for example"),
         'template_language' : lambda *a:'mako',
 
     }
-    
+
     _sql_constraints = [
-        ('name', 'unique (name)', _('The template name must be unique !'))
+        ('name', 'unique (name)','The template name must be unique !')
     ]
 
-    def create_action(self, cr, uid, ids, context):
+    def create_action(self, cr, uid, ids, context=None):
         vals = {}
-        template_obj = self.browse(cr, uid, ids)[0]
+        if context is None:
+            context = {}
+        template_obj = self.browse(cr, uid, ids, context=context)[0]
         src_obj = template_obj.object_name.model
         vals['ref_ir_act_window'] = self.pool.get('ir.actions.act_window').create(cr, uid, {
              'name': template_obj.name,
@@ -300,9 +293,8 @@ This is useful for CRM leads for example"),
         }, context)
         return True
 
-    def unlink_action(self, cr, uid, ids, context):
-        for template in self.browse(cr, uid, ids, context):
-            obj = self.pool.get(template.object_name.model)
+    def unlink_action(self, cr, uid, ids, context=None):
+        for template in self.browse(cr, uid, ids, context=context):
             try:
                 if template.ref_ir_act_window:
                     self.pool.get('ir.actions.act_window').unlink(cr, uid, template.ref_ir_act_window.id, context)
@@ -311,14 +303,14 @@ This is useful for CRM leads for example"),
             except:
                 raise osv.except_osv(_("Warning"), _("Deletion of Record failed"))
 
-    def delete_action(self, cr, uid, ids, context):
-        self.unlink_action(cr, uid, ids, context)
+    def delete_action(self, cr, uid, ids, context=None):
+        self.unlink_action(cr, uid, ids, context=context)
         return True
-        
+
     def unlink(self, cr, uid, ids, context=None):
-        self.unlink_action(cr, uid, ids, context)
-        return super(email_template, self).unlink(cr, uid, ids, context)
-    
+        self.unlink_action(cr, uid, ids, context=context)
+        return super(email_template, self).unlink(cr, uid, ids, context=context)
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -330,40 +322,36 @@ This is useful for CRM leads for example"),
             new_name = new_name + '_' + random.choice('abcdefghij') + random.choice('lmnopqrs') + random.choice('tuvwzyz')
         default.update({'name':new_name})
         return super(email_template, self).copy(cr, uid, id, default, context)
-    
-    def compute_pl(self,
-                   model_object_field,
-                   sub_model_object_field,
-                   null_value, template_language='mako'):
+
+    def build_expression(self, field_name, sub_field_name, null_value, template_language='mako'):
         """
-        Returns the expression based on data provided
-        @param model_object_field: First level field
-        @param sub_model_object_field: Second level drilled down field (M2O)
-        @param null_value: What has to be returned if the value is empty
-        @param template_language: The language used for templating
+        Returns a template expression based on data provided
+        @param field_name: field name
+        @param sub_field_name: sub field name (M2O)
+        @param null_value: default value if the target value is empty
+        @param template_language: name of template engine
         @return: computed expression
         """
-        #Configure for MAKO
-        copy_val = ''
+
+        expression = ''
         if template_language == 'mako':
-            if model_object_field:
-                copy_val = "${object." + model_object_field
-            if sub_model_object_field:
-                copy_val += "." + sub_model_object_field
-            if null_value:
-                copy_val += " or '" + null_value + "'"
-            if model_object_field:
-                copy_val += "}"
+            if field_name:
+                expression = "${object." + field_name
+                if sub_field_name:
+                    expression += "." + sub_field_name
+                if null_value:
+                    expression += " or '''%s'''" % null_value
+                expression += "}"
         elif template_language == 'django':
-            if model_object_field:
-                copy_val = "{{object." + model_object_field
-            if sub_model_object_field:
-                copy_val += "." + sub_model_object_field
-            if null_value:
-                copy_val = copy_val + '|default:"' + null_value + '"'  
-            copy_val = copy_val + "}}"        
-        return copy_val 
-            
+            if field_name:
+                expression = "{{object." + field_name
+                if sub_field_name:
+                    expression += "." + sub_field_name
+                if null_value:
+                    expression += "|default: '''%s'''" % null_value
+                expression += "}}"
+        return expression
+
     def onchange_model_object_field(self, cr, uid, ids, model_object_field, template_language, context=None):
         if not model_object_field:
             return {}
@@ -374,7 +362,7 @@ This is useful for CRM leads for example"),
             res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
             if res_ids:
                 result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.compute_pl(False,
+                result['copyvalue'] = self.build_expression(False,
                                                       False,
                                                       False,
                                                       template_language)
@@ -383,7 +371,7 @@ This is useful for CRM leads for example"),
         else:
             #Its a simple field... just compute placeholder
             result['sub_object'] = False
-            result['copyvalue'] = self.compute_pl(field_obj.name,
+            result['copyvalue'] = self.build_expression(field_obj.name,
                                                   False,
                                                   False,
                                                   template_language
@@ -391,7 +379,7 @@ This is useful for CRM leads for example"),
             result['sub_model_object_field'] = False
             result['null_value'] = False
         return {'value':result}
-        
+
     def onchange_sub_model_object_field(self, cr, uid, ids, model_object_field, sub_model_object_field, template_language, context=None):
         if not model_object_field or not sub_model_object_field:
             return {}
@@ -402,7 +390,7 @@ This is useful for CRM leads for example"),
             sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
             if res_ids:
                 result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.compute_pl(field_obj.name,
+                result['copyvalue'] = self.build_expression(field_obj.name,
                                                       sub_field_obj.name,
                                                       False,
                                                       template_language
@@ -412,7 +400,7 @@ This is useful for CRM leads for example"),
         else:
             #Its a simple field... just compute placeholder
             result['sub_object'] = False
-            result['copyvalue'] = self.compute_pl(field_obj.name,
+            result['copyvalue'] = self.build_expression(field_obj.name,
                                                   False,
                                                   False,
                                                   template_language
@@ -431,7 +419,7 @@ This is useful for CRM leads for example"),
             sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
             if res_ids:
                 result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.compute_pl(field_obj.name,
+                result['copyvalue'] = self.build_expression(field_obj.name,
                                                       sub_field_obj.name,
                                                       null_value,
                                                       template_language
@@ -441,7 +429,7 @@ This is useful for CRM leads for example"),
         else:
             #Its a simple field... just compute placeholder
             result['sub_object'] = False
-            result['copyvalue'] = self.compute_pl(field_obj.name,
+            result['copyvalue'] = self.build_expression(field_obj.name,
                                                   False,
                                                   null_value,
                                                   template_language
@@ -453,7 +441,7 @@ This is useful for CRM leads for example"),
     def _add_attachment(self, cursor, user, mailbox_id, name, data, filename, context=None):
         """
         Add an attachment to a given mailbox entry.
-        
+
         :param data: base64 encoded attachment data to store
         """
         attachment_obj = self.pool.get('ir.attachment')
@@ -490,7 +478,7 @@ This is useful for CRM leads for example"),
         """
         Generate report to be attached and attach it
         to the email, and add any directly attached files as well.
-        
+
         @param cursor: Database Cursor
         @param user: ID of User
         @param template: Browse record of
@@ -498,8 +486,8 @@ This is useful for CRM leads for example"),
         @param record_id: ID of the target model
                           for which this mail has
                           to be generated
-        @param mail: Browse record of email object 
-        @return: True 
+        @param mail: Browse record of email object
+        @return: True
         """
         if template.report_template:
             reportname = 'report.' + \
@@ -516,7 +504,7 @@ This is useful for CRM leads for example"),
                                               user,
                                               [record_id],
                                               data,
-                                              context)   
+                                              context)
             fname = tools.ustr(get_value(cursor, user, record_id,
                                          template.file_name, template, context)
                                or 'Report')
@@ -530,7 +518,7 @@ This is useful for CRM leads for example"),
                 self._add_attachment(cursor, user, mail.id, attachment.name, attachment.datas, attachment.datas_fname, context)
 
         return True
-    
+
     def _generate_mailbox_item_from_template(self,
                                       cursor,
                                       user,
@@ -540,7 +528,7 @@ This is useful for CRM leads for example"),
         """
         Generates an email from the template for
         record record_id of target object
-        
+
         @param cursor: Database Cursor
         @param user: ID of User
         @param template: Browse record of
@@ -548,7 +536,7 @@ This is useful for CRM leads for example"),
         @param record_id: ID of the target model
                           for which this mail has
                           to be generated
-        @return: ID of created object 
+        @return: ID of created object
         """
         if context is None:
             context = {}
@@ -577,9 +565,9 @@ This is useful for CRM leads for example"),
             ctx = context.copy()
             ctx.update({'lang':lang})
             template = self.browse(cursor, user, template.id, context=ctx)
-        
-        # determine name of sender, either it is specified in email_id or we 
-        # use the account name 
+
+        # determine name of sender, either it is specified in email_id or we
+        # use the account name
         email_id = from_account['email_id'].strip()
         email_from = re.findall(r'([^ ,<@]+@[^> ,]+)', email_id)[0]
         if email_from != email_id:
@@ -669,7 +657,7 @@ This is useful for CRM leads for example"),
                                                              context)
 
         return mailbox_id
-        
+
 
     def generate_mail(self,
                       cursor,
@@ -727,7 +715,7 @@ email_template()
 class email_template_preview(osv.osv_memory):
     _name = "email_template.preview"
     _description = "Email Template Preview"
-    
+
     def _get_model_recs(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -737,13 +725,16 @@ class email_template_preview(osv.osv_memory):
             ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
             ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
             model_obj = self.pool.get(ref_obj_name)
-            ref_obj_ids = model_obj.search(cr, uid, [], 0, 20, 'id desc', context=context)
+            ref_obj_ids = model_obj.search(cr, uid, [], 0, 20, 'id', context=context)
+            if not ref_obj_ids:
+                ref_obj_ids = []
 
             # also add the default one if requested, otherwise it won't be available for selection:
             default_id = context.get('default_rel_model_ref')
             if default_id and default_id not in ref_obj_ids:
                 ref_obj_ids.insert(0, default_id)
             return model_obj.name_get(cr, uid, ref_obj_ids, context)
+        return []
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -767,8 +758,8 @@ class email_template_preview(osv.osv_memory):
                                                    user,
                                                    context['template_id'],
                                                    ['object_name'],
-                                                   context)['object_name']
-        
+                                                   context).get('object_name', False)
+
     _columns = {
         'ref_template':fields.many2one(
                                        'email.template',
@@ -778,13 +769,13 @@ class email_template_preview(osv.osv_memory):
         'to':fields.char('To', size=250, readonly=True),
         'cc':fields.char('CC', size=250, readonly=True),
         'bcc':fields.char('BCC', size=250, readonly=True),
-        'reply_to':fields.char('Reply-To', 
-                    size=250, 
+        'reply_to':fields.char('Reply-To',
+                    size=250,
                     help="The address recipients should reply to,"
                          " if different from the From address."
                          " Placeholders can be used here."),
-        'message_id':fields.char('Message-ID', 
-                    size=250, 
+        'message_id':fields.char('Message-ID',
+                    size=250,
                     help="The Message-ID header value, if you need to"
                          "specify it, for example to automatically recognize the replies later."
                         " Placeholders can be used here."),
@@ -794,7 +785,7 @@ class email_template_preview(osv.osv_memory):
         'report':fields.char('Report Name', size=100, readonly=True),
     }
     _defaults = {
-        'ref_template': lambda self, cr, uid, ctx:ctx['template_id'],
+        'ref_template': lambda self, cr, uid, ctx:ctx['template_id'] or False,
         'rel_model': _default_model,
     }
     def on_change_ref(self, cr, uid, ids, rel_model_ref, context=None):
@@ -825,7 +816,7 @@ class email_template_preview(osv.osv_memory):
         vals['body_html'] = get_value(cr, uid, rel_model_ref, template.def_body_html, template, context)
         vals['report'] = get_value(cr, uid, rel_model_ref, template.file_name, template, context)
         return {'value':vals}
-        
+
 email_template_preview()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -42,7 +42,7 @@
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
-                   <filter string="Period" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'period_id'}"/>
+                   <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id'}"/>
                    </group>
                </search>
             </field>
@@ -57,7 +57,7 @@
             <field name="search_view_id" ref="hr_contract_wage_type_view_search"/>
         </record>
 
-        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_management" sequence="5" groups="base.group_system"/>
+        <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_management" sequence="5"/>
         <menuitem action="action_hr_contract_wage_type" id="hr_menu_contract_wage_type" parent="next_id_56" sequence="7"/>
 
         <record id="hr_contract_wage_type_period_view_form" model="ir.ui.view">
@@ -102,10 +102,10 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <page string="Personal Information" position="after">
-                    <page string="Miscellaneous">
+                    <page string="Miscellaneous" groups="base.group_hr_user">
                         <group colspan="2" col="2">
                         <separator string="Personal Info" colspan="2"/>
-                        <field name="bank_account"/>
+                        <field name="bank_account_id"/>
                         <field name="place_of_birth"/>
                         <field name="children"/>
                         </group>
@@ -120,24 +120,10 @@
                         <field name="medic_exam" />
                         </group>
                     </page>
-                    <page string="Contracts">
-                        <field colspan="4" name="contract_ids" nolabel="1"/>
-                    </page>
                 </page>
             </field>
         </record>
 
-        <record id="hr_employee_view_form3" model="ir.ui.view">
-            <field name="name">hr.employee.view.form3</field>
-            <field name="model">hr.employee</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="hr.view_employee_form"/>
-            <field name="arch" type="xml">
-                <field name="parent_id" position="after">
-                    <field name="contract_id"/>
-                </field>
-            </field>
-        </record>
 
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
@@ -146,6 +132,9 @@
             <field name="arch" type="xml">
                 <search string="Search Contract">
                    <group col='15' colspan='4'>
+                   <filter string="Current" icon="terp-check" name="current"  domain="['|',('date_end','&gt;=', time.strftime('%%Y-%%m-%%d')),('date_end','=',False)]" help="Contracts in progress"/> 
+                   <filter string="Overpassed" icon="terp-emblem-important" domain="[('date_end','&lt;', time.strftime('%%Y-%%m-%%d'))]" help="Contracts whose end date already passed"/>   
+                   <separator orientation="vertical"/>                  
                    <field name="name"/>
                    <field name="employee_id"/>
                    <field name="working_hours"/>
@@ -154,11 +143,12 @@
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
+                   <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/> 
+                   <separator orientation="vertical"/> 
+                   <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
+                   <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
+                    <separator orientation="vertical"/> 
                     <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
-                    <filter string="Working Schedule" icon="terp-personal+" domain="[]" context="{'group_by':'working_hours'}"/>
-                    <filter string="Current" icon="terp-stock_symbol-selection" 
-                            domain="[('date_end','&gt;=', time.strftime('%%Y-%%m-%%d'))]" 
-                            context="{'group_by':'date_end'}"/>                    
                    </group>
                </search>
             </field>
@@ -213,7 +203,7 @@
                     <field name="employee_id"/>
                     <field name="type_id"/>
                     <field name="job_id"/>
-                    <field name="department_id"/>
+                    <!--field name="department_id"/-->
                     <field name="working_hours"/>                    
                     <field name="date_start"/>
                     <field name="date_end"/>
@@ -224,11 +214,12 @@
         </record>
 
         <record id="action_hr_contract" model="ir.actions.act_window">
-            <field name="name">Contract</field>
+            <field name="name">Contracts</field>
             <field name="res_model">hr.contract</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
+            <field name="context">{'search_default_current':1}</field>
             <field name="search_view_id" ref="hr_contract_view_search"/>
         </record>
 
@@ -276,7 +267,7 @@
         </record>
 
         <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56" sequence="6"/>
-        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_system,base.group_hr_manager,base.group_hr_contract"/>
+        <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_hr_manager"/>
 
         <!-- Contracts Button on Employee Form -->
         <act_window 
@@ -284,7 +275,8 @@
         id="act_hr_employee_2_hr_contract" 
         name="Contracts" 
         res_model="hr.contract" 
-        src_model="hr.employee"/>
+        src_model="hr.employee"
+        groups="base.group_hr_manager"/>
 
     </data>
 </openerp>

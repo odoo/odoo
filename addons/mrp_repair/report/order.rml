@@ -161,6 +161,28 @@
   </stylesheet>
   <images/>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="254.0,100.0,60.0,60.0,60.0" repeatRows="1" style="Table4">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Description</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">VAT</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Quantity</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Unit Price</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Price</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="P12">[[ repeatIn(objects,'o') ]]</para>
     <blockTable colWidths="265.0,51.0,225.0" style="Table1">
       <tr>
@@ -277,14 +299,14 @@
           <para style="terp_tblheader_Details_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Price<font size="8.0">([[ o.pricelist_id.currency_id. name ]])</font></para>
+          <para style="terp_tblheader_Details_Right">Price</para>
         </td>
       </tr>
     </blockTable>
     <para style="P29">Operation Line(s)</para>
     <section>
       <para style="P30"><font color="white">[[ repeatIn(o.operations,'line') ]] </font></para>
-      <para style="P30"><font color="white">[[ line or removeParentNode('section')]]</font></para>
+      <para style="P29">[[ (not line) and removeParentNode('section') ]]</para>
       <blockTable colWidths="254.0,100.0,60.0,60.0,60.0" style="Table5">[[ (line.to_invoice==True) or removeParentNode('blockTable') ]]
         <tr>
           <td>
@@ -310,7 +332,7 @@
     <para style="P29">Fees Line(s) [[ (o.fees_lines ==[] and  removeParentNode('para') )  ]]</para>
     <section>
     <para style="P30"><font color="white">[[ repeatIn(o.fees_lines,'fees') ]]</font></para>
-    <para style="P30"><font color="white">[[ fees or removeParentNode('section')]]</font></para>
+    <para style="P29">[[ (not fees) and removeParentNode('section') ]]</para>
 
     <blockTable colWidths="254.0,100.0,60.0,60.0,60.0" style="Table6">[[ (fees.to_invoice==True) or removeParentNode('blockTable') ]]
       <tr>
@@ -343,7 +365,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_untaxed, digits=get_digits(dp='Sale Price'))]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="P26">[[ formatLang(o.amount_untaxed, dp='Sale Price')]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
 
       </tr>
@@ -357,7 +379,7 @@
           <para style="terp_default_9">Taxes:</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_tax, digits=get_digits(dp='Account'))]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="P26">[[ formatLang(o.amount_tax, dp='Account')]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
       <tr>
@@ -370,7 +392,7 @@
           <para style="terp_tblheader_Details">Total :</para>
         </td>
         <td>
-          <para style="terp_default_right_bold_9">[[ formatLang(total(o), digits=get_digits(dp='Sale Price')) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_right_bold_9">[[ formatLang(total(o), dp='Sale Price') ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -390,5 +412,6 @@
     <para style="P24">
       <font color="white"> </font>
     </para>
+  </pto>
   </story>
 </document>

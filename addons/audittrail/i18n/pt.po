@@ -6,28 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 00:49+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-09 09:18+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
 #: model:ir.module.module,shortdesc:audittrail.module_meta_information
 msgid "Audit Trail"
-msgstr "Auditar Rastreio"
+msgstr "Tilha de Auditória"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
-"especial !"
 
 #. module: audittrail
 #: field:audittrail.log.line,log_id:0
@@ -35,31 +33,42 @@ msgid "Log"
 msgstr "Registo"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "Subscrito"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value : "
-msgstr "Valor antigo : "
+#: model:ir.model,name:audittrail.model_audittrail_rule
+msgid "Audittrail Rule"
+msgstr ""
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Create"
-msgstr "Criar"
-
-#. module: audittrail
-#: wizard_view:audittrail.view.log,init:0
+#: view:audittrail.view.log:0
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
-msgstr "Registos de Auditoria"
+msgstr "Registos de Auditória"
 
 #. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
+msgstr "Agrupar por..."
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "Estado"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "Rascunho"
@@ -67,21 +76,18 @@ msgstr "Rascunho"
 #. module: audittrail
 #: field:audittrail.log.line,old_value:0
 msgid "Old Value"
-msgstr "Valor antigo"
+msgstr "Valor Antigo"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da acção"
-
-#. module: audittrail
-#: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
 msgid "View log"
 msgstr "Ver registo"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "audittrail.log.line"
+#: help:audittrail.rule,log_read:0
+msgid ""
+"Select this if you want to keep track of read/open on any record of the "
+"object of this rule"
 msgstr ""
 
 #. module: audittrail
@@ -90,46 +96,49 @@ msgid "Method"
 msgstr "Método"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,from:0
+#: field:audittrail.view.log,from:0
 msgid "Log From"
-msgstr "Registar desde"
+msgstr "Registo Desde"
 
 #. module: audittrail
 #: field:audittrail.log.line,log:0
 msgid "Log ID"
-msgstr "Id registo"
+msgstr "ID do Registo"
 
 #. module: audittrail
 #: field:audittrail.log,res_id:0
 msgid "Resource Id"
-msgstr "Id do recurso"
+msgstr "ID do Recurso"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Write"
-msgstr "Escrita"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
-msgid "Audittrails"
+#: help:audittrail.rule,user_id:0
+msgid "if  User is not added then it will applicable for all users"
 msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,log_workflow:0
+msgid ""
+"Select this if you want to keep track of workflow on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,user_id:0
+msgid "Users"
+msgstr "Utilizadores"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Log Lines"
-msgstr "Linhas de registos"
+msgstr "Linhas de Registos"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "Registar"
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
+msgid "Rules"
+msgstr "Regras"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Read"
-msgstr "Ler"
-
-#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -138,61 +147,100 @@ msgstr "Objecto"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rule"
-msgstr ""
+msgstr "Regras da Trilha de Auditória"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,to:0
+#: field:audittrail.view.log,to:0
 msgid "Log To"
-msgstr ""
+msgstr "Registrar Para"
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value Text: "
-msgstr "Novo valor do texto : "
+msgstr "Novo Valor de Texto: "
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"Allows the administrator to track every user operations on all objects of "
-"the system.\n"
-"    Subscribe Rules for read, write, create and delete on objects and check "
-"logs"
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
 msgstr ""
 
 #. module: audittrail
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
+msgid "Audit Rules"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Old Value : "
+msgstr "Valor Antigo : "
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Resource Name"
+msgstr "Nome do recurso"
+
+#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "Data"
 
 #. module: audittrail
-#: field:audittrail.log,user_id:0
-msgid "User"
-msgstr "Utilizador"
+#: help:audittrail.rule,log_write:0
+msgid ""
+"Select this if you want to keep track of modification on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,object_id:0
+msgid "Select object for which you want to generate log."
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Old Value Text : "
-msgstr "Texto com valores antigos : "
+msgstr "Texto com Valor Antigo : "
 
 #. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitectura de vista"
+#: field:audittrail.rule,log_workflow:0
+msgid "Log Workflow"
+msgstr ""
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
-msgstr "Nome"
+#: model:ir.module.module,description:audittrail.module_meta_information
+msgid ""
+"\n"
+"    This module gives the administrator the rights\n"
+"    to track every user operation on all the objects\n"
+"    of the system.\n"
+"\n"
+"    Administrator can subscribe rules for read,write and\n"
+"    delete on objects and can check logs.\n"
+"    "
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_read:0
+msgid "Log Reads"
+msgstr ""
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr ""
+"A mudança depende da Trilha de Auditória -- Definir regras como RASCUNHO"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
-msgstr ""
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "Regras subscritas"
+msgstr "Linhas de Registo"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
@@ -202,62 +250,70 @@ msgstr "Campos"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "AuditTrail Rules"
+msgstr "Regras da Trilha de Auditória"
+
+#. module: audittrail
+#: help:audittrail.rule,log_unlink:0
+msgid ""
+"Select this if you want to keep track of deletion on any record of the "
+"object of this rule"
 msgstr ""
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_rule
-msgid "audittrail.rule"
+#: view:audittrail.log:0
+#: field:audittrail.log,user_id:0
+msgid "User"
+msgstr "Utilizador"
+
+#. module: audittrail
+#: field:audittrail.rule,action_id:0
+msgid "Action ID"
+msgstr "ID da Ação"
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Users (if User is not added then it will applicable for all users)"
 msgstr ""
 
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "UnSubscribe"
-msgstr "Não registar"
+msgstr "Não Registar"
 
 #. module: audittrail
-#: field:audittrail.rule,log_write:0
-msgid "Log writes"
-msgstr ""
-
-#. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log
-msgid "audittrail.log"
+#: field:audittrail.rule,log_unlink:0
+msgid "Log Deletes"
 msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,field_description:0
 msgid "Field Description"
-msgstr "Descrição do campo"
+msgstr "Descrição do Campo"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Delete"
-msgstr "Eliminar"
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
+msgstr ""
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,open:0
+#: field:audittrail.rule,log_write:0
+msgid "Log Writes"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.view.log:0
 msgid "Open Logs"
-msgstr "Abrir registos"
+msgstr "Abrir Registos"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value_text:0
 msgid "New value Text"
-msgstr "Novo valor de texto"
+msgstr "Novo valor de Texto"
 
 #. module: audittrail
 #: field:audittrail.rule,name:0
 msgid "Rule Name"
-msgstr "Nome da regra"
-
-#. module: audittrail
-#: field:audittrail.rule,log_read:0
-msgid "Log reads"
-msgstr "Leituras os registos"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr "Registos"
+msgstr "Nome da Regra"
 
 #. module: audittrail
 #: field:audittrail.log.line,new_value:0
@@ -265,46 +321,151 @@ msgid "New Value"
 msgstr "Novo Valor"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_log_tree2
-msgid "View Logs"
-msgstr "Ver registos"
-
-#. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log creates"
-msgstr "Criação de registos"
-
-#. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
+msgstr "Registros da Trilha de Auditória"
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log
+msgid "Audittrail Log"
 msgstr ""
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
-msgid "Rules"
-msgstr "Regras"
+#: help:audittrail.rule,log_action:0
+msgid ""
+"Select this if you want to keep track of actions on the object of this rule"
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "New Value : "
-msgstr "Novo valor : "
+msgstr "Novo Valor : "
 
 #. module: audittrail
-#: field:audittrail.rule,user_id:0
-msgid "Users"
-msgstr "Utilizadores"
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
 msgid "Old value Text"
-msgstr "Texto com valores antigos"
+msgstr "Texto com valor Antigo"
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,end:0
+#: view:audittrail.view.log:0
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: audittrail
-#: field:audittrail.rule,log_unlink:0
-msgid "Log deletes"
-msgstr "Apagar registos"
+#: model:ir.model,name:audittrail.model_audittrail_view_log
+msgid "View Log"
+msgstr ""
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_action:0
+msgid "Log Action"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,log_create:0
+msgid ""
+"Select this if you want to keep track of creation on any record of the "
+"object of this rule"
+msgstr ""
+
+#~ msgid "Create"
+#~ msgstr "Criar"
+
+#~ msgid "Write"
+#~ msgstr "Escrita"
+
+#~ msgid "Read"
+#~ msgstr "Ler"
+
+#~ msgid "Delete"
+#~ msgstr "Eliminar"
+
+#~ msgid "Logs"
+#~ msgstr "Registos"
+
+#~ msgid "Name"
+#~ msgstr "Nome"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
+#~ "especial !"
+
+#~ msgid "audittrail.log.line"
+#~ msgstr "audittrail.log.line"
+
+#~ msgid "audittrail.rule"
+#~ msgstr "audittrail.rule"
+
+#~ msgid "audittrail.log"
+#~ msgstr "audittrail.log"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da acção"
+
+#~ msgid "Audittrails"
+#~ msgstr "Trilha de Auditória"
+
+#~ msgid "Subscribe"
+#~ msgstr "Subscrever"
+
+#~ msgid ""
+#~ "Allows the administrator to track every user operations on all objects of "
+#~ "the system.\n"
+#~ "    Subscribe Rules for read, write, create and delete on objects and check "
+#~ "logs"
+#~ msgstr ""
+#~ "Permite ao administrador para acompanhar todas as operações do utilizados em "
+#~ "todos os objectos do sistema.\n"
+#~ "   Subscrever as Regras para leitura, escrita e eliminar em objectos e "
+#~ "verificar os registros"
+
+#, python-format
+#~ msgid "WARNING:audittrail is not part of the pool"
+#~ msgstr "AVISO: A Trilha de Auditória não faz parte"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML Inválido para a Arquitectura de Vista !"
+
+#~ msgid "Subscribed Rules"
+#~ msgstr "Regras Subscritas"
+
+#~ msgid "Log writes"
+#~ msgstr "Escrever Registo"
+
+#~ msgid "Log reads"
+#~ msgstr "Leritura de Registos"
+
+#~ msgid "View Logs"
+#~ msgstr "Ver Registos"
+
+#~ msgid "Log creates"
+#~ msgstr "Criação de Registos"
+
+#~ msgid "Log deletes"
+#~ msgstr "Apagar Registos"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo deve ser único!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID do certificado do módulo tem de ser único!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro! Não pode criar menus recursivos."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo não pode ser inferior a 1 !"

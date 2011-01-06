@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-18 06:50:02+0000\n"
-"PO-Revision-Date: 2010-08-18 06:50:02+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58:26+0000\n"
+"PO-Revision-Date: 2011-01-03 16:58:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,11 +23,6 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Friday"
-msgstr ""
-
-#. module: resource
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: resource
@@ -47,15 +42,10 @@ msgid "Resources Leaves"
 msgstr ""
 
 #. module: resource
+#: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
-#: view:resource.calendar.leaves:0
 msgid "Working Time"
-msgstr ""
-
-#. module: resource
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
 msgstr ""
 
 #. module: resource
@@ -64,7 +54,6 @@ msgid "Thursday"
 msgstr ""
 
 #. module: resource
-#: view:resource.calendar:0
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Group By..."
@@ -73,11 +62,6 @@ msgstr ""
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
-msgstr ""
-
-#. module: resource
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
 msgstr ""
 
 #. module: resource
@@ -102,13 +86,13 @@ msgid "Workgroup manager"
 msgstr ""
 
 #. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Period"
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Working time will start from"
 msgstr ""
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Monday"
+#: constraint:resource.calendar.leaves:0
+msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
 
 #. module: resource
@@ -136,8 +120,23 @@ msgid "Day of week"
 msgstr ""
 
 #. module: resource
+#: help:resource.calendar.attendance,hour_to:0
+msgid "Working time will end at"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting date"
+msgstr ""
+
+#. module: resource
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr ""
+
+#. module: resource
+#: view:resource.calendar.leaves:0
+msgid "Reason"
 msgstr ""
 
 #. module: resource
@@ -168,6 +167,7 @@ msgstr ""
 
 #. module: resource
 #: model:ir.module.module,shortdesc:resource.module_meta_information
+#: model:ir.ui.menu,name:resource.menu_resource_config
 #: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,resource_id:0
 #: view:resource.resource:0
@@ -178,7 +178,6 @@ msgstr ""
 #: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
-#: view:resource.calendar.leaves:0
 #: field:resource.calendar.leaves,name:0
 #: field:resource.resource,name:0
 msgid "Name"
@@ -197,18 +196,15 @@ msgid "\n"
 msgstr ""
 
 #. module: resource
-#: help:resource.resource,active:0
-msgid "If the active field is set to true, it will allow you to hide the resource record without removing it."
-msgstr ""
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Wednesday"
 msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
+#: view:resource.calendar.leaves:0
+#: view:resource.resource:0
+#: field:resource.resource,calendar_id:0
 msgid "Working Period"
 msgstr ""
 
@@ -220,6 +216,11 @@ msgstr ""
 #. module: resource
 #: field:resource.resource,active:0
 msgid "Active"
+msgstr ""
+
+#. module: resource
+#: help:resource.resource,active:0
+msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
 msgstr ""
 
 #. module: resource
@@ -248,6 +249,11 @@ msgid "Code"
 msgstr ""
 
 #. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Monday"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.attendance,hour_to:0
 msgid "Work to"
 msgstr ""
@@ -264,22 +270,32 @@ msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
-#: field:resource.resource,calendar_id:0
 msgid "Working time"
 msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
+#: model:ir.ui.menu,name:resource.menu_view_resource_calendar_leaves_search
 msgid "Resource Leaves"
 msgstr ""
 
 #. module: resource
-#: view:resource.calendar:0
-msgid "Manager"
+#: view:resource.resource:0
+msgid "General Information"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/faces/resource.py:0
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid "Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours."
+msgstr ""
+
+#. module: resource
+#: view:resource.resource:0
+msgid "Inactive"
+msgstr ""
+
+#. module: resource
+#: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
 msgstr ""
@@ -305,6 +321,13 @@ msgid "Start Date"
 msgstr ""
 
 #. module: resource
+#: code:addons/resource/resource.py:246
+#, python-format
+msgid " (copy)"
+msgstr ""
+
+#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr ""
+

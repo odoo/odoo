@@ -26,13 +26,10 @@ class sale_installer(osv.osv_memory):
     _inherit = 'res.config.installer'
 
     _columns = {
-        'sale_analytic_plans': fields.boolean('Sales Analytic Distribution',
-            help="Helps you to manage analytic distribution and sales orders."),
-        'sale_journal': fields.boolean('Sales and deliveries by journal',
-            help="Allows you to categorise your "
-                "sales and deliveries (picking lists) between different journals. "
-                "This module is very helpful for bigger companies that "
-                "work by departments."),
+        'delivery': fields.boolean('Delivery Costs', 
+            help="Allows you to compute delivery costs on your quotations."),
+        'sale_journal': fields.boolean('Invoicing journals',
+            help="Allows you to group and invoice your delivery orders according to different invoicing types: daily, weekly, etc."),
         'sale_layout': fields.boolean('Sales Order Layout Improvement',
             help="Provides some features to improve the layout of the Sales Order reports."),
         'sale_margin': fields.boolean('Margins in Sales Orders',
@@ -40,7 +37,7 @@ class sale_installer(osv.osv_memory):
                  "the difference between Unit Price and Cost Price."),
         'sale_order_dates': fields.boolean('Sales Order Dates',
             help="Adds commitment, requested and effective dates on Sales Orders."),
-        }
+    }
     
 sale_installer()
 

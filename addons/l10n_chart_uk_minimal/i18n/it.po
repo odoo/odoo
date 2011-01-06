@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2010-08-18 10:16+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:11+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: l10n_chart_uk_minimal
@@ -22,18 +22,36 @@ msgid "Receivable"
 msgstr "Credito"
 
 #. module: l10n_chart_uk_minimal
-#: model:ir.module.module,description:l10n_chart_uk_minimal.module_meta_information
-msgid ""
-"This is the base module to manage the accounting chart for United Kingdom in "
-"Open ERP."
+#: model:account.account.type,name:l10n_chart_uk_minimal.acct_type_asset_view
+msgid "Asset View"
 msgstr ""
-"Questo è il modulo base per gestire il piano dei conti per il Regno Unito in "
-"Open ERP."
+
+#. module: l10n_chart_uk_minimal
+#: model:account.account.type,name:l10n_chart_uk_minimal.acct_type_expense_view
+msgid "Expense View"
+msgstr ""
+
+#. module: l10n_chart_uk_minimal
+#: model:ir.actions.todo,note:l10n_chart_uk_minimal.config_call_account_template_uk_minimal
+msgid ""
+"Generate Chart of Accounts from a Chart Template. You will be asked to pass "
+"the name of the company, the chart template to follow, the no. of digits to "
+"generate the code for your accounts and Bank account, currency to create "
+"Journals. Thus,the pure copy of chart Template is generated.\n"
+"    This is the same wizard that runs from Financial "
+"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
+"Chart of Accounts from a Chart Template."
+msgstr ""
 
 #. module: l10n_chart_uk_minimal
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
 msgstr "Errore! Non puoi creare un modello di conto ricorsivo"
+
+#. module: l10n_chart_uk_minimal
+#: model:account.account.type,name:l10n_chart_uk_minimal.acct_type_income_view
+msgid "Income View"
+msgstr ""
 
 #. module: l10n_chart_uk_minimal
 #: model:account.account.type,name:l10n_chart_uk_minimal.account_type_income
@@ -51,24 +69,9 @@ msgid "Cash"
 msgstr "Contante"
 
 #. module: l10n_chart_uk_minimal
-#: model:ir.actions.todo,note:l10n_chart_uk_minimal.config_call_account_template_uk_minimal
-msgid ""
-"Generate Chart of Accounts from a Chart Template. You will be asked to pass "
-"the name of the company, the chart template to follow, the no. of digits to "
-"generate the code for your accounts and Bank account, currency to create "
-"Journals. Thus,the pure copy of chart Template is generated.\n"
-"\tThis is the same wizard that runs from Financial "
-"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
-"Chart of Accounts from a Chart Template."
+#: model:account.account.type,name:l10n_chart_uk_minimal.account_type_liability
+msgid "Liability"
 msgstr ""
-"Genera il Piano dei Conti da un Modello. Ti verrà richiesto di passare il "
-"nome della Compagnia, il modello da seguire, il numero di decimali per "
-"generare il codice dei tuoi conti e, per il conto della Banca, la valuta per "
-"creare il Libro Giornale. Così, una copia vergine del Piano dei Conti "
-"derivata dal modello è generata.\n"
-"\tQuesto è la stessa procedura automatica che viene lanciata da: Gestione "
-"Finanziaria / Configurazione / Contabilità / Conti finanziari / Genera il "
-"Piano dei conti da un modello."
 
 #. module: l10n_chart_uk_minimal
 #: model:account.account.type,name:l10n_chart_uk_minimal.account_type_payable
@@ -81,6 +84,13 @@ msgid "United Kingdom - minimal"
 msgstr "Regno Unito - minimale"
 
 #. module: l10n_chart_uk_minimal
+#: model:ir.module.module,description:l10n_chart_uk_minimal.module_meta_information
+msgid ""
+"This is the base module to manage the accounting chart for United Kingdom in "
+"OpenERP."
+msgstr ""
+
+#. module: l10n_chart_uk_minimal
 #: model:account.account.type,name:l10n_chart_uk_minimal.account_type_equity
 msgid "Equity"
 msgstr "Capitale"
@@ -91,6 +101,11 @@ msgid "Error ! You can not create recursive Tax Codes."
 msgstr "Errore! Non puoi creare un Codice di Tassa ricorsivo"
 
 #. module: l10n_chart_uk_minimal
+#: model:account.account.type,name:l10n_chart_uk_minimal.acct_type_liability_view
+msgid "Liability View"
+msgstr ""
+
+#. module: l10n_chart_uk_minimal
 #: model:account.account.type,name:l10n_chart_uk_minimal.account_type_expense
 msgid "Expense"
 msgstr "Uscita"
@@ -99,3 +114,28 @@ msgstr "Uscita"
 #: model:account.account.type,name:l10n_chart_uk_minimal.account_type_view
 msgid "View"
 msgstr "Vista"
+
+#~ msgid ""
+#~ "This is the base module to manage the accounting chart for United Kingdom in "
+#~ "Open ERP."
+#~ msgstr ""
+#~ "Questo è il modulo base per gestire il piano dei conti per il Regno Unito in "
+#~ "Open ERP."
+
+#~ msgid ""
+#~ "Generate Chart of Accounts from a Chart Template. You will be asked to pass "
+#~ "the name of the company, the chart template to follow, the no. of digits to "
+#~ "generate the code for your accounts and Bank account, currency to create "
+#~ "Journals. Thus,the pure copy of chart Template is generated.\n"
+#~ "\tThis is the same wizard that runs from Financial "
+#~ "Management/Configuration/Financial Accounting/Financial Accounts/Generate "
+#~ "Chart of Accounts from a Chart Template."
+#~ msgstr ""
+#~ "Genera il Piano dei Conti da un Modello. Ti verrà richiesto di passare il "
+#~ "nome della Compagnia, il modello da seguire, il numero di decimali per "
+#~ "generare il codice dei tuoi conti e, per il conto della Banca, la valuta per "
+#~ "creare il Libro Giornale. Così, una copia vergine del Piano dei Conti "
+#~ "derivata dal modello è generata.\n"
+#~ "\tQuesto è la stessa procedura automatica che viene lanciata da: Gestione "
+#~ "Finanziaria / Configurazione / Contabilità / Conti finanziari / Genera il "
+#~ "Piano dei conti da un modello."

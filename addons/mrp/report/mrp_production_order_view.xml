@@ -53,12 +53,12 @@
 	                    	    help="Production performed during current year"/>
 	                    <filter icon="terp-go-month" string="Month"
 	                    		name="month"
-	                    		domain="[('month','=',time.strftime('%%m'))]"
+	                    		domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
 	                    		help="Production performed during current month"/>
 		                <filter icon="terp-go-week"
 	                            string="Month -1"
 	                            separator="1"
-	                            domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date_start','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"
+	                            domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Production during last month"/>
                       <separator orientation="vertical"/>
                         <filter string="Current" icon="terp-check" domain="[('state','in',('open','draft'))]"/>
@@ -80,7 +80,7 @@
                       <newline/>
                         <field name="date_start"/>
                       <field name="date_planned"/>
-                      <field name="date_finnished"/>
+                      <field name="date_finished"/>
                     </group>
                    <newline/>
                    <group expand="1" string="Group By...">
@@ -104,13 +104,14 @@
             </field>
         </record>
         <record id="action_report_mrp_production_order" model="ir.actions.act_window">
-            <field name="name">Production Order</field>
+            <field name="name">Production Analysis</field>
             <field name="res_model">mrp.production.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="view_id" ref="view_report_mrp_production_order_tree"/>
             <field name="search_view_id" ref="view_report_mrp_production_order_filter"/>
             <field name="context">{'search_default_Product': 1,'search_default_month':1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="help">This reporting allows you to analyse your manufacturing activities and performance.</field>
         </record>
 
        	<record model="ir.actions.act_window.view" id="action_report_mrp_production_order_tree">
@@ -127,7 +128,7 @@
 	        <field name="act_window_id" ref="action_report_mrp_production_order"/>
 	    </record>
 
-        <menuitem name="Production" action="action_report_mrp_production_order" id="menu_report_mrp_production_orders_tree" parent="next_id_77"/>
+        <menuitem name="Production Analysis" action="action_report_mrp_production_order" id="menu_report_mrp_production_orders_tree" parent="next_id_77"/>
 
   </data>
 </openerp>

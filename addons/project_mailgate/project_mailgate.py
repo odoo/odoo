@@ -54,9 +54,6 @@ class project_tasks(osv.osv):
             data.update(res)
         res = self.create(cr, uid, data)    
         
-        message = _('A task created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
-        
         attachments = msg.get('attachments', [])
         for attachment in attachments or []:
             data_attach = {
@@ -102,7 +99,7 @@ class project_tasks(osv.osv):
             select = [ids]
         else:
             select = ids
-        for task in self.browse(cr, uid, select):
+        for task in self.browse(cr, uid, select, context=context):
             user_email = (task.user_id and task.user_id.address_id and task.user_id.address_id.email) or False
             res += [(user_email, False, False, task.priority)]
         if isinstance(ids, (str, int, long)):
@@ -112,7 +109,7 @@ class project_tasks(osv.osv):
     def msg_send(self, cr, uid, id, *args, **argv):
         return True
     
-    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context={}):
+    def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
         mailgate_pool = self.pool.get('mailgate.thread')
         return mailgate_pool.history(cr, uid, cases, keyword, history=history,\
                                        subject=subject, email=email, \

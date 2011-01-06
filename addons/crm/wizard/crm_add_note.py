@@ -19,7 +19,7 @@ class crm_add_note(osv.osv_memory):
     }
 
     def action_add(self, cr, uid, ids, context=None):
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):
@@ -50,7 +50,7 @@ class crm_add_note(osv.osv_memory):
                 act = 'case_' + obj.state
                 getattr(case_pool, act)(cr, uid, [case.id])
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def default_get(self, cr, uid, fields, context=None):
         """

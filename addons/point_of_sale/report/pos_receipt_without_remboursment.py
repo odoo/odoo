@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -23,11 +23,10 @@ import time
 from report import report_sxw
 import pooler
 
-
 class order(report_sxw.rml_parse):
 
     def __init__(self, cr, uid, name, context):
-        super(order, self).__init__(cr, uid, name, context)
+        super(order, self).__init__(cr, uid, name, context=context)
 
         user = pooler.get_pool(cr.dbname).get('res.users').browse(cr, uid, uid)
         partner = user.company_id.partner_id
@@ -64,17 +63,21 @@ class order(report_sxw.rml_parse):
                     WHERE absl.pos_statement_id = %d"""%(order_id.id)
         self.cr.execute(sql)
         res = self.cr.fetchone()
-        lst.append(res[0])
+        if not res:
+            return ['', 0.0]
+        lst.append(res[0]) # todo: improve
         sql2 = """ select sum(absl.amount) as amt from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
                     LEFT JOIN account_journal as aj ON aj.id = abs.journal_id
                     where aj.name = '%s' """%(res[0])
         self.cr.execute(sql2)
         res1 = self.cr.fetchone()
-        lst.append(res1[0])
+        if res1:
+            lst.append(res1[0])
+        else:
+            lst.append(0.0)
         return lst
 
 report_sxw.report_sxw('report.pos.receipt.without.remboursment', 'pos.order', 'addons/point_of_sale/report/pos_receipt_without_remboursment.rml', parser=order, header=False)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

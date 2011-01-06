@@ -36,11 +36,11 @@ class base_calendar_invite_attendee(osv.osv_memory):
     _columns = {
         'type': fields.selection([('internal', 'Internal User'), \
               ('external', 'External Email'), \
-              ('partner', 'Partner Contacts')], 'Type', required=True),
+              ('partner', 'Partner Contacts')], 'Type', required=True, help="Select whom you want to Invite"),
         'user_ids': fields.many2many('res.users', 'invite_user_rel',
                                   'invite_id', 'user_id', 'Users'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'email': fields.char('Email', size=124),
+        'email': fields.char('Email', size=124, help="Provide external email address who will receive this invitation."),
         'contact_ids': fields.many2many('res.partner.address', 'invite_contact_rel',
                                   'invite_id', 'contact_id', 'Contacts'),
         'send_mail': fields.boolean('Send mail?', help='Check this if you want to \
@@ -62,19 +62,19 @@ send an Email to Invited Person')
         @return: Dictionary of {}.
         """
 
-        if not context:
+        if context is None:
             context = {}
 
         model = False
         context_id = context and context.get('active_id', False) or False
         if not context or not context.get('model'):
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
         else:
             model = context.get('model')
 
         model_field = context.get('attendee_field', False)
         obj = self.pool.get(model)
-        res_obj = obj.browse(cr, uid, context_id)
+        res_obj = obj.browse(cr, uid, context_id, context=context)
         att_obj = self.pool.get('calendar.attendee')
         user_obj = self.pool.get('res.users')
         current_user = user_obj.browse(cr, uid, uid, context=context)
@@ -89,7 +89,7 @@ send an Email to Invited Person')
                 if context_id:
                     ref = {'ref': '%s,%s' % (model, base_calendar.base_calendar_id2real_id(context_id))}
                 else:
-                    return {}
+                    return {'type': 'ir.actions.act_window_close'}
             if type == 'internal':
                 
                 if not datas.get('user_ids'):
@@ -144,7 +144,7 @@ send an Email to Invited Person')
                 att_obj._send_mail(cr, uid, attendees, mail_to, \
                        email_from = current_user.user_email or tools.config.get('email_from', False))
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, *args, **argv):

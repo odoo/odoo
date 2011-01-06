@@ -38,7 +38,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
         'obj_num': fields.integer('Catalog Number', required=True)
     }
     
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """ 
          To get default values for the object.
          @param self: The object pointer.
@@ -48,13 +48,14 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
          @param context: A standard dictionary 
          @return: A dictionary which of fields with values. 
         """
+        if context is None: context = {}
         res = super(auction_lots_numerotate_per_lot, self).default_get(cr, uid, fields, context=context)
         active_id = context.get('active_id',False)
         active_model = context.get('active_model')
         if active_id and (active_model and active_model!='auction.lots'):
             return res
         lots_obj = self.pool.get('auction.lots')
-        lots = lots_obj.browse(cr, uid, active_id)
+        lots = lots_obj.browse(cr, uid, active_id, context=context)
         if 'bord_vnd_id' in fields and context.get('bord_vnd_id',False):
             res['bord_vnd_id'] = context.get('bord_vnd_id')
         if 'lot_num' in fields and context.get('lot_num',False):
@@ -71,7 +72,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
             res['obj_num'] = lots.obj_num
         return res
     
-    def open_init_form(self, cr, uid, ids, context={}):
+    def open_init_form(self, cr, uid, ids, context=None):
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         data_obj = self.pool.get('ir.model.data')
@@ -89,7 +90,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
             'context': context
         }
     
-    def numerotate(self, cr, uid, ids, context={}):
+    def numerotate(self, cr, uid, ids, context=None):
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         datas = self.read(cr, uid, ids[0], ['bord_vnd_id','lot_num','obj_num'])
@@ -99,7 +100,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
                                       ('lot_num','=',int(datas['lot_num']))])
         found = [r for r in res if r in record_ids]
         if len(found)==0:
-            raise osv.except_osv('UserError', 'This record does not exist !')
+            raise osv.except_osv(_('UserError'), _('This record does not exist !'))
         lots_obj.write(cr, uid, found, {'obj_num':int(datas['obj_num'])} )
         view_id = data_obj._get_id(cr, uid, 'auction', 'view_auction_numerotate')
         if view_id:
@@ -116,7 +117,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
             'context': context
         }
     
-    def read_record(self, cr, uid, ids, context={}):
+    def read_record(self, cr, uid, ids, context=None):
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         datas = self.read(cr, uid, ids[0], ['bord_vnd_id','lot_num'])
@@ -125,13 +126,13 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
                                         ('lot_num','=',int(datas['lot_num']))])
         found = [r for r in res if r in record_ids]
         if len(found)==0:
-            raise osv.except_osv('UserError', 'This record does not exist !')
+            raise osv.except_osv(_('UserError'), _('This record does not exist !'))
         lots_datas = lots_obj.read(cr, uid, found,
                                    ['obj_num', 'name', 'lot_est1', 
                                    'lot_est2', 'obj_desc'])
         return lots_datas[0]
     
-    def test_exist(self, cr, uid, ids, context={}):
+    def test_exist(self, cr, uid, ids, context=None):
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         data_obj = self.pool.get('ir.model.data')
@@ -141,7 +142,7 @@ class auction_lots_numerotate_per_lot(osv.osv_memory):
                                                     ('lot_num','=',int(datas['lot_num']))])
         found = [r for r in res if r in record_ids]
         if len(found)==0:
-            raise osv.except_osv('Error', 'This lot does not exist !')
+            raise osv.except_osv(_('Error'), _('This lot does not exist !'))
         view_id = data_obj._get_id(cr, uid, 'auction', 'view_auction_lots_numerotate_second')
         if view_id:
             res_id = data_obj.browse(cr, uid, view_id, context=context).res_id
@@ -167,17 +168,17 @@ class auction_lots_numerotate(osv.osv_memory):
         'number': fields.integer('First Number', required=True)   
     }
    
-    def numerotate_cont(self, cr, uid, ids, context={}):
+    def numerotate_cont(self, cr, uid, ids, context=None):
         record_ids = context and context.get('active_ids',False) or False
         assert record_ids, _('Active IDs not Found')
         datas = self.read(cr, uid, ids[0], ['number'])
         nbr = int(datas['number'])
         lots_obj = self.pool.get('auction.lots')
-        rec_ids = lots_obj.browse(cr, uid, record_ids)
+        rec_ids = lots_obj.browse(cr, uid, record_ids, context=context)
         for rec_id in rec_ids:
             lots_obj.write(cr, uid, [rec_id.id], {'obj_num':nbr})
             nbr+=1
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
 auction_lots_numerotate()
 

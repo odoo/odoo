@@ -58,7 +58,7 @@ class project_issue(crm.crm_case, osv.osv):
         res = super(project_issue, self).case_open(cr, uid, ids, *args)
         self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Issue ') + " '" + name + "' "+ _("is Open.")
+            message = _("Issue '%s' has been opened.") % name
             self.log(cr, uid, id, message)
         return res
 
@@ -73,13 +73,11 @@ class project_issue(crm.crm_case, osv.osv):
 
         res = super(project_issue, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Issue ') + " '" + name + "' "+ _("is Closed.")
+            message = _("Issue '%s' has been closed.") % name
             self.log(cr, uid, id, message)
         return res
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        if context is None:
-            context = {}
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -141,7 +139,32 @@ class project_issue(crm.crm_case, osv.osv):
                 else:
                     res[issue.id][field] = abs(float(duration))
         return res
-    
+
+    def _get_issue_task(self, cr, uid, ids, context=None):
+        issues = []
+        issue_pool = self.pool.get('project.issue')
+        for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
+            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])            
+        return issues
+
+    def _get_issue_work(self, cr, uid, ids, context=None):
+        issues = []
+        issue_pool = self.pool.get('project.issue')
+        for work in self.pool.get('project.task.work').browse(cr, uid, ids, context=context):
+            if work.task_id:
+                issues += issue_pool.search(cr, uid, [('task_id','=',work.task_id.id)])
+        return issues
+
+    def _hours_get(self, cr, uid, ids, field_names, args, context=None):
+        task_pool = self.pool.get('project.task')
+        res = {}
+        for issue in self.browse(cr, uid, ids, context=context):
+            progress = 0.0
+            if issue.task_id:
+                progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
+            res[issue.id] = {'progress' : progress}     
+        return res        
+
     _columns = {
         'id': fields.integer('ID'),
         'name': fields.char('Issue', size=128, required=True),
@@ -172,12 +195,12 @@ class project_issue(crm.crm_case, osv.osv):
         'canal_id': fields.many2one('res.partner.canal', 'Channel', help="The channels represent the different communication modes available with the customer." \
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
-        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Severity'),
+        'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'partner_name': fields.char("Employee's Name", size=64),
         'partner_mobile': fields.char('Mobile', size=32),
         'partner_phone': fields.char('Phone', size=32),
-        'type_id': fields.many2one ('project.task.type', 'Resolution', domain="[('object_id.model', '=', 'project.issue')]"),
+        'type_id': fields.many2one ('project.task.type', 'Resolution'),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -193,10 +216,15 @@ class project_issue(crm.crm_case, osv.osv):
         'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
-        'progress': fields.related('task_id', 'progress', string='Progress (%)',group_operator="avg", store=True),
+        'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
+            store = {
+                'project.issue': (lambda self, cr, uid, ids, c={}: ids, ['task_id'], 10),
+                'project.task': (_get_issue_task, ['progress'], 10),
+                'project.task.work': (_get_issue_work, ['hours'], 10),
+            }),
     }
 
-    def _get_project(self, cr, uid, context):
+    def _get_project(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if user.context_project_id:
             return user.context_project_id.id
@@ -219,6 +247,7 @@ class project_issue(crm.crm_case, osv.osv):
         case_obj = self.pool.get('project.issue')
         data_obj = self.pool.get('ir.model.data')
         task_obj = self.pool.get('project.task')
+
 
         if context is None:
             context = {}
@@ -246,7 +275,7 @@ class project_issue(crm.crm_case, osv.osv):
 
             vals = {
                 'task_id': new_task_id,
-                'state':'open'
+                'state':'pending'
             }
             case_obj.write(cr, uid, [bug.id], vals)
 
@@ -263,6 +292,7 @@ class project_issue(crm.crm_case, osv.osv):
             'nodestroy': True
         }
 
+
     def _convert(self, cr, uid, ids, xml_id, context=None):
         data_obj = self.pool.get('ir.model.data')
         id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)
@@ -278,7 +308,6 @@ class project_issue(crm.crm_case, osv.osv):
 
     def convert_to_bug(self, cr, uid, ids, context=None):
         return self._convert(cr, uid, ids, 'bug_categ', context=context)
-
 
     def next_type(self, cr, uid, ids, *args):
         for task in self.browse(cr, uid, ids):
@@ -302,13 +331,12 @@ class project_issue(crm.crm_case, osv.osv):
                     self.write(cr, uid, task.id, {'type_id': index and types[index-1] or False})
         return True
 
+
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
-        if context is None:
-            context = {}
-        result = {}    
+        result = {}
         if not task_id:
             return {'value':{}}
-        task = self.pool.get('project.task').browse(cr, uid, task_id, context)
+        task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
         return {'value':{'assigned_to': task.user_id.id,}}
 
     def case_escalate(self, cr, uid, ids, *args):
@@ -334,7 +362,7 @@ class project_issue(crm.crm_case, osv.osv):
         self._history(cr, uid, cases, _('Escalate'))
         return True
 
-    def message_new(self, cr, uid, msg, context):
+    def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
 
@@ -342,7 +370,8 @@ class project_issue(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-
+        if context is None: 
+            context = {}
         mailgate_pool = self.pool.get('email.server.tools')
 
         subject = msg.get('subject') or _('No Title')
@@ -364,9 +393,7 @@ class project_issue(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
         context.update({'state_to' : 'draft'})
-        res = self.create(cr, uid, vals, context)
-        message = _('An Issue created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
+        res = self.create(cr, uid, vals, context=context)
         self.convert_to_bug(cr, uid, [res], context=context)
 
         attachents = msg.get('attachments', [])
@@ -384,8 +411,6 @@ class project_issue(crm.crm_case, osv.osv):
         return res
 
     def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
-        if context is None:
-            context = {}
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -430,10 +455,8 @@ class project_issue(crm.crm_case, osv.osv):
             @param **args: Return Dictionary of Keyword Value
         """
         return True
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
-        if not context:
-            context={}
         issue = self.read(cr, uid, id, ['name'], context=context)
         if not default:
             default = {}
@@ -452,8 +475,8 @@ class project(osv.osv):
         'reply_to' : fields.char('Reply-To Email Address', size=256)
     }
 
-    def _check_escalation(self, cr, uid, ids):
-         project_obj = self.browse(cr, uid, ids[0])
+    def _check_escalation(self, cr, uid, ids, context=None):
+         project_obj = self.browse(cr, uid, ids[0], context=context)
          if project_obj.project_escalation_id:
              if project_obj.project_escalation_id.id == project_obj.id:
                  return False

@@ -28,6 +28,7 @@ import os
 import tools
 from tools.translate import _
 import nodes
+import logging
 
 DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['root_path'], 'filestore'))
 
@@ -37,11 +38,13 @@ class document_file(osv.osv):
     def _get_filestore(self, cr):
         return os.path.join(DMS_ROOT_PATH, cr.dbname)
 
-    def _data_get(self, cr, uid, ids, name, arg, context):
+    def _data_get(self, cr, uid, ids, name, arg, context=None):
+        if context is None:
+            context = {}
         fbrl = self.browse(cr, uid, ids, context=context)
         nctx = nodes.get_node_context(cr, uid, context={})
         # nctx will /not/ inherit the caller's context. Most of
-        # it would be useless, anyway (like active_id, active_model, 
+        # it would be useless, anyway (like active_id, active_model,
         # bin_size etc.)
         result = {}
         bin_size = context.get('bin_size', False)
@@ -58,7 +61,7 @@ class document_file(osv.osv):
     #
     # This code can be improved
     #
-    def _data_set(self, cr, uid, id, name, value, arg, context):
+    def _data_set(self, cr, uid, id, name, value, arg, context=None):
         if not value:
             return True
         fbro = self.browse(cr, uid, id, context=context)
@@ -73,7 +76,7 @@ class document_file(osv.osv):
         'create_uid':  fields.many2one('res.users', 'Creator', readonly=True),
         'write_date': fields.datetime('Date Modified', readonly=True),
         'write_uid':  fields.many2one('res.users', 'Last Modification User', readonly=True),
-        'res_model': fields.char('Attached Model', size=64, readonly=True),
+        'res_model': fields.char('Attached Model', size=64, readonly=True, change_default=True),
         'res_id': fields.integer('Attached ID', readonly=True),
 
         # If ir.attachment contained any data before document is installed, preserve
@@ -85,29 +88,28 @@ class document_file(osv.osv):
         'user_id': fields.many2one('res.users', 'Owner', select=1),
         # 'group_ids': fields.many2many('res.groups', 'document_group_rel', 'item_id', 'group_id', 'Groups'),
         # the directory id now is mandatory. It can still be computed automatically.
-        'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True),
+        'parent_id': fields.many2one('document.directory', 'Directory', select=1, required=True, change_default=True),
         'index_content': fields.text('Indexed Content'),
         'partner_id':fields.many2one('res.partner', 'Partner', select=1),
-        'company_id': fields.many2one('res.company', 'Company'),
         'file_size': fields.integer('File Size', required=True),
         'file_type': fields.char('Content Type', size=128),
-        
+
         # fields used for file storage
         'store_fname': fields.char('Stored Filename', size=200),
     }
+    _order = "create_date desc"
 
     def __get_def_directory(self, cr, uid, context=None):
         dirobj = self.pool.get('document.directory')
         return dirobj._get_root_directory(cr, uid, context)
 
     _defaults = {
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'ir.attachment', context=c),
         'user_id': lambda self, cr, uid, ctx:uid,
         'file_size': lambda self, cr, uid, ctx:0,
         'parent_id': __get_def_directory
     }
     _sql_constraints = [
-        ('filename_uniq', 'unique (name,parent_id,res_id,res_model)', 'The file name must be unique !')
+        # filename_uniq is not possible in pure SQL
     ]
     def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name = vals.get('name', False)
@@ -139,7 +141,7 @@ class document_file(osv.osv):
         if 'name' not in default:
             name = self.read(cr, uid, [id])[0]['name']
             default.update({'name': name + " (copy)"})
-        return super(document_file, self).copy(cr, uid, id, default, context)
+        return super(document_file, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         result = False
@@ -150,7 +152,7 @@ class document_file(osv.osv):
             return False
         if not self._check_duplication(cr, uid, vals, ids, 'write'):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-        
+
         # if nodes call this write(), they must skip the code below
         from_node = context and context.get('__from_node', False)
         if (('parent_id' in vals) or ('name' in vals)) and not from_node:
@@ -222,7 +224,7 @@ class document_file(osv.osv):
         cr.commit() # ?
         return result
 
-    def __get_partner_id(self, cr, uid, res_model, res_id, context):
+    def __get_partner_id(self, cr, uid, res_model, res_id, context=None):
         """ A helper to retrieve the associated partner from any res_model+id
             It is a hack that will try to discover if the mentioned record is
             clearly associated with a partner record.
@@ -245,8 +247,8 @@ class document_file(osv.osv):
         # files to be unlinked, update the db (safer to do first, can be
         # rolled back) and then unlink the files. The list wouldn't exist
         # after we discard the objects
-
-        for f in self.browse(cr, uid, ids, context):
+        ids = self.search(cr, uid, [('id','in',ids)])
+        for f in self.browse(cr, uid, ids, context=context):
             # TODO: update the node cache
             par = f.parent_id
             storage_id = None
@@ -255,10 +257,14 @@ class document_file(osv.osv):
                     storage_id = par.storage_id
                     break
                 par = par.parent_id
-            assert storage_id, "Strange, found file #%s w/o storage!" % f.id
-            r = stor.prepare_unlink(cr, uid, storage_id, f)
-            if r:
-                unres.append(r)
+            #assert storage_id, "Strange, found file #%s w/o storage!" % f.id #TOCHECK: after run yml, it's fail
+            if storage_id:
+                r = stor.prepare_unlink(cr, uid, storage_id, f)
+                if r:
+                    unres.append(r)
+            else:
+                logging.getLogger('document').warning("Unlinking attachment #%s %s that has no storage",
+                                                f.id, f.name)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)
         return res

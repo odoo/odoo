@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <record id="sheet0" model="hr_timesheet_sheet.sheet">
-            <field name="name">Sheet 0</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field eval="time.strftime('%Y-%m-01', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))" name="date_from"/>
-            <field eval="time.strftime('%Y-%m-15', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))" name="date_current"/>
-            <field eval="time.strftime('%Y-%m-%d', time.localtime(time.mktime(time.localtime()[0:2] + (0,)*7)-1))" name="date_to"/>
-        </record>
-
-        <!-- record id="sheet1" model="hr_timesheet_sheet.sheet">
+        
+        <record id="sheet1" model="hr_timesheet_sheet.sheet">
             <field name="name">Sheet 1</field>
             <field name="user_id" ref="base.user_root"/>
+            <field name="employee_id" ref="hr.employee1" />
             <field eval="time.strftime('%Y-%m-%d')" name="date_current"/>
-        </record-->
+        </record>
 
     </data>
 </openerp>

@@ -7,22 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-12 06:37+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:09+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:35+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_form
-#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_defaul_form
-msgid "Analytic Defaults"
-msgstr "Аналитик үндсэн утгууд"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
@@ -30,62 +23,85 @@ msgid "Account Analytic Default"
 msgstr "Дансны аналитик үндсэн утга"
 
 #. module: account_analytic_default
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
+#: help:account.analytic.default,partner_id:0
+msgid ""
+"select a partner which will use analytical account specified in analytic "
+"default (eg. create new cutomer invoice or Sale order if we select this "
+"partner, it will automatically take this as an analytical account)"
+msgstr ""
 
 #. module: account_analytic_default
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
+#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
+msgid "Analytic Rules"
+msgstr "Аналитик дүрмүүд"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,analytic_id:0
+msgid "Analytical Account"
 msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
-msgid "Seq"
-msgstr "Д/д"
+msgid "Current"
+msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,date_stop:0
-msgid "End Date"
-msgstr "Дуусах огноо"
+#: view:account.analytic.default:0
+msgid "Group By..."
+msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,company_id:0
-msgid "Company"
-msgstr "Компани"
+#: help:account.analytic.default,date_stop:0
+msgid "Default end date for this Analytical Account"
+msgstr ""
 
 #. module: account_analytic_default
-#: field:account.analytic.default,sequence:0
-msgid "Sequence"
-msgstr "Дугаарлалт"
+#: model:ir.model,name:account_analytic_default.model_stock_picking
+msgid "Picking List"
+msgstr ""
 
 #. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Conditions"
+msgstr "Нөхцөлүүд"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"select a company which will use analytical account specified in analytic "
+"default (eg. create new cutomer invoice or Sale order if we select this "
+"company, it will automatically take this as an analytical account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,date_start:0
+msgid "Default start date for this Analytical Account"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
 #: field:account.analytic.default,product_id:0
 msgid "Product"
 msgstr "Бараа"
 
 #. module: account_analytic_default
-#: field:account.analytic.default,analytic_id:0
-msgid "Analytic Account"
-msgstr "Аналитик данс"
-
-#. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
-msgid "Analytic Distributions"
-msgstr "Аналитик тархалт"
+msgid "Analytic Distribution"
+msgstr ""
 
 #. module: account_analytic_default
+#: view:account.analytic.default:0
+#: field:account.analytic.default,company_id:0
+msgid "Company"
+msgstr "Компани"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
 #: field:account.analytic.default,user_id:0
 msgid "User"
 msgstr "Хэрэглэгч"
-
-#. module: account_analytic_default
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр заасан байна."
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
@@ -93,6 +109,67 @@ msgid "Entries"
 msgstr "Бичлэгүүд"
 
 #. module: account_analytic_default
+#: field:account.analytic.default,date_stop:0
+msgid "End Date"
+msgstr "Дуусах огноо"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,user_id:0
+msgid ""
+"select a user which will use analytical account specified in analytic default"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+#: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
+#: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
+msgid "Analytic Defaults"
+msgstr "Аналитик үндсэн утгууд"
+
+#. module: account_analytic_default
+#: model:ir.module.module,description:account_analytic_default.module_meta_information
+msgid ""
+"\n"
+"Allows to automatically select analytic accounts based on criterions:\n"
+"* Product\n"
+"* Partner\n"
+"* User\n"
+"* Company\n"
+"* Date\n"
+"    "
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"select a product which will use analytical account specified in analytic "
+"default (eg. create new cutomer invoice or Sale order if we select this "
+"product, it will automatically take this as an analytical account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: field:account.analytic.default,sequence:0
+msgid "Sequence"
+msgstr "Дугаарлалт"
+
+#. module: account_analytic_default
+#: model:ir.model,name:account_analytic_default.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+#: field:account.analytic.default,analytic_id:0
+msgid "Analytic Account"
+msgstr "Аналитик данс"
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
+msgid "Accounts"
+msgstr ""
+
+#. module: account_analytic_default
+#: view:account.analytic.default:0
 #: field:account.analytic.default,partner_id:0
 msgid "Partner"
 msgstr "Харилцагч"
@@ -103,13 +180,30 @@ msgid "Start Date"
 msgstr "Эхлэл огноо"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Conditions"
-msgstr "Нөхцөлүүд"
+#: help:account.analytic.default,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of analytic distribution"
+msgstr ""
 
 #. module: account_analytic_default
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
-#: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
-msgid "Analytic Rules"
-msgstr "Аналитик дүрмүүд"
+#: model:ir.model,name:account_analytic_default.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Seq"
+#~ msgstr "Д/д"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр заасан байна."
+
+#~ msgid "Analytic Distributions"
+#~ msgstr "Аналитик тархалт"

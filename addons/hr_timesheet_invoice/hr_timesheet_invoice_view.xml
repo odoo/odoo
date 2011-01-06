@@ -14,8 +14,14 @@
                         <field name="to_invoice" widget="selection" />
                         <field name="amount_max"/>
                         <field name="amount_invoiced"/>
-                        <separator colspan="4" string="State"/>
-                        <field name="state"/>
+                        <separator colspan="4"/>
+                        <group col="9" colspan="8">
+	                        <field name="state" readonly="1"/>
+	                        <button name="set_cancel" string="Cancel" type="object" states="open,pending" icon="gtk-cancel"/>
+	                        <button name="set_open" string="Reactivate Account" type="object" states="pending,cancelled,close" icon="gtk-ok"/>
+	                        <button name="set_pending" string="Pending" type="object" states="open" icon="gtk-media-pause"/>
+	                        <button name="set_close" string="Close" type="object" states="open,pending" icon="terp-dialog-close"/>
+                        </group>
                     </group>
                 </field>
             </field>
@@ -78,10 +84,10 @@
             <field name="type">search</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
-                <filter name="others" position="after">
+                <field name="date" position="before">
+                    <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
                     <separator orientation="vertical"/>
-                    <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]" icon="terp-sale"/>
-                </filter>
+                </field>
             </field>
         </record>
 
@@ -96,8 +102,7 @@
                 </field>
             </field>
         </record>
-
-        <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
+          <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.form.to_invoice</field>
             <field name="model">account.analytic.line</field>
             <field name="type">form</field>
@@ -112,13 +117,14 @@
 
         <!-- Menus -->
         <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
-            <field name="name">Costs to Invoice</field>
+            <field name="name">Bill Tasks Works</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
-            <field name="help">OpenERP automatically group the entries to be invoiced so you can keep an eye on them on real time in one glance.</field>
+ 			<field name="search_view_id" ref="account.view_account_analytic_line_filter"/>            
+            <field name="help">This list shows you every task you can invoice to the customer. Select the lines and click the Action button to generate the invoices automatically.</field>
         </record>
         <menuitem
             action="action_hr_analytic_timesheet_open_tree"
@@ -126,13 +132,25 @@
             parent="account.menu_finance_periodical_processing_billing"
             sequence="1"/>
 
+        <record id="view_hr_timesheet_invoice_factor_search" model="ir.ui.view">
+            <field name="name">hr_timesheet_invoice.factor.search</field>
+            <field name="model">hr_timesheet_invoice.factor</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Type of invoicing">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="view_hr_timesheet_invoice_factor_form" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.form</field>
             <field name="model">hr_timesheet_invoice.factor</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Type of invoicing">
-                    <field colspan="1" name="name" select="1"/>
+                    <field colspan="1" name="name"/>
                     <field colspan="1" name="customer_name"/>
                     <field colspan="2" name="factor"/>
                 </form>
@@ -156,11 +174,13 @@
             <field name="res_model">hr_timesheet_invoice.factor</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="view_hr_timesheet_invoice_factor_tree"/>
+            <field name="search_view_id" ref="view_hr_timesheet_invoice_factor_search"/>
+            <field name="help">OpenERP allows you to create default invoicing types. You might have to regularly assign discounts because of a specific contract or agreement with a customer. From this menu, you can create additional types of invoicing to speed up your invoicing.</field>
         </record>
         <menuitem
             action="action_hr_timesheet_invoice_factor_form"
             id="hr_timesheet_invoice_factor_view"
-            parent="account.menu_low_level"/>
+            parent="account.menu_configuration_misc" sequence="25"/>
 
     </data>
 </openerp>

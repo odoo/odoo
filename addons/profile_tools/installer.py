@@ -29,9 +29,13 @@ class misc_tools_installer(osv.osv_memory):
         'subscription':fields.boolean('Recurring Documents',help='Helps to generate automatically recurring documents.'),
         'survey':fields.boolean('Survey',help='Allows you to organize surveys.'),
         'idea':fields.boolean('Ideas Box',help='Promote ideas of the employees, votes and discussion on best ideas.'),
-    }
-    _defaults = {
-        'lunch': True,
+        'share':fields.boolean('Web Share',help='Allows you to give restricted access to your OpenERP documents to external users, ' \
+            'such as customers, suppliers, or accountants. You can share any OpenERP Menu such as your project tasks, support requests, invoices, etc.'),
+        'pad': fields.boolean('Collaborative Note Pads',
+            help="This module creates a tighter integration between a Pad "
+                 "instance of your choosing and your OpenERP Web Client by "
+                 "letting you easily link pads to OpenERP objects via "
+                 "OpenERP attachments."),
     }
 misc_tools_installer()
 

@@ -2,18 +2,11 @@
 <openerp>
   <data noupdate="1">
 
-    <!-- Casual leave -->
-    <record model="hr.holidays.status" id="holiday_status_cl">
-      <field name="name">Casual Leave</field>
-      <field name="double_validation">True</field>
-      <field name="color_name">black</field>
-    </record>
-
     <record model="hr.holidays" id="hr_holidays_employee1_allocation_cl">
         <field name="name">Casual Leave for Fabien Pinckaers</field>
         <field name="holiday_status_id" ref="holiday_status_cl"/>
         <field name="type">add</field>
-        <field name="number_of_days_temp">12</field>
+        <field name="number_of_days_temp">20</field>
         <field name="employee_id" ref="hr.employee1"/>
     </record>
 
@@ -25,13 +18,6 @@
       <field name="type">remove</field>
       <field name="number_of_days_temp">3</field>
       <field name="employee_id" ref="hr.employee1"/>
-    </record>
-
-    <!-- Sick leave -->
-    <record model="hr.holidays.status" id="holiday_status_sl">
-      <field name="name">Sick Leave</field>
-      <field name="limit">True</field>
-      <field name="color_name">red</field>
     </record>
 
     <record model="hr.holidays" id="hr_holidays_employee1_sl">
@@ -47,19 +33,5 @@
 
     <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
-
-    <record id="property_rule_holidays" model="ir.rule">
-        <field name="name">Employee Holidays</field>
-        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
-        <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
-        <field name="groups" eval="[(6,0,[ref('base.group_user')])]"/>
-    </record>
-    <record id="property_rule_holidays_manager" model="ir.rule">
-        <field name="name">Manager Holidays</field>
-        <field model="ir.model" name="model_id" ref="model_hr_holidays"/>
-        <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id.parent_id.user_id','=',user.id )]</field>
-        <field name="groups" eval="[(6,0,[ref('base.group_hr_user'),ref('base.group_hr_manager')])]"/>
-        </record>
-
   </data>
 </openerp>

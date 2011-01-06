@@ -9,10 +9,10 @@
             <field name="inherit_id" ref="account.view_invoice_line_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='name']" position="before">
+                <field name="name" position="before">
                     <field name="state" select="1" on_change="onchange_invoice_line_view(state)" />
                     <field name="sequence"/>
-                </xpath>
+            	</field>
             </field>
         </record>
 
@@ -55,6 +55,17 @@
         </record>
 
 <!-- notification message views -->
+    <record model="ir.ui.view" id="view_notify_message_search">
+        <field name="name">notify.message.search</field>
+        <field name="model">notify.message</field>
+        <field name="type">search</field>
+        <field name="arch" type="xml">
+            <search string="Messages">
+                <field name="name"/>
+                <field name="msg"/>
+            </search>
+        </field>
+    </record>
     <record model="ir.ui.view" id="view_notify_message_tree">
         <field name="name">notify.message.tree</field>
         <field name="model">notify.message</field>
@@ -73,9 +84,10 @@
         <field name="arch" type="xml">
             <form string="Messages">
                 <separator string="Write a notification or a wishful message." colspan="4"/>
-                <field name="name" select="1" colspan="2" />
+                <field name="name" colspan="2" />
                 <newline/>
-                <field name="msg" select="1" colspan="2"/>
+                <separator string="Special Message" colspan="4"/>
+                <field name="msg" nolabel="1" colspan="2"/>
             </form>
         </field>
     </record>
@@ -84,10 +96,11 @@
         <field name="res_model">notify.message</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_notify_message_search"/>
     </record>
 
     <menuitem name="Notification Message" id="menu_finan_config_notify_message" parent="account.menu_finance_configuration"/>
-    <menuitem name="All Notification Messages" id="menu_notify_mesage_tree_form" action="notify_mesage_tree_form" parent="menu_finan_config_notify_message" groups="base.group_system"/>
+    <menuitem name="All Notification Messages" id="menu_notify_mesage_tree_form" action="notify_mesage_tree_form" parent="menu_finan_config_notify_message"/>
 
     </data>
 </openerp>

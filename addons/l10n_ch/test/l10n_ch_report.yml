@@ -1,19 +1,27 @@
 -
+  In order to test the PDF reports defined on a l10n_ch, we will create a Invoice Record
+-
+  !record {model: account.invoice, id: test_invoice_1}:
+    currency_id: base.EUR
+    company_id: base.main_company
+    address_invoice_id: base.res_partner_address_tang
+    partner_id: base.res_partner_asus
+    state: draft
+    type: out_invoice
+    account_id: account.a_recv
+    name: Test invoice 1
+    address_contact_id: base.res_partner_address_tang
+
+-
   In order to test the PDF reports defined on a l10n_ch, we will print BVR Report
 -
   !python {model: account.invoice}: |
-    import netsvc, tools, os
-    run_str = 'cp ' + tools.config['addons_path'] + '/l10n_ch/report/ocrbb.ttf' + ' ' + '/tmp/ocrbb.ttf' 
-    os.system(run_str)
-    (data, format) = netsvc.LocalService('report.l10n_ch.bvr').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'l10ch-bvr_report.'+format), 'wb+').write(data)
+    from tools.test_reports import try_report
+    try_report(cr, uid, 'report.l10n_ch.bvr', [ref('test_invoice_1')])
 
 -
   In order to test the PDF reports defined on a l10n_ch, we will print a BVR Invoice Report
 -
   !python {model: account.invoice}: |
-    import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.l10n_ch.invoice.bvr').create(cr, uid, [ref('account.test_invoice_1')], {}, {})
-    if tools.config['test_report_directory']:
-        file(os.path.join(tools.config['test_report_directory'], 'l10ch-bvr_invoice_report.'+format), 'wb+').write(data)
+    from tools.test_reports import try_report
+    try_report(cr, uid, 'report.l10n_ch.invoice.bvr', [ref('test_invoice_1')])

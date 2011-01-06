@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -62,18 +62,18 @@ Main features :
         'wizard/pos_payment.xml',
         'wizard/pos_scan_product_view.xml',
         'wizard/pos_return_view.xml',
-        'pos_report.xml',
-        'pos_view.xml',
-        'report/report_pos_order_view.xml',
+        'point_of_sale_report.xml',
+        'point_of_sale_view.xml',
+        'report/pos_order_report_view.xml',
         'report/report_cash_register_view.xml',
-        'pos_sequence.xml',
-        'pos_workflow.xml',
-        'statement_view.xml',
-        'statement_report.xml',
+        'point_of_sale_sequence.xml',
+        'point_of_sale_workflow.xml',
+        'account_statement_view.xml',
+        'account_statement_report.xml',
     ],
-    'demo_xml': ['pos_demo.xml','singer_statement_demo.xml'],
-    'test':['test/pos_test.yml',
-            'test/pos_report.yml',
+    'demo_xml': ['point_of_sale_demo.xml','account_statement_demo.xml'],
+    'test': ['test/point_of_sale_test.yml',
+            'test/point_of_sale_report.yml',
     ],
     'installable': True,
 }

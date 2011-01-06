@@ -6,44 +6,187 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 09:37+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-10-30 08:46+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account4_ids:0
-msgid "Account4 Id"
-msgstr "Id cont4"
-
-#. module: account_analytic_plans
-#: constraint:ir.model:0
+#: view:analytic.plan.create.model:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"This distribution model has been saved.You will be able to reuse it later."
 msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-"special !"
 
 #. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,plan_id:0
+msgid "Plan Id"
+msgstr "Id plan"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "From Date"
+msgstr "Ce la data"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+#: view:account.crossovered.analytic:0
+#: model:ir.actions.act_window,name:account_analytic_plans.action_account_crossovered_analytic
 #: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
-#: model:ir.actions.wizard,name:account_analytic_plans.account_analytic_account_inverted_balance_report
 msgid "Crossovered Analytic"
 msgstr "Analitic încrucişat"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account5_ids:0
-msgid "Account5 Id"
-msgstr "Id cont5"
+#: view:account.analytic.plan:0
+#: field:account.analytic.plan,name:0
+#: field:account.analytic.plan.line,plan_id:0
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
+msgid "Analytic Plan"
+msgstr "Plan analitic"
 
 #. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date2:0
-msgid "End Date"
-msgstr "Dată de sfârșit"
+#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
+msgid "Multiple-plans management in Analytic Accounting"
+msgstr "Management multi-planuri în contabilitatea analitică"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,journal_id:0
+#: view:account.crossovered.analytic:0
+#: field:account.crossovered.analytic,journal_ids:0
+msgid "Analytic Journal"
+msgstr "Jurnal analitic"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.line:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
+msgid "Analytic Plan Line"
+msgstr "Linie plan analitic"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
+msgid "Analytic Plan Instance"
+msgstr "Instanţă plan analitic"
+
+#. module: account_analytic_plans
+#: view:analytic.plan.create.model:0
+msgid "Ok"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,plan_id:0
+msgid "Model's Plan"
+msgstr "Planul modelului"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account2_ids:0
+msgid "Account2 Id"
+msgstr "Id cont2"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Id cont"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Amount"
+msgstr "Sumă"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Cod"
+
+#. module: account_analytic_plans
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account6_ids:0
+msgid "Account6 Id"
+msgstr "Id cont6"
+
+#. module: account_analytic_plans
+#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
+msgid "Multi Plans"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Cont analitic"
+
+#. module: account_analytic_plans
+#: sql_constraint:account.journal:0
+msgid "The code of the journal must be unique per company !"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,ref:0
+msgid "Analytic Account Reference"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: view:analytic.plan.create.model:0
+#, python-format
+msgid "Distribution Model Saved"
+msgstr "Model de repartizare salvat"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
+msgid "Analytic Distribution's Models"
+msgstr "Modele repartizare analitice"
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:0
+msgid "Print"
+msgstr "Tipărire"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Percentage"
+msgstr "Procentaj"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "A model having this name and code already exists !"
+msgstr "Există deja un model având acest cod şi această denumire !"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "No analytic plan defined !"
+msgstr "Nu este definit nici un plan analitic !"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -52,151 +195,16 @@ msgstr "Rată (%)"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan:0
-#: field:account.analytic.plan,name:0
-#: field:account.analytic.plan.line,plan_id:0
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
-msgid "Analytic Plan"
-msgstr "Plan analitic"
-
-#. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
-msgid "Analytic Instance Line"
-msgstr "Linie instanţă analitic"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Lines"
-msgstr "Linii repartizare analitic"
-
-#. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
-msgstr "Tipărire"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "To Date"
-msgstr "La data"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,plan_id:0
-msgid "Plan Id"
-msgstr "Id plan"
-
-#. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
-msgid "Analytic Distribution's Models"
-msgstr "Modele repartizare analitice"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Account Name"
-msgstr "Denumire cont"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan.instance.line:0
-msgid "Analytic Distribution Line"
-msgstr "Linie repartizare analitic"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr "Cod repartizare"
-
-#. module: account_analytic_plans
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nume invalid de model în definirea acţiunii"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.line,name:0
-msgid "Plan Name"
-msgstr "Denumire plan"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date"
-msgstr "Data tipăririi"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Percentage"
-msgstr "Procentaj"
-
-#. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,empty_line:0
-msgid "Dont show empty lines"
-msgstr "Fără afişarelinii goale"
-
-#. module: account_analytic_plans
-#: wizard_view:wizard.crossovered.analytic,init:0
-msgid "Select Information"
-msgstr "Selectare informaţii"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account3_ids:0
-msgid "Account3 Id"
-msgstr "Id cont3"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,journal_id:0
-#: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
-msgid "Analytic Journal"
-msgstr "Jurnal analitic"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "100.00%"
-msgstr "100.00%"
-
-#. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,ref:0
-msgid "Analytic Account Ref."
-msgstr "Ref. cont analitic"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Analytic Account :"
-msgstr "Cont analitic :"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan.line:0
-msgid "Analytic Plan Line"
-msgstr "Linie plan analitic"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Analytic Account Reference:"
-msgstr "Referinţă cont analitic:"
-
-#. module: account_analytic_plans
-#: model:ir.actions.wizard,name:account_analytic_plans.create_model
-msgid "Create Model"
-msgstr "Creare model"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan,default_instance_id:0
-msgid "Default Entries"
-msgstr "Înregistrări implicite"
-
-#. module: account_analytic_plans
-#: view:account.analytic.plan:0
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
 msgstr "Planuri analitice"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,min_required:0
-msgid "Minimum Allowed (%)"
-msgstr "Minim permis (%)"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account1_ids:0
-msgid "Account1 Id"
-msgstr "Id cont1"
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:0
+#, python-format
+msgid "User Error"
+msgstr "Eroare utilizator"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
@@ -204,24 +212,82 @@ msgid "Maximum Allowed (%)"
 msgstr "Maxim permis (%)"
 
 #. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid "Distribution Model Saved"
-msgstr "Model de repartizare salvat"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Data tipăririi"
 
 #. module: account_analytic_plans
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
-msgid "Analytic Plan Instance"
-msgstr "Instanţă plan analitic"
+#: view:account.analytic.plan.line:0
+msgid "Analytic Plan Lines"
+msgstr "Linii plan analitic"
 
 #. module: account_analytic_plans
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid pentru arhitectura machetei de afișare !"
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
-msgid "Distribution Models"
-msgstr "Modele de repartizare"
+#: model:ir.model,name:account_analytic_plans.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Currency"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date1:0
+msgid "Start Date"
+msgstr "Dată de început"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account5_ids:0
+msgid "Account5 Id"
+msgstr "Id cont5"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
+msgid "Analytic Instance Line"
+msgstr "Linie instanţă analitic"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,root_analytic_id:0
+msgid "Root Account"
+msgstr "Cont rădăcină"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "To Date"
+msgstr "La data"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "You have to define an analytic journal on the '%s' journal!"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,empty_line:0
+msgid "Dont show empty lines"
+msgstr "Fără afişarelinii goale"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.action_analytic_plan_create_model
+msgid "analytic.plan.create.model.action"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account :"
+msgstr "Cont analitic :"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,description:account_analytic_plans.module_meta_information
@@ -255,71 +321,46 @@ msgid ""
 "So when this line of invoice will be confirmed, it will generate 3 analytic "
 "lines,\n"
 "for one account entry.\n"
+"The analytic plan validates the minimum and maximum percentage at the time "
+"of creation\n"
+"of distribution models.\n"
 "        "
 msgstr ""
-"Acest modul permite utilizarea de multiple planuri analitice, conform "
-"jurnalului general, \n"
-"astfel ca sunt create mai multe înregistrări analitice atunci când "
-"înregistrările sau facturile sunt confirmate.\n"
-"\n"
-"De exemplu, puteţi defini următoarea structură de analitice:\n"
-"  Proiecte\n"
-"      Proiect 1\n"
-"          Subproiect 1.1\n"
-"          Subproiect 1.2\n"
-"      Proiect 2\n"
-"  Agenţi vânzări\n"
-"      Gheorghe\n"
-"      Vasile\n"
-"\n"
-"Avem două planuri: Proiecte şi Agenţi vânzări.\n"
-"O linie din factură trebuie să poata scrie înregistrări analitice în souă "
-"planuri: Subproiect 1.1 şi \n"
-"Vasile. Suma poate fi de asemenea distribuită. Exemplul următor este pentru\n"
-"o factură ce trebuie distribuită între cele două subproiecte şi trebuie "
-"atribuită unui agent de vânzări:\n"
-"\n"
-"Plan1:\n"
-"    Subproiect 1.1: 50%\n"
-"    Subproiect 1.2: 50%\n"
-"Plan2:\n"
-"Gheorghe: 100%\n"
-"\n"
-"Aşadar atunci când va fi confirmată factura, vor fi generate 3 înregistrări "
-"în analitice\n"
-"pentru o singură înregistrare în contabilitatea  financiară.\n"
-"        "
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "Management multi-planuri în contabilitatea analitică"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account Reference:"
+msgstr "Referinţă cont analitic:"
 
 #. module: account_analytic_plans
-#: view:account.analytic.plan.line:0
-#: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
-msgid "Analytic Plan Lines"
-msgstr "Linii plan analitic"
+#: field:account.analytic.plan.line,name:0
+msgid "Plan Name"
+msgstr "Denumire plan"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Crossovered Analytic -"
-msgstr "Analitic încrucişat -"
+#: field:account.analytic.plan,default_instance_id:0
+msgid "Default Entries"
+msgstr "Înregistrări implicite"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,plan_id:0
-msgid "Model's Plan"
-msgstr "Planul modelului"
+#: model:ir.model,name:account_analytic_plans.model_account_move_line
+msgid "Journal Items"
+msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account2_ids:0
-msgid "Account2 Id"
-msgstr "Id cont2"
+#: field:account.analytic.plan.instance,account1_ids:0
+msgid "Account1 Id"
+msgstr "Id cont1"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Amount"
-msgstr "Sumă"
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,min_required:0
+msgid "Minimum Allowed (%)"
+msgstr "Minim permis (%)"
 
 #. module: account_analytic_plans
 #: help:account.analytic.plan.line,root_analytic_id:0
@@ -327,41 +368,136 @@ msgid "Root account of this plan."
 msgstr "Contul rădăcină al acestui plan"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account6_ids:0
-msgid "Account6 Id"
-msgstr "Id cont6"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "Error"
+msgstr "Eroare"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
+msgid "Save This Distribution as a Model"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
 msgstr "Cantitate"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Id cont"
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#, python-format
+msgid "Please put a name and a code before saving the model !"
+msgstr "Înainte de a salva modelul completaţi numele şi codul !"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Cod"
-
-#. module: account_analytic_plans
-#: wizard_button:create.model,info,end:0
-msgid "OK"
-msgstr "OK"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.line,root_analytic_id:0
-msgid "Root Account"
-msgstr "Cont rădăcină"
-
-#. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid ""
-"This distribution model has been saved. You will be able to reuse it later."
+#: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
+msgid "Print Crossovered Analytic"
 msgstr ""
-"Acest model de repartizare a fost salvat. Îl veţi putea refolosi mai târziu."
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "No Analytic Journal !"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_bank_statement
+msgid "Bank Statement"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account3_ids:0
+msgid "Account3 Id"
+msgstr "Id cont3"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_invoice
+msgid "Invoice"
+msgstr ""
+
+#. module: account_analytic_plans
+#: view:account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
+msgid "Cancel"
+msgstr "Renunțare"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,account4_ids:0
+msgid "Account4 Id"
+msgstr "Id cont4"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Lines"
+msgstr "Linii repartizare analitic"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "at"
+msgstr "la"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Account Name"
+msgstr "Denumire cont"
+
+#. module: account_analytic_plans
+#: view:account.analytic.plan.instance.line:0
+msgid "Analytic Distribution Line"
+msgstr "Linie repartizare analitic"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "Cod repartizare"
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "%"
+msgstr ""
+
+#. module: account_analytic_plans
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "100.00%"
+msgstr "100.00%"
+
+#. module: account_analytic_plans
+#: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
+#: field:account.analytic.plan.instance,name:0
+#: field:account.bank.statement.line,analytics_id:0
+#: field:account.invoice.line,analytics_id:0
+#: field:account.move.line,analytics_id:0
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_default
+msgid "Analytic Distribution"
+msgstr "Repartizare analitic"
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
+msgid "analytic.plan.create.model"
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date2:0
+msgid "End Date"
+msgstr "Dată de sfârșit"
+
+#. module: account_analytic_plans
+#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
+msgid "Distribution Models"
+msgstr "Modele de repartizare"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -369,40 +505,129 @@ msgid "Sequence"
 msgstr "Secvenţă"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Cont analitic"
+#: sql_constraint:account.journal:0
+msgid "The name of the journal must be unique per company !"
+msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.default,analytics_id:0
-#: view:account.analytic.plan.instance:0
-#: field:account.analytic.plan.instance,name:0
-#: field:account.invoice.line,analytics_id:0
-#: field:account.move.line,analytics_id:0
-msgid "Analytic Distribution"
-msgstr "Repartizare analitic"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "Value Error"
+msgstr "Eroare valoare"
 
 #. module: account_analytic_plans
-#: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
-msgid "Analytic Distribution's models"
-msgstr "Modele de repartizare analitice"
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
 
-#. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,end:0
-msgid "Cancel"
-msgstr "Renunțare"
+#~ msgid "Currency:"
+#~ msgstr "Monedă:"
 
-#. module: account_analytic_plans
-#: wizard_field:wizard.crossovered.analytic,init,date1:0
-msgid "Start Date"
-msgstr "Dată de început"
+#~ msgid "to"
+#~ msgstr "la"
 
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "at"
-msgstr "la"
+#~ msgid "OK"
+#~ msgstr "OK"
 
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "From Date"
-msgstr "Ce la data"
+#~ msgid "Analytic Account Ref."
+#~ msgstr "Ref. cont analitic"
+
+#~ msgid "Create Model"
+#~ msgstr "Creare model"
+
+#~ msgid "Period from"
+#~ msgstr "Perioada de la"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
+#~ "special !"
+
+#~ msgid "Select Information"
+#~ msgstr "Selectare informaţii"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "        "
+#~ msgstr ""
+#~ "Acest modul permite utilizarea de multiple planuri analitice, conform "
+#~ "jurnalului general, \n"
+#~ "astfel ca sunt create mai multe înregistrări analitice atunci când "
+#~ "înregistrările sau facturile sunt confirmate.\n"
+#~ "\n"
+#~ "De exemplu, puteţi defini următoarea structură de analitice:\n"
+#~ "  Proiecte\n"
+#~ "      Proiect 1\n"
+#~ "          Subproiect 1.1\n"
+#~ "          Subproiect 1.2\n"
+#~ "      Proiect 2\n"
+#~ "  Agenţi vânzări\n"
+#~ "      Gheorghe\n"
+#~ "      Vasile\n"
+#~ "\n"
+#~ "Avem două planuri: Proiecte şi Agenţi vânzări.\n"
+#~ "O linie din factură trebuie să poata scrie înregistrări analitice în souă "
+#~ "planuri: Subproiect 1.1 şi \n"
+#~ "Vasile. Suma poate fi de asemenea distribuită. Exemplul următor este pentru\n"
+#~ "o factură ce trebuie distribuită între cele două subproiecte şi trebuie "
+#~ "atribuită unui agent de vânzări:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    Subproiect 1.1: 50%\n"
+#~ "    Subproiect 1.2: 50%\n"
+#~ "Plan2:\n"
+#~ "Gheorghe: 100%\n"
+#~ "\n"
+#~ "Aşadar atunci când va fi confirmată factura, vor fi generate 3 înregistrări "
+#~ "în analitice\n"
+#~ "pentru o singură înregistrare în contabilitatea  financiară.\n"
+#~ "        "
+
+#~ msgid "Analytic Distribution's models"
+#~ msgstr "Modele de repartizare analitice"
+
+#~ msgid ""
+#~ "This distribution model has been saved. You will be able to reuse it later."
+#~ msgstr ""
+#~ "Acest model de repartizare a fost salvat. Îl veţi putea refolosi mai târziu."
+
+#~ msgid "Printing date:"
+#~ msgstr "Data tipăririi:"
+
+#~ msgid "Crossovered Analytic -"
+#~ msgstr "Analitic încrucişat -"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nume invalid de model în definirea acţiunii"

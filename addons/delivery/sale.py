@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import netsvc
 from osv import fields,osv
 
 
@@ -26,7 +25,7 @@ from osv import fields,osv
 class sale_order(osv.osv):
     _inherit = 'sale.order'
     _columns = {
-        'carrier_id':fields.many2one("delivery.carrier","Delivery method", help="Complete this field if you plan to invoice the shipping based on picking."),
+        'carrier_id':fields.many2one("delivery.carrier", "Delivery Method", help="Complete this field if you plan to invoice the shipping based on picking."),
         'id': fields.integer('ID', readonly=True,invisible=True),
     }
 

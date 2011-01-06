@@ -21,24 +21,35 @@
 
 
 {
-    "name" : "Share Management",
+    "name" : "Sharing Tools",
     "version" : "1.1",
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": 'Generic Modules',
-    "description": """The goal is to implement a generic sharing mechanism, where user of OpenERP
-can share data from OpenERP to their colleagues, customers, or friends.
-The system will work by creating new users and groups on the fly, and by
-combining the appropriate access rights and ir.rules to ensure that the /shared
-users/ will only have access to the correct data.
+    "description": """
+
+    This module adds generic sharing tools to your current OpenERP database,
+    and specifically a 'share' button that is available in the Web client to
+    share any kind of OpenERP data with colleagues, customers, friends, etc.
+
+    The system will work by creating new users and groups on the fly, and by
+    combining the appropriate access rights and ir.rules to ensure that the
+    shared users only have access to the data that has been shared with them.
+
+    This is extremely useful for collaborative work, knowledge sharing, 
+    synchronization with other companies, etc.
+
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
+    'demo_xml': ['share_demo.xml'],
+    'data': [
+        'security/share_security.xml',
         'share_view.xml',
+        'res_users_view.xml',
         'wizard/share_wizard_view.xml'
-    ],    
+    ],
     'installable': True,
-    'active': False,
+    'web': True,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

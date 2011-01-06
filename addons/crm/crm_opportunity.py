@@ -19,11 +19,10 @@
 #
 ##############################################################################
 
-from datetime import datetime
-from osv import fields,osv,orm
+from osv import fields, osv
 from tools.translate import _
 import crm
-import time
+
 
 AVAILABLE_STATES = [
     ('draft','Draft'),
@@ -51,7 +50,31 @@ class crm_opportunity(osv.osv):
         'date_deadline': fields.date('Expected Closing'),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),
+        'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','opportunity')]"),
      }
+    
+    def _case_close_generic(self, cr, uid, ids, find_stage, *args):
+        res = super(crm_opportunity, self).case_close(cr, uid, ids, *args)
+        for case in self.browse(cr, uid, ids):
+            #if the case is not an opportunity close won't change the stage
+            if not case.type == 'opportunity':
+                return res
+                
+            value = {}
+            stage_id = find_stage(cr, uid, 'opportunity', case.section_id.id or False)
+            if stage_id:
+                stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage_id)
+                value.update({'stage_id': stage_id})
+                if stage_obj.on_change:
+                    value.update({'probability': stage_obj.probability})
+                
+            #Done un crm.case
+            #value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
+            
+
+            self.write(cr, uid, ids, value)
+        return res
+    
     def case_close(self, cr, uid, ids, *args):
         """Overrides close for crm_case for setting probability and close date
         @param self: The object pointer
@@ -60,18 +83,12 @@ class crm_opportunity(osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 100)]})
-        if not stage_id:
-            raise osv.except_osv(_('Warning !'), _('There is no stage for won opportunities defined for this Sale Team.'))
-        value = self.onchange_stage_id(cr, uid, ids, stage_id, context={})['value']
-        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S'), 'stage_id': stage_id})
-
-        self.write(cr, uid, ids, value)
+        res = self._case_close_generic(cr, uid, ids, self._find_won_stage, *args)
+        
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been Won.")
+                message = _("The opportunity '%s' has been won.") % name
                 self.log(cr, uid, id, message)
         return res
 
@@ -83,22 +100,15 @@ class crm_opportunity(osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
-        res = super(crm_opportunity, self).case_close(cr, uid, ids, args)
-        stage_id = super(crm_opportunity, self).stage_next(cr, uid, ids, context={'force_domain': [('probability', '=', 0)]})
-        value = {}
-        if stage_id:
-            value = self.onchange_stage_id(cr, uid, ids, stage_id, context={}).get('value', {})
-            value['stage_id'] = stage_id
-        value.update({'date_closed': time.strftime('%Y-%m-%d %H:%M:%S')})
-
-        res = self.write(cr, uid, ids, value)
+        res = self._case_close_generic(cr, uid, ids, self._find_lost_stage, *args)
+        
         for (id, name) in self.name_get(cr, uid, ids):
             opp = self.browse(cr, uid, id)
             if opp.type == 'opportunity':
-                message = _('The Opportunity') + " '" + name + "' "+ _("has been Lost.")
+                message = _("The opportunity '%s' has been marked as lost.") % name
                 self.log(cr, uid, id, message)
         return res
-
+    
     def case_cancel(self, cr, uid, ids, *args):
         """Overrides cancel for crm_case for setting probability
         @param self: The object pointer
@@ -120,8 +130,8 @@ class crm_opportunity(osv.osv):
         @param *args: Tuple Value for additional Params
         """
         res = super(crm_opportunity, self).case_reset(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'stage_id': False})
-        return True
+        self.write(cr, uid, ids, {'stage_id': False, 'probability': 0.0})
+        return res
    
  
     def case_open(self, cr, uid, ids, *args):
@@ -133,21 +143,21 @@ class crm_opportunity(osv.osv):
         @param *args: Give Tuple Value
         """
         res = super(crm_opportunity, self).case_open(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S')})
+        
         return res
 
-    def onchange_stage_id(self, cr, uid, ids, stage_id, context={}):
+    def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
 
         """ @param self: The object pointer
             @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
             @param ids: List of stage’s IDs
             @stage_id: change state id on run time """
-
         if not stage_id:
             return {'value':{}}
+        
+        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context=context)
 
-        stage = self.pool.get('crm.case.stage').browse(cr, uid, stage_id, context)
         if not stage.on_change:
             return {'value':{}}
         return {'value':{'probability': stage.probability}}
@@ -169,7 +179,7 @@ class crm_opportunity(osv.osv):
         @return : Dictionary value for created Meeting view
         """
         value = {}
-        for opp in self.browse(cr, uid, ids):
+        for opp in self.browse(cr, uid, ids, context=context):
             data_obj = self.pool.get('ir.model.data')
 
             # Get meeting views

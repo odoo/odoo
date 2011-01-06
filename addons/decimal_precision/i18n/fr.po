@@ -6,47 +6,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 05:24+0000\n"
-"PO-Revision-Date: 2010-08-30 12:19+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2011-01-01 13:17+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2011-01-02 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: decimal_precision
 #: field:decimal.precision,digits:0
 msgid "Digits"
-msgstr ""
-
-#. module: decimal_precision
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: decimal_precision
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: decimal_precision
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Chiffres après la virgule"
 
 #. module: decimal_precision
 #: view:decimal.precision:0
 msgid "Decimal Precision"
-msgstr ""
+msgstr "Précision décimale"
 
 #. module: decimal_precision
 #: model:ir.actions.act_window,name:decimal_precision.action_decimal_precision_form
 #: model:ir.ui.menu,name:decimal_precision.menu_decimal_precision_form
 msgid "Decimal Accuracy Definitions"
-msgstr ""
+msgstr "Définitions de la précisions décimale"
 
 #. module: decimal_precision
 #: model:ir.module.module,description:decimal_precision.module_meta_information
@@ -58,23 +42,47 @@ msgid ""
 "\n"
 "The decimal precision is configured per company.\n"
 msgstr ""
-
-#. module: decimal_precision
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr ""
+"\n"
+"Ce module autorise la configuration du nombre de décimale pour les "
+"différents cas\n"
+"d'usage: comptabilité, ventes, achats ...\n"
+"\n"
+"La précision du nombre de décimal est confgurable par société.\n"
 
 #. module: decimal_precision
 #: field:decimal.precision,name:0
 msgid "Usage"
-msgstr ""
+msgstr "Utilisation"
+
+#. module: decimal_precision
+#: sql_constraint:decimal.precision:0
+msgid "Only one value can be defined for each given usage!"
+msgstr "Une seule valeur peut être définie pour chaque usage !"
 
 #. module: decimal_precision
 #: model:ir.module.module,shortdesc:decimal_precision.module_meta_information
 msgid "Decimal Precision Configuration"
-msgstr ""
+msgstr "Configuration de la précision décimale"
 
 #. module: decimal_precision
 #: model:ir.model,name:decimal_precision.model_decimal_precision
 msgid "decimal.precision"
-msgstr ""
+msgstr "decimal.precision"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nom de modèle invalide dans la définition de l'action."
+
+#~ msgid "Decimal Accuracy"
+#~ msgstr "Précision décimale"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalide pour l'architecture de la vue !"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Le nom de l'objet doit commencer avec x_ et ne doit pas contenir de "
+#~ "caractère spécial !"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erreur ! Vous ne pouvez pas créer de menu récursif."

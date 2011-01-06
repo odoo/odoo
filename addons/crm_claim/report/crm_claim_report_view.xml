@@ -19,6 +19,8 @@
                     <field name="day" invisible="1"/>
                     <field name="nbr" string="#Claim" sum="#Claim"/>
                     <field name="delay_close" avg="Avg Closing Delay"/>
+                    <field name="email"/>
+                    <field name="probability" widget="progressbar"/>
                     <field name="delay_expected"/>
                     <field name="state" invisible="1"/>
                     <field name="stage_id" invisible="1"/>
@@ -26,30 +28,6 @@
                     <field name="priority" invisible="1"/>
                     <field name="type_action" invisible="1"/>
                 </tree>
-            </field>
-        </record>
-
-<!-- CRM Claim Report Form View -->
-
-        <record id="view_report_crm_claim_form" model="ir.ui.view">
-            <field name="name">crm.claim.report.form</field>
-            <field name="model">crm.claim.report</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Cases">
-                    <field name="name" select="1"/>
-                    <field name="month" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="section_id" select="1"/>
-                    <field name="nbr" select="1"/>
-                    <field name="delay_close"/>
-                    <field name="delay_expected"/>
-                    <field name="amount_revenue"/>
-                    <field name="amount_costs"/>
-                    <field name="amount_revenue_prob"/>
-                    <field name="probability"/>
-                    <field name="state" select="1"/>
-                </form>
             </field>
         </record>
 
@@ -77,94 +55,97 @@
             <field name="arch" type="xml">
                 <search string="Search">
                   <group col="16" colspan="8">
-                           <filter string="  Year  " icon="terp-go-year"
+                       <filter string="  Year  " icon="terp-go-year"
                                domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                                help="Claims created in current year"/>
 
                        <filter string="   Month   " icon="terp-go-month" name="This Month"
-                           domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                           domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                            help="Claims created in current month"/>
 
                        <filter icon="terp-go-month" string="    Month-1    " separator="1"
-                            domain="[('create_date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Claims created in last month"/>
 
-                           <separator orientation="vertical" />
+                        <separator orientation="vertical" />
                         <filter icon="terp-document-new"
                             string="Draft"
                             domain="[('state','=','draft')]"/>
-                       <filter icon="terp-camera_test"
+                        <filter icon="terp-camera_test"
                             string="Open"
                             domain="[('state','=','open')]"/>
-                       <filter icon="terp-gtk-media-pause"
+                        <filter icon="terp-gtk-media-pause"
                             string="Pending"
                             domain="[('state','=','pending')]"/>
 
-                           <separator orientation="vertical" />
-                              <field name="section_id" string="Sales Team"
-                               default="context.get('section_id', False)"
-                               context="{'invisible_section': False}">
+                        <separator orientation="vertical" />
+                        <field name="section_id" string="Sales Team"
+                            context="{'invisible_section': False}">
 
-                               <filter icon="terp-personal+"
-                                   context="{'invisible_section': False}"
-                                   domain="[('section_id.user_id','=',uid)]"
-                                   help="My team" />
+                            <filter icon="terp-personal+" groups="base.group_extended"
+                                context="{'invisible_section': False}"
+                                domain="[('section_id.user_id','=',uid)]"
+                                help="My Sales Team(s)" />
 
-                           </field>
-                           <field name="company_id">
-                           <filter icon="terp-go-home"
-                        context="{'invisible_section': False}"
-                        domain="[('section_id.user_id.company_id','=',uid)]"
-                        help="My company"/>
+                        </field>
+                        <field name="company_id" groups="base.group_multi_company">
+                            <filter icon="terp-go-home"
+                                context="{'invisible_section': False}"
+                                domain="[('section_id.user_id.company_id','=',uid)]"
+                                help="My company"/>
                         </field>
 
-                      	<field name="user_id" string="Salesman" select="1">
-	            			<filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-               			</field>
-                   </group>
-                   <newline/>
-                   <group  expand="0" string="Extended Filters..." groups="base.group_extended">
-                         <filter icon="terp-dialog-close"
+                        <field name="user_id" string="Salesman" select="1">
+                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                        </field>
+                    </group>
+                    <newline/>
+                    <group  expand="0" string="Extended Filters..." groups="base.group_extended">
+                        <filter icon="terp-dialog-close"
                             string="Done"
                             domain="[('state','=','done')]"/>
                         <filter icon="gtk-cancel"
                             string="Cancel"
                             domain="[('state','=','cancel')]"/>
-                        <group>
-                            <separator orientation="vertical"/>
-                            <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
-                            <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
-                            <separator orientation="vertical"/>
-                            <field name="priority" />
-                            <field name="type_action" />
-                        </group>
-                   </group>
-                   <newline/>
-                   <group  expand="1" string="Group By...">
+                        <separator orientation="vertical"/>
+                        <field name="partner_id"/>
+                        <separator orientation="vertical"/>
+                        <field name="stage_id" widget="selection" domain="[('type', '=', 'claim')]"/>
+                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
+                        <separator orientation="vertical"/>
+                        <field name="priority" />
+                        <field name="type_action" />
+                        <newline/>
+                        <field name="date_closed" />
+                        <field name="date_deadline" />
+                    </group>
+                    <newline/>
+                    <group  expand="1" string="Group By...">
                         <filter string="Salesman" name="Salesman" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
                             context="{'group_by':'section_id'}" />
-                            
+                        <filter string="Partner" name="partner" icon="terp-partner"
+                            domain="[]" context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Stage" icon="terp-stage" domain="[]"
-                             context="{'group_by':'stage_id'}" />
+                            context="{'group_by':'stage_id'}" />
                         <filter string="Priority" icon="terp-rating-rated" domain="[]"
-                             context="{'group_by':'priority'}" />
+                            context="{'group_by':'priority'}" />
                         <filter string="Category" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
 
                         <separator orientation="vertical"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"
-                             context="{'group_by':'type_action'}" />
+                            context="{'group_by':'type_action'}" help="Action Type"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Company" icon="terp-go-home"
                             domain="[]"
                             context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        
+
                         <separator orientation="vertical" />
                         <filter string="Day" icon="terp-go-today"
                             domain="[]" context="{'group_by':'day'}"
@@ -177,8 +158,8 @@
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'name'}" 
                             help="Year of claim"/>
-                  </group>
-               </search>
+                    </group>
+                </search>
             </field>
         </record>
 
@@ -188,30 +169,30 @@
             <field name="name">Claims Analysis</field>
             <field name="res_model">crm.claim.report</field>
             <field name="view_type">form</field>
-              <field name="view_mode">tree,graph</field>
-              <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="view_mode">tree,graph</field>
+            <field name="context">{"search_default_User":1,"search_default_This Month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_id" ref="view_report_crm_claim_tree"/>
             <field name="search_view_id" ref="view_report_crm_claim_filter"/>
-
+            <field name="help">Have a general overview of all claims processed in the system by sorting them with specific criteria.</field>
         </record>
 
-           <record model="ir.actions.act_window.view" id="action_report_crm_claim_tree">
+        <record model="ir.actions.act_window.view" id="action_report_crm_claim_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_report_crm_claim_tree"/>
             <field name="act_window_id" ref="action_report_crm_claim"/>
         </record>
 
-           <record model="ir.actions.act_window.view" id="action_report_crm_claim_graph">
+        <record model="ir.actions.act_window.view" id="action_report_crm_claim_graph">
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_report_crm_claim_graph"/>
             <field name="act_window_id" ref="action_report_crm_claim"/>
         </record>
 
-       <menuitem name="Claims Analysis" id="menu_report_crm_claim_tree"
-           groups="base.group_extended"
-           action="action_report_crm_claim" parent="base.next_id_64" sequence="6"/>
+        <menuitem name="Claims Analysis" id="menu_report_crm_claim_tree"
+            groups="base.group_extended"
+            action="action_report_crm_claim" parent="base.next_id_64" sequence="6"/>
 
 
     </data>

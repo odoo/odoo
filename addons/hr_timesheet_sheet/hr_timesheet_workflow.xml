@@ -2,12 +2,6 @@
 <openerp>
     <data>
 
-        <!-- Roles definition -->
-
-        <record id="HR" model="res.roles">
-            <field name="name">Timesheets validation</field>
-        </record>
-
         <!-- Workflow definition -->
 
         <record id="wkf_timesheet" model="workflow">
@@ -46,21 +40,25 @@
         <record id="t0" model="workflow.transition">
             <field name="act_from" ref="act_new"/>
             <field name="act_to" ref="act_draft"/>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         <record id="t1" model="workflow.transition">
             <field name="act_from" ref="act_draft"/>
             <field name="act_to" ref="act_confirm"/>
             <field name="signal">confirm</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         <record id="t2" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_done"/>
             <field name="signal">done</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
         <record id="t3" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">cancel</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
     </data>
 </openerp>

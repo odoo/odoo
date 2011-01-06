@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+from osv import osv
 from base_calendar import base_calendar
-from crm import crm
 from caldav import calendar
 from datetime import datetime
 import re
@@ -37,8 +36,7 @@ class crm_meeting(osv.osv):
             @param ids: List of CRM Meeting’s IDs
             @param context: A standard dictionary for contextual values
         """
-        if not context:
-            context = {}
+        if context is None: context = {}
         ids = map(lambda x: base_calendar.base_calendar_id2real_id(x), ids)
         event_data = self.read(cr, uid, ids, context=context)
         event_obj = self.pool.get('basic.calendar.event')
@@ -55,8 +53,6 @@ class crm_meeting(osv.osv):
             @param data_id: calendar's Id
             @param context: A standard dictionary for contextual values
         """
-        if not context:
-            context = {}
         event_obj = self.pool.get('basic.calendar.event')
         vals = event_obj.import_cal(cr, uid, data, context=context)
         return self.check_import(cr, uid, vals, context=context)
@@ -69,7 +65,7 @@ class crm_meeting(osv.osv):
             @param vals: Get Values
             @param context: A standard dictionary for contextual values
         """
-        if not context:
+        if context is None:
             context = {}
         ids = []
         model_obj = self.pool.get(context.get('model'))
@@ -77,7 +73,7 @@ class crm_meeting(osv.osv):
         try:
             for val in vals:
                 # Compute value of duration
-                if 'date_deadline' in val and 'duration' not in val:
+                if val.get('date_deadline', False) and 'duration' not in val:
                     start = datetime.strptime(val['date'], '%Y-%m-%d %H:%M:%S')
                     end = datetime.strptime(val['date_deadline'], '%Y-%m-%d %H:%M:%S')
                     diff = end - start

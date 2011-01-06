@@ -69,17 +69,14 @@ def _reconstruct_invoice_ref(cursor, user, reference, context=None):
         return []
     return True
 
-def _import(obj, cursor, user, data, context=None):
+def _import(self, cursor, user, data, context=None):
 
-    pool = pooler.get_pool(cursor.dbname)
-    statement_line_obj = pool.get('account.bank.statement.line')
-#    statement_reconcile_obj = pool.get('account.bank.statement.reconcile')
+    statement_line_obj = self.pool.get('account.bank.statement.line')
+    statement_obj = self.pool.get('account.bank.statement')
     voucher_obj = self.pool.get('account.voucher')
     voucher_line_obj = self.pool.get('account.voucher.line')
-    move_line_obj = pool.get('account.move.line')
-    property_obj = pool.get('ir.property')
-    model_fields_obj = pool.get('ir.model.fields')
-    attachment_obj = pool.get('ir.attachment')
+    move_line_obj = self.pool.get('account.move.line')
+    attachment_obj = self.pool.get('ir.attachment')
     file = data['form']['file']
     statement_id = data['id']
     records = []
@@ -137,22 +134,17 @@ def _import(obj, cursor, user, data, context=None):
                 total_cost += record['cost']
                 records.append(record)
 
-    model_fields_ids = model_fields_obj.search(cursor, user, [
-        ('name', 'in', ['property_account_receivable', 'property_account_payable']),
-        ('model', '=', 'res.partner'),
-        ], context=context)
-    property_ids = property_obj.search(cursor, user, [
-        ('fields_id', 'in', model_fields_ids),
-        ('res_id', '=', False),
-        ], context=context)
-
+#    model_fields_ids = model_fields_obj.search(cursor, user, [
+#        ('name', 'in', ['property_account_receivable', 'property_account_payable']),
+#        ('model', '=', 'res.partner'),
+#        ], context=context)
+#    property_ids = property_obj.search(cursor, user, [
+#        ('fields_id', 'in', model_fields_ids),
+#        ('res_id', '=', False),
+#        ], context=context)
     account_receivable = False
     account_payable = False
-    for property in property_obj.browse(cursor, user, property_ids, context=context):
-        if property.fields_id.name == 'property_account_receivable':
-            account_receivable = int(property.value.split(',')[1])
-        elif property.fields_id.name == 'property_account_payable':
-            account_payable = int(property.value.split(',')[1])
+    statement = statement_obj.browse(cursor, user, statement_id, context=context)
 
     for record in records:
         # Remove the 11 first char because it can be adherent number
@@ -166,6 +158,7 @@ def _import(obj, cursor, user, data, context=None):
             'type': (record['amount'] >= 0 and 'customer') or 'supplier',
             'statement_id': statement_id,
         }
+
         line_ids = move_line_obj.search(cursor, user, [
             ('ref', 'like', reference),
             ('reconcile_id', '=', False),
@@ -174,22 +167,49 @@ def _import(obj, cursor, user, data, context=None):
         if not line_ids:
             line_ids = _reconstruct_invoice_ref(cursor, user, reference, None)
 
-        line2reconcile = False
         partner_id = False
         account_id = False
         for line in move_line_obj.browse(cursor, user, line_ids, context=context):
-            if line.partner_id.id:
-                partner_id = line.partner_id.id
+            account_receivable = line.partner_id.property_account_receivable.id
+            account_payable = line.partner_id.property_account_payable.id
+            partner_id = line.partner_id.id
+            move_id = line.move_id.id
             if record['amount'] >= 0:
                 if round(record['amount'] - line.debit, 2) < 0.01:
-                    line2reconcile = line.id
+#                    line2reconcile = line.id
                     account_id = line.account_id.id
                     break
             else:
                 if round(line.credit + record['amount'], 2) < 0.01:
-                    line2reconcile = line.id
+#                    line2reconcile = line.id
                     account_id = line.account_id.id
                     break
+        result = voucher_obj.onchange_partner_id(cursor, user, [], partner_id=partner_id, journal_id=statement.journal_id.id, price=abs(record['amount']), currency_id= statement.currency.id, ttype='payment', context=context)
+        voucher_res = { 'type': 'payment' ,
+
+             'name': values['name'],
+             'partner_id': partner_id,
+             'journal_id': statement.journal_id.id,
+             'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
+             'company_id': statement.company_id.id,
+             'currency_id': statement.currency.id,
+             'date': record['date'] or time.strftime('%Y-%m-%d'),
+             'amount': abs(record['amount']),
+            'period_id': statement.period_id.id
+             }
+        voucher_id = voucher_obj.create(cursor, user, voucher_res, context=context)
+        context.update({'move_line_ids': line_ids})
+        values['voucher_id'] = voucher_id
+        voucher_line_dict =  False
+        if result['value']['line_ids']:
+            for line_dict in result['value']['line_ids']:
+                move_line = move_line_obj.browse(cursor, user, line_dict['move_line_id'], context)
+                if move_id == move_line.move_id.id:
+                    voucher_line_dict = line_dict
+        if voucher_line_dict:
+            voucher_line_dict.update({'voucher_id':voucher_id})
+            voucher_line_obj.create(cursor, user, voucher_line_dict, context=context)                
+             
         if not account_id:
             if record['amount'] >= 0:
                 account_id = account_receivable
@@ -201,31 +221,6 @@ def _import(obj, cursor, user, data, context=None):
         values['account_id'] = account_id
         values['partner_id'] = partner_id
 
-        if line2reconcile:
-            voucher_res = { 'type': 'payment' ,
-                'name': line.name,
-                'partner_id': line.partner_id.id,
-                'journal_id': statement.journal_id.id,
-                'account_id': account,
-                'company_id': statement.company_id.id,
-                'currency_id': statement.currency.id,
-                'date': line.date or time.strftime('%Y-%m-%d'),
-                'amount': abs(amount),
-                'period_id': statement.period_id.id
-                }
-            voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
-            context.update({'move_line_ids': line_ids})
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, price=abs(amount), currency_id= statement.currency.id, ttype='payment', context=context)
-            voucher_line_dict =  False
-            if result['value']['line_ids']:
-                for line_dict in result['value']['line_ids']:
-                    move_line = self.pool.get('account.move.line').browse(cr, uid, line_dict['move_line_id'], context)
-                    if line.move_line_id.move_id.id == move_line.move_id.id:
-                        voucher_line_dict = line_dict
-            if voucher_line_dict:
-                voucher_line_dict.update({'voucher_id':voucher_id})
-                voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
-            values['voucher_id'] = voucher_id
 #            values['reconcile_id'] = statement_reconcile_obj.create(cursor, user, {
 #                'line_ids': [(6, 0, [line2reconcile])],
 #                }, context=context)
@@ -261,7 +256,7 @@ class bvr_import_wizard(osv.osv_memory):
         if res:
             data['form']['file'] = res['file']
         _import(self, cr, uid, data, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 bvr_import_wizard()
 

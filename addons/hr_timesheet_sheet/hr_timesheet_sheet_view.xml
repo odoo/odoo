@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="hr_timesheet_sheet_tree" model="ir.ui.view">
-            <field name="name">hr.timesheet.sheet.tree</field>
-            <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Timesheets"
-                    colors="blue:state == 'draft';gray:state == 'done'">
-                    <field name="user_id"/>
-                    <field name="date_from"/>
-                    <field name="date_to"/>
-                    <field name="name"/>
-                    <field name="department_id"/>
-                    <field name="total_attendance" groups="base.group_hr_attendance"/>
-                    <field name="total_timesheet"/>
-                    <field name="total_difference" groups="base.group_hr_attendance"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
        <record id="hr_timesheet_sheet_graph" model="ir.ui.view">
          <field name="name">hr.timesheet.sheet.graph</field>
          <field name="model">hr_timesheet_sheet.sheet</field>
@@ -39,7 +20,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet by Accounts">
                     <field name="sheet_id" select="1"/>
-                    <field name="name" select="1" groups="base.group_extended"/>
+                    <field name="name" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="total" sum="Total"/>
                     <field name="invoice_rate"/>
                 </form>
@@ -53,7 +34,7 @@
             <field name="arch" type="xml">
                 <tree string="Timesheet by Accounts">
                     <field name="sheet_id"/>
-                    <field name="name" groups="base.group_extended"/>
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
                     <field name="total" sum="Total"/>
                     <field name="invoice_rate"/>
                 </tree>
@@ -71,7 +52,8 @@
                         <field name="company_id" select="1" groups="base.group_multi_company"/>
                         <field name="department_id" groups="base.group_extended"/>
                         <newline/>
-                        <field name="user_id"/>
+                        <field name="employee_id"/>
+                        <field name="user_id" invisible="1"/>
                         <field name="date_from"/>
                         <field name="date_to"/>
                     </group>
@@ -86,20 +68,20 @@
                                 <button icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
                             </group>
 
-                            <field colspan="3" context="name=date_current,user_id=user_id" height="100" name="attendances_ids" nolabel="1" groups="base.group_hr_attendance">
+                            <field colspan="3" context="{'name':date_current,'user_id':user_id}" height="100" name="attendances_ids" nolabel="1">
                                 <tree string="Attendances" editable="bottom">
                                     <field name="name"/>
                                     <field name="action"/>
                                     <field invisible="1" name="employee_id"/>
                                 </tree>
                             </field>
-                            <group col="1" colspan="1" groups="base.group_hr_attendance">
+                            <group col="1" colspan="1">
                                 <button name="sign_in" string="Sign In" type="object" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="sign_out" string="Sign Out" type="object" icon="terp-gtk-jump-to-rtl"/>
                             </group>
-                            <field name="state_attendance" groups="base.group_hr_attendance"/>
-                            <field name="total_attendance_day" widget="float_time" groups="base.group_hr_attendance"/>
-                            <field colspan="4" context="date=date_current,user_id=user_id" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
+                            <field name="state_attendance"/>
+                            <field name="total_attendance_day" widget="float_time"/>
+                            <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet">
                                     <field invisible="1" name="date"/>
                                     <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
@@ -134,9 +116,9 @@
                             <field colspan="4" name="period_ids" nolabel="1">
                                 <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
-                                    <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
+                                    <field name="total_attendance" widget="float_time"/>
                                     <field name="total_timesheet" widget="float_time"/>
-                                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
+                                    <field name="total_difference" widget="float_time"/>
                                 </tree>
                             </field>
                             <group colspan="4" col="6">
@@ -146,12 +128,12 @@
                             </group>
                         </page>
                     </notebook>
-                    <field name="state"/>
-                    <group col="4" colspan="2">
+                    <group col="6" colspan="4">
+                        <field name="state"/>
                         <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-check"/>
                         <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" icon="terp-stock_effects-object-colorize"/>
-                        <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-cancel"/>
-                        <button name="done" states="confirm" string="Approve" type="workflow" icon="terp-camera_test"/>
+                        <button name="cancel" states="confirm" string="Refuse" type="workflow" icon="gtk-cancel" groups="base.group_hr_user"/>
+                        <button name="done" states="confirm" string="Approve" type="workflow" icon="terp-camera_test" groups="base.group_hr_user"/>
                     </group>
                 </form>
             </field>
@@ -167,7 +149,7 @@
                         <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
                         <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                         <separator orientation="vertical"/>
-                        <field name="user_id" select="1"/>
+                        <field name="employee_id" select="1"/>
                         <field name="date_from"/>
                         <field name="department_id" widget="selection">
                             <filter icon="terp-personal+"
@@ -177,7 +159,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
-                        <filter string="Users" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Employees" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
                         <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
                     </group>
                 </search>
@@ -190,20 +172,13 @@
             <field name="res_model">hr_timesheet_sheet.sheet</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{'search_default_my_timesheet':1, 'search_default_user_id':uid }</field>
+            <field name="context">{'search_default_my_timesheet':1, }</field>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
-            <field name="help">Employees can encode their time spent on the different projects. A project is an analytic account and the time spent on a project generate costs on the analytic account.</field>
+            <field name="help">Check your timesheets for a specific period. You can also encode time spent on a project (i.e. an analytic account) thus generating costs in the analytic account concerned.</field>
         </record>
 
-        <!--Time Tracking menu in project Management-->
-        <menuitem icon="terp-project" id="base.menu_main_pm" name="Project" sequence="10"/>
-        <menuitem
-             id="base.menu_project_management_time_tracking"
-             name="Time Tracking"
-             parent="base.menu_main_pm" sequence="5"/>
-
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
-             sequence="2"/>
+             sequence="2" groups="base.group_hr_user,base.group_hr_manager"/>
 
         <!--
             Company inheritancy
@@ -289,41 +264,42 @@
             </field>
         </record>
 
-        <act_window 
+        <act_window
         context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_by_day" 
-        name="Timesheet by Account" 
-        res_model="hr_timesheet_sheet.sheet.account" 
+        id="act_hr_timesheet_sheet_sheet_by_day"
+        name="Timesheet by Account"
+        res_model="hr_timesheet_sheet.sheet.account"
         src_model="hr_timesheet_sheet.sheet"/>
 
-        <act_window 
+        <act_window
         context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet" 
-        name="Timesheet Lines" 
-        res_model="hr.analytic.timesheet" 
+        id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet"
+        name="Timesheet Lines"
+        res_model="hr.analytic.timesheet"
         src_model="hr_timesheet_sheet.sheet"/>
-        
 
-        <act_window 
+
+        <act_window
         context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_2_hr_attendance" 
-        name="Attendances" 
-        res_model="hr.attendance" 
+        id="act_hr_timesheet_sheet_sheet_2_hr_attendance"
+        name="Attendances"
+        res_model="hr.attendance"
         src_model="hr_timesheet_sheet.sheet"/>
 
         <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
-            <field name="name">hr.timesheet.sheet.tree.simplified</field>
+            <field name="name">hr.timesheet.sheet.tree</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
             <field name="type">tree</field>
-            <field eval="20" name="priority"/>
+            <field eval="10" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="blue:state in ('draft');black:state in ('confirm','new');gray:state in('done')" string="Timesheets">
+                    <field name="employee_id"/>
                     <field name="date_from"/>
-                    <field name="user_id"/>
-                    <field name="department_id" invisible="1"/>
-                    <field name="name"/>
+                    <field name="date_to"/>
+                    <field name="department_id"/>
                     <field name="total_attendance"/>
                     <field name="total_timesheet"/>
+                    <field name="total_difference"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -340,7 +316,9 @@
             </field>
         </record>
   <!-- Timesheet Button on Employee Form -->
-  <act_window domain="[('user_id', '=', user_id)]" id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
+  <act_window
+           context="{'search_default_employee_id': [active_id]}"
+           id="act_hr_employee_2_hr_timesheet" name="Timesheets" res_model="hr_timesheet_sheet.sheet" src_model="hr.employee"/>
 
     </data>
 </openerp>

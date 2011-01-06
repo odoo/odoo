@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 import tools
 from osv import fields,osv
 
@@ -39,6 +40,7 @@ class report_cash_register(osv.osv):
         'balance_end_real': fields.float('Closing Balance'),
     }
     _order = 'date desc'
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'report_cash_register')
         cr.execute("""
@@ -62,3 +64,5 @@ class report_cash_register(osv.osv):
                         to_char(s.create_date, 'YYYY-MM-DD'))""")
 
 report_cash_register()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

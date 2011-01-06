@@ -38,20 +38,14 @@ class hr_action_reason(osv.osv):
 hr_action_reason()
 
 def _employee_get(obj, cr, uid, context=None):
-    if context is None:
-        context = {}
     ids = obj.pool.get('hr.employee').search(cr, uid, [('user_id', '=', uid)], context=context)
-    if ids:
-        return ids[0]
-    return False
+    return ids and ids[0] or False
 
 class hr_attendance(osv.osv):
     _name = "hr.attendance"
     _description = "Attendance"
 
     def _day_compute(self, cr, uid, ids, fieldnames, args, context=None):
-        if context is None:
-            context = {}
         res = dict.fromkeys(ids, '')
         for obj in self.browse(cr, uid, ids, context=context):
             res[obj.id] = time.strftime('%Y-%m-%d', time.strptime(obj.name, '%Y-%m-%d %H:%M:%S'))
@@ -65,11 +59,11 @@ class hr_attendance(osv.osv):
         'day': fields.function(_day_compute, method=True, type='char', string='Day', store=True, select=1, size=32),
     }
     _defaults = {
-        'name': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), #Don't remove the lambda, if you remove it then the current time will not change
+        'name': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'), #please don't remove the lambda, if you remove it then the current time will not change
         'employee_id': _employee_get,
     }
 
-    def _altern_si_so(self, cr, uid, ids):
+    def _altern_si_so(self, cr, uid, ids, context=None):
         for id in ids:
             sql = '''
             SELECT action, name
@@ -95,8 +89,6 @@ class hr_employee(osv.osv):
     _description = "Employee"
 
     def _state(self, cr, uid, ids, name, args, context=None):
-        if context is None:
-            context = {}
         result = {}
         if not ids:
             return result
@@ -122,21 +114,17 @@ class hr_employee(osv.osv):
     }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):
-        if context is None:
-            context = {}
         cr.execute('SELECT MAX(name) FROM hr_attendance WHERE employee_id=%s', (emp_id,))
         res = cr.fetchone()
         return not (res and (res[0]>=(dt or time.strftime('%Y-%m-%d %H:%M:%S'))))
 
     def attendance_action_change(self, cr, uid, ids, type='action', context=None, dt=False, *args):
         obj_attendance = self.pool.get('hr.attendance')
-        if context is None:
-            context = {}
         id = False
         warning_sign = 'sign'
         res = {}
 
-        #Special case when button calls this method :type=context
+        #Special case when button calls this method: type=context
         if isinstance(type, dict):
             type = type.get('type','action')
         if type == 'sign_in':
@@ -149,8 +137,8 @@ class hr_employee(osv.osv):
 
             res = {'action': type, 'employee_id': emp['id']}
             if dt:
-                res['name'] = dt
-            id = obj_attendance.create(cr, uid, res, context=context)
+                res['name'] = dt   
+        id = obj_attendance.create(cr, uid, res, context=context)
 
         if type != 'action':
             return id

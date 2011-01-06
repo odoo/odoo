@@ -7,45 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-12-08 11:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-29 11:18+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: multi_company
-#: help:multi_company.default,object_id:0
-msgid "Object affect by this rules"
-msgstr "Энэ дүрэмд хамрагдах объект"
-
-#. module: multi_company
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
-
-#. module: multi_company
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr "НӨАТ буруу байж магадгүй."
-
-#. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
 #. module: multi_company
 #: model:res.company,overdue_msg:multi_company.res_company_odoo
@@ -54,22 +24,37 @@ msgstr "Үйлдлийн тодорхойлолтод буруу моделий�
 #: model:res.company,overdue_msg:multi_company.res_company_oerp_in
 #: model:res.company,overdue_msg:multi_company.res_company_oerp_us
 msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Please find in attachment a reminder of all your unpaid invoices, for a "
+"total amount due of:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
 msgstr ""
-"Энэ имэйлийн дараа таны төлбөр хийгдэх болно, одоогийнхийг хүчингүйд тооцно "
-"уу. Манай санхүүгийн хэлтэст санаа зоволгүй хандаарай."
 
 #. module: multi_company
-#: field:multi_company.default,company_dest_id:0
-msgid "Default Company"
-msgstr "Үндсэн компани"
+#: model:product.category,name:multi_company.Odoo1
+msgid "Odoo Offers"
+msgstr "Odoo санал"
 
 #. module: multi_company
-#: field:multi_company.default,object_id:0
-msgid "Object"
-msgstr "Объект"
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr ""
+
+#. module: multi_company
+#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
+msgid "Multi-Companies"
+msgstr ""
 
 #. module: multi_company
 #: model:ir.module.module,shortdesc:multi_company.module_meta_information
@@ -78,85 +63,10 @@ msgid "Multi Company"
 msgstr "Олон компани"
 
 #. module: multi_company
-#: model:ir.module.module,description:multi_company.module_meta_information
-msgid ""
-"This module add the possibility to easily manage \n"
-"    the default value for each object\n"
-"    "
-msgstr ""
-"Энэ модуль нь объект бүрт үндсэн утгыг хялбар \n"
-"     удирдах боломж нэмнэ.\n"
-"    "
-
-#. module: multi_company
-#: field:multi_company.default,company_id:0
-msgid "Main Company"
-msgstr "Үндсэн компани"
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Condition"
-msgstr "Нөхцөл"
-
-#. module: multi_company
-#: help:multi_company.default,company_dest_id:0
-msgid "Company to store the current record"
-msgstr "Энэ бичлэгийг хадгалах компани"
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
-
-#. module: multi_company
-#: field:multi_company.default,name:0
-msgid "Name"
-msgstr "Нэр"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Алдаа: Борлуулах нэгжийн ангилал хэмжих нэгжийнхээс өөр байх ёстой"
-
-#. module: multi_company
-#: model:product.category,name:multi_company.Odoo1
-msgid "Odoo Offers"
-msgstr "Odoo санал"
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Алдаа! Рекурсив компани үүсгэж болохгүй."
-
-#. module: multi_company
-#: help:multi_company.default,name:0
-msgid "Name it to easily find a record"
-msgstr "Бичлэгийг хялбар олохын тулд нэрлэх хэрэгтэй"
-
-#. module: multi_company
-#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
-msgid "Multi company"
-msgstr "Олон компани"
-
-#. module: multi_company
-#: model:ir.model,name:multi_company.model_multi_company_default
-msgid "multi_company.default"
-msgstr "multi_company.default"
-
-#. module: multi_company
-#: help:multi_company.default,company_id:0
-msgid "Company where the user is connected"
-msgstr "Хэрэглэгч холбогдсон компани"
-
-#. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
+#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
 msgstr "Объект бүрийн үндсэн компани"
-
-#. module: multi_company
-#: field:multi_company.default,expression:0
-msgid "Expression"
-msgstr "Илэрхийлэл"
 
 #. module: multi_company
 #: model:product.template,name:multi_company.product_product_odoo1_product_template
@@ -164,37 +74,115 @@ msgid "Odoo Offer"
 msgstr "Odoo санал"
 
 #. module: multi_company
-#: field:multi_company.default,sequence:0
-msgid "Sequence"
-msgstr "Дугаарлалт"
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Алдаа! Рекурсив ангилал үүсгэж болохгүй."
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Алдаа: Буруу зураасан код"
-
-#. module: multi_company
-#: help:multi_company.default,expression:0
-msgid "Expression, must be True to match"
-msgstr "Тулгахын тулд илэрхийлэл True байх ёстой"
-
-#. module: multi_company
-#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
-msgid "Default company per Object"
-msgstr "Объект бүрийн үндсэн компани"
-
-#. module: multi_company
-#: code:addons/multi_company/multi_company.py:0
-#, python-format
-msgid " (copy)"
-msgstr " (Хуулах)"
-
-#. module: multi_company
 #: view:multi_company.default:0
 msgid "Matching"
 msgstr "Тулгалт"
+
+#. module: multi_company
+#: view:multi_company.default:0
+msgid "Condition"
+msgstr "Нөхцөл"
+
+#. module: multi_company
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
+msgstr ""
+
+#~ msgid "Default Company"
+#~ msgstr "Үндсэн компани"
+
+#~ msgid "Object"
+#~ msgstr "Объект"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Алдаа: Үндсэн нэгж худалдан авах нэгж хоёул нэг ангилалд хамаарах ёстой."
+
+#~ msgid "The VAT doesn't seem to be correct."
+#~ msgstr "НӨАТ буруу байж магадгүй."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid "Object affect by this rules"
+#~ msgstr "Энэ дүрэмд хамрагдах объект"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid ""
+#~ "This module add the possibility to easily manage \n"
+#~ "    the default value for each object\n"
+#~ "    "
+#~ msgstr ""
+#~ "Энэ модуль нь объект бүрт үндсэн утгыг хялбар \n"
+#~ "     удирдах боломж нэмнэ.\n"
+#~ "    "
+
+#~ msgid "Name it to easily find a record"
+#~ msgstr "Бичлэгийг хялбар олохын тулд нэрлэх хэрэгтэй"
+
+#~ msgid "Multi company"
+#~ msgstr "Олон компани"
+
+#~ msgid "Main Company"
+#~ msgstr "Үндсэн компани"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Алдаа: Борлуулах нэгжийн ангилал хэмжих нэгжийнхээс өөр байх ёстой"
+
+#~ msgid "Name"
+#~ msgstr "Нэр"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Алдаа! Рекурсив компани үүсгэж болохгүй."
+
+#~ msgid "multi_company.default"
+#~ msgstr "multi_company.default"
+
+#~ msgid "Company where the user is connected"
+#~ msgstr "Хэрэглэгч холбогдсон компани"
+
+#~ msgid "Sequence"
+#~ msgstr "Дугаарлалт"
+
+#~ msgid "Expression"
+#~ msgstr "Илэрхийлэл"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Алдаа! Рекурсив ангилал үүсгэж болохгүй."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Алдаа: Буруу зураасан код"
+
+#~ msgid "Expression, must be True to match"
+#~ msgstr "Тулгахын тулд илэрхийлэл True байх ёстой"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (Хуулах)"
+
+#~ msgid "Company to store the current record"
+#~ msgstr "Энэ бичлэгийг хадгалах компани"
+
+#~ msgid "Default company per Object"
+#~ msgstr "Объект бүрийн үндсэн компани"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
+#~ msgstr ""
+#~ "Энэ имэйлийн дараа таны төлбөр хийгдэх болно, одоогийнхийг хүчингүйд тооцно "
+#~ "уу. Манай санхүүгийн хэлтэст санаа зоволгүй хандаарай."

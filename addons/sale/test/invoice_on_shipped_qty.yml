@@ -66,23 +66,15 @@
        }
        self.do_partial(cr, uid, [pick.id],partial_datas)
 -
-  Then I create the invoice from the two partial picking
-- 
-  !record {model: stock.invoice.onshipping, id: stock_invoice_onshipping_6}:
-    invoice_date: '2010-07-17'
-    journal_id: account.sales_journal
-    type: out_invoice
--
   Then I click on 'Create Invoices' button
 -
   !python {model: stock.invoice.onshipping}: |
     sale_obj = self.pool.get('sale.order')  
     sale_id = sale_obj.browse(cr, uid, ref("sale_order_so6"))
-    picking_obj = self.pool.get('stock.picking')
-    ids = picking_obj.search(cr, uid, [('origin', '=', sale_id.name)])
-    self.create_invoice(cr, uid, [ref("stock_invoice_onshipping_6")], {"lang": "en_US",
-      "search_default_available": 1, "tz": False, "active_model": "stock.picking",
-      "contact_display": "partner", "active_ids": ids, "active_id": ids[0]})
+    ids = [x.id for x in sale_id.picking_ids]
+    wiz_id = self.create(cr, uid, {'invoice_date': '2010-07-17', 'journal_id': ref('account.sales_journal')},
+      {'active_ids': ids})
+    self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids, "active_id": ids[0]})
 -
   I verify whether the invoice has been generated for SO
 -
@@ -90,13 +82,13 @@
     so = self.browse(cr, uid, ref("sale_order_so6"))
     assert so.invoice_ids, "Invoices has not been generated for sale_order_so6"
 -
-  I verify that an invoice is created on the basis of shipped quantities 199 not ordered quantities 200
+  I verify that an invoice is created on the basis of shipped quantities 100 not ordered quantities 200
 -
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so6"))
     picking_obj = self.pool.get('stock.picking')
-    ids = picking_obj.search(cr, uid, [('origin', '=', so.name),('type','=','out')])
+    ids = picking_obj.search(cr, uid, [('origin', '=', so.name),('type','=','out'),('state','=','done')])
     qty = qty1 = 0.0
     for pick_brw in picking_obj.browse(cr,uid, ids):
         for lines in pick_brw.move_lines:
@@ -105,7 +97,7 @@
     inv_brw = self.browse(cr,uid,inv_id)[0]
     for inv_lines in inv_brw.invoice_line:
         qty1=inv_lines.quantity
-    assert abs(qty1-qty) < 0.001, "Quantities are not the same"
+    assert (qty1 == qty), "Quantities are not the same"
 -    
   I open the Invoice for the SO.
 -

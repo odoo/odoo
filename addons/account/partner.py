@@ -18,23 +18,23 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from operator import itemgetter
 
 from osv import fields, osv
-import ir
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
-    _description = 'Fiscal Mapping'
+    _description = 'Fiscal Position'
     _columns = {
-        'name': fields.char('Fiscal Mapping', size=64, translate=True, required=True),
+        'name': fields.char('Fiscal Position', size=64, translate=True, required=True),
         'company_id': fields.many2one('res.company', 'Company'),
         'account_ids': fields.one2many('account.fiscal.position.account', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax', 'position_id', 'Tax Mapping'),
         'note': fields.text('Notes', translate=True),
     }
 
-    def map_tax(self, cr, uid, fposition_id, taxes, context={}):
+    def map_tax(self, cr, uid, fposition_id, taxes, context=None):
         if not taxes:
             return []
         if not fposition_id:
@@ -51,38 +51,39 @@ class account_fiscal_position(osv.osv):
                 result.append(t.id)
         return result
 
-    def map_account(self, cr, uid, fposition_id, account_id, context={}):
-        if not fposition_id :
+    def map_account(self, cr, uid, fposition_id, account_id, context=None):
+        if not fposition_id:
             return account_id
         for pos in fposition_id.account_ids:
             if pos.account_src_id.id == account_id:
                 account_id = pos.account_dest_id.id
                 break
         return account_id
-account_fiscal_position()
 
+account_fiscal_position()
 
 class account_fiscal_position_tax(osv.osv):
     _name = 'account.fiscal.position.tax'
-    _description = 'Taxes Fiscal Mapping'
+    _description = 'Taxes Fiscal Position'
     _rec_name = 'position_id'
     _columns = {
-        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Mapping', required=True, ondelete='cascade'),
+        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
         'tax_src_id': fields.many2one('account.tax', 'Tax Source', required=True),
         'tax_dest_id': fields.many2one('account.tax', 'Replacement Tax')
     }
-account_fiscal_position_tax()
 
+account_fiscal_position_tax()
 
 class account_fiscal_position_account(osv.osv):
     _name = 'account.fiscal.position.account'
-    _description = 'Accounts Fiscal Mapping'
+    _description = 'Accounts Fiscal Position'
     _rec_name = 'position_id'
     _columns = {
-        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Mapping', required=True, ondelete='cascade'),
+        'position_id': fields.many2one('account.fiscal.position', 'Fiscal Position', required=True, ondelete='cascade'),
         'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type','<>','view')], required=True),
         'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type','<>','view')], required=True)
     }
+
 account_fiscal_position_account()
 
 class res_partner(osv.osv):
@@ -90,7 +91,7 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
     _description = 'Partner'
 
-    def _credit_debit_get(self, cr, uid, ids, field_names, arg, context):
+    def _credit_debit_get(self, cr, uid, ids, field_names, arg, context=None):
         query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
         cr.execute("""SELECT l.partner_id, a.type, SUM(l.debit-l.credit)
                       FROM account_move_line l
@@ -102,10 +103,6 @@ class res_partner(osv.osv):
                       GROUP BY l.partner_id, a.type
                       """,
                    (tuple(ids),))
-        tinvert = {
-            'credit': 'receivable',
-            'debit': 'payable'
-        }
         maps = {'receivable':'credit', 'payable':'debit' }
         res = {}
         for id in ids:
@@ -116,7 +113,7 @@ class res_partner(osv.osv):
         return res
 
     def _asset_difference_search(self, cr, uid, obj, name, type, args, context=None):
-        if not len(args):
+        if not args:
             return []
         having_values = tuple(map(itemgetter(2), args))
         where = ' AND '.join(
@@ -133,14 +130,14 @@ class res_partner(osv.osv):
                     'GROUP BY partner_id HAVING '+where),
                    (type,) + having_values)
         res = cr.fetchall()
-        if not len(res):
+        if not res:
             return [('id','=','0')]
         return [('id','in',map(itemgetter(0), res))]
 
-    def _credit_search(self, cr, uid, obj, name, args, context):
+    def _credit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'receivable', args, context=context)
 
-    def _debit_search(self, cr, uid, obj, name, args, context):
+    def _debit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'payable', args, context=context)
 
     _columns = {
@@ -172,10 +169,10 @@ class res_partner(osv.osv):
             'account.fiscal.position',
             type='many2one',
             relation='account.fiscal.position',
-            string="Fiscal Mapping",
+            string="Fiscal Position",
             method=True,
             view_load=True,
-            help="The fiscal Mapping will determine taxes and the accounts used for the partner.",
+            help="The fiscal position will determine taxes and the accounts used for the partner.",
         ),
         'property_payment_term': fields.property(
             'account.payment.term',
@@ -187,8 +184,9 @@ class res_partner(osv.osv):
             help="This payment term will be used instead of the default one for the current partner"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
-        'last_reconciliation_date': fields.datetime('Last Reconciliation Date', help='Date on which the partner accounting entries were reconciled last time')
+        'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were reconciled last time')
     }
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

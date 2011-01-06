@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Payroll Advice" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Payment Advice.pdf">
+  <template pageSize="(595.0,842.0)" title="Payment Advice" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -41,6 +41,12 @@
     <blockTableStyle id="Table5">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
@@ -119,6 +125,31 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="61.0,166.0,84.0,82.0,111.0,35.0" style="Table4">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">SI. No.</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Name of the Employee</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Amount</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">By Salary</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Bank Account</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">C/D</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_8">[[repeatIn(objects,'o')]]</para>
     <blockTable colWidths="269.0,269.0" style="Table1">
       <tr>
@@ -151,7 +182,7 @@
       </tr>
       <tr>
         <td>
-          <para style="terp_default_Bold_9">[[ o.bank or 'Bank' ]]</para>
+          <para style="terp_default_Bold_9">[[ o.bank_id and o.bank_id.name or 'Bank' ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">
@@ -199,10 +230,10 @@
           <para style="terp_tblheader_Details">Name of the Employee</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Amount([[ company.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">Amount</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">By Sal([[ company.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">By Salary</para>
         </td>
         <td>
           <para style="terp_tblheader_Details">Bank Account</para>
@@ -212,9 +243,6 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_1">
-      <font color="white"> </font>
-    </para>
     <section>
       <para style="terp_default_8">[[ repeatIn(get_detail(o.line_ids),'line') ]]</para>
       <blockTable colWidths="60.0,167.0,84.0,82.0,110.0,35.0" style="Table5">
@@ -229,10 +257,10 @@
             <para style="terp_default_9">[[ line['name'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['amount' ]) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['amount'], dp='Account') ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['bysal']) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line['bysal'], dp='Account') ]] [[ company.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ line['acc_no'] ]]</para>
@@ -242,13 +270,7 @@
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
     </section>
-    <para style="terp_default_1">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="60.0,167.0,84.0,82.0,145.0" style="Table6">
       <tr>
         <td>
@@ -257,13 +279,13 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Total([[ company.currency_id.code ]]):</para>
+          <para style="terp_tblheader_Details">Total:</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(get_total()) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(get_total(), dp='Account') ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(get_bysal_total()) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(get_bysal_total(), dp='Account') ]] [[ company.currency_id.symbol ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">
@@ -337,5 +359,6 @@
     <para>
       <seqReset id="L1"/>
     </para>
+  </pto>
   </story>
 </document>

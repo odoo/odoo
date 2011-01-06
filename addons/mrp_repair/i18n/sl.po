@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2009-11-17 07:18+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:15+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:48+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -22,9 +22,18 @@ msgid "Fees Line"
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,repair_id:0
-#: field:mrp.repair.line,repair_id:0
-msgid "Repair Order Ref"
+#: help:mrp.repair,state:0
+msgid ""
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"repair order.             \n"
+"* The 'Confirmed' state is used when a user confirms the repair order.       "
+"      \n"
+"* The 'Ready to Repair' state is used to start to repairing, user can start "
+"repairing only after repair order is confirmed.             \n"
+"* The 'To be Invoiced' state is used to generate the invoice before or after "
+"repairing done.             \n"
+"* The 'Done' state is set when repairing is completed.            \n"
+"* The 'Cancelled' state is used when user cancel repair order."
 msgstr ""
 
 #. module: mrp_repair
@@ -33,30 +42,51 @@ msgid "Inventory Move"
 msgstr ""
 
 #. module: mrp_repair
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Napačno ime modela v definiciji dejanja."
+#: view:mrp.repair:0
+msgid "Group By..."
+msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Untaxed amount"
-msgstr "Neobdavčen znesek"
+msgid "Recreate Invoice"
+msgstr "Znova ustvari račun"
 
 #. module: mrp_repair
-#: field:mrp.repair,state:0
-msgid "Repair State"
-msgstr "Stanje popravila"
+#: help:mrp.repair,deliver_bool:0
+msgid ""
+"Check this box if you want to manage the delivery once the product is "
+"repaired. If cheked, it will create a picking with selected product. Note "
+"that you can select the locations in the Info tab, if you have the extended "
+"view."
+msgstr ""
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
+#: view:mrp.repair.cancel:0
+msgid "Cancel Repair Order"
+msgstr ""
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,to_invoice:0
+#: field:mrp.repair.line,to_invoice:0
+msgid "To Invoice"
+msgstr ""
+
+#. module: mrp_repair
+#: report:repair.order:0
 msgid "Printing Date"
 msgstr "Datum izpisa"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,product_uom_qty:0
-#: rml:repair.order:0
-msgid "Quantity"
-msgstr "Količina"
+#: field:mrp.repair.make_invoice,group:0
+msgid "Group by partner invoice address"
+msgstr "Združi po naslovu za račun partnerja"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No product defined on Fees!"
+msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -74,6 +104,8 @@ msgid "Delivery Address"
 msgstr "Naslov za dostavo"
 
 #. module: mrp_repair
+#: model:ir.actions.act_window,name:mrp_repair.act_mrp_repair_invoice
+#: model:ir.model,name:mrp_repair.model_mrp_repair_make_invoice
 #: view:mrp.repair:0
 msgid "Make Invoice"
 msgstr "Izdaj račun"
@@ -85,7 +117,7 @@ msgid "Subtotal"
 msgstr "Delna vsota"
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Invoice address :"
 msgstr "Naslov za račun:"
 
@@ -95,6 +127,25 @@ msgid "Guarantee limit"
 msgstr "Meja garancije"
 
 #. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Notes"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.module.module,description:mrp_repair.module_meta_information
+msgid ""
+"\n"
+"           The aim is to have a complete module to manage all products "
+"repairs. The following topics should be covered by this module:\n"
+"           * Add/remove products in the reparation\n"
+"           * Impact for stocks\n"
+"           * Invoicing (products and/or services)\n"
+"           * Warranty concept\n"
+"           * Repair quotation report\n"
+"           * Notes for the technician and for the final customer\n"
+msgstr ""
+
+#. module: mrp_repair
 #: field:mrp.repair,amount_tax:0
 #: field:mrp.repair.fee,tax_id:0
 #: field:mrp.repair.line,tax_id:0
@@ -102,12 +153,18 @@ msgid "Taxes"
 msgstr "Davki"
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Net Total :"
 msgstr "Skupaj neto:"
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: mrp_repair
+#: report:repair.order:0
 msgid "VAT"
 msgstr "DDV"
 
@@ -122,7 +179,14 @@ msgid "Move"
 msgstr "Prenos"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a Partner Invoice Address in the repair form !"
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_tree
+#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
 msgid "Repair Orders"
 msgstr "Nalog za popravila"
 
@@ -137,17 +201,24 @@ msgid "Extra Info"
 msgstr "Dodatne informacije"
 
 #. module: mrp_repair
-#: field:mrp.repair,partner_id:0
-msgid "Partner"
-msgstr "Partner"
-
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_quotation
-msgid "Repairs in quotation"
+#: field:mrp.repair.fee,repair_id:0
+#: field:mrp.repair.line,repair_id:0
+msgid "Repair Order Reference"
 msgstr ""
 
 #. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Osnutek"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:0
 #: selection:mrp.repair,state:0
 #: selection:mrp.repair.line,state:0
 msgid "Confirmed"
@@ -155,28 +226,28 @@ msgstr "Potrjeno"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
-msgid "Recreate Invoice"
-msgstr "Znova ustvari račun"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
 msgid "Repairs order"
 msgstr ""
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"Repair orders allows you to organize your reparations on the products. On a "
+"repair order, you can detail the components you remove, add or replace and "
+"record the time you spent on the different operations. The repair order uses "
+"the warranty date on the production lot in order to know if you have to "
+"invoice the reparation to the customer or not."
+msgstr ""
+
+#. module: mrp_repair
+#: report:repair.order:0
 msgid "Repair Order N° :"
 msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair,prodlot_id:0
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Lot Number"
-msgstr ""
-
-#. module: mrp_repair
-#: selection:mrp.repair,state:0
-msgid "Under Repair"
 msgstr ""
 
 #. module: mrp_repair
@@ -185,12 +256,12 @@ msgid "Fees Lines"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
-msgid "Repair Fees line"
-msgstr ""
+#: field:mrp.repair.line,type:0
+msgid "Type"
+msgstr "Tip"
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Fees Line(s)"
 msgstr ""
 
@@ -200,14 +271,15 @@ msgid "To be Invoiced"
 msgstr "Bo zaračunano"
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Shipping address :"
 msgstr "Naslov za dostavo:"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Start Repair"
-msgstr "Začni popravilo"
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
@@ -215,35 +287,33 @@ msgid "Quantity (UoM)"
 msgstr "Količina (ME)"
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,to_invoice:0
-#: field:mrp.repair.line,to_invoice:0
-msgid "To Invoice"
+#: help:mrp.repair.line,state:0
+msgid ""
+" * The 'Draft' state is set automatically as draft when repair order in "
+"draft state.                         \n"
+"* The 'Confirmed' state is set automatically as confirm when repair order in "
+"confirm state.                         \n"
+"* The 'Done' state is set automatically when repair order is completed.      "
+"                  \n"
+"* The 'Cancelled' state is set automatically when user cancel repair order."
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_order
-msgid "Repairs"
-msgstr "Popravila"
-
-#. module: mrp_repair
-#: field:mrp.repair,picking_id:0
-msgid "Packing"
-msgstr "Pakiranje"
-
-#. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Total :"
 msgstr "Skupaj:"
+
+#. module: mrp_repair
+#: view:mrp.repair.cancel:0
+msgid ""
+"This operation will cancel the Repair process, but will not cancel it's "
+"Invoice. Do you want to continue?"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
 msgid "Pricelist"
 msgstr "Cenik"
-
-#. module: mrp_repair
-#: help:mrp.repair,state:0
-msgid "Gives the state of the Repair Order"
-msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -252,34 +322,32 @@ msgid "Quotation Notes"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_progress_tree
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_progress
-msgid "Repairs in progress"
-msgstr "Popravila v delu"
-
-#. module: mrp_repair
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neveljaven XML za arhitekturo pogleda."
-
-#. module: mrp_repair
-#: help:mrp.repair,guarantee_limit:0
-msgid ""
-"The garantee limit is computed as: last move date + warranty defined on "
-"selected product. If the current date is below the garantee limit, each "
-"operation and fee you will add will be set as 'not to invoiced' by default. "
-"Note that you can change manually afterwards."
+#: code:addons/mrp_repair/wizard/cancel_repair.py:0
+#, python-format
+msgid "Warning!"
 msgstr ""
 
 #. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Search Reair Orders"
+msgstr ""
+
+#. module: mrp_repair
+#: report:repair.order:0
+msgid "(Add)"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_line
 #: view:mrp.repair:0
 msgid "Repair Line"
 msgstr ""
 
 #. module: mrp_repair
-#: rml:repair.order:0
-msgid "N° :"
-msgstr "Št :"
+#: view:mrp.repair:0
+#: field:mrp.repair,partner_id:0
+msgid "Partner"
+msgstr "Partner"
 
 #. module: mrp_repair
 #: field:mrp.repair,invoice_method:0
@@ -292,20 +360,15 @@ msgid "Repaired"
 msgstr "Popravljeno"
 
 #. module: mrp_repair
-#: wizard_field:mrp.repair.make_invoice,init,group:0
-msgid "Group by partner invoice address"
-msgstr "Združi po naslovu za račun partnerja"
+#: model:ir.module.module,shortdesc:mrp_repair.module_meta_information
+msgid "Products Repairs Module - Manage All products Repairs"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,invoice_line_id:0
 #: field:mrp.repair.line,invoice_line_id:0
 msgid "Invoice Line"
 msgstr "Postavka računa"
-
-#. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Total amount"
-msgstr "Skupni znesek"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -323,7 +386,7 @@ msgid "Current Location"
 msgstr "Trenutna lokacija"
 
 #. module: mrp_repair
-#: wizard_button:mrp.repair.cancel,display,yes:0
+#: view:mrp.repair.cancel:0
 msgid "Yes"
 msgstr "Da"
 
@@ -335,39 +398,49 @@ msgid "Invoiced"
 msgstr "Zaračunano"
 
 #. module: mrp_repair
-#: wizard_button:mrp.repair.cancel,display,end:0
+#: view:mrp.repair.cancel:0
 msgid "No"
 msgstr "Ne"
 
 #. module: mrp_repair
-#: wizard_view:mrp.repair.make_invoice,init:0
-#: wizard_button:mrp.repair.make_invoice,init,invoice:0
+#: view:mrp.repair.make_invoice:0
 msgid "Create invoices"
 msgstr "Ustvari račune"
 
 #. module: mrp_repair
+#: report:repair.order:0
+msgid "(Remove)"
+msgstr ""
+
+#. module: mrp_repair
 #: selection:mrp.repair.line,type:0
-#: rml:repair.order:0
 msgid "Add"
 msgstr "Dodaj"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Draft"
-msgstr "Osnutek"
-
-#. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_order_form
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_form
-msgid "New Repair"
-msgstr "Novo popravilo"
-
-#. module: mrp_repair
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: view:mrp.repair.make_invoice:0
+msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
-"Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
+
+#. module: mrp_repair
+#: field:mrp.repair,name:0
+msgid "Repair Reference"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair
+msgid "Repair Order"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair,state:0
+msgid "Under Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Ready To Repair"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -375,20 +448,25 @@ msgid "Untaxed Amount"
 msgstr "Neobdavčen znesek"
 
 #. module: mrp_repair
-#: field:mrp.repair.line,state:0
-msgid "Status"
-msgstr "Stanje"
-
-#. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Guarantee Limit"
 msgstr ""
 
 #. module: mrp_repair
+#: field:mrp.repair,default_address_id:0
+msgid "unknown"
+msgstr ""
+
+#. module: mrp_repair
 #: field:mrp.repair,product_id:0
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Product to Repair"
 msgstr ""
+
+#. module: mrp_repair
+#: report:repair.order:0
+msgid "N° :"
+msgstr "Št :"
 
 #. module: mrp_repair
 #: help:mrp.repair,pricelist_id:0
@@ -396,10 +474,13 @@ msgid "The pricelist comes from the selected partner, by default."
 msgstr ""
 
 #. module: mrp_repair
-#: wizard_view:mrp.repair.cancel,display:0
-msgid ""
-"This operation  will  cancel the  Repair process, but  will not cancel it's "
-"Invoice. Do you want to continue?"
+#: view:mrp.repair:0
+msgid "Date"
+msgstr ""
+
+#. module: mrp_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_fee
+msgid "Repair Fees Line"
 msgstr ""
 
 #. module: mrp_repair
@@ -418,7 +499,7 @@ msgid "Confirm Repair"
 msgstr ""
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Repair Quotation"
 msgstr ""
 
@@ -428,25 +509,45 @@ msgid "End Repair"
 msgstr ""
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
 #: view:mrp.repair:0
-msgid "History"
-msgstr "Zgodovina"
+msgid "Quotations"
+msgstr ""
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair
-msgid "Repairs Order"
-msgstr "Nalog za popravilo"
+#: field:mrp.repair.fee,product_uom_qty:0
+#: report:repair.order:0
+msgid "Quantity"
+msgstr "Količina"
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_ready_tree
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_ready
-msgid "Repairs Ready to Start"
-msgstr "Popravila pripravljena na začetek"
+#: view:mrp.repair:0
+msgid "Start Repair"
+msgstr "Začni popravilo"
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+#: field:mrp.repair,state:0
+#: field:mrp.repair.line,state:0
+msgid "State"
+msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Qty"
 msgstr "Kol."
+
+#. module: mrp_repair
+#: field:mrp.repair.fee,price_unit:0
+#: field:mrp.repair.line,price_unit:0
+#: report:repair.order:0
+msgid "Unit Price"
+msgstr "Cena enote"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -455,9 +556,12 @@ msgid "Done"
 msgstr "Zaključeno"
 
 #. module: mrp_repair
-#: model:ir.actions.act_window,name:mrp_repair.action_repair_2binvoiced_tree
-#: model:ir.ui.menu,name:mrp_repair.menu_repair_2binvoiced
-msgid "Repairs to be invoiced"
+#: help:mrp.repair,guarantee_limit:0
+msgid ""
+"The guarantee limit is computed as: last move date + warranty defined on "
+"selected product. If the current date is below the guarantee limit, each "
+"operation and fee you will add will be set as 'not to invoiced' by default. "
+"Note that you can change manually afterwards."
 msgstr ""
 
 #. module: mrp_repair
@@ -472,7 +576,7 @@ msgstr ""
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
-#: wizard_button:mrp.repair.make_invoice,init,end:0
+#: view:mrp.repair.make_invoice:0
 msgid "Cancel"
 msgstr "Prekliči"
 
@@ -482,24 +586,19 @@ msgid "Dest. Location"
 msgstr "Ciljna lokacija"
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Operation Line(s)"
 msgstr ""
 
 #. module: mrp_repair
-#: model:ir.model,name:mrp_repair.model_mrp_repair_line
-msgid "Repair Operations Lines"
-msgstr ""
+#: view:mrp.repair:0
+msgid "History"
+msgstr "Zgodovina"
 
 #. module: mrp_repair
 #: field:mrp.repair,location_dest_id:0
 msgid "Delivery Location"
 msgstr "Lokacija dostave"
-
-#. module: mrp_repair
-#: model:ir.module.module,shortdesc:mrp_repair.module_meta_information
-msgid "Products Repairs Module"
-msgstr ""
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
@@ -510,21 +609,14 @@ msgid ""
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair.fee,price_unit:0
-#: field:mrp.repair.line,price_unit:0
-#: rml:repair.order:0
-msgid "Unit Price"
-msgstr "Cena enote"
-
-#. module: mrp_repair
-#: wizard_view:mrp.repair.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
-msgstr "Ali res želite ustvariti račune?"
+#: view:mrp.repair.make_invoice:0
+msgid "Create Invoice"
+msgstr ""
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0
 #: field:mrp.repair.line,name:0
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Description"
 msgstr "Opis"
 
@@ -534,6 +626,12 @@ msgid "Operation Lines"
 msgstr ""
 
 #. module: mrp_repair
+#: view:mrp.repair:0
+msgid "invoiced"
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:0
 #: field:mrp.repair.fee,product_id:0
 #: field:mrp.repair.line,product_id:0
 msgid "Product"
@@ -545,21 +643,7 @@ msgid "Invoice Corrected"
 msgstr "Račun popravljen"
 
 #. module: mrp_repair
-#: help:mrp.repair,deliver_bool:0
-msgid ""
-"Check this box if you want to manage the delivery once the product is "
-"repaired. If cheked, it will create a packing with selected product. Note "
-"that you can select the locations in the Info tab, if you have the extended "
-"view."
-msgstr ""
-
-#. module: mrp_repair
-#: field:mrp.repair.line,type:0
-msgid "Type"
-msgstr "Tip"
-
-#. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Price"
 msgstr "Cena"
 
@@ -575,19 +659,36 @@ msgid "Internal Notes"
 msgstr ""
 
 #. module: mrp_repair
-#: rml:repair.order:0
+#: report:repair.order:0
 msgid "Taxes:"
 msgstr "Davki:"
 
 #. module: mrp_repair
-#: model:ir.actions.wizard,name:mrp_repair.wizard_mrp_repair_make_invoice
-msgid "Make invoices"
-msgstr "Naredi račune"
+#: field:mrp.repair,picking_id:0
+msgid "Picking"
+msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Ref"
+#: view:mrp.repair:0
+msgid "Untaxed amount"
+msgstr "Neobdavčen znesek"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:0
+#, python-format
+msgid "Active ID is not Found"
 msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/wizard/cancel_repair.py:0
+#, python-format
+msgid "Repair order is not invoiced."
+msgstr ""
+
+#. module: mrp_repair
+#: view:mrp.repair:0
+msgid "Total amount"
+msgstr "Skupni znesek"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -596,14 +697,8 @@ msgstr "ME"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,type:0
-#: rml:repair.order:0
 msgid "Remove"
 msgstr "Odstrani"
-
-#. module: mrp_repair
-#: wizard_view:mrp.repair.cancel,display:0
-msgid "Cancel Repair...??"
-msgstr "Prekliči popravilo...??"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom:0
@@ -632,12 +727,7 @@ msgid "Source Location"
 msgstr "Izvorna lokacija"
 
 #. module: mrp_repair
-#: view:mrp.repair:0
-msgid "Quality"
-msgstr "Kakovost"
-
-#. module: mrp_repair
-#: model:ir.actions.wizard,name:mrp_repair.action_cancel_repair
+#: model:ir.model,name:mrp_repair.model_mrp_repair_cancel
 #: view:mrp.repair:0
 msgid "Cancel Repair"
 msgstr ""
@@ -667,3 +757,56 @@ msgstr "Skupaj"
 #: selection:mrp.repair,state:0
 msgid "Ready to Repair"
 msgstr "Pripravljeno na popravilo"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No partner !"
+msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neveljaven XML za arhitekturo pogleda."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
+
+#~ msgid "Make invoices"
+#~ msgstr "Naredi račune"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Napačno ime modela v definiciji dejanja."
+
+#~ msgid "Repair State"
+#~ msgstr "Stanje popravila"
+
+#~ msgid "Repairs"
+#~ msgstr "Popravila"
+
+#~ msgid "Packing"
+#~ msgstr "Pakiranje"
+
+#~ msgid "Repairs in progress"
+#~ msgstr "Popravila v delu"
+
+#~ msgid "New Repair"
+#~ msgstr "Novo popravilo"
+
+#~ msgid "Status"
+#~ msgstr "Stanje"
+
+#~ msgid "Repairs Ready to Start"
+#~ msgstr "Popravila pripravljena na začetek"
+
+#~ msgid "Repairs Order"
+#~ msgstr "Nalog za popravilo"
+
+#~ msgid "Do you really want to create the invoices ?"
+#~ msgstr "Ali res želite ustvariti račune?"
+
+#~ msgid "Cancel Repair...??"
+#~ msgstr "Prekliči popravilo...??"
+
+#~ msgid "Quality"
+#~ msgstr "Kakovost"

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 13:33:09+0000\n"
-"PO-Revision-Date: 2010-08-20 13:33:09+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:33+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:33+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,54 +16,50 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: fetchmail
+#: constraint:email.server:0
+msgid "Warning! Record for selected Model can not be created\n"
+"Please choose valid Model"
+msgstr ""
+
+#. module: fetchmail
 #: selection:email.server,state:0
 msgid "Confirmed"
 msgstr ""
 
 #. module: fetchmail
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: fetchmail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree_imap
-#: model:ir.ui.menu,name:fetchmail.menu_action_email_server_tree_imap
-msgid "IMAP Servers"
-msgstr ""
-
-#. module: fetchmail
-#: field:email.server,action_id:0
-msgid "Reply Email"
+#: view:email.server:0
+msgid "Confirm"
 msgstr ""
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Server & Login"
+msgid "Group By..."
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,priority:0
-msgid "Server Priority"
-msgstr ""
-
-#. module: fetchmail
+#: view:email.server:0
 #: field:email.server,state:0
 msgid "State"
 msgstr ""
 
 #. module: fetchmail
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:email.server:0
+msgid "POP"
 msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,state:0
 msgid "Not Confirmed"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,user:0
+msgid "User Name"
+msgstr ""
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Type"
 msgstr ""
 
 #. module: fetchmail
@@ -83,18 +79,24 @@ msgid "Description"
 msgstr ""
 
 #. module: fetchmail
+#: help:email.server,object_id:0
+msgid "OpenObject Model. Generates a record of this model.\n"
+"Select Object with message_new attrbutes."
+msgstr ""
+
+#. module: fetchmail
 #: field:email.server,attach:0
 msgid "Add Attachments ?"
 msgstr ""
 
 #. module: fetchmail
 #: view:email.server:0
-msgid "Set to Draft"
+msgid "# of emails"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,user:0
-msgid "User Name"
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+msgid "Email History"
 msgstr ""
 
 #. module: fetchmail
@@ -118,13 +120,18 @@ msgid "Password"
 msgstr ""
 
 #. module: fetchmail
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
+#: view:mailgate.message:0
+msgid "Emails"
 msgstr ""
 
 #. module: fetchmail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:email.server:0
+msgid "Search Email Servers"
+msgstr ""
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Server & Login"
 msgstr ""
 
 #. module: fetchmail
@@ -144,8 +151,18 @@ msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
-#: model:ir.ui.menu,name:fetchmail.menu_action_email_server_tree
 msgid "POP Servers"
+msgstr ""
+
+#. module: fetchmail
+#: view:email.server:0
+msgid "Set to Draft"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,message_ids:0
+#: model:ir.actions.act_window,name:fetchmail.action_view_mail_message_emails
+msgid "Messages"
 msgstr ""
 
 #. module: fetchmail
@@ -154,11 +171,8 @@ msgid "Fetchmail Services"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.action_mailgate_message_tree
-#: model:ir.actions.act_window,name:fetchmail.action_mailgate_message_tree_pop
-#: model:ir.ui.menu,name:fetchmail.menu_action_mailgate_message_tree
-#: model:ir.ui.menu,name:fetchmail.menu_action_mailgate_message_tree_pop
-msgid "Received Email History"
+#: field:email.server,server:0
+msgid "Server"
 msgstr ""
 
 #. module: fetchmail
@@ -178,7 +192,7 @@ msgstr ""
 
 #. module: fetchmail
 #: selection:email.server,type:0
-#: selection:mailgate.message,type:0
+#: selection:mailgate.message,server_type:0
 msgid "IMAP Server"
 msgstr ""
 
@@ -188,13 +202,8 @@ msgid "Model"
 msgstr ""
 
 #. module: fetchmail
-#: field:email.server,server:0
-msgid "Server"
-msgstr ""
-
-#. module: fetchmail
-#: model:ir.actions.act_window,name:fetchmail.act_server_history
-msgid "Email History"
+#: view:email.server:0
+msgid "IMAP"
 msgstr ""
 
 #. module: fetchmail
@@ -204,13 +213,13 @@ msgid "POP/IMAP Server"
 msgstr ""
 
 #. module: fetchmail
-#: constraint:ir.rule:0
-msgid "Rules are not supported for osv_memory objects !"
+#: constraint:email.server:0
+msgid "Warning! Can't have duplicate server configuration!"
 msgstr ""
 
 #. module: fetchmail
 #: field:email.server,type:0
-#: field:mailgate.message,type:0
+#: field:mailgate.message,server_type:0
 msgid "Server Type"
 msgstr ""
 
@@ -225,8 +234,13 @@ msgid "Server Information"
 msgstr ""
 
 #. module: fetchmail
+#: help:email.server,attach:0
+msgid "Fetches mail with attachments if true."
+msgstr ""
+
+#. module: fetchmail
 #: selection:email.server,type:0
-#: selection:mailgate.message,type:0
+#: selection:mailgate.message,server_type:0
 msgid "POP Server"
 msgstr ""
 
@@ -247,11 +261,32 @@ msgid "Fetchmail: \n"
 msgstr ""
 
 #. module: fetchmail
+#: view:email.server:0
+msgid "SSL"
+msgstr ""
+
+#. module: fetchmail
+#: help:email.server,action_id:0
+msgid "An Email Server Action. It will be run whenever an e-mail is fetched from server."
+msgstr ""
+
+#. module: fetchmail
 #: help:email.server,priority:0
 msgid "Priority between 0 to 10, select define the order of Processing"
 msgstr ""
 
 #. module: fetchmail
+#: field:email.server,action_id:0
+msgid "Email Server Action"
+msgstr ""
+
+#. module: fetchmail
+#: field:email.server,priority:0
+msgid "Server Priority"
+msgstr ""
+
+#. module: fetchmail
+#: view:mailgate.message:0
 #: field:mailgate.message,server_id:0
 msgid "Mail Server"
 msgstr ""

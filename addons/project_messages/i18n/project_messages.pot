@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-20 10:28:48+0000\n"
-"PO-Revision-Date: 2010-08-20 10:28:48+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58:19+0000\n"
+"PO-Revision-Date: 2011-01-03 16:58:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,8 +21,8 @@ msgid "To"
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.model,name:project_messages.model_project_messages
+msgid "project.messages"
 msgstr ""
 
 #. module: project_messages
@@ -31,15 +31,24 @@ msgid "From"
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: model:ir.actions.act_window,name:project_messages.messages_form
+#: model:ir.ui.menu,name:project_messages.menu_messages_form
+msgid "Communication Messages"
 msgstr ""
 
 #. module: project_messages
-#: model:ir.actions.act_window,name:project_messages.messages_form
-#: model:ir.ui.menu,name:project_messages.menu_messages_form
 #: view:project.messages:0
-msgid "Communication Messages"
+msgid "Group By..."
+msgstr ""
+
+#. module: project_messages
+#: field:project.messages,create_date:0
+msgid "Creation Date"
+msgstr ""
+
+#. module: project_messages
+#: view:project.messages:0
+msgid "Today"
 msgstr ""
 
 #. module: project_messages
@@ -48,16 +57,8 @@ msgid "Keep this empty to broadcast the message."
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: project_messages
-#: model:ir.model,name:project_messages.model_project_messages
-msgid "project.messages"
-msgstr ""
-
-#. module: project_messages
+#: model:ir.actions.act_window,name:project_messages.act_project_messages
+#: model:ir.actions.act_window,name:project_messages.action_view_project_editable_messages_tree
 #: view:project.messages:0
 #: view:project.project:0
 #: field:project.project,message_ids:0
@@ -72,8 +73,8 @@ msgid "Project"
 msgstr ""
 
 #. module: project_messages
-#: view:project.messages:0
-msgid "Group By..."
+#: model:ir.actions.act_window,help:project_messages.messages_form
+msgid "An in-project messaging system allows for an efficient and trackable communication between project members. The messages are stored in the system and can be used for post analysis."
 msgstr ""
 
 #. module: project_messages
@@ -86,13 +87,13 @@ msgid "\n"
 msgstr ""
 
 #. module: project_messages
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: view:project.messages:0
+msgid "Message To"
 msgstr ""
 
 #. module: project_messages
-#: view:project.messages:0
-msgid "Message To"
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_messages
@@ -105,6 +106,16 @@ msgstr ""
 #. module: project_messages
 #: view:project.messages:0
 msgid "Message From"
+msgstr ""
+
+#. module: project_messages
+#: view:project.messages:0
+msgid "Project Messages"
+msgstr ""
+
+#. module: project_messages
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
 
 #. module: project_messages

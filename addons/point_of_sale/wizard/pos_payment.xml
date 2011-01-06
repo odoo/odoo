@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-   
+
         <!--  Select an Open Sale Order -->
-        
+
 		<record id="view_pos_payment" model="ir.ui.view">
             <field name="name">Add payment :</field>
             <field name="model">pos.make.payment</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
 			<form string="Add payment :">
-				<group colspan="8" col="8" width="660" height="230">
-                    <group colspan="4" col="4" width="150">
-                        <label align="0.0" string="The register must be opened to be able to execute a payment." colspan="2"/>
-                        <separator string="" orientation="vertical" rowspan="6"/>
-                    </group>
-                    <group colspan="4" col="4">
-                        <field name="journal"/>
-                        <field name="amount"/>
-                        <field name="payment_date"/>
-                        <!--field name="payment_name" /-->
-                        <field name="invoice_wanted"/>
-                        <field name="num_sale"/>
-                        <field name="is_acc"/>
-                        <group attrs="{'invisible':[('is_acc','=',False)]}" colspan="4" col="2">
-                            <field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]" on_change="onchange_product_id(product_id, amount)"/>
-                        </group>
-                        <newline/>
-                        <group attrs="{'invisible':[('invoice_wanted','=',False)]}" colspan="4">
-                            <field name="partner_id" attrs="{'required':[('invoice_wanted', '=', True)]}" colspan="2"/>
-                            <field name="pricelist_id" attrs="{'required':[('invoice_wanted', '=', True)]}" colspan="2"/>
-                        </group>
-                    </group>
-                    <separator colspan="8"/>
-                    <group col="4" colspan="4"/>
-                    <group col="4" colspan="4">
-                        <group col="2" colspan="2"/>
-                        <group col="2" colspan="2">
-                            <button icon="gtk-stop" special="cancel" string="Cancel"/>
-                            <button name="check" string="Make Payment" colspan="1" type="object" icon="terp-dolar"/>
-                        </group>
-                     </group>
-                 </group>
-				</form>
+				<group colspan="6" col="6" >
+					<group colspan="3" >
+						<separator string="The cash register must be opened to be able to execute a payment."  />
+					</group>
+					<newline/>
+					<group colspan="6">
+						<field name="journal"/>
+						<field name="payment_date"/>
+						<field name="num_sale" />
+						<field name="amount" />
+						<!--field name="payment_name" /-->
+						<field name="invoice_wanted" />
+						<field name="is_acc" />
+					</group>
+					<group attrs="{'invisible':[('is_acc','=',False)]}" colspan="3" >
+						<field name="product_id" attrs="{'required':[('is_acc', '=', True)]}" domain="[('type','=','service')]" on_change="onchange_product_id(product_id, amount)"/>
+					</group>
+					<newline/>
+					<group attrs="{'invisible':[('invoice_wanted','=',False)]}" colspan="3">
+						<field name="partner_id" attrs="{'required':[('invoice_wanted', '=', True)]}" colspan="2"/>
+						<field name="pricelist_id" attrs="{'required':[('invoice_wanted', '=', True)]}" colspan="2"/>
+					</group>
+					<separator colspan="6"/>
+					<group colspan="3"/>
+					<group colspan="3">
+						<group colspan="2"/>
+						<group  colspan="2">
+							<button icon="gtk-stop" special="cancel" string="Cancel"/>
+							<button name="check" string="Make Payment" colspan="1" type="object" icon="terp-dolar"/>
+						</group>
+					</group>
+				</group>
+			</form>
             </field>
         </record>
         <record id="action_pos_payment" model="ir.actions.act_window">
@@ -54,5 +54,5 @@
             <field name="target">new</field>
         </record>
 	</data>
-</openerp>	
-        
+</openerp>
+

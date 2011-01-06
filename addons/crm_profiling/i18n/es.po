@@ -6,24 +6,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-17 07:39+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-24 21:12+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-25 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
-#: constraint:ir.model:0
+#: view:crm_profiling.questionnaire:0
+msgid "Questions List"
+msgstr "Lista de preguntas"
+
+#. module: crm_profiling
+#: model:ir.module.module,description:crm_profiling.module_meta_information
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"\n"
+"    This module allows users to perform segmentation within partners.\n"
+"    It uses the profiles criteria from the earlier segmentation module and "
+"improve it. Thanks to the new concept of questionnaire. You can now regroup "
+"questions into a questionnaire and directly use it on a partner.\n"
+"\n"
+"    It also has been merged with the earlier CRM & SRM segmentation tool "
+"because they were overlapping.\n"
+"\n"
+"    The menu items related are in \"CRM & SRM\\Configuration\\"
+"Segmentations\"\n"
+"\n"
+"\n"
+"    * Note: this module is not compatible with the module segmentation, "
+"since it's the same which has been renamed.\n"
+"    "
 msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+"\n"
+"    Este módulo permite a los usuarios realizar una segmentación de "
+"empresas.\n"
+"    Utiliza los criterios de los perfiles del módulo de segmentación "
+"anterior y los mejora. Gracias a la nueva concepción del cuestionario, ahora "
+"puede agrupar las preguntas en un cuestionario y utilizarlo directamente "
+"sobre una empresa.\n"
+"\n"
+"    También se ha fusionado con la anterior herramienta de segmentación CRM "
+"y SRM, ya que se solapaban.\n"
+"\n"
+"    Las segmentaciones se acceden desde el menú \"CRM y "
+"SRM/Configuración/Segmentaciones\"\n"
+"\n"
+"     * Nota: este módulo no es compatible con el módulo de segmentación, ya "
+"que es el mismo sólo que ha sido renombrado.\n"
+"    "
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -38,19 +73,29 @@ msgid "Open Questionnaire"
 msgstr "Cuestionario abierto"
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
-msgstr "Perfiles hijos"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
+msgstr ""
+"Puede crear cuestionarios sobre temas específicos que serán usados para "
+"guiar a su(s) equipo(s) en el ciclo de ventas, ayudándoles a hacer las "
+"preguntas correctas. Utilizando la herramienta de segmentación, puede "
+"asignar automáticamente una empresa a una categoría basándose en sus "
+"respuestas a los diferentes cuestionarios."
 
 #. module: crm_profiling
-#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
-msgid "crm_profiling management"
-msgstr "Gestión de perfiles del CRM"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "¡Error! No puede crear miembros asociados recursivos."
 
 #. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
+msgstr "Segmentaciones de empresa"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -59,11 +104,22 @@ msgid "Answer"
 msgstr "Respuesta"
 
 #. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr "Segmentación de empresas"
+
+#. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
 msgstr "Perfiles"
 
 #. module: crm_profiling
+#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
+msgid "Crm Profiling management - To Perform Segmentation within Partners"
+msgstr "Gestión de perfiles CRM - Permite realizar segmentación de empresas"
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
 #: field:crm_profiling.questionnaire,description:0
 msgid "Description"
 msgstr "Descripción"
@@ -91,11 +147,6 @@ msgid "Use a questionnaire"
 msgstr "Usa un cuestionario"
 
 #. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -103,11 +154,14 @@ msgid "Questionnaires"
 msgstr "Cuestionarios"
 
 #. module: crm_profiling
-#: field:crm_profiling.questionnaire,name:0
-#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: wizard_view:open_questionnaire,init:0
-msgid "Questionnaire"
-msgstr "Cuestionario"
+#: help:crm.segmentation,profiling_active:0
+msgid ""
+"Check                             this box if you want to use this tab as "
+"part of the                              segmentation rule. If not checked, "
+"the criteria beneath will be ignored"
+msgstr ""
+"Marque esta opción si desea usar esta pestaña como parte de la regla de "
+"segmentación. Si no está marcada, los criterios más abajo serán ignorados."
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
@@ -131,13 +185,9 @@ msgid "Included Answers"
 msgstr "Respuestas incluidas"
 
 #. module: crm_profiling
-#: help:crm.segmentation,profiling_active:0
-msgid ""
-"Check this box if you want to use this tab as part of the segmentation rule. "
-"If not checked, the criteria beneath will be ignored"
-msgstr ""
-"Marque esta opción si desea utilizar esta pestaña como parte de la regla de "
-"segmentación. Si no está marcada, los siguientes criterios serán ignorados"
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
+msgstr "Perfiles hijos"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -159,9 +209,18 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: crm_profiling
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
-msgstr "Segmentaciones de empresa"
+#: model:ir.model,name:crm_profiling.model_res_partner
+msgid "Partner"
+msgstr "Empresa"
+
+#. module: crm_profiling
+#: code:addons/crm_profiling/crm_profiling.py:0
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: wizard_view:open_questionnaire,init:0
+#, python-format
+msgid "Questionnaire"
+msgstr "Cuestionario"
 
 #. module: crm_profiling
 #: model:ir.actions.wizard,name:crm_profiling.wizard_open_questionnaire
@@ -172,3 +231,37 @@ msgstr "Usa un cuestionario"
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
 msgstr "Guardar datos"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "crm_profiling management"
+#~ msgstr "Gestión de perfiles del CRM"
+
+#~ msgid ""
+#~ "Check this box if you want to use this tab as part of the segmentation rule. "
+#~ "If not checked, the criteria beneath will be ignored"
+#~ msgstr ""
+#~ "Marque esta opción si desea utilizar esta pestaña como parte de la regla de "
+#~ "segmentación. Si no está marcada, los siguientes criterios serán ignorados"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

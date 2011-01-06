@@ -6,31 +6,37 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-03 00:37+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_journal_billing_rate
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
+#: model:ir.module.module,description:analytic_journal_billing_rate.module_meta_information
+msgid ""
+"\n"
+"\n"
+"    This module allows you to define what is the default invoicing rate for "
+"a specific journal on a given account. This is mostly used when a user "
+"encodes his timesheet: the values are retrieved and the fields are auto-"
+"filled... but the possibility to change these values is still available.\n"
+"\n"
+"    Obviously if no data has been recorded for the current account, the "
+"default value is given as usual by the account data so that this module is "
+"perfectly compatible with older configurations.\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,journal_id:0
 msgid "Analytic Journal"
 msgstr "辅助核算记录集合"
-
-#. module: analytic_journal_billing_rate
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: analytic_journal_billing_rate
 #: view:analytic_journal_rate_grid:0
@@ -39,6 +45,7 @@ msgstr "辅助核算记录集合中每个记录集合的开单税率"
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,account_id:0
+#: model:ir.model,name:analytic_journal_billing_rate.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "辅助核算项"
 
@@ -54,13 +61,30 @@ msgstr "每个记录集合的的开票税率"
 
 #. module: analytic_journal_billing_rate
 #: model:ir.module.module,shortdesc:analytic_journal_billing_rate.module_meta_information
-msgid "Analytic Journal Billing Rate"
-msgstr "辅助核算集合的开票税率"
+msgid ""
+"Analytic Journal Billing Rate, Define the default invoicing rate for a "
+"specific journal"
+msgstr ""
+
+#. module: analytic_journal_billing_rate
+#: model:ir.model,name:analytic_journal_billing_rate.model_account_invoice
+msgid "Invoice"
+msgstr ""
 
 #. module: analytic_journal_billing_rate
 #: field:analytic_journal_rate_grid,rate_id:0
 msgid "Invoicing Rate"
 msgstr "开票税率"
+
+#. module: analytic_journal_billing_rate
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: analytic_journal_billing_rate
+#: model:ir.model,name:analytic_journal_billing_rate.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr ""
 
 #~ msgid ""
 #~ "\n"
@@ -83,3 +107,13 @@ msgstr "开票税率"
 #~ "    显然,如果当前的科目没有记录的数据,默认的值是作为正常科目数据,所以这模块是完全兼容旧的设置\n"
 #~ "\n"
 #~ "    "
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+
+#~ msgid "Analytic Journal Billing Rate"
+#~ msgstr "辅助核算集合的开票税率"

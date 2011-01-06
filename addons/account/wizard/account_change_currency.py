@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import osv, fields
 from tools.translate import _
 
@@ -34,7 +35,6 @@ class account_change_currency(osv.osv_memory):
         if context is None:
             context = {}
         if context.get('active_id',False):
-            state = obj_inv.browse(cr, uid, context['active_id']).state
             if obj_inv.browse(cr, uid, context['active_id']).state != 'draft':
                 raise osv.except_osv(_('Error'), _('You can only change currency for Draft Invoice !'))
             pass
@@ -43,7 +43,6 @@ class account_change_currency(osv.osv_memory):
         obj_inv = self.pool.get('account.invoice')
         obj_inv_line = self.pool.get('account.invoice.line')
         obj_currency = self.pool.get('res.currency')
-        invoice_ids = []
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
@@ -52,7 +51,7 @@ class account_change_currency(osv.osv_memory):
         invoice = obj_inv.browse(cr, uid, context['active_id'], context=context)
         if invoice.currency_id.id == new_currency:
             return {}
-        rate = obj_currency.browse(cr, uid, new_currency).rate
+        rate = obj_currency.browse(cr, uid, new_currency, context=context).rate
         for line in invoice.invoice_line:
             new_price = 0
             if invoice.company_id.currency_id.id == invoice.currency_id.id:
@@ -71,9 +70,9 @@ class account_change_currency(osv.osv_memory):
                 if old_rate <= 0:
                     raise osv.except_osv(_('Error'), _('Current currency is not confirured properly !'))
                 new_price = (line.price_unit / old_rate ) * rate
-            obj_inv_line.write(cr, uid, [line.id], {'price_unit' : new_price})
-        obj_inv.write(cr, uid, [invoice.id], {'currency_id' : new_currency}, context=context)
-        return {}
+            obj_inv_line.write(cr, uid, [line.id], {'price_unit': new_price})
+        obj_inv.write(cr, uid, [invoice.id], {'currency_id': new_currency}, context=context)
+        return {'type': 'ir.actions.act_window_close'}
 
 account_change_currency()
 

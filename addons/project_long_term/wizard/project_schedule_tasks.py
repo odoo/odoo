@@ -32,8 +32,6 @@ class project_schedule_task(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields_list, context=None):
-        if context is None:
-            context = {}
         res = super(project_schedule_task, self).default_get(cr, uid, fields_list, context)
         self.compute_date(cr, uid, context=context)
         return res
@@ -46,7 +44,7 @@ class project_schedule_task(osv.osv_memory):
         if context is None:
             context = {}
         if not 'active_id' in context:
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
         return phase_pool.schedule_tasks(cr, uid, [context['active_id']], context=context)
 project_schedule_task()
 

@@ -1,47 +1,47 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-	    <record model="ir.ui.view" id="crm_case_form_view_oppor">
-	        <field name="name">CRM - Opportunities - Quote Inherit</field>
-	        <field name="model">crm.lead</field>
-	        <field name="type">form</field>
-	        <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
-	        <field name="arch" type="xml">
-	            <field name="priority" position="after">
-	                <button string="Convert to Sale" icon="gtk-go-forward" name="%(action_crm_make_sale)d" type="action"/>
-	            </field>
-	        </field>
-	    </record>
+        <record model="ir.ui.view" id="crm_case_form_view_oppor">
+            <field name="name">CRM - Opportunities - Quote Inherit</field>
+            <field name="model">crm.lead</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="arch" type="xml">
+                <field name="priority" position="after">
+                    <button string="Convert to Quote" icon="gtk-go-forward" name="%(action_crm_make_sale)d" type="action"/>
+                </field>
+            </field>
+        </record>
 
-	    <record model="ir.ui.view" id="sale_view_inherit123">
-	        <field name="name">sale.order.inherit</field>
-	        <field name="model">sale.order</field>
-	        <field name="type">form</field>
-	        <field name="inherit_id" ref="sale.view_order_form"/>
-	        <field name="arch" type="xml">
-	            <field name="user_id" position="after">
-	            <field name="section_id" widget="selection" groups="base.group_extended"/>
-	            </field>
-	        </field>
-	    </record>
+        <record model="ir.ui.view" id="sale_view_inherit123">
+            <field name="name">sale.order.inherit</field>
+            <field name="model">sale.order</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                <field name="section_id" widget="selection" groups="base.group_extended"/>
+                </field>
+            </field>
+        </record>
 
-	    <record id="view_sales_order_filter_inherit" model="ir.ui.view">
-	        <field name="name">sale.order.list.select</field>
-	        <field name="model">sale.order</field>
-	        <field name="type">search</field>
-	        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-	        <field name="arch" type="xml">
-	            <field name="date_order" position="after">
-	                <field name="section_id" default="context.get('section_id', False)" widget="selection" string="Sales Team" groups="base.group_extended">
-	                    <filter icon="terp-personal+"
-	                            domain="[('section_id.user_id','=',uid)]"
-	                            groups="base.group_extended"
-	                            help="My Sales Team(s)"/>
-	                </field>
-	            </field>
-	        </field>
-	    </record>
+        <record id="view_sales_order_filter_inherit" model="ir.ui.view">
+            <field name="name">sale.order.list.select</field>
+            <field name="model">sale.order</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+            <field name="arch" type="xml">
+                <field name="date_order" position="after">
+                    <field name="section_id" widget="selection" string="Sales Team" groups="base.group_extended">
+                        <filter icon="terp-personal+"
+                                domain="[('section_id.user_id','=',uid)]"
+                                groups="base.group_extended"
+                                help="My Sales Team(s)"/>
+                    </field>
+                </field>
+            </field>
+        </record>
 
-	</data>
+    </data>
 </openerp>

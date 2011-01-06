@@ -30,7 +30,6 @@
 #
 ##############################################################################
 
-import time
 from osv import osv, fields
 
 class account_dta(osv.osv):

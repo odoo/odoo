@@ -1,22 +1,21 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
-#    $Id$
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>)
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details
 #
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
 
@@ -32,6 +31,7 @@ from osv import osv
 import tools
 from tools.translate import _
 import netsvc
+import addons
 
 
 class survey_send_invitation(osv.osv_memory):
@@ -60,11 +60,13 @@ class survey_send_invitation(osv.osv_memory):
         return ''.join([choice(chars) for i in range(6)])
 
     def default_get(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         data = super(survey_send_invitation, self).default_get(cr, uid, fields_list, context)
         survey_obj = self.pool.get('survey')
         msg = ""
         name = ""
-        for sur in survey_obj.browse(cr, uid, context.get('active_ids', [])):
+        for sur in survey_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             name += "\t --> " + sur.title + "\n"
             if sur.state != 'open':
                 msg +=  sur.title + "\n"
@@ -79,7 +81,7 @@ class survey_send_invitation(osv.osv_memory):
         if not report_name or not res_ids:
             return (False, Exception('Report name and Resources ids are required !!!'))
         try:
-            ret_file_name = tools.config['addons_path'] + '/survey/report/' + file_name + '.pdf'
+            ret_file_name = addons.get_module_resource('survey', 'report') + file_name + '.pdf'
             service = netsvc.LocalService(report_name);
             (result, format) = service.create(cr, uid, res_ids, {}, {})
             fp = open(ret_file_name, 'wb+');
@@ -92,6 +94,8 @@ class survey_send_invitation(osv.osv_memory):
 
 
     def action_send(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         record = self.read(cr, uid, ids, [])
         survey_ids =  context.get('active_ids', [])
         record = record and record[0]
@@ -113,10 +117,16 @@ class survey_send_invitation(osv.osv_memory):
         error = ""
         res_user = ""
         user_exists = False
+        new_user = []
         attachments = []
+        current_sur = survey_ref.browse(cr, uid, context.get('active_id'), context=context)
+        exist_user = current_sur.invited_user_ids
+        if exist_user:
+            for use in exist_user:
+                new_user.append(use.id)
         for id in survey_ref.browse(cr, uid, survey_ids):
             report = self.create_report(cr, uid, [id.id], 'report.survey.form', id.title)
-            file = open(tools.config['addons_path'] + '/survey/report/' + id.title +".pdf")
+            file = open(addons.get_module_resource('survey', 'report') + id.title +".pdf")
             file_data = ""
             while 1:
                 line = file.readline()
@@ -125,7 +135,7 @@ class survey_send_invitation(osv.osv_memory):
                     break
             attachments.append((id.title +".pdf",file_data))
             file.close()
-            os.remove(tools.config['addons_path'] + '/survey/report/' + id.title + ".pdf")
+            os.remove(addons.get_module_resource('survey', 'report') + id.title +".pdf")
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids):
             for addr in partner.address:
@@ -134,6 +144,8 @@ class survey_send_invitation(osv.osv_memory):
                     continue
                 user = user_ref.search(cr, uid, [('login', "=", addr.email)])
                 if user:
+                    if user[0] not in new_user:
+                        new_user.append(user[0])
                     user = user_ref.browse(cr, uid, user[0])
                     user_ref.write(cr, uid, user.id, {'survey_id':[[6, 0, survey_ids]]})
                     mail = record['mail']%{'login':addr.email, 'passwd':user.password, \
@@ -172,11 +184,17 @@ class survey_send_invitation(osv.osv_memory):
                                     'survey_id': [[6, 0, survey_ids]]
                                    }
                         user = user_ref.create(cr, uid, res_data)
+                        if user not in new_user:
+                            new_user.append(user)
                         created+= "- %s (Login: %s,  Password: %s)\n" % (addr.name or 'Unknown',\
                                                                           addr.email, passwd)
                     else:
                         error+= "- %s (Login: %s,  Password: %s)\n" % (addr.name or 'Unknown',\
                                                                         addr.email, passwd)
+
+        new_vals = {}
+        new_vals.update({'invited_user_ids':[[6,0,new_user]]})
+        survey_ref.write(cr, uid, context.get('active_id'),new_vals)
         note= ""
         if created:
             note += 'Created users:\n%s\n\n' % (created)
@@ -206,6 +224,8 @@ class survey_send_invitation_log(osv.osv_memory):
     }
 
     def default_get(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         data = super(survey_send_invitation_log, self).default_get(cr, uid, fields_list, context)
         data['note'] = context.get('note', '')
         return data

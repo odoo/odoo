@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-20 10:50+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-09-29 11:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_planning
@@ -53,27 +53,12 @@ msgid "Group By..."
 msgstr "Grupuj wg..."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Already Out: "
-msgstr ""
-"\n"
-" Już wydane: "
-
-#. module: stock_planning
 #: help:stock.sale.forecast,product_amt:0
 msgid ""
 "Forecast value which will be converted to Product Quantity according to "
 "prices."
 msgstr ""
 "Wartość prognozy, która będzie skonwertowana do ilości według ceny produktu."
-
-#. module: stock_planning
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -152,6 +137,16 @@ msgid "Company"
 msgstr "Firma"
 
 #. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Initial Stock: "
+msgstr ""
+"\n"
+" Zapas początkowy: "
+
+#. module: stock_planning
 #: help:stock.planning,warehouse_forecast:0
 msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
@@ -200,16 +195,6 @@ msgstr ""
 #: view:stock.planning:0
 msgid "Current Period Situation"
 msgstr "Sytuacja bieżącego okresu"
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Planned Out Before: "
-msgstr ""
-"\n"
-" Wcześniejsze planowane wydania: "
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -349,9 +334,10 @@ msgid "Procure Incoming Left"
 msgstr "Zapotrzebowanie na brakujące przyjęcia"
 
 #. module: stock_planning
-#: view:stock.period:0
-msgid "Closed"
-msgstr "Zamknięte"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid "    Incoming Left: "
+msgstr "    Brakujące przyjęcia: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -372,11 +358,6 @@ msgstr "Utwórz"
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
 msgstr "Główny planista zapotrzebowania (MPS)"
-
-#. module: stock_planning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Niewłaściwy XML dla architektury widoku!"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -487,6 +468,16 @@ msgid "This User"
 msgstr "Ten użytkownik"
 
 #. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Confirmed Out: "
+msgstr ""
+"\n"
+" Potwierdzone wydania: "
+
+#. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecasts"
 msgstr "Prognozy"
@@ -541,22 +532,6 @@ msgid "Creates planning lines for selected period and warehouse."
 msgstr "Tworzy planowania dla wybranego Okresu i Magazynu."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Warehouse Forecast: "
-msgstr ""
-"\n"
-" Prognoza Magazynu: "
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid "Cannot delete Validated Sale Forecasts !"
-msgstr "Nie mozna usuwać zatwierdzonych prognoz !"
-
-#. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
 msgid "This User Period4"
 msgstr "Ten użytkownik Okres4"
@@ -594,6 +569,13 @@ msgid "Per User :"
 msgstr "Na użytkownika :"
 
 #. module: stock_planning
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
+#: view:stock.sale.forecast:0
+msgid "Sales Forecasts"
+msgstr "Prognozy sprzedaży"
+
+#. module: stock_planning
 #: field:stock.period,name:0
 #: field:stock.period.createlines,name:0
 msgid "Period Name"
@@ -605,9 +587,9 @@ msgid "Created/Validated by"
 msgstr "Utworzył/Zatwierdził"
 
 #. module: stock_planning
-#: field:stock.planning,warehouse_forecast:0
-msgid "Warehouse Forecast"
-msgstr "Prognoza dla magazynu"
+#: view:stock.planning:0
+msgid "Internal Supply"
+msgstr "Zapotrzebowanie wewnętrzne"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
@@ -618,16 +600,6 @@ msgstr "Ta firma Okres4"
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
 msgstr "ta firma Okres5"
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Planned Out: "
-msgstr ""
-"\n"
-" Planowane wydania: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
@@ -646,9 +618,14 @@ msgid "Start Date"
 msgstr "Data Początkowa"
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period2_per_user:0
-msgid "This User Period2"
-msgstr "Ten użytkownik Okres2"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Already Out: "
+msgstr ""
+"\n"
+" Już wydane: "
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
@@ -671,6 +648,11 @@ msgid "Planned Out"
 msgstr "Planowane wydania"
 
 #. module: stock_planning
+#: view:stock.sale.forecast:0
+msgid "Per Department :"
+msgstr "Na dział :"
+
+#. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecast"
 msgstr "Prognoza"
@@ -683,9 +665,9 @@ msgid "Draft"
 msgstr "Projekt"
 
 #. module: stock_planning
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+#: view:stock.period:0
+msgid "Closed"
+msgstr "Zamknięte"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -694,9 +676,14 @@ msgid "Warehouse "
 msgstr "Magazyn "
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period5_per_dept:0
-msgid "This Dept Period5"
-msgstr "ten wydział Okres5"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Expected Out: "
+msgstr ""
+"\n"
+" Spodziewane wydania: "
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -951,13 +938,18 @@ msgstr ""
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
-msgid "    Incoming Left: "
-msgstr "    Brakujące przyjęcia: "
+msgid "Cannot delete Validated Sale Forecasts !"
+msgstr "Nie mozna usuwać zatwierdzonych prognoz !"
 
 #. module: stock_planning
-#: view:stock.planning:0
-msgid "Internal Supply"
-msgstr "Zapotrzebowanie wewnętrzne"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Planned Out: "
+msgstr ""
+"\n"
+" Planowane wydania: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -1024,16 +1016,6 @@ msgstr "Okres1"
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
-msgid ""
-"\n"
-" Initial Stock: "
-msgstr ""
-"\n"
-" Zapas początkowy: "
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
 msgid "    Minimum stock: "
 msgstr "    Zapas minimalny: "
 
@@ -1071,6 +1053,11 @@ msgid "This Warehouse Period1"
 msgstr "Ten magazyn Okres1"
 
 #. module: stock_planning
+#: field:stock.planning,warehouse_forecast:0
+msgid "Warehouse Forecast"
+msgstr "Prognoza dla magazynu"
+
+#. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
 msgid "    Confirmed In: "
@@ -1097,26 +1084,6 @@ msgid "Stock"
 msgstr "Zapasy"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Stock Simulation: "
-msgstr ""
-"\n"
-" Symulacja zapasu: "
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Confirmed Out: "
-msgstr ""
-"\n"
-" Potwierdzone wydania: "
-
-#. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
 msgstr "Strefa pobrania"
@@ -1125,6 +1092,11 @@ msgstr "Strefa pobrania"
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
 msgstr "Data końcowa okresu planowania."
+
+#. module: stock_planning
+#: field:stock.sale.forecast,analyzed_period2_per_user:0
+msgid "This User Period2"
+msgstr "Ten użytkownik Okres2"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
@@ -1240,12 +1212,9 @@ msgid "This Dept Period2"
 msgstr "Ten dział Okres2"
 
 #. module: stock_planning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
+#: field:stock.sale.forecast,analyzed_period5_per_dept:0
+msgid "This Dept Period5"
+msgstr "ten wydział Okres5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
@@ -1313,9 +1282,14 @@ msgid "Warehouse which planning will concern."
 msgstr "Magazyn, którego dotyczy planowanie."
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyze_company:0
-msgid "Per Company"
-msgstr "Na firmę"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Stock Simulation: "
+msgstr ""
+"\n"
+" Symulacja zapasu: "
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -1353,10 +1327,10 @@ msgstr "Na magazyn :"
 #, python-format
 msgid ""
 "\n"
-"For period: "
+" Warehouse Forecast: "
 msgstr ""
 "\n"
-"Dla okresu: "
+" Prognoza Magazynu: "
 
 #. module: stock_planning
 #: field:stock.planning,history:0
@@ -1375,9 +1349,21 @@ msgid "    Planned In: "
 msgstr "    Planowane przyjęcia: "
 
 #. module: stock_planning
-#: view:stock.sale.forecast:0
-msgid "Per Department :"
-msgstr "Na dział :"
+#: field:stock.sale.forecast,analyze_company:0
+msgid "Per Company"
+msgstr "Na firmę"
+
+#. module: stock_planning
+#: help:stock.planning,incoming_left:0
+msgid ""
+"Quantity left to Planned incoming quantity. This is calculated difference "
+"between Planned In and Confirmed In. For current period Already In is also "
+"calculated. This value is used to create procurement for lacking quantity."
+msgstr ""
+"Ilość brakująca do Planowane przyjęcia. Jest to różnica pomiędzy Planowane "
+"przyjęcia i Potwierdzone przyjęcia. Dla bieżącego okresu Już przyjęte są "
+"również uwzględniane. Ta wartość jest stosowana do tworzenia zapotrzebowania "
+"na brakującą ilość."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
@@ -1440,17 +1426,10 @@ msgstr "Produkt"
 #, python-format
 msgid ""
 "\n"
-" Expected Out: "
+"For period: "
 msgstr ""
 "\n"
-" Spodziewane wydania: "
-
-#. module: stock_planning
-#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
-#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
-#: view:stock.sale.forecast:0
-msgid "Sales Forecasts"
-msgstr "Prognozy sprzedaży"
+"Dla okresu: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
@@ -1537,18 +1516,31 @@ msgid "Shows who created this forecast, or who validated."
 msgstr "Pokazuje kto utworzył lub kto zatwierdził prognozę."
 
 #. module: stock_planning
-#: help:stock.planning,incoming_left:0
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
 msgid ""
-"Quantity left to Planned incoming quantity. This is calculated difference "
-"between Planned In and Confirmed In. For current period Already In is also "
-"calculated. This value is used to create procurement for lacking quantity."
+"\n"
+" Planned Out Before: "
 msgstr ""
-"Ilość brakująca do Planowane przyjęcia. Jest to różnica pomiędzy Planowane "
-"przyjęcia i Potwierdzone przyjęcia. Dla bieżącego okresu Już przyjęte są "
-"również uwzględniane. Ta wartość jest stosowana do tworzenia zapotrzebowania "
-"na brakującą ilość."
+"\n"
+" Wcześniejsze planowane wydania: "
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
 msgstr "Zapas początkowy"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Niewłaściwy XML dla architektury widoku!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"

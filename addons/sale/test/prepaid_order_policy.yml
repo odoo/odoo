@@ -40,8 +40,8 @@
   !python {model: stock.picking }: |
    sale_order_obj = self.pool.get('sale.order')
    so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
-   picking_id = self.search(cr, uid, [('origin','!=',so.name),(('type','=','out')and('type','=','delivery'))])
-   assert picking_id,"There is a picking attached to this sale order"
+   picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
+   assert not picking_id,"As the order policy is prepaid, the sale order shouldn't have already a picking."
 -
   I open the Invoice for the SO.
 -

@@ -1,26 +1,14 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Salary Payment Register" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Salary Payment Register.pdf">
+  <template pageSize="(595.0,842.0)" title="Salary Payment Register" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      <frame id="first" x1="33.0" y1="30.0" width="529" height="782"/>
     </pageTemplate>
   </template>
   <stylesheet>
     <blockTableStyle id="Standard_Outline">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
-    </blockTableStyle>
-    <blockTableStyle id="Table3">
-      <blockAlignment value="LEFT"/>
-      <blockValign value="TOP"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="0,-1" stop="0,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="1,-1" stop="1,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="2,-1" stop="2,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#000000" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table6">
       <blockAlignment value="LEFT"/>
@@ -37,6 +25,14 @@
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="1,-1" stop="1,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="7,-1" stop="7,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table4">
       <blockAlignment value="LEFT"/>
@@ -65,7 +61,7 @@
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="space" fontName="Helvetica" fontSize="6.0" leading="8"/>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="6.0" leading="8"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -92,51 +88,9 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="terp_default_8">[[ repeatIn(objects, 'o') ]]</para>
-    <para style="terp_header_center">Salary Payment Register</para>
-    <para style="terp_default_9_bold_center">[[o.name]]</para>
-    <para style="terp_default_8_center">For the month of [[get_month(o.date)]]</para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="72.0,295.0,47.0,68.0" style="Table3">
-      <tr>
-        <td>
-          <para style="terp_tblheader_general">Expanse To</para>
-        </td>
-        <td>
-          <para style="terp_default_8">[[o.journal_id.name]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_general">Number</para>
-        </td>
-        <td>
-          <para style="terp_default_8">[[o.number]]</para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="terp_tblheader_general">Payment From</para>
-        </td>
-        <td>
-          <para style="terp_default_8">[[o.bank_journal_id.name]]</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_general">Date</para>
-        </td>
-        <td>
-          <para style="terp_default_8">[[formatLang(time.strftime('%Y-%m-%d'), date = True)]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <section>
-      <para style="terp_default_8">
-        <font color="white"> </font>
-      </para>
-      <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table6">
+  <pto>
+  <pto_header>
+      <blockTable colWidths="26.0,106.0,66.0,66.0,66.0,66.0,66.0,66.0" style="Table6">
         <tr>
           <td>
             <para style="terp_tblheader_details_center">#</para>
@@ -145,32 +99,74 @@
             <para style="terp_tblheader_details">Employee Name</para>
           </td>
           <td>
-            <para style="terp_tbleheader_details_right">Basic SAL <font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
+            <para style="terp_tbleheader_details_right">Basic</para>
           </td>
           <td>
-            <para style="terp_tbleheader_details_right">Others <font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
+            <para style="terp_tbleheader_details_right">Others </para>
           </td>
           <td>
-            <para style="terp_tbleheader_details_right">Allowances <font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
+            <para style="terp_tbleheader_details_right">Allowances </para>
           </td>
           <td>
-            <para style="terp_tbleheader_details_right">Gross SAL <font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
+            <para style="terp_tbleheader_details_right">Gross Sal.</para>
           </td>
           <td>
-            <para style="terp_tbleheader_details_right">Deduction <font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
+            <para style="terp_tbleheader_details_right">Deduction </para>
           </td>
           <td>
-            <para style="terp_tbleheader_details_right">Net SAL <font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
+            <para style="terp_tbleheader_details_right">Net Sal.</para>
           </td>
         </tr>
       </blockTable>
-      <para style="space">
-        <font color="white"> </font>
-      </para>
+  </pto_header>
+    <para style="terp_default_8">[[ repeatIn(objects, 'o') ]]</para>
+    <para style="terp_header_center">Salary Payment Register</para>
+    <para style="terp_default_9_bold_center">[[o.name]]</para>
+    <para style="terp_default_8_center">For the month of [[get_month(o.date)]]</para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_8">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_tblheader_general">Number : <font face="Helvetica">[[o.number]]</font></para>
+    <para style="terp_tblheader_general">Date : <font face="Helvetica">[[formatLang(time.strftime('%Y-%m-%d'), date = True)]]</font></para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <section>
+      <blockTable colWidths="26.0,106.0,66.0,66.0,66.0,66.0,66.0,66.0" style="Table6">
+        <tr>
+          <td>
+            <para style="terp_tblheader_details_center">#</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_details">Employee Name</para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Basic</para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Others </para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Allowances </para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Gross Sal.</para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Deduction </para>
+          </td>
+          <td>
+            <para style="terp_tbleheader_details_right">Net Sal.</para>
+          </td>
+        </tr>
+      </blockTable>
     </section>
     <section>
       <para style="terp_default_9">[[repeatIn(o.line_ids, 'l')]]</para>
-      <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table1">
+      <blockTable colWidths="26.0,106.0,66.0,66.0,66.0,66.0,66.0,66.0" style="Table1">
         <tr>
           <td>
             <para style="terp_default_8">[[ get_no() ]]</para>
@@ -179,30 +175,27 @@
             <para style="terp_default_8">[[ l.employee_id.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.basic) ]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.basic, dp='Account') ]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.other_pay)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.other_pay, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.allounce)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.allounce, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.grows)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.grows, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.deduction)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.deduction, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
           <td>
-            <para style="terp_default_9_right">[[ formatLang(l.net)]] [[ company.currency_id.symbol]] </para>
+            <para style="terp_default_9_right">[[ formatLang(l.net, dp='Account')]] [[ company.currency_id.symbol]] </para>
           </td>
         </tr>
       </blockTable>
-      <para style="space">
-        <font color="white"> </font>
-      </para>
     </section>
-    <blockTable colWidths="24.0,96.0,60.0,60.0,60.0,60.0,60.0,60.0" style="Table4">
+    <blockTable colWidths="26.0,106.0,66.0,66.0,66.0,66.0,66.0,66.0" style="Table4">
       <tr>
         <td>
           <para style="terp_default_8">
@@ -210,25 +203,25 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_details">Total SAL<font face="Helvetica" size="7.0">([[ company.currency_id.code]])</font></para>
+          <para style="terp_tblheader_details">Total Salary</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_basic())]][[ company.currency_id.symbol]] </para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_basic(o), dp='Account')]][[ company.currency_id.symbol]] </para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_other())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_other(o), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_allow())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_allow(o), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_grows())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_grows(o), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_deduct())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_deduct(o), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
         <td>
-          <para style="terp_tbleheader_details_right">[[formatLang(get_net())]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tbleheader_details_right">[[formatLang(get_net(o), dp='Account')]] [[ company.currency_id.symbol]]</para>
         </td>
       </tr>
     </blockTable>
@@ -238,7 +231,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="241.0,241.0" style="Table5">
+    <blockTable colWidths="265.0,265.0" style="Table5">
       <tr>
         <td>
           <para style="terp_default_9_bold">For [[company.name]],</para>
@@ -264,5 +257,6 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
+  </pto>
   </story>
 </document>

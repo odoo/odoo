@@ -6,64 +6,58 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 20:51+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-10-30 13:47+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: wiki
-#: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
-msgid "wizard.wiki.history.show_diff"
-msgstr "wizard.wiki.history.show_diff"
+#: field:wiki.groups,template:0
+msgid "Wiki Template"
+msgstr "Wiki šablona"
 
 #. module: wiki
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
-
-#. module: wiki
-#: model:ir.model,name:wiki.model_wiki_groups_link
-msgid "Wiki Groups Links"
-msgstr "Wiki odkazy skupiny"
-
-#. module: wiki
-#: field:wiki.wiki,create_uid:0
-msgid "Author"
-msgstr "Tvůrce"
-
-#. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_open_page
-msgid "Open Page"
-msgstr "Otevřít stránku"
-
-#. module: wiki
-#: field:wiki.groups.link,action_id:0
-msgid "Menu"
-msgstr "Nabídka"
-
-#. module: wiki
-#: field:wiki.groups,child_ids:0
-msgid "Child Groups"
-msgstr "Dětské skupiny"
-
-#. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 #: model:ir.actions.act_window,name:wiki.action_wiki
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_wiki
 msgid "Wiki Pages"
 msgstr "Wiki stránky"
 
 #. module: wiki
-#: field:wiki.groups,section:0
-msgid "Make Section ?"
-msgstr "Vytvořit sekci ?"
+#: field:wiki.groups,method:0
+msgid "Display Method"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+#: field:wiki.wiki,create_uid:0
+msgid "Author"
+msgstr "Tvůrce"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_wiki_page_open
+#: view:wiki.wiki.page.open:0
+msgid "Open Page"
+msgstr "Otevřít stránku"
+
+#. module: wiki
+#: field:wiki.groups,menu_id:0
+msgid "Menu"
+msgstr "Nabídka"
+
+#. module: wiki
+#: field:wiki.wiki,section:0
+msgid "Section"
+msgstr "Sekce"
+
+#. module: wiki
+#: help:wiki.wiki,toc:0
+msgid "Indicates that this pages have a table of contents or not"
+msgstr ""
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
@@ -77,22 +71,40 @@ msgid "Minor edit"
 msgstr "Malá editace"
 
 #. module: wiki
+#: view:wiki.wiki:0
 #: field:wiki.wiki,text_area:0
 msgid "Content"
 msgstr "Obsah"
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document_configuration
-msgid "Wiki Configuration"
-msgstr "Wiki konfigurace"
+#: field:wiki.wiki,child_ids:0
+msgid "Child Pages"
+msgstr ""
 
 #. module: wiki
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Špatný název modelu v definici akce"
+#: field:wiki.wiki,parent_id:0
+msgid "Parent Page"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+#: field:wiki.wiki,write_uid:0
+msgid "Last Contributor"
+msgstr ""
+
+#. module: wiki
+#: field:wiki.create.menu,menu_parent_id:0
+msgid "Parent Menu"
+msgstr "Rodičovská nabídka"
+
+#. module: wiki
+#: help:wiki.wiki,group_id:0
+msgid "Topic, also called Wiki Group"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.groups,name:0
+#: view:wiki.wiki:0
 #: field:wiki.wiki,group_id:0
 msgid "Wiki Group"
 msgstr "Wiki skupina"
@@ -103,14 +115,31 @@ msgid "Title"
 msgstr "Název"
 
 #. module: wiki
+#: model:ir.model,name:wiki.model_wiki_create_menu
+msgid "Wizard Create Menu"
+msgstr ""
+
+#. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
 msgstr "Linky historie"
 
 #. module: wiki
-#: field:wiki.groups,template:0
-msgid "Wiki Template"
-msgstr "Wiki šablona"
+#: view:wiki.wiki:0
+msgid "Page Content"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no changes in revisions"
+msgstr ""
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
@@ -118,9 +147,9 @@ msgid "Document Management - Wiki"
 msgstr "Správa dokumentů - Wiki"
 
 #. module: wiki
-#: view:wiki.groups:0
-msgid "Create a Menu"
-msgstr "Vytvořit menu"
+#: field:wiki.create.menu,menu_name:0
+msgid "Menu Name"
+msgstr "Jméno v menu"
 
 #. module: wiki
 #: field:wiki.groups,notes:0
@@ -128,33 +157,31 @@ msgid "Description"
 msgstr "Popis"
 
 #. module: wiki
-#: field:wiki.wiki,section:0
-msgid "Section"
-msgstr "Sekce"
+#: field:wiki.wiki,review:0
+msgid "Needs Review"
+msgstr ""
 
 #. module: wiki
-#: view:wizard.wiki.history.show_diff:0
-msgid "History Differance"
-msgstr "Rozdílnost historie"
+#: help:wiki.wiki,review:0
+msgid ""
+"Indicates that this page should be reviewed, raising the attention of other "
+"contributors"
+msgstr ""
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,page:0
-msgid "Group Home Page"
-msgstr "Hlavní stránka skupiny"
+#: view:wiki.create.menu:0
+#: view:wiki.make.index:0
+msgid "Menu Information"
+msgstr "Informace nabídky"
 
 #. module: wiki
-#: field:wiki.wiki,write_uid:0
-msgid "Last Author"
-msgstr "Poslední autor"
+#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
+msgid "Page History"
+msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_view_diff
-msgid "Differences"
-msgstr "Rozdíly"
-
-#. module: wiki
-#: help:wiki.wiki,section:0
-msgid "Use page section code like 1.2.1"
+#: selection:wiki.groups,method:0
+msgid "Tree"
 msgstr ""
 
 #. module: wiki
@@ -163,45 +190,15 @@ msgid "Page Template"
 msgstr "Šablona stránky"
 
 #. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document2
-msgid "Document Management"
-msgstr "Správa dokumntů"
+#: field:wiki.wiki,tags:0
+msgid "Keywords"
+msgstr ""
 
 #. module: wiki
-#: field:wiki.wiki.history,create_date:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: wiki
-#: wizard_view:wiki.make.index,init:0
-msgid "Want to create a Index on Selected Pages ? "
-msgstr "Chcete vytvořit index na vybraných stránkách ? "
-
-#. module: wiki
-#: view:wiki.groups:0
-msgid "Configuration"
-msgstr "Nastavení"
-
-#. module: wiki
-#: field:wiki.groups,home:0
-#: field:wiki.groups,page_ids:0
-msgid "Pages"
-msgstr "Stránky"
-
-#. module: wiki
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalidní XML pro zobrazení architektury!"
-
-#. module: wiki
-#: field:wiki.wiki.history,text_area:0
-msgid "Text area"
-msgstr "Textová plocha"
-
-#. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_parent_id:0
-msgid "Parent Menu"
-msgstr "Rodičovská nabídka"
+#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#, python-format
+msgid "Warning"
+msgstr "Upozornění"
 
 #. module: wiki
 #: field:wiki.wiki,create_date:0
@@ -209,21 +206,82 @@ msgid "Created on"
 msgstr "Vytvořeno"
 
 #. module: wiki
+#: field:wiki.wiki.history,create_date:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: wiki
+#: view:wiki.make.index:0
+msgid "Want to create a Index on Selected Pages ? "
+msgstr "Chcete vytvořit index na vybraných stránkách ? "
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
+#: view:wizard.wiki.history.show_diff:0
+msgid "Difference"
+msgstr ""
+
+#. module: wiki
+#: field:wiki.groups,page_ids:0
+msgid "Pages"
+msgstr "Stránky"
+
+#. module: wiki
 #: view:wiki.groups:0
+msgid "Group Description"
+msgstr ""
+
+#. module: wiki
+#: help:wiki.wiki,section:0
+msgid "Use page section code like 1.2.1"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki.page.open:0
+msgid "Want to open a wiki page? "
+msgstr ""
+
+#. module: wiki
+#: field:wiki.groups,section:0
+msgid "Make Section ?"
+msgstr "Vytvořit sekci ?"
+
+#. module: wiki
+#: field:wiki.wiki.history,text_area:0
+msgid "Text area"
+msgstr "Textová plocha"
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Meta Information"
+msgstr ""
+
+#. module: wiki
+#: model:ir.module.module,description:wiki.module_meta_information
+msgid ""
+"\n"
+"The base module to manage documents(wiki)\n"
+"\n"
+"keep track for the wiki groups, pages, and history\n"
+"    "
+msgstr ""
+
+#. module: wiki
+#: view:wiki.groups:0
+#: view:wizard.wiki.history.show_diff:0
 msgid "Notes"
 msgstr "Poznámky"
 
 #. module: wiki
-#: wizard_view:wiki.create.menu,init:0
-#: wizard_view:wiki.make.index,init:0
-msgid "Menu Information"
-msgstr "Informace nabídky"
+#: help:wiki.groups,home:0
+msgid "Required to select home page if display method is Home Page"
+msgstr ""
 
 #. module: wiki
-#: field:wiki.groups,parent_id:0
-#: field:wiki.groups.link,group_id:0
-msgid "Parent Group"
-msgstr "Rodičovská skupina"
+#: selection:wiki.groups,method:0
+msgid "List"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -238,7 +296,6 @@ msgstr "Vytvořené datum"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_history
-#: model:ir.ui.menu,name:wiki.menu_action_history
 msgid "All Page Histories"
 msgstr "Historie všech stránek"
 
@@ -248,9 +305,19 @@ msgid "wiki.wiki"
 msgstr "wiki.wiki"
 
 #. module: wiki
+#: help:wiki.groups,method:0
+msgid "Define the default behaviour of the menu created on this group"
+msgstr ""
+
+#. module: wiki
 #: view:wizard.wiki.history.show_diff:0
-msgid "Wiki Differance"
-msgstr "Rozdílnost Wiki"
+msgid "Close"
+msgstr ""
+
+#. module: wiki
+#: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
+msgid "wizard.wiki.history.show_diff"
+msgstr "wizard.wiki.history.show_diff"
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
@@ -258,22 +325,23 @@ msgid "Wiki Id"
 msgstr "Wiki Id"
 
 #. module: wiki
-#: wizard_field:wiki.create.menu,init,menu_name:0
-msgid "Menu Name"
-msgstr "Jméno v menu"
+#: field:wiki.groups,home:0
+#: selection:wiki.groups,method:0
+msgid "Home Page"
+msgstr ""
+
+#. module: wiki
+#: help:wiki.wiki,parent_id:0
+msgid "Allows you to link with the other page with in the current topic"
+msgstr ""
 
 #. module: wiki
 #: view:wiki.wiki:0
-msgid "Modifications"
-msgstr "Úpravy"
+msgid "Modification Information"
+msgstr ""
 
 #. module: wiki
-#: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
-msgid "History"
-msgstr "Přehled změn"
-
-#. module: wiki
-#: model:ir.ui.menu,name:wiki.menu_document
+#: model:ir.ui.menu,name:wiki.menu_wiki_configuration
 #: view:wiki.wiki:0
 msgid "Wiki"
 msgstr "Wiki"
@@ -284,10 +352,45 @@ msgid "Modification Date"
 msgstr "Datum změny"
 
 #. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_make_index
-#: wizard_button:wiki.make.index,init,yes:0
+#: view:wiki.groups:0
+msgid "Configuration"
+msgstr "Nastavení"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index
+#: model:ir.actions.act_window,name:wiki.action_view_wiki_make_index_values
+#: model:ir.model,name:wiki.model_wiki_make_index
+#: view:wiki.make.index:0
 msgid "Create Index"
 msgstr "Vytvořit index"
+
+#. module: wiki
+#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#, python-format
+msgid "You need to select minimum 1 or maximum 2 history revision!"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Group By..."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+"can create a new document that can be link to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_wiki_create_menu
+#: view:wiki.create.menu:0
+#: view:wiki.groups:0
+#: view:wiki.make.index:0
+msgid "Create Menu"
+msgstr "Vytvořit menu"
 
 #. module: wiki
 #: field:wiki.wiki.history,minor_edit:0
@@ -295,27 +398,18 @@ msgid "This is a major edit ?"
 msgstr "Toto je velká editace ?"
 
 #. module: wiki
-#: model:ir.actions.wizard,name:wiki.wizard_group_menu_create
-#: wizard_view:wiki.create.menu,init:0
-#: wizard_button:wiki.create.menu,init,create_menu:0
-#: wizard_view:wiki.make.index,init:0
-msgid "Create Menu"
-msgstr "Vytvořit menu"
-
-#. module: wiki
-#: field:wiki.wiki,tags:0
-msgid "Tags"
-msgstr "Značky"
-
-#. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups_browse
 #: model:ir.model,name:wiki.model_wiki_groups
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups
-#: model:ir.ui.menu,name:wiki.menu_action_wiki_groups_browse
 #: view:wiki.groups:0
 msgid "Wiki Groups"
 msgstr "Wiki skupiny"
+
+#. module: wiki
+#: view:wiki.wiki:0
+msgid "Topic"
+msgstr ""
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
@@ -323,22 +417,99 @@ msgid "Modify By"
 msgstr "Upraveno od"
 
 #. module: wiki
+#: code:addons/wiki/web/widgets/wikimarkup/__init__.py:0
 #: field:wiki.wiki,toc:0
+#, python-format
 msgid "Table of Contents"
 msgstr "Obsah"
 
 #. module: wiki
-#: wizard_button:wiki.create.menu,init,end:0
-#: wizard_button:wiki.make.index,init,end:0
+#: view:wiki.groups:0
+#: view:wiki.wiki.page.open:0
+msgid "Open Wiki Page"
+msgstr ""
+
+#. module: wiki
+#: model:ir.model,name:wiki.model_wiki_wiki_page_open
+msgid "wiz open page"
+msgstr ""
+
+#. module: wiki
+#: view:wiki.create.menu:0
+#: view:wiki.make.index:0
+#: view:wiki.wiki.page.open:0
 msgid "Cancel"
 msgstr "Zrušit"
 
 #. module: wiki
-#: field:wizard.wiki.history.show_diff,diff:0
+#: field:wizard.wiki.history.show_diff,file_path:0
 msgid "Diff"
 msgstr "Rozdíl"
 
 #. module: wiki
-#: field:wiki.wiki,review:0
+#: view:wiki.wiki:0
 msgid "Need Review"
 msgstr "Potřebuje kontrolu"
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.action_wiki_review
+msgid "Pages Waiting Review"
+msgstr ""
+
+#. module: wiki
+#: model:ir.actions.act_window,name:wiki.act_wiki_group_open
+msgid "Search Page"
+msgstr ""
+
+#~ msgid "Child Groups"
+#~ msgstr "Dětské skupiny"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
+
+#~ msgid "Create a Menu"
+#~ msgstr "Vytvořit menu"
+
+#~ msgid "Wiki Configuration"
+#~ msgstr "Wiki konfigurace"
+
+#~ msgid "Group Home Page"
+#~ msgstr "Hlavní stránka skupiny"
+
+#~ msgid "Last Author"
+#~ msgstr "Poslední autor"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalidní XML pro zobrazení architektury!"
+
+#~ msgid "History"
+#~ msgstr "Přehled změn"
+
+#~ msgid "Modifications"
+#~ msgstr "Úpravy"
+
+#~ msgid "Tags"
+#~ msgstr "Značky"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Špatný název modelu v definici akce"
+
+#~ msgid "Wiki Groups Links"
+#~ msgstr "Wiki odkazy skupiny"
+
+#~ msgid "Differences"
+#~ msgstr "Rozdíly"
+
+#~ msgid "Document Management"
+#~ msgstr "Správa dokumntů"
+
+#~ msgid "Parent Group"
+#~ msgstr "Rodičovská skupina"
+
+#~ msgid "History Differance"
+#~ msgstr "Rozdílnost historie"
+
+#~ msgid "Wiki Differance"
+#~ msgstr "Rozdílnost Wiki"

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Follow UP" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Account Followup.pdf">
+  <template pageSize="(595.0,842.0)" title="Account Followup" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="42.0" y1="28.0" width="511" height="786"/>
+      <frame id="first" x1="31.0" y1="28.0" width="532" height="786"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -48,11 +48,13 @@
       <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
       <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,1" stop="1,1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,1" stop="2,1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,1" stop="3,1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,1" stop="4,1"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,1" stop="5,1"/>
+    </blockTableStyle>
+    <blockTableStyle id="Table3">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -92,16 +94,16 @@
   <story>
     <para style="terp_default_8">[[ repeatIn(ids_to_objects(data['form']['partner_ids']),'o') ]] </para>
     <para style="terp_default_8">[[ setLang(o.lang) ]]</para>
-    <blockTable colWidths="286.0,224.0" style="Tableau2">
+    <blockTable colWidths="298.0,234.0" style="Tableau2">
       <tr>
         <td>
           <para style="terp_default_9">[[ repeatIn(adr_get(o,'invoice'),'a' )]]</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.name ]]</para>
-          <para style="terp_default_9">[[ a['street'] ]]</para>
+          <para style="terp_default_9">[[ o.name or '' ]]</para>
+          <para style="terp_default_9">[[ a['street'] or '']]</para>
           <para style="terp_default_9">[[ a['street2'] or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ a['zip'] ]] [[ a['city'] ]]</para>
+          <para style="terp_default_9">[[ a['zip'] or '' ]] [[ a['city'] or '' ]]</para>
           <para style="terp_default_9">[[( a['state_id'] and a['state_id'][1]) or removeParentNode('para') ]]</para>
           <para style="terp_default_9">[[( a['country_id'] and a['country_id'][1]) or '']]</para>
           <para style="terp_default_9">
@@ -115,7 +117,7 @@
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">Document : Customer account statement</para>
-    <para style="terp_default_9">Date : [[ formatLang(time.strftime('%Y-%m-%d'),date = True) ]]</para>
+    <para style="terp_default_9">Date : [[ formatLang(data['form']['date'],date=True) ]]</para>
     <para style="terp_default_9">Customer Ref : [[ o.ref or '' ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
@@ -124,7 +126,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="68.0,78.0,45.0,70.0,51.0,58.0,62.0,61.0,27.0" style="Table1">
+    <blockTable colWidths="66.0,77.0,46.0,74.0,52.0,62.0,59.0,67.0,29.0" style="Table1">
       <tr>
         <td>
           <para style="terp_tblheader_Details_Centre">Invoice Date</para>
@@ -157,7 +159,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[repeatIn(getLines(o), 'line') ]]</para>
-      <blockTable colWidths="68.0,79.0,44.0,69.0,49.0,62.0,61.0,60.0,26.0" style="Table5">
+      <blockTable colWidths="66.0,78.0,46.0,69.0,57.0,62.0,58.0,68.0,28.0" style="Table5">
         <tr>
           <td>
             <para style="terp_default_9">[[ formatLang(line['date'],date = True) ]]</para>
@@ -189,7 +191,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="191.0,108.0,73.0,61.0,60.0,26.0" style="Table2">
+    <blockTable colWidths="190.0,101.0,87.0,58.0,68.0,28.0" style="Table2">
       <tr>
         <td>
           <para style="terp_default_8">
@@ -200,10 +202,10 @@
           <para style="terp_tblheader_Details">Sub-Total: </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['debit'], getLines(o), 0.00)) ]]</para>
+          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['debit'], getLines(o), 0.00)) ]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['credit'], getLines(o), 0.00)) ]]</para>
+          <para style="terp_default_Right_9">[[formatLang(reduce(lambda x,y: x+y['credit'], getLines(o), 0.00)) ]] </para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[ formatLang(reduce(lambda x,y: x+(y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0)) ]] [[ company.currency_id.symbol ]]</para>
@@ -214,6 +216,8 @@
           </para>
         </td>
       </tr>
+    </blockTable>
+    <blockTable colWidths="193.0,92.0,100.0,147.0" style="Table3">
       <tr>
         <td>
           <para style="terp_default_8">
@@ -224,27 +228,14 @@
           <para style="terp_tblheader_Details">Balance: </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x,y: x+(y['debit'] - y['credit']), getLines(o), 0.00))) ]] [[ company.currency_id.symbol]] </para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang((reduce(lambda x,y: x+(y['debit'] - y['credit']), getLines(o), 0.00))) ]] [[ company.currency_id.symbol]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="Standard">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="Standard">
+          <para style="terp_default_8">
             <font color="white"> </font>
           </para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>

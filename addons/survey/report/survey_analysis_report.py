@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -29,14 +29,13 @@ from report import report_sxw
 
 class survey_analysis(report_rml):
     def create(self, cr, uid, ids, datas, context):
-
         surv_obj = pooler.get_pool(cr.dbname).get('survey')
         user_obj = pooler.get_pool(cr.dbname).get('res.users')
         rml_obj=report_sxw.rml_parse(cr, uid, surv_obj._name,context)
         company=user_obj.browse(cr,uid,[uid],context)[0].company_id
 
         rml ="""<document filename="Survey Analysis Report.pdf">
-                <template pageSize="(595.0,842.0)" title="Survey Analysis" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+                <template pageSize="(595.0,842.0)" title="Survey Analysis" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
                         <pageTemplate>
                         <frame id="first" x1="1.3cm" y1="1.5cm" width="18.4cm" height="26.5cm"/>
                         <pageGraphics>
@@ -46,9 +45,6 @@ class survey_analysis(report_rml):
                         <drawString x="1.3cm" y="28.3cm"> """+to_xml(rml_obj.formatLang(time.strftime("%Y-%m-%d %H:%M:%S"),date_time=True))+"""</drawString>
                         <setFont name="DejaVu Sans Bold" size="10"/>
                         <drawString x="9.8cm" y="28.3cm">"""+ to_xml(company.name) +"""</drawString>
-                        <setFont name="DejaVu Sans" size="8"/>
-                        <drawRightString x="19.7cm" y="28.3cm"><pageNumber/> / </drawRightString>
-                        <drawString x="19.8cm" y="28.3cm"></drawString>
                         <stroke color="#000000"/>
                         <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
                         </pageGraphics>
@@ -122,7 +118,7 @@ class survey_analysis(report_rml):
 
         for survey in surv_obj.browse(cr, uid, ids):
             rml += """<story>
-                    <para style="Title">Answer Summary</para>
+                    <para style="Title">Answers Summary</para>
                     <para style="Standard"><font></font></para>
                     <para style="P2">
                       <font color="white"> </font>
@@ -321,7 +317,6 @@ class survey_analysis(report_rml):
                                     rating_weight_sum += int(col_weight[1]) * tot_res
                                     tot_per = round((float(tot_res) * 100) / int(res_count), 2)
                                 else:
-                                    tor_res = 0
                                     tot_per = 0.0
                                 if tot_res:
                                     rml += """<td><para style="answer_bold">""" + tools.ustr(tot_per) + "%(" + tools.ustr(tot_res) + """)</para></td>"""
@@ -426,6 +421,7 @@ class survey_analysis(report_rml):
         rml += """</document>"""
         report_type = datas.get('report_type', 'pdf')
         create_doc = self.generators[report_type]
+        self.internal_header=True
         pdf = create_doc(rml, title=self.title)
 
         return (pdf, report_type)

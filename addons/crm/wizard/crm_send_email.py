@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -65,7 +65,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         hist_obj = self.pool.get('mailgate.message')
 
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):
@@ -156,13 +156,13 @@ class crm_send_new_email(osv.osv_memory):
                 act = 'case_' + obj.state
                 getattr(case_pool, act)(cr, uid, [case.id])
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def default_get(self, cr, uid, fields, context=None):
         """
         This function gets default values
         """
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):
@@ -181,7 +181,7 @@ class crm_send_new_email(osv.osv_memory):
         user_obj = self.pool.get('res.users')
         user_mail_from = user_obj._get_email_from(cr, uid, [uid], context=context)[uid]
 
-        for case in mod_obj.browse(cr, uid, res_id):
+        for case in mod_obj.browse(cr, uid, res_id, context=context):
             if 'email_to' in fields:
                 res.update({'email_to': case.email_from and tools.ustr(case.email_from) or ''})
             if 'email_from' in fields:
@@ -217,7 +217,7 @@ class crm_send_new_email(osv.osv_memory):
 
             # In the case where the crm.case does not exist in the database
             if not model:
-                return {}
+                return {'type': 'ir.actions.act_window_close'}
 
             model_pool = self.pool.get(model)
             res_id = hist.res_id
@@ -263,7 +263,7 @@ class crm_send_new_email(osv.osv_memory):
         @param context: A standard dictionary for contextual values
 
         """
-        if not context:
+        if context is None:
             context = {}
 
         if not context.get('active_model'):

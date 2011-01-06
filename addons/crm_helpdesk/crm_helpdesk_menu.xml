@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-    <menuitem id="base.menu_aftersale" name="After-Sale Services"
-    	parent="base.menu_base_partner" sequence="7" />
+        <menuitem id="base.menu_aftersale" name="After-Sale Services"
+            parent="base.menu_base_partner" sequence="7" />
 
 <!-- Help Desk (menu) -->
 
-    <record model="ir.actions.act_window" id="crm_case_helpdesk_act111">
-        <field name="name">Helpdesk Requests</field>
-        <field name="res_model">crm.helpdesk</field>
-        <field name="view_mode">tree,calendar,form</field>
-        <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
-        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
-        <field name="search_view_id" ref="view_crm_case_helpdesk_filter"/>
-        <field name="help">Alike records and processing of claims, Helpdesk and Support is a good tool to trace your interventions. This menu is more adapted to an oral communication, which is not necessarily related to a claim. Select a customer, add notes and categorize your interventions with a channel and a priority level.</field>
-    </record>
+        <record model="ir.actions.act_window" id="crm_case_helpdesk_act111">
+            <field name="name">Helpdesk Requests</field>
+            <field name="res_model">crm.helpdesk</field>
+            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
+            <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
+            <field name="search_view_id" ref="view_crm_case_helpdesk_filter"/>
+            <field name="help">Helpdesk and Support allow you to track your interventions. Select a customer, add notes and categorize interventions with partners if necessary. You can also assign a priority level. Use the OpenERP Issues system to manage your support activities. Issues can be connected to the email gateway: new emails may create issues, each of them automatically gets the history of the conversation with the customer.</field>
+        </record>
 
-    <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_act111">
-        <field name="sequence" eval="1"/>
-        <field name="view_mode">tree</field>
-        <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
-        <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
-    </record>
+        <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_act111">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
+            <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
+        </record>
 
-    <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_act111">
-        <field name="sequence" eval="2"/>
-        <field name="view_mode">calendar</field>
-        <field name="view_id" ref="crm_case_helpdesk_calendar_view"/>
-        <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
-    </record>
+        <record model="ir.actions.act_window.view" id="action_crm_sec_calendar_view_act111">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">calendar</field>
+            <field name="view_id" ref="crm_case_helpdesk_calendar_view"/>
+            <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
+        </record>
 
-    <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_act111">
-        <field name="sequence" eval="3"/>
-        <field name="view_mode">form</field>
-        <field name="view_id" ref="crm_case_form_view_helpdesk"/>
-        <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
-    </record>
+        <record model="ir.actions.act_window.view" id="action_crm_sec_form_view_act111">
+            <field name="sequence" eval="3"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_helpdesk"/>
+            <field name="act_window_id" ref="crm_case_helpdesk_act111"/>
+        </record>
 
-    <menuitem name="Helpdesk and Support" id="menu_help_support_main"
-    	parent="base.menu_aftersale" action="crm_case_helpdesk_act111" sequence="2"/>
+        <menuitem name="Helpdesk and Support" id="menu_help_support_main"
+            groups="base.group_extended,base.group_sale_salesman"
+            parent="base.menu_aftersale" action="crm_case_helpdesk_act111" sequence="2"/>
 
     </data>
 </openerp>

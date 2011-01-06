@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 02:37+0000\n"
-"Last-Translator: Pedro_Maschio <pedro.bicudo@tgtconsult.com.br>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-12 01:13+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_creator
@@ -25,6 +25,11 @@ msgid ""
 msgstr ""
 "Forneça uma fórmula para o campo para filtrar os resultados.\n"
 " p.ex.: res_partner.id=3"
+
+#. module: base_report_creator
+#: model:ir.model,name:base_report_creator.model_report_menu_create
+msgid "Menu Create"
+msgstr "Criar Menu"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_type:0
@@ -47,9 +52,19 @@ msgid "Graph Mode"
 msgstr "Modo Gráfico"
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação"
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid ""
+"These is/are model(s) (%s) in selection which is/are not related to any "
+"other model"
+msgstr ""
+"Existe um ou mais modelos (%s) na seleção que não são relacionados a nenhum "
+"outro modelo"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Legend"
+msgstr "Legenda"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -84,7 +99,7 @@ msgstr "SQL Query"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-#: wizard_button:base_report_creator.report.menu.create,init,create_menu:0
+#: view:report.menu.create:0
 msgid "Create Menu"
 msgstr "Criar Menu"
 
@@ -105,13 +120,18 @@ msgid "OR"
 msgstr "OU"
 
 #. module: base_report_creator
-#: model:ir.ui.menu,name:base_report_creator.menu_base_report_creator_action
-#: model:ir.ui.menu,name:base_report_creator.menu_base_report_creator_action_config
+#: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
 msgid "Custom Reports"
 msgstr "Relatório Especial (customizado)"
 
 #. module: base_report_creator
-#: wizard_view:base_report_creator.report.menu.create,init:0
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "No Related Models!!"
+msgstr "Nenhum Modelo Relacionado!!"
+
+#. module: base_report_creator
+#: view:report.menu.create:0
 msgid "Menu Information"
 msgstr "Informação do Menu"
 
@@ -119,6 +139,11 @@ msgstr "Informação do Menu"
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Sum"
 msgstr "Soma"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You must have to give calendar view's color,start date and delay."
+msgstr "Você precisa informar a cor de exibição, data inicial e atraso."
 
 #. module: base_report_creator
 #: field:base_report_creator.report,model_ids:0
@@ -137,21 +162,11 @@ msgstr "Tipo de Relatório"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "State"
-msgstr "Modo"
-
-#. module: base_report_creator
-#: selection:base_report_creator.report,state:0
-msgid "Valid"
-msgstr "Válido"
-
-#. module: base_report_creator
-#: view:base_report_creator.report:0
 msgid "Add filter"
 msgstr "Adicionar filtro"
 
 #. module: base_report_creator
-#: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
+#: model:ir.actions.act_window,name:base_report_creator.action_report_menu_create
 msgid "Create Menu for Report"
 msgstr "Criar Menu para Relatório"
 
@@ -163,6 +178,7 @@ msgid "Form"
 msgstr "Formulário"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report,view_type2:0
 #: selection:base_report_creator.report,view_type3:0
 #: selection:base_report_creator.report.fields,calendar_mode:0
 #: selection:base_report_creator.report.fields,graph_mode:0
@@ -170,6 +186,7 @@ msgid "/"
 msgstr "/"
 
 #. module: base_report_creator
+#: view:base_report_creator.report:0
 #: field:base_report_creator.report.fields,report_id:0
 #: field:base_report_creator.report.filter,report_id:0
 #: model:ir.model,name:base_report_creator.model_base_report_creator_report
@@ -182,9 +199,14 @@ msgid "Starting Date"
 msgstr "Data de Início"
 
 #. module: base_report_creator
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Invalido XML para Arquitetura da View"
+#: view:base_report_creator.report:0
+msgid "Filters on Fields"
+msgstr "Filtros nos Campos"
+
+#. module: base_report_creator
+#: field:base_report_creator.report,group_ids:0
+msgid "Authorized Groups"
+msgstr "Grupos Autorizados"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type1:0
@@ -192,11 +214,6 @@ msgstr "Invalido XML para Arquitetura da View"
 #: selection:base_report_creator.report,view_type3:0
 msgid "Tree"
 msgstr "Visão em árvore"
-
-#. module: base_report_creator
-#: field:base_report_creator.report,group_ids:0
-msgid "Authorized Groups"
-msgstr "Grupos Autorizados"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_orientation:0
@@ -214,7 +231,7 @@ msgid "Security"
 msgstr "Segurança"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report.menu.create,init,menu_name:0
+#: field:report.menu.create,menu_name:0
 msgid "Menu Name"
 msgstr "Nome do Menu"
 
@@ -223,6 +240,12 @@ msgstr "Nome do Menu"
 #: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "AND"
 msgstr "E"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You can not display field which are not stored in Database."
+msgstr ""
+"Você não pode exibir campos que não estão armazenados no Banco de Dados."
 
 #. module: base_report_creator
 #: field:base_report_creator.report.fields,calendar_mode:0
@@ -259,19 +282,9 @@ msgid "Field Name"
 msgstr "Nome do campo"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report,state:0
-msgid "Draft"
-msgstr "Provisório"
-
-#. module: base_report_creator
 #: wizard_view:base_report_creator.report_filter.fields,set_value_select_field:0
 msgid "Set Filter Values"
 msgstr "Defina os Valores do Filtro"
-
-#. module: base_report_creator
-#: field:base_report_creator.report,state:0
-msgid "Status"
-msgstr "Posição"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
@@ -287,6 +300,11 @@ msgstr "Relatório de Linhas e Colunas"
 #: view:base_report_creator.report:0
 msgid "General Configuration"
 msgstr "Configuração geral"
+
+#. module: base_report_creator
+#: help:base_report_creator.report.fields,sequence:0
+msgid "Gives the sequence order when displaying a list of fields."
+msgstr "Fornece a ordem sequencial ao exibir uma lista de campos."
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report_filter.fields,init:0
@@ -325,7 +343,7 @@ msgid "X Axis"
 msgstr "Eixo X"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report.menu.create,init,menu_parent_id:0
+#: field:report.menu.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Menu Superior(pai)"
 
@@ -340,7 +358,7 @@ msgid "Filter Name"
 msgstr "Nome do Filtro"
 
 #. module: base_report_creator
-#: model:ir.actions.wizard,name:base_report_creator.wizard_report_open
+#: view:base_report_creator.report:0
 msgid "Open Report"
 msgstr "Abrir Relatório"
 
@@ -356,19 +374,21 @@ msgid "Report Creator"
 msgstr "Criador de Relatórios"
 
 #. module: base_report_creator
-#: wizard_button:base_report_creator.report.menu.create,init,end:0
 #: wizard_button:base_report_creator.report_filter.fields,init,end:0
 #: wizard_button:base_report_creator.report_filter.fields,set_value_select_field,end:0
+#: view:report.menu.create:0
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: base_report_creator
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-"especial!"
+#: constraint:base_report_creator.report:0
+msgid "You can apply aggregate function to the non calculated field."
+msgstr "Você pode aplicar a função agregada para o campo não calculado."
+
+#. module: base_report_creator
+#: field:base_report_creator.report,menu_id:0
+msgid "Menu"
+msgstr "Menu"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_type1:0
@@ -386,9 +406,18 @@ msgid "Field"
 msgstr "Campo"
 
 #. module: base_report_creator
-#: view:base_report_creator.report:0
-msgid "Filters on Fields"
-msgstr "Filtros nos Campos"
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Unique Colors"
+msgstr "Cores Originais"
+
+#. module: base_report_creator
+#: help:base_report_creator.report,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the report "
+"without removing it."
+msgstr ""
+"Se o campo ativo for definido como Falso, permite esconder o relatório sem "
+"removê-lo."
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_type:0
@@ -401,26 +430,9 @@ msgid "Third View"
 msgstr "Terceira Visão"
 
 #. module: base_report_creator
-#: model:ir.module.module,description:base_report_creator.module_meta_information
-msgid ""
-"This modules allows you to create any statistic\n"
-"report on several object. It's a SQL query builder and browser\n"
-"for and users.\n"
-"\n"
-"After installing the module, it adds a menu to define custom report in\n"
-"the \"Dashboard\" menu.\n"
-msgstr ""
-"Este módulo permite criar qualquer relatório\n"
-"estatístico em vários objetos. É um construtor\n"
-"de query SQL e browser para usuários.\n"
-"\n"
-"Após instalar o módulo, ele adiciona um menu para definir\n"
-"relatórios customizados no menu \"Dashboard\".\n"
-
-#. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Uniq Colors"
-msgstr "Cores únicas"
+msgid "End Date"
+msgstr "Data Final"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0
@@ -439,8 +451,8 @@ msgstr "Média"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "Reports"
-msgstr "Relatórios"
+msgid "Use %(uid)s to filter by the connected user"
+msgstr "Usar %(uid)s para filtrar pelos usuários conectados"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
@@ -468,7 +480,7 @@ msgid "Second View"
 msgstr "Segunda Visão"
 
 #. module: base_report_creator
-#: wizard_view:base_report_creator.report.menu.create,init:0
+#: view:report.menu.create:0
 msgid "Create Menu For This Report"
 msgstr "Criar Menu para este Relatório"
 
@@ -498,3 +510,82 @@ msgstr "Campos para Mostrar"
 #: field:base_report_creator.report,filter_ids:0
 msgid "Filters"
 msgstr "Filtros"
+
+#. module: base_report_creator
+#: model:ir.module.module,description:base_report_creator.module_meta_information
+msgid ""
+"This module allows you to create any statistic\n"
+"report on several objects. It's a SQL query builder and browser\n"
+"for and users.\n"
+"\n"
+"After installing the module, it adds a menu to define custom report in\n"
+"the \"Dashboard\" menu.\n"
+msgstr ""
+"Este módulo permite a você criar qualquer relatório\n"
+"estatístico em vários objetos. É um construtor de consultas SQL e navegador\n"
+"para usuários finais.\n"
+"\n"
+"Após instalar o módulo, será adicionado um menu para definir um relatório "
+"personalizado\n"
+"no Menu \"Painéis\".\n"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Invalido XML para Arquitetura da View"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
+#~ "especial!"
+
+#~ msgid "Valid"
+#~ msgstr "Válido"
+
+#~ msgid "Status"
+#~ msgstr "Posição"
+
+#~ msgid "Draft"
+#~ msgstr "Provisório"
+
+#~ msgid "Reports"
+#~ msgstr "Relatórios"
+
+#~ msgid "Uniq Colors"
+#~ msgstr "Cores únicas"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
+
+#~ msgid "State"
+#~ msgstr "Modo"
+
+#~ msgid ""
+#~ "This modules allows you to create any statistic\n"
+#~ "report on several object. It's a SQL query builder and browser\n"
+#~ "for and users.\n"
+#~ "\n"
+#~ "After installing the module, it adds a menu to define custom report in\n"
+#~ "the \"Dashboard\" menu.\n"
+#~ msgstr ""
+#~ "Este módulo permite criar qualquer relatório\n"
+#~ "estatístico em vários objetos. É um construtor\n"
+#~ "de query SQL e browser para usuários.\n"
+#~ "\n"
+#~ "Após instalar o módulo, ele adiciona um menu para definir\n"
+#~ "relatórios customizados no menu \"Dashboard\".\n"
+
+#~ msgid ""
+#~ "If the active field is set to true, it will allow you to hide the report "
+#~ "without removing it."
+#~ msgstr ""
+#~ "Se o campo ativo é definido como verdadeiro, permite esconder o relatório "
+#~ "sem removê-lo."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "O tamanho do campo nunca pode ser menor que 1 !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"

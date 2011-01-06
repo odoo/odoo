@@ -121,17 +121,6 @@
             <field name="action">sign_out</field>
             <field name="employee_id" ref="hr.employee1"/>
         </record>
-        <record id="property_rule_attendace" model="ir.rule">
-            <field name="name">Employee Attendance</field>
-            <field model="ir.model" name="model_id" ref="model_hr_attendance"/>
-            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(6,0,[ref('base.group_user')])]"/>
-        </record>
-        <record id="property_rule_attendace_manager" model="ir.rule">
-            <field name="name">Manager Attendance</field>
-            <field model="ir.model" name="model_id" ref="model_hr_attendance"/>
-            <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id.parent_id.user_id','=',user.id )]</field>
-            <field name="groups" eval="[(6,0,[ref('base.group_hr_user'),ref('base.group_hr_manager')])]"/>
-        </record>
+
     </data>
 </openerp>

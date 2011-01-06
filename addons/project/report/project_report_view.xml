@@ -2,7 +2,9 @@
 <openerp>
     <data>
 
-        <menuitem id="base.menu_project_report" name="Reporting" parent="base.menu_main_pm" sequence="50"/>
+        <menuitem id="base.menu_project_report" name="Reporting"
+            groups="project.group_project_manager"
+            parent="base.menu_main_pm" sequence="50"/>
 
         <record id="view_task_project_user_tree" model="ir.ui.view">
             <field name="name">report.project.task.user.tree</field>
@@ -10,7 +12,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Tasks Analysis">
-                	<field name="name" invisible="1"/>
+                    <field name="name" invisible="1"/>
                     <field name="project_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="date_deadline" invisible="1"/>
@@ -43,13 +45,13 @@
             <field name="model">report.project.task.user</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-	            <graph string="Tasks Analysis" type="bar">
-	                 <field name="name"/>
-	                 <field name="state" group="True"/>
-	                 <field name="no_of_days" operator="+"/>
-	             </graph>
-         	</field>
-    	</record>
+                <graph string="Tasks Analysis" type="bar">
+                     <field name="name"/>
+                     <field name="state" group="True"/>
+                     <field name="no_of_days" operator="+"/>
+                 </graph>
+             </field>
+        </record>
 
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
@@ -57,69 +59,71 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks Analysis">
-                	<group colspan="10" col="12">
-	                    <filter icon="terp-go-year" string="  Year  "
+                    <group colspan="10" col="12">
+                        <filter icon="terp-go-year" string="  Year  "
                                 domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;=',time.strftime('%%Y-01-01'))]"
-	                    	    help="Current Year"/>
-	                    <filter icon="terp-go-month" string="   Month   "
-	                    		name="month"
-	                    		domain="[('date_start','&lt;=', time.strftime('%%Y-%%m-%%d')),('date_start','&gt;=',time.strftime('%%Y-%%m-01'))]"
-	                    		help="Current Month"/>
-		                <filter icon="terp-go-week"
-	                            string="    Month-1    "
-	                            separator="1"
-	                            domain="[('date_start','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
-	                            help="Previous Month"/>
-	                    <separator orientation="vertical"/>
-	                    <filter string="Draft"
-	                    		icon="terp-document-new"
-	                    		domain="[('state','=','draft')]"
-	                    		help = "Draft tasks"/>
-		                <filter string="Current"
-		                		icon="terp-check"
-		                		domain="[('state', '=' ,'open')]"
-		                		help = "In progress tasks"/>
-	                   	<filter string="Pending"
-	                   			icon="terp-gtk-media-pause"
-	                   			domain="[('state','=','pending')]"
-	                   			help = "Pending tasks"/>
-                      	<filter string="Done"
-                    			icon="terp-dialog-close"
-                    			name="done"
-                    			domain="[('state','=','done')]"/>
+                                help="Current Year"/>
+                        <filter icon="terp-go-month" string="   Month   "
+                                name="month"
+                                domain="[('date_start','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
+                                help="Current Month"/>
+                        <filter icon="terp-go-week"
+                                string="    Month-1    "
+                                separator="1"
+                                domain="[('date_start','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                                help="Previous Month"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Draft"
+                                icon="terp-document-new"
+                                domain="[('state','=','draft')]"
+                                help = "Draft tasks"/>
+                        <filter string="Current"
+                                icon="terp-check"
+                                domain="[('state', '=' ,'open')]"
+                                help = "In progress tasks"/>
+                           <filter string="Pending"
+                                   icon="terp-gtk-media-pause"
+                                   domain="[('state','=','pending')]"
+                                   help = "Pending tasks"/>
+                          <filter string="Done"
+                                icon="terp-dialog-close"
+                                name="done"
+                                domain="[('state','=','done')]"/>
                        <separator orientation="vertical"/>
-	                    <field name="project_id">
-	                        <filter icon="terp-folder-blue"
-	                        		string="My Projects"
-	                        		help="My Projects" domain="[('project_id','=',uid)]"/>
+                        <field name="project_id">
+                            <filter icon="terp-folder-violet"
+                                    string="My Projects"
+                                    help="My Projects" domain="[('project_id.user_id','=',uid)]"/>
                           </field>
 
                           <field name="user_id" widget="selection">
-	                        <filter icon="terp-personal"
-	                        		string="My Task"
-	                        		help = "My tasks"
-	                        		domain="[('user_id','=',uid)]" />
-	                        <filter icon="terp-personal-"
-	                        		string="Non Assigned Tasks to users"
-	                        		help="Non Assigned Tasks to users"
-	                        		domain="[('user_id','=',False)]"/>
+                            <filter icon="terp-personal"
+                                    string="My Task"
+                                    help = "My tasks"
+                                    domain="[('user_id','=',uid)]" />
+                            <filter icon="terp-personal-"
+                                    string="Non Assigned Tasks to users"
+                                    help="Non Assigned Tasks to users"
+                                    domain="[('user_id','=',False)]"/>
                           </field>
                       <field name="partner_id" />
                     </group>
                     <newline/>
                     <group expand="0" string="Extended Filters..." colspan="10" col="12" groups="base.group_extended">
+                        <field name="priority"/>
                         <field name="type_id" widget="selection"/>
                         <separator orientation="vertical"/>
-                        <field name="date_start"/>
-                        <field name="date_deadline"/>
-                        <field name="date_end"/>
-                        <separator orientation="vertical"/>
-                        <field name="priority"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        <newline/>
+                        <field name="date_start"/>
+                        <field name="date_end"/>
+                        <field name="date_deadline"/>
+                        <separator orientation="vertical"/>
+
                     </group>
                     <newline/>
                     <group expand="1" string="Group By..." colspan="10" col="12">
-                        <filter string="Project" name="project" icon="terp-folder-blue" context="{'group_by':'project_id'}"/>
+                        <filter string="Project" name="project" icon="terp-folder-violet" context="{'group_by':'project_id'}"/>
                         <filter string="Task" icon="terp-stock_align_left_24" context="{'group_by':'name'}" />
                         <separator orientation="vertical"/>
                         <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
@@ -129,9 +133,9 @@
                         <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}"  groups="base.group_multi_company"/>
                         <filter string="Stage" icon="terp-stage" context="{'group_by':'type_id'}" />
                         <separator orientation="vertical"/>
-                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Current Day"/>
-                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Current Month"/>
-                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Current Year"/>
+                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
+                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>
+                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Creation Date"/>
                     </group>
                 </search>
             </field>
@@ -144,10 +148,10 @@
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_task_project_user_search"/>
             <field name="context">{'search_default_month':1,'search_default_project':1,'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="help">Get detailed analysis by task</field>
+            <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
         </record>
 
-        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report" groups="project.group_project_manager"/>
+        <menuitem action="action_project_task_user_tree" id="menu_project_task_user_tree" parent="base.menu_project_report"/>
 
    <!-- Views and action for project dashboard -->
    <record id="view_project_vs_remaining_hours_tree" model="ir.ui.view">
@@ -185,14 +189,15 @@
         <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
     </record>
 
-	<record id="open_view_project_vs_remaining_hours_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
+    <record id="open_view_project_vs_remaining_hours_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_project_vs_remaining_hours_tree"/>
+
             <field name="act_window_id" ref="action_project_vs_remaining_hours_graph"/>
    </record>
    <record id="open_view_project_vs_remaining_hours_graph" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
+            <field eval="1" name="sequence"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_project_vs_remaining_hours_graph"/>
             <field name="act_window_id" ref="action_project_vs_remaining_hours_graph"/>
@@ -240,7 +245,7 @@
         <field name="model">project.vs.hours</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Project Vs Planned and Total Hours" colors="pink:state=='draft';blue:state=='pending';black:state=='open';red:state=='cancelled';grey:state=='close';yellow:state=='template'">
+            <tree string="Project vs Planned and Total Hours" colors="pink:state=='draft';blue:state=='pending';black:state=='open';red:state=='cancelled';grey:state=='close';yellow:state=='template'">
                 <field name="project"/>
                 <field name="planned_hours"/>
                 <field name="total_hours"/>
@@ -253,7 +258,7 @@
          <field name="model">project.vs.hours</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Project Vs Planned and Total Hours" type="bar">
+             <graph string="Project vs Planned and Total Hours" type="bar">
                  <field name="project"/>
                  <field name="planned_hours" operator="+"/>
                  <field name="total_hours" operator="+"/>
@@ -262,22 +267,24 @@
     </record>
 
     <record id="action_project_vs_planned_total_hours_graph" model="ir.actions.act_window">
+
         <field name="name">Projects: Planned Vs Total hours</field>
         <field name="res_model">project.vs.hours</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
+        <field name="context">{'group_by':['project'],'group_by_no_leaf':1}</field>
         <field name="domain">[('uid','=',uid),('state','=','open')]</field>
         <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
     </record>
 
-	<record id="open_view_project_vs_planned_total_hours_tree" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
+    <record id="open_view_project_vs_planned_total_hours_tree" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_project_vs_planned_total_hours_tree"/>
             <field name="act_window_id" ref="action_project_vs_planned_total_hours_graph"/>
     </record>
     <record id="open_view_project_vs_planned_total_hours_graph" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
+            <field eval="1" name="sequence"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="view_project_vs_planned_total_hours_graph"/>
             <field name="act_window_id" ref="action_project_vs_planned_total_hours_graph"/>

@@ -6,75 +6,118 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 00:03+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-11 23:26+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.act_account_acount_move_line_open1
-msgid "Opening Balance Entry"
+#: view:account.voucher.unreconcile:0
+msgid "Unreconciliation transactions"
+msgstr "Неподтвержденные транзакции"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid "Write-Off"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_bakreceipt_voucher_list
-msgid "Bank Receipts"
+#: view:account.voucher:0
+msgid "Payment Ref"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
+#: view:account.voucher:0
+msgid "Open Customer Journal Entries"
+msgstr ""
+
+#. module: account_voucher
+#: report:voucher.print:0
 msgid "Particulars"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "State :"
-msgstr "Статус:"
+#: view:account.voucher:0
+msgid "Group By..."
+msgstr "Объединять по..."
 
 #. module: account_voucher
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
-
-#. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Ref. :"
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
-#: selection:account.voucher,type:0
-#: selection:account.voucher.open,init,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_cont_voucher_form
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_cont_voucher_form
-msgid "Contra Voucher"
+#: view:account.voucher:0
+msgid "Supplier"
+msgstr "Поставщик"
+
+#. module: account_voucher
+#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher_print
+msgid "Voucher Print"
 msgstr ""
+
+#. module: account_voucher
+#: model:ir.module.module,description:account_voucher.module_meta_information
+msgid ""
+"Account Voucher module includes all the basic requirements of\n"
+"    Voucher Entries for Bank, Cash, Sales, Purchase, Expanse, Contra, "
+"etc...\n"
+"    * Voucher Entry\n"
+"    * Voucher Receipt\n"
+"    * Cheque Register\n"
+"    "
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.act_pay_bills
+msgid "Bill Payment"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher.line,amount_original:0
+msgid "Originial Amount"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.statement.from.invoice.lines:0
+#: code:addons/account_voucher/wizard/account_statement_from_invoice.py:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_account_statement_from_invoice_lines
+#, python-format
+msgid "Import Entries"
+msgstr "Импорт записей"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_voucher_unreconcile
+msgid "Account voucher unreconcile"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
+msgid ""
+"When you sell products to a customer, you can give him a sales receipt or an "
+"invoice. When the sales receipt is confirmed, it creates journal items "
+"automatically and you can record the customer payment related to this sales "
+"receipt."
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Pay Bill"
+msgstr "Счета для оплаты"
 
 #. module: account_voucher
 #: field:account.voucher,company_id:0
+#: field:account.voucher.line,company_id:0
 msgid "Company"
 msgstr "Компания"
-
-#. module: account_voucher
-#: selection:account.move,voucher_type:0
-#: selection:account.voucher,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_jour_voucher_form
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_voucher_form
-msgid "Journal Voucher"
-msgstr "Журнальный ваучер"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt.drcr:0
-msgid ","
-msgstr ","
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -82,19 +125,34 @@ msgid "Set to Draft"
 msgstr "Установить в 'Черновик'"
 
 #. module: account_voucher
-#: wizard_button:account.voucher.open,init,open:0
-msgid "Open Voucher Entries"
+#: field:account.voucher,comment:0
+msgid "Write-Off Comment"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.model,name:account_voucher.model_account_voucher_line
-msgid "Voucher Line"
+#: model:ir.actions.act_window,name:account_voucher.action_view_account_voucher_unreconcile
+msgid "Unreconcile entries"
+msgstr "Неподтвержденные проводки"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Voucher Statistics"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.move:0
-msgid "Total Credit"
-msgstr "Всего кредит"
+#: view:account.voucher:0
+msgid "Validate"
+msgstr "Утвердить"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Search Vouchers"
+msgstr "Искать ваучеры"
+
+#. module: account_voucher
+#: selection:account.voucher,type:0
+msgid "Purchase"
+msgstr "Закупка"
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0
@@ -103,49 +161,113 @@ msgid "Account"
 msgstr "Счет"
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-msgid "D"
+#: field:account.voucher,line_dr_ids:0
+msgid "Debits"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.account,level:0
-msgid "Level"
-msgstr "Уровень"
+#: view:account.statement.from.invoice.lines:0
+msgid "Ok"
+msgstr "OK"
 
 #. module: account_voucher
-#: view:account.move:0
-msgid "Account Entry Line"
-msgstr "Проводка по счету"
+#: field:account.voucher,date_due:0
+#: field:account.voucher.line,date_due:0
+msgid "Due Date"
+msgstr "Срок"
 
 #. module: account_voucher
-#: view:account.move:0
-msgid "Total Debit"
-msgstr "Всего дебет"
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,amount:0
+#: field:account.voucher,narration:0
+msgid "Notes"
+msgstr "Примечания"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
+msgid ""
+"Sales payment allows you to register the payments you receive from your "
+"customers. In order to record a payment, you must enter the customer, the "
+"payment method (=the journal) and the payment amount. OpenERP will propose "
+"to you automatically the reconciliation of this payment with the open "
+"invoices or sales receipts."
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,type:0
+msgid "Sale"
+msgstr "Продажа"
+
+#. module: account_voucher
+#: field:account.voucher.line,move_line_id:0
+msgid "Journal Item"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,reference:0
+msgid "Ref #"
+msgstr ""
+
+#. module: account_voucher
 #: field:account.voucher.line,amount:0
-#: rml:voucher.cash_amount:0
+#: report:voucher.print:0
 msgid "Amount"
 msgstr "Количество"
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Receiver's Signature"
+#: view:account.voucher:0
+msgid "Payment Options"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "No."
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
+#: view:account.voucher:0
+msgid "Bill Information"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,state:0
+msgid "Cancelled"
+msgstr "Отменено"
+
+#. module: account_voucher
+#: field:account.statement.from.invoice,date:0
+msgid "Date payment"
+msgstr "Дата оплаты"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr "Позиция банковской выписки"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_purchase_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_purchase_receipt
+msgid "Supplier Vouchers"
+msgstr "Ваучеры поставщика"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: view:account.voucher.unreconcile:0
+msgid "Unreconcile"
+msgstr "Не сверено"
+
+#. module: account_voucher
+#: field:account.voucher,tax_id:0
+msgid "Tax"
+msgstr "Налог"
+
+#. module: account_voucher
+#: report:voucher.print:0
 msgid "Amount (in words) :"
-msgstr ""
+msgstr "Величина (прописью)"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -153,136 +275,209 @@ msgid "Analytic Account"
 msgstr "Счет аналитического учета"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
-#: selection:account.voucher,type:0
-#: selection:account.voucher.open,init,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_jour_sale_voucher_form
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_sale_voucher_form
-msgid "Journal Sale Voucher"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_receipt_vou_voucher_list
-#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_vou_voucher_list
-msgid "Receipt Vouchers"
+#: help:account.voucher,state:0
+msgid ""
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
+"an voucher number.                         \n"
+"* The 'Posted' state is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account                         "
+"\n"
+"* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-msgid "Account :"
-msgstr ""
-
-#. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "On Account of :"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_payments_bankpay_voucher_list
-#: model:ir.actions.act_window,name:account_voucher.action_payments_cashpay_voucher_list
-#: model:ir.actions.act_window,name:account_voucher.action_payments_voucher_list
-#: model:ir.ui.menu,name:account_voucher.menu_action_payments_voucher_list
-msgid "Payment Vouchers"
-msgstr ""
+#: view:account.statement.from.invoice:0
+msgid "Go"
+msgstr "Перейти"
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "Create"
-msgstr "Создать"
-
-#. module: account_voucher
-#: selection:account.account,type1:0
-#: selection:account.account.template,type1:0
-msgid "None"
-msgstr "Отсутствует"
-
-#. module: account_voucher
-#: field:account.voucher,number:0
-msgid "Number"
-msgstr "Номер"
-
-#. module: account_voucher
-#: view:account.move:0
-#: field:account.voucher,state:0
-#: wizard_field:account.voucher.open,init,state:0
-msgid "State"
-msgstr "Состояние"
-
-#. module: account_voucher
-#: selection:account.account,type1:0
-#: selection:account.account.template,type1:0
-#: selection:account.voucher.line,type:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Debit"
-msgstr "Дебет"
-
-#. module: account_voucher
-#: field:account.voucher,type:0
-#: field:account.voucher.line,type:0
-msgid "Type"
-msgstr "Тип"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_voucher_list
-msgid "Voucher Entries"
-msgstr ""
-
-#. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Authorised Signatory"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-#: model:ir.actions.act_window,name:account_voucher.action_voucher_list
-msgid "Vouchers"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.voucher:0
-#: field:account.voucher.line,voucher_id:0
-#: model:res.request.link,name:account_voucher.req_link_voucher
-msgid "Voucher"
-msgstr "Товарный чек"
-
-#. module: account_voucher
-#: wizard_view:account.voucher.open,init:0
-#: model:ir.ui.menu,name:account_voucher.menu_wizard_account_voucher_open
-msgid "Open Vouchers"
-msgstr ""
-
-#. module: account_voucher
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
-
-#. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Dated :"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_receipt_cashreceipt_voucher_list
-msgid "Cash Receipts"
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,partner_id:0
 #: field:account.voucher.line,partner_id:0
 msgid "Partner"
 msgstr "Партнер"
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_bank_pay_voucher_form
-msgid "New Bank Payment"
+#: view:account.bank.statement:0
+msgid "Import Invoices"
+msgstr "Импорт счетов"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid ""
+"You have to configure account base code and account tax code on the '%s' tax!"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Later or Group Funds"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,type:0
+msgid "Receipt"
+msgstr "Приход"
+
+#. module: account_voucher
+#: report:voucher.print:0
+msgid "On Account of :"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,writeoff_amount:0
+msgid "Write-Off Amount"
 msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
+msgid "Sales Lines"
+msgstr ""
+
+#. module: account_voucher
+#: report:voucher.print:0
+msgid "Date:"
+msgstr "Дата:"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: field:account.voucher,period_id:0
+msgid "Period"
+msgstr "Период"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: field:account.voucher,state:0
+msgid "State"
+msgstr "Состояние"
+
+#. module: account_voucher
+#: model:ir.module.module,shortdesc:account_voucher.module_meta_information
+msgid "Accounting Voucher Entries"
+msgstr "Проводки по ваучерам"
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.act_journal_voucher_open
+msgid "Voucher Entries"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid "Error !"
+msgstr "Ошибка !"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Supplier Voucher"
+msgstr "Ваучер поставщика"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
+msgid "Vouchers Entries"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,name:0
+msgid "Memo"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: model:ir.actions.act_window,name:account_voucher.action_sale_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt
+msgid "Sales Receipt"
+msgstr ""
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid "Invalid action !"
+msgstr "Неверное действие !"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Other Information"
+msgstr "Прочая информация"
+
+#. module: account_voucher
+#: view:account.voucher.unreconcile:0
+msgid "Unreconciliation"
+msgstr "Отмена сверки"
+
+#. module: account_voucher
+#: field:account.voucher,tax_amount:0
+msgid "Tax Amount"
+msgstr "Сумма налога"
+
+#. module: account_voucher
+#: view:account.invoice:0
+#: code:addons/account_voucher/invoice.py:0
+#, python-format
+msgid "Pay Invoice"
+msgstr "Оплата счета"
+
+#. module: account_voucher
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid "No Account Base Code and Account Tax Code!"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Payment Information"
+msgstr "Информация о платеже"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Voucher Entry"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Paid Amount"
+msgstr "Оплаченная сумма"
+
+#. module: account_voucher
+#: field:account.voucher,payment_option:0
+msgid "Payment Difference"
+msgstr ""
+
+#. module: account_voucher
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,pay_now:0
+msgid "Pay Directly"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.statement.from.invoice,line_ids:0
+#: field:account.statement.from.invoice.lines,line_ids:0
+msgid "Invoices"
+msgstr "Счета"
+
+#. module: account_voucher
+#: field:account.voucher.unreconcile,remove:0
+msgid "Want to remove accounting entries too ?"
+msgstr "Хотите удалить проводки ?"
+
+#. module: account_voucher
 #: field:account.voucher,line_ids:0
+#: model:ir.model,name:account_voucher.model_account_voucher_line
 msgid "Voucher Lines"
 msgstr ""
 
@@ -292,182 +487,270 @@ msgid "Currency"
 msgstr "Валюта"
 
 #. module: account_voucher
-#: view:account.move:0
-#: field:account.move,narration:0
+#: view:account.statement.from.invoice.lines:0
+msgid "Payable and Receivables"
+msgstr ""
+
+#. module: account_voucher
+#: report:voucher.print:0
+msgid "Account :"
+msgstr "Счет:"
+
+#. module: account_voucher
 #: view:account.voucher:0
-#: field:account.voucher,narration:0
-msgid "Narration"
-msgstr ""
-
-#. module: account_voucher
-#: field:account.voucher,reference:0
-msgid "Voucher Reference"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_cash_rec_voucher_form
-msgid "New Cash Receipt"
-msgstr ""
-
-#. module: account_voucher
-#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher_amt
-msgid "Voucher Report"
-msgstr ""
-
-#. module: account_voucher
-#: field:account.account,open_bal:0
-msgid "Opening Balance"
-msgstr "Начальное сальдо"
-
-#. module: account_voucher
 #: selection:account.voucher,state:0
-#: selection:account.voucher.open,init,state:0
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
+#: report:voucher.print:0
 msgid "Draft"
 msgstr "Черновик"
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
+#: field:account.voucher,type:0
+msgid "Default Type"
+msgstr ""
+
+#. module: account_voucher
+#: report:voucher.print:0
+msgid "Currency:"
+msgstr "Валюта:"
+
+#. module: account_voucher
+#: report:voucher.print:0
 msgid "PRO-FORMA"
 msgstr "Проформа"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_receipt_cashreceipt_voucher_list
-msgid "Cash Receipt"
+#: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
+msgid ""
+"The supplier payment form allows you to track the payment you do to your "
+"suppliers. When you select a supplier, the payment method and an amount for "
+"the payment, OpenERP will propose to reconcile your payment with the open "
+"supplier invoices or bills."
 msgstr ""
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_cash_pay_voucher_form
-msgid "New Cash Payment"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.move:0
-msgid "Optional Information"
-msgstr "Доп. информация"
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "General Entries"
+msgid "Total Amount"
+msgstr "Общая сумма"
+
+#. module: account_voucher
+#: field:account.voucher.line,type:0
+msgid "Cr/Dr"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher,audit:0
+msgid "Audit Complete ?"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Payment Terms"
+msgstr "Условия оплаты"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Are you sure to unreconcile this record ?"
 msgstr ""
 
 #. module: account_voucher
 #: field:account.voucher,date:0
+#: field:account.voucher.line,date_original:0
 msgid "Date"
 msgstr "Дата"
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid ":"
-msgstr ":"
-
-#. module: account_voucher
-#: field:account.account,type1:0
-#: field:account.account.template,type1:0
-msgid "Dr/Cr"
+#: view:account.voucher:0
+msgid "Post"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.report.xml,name:account_voucher.report_account_voucher
-msgid "Voucher Report (Cr/Dr)"
+#: view:account.voucher:0
+msgid "Extended Filters..."
+msgstr "Расширенные фильтры..."
+
+#. module: account_voucher
+#: report:voucher.print:0
+msgid "Number:"
+msgstr "Номер:"
+
+#. module: account_voucher
+#: field:account.bank.statement.line,amount_reconciled:0
+msgid "Amount reconciled"
+msgstr "Сверенная сумма"
+
+#. module: account_voucher
+#: field:account.voucher,analytic_id:0
+msgid "Write-Off Analytic Account"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.move,voucher_type:0
-#: wizard_field:account.voucher.open,init,type:0
-msgid "Voucher Type"
+#: view:account.voucher:0
+msgid "Expense Lines"
+msgstr "Позиции расходов"
+
+#. module: account_voucher
+#: field:account.voucher,pre_line:0
+msgid "Previous Payments ?"
+msgstr "Предыдущие платежи ?"
+
+#. module: account_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_voucher_list
+#: model:ir.ui.menu,name:account_voucher.menu_encode_entries_by_voucher
+msgid "Journal Vouchers"
 msgstr ""
 
 #. module: account_voucher
-#: selection:account.account,type1:0
-#: selection:account.account.template,type1:0
+#: view:account.voucher:0
+msgid "Compute Tax"
+msgstr "Вычислить налог"
+
+#. module: account_voucher
 #: selection:account.voucher.line,type:0
-#: rml:voucher.cash_receipt.drcr:0
 msgid "Credit"
 msgstr "Кредит"
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
+#: code:addons/account_voucher/account_voucher.py:0
+#, python-format
+msgid "Please define a sequence on the journal !"
+msgstr ""
+
+#. module: account_voucher
+#: report:voucher.print:0
 msgid "Through :"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,reference_type:0
-msgid "Reference Type"
-msgstr "Тип ссылки"
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_payment
+msgid "Supplier Payment"
+msgstr ""
 
 #. module: account_voucher
+#: help:account.voucher,reference:0
+msgid "Transaction reference number."
+msgstr "Номер транзакции."
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Invoices and outstanding transactions"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Bill Date"
+msgstr ""
+
+#. module: account_voucher
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
 #: model:ir.model,name:account_voucher.model_account_voucher
 msgid "Accounting Voucher"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,period_id:0
-msgid "Period"
-msgstr "Период"
+#: field:account.voucher,number:0
+msgid "Number"
+msgstr "Номер"
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_payments_bankpay_voucher_list
-msgid "Bank Payments"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.move:0
-msgid "General Information"
-msgstr "Общая информация"
-
-#. module: account_voucher
-#: wizard_field:account.voucher.open,init,period_ids:0
-msgid "Periods"
-msgstr "Периоды"
+#: model:ir.model,name:account_voucher.model_account_bank_statement
+msgid "Bank Statement"
+msgstr "Банковская выписка"
 
 #. module: account_voucher
 #: view:account.voucher:0
-#: selection:account.voucher,state:0
-#: wizard_button:account.voucher.open,init,end:0
-#: selection:account.voucher.open,init,state:0
+msgid "To Review"
+msgstr "Для проверки"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Sales Information"
+msgstr "Информация о продажах"
+
+#. module: account_voucher
+#: field:account.voucher.line,voucher_id:0
+#: model:res.request.link,name:account_voucher.req_link_voucher
+msgid "Voucher"
+msgstr "Товарный чек"
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_invoice
+msgid "Invoice"
+msgstr "Счет"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Voucher Items"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.statement.from.invoice:0
+#: view:account.statement.from.invoice.lines:0
+#: view:account.voucher:0
+#: view:account.voucher.unreconcile:0
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: account_voucher
-#: view:account.voucher:0
 #: selection:account.voucher,state:0
-#: selection:account.voucher.open,init,state:0
 msgid "Pro-forma"
 msgstr "Проформа"
 
 #. module: account_voucher
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
+#: view:account.voucher:0
+#: field:account.voucher,move_ids:0
+#: model:ir.model,name:account_voucher.model_account_move_line
+msgid "Journal Items"
+msgstr "Элементы журнала"
 
 #. module: account_voucher
 #: view:account.voucher:0
-msgid "Other Info"
-msgstr "Прочая информация"
+#: model:ir.actions.act_window,name:account_voucher.act_pay_voucher
+#: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
+#: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
+msgid "Customer Payment"
+msgstr "Платеж заказчика"
 
 #. module: account_voucher
-#: model:ir.module.module,shortdesc:account_voucher.module_meta_information
-msgid "Accounting Voucher Entries"
+#: field:account.move.line,amount_unreconciled:0
+msgid "Unreconciled Amount"
 msgstr ""
 
 #. module: account_voucher
-#: field:res.currency,sub_name:0
-msgid "Sub Currency"
+#: view:account.statement.from.invoice:0
+#: model:ir.actions.act_window,name:account_voucher.action_view_account_statement_from_invoice
+msgid "Import Invoices in Statement"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_other_voucher_list
-#: model:ir.ui.menu,name:account_voucher.menu_action_other_voucher_list
-msgid "Other Vouchers"
+#: view:account.voucher:0
+msgid "Pay"
+msgstr "Оплата"
+
+#. module: account_voucher
+#: selection:account.voucher.line,type:0
+msgid "Debit"
+msgstr "Дебет"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Are you sure to confirm this record ?"
 msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "Reconcile with Write-Off"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Payment Method"
+msgstr "Метод платежа"
 
 #. module: account_voucher
 #: field:account.voucher.line,name:0
@@ -475,72 +758,73 @@ msgid "Description"
 msgstr "Описание"
 
 #. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
+#: report:voucher.print:0
 msgid "Canceled"
 msgstr "Отменено"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
+#: field:account.statement.from.invoice,journal_ids:0
+#: view:account.voucher:0
+#: field:account.voucher,journal_id:0
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Internal Notes"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher:0
+#: field:account.voucher,line_cr_ids:0
+msgid "Credits"
+msgstr ""
+
+#. module: account_voucher
+#: report:voucher.print:0
+msgid "State:"
+msgstr "Состояние:"
+
+#. module: account_voucher
+#: field:account.bank.statement.line,voucher_id:0
+#: view:account.invoice:0
+#: view:account.voucher:0
+#: field:account.voucher,pay_now:0
 #: selection:account.voucher,type:0
-#: selection:account.voucher.open,init,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_cash_pay_voucher_form
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Cash Payment Voucher"
-msgstr ""
+msgid "Payment"
+msgstr "Платеж"
 
 #. module: account_voucher
-#: model:ir.actions.act_window,name:account_voucher.action_receipt_bakreceipt_voucher_list
-msgid "Bank Receipt"
-msgstr "Квитанция банка"
-
-#. module: account_voucher
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "-"
-msgstr "-"
-
-#. module: account_voucher
-#: selection:account.move,voucher_type:0
-#: selection:account.voucher,type:0
-#: selection:account.voucher.open,init,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_jour_pur_voucher_form
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_pur_voucher_form
-msgid "Journal Purchase Voucher"
-msgstr ""
-
-#. module: account_voucher
-#: view:account.account:0
-msgid "Closing Balance"
-msgstr ""
-
-#. module: account_voucher
-#: field:account.voucher.line,ref:0
-msgid "Ref."
-msgstr "Ссылка"
-
-#. module: account_voucher
+#: view:account.voucher:0
 #: selection:account.voucher,state:0
-#: selection:account.voucher.open,init,state:0
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
+#: report:voucher.print:0
 msgid "Posted"
 msgstr "Проведено"
 
 #. module: account_voucher
-#: field:account.voucher,name:0
-msgid "Name"
-msgstr "Название"
+#: view:account.voucher:0
+msgid "Customer"
+msgstr "Заказчик"
 
 #. module: account_voucher
-#: field:account.voucher,move_ids:0
-msgid "Real Entry"
+#: field:account.voucher,writeoff_acc_id:0
+msgid "Write-Off account"
+msgstr "Счет списания"
+
+#. module: account_voucher
+#: view:account.voucher:0
+msgid "Supplier Invoices and Outstanding transactions"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.actions.wizard,name:account_voucher.wizard_account_voucher_open
-msgid "Open a Voucher Entry"
+#: view:account.voucher:0
+msgid "Open Supplier Journal Entries"
+msgstr ""
+
+#. module: account_voucher
+#: model:ir.model,name:account_voucher.model_account_statement_from_invoice
+#: model:ir.model,name:account_voucher.model_account_statement_from_invoice_lines
+msgid "Entries by Statement from Invoices"
 msgstr ""
 
 #. module: account_voucher
@@ -549,52 +833,148 @@ msgid "Account Entry"
 msgstr "Проводка по счету"
 
 #. module: account_voucher
+#: help:account.voucher,date:0
+msgid "Effective date for accounting entries"
+msgstr ""
+
+#. module: account_voucher
+#: selection:account.voucher,payment_option:0
+msgid "Keep Open"
+msgstr ""
+
+#. module: account_voucher
+#: view:account.voucher.unreconcile:0
+msgid ""
+"If you unreconciliate transactions, you must also verify all the actions "
+"that are linked to those transactions because they will not be disable"
+msgstr ""
+
+#. module: account_voucher
+#: field:account.voucher.line,untax_amount:0
+msgid "Untax Amount"
+msgstr ""
+
+#. module: account_voucher
 #: view:account.voucher:0
-msgid "Entry Lines"
-msgstr "Строки проводок"
-
-#. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_view_bank_rec_voucher_form
-msgid "New Bank Receipt"
+#: field:account.voucher.line,amount_unreconciled:0
+msgid "Open Balance"
 msgstr ""
 
 #. module: account_voucher
-#: model:ir.ui.menu,name:account_voucher.menu_action_payments_cashpay_voucher_list
-msgid "Cash Payments"
-msgstr ""
+#: view:account.voucher:0
+#: field:account.voucher,amount:0
+msgid "Total"
+msgstr "Всего"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
-#: selection:account.voucher,type:0
-#: selection:account.voucher.open,init,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_cash_rec_voucher_form
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Cash Receipt Voucher"
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
 msgstr ""
 
-#. module: account_voucher
-#: selection:account.move,voucher_type:0
-#: selection:account.voucher,type:0
-#: selection:account.voucher.open,init,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_bank_pay_voucher_form
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Bank Payment Voucher"
-msgstr ""
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
 
-#. module: account_voucher
-#: selection:account.move,voucher_type:0
-#: selection:account.voucher,type:0
-#: selection:account.voucher.open,init,type:0
-#: model:ir.actions.act_window,name:account_voucher.action_view_bank_rec_voucher_form
-#: rml:voucher.cash_amount:0
-#: rml:voucher.cash_receipt.drcr:0
-msgid "Bank Receipt Voucher"
-msgstr ""
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
 
-#. module: account_voucher
-#: field:account.account,journal_id:0
-#: field:account.voucher,journal_id:0
-msgid "Journal"
-msgstr "Журнал"
+#~ msgid "Account Entry Line"
+#~ msgstr "Проводка по счету"
+
+#~ msgid "Optional Information"
+#~ msgstr "Доп. информация"
+
+#~ msgid "General Information"
+#~ msgstr "Общая информация"
+
+#~ msgid "Journal Voucher"
+#~ msgstr "Журнальный ваучер"
+
+#~ msgid ","
+#~ msgstr ","
+
+#~ msgid "State :"
+#~ msgstr "Статус:"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid "Total Credit"
+#~ msgstr "Всего кредит"
+
+#~ msgid "Total Debit"
+#~ msgstr "Всего дебет"
+
+#~ msgid "Level"
+#~ msgstr "Уровень"
+
+#~ msgid "Create"
+#~ msgstr "Создать"
+
+#~ msgid "None"
+#~ msgstr "Отсутствует"
+
+#~ msgid "Type"
+#~ msgstr "Тип"
+
+#~ msgid "Opening Balance"
+#~ msgstr "Начальное сальдо"
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#~ msgid "Periods"
+#~ msgstr "Периоды"
+
+#~ msgid "Other Info"
+#~ msgstr "Прочая информация"
+
+#~ msgid "Reference Type"
+#~ msgstr "Тип ссылки"
+
+#~ msgid "Bank Receipt"
+#~ msgstr "Квитанция банка"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "Ref."
+#~ msgstr "Ссылка"
+
+#~ msgid "Entry Lines"
+#~ msgstr "Строки проводок"
+
+#~ msgid "Name"
+#~ msgstr "Название"
+
+#~ msgid "Extended options..."
+#~ msgstr "Расширенные опции..."
+
+#~ msgid "Ref. :"
+#~ msgstr "Ссылка:"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Идентификатор сертификата модуля должен быть уникальным !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid "Journal:"
+#~ msgstr "Журнал:"
+
+#~ msgid "Write-Off journal"
+#~ msgstr "Журнал списаний"
+
+#~ msgid "Comment"
+#~ msgstr "Комментарий"
+
+#~ msgid "Without Write-off"
+#~ msgstr "Без списания"
+
+#~ msgid "Writeoff Amount"
+#~ msgstr "Сумма списания"
+
+#~ msgid "With Write-off"
+#~ msgstr "Со списанием"

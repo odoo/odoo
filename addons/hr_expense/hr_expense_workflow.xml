@@ -2,16 +2,6 @@
 <openerp>
     <data>
 
-        <!-- Roles definition -->
-
-        <record id="HR" model="res.roles">
-            <field name="name">Human Resources - Expenses</field>
-        </record>
-
-        <record id="HR_INV" model="res.roles">
-            <field name="name">Human Resources - Expenses invoice</field>
-        </record>
-
         <!-- Workflow definition -->
 
         <record id="wkf_expenses" model="workflow">
@@ -75,54 +65,56 @@
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_accepted"/>
             <field name="signal">validate</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
         <record id="t4" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_refused"/>
             <field name="signal">refuse</field>
-        </record>
-
-        <record id="t5" model="workflow.transition">
-            <field name="act_from" ref="act_draft"/>
-            <field name="act_to" ref="act_refused"/>
-            <field name="signal">refuse</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
         <record id="t6" model="workflow.transition">
             <field name="act_from" ref="act_accepted"/>
             <field name="act_to" ref="act_refused"/>
             <field name="signal">refuse</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
         <record id="t7" model="workflow.transition">
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">draft</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
         <record id="t8" model="workflow.transition">
             <field name="act_from" ref="act_accepted"/>
             <field name="act_to" ref="act_invoice"/>
             <field name="signal">invoice</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
         <record id="t9" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_paid"/>
             <field name="signal">subflow.paid</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
         <record id="t10" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_refused"/>
             <field name="signal">subflow.cancel</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
 		<record id="t11" model="workflow.transition">
             <field name="act_from" ref="act_refused"/>
             <field name="act_to" ref="act_draft"/>
             <field name="signal">draft</field>
+            <field name="group_id" ref="base.group_hr_user"/>
         </record>
 
     </data>

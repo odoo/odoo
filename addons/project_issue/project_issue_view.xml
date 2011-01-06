@@ -2,7 +2,7 @@
 <openerp>
     <data>
 
-        <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2" groups="base.group_system"/>
+        <menuitem  id="menu_project_confi" name="Project Issue" parent="project.menu_definitions" sequence="2"/>
 
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
@@ -30,6 +30,7 @@
             <field name="name">Versions</field>
             <field name="res_model">project.issue.version</field>
             <field name="view_type">form</field>
+            <field name="help">You can use the issues tracker in OpenERP to handle bugs in the software development project, to handle claims in after-sales services, etc. Define here the different versions of your products on which you can work on issues.</field>
         </record>
         <menuitem action="project_issue_version_action" id="menu_project_issue_version_act" parent="menu_project_confi" />
 
@@ -84,15 +85,15 @@
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                             <field name="state" />
+                            <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
                             <button name="case_close" string="Close" states="open,draft,pending" type="object" icon="terp-dialog-close"/>
                             <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
-                            <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                             <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                             <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
                             </group>
                         </page>
-                        <page string="Emails" groups="base.group_extended">
+                        <page string="Communication &amp; History" groups="base.group_extended">
                             <group colspan="4">
                             <field colspan="4" name="email_cc" string="Global CC" widget="url"/>
                             </group>
@@ -145,7 +146,7 @@
                                context="{'mail':'new', 'model': 'project.issue'}"
                                icon="terp-mail-message-new" type="action" />
                         </page>
-                           <page string="History" groups="base.group_extended">
+                           <page string="Extra Info" groups="base.group_extended">
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Date"/>
                             <field name="create_date"/>
@@ -191,9 +192,9 @@
                     <field name="assigned_to"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward" help="To Do"/>
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
@@ -209,11 +210,11 @@
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <group>
-                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check" default="1"/>
+                        <filter string="Current" name="current" domain="[('state','in',('open','draft'))]" help="Draft and To Do" icon="terp-check"/>
                         <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]"  help="Pending Issues" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','=',time.strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
+                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]" help="Today's bugs" />
                         <separator orientation="vertical"/>
                         <field name="name"/>
                         <field name="partner_id" groups="base.group_extended"/>
@@ -236,7 +237,7 @@
                         <filter string="Partner" icon="terp-partner" domain="[]"
                             context="{'group_by':'partner_id'}" />
                         <separator orientation="vertical"/>
-                        <filter string="Project"  icon="terp-folder-blue" domain="[]"
+                        <filter string="Project"  icon="terp-folder-violet" domain="[]"
                             context="{'group_by':'project_id'}" />
                         <filter string="Version" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'version_id'}" />
@@ -290,9 +291,9 @@
                     <field name="version_id"/>
                     <field name="user_id"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_close" string="Done" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
                     <button name="case_open" string="Open" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                    <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
                     <button name="case_pending" string="Pending" states="draft,open" type="object" icon="gtk-media-pause"/>
                     <button name="case_escalate" string="Escalate" states="open,draft,pending" type="object" icon="gtk-go-up"/>
                     <button name="case_reset" string="Reset to Draft" states="done,cancel" type="object" icon="gtk-convert"/>
@@ -326,6 +327,19 @@
     # Project
     # ------------------------------------------------------
 
+        <record id="project.view_project_resource_form1" model="ir.ui.view">
+            <field name="name">Project Resource Calendar View</field>
+            <field name="model">project.project</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="arch" type="xml">
+                <field name="priority" position="before">
+                    <field name="resource_calendar_id"/>
+                </field>
+
+            </field>
+       </record>
+
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
             <field name="model">project.project</field>
@@ -333,7 +347,6 @@
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
                 <field name="priority" position="before">
-                    <field name="resource_calendar_id"/>
                     <field name="project_escalation_id"/>
                     <field name="reply_to"/>
                 </field>

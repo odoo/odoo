@@ -19,13 +19,9 @@
 #
 ##############################################################################
 
-from mx import DateTime
 from osv import fields
 from osv import osv
-from tools.translate import _
-import ir
 import netsvc
-import time
 
 
 class StockMove(osv.osv):
@@ -35,7 +31,7 @@ class StockMove(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
     }
     
-    def _action_explode(self, cr, uid, move, context={}):
+    def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
         @param move: Stock moves
         @return: True
@@ -52,7 +48,7 @@ class StockMove(osv.osv):
                 ('type','=','phantom')])
             if bis:
                 factor = move.product_qty
-                bom_point = bom_obj.browse(cr, uid, bis[0])
+                bom_point = bom_obj.browse(cr, uid, bis[0], context=context)
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor, [])
                 dest = move.product_id.product_tmpl_id.property_stock_production.id
                 state = 'confirmed'
@@ -79,7 +75,7 @@ class StockMove(osv.osv):
                     proc_id = procurement_obj.create(cr, uid, {
                         'name': (move.picking_id.origin or ''),
                         'origin': (move.picking_id.origin or ''),
-                        'date_planned': move.date_planned,
+                        'date_planned': move.date,
                         'product_id': line['product_id'],
                         'product_qty': line['product_qty'],
                         'product_uom': line['product_uom'],
@@ -117,6 +113,9 @@ class StockMove(osv.osv):
                     production_obj.force_production(cr, uid, [prod.id])
                 wf_service.trg_validate(uid, 'mrp.production', prod.id, 'button_produce', cr)
             for new_move in new_moves:
+                if new_move == move.id:
+                    #This move is already there in move lines of production order
+                    continue
                 production_obj.write(cr, uid, production_ids, {'move_lines': [(4, new_move)]})
                 res.append(new_move)
         return res
@@ -130,8 +129,9 @@ class StockMove(osv.osv):
         res = []
         production_obj = self.pool.get('mrp.production')
         wf_service = netsvc.LocalService("workflow")
-        for move in self.browse(cr, uid, ids):
+        for move in self.browse(cr, uid, ids, context=context):
             new_moves = super(StockMove, self).action_scrap(cr, uid, [move.id], product_qty, location_id, context=context)
+            self.write(cr, uid, [move.id], {'prodlot_id': False, 'tracking_id': False})
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])
             for prod_id in production_ids:
                 wf_service.trg_validate(uid, 'mrp.production', prod_id, 'button_produce', cr)
@@ -173,7 +173,7 @@ class spilt_in_production_lot(osv.osv_memory):
         """  
         production_obj = self.pool.get('mrp.production')
         move_obj = self.pool.get('stock.move')  
-        res = []      
+        res = []
         for move in move_obj.browse(cr, uid, move_ids, context=context):
             new_moves = super(spilt_in_production_lot, self).split(cr, uid, ids, move_ids, context=context)
             production_ids = production_obj.search(cr, uid, [('move_lines', 'in', [move.id])])

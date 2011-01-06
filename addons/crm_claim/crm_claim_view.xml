@@ -3,7 +3,7 @@
     <data>
 
         <menuitem id="menu_config_claim" name="Claim"
-            groups="base.group_extended,base.group_system"
+            groups="base.group_extended"
             parent="base.menu_base_config" sequence="6" />
 
         <!-- Claims categories  -->
@@ -15,6 +15,7 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
             <field name="context">{'object_id':'crm.claim'}</field>
+            <field name="help">Create claim categories to better manage and classify your claims. Some example of claims can be: preventive action, corrective action.</field>
         </record>
 
         <menuitem action="crm_claim_categ_action" name="Categories"
@@ -28,10 +29,11 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.claim')]</field>
-            <field name="context">{'object_id':'crm.claim'}</field>
+            <field name="domain">[('type', '=', 'claim')]</field>
+            <field name="context">{'type':'claim'}</field>
+            <field name="help">You can create claim stages to categorize the status of every claim entered in the system. The stages define all the steps required for the resolution of a claim.</field>
         </record>
-
+        
          <menuitem action="crm_claim_stage_act" name="Stages"
                 id="menu_crm_claim_stage_act" parent="menu_config_claim" />
 
@@ -46,27 +48,18 @@
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
-                    <field name="section_id"/>
-                    <field name="date" string="Claim Date"/>
-                    <field name="date_deadline" string="Deadline"/>
-                    <field name="date_closed" string="Closure Date"/>
+                    <field name="date"/>
+                    <field name="date_action_next"/>
+                    <field name="action_next"/>
                     <field name="categ_id" string="Type" select="1"/>
                     <field name="stage_id" invisible="1"/>
                     <field name="state"/>
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
-                    <button name="case_pending" string="Pending"
-                        states="draft,open" type="object"
-                        icon="gtk-media-pause" />
                     <button name="case_close" string="Close"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
-                    <button name="case_reset" string="Reset to Draft"
-                        states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
             </field>
         </record>
@@ -77,77 +70,92 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Claims">
-
-                    <group colspan="4" col="4">
-                        <group colspan="1" col="2">
-                            <field name="name" />
+                    <group>
+                        <field name="name" />
+                        <field name="date"/>
+                        
+                        
+                    </group>
+                    
+                    <group colspan="4" col="6">
+                        
+                        <field name="user_id"/>
+                        <field name="section_id" widget="selection" />
+                        
+                        <group colspan="2" col="4">
+                            <field name="stage_id" domain="[('type','=','claim'),('section_ids', '=', section_id)]"/>
+                            <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
+                            <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
                         </group>
-                        <group colspan="1" col="2">
-                            <field name="date" string="Date of Claim"/>
-                        </group>
-                        <group colspan="1" col="2">
-                            <field name="date_deadline" string="Deadline"/><newline/>
-                        </group>
+                        <newline />
+                        <field name="priority"/>
+                        <field name="date_deadline"/>
                     </group>
                     <group colspan="4" col="4">
-
                         <notebook>
-                            <page string="Claim Info">
-                                <separator colspan="4" string="Communication"/>
-                                <group colspan="4" col="4">
+                            <page string="Claim Description">
+                                <group colspan="2" col="2">
+                                    <separator colspan="2" string="Claim Reporter"/>
                                     <field name="partner_id" string="Partner"
-                                    on_change="onchange_partner_id(partner_id)" />
+                                        on_change="onchange_partner_id(partner_id)" />
                                     <field name="partner_address_id" string="Contact"
-                                    on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
                                     <field name="partner_phone"/>
-                                    <field name="partner_mobile"/>
                                     <field name="email_from"/>
                                 </group>
-                                <separator colspan="4" string="Status and Categorization"/>
-                                <group colspan="4" col="6">
-                                    <field name="user_id" string="Responsible"/>
-                                    <field name="section_id" widget="selection"/>
-                                    <label string="Stage: " align="1.0"/>
-                                    <group colspan="1" col="3">
-                                        <field name="stage_id" nolabel="1" readonly="1"
-                                            on_change="onchange_stage_id(stage_id)"
-                                            domain="[('object_id.model', '=', 'crm.claim')]" />
-                                        <button name="stage_previous" string="" type="object" icon="gtk-go-back" />
-                                        <button icon="gtk-go-forward" string="" name="stage_next" type="object"/>
-                                    </group>
-                                    <field name="categ_id" select="1" widget="selection"
-                                    domain="[('object_id.model', '=', 'crm.claim')]" />
-                                    <field name="type_action" select="1"/>
-                                    <field name="priority"/>
-                                </group>
-                                <separator colspan="4" string="References"/>
-                                <group colspan="4" col="4">
+                                <group colspan="2" col="2">
+                                    <separator colspan="2" string="Responsibilities"/>
+                                    <field name="user_fault"/>
+                                    <field name="categ_id" widget="selection"
+                                        domain="[('object_id.model', '=', 'crm.claim')]" />
                                     <field name="ref"/>
-                                    <field name="ref2"/>
                                 </group>
                                 <separator colspan="4" string="Claim/Action Description"/>
                                 <field name="description" colspan="4" nolabel="1"/>
                                 <separator colspan="4" string=""/>
                                 <group col="8" colspan="4">
                                     <field name="state" select="1"/>
-                                    <button name="case_open" string="Open"
-                                    states="draft,pending" type="object"
-                                    icon="gtk-go-forward" />
-                                    <button name="case_pending" string="Pending"
-                                    states="draft,open" type="object"
-                                    icon="gtk-media-pause" />
-                                    <button name="case_close" string="Done"
-                                    states="open,draft,pending" type="object"
-                                    icon="gtk-jump-to" />
                                     <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-cancel" />
+                                        states="draft,open,pending" type="object"
+                                        icon="gtk-cancel" />
+                                    <button name="case_pending" string="Pending"
+                                        states="draft,open" type="object"
+                                        icon="gtk-media-pause" />
+                                    <button name="case_open" string="Open"
+                                        states="draft,pending" type="object"
+                                        icon="gtk-go-forward" />
+                                    <button name="case_close" string="Done"
+                                        states="open,pending" type="object"
+                                        icon="gtk-jump-to" />
                                     <button name="case_reset"
-                                    string="Reset to Draft" states="done,cancel"
-                                    type="object" icon="gtk-convert" />
+                                        string="Reset to Draft" states="done,cancel"
+                                        type="object" icon="gtk-convert" />
                                 </group>
                             </page>
-                            <page string="History" groups="base.group_extended">
+                            <page string="Follow Up">
+                                <group colspan="2" col="2">
+                                    <separator colspan="2" string="Actions"/>
+                                    <field name="date_action_next"/>
+                                    <field name="action_next"/>
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator colspan="2" string="Dates"/>
+                                    <field name="create_date"/>
+                                    <field name="date_closed"/>
+                                    <field name="write_date"/>
+                                </group>
+
+                                <group colspan="2" col="2">
+                                    <separator colspan="2" string="Root Causes"/>
+                                    <field name="cause" colspan="2" nolabel="1"/>
+                                </group>
+                                <group colspan="2" col="2">
+                                    <separator colspan="2" string="Resolution Actions"/>
+                                    <field name="type_action"/>
+                                    <field name="resolution" colspan="2" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Communication &amp; History" groups="base.group_extended">
                                 <group colspan="4">
                                     <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                                 </group>
@@ -160,7 +168,7 @@
                                             context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
                                             icon="terp-mail-replied" type="action" attrs="{'invisible': [('history', '!=', True)]}" />
                                     </tree>
-                                    <form string="History">
+                                    <form string="Communication &amp; History">
                                         <group col="4" colspan="4">
                                             <field name="email_from"/>
                                             <field name="date"/>
@@ -198,14 +206,6 @@
                                     context="{'mail':'new', 'model': 'crm.claim'}"
                                     icon="terp-mail-message-new" type="action" />
                             </page>
-                            <page string="Extra Info" groups="base.group_extended">
-                                <field name="id" select="1"/>
-                                <field name="active"/>
-                                <field name="canal_id"/>
-                                <separator colspan="4" string="Dates"/>
-                                <field name="create_date"/>
-                                <field name="date_closed"/>
-                            </page>
                         </notebook>
                     </group>
                 </form>
@@ -215,33 +215,17 @@
         <!-- Claim Calendar view -->
 
         <record model="ir.ui.view" id="crm_case_claims_calendar_view">
-            <field name="name">CRM - Claims Calendar</field>
+            <field name="name">Claims Actions</field>
             <field name="model">crm.claim</field>
             <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Claims" date_start="date" color="user_id">
+                <calendar string="Claims" date_start="date_action_next" color="user_id">
                     <field name="name"/>
-                    <field name="partner_name"/>
-                    <field name="categ_id"/>
                 </calendar>
             </field>
         </record>
 
-        <!-- Claim Graph view -->
-
-        <record model="ir.ui.view" id="crm_case_graph_view_stage_cost">
-            <field name="name">CRM -Graph</field>
-            <field name="model">crm.claim</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
-                    <field name="stage_id"/>
-                    <field name="planned_cost" operator="+"/>
-                    <field name="planned_revenue" operator="+"/>
-                </graph>
-            </field>
-        </record>
 
         <!-- Crm claim Search view -->
 
@@ -251,66 +235,56 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Claims">
-                   <filter icon="terp-check" string="Current" name="current"
-                       domain="[('state','in',('draft', 'open'))]"
-                       separator="1" help="Draft and Open Claims" default="1"
-                   />
-                   <filter icon="terp-camera_test"
-                       string="In Progress"
-                       domain="[('state','=','open')]"
-                       separator="1" help="In Progress Claims"
-                   />
-                   <filter icon="terp-gtk-media-pause"
-                       string="Pending"
-                       domain="[('state','=','pending')]"
-                       separator="1" help="All pending Claims"
-                   />
-                   <separator orientation="vertical"/>
-                   <field name="name" select='1'/>
-                   <field name="partner_id" select="1"/>
-                   <field name="user_id" select="1" widget="selection">
-                           <filter icon="terp-personal-"
-                               domain="[('user_id','=', False)]"
-                               help="Unassigned Claims" />
-                   </field>
-                   <field name="section_id" select="1"
-                       widget="selection">
-                       <filter icon="terp-personal+"
-                            domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                            help="My section" />
+                    <filter icon="terp-check" string="Current" name="current"
+                        domain="[('state','in',('draft', 'open'))]"
+                        separator="1" help="Draft and Open Claims" />
+                    <filter icon="terp-camera_test"
+                        string="In Progress"
+                        domain="[('state','=','open')]"
+                        separator="1" help="In Progress Claims"
+                    />
+                    <filter icon="terp-gtk-media-pause"
+                        string="Pending"
+                        domain="[('state','=','pending')]"
+                        separator="1" help="All pending Claims"
+                    />
+                    <separator orientation="vertical"/>
+                    <field name="name" select='1'/>
+                    <field name="partner_id" select="1"/>
+                    <field name="user_id" select="1" widget="selection">
+                            <filter icon="terp-personal-"
+                                domain="[('user_id','=', False)]"
+                                help="Unassigned Claims" />
                     </field>
-                   <newline/>
-                   <group expand="0" string="Group By...">
+                    <newline/>
+                    <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
-                           domain="[]" help="Partner"
-                           context="{'group_by':'partner_id'}" />
+                            domain="[]" help="Partner"
+                            context="{'group_by':'partner_id'}" />
                         <filter string="Responsible" icon="terp-personal"
-                           domain="[]" help="Responsible User"
-                           context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+"
-                           domain="[]" help="Sales Team"
-                           context="{'group_by':'section_id'}" />
+                            domain="[]" help="Responsible User"
+                            context="{'group_by':'user_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="Stage" icon="terp-stage"
                             domain="[]" context="{'group_by':'stage_id'}" />
                         <filter string="Type" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
-                       <filter string="State"
+                        <filter string="State"
                             icon="terp-stock_effects-object-colorize"
                             domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
                         <filter string="Claim Date" icon="terp-go-month"
-                           domain="[]" help="Claim Date"
-                           context="{'group_by':'date'}" />
-                       <filter string="Deadline" icon="terp-go-month"
-                           domain="[]"
-                           context="{'group_by':'date_deadline'}" />
-                       <filter string="Closure" icon="terp-go-month"
-                           domain="[]" help="Date Closed"
-                           context="{'group_by':'date_closed'}" />
-                   </group>
-               </search>
-           </field>
+                            domain="[]" help="Claim Date"
+                            context="{'group_by':'date'}" />
+                        <filter string="Deadline" icon="terp-go-month"
+                            domain="[]"
+                            context="{'group_by':'date_deadline'}" />
+                        <filter string="Closure" icon="terp-go-month"
+                            domain="[]" help="Date Closed"
+                            context="{'group_by':'date_closed'}" />
+                    </group>
+                </search>
+            </field>
         </record>
 
         <act_window
@@ -324,7 +298,7 @@
 
         <act_window
             domain="[('partner_address_id', '=', active_id)]"
-            context="{'default_partner_address_id': active_id}"
+            context="{'default_partner_id': partner_id}"
             id="act_claim_partner_address"
             name="Report a Claim"
             view_mode="form,tree"

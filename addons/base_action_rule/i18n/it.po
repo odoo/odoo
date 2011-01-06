@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-19 12:20+0000\n"
-"PO-Revision-Date: 2010-09-29 10:07+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-11-22 07:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -36,17 +36,9 @@ msgid "Partner Category"
 msgstr "Categoria Partner"
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome modello non valido nella definizione dell'azione."
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Selezionare se si desidera che la regola spedisca un promeria tramite email "
-"all'utente."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "Mail agli osservatori (Campo CC)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -67,6 +59,11 @@ msgstr "Invia mail a questi indirizzi"
 #: field:base.action.rule,act_state:0
 msgid "Set State to"
 msgstr "Imposta lo Stato per"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_from:0
+msgid "Email From"
+msgstr "Email da"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -117,9 +114,13 @@ msgstr ""
 "partner"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Email Reminders"
-msgstr "Promemoria Email"
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Create actions automatically triggered based on a user activity in the "
+"system.E.g.: an opportunity created by a specific user can be automatically "
+"maintained with a specific sales team, or an opportunity which still has "
+"status pending after 14 days triggers an automatic reminder email."
+msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -142,9 +143,9 @@ msgid "%(object_subject)s = Object subject"
 msgstr "%(object_subject)s = Oggetto Soggetto"
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per la struttura della vista!"
+#: view:base.action.rule:0
+msgid "Email Reminders"
+msgstr "Promemoria Email"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -218,6 +219,13 @@ msgid "None"
 msgstr "Nessuno"
 
 #. module: base_action_rule
+#: help:base.action.rule,act_email_to:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'To' field of the header"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user_phone)s = Responsible phone"
 msgstr "%(object_user_phone)s = Telefono responsabile"
@@ -256,6 +264,11 @@ msgid "Call Object Method"
 msgstr "Metodo Chiamata Oggetto"
 
 #. module: base_action_rule
+#: field:base.action.rule,act_email_to:0
+msgid "Email To"
+msgstr "Email per"
+
+#. module: base_action_rule
 #: help:base.action.rule,act_mail_to_watchers:0
 msgid ""
 "Check this if you want the rule to mark CC(mail to any other person defined "
@@ -275,9 +288,11 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Errore ! Non puoi creare un menù ricorsivo"
+#: help:base.action.rule,act_email_from:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'From' field of the header"
+msgstr ""
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -364,6 +379,11 @@ msgid "%(object_description)s = Object description"
 msgstr "%(object_description)s = Descrizione oggetto"
 
 #. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr "Azioni E-mail"
@@ -372,14 +392,6 @@ msgstr "Azioni E-mail"
 #: view:base.action.rule:0
 msgid "Email Information"
 msgstr "Informazione Email"
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -417,9 +429,12 @@ msgid "Mail body"
 msgstr "Corpo del Messaggio"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "Mail agli osservatori (Campo CC)"
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
+"Selezionare se si desidera che la regola spedisca un promeria tramite email "
+"all'utente."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -509,3 +524,27 @@ msgstr "Condizioni sugli stati"
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Data Programmata"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome modello non valido nella definizione dell'azione."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per la struttura della vista!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Errore ! Non puoi creare un menù ricorsivo"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"

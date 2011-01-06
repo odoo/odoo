@@ -2,6 +2,10 @@
 <openerp>
 <data noupdate="1">
 
+    <record id="base.user_demo" model="res.users">
+        <field eval="[(4, ref('group_auction_user'))]" name="groups_id"/>
+    </record>
+
     <!-- demo data for Account -->
     <record model="account.account.type" id="account.account_type_tax">
           <field name="name">Tax</field>
@@ -10,93 +14,93 @@
     </record>
 
     <record model="account.account" id="auction_income_view">
-		<field name="name">Auction Adjudications</field>
-		<field name="code">A0</field>
-		<field name="type">view</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="0">
-			<value search="[('type','=','view')]" model="account.account"/>
-		</field>
-		<field name="user_type" ref="account.account_type_root"/>
-	</record>
+        <field name="name">Auction Adjudications</field>
+        <field name="code">A0</field>
+        <field name="type">view</field>
+        <field name="currency_id" search="[('name','=','EUR')]"/>
+        <field name="parent_id" eval="0">
+            <value search="[('type','=','view')]" model="account.account"/>
+        </field>
+        <field name="user_type" ref="account.account_type_root"/>
+    </record>
 
     <record model="account.account" id="auction_expense_view">
-		<field name="name">Auction Adjudication Expenses</field>
-		<field name="code">A1</field>
-		<field name="type">view</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="0">
-			<value search="[('type','=','view')]" model="account.account"/>
-		</field>
-		<field name="user_type" ref="account.account_type_expense"/>
-	</record>
+        <field name="name">Auction Adjudication Expenses</field>
+        <field name="code">A1</field>
+        <field name="type">view</field>
+        <field name="currency_id" search="[('name','=','EUR')]"/>
+        <field name="parent_id" eval="0">
+            <value search="[('type','=','view')]" model="account.account"/>
+        </field>
+        <field name="user_type" ref="account.account_type_expense"/>
+    </record>
 
-	<record model="account.account" id="auction_income">
-		<field name="name">Auction Adjudications</field>
-		<field name="code">A7x*</field>
+    <record model="account.account" id="auction_income">
+        <field name="name">Auction Adjudications</field>
+        <field name="code">A7x*</field>
         <field name="user_type" ref="account.account_type_income"/> 
-		<field name="type">receivable</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="auction_income_view"/>
-	</record>
+        <field name="type">receivable</field>
+        <field name="currency_id" search="[('name','=','EUR')]"/>
+        <field name="parent_id" eval="auction_income_view"/>
+    </record>
 
-	<record model="account.account" id="auction_expense">
-		<field name="name">Auction Adjudication Expenses</field>
-		<field name="code">A6x*</field>
-		<field name="user_type" ref="account.account_type_expense"/>
-		<field name="type">payable</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="auction_expense_view"/>
-	</record>
+    <record model="account.account" id="auction_expense">
+        <field name="name">Auction Adjudication Expenses</field>
+        <field name="code">A6x*</field>
+        <field name="user_type" ref="account.account_type_expense"/>
+        <field name="type">payable</field>
+        <field name="currency_id" search="[('name','=','EUR')]"/>
+        <field name="parent_id" eval="auction_expense_view"/>
+    </record>
 
-	<record model="account.account" id="auction_income_costs">
-		<field name="name">Auction Buyer Costs</field>
-		<field name="code">A8x*</field>
-		<field name="type">payable</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="auction_income_view"/>
-		<field name="user_type" ref="account.account_type_tax"/>
-	</record>
-	<record model="account.account" id="auction_expense_costs">
-		<field name="name">Auction Seller Costs</field>
-		<field name="code">A9x*</field>
-		<field name="type">receivable</field>
-		<field name="currency_id" search="[('name','=','EUR')]"/>
-		<field name="parent_id" eval="auction_expense_view"/>
-		<field name="user_type" ref="account.account_type_tax"/>
-	</record>
+    <record model="account.account" id="auction_income_costs">
+        <field name="name">Auction Buyer Costs</field>
+        <field name="code">A8x*</field>
+        <field name="type">payable</field>
+        <field name="currency_id" search="[('name','=','EUR')]"/>
+        <field name="parent_id" eval="auction_income_view"/>
+        <field name="user_type" ref="account.account_type_tax"/>
+    </record>
+    <record model="account.account" id="auction_expense_costs">
+        <field name="name">Auction Seller Costs</field>
+        <field name="code">A9x*</field>
+        <field name="type">receivable</field>
+        <field name="currency_id" search="[('name','=','EUR')]"/>
+        <field name="parent_id" eval="auction_expense_view"/>
+        <field name="user_type" ref="account.account_type_tax"/>
+    </record>
 
-	<record model="account.tax" id="tax_buyer_author">
-		<field name="name">Author rights (4%)</field>
-		<field name="type">percent</field>
-		<field name="applicable_type">code</field>
-		<field name="amount">0.04</field>
-		<field name="domain">sabam</field>
-		<field name="account_collected_id" ref="auction_income_costs"/>
-		<field name="account_paid_id" ref="auction_income_costs"/>
-		<field name="python_applicable">result = (price_unit&gt;=1250)</field>
-	</record>
-	<record model="account.tax" id="tax_buyer">
-		<field name="name">Buyer Costs (20%)</field>
-		<field name="type">percent</field>
-		<field name="amount">0.20</field>
-		<field name="domain">auction</field>
-		<field name="account_collected_id" ref="auction_income_costs"/>
-		<field name="account_paid_id" ref="auction_income_costs"/>
-	</record>
-	<record model="account.tax" id="tax_seller">
-		<field name="name">Seller Costs (12%)</field>
-		<field name="type">percent</field>
-		<field name="amount">-0.12</field>
-		<field name="domain">auction</field>
-		<field name="account_collected_id" ref="auction_expense_costs"/>
-		<field name="account_paid_id" ref="auction_expense_costs"/>
-	</record>
-	<!--demo data for the product-->
-	<record id="product.product_product_pc2" model="product.product">
-		<field name="list_price">770.0</field>
-		<field name="standard_price">700.0</field>
-	</record>
+    <record model="account.tax" id="tax_buyer_author">
+        <field name="name">Author rights (4%)</field>
+        <field name="type">percent</field>
+        <field name="applicable_type">code</field>
+        <field name="amount">0.04</field>
+        <field name="domain">sabam</field>
+        <field name="account_collected_id" ref="auction_income_costs"/>
+        <field name="account_paid_id" ref="auction_income_costs"/>
+        <field name="python_applicable">result = (price_unit&gt;=1250)</field>
+    </record>
+    <record model="account.tax" id="tax_buyer">
+        <field name="name">Buyer Costs (20%)</field>
+        <field name="type">percent</field>
+        <field name="amount">0.20</field>
+        <field name="domain">auction</field>
+        <field name="account_collected_id" ref="auction_income_costs"/>
+        <field name="account_paid_id" ref="auction_income_costs"/>
+    </record>
+    <record model="account.tax" id="tax_seller">
+        <field name="name">Seller Costs (12%)</field>
+        <field name="type">percent</field>
+        <field name="amount">-0.12</field>
+        <field name="domain">auction</field>
+        <field name="account_collected_id" ref="auction_expense_costs"/>
+        <field name="account_paid_id" ref="auction_expense_costs"/>
+    </record>
+    <!--demo data for the product-->
+    <record id="product.product_product_pc2" model="product.product">
+        <field name="list_price">770.0</field>
+        <field name="standard_price">700.0</field>
+    </record>
 
 
     <!--demo data for the partner-->
@@ -106,39 +110,39 @@
     </record>
 
     <record id="res_partner_unknown_address_1" model="res.partner.address">
-	    <field name="city">Bruxelles1</field>
-	    <field name="name">Benoit Mortie1r1</field>
-	    <field name="zip">1030</field>
-	    <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
-	    <field name="email">info@opensides.be</field>
-	    <field name="phone">(+32)2 211 34 83</field>
-	    <field name="street">Rue des Palais 44, bte 33</field>
-	    <field name="type">default</field>
-	    <field name="partner_id" ref="partner_record1"/>
-	</record>
+        <field name="city">Bruxelles1</field>
+        <field name="name">Benoit Mortie1r1</field>
+        <field name="zip">1030</field>
+        <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+        <field name="email">info@opensides.be</field>
+        <field name="phone">(+32)2 211 34 83</field>
+        <field name="street">Rue des Palais 44, bte 33</field>
+        <field name="type">default</field>
+        <field name="partner_id" ref="partner_record1"/>
+    </record>
 
-	<record id="res_partner_unknown_address_2" model="res.partner.address">
-	    <field name="city">Avignon CEDEX 091</field>
-	    <field name="name">Laurent Jacot1</field>
-	    <field name="zip">84911</field>
-	    <field name="country_id" model="res.country" search="[('name','=','France')]"/>
-	    <field name="email">contact@tecsas.fr</field>
-	    <field name="phone">(+33)4.32.74.10.57</field>
-	    <field name="street">85 rue du traite de Rome</field>
-	    <field name="type">default</field>
-	    <field name="partner_id" ref="partner_record1"/>
-	</record>
+    <record id="res_partner_unknown_address_2" model="res.partner.address">
+        <field name="city">Avignon CEDEX 091</field>
+        <field name="name">Laurent Jacot1</field>
+        <field name="zip">84911</field>
+        <field name="country_id" model="res.country" search="[('name','=','France')]"/>
+        <field name="email">contact@tecsas.fr</field>
+        <field name="phone">(+33)4.32.74.10.57</field>
+        <field name="street">85 rue du traite de Rome</field>
+        <field name="type">default</field>
+        <field name="partner_id" ref="partner_record1"/>
+    </record>
 
-	<record id="res_partner_unknown_address_3" model="res.partner.address">
-	    <field name="city">Louvain-la-Neuve</field>
-	    <field name="name">Thomas Passot</field>
-	    <field name="zip">1348</field>
-	    <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
-	    <field name="email">info@mediapole.net</field>
-	    <field name="phone">(+32).10.45.17.73</field>
-	    <field name="street">Rue de l'Angelique, 1</field>
-	    <field name="partner_id" ref="partner_record1"/>
-	</record>
+    <record id="res_partner_unknown_address_3" model="res.partner.address">
+        <field name="city">Louvain-la-Neuve</field>
+        <field name="name">Thomas Passot</field>
+        <field name="zip">1348</field>
+        <field name="country_id" model="res.country" search="[('name','=','Belgium')]"/>
+        <field name="email">info@mediapole.net</field>
+        <field name="phone">(+32).10.45.17.73</field>
+        <field name="street">Rue de l'Angelique, 1</field>
+        <field name="partner_id" ref="partner_record1"/>
+    </record>
 
         <!-- demo data for the auction_artist object-->
 
@@ -331,33 +335,33 @@
     <!-- start == demo data for the auction_deposit-->
 
     <record model="auction.deposit" id="auction_deposit_1">
-	    <field name="date_dep" eval="time.strftime('%Y')+'-04-01'"/>
-	    <field name="partner_id" model="res.partner" search="[('name','=','Unknown')]"></field>
-	    <field name="method">keep</field>
+        <field name="date_dep" eval="time.strftime('%Y')+'-04-01'"/>
+        <field name="partner_id" model="res.partner" search="[('name','=','Unknown')]"></field>
+        <field name="method">keep</field>
     </record>
 
     <record model="auction.deposit" id="auction_deposit_2">
-	    <field name="date_dep" eval="time.strftime('%Y')+'-04-05'"/>
-	    <field name="partner_id" model="res.partner" search="[('name','=','China Export')]"></field>
-	    <field name="method">keep</field>
+        <field name="date_dep" eval="time.strftime('%Y')+'-04-05'"/>
+        <field name="partner_id" model="res.partner" search="[('name','=','China Export')]"></field>
+        <field name="method">keep</field>
     </record>
 
     <record model="auction.deposit" id="auction_deposit_3">
-	    <field name="date_dep" eval="time.strftime('%Y')+'-04-10'"/>
-	    <field name="partner_id" model="res.partner" search="[('name','=','Agrolait')]"></field>
-	    <field name="method">keep</field>
+        <field name="date_dep" eval="time.strftime('%Y')+'-04-10'"/>
+        <field name="partner_id" model="res.partner" search="[('name','=','Agrolait')]"></field>
+        <field name="method">keep</field>
     </record>
 
     <record model="auction.deposit" id="auction_deposit_4">
-	    <field name="date_dep" eval="time.strftime('%Y')+'-04-15'"/>
-	    <field name="partner_id" model="res.partner" search="[('name','=','Bank Wealthy and sons')]"></field>
-	    <field name="method">keep</field>
+        <field name="date_dep" eval="time.strftime('%Y')+'-04-15'"/>
+        <field name="partner_id" model="res.partner" search="[('name','=','Bank Wealthy and sons')]"></field>
+        <field name="method">keep</field>
     </record>
 
     <record model="auction.deposit" id="auction_deposit_5">
-	    <field name="date_dep" eval="time.strftime('%Y')+'-04-12'"/>
-	    <field name="partner_id" model="res.partner" search="[('name','=','Unknown')]"></field>
-	    <field name="method">keep</field>
+        <field name="date_dep" eval="time.strftime('%Y')+'-04-12'"/>
+        <field name="partner_id" model="res.partner" search="[('name','=','Unknown')]"></field>
+        <field name="method">keep</field>
     </record>
 
     <record model="auction.lots" id="auction_deposit_1_lot_1">
@@ -909,6 +913,8 @@
        <field name="action">sign_out</field>
        <field name="employee_id" ref="employee2" />
     </record>
-
+    <record id="base.user_demo" model="res.users">
+        <field name="groups_id" eval="[(4,ref('auction.group_auction_manager'))]"/> 
+    </record>
     </data>
 </openerp>

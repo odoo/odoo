@@ -58,6 +58,7 @@
         'mrp_operations_workflow.xml',
         'mrp_operations_view.xml',
         'mrp_operations_report.xml',
+        'report/mrp_workorder_analysis_view.xml',
         'process/mrp_operation_process.xml'
     ],
     'demo_xml': ['mrp_operation_data.xml'],

@@ -23,7 +23,6 @@ import time
 
 from osv import fields
 from osv import osv
-from osv.orm import except_orm
 from tools.translate import _
 
 class hr_employee(osv.osv):
@@ -32,6 +31,29 @@ class hr_employee(osv.osv):
     _columns = {
         'product_id': fields.many2one('product.product', 'Product', help="Specifies employee's designation as a product with type 'service'."),
         'journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal')
+    }
+
+    def _getAnalyticJournal(self, cr, uid, context=None):
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'analytic_journal')
+            return result[1]
+        except ValueError:
+            pass
+        return False
+
+    def _getEmployeeProduct(self, cr, uid, context=None):
+        md = self.pool.get('ir.model.data')
+        try:
+            result = md.get_object_reference(cr, uid, 'hr_timesheet', 'product_consultant')
+            return result[1]
+        except ValueError:
+            pass
+        return False
+
+    _defaults = {
+        'journal_id': _getAnalyticJournal,
+        'product_id': _getEmployeeProduct
     }
 hr_employee()
 
@@ -43,13 +65,11 @@ class hr_analytic_timesheet(osv.osv):
     _inherits = {'account.analytic.line': 'line_id'}
     _order = "id desc"
     _columns = {
-        'line_id' : fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade', required=True),
+        'line_id': fields.many2one('account.analytic.line', 'Analytic line', ondelete='cascade', required=True),
         'partner_id': fields.related('account_id', 'partner_id', type='many2one', string='Partner Id', relation='res.partner', store=True),
     }
 
     def unlink(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         toremove = {}
         for obj in self.browse(cr, uid, ids, context=context):
             toremove[obj.line_id.id] = True
@@ -58,13 +78,13 @@ class hr_analytic_timesheet(osv.osv):
 
 
     def on_change_unit_amount(self, cr, uid, id, prod_id, unit_amount, company_id, unit=False, journal_id=False, context=None):
-        if context is None:
-            context = {}
         res = {'value':{}}
         if prod_id and unit_amount:
             # find company
             company_id = self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=context)
-            res.update(self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, journal_id, context=context))
+            r = self.pool.get('account.analytic.line').on_change_unit_amount(cr, uid, id, prod_id, unit_amount, company_id, unit, journal_id, context=context)
+            if r:
+                res.update(r)
         # update unit of measurement
         if prod_id:
             uom = self.pool.get('product.product').browse(cr, uid, prod_id, context=context)
@@ -124,12 +144,12 @@ class hr_analytic_timesheet(osv.osv):
 
 
     _defaults = {
-        'product_uom_id' : _getEmployeeUnit,
-        'product_id' : _getEmployeeProduct,
-        'general_account_id' : _getGeneralAccount,
-        'journal_id' : _getAnalyticJournal,
-        'date' : lambda self, cr, uid, ctx : ctx.get('date', time.strftime('%Y-%m-%d')),
-        'user_id' : lambda obj, cr, uid, ctx : ctx.get('user_id', uid),
+        'product_uom_id': _getEmployeeUnit,
+        'product_id': _getEmployeeProduct,
+        'general_account_id': _getGeneralAccount,
+        'journal_id': _getAnalyticJournal,
+        'date': lambda self, cr, uid, ctx: ctx.get('date', time.strftime('%Y-%m-%d')),
+        'user_id': lambda obj, cr, uid, ctx: ctx.get('user_id', uid),
     }
     def on_change_account_id(self, cr, uid, ids, account_id):
         return {'value':{}}
@@ -160,13 +180,13 @@ class hr_analytic_timesheet(osv.osv):
         if not user_id:
             return {}
         context = {'user_id': user_id}
-        return {'value' : {
-            'product_id' : self._getEmployeeProduct(cr, uid, context),
-            'product_uom_id' : self._getEmployeeUnit(cr, uid, context),
-            'general_account_id' :self._getGeneralAccount(cr, uid, context),
-            'journal_id' : self._getAnalyticJournal(cr, uid, context),
+        return {'value': {
+            'product_id': self. _getEmployeeProduct(cr, uid, context),
+            'product_uom_id': self._getEmployeeUnit(cr, uid, context),
+            'general_account_id': self._getGeneralAccount(cr, uid, context),
+            'journal_id': self._getAnalyticJournal(cr, uid, context),
         }}
-        
+
 hr_analytic_timesheet()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

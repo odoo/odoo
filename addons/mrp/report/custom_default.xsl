@@ -19,8 +19,6 @@
         <drawString x="1.3cm" y="28.3cm"><xsl:value-of select="//date"/></drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
         <drawString x="9.8cm" y="28.3cm"><xsl:value-of select="//company"/></drawString>
-        <setFont name="DejaVu Sans" size="8"/>
-        <drawRightString x="19.7cm" y="28.3cm"><pageNumber/> /  </drawRightString>
         <stroke color="#000000"/>
         <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
 
@@ -35,8 +33,6 @@
         <drawString x="1.3cm" y="28.3cm"><xsl:value-of select="//date"/></drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
         <drawString x="9.8cm" y="28.3cm"><xsl:value-of select="//company"/></drawString>
-        <setFont name="DejaVu Sans" size="8"/>
-        <drawRightString x="19.7cm" y="28.3cm"><pageNumber/> /  </drawRightString>
         <stroke color="#000000"/>
         <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
  </xsl:template>

@@ -43,7 +43,7 @@
                 HR / Employees / Employees
             then select the ones you want to choose, click on the print icon and select the option
                 'Print Summary of Employee's Holidays'
-    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in
+    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR'. You can define these features in the security tab from the user data in
                 Administration / Users / Users
             for example, you maybe will do it for the user 'admin'
             .
@@ -54,8 +54,10 @@
     'init_xml': [],
     'update_xml': [
         'security/ir.model.access.csv',
+        'security/ir_rule.xml',
         'hr_holidays_workflow.xml',
         'hr_holidays_view.xml',
+        'hr_holidays_data.xml',
         'hr_holidays_wizard.xml',
         'hr_holidays_report.xml',
         'report/hr_holidays_report_view.xml',

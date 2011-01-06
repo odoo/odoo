@@ -23,10 +23,10 @@
 {
     "name" : "Email Template for OpenERP",
     "version" : "0.7 RC",
-    "author" : "Sharoon Thomas, Openlabs",
+    "author" : "Openlabs",
     "website" : "http://openerp.com",
     "category" : "Added functionality",
-    "depends" : ['base'],
+    "depends" : ['marketing', 'base_tools'],
     "description": """
     Email Template is extraction of Power Email basically just to send the emails.
     """,

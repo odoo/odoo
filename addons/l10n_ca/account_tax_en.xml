@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+    <record id="notax_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">No tax</field>
+        <field name="amount">0.00</field>
+        <field name="type">percent</field>
+        <field name="base_code_id" ref="vat_code_base_due_en"/>
+        <field name="ref_base_code_id" ref="vat_code_receivable_net_en"/>
+    </record>
+
+    <record id="gst_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">GST (5.0%)</field>
+        <field name="code">GST</field>
+        <field name="amount">0.050000</field>
+        <field name="type">percent</field>
+        <field name="account_collected_id" ref="chart241000_en"/>
+        <field name="account_paid_id" ref="chart243000_en"/>
+        <field name="base_code_id" ref="vat_code_base_due_en"/>
+        <field name="tax_code_id" ref="vat_code_due_tva_en"/>
+        <field name="ref_base_code_id" ref="vat_code_receivable_net_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable_en"/>
+    </record>
+
+    <record id="pst_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">PST (7,5%)</field>
+        <field name="code">PST</field>
+        <field name="amount">0.075000</field>
+        <field name="type">percent</field>
+        <field name="account_collected_id" ref="chart242000_en"/>
+        <field name="account_paid_id" ref="chart244000_en"/>
+        <field name="base_code_id" ref="vat_code_base_due_en"/>
+        <field name="tax_code_id" ref="vat_code_due_tva_en"/>
+        <field name="ref_base_code_id" ref="vat_code_receivable_net_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable_en"/>
+    </record>
+
+    <record id="hst_en" model="account.tax.template">
+        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
+        <field name="name">HST (13%)</field>
+        <field name="code">HST</field>
+        <field name="amount">0.130000</field>
+        <field name="type">percent</field>
+        <field name="account_collected_id" ref="chart242000_en"/>
+        <field name="account_paid_id" ref="chart244000_en"/>
+        <field name="base_code_id" ref="vat_code_base_due_en"/>
+        <field name="tax_code_id" ref="vat_code_due_tva_en"/>
+        <field name="ref_base_code_id" ref="vat_code_receivable_net_en"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable_en"/>
+    </record>
+
+    </data>
+</openerp>

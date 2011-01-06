@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
 
@@ -28,10 +29,9 @@ class event_make_invoice(osv.osv_memory):
     _name = "event.make.invoice"
     _description = "Event Make Invoice"
     _columns = {
-
         'grouped': fields.boolean('Group the invoices'),
-        'invoice_date':fields.date('Invoice Date'),
-         }
+        'invoice_date': fields.date('Invoice Date'),
+    }
 
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -46,12 +46,9 @@ class event_make_invoice(osv.osv_memory):
         data = context and context.get('active_ids', [])
 
         for event_reg in obj_event_reg.browse(cr, uid, data, context=context):
-            if event_reg.state == 'draft':
+            if event_reg.state in ('draft', 'done', 'cancel'):
                      raise osv.except_osv(_('Warning !'),
-                        _("Invoice cannot be created if the registration is in draft state."))
-            if event_reg.state == 'done':
-                     raise osv.except_osv(_('Warning !'),
-                        _("Invoice cannot be created if the registration is in done state."))
+                        _("Invoice cannot be created if the registration is in %s state.") % (event_reg.state))
 
             if (not event_reg.tobe_invoiced):
                     raise osv.except_osv(_('Warning !'),
@@ -60,38 +57,39 @@ class event_make_invoice(osv.osv_memory):
             if not event_reg.event_id.product_id:
                     raise osv.except_osv(_('Warning !'),
                         _("Event related doesn't have any product defined"))
+
             if not event_reg.partner_invoice_id:
                    raise osv.except_osv(_('Warning !'),
                         _("Registration doesn't have any partner to invoice."))
 
     def default_get(self, cr, uid, fields_list, context=None):
-        res = super(event_make_invoice, self).default_get(cr, uid, fields_list, context)
-        return res
+        return super(event_make_invoice, self).default_get(cr, uid, fields_list, context=context)
 
-    def make_invoice(self, cr, uid, ids, context={}):
-
+    def make_invoice(self, cr, uid, ids, context=None):
         reg_obj = self.pool.get('event.registration')
-        newinv = []
+        mod_obj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
 
-        for data in self.browse(cr, uid, ids):
+        for data in self.browse(cr, uid, ids, context=context):
             res = reg_obj.action_invoice_create(cr, uid, context.get(('active_ids'),[]), data.grouped, date_inv = data.invoice_date)
 
-        mod_obj =self.pool.get('ir.model.data')
-        result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-
-        id = mod_obj.read(cr, uid, result, ['res_id'])
-
+        form_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        form_res = form_id and form_id[1] or False
+        tree_id = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+        tree_res = tree_id and tree_id[1] or False
         return {
-            'domain': "[('id','in',%s)]" % res,
-            'name': 'Invoices',
+            'domain': "[('id', 'in', %s)]" % res,
+            'name': _('Customer Invoices'),
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
+            'views': [(tree_res, 'tree'), (form_res, 'form')],
             'context': "{'type':'out_refund'}",
             'type': 'ir.actions.act_window',
-            'search_view_id': id['id']
         }
 
 event_make_invoice()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

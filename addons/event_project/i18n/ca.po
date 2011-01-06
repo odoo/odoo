@@ -6,28 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 03:57+0000\n"
 "Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event_project
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "﻿XML invàlid per a la definició de la vista!"
+#: model:ir.model,name:event_project.model_event_project
+msgid "Event Project"
+msgstr ""
 
 #. module: event_project
-#: model:ir.actions.wizard,name:event_project.wizard_event_task
-msgid "Tasks"
-msgstr "Tasques"
+#: field:event.project,date:0
+msgid "Date End"
+msgstr ""
 
 #. module: event_project
-#: wizard_button:event.project,init,done:0
+#: view:event.project:0
 msgid "Ok"
 msgstr "Ok"
 
@@ -36,30 +36,59 @@ msgstr "Ok"
 msgid ""
 "Organization and management of events.\n"
 "\n"
-"    This module allow you to create retro planning for managing your "
+"    This module allows you to create retro planning for managing your "
 "events.\n"
 msgstr ""
-"Organització i gestió d'esdeveniments.\n"
-"\n"
-"    Aquest mòdul us permet crear retro planificació per a la gestió dels "
-"vostres esdeveniments.\n"
 
 #. module: event_project
-#: view:event.event:0
-msgid "Remaining Tasks"
-msgstr "Tasques pendents"
+#: help:event.project,project_id:0
+msgid ""
+"This is Template Project. Project of event is a duplicate of this Template. "
+"After click on  'Create Retro-planning', New Project will be duplicated from "
+"this template project."
+msgstr ""
 
 #. module: event_project
-#: model:ir.module.module,shortdesc:event_project.module_meta_information
-msgid "Event - Project"
-msgstr "Projectes - Esdeveniments"
+#: view:event.project:0
+#: model:ir.actions.act_window,name:event_project.action_event_project
+msgid "Retro-Planning"
+msgstr ""
+
+#. module: event_project
+#: constraint:event.event:0
+msgid "Error ! Closing Date cannot be set before Beginning Date."
+msgstr ""
 
 #. module: event_project
 #: field:event.event,project_id:0
-#: wizard_field:event.project,init,project_id:0
-#: model:ir.actions.wizard,name:event_project.event_wiz
 msgid "Project"
 msgstr "Projecte"
+
+#. module: event_project
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event_project.act_event_task
+msgid "Tasks"
+msgstr "Tasques"
+
+#. module: event_project
+#: view:event.event:0
+msgid "All tasks"
+msgstr ""
+
+#. module: event_project
+#: model:ir.module.module,shortdesc:event_project.module_meta_information
+msgid "Event Project - Create Retro-Planning to manage your Events"
+msgstr ""
+
+#. module: event_project
+#: field:event.project,project_id:0
+msgid "Template of Project"
+msgstr ""
+
+#. module: event_project
+#: constraint:event.event:0
+msgid "Error ! You cannot create recursive event."
+msgstr ""
 
 #. module: event_project
 #: field:event.event,task_ids:0
@@ -67,9 +96,14 @@ msgid "Project tasks"
 msgstr "Tasques del projecte"
 
 #. module: event_project
-#: wizard_button:event.project,init,end:0
-msgid "Cancel"
-msgstr "Cancel·la"
+#: view:event.project:0
+msgid "Close"
+msgstr ""
+
+#. module: event_project
+#: field:event.project,date_start:0
+msgid "Date Start"
+msgstr ""
 
 #. module: event_project
 #: view:event.event:0
@@ -77,7 +111,7 @@ msgid "Create Retro-Planning"
 msgstr "Crea retro-planificació"
 
 #. module: event_project
-#: wizard_view:event.project,init:0
+#: model:ir.model,name:event_project.model_event_event
 msgid "Event"
 msgstr "Esdeveniment"
 
@@ -85,3 +119,38 @@ msgstr "Esdeveniment"
 #: view:event.event:0
 msgid "Tasks management"
 msgstr "Gestió de tasques"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "﻿XML invàlid per a la definició de la vista!"
+
+#~ msgid "Remaining Tasks"
+#~ msgstr "Tasques pendents"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancel·la"
+
+#, python-format
+#~ msgid ""
+#~ "No project defined for this event.\n"
+#~ "You can create one with the retro-planning button !"
+#~ msgstr ""
+#~ "No existeix cap projecte definit per aquest esdeveniment.\n"
+#~ "Podeu crear un amb el botó de retro-planificació!"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Error !"
+
+#~ msgid "Event - Project"
+#~ msgstr "Projectes - Esdeveniments"
+
+#~ msgid ""
+#~ "Organization and management of events.\n"
+#~ "\n"
+#~ "    This module allow you to create retro planning for managing your "
+#~ "events.\n"
+#~ msgstr ""
+#~ "Organització i gestió d'esdeveniments.\n"
+#~ "\n"
+#~ "    Aquest mòdul us permet crear retro planificació per a la gestió dels "
+#~ "vostres esdeveniments.\n"

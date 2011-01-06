@@ -3,19 +3,34 @@
 # This file is distributed under the same license as the openobject-addons package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
 #
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* hr_timesheet_invoice
+#
+# Mongolian translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-10 08:54+0000\n"
-"Last-Translator: munkhbold <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-25 19:13+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:0
+#: view:report_timesheet.user:0
+msgid "Timesheet by user"
+msgstr "Цаг бүртгэлийг хэрэглэгчээр харах"
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
@@ -23,758 +38,1235 @@ msgid "Type of invoicing"
 msgstr "Нэхэмжлэх төрөл"
 
 #. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
+#: report:account.analytic.profit:0
 msgid "Profit"
-msgstr ""
+msgstr "Ашиг"
 
 #. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.invoice.create,init:0
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Analytic account incomplete"
+msgstr "Бүрэн биш аналитик данс"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
+msgid "Create invoice from timesheet final"
+msgstr "Эцсийн цаг бүртгэлээс нэхэмжлэх үүсгэх"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:0
 msgid "Force to use a specific product"
-msgstr ""
+msgstr "Тодорхой бүтээгдэхүүнийг хэрэглэхийг тулгах"
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Income"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,customer_name:0
-msgid "Visible name"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,date1:0
-msgid "Start of period"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,init,price:0
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
 msgid ""
-"The cost of each work done will be displayed on the invoice. You probably "
-"don't want to check this."
+"This lists show you every task work you can invoice to the customer. Select "
+"the lines in order to generate the invoices automatically."
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.wizard,name:hr_timesheet_invoice.hr_timesheet_invoice_create
-msgid "Invoice analytic lines"
-msgstr ""
+#: view:report.timesheet.line:0
+msgid "    7 Days    "
+msgstr "    7 хоног    "
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.final.invoice.create,init,time:0
+#: report:account.analytic.profit:0
+msgid "Income"
+msgstr "Орлого"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.line:0
+msgid "To Invoice"
+msgstr "Нэхэмжлэх"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
+msgid "Timesheet per day"
+msgstr "Цаг бүртгэлийг өдрөөр харах"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "March"
+msgstr "3 сар"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create.final,name:0
+msgid "Name of entry"
+msgstr "Бичлэгийн нэр"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,pricelist_id:0
+msgid ""
+"The product to invoice is defined on the employee form, the price will be "
+"deduced by this pricelist on the product."
+msgstr ""
+"Нэхэмжлэх бараа нь ажилтны маягт дээр тодорхойлогдоно. Энэ барааны үнийн "
+"жагсаалтаас үнийг нь тогтооно."
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
+msgid "Invoice Rate"
+msgstr "Нэхэмжлэхийн харьцаа"
+
+#. module: hr_timesheet_invoice
+#: view:report.account.analytic.line.to.invoice:0
+#: view:report.timesheet.line:0
+#: view:report_timesheet.account:0
+#: view:report_timesheet.account.date:0
+#: view:report_timesheet.user:0
+msgid "This Year"
+msgstr "Энэ жил"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,time:0
 msgid "Display time in the history of works"
-msgstr ""
+msgstr "Ажлын түүх дээр цагийг харуулах"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_draft_analytic_accounts
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_draft_analytic_accounts
-msgid "Draft Analytic Accounts"
-msgstr ""
+#: view:hr.timesheet.analytic.profit:0
+msgid "Journals"
+msgstr "Журналууд"
 
 #. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.final.invoice.create,init,time:0
-#: wizard_field:hr.timesheet.invoice.create,init,time:0
-msgid "Time spent"
-msgstr ""
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,day:0
+msgid "Day"
+msgstr "Өдөр"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,uom_id:0
+#: field:report.account.analytic.line.to.invoice,product_uom_id:0
+msgid "UoM"
+msgstr "Х.н"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:0
+msgid "Account"
+msgstr "Данс"
+
+#. module: hr_timesheet_invoice
+#: view:report.random.timesheet:0
+msgid "Random Timesheets"
+msgstr "Гэнэтийн цаг бүртгэлүүд"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,amount_invoiced:0
 msgid "Invoiced Amount"
-msgstr ""
+msgstr "Нэхэмжилсэн дүн"
 
 #. module: hr_timesheet_invoice
-#: help:account.analytic.account,to_invoice:0
-msgid ""
-"Check this field if you plan to automatically generate invoices based on the "
-"costs in this analytic account: timesheets, expenses, ...You can configure "
-"an automatic invoice rate on analytic accounts."
-msgstr ""
+#: view:report.timesheet.line:0
+msgid "Uninvoiced line with billing rate"
+msgstr "Тооцооны хэмжээтэй нэхэмжлээгүй бичлэг"
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,init,name:0
-msgid "The detail of each work done will be displayed on the invoice"
-msgstr ""
+#: view:random.timesheet.lines:0
+msgid "Random Timesheets Lines"
+msgstr "Гэнэтийн цаг бүртгэлийн мөрүүд"
 
 #. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init:0
-msgid "Select period"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Period to enddate"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_button:hr.timesheet.invoice.create,init,create:0
-msgid "Create Invoices"
-msgstr "Нэхэмжлэл үүсгэх"
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Period from startdate"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,init,time:0
-msgid "The time of each work done will be displayed on the invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.final.invoice.create,init,balance_product:0
-msgid "Balance product"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.wizard,name:hr_timesheet_invoice.hr_timesheet_final_invoice_create
-msgid "Final Invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.final.invoice.create,init:0
-msgid "Do you want details for each line of the invoices ?"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Date or Code"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree
-msgid "Entries to invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_view:account.analytic.profit,init:0
-msgid "Choose"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Debit"
-msgstr "Дебит"
-
-#. module: hr_timesheet_invoice
-#: wizard_button:account.analytic.profit,init,report:0
-#: wizard_button:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,report:0
-msgid "Print"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_open_analytic_accounts
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_open_analytic_accounts
-msgid "Open Analytic Accounts"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.invoice.create,init:0
-msgid "Filter on Accounts"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.report.xml,name:hr_timesheet_invoice.report_analytical_profit
-#: model:ir.actions.wizard,name:hr_timesheet_invoice.account_analytic_profit
-#: model:ir.ui.menu,name:hr_timesheet_invoice.print_account_analytic_profit
-msgid "Timesheet Profit"
-msgstr ""
+#: field:report_timesheet.invoice,account_id:0
+msgid "Project"
+msgstr "Төсөл"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,pricelist_id:0
 msgid "Sale Pricelist"
+msgstr "Борлуулалтын үнийн жагсаалт"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,amount:0
+#: field:report.account.analytic.line.to.invoice,amount:0
+msgid "Amount"
+msgstr "Дүн"
+
+#. module: hr_timesheet_invoice
+#: view:board.board:0
+msgid "Uninvoice Lines With Billing Rate"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: help:hr.timesheet.final.invoice.create,init,name:0
+#: help:hr.timesheet.invoice.create,name:0
+msgid "The detail of each work done will be displayed on the invoice"
+msgstr "Хийсэн ажил бүрийн мэдээллийг нэхэмжлэх дээр харуулна"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_random_timesheet_board
+msgid "Random Timesheet"
+msgstr "Гэнэтийн цаг бүртгэл"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
+msgid "Create invoice from timesheet"
+msgstr "Цаг бүртгэлээс нэхэмжлэх үүсгэх"
+
+#. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "Period to enddate"
+msgstr "Дуусах огноо хүртэлх мөчлөг"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
+msgid "Analytic account to close"
+msgstr "Хаах шаардлагатай аналитик данс"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
+msgid ""
+"OpenERP allows you to create default invoicing types. You could need to "
+"regularly make discounts based on a specific contract or agreement with a "
+"customer. From this menu, you can create additional default types of "
+"invoicing that will speed up your invoicing."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+#: view:report.timesheet.line:0
+msgid "Group By..."
+msgstr "Бүлэглэх..."
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Create Invoices"
+msgstr "Нэхэмжлэл үүсгэх"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet per account"
+msgstr "Данс бүрийн өдрөөр харах цаг бүртгэл"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Final invoice for analytic account"
+msgstr "Аналитик дансны эцсийн нэхэмжлэл"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Analytic Account incomplete"
+msgstr "Бүрэн биш аналитик данс"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_account
+#: view:random.timesheet.lines:0
+#: field:random.timesheet.lines,analytic_account_id:0
+#: field:report.random.timesheet,analytic_account_id:0
+#: field:report.timesheet.line,account_id:0
+#: field:report_timesheet.account,account_id:0
+#: field:report_timesheet.account.date,account_id:0
+msgid "Analytic Account"
+msgstr "Аналитик данс"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,date_deadline:0
+msgid "Deadline"
+msgstr "Тогтсон өдөр"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_my_account
+msgid "Accounts to invoice"
+msgstr "Нэхэмжлэл үүсгэх дансууд"
+
+#. module: hr_timesheet_invoice
+#: field:report.analytic.account.close,partner_id:0
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: hr_timesheet_invoice
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,time:0
+msgid "The time of each work done will be displayed on the invoice"
+msgstr "Хийсэн ажилд зарцуулсан хугацааг нэхэмжлэл дээр харуулна"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create.final,balance_product:0
+msgid "Balance product"
+msgstr "Үлдсэн дүнгийн бараа"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_account_analytic_account_2_report_timehsheet_account
+msgid "Timesheets"
+msgstr "Цаг бүртгэл"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_cost_ledger
+msgid "hr.timesheet.analytic.cost.ledger"
+msgstr "Цаг бүртгэлийн аналитик үнийн дэвтэр"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
+msgid "Final Invoice"
+msgstr "Эцсийн нэхэмжлэл"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Do you want details for each line of the invoices ?"
+msgstr "Нэхэмжлэлүүдийн мөр бүрийг нарийвчлан харахыг хүсэж байна уу ?"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_invoice
+msgid "Costs to invoice"
+msgstr "Нэхэмжлэх үнийн дүн"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,account_id:0
+#: field:report.analytic.account.close,name:0
+msgid "Analytic account"
+msgstr "Аналитик данс"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:0
+#: field:report.analytic.account.close,state:0
+msgid "State"
+msgstr "Төлөв"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:0
+#, python-format
+msgid "Data Insufficient!"
+msgstr "Өгөгдөл хангалтгүй байна!"
+
+#. module: hr_timesheet_invoice
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Debit"
+msgstr "Дебит"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,employee_ids:0
+msgid "Employee"
+msgstr "Ажилтан"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.line,to_invoice:0
+msgid "It allows to set the discount while making invoice"
+msgstr "Энэ нь нэхэмжлэл үүсгэх үед хөнгөлөлт бичихийг зөвшөөрнө"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,price:0
+msgid ""
+"The cost of each work done will be displayed on the invoice. You probably "
+"don't want to check this"
+msgstr ""
+"Хийсэн ажил бүрийн үнийг нэхэмжлэх дээр харуулна. Үүнийг та хянахыг хүсэхгүй "
+"байгаа болов уу"
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,customer_name:0
+msgid "Name"
+msgstr "Нэр"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
+msgid "Lines to Invoice"
+msgstr "Нэхэмжлэлийн аналитик мөрүүд"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
+#, python-format
+msgid "Error !"
+msgstr "Алдаа!"
+
+#. module: hr_timesheet_invoice
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
+msgid "Gratis"
+msgstr "Үнэгүй бэлэг"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,description:hr_timesheet_invoice.module_meta_information
+msgid ""
+"\n"
+"Module to generate invoices based on costs (human resources, expenses, "
+"...).\n"
+"You can define price lists in analytic account, make some theoretical "
+"revenue\n"
+"reports, eso."
+msgstr ""
+"\n"
+"Хүний нөөц, зардалын гэх мэт өртөгт үндэслэн нэхэмжлэлийг энэ модуль "
+"үүсгэнэ.\n"
+"Аналитик дансаарх үнийн жагсаалт үүсгэж, таамаглаж байгаа орлогын тайланг\n"
+"үүсгэж болно."
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,to_invoice:0
+msgid ""
+"Fill this field if you plan to automatically generate invoices based on the "
+"costs in this analytic account: timesheets, expenses, ...You can configure "
+"an automatic invoice rate on analytic accounts."
+msgstr ""
+"Цаг бүртгэл, зардал зэрэг аналитик дансны үнэ дээр суурилан автоматаар "
+"нэхэмжлэл үүсгэхээр төлөвлөж байвал энэ талбарыг бөглөнө үү, ... Аналитик "
+"дансуудад нэхэмжлэлийн автомат харьцааг тохируулж болно."
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:0
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_analytic_profit
+#: model:ir.actions.report.xml,name:hr_timesheet_invoice.report_analytical_profit
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
+msgid "Timesheet Profit"
+msgstr "Цаг бүртгэлийн аналитик ашиг"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Partner incomplete"
+msgstr "Харилцагчийн хаягийг бүртгээгүй"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,name:0
 msgid "Display detail of work in the invoice line."
-msgstr ""
+msgstr "Нэхэмжлэлийн мөрөнд бичигдсэн ажлыг нарийвчлан харах"
 
 #. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "J.C. or Move name"
-msgstr ""
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "July"
+msgstr "7 сар"
 
 #. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+#: model:ir.model,name:hr_timesheet_invoice.model_report_random_timesheet
+msgid "Random Timesheet Report"
+msgstr "Гэнэтийн цаг бүртгэлийн тайлан"
+
+#. module: hr_timesheet_invoice
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
 msgid "Printing date"
 msgstr "Хэвлэсэн огноо"
 
 #. module: hr_timesheet_invoice
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
+#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree
+msgid "Bill Tasks Works"
+msgstr "Тооцооны даалгаврын ажлууд"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
 #: model:ir.ui.menu,name:hr_timesheet_invoice.hr_timesheet_invoice_factor_view
 msgid "Types of Invoicing"
-msgstr ""
+msgstr "Нэхэмжлэх төрлүүд"
 
 #. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
+#: report:account.analytic.profit:0
 msgid "Theorical"
-msgstr ""
+msgstr "Онолын"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced_my
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree_invoiced_my
-msgid "My Uninvoiced Entries"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.final.invoice.create,init,name:0
-#: wizard_field:hr.timesheet.invoice.create,init,name:0
-msgid "Name of entry"
-msgstr "Бичлэгийн нэр"
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Employee or Journal Name"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Currency"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,init,product:0
-msgid ""
-"Complete this field only if you want to force to use a specific product. "
-"Keep empty to use the real product that comes from the cost."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_tree_invoiced
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree_invoiced
-msgid "Uninvoiced Entries"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_button:hr.timesheet.final.invoice.create,init,create:0
-msgid "Create invoices"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.final.invoice.create,init:0
-msgid "Invoice Balance amount"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Invoice rate by user"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:account.analytic.profit,init,date_from:0
-msgid "From"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:account.analytic.account,amount_invoiced:0
-msgid "Total invoiced"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-msgid "Status"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Period to"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.final.invoice.create,init,balance_product:0
-msgid "The product that will be used to invoice the remaining amount."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-#: model:ir.actions.report.xml,name:hr_timesheet_invoice.account_analytic_account_cost_ledger
-#: model:ir.actions.wizard,name:hr_timesheet_invoice.account_analytic_account_cost_ledger_report
-msgid "Cost Ledger"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.final.invoice.create,init,date:0
-msgid "Display date in the history of works"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.final.invoice.create,init,date:0
-#: wizard_field:hr.timesheet.invoice.create,init,date:0
-msgid "Date"
-msgstr "Огноо"
-
-#. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,factor:0
-msgid "Discount (%)"
-msgstr "Хөнгөлөлт (%)"
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Eff."
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.invoice.create,init,accounts:0
-msgid "Analytic Accounts"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Total:"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Credit"
-msgstr "Кредит"
-
-#. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,date2:0
-msgid "End of period"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Balance"
-msgstr "Тэнцэл"
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,to_invoice:0
-msgid "Reinvoice Costs"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Totals:"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:account.analytic.profit,init,date_to:0
-msgid "To"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.invoice.create,init:0
-msgid "Do you want to show details of work in invoice ?"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
-msgid "Period from"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.account,amount_max:0
-msgid "Max. Invoice Price"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.line,invoice_id:0
-msgid "Invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_button:account.analytic.profit,init,end:0
-#: wizard_button:hr.timesheet.final.invoice.create,init,end:0
-#: wizard_button:hr.timesheet.invoice.account.analytic.account.cost_ledger.report,init,end:0
-#: wizard_button:hr.timesheet.invoice.create,init,end:0
-msgid "Cancel"
-msgstr "Цуцлах"
-
-#. module: hr_timesheet_invoice
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:account.analytic.profit,init,employee_ids:0
-msgid "Employee"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.invoice.create,init,date:0
-msgid "The real date of each work will be displayed on the invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: help:hr.timesheet.final.invoice.create,init,price:0
-msgid "Display cost of the item you reinvoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_view:hr.timesheet.invoice.create,init:0
-msgid "Choose accounts you want to invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:hr.timesheet.invoice.create,init,product:0
-msgid "Product"
-msgstr "Бараа"
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "%"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:hr_timesheet_invoice.factor,name:0
-msgid "Internal name"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: wizard_field:account.analytic.profit,init,journal_ids:0
-msgid "Journal"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-msgid "Units"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
-msgid "Invoice on analytic lines"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_pending_analytic_accounts
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_pending_analytic_accounts
-msgid "Pending Analytic Accounts"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:account.analytic.account:0
-#: wizard_view:hr.timesheet.invoice.create,init:0
-msgid "Invoicing Data"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
-msgid "Invoice rate"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:hr_timesheet_invoice.factor:0
-msgid "Types of invoicing"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:account.analytic.line,to_invoice:0
-msgid "Invoicing"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_open_invoice_analytic_accounts
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_open_invoice_analytic_accounts
-msgid "Unclosed Invoiceable Accounts"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: rml:account.analytic.profit:0
-#: wizard_field:hr.timesheet.final.invoice.create,init,price:0
-#: wizard_field:hr.timesheet.invoice.create,init,price:0
-msgid "Cost"
-msgstr "Өртөг"
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:hr_timesheet_invoice.model_report_analytic_account_close
-msgid "Analytic account to close"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,quantity_max:0
-msgid "Max. Quantity"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,name:0
-msgid "Analytic account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,state:0
-msgid "State"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,date_deadline:0
-msgid "Deadline"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
-msgid "Analytic Account Reporting"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,partner_id:0
-msgid "Partner"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
-#: model:ir.ui.menu,name:hr_timesheet_invoice.menu_action_analytic_account_tree
-#: view:report.analytic.account.close:0
-msgid "Expired analytic accounts"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.analytic.account.close,quantity:0
-msgid "Quantity"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
-msgid "Lines to Invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_account_analytic_line_to_invoice
-#: model:ir.ui.menu,name:hr_timesheet_invoice.account_analytic_lines_to_invoice_report
-#: view:report.account.analytic.line.to.invoice:0
-msgid "Analytic Lines to Invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,sale_price:0
-msgid "Sale price"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
-msgid "Analytic lines - Reporting"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,name:0
-msgid "Month"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,amount:0
-msgid "Amount"
-msgstr ""
+#: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:0
+#, python-format
+msgid "You can not modify an invoiced analytic line!"
+msgstr "Та нэхэмжилсэн аналитик мөрийг өөрчилж болохгүй"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_account_analytic_line_to_invoice
 msgid "Analytic lines to invoice report"
-msgstr ""
+msgstr "Аналитик мөрүүдийг нэхэмжлэлийн тайлан дээр харах"
 
 #. module: hr_timesheet_invoice
-#: field:report.account.analytic.line.to.invoice,product_uom_id:0
-msgid "UoM"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
+msgid "Timesheet by User"
+msgstr "Цаг бүртгэлийг хэрэгдэгчээр харах"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_date_stat_my
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_date_my
-msgid "My daily timesheets by account"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
+msgid "Timesheet by Invoice"
+msgstr "Цаг бүртгэлийг нэхэмжлэлээр харах"
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.user:0
-msgid "Timesheet by user"
-msgstr ""
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
+#: view:report.analytic.account.close:0
+msgid "Expired analytic accounts"
+msgstr "Хугацаа нь дууссан аналитик данснууд"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_stat_all
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_all
-msgid "Timesheet by Account"
-msgstr ""
+#: field:hr_timesheet_invoice.factor,factor:0
+msgid "Discount (%)"
+msgstr "Хөнгөлөлт(%)"
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.account:0
-msgid "Timesheet by account"
-msgstr ""
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor1
+msgid "Yes (100%)"
+msgstr "Тийм(100%)"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timesheet_invoice
-#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_invoice
-msgid "Costs to invoice"
-msgstr ""
+#: report:account.analytic.profit:0
+msgid "Employee or Journal Name"
+msgstr "Ажилтан буюу журналын нэр"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat_my
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user_my
-msgid "My Timesheet of the Month"
-msgstr ""
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Invoices"
+msgstr "Нэхэмжлэлүүд"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_random_timesheet_lines_board
-#: model:ir.model,name:report_timesheet_invoice.model_random_timesheet_lines
-msgid "Random Timesheet Lines"
-msgstr ""
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "December"
+msgstr "12 сар"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.act_account_analytic_account_2_report_timehsheet_account
-msgid "Timesheets"
-msgstr ""
+#: field:report.account.analytic.line.to.invoice,month:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,month:0
+#: field:report_timesheet.account,month:0
+#: field:report_timesheet.account.date,month:0
+#: field:report_timesheet.user,month:0
+msgid "Month"
+msgstr "Сар"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timehsheet_account
-msgid "Timesheets per account"
-msgstr ""
+#: report:account.analytic.profit:0
+msgid "Currency"
+msgstr "Валют"
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.invoice:0
-msgid "Timesheets to invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.act_res_users_2_report_timesheet_user
-msgid "Timesheets per day"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_date_stat_all
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_date_all
-msgid "Daily Timesheet by Account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: field:random.timesheet.lines,name:0 field:report.random.timesheet,name:0
-msgid "Description"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_account
-#: view:report_timesheet.account:0
-msgid "Timesheet per account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.module.module,shortdesc:report_timesheet.module_meta_information
-msgid "Timesheet - Reporting"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: view:report_timesheet.invoice:0
-msgid "Timesheet by invoice"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.ui.menu,name:report_timesheet_invoice.next_id_69
-msgid "This Month"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_account_stat_my
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_account_my
-msgid "My timesheets by account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.model,name:report_timesheet_invoice.model_report_random_timesheet
-msgid "Random Timesheet Report"
-msgstr ""
-
-#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
 #: field:random.timesheet.lines,user_id:0
 #: field:report.random.timesheet,user_id:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,user_id:0
 #: field:report_timesheet.account,user_id:0
 #: field:report_timesheet.account.date,user_id:0
 #: field:report_timesheet.invoice,user_id:0
 #: field:report_timesheet.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Хэрэглэгч"
 
 #. module: hr_timesheet_invoice
-#: view:report.random.timesheet:0
-msgid "Random Timesheets"
+#: help:hr.timesheet.invoice.create,product:0
+msgid ""
+"Complete this field only if you want to force to use a specific product. "
+"Keep empty to use the real product that comes from the cost."
 msgstr ""
+"Тухайлсан 1 барааг хэрэглэхийг тулгах гэж байгаа бол энэ талбарыг бөглөнө "
+"үү. Үнээр нь сонгох боломжтой бодит бараа хэрэглэж байгаа бол хоосон үлдээнэ "
+"үү."
 
 #. module: hr_timesheet_invoice
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet by account"
-msgstr ""
+#: view:report.timesheet.line:0
+msgid "Non Assigned timesheets to users"
+msgstr "Хэрэглэгчид оноогоогүй цаг бүртгэл"
 
 #. module: hr_timesheet_invoice
-#: view:random.timesheet.lines:0
-msgid "Random Timesheets Lines"
-msgstr ""
+#: field:report.timesheet.line,invoice_id:0
+msgid "Invoiced"
+msgstr "Нэхэмжилсэн"
 
 #. module: hr_timesheet_invoice
-#: field:report_timesheet.invoice,account_id:0
-msgid "Project"
-msgstr ""
+#: field:report.analytic.account.close,quantity_max:0
+msgid "Max. Quantity"
+msgstr "Хамгийн их тоо хэмжээ"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Invoice Balance amount"
+msgstr "Нэхэмжлэлийн үлдсэн дүн"
+
+#. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "Invoice rate by user"
+msgstr "Хэрэглэгчээр харах нэхэмжлэлийн харьцаа"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account:0
+msgid "Timesheet by account"
+msgstr "Цаг бүртгэлийг дансаар харах"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,date_from:0
+msgid "From"
+msgstr "Хэзээнээс"
+
+#. module: hr_timesheet_invoice
+#: help:account.analytic.account,amount_invoiced:0
+msgid "Total invoiced"
+msgstr "Нэхэмжилсэн бүгд"
+
+#. module: hr_timesheet_invoice
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Period to"
+msgstr "огноо хүртэлх үе"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Аналитик мөр"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "August"
+msgstr "8 сар"
+
+#. module: hr_timesheet_invoice
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_cost_ledger
+#: model:ir.actions.report.xml,name:hr_timesheet_invoice.account_analytic_account_cost_ledger
+msgid "Cost Ledger"
+msgstr "Үнийн дэвтэр"
+
+#. module: hr_timesheet_invoice
+#: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
+msgid "50%"
+msgstr "50%"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "June"
+msgstr "6 сар"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,date:0
+msgid "Display date in the history of works"
+msgstr "Ажлын түүх дээр огноог харуулах"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
+#: view:report_timesheet.account:0
+msgid "Timesheet per account"
+msgstr "Данс бүрийн цаг бүртгэл"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
+msgid "Timesheet by Account"
+msgstr "Дансаар харах цаг бүртгэл"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,date:0
+#: field:hr.timesheet.invoice.create.final,date:0
+#: field:random.timesheet.lines,date:0
+#: field:report.random.timesheet,date:0
+#: field:report.timesheet.line,date:0
+msgid "Date"
+msgstr "Огноо"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Please fill in the Address field in the Partner: %s."
+msgstr "Харилцагчийн 'Хаяг' талбарыг бөглөнө үү: %s."
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "November"
+msgstr "11 сар"
+
+#. module: hr_timesheet_invoice
+#: view:report.timesheet.line:0
+msgid "Extended Filters..."
+msgstr "Өргөтгөсөн хайлт..."
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,amount_invoice:0
 msgid "To invoice"
-msgstr ""
+msgstr "Нэхэмжлэх"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat_all
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user_all
-msgid "Timesheet by User"
-msgstr ""
+#: report:account.analytic.profit:0
+msgid "Eff."
+msgstr "Үр нөлөө"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_invoice_stat_all
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_invoice_all
-msgid "Timesheet by Invoice"
-msgstr ""
+#: view:hr.timesheet.invoice.create:0
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create
+msgid "Invoice analytic lines"
+msgstr "Нэхэмжлэлийн аналитик мөрүүд"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_random_timesheet_board
-msgid "Random Timesheet"
-msgstr ""
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "J.C. /Move name"
+msgstr "J.C. / Гүйлгээний нэр"
 
 #. module: hr_timesheet_invoice
-#: field:random.timesheet.lines,general_account_id:0
-msgid "General Account"
-msgstr ""
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Total:"
+msgstr "Бүгд:"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_user
-msgid "Timesheet per day"
-msgstr ""
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "January"
+msgstr "1 сар"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_invoice_stat_my
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_invoice_my
-msgid "My timesheets to invoice"
-msgstr ""
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Credit"
+msgstr "Кредит"
 
 #. module: hr_timesheet_invoice
-#: model:ir.model,name:report_timesheet_invoice.model_report_timesheet_account_date
-#: view:report_timesheet.account.date:0
-msgid "Daily timesheet per account"
-msgstr ""
-
-#. module: hr_timesheet_invoice
-#: model:ir.module.module,description:report_timesheet.module_meta_information
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
 msgid ""
-"Module to add timesheet views like\n"
-"    All Month, Timesheet By User, Timesheet Of Month, Timesheet By Account"
+"Please fill in the partner and pricelist field in the analytic account:\n"
+"%s"
 msgstr ""
 
 #. module: hr_timesheet_invoice
-#: field:random.timesheet.lines,analytic_account_id:0
-#: field:report.random.timesheet,analytic_account_id:0
-#: field:report_timesheet.account,account_id:0
-#: field:report_timesheet.account.date,account_id:0
-msgid "Analytic Account"
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "Error"
+msgstr "Алдаа"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.cost.ledger,date2:0
+msgid "End of period"
+msgstr "Мөчлөгийн эцэс"
+
+#. module: hr_timesheet_invoice
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+#: field:report.analytic.account.close,balance:0
+msgid "Balance"
+msgstr "Тэнцэл"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,quantity:0
+#: field:report.analytic.account.close,quantity:0
+#: field:report.random.timesheet,quantity:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,quantity:0
+#: field:report_timesheet.account,quantity:0
+#: field:report_timesheet.account.date,quantity:0
+#: field:report_timesheet.invoice,quantity:0
+#: field:report_timesheet.user,quantity:0
+msgid "Quantity"
+msgstr "Тоо хэмжээ"
+
+#. module: hr_timesheet_invoice
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Date/Code"
+msgstr "Огноо/Код"
+
+#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+#: field:random.timesheet.lines,general_account_id:0
+#: field:report.timesheet.line,general_account_id:0
+msgid "General Account"
+msgstr "Ерөнхий данс"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
+msgid "Print Timesheet Profit"
+msgstr "Цаг бүртгэлийн ашгийг хэвлэх"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,to_invoice:0
+msgid "Reinvoice Costs"
+msgstr "Үнийг дахин нэхэмжлэх"
+
+#. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "Totals:"
+msgstr "Бүгд :"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,date_to:0
+msgid "To"
+msgstr "Хэдий хүртэл"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:0
+msgid "Do you want to show details of work in invoice ?"
+msgstr "Нэхэмжлэл дээрх ажлыг дэлгэрэнгүй харах гэж байна уу ?"
+
+#. module: hr_timesheet_invoice
+#: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
+msgid "Period from"
+msgstr "Огнооноос хойших мөчлөг"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.account,amount_max:0
+msgid "Max. Invoice Price"
+msgstr "Нэхэмжлэлийн хамгийн их үнэ"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "September"
+msgstr "11 сар"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.line,invoice_id:0
+#: model:ir.model,name:hr_timesheet_invoice.model_account_invoice
+#: view:report.timesheet.line:0
+msgid "Invoice"
+msgstr "Нэхэмжлэл"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.cost.ledger:0
+#: view:hr.timesheet.analytic.profit:0
+#: view:hr.timesheet.invoice.create:0
+#: view:hr.timesheet.invoice.create.final:0
+msgid "Cancel"
+msgstr "Цуцлах"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
+#: model:ir.model,name:hr_timesheet_invoice.model_hr_analytic_timesheet
+#: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_line
+#: view:report.timesheet.line:0
+msgid "Timesheet Line"
+msgstr "Цаг бүртгэлийн мөрүүд"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Balance product needed"
+msgstr "Үлдсэн дүнгийн бараа хэрэгтэй байна."
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.invoice.create:0
+msgid "Billing Data"
+msgstr "Тооцооны өгөгдөл"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid ""
+"Please fill in the Partner or Customer and Sale Pricelist fields in the "
+"Analytic Account:\n"
+"%s"
 msgstr ""
+"Аналитик данс маягтын 'Харилцагч' буюу 'Үйлчлүүлэгч', 'Борлуулалтын үнийн "
+"санал' талбарыг бөглөнө үү:\n"
+"%s"
+
+#. module: hr_timesheet_invoice
+#: help:hr_timesheet_invoice.factor,customer_name:0
+msgid "Label for the customer"
+msgstr "Үйлчлүүлэгчийн шошго"
+
+#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+msgid "Current"
+msgstr "Одоогийн"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.cost.ledger:0
+#: view:hr.timesheet.analytic.profit:0
+msgid "Print"
+msgstr "Хэвлэх"
+
+#. module: hr_timesheet_invoice
+#: model:ir.model,name:hr_timesheet_invoice.model_random_timesheet_lines
+msgid "Random Timesheet Lines"
+msgstr "Гэнэтийн цаг бүртгэлийн мөрүүд"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "October"
+msgstr "10 сар"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,price:0
+msgid "Display cost of the item you reinvoice"
+msgstr "Дахин нэхэмжлэх зүйлсийн үнийг үзүүлэх"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create,date:0
+msgid "The real date of each work will be displayed on the invoice"
+msgstr "Ажил бүрийн нэхэмжлэл дээр харуулах бодит огноо"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:0
+#, python-format
+msgid "At least one line has no product !"
+msgstr "Багадаа 1 мөрийн барааг сонгоогүй байна!"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:0
+msgid "Timesheets to invoice"
+msgstr "Нэхэмжлэх цаг бүртгэл"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:0
+#, python-format
+msgid "Please fill a Balance product in the wizard"
+msgstr "Оруулах дэлгэцэд үлдсэн дүнгийн бараа талбарыг бөглөнө үү!"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.cost.ledger,date1:0
+msgid "Start of period"
+msgstr "Мөчлөгийн эхлэл"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,time:0
+#: field:hr.timesheet.invoice.create.final,time:0
+msgid "Time spent"
+msgstr "Зарцуулсан ццг"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
+msgid "Daily Timesheet by Account"
+msgstr "Өдөр бүрийн цаг бүртгэлийг дансаар харах"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,product:0
+#: view:random.timesheet.lines:0
+#: field:random.timesheet.lines,product_id:0
+#: field:report.account.analytic.line.to.invoice,product_id:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,product_id:0
+msgid "Product"
+msgstr "Бараа"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_uninvoiced_line
+msgid "Uninvoice lines with billing rate"
+msgstr "Тооцооны үнэ бүхий нэхэмжлээгүй мөрүүд"
+
+#. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "%"
+msgstr "%"
+
+#. module: hr_timesheet_invoice
+#: field:random.timesheet.lines,to_invoice:0
+msgid "Invoicing"
+msgstr "Нэхэмжилж байгаа"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "May"
+msgstr "5 сар"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.analytic.profit,journal_ids:0
+msgid "Journal"
+msgstr "Журнал"
+
+#. module: hr_timesheet_invoice
+#: help:hr.timesheet.invoice.create.final,balance_product:0
+msgid "The product that will be used to invoice the remaining amount"
+msgstr "Энэ барааг үлдсэн дүнг нэхэмжлэхэд хэрэглэдэг"
+
+#. module: hr_timesheet_invoice
+#: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:0
+#, python-format
+msgid "No Records Found for Report!"
+msgstr "Энэ тайланд тохирох  бичлэг олдсонгүй"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.invoice:0
+msgid "Timesheet by invoice"
+msgstr "Цаг бүртгэлийг нэхэмжлэлээр харах"
+
+#. module: hr_timesheet_invoice
+#: view:report.account.analytic.line.to.invoice:0
+#: view:report.timesheet.line:0
+#: view:report_timesheet.account:0
+#: view:report_timesheet.account.date:0
+#: view:report_timesheet.user:0
+msgid "This Month"
+msgstr "Энэ сар"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.action_random_timesheet_lines_board
+msgid "Working Hours"
+msgstr "Ажлын цаг"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.cost.ledger:0
+msgid "Select Period"
+msgstr "Мөчлөгийг сонгох"
+
+#. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+msgid "Period from startdate"
+msgstr "Эхлэх огнооноос хойших мөчлөг"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "February"
+msgstr "2 сар"
+
+#. module: hr_timesheet_invoice
+#: model:ir.module.module,shortdesc:hr_timesheet_invoice.module_meta_information
+msgid "Invoice on analytic lines"
+msgstr "Аналитик мөрүүдийг үндэслэн нэхэмжлэх"
+
+#. module: hr_timesheet_invoice
+#: view:report_timesheet.account.date:0
+msgid "Daily timesheet by account"
+msgstr "Өдөр бүрийн цаг бүртгэлийг дансаар харах"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,sale_price:0
+msgid "Sale price"
+msgstr "Борлуулалтын үнэ"
+
+#. module: hr_timesheet_invoice
+#: view:hr.timesheet.analytic.profit:0
+msgid "Employees"
+msgstr "Ажилчид"
+
+#. module: hr_timesheet_invoice
+#: field:report.account.analytic.line.to.invoice,name:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,name:0
+#: field:report_timesheet.account,name:0
+#: field:report_timesheet.account.date,name:0
+#: field:report_timesheet.user,name:0
+msgid "Year"
+msgstr "Он"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timesheet_user
+msgid "Timesheets per day"
+msgstr "1 өдрийн цаг бүртгэл"
+
+#. module: hr_timesheet_invoice
+#: selection:report.account.analytic.line.to.invoice,month:0
+#: selection:report.timesheet.line,month:0
+#: selection:report_timesheet.account,month:0
+#: selection:report_timesheet.account.date,month:0
+#: selection:report_timesheet.user,month:0
+msgid "April"
+msgstr "4 сар"
+
+#. module: hr_timesheet_invoice
+#: view:account.analytic.account:0
+msgid "Invoicing Data"
+msgstr "Нэхэмжлэх өгөгдөл"
+
+#. module: hr_timesheet_invoice
+#: help:hr_timesheet_invoice.factor,factor:0
+msgid "Discount in percentage"
+msgstr "Хөнгөлөлт(%)"
+
+#. module: hr_timesheet_invoice
+#: view:hr_timesheet_invoice.factor:0
+msgid "Types of invoicing"
+msgstr "Нэхэмжлэх төрлүүд"
+
+#. module: hr_timesheet_invoice
+#: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
+msgid "Timesheets per account"
+msgstr "1 дансны цаг бүртгэлүүд"
+
+#. module: hr_timesheet_invoice
+#: field:hr_timesheet_invoice.factor,name:0
+msgid "Internal name"
+msgstr "Дотоод нэр"
+
+#. module: hr_timesheet_invoice
+#: report:account.analytic.profit:0
+#: field:report.account.analytic.line.to.invoice,unit_amount:0
+msgid "Units"
+msgstr "Нэгжүүд"
+
+#. module: hr_timesheet_invoice
+#: field:account.analytic.line,to_invoice:0
+msgid "Type of Invoicing"
+msgstr "Нэхэмжлэх төрлүүд"
+
+#. module: hr_timesheet_invoice
+#: view:report.account.analytic.line.to.invoice:0
+msgid "Analytic Lines to Invoice"
+msgstr "Аналитик мөрөөс нэхэмжлэл рүү"
+
+#. module: hr_timesheet_invoice
+#: field:hr.timesheet.invoice.create,name:0
+#: field:random.timesheet.lines,name:0
+#: field:report.random.timesheet,name:0
+msgid "Description"
+msgstr "Тайлбар"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0
 msgid "Manager"
-msgstr ""
+msgstr "Менежер"
 
 #. module: hr_timesheet_invoice
-#: model:ir.actions.act_window,name:report_timesheet_invoice.action_timesheet_user_stat
-#: model:ir.ui.menu,name:report_timesheet_invoice.menu_report_timesheet_user
-msgid "Timesheet by user (this month)"
-msgstr ""
+#: report:account.analytic.profit:0
+#: field:hr.timesheet.invoice.create,price:0
+#: field:hr.timesheet.invoice.create.final,price:0
+#: view:report.timesheet.line:0
+#: field:report.timesheet.line,cost:0
+#: field:report_timesheet.user,cost:0
+msgid "Cost"
+msgstr "Өртөг"
+
+#. module: hr_timesheet_invoice
+#: view:random.timesheet.lines:0
+msgid "Search Timesheet Lines"
+msgstr "Цаг бүртгэлийн мөрийг хайх"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Дэлгэцийн үйлдлийн тодорхойлолтод моделийн нэр буруу байна."
+
+#, python-format
+#~ msgid ""
+#~ "Please fill in the partner and pricelist field '\n"
+#~ "                        'in the analytic account:\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Дараах аналитик данс дээрх харилцагч, үнийн саналыг бөглөнө үү! \n"
+#~ "%s"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй."
+
+#~ msgid "Visible name"
+#~ msgstr "Харагдах нэр"
+
+#~ msgid ""
+#~ "The cost of each work done will be displayed on the invoice. You probably "
+#~ "don't want to check this."
+#~ msgstr ""
+#~ "Хийсэн ажил бүрийн өртөг нь нэхэмжлэл дээр харагдана. Үүнийг та шалгах "
+#~ "шаардлагагүй ч байж магадгүй."
+
+#~ msgid "Draft Analytic Accounts"
+#~ msgstr "Ноорог аналитик данс"
+
+#~ msgid ""
+#~ "Check this field if you plan to automatically generate invoices based on the "
+#~ "costs in this analytic account: timesheets, expenses, ...You can configure "
+#~ "an automatic invoice rate on analytic accounts."
+#~ msgstr ""
+#~ "Зардал, цаг бүртгэл зэрэг аналитик дансаарх өртөг дээр суурилсан "
+#~ "нэхэмжлэлийг автоматаар үүсгэхээр төлөвлөвөл энэ талбарыг сонгоно уу. "
+#~ "Аналитик дансаарх нэхэмжлэх харьцааг тохируулж болно."
+
+#~ msgid "Select period"
+#~ msgstr "Мөчлөг сонгох"
+
+#~ msgid "Date or Code"
+#~ msgstr "Огноо буюу Код"
+
+#~ msgid "Entries to invoice"
+#~ msgstr "Нэхэмжлэлийн бичилт"
+
+#~ msgid "Choose"
+#~ msgstr "Сонголт"
+
+#~ msgid "Open Analytic Accounts"
+#~ msgstr "Аналитик данс нээх"
+
+#~ msgid "Filter on Accounts"
+#~ msgstr "Дансаар шүүх"
+
+#~ msgid "J.C. or Move name"
+#~ msgstr "J.C. ба гүйлгээний нэр"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн архитектур алдаатай!"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Өөрийн нэхэмжлэгдээгүй мөрүүд"
+
+#~ msgid "Uninvoiced Entries"
+#~ msgstr "Нэхэмжлэгдээгүй мөрүүд"
+
+#~ msgid "Create invoices"
+#~ msgstr "Нэхэмжлэл үүсгэх"
+
+#~ msgid "Status"
+#~ msgstr "Төлөв"
+
+#~ msgid "The product that will be used to invoice the remaining amount."
+#~ msgstr "Үлдсэн дүнг нэхэмжлэхэд энэ бүтээгдэхүүнийг хэрэглэнэ."
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Аналитик данс"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Choose accounts you want to invoice"
+#~ msgstr "Нэхэмжлэх дээрх дансуудыг сонгоно уу"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Хүлээгдэж буй аналитик данс"
+
+#~ msgid "Invoice rate"
+#~ msgstr "Нэхэмжлэх харьцаа"
+
+#~ msgid "Unclosed Invoiceable Accounts"
+#~ msgstr "Хаагдаагүй нэхэмжилж болох дансууд"
+
+#~ msgid "Analytic Account Reporting"
+#~ msgstr "Аналитик дансны тайлан"
+
+#~ msgid "Analytic lines - Reporting"
+#~ msgstr "Аналитик мөр - Тайлан"
+
+#~ msgid "My daily timesheets by account"
+#~ msgstr "Өөрийн өдрийн цаг бүртгэлийг дансаар харах"
+
+#~ msgid "My Timesheet of the Month"
+#~ msgstr "Миний сарын цаг бүртгэл"
+
+#~ msgid "Timesheet - Reporting"
+#~ msgstr "Цаг бүртгэл - Тайлан"
+
+#~ msgid "My timesheets by account"
+#~ msgstr "Миний цаг бүртгэлийн данс"
+
+#~ msgid "My timesheets to invoice"
+#~ msgstr "Миний цаг бүртгэлийн нэхэмжлэх"
+
+#~ msgid ""
+#~ "Module to add timesheet views like\n"
+#~ "    All Month, Timesheet By User, Timesheet Of Month, Timesheet By Account"
+#~ msgstr ""
+#~ "Дараа цаг бүртгэлийн дэлгэцийг энэ модуль нэмнэ\n"
+#~ "  Бүх сар, Цаг бүртгэлийг хэрэглэгчээр харах, Сарын цаг бүртгэл, Цаг "
+#~ "бүртгэлийг дансаар харах"
+
+#~ msgid "Timesheet by user (this month)"
+#~ msgstr "Хэрэглэгчийн цаг бүртгэл (энэ сард)"
+
+#~ msgid "90%"
+#~ msgstr "90%"

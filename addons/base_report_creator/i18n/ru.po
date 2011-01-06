@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-03 02:39+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 09:22+0000\n"
+"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_report_creator
@@ -25,6 +25,11 @@ msgid ""
 msgstr ""
 "Введите параметр для поиска нужных записей.\n"
 "Например: res_partner.id=3"
+
+#. module: base_report_creator
+#: model:ir.model,name:base_report_creator.model_report_menu_create
+msgid "Menu Create"
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_type:0
@@ -47,9 +52,18 @@ msgid "Graph Mode"
 msgstr "Графический вид"
 
 #. module: base_report_creator
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия."
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid ""
+"These is/are model(s) (%s) in selection which is/are not related to any "
+"other model"
+msgstr ""
+"Существует модель (%s) в выделении, которая не связанна ни с одной моделью"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Legend"
+msgstr "Легенда"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -84,7 +98,7 @@ msgstr "Запрос SQL"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-#: wizard_button:base_report_creator.report.menu.create,init,create_menu:0
+#: view:report.menu.create:0
 msgid "Create Menu"
 msgstr "Создать меню"
 
@@ -105,13 +119,18 @@ msgid "OR"
 msgstr "ИЛИ"
 
 #. module: base_report_creator
-#: model:ir.ui.menu,name:base_report_creator.menu_base_report_creator_action
-#: model:ir.ui.menu,name:base_report_creator.menu_base_report_creator_action_config
+#: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
 msgid "Custom Reports"
 msgstr "Пользовательские отчеты"
 
 #. module: base_report_creator
-#: wizard_view:base_report_creator.report.menu.create,init:0
+#: code:addons/base_report_creator/base_report_creator.py:0
+#, python-format
+msgid "No Related Models!!"
+msgstr "Нет связанной модели!!"
+
+#. module: base_report_creator
+#: view:report.menu.create:0
 msgid "Menu Information"
 msgstr "Информация меню"
 
@@ -119,6 +138,11 @@ msgstr "Информация меню"
 #: selection:base_report_creator.report.fields,group_method:0
 msgid "Sum"
 msgstr "Сумма"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You must have to give calendar view's color,start date and delay."
+msgstr ""
 
 #. module: base_report_creator
 #: field:base_report_creator.report,model_ids:0
@@ -137,21 +161,11 @@ msgstr "Тип отчета"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "State"
-msgstr "Состояние"
-
-#. module: base_report_creator
-#: selection:base_report_creator.report,state:0
-msgid "Valid"
-msgstr "Корректный"
-
-#. module: base_report_creator
-#: view:base_report_creator.report:0
 msgid "Add filter"
 msgstr "Добавить фильтр"
 
 #. module: base_report_creator
-#: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
+#: model:ir.actions.act_window,name:base_report_creator.action_report_menu_create
 msgid "Create Menu for Report"
 msgstr "Создать меню для отчета"
 
@@ -163,6 +177,7 @@ msgid "Form"
 msgstr "Форма"
 
 #. module: base_report_creator
+#: selection:base_report_creator.report,view_type2:0
 #: selection:base_report_creator.report,view_type3:0
 #: selection:base_report_creator.report.fields,calendar_mode:0
 #: selection:base_report_creator.report.fields,graph_mode:0
@@ -170,6 +185,7 @@ msgid "/"
 msgstr "/"
 
 #. module: base_report_creator
+#: view:base_report_creator.report:0
 #: field:base_report_creator.report.fields,report_id:0
 #: field:base_report_creator.report.filter,report_id:0
 #: model:ir.model,name:base_report_creator.model_base_report_creator_report
@@ -182,9 +198,14 @@ msgid "Starting Date"
 msgstr "Дата начала"
 
 #. module: base_report_creator
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Неправильный XML для просмотра архитектуры!"
+#: view:base_report_creator.report:0
+msgid "Filters on Fields"
+msgstr "Фильтры по полям"
+
+#. module: base_report_creator
+#: field:base_report_creator.report,group_ids:0
+msgid "Authorized Groups"
+msgstr "Авторизованные группы"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type1:0
@@ -192,11 +213,6 @@ msgstr "Неправильный XML для просмотра архитект�
 #: selection:base_report_creator.report,view_type3:0
 msgid "Tree"
 msgstr "В виде дерева"
-
-#. module: base_report_creator
-#: field:base_report_creator.report,group_ids:0
-msgid "Authorized Groups"
-msgstr "Авторизованные группы"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_orientation:0
@@ -214,7 +230,7 @@ msgid "Security"
 msgstr "Безопасность"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report.menu.create,init,menu_name:0
+#: field:report.menu.create,menu_name:0
 msgid "Menu Name"
 msgstr "Название меню"
 
@@ -223,6 +239,11 @@ msgstr "Название меню"
 #: selection:base_report_creator.report_filter.fields,set_value_select_field,condition:0
 msgid "AND"
 msgstr "И"
+
+#. module: base_report_creator
+#: constraint:base_report_creator.report:0
+msgid "You can not display field which are not stored in Database."
+msgstr "Нельзя вывести поле, которое не хранится в базе данных."
 
 #. module: base_report_creator
 #: field:base_report_creator.report.fields,calendar_mode:0
@@ -259,19 +280,9 @@ msgid "Field Name"
 msgstr "Название поля"
 
 #. module: base_report_creator
-#: selection:base_report_creator.report,state:0
-msgid "Draft"
-msgstr "Черновик"
-
-#. module: base_report_creator
 #: wizard_view:base_report_creator.report_filter.fields,set_value_select_field:0
 msgid "Set Filter Values"
 msgstr "Установить значения фильтра"
-
-#. module: base_report_creator
-#: field:base_report_creator.report,state:0
-msgid "Status"
-msgstr "Статус"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_orientation:0
@@ -287,6 +298,11 @@ msgstr "Строки и столбцы отчета"
 #: view:base_report_creator.report:0
 msgid "General Configuration"
 msgstr "Общие настройки"
+
+#. module: base_report_creator
+#: help:base_report_creator.report.fields,sequence:0
+msgid "Gives the sequence order when displaying a list of fields."
+msgstr "Определяет порядок вывода списка полей."
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report_filter.fields,init:0
@@ -325,7 +341,7 @@ msgid "X Axis"
 msgstr "Ось X"
 
 #. module: base_report_creator
-#: wizard_field:base_report_creator.report.menu.create,init,menu_parent_id:0
+#: field:report.menu.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Родительское меню"
 
@@ -340,7 +356,7 @@ msgid "Filter Name"
 msgstr "Название фильтра"
 
 #. module: base_report_creator
-#: model:ir.actions.wizard,name:base_report_creator.wizard_report_open
+#: view:base_report_creator.report:0
 msgid "Open Report"
 msgstr "Открыть отчет"
 
@@ -356,19 +372,21 @@ msgid "Report Creator"
 msgstr "Создатель отчета"
 
 #. module: base_report_creator
-#: wizard_button:base_report_creator.report.menu.create,init,end:0
 #: wizard_button:base_report_creator.report_filter.fields,init,end:0
 #: wizard_button:base_report_creator.report_filter.fields,set_value_select_field,end:0
+#: view:report.menu.create:0
 msgid "Cancel"
 msgstr "Отмена"
 
 #. module: base_report_creator
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: constraint:base_report_creator.report:0
+msgid "You can apply aggregate function to the non calculated field."
 msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
+
+#. module: base_report_creator
+#: field:base_report_creator.report,menu_id:0
+msgid "Menu"
+msgstr "Меню"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_type1:0
@@ -386,9 +404,16 @@ msgid "Field"
 msgstr "Поле"
 
 #. module: base_report_creator
-#: view:base_report_creator.report:0
-msgid "Filters on Fields"
-msgstr "Фильтры по полям"
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Unique Colors"
+msgstr "Уникальные цвета"
+
+#. module: base_report_creator
+#: help:base_report_creator.report,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the report "
+"without removing it."
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_graph_type:0
@@ -401,25 +426,9 @@ msgid "Third View"
 msgstr "Третий вид"
 
 #. module: base_report_creator
-#: model:ir.module.module,description:base_report_creator.module_meta_information
-msgid ""
-"This modules allows you to create any statistic\n"
-"report on several object. It's a SQL query builder and browser\n"
-"for and users.\n"
-"\n"
-"After installing the module, it adds a menu to define custom report in\n"
-"the \"Dashboard\" menu.\n"
-msgstr ""
-"С помощью этих модулей вы сможете создать статистический отчет\n"
-"выбранных объектов. Это создатель и браузер SQL-запросов для пользователей.\n"
-"\n"
-"После установки модуля, в главном меню появится ссылка для выбора отчета по "
-"умолчанию.\n"
-
-#. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Uniq Colors"
-msgstr "Уник. цвета"
+msgid "End Date"
+msgstr "Дата окончания"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0
@@ -438,8 +447,8 @@ msgstr "Среднее"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
-msgid "Reports"
-msgstr "Отчеты"
+msgid "Use %(uid)s to filter by the connected user"
+msgstr ""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,group_method:0
@@ -467,7 +476,7 @@ msgid "Second View"
 msgstr "Второй вид"
 
 #. module: base_report_creator
-#: wizard_view:base_report_creator.report.menu.create,init:0
+#: view:report.menu.create:0
 msgid "Create Menu For This Report"
 msgstr "Создать меню для данного отчета"
 
@@ -497,3 +506,58 @@ msgstr "Воля для отображения"
 #: field:base_report_creator.report,filter_ids:0
 msgid "Filters"
 msgstr "Фильтры"
+
+#. module: base_report_creator
+#: model:ir.module.module,description:base_report_creator.module_meta_information
+msgid ""
+"This module allows you to create any statistic\n"
+"report on several objects. It's a SQL query builder and browser\n"
+"for and users.\n"
+"\n"
+"After installing the module, it adds a menu to define custom report in\n"
+"the \"Dashboard\" menu.\n"
+msgstr ""
+
+#~ msgid "State"
+#~ msgstr "Состояние"
+
+#~ msgid "Valid"
+#~ msgstr "Корректный"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Неправильный XML для просмотра архитектуры!"
+
+#~ msgid "Draft"
+#~ msgstr "Черновик"
+
+#~ msgid "Status"
+#~ msgstr "Статус"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Название объекта должно начинаться с x_  и не должно содержать специальных "
+#~ "символов !"
+
+#~ msgid "Uniq Colors"
+#~ msgstr "Уник. цвета"
+
+#~ msgid "Reports"
+#~ msgstr "Отчеты"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Недопустимое имя модели в определении действия."
+
+#~ msgid ""
+#~ "This modules allows you to create any statistic\n"
+#~ "report on several object. It's a SQL query builder and browser\n"
+#~ "for and users.\n"
+#~ "\n"
+#~ "After installing the module, it adds a menu to define custom report in\n"
+#~ "the \"Dashboard\" menu.\n"
+#~ msgstr ""
+#~ "С помощью этих модулей вы сможете создать статистический отчет\n"
+#~ "выбранных объектов. Это создатель и браузер SQL-запросов для пользователей.\n"
+#~ "\n"
+#~ "После установки модуля, в главном меню появится ссылка для выбора отчета по "
+#~ "умолчанию.\n"

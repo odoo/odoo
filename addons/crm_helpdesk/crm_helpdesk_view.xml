@@ -15,6 +15,7 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.helpdesk')]</field>
             <field name="context">{'object_id':'crm.helpdesk'}</field>
+            <field name="help">Create and manage helpdesk categories to better manage and classify your support requests.</field>
         </record>
 
         <menuitem action="crm_helpdesk_categ_action" name="Categories"
@@ -69,6 +70,9 @@
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1"/>
+                                <button name="case_cancel"
+                                    states="draft,open,pending" string="Cancel"
+                                    type="object" icon="gtk-cancel" />
                                 <button name="case_open"
                                     states="draft,pending" string="Open"
                                     type="object" icon="gtk-go-forward" />
@@ -82,16 +86,13 @@
                                 <button name="case_close"
                                     states="open,draft,pending" string="Close"
                                     type="object" icon="gtk-jump-to" />
-                                <button name="case_cancel"
-                                    states="draft,open,pending" string="Cancel"
-                                    type="object" icon="gtk-cancel" />
                                 <button name="case_reset"
                                     states="done,cancel"
                                     string="Reset to Draft" type="object"
                                     icon="gtk-convert" />
                             </group>
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="Communication &amp; History" groups="base.group_extended">
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
@@ -187,6 +188,9 @@
                     <field name="section_id"/>
                     <field name="priority"/>
                     <field name="state"/>
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -200,9 +204,6 @@
                     <button name="case_close" string="Done"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -248,21 +249,21 @@
                     <field name="partner_id" />
                     <field name="user_id" select="1" widget="selection"/>
                     <field name="section_id" select="1" widget="selection" string="Sales Team">
-                        <filter icon="terp-personal+"
+                        <filter icon="terp-personal+" groups="base.group_extended"
                             domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                            help="My section" />
+                            help="My Sales Team(s)" />
                     </field>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner"
-                           domain="[]" help="Partner"
-                           context="{'group_by':'partner_id'}" />
+                            domain="[]" help="Partner"
+                            context="{'group_by':'partner_id'}" />
                         <filter string="Responsible" icon="terp-personal"
-                           domain="[]" help="Responsible User"
-                           context="{'group_by':'user_id'}" />
+                            domain="[]" help="Responsible User"
+                            context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
-                           domain="[]" help="Sales Team"
-                           context="{'group_by':'section_id'}" />
+                            domain="[]" help="Sales Team"
+                            context="{'group_by':'section_id'}" />
                         <separator orientation="vertical"/>
                         <filter string="Priority" icon="terp-rating-rated"
                             domain="[]" context="{'group_by':'priority'}" />
@@ -270,11 +271,11 @@
                             context="{'group_by':'state'}" />
                         <separator orientation="vertical"/>
                         <filter string="Date" icon="terp-go-month"
-                           domain="[]" help="Request Date"
-                           context="{'group_by':'date'}" />
-                       <filter string="Deadline" icon="terp-go-month"
-                           domain="[]"
-                           context="{'group_by':'date_deadline'}" />
+                            domain="[]" help="Request Date"
+                            context="{'group_by':'date'}" />
+                        <filter string="Deadline" icon="terp-go-month"
+                            domain="[]"
+                            context="{'group_by':'date_deadline'}" />
                     </group>
                 </search>
             </field>

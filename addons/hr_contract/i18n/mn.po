@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-29 10:58+0000\n"
-"Last-Translator: ub121 <ubs121@gmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 11:33+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_contract
@@ -28,28 +28,54 @@ msgid "Gross"
 msgstr "Бааз"
 
 #. module: hr_contract
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
+#: view:hr.contract:0
+msgid "Trial Period"
+msgstr "Туршилтын хугацаа"
+
+#. module: hr_contract
+#: field:hr.contract,trial_date_start:0
+msgid "Trial Start Date"
+msgstr "Туршилтын үе эхлэх огноо"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Function Arguments"
+msgstr "Функцийн хувьсагчууд"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Medical Examination"
+msgstr "Эрүүл мэндийн үзлэг"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle:0
+msgid "Company Vehicle"
+msgstr "Компанийн тээврийн хэрэгсэл"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,name:0
+msgid "Wage Type Name"
+msgstr "Цалингийн төрлийн нэр"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Miscellaneous"
+msgstr "Бусад"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Generalities"
-msgstr "Ерөнхий"
+msgid "Current"
+msgstr "Одоогийн"
 
 #. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of children"
-msgstr "Хүүхдийн тоо"
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Хэлтэс"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Цагийн өртөгийн фактор"
+#: view:hr.contract:0
+msgid "Overpassed"
+msgstr "Хугацаа нь өнгөрсөн"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -57,14 +83,27 @@ msgid "Wage Types"
 msgstr "Цалингийн төрлүүд"
 
 #. module: hr_contract
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+#: view:hr.employee:0
+msgid "Calculations"
+msgstr "Тооцоолол"
 
 #. module: hr_contract
+#: selection:hr.contract.wage.type,type:0
+msgid "Basic"
+msgstr "Үндсэн"
+
+#. module: hr_contract
+#: view:hr.contract:0
 #: field:hr.contract,employee_id:0
+#: model:ir.model,name:hr_contract.model_hr_employee
 msgid "Employee"
 msgstr "Ажилтан"
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Ажлын цагийн хуваарь"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -82,72 +121,118 @@ msgid "Hours in the period"
 msgstr "Хугацааны мөчлөг"
 
 #. module: hr_contract
-#: field:hr.contract,function:0
+#: view:hr.employee:0
 msgid "Function"
 msgstr "Үүрэг"
 
 #. module: hr_contract
-#: field:hr.employee,marital_status:0
-#: view:hr.employee.marital.status:0
-#: field:hr.employee.marital.status,name:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_marital_status
-#: model:ir.ui.menu,name:hr_contract.hr_menu_marital_status
-msgid "Marital Status"
-msgstr "Гэрлэлтийн байдал"
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Бүлэглэвэл..."
 
 #. module: hr_contract
 #: view:hr.employee:0
-msgid "Miscelleanous"
-msgstr "Бусад"
+msgid "Description"
+msgstr "Тайлбар"
+
+#. module: hr_contract
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Төрсөн газар"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
+#: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 msgid "Contracts"
 msgstr "Гэрээнүүд"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,type:0
-msgid "Type"
-msgstr "Төрөл"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Менежер эсэх"
 
 #. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-msgid "Wage Type"
-msgstr "Цалингийн төрөл"
+#: view:hr.contract:0
+msgid "Job"
+msgstr "Ажлын байр"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type.period,name:0
-msgid "Period Name"
-msgstr "Мөчлөгийн нэр"
-
-#. module: hr_contract
-#: model:ir.model,name:hr_contract.model_hr_employee_marital_status
-msgid "Employee Marital Status"
-msgstr "Ажилчдын гэрлэлтийн байдал"
-
-#. module: hr_contract
-#: field:hr.employee,medic_exam:0
-msgid "Medical examination date"
-msgstr "Эмнэлэгийн үзлэгийн огноо"
-
-#. module: hr_contract
-#: field:hr.contract.wage.type,name:0
-msgid "Wage Type Name"
-msgstr "Цалингийн төрлийн нэр"
-
-#. module: hr_contract
-#: field:hr.contract,working_hours_per_day:0
-msgid "Working hours per day"
-msgstr "Өдөрт дунджаар ажиллах хугацаа"
-
-#. module: hr_contract
+#: view:hr.contract:0
 #: view:hr.employee:0
-msgid "Salary"
-msgstr "Цалин"
+msgid "Passport"
+msgstr "Пасспорт"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Search Contract"
+msgstr "Гэрээг хайх"
+
+#. module: hr_contract
+#: help:hr.employee,contract_id:0
+msgid "Latest contract of the employee"
+msgstr "Ажилтны одоогийн хөдөлмөрийн гэрээ"
+
+#. module: hr_contract
+#: field:hr.contract,advantages_net:0
+msgid "Deductions"
+msgstr "Суутгал"
+
+#. module: hr_contract
+#: model:ir.module.module,description:hr_contract.module_meta_information
+msgid ""
+"\n"
+"    Add all information on the employee form to manage contracts:\n"
+"    * Marital status,\n"
+"    * Security number,\n"
+"    * Place of birth, birth date, ...\n"
+"    You can assign several contracts per employee.\n"
+"    "
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: field:hr.contract,advantages:0
+#: view:hr.employee:0
+msgid "Advantages"
+msgstr "Давуу тал"
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: view:hr.employee:0
+msgid "Valid for"
+msgstr "Хүчинтэй хугацаа дуусах огноо"
+
+#. module: hr_contract
+#: view:hr.contract:0
+#: view:hr.employee:0
+msgid "Work Permit"
+msgstr "Ажлын зөвшөөрөл"
+
+#. module: hr_contract
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Хүүхдийн тоо"
+
+#. module: hr_contract
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_type
+msgid "Contract Types"
+msgstr "Гэрээний төрлүүд"
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
+msgstr "Цалин төрлийг хайх"
+
+#. module: hr_contract
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "Алдаа! Ажилтны рекурс иерархийг үүсгэж болохгүй"
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -155,9 +240,19 @@ msgid "End Date"
 msgstr "Дуусах огноо"
 
 #. module: hr_contract
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
+#: field:hr.contract,wage:0
+msgid "Wage"
+msgstr "Цалин"
+
+#. module: hr_contract
+#: field:hr.contract,name:0
+msgid "Contract Reference"
+msgstr "Гэрээний нэр"
+
+#. module: hr_contract
+#: help:hr.employee,vehicle_distance:0
+msgid "In kilometers"
+msgstr "Километрээр"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -167,63 +262,129 @@ msgid "Notes"
 msgstr "Тэмдэглэл"
 
 #. module: hr_contract
+#: constraint:hr.employee:0
+msgid ""
+"Error ! You cannot select a department for which the employee is the manager."
+msgstr "Алдаа! Ажилтан нь менежер байх хэлтсийг сонгож болохгүй."
+
+#. module: hr_contract
+#: field:hr.contract,wage_type_id:0
+#: view:hr.contract.wage.type:0
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Wage Type"
+msgstr "Цалингийн төрөл"
+
+#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract
+#: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
 msgid "Contract"
 msgstr "Гэрээ"
 
 #. module: hr_contract
+#: view:hr.contract:0
+#: field:hr.contract,type_id:0
 #: view:hr.contract.type:0
+#: field:hr.contract.type,name:0
+#: model:ir.model,name:hr_contract.model_hr_contract_type
 msgid "Contract Type"
 msgstr "Гэрээний төрөл"
 
 #. module: hr_contract
+#: view:hr.contract.wage.type.period:0
+msgid "Search Wage Period"
+msgstr "Цалийн мөчлөгийг хайх"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Salary Computation"
+msgstr "Цалингийн тооцоолол"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Job Info"
+msgstr "Ажлын байрны мэдээлэл"
+
+#. module: hr_contract
 #: field:hr.contract.wage.type,period_id:0
+#: view:hr.contract.wage.type.period:0
 #: model:ir.model,name:hr_contract.model_hr_contract_wage_type_period
 msgid "Wage Period"
 msgstr "Цалингийн мөчлөг"
 
 #. module: hr_contract
-#: field:hr.employee,audiens_num:0
-msgid "AUDIENS Number"
-msgstr "AUDIENS дугаар"
+#: field:hr.contract,job_id:0
+msgid "Job Title"
+msgstr "Албан тушаал"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Remuneration"
-msgstr "Нөхөн олговор"
-
-#. module: hr_contract
-#: field:hr.contract,name:0
-msgid "Contract Name"
-msgstr "Гэрээний нэр"
-
-#. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Contract Wage Type"
-msgstr "Гэрээн дахь цалингийн төрөл"
-
-#. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Төрсөн газар"
-
-#. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Manager"
-msgstr "Менежер"
-
-#. module: hr_contract
-#: view:hr.contract.wage.type.period:0
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
 #: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
 msgid "Wage period"
 msgstr "Цалингийн мөчлөг"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
+msgstr "Гэрээс ажил хүртэлх зай"
+
+#. module: hr_contract
+#: field:hr.contract,date_start:0
+msgid "Start Date"
+msgstr "Эхлэх огноо"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Company contribution"
+msgstr "Ажил олгогчийн төлөх шимтгэл"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,type:0
+msgid "Type"
+msgstr "Төрөл"
+
+#. module: hr_contract
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Туршилт хугацаа дуусах огноо"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "Цагийн өртөгийн фактор"
+
+#. module: hr_contract
+#: field:hr.contract.wage.type.period,name:0
+msgid "Period Name"
+msgstr "Мөчлөгийн нэр"
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Period"
+msgstr "Мөчлөг"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Payslip Line"
+msgstr "Цалингийн хуудасны мөр"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Employee specific allowances and deductions"
+msgstr "Ажилтанд бүрт онцлог олголт, суутгалууд"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Contract Details"
+msgstr "Гэрээний дэлгэрэнгүй"
+
+#. module: hr_contract
+#: view:hr.employee:0
+msgid "Salary Structure"
+msgstr "Цалингийн шатлал"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -236,22 +397,92 @@ msgstr ""
 "тооцоход хэрэглэгдэнэ"
 
 #. module: hr_contract
-#: field:hr.contract,wage:0
-msgid "Wage"
-msgstr "Цалин"
-
-#. module: hr_contract
-#: field:hr.contract,date_start:0
-msgid "Start Date"
-msgstr "Эхлэх огноо"
-
-#. module: hr_contract
-#: field:hr.employee.marital.status,description:0
-msgid "Status Description"
-msgstr "Статусын тайлбар"
+#: view:hr.employee:0
+msgid "Personal Info"
+msgstr "Хувийн мэдээлэл"
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: view:hr.employee:0
-msgid "Contract Duration"
-msgstr "Гэрээний үргэлжлэх хугацаа"
+msgid "Duration"
+msgstr "Үргэлжлэх хугацаа"
+
+#. module: hr_contract
+#: field:hr.employee,medic_exam:0
+msgid "Medical Examination Date"
+msgstr "Эмнэлгийн үзлэгийн огноо"
+
+#. module: hr_contract
+#: field:hr.contract,advantages_gross:0
+msgid "Allowances"
+msgstr "Олголтууд"
+
+#. module: hr_contract
+#: view:hr.contract:0
+msgid "Main Data"
+msgstr "Үндсэн мэдээлэл"
+
+#. module: hr_contract
+#: view:hr.contract.type:0
+msgid "Search Contract Type"
+msgstr "Гэрээний төрлийг хайх"
+
+#~ msgid "Generalities"
+#~ msgstr "Ерөнхий"
+
+#~ msgid "Number of children"
+#~ msgstr "Хүүхдийн тоо"
+
+#~ msgid "Marital Status"
+#~ msgstr "Гэрлэлтийн байдал"
+
+#~ msgid "Miscelleanous"
+#~ msgstr "Бусад"
+
+#~ msgid "Employee Marital Status"
+#~ msgstr "Ажилчдын гэрлэлтийн байдал"
+
+#~ msgid "Medical examination date"
+#~ msgstr "Эмнэлэгийн үзлэгийн огноо"
+
+#~ msgid "Working hours per day"
+#~ msgstr "Өдөрт дунджаар ажиллах хугацаа"
+
+#~ msgid "Salary"
+#~ msgstr "Цалин"
+
+#~ msgid "AUDIENS Number"
+#~ msgstr "AUDIENS дугаар"
+
+#~ msgid "Remuneration"
+#~ msgstr "Нөхөн олговор"
+
+#~ msgid "Contract Name"
+#~ msgstr "Гэрээний нэр"
+
+#~ msgid "Contract Wage Type"
+#~ msgstr "Гэрээн дахь цалингийн төрөл"
+
+#~ msgid "Manager"
+#~ msgstr "Менежер"
+
+#~ msgid "Status Description"
+#~ msgstr "Статусын тайлбар"
+
+#~ msgid "Contract Duration"
+#~ msgstr "Гэрээний үргэлжлэх хугацаа"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй"

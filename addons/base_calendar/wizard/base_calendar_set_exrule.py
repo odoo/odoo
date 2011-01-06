@@ -82,8 +82,10 @@ class base_calendar_set_exrule(osv.osv_memory):
         @param fields: List of fields for default value
         @param context: A standard dictionary for contextual values
         """
+        if context is None: 
+            context = {}
         event_obj = self.pool.get(context.get('active_model'))
-        for event in event_obj.browse(cr, uid, context.get('active_ids', [])):
+        for event in event_obj.browse(cr, uid, context.get('active_ids', []), context=context):
             if not event.rrule:
                 raise osv.except_osv(_("Warning !"), _("Please Apply Recurrency before applying Exception Rule."))
         return False
@@ -102,7 +104,9 @@ class base_calendar_set_exrule(osv.osv_memory):
         weekstring = ''
         monthstring = ''
         yearstring = ''
-        ex_id = base_calendar.base_calendar_id2real_id(context['active_id'])
+        if context is None: 
+            context = {}
+        ex_id = base_calendar.base_calendar_id2real_id(context.get('active_id', False))
         model = context.get('model', False)
         model_obj = self.pool.get(model)
         for datas in self.read(cr, uid, ids, context=context):
@@ -146,7 +150,7 @@ class base_calendar_set_exrule(osv.osv_memory):
                                 + enddate + monthstring + yearstring
 
             model_obj.write(cr, uid, ex_id,{'exrule': exrule_string})
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
         _defaults = {
          'freq': lambda *x: 'None',

@@ -7,44 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-12-08 11:46+0000\n"
-"PO-Revision-Date: 2010-08-03 08:13+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-27 00:49+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: multi_company
-#: help:multi_company.default,object_id:0
-msgid "Object affect by this rules"
-msgstr "Objeto afetado por esta regra"
-
-#. module: multi_company
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do objeto deve começar com x_ e não deve conter caracteres especiais!"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erro: A unidade padrão e a unidade de compra devem ser da mesma categoria."
-
-#. module: multi_company
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr "O imposto não parece estar correto."
-
-#. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nome de modelo inválido na definição da ação"
 
 #. module: multi_company
 #: model:res.company,overdue_msg:multi_company.res_company_odoo
@@ -53,71 +24,37 @@ msgstr "Nome de modelo inválido na definição da ação"
 #: model:res.company,overdue_msg:multi_company.res_company_oerp_in
 #: model:res.company,overdue_msg:multi_company.res_company_oerp_us
 msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Please find in attachment a reminder of all your unpaid invoices, for a "
+"total amount due of:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
 msgstr ""
-"Por favor desconsidere esta mensagem, caso o seu pagamento tenha sido "
-"efetuado após o envio deste e-mail. Em caso de dúvida, entre em contato com "
-"nosso departamento contábil"
-
-#. module: multi_company
-#: field:multi_company.default,company_dest_id:0
-msgid "Default Company"
-msgstr "Empresa Padrão"
-
-#. module: multi_company
-#: field:multi_company.default,object_id:0
-msgid "Object"
-msgstr "Objeto"
-
-#. module: multi_company
-#: model:ir.module.module,shortdesc:multi_company.module_meta_information
-#: view:multi_company.default:0
-msgid "Multi Company"
-msgstr "Empresa Múltipla"
-
-#. module: multi_company
-#: model:ir.module.module,description:multi_company.module_meta_information
-msgid ""
-"This module add the possibility to easily manage \n"
-"    the default value for each object\n"
-"    "
-msgstr ""
-"Este módulo acrescenta a possibilidade de se gerenciar facilmente \n"
-"    o valor padrão para cada objeto\n"
-"    "
-
-#. module: multi_company
-#: field:multi_company.default,company_id:0
-msgid "Main Company"
-msgstr "Empresa principal"
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Condition"
-msgstr "Condição"
-
-#. module: multi_company
-#: help:multi_company.default,company_dest_id:0
-msgid "Company to store the current record"
-msgstr "Empresa onde será armazenado o registro atual"
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML inválido para a arquitetura de exibição"
-
-#. module: multi_company
-#: field:multi_company.default,name:0
-msgid "Name"
-msgstr "Nome"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Erro: Unidade de venda deve ser de categoria diferente da unidade de medida"
+"\n"
+"Data: %(date)s\n"
+"\n"
+"Prezado %(partner_name)s,\n"
+"\n"
+"Em anexo encontra-se  um lembrete de todas suas  faturas à pagar, por um "
+"montante total devido de;\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Obrigado,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
 
 #. module: multi_company
 #: model:product.category,name:multi_company.Odoo1
@@ -125,39 +62,26 @@ msgid "Odoo Offers"
 msgstr "Promoções Odoo (On Demand Open Object)"
 
 #. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erro! Você não pode criar empresas recursivas."
-
-#. module: multi_company
-#: help:multi_company.default,name:0
-msgid "Name it to easily find a record"
-msgstr "Dê um nome a este registro, a fim de localizá-lo facilmente"
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr "Retornando"
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
-msgid "Multi company"
-msgstr "Multi empresa"
+msgid "Multi-Companies"
+msgstr "Multi-Empresas"
 
 #. module: multi_company
-#: model:ir.model,name:multi_company.model_multi_company_default
-msgid "multi_company.default"
-msgstr "multi_company.default"
-
-#. module: multi_company
-#: help:multi_company.default,company_id:0
-msgid "Company where the user is connected"
-msgstr "Empresa onde o usuário está conectado"
+#: model:ir.module.module,shortdesc:multi_company.module_meta_information
+#: view:multi_company.default:0
+msgid "Multi Company"
+msgstr "Multi-Empresa"
 
 #. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
+#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
 msgstr "Empresa Padrão por Objeto"
-
-#. module: multi_company
-#: field:multi_company.default,expression:0
-msgid "Expression"
-msgstr "Expressão"
 
 #. module: multi_company
 #: model:product.template,name:multi_company.product_product_odoo1_product_template
@@ -165,37 +89,138 @@ msgid "Odoo Offer"
 msgstr "Promoções Odoo (On Demand Open Object)"
 
 #. module: multi_company
-#: field:multi_company.default,sequence:0
-msgid "Sequence"
-msgstr "Seqüência"
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "Erro!  Você não pode criar categorias recursivas."
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Erro: Código EAN inválido"
-
-#. module: multi_company
-#: help:multi_company.default,expression:0
-msgid "Expression, must be True to match"
-msgstr "Expressão, deve ser verdadeira para validar"
-
-#. module: multi_company
-#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
-msgid "Default company per Object"
-msgstr "Empresa padrão por Objeto"
-
-#. module: multi_company
-#: code:addons/multi_company/multi_company.py:0
-#, python-format
-msgid " (copy)"
-msgstr " (cópia)"
-
-#. module: multi_company
 #: view:multi_company.default:0
 msgid "Matching"
 msgstr "Correspondendo a"
+
+#. module: multi_company
+#: view:multi_company.default:0
+msgid "Condition"
+msgstr "Condição"
+
+#. module: multi_company
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
+msgstr ""
+
+#~ msgid "Default Company"
+#~ msgstr "Empresa Padrão"
+
+#~ msgid "Object"
+#~ msgstr "Objeto"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erro: A unidade padrão e a unidade de compra devem ser da mesma categoria."
+
+#~ msgid "The VAT doesn't seem to be correct."
+#~ msgstr "O imposto não parece estar correto."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
+
+#~ msgid "Object affect by this rules"
+#~ msgstr "Objeto afetado por esta regra"
+
+#~ msgid "Multi company"
+#~ msgstr "Multi empresa"
+
+#~ msgid "Main Company"
+#~ msgstr "Empresa principal"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Erro: Unidade de venda deve ser de categoria diferente da unidade de medida"
+
+#~ msgid "Name"
+#~ msgstr "Nome"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Erro! Você não pode criar empresas recursivas."
+
+#~ msgid "Company where the user is connected"
+#~ msgstr "Empresa onde o usuário está conectado"
+
+#~ msgid "Sequence"
+#~ msgstr "Seqüência"
+
+#~ msgid "Expression"
+#~ msgstr "Expressão"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Erro!  Você não pode criar categorias recursivas."
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Erro: Código EAN inválido"
+
+#~ msgid "Default company per Object"
+#~ msgstr "Empresa padrão por Objeto"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (cópia)"
+
+#~ msgid "Expression, must be True to match"
+#~ msgstr "Expressão, deve ser verdadeira para validar"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
+#~ msgstr ""
+#~ "Por favor desconsidere esta mensagem, caso o seu pagamento tenha sido "
+#~ "efetuado após o envio deste e-mail. Em caso de dúvida, entre em contato com "
+#~ "nosso departamento contábil"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "O nome do objeto deve começar com x_ e não deve conter caracteres especiais!"
+
+#~ msgid "Name it to easily find a record"
+#~ msgstr "Dê um nome a este registro, a fim de localizá-lo facilmente"
+
+#~ msgid "Company to store the current record"
+#~ msgstr "Empresa onde será armazenado o registro atual"
+
+#~ msgid "multi_company.default"
+#~ msgstr "multi_company.default"
+
+#~ msgid ""
+#~ "This module add the possibility to easily manage \n"
+#~ "    the default value for each object\n"
+#~ "    "
+#~ msgstr ""
+#~ "Este módulo acrescenta a possibilidade de se gerenciar facilmente \n"
+#~ "    o valor padrão para cada objeto\n"
+#~ "    "
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "O nome do módulo precisa ser único !"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "A empresa escolhida não está entre as empresas habilitadas para este usuário"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Não é permitido criar dois usuários com o mesmo login!"
+
+#~ msgid "Cash Journal - (OpenERP IN)"
+#~ msgstr "Livro Caixa - (OpenERP IN)"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "Erro! Você não pode criar membros recursivos associados."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Erro ! Você não pode criar Menu recursivo."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "O ID de certificado do módulo precisa ser único !"

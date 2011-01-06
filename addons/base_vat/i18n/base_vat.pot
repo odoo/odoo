@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01:51+0000\n"
-"PO-Revision-Date: 2009-08-28 16:01:51+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:19+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:19+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,22 +16,49 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: base_vat
-#: model:ir.module.module,description:base_vat.module_meta_information
-msgid "Enable the VAT Number for the partner. Check the validity of that VAT Number."
+#: code:addons/base_vat/base_vat.py:87
+#, python-format
+msgid "The Vat does not seems to be correct. You should have entered something like this %s"
 msgstr ""
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.module.module,description:base_vat.module_meta_information
+msgid "\n"
+"    Enable the VAT Number for the partner. Check the validity of that VAT Number.\n"
+"\n"
+"    This module follows the methods stated at http://sima-pc.com/nif.php for\n"
+"    checking the validity of VAT Number assigned to partners in European countries.\n"
+"    "
+msgstr ""
+
+#. module: base_vat
+#: model:ir.module.module,shortdesc:base_vat.module_meta_information
+msgid "Base VAT - To check VAT number validity"
+msgstr ""
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:88
+#, python-format
+msgid "The VAT is invalid, It should begin with the country code"
+msgstr ""
+
+#. module: base_vat
+#: help:res.partner,vat_subjected:0
+msgid "Check this box if the partner is subjected to the VAT. It will be used for the VAT legal statement."
+msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
 msgstr ""
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr ""
-
-#. module: base_vat
-#: model:ir.module.module,shortdesc:base_vat.module_meta_information
-msgid "VAT"
 msgstr ""
 

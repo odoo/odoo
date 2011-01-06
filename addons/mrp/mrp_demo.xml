@@ -2,6 +2,11 @@
 <openerp>
     <data noupdate="1">
 
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_mrp_user'))]" name="groups_id"/>
+        </record>
+        
+        
         <!--
     Resource: mrp.workcenter
     -->
@@ -700,6 +705,17 @@
             <field name="product_qty">12.0</field>
         <field name="bom_id" ref="mrp_bom_defaultbomforshelfofcm1"/>
     </record>
+    
+    <record id="mrp_production_order1" model="mrp.production">
+        <field name="product_id" ref="product.product_product_pc1"/>
+        <field name="product_uom" ref="product.product_uom_unit"/>
+        <field name="location_src_id" ref="stock.stock_location_stock"/>
+        <field name="location_dest_id" ref="stock.stock_location_output"/>
+        <field name="bom_id" ref="mrp.mrp_bom_9"/>
+        <field name="routing_id" ref="mrp.mrp_routing_0"/>
+    </record>
+    
+    <workflow action="button_confirm" model="mrp.production" ref="mrp_production_order1"/>
     
     <!-- Run Scheduler -->
     <function model="procurement.order" name="run_scheduler"/>

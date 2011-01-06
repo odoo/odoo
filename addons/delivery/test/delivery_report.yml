@@ -1,8 +1,36 @@
+
+-
+ 
+  In Order to test the delivery report I create picking with move lines.
+- 
+  !record {model: stock.picking, id: stock_picking_delivery}:
+    name: test_picking
+    origin: SO001
+    address_id: base.res_partner_address_4
+    company_id: base.main_company
+    date: '2010-05-11 15:18:52'
+    invoice_state: none
+    move_lines:
+      - company_id: base.main_company
+        date: '2010-05-11 15:18:57'
+        location_dest_id: stock.stock_location_customers
+        location_id: stock.stock_location_stock
+        name: HP CD writers
+        product_id: product.product_product_pc1
+        product_qty: 3.0
+        product_uom: product.product_uom_unit
+        date: '2010-05-11 15:18:57'
+        product_uos_qty: 3.0
+    move_type: direct
+    type: out
+    
+    
+
 -
   In order to test the PDF reports defined on a Delievry, we will print a Delivery Order report
 - 
   !python {model: stock.picking}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.sale.shipping').create(cr, uid, [ref('stock.stock_picking_1')], {}, {})
+    (data, format) = netsvc.LocalService('report.sale.shipping').create(cr, uid, [ref('stock_picking_delivery')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'delievry-shipping'+format), 'wb+').write(data)

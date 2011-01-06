@@ -32,6 +32,10 @@ class marketing_installer(osv.osv_memory):
         'crm_profiling':fields.boolean('Profiling Tools',
             help="Helps you to perform segmentation of partners and design segmentation questionnaires")
     }
+    _defaults = {
+        'marketing_campaign': lambda *a: 1,
+    }
+
 marketing_installer()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -22,25 +22,29 @@
 import time
 
 from osv import fields, osv
-from tools.translate import _
 
 class hr_payroll_employees_detail(osv.osv_memory):
 
    _name ='hr.payroll.employees.detail'
    _columns = {
         'employee_ids': fields.many2many('hr.employee', 'payroll_emp_rel','payroll_id','emp_id', 'Employees',required=True),
-        'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)
+        'date_from': fields.date('Start Date', required=True),
+        'date_to': fields.date('End Date', required=True),
+        #'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True)
        }
-   def _get_fiscalyear(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        fiscal_ids = self.pool.get('account.fiscalyear').search(cr,uid,[], context=context)
-        if fiscal_ids:
-            return fiscal_ids[0]
-        return False
+#   def _get_fiscalyear(self, cr, uid, ids, context=None):
+#        if context is None:
+#            context = {}
+#        fiscal_ids = self.pool.get('account.fiscalyear').search(cr,uid,[], context=context)
+#        if fiscal_ids:
+#            return fiscal_ids[0]
+#        return False
 
    _defaults = {
-        'fiscalyear_id':_get_fiscalyear,
+#        'fiscalyear_id':_get_fiscalyear,
+        'date_from': lambda *a: time.strftime('%Y-01-01'),
+        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
+
     }
 
    def print_report(self, cr, uid, ids, context=None):
@@ -50,15 +54,15 @@ class hr_payroll_employees_detail(osv.osv_memory):
          @param cr: A database cursor
          @param uid: ID of the user currently logged in
          @param context: A standard dictionary
-         @return : return report
+         @return: return report
         """
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids', [])}
-
-        res = self.read(cr, uid, ids, ['employee_ids', 'fiscalyear_id'], context=context)
+        res = self.read(cr, uid, ids, ['employee_ids', 'date_from', 'date_to'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
+        datas['ids'] = res.get('employee_ids',[])
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'employees.salary',

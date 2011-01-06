@@ -7,35 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-06-18 10:59+0000\n"
-"PO-Revision-Date: 2010-09-29 09:38+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-21 08:52+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:43+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Дэд дансууд"
-
-#. module: analytic
-#: help:account.analytic.line,amount_currency:0
-msgid ""
-"The amount expressed in the related account currency if not equal to the "
-"company one."
-msgstr ""
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -45,12 +30,7 @@ msgstr "Дансны нэр"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
-
-#. module: analytic
-#: help:account.analytic.line,currency_id:0
-msgid "The related account currency if not equal to the company one."
-msgstr ""
+msgstr "Тоо ширхэгийг тоолох хэмжээг тооцоолох"
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -58,6 +38,8 @@ msgid ""
 "Module for defining analytic accounting object.\n"
 "    "
 msgstr ""
+"Объект шинжилгээний бүртгэлийг тодорхойлох модуль.\n"
+"    "
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -127,14 +109,12 @@ msgstr "Аналитик шугам"
 #: field:account.analytic.account,description:0
 #: field:account.analytic.line,name:0
 msgid "Description"
-msgstr "Тодорхойлолт"
+msgstr "Тайлбар"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price."
-msgstr ""
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "Хэвийн"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -164,19 +144,28 @@ msgstr "Огноо"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
-#: field:account.analytic.line,currency_id:0
 msgid "Account currency"
 msgstr "Валютын данс"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
-msgstr "Харах"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Тоо хэмжээ"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Бүтээгдэхүүний үнэд өгөгдсөн тоо ширхэгиг үржүүлж тооцоолоогдсон. Үргэлж "
+"компанийн үндсэн мөнгөн тэмдэгтэд илэрхийлэгдсэн."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of quantity of hours."
-msgstr ""
+msgstr "Цагийн тоо хэмжээнд дээд хязгаар тавих"
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -204,15 +193,18 @@ msgid "Balance"
 msgstr "Тэнцэл"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr "Эхлэх огноо"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Тоо хэмжээ"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr ""
+"Хэрэв та Харагдацын Төрлийг сонговол, энэ бүртгэлийг ашиглан бүртгэлийн "
+"мэдээлэл оруулах боломжгүй болно."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -223,11 +215,6 @@ msgstr "Дуусах огноо"
 #: field:account.analytic.account,code:0
 msgid "Account Code"
 msgstr "Дансны код"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
-msgstr "Хэвийн"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -242,19 +229,19 @@ msgid "Analytic Account"
 msgstr "Аналитик Данс"
 
 #. module: analytic
-#: field:account.analytic.account,company_currency_id:0
-msgid "Currency"
-msgstr "Валют"
-
-#. module: analytic
-#: field:account.analytic.line,amount_currency:0
-msgid "Amount currency"
-msgstr "Валютын хэмжээ"
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "Харах"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
-msgid "Associated Partner"
-msgstr "Холбогдох харилцагч"
+msgid "Partner"
+msgstr "Харилцагч"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "Эхлэх огноо"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -265,3 +252,18 @@ msgstr "Нээх"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Аналитик бичилт"
+
+#~ msgid "Currency"
+#~ msgstr "Валют"
+
+#~ msgid "Amount currency"
+#~ msgstr "Валютын хэмжээ"
+
+#~ msgid "Associated Partner"
+#~ msgstr "Холбогдох харилцагч"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"

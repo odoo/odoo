@@ -1,57 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    
-        <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0" groups="base.group_system,base.group_hr_manager,base.group_hr_user"/>
+
+        <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0"/>
         <menuitem
             action="hr.open_board_hr"
             icon="terp-graph"
             id="base.menu_hr_project"
             parent="base.menu_hr_dasboard"
             sequence="4"/>
-        <record id="action_view_holiday_status_board" model="ir.actions.act_window">
+
+            <!-- Need to merge in above view -->
+
+        <record model="ir.actions.act_window" id="action_hr_holidays_leaves_by_month">
             <field name="name">My Leaves</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">hr.holidays</field>
+            <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','in',('confirm', 'validate')),('user_id','=',uid)]</field>
-            <field name="view_id" ref="hr_holidays.open_allocation_holidays"/>
+            <field name="view_id" eval="False"/>
+            <field name="context">{}</field>
+            <field name="domain">[]</field>
         </record>
-        
-        <record id="board_hr_holidays_form" model="ir.ui.view">
-            <field name="name">board.hr.holidays.form</field>
-            <field name="model">board.board</field>
-			<field name="inherit_id" ref="hr.board_hr_form"/>              
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-	      		<xpath expr="/form/hpaned/child1" position="inside"> 
-					<action colspan="4" height="220" name="%(action_view_holiday_status_board)d" string="My Leaves"/>
-				</xpath>
-            </field>
-        </record>
-        
-        	<!-- Need to merge in above view -->
-
-		<record id="action_hr_holidays_leaves_by_month" model="ir.actions.act_window">
-	        <field name="name">Leaves by Month</field>
-	        <field name="type">ir.actions.act_window</field>
-	        <field name="res_model">available.holidays.report</field>
-	        <field name="view_type">form</field>
-	        <field name="view_mode">graph,tree</field>
-	        <field name="domain">[('user_id','=',uid)]</field>
-            <field name="context">{'group_by_no_leaf':1,'group_by':['month']}</field>
-	        <field name="view_id" ref="hr_holidays.view_hr_available_holidays_report_graph"/>
-		</record>
-		<record id="board_hr_holidays_leave_by_month_form" model="ir.ui.view">
+        <record id="board_hr_holidays_leave_by_month_form" model="ir.ui.view">
             <field name="name">board.hr.holidays.leave.month.form</field>
             <field name="model">board.board</field>
- 			<field name="type">form</field>            
-			<field name="inherit_id" ref="hr.board_hr_form"/>           
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.board_hr_form"/>
             <field name="arch" type="xml">
-	      		<xpath expr="/form/hpaned/child2" position="inside">            
-				 <action colspan="4" height="220" name="%(action_hr_holidays_leaves_by_month)d" string="Leaves by Month" />
-				</xpath>  
+                <xpath expr="/form/hpaned/child2" position="inside">
+                 <action colspan="4" height="220" name="%(action_hr_holidays_leaves_by_month)d" string="Leaves" />
+                </xpath>
             </field>
         </record>
     </data>

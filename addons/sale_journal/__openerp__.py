@@ -24,7 +24,7 @@
     'version': '1.0',
     'category': 'Generic Modules/Sales & Purchases',
     'description': """
-    The sale journal modules allows you to categorise your
+    The sales journal modules allows you to categorise your
     sales and deliveries (picking lists) between different journals.
     This module is very helpful for bigger companies that
     works by departments.
@@ -53,14 +53,9 @@
     'update_xml': [
         'security/ir.model.access.csv',
         'sale_journal_view.xml',
-        'report/sale_journal_report_view.xml',
-        'report/picking_journal_report_view.xml',
     ],
     'demo_xml': ['sale_journal_demo.xml'],
-    'test': [
-             'test/sale_journal.yml',
-             'test/picking_journal.yml',
-             ],
+    'test': [ ],
     'installable': True,
     'active': False,
     'certificate': '0077661619085',

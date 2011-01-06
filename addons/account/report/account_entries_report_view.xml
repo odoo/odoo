@@ -48,6 +48,19 @@
              </graph>
          </field>
     </record>
+    <record id="view_company_analysis_tree" model="ir.ui.view">
+         <field name="name">account.company.analysis.tree</field>
+         <field name="model">account.entries.report</field>
+         <field name="type">tree</field>
+         <field name="arch" type="xml">
+             <tree string="Company Analysis" >
+                <field name="user_type"/>
+                <field name="debit" />
+                <field name="credit" />
+                <field name="balance" />
+             </tree>
+         </field>
+    </record>
     <record id="view_account_entries_report_search" model="ir.ui.view">
         <field name="name">account.entries.report.search</field>
         <field name="model">account.entries.report</field>
@@ -74,7 +87,7 @@
                     <field name="journal_id" widget="selection"/>
                     <field name="period_id"/>
                 </group>
-                <newline/>
+                 <newline/>
                  <group expand="0" string="Extended Filters..." groups="base.group_extended">
                     <field name="fiscalyear_id"/>
                     <separator orientation="vertical"/>
@@ -97,8 +110,8 @@
                     <filter string="Journal" name="group_journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <filter string="Account" name="group_account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Acc.Type" icon="terp-folder-blue" context="{'group_by':'user_type'}" name="usertype"/>
-                    <filter string="Int.Type" icon="terp-folder-yellow" context="{'group_by':'type'}"/>
+                    <filter string="Acc.Type" icon="terp-stock_symbol-selection" context="{'group_by':'user_type'}" name="usertype"/>
+                    <filter string="Int.Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
                     <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
@@ -114,9 +127,14 @@
         <field name="res_model">account.entries.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
+        <field name="search_view_id" ref="view_account_entries_report_search"/>
+        <field name="view_id" ref="view_account_entries_report_tree"/>
         <field name="context">{'group_by':[], 'search_default_usertype':1, 'search_default_thisyear':1, 'group_by_no_leaf':1}</field>
-        <field name="help">A tool search lets you know statistics on your different financial accounts that match your needs.</field>
+        <field name="help">From this view, have an analysis of your different financial accounts. The document shows your debit and credit taking in consideration some criteria you can choose by using the search tool.</field>
     </record>
-    <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all" parent="account.menu_finance_statistic_report_statement" sequence="2"/>
+    <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all"
+        parent="account.menu_finance_statistic_report_statement"
+        groups="group_account_manager"
+        sequence="2"/>
 </data>
 </openerp>

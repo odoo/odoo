@@ -1,10 +1,5 @@
 <openerp>
    <data>
-        <menuitem id="base.menu_base_config" name="Configuration" parent="base.menu_base_partner" sequence="30"
-            groups="base.group_system,base.group_sale_salesman"/>
-        <menuitem id="menu_sale_journal_config" name="Sale Journals"
-            parent="base.menu_base_config" sequence="5" groups="base.group_system,base.group_sale_salesman"/>
-
    <!--  sale journal invoice Type's Form  view -->
 
         <record model="ir.ui.view" id="view_sale_journal_invoice_type_form">
@@ -14,13 +9,12 @@
             <field name="arch" type="xml">
                 <form string="Invoice Type">
                     <group colspan="4" col="6">
-                    <field name="name" select="1"/>
-                    <field name="invoicing_method" select="1"/>
-                    <field name="active" select="1"/>
+                        <field name="name" select="1"/>
+                        <field name="invoicing_method" select="1"/>
+                        <field name="active" select="1"/>
                     </group>
-                    <separator string="Notes" colspan="3"/>
-                    <newline/>
-                    <field name="note" colspan="3" nolabel="1"/>
+                    <separator string="Notes" colspan="4"/>
+                    <field name="note" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>
@@ -42,111 +36,15 @@
       <!-- Action for sale journal invoice Type -->
 
         <record model="ir.actions.act_window" id="action_definition_journal_invoice_type">
+            <field name="name">Invoice Types</field>
             <field name="res_model">sale_journal.invoice.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Invoice types are used for partners, sales orders and delivery orders. You can create a specific invoicing journal to group your invoicing according to your customer's needs: daily, each Wednesday, monthly, etc.</field>
         </record>
 
-     <menuitem name="Invoicing Methods" id="menu_definition_journal_invoice_type" parent="menu_sale_journal_config" action="action_definition_journal_invoice_type"/>
-
-    <!-- sale journal Form view  -->
-
-        <record model="ir.ui.view" id="view_sale_journal_form">
-            <field name="name">sale_journal.sale.journal.form</field>
-            <field name="model">sale_journal.sale.journal</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Sales Journals">
-                    <group colspan="4"    col="6">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
-                        <field name="user_id" select="1"/>
-                        <field name="date" select="1"/>
-                        <field name="date_created" select="1"/>
-                        <field name="date_close" select="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Sales">
-                            <field name="sale_stats_ids" colspan="4" nolabel="1">
-                                <tree string="Sales">
-                                    <field name="name"/>
-                                    <field name="quantity"/>
-                                    <field name="price_total"/>
-                                    <field name="price_average"/>
-                                    <field name="count"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Notes">
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
-                    <field name="state"/>
-                        <group col="6" colspan="2">
-                            <button name="button_open" string="Open Journal" states="draft" type="object" icon="terp-check"/>
-                            <button string="Confirm Sales" name="button_sale_confirm" states="open" type="object" icon="terp-camera_test"/>
-                            <button name="button_close" string="Close Journal" states="confirm,open" type="object" icon="terp-dialog-close"/>
-                            <button name="button_draft" string="Set to Draft" states="cancel" type="object" icon="gtk-convert"/>
-                            <button string="Cancel Sales" name="button_sale_cancel" states="close,draft,open,confirm" type="object" icon="gtk-cancel"/>
-                        </group>
-                </form>
-            </field>
-        </record>
-
-  <!-- Sale journal tree view -->
-
-        <record model="ir.ui.view" id="view_sale_journal_tree">
-            <field name="name">sale_journal.sale.journal.tree</field>
-            <field name="model">sale_journal.sale.journal</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Sales Journals">
-                    <field name="name" select="1"/>
-                    <field name="code" select="1"/>
-                    <field name="user_id" select="1"/>
-                    <field name="date" select="1"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
-    <!-- Sale journal search view -->
-
-        <record model="ir.ui.view" id="view_sale_journal_search">
-            <field name="name">sale_journal.sale.journal.search</field>
-            <field name="model">sale_journal.sale.journal</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Sales by Journal">
-                    <group col="8" colspan="4">
-						<filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Sales Journal which are in draft state"/>
-                        <filter icon="terp-check" string="Open" domain="[('state','=','open')]" help="Open Sales Journal"/>
-                        <filter icon="terp-camera_test" string="Confirm" domain="[('state','=','confirm')]" help="Confirmed Sales Journal"/>
-                        <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Sales Journal which are cancelled"/>
-                        <filter icon="terp-dialog-close" string="Close" domain="[('state','=','done')]" help="Sales Journal which are closed"/>
-                       <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="user_id"/>
-                        <field name="date"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-      <!-- Action for sale journal view -->
-
-        <record model="ir.actions.act_window" id="action_definition_journal">
-            <field name="res_model">sale_journal.sale.journal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_user_id':uid}</field>
-            <field name="search_view_id" ref="view_sale_journal_search"/>
-        </record>
-
-
-        <menuitem id="menu_definition_journal" name="Sales Journals" parent="menu_sale_journal_config"  action="action_definition_journal" sequence="70"/>
+     <menuitem id="menu_definition_journal_invoice_type"
+        parent="base.menu_sale_config_sales" action="action_definition_journal_invoice_type"/>
 
     <!-- Inherit sales order form view -->
 
@@ -157,11 +55,7 @@
             <field name="inherit_id" ref="sale.view_order_form" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                	<group colspan="2" col="2">
-	                    <separator string="Journal" colspan="4"/>
-	                    <field name="journal_id" select="1" widget="selection" domain="[('state','in', ('draft', 'open'))]"/>
-	                    <field name="invoice_type_id" select="1" widget="selection"/>
-                    </group>
+                    <field name="invoice_type_id" widget="selection"/>
                 </field>
             </field>
         </record>
@@ -175,8 +69,7 @@
             <field name="inherit_id" ref="sale.view_order_tree" />
             <field name="arch" type="xml">
                 <field name="state" position="after">
-                    <field name="invoice_type_id"/>
-                    <field name="journal_id"/>
+                    <field name="invoice_type_id" widget="selection"/>
                 </field>
             </field>
         </record>
@@ -190,9 +83,7 @@
             <field name="inherit_id" ref="stock.view_picking_form" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
-                    <field name="invoice_type_id" select="1"/>
+                    <field name="invoice_type_id" widget="selection"/>
                 </field>
             </field>
         </record>
@@ -206,41 +97,7 @@
             <field name="inherit_id" ref="stock.vpicktree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
                     <field name="invoice_type_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
-                </field>
-            </field>
-        </record>
-
-    <!--  Inherit stock picking delivery's form  view.-->
-
-        <record model="ir.ui.view" id="sale_journal_picking_order_del">
-            <field name="name">stock.picking.journal.view.form</field>
-            <field name="type">form</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_form" />
-            <field name="arch" type="xml">
-                <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
-                    <field name="invoice_type_id" select="1"/>
-                </field>
-            </field>
-        </record>
-
-    <!--  Inherit stock picking delivery's tree  view.-->
-
-        <record model="ir.ui.view" id="sale_journal_picking_order_tree_del">
-            <field name="name">stock.picking.journal.view.tree</field>
-            <field name="type">tree</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_delivery_tree" />
-            <field name="arch" type="xml">
-                <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
-                    <field name="invoice_type_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
                 </field>
             </field>
         </record>
@@ -252,8 +109,6 @@
             <field name="inherit_id" ref="stock.view_picking_in_form" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
                     <field name="invoice_type_id" select="1"/>
                 </field>
             </field>
@@ -266,9 +121,7 @@
             <field name="inherit_id" ref="stock.view_picking_in_tree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
                     <field name="invoice_type_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
                 </field>
             </field>
         </record>
@@ -280,8 +133,6 @@
             <field name="inherit_id" ref="stock.view_picking_out_form" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
                     <field name="invoice_type_id" select="1"/>
                 </field>
             </field>
@@ -294,72 +145,10 @@
             <field name="inherit_id" ref="stock.view_picking_out_tree" />
             <field name="arch" type="xml">
                 <field name="origin" position="after">
-                    <field name="journal_id" select="1"/>
                     <field name="invoice_type_id" select="1"/>
-                    <field name="sale_journal_id" select="1"/>
                 </field>
             </field>
         </record>
-
-        <!-- Action of sale journal report in sale journal  -->
-
-        <act_window name="Monthly sales"
-            context="{'search_default_journal_id': active_id}"
-            res_model="sale.journal.report"
-            src_model="sale_journal.sale.journal"
-            id="act_sale_journal_sale_journal_2_sale_journal_sale_stats"/>
-
-       <!-- Action  of stock picking  in picking journal  -->
-
-        <act_window name="Assigned picking"
-            domain="[('state', '=', 'assigned')]"
-            context="{'search_default_journal_id': [active_id]}"
-            res_model="stock.picking"
-            src_model="sale_journal.picking.journal"
-            id="act_sale_journal_picking_journal_2_stock_picking_assigned"/>
-
-      <!-- Action  of stock picking  in picking journal  -->
-
-        <act_window name="Confirmed picking"
-            domain="[('state', '=', 'confirmed')]"
-            context="{'search_default_journal_id': [active_id]}"
-            res_model="stock.picking"
-            src_model="sale_journal.picking.journal"
-            id="act_sale_journal_picking_journal_2_stock_picking_confirmed"/>
-
-     <!-- Action  of stock picking  in sale journal  -->
-
-        <act_window name="Assigned picking"
-            domain="[('state', '=', 'assigned')]"
-            context="{'search_default_sale_journal_id': [active_id]}"
-            res_model="stock.picking"
-            src_model="sale_journal.sale.journal"
-            id="act_sale_journal_sale_journal_2_stock_picking_assigned"/>
-
-    <!-- Action  of stock picking in sale journal -->
-
-        <act_window name="Confirmed picking"
-            domain="[('state', '=', 'confirmed')]"
-            context="{'search_default_sale_journal_id': [active_id]}"
-            res_model="stock.picking"
-            src_model="sale_journal.sale.journal"
-            id="act_sale_journal_sale_journal_2_stock_picking_confirmed"/>
-
-    <!-- Action of sale order in sale journal -->
-
-        <act_window name="Draft sales"
-            domain="[('journal_id', '=', active_id),('state', '=', 'draft')]"
-            res_model="sale.order"
-            src_model="sale_journal.sale.journal"
-            id="act_sale_journal_sale_journal_2_sale_order_draft"/>
-
-      <!-- Action  of sale order in sale journal -->
-
-        <act_window name="Approved sales"
-            domain="[('journal_id', '=', active_id),('state', '=', 'approved')]"
-            res_model="sale.order"
-            src_model="sale_journal.sale.journal"
-            id="act_sale_journal_sale_journal_2_sale_order_approved"/>
 
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.journal.property.form.inherit</field>
@@ -368,173 +157,13 @@
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <page string="Sales &amp; Purchases" position="inside">
-                    <field name="property_invoice_type"/>
+                    <group colspan="2" col="2">
+                        <separator string="Invoicing" colspan="2"/>
+                        <field name="property_invoice_type" widget="selection"/>
+                    </group>
                 </page>
             </field>
         </record>
-
-    <!--=====================================================-->
-    <!-- picking journal view-->
-    <!--=====================================================    -->
-
-        <record model="ir.ui.view" id="view_picking_journal_form">
-            <field name="name">sale_journal.picking.journal.form</field>
-            <field name="model">sale_journal.picking.journal</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Picking Journal">
-                    <group colspan="4" col="6">
-                        <field name="name" select="1"/>
-                        <field name="code" select="1"/>
-                        <field name="user_id" select="1"/>
-                        <newline/>
-                        <field name="date" select="1"/>
-                        <field name="date_created" select="1"/>
-                        <field name="date_close" select="1"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Picking">
-                            <field name="picking_stats_ids" colspan="4" nolabel="1"/>
-                        </page>
-                        <page string="Notes">
-                            <field name="note" colspan="4" nolabel="1"/>
-                        </page>
-                    </notebook>
-                    <field name="state"/>
-                        <group col="6" colspan="2">
-                            <button name="button_open" string="Open Journal" states="draft" type="object" icon="terp-check"/>
-                            <button string="Confirm Picking" name="button_picking_confirm" states="open" type="object" icon="terp-camera_test"/>
-                            <button name="button_reset" string="Set to Draft" states="cancel" type="object" icon="gtk-convert"/>
-                            <button name="button_close" string="Close Journal" states="confirm,open" type="object" icon="terp-dialog-close"/>
-                            <button string="Cancel Picking" name="button_picking_cancel" states="close,draft,open,confirm" type="object" icon="gtk-cancel"/>
-                        </group>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_picking_journal_tree">
-            <field name="name">sale_journal.picking.journal.tree</field>
-            <field name="model">sale_journal.picking.journal</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Picking Journal">
-                    <field name="name"/>
-                    <field name="code"/>
-                    <field name="user_id"/>
-                    <field name="date"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
-       <!-- Picking journal tree view  -->
-
-        <record model="ir.ui.view" id="view_picking_journal_search">
-            <field name="name">sale_journal.picking.journal.search</field>
-            <field name="model">sale_journal.picking.journal</field>
-            <field name="type">search</field>
-            <field name="arch" type="xml">
-                <search string="Picking Journals">
-                    <group col="8" colspan="4">
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Picking Journals which are in draft state"/>
-					   	<filter icon="terp-check" string="Open" domain="[('state','=','open')]" help="Open Picking Journals"/>
-					   	<filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]" help="Picking Journals which are cancelled"/>
-					   	<filter icon="terp-dialog-close" string="Close" domain="[('state','=','done')]" help="Picking Journals which are closed"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="user_id"/>
-                        <field name="date"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-<!-- Action of Picking journals -->
-
-        <record model="ir.actions.act_window" id="action_definition_picking_journal">
-            <field name="name">Picking Journals</field>
-            <field name="res_model">sale_journal.picking.journal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_user_id':uid}</field>
-            <field name="search_view_id" ref="view_picking_journal_search"/>
-        </record>
-
-        <menuitem name="Picking Journals" id="menu_definition_journal_picking" parent="stock.menu_warehouse_config" action="action_definition_picking_journal" groups="base.group_system"/>
-
-        <record model="ir.actions.act_window" id="action_invoice_type_tree">
-            <field name="name">Picking by invoice_method</field>
-            <field name="res_model">sale_journal.invoice.type</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">tree</field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_invoice_type_picking_open">
-            <field name="name">Picking to invoice</field>
-            <field name="res_model">stock.picking</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','=','done'),('invoice_state','=','2binvoiced'),('invoice_type_id','=',active_id)]</field>
-        </record>
-
-        <record model="ir.values" id="ir_open_invoice_type">
-            <field name="key2">tree_but_open</field>
-            <field name="model">sale_journal.invoice.type</field>
-            <field name="name">Picking to invoice</field>
-            <field name="value" eval="'ir.actions.act_window,%d'%action_invoice_type_picking_open"/>
-            <field name="object" eval="True"/>
-        </record>
-
-        <record id="view_picking_delivery_jorunal_search_form" model="ir.ui.view">
-            <field name="name">stock.picking.journal.search</field>
-            <field name="model">stock.picking</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="stock.view_stock_delivery_filter"/>
-            <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']/filter[@string='Partner']" position="after">
-                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_picking_out_jorunal_search_form" model="ir.ui.view">
-            <field name="name">stock.picking.journal.search</field>
-            <field name="model">stock.picking</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="stock.view_picking_out_search"/>
-            <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']/filter[@string='Partner']" position="after">
-                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_picking_in_jorunal_search_form" model="ir.ui.view">
-            <field name="name">stock.picking.journal.search</field>
-            <field name="model">stock.picking</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="stock.view_picking_in_search"/>
-            <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']/filter[@string='Partner']" position="after">
-                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                </xpath>
-            </field>
-        </record>
-
-        <record id="view_picking_internal_jorunal_search_form" model="ir.ui.view">
-            <field name="name">stock.picking.journal.search</field>
-            <field name="model">stock.picking</field>
-            <field name="type">search</field>
-            <field name="inherit_id" ref="stock.view_picking_internal_search"/>
-            <field name="arch" type="xml">
-                <xpath expr="/search/group[@string='Group By...']/filter[@string='Origin']" position="after">
-                   	<filter string="Picking Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
-                </xpath>
-            </field>
-        </record>
-
 
    </data>
 </openerp>

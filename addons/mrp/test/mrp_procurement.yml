@@ -2,10 +2,10 @@
   In order to test the flow of procurement orders. I will put some orders with
   different procurement methods. I have installed sale, mrp and purchase modules.
 -
-  I am creating products.   
-- 
+  I am creating products.
+-
   I create record for product Shirt.
-- 
+-
   !record {model: product.product, id: product_product_shirt0}:
     categ_id: product.cat1
     cost_method: standard
@@ -26,9 +26,9 @@
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
-- 
+-
   I create record for product Cloth.
-- 
+-
   !record {model: product.product, id: product_product_cloth0}:
     categ_id: product.cat1
     cost_method: standard
@@ -42,6 +42,7 @@
     seller_ids:
       - delay: 1
         name: base.res_partner_maxtor
+        product_uom: product.product_uom_unit
         min_qty: 300.0
     standard_price: 1.0
     supply_method: buy
@@ -52,9 +53,9 @@
     warranty: 0.0
     weight: 0.0
     weight_net: 0.0
-- 
+-
   I create record for product Buttons.
-- 
+-
   !record {model: product.product, id: product_product_buttons0}:
     categ_id: product.cat1
     cost_method: standard
@@ -68,6 +69,7 @@
     seller_ids:
       - delay: 1
         name: base.res_partner_asus
+        product_uom: product.product_uom_kgm
         min_qty: 100.0
     standard_price: 1.0
     supply_method: buy
@@ -79,10 +81,10 @@
     weight: 0.0
     weight_net: 0.0
 -
-  I am creating bills of material for 'Shirt'.      
-- 
+  I am creating bills of material for 'Shirt'.
+-
   I create bills of material for Shirt.
-- 
+-
   !record {model: mrp.bom, id: mrp_bom_shirt0}:
     bom_lines:
       - company_id: base.main_company
@@ -99,7 +101,7 @@
         product_efficiency: 1.0
         product_id: product_product_buttons0
         product_qty: 8.0
-        product_uom: product.product_uom_unit
+        product_uom: product.product_uom_kgm
         product_uos_qty: 0.0
         sequence: 0.0
         type: normal
@@ -123,7 +125,7 @@
     product_id: mrp.product_product_buttons0
     product_max_qty: 50.0
     product_min_qty: 10.0
-    product_uom: product.product_uom_unit
+    product_uom: product.product_uom_kgm
     qty_multiple: 1
     warehouse_id: stock.warehouse0
 -
@@ -142,7 +144,7 @@
 -
   I run the procurement.
 -
-  !workflow {model: procurement.order, action: button_check, ref: procurement_order_shirt0} 
+  !workflow {model: procurement.order, action: button_check, ref: procurement_order_shirt0}
 -
   I see that there is a manufacturing order for Shirt.
 -
@@ -177,18 +179,8 @@
     purch_ids = self.search(cr, uid, [('partner_id.name','=','Maxtor')])
     wf_service = netsvc.LocalService("workflow")
     for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
--
-  I get the approval from the supplier. So I approve my purchase orders.
--
-  !python {model: purchase.order}: |
-    from tools.translate import _
-    import netsvc
-    purch_ids = self.search(cr, uid, [('state','=','confirmed')])
-    assert purch_ids, _('No Confirmed Purchase Orders found!')
-    wf_service = netsvc.LocalService("workflow")
-    for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_approve', cr)
+        wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
+
 -
   I confirm purchase order for Buttons.
 -
@@ -197,18 +189,8 @@
     purch_ids = self.search(cr, uid, [('partner_id.name','=','ASUStek')])
     wf_service = netsvc.LocalService("workflow")
     for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
--
-  I get the approval from the supplier. So I approve my purchase orders.
--
-  !python {model: purchase.order}: |
-    from tools.translate import _
-    import netsvc
-    purch_ids = self.search(cr, uid, [('state','=','confirmed')])
-    assert purch_ids, _('No Confirmed Purchase Orders found!')
-    wf_service = netsvc.LocalService("workflow")
-    for p_id in purch_ids:
-    	wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_approve', cr)
+        wf_service.trg_validate(uid, 'purchase.order', p_id, 'purchase_confirm', cr)
+
 -
   I Check incoming shipments for cloth. And receive products.
 -
@@ -230,7 +212,7 @@
      picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Wong'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
-            'delivery_date' : partial.date         
+            'delivery_date' : partial.date
      }
      for pick in pick_obj.browse(cr, uid, picking_ids):
         for m in pick.move_lines:
@@ -239,8 +221,8 @@
                     'product_qty' : m.product_qty,
                     'product_uom' : m.product_uom.id
            }
-           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):   
-                    partial_datas['move%s'%(m.id)].update({             
+           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
+                    partial_datas['move%s'%(m.id)].update({
                         'product_price' : m.product_price,
                         'product_currency': m.product_currency
                     })
@@ -266,7 +248,7 @@
      picking_ids = pick_obj.search(cr, uid, [('address_id.name','=','Tang'),('state','=','assigned')])
      partial = self.browse(cr, uid, 1, context)
      partial_datas = {
-            'delivery_date': partial.date         
+            'delivery_date': partial.date
      }
      for pick in pick_obj.browse(cr, uid, picking_ids):
         for m in pick.move_lines:
@@ -275,8 +257,8 @@
                     'product_qty': m.product_qty,
                     'product_uom': m.product_uom.id
            }
-           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):   
-                    partial_datas['move%s'%(m.id)].update({             
+           if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
+                    partial_datas['move%s'%(m.id)].update({
                         'product_price': m.product_price,
                         'product_currency': m.product_currency
                     })
@@ -304,7 +286,7 @@
     assert prod_ids, _('No Ready Manufacturing Orders found!')
     wf_service = netsvc.LocalService("workflow")
     for p_id in prod_ids:
-    	wf_service.trg_validate(uid, 'mrp.production', p_id, 'button_produce', cr)
+        wf_service.trg_validate(uid, 'mrp.production', p_id, 'button_produce', cr)
 -
   I create record for producing products with quantity 5.00.
 -
@@ -343,4 +325,4 @@
     prod_obj = self.pool.get('mrp.production')
     prod_ids = prod_obj.search(cr, uid, [('product_id.name','=','Shirt')])
     self.do_produce(cr, uid, [1], context={'active_ids': prod_ids})
-    
+

@@ -42,6 +42,7 @@
             <field name="res_model">product.pricelist.version</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_pricelist_version_tree_view"/>
+            <field name="help">There can be more than one version of a pricelist. Here you can create and manage new versions of a price list. Some examples of versions: 2010, 2011, Summer Promotion, etc.</field>
         </record>
         <menuitem
             action="product_pricelist_action" id="menu_product_pricelist_action"
@@ -163,6 +164,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="product_pricelist_view_search" />
+            <field name="help">A price list contains rules to be evaluated in order to compute the purchase or sales price for all the partners assigned to a price list. Price lists have several versions (2010, 2011, Promotion of February 2010, etc.) and each version has several rules. Example: the customer price of a product category will be based on the supplier price multiplied by 1.80.</field>
         </record>
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"
@@ -206,5 +208,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+        <menuitem
+            action="product_pricelist_type_action" id="menu_product_pricelist_type_action2"
+            parent="product.menu_product_pricelist_main" sequence="2"
+            groups="base.group_extended"/>
+
     </data>
 </openerp>

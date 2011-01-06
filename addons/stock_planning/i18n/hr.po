@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-20 10:50+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-09-29 11:15+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:44+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_planning
@@ -54,16 +54,6 @@ msgid "Group By..."
 msgstr "Grupiraj po..."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Already Out: "
-msgstr ""
-"\n"
-" Već vani: "
-
-#. module: stock_planning
 #: help:stock.sale.forecast,product_amt:0
 msgid ""
 "Forecast value which will be converted to Product Quantity according to "
@@ -71,11 +61,6 @@ msgid ""
 msgstr ""
 "Vrijednost predviđanja koja će se promijeniti u količinu proizvoda u skladu "
 "s cijenama."
-
-#. module: stock_planning
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Pogrešan naziv u definiciji akcije."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -154,6 +139,16 @@ msgid "Company"
 msgstr "Tvrtka"
 
 #. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Initial Stock: "
+msgstr ""
+"\n"
+" Početna zaliha: "
+
+#. module: stock_planning
 #: help:stock.planning,warehouse_forecast:0
 msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
@@ -201,16 +196,6 @@ msgstr ""
 #: view:stock.planning:0
 msgid "Current Period Situation"
 msgstr "Stanje trenutnog perioda"
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Planned Out Before: "
-msgstr ""
-"\n"
-" Prethodno očekivani izlaz: "
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -349,9 +334,10 @@ msgid "Procure Incoming Left"
 msgstr "Nabavi ostatak ulaza"
 
 #. module: stock_planning
-#: view:stock.period:0
-msgid "Closed"
-msgstr "Zatvoreno"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid "    Incoming Left: "
+msgstr "    Ostatak ulaza: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -372,11 +358,6 @@ msgstr "Kreiraj"
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
 msgstr "Raspored glavne nabave"
-
-#. module: stock_planning
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za arhitekturu View-a"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -486,6 +467,16 @@ msgid "This User"
 msgstr "Ovaj korisnik"
 
 #. module: stock_planning
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Confirmed Out: "
+msgstr ""
+"\n"
+" Potvrđen izlaz: "
+
+#. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecasts"
 msgstr "Predviđanja"
@@ -540,22 +531,6 @@ msgid "Creates planning lines for selected period and warehouse."
 msgstr "Kreira stavke planiranja za odabrani period i skladište."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Warehouse Forecast: "
-msgstr ""
-"\n"
-" Predviđanje za skladište: "
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid "Cannot delete Validated Sale Forecasts !"
-msgstr "Ne možete izbrisati potvrđena predviđanja prodaje !"
-
-#. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
 msgid "This User Period4"
 msgstr "Period4 ovog korisnika"
@@ -593,6 +568,13 @@ msgid "Per User :"
 msgstr "Po korisniku :"
 
 #. module: stock_planning
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
+#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
+#: view:stock.sale.forecast:0
+msgid "Sales Forecasts"
+msgstr "Predviđanja prodaje:"
+
+#. module: stock_planning
 #: field:stock.period,name:0
 #: field:stock.period.createlines,name:0
 msgid "Period Name"
@@ -604,9 +586,9 @@ msgid "Created/Validated by"
 msgstr "Kreirao/Potvrdio"
 
 #. module: stock_planning
-#: field:stock.planning,warehouse_forecast:0
-msgid "Warehouse Forecast"
-msgstr "Predviđanje za skladište"
+#: view:stock.planning:0
+msgid "Internal Supply"
+msgstr "Unutarnja opskrba"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
@@ -617,16 +599,6 @@ msgstr "Period4 ove tvtke"
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
 msgstr "Period5 ove tvtke"
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Planned Out: "
-msgstr ""
-"\n"
-" Očekivani izlaz: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
@@ -645,9 +617,14 @@ msgid "Start Date"
 msgstr "Datum početka"
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period2_per_user:0
-msgid "This User Period2"
-msgstr "Period2 ovog korisnika"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Already Out: "
+msgstr ""
+"\n"
+" Već vani: "
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
@@ -670,6 +647,11 @@ msgid "Planned Out"
 msgstr "Očekivani izlaz"
 
 #. module: stock_planning
+#: view:stock.sale.forecast:0
+msgid "Per Department :"
+msgstr "Po odjelu:"
+
+#. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecast"
 msgstr "Predviđanje"
@@ -682,9 +664,9 @@ msgid "Draft"
 msgstr "Nacrt"
 
 #. module: stock_planning
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Pogreška ! Ne možete kreirati rekurzivni izbornik."
+#: view:stock.period:0
+msgid "Closed"
+msgstr "Zatvoreno"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -693,9 +675,14 @@ msgid "Warehouse "
 msgstr "Skladište "
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyzed_period5_per_dept:0
-msgid "This Dept Period5"
-msgstr "Period5 ovog odjela"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Expected Out: "
+msgstr ""
+"\n"
+" Očekivani izlaz: "
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -1183,13 +1170,18 @@ msgstr ""
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
-msgid "    Incoming Left: "
-msgstr "    Ostatak ulaza: "
+msgid "Cannot delete Validated Sale Forecasts !"
+msgstr "Ne možete izbrisati potvrđena predviđanja prodaje !"
 
 #. module: stock_planning
-#: view:stock.planning:0
-msgid "Internal Supply"
-msgstr "Unutarnja opskrba"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Planned Out: "
+msgstr ""
+"\n"
+" Očekivani izlaz: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
@@ -1258,16 +1250,6 @@ msgstr "Period1"
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
-msgid ""
-"\n"
-" Initial Stock: "
-msgstr ""
-"\n"
-" Početna zaliha: "
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
 msgid "    Minimum stock: "
 msgstr "    Minimalna zaliha: "
 
@@ -1305,6 +1287,11 @@ msgid "This Warehouse Period1"
 msgstr "Period1 ovog skladišta"
 
 #. module: stock_planning
+#: field:stock.planning,warehouse_forecast:0
+msgid "Warehouse Forecast"
+msgstr "Predviđanje za skladište"
+
+#. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:0
 #, python-format
 msgid "    Confirmed In: "
@@ -1331,26 +1318,6 @@ msgid "Stock"
 msgstr "Zaliha"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Stock Simulation: "
-msgstr ""
-"\n"
-" Simulacija zalihe: "
-
-#. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#, python-format
-msgid ""
-"\n"
-" Confirmed Out: "
-msgstr ""
-"\n"
-" Potvrđen izlaz: "
-
-#. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
 msgstr "Lokacija zalihe"
@@ -1359,6 +1326,11 @@ msgstr "Lokacija zalihe"
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
 msgstr "Datum završetka za planirani period"
+
+#. module: stock_planning
+#: field:stock.sale.forecast,analyzed_period2_per_user:0
+msgid "This User Period2"
+msgstr "Period2 ovog korisnika"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
@@ -1474,11 +1446,9 @@ msgid "This Dept Period2"
 msgstr "Period2 ovog odjela"
 
 #. module: stock_planning
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv objekta mora počinjati sa x_ i ne smije sadržavati posebne znakove !"
+#: field:stock.sale.forecast,analyzed_period5_per_dept:0
+msgid "This Dept Period5"
+msgstr "Period5 ovog odjela"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
@@ -1546,9 +1516,14 @@ msgid "Warehouse which planning will concern."
 msgstr "Skladište na koje se odnosi planiranje."
 
 #. module: stock_planning
-#: field:stock.sale.forecast,analyze_company:0
-msgid "Per Company"
-msgstr "Po tvrtki:"
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
+msgid ""
+"\n"
+" Stock Simulation: "
+msgstr ""
+"\n"
+" Simulacija zalihe: "
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -1586,10 +1561,10 @@ msgstr "Po skladištu:"
 #, python-format
 msgid ""
 "\n"
-"For period: "
+" Warehouse Forecast: "
 msgstr ""
 "\n"
-"Za period: "
+" Predviđanje za skladište: "
 
 #. module: stock_planning
 #: field:stock.planning,history:0
@@ -1608,9 +1583,21 @@ msgid "    Planned In: "
 msgstr "    Očekivan ulaz: "
 
 #. module: stock_planning
-#: view:stock.sale.forecast:0
-msgid "Per Department :"
-msgstr "Po odjelu:"
+#: field:stock.sale.forecast,analyze_company:0
+msgid "Per Company"
+msgstr "Po tvrtki:"
+
+#. module: stock_planning
+#: help:stock.planning,incoming_left:0
+msgid ""
+"Quantity left to Planned incoming quantity. This is calculated difference "
+"between Planned In and Confirmed In. For current period Already In is also "
+"calculated. This value is used to create procurement for lacking quantity."
+msgstr ""
+"Preostala količina za planiranu ulaznu količinu. Ovo je izračunata "
+"vrijednost između planiranog i potvrđenog ulaza. Za trenutni period trenutni "
+"ulaz je već izbračunat. Ova vrijednost se koristi za kreiranje nabave za "
+"manjak količina."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
@@ -1674,17 +1661,10 @@ msgstr "Proizvod"
 #, python-format
 msgid ""
 "\n"
-" Expected Out: "
+"For period: "
 msgstr ""
 "\n"
-" Očekivani izlaz: "
-
-#. module: stock_planning
-#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
-#: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
-#: view:stock.sale.forecast:0
-msgid "Sales Forecasts"
-msgstr "Predviđanja prodaje:"
+"Za period: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
@@ -1770,18 +1750,30 @@ msgid "Shows who created this forecast, or who validated."
 msgstr "Pokazuje tko je kreirao ovo predviđanje, ili tko ga je potvrdio."
 
 #. module: stock_planning
-#: help:stock.planning,incoming_left:0
+#: code:addons/stock_planning/stock_planning.py:0
+#, python-format
 msgid ""
-"Quantity left to Planned incoming quantity. This is calculated difference "
-"between Planned In and Confirmed In. For current period Already In is also "
-"calculated. This value is used to create procurement for lacking quantity."
+"\n"
+" Planned Out Before: "
 msgstr ""
-"Preostala količina za planiranu ulaznu količinu. Ovo je izračunata "
-"vrijednost između planiranog i potvrđenog ulaza. Za trenutni period trenutni "
-"ulaz je već izbračunat. Ova vrijednost se koristi za kreiranje nabave za "
-"manjak količina."
+"\n"
+" Prethodno očekivani izlaz: "
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
 msgstr "Početna zaliha"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešan naziv u definiciji akcije."
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za arhitekturu View-a"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Pogreška ! Ne možete kreirati rekurzivni izbornik."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta mora počinjati sa x_ i ne smije sadržavati posebne znakove !"

@@ -29,7 +29,7 @@
                 <field name="email" sum="# Mails"/>
                 <field name="delay_open"/>
                 <field name="delay_close"/>
-                <field name="avg_answers"/>
+                <field name="planned_revenue"/>
              </tree>
             </field>
         </record>
@@ -75,12 +75,12 @@
                             domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
                             help="Leads/Opportunities created in current year"/>
                         <filter string="   Month   " icon="terp-go-month" name="this_month"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Leads/Opportunities created in current month"/>
                         <filter icon="terp-go-month" string="    Month-1    " separator="1"
-                            domain="[('create_date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Leads/Opportunities created in last month"/>
-                            
+
                         <separator orientation="vertical" />
                         <filter icon="terp-check"
                             string="Active"
@@ -94,55 +94,55 @@
                             string="Closed"
                             domain="[('state','=','done')]"
                             help="Leads/Opportunities which are in done state"/>
-                            
+
                         <separator orientation="vertical" />
                         <field name="section_id"
-                            default="context.get('section_id', False)"
                             context="{'invisible_section': False}">
-                            <filter icon="terp-personal+"
+                            <filter icon="terp-personal+" groups="base.group_extended"
                                 context="{'invisible_section': False}"
                                 domain="[('section_id.user_id','=',uid)]"
-                                help="My team" />
+                                help="My Sales Team(s)" />
                         </field>
                         <field name="user_id" string="Salesman">
                             <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
                         </field>
-                   </group>
-                   <newline/>
-                  <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                      <field name="partner_id"/>
-                      <separator orientation="vertical"/>
-                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]" />
-                      <field name="categ_id" widget="selection"/>
-                      <field name="type_id" widget="selection"/>
-                      <field name="channel_id" widget="selection"/>
-                      <separator orientation="vertical"/>
-                      <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                      <newline/>
-                      <field name="creation_date"/>
-                      <field name="opening_date"/>
-                      <field name="date_closed"/>
-                  </group>
-                   <newline/>
-                   <group expand="1" string="Group By...">
+                    </group>
+                    <newline/>
+                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                        <field name="partner_id"/>
+                        <separator orientation="vertical"/>
+                        <field name="stage_id" widget="selection" domain="[('type', '=', 'lead')]" />
+                        <field name="categ_id" widget="selection"/>
+                        <field name="type_id" widget="selection"/>
+                        <field name="channel_id" widget="selection"/>
+                        <separator orientation="vertical"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        <newline/>
+                        <field name="creation_date"/>
+                        <field name="opening_date"/>
+                        <field name="date_closed"/>
+                    </group>
+                    <newline/>
+                    <group expand="1" string="Group By...">
                         <filter string="Salesman" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
                         <filter string="Sales Team" icon="terp-personal+"
                             domain="[]"
                             context="{'group_by':'section_id'}" />
-                       <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
-                       <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
-                       <filter string="Company" icon="terp-go-home"
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
+                        <filter string="Company" icon="terp-go-home"
                             domain="[]"
-                            context="{'group_by':'company_id'}" />
+                            context="{'group_by':'company_id'}" 
+                            groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
-                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                        <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Category" icon="terp-stock_symbol-selection"
+                        <filter string="Category" name="Category" icon="terp-stock_symbol-selection"
                             domain="[]" context="{'group_by':'categ_id'}" />
-                        <filter string="Campaign" icon="terp-stock_symbol-selection"
+                        <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'type_id'}" />
-                        <filter string="Channel" icon="terp-stock_symbol-selection"
+                        <filter string="Channel" icon="terp-call-start"
                             domain="[]" context="{'group_by':'channel_id'}" />
                         <separator orientation="vertical" />
                         <filter string="State" icon="terp-stock_effects-object-colorize"
@@ -154,14 +154,14 @@
                             domain="[]" context="{'group_by':'month'}" help="Month in which lead/opportunity is created"/>
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'name'}" help="Year in which lead/opportunity is created"/>
-                  </group>
-               </search>
+                    </group>
+                </search>
             </field>
         </record>
 
 <!--     Opportunity tree view  -->
 
-    <record id="view_report_crm_opportunity_tree" model="ir.ui.view">
+        <record id="view_report_crm_opportunity_tree" model="ir.ui.view">
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
             <field name="type">tree</field>
@@ -196,23 +196,21 @@
 
 <!-- Leads by user and section Action -->
 
-        <record id="action_report_crm_lead" model="ir.actions.act_window">
-            <field name="name">Leads Analysis</field>
-            <field name="res_model">crm.lead.report</field>
-            <field name="view_type">form</field>
-            <field name="context">{'search_default_filter_lead': 1, 'search_default_lead':1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="domain">[('type', '=', 'lead')]</field>
-            <field name="help">Leads Analysis allows you to consult different informations relative to CRM. Check for treatments delays, number of responses given and emails send. You can sort out your leads analysis on different groups to get fine grained analysis.</field>
-        </record>
-
+       <record id="action_report_crm_lead" model="ir.actions.act_window">
+           <field name="name">Leads Analysis</field>
+           <field name="res_model">crm.lead.report</field>
+           <field name="view_type">form</field>
+           <field name="context">{'search_default_filter_lead': 1, "search_default_user":1, "search_default_this_month":1, 'group_by_no_leaf':1, 'group_by':[]}</field>
+           <field name="view_mode">tree,graph</field>
+           <field name="domain">[]</field>
+           <field name="help">Leads Analysis allows you to check different CRM related information. Check for treatment delays, number of responses given and emails sent. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
+       </record>
        <record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="view_report_crm_lead_tree"/>
             <field name="act_window_id" ref="action_report_crm_lead"/>
        </record>
-
        <record model="ir.actions.act_window.view" id="action_report_crm_lead_graph">
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>
@@ -227,7 +225,7 @@
             <field name="context">{"search_default_filter_opportunity":1, "search_default_opportunity": 1, "search_default_user":1,"search_default_this_month":1,'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">tree,graph</field>
             <field name="domain">[('type', '=', 'opportunity')]</field>
-            <field name="help">Opportunities Analysis menu gives you an instant access to your opportunities like expected revenue, planned cost, overpassed deadline or the number of exchanges by opportunity.</field>
+            <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the teams of the sales pipeline.</field>
         </record>
 
        <record model="ir.actions.act_window.view" id="action_report_crm_opportunity_tree">
@@ -246,11 +244,11 @@
 
        <menuitem name="Leads Analysis" id="menu_report_crm_leads_tree"
             groups="base.group_extended"
-           parent="base.next_id_64" action="action_report_crm_lead" sequence="3"/>
+            parent="base.next_id_64" action="action_report_crm_lead" sequence="3"/>
 
        <menuitem name="Opportunities Analysis" id="menu_report_crm_opportunities_tree"
             groups="base.group_extended"
-           parent="base.next_id_64" action="action_report_crm_opportunity" sequence="4"/>
+            parent="base.next_id_64" action="action_report_crm_opportunity" sequence="4"/>
 
     </data>
 </openerp>

@@ -28,21 +28,18 @@ class account_common_partner_report(osv.osv_memory):
     _columns = {
         'result_selection': fields.selection([('customer','Receivable Accounts'),
                                               ('supplier','Payable Accounts'),
-                                              ('customer_supplier' ,'Receivable and Payable Accounts')],
+                                              ('customer_supplier','Receivable and Payable Accounts')],
                                               "Partner's", required=True),
-        'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True),
     }
 
     _defaults = {
         'result_selection': 'customer',
-        'target_move': 'all'
     }
 
     def pre_print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
-        data['form'].update(self.read(cr, uid, ids, ['result_selection', 'target_move'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['result_selection'], context=context)[0])
         return data
 
 account_common_partner_report()

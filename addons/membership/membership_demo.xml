@@ -6,7 +6,7 @@
     <record id="membership_0" model="product.product">
         <field name="membership">True</field>
         <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
-        <field eval="time.strftime('%Y-06-01')" name="membership_date_to"/>
+        <field eval="time.strftime('%Y-12-01')" name="membership_date_to"/>
         <field name="name">Golden Membership</field>
         <field name="list_price">180</field>
         <field name="categ_id" ref="product.cat1"/>
@@ -15,7 +15,7 @@
     <record id="membership_1" model="product.product">
         <field name="membership">True</field>
         <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
-        <field eval="time.strftime('%Y-08-01')" name="membership_date_to"/>
+        <field eval="time.strftime('%Y-12-01')" name="membership_date_to"/>
         <field name="name">Silver Membership</field>
         <field name="categ_id" ref="product.cat1"/>
         <field name="list_price">80</field>
@@ -24,7 +24,7 @@
     <record id="membership_2" model="product.product">
         <field name="membership">True</field>
         <field eval="time.strftime('%Y-01-01')" name="membership_date_from"/>
-        <field eval="time.strftime('%Y-08-01')" name="membership_date_to"/>
+        <field eval="time.strftime('%Y-12-01')" name="membership_date_to"/>
         <field name="name">Basic Membership</field>
         <field name="categ_id" ref="product.cat1"/>
         <field name="list_price">40</field>
@@ -33,7 +33,7 @@
 
 <!-- Join Memberships  -->
     <function model="res.partner" name="create_membership_invoice" eval="(ref('base.res_partner_agrolait'), ref('membership_0'), {'amount':180})"/>
-    
+
 <!-- Demo data for free member -->
     <record id="base.res_partner_desertic_hispafuentes" model="res.partner">
         <field name="free_member">True</field>

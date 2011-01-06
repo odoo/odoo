@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    <menuitem id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" sequence="0" groups="base.group_system,base.group_hr_manager,base.group_hr_user"/>
+    <menuitem
+        id="base.menu_hr_dasboard" name="Dashboard" parent="hr.menu_hr_reporting" 
+        sequence="0"/>
     <menuitem
             action="hr.open_board_hr"
             icon="terp-graph"
             id="base.menu_hr_project"
             parent="base.menu_hr_dasboard"
             sequence="4"/>
-
-    <record id="action_timesheet_report_all" model="ir.actions.act_window">
-            <field name="name">Timesheets by Month</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">timesheet.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('user_id','=',uid), ('month', '=' , time.strftime('%m')), ('year', '=', time.strftime('%Y'))]</field>
-            <field name="view_id" ref="hr_timesheet_sheet.view_timesheet_report_graph"/>
-        </record>
 
         <record id="action_hr_timesheet_sheet_graph" model="ir.actions.act_window">
             <field name="name">Timesheets</field>
@@ -26,39 +18,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_graph"/>
-        </record>
-
-        <record id="view_employee_attendance_graph" model="ir.ui.view">
-            <field name="name">Employee Attendance Graph</field>
-            <field name="model">timesheet.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Employee Attendances" type="bar">
-                    <field name="user_id" />
-                    <field name="total_attendance" operator="+"/>
-                    <field name="total_timesheet" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-        <record id="action_employee_attendance_graph" model="ir.actions.act_window">
-            <field name="name">Employee Attendance Graph</field>
-            <field name="res_model">timesheet.report</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_employee_attendance_graph"/>
-        </record>
-
-        <record id="board_hr_timesheet_form" model="ir.ui.view">
-            <field name="name">board.hr.timesheet.form</field>
-            <field name="model">board.board</field>
-            <field name="inherit_id" ref="hr.board_hr_manager_form"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <xpath expr="/form/hpaned/child2" position="inside">
-                    <action colspan="4" height="220" name="%(action_employee_attendance_graph)d" string="Employee Attendances" />
-                </xpath>
-            </field>
         </record>
 
         <record id="hr_timesheet_sheet_tree" model="ir.ui.view">

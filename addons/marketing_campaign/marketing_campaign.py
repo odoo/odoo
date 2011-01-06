@@ -28,6 +28,7 @@ from traceback import format_exception
 from sys import exc_info
 from tools.safe_eval import safe_eval as eval
 import re
+from decimal_precision import decimal_precision as dp
 
 from osv import fields, osv
 import netsvc
@@ -87,7 +88,7 @@ class marketing_campaign(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True),
         'object_id': fields.many2one('ir.model', 'Resource', required=True,
-                                      help="Choose the model on which you want \
+                                      help="Choose the resource on which you want \
 this campaign to be run"),
         'partner_field_id': fields.many2one('ir.model.fields', 'Partner Field',
                                             domain="[('model_id', '=', object_id), ('ttype', '=', 'many2one'), ('relation', '=', 'res.partner')]",
@@ -108,7 +109,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                                    'State',),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
-        'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting."),
+        'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Purchase Price')),
     }
 
     _defaults = {
@@ -172,7 +173,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         domain = [('object_id.model', '=', record._table._name),
                   ('state', '=', 'running')]
         campaign_ids = self.search(cr, uid, domain, context=context)
-        for campaign in self.browse(cr, uid, campaign_ids, context):
+        for campaign in self.browse(cr, uid, campaign_ids, context=context):
             for activity in campaign.activity_ids:
                 if activity.signal != signal:
                     continue
@@ -205,7 +206,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv("Operation not supported", "Sorry, campaign duplication is not supported at the moment.")
+        raise osv.except_osv(_("Operation not supported"), _("Sorry, campaign duplication is not supported at the moment."))
 
 marketing_campaign()
 
@@ -247,8 +248,6 @@ class marketing_campaign_segment(osv.osv):
     }
 
     def _check_model(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for obj in self.browse(cr, uid, ids, context=context):
             if not obj.ir_filter_id:
                 return True
@@ -257,7 +256,7 @@ class marketing_campaign_segment(osv.osv):
         return True
 
     _constraints = [
-        (_check_model, _('Model of filter must be same as resource model of Campaign '), ['ir_filter_id,campaign_id']),
+        (_check_model, 'Model of filter must be same as resource model of Campaign ', ['ir_filter_id,campaign_id']),
     ]
 
     def onchange_campaign_id(self, cr, uid, ids, campaign_id):
@@ -309,7 +308,7 @@ class marketing_campaign_segment(osv.osv):
         for segment in self.browse(cr, uid, segment_ids, context=context):
             if segment.campaign_id.state != 'running':
                 continue
-            
+
             campaigns.add(segment.campaign_id.id)
             act_ids = self.pool.get('marketing.campaign.activity').search(cr,
                   uid, [('start', '=', True), ('campaign_id', '=', segment.campaign_id.id)], context=context)
@@ -377,7 +376,7 @@ class marketing_campaign_activity(osv.osv):
                                  help="Python expression to decide whether the activity can be executed, otherwise it will be deleted or cancelled."
                                  "The expression may use the following [browsable] variables:\n"
                                  "   - activity: the campaign activity\n"
-                                 "   - workitem: the campaign workitem\n" 
+                                 "   - workitem: the campaign workitem\n"
                                  "   - resource: the resource object this campaign item represents\n"
                                  "   - transitions: list of campaign transitions outgoing from this activity\n"
                                  "...- re: Python regular expression module"),
@@ -399,8 +398,8 @@ class marketing_campaign_activity(osv.osv):
         'from_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_to_id',
                                             'Previous Activities'),
-        'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section"),
-        'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section"),
+        'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section", digits_compute=dp.get_precision('Purchase Price')),
+        'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits_compute=dp.get_precision('Sale Price')),
         'signal': fields.char('Signal', size=128,
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
         'keep_if_condition_not_met': fields.boolean("Don't delete workitems",
@@ -470,7 +469,7 @@ class marketing_campaign_activity(osv.osv):
 
         workitem_obj = self.pool.get('marketing.campaign.workitem')
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
-        return action(cr, uid, activity, workitem, context)
+        return action(cr, uid, activity, workitem, context=context)
 
 marketing_campaign_activity()
 
@@ -498,7 +497,7 @@ class marketing_campaign_transition(osv.osv):
 
     def _delta(self, cr, uid, ids, context=None):
         assert len(ids) == 1
-        transition = self.browse(cr, uid, ids[0], context)
+        transition = self.browse(cr, uid, ids[0], context=context)
         if transition.trigger != 'time':
             raise ValueError('Delta is only relevant for timed transiton')
         return relativedelta(**{str(transition.interval_type): transition.interval_nbr})
@@ -531,17 +530,15 @@ class marketing_campaign_transition(osv.osv):
         'trigger': 'time',
     }
     def _check_campaign(self, cr, uid, ids, context=None):
-        if not context:
-            context = {}
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.activity_from_id.campaign_id != obj.activity_to_id.campaign_id:
                 return False
         return True
 
     _constraints = [
-            (_check_campaign, _('The To/From Activity of transition must be of the same Campaign '), ['activity_from_id,activity_to_id']),
+            (_check_campaign, 'The To/From Activity of transition must be of the same Campaign ', ['activity_from_id,activity_to_id']),
         ]
- 
+
     _sql_constraints = [
         ('interval_positive', 'CHECK(interval_nbr >= 0)', 'The interval must be positive or zero')
     ]
@@ -566,8 +563,6 @@ class marketing_campaign_workitem(osv.osv):
 
     def _resource_search(self, cr, uid, obj, name, args, domain=None, context=None):
         """Returns id of workitem whose resource_name matches  with the given name"""
-        if context is None:
-            context = {}
         if not len(args):
             return []
 
@@ -614,13 +609,13 @@ class marketing_campaign_workitem(osv.osv):
         'date': False,
     }
 
-    def button_draft(self, cr, uid, workitem_ids, context={}):
+    def button_draft(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('exception', 'cancelled'):
                 self.write(cr, uid, [wi.id], {'state':'todo'}, context=context)
         return True
 
-    def button_cancel(self, cr, uid, workitem_ids, context={}):
+    def button_cancel(self, cr, uid, workitem_ids, context=None):
         for wi in self.browse(cr, uid, workitem_ids, context=context):
             if wi.state in ('todo','exception'):
                 self.write(cr, uid, [wi.id], {'state':'cancelled'}, context=context)
@@ -638,7 +633,7 @@ class marketing_campaign_workitem(osv.osv):
             'activity': activity,
             'workitem': workitem,
             'object': object_id,
-            'resource': object_id, 
+            'resource': object_id,
             'transitions': activity.to_ids,
             're': re,
         }
@@ -714,8 +709,8 @@ class marketing_campaign_workitem(osv.osv):
                      context=context)
 
     def process(self, cr, uid, workitem_ids, context=None):
-        for wi in self.browse(cr, uid, workitem_ids, context):
-            self._process_one(cr, uid, wi, context)
+        for wi in self.browse(cr, uid, workitem_ids, context=context):
+            self._process_one(cr, uid, wi, context=context)
         return True
 
     def process_all(self, cr, uid, camp_ids=None, context=None):
@@ -735,12 +730,12 @@ class marketing_campaign_workitem(osv.osv):
                 if not workitem_ids:
                     break
 
-                self.process(cr, uid, workitem_ids, context)
+                self.process(cr, uid, workitem_ids, context=context)
         return True
 
-    def preview(self, cr, uid, ids, context):
+    def preview(self, cr, uid, ids, context=None):
         res = {}
-        wi_obj = self.browse(cr, uid, ids[0], context)
+        wi_obj = self.browse(cr, uid, ids[0], context=context)
         if wi_obj.activity_id.type == 'email':
             data_obj = self.pool.get('ir.model.data')
             data_id = data_obj._get_id(cr, uid, 'email_template', 'email_template_preview_form')
@@ -796,7 +791,7 @@ class report_xml(osv.osv):
             context = {}
         object_id = context.get('object_id')
         if object_id:
-            model = self.pool.get('ir.model').browse(cr, uid, object_id).model
+            model = self.pool.get('ir.model').browse(cr, uid, object_id, context=context).model
             args.append(('model', '=', model))
         return super(report_xml, self).search(cr, uid, args, offset, limit, order, context, count)
 

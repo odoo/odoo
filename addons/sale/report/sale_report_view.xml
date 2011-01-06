@@ -3,6 +3,7 @@
 <data>
 
     <record id="view_order_product_tree" model="ir.ui.view">
+        <field eval="1" name="priority"/>
         <field name="name">sale.report.tree</field>
         <field name="model">sale.report</field>
         <field name="type">tree</field>
@@ -22,11 +23,10 @@
                 <field name="product_uom_qty" sum="# of Qty"/>
                 <field name="shipped_qty_1" sum="Shipped Qty"/>
                 <field name="uom_name" invisible="not context.get('set_visible',False)"/>
-                <field name="price_average" sum="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay" sum="Commitment Delay"/>
                 <field name="state" invisible="1"/>
-                <field name="analytic_account_id" invisible="1" groups="base.group_extended"/>
+                <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
             </tree>
         </field>
     </record>
@@ -56,12 +56,12 @@
                         help="Sales order created in current year"/>
                     <filter icon="terp-go-month" string="   Month   "
                         name="month"
-                        domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                        domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                         help="Sales order created in current month"/>
                     <filter icon="terp-go-month"
                          string="    Month-1    "
                          separator="1"
-                         domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                         domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                          help="Sales order created in last month"/>
                     <separator orientation="vertical"/>
                     <filter icon="terp-document-new"
@@ -71,7 +71,7 @@
                         string="Sales"
                         domain="[('state','not in',('draft','done','cancel'))]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-sale"
+                    <filter icon="terp-accessories-archiver"
                         string="Picked"
                         domain="[('shipped','=',True)]"/>
                     <separator orientation="vertical"/>
@@ -96,21 +96,21 @@
                 <newline/>
                 <group expand="1" string="Group By..." colspan="10" col="12">
                     <filter string="Salesman" icon="terp-personal" name="User" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
+                    <filter string="Partner" icon="terp-partner"  name="Customer" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True}"/>
-                    <filter string="Default UoM" icon="terp-mrp" context="{'group_by':'uom_name'}"/>
-                    <filter string="Category of Product" icon="terp-stock_symbol-selection" context="{'group_by':'categ_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}"/>
-                    <separator orientation="vertical"/>
+                    <filter string="Reference UoM" icon="terp-mrp" context="{'group_by':'uom_name'}"/>
+                    <filter string="Category of Product" icon="terp-stock_symbol-selection" name="Category" context="{'group_by':'categ_id'}"/>
+                    <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
+                    <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'analytic_account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                     <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Shop" icon="terp-go-home" context="{'group_by':'shop_id'}"/>
                     <filter string="Company" icon="terp-go-home" groups="base.group_multi_company" context="{'group_by':'company_id'}"/>
                     <separator orientation="vertical"/>
                    <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Ordered date of the sales order"/>
-                   <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Ordered month of the sales order"/>
+                   <filter string="Month" name="order_month" icon="terp-go-month" context="{'group_by':'month'}" help="Ordered month of the sales order"/>
                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Ordered Year of the sales order"/>
                 </group>
             </search>
@@ -125,31 +125,19 @@
         <field name="search_view_id" ref="view_order_product_search"/>
         <field name="view_id" ref="view_order_product_tree"/>
         <field name="context">{'search_default_month':1,'search_default_User':1,'group_by_no_leaf':1,'group_by':[]}</field>
-        <field name="help">With Sales Analysis consult your sales total amount suits to different group criteria (salesman, partner, product, etc.)</field>
+        <field name="help">This report performs analysis on your quotations and sales orders. Analysis check your sales revenues and sort it by different group criteria (salesman, partner, product, etc.) Use this report to perform analysis on sales not having invoiced yet. If you want to analyse your turnover, you should use the Invoice Analysis report in the Accounting application.</field>
     </record>
 
     <menuitem id="base.next_id_64" name="Reporting" parent="base.menu_base_partner" sequence="11"/>
-    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1"/>
+    <menuitem action="action_order_report_all" id="menu_report_product_all" parent="base.next_id_64" sequence="1" groups="base.group_sale_manager"/>
 
     <!--This views used in board_sale module -->
-    <record id="view_sales_by_partner_tree" model="ir.ui.view">
-        <field name="name">sales.by.partner.tree</field>
-        <field name="model">sale.report</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Sales By Partner">
-                <field name="partner_id"/>
-                <field name="price_total"/>
-            </tree>
-        </field>
-    </record>
-
     <record id="view_sales_by_partner_graph" model="ir.ui.view">
          <field name="name">sales.by.partner.graph</field>
          <field name="model">sale.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Sales By Partner" type="bar">
+             <graph string="Sales by Partner" type="bar">
                  <field name="partner_id" />
                  <field name="price_total" operator="+"/>
              </graph>
@@ -157,36 +145,13 @@
     </record>
 
    <record id="action_sales_by_partner" model="ir.actions.act_window">
-        <field name="name">Sales By Partner</field>
+        <field name="name">Sales per Customer in last 90 days</field>
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
-        <field name="domain">[('state','in',('manual','progress')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
+        <field name="domain">[('state','=','done'),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_by_partner_graph"/>
-    </record>
-    <record id="open_view_sales_by_partner_graph" model="ir.actions.act_window.view">
-            <field eval="1" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_sales_by_partner_graph"/>
-            <field name="act_window_id" ref="action_sales_by_partner"/>
-   </record>
-   <record id="open_view_sales_by_partner_tree" model="ir.actions.act_window.view">
-            <field eval="2" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_sales_by_partner_tree"/>
-            <field name="act_window_id" ref="action_sales_by_partner"/>
-   </record>
-
-    <record id="view_sales_by_salesman_tree" model="ir.ui.view">
-        <field name="name">sales.by.salesman.tree</field>
-        <field name="model">sale.report</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Sales By Salesman">
-                <field name="user_id"/>
-                <field name="price_total"/>
-            </tree>
-        </field>
+        <field name="context">{'search_default_Customer':1}</field>
     </record>
 
     <record id="view_sales_by_salesman_graph" model="ir.ui.view">
@@ -194,7 +159,7 @@
          <field name="model">sale.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Sales By Salesman" type="bar">
+             <graph string="Sales by Salesman" type="bar">
                  <field name="user_id" />
                  <field name="price_total" operator="+"/>
              </graph>
@@ -202,35 +167,13 @@
     </record>
 
    <record id="action_sales_by_salesman" model="ir.actions.act_window">
-        <field name="name">Sales By Salesman</field>
+        <field name="name">Sales by Salesman in last 90 days</field>
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('state','in',('manual','progress','done')),('date','&lt;=', time.strftime('%Y-%m-%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_by_salesman_graph"/>
-    </record>
-   <record id="open_view_sales_by_salesman_graph" model="ir.actions.act_window.view">
-            <field eval="7" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_sales_by_salesman_graph"/>
-            <field name="act_window_id" ref="action_sales_by_salesman"/>
-   </record>
-    <record id="open_view_sales_by_salesman_tree" model="ir.actions.act_window.view">
-            <field eval="9" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_sales_by_salesman_tree"/>
-            <field name="act_window_id" ref="action_sales_by_salesman"/>
-   </record>
-    <record id="view_sales_product_total_price_tree" model="ir.ui.view">
-        <field name="name">sold.product.total.price.tree</field>
-        <field name="model">sale.report</field>
-        <field name="type">tree</field>
-        <field name="arch" type="xml">
-            <tree string="Sales by Products">
-                <field name="product_id"/>
-                <field name="price_total"/>
-            </tree>
-        </field>
+        <field name="context">{'search_default_User':1}</field>
     </record>
 
     <record id="view_sales_product_total_price_graph" model="ir.ui.view">
@@ -238,33 +181,22 @@
          <field name="model">sale.report</field>
          <field name="type">graph</field>
          <field name="arch" type="xml">
-             <graph string="Sales by Products" type="bar">
-                 <field name="product_id" />
+             <graph string="Sales by Product Category" type="bar">
+                 <field name="categ_id" />
                  <field name="price_total" operator="+"/>
              </graph>
          </field>
     </record>
 
    <record id="action_sales_product_total_price" model="ir.actions.act_window">
-        <field name="name">Sales by Products</field>
+        <field name="name">Sales by Product's Category in last 90 days</field>
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">graph,tree</field>
         <field name="domain">[('state','in',('manual','progress','done')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=90)).strftime('%Y-%m-%d'))]</field>
         <field name="view_id" ref="view_sales_product_total_price_graph"/>
+        <field name="context">{'search_default_Category':1}</field>
     </record>
-    <record id="open_view_sales_product_total_price_graph" model="ir.actions.act_window.view">
-            <field eval="3" name="sequence"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_sales_product_total_price_graph"/>
-            <field name="act_window_id" ref="action_sales_product_total_price"/>
-    </record>
-    <record id="open_view_sales_product_total_price_tree" model="ir.actions.act_window.view">
-            <field eval="4" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_sales_product_total_price_tree"/>
-            <field name="act_window_id" ref="action_sales_product_total_price"/>
-   </record>
 
     <record id="view_sales_by_month_tree" model="ir.ui.view">
         <field name="name">view.sales.by.month.tree</field>
@@ -275,16 +207,27 @@
                 <field name="month" />
                 <field name="product_id" />
                 <field name="price_total" />
+                <field name="user_id" invisible="1"/>
+                <field name="partner_id" invisible="1"/>
+                <field name="uom_name" invisible="1"/>
+                <field name="categ_id" invisible="1"/>
+                <field name="analytic_account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
+                <field name="state" invisible="1"/>
+                <field name="shop_id" invisible="1"/>
+                <field name="company_id" invisible="1" groups="base.group_multi_company"/>
+                <field name="day" invisible="1"/>
+                <field name="year" invisible="1"/>
+                <field name="date" invisible="1"/>
             </tree>
         </field>
     </record>
     <record id="action_view_sales_by_month" model="ir.actions.act_window">
-        <field name="name">Sales By Month</field>
+        <field name="name">Sales by Month</field>
         <field name="res_model">sale.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
         <field name="domain">[('state','in',('manual','progress','done')),('year','=', time.strftime('%Y'))]</field>
-        <field name="context">{'group_by_no_leaf':1,'group_by':['month','product_id']}</field>
+        <field name="context">{'search_default_order_month':1,'group_by_no_leaf':0,'group_by':['month', 'product_id']}</field>
         <field name="view_id" ref="view_sales_by_month_tree"/>
     </record>
 
@@ -293,7 +236,7 @@
             <field name="model">sale.order</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Top Quotations">
+                <tree string="Quotations">
                     <field name="date_order"/>
                     <field name="name"/>
                     <field name="partner_id"/>
@@ -305,7 +248,7 @@
         </record>
 
     <record id="action_quotation_for_sale" model="ir.actions.act_window">
-        <field name="name">Top Quotations</field>
+        <field name="name">Quotations</field>
         <field name="res_model">sale.order</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>

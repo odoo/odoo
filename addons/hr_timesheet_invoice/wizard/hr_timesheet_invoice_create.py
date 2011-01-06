@@ -35,31 +35,14 @@ class hr_timesheet_invoice_create(osv.osv_memory):
     _name = 'hr.timesheet.invoice.create'
     _description = 'Create invoice from timesheet'
     _columns = {
-        'accounts': fields.many2many('account.analytic.account', 'invoice_id', 'account_id', 'Analytic Accounts', required=True),
         'date': fields.boolean('Date', help='The real date of each work will be displayed on the invoice'),
         'time': fields.boolean('Time spent', help='The time of each work done will be displayed on the invoice'),
         'name': fields.boolean('Description', help='The detail of each work done will be displayed on the invoice'),
         'price': fields.boolean('Cost', help='The cost of each work done will be displayed on the invoice. You probably don\'t want to check this'),
         'product': fields.many2one('product.product', 'Product', help='Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
-                }
-
-    def _get_accounts(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if not len(context['active_ids']):
-            return {}
-        #Checking whether the analytic line is invoiced or not
-        analytic_line_obj = self.pool.get('account.analytic.line').browse(cr, uid, context['active_ids'], context=context)
-        for obj_acc in analytic_line_obj:
-            if obj_acc.invoice_id and obj_acc.invoice_id.state !='cancel':
-                raise osv.except_osv(_('Warning'),_('The analytic entry "%s" is already invoiced!')%(obj_acc.name,))
-
-        cr.execute("SELECT distinct(account_id) from account_analytic_line where id IN %s",(tuple(context['active_ids']),))
-        account_ids = cr.fetchall()
-        return [x[0] for x in account_ids]
+    }
 
     _defaults = {
-         'accounts': _get_accounts,
          'date': lambda *args: 1,
          'name': lambda *args: 1
     }
@@ -80,14 +63,18 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         if context is None:
             context = {}
         result = mod_obj._get_id(cr, uid, 'account', 'view_account_invoice_filter')
-        res = mod_obj.read(cr, uid, result, ['res_id'], context=context)
         data = self.read(cr, uid, ids, [], context=context)[0]
-        account_ids = data['accounts']
+
+        account_ids = {}
+        for line in self.pool.get('account.analytic.line').browse(cr, uid, context['active_ids'], context=context):
+            account_ids[line.account_id.id] = True
+
+        account_ids = account_ids.keys() #data['accounts']
         for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
                 raise osv.except_osv(_('Analytic Account incomplete'),
-                        _('Please fill in the Associate Partner and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
+                        _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
 
             if not partner.address:
                 raise osv.except_osv(_('Partner incomplete'),
@@ -104,7 +91,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
                     date_due = pterm_list[-1]
 
             curr_invoice = {
-                'name': time.strftime('%D')+' - '+account.name,
+                'name': time.strftime('%d/%m/%Y')+' - '+account.name,
                 'partner_id': account.partner_id.id,
                 'address_contact_id': res_partner_obj.address_get(cr, uid,
                     [account.partner_id.id], adr_pref=['contact'])['contact'],
@@ -188,9 +175,9 @@ class hr_timesheet_invoice_create(osv.osv_memory):
 
                 curr_line['note'] = "\n".join(map(lambda x: unicode(x) or '',note))
                 invoice_line_obj.create(cr, uid, curr_line, context=context)
-                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s" ,(last_invoice, account.id, tuple(context['active_ids'])))
+                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(context['active_ids'])))
 
-        invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
+            invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
 
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')

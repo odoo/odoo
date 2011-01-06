@@ -4,13 +4,13 @@
   !record {model: project.project, id: project_project_project0}:
     name: Develop an outlook-openerp synchronization plugin
     members:
-      - project_long_term.res_users_project_manager
-      - project_long_term.res_users_technical_leader
-      - project_long_term.res_users_developer
-      - project_long_term.res_users_designer
-      - project_long_term.res_users_tester
-      - project_long_term.res_users_analyst
-      - project_long_term.res_users_finacial_manager
+      - project.res_users_project_manager
+      - project.res_users_technical_leader
+      - project.res_users_developer
+      - project.res_users_designer
+      - project.res_users_tester
+      - project.res_users_analyst
+      - project.res_users_finacial_manager
 - 
   Create phase 'Develop GUI' in Outlook
 - 
@@ -40,7 +40,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    user_id: project_long_term.res_users_developer
+    user_id: project.res_users_developer
     
 - 
   Create the phase task 'Develop GUI for Modules Configuration'
@@ -52,7 +52,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    user_id: project_long_term.res_users_developer
+    user_id: project.res_users_developer
 - 
   Create the phase task 'Develop GUI for OpenERP Synchronisation'
 - 
@@ -63,7 +63,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    user_id: project_long_term.res_users_developer
+    user_id: project.res_users_developer
 - 
   Create the phase task 'Design required GUI/Menus'
 - 
@@ -74,7 +74,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    user_id: project_long_term.res_users_designer
+    user_id: project.res_users_designer
     
 - 
   Schedule phase tasks

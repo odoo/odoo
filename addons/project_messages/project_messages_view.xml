@@ -70,7 +70,7 @@
            <field name="arch" type="xml">
                <search string="Project Messages">
                		<group>
-                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','=',time.strftime('%%Y-%%m-%%d'))]"/>
+                        <filter icon="terp-go-today" string="Today" separator="1" domain="[('create_date','&gt;=',time.strftime('%%Y-%%m-%%d')),('create_date','&lt;', (datetime.date.today() + datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d'))]"/>
                         <separator orientation="vertical"/>
                			<field name="project_id"/>
                         <field name="from_id"/>
@@ -82,7 +82,7 @@
                         <filter string="Message To" icon="terp-personal" domain="[]" context="{'group_by':'to_id'}"/>
                         <filter string="Message From" icon="terp-personal" domain="[]" context="{'group_by':'from_id'}"/>
                         <separator orientation="vertical"/>
-                    	<filter string="Project" icon="terp-folder-blue" domain="[]" context="{'group_by':'project_id'}"/>
+                    	<filter string="Project" icon="terp-folder-violet" domain="[]" context="{'group_by':'project_id'}"/>
                     </group>
                </search>
            </field>
@@ -95,7 +95,7 @@
             <field name="search_view_id" ref="view_project_messages_search"/>
             <field name="context">{"search_default_to_id":uid}</field>
             <field name="view_id" ref="view_project_message_tree"/>
-			<field name="help">An in-project messagery system permits an efficient and trackable communication between project members. The messages are kept in the system and can then be used for post-analysis.</field>
+			<field name="help">An in-project messaging system allows for an efficient and trackable communication between project members. The messages are stored in the system and can be used for post analysis.</field>
         </record>
 
         <act_window context="{'search_default_project_id': [active_id]}" id="act_project_messages" name="Messages" res_model="project.messages" src_model="project.project"/>
@@ -109,6 +109,6 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="project_messages.view_project_message_tree"/>
        </record>
-       <menuitem action="messages_form" id="menu_messages_form" parent="project.menu_project_management"/>
+       <menuitem action="messages_form" id="menu_messages_form" parent="project.menu_project_management" groups="project.group_project_user"/>
      </data>
 </openerp>

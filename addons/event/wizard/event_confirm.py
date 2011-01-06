@@ -19,8 +19,7 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
+from osv import osv
 
 class event_confirm(osv.osv_memory):
     """
@@ -29,18 +28,9 @@ class event_confirm(osv.osv_memory):
     _name = "event.confirm"
     _description = "Event Confirmation"
 
-    _columns = {
-        'msg': fields.text('Message', readonly=True),
-    }
-    _defaults = {
-        'msg': _('Warning: This Event has not reached its Minimum Registration Limit. Are you sure you want to confirm it?')
-    }
-
-    def confirm(self, cr, uid, ids, context):
-        event_pool = self.pool.get('event.event')
-        event_ids = context.get('event_ids', [])
-        event_pool.do_confirm(cr, uid, event_ids, context=context)
-        return {}
+    def confirm(self, cr, uid, ids, context=None):
+        self.pool.get('event.event').do_confirm(cr, uid, context.get('event_ids', []), context=context)
+        return {'type': 'ir.actions.act_window_close'}
 
 event_confirm()
 

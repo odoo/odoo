@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Pay slip" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Pay Slip.pdf">
+  <template pageSize="(595.0,842.0)" title="Pay Slip" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -333,7 +333,7 @@
           <para style="terp_default_Bold_9">Identification No</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.employee_id.otherid or '' ]]</para>
+          <para style="terp_default_9">[[ o.employee_id.passport_id and o.employee_id.passport_id.name or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -349,7 +349,7 @@
           <para style="terp_default_Bold_9">Designation </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.employee_id.contract_ids and o.employee_id.contract_ids[0].job_id.name or '' ]]</para>
+          <para style="terp_default_9">[[ o.employee_id.contract_id and o.employee_id.contract_id.job_id.name or '' ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -392,19 +392,19 @@
           <para style="terp_default_Bold_9">Basic Salary</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ formatLang(o.basic_before_leaves) ]] [[ o.company_id.currency_id.symbol ]] </para>
+          <para style="terp_default_9">[[ formatLang(o.basic_before_leaves, dp='Account') ]] [[ o.company_id.currency_id.symbol ]] </para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Leaved Deduction</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.leaves or '' ]]</para>
+          <para style="terp_default_9">[[ formatLang(o.leaves, dp='Account') ]] [[ o.company_id.currency_id.symbol ]] </para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Basic Salary – Leaves</para>
         </td>
         <td>
-          <para style="terp_default_9">[[ formatLang(o.basic) ]] [[ o.company_id.currency_id.symbol ]]</para>
+          <para style="terp_default_9">[[ formatLang(o.basic, dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -433,7 +433,7 @@
             <para style="terp_default_9">[[ ld.code ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(ld.total) ]] [[ o.company_id.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(ld.total, dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -463,15 +463,15 @@
                 <para style="terp_default_9">Basic Salary</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(o.basic) ]] [[ o.company_id.currency_id.symbol ]]</para>
+                <para style="terp_default_Right_9">[[ formatLang(o.basic, dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
               </td>
             </tr>
             <tr>
               <td>
-                <para style="terp_default_9">[[repeatIn(get_earnings(o.line_ids),'a') ]] [[ a.code or removeParentNode('tr') ]]</para>
+                <para style="terp_default_9">[[repeatIn(get_earnings(o.line_ids),'a') ]] [[ a.code ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(a.total) ]] [[ o.company_id.currency_id.symbol ]]</para>
+                <para style="terp_default_Right_9">[[ formatLang(a.total, dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
               </td>
             </tr>
           </blockTable>
@@ -488,7 +488,7 @@
                   <para style="terp_default_9">[[ b.code ]]</para>
                 </td>
                 <td>
-                  <para style="terp_default_Right_9">[[ formatLang(b.total) ]] [[ o.company_id.currency_id.symbol ]]</para>
+                  <para style="terp_default_Right_9">[[ formatLang(b.total, dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
                 </td>
               </tr>
             </blockTable>
@@ -505,16 +505,16 @@
     <blockTable colWidths="181.0,88.0,177.0,93.0" style="Table4">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Total Earnings<font face="Helvetica" size="7.0">([[ o.company_id.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details">Total Earnings<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.symbol or '' ]])</font></para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(o.allounce + o.basic) ]] [[ o.company_id.currency_id.symbol ]] </para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(o.allounce + o.basic, dp='Account') ]] [[ o.company_id.currency_id.symbol ]] </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Total Deductions<font face="Helvetica" size="7.0">([[ o.company_id.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details">Total Deductions<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.symbol or '' ]])</font></para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(o.deduction) ]] [[ o.company_id.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(o.deduction, dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -539,13 +539,13 @@
       <blockTable colWidths="269.0,134.0,135.0" style="Table22">
         <tr>
           <td>
-            <para style="terp_default_9">[[ ol.type in ['advance','loan','otherpay','otherdeduct','installment'] and ol.code or '' ]]</para>
+            <para style="terp_default_9">[[ ol.code or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ ol.type in ['advance','loan','otherpay'] and formatLang(ol.total) or '' ]] [[ ol.type in ['advance','loan','otherpay'] and o.company_id.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_Right_9">[[ ol.type in ['advance','loan','otherpay'] and formatLang(ol.total, dp='Account') or '' ]] [[ ol.type in ['advance','loan','otherpay'] and o.company_id and o.company_id.currency_id.symbol or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ ol.type in ['otherdeduct','installment'] and formatLang(ol.total) or '' ]] [[ ol.type in ['advance','loan','otherpay'] and o.company_id.currency_id.symbol or '' ]]</para>
+            <para style="terp_default_Right_9">[[ ol.type in ['otherdeduct','installment'] and formatLang(ol.total, dp='Account') or '' ]] [[ ol.type in ['otherdeduct','installment'] and o.company_id and o.company_id.currency_id.symbol or '' ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -558,10 +558,10 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Net Amount<font face="Helvetica" size="7.0">([[ o.company_id.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details">Net Amount<font face="Helvetica" size="7.0">([[ o.company_id and o.company_id.currency_id.symbol or '' ]])</font></para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(o.net) ]] [[ o.company_id.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(o.net, dp='Account') ]] [[ o.company_id.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>

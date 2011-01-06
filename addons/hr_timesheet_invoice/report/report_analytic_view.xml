@@ -8,7 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Expired analytic accounts">
-                    <field name="name" select="1"/>
+                    <field name="name" select="1" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id" select="1"/>
                     <field name="quantity" select="1"/>
                     <field name="state" select="1"/>
@@ -26,7 +26,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Expired analytic accounts">
-                    <field name="name"/>
+                    <field name="name" groups="analytic.group_analytic_accounting"/>
                     <field name="partner_id"/>
                     <field name="state"/>
                     <field name="quantity"/>
@@ -66,7 +66,7 @@
                 <form string="Analytic Lines to Invoice">
                     <field name="name" select="1"/>
                     <field name="month" select="1"/>
-                    <field name="account_id" select="1"/>
+                    <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                     <newline/>
                     <field name="product_id" select="1"/>
                     <field name="product_uom_id"/>
@@ -86,7 +86,7 @@
                     <field name="name"/>
                     <field name="month"/>
                     <field name="product_id"/>
-                    <field name="account_id"/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="amount"/>
                     <field name="sale_price"/>
                     <field name="unit_amount"/>
@@ -120,7 +120,7 @@
                         <field name="name" select="1"/>
                         <field name="month" select="1"/>
                         <field name="product_id" select="1"/>
-                        <field name="account_id" select="1"/>
+                        <field name="account_id" select="1" groups="analytic.group_analytic_accounting"/>
                    </group>
                </search>
             </field>
@@ -134,12 +134,12 @@
             <field name="search_view_id" ref="account_analytic_line_to_invoice_view_filter"/>
         </record>
 
-        <act_window 
+        <act_window
         domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False)]"
-        context="{'search_default_account_id': [active_id]}" 
-        id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice" 
-        name="Lines to Invoice" 
-        res_model="account.analytic.line" 
+        context="{'search_default_account_id': [active_id]}"
+        id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice"
+        name="Lines to Invoice"
+        res_model="account.analytic.line"
         src_model="account.analytic.account"/>
 
     </data>

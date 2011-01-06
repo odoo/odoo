@@ -32,7 +32,7 @@ class followup(osv.osv):
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
-                }
+    }
 
 followup()
 
@@ -46,7 +46,7 @@ class followup_line(osv.osv):
         'start': fields.selection([('days','Net Days'),('end_of_month','End of Month')], 'Type of Term', size=64, required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
         'description': fields.text('Printed Message', translate=True),
-                }
+    }
 
 followup_line()
 
@@ -62,12 +62,12 @@ account_move_line()
 class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
-        'follow_up_msg' : fields.text('Follow-up Message', translate=True),
-                }
+        'follow_up_msg': fields.text('Follow-up Message', translate=True),
+    }
 
     _defaults = {
         'overdue_msg': '''
-Date : %(date)s
+Date: %(date)s
 
 Dear %(partner_name)s,
 
@@ -80,7 +80,7 @@ Thanks,
 %(user_signature)s
 %(company_name)s
         '''
-                }
+    }
 
 res_company()
 

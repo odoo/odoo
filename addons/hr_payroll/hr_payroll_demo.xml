@@ -11,48 +11,44 @@
 
         <record id="hr_payslip_line_houserantallowance1" model="hr.payslip.line">
             <field name="amount_type">per</field>
-            <field name="account_id" ref="account.a_expense"/>
             <field eval="5" name="sequence"/>
             <field eval="0.4" name="amount"/>
             <field name="code">HRA</field>
-            <field name="category_id" ref="hr_payroll.HRA"/>
             <field name="type">allowance</field>
+            <field name="category_id" ref="hr_payroll.HRA"/>
             <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">House Rant Allowance</field>
         </record>
 
         <record id="hr_payslip_line_convanceallowance1" model="hr.payslip.line">
             <field name="amount_type">fix</field>
-            <field name="account_id" ref="account.a_expense"/>
             <field eval="10" name="sequence"/>
             <field eval="800.0" name="amount"/>
             <field name="code">CA</field>
-            <field name="category_id" ref="hr_payroll.CA"/>
             <field name="type">allowance</field>
+            <field name="category_id" ref="hr_payroll.CA"/>
             <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Convance Allowance</field>
         </record>
 
         <record id="hr_payslip_line_professionaltax1" model="hr.payslip.line">
             <field name="amount_type">fix</field>
-            <field name="account_id" ref="account.a_pay"/>
             <field eval="15" name="sequence"/>
             <field eval="200.0" name="amount"/>
             <field name="code">PT</field>
-            <field name="category_id" ref="hr_payroll.PT"/>
             <field name="type">deduction</field>
+            <field name="category_id" ref="hr_payroll.PT"/>
             <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Professional Tax</field>
         </record>
 
         <record id="hr_payslip_line_providentfund1" model="hr.payslip.line">
             <field name="amount_type">per</field>
-            <field name="account_id" ref="account.a_pay"/>
             <field eval="20" name="sequence"/>
             <field eval="0.125" name="amount"/>
             <field name="code">PF</field>
-            <field name="category_id" ref="hr_payroll.PF"/>
             <field name="type">deduction</field>
+            <field name="category_id" ref="hr_payroll.PF"/>
             <field name="function_id" ref="hr_payroll.structure_001"/>
             <field name="name">Provident Fund</field>
         </record>
@@ -84,122 +80,12 @@
         <!-- Payslip -->
         <record id="hr_payslip_salaryslipofbonamyforjune0" model="hr.payslip">
             <field name="number">SLIP/001</field>
-            <field name="journal_id" ref="account.expenses_journal"/>
             <field name="deg_id" ref="hr_payroll.structure_001"/>
             <field name="employee_id" ref="hr_employee_bonamy0"/>
             <field name="contract_id" ref="hr_contract_firstcontract1"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="date" eval="time.strftime('%Y-%m')+'-5'"/>
-            <field name="bank_journal_id" ref="account.bank_journal"/>
-            <field name="name">Salary Slip of Bonamy for June-2010</field>
-        </record>
-
-        <record id="ir_property_salaryaccount0" model="ir.property">
-            <field name="name">salary_account</field>
-            <field name="res_id">hr.employee,1</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_salary_account"/>
-            <field name="value_reference">account.account,27</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_employeeaccount0" model="ir.property">
-            <field name="name">employee_account</field>
-            <field name="res_id">hr.employee,1</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_employee_account"/>
-            <field name="value_reference">account.account,22</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_propertybankaccount0" model="ir.property">
-            <field name="name">property_bank_account</field>
-            <field name="res_id">hr.employee,1</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_property_bank_account"/>
-            <field name="value_reference">account.account,11</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_salaryaccount2" model="ir.property">
-            <field name="name">salary_account</field>
-            <field name="res_id">hr.employee,2</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_salary_account"/>
-            <field name="value_reference">account.account,27</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_employeeaccount2" model="ir.property">
-            <field name="name">employee_account</field>
-            <field name="res_id">hr.employee,2</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_employee_account"/>
-            <field name="value_reference">account.account,22</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_propertybankaccount2" model="ir.property">
-            <field name="name">property_bank_account</field>
-            <field name="res_id">hr.employee,2</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_property_bank_account"/>
-            <field name="value_reference">account.account,11</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_salaryaccount3" model="ir.property">
-            <field name="name">salary_account</field>
-            <field name="res_id">hr.employee,3</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_salary_account"/>
-            <field name="value_reference">account.account,27</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_employeeaccount3" model="ir.property">
-            <field name="name">employee_account</field>
-            <field name="res_id">hr.employee,3</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_employee_account"/>
-            <field name="value_reference">account.account,22</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_propertybankaccount3" model="ir.property">
-            <field name="name">property_bank_account</field>
-            <field name="res_id">hr.employee,3</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_property_bank_account"/>
-            <field name="value_reference">account.account,11</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_salaryaccount4" model="ir.property">
-            <field name="name">salary_account</field>
-            <field name="res_id">hr.employee,10</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_salary_account"/>
-            <field name="value_reference">account.account,27</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_employeeaccount4" model="ir.property">
-            <field name="name">employee_account</field>
-            <field name="res_id">hr.employee,10</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_employee_account"/>
-            <field name="value_reference">account.account,22</field>
-            <field name="type">many2one</field>
-        </record>
-
-        <record id="ir_property_propertybankaccount4" model="ir.property">
-            <field name="name">property_bank_account</field>
-            <field name="res_id">hr.employee,10</field>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="fields_id" ref="hr_payroll.field_hr_employee_property_bank_account"/>
-            <field name="value_reference">account.account,11</field>
-            <field name="type">many2one</field>
+            <field name="name" eval="'Salary Slip of Bonamy for June-'+time.strftime('%Y')"/>
         </record>
     </data>
 </openerp>

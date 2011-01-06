@@ -7,42 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-12-08 11:46+0000\n"
-"PO-Revision-Date: 2010-08-03 08:14+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-25 19:25+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: multi_company
-#: help:multi_company.default,object_id:0
-msgid "Object affect by this rules"
-msgstr "受此规则影响的对象"
-
-#. module: multi_company
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误：默认计量单位和采购计量单位必须在同一分类下。"
-
-#. module: multi_company
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr "增值税似乎不正确。"
-
-#. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在操作定义中的模式名称无效"
 
 #. module: multi_company
 #: model:res.company,overdue_msg:multi_company.res_company_odoo
@@ -51,20 +24,37 @@ msgstr "在操作定义中的模式名称无效"
 #: model:res.company,overdue_msg:multi_company.res_company_oerp_in
 #: model:res.company,overdue_msg:multi_company.res_company_oerp_us
 msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Please find in attachment a reminder of all your unpaid invoices, for a "
+"total amount due of:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
 msgstr ""
 
 #. module: multi_company
-#: field:multi_company.default,company_dest_id:0
-msgid "Default Company"
-msgstr "默认公司"
+#: model:product.category,name:multi_company.Odoo1
+msgid "Odoo Offers"
+msgstr "ODOO 服务提供者"
 
 #. module: multi_company
-#: field:multi_company.default,object_id:0
-msgid "Object"
-msgstr "对象"
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr ""
+
+#. module: multi_company
+#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
+msgid "Multi-Companies"
+msgstr ""
 
 #. module: multi_company
 #: model:ir.module.module,shortdesc:multi_company.module_meta_information
@@ -73,84 +63,10 @@ msgid "Multi Company"
 msgstr "多公司"
 
 #. module: multi_company
-#: model:ir.module.module,description:multi_company.module_meta_information
-msgid ""
-"This module add the possibility to easily manage \n"
-"    the default value for each object\n"
-"    "
-msgstr ""
-"此模块提供了管理每个对象的默认值的可能性。\n"
-"    "
-
-#. module: multi_company
-#: field:multi_company.default,company_id:0
-msgid "Main Company"
-msgstr "母公司"
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Condition"
-msgstr "状态"
-
-#. module: multi_company
-#: help:multi_company.default,company_dest_id:0
-msgid "Company to store the current record"
-msgstr "保存当前记录的公司"
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效XML视图结构!"
-
-#. module: multi_company
-#: field:multi_company.default,name:0
-msgid "Name"
-msgstr "名称"
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "错误：销售单位必须和计量单位在不同的分类。"
-
-#. module: multi_company
-#: model:product.category,name:multi_company.Odoo1
-msgid "Odoo Offers"
-msgstr "ODOO 服务提供者"
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "错误！您不能创建循环的公司。"
-
-#. module: multi_company
-#: help:multi_company.default,name:0
-msgid "Name it to easily find a record"
-msgstr "为了方便索搜请命名记录"
-
-#. module: multi_company
-#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
-msgid "Multi company"
-msgstr "多公司"
-
-#. module: multi_company
-#: model:ir.model,name:multi_company.model_multi_company_default
-msgid "multi_company.default"
-msgstr "multi_company.default"
-
-#. module: multi_company
-#: help:multi_company.default,company_id:0
-msgid "Company where the user is connected"
-msgstr ""
-
-#. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
+#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
 msgstr "每个对象的默认公司"
-
-#. module: multi_company
-#: field:multi_company.default,expression:0
-msgid "Expression"
-msgstr "表达式"
 
 #. module: multi_company
 #: model:product.template,name:multi_company.product_product_odoo1_product_template
@@ -158,37 +74,106 @@ msgid "Odoo Offer"
 msgstr "ODOO 服务合同"
 
 #. module: multi_company
-#: field:multi_company.default,sequence:0
-msgid "Sequence"
-msgstr "顺序"
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr "错误！您不能创建循环分类。"
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "错误：无效的(EAN)条码"
-
-#. module: multi_company
-#: help:multi_company.default,expression:0
-msgid "Expression, must be True to match"
-msgstr "表达式（为真则匹配）"
-
-#. module: multi_company
-#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
-msgid "Default company per Object"
-msgstr "每个对象的默认公司"
-
-#. module: multi_company
-#: code:addons/multi_company/multi_company.py:0
-#, python-format
-msgid " (copy)"
-msgstr " (副本)"
-
-#. module: multi_company
 #: view:multi_company.default:0
 msgid "Matching"
 msgstr "匹配"
+
+#. module: multi_company
+#: view:multi_company.default:0
+msgid "Condition"
+msgstr "状态"
+
+#. module: multi_company
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
+msgstr ""
+
+#~ msgid "Default Company"
+#~ msgstr "默认公司"
+
+#~ msgid "Object"
+#~ msgstr "对象"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "错误：默认计量单位和采购计量单位必须在同一分类下。"
+
+#~ msgid "The VAT doesn't seem to be correct."
+#~ msgstr "增值税似乎不正确。"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在操作定义中的模式名称无效"
+
+#~ msgid "Object affect by this rules"
+#~ msgstr "受此规则影响的对象"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
+#~ msgid "Multi company"
+#~ msgstr "多公司"
+
+#~ msgid "Main Company"
+#~ msgstr "母公司"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效XML视图结构!"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "错误：销售单位必须和计量单位在不同的分类。"
+
+#~ msgid "Name"
+#~ msgstr "名称"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "错误！您不能创建循环的公司。"
+
+#~ msgid "Sequence"
+#~ msgstr "顺序"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "错误！您不能创建循环分类。"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "错误：无效的(EAN)条码"
+
+#~ msgid "Expression"
+#~ msgstr "表达式"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (副本)"
+
+#~ msgid "multi_company.default"
+#~ msgstr "multi_company.default"
+
+#~ msgid "Name it to easily find a record"
+#~ msgstr "为了方便索搜请命名记录"
+
+#~ msgid ""
+#~ "This module add the possibility to easily manage \n"
+#~ "    the default value for each object\n"
+#~ "    "
+#~ msgstr ""
+#~ "此模块提供了管理每个对象的默认值的可能性。\n"
+#~ "    "
+
+#~ msgid "Company to store the current record"
+#~ msgstr "保存当前记录的公司"
+
+#~ msgid "Default company per Object"
+#~ msgstr "每个对象的默认公司"
+
+#~ msgid "Expression, must be True to match"
+#~ msgstr "表达式（为真则匹配）"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "模块名重复!"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "用户名必须唯一！"

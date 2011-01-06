@@ -8,28 +8,61 @@ msgid ""
 msgstr ""
 "Project-Id-Version: base-module-record-gl\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-08-14 09:11+0000\n"
 "Last-Translator: Frco. Javier Rial <Unknown>\n"
 "Language-Team: Galego <g11n@mancomun.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:58+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:13+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,category:0
-#: wizard_field:base_module_record.module_save,info,category:0
+#: wizard_field:base_module_record.module_record_objects,info,category:0
 msgid "Category"
 msgstr "Categoría"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save:0
-#: wizard_field:base_module_record.module_save,init,info_text:0
-#: wizard_view:base_module_record.module_save,save:0
 msgid "Information"
 msgstr "Información"
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record_objects,save:0
+msgid ""
+"If you think your module could interest others people, we'd like you to "
+"publish it on OpenERP.com, in the 'Modules' section. You can do it through "
+"the website or using features of the 'base_module_publish' module."
+msgstr ""
+
+#. module: base_module_record
+#: wizard_button:base_module_record.module_record_data,info,end:0
+#: wizard_button:base_module_record.module_record_data,save_yaml,end:0
+msgid "End"
+msgstr ""
+
+#. module: base_module_record
+#: wizard_view:base_module_record.module_record_data,init:0
+#: wizard_view:base_module_record.module_record_objects,init:0
+msgid "Choose objects to record"
+msgstr "Seleccionar os obxectos a gravar"
+
+#. module: base_module_record
+#: wizard_field:base_module_record.module_record_objects,info,author:0
+msgid "Author"
+msgstr "Autor"
+
+#. module: base_module_record
+#: wizard_field:base_module_record.module_record_objects,info,directory_name:0
+msgid "Directory Name"
+msgstr "Nome do directorio"
+
+#. module: base_module_record
+#: wizard_field:base_module_record.module_record_data,init,filter_cond:0
+#: wizard_field:base_module_record.module_record_objects,init,filter_cond:0
+msgid "Records only"
+msgstr "Só rexistros"
 
 #. module: base_module_record
 #: model:ir.model,name:base_module_record.model_ir_module_record
@@ -37,83 +70,40 @@ msgid "ir.module.record"
 msgstr "ir.module.record"
 
 #. module: base_module_record
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡O nome do obxecto debe comezar con x_ y e non conter ningún carácter "
-"especial!"
-
-#. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,init:0
-msgid "Choose objects to record"
-msgstr "Seleccionar os obxectos a gravar"
-
-#. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,author:0
-#: wizard_field:base_module_record.module_save,info,author:0
-msgid "Author"
-msgstr "Autor"
-
-#. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,directory_name:0
-#: wizard_field:base_module_record.module_save,info,directory_name:0
-msgid "Directory Name"
-msgstr "Nome do directorio"
-
-#. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,init,filter_cond:0
-msgid "Records only"
-msgstr "Só rexistros"
-
-#. module: base_module_record
-#: selection:base_module_record.module_record_objects,intro,data_kind:0
-#: selection:base_module_record.module_save,info,data_kind:0
+#: selection:base_module_record.module_record_objects,info,data_kind:0
 msgid "Demo Data"
 msgstr "Datos demostración"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,save,module_filename:0
-#: wizard_field:base_module_record.module_save,save,module_filename:0
 msgid "Filename"
 msgstr "Nome do ficheiro"
 
 #. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,version:0
-#: wizard_field:base_module_record.module_save,info,version:0
+#: wizard_field:base_module_record.module_record_objects,info,version:0
 msgid "Version"
 msgstr "Versión"
 
 #. module: base_module_record
+#: wizard_view:base_module_record.module_record_data,info:0
+#: wizard_view:base_module_record.module_record_data,init:0
+#: wizard_view:base_module_record.module_record_data,save_yaml:0
 #: wizard_view:base_module_record.module_record_objects,init:0
 msgid "Objects Recording"
 msgstr "Gravación de obxectos"
 
 #. module: base_module_record
+#: wizard_field:base_module_record.module_record_data,init,check_date:0
 #: wizard_field:base_module_record.module_record_objects,init,check_date:0
 msgid "Record from Date"
 msgstr "Gravar desde data"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record,stop:0
-#: wizard_view:base_module_record.module_save,init:0
-msgid "Recording Information"
-msgstr "Información da gravación"
-
-#. module: base_module_record
-#: wizard_field:base_module_record.module_save,init,info_status:0
-msgid "Status"
-msgstr "Estado"
-
-#. module: base_module_record
-#: wizard_view:base_module_record.module_record,stop:0
+#: wizard_view:base_module_record.module_record_data,end:0
 #: wizard_view:base_module_record.module_record_objects,end:0
-#: wizard_view:base_module_record.module_record_objects,intro:0
+#: wizard_view:base_module_record.module_record_objects,info:0
 #: wizard_view:base_module_record.module_record_objects,save:0
-#: wizard_view:base_module_record.module_save,end:0
-#: wizard_view:base_module_record.module_save,info:0
-#: wizard_view:base_module_record.module_save,init:0
-#: wizard_view:base_module_record.module_save,save:0
+#: wizard_view:base_module_record.module_record_objects,save_yaml:0
 msgid "Module Recording"
 msgstr "Gravación de módulos"
 
@@ -125,155 +115,114 @@ msgstr "Exportar personalizacións coma un módulo"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save:0
-#: wizard_view:base_module_record.module_save,save:0
 msgid "Thanks in advance for your contribution."
 msgstr "Graciñas de antemán pola súa contribución."
 
 #. module: base_module_record
+#: help:base_module_record.module_record_data,init,objects:0
 #: help:base_module_record.module_record_objects,init,objects:0
 msgid "List of objects to be recorded"
 msgstr "Lista de obxectos que serán gravados"
 
 #. module: base_module_record
-#: wizard_button:base_module_record.module_record,start,start_confirm:0
-#: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record
-msgid "Start Recording"
-msgstr "Iniciar a gravación"
-
-#. module: base_module_record
-#: selection:base_module_record.module_save,init,info_status:0
-msgid "Not Recording"
-msgstr "Non se está a gravar"
-
-#. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,description:0
-#: wizard_field:base_module_record.module_save,info,description:0
+#: wizard_field:base_module_record.module_record_objects,info,description:0
 msgid "Full Description"
 msgstr "Descrición completa"
 
 #. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,name:0
-#: wizard_field:base_module_record.module_save,info,name:0
+#: wizard_field:base_module_record.module_record_objects,info,name:0
 msgid "Module Name"
 msgstr "Nome do módulo"
 
 #. module: base_module_record
+#: wizard_field:base_module_record.module_record_data,init,objects:0
 #: wizard_field:base_module_record.module_record_objects,init,objects:0
 msgid "Objects"
 msgstr "Obxectos"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,save,module_file:0
-#: wizard_field:base_module_record.module_save,save,module_file:0
+#: wizard_field:base_module_record.module_record_objects,save_yaml,yaml_file:0
 msgid "Module .zip File"
 msgstr "Archivo .zip do módulo"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record,start:0
-msgid "Recording information"
-msgstr "Información da gravación"
-
-#. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save:0
-#: wizard_view:base_module_record.module_save,save:0
 msgid "Module successfully created !"
 msgstr "¡Módulo creado correctamente!"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record,start:0
-msgid "Recording Stopped"
-msgstr "Gravación detida"
+#: wizard_view:base_module_record.module_record_objects,save_yaml:0
+msgid "YAML file successfully created !"
+msgstr ""
 
 #. module: base_module_record
+#: wizard_view:base_module_record.module_record_data,info:0
+#: wizard_view:base_module_record.module_record_data,save_yaml:0
+msgid "Result, paste this to your module's xml"
+msgstr ""
+
+#. module: base_module_record
+#: selection:base_module_record.module_record_data,init,filter_cond:0
 #: selection:base_module_record.module_record_objects,init,filter_cond:0
 msgid "Created"
 msgstr "Creado(s)"
 
 #. module: base_module_record
+#: wizard_view:base_module_record.module_record_data,end:0
 #: wizard_view:base_module_record.module_record_objects,end:0
-#: wizard_view:base_module_record.module_save,end:0
 msgid "Thanks For using Module Recorder"
 msgstr "Graciñas por usar o módulo de gravación"
 
 #. module: base_module_record
-#: wizard_field:base_module_record.module_record,start,continue:0
-msgid "Continue Previous Session"
-msgstr "Continuar sesión anterior"
-
-#. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,website:0
-#: wizard_field:base_module_record.module_save,info,website:0
+#: wizard_field:base_module_record.module_record_objects,info,website:0
 msgid "Documentation URL"
 msgstr "URL documentación"
 
 #. module: base_module_record
+#: selection:base_module_record.module_record_data,init,filter_cond:0
 #: selection:base_module_record.module_record_objects,init,filter_cond:0
 msgid "Modified"
 msgstr "Modificado(s)"
 
 #. module: base_module_record
-#: selection:base_module_record.module_save,init,info_status:0
-msgid "Recording"
-msgstr "Gravando"
-
-#. module: base_module_record
+#: wizard_button:base_module_record.module_record_data,init,record:0
 #: wizard_button:base_module_record.module_record_objects,init,record:0
 msgid "Record"
 msgstr "Gravar"
 
 #. module: base_module_record
-#: wizard_button:base_module_record.module_record,stop,end:0
-#: wizard_button:base_module_record.module_record_objects,intro,save:0
-#: wizard_button:base_module_record.module_save,info,save:0
-#: wizard_button:base_module_record.module_save,init,check:0
+#: model:ir.module.module,shortdesc:base_module_record.module_meta_information
+msgid "Module Record"
+msgstr ""
+
+#. module: base_module_record
+#: wizard_button:base_module_record.module_record_objects,info,save:0
 msgid "Continue"
 msgstr "Continuar"
 
 #. module: base_module_record
-#: model:ir.module.module,shortdesc:base_module_record.module_meta_information
-#: model:ir.ui.menu,name:base_module_record.menu_wizard_base_mod_rec_rec
-msgid "Module Recorder"
-msgstr "Gravadora de módulos"
+#: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_data
+#: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_data
+msgid "Export Customizations As Data File"
+msgstr ""
 
 #. module: base_module_record
-#: selection:base_module_record.module_record_objects,intro,data_kind:0
-#: selection:base_module_record.module_save,info,data_kind:0
+#: code:addons/base_module_record/wizard/base_module_save.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: base_module_record
+#: selection:base_module_record.module_record_objects,info,data_kind:0
 msgid "Normal Data"
 msgstr "Datos normais"
 
 #. module: base_module_record
+#: wizard_button:base_module_record.module_record_data,end,end:0
 #: wizard_button:base_module_record.module_record_objects,end,end:0
-#: wizard_button:base_module_record.module_save,end,end:0
 msgid "OK"
 msgstr "Aceptar"
-
-#. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,save:0
-#: wizard_view:base_module_record.module_save,save:0
-msgid ""
-"If you think your module could interrest others people, we'd like you to "
-"publish it on OpenERP.com, in the 'Modules' section. You can do it through "
-"the website or using features of the 'base_module_publish' module."
-msgstr ""
-"Se cre que o seu módulo pode interesar a outros, gustaríanos que o publicara "
-"en OpenERP.com, na sección de 'Módulos'. Pódeo facer a través do sitio web "
-"ou usando as funcionalidades do módulo 'base_module_publish'."
-
-#. module: base_module_record
-#: wizard_view:base_module_record.module_record,start:0
-msgid ""
-"The module recorder allows you to record every operation made in the Open "
-"ERP client and save them as a module. You will be able to install this "
-"module on any database to reuse and/or publish it."
-msgstr ""
-"A gravadora de módulos permítelle rexistrar todas as operacións feitas no "
-"cliente de OpenERP e gardalas coma un módulo. Poderá instalar este módulo en "
-"calquera base de datos para reutilizalo e/ou publicalo."
-
-#. module: base_module_record
-#: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record
-msgid "Record module"
-msgstr "Módulo de gravación"
 
 #. module: base_module_record
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_mod_rec
@@ -281,60 +230,139 @@ msgid "Module Creation"
 msgstr "Creación do módulo"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record,stop:0
-msgid ""
-"You can continue the recording session by relauching the 'start recording' "
-"wizard."
-msgstr ""
-"Pode continuar a sesión de gravación volvendo a executar o asistente "
-"'Iniciar gravación'."
-
-#. module: base_module_record
-#: wizard_field:base_module_record.module_record_objects,intro,data_kind:0
-#: wizard_field:base_module_record.module_save,info,data_kind:0
+#: wizard_field:base_module_record.module_record_objects,info,data_kind:0
 msgid "Type of Data"
 msgstr "Tipo de datos"
 
 #. module: base_module_record
-#: wizard_view:base_module_record.module_record_objects,intro:0
-#: wizard_view:base_module_record.module_save,info:0
+#: wizard_view:base_module_record.module_record_objects,info:0
 msgid "Module Information"
 msgstr "Información do módulo"
 
 #. module: base_module_record
-#: model:ir.actions.wizard,name:base_module_record.wizard_base_module_save
-#: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_save
-msgid "Save Recorded Module"
-msgstr "Gardar módulo gravado"
-
-#. module: base_module_record
-#: wizard_view:base_module_record.module_record,stop:0
-msgid ""
-"Open ERP recording is stopped. Don't forget to save the recorded module."
+#: wizard_field:base_module_record.module_record_data,init,info_yaml:0
+#: wizard_field:base_module_record.module_record_objects,init,info_yaml:0
+msgid "YAML"
 msgstr ""
-"A gravación de OpenERP está detida. Non olvide gardar o módulo gravado."
 
 #. module: base_module_record
-#: wizard_button:base_module_record.module_record,start,end:0
+#: wizard_field:base_module_record.module_record_data,info,res_text:0
+#: wizard_field:base_module_record.module_record_data,save_yaml,res_text:0
+msgid "Result"
+msgstr ""
+
+#. module: base_module_record
+#: wizard_button:base_module_record.module_record_data,init,end:0
+#: wizard_button:base_module_record.module_record_objects,info,end:0
 #: wizard_button:base_module_record.module_record_objects,init,end:0
-#: wizard_button:base_module_record.module_record_objects,intro,end:0
-#: wizard_button:base_module_record.module_save,info,end:0
-#: wizard_button:base_module_record.module_save,init,end:0
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,save,end:0
-#: wizard_button:base_module_record.module_save,save,end:0
+#: wizard_button:base_module_record.module_record_objects,save_yaml,end:0
 msgid "Close"
 msgstr "Pechar"
 
 #. module: base_module_record
+#: selection:base_module_record.module_record_data,init,filter_cond:0
 #: selection:base_module_record.module_record_objects,init,filter_cond:0
 msgid "Created & Modified"
 msgstr "Creado(s) e modificado(s)"
 
 #. module: base_module_record
-#: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_stop
-msgid "Stop Recording"
-msgstr "Deter a gravación"
+#: model:ir.module.module,description:base_module_record.module_meta_information
+msgid ""
+"\n"
+"This module allows you to create a new module without any development.\n"
+"It records all operations on objects during the recording session and\n"
+"produce a .ZIP module. So you can create your own module directly from\n"
+"the OpenERP client.\n"
+"\n"
+"This version works for creating and updating existing records. It "
+"recomputes\n"
+"dependencies and links for all types of widgets (many2one, many2many, ...).\n"
+"It also support workflows and demo/update data.\n"
+"\n"
+"This should help you to easily create reusable and publishable modules\n"
+"for custom configurations and demo/testing data.\n"
+"\n"
+"How to use it:\n"
+"Run Administration/Customization/Module Creation/Export Customizations As a "
+"Module wizard.\n"
+"Select datetime criteria of recording and objects to be recorded and Record "
+"module.\n"
+"    "
+msgstr ""
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡O nome do obxecto debe comezar con x_ y e non conter ningún carácter "
+#~ "especial!"
+
+#~ msgid "Recording Information"
+#~ msgstr "Información da gravación"
+
+#~ msgid "Status"
+#~ msgstr "Estado"
+
+#~ msgid "Start Recording"
+#~ msgstr "Iniciar a gravación"
+
+#~ msgid "Not Recording"
+#~ msgstr "Non se está a gravar"
+
+#~ msgid "Recording information"
+#~ msgstr "Información da gravación"
+
+#~ msgid "Recording Stopped"
+#~ msgstr "Gravación detida"
+
+#~ msgid "Continue Previous Session"
+#~ msgstr "Continuar sesión anterior"
+
+#~ msgid "Recording"
+#~ msgstr "Gravando"
+
+#~ msgid "Module Recorder"
+#~ msgstr "Gravadora de módulos"
+
+#~ msgid ""
+#~ "If you think your module could interrest others people, we'd like you to "
+#~ "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
+#~ "the website or using features of the 'base_module_publish' module."
+#~ msgstr ""
+#~ "Se cre que o seu módulo pode interesar a outros, gustaríanos que o publicara "
+#~ "en OpenERP.com, na sección de 'Módulos'. Pódeo facer a través do sitio web "
+#~ "ou usando as funcionalidades do módulo 'base_module_publish'."
+
+#~ msgid ""
+#~ "The module recorder allows you to record every operation made in the Open "
+#~ "ERP client and save them as a module. You will be able to install this "
+#~ "module on any database to reuse and/or publish it."
+#~ msgstr ""
+#~ "A gravadora de módulos permítelle rexistrar todas as operacións feitas no "
+#~ "cliente de OpenERP e gardalas coma un módulo. Poderá instalar este módulo en "
+#~ "calquera base de datos para reutilizalo e/ou publicalo."
+
+#~ msgid "Record module"
+#~ msgstr "Módulo de gravación"
+
+#~ msgid ""
+#~ "You can continue the recording session by relauching the 'start recording' "
+#~ "wizard."
+#~ msgstr ""
+#~ "Pode continuar a sesión de gravación volvendo a executar o asistente "
+#~ "'Iniciar gravación'."
+
+#~ msgid "Save Recorded Module"
+#~ msgstr "Gardar módulo gravado"
+
+#~ msgid ""
+#~ "Open ERP recording is stopped. Don't forget to save the recorded module."
+#~ msgstr ""
+#~ "A gravación de OpenERP está detida. Non olvide gardar o módulo gravado."
+
+#~ msgid "Stop Recording"
+#~ msgstr "Deter a gravación"

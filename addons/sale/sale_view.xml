@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,base.group_partner_manager"/>
+        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0"
+            groups="base.group_sale_salesman,base.group_sale_manager"/>
+
         <menuitem id="base.menu_sales" name="Sales" parent="base.menu_base_partner" sequence="1"/>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
@@ -12,14 +14,14 @@
             <field name="model">sale.shop</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sale Shop">
+                <form string="Sales Shop">
                     <field name="name" select="1"/>
                     <field name="warehouse_id" required="1" select="1" widget="selection"/>
                     <field name="company_id" widget='selection' groups="base.group_multi_company"/>
                     <separator colspan="4" string="Accounting"/>
                     <field name="payment_default_id"/>
                     <field domain="[('type','=','sale')]" name="pricelist_id" select="1"/>
-                    <field name="project_id" select="1"/>
+                    <field name="project_id" select="1" groups="analytic.group_analytic_accounting"/>
                 </form>
             </field>
         </record>
@@ -28,11 +30,11 @@
             <field name="model">sale.shop</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sale Shop">
+                <tree string="Sales Shop">
                     <field name="name"/>
                     <field name="warehouse_id"/>
                     <field name="pricelist_id"/>
-                    <field name="project_id"/>
+                    <field name="project_id" groups="analytic.group_analytic_accounting"/>
                 </tree>
             </field>
         </record>
@@ -44,18 +46,18 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_shop_tree"/>
+            <field name="help">If you have more than one shop reselling your company products, you can create and manage that from here. Whenever you will record a new quotation or sales order, it has to be linked to a shop. The shop also defines the warehouse from which the products will be delivered for each particular sales.</field>
         </record>
 
         <menuitem action="action_shop_form" id="menu_action_shop_form"
-            parent="product.prod_config_main" sequence="0"
-            groups="base.group_extended"/>
+            parent="base.menu_sale_config_sales" sequence="0" />
 
         <record id="view_sale_order_calendar" model="ir.ui.view">
             <field name="name">sale.order.calendar</field>
             <field name="model">sale.order</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
-                <calendar string="Sales orders" color="state" date_start="date_order">
+                <calendar string="Sales Orders" color="state" date_start="date_order">
                     <field name="partner_id"/>
                     <field name="amount_total"/>
                 </calendar>
@@ -66,7 +68,7 @@
             <field name="model">sale.order</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Sales orders" type="bar">
+                <graph string="Sales Orders" type="bar">
                     <field name="partner_id"/>
                     <field name="amount_total" operator="+"/>
                 </graph>
@@ -77,16 +79,18 @@
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
             <field name="type">tree</field>
+            <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales orders" colors="grey:state=='done'">
+                <tree string="Sales Orders" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
                     <field name="name"/>
                     <field name="date_order"/>
+                    <field name="client_order_ref" groups="base.group_extended"/>
                     <field name="partner_id"/>
                     <field name="user_id" />
                     <field name="picked_rate" widget="progressbar"/>
                     <field name="invoiced_rate" widget="progressbar"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount"/>
-                    <field name="amount_total" sum="Total amount"/>
+                    <field name="amount_untaxed" sum="Total Tax Excluded"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -97,28 +101,28 @@
             <field name="model">sale.order</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales order">
+                <form string="Sales Order">
                     <group col="6" colspan="4">
                         <field name="name"/>
                         <field name="date_order"/>
-                        <field name="shipped"/>
-                        <field name="client_order_ref"/>
-                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
                         <field name="invoiced"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
+                        <field name="client_order_ref"/>
+                        <field name="shipped"/>
                     </group>
                     <notebook colspan="5">
                         <page string="Sales Order">
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" required="1"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1}" required="1"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_order_id"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_invoice_id" groups="base.group_extended"/>
                             <field domain="[('partner_id','=',partner_id)]" name="partner_shipping_id" groups="base.group_extended"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="base.group_extended"/>
                             <field name="project_id"
                                 context="{'partner_id':partner_id, 'contact_id':partner_order_id, 'pricelist_id':pricelist_id, 'default_name':name}"
-                                groups="base.group_extended" domain="[('parent_id','!=',False)]" />
+                                groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" />
                             <newline/>
                             <field colspan="4" mode="tree,form,graph" name="order_line" nolabel="1" widget="one2many_list">
-                                <form string="Sale Order Lines">
+                                <form string="Sales Order Lines">
                                     <notebook>
                                         <page string="Order Line">
                                             <field colspan="4"
@@ -180,7 +184,7 @@
                                         </page>
                                     </notebook>
                                 </form>
-                                <tree string="Sales order lines">
+                                <tree string="Sales Order Lines">
                                     <field colspan="4" name="name"/>
                                     <field name="product_uom_qty" string="Qty"/>
                                     <field name="product_uom" string="UoM"/>
@@ -195,27 +199,28 @@
                                 <field name="amount_tax"/>
                                 <field name="amount_total"/>
                                 <button name="button_dummy" states="draft" string="Compute" type="object" icon="gtk-execute"/>
-                                <button name="%(action_view_sale_advance_payment_inv)d" string="Deposit" type="action" icon="gtk-execute" attrs="{'invisible':[('state','!=','draft')]}"/>
+                                <button name="%(action_view_sale_advance_payment_inv)d" string="Advance Invoice"
+                                    type="action" icon="gtk-execute" states="draft,manual" groups="base.group_extended"/>
                             </group>
                             <group col="13" colspan="4">
                                 <field name="state"/>
-                                <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
-                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-print"/>
-                                <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected" icon="gtk-apply"/>
-                                <button name="ship_recreate" states="shipping_except" string="Recreate Procurement" icon="gtk-ok"/>
-                                <button name="ship_corrected" states="shipping_except" string="Procurement Corrected" icon="gtk-apply"/>
+                                <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice" icon="gtk-go-forward"/>
+                                <button name="invoice_corrected" states="invoice_except" string="Ignore Exception" icon="gtk-apply"/>
+                                <button name="ship_recreate" states="shipping_except" string="Recreate Packing" icon="gtk-ok"/>
+                                <button name="ship_corrected" states="shipping_except" string="Ignore Exception" icon="gtk-apply"/>
                                 <button name="action_cancel" states="manual,progress" string="Cancel Order" type="object" icon="gtk-cancel"/>
-                                <button name="manual_invoice" states="manual" string="Create Invoice" icon="terp-document-new"/>
+                                <button name="manual_invoice" states="manual" string="Create Final Invoice" icon="gtk-go-forward" type="object"/>
                                 <button name="ship_cancel" states="shipping_except" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" icon="gtk-convert"/>
                                 <button name="cancel" states="draft" string="Cancel Order" icon="gtk-cancel"/>
                                 <button name="invoice_cancel" states="invoice_except" string="Cancel Order" icon="gtk-cancel"/>
+                                <button name="order_confirm" states="draft" string="Confirm Order" icon="gtk-apply"/>
                             </group>
                         </page>
                         <page string="Other Information">
-                            <group colspan="2" col="2" groups="base.group_extended" name="logistic">
+                            <group colspan="2" col="2" groups="base.group_extended" name="logistics">
                                 <separator string="Logistic" colspan="2"/>
-                                <field name="incoterm"/>
+                                <field name="incoterm" widget="selection"/>
                                 <field name="picking_policy" required="True"/>
                                 <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
                                 <field name="invoice_quantity" attrs="{'readonly':[('order_policy','=','prepaid'),('order_policy','=','picking')]}"/>
@@ -240,8 +245,9 @@
                             <field colspan="4" name="note" nolabel="1"/>
                         </page>
                         <page string="History" groups="base.group_extended">
-                            <separator colspan="4" string="Related Invoices"/>
+                            <separator colspan="4" string="Invoices"/>
                             <field colspan="4" name="invoice_ids" nolabel="1" context="{'form_view_ref':'account.invoice_form'}"/>
+                            <separator colspan="4" string="Packings"/>
                             <field colspan="4" name="picking_ids" nolabel="1"/>
                         </page>
                     </notebook>
@@ -286,14 +292,10 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="view_sales_order_filter"/>
-            <field name="help">The sales order manages the invoicing, the product fullfilment and the
-delivery processes. OpenERP can handle products, services and
-consumables so that a sales order can trigger tasks, manufacturing
-orders, purchases, etc. It support several invoicing methods according
-to your configuration: from the sales order, from the pickings, etc.
-            </field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="help">Sales Orders help you manage quotations and orders from your customers. OpenERP suggests that you start by creating a quotation. Once it is confirmed, the quotation will be converted into a Sales Order. OpenERP can handle several types of products so that a sales order may trigger tasks, delivery orders, manufacturing orders, purchases and so on. Based on the configuration of the sales order, a draft invoice will be generated so that you just have to confirm it when you want to bill your customer.</field>
         </record>
-        <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3"/>
+        <menuitem action="action_order_form" id="menu_sale_order" parent="base.menu_sales" sequence="3" groups="base.group_sale_salesman,base.group_sale_manager"/>
 
         <record id="action_order_tree2" model="ir.actions.act_window">
             <field name="name">Sales in Exception</field>
@@ -343,7 +345,7 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="model">sale.order.line</field>
             <field name="type">graph</field>
             <field name="arch" type="xml">
-                <graph string="Sales order lines">
+                <graph string="Sales Order Lines">
                     <field name="product_id"/>
                     <field name="price_subtotal" operator="+"/>
                 </graph>
@@ -355,14 +357,14 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="model">sale.order.line</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Sales order lines">
+                <tree string="Sales Order Lines">
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="product_uom_qty" string="Qty"/>
                     <field name="product_uom" string="UoM"/>
                     <field name="salesman_id"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" sum="Total"/>
                     <field name="state"/>
                     <field name="invoiced"/>
                 </tree>
@@ -374,42 +376,44 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Order Lines">
-				    <group colspan="4" col="6">
-						<field name="order_id"/>
-						<field name="product_id" readonly="1"/>
-						<field name="invoiced"/>
-						<field name="product_uom_qty" readonly="1"/>
-						<field groups="product.group_uos" name="product_uos_qty"/>
-						<field name="product_uom"/>
-						<field colspan="4" name="name" groups="base.group_extended"/>
-						<field name="company_id" groups="base.group_multi_company" readonly="1"/>
-						<field name="order_partner_id" readonly="1" invisible="1"/>
-				    </group>
+                    <group colspan="4" col="6">
+                        <field name="order_id"/>
+                        <field name="order_partner_id" readonly="1" invisible="1"/>
+                        <field name="invoiced"/>
+
+                        <field name="product_id" readonly="1"/>
+                        <field name="product_uom_qty" readonly="1"/>
+                        <field name="product_uom"/>
+
+                        <field colspan="4" name="name" groups="base.group_extended"/>
+                        <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    </group>
                     <separator colspan="4" string="Price"/>
                     <group colspan="4" col="6">
-	                    <field name="price_unit"/>
-	                    <field name="discount"/>
-	                    <field name="price_subtotal"/>
+                        <field name="price_unit"/>
+                        <field name="discount"/>
+                        <field name="price_subtotal"/>
                     </group>
                     <separator colspan="4" string="Notes"/>
                     <field colspan="4" name="notes" nolabel="1"/>
                     <separator colspan="4"/>
                     <field name="state"/>
                     <group col="3" colspan="2">
-                       <!-- <button colspan="1"
-                          name="%(action_view_sale_order_line_make_invoice)d"
-                          string="Make Invoice"
-                          type="action"
-                          icon="terp-document-new"
-                          attrs="{'invisible': ['|',('state', 'in', ('draft','cancel')),('invoiced', '=', 1)]}"/>-->
                         <button name="button_cancel"
                             string="Cancel" type="object"
                             icon="gtk-cancel"
-                            attrs="{'invisible': ['|',('state', 'not in', ('confirmed', 'exception')),('invoiced', '=', 1)]}"/>
+                            states="confirmed,exception"/>
+                        <button colspan="1"
+                            name="%(action_view_sale_order_line_make_invoice)d"
+                            string="Create Invoice"
+                            type="action"
+                            states="done"
+                            icon="gtk-go-forward"
+                            attrs="{'invisible': [('invoiced', '=', 1)]}"/>
                         <button name="button_done"
                             string="Done" type="object"
-                            icon="gtk-jump-to"
-                            attrs="{'invisible': ['|',('state', 'not in', ('confirmed','exception')),('invoiced', '=', 0)]}"/>
+                            states="confirmed,exception"
+                            icon="gtk-go-forward" />
                     </group>
                 </form>
             </field>
@@ -421,18 +425,18 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
-                    <filter icon="terp-gtk-go-back-rtl" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1" help="Sale Order Lines ready to be invoiced"/>
+                    <filter icon="terp-dolar_ok!" string="To Invoice" domain="[('invoiced','&lt;&gt;', 1),('state','=','done')]" separator="1" help="Sale Order Lines ready to be invoiced"/>
                     <separator orientation="vertical"/>
                     <field name="order_id"/>
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sale Order Lines related to a Sales Order of mine"/>
+                        <filter icon="terp-personnal" domain="[('salesman_id','=',uid)]" help="Sales Order Lines related to a Sales Order of mine"/>
                     </field>
                     <newline/>
                     <group expand="context.get('report',False)" string="Group By..." colspan="9" col="8">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Order" icon="terp-sale" domain="[]" context="{'group_by':'order_id'}"/>
+                        <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'order_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'salesman_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
@@ -446,12 +450,17 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Uninvoiced Lines">
-                    <filter icon="terp-check" string="Confirmed"
+                    <filter icon="terp-gtk-go-back-rtl" string="To Do"
                         domain="[('state','=','confirmed')]"
                         name="sale order"
-                        help="Confirmed Sale Order Lines"
+                        help="Confirmed sale order lines, not yet delivered"
                         />
-                    <separator orientation="vertical"/>    
+                    <filter icon="terp-dialog-close" string="Done"
+                        domain="[('state','=','done')]"
+                        name="sale_order_done"
+                        help="Sale order lines done"
+                        />
+                    <separator orientation="vertical"/>
                     <filter icon="terp-accessories-archiver" string="Shipped"
                         domain="[('state','=','done')]"
                         name="unshipped"
@@ -466,7 +475,7 @@ to your configuration: from the sales order, from the pickings, etc.
                     <field name="order_partner_id"/>
                     <field name="product_id"/>
                     <field name="salesman_id">
-                        <filter icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sale Order Lines"/>
+                        <filter icon="terp-personal" domain="[('salesman_id','=',uid)]" help="My Sales Order Lines"/>
                     </field>
                     <newline />
                     <group expand="0" string="Group By..." colspan="9" col="8">
@@ -488,7 +497,7 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter" />
             <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
-            <field name="help">Lines to invoice opens a search view with sales order and their status.</field>
+            <field name="help">Here is a list of each sales order line to be invoiced. You can invoice sales orders partially, by lines of sales order. You do not need this list if you invoice from the delivery orders or if you invoice sales totally.</field>
         </record>
 
         <record id="action_order_line_tree3" model="ir.actions.act_window">
@@ -501,23 +510,25 @@ to your configuration: from the sales order, from the pickings, etc.
             <field name="filter" eval="True"/>
         </record>
 
-        <act_window 
-        context="{'search_default_partner_id': [active_id]}" 
-        id="act_res_partner_2_sale_order" 
-        name="Sales" 
-        res_model="sale.order" 
+        <act_window
+        context="{'search_default_partner_id': [active_id]}"
+        id="act_res_partner_2_sale_order"
+        name="Sales"
+        groups="base.group_sale_salesman"
+        res_model="sale.order"
         src_model="res.partner"/>
 
-        <act_window 
-        context="{'search_default_product_id': [active_id]}" 
-        id="action_order_line_product_tree" 
-        name="Product sales" 
-        res_model="sale.order.line" 
-        src_model="product.product" 
-        groups="base.group_extended"/>
+        <act_window
+        context="{'search_default_product_id': [active_id]}"
+        id="action_order_line_product_tree"
+        name="Product sales"
+        res_model="sale.order.line"
+        src_model="product.product"
+        groups="base.group_sale_salesman"/>
 
-        <menuitem id="menu_invoiced" name="Billing" parent="base.menu_base_partner" sequence="5"/>
-        <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2"/>
+        <menuitem id="menu_invoiced" name="Invoicing" parent="base.menu_base_partner" sequence="5"
+            groups="base.group_extended"/>
+        <menuitem action="action_order_line_tree2" id="menu_invoicing_sales_order_lines" parent="menu_invoiced" sequence="2" groups="base.group_sale_salesman,base.group_sale_manager"/>
         <!-- configartion view -->
 
         <record id="view_config_picking_policy" model="ir.ui.view">
@@ -531,8 +542,7 @@ to your configuration: from the sales order, from the pickings, etc.
                   <attribute name="string">Sales Application Configuration</attribute>
                 </form>
                 <separator string="title" position="attributes">
-                <attribute name="string"
-                       >Configure Sales Order Logistic</attribute>
+                <attribute name="string">Configure Sales Order Logistics</attribute>
                   </separator>
                   <xpath expr="//label[@string='description']" position="attributes">
                     <attribute name="string">Setup your sales workflow and default values.</attribute>
@@ -549,7 +559,6 @@ to your configuration: from the sales order, from the pickings, etc.
                   <field name="step"/>
                 </group>
                 <xpath expr='//button[@name="action_skip"]' position='replace'/>
-               
               </data>
             </field>
         </record>
@@ -567,6 +576,7 @@ to your configuration: from the sales order, from the pickings, etc.
         <!-- register configuration wizard -->
         <record id="config_wizard_step_sale_picking_policy" model="ir.actions.todo">
             <field name="action_id" ref="action_config_picking_policy"/>
+            <field name="restart">always</field>
             <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
         </record>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
+<document filename="Voucher.pdf">
+  <template pageSize="(595.0,842.0)" title="Voucher" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="42.0" width="525" height="772"/>
     </pageTemplate>
@@ -181,7 +181,7 @@
           <para style="terp_tblheader_General">Currency:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ voucher.currency_id.code ]]</para>
+          <para style="terp_default_Right_9">[[ voucher.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -327,56 +327,5 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_1">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="154.0,108.0,118.0,144.0" style="Table5">
-      <tr>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <para style="terp_default_9">Receiver's Signature</para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_Right_9">Authorised Signatory</para>
-        </td>
-      </tr>
-    </blockTable>
-    <para style="P1">
-      <font color="white"> </font>
-    </para>
   </story>
 </document>

@@ -2,24 +2,24 @@
 <openerp>
     <data noupdate="1">
         <!--
-	Requests Links
-	-->
+    Requests Links
+    -->
         <record id="req_link_sale_order" model="res.request.link">
-            <field name="name">Sale Order</field>
+            <field name="name">Sales Order</field>
             <field name="object">sale.order</field>
         </record>
-        
+
         <!--
-	Resource: sale.shop
-	-->
+    Resource: sale.shop
+    -->
         <record id="shop" model="sale.shop">
             <field model="res.company" name="name" search="[]" use="name"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
             <field model="account.payment.term" name="payment_default_id" search="[]"/>
             <field model="res.company" name="company_id" search="[]"/>
         </record>
-        
+
         <function eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
-        
+
     </data>
 </openerp>

@@ -6,16 +6,16 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
@@ -26,14 +26,12 @@ class mrp_production(osv.osv):
     _inherit = 'mrp.production'
 
     def _ref_calc(self, cr, uid, ids, field_names=None, arg=False, context=None):
-        """ Finds reference of sale order for production order.
+        """ Finds reference of sales order for production order.
         @param field_names: Names of fields.
         @param arg: User defined arguments
         @return: Dictionary of values.
         """
         res = {}
-        if context is None:
-            context = {}
         if not field_names:
             field_names = []
         for id in ids:
@@ -62,9 +60,9 @@ class mrp_production(osv.osv):
         for production in productions:
             res[production.id] = False
             if production.move_prod_id:
-                parent_move_line = get_parent_move(production.move_prod_id)
+                parent_move_line = get_parent_move(production.move_prod_id.id)
                 if parent_move_line:
-                    move = move_obj.browse(cr,uid,parent_move_line)
+                    move = move_obj.browse(cr, uid, parent_move_line)
                     if field_name == 'name':
                         res[production.id] = move.sale_line_id and move.sale_line_id.order_id.name or False
                     if field_name == 'client_order_ref':
@@ -72,8 +70,8 @@ class mrp_production(osv.osv):
         return res
 
     _columns = {
-        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sale order.'),
-        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_ref', type='char', string='Sale Reference', help='Indicate the Customer Reference from sale order.'),
+        'sale_name': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sales Name', help='Indicate the name of sales order.'),
+        'sale_ref': fields.function(_ref_calc, method=True, multi='sale_name', type='char', string='Sales Reference', help='Indicate the Customer Reference from sales order.'),
     }
 
 mrp_production()

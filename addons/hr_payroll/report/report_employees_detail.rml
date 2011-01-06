@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(1120.0,770.0)" title="Employees Salary Details" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Employees Salary Details.pdf">
+  <template pageSize="(842.0,595.0)" title="Employees Salary Details" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="28.0" y1="28.0" width="1064" height="714"/>
+      <frame id="first" x1="28.0" y1="57.0" width="786" height="481"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -184,12 +184,24 @@
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="0,0" stop="0,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="5,0" stop="5,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="6,0" stop="6,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="7,0" stop="7,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="8,0" stop="8,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="9,0" stop="9,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="10,0" stop="10,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="11,0" stop="11,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="12,0" stop="12,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="13,0" stop="13,0"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
-    <paraStyle name="P1" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
-    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="12.0" leading="15" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
     <paraStyle name="Text body" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="0.0" spaceAfter="6.0"/>
@@ -246,22 +258,68 @@
     <images/>
   </stylesheet>
   <story>
-    <para style="terp_default_8">[[ repeatIn(get_employee(data['form']), 'o') ]] [[ get_employee_detail(o) ]]</para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="1063.0" style="Table12">
+  <pto>
+  <pto_header>
+  <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table4">
+        <tr>
+          <td>
+            <para style="terp_tblheader_Details">Title</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[0] != 'None' and m[0] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[1] != 'None' and m[1] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[2] != 'None' and m[2] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[3] != 'None' and m[3] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[4] != 'None' and m[4] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[5] != 'None' and m[5] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[6] != 'None' and m[6] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[7] != 'None' and m[7] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[8] != 'None' and m[8] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[9] != 'None' and m[9] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[10] != 'None' and m[10] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">[[ m[11] != 'None' and m[11] or '' ]]</para>
+          </td>
+          <td>
+            <para style="terp_tblheader_Details_Right">Total</para>
+          </td>
+        </tr>
+      </blockTable>
+  </pto_header>
+    <para style="terp_default_8">[[ repeatIn(get_employee(data['form']), 'o') ]] </para>
+    <blockTable colWidths="785.0" style="Table12">
       <tr>
         <td>
-          <para style="P2">Employees Salary Details </para>
-          <para style="terp_default_Centre_9">For [[ get_fiscalyear(data['form']['fiscalyear_id']) ]]</para>
+          <para style="terp_header_Centre">Employees Salary Details </para>
+          <para style="terp_default_Centre_9">From [[ formatLang(data['form']['date_from'], date=True) ]] To [[ formatLang(data['form']['date_to'], date=True) ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="terp_default_Centre_9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="135.0,219.0,124.0,218.0,140.0,226.0" style="Table2">
+    <blockTable colWidths="100.0,162.0,92.0,161.0,103.0,167.0" style="Table2">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Employee Code</para>
@@ -283,7 +341,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="135.0,219.0,124.0,218.0,140.0,226.0" style="Table3">
+    <blockTable colWidths="100.0,162.0,92.0,161.0,103.0,167.0" style="Table3">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Employee Name</para>
@@ -292,7 +350,7 @@
           <para style="terp_default_9">[[ o.name ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details">Other Id</para>
+          <para style="terp_tblheader_Details">Other No.</para>
         </td>
         <td>
           <para style="terp_default_9">[[ o.otherid or '' ]]</para>
@@ -305,7 +363,7 @@
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="135.0,219.0,124.0,218.0,140.0,226.0" style="Table5">
+    <blockTable colWidths="100.0,162.0,92.0,161.0,103.0,167.0" style="Table5">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Designation</para>
@@ -331,299 +389,342 @@
       <font color="white"> </font>
     </para>
     <section>
-      <para style="terp_default_8">[[ repeatIn(get_periods(data['form']),'m') ]]</para>
-      <blockTable colWidths="100.0,73.0,69.0,74.0,71.0,73.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table4">
+      <para style="terp_default_1">[[ repeatIn(get_periods(data['form']),'m') ]] [[ get_employee_detail(o) ]]</para>
+      <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table4">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Title</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[0] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[0] != 'None' and m[0] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[1] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[1] != 'None' and m[1] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[2] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[2] != 'None' and m[2] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[3] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[3] != 'None' and m[3] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[4] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[4] != 'None' and m[4] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[5] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[5] != 'None' and m[5] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[6] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[6] != 'None' and m[6] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[7] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[7] != 'None' and m[7] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[8] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[8] != 'None' and m[8] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[9] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[9] != 'None' and m[9] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[10] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[10] != 'None' and m[10] or '' ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ m[11] ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ m[11] != 'None' and m[11] or '' ]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Right">Total</para>
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
       <section>
-        <para style="terp_default_9">
-          <font color="white"> </font>
-        </para>
-        <blockTable colWidths="1063.0" style="Table7">
+        <blockTable colWidths="785.0" style="Table7">
           <tr>
             <td>
-              <para style="P1">Allowances with Basic:</para>
+              <para style="terp_tblheader_Details">Allowances with Basic: </para>
             </td>
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_9">[[ repeatIn(get_allow(),'e1') ]]</para>
-          <blockTable colWidths="100.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table6">
+          <para style="terp_default_1">[[ repeatIn(get_allow(),'e1') ]]</para>
+          <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table6">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e1[0] ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[1]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[1]!='' and formatLang(e1[1])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[2]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[2]!='' and formatLang(e1[2])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[3]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[3]!='' and formatLang(e1[3])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[4]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[4]!='' and formatLang(e1[4])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[5]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[5]!='' and formatLang(e1[5])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[6]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[6]!='' and formatLang(e1[6])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[7]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[7]!='' and formatLang(e1[7])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[8]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[8]!='' and formatLang(e1[8])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[9]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[9]!='' and formatLang(e1[9])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[10]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[10]!='' and formatLang(e1[10])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[11]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[11]!='' and formatLang(e1[11])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e1[12]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e1[12]!='' and formatLang(e1[12])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9_Bold">[[ formatLang(e1[13]) ]]</para>
+                <para style="terp_default_Right_9_Bold">[[ formatLang(e1[13]) ]] [[ company.currency_id.symbol ]]</para>
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_1">
-            <font color="white"> </font>
-          </para>
         </section>
-        <blockTable colWidths="1063.0" style="Table10">
+        <blockTable colWidths="785.0" style="Table10">
           <tr>
             <td>
-              <para style="P1">Deductions:</para>
+              <para style="terp_tblheader_Details">Deductions: </para>
             </td>
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_9">[[ repeatIn(get_deduct(),'e2') ]]</para>
-          <blockTable colWidths="100.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table8">
+          <para style="terp_default_1">[[ repeatIn(get_deduct(),'e2') ]]</para>
+          <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table8">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e2[0] ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[1]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[1]!='' and formatLang(e2[1])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[2]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[2]!='' and formatLang(e2[2])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[3]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[3]!='' and formatLang(e2[3])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[4]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[4]!='' and formatLang(e2[4])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[5]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[5]!='' and formatLang(e2[5])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[6]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[6]!='' and formatLang(e2[6])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[7]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[7]!='' and formatLang(e2[7])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[8]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[8]!='' and formatLang(e2[8])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[9]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[9]!='' and formatLang(e2[9])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[10]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[10]!='' and formatLang(e2[10])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[11]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[11]!='' and formatLang(e2[11])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e2[12]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e2[12]!='' and formatLang(e2[12])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9_Bold">[[ formatLang(e2[13]) ]]</para>
+                <para style="terp_default_Right_9_Bold">[[ formatLang(e2[13]) ]] [[ company.currency_id.symbol ]]</para>
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_1">
-            <font color="white"> </font>
-          </para>
         </section>
-        <blockTable colWidths="1063.0" style="Table11">
+        <blockTable colWidths="785.0" style="Table11">
           <tr>
             <td>
-              <para style="P1">Others:</para>
+              <para style="terp_tblheader_Details">Others: </para>
             </td>
           </tr>
         </blockTable>
         <section>
-          <para style="terp_default_9">[[ repeatIn(get_other(),'e3') ]]</para>
-          <blockTable colWidths="100.0,73.0,69.0,74.0,70.0,74.0,75.0,72.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table9">
+          <para style="terp_default_1">[[ repeatIn(get_other(),'e3') ]]</para>
+          <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table9">
             <tr>
               <td>
                 <para style="terp_default_9">[[ e3[0] ]]</para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[1]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[1]!='' and formatLang(e3[1])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[2]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[2]!='' and formatLang(e3[2])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[3]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[3]!='' and formatLang(e3[3])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[4]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[4]!='' and formatLang(e3[4])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[5]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[5]!='' and formatLang(e3[5])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[6]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[6]!='' and formatLang(e3[6])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[7]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[7]!='' and formatLang(e3[7])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[8]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[8]!='' and formatLang(e3[8])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[9]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[9]!='' and formatLang(e3[9])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[10]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[10]!='' and formatLang(e3[10])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[11]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[11]!='' and formatLang(e3[11])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9">[[ formatLang(e3[12]) ]]</para>
+                <para style="terp_default_Right_8">
+                  <font face="Helvetica" size="9.0">[[ (e3[12]!='' and formatLang(e3[12])) or removeParentNode('font') ]] [[company.currency_id.symbol]]</font>
+                </para>
               </td>
               <td>
-                <para style="terp_default_Right_9_Bold">[[ formatLang(e3[13]) ]]</para>
+                <para style="terp_default_Right_9_Bold">[[ formatLang(e3[13]) ]] [[ company.currency_id.symbol ]]</para>
               </td>
             </tr>
           </blockTable>
-          <para style="terp_default_1">
-            <font color="white"> </font>
-          </para>
         </section>
-        <para style="terp_default_1">
-          <font color="white"> </font>
-        </para>
       </section>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
-      <blockTable colWidths="101.0,73.0,68.0,74.0,70.0,74.0,74.0,73.0,76.0,76.0,76.0,76.0,76.0,76.0" style="Table1">
+      <blockTable colWidths="180.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,46.0,52.0" style="Table1">
         <tr>
           <td>
             <para style="terp_tblheader_Details">[[ get_monthly_total()[0] ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[1]) ]][[ company.currency_id.symbol ]]</para>
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[1], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[2], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[3], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[4], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[5], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[6], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[7], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[8], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[9], dp='Account')) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[10], dp='Account']) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[11], dp='Account']) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
+          </td>                                                                                           
+          <td>                                                                                            
+            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[12], dp='Account']) or removeParentNode('para') ]][[ company.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[2]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[3]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[4]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[5]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[6]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[7]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[8]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[9]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[10]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[11]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(get_monthly_total()[12]) ]][[ company.currency_id.symbol ]]</para>
-          </td>
-          <td>
-            <para style="terp_tblheader_General_Right">[[ formatLang(get_total()) ]][[ company.currency_id.symbol ]]</para>
+            <para style="terp_tblheader_General_Right">[[ formatLang(get_total(), dp='Account') ]][[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_1">
-        <font color="white"> </font>
-      </para>
     </section>
-    <para style="terp_default_1">
-      <font color="white"> </font>
-    </para>
-    <para style="terp_default_9">
-      <font color="white"> </font>
-    </para>
+    </pto>
   </story>
 </document>

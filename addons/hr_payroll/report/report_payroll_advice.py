@@ -1,3 +1,27 @@
+#!/usr/bin/env python
+#-*- coding:utf-8 -*-
+
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
+#    d$
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 import time
 from datetime import datetime
 from report import report_sxw
@@ -11,16 +35,16 @@ class payroll_advice_report(report_sxw.rml_parse):
         self.total_bysal = 0.00
         self.localcontext.update({
             'time': time,
-            'get_month'   : self.get_month,
-            'convert'     : self.convert,
-            'get_detail'  : self.get_detail,
-            'get_total'   : self.get_total,
-            'get_bysal_total'   : self.get_bysal_total,
+            'get_month': self.get_month,
+            'convert': self.convert,
+            'get_detail': self.get_detail,
+            'get_total': self.get_total,
+            'get_bysal_total': self.get_bysal_total,
         })
 
     def get_month(self,input_date):
         res = {
-               'mname':''
+               'mname': ''
                }
         date = datetime.strptime(input_date, '%Y-%m-%d')
         res['mname']= date.strftime('%B')+'-'+date.strftime('%Y')

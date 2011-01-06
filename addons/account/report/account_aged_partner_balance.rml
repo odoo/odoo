@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-    <template pageSize="(1120.0,770.0)" title="Aged Trial balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Aged Trial Balance.pdf">
+   <template pageSize="(842.0,595.0)" title="Aged Trial Balance" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-       <frame id="first" x1="20.0" y1="35.0" width="1080" height="650"/>
+      <frame id="first" x1="28.0" y1="57.0" width="772" height="481"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -100,18 +100,16 @@
 
   </stylesheet>
   <story>
-    <para style="P9">
-      <font color="white"> </font>
-    </para>
+
      <blockTable colWidths="180.0,180.0,180.0" style="Table_header_Content">
       <tr>
         <td><para style="terp_header"><font color="white"> </font></para>
         </td>
-        <td><para style="terp_header_Centre">Aged Trial balance</para></td>
+        <td><para style="terp_header_Centre">Aged Trial Balance</para></td>
         <td><para style="terp_header"><font color="white"> </font></para></td>
       </tr>
     </blockTable>
-    <blockTable colWidths="200.0,200.0,100.0,100.0,119.0,100.0,200.0" style="Table8">
+    <blockTable colWidths="110.0,110.0,110.0,110.0,128.0,93.0,110.0" style="Table8">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Chart of Account</para>
@@ -132,7 +130,7 @@
           <para style="terp_tblheader_General_Centre">Analysis Direction</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Printing Date</para>
+          <para style="terp_tblheader_General_Centre">Target Moves</para>
         </td>
       </tr>
         <tr>
@@ -155,35 +153,35 @@
           <para style="terp_default_Centre_8">[[ data['form']['direction_selection'] ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True)]]</para>
+          <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
         </td>
       </tr>
       </blockTable>
 	<para style="P9">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="300.0,100.0,100.0,100.0,100.0,105.0,105.0,125.0" style="Table2" repeatRows="1">
+    <blockTable colWidths="135.0,90.0,90.0,90.0,90.0,90.0,90.0,90.0" style="Table2" repeatRows="1">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Partners</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]]<font size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['4']['name'] ]]<font size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['4']['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['3']['name'] ]]<font size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['3']['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['2']['name'] ]]<font size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['2']['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['1']['name'] ]]<font size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['1']['name'] ]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['0']['name'] ]]<font size="8.0">([[ company.currency_id.code ]])</font></para>
+          <para style="terp_tblheader_Details_Right">[[ data['form']['0']['name'] ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Total</para>

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-10-18 17:46+0000\n"
 "PO-Revision-Date: 2009-04-10 14:09+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: l10n_ch_chart_c2c_pcg
@@ -28,13 +28,6 @@ msgid "Refund Tax Account"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
-#: model:ir.actions.todo,note:l10n_ch_chart_c2c_pcg.action_config_tax_todo
-msgid ""
-"Set account on financial taxes defined by \n"
-"\t\t\tCamptocamp l10n_ch_c2c_pcg module"
-msgstr ""
-
-#. module: l10n_ch_chart_c2c_pcg
 #: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_adj_liability
 msgid "Bilan : Passifs de regularisation"
 msgstr ""
@@ -45,8 +38,8 @@ msgid "Bilan : Immo incorporelles"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
-#: view:account.tax.template.todo:0
-msgid "Next"
+#: help:account.tax.template.todo,account_collected_id:0
+msgid "You can set here the invoice tax account"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
@@ -70,25 +63,23 @@ msgid "The accounts linked to the tax template"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
+#: model:ir.module.module,description:l10n_ch_chart_c2c_pcg.module_meta_information
+msgid "Swiss account chart that also add tax template definition"
+msgstr ""
+
+#. module: l10n_ch_chart_c2c_pcg
 #: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_other_payable
 msgid "Bilan : Autres creanciers à CT"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
-#: help:account.tax.template.todo,account_collected_id:0
-msgid ""
-"You can set                                                 here the invoice "
-"tax account"
+#: model:ir.actions.act_window,name:l10n_ch_chart_c2c_pcg.action_config_tax
+msgid "Finalize your tax configuration"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
 #: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_other_ope_exp
 msgid "PP : Autres charges d'exploitation"
-msgstr ""
-
-#. module: l10n_ch_chart_c2c_pcg
-#: model:ir.module.module,description:l10n_ch_chart_c2c_pcg.module_meta_information
-msgid "Swiws account chart that add also tax template definition"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
@@ -99,6 +90,11 @@ msgstr ""
 #. module: l10n_ch_chart_c2c_pcg
 #: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_other
 msgid "Autre : Other"
+msgstr ""
+
+#. module: l10n_ch_chart_c2c_pcg
+#: field:account.tax.template.todo,progress:0
+msgid "Configuration Progress"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
@@ -117,11 +113,6 @@ msgid "PP : Achat de marchandise"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
-#: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_closed
-msgid "Autre : Closed"
-msgstr ""
-
-#. module: l10n_ch_chart_c2c_pcg
 #: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_equity
 msgid "Bilan : Capitaux propres"
 msgstr ""
@@ -129,11 +120,6 @@ msgstr ""
 #. module: l10n_ch_chart_c2c_pcg
 #: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_receivable
 msgid "Bilan : Debiteurs"
-msgstr ""
-
-#. module: l10n_ch_chart_c2c_pcg
-#: model:ir.actions.act_window,name:l10n_ch_chart_c2c_pcg.action_config_tax
-msgid "Configure Journal"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
@@ -192,15 +178,14 @@ msgid "Bilan : Resultat reporte"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
-#: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_income
-msgid "PP : Chiffre d'affaires"
+#: view:account.tax.template.todo:0
+msgid ""
+"Set account on financial taxes defined by Camptocamp l10n_ch_c2c_pcg module"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
-#: help:account.tax.template.todo,account_paid_id:0
-msgid ""
-"You can set                                             here the refund tax "
-"account"
+#: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_income
+msgid "PP : Chiffre d'affaires"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
@@ -234,6 +219,11 @@ msgid "Error ! You can not create recursive account templates."
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
+#: field:account.tax.template.todo,config_logo:0
+msgid "Image"
+msgstr ""
+
+#. module: l10n_ch_chart_c2c_pcg
 #: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_lt_liability
 msgid "Bilan : Dettes à LT"
 msgstr ""
@@ -257,7 +247,7 @@ msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
 #: view:account.tax.template.todo:0
-msgid "Cancel"
+msgid "res_config_contents"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg
@@ -273,6 +263,11 @@ msgstr ""
 #. module: l10n_ch_chart_c2c_pcg
 #: model:account.account.type,name:l10n_ch_chart_c2c_pcg.account_type_personnal_exp
 msgid "PP : Charge de personnel"
+msgstr ""
+
+#. module: l10n_ch_chart_c2c_pcg
+#: help:account.tax.template.todo,account_paid_id:0
+msgid "You can set here the refund tax account"
 msgstr ""
 
 #. module: l10n_ch_chart_c2c_pcg

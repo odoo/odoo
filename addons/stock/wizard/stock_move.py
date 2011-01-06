@@ -34,7 +34,7 @@ class stock_move_track(osv.osv_memory):
         'quantity': lambda *x: 1
     }
 
-    def track_lines(self, cr, uid, ids, context={}):
+    def track_lines(self, cr, uid, ids, context=None):
         """ To track stock moves lines
         @param self: The object pointer.
         @param cr: A database cursor
@@ -46,7 +46,7 @@ class stock_move_track(osv.osv_memory):
         datas = self.read(cr, uid, ids)[0]
         move_obj = self.pool.get('stock.move')
         move_obj._track_lines(cr, uid, context['active_id'], datas, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_move_track()
 
@@ -70,6 +70,8 @@ class stock_move_consume(osv.osv_memory):
         @param context: A standard dictionary
         @return: default values of fields
         """
+        if context is None:
+            context = {}
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         if 'product_id' in fields:
@@ -83,7 +85,7 @@ class stock_move_consume(osv.osv_memory):
 
         return res
 
-    def do_move_consume(self, cr, uid, ids, context={}):
+    def do_move_consume(self, cr, uid, ids, context=None):
         """ To move consumed products
         @param self: The object pointer.
         @param cr: A database cursor
@@ -92,13 +94,15 @@ class stock_move_consume(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):
             move_obj.action_consume(cr, uid, move_ids,
                              data['product_qty'], data['location_id'],
                              context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_move_consume()
 
@@ -121,6 +125,8 @@ class stock_move_scrap(osv.osv_memory):
         @param context: A standard dictionary
         @return: default values of fields
         """
+        if context is None:
+            context = {}
         res = super(stock_move_consume, self).default_get(cr, uid, fields, context=context)
         move = self.pool.get('stock.move').browse(cr, uid, context['active_id'], context=context)
         location_obj = self.pool.get('stock.location')
@@ -140,7 +146,7 @@ class stock_move_scrap(osv.osv_memory):
 
         return res
 
-    def move_scrap(self, cr, uid, ids, context={}):
+    def move_scrap(self, cr, uid, ids, context=None):
         """ To move scrapped products
         @param self: The object pointer.
         @param cr: A database cursor
@@ -149,13 +155,15 @@ class stock_move_scrap(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
         move_obj = self.pool.get('stock.move')
         move_ids = context['active_ids']
         for data in self.read(cr, uid, ids):
             move_obj.action_scrap(cr, uid, move_ids,
                              data['product_qty'], data['location_id'],
                              context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_move_scrap()
 
@@ -173,6 +181,8 @@ class split_in_production_lot(osv.osv_memory):
         @param context: A standard dictionary
         @return: Default values of fields
         """
+        if context is None:
+            context = {}
 
         res = super(split_in_production_lot, self).default_get(cr, uid, fields, context=context)
         if context.get('active_id'):
@@ -205,8 +215,10 @@ class split_in_production_lot(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
         self.split(cr, uid, ids, context.get('active_ids'), context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def split(self, cr, uid, ids, move_ids, context=None):
         """ To split stock moves into production lot
@@ -218,11 +230,15 @@ class split_in_production_lot(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
+        if context is None:
+            context = {}
+        inventory_id = context.get('inventory_id', False)
         prodlot_obj = self.pool.get('stock.production.lot')
+        inventory_obj = self.pool.get('stock.inventory')
         move_obj = self.pool.get('stock.move')
         new_move = []
-        for data in self.browse(cr, uid, ids):
-            for move in move_obj.browse(cr, uid, move_ids):
+        for data in self.browse(cr, uid, ids, context=context):
+            for move in move_obj.browse(cr, uid, move_ids, context=context):
                 move_qty = move.product_qty
                 quantity_rest = move.product_qty
                 uos_qty_rest = move.product_uos_qty
@@ -247,8 +263,11 @@ class split_in_production_lot(osv.osv_memory):
                         'state': move.state
                     }
                     if quantity_rest > 0:
-                        current_move = move_obj.copy(cr, uid, move.id, default_val)
+                        current_move = move_obj.copy(cr, uid, move.id, default_val, context=context)
+                        if inventory_id and current_move:
+                            inventory_obj.write(cr, uid, inventory_id, {'move_ids': [(4, current_move)]}, context=context)
                         new_move.append(current_move)
+
                     if quantity_rest == 0:
                         current_move = move.id
                     prodlot_id = False
@@ -259,7 +278,7 @@ class split_in_production_lot(osv.osv_memory):
                             'name': line.name,
                             'product_id': move.product_id.id},
                         context=context)
-                    
+
                     move_obj.write(cr, uid, [current_move], {'prodlot_id': prodlot_id, 'state':move.state})
 
                     update_val = {}
@@ -268,7 +287,9 @@ class split_in_production_lot(osv.osv_memory):
                         update_val['product_uos_qty'] = uos_qty_rest
                         update_val['state'] = move.state
                         move_obj.write(cr, uid, [move.id], update_val)
+
         return new_move
+
 split_in_production_lot()
 
 class stock_move_split_lines_exist(osv.osv_memory):

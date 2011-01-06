@@ -7,23 +7,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-03-25 12:11+0000\n"
-"PO-Revision-Date: 2010-06-21 15:58+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2011-01-01 07:19+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2011-01-02 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_visible_discount
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML no válido para la definición de la vista!"
+#: code:addons/product_visible_discount/product_visible_discount.py:0
+#, python-format
+msgid "No Purchase Pricelist Found !"
+msgstr "¡No se ha encontrado tarifa de compra!"
 
 #. module: product_visible_discount
-#: model:ir.module.module,description:product_visible_discount.module_name_translation
+#: code:addons/product_visible_discount/product_visible_discount.py:0
+#, python-format
+msgid "No Sale Pricelist Found "
+msgstr "No se ha encontrado tarifa de venta "
+
+#. module: product_visible_discount
+#: model:ir.module.module,description:product_visible_discount.module_meta_information
 msgid ""
 "\n"
 "    This module lets you calculate discounts on Sale Order lines and Invoice "
@@ -41,21 +49,69 @@ msgid ""
 msgstr ""
 "\n"
 "    Este módulo permite calcular descuentos en las líneas del Pedido de "
-"Ventas y en las de la Factura basados en la lista de precios del proveedor.\n"
-"    Para esto, una nueva casilla de selección llamada \"Descuento visible\" "
-"se añade al formulario de la lista de precios.\n"
+"Ventas y en las de la Factura basados en la tarifa de la empresa.\n"
+"    Para ello se añade al formulario de la tarifa una nueva opción llamada "
+"\"Descuento visible\".\n"
 "    Ejemplo:\n"
-"        Para el producto PC1 y el proveedor \"Asustek\": si el precio de "
-"lista es 450 y el precio calculado con la lista de precios de Asustek es "
-"225\n"
-"        Si la casilla de selección está activada, en la línea del pedido "
-"aparecerá: precio unicario=450, Descuento=50,00, Precio neto=225\n"
-"        Si la casilla de selección está desactivada, en la línea del pedido "
-"y en la factura aparecerá: Precio unitario=225, Descuento=0,00, Precio "
-"neto=225\n"
+"        Para el producto PC1 y la empresa \"Asustek\": si el precio de venta "
+"es 450 y el precio calculado con la tarifa de Asustek es 225:\n"
+"        Si la opción \"Descuento visible\" está activada, en la línea del "
+"pedido aparecerá: precio unitario=450, Descuento=50,00, Precio neto=225\n"
+"        Si la opción \"Descuento visible\" está desactivada, en la línea del "
+"pedido y en la factura aparecerá: Precio unitario=225, Descuento=0,00, "
+"Precio neto=225\n"
 "    "
 
 #. module: product_visible_discount
+#: model:ir.module.module,shortdesc:product_visible_discount.module_meta_information
 #: field:product.pricelist,visible_discount:0
 msgid "Visible Discount"
 msgstr "Descuento visible"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Línea factura"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:0
+#, python-format
+msgid "You must first define a pricelist for Customer !"
+msgstr "¡Primero debe definir una tarifa para el cliente!"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_product_pricelist
+msgid "Pricelist"
+msgstr "Tarifa"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:0
+#, python-format
+msgid "You must first define a pricelist for Supplier !"
+msgstr "¡Primero debe definir una tarifa para el proveedor!"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea pedido de venta"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML no válido para la definición de la vista!"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Línea pedido venta"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

@@ -1,0 +1,204 @@
+# Polish translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-10-08 07:39+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
+"Language-Team: Polish <pl@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:52+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr ""
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_from_product_template
+msgid "Ham"
+msgstr "Szynka"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_lait_product_template
+msgid "Cow milk"
+msgstr "Mleko"
+
+#. module: product_expiry
+#: model:ir.module.module,shortdesc:product_expiry.module_meta_information
+msgid "Products date of expiry"
+msgstr "Data przydatności"
+
+#. module: product_expiry
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
+msgid ""
+"The date on which the lot starts deteriorating without becoming dangerous."
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr ""
+
+#. module: product_expiry
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr ""
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr ""
+
+#. module: product_expiry
+#: field:stock.production.lot,removal_date:0
+msgid "Removal Date"
+msgstr "Data usunięcia"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.module.module,description:product_expiry.module_meta_information
+msgid ""
+"Track different dates on products and production lots:\n"
+" - end of life\n"
+" - best before date\n"
+" - removal date\n"
+" - alert date\n"
+"Used, for example, in food industries."
+msgstr ""
+"Śledzi różne daty na produktach i partie produktu:\n"
+" - Data przydatności\n"
+" - Należy użyć przed\n"
+" - Data usunięcia\n"
+" - Data ostrzegania\n"
+"Stosowane na przykład w przemyśle spożywczym."
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_pain_product_template
+msgid "Bread"
+msgstr "Chleb"
+
+#. module: product_expiry
+#: model:product.uom,name:product_expiry.product_uom_ltr
+#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
+msgid "LTR"
+msgstr ""
+
+#. module: product_expiry
+#: view:product.product:0
+#: view:stock.production.lot:0
+msgid "Dates"
+msgstr "Daty"
+
+#. module: product_expiry
+#: field:stock.production.lot,life_date:0
+msgid "End of Life Date"
+msgstr "Koniec przydatności"
+
+#. module: product_expiry
+#: field:stock.production.lot,use_date:0
+msgid "Best before Date"
+msgstr "Data najlepszego użycia"
+
+#. module: product_expiry
+#: model:product.template,name:product_expiry.product_product_jambon_product_template
+msgid "French cheese Camenbert"
+msgstr "Cammembert"
+
+#. module: product_expiry
+#: help:product.product,removal_time:0
+msgid "The number of days before a production lot should be removed."
+msgstr ""
+
+#. module: product_expiry
+#: field:stock.production.lot,alert_date:0
+msgid "Alert Date"
+msgstr "Data ostrzegawcza"
+
+#. module: product_expiry
+#: help:product.product,use_time:0
+msgid ""
+"The number of days before a production lot starts deteriorating without "
+"becoming dangerous."
+msgstr ""
+
+#. module: product_expiry
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Błąd: Niedozwolony kod EAN"
+
+#. module: product_expiry
+#: help:product.product,life_time:0
+msgid ""
+"The number of days before a production lot may become dangerous and should "
+"not be consumed."
+msgstr ""
+
+#. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"The date on which an alert should be notified about the production lot."
+msgstr ""
+
+#. module: product_expiry
+#: field:product.product,alert_time:0
+msgid "Product Alert Time"
+msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Niewłaściwy XML dla architektury widoku!"
+
+#~ msgid "Product lifetime"
+#~ msgstr "Okres przydatności produktu"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "Błąd: domyślna JM i zakupowa JM muszą być tej samej kategorii."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Błąd: JS musi być innej kategorii niż JM."
+
+#~ msgid "The date the lot should be removed."
+#~ msgstr "Data, w której produkt powinien być usunięty"
+
+#~ msgid "Product removal time"
+#~ msgstr "Czas wycofania produktu"
+
+#~ msgid "Product alert time"
+#~ msgstr "Czas ostrzeżenia dla produktu"

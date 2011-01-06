@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4, ref('base.group_hr_user'))]"/>
+        </record>
 
         <!-- Employee Category -->
 
@@ -74,6 +77,13 @@
             <field name="calendar_id" ref="resource.timesheet_group1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="category_ids" eval="[(6, 0, [ref('category_trainee')])]"/>
+        </record>
+
+        <record id="ir_ui_view_sc_employees_demo" model="ir.ui.view_sc">
+            <field name="name">Employees</field>
+            <field name="resource">ir.ui.menu</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="res_id" ref="hr.menu_open_view_employee_list_my"/>
         </record>
 
     </data>

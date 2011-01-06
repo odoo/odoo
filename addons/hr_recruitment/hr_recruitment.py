@@ -82,8 +82,6 @@ class hr_applicant(crm.crm_case, osv.osv):
     _inherit = ['mailgate.thread']
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
-        if context is None:
-            context = {}
         """
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
@@ -123,13 +121,13 @@ class hr_applicant(crm.crm_case, osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to false, it will allow you to hide the case without removing it."),
         'description': fields.text('Description'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
-        'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
+        'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'probability': fields.float('Probability'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
-        'create_date': fields.datetime('Creation Date' , readonly=True),
-        'write_date': fields.datetime('Update Date' , readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+        'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
@@ -153,10 +151,10 @@ class hr_applicant(crm.crm_case, osv.osv):
         'partner_phone': fields.char('Phone', size=32),
         'partner_mobile': fields.char('Mobile', size=32),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
-        'department_id':fields.many2one('hr.department', 'Department'),
+        'department_id': fields.many2one('hr.department', 'Department'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'survey' : fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
-        'response' : fields.integer("Response"),
+        'survey': fields.related('job_id', 'survey_id', type='many2one', relation='survey', string='Survey'),
+        'response': fields.integer("Response"),
         'reference': fields.char('Reference', size=128),
         'day_open': fields.function(_compute_day, string='Days to Open', \
                                 method=True, multi='day_open', type="float", store=True),
@@ -165,8 +163,6 @@ class hr_applicant(crm.crm_case, osv.osv):
     }
 
     def _get_stage(self, cr, uid, context=None):
-        if context is None:
-            context = {}
         ids = self.pool.get('hr.recruitment.stage').search(cr, uid, [], context=context)
         return ids and ids[0] or False
 
@@ -181,15 +177,13 @@ class hr_applicant(crm.crm_case, osv.osv):
     }
 
     def onchange_job(self,cr, uid, ids, job, context=None):
-        job_obj = self.pool.get('hr.job')
-        if context is None:
-            context = {}
         result = {}
 
         if job:
+            job_obj = self.pool.get('hr.job')
             result['department_id'] = job_obj.browse(cr, uid, job, context=context).department_id.id
             return {'value': result}
-        return {'value': {'department_id': []}}
+        return {'value': {'department_id': False}}
 
     def stage_previous(self, cr, uid, ids, context=None):
         """This function computes previous stage for case from its current stage
@@ -200,8 +194,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
         stage_obj = self.pool.get('hr.recruitment.stage')
-        if not context:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
@@ -219,8 +211,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case IDs
         @param context: A standard dictionary for contextual values"""
         stage_obj = self.pool.get('hr.recruitment.stage')
-        if not context:
-            context = {}
         for case in self.browse(cr, uid, ids, context=context):
             department = (case.department_id.id or False)
             st = case.stage_id.id  or False
@@ -238,7 +228,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of Opportunity to Meeting IDs
         @param context: A standard dictionary for contextual values
 
-        @return : Dictionary value for created Meeting view
+        @return: Dictionary value for created Meeting view
         """
         data_obj = self.pool.get('ir.model.data')
         if context is None:
@@ -289,14 +279,14 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of Survey IDs
         @param context: A standard dictionary for contextual values
-        @return : Dictionary value for print survey form.
+        @return: Dictionary value for print survey form.
         """
-        if not context:
+        if context is None:
             context = {}
         record = self.browse(cr, uid, ids, context=context)
         record = record and record[0]
-        context.update({'survey_id': record.survey.id, 'response_id' : [record.response], 'response_no':0, })
-        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context)
+        context.update({'survey_id': record.survey.id, 'response_id': [record.response], 'response_no': 0, })
+        value = self.pool.get("survey").action_print_survey(cr, uid, ids, context=context)
         return value
 
     def message_new(self, cr, uid, msg, context=None):
@@ -309,8 +299,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         """
         mailgate_pool = self.pool.get('email.server.tools')
         attach_obj = self.pool.get('ir.attachment')
-        if context is None:
-            context = {}
 
         subject = msg.get('subject')
         body = msg.get('body')
@@ -331,9 +319,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         if res:
             vals.update(res)
         res = self.create(cr, uid, vals, context=context)
-
-        message = _('A Job Request created') + " '" + subject + "' " + _("from Mailgate.")
-        self.log(cr, uid, res, message)
 
         attachents = msg.get('attachments', [])
         for attactment in attachents or []:
@@ -356,8 +341,6 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs
         """
-        if context is None:
-            context = {}
 
         if isinstance(ids, (str, int, long)):
             ids = [ids]
@@ -410,7 +393,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         if not date['date_open']:
             self.write(cr, uid, ids, {'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),})
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Job request for') + " '" + name + "' "+ _("is Open.")
+            message = _("The job request '%s' has been set 'in progress'.") % name
             self.log(cr, uid, id, message)
         return res
 
@@ -426,19 +409,12 @@ class hr_applicant(crm.crm_case, osv.osv):
         job_obj = self.pool.get('hr.job')
         res = super(hr_applicant, self).case_close(cr, uid, ids, *args)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Applicant ') + " '" + name + "' "+ _("is Hired.")
+            message = _("Applicant '%s' is being hired.") % name
             self.log(cr, uid, id, message)
 
-        stage_id = self.pool.get('hr.recruitment.stage').search(cr, uid, [('name','=','Contract Signed')])
-        self.write(cr, uid, ids,{'stage_id':stage_id[0]})
-
         applicant = self.browse(cr, uid, ids)[0]
-        if applicant.job_id :
-            emp_id = employee_obj.create(cr,uid,{'name':applicant.name,'job_id':applicant.job_id.id})
-            job_data = job_obj.browse(cr,uid, applicant.job_id.id)
-            expected_emp = job_data['expected_employees'] - 1
-            job_obj.write(cr,uid, [applicant.job_id.id],{'expected_employees':expected_emp,'state': 'old'})
-
+        if applicant.job_id:
+            emp_id = employee_obj.create(cr,uid,{'name': applicant.name,'job_id': applicant.job_id.id})
         return res
 
     def case_reset(self, cr, uid, ids, *args):
@@ -449,8 +425,9 @@ class hr_applicant(crm.crm_case, osv.osv):
         @param ids: List of case Ids
         @param *args: Tuple Value for additional Params
         """
+
         res = super(hr_applicant, self).case_reset(cr, uid, ids, *args)
-        self.write(cr, uid, ids, {'date_open': False, 'date_closed':False})
+        self.write(cr, uid, ids, {'date_open': False, 'date_closed': False})
         return res
 
 

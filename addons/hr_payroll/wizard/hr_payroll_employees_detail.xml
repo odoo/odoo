@@ -7,12 +7,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Year Salary">
-                 <group col="4" colspan="4"  width="600">
-			    	<group col="2" colspan="1">
-				    	<field name="fiscalyear_id"  align="1.0" />
+                 <group col="4" colspan="4">
+			    	<group colspan="4">
+                        <field name="date_from" colspan="2"/>
+                        <field name="date_to" colspan="2"/>
 				    	<newline/>
 				    	<separator string="Employees" colspan="4"/>
-				    	<field name="employee_ids"  nolabel="1" colspan="2" />
+				    	<field name="employee_ids"  nolabel="1" colspan="4" />
 			    	</group>
 			    	<newline/>
 			    	<group col="2" colspan="1">

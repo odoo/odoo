@@ -6,31 +6,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 06:15+0000\n"
 "Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:50+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: google_map
-#: model:ir.actions.wizard,name:google_map.wizard_google_map
-msgid "Launch Google Map"
-msgstr "Зареди \"Гугъл карта\""
-
-#. module: google_map
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Невалиден XML за преглед на архитектурата"
+#: view:res.partner:0
+#: view:res.partner.address:0
+msgid "Map"
+msgstr "Карта"
 
 #. module: google_map
 #: view:res.partner:0
 #: view:res.partner.address:0
 msgid "Street2 : "
 msgstr "Улица2 : "
+
+#. module: google_map
+#: model:ir.actions.wizard,name:google_map.wizard_google_map
+msgid "Launch Google Map"
+msgstr "Зареди \"Гугъл карта\""
 
 #. module: google_map
 #: model:ir.module.module,description:google_map.module_meta_information
@@ -44,7 +45,14 @@ msgstr ""
 "url джджата."
 
 #. module: google_map
-#: view:res.partner:0
-#: view:res.partner.address:0
-msgid "Map"
-msgstr "Карта"
+#: model:ir.module.module,shortdesc:google_map.module_meta_information
+msgid "Google Map"
+msgstr ""
+
+#. module: google_map
+#: model:ir.model,name:google_map.model_res_partner_address
+msgid "Partner Addresses"
+msgstr ""
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Невалиден XML за преглед на архитектурата"

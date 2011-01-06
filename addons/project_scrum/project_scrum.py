@@ -43,7 +43,7 @@ project_scrum_project()
 class project_scrum_sprint(osv.osv):
     _name = 'project.scrum.sprint'
     _description = 'Project Scrum Sprint'
-
+    _order = 'date_start desc'
     def _compute(self, cr, uid, ids, fields, arg, context=None):
         res = {}.fromkeys(ids, 0.0)
         progress = {}
@@ -70,38 +70,28 @@ class project_scrum_sprint(osv.osv):
         return res
 
     def button_cancel(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         return True
 
     def button_draft(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
 
     def button_open(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Sprint ') + " '" + name + "' "+ _("is Open.")
+            message = _("The sprint '%s' has been opened.") % (name,)
             self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Sprint ') + " '" + name + "' "+ _("is Closed.")
+            message = _("The sprint '%s' has been closed.") % (name,)
             self.log(cr, uid, id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
 
@@ -123,7 +113,7 @@ class project_scrum_sprint(osv.osv):
     }
     _defaults = {
         'state': 'draft',
-        'date_start' : time.strftime('%Y-%m-%d'),
+        'date_start' : lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -134,8 +124,6 @@ class project_scrum_sprint(osv.osv):
         @param ids: List of case’s IDs
         @param context: A standard dictionary for contextual values
         """
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         default.update({'backlog_ids': [], 'meeting_ids': []})
@@ -159,8 +147,6 @@ class project_scrum_product_backlog(osv.osv):
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
             args=[]
-        if not context:
-            context={}
         if name:
             match = re.match('^S\(([0-9]+)\)$', name)
             if match:
@@ -173,8 +159,6 @@ class project_scrum_product_backlog(osv.osv):
         progress = {}
         if not ids:
             return res
-        if context is None:
-            context = {}
         for backlog in self.browse(cr, uid, ids, context=context):
             tot = 0.0
             prog = 0.0
@@ -197,48 +181,31 @@ class project_scrum_product_backlog(osv.osv):
 
     def button_cancel(self, cr, uid, ids, context=None):
         obj_project_task = self.pool.get('project.task')
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'cancel'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             obj_project_task.write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'cancelled'})
         return True
 
     def button_draft(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'draft'}, context=context)
         return True
 
     def button_open(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'open'}, context=context)
-        for (id, name) in self.name_get(cr, uid, ids):
-            message = _('Product Backlog ') + " '" + name + "' "+ _("is Open.")
-            self.log(cr, uid, id, message)
         return True
 
     def button_close(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         obj_project_task = self.pool.get('project.task')
         self.write(cr, uid, ids, {'state':'done'}, context=context)
         for backlog in self.browse(cr, uid, ids, context=context):
             obj_project_task.write(cr, uid, [i.id for i in backlog.tasks_id], {'state': 'done'})
-            message = _('Product Backlog ') + " '" + backlog.name + "' "+ _("is Closed.")
-            self.log(cr, uid, backlog.id, message)
         return True
 
     def button_pending(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         return True
 
     def button_postpone(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         for product in self.browse(cr, uid, ids, context=context):
             tasks_id = []
             for task in product.tasks_id:
@@ -283,8 +250,6 @@ class project_scrum_task(osv.osv):
 
     def _get_task(self, cr, uid, ids, context=None):
         result = {}
-        if context is None:
-            context = {}
         for line in self.pool.get('project.scrum.product.backlog').browse(cr, uid, ids, context=context):
             for task in line.tasks_id:
                 result[task.id] = True
@@ -319,7 +284,7 @@ class project_scrum_meeting(osv.osv):
         'question_blocks': fields.text('Blocks encountered'),
         'question_backlog': fields.text('Backlog Accurate'),
         'task_ids': fields.many2many('project.task', 'meeting_task_rel', 'metting_id', 'task_id', 'Tasks'),
-        'user_id': fields.related('sprint_id', 'scrum_master_id', type='many2one', relation='res.users', string='Responsible', readonly=True),
+        'user_id': fields.related('sprint_id', 'scrum_master_id', type='many2one', relation='res.users', string='Scrum Master', readonly=True),
     }
     #
     # TODO: Find the right sprint thanks to users and date
@@ -329,13 +294,11 @@ class project_scrum_meeting(osv.osv):
     }
 
     def button_send_to_master(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        meeting_id = self.browse(cr, uid, ids)[0]
+        meeting_id = self.browse(cr, uid, ids, context=context)[0]
         if meeting_id and meeting_id.sprint_id.scrum_master_id.user_email:
             res = self.email_send(cr, uid, ids, meeting_id.sprint_id.scrum_master_id.user_email)
             if not res:
-                raise osv.except_osv(_('Error !'), _(' Email Not send to the scrum master %s!' % meeting_id.sprint_id.scrum_master_id.name))
+                raise osv.except_osv(_('Error !'), _('Email notification could not be sent to the scrum master %s') % meeting_id.sprint_id.scrum_master_id.name)
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for scrum master defined on sprint.'))
         return True
@@ -344,26 +307,24 @@ class project_scrum_meeting(osv.osv):
         if context is None:
             context = {}
         context.update({'button_send_product_owner': True})
-        meeting_id = self.browse(cr, uid, ids)[0]
+        meeting_id = self.browse(cr, uid, ids, context=context)[0]
         if meeting_id.sprint_id.product_owner_id.user_email:
             res = self.email_send(cr,uid,ids,meeting_id.sprint_id.product_owner_id.user_email)
             if not res:
-                raise osv.except_osv(_('Error !'), _(' Email Not send to the product owner %s!' % meeting_id.sprint_id.product_owner_id.name))
+                raise osv.except_osv(_('Error !'), _('Email notification could not be sent to the product owner %s') % meeting_id.sprint_id.product_owner_id.name)
         else:
             raise osv.except_osv(_('Error !'), _('Please provide email address for product owner defined on sprint.'))
         return True
 
     def email_send(self, cr, uid, ids, email, context=None):
-        if context is None:
-            context = {}
         email_from = tools.config.get('email_from', False)
-        meeting_id = self.browse(cr,uid,ids)[0]
+        meeting_id = self.browse(cr, uid, ids, context=context)[0]
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         user_email = email_from or user.address_id.email  or email_from
         body = _('Hello ') + meeting_id.sprint_id.scrum_master_id.name + ",\n" + " \n" +_('I am sending you Daily Meeting Details of date')+ ' %s ' % (meeting_id.date)+ _('for the Sprint')+ ' %s\n' % (meeting_id.sprint_id.name)
         body += "\n"+ _('*Tasks since yesterday:')+ '\n_______________________%s' % (meeting_id.question_yesterday) + '\n' +_("*Task for Today:")+ '\n_______________________ %s\n' % (meeting_id.question_today )+ '\n' +_('*Blocks encountered:') +'\n_______________________ %s' % (meeting_id.question_blocks or _('No Blocks'))
         body += "\n\n"+_('Thank you')+",\n"+ user.name
-        sub_name = meeting_id.name or _('Scrum Meeting of')+ "%s" %meeting_id.date
+        sub_name = meeting_id.name or _('Scrum Meeting of %s') % meeting_id.date
         flag = tools.email_send(user_email , [email], sub_name, body, reply_to=None, openobject_id=str(meeting_id.id))
         if not flag:
             return False

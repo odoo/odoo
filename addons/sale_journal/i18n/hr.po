@@ -6,402 +6,44 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-08-03 06:04+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "Language: hr\n"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_journal_sale_stats
-msgid "Monthly sales"
-msgstr "Mjesečne prodaje"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_assigned
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_assigned
-msgid "Assigned packing"
-msgstr "Dodijeljeno pakiranje"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "assigned"
-msgstr "Dodijeljen"
-
-#. module: sale_journal
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nepravilno ime modela u definiciji radnje."
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Waiting Schedule"
-msgstr "Raspored čekanja"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,invoice_state:0
-msgid "to be invoiced"
-msgstr "Treba izdati račun"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_sale_journal
-#: view:sale_journal.sale.journal:0
-#: field:stock.picking,sale_journal_id:0
-msgid "Sale Journal"
-msgstr "Prodajni Pregled"
-
-#. module: sale_journal
-#: field:sale_journal.sale.journal,sale_stats_ids:0
-msgid "Sale Stats"
-msgstr "Prodajne statistike"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "waiting"
-msgstr "Čekanje"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Set to Draft"
-msgstr "Postavi na Nacrt"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,date:0
-#: field:sale_journal.sale.journal,date:0
-msgid "Journal date"
-msgstr "Datum Pregleda"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice_method
-#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_menu
-msgid "Packing by Invoice Method"
-msgstr "Pakiranje prema načinu izrade Računa"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking
-msgid "Packing Journals"
-msgstr "Pregledi Pakiranja"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Notes"
-msgstr "Bilješke"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_my
-msgid "My open journals"
-msgstr "Moji otvoreni Pregledi"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,count:0
-#: field:sale_journal.picking.stats,count:0
-#: field:sale_journal.sale.stats,count:0
-msgid "# of Lines"
-msgstr "# Linija"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal_all
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales_all_open
-msgid "All Open Journals"
-msgstr "Svi otvoreni Pregledi"
-
-#. module: sale_journal
-#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
-msgid "Managing sales and deliveries by journal"
-msgstr "Upravljanje prodajom i narudžbama prema Pregledu"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "done"
-msgstr "Gotovo"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,price_average:0
-#: field:sale_journal.picking.stats,price_average:0
-#: field:sale_journal.sale.stats,price_average:0
-msgid "Average Price"
-msgstr "Prosječna cijena"
-
-#. module: sale_journal
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za Arhitekturu Prikaza!"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Grupirano"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,state:0
-#: field:sale_journal.picking.stats,state:0
-#: field:sale_journal.sale.journal,state:0
-msgid "State"
-msgstr "Stanje"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting_all
-#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales_all_month
-msgid "All Months"
-msgstr "Svi mjeseci"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,price_total:0
-#: field:sale_journal.picking.stats,price_total:0
-#: field:sale_journal.sale.stats,price_total:0
-msgid "Total Price"
-msgstr "Ukupna cijena"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal
-msgid "Packing journals"
-msgstr "Pregledi Pakiranja"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales
-msgid "Reporting"
-msgstr "Izvještavanje"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree_my
-msgid "My open packing journals"
-msgstr "Moji otvoreni Pregledi pakiranja"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_sale_stats
-msgid "Sales Orders by Journal"
-msgstr "Prodajne narudžbe prema Pregledu"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_all
-msgid "Open journals"
-msgstr "Otvoreni Pregledi"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-msgid "Packing"
-msgstr "Pakiranje"
-
-#. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid "The type of journal used for sales and packing."
-msgstr "Tip Pregleda koji se koristi za prodaju i pakiranje."
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,invoice_state:0
-msgid "None"
-msgstr "Nijedan"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_sale_sale_stats_open_menu_month
-msgid "Sales by journal (this month)"
-msgstr "Prodaje prema Pregledu (Ovaj mjesec)"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Manual in progress"
-msgstr "Ručni postupak u tijeku"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree
-#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree_all
-#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_all
-#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_month
-msgid "Packing by journal"
-msgstr "Pakiranje prema Pregledu"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-msgid "Cancel Packing"
-msgstr "Otkaži Pakiranje"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_confirmed
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_confirmed
-msgid "Confirmed packing"
-msgstr "Potvrđeno Pakiranje"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "In progress"
-msgstr "U Tijeku"
-
-#. module: sale_journal
-#: view:sale_journal.picking.stats:0
-msgid "Packing by journals"
-msgstr "Pakiranje prema Pregledima"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,name:0
-#: field:sale_journal.picking.stats,name:0
-#: field:sale_journal.sale.stats,name:0
-msgid "Month"
-msgstr "Mjesec"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,invoice_state:0
-msgid "Invoice state"
-msgstr "Stanje računa"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_all
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_month
-#: view:sale_journal.invoice.type.stats:0
-msgid "Packing by invoice method"
-msgstr "Pakiranje prema načinu izrade Računa"
-
-#. module: sale_journal
-#: field:sale_journal.sale.stats,state:0
-msgid "Order State"
-msgstr "Stanje Narudžbe"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Shipping Exception"
-msgstr "Izuzetak kod Otpreme"
-
-#. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
-#: field:sale_journal.picking.journal,note:0
-#: field:sale_journal.sale.journal,note:0
 msgid "Note"
 msgstr "Bilješka"
 
 #. module: sale_journal
-#: selection:sale_journal.picking.journal,state:0
-#: selection:sale_journal.sale.journal,state:0
-msgid "Draft"
-msgstr "Nacrt"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "cancel"
-msgstr "Odustani"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Invoice Exception"
-msgstr "Izuzetak u izdavanju Računa"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,date_validation:0
-#: field:sale_journal.sale.journal,date_validation:0
-msgid "Validation date"
-msgstr "Datum Vrednovanja"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "draft"
-msgstr "Nacrt"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Aktivan"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_order_draft
-msgid "Draft sales"
-msgstr "Skiciraj prodaje"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Quotation"
-msgstr "Ponuda"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal
-msgid "Sales Journals"
-msgstr "Prodajni Pregledi"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_tree
-msgid "sale_journal.invoice.type.tree"
-msgstr "sale_journal.invoice.type.tree"
-
-#. module: sale_journal
-#: view:sale_journal.sale.journal:0
-msgid "Confirm Sales"
-msgstr "Potvrdi prodaje"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,date_created:0
-#: field:sale_journal.picking.journal,state:0
-#: field:sale_journal.sale.journal,date_created:0
-msgid "Creation date"
-msgstr "Datum stvaranja"
-
-#. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Method"
-msgstr "Način Izrade Računa"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,code:0
-#: field:sale_journal.sale.journal,code:0
-msgid "Code"
-msgstr "Kod"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Open Journal"
-msgstr "Otvoreni Pregled"
-
-#. module: sale_journal
-#: view:sale_journal.sale.journal:0
-msgid "Sales"
-msgstr "Prodaje"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_picking_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting
-#: view:sale_journal.picking.journal:0
-msgid "Packing Journal"
-msgstr "Pregled Pakiranja"
-
-#. module: sale_journal
-#: selection:sale_journal.picking.journal,state:0
-#: selection:sale_journal.sale.journal,state:0
-#: selection:sale_journal.sale.stats,state:0
-msgid "Done"
-msgstr "Gotovo"
-
-#. module: sale_journal
-#: selection:sale_journal.sale.stats,state:0
-msgid "Cancel"
-msgstr "Poništi"
-
-#. module: sale_journal
-#: field:sale_journal.picking.journal,picking_stats_ids:0
-msgid "Journal Stats"
-msgstr "Statistike Pregleda"
-
-#. module: sale_journal
-#: selection:sale_journal.picking.journal,state:0
-#: selection:sale_journal.sale.journal,state:0
-msgid "Open"
-msgstr "Otvori"
-
-#. module: sale_journal
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and picking."
 msgstr ""
-"Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr ""
+
+#. module: sale_journal
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used on partners, sales order and delivery orders. You can "
+"create journal to group your invoicing according to customer's needs: daily, "
+"each wednesday, monthly, etc."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -409,26 +51,69 @@ msgid "Sales & Purchases"
 msgstr "Prodaje i Kupnje"
 
 #. module: sale_journal
-#: field:sale_journal.picking.journal,user_id:0
-#: field:sale_journal.sale.journal,user_id:0
-msgid "Responsible"
-msgstr "Odgovoran"
+#: help:sale_journal.invoice.type,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the invoice "
+"type without removing it."
+msgstr ""
 
 #. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal_my
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales_my_open
-msgid "My Open Journals"
-msgstr "Moji otvoreni Pregledi"
+#: view:sale_journal.invoice.type:0
+msgid "Notes"
+msgstr "Bilješke"
 
 #. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open
-msgid "Statistics on packing to invoice"
-msgstr "Statistike vezane uz postupak od pakiranja do izdavanja Računa"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Method"
+msgstr "Način Izrade Računa"
 
 #. module: sale_journal
-#: view:sale_journal.sale.journal:0
-msgid "Cancel Sales"
-msgstr "Otkaži Prodaje"
+#: model:ir.module.module,description:sale_journal.module_meta_information
+msgid ""
+"\n"
+"    The sales journal modules allows you to categorise your\n"
+"    sales and deliveries (picking lists) between different journals.\n"
+"    This module is very helpful for bigger companies that\n"
+"    works by departments.\n"
+"\n"
+"    You can use journal for different purposes, some examples:\n"
+"    * isolate sales of different departments\n"
+"    * journals for deliveries by truck or by UPS\n"
+"\n"
+"    Journals have a responsible and evolves between different status:\n"
+"    * draft, open, cancel, done.\n"
+"\n"
+"    Batch operations can be processed on the different journals to\n"
+"    confirm all sales at once, to validate or invoice packing, ...\n"
+"\n"
+"    It also supports batch invoicing methods that can be configured by\n"
+"    partners and sales orders, examples:\n"
+"    * daily invoicing,\n"
+"    * monthly invoicing, ...\n"
+"\n"
+"    Some statistics by journals are provided.\n"
+"    "
+msgstr ""
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "Nije grupirano"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Grupirano"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Način Izrade Računa"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -439,116 +124,276 @@ msgid "Invoice Type"
 msgstr "Tip Računa"
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,invoice_state:0
-msgid "invoiced"
-msgstr "Izdan račun"
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Aktivan"
 
 #. module: sale_journal
-#: selection:sale_journal.invoice.type.stats,state:0
-#: selection:sale_journal.picking.stats,state:0
-msgid "confirmed"
-msgstr "Potvrđen"
+#: model:ir.model,name:sale_journal.model_res_partner
+msgid "Partner"
+msgstr ""
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_picking_stats
-msgid "Packing lists by Journal"
-msgstr "Tovarne liste prema Pregledu"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type.stats,quantity:0
-#: field:sale_journal.picking.stats,quantity:0
-#: field:sale_journal.sale.stats,quantity:0
-msgid "Quantities"
-msgstr "Količine"
-
-#. module: sale_journal
-#: field:sale.order,journal_id:0
-#: view:sale_journal.picking.journal:0
-#: field:sale_journal.picking.journal,name:0
-#: field:sale_journal.picking.stats,journal_id:0
-#: view:sale_journal.sale.journal:0
-#: field:sale_journal.sale.journal,name:0
-#: field:sale_journal.sale.stats,journal_id:0
-#: field:stock.picking,journal_id:0
-msgid "Journal"
-msgstr "Pregled"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-#: field:sale_journal.invoice.type.stats,invoice_type_id:0
-msgid "Invoicing method"
-msgstr "Način Izrade Računa"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting_this
-#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales_this_month
-msgid "This Month"
-msgstr "Ovaj mjesec"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales
-#: model:ir.ui.menu,name:sale_journal.menu_sale_sale_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_sale_sale_stats_open_menu
-#: view:sale_journal.sale.stats:0
-msgid "Sales by Journal"
-msgstr "Prodaje po Pregledu"
-
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoicing Methods"
-msgstr "Načini Izrade Računa"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Non grouped"
-msgstr "Nije grupirano"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_open
-msgid "Packing to invoice"
-msgstr "Od pakiranja do izrade Računa"
-
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Journal Information"
-msgstr "Obavjest o Pregledu"
-
-#. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type_stats
-msgid "Stats on packing by invoice method"
-msgstr "Statistike o Pakiranju prema načinu izrade Računa"
-
-#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
 msgstr "Tipovi Računa"
 
 #. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "States"
-msgstr "Stanja"
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr ""
 
 #. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
-#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
-msgid "Packing by Journal"
-msgstr "Pakiranje prema Pregledu"
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "Upravljanje prodajom i narudžbama prema Pregledu"
 
-#. module: sale_journal
-#: view:sale_journal.picking.journal:0
-#: view:sale_journal.sale.journal:0
-msgid "Close Journal"
-msgstr "Zatvori Pregled"
+#~ msgid "Assigned packing"
+#~ msgstr "Dodijeljeno pakiranje"
 
-#. module: sale_journal
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice
-msgid "Packing to Invoice"
-msgstr "Od pakiranja do izrade Računa"
+#~ msgid "assigned"
+#~ msgstr "Dodijeljen"
 
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_order_approved
-msgid "Approved sales"
-msgstr "Dozvoljene prodaje"
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nepravilno ime modela u definiciji radnje."
+
+#~ msgid "Waiting Schedule"
+#~ msgstr "Raspored čekanja"
+
+#~ msgid "to be invoiced"
+#~ msgstr "Treba izdati račun"
+
+#~ msgid "Sale Journal"
+#~ msgstr "Prodajni Pregled"
+
+#~ msgid "Sale Stats"
+#~ msgstr "Prodajne statistike"
+
+#~ msgid "waiting"
+#~ msgstr "Čekanje"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Postavi na Nacrt"
+
+#~ msgid "Journal date"
+#~ msgstr "Datum Pregleda"
+
+#~ msgid "Packing by Invoice Method"
+#~ msgstr "Pakiranje prema načinu izrade Računa"
+
+#~ msgid "Packing Journals"
+#~ msgstr "Pregledi Pakiranja"
+
+#~ msgid "My open journals"
+#~ msgstr "Moji otvoreni Pregledi"
+
+#~ msgid "# of Lines"
+#~ msgstr "# Linija"
+
+#~ msgid "All Open Journals"
+#~ msgstr "Svi otvoreni Pregledi"
+
+#~ msgid "done"
+#~ msgstr "Gotovo"
+
+#~ msgid "Average Price"
+#~ msgstr "Prosječna cijena"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za Arhitekturu Prikaza!"
+
+#~ msgid "State"
+#~ msgstr "Stanje"
+
+#~ msgid "All Months"
+#~ msgstr "Svi mjeseci"
+
+#~ msgid "Total Price"
+#~ msgstr "Ukupna cijena"
+
+#~ msgid "Packing journals"
+#~ msgstr "Pregledi Pakiranja"
+
+#~ msgid "Reporting"
+#~ msgstr "Izvještavanje"
+
+#~ msgid "My open packing journals"
+#~ msgstr "Moji otvoreni Pregledi pakiranja"
+
+#~ msgid "Sales Orders by Journal"
+#~ msgstr "Prodajne narudžbe prema Pregledu"
+
+#~ msgid "Open journals"
+#~ msgstr "Otvoreni Pregledi"
+
+#~ msgid "Packing"
+#~ msgstr "Pakiranje"
+
+#~ msgid "The type of journal used for sales and packing."
+#~ msgstr "Tip Pregleda koji se koristi za prodaju i pakiranje."
+
+#~ msgid "None"
+#~ msgstr "Nijedan"
+
+#~ msgid "Sales by journal (this month)"
+#~ msgstr "Prodaje prema Pregledu (Ovaj mjesec)"
+
+#~ msgid "Manual in progress"
+#~ msgstr "Ručni postupak u tijeku"
+
+#~ msgid "Packing by journal"
+#~ msgstr "Pakiranje prema Pregledu"
+
+#~ msgid "Cancel Packing"
+#~ msgstr "Otkaži Pakiranje"
+
+#~ msgid "Confirmed packing"
+#~ msgstr "Potvrđeno Pakiranje"
+
+#~ msgid "In progress"
+#~ msgstr "U Tijeku"
+
+#~ msgid "Packing by journals"
+#~ msgstr "Pakiranje prema Pregledima"
+
+#~ msgid "Month"
+#~ msgstr "Mjesec"
+
+#~ msgid "Invoice state"
+#~ msgstr "Stanje računa"
+
+#~ msgid "Packing by invoice method"
+#~ msgstr "Pakiranje prema načinu izrade Računa"
+
+#~ msgid "Order State"
+#~ msgstr "Stanje Narudžbe"
+
+#~ msgid "Shipping Exception"
+#~ msgstr "Izuzetak kod Otpreme"
+
+#~ msgid "Draft"
+#~ msgstr "Nacrt"
+
+#~ msgid "cancel"
+#~ msgstr "Odustani"
+
+#~ msgid "Invoice Exception"
+#~ msgstr "Izuzetak u izdavanju Računa"
+
+#~ msgid "Validation date"
+#~ msgstr "Datum Vrednovanja"
+
+#~ msgid "draft"
+#~ msgstr "Nacrt"
+
+#~ msgid "Draft sales"
+#~ msgstr "Skiciraj prodaje"
+
+#~ msgid "Quotation"
+#~ msgstr "Ponuda"
+
+#~ msgid "Sales Journals"
+#~ msgstr "Prodajni Pregledi"
+
+#~ msgid "sale_journal.invoice.type.tree"
+#~ msgstr "sale_journal.invoice.type.tree"
+
+#~ msgid "Confirm Sales"
+#~ msgstr "Potvrdi prodaje"
+
+#~ msgid "Creation date"
+#~ msgstr "Datum stvaranja"
+
+#~ msgid "Code"
+#~ msgstr "Kod"
+
+#~ msgid "Open Journal"
+#~ msgstr "Otvoreni Pregled"
+
+#~ msgid "Sales"
+#~ msgstr "Prodaje"
+
+#~ msgid "Packing Journal"
+#~ msgstr "Pregled Pakiranja"
+
+#~ msgid "Cancel"
+#~ msgstr "Poništi"
+
+#~ msgid "Journal Stats"
+#~ msgstr "Statistike Pregleda"
+
+#~ msgid "Open"
+#~ msgstr "Otvori"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv Objekta mora početi s x_ i ne smije sadržavati bilo koji posebni znak !"
+
+#~ msgid "Responsible"
+#~ msgstr "Odgovoran"
+
+#~ msgid "My Open Journals"
+#~ msgstr "Moji otvoreni Pregledi"
+
+#~ msgid "Statistics on packing to invoice"
+#~ msgstr "Statistike vezane uz postupak od pakiranja do izdavanja Računa"
+
+#~ msgid "Cancel Sales"
+#~ msgstr "Otkaži Prodaje"
+
+#~ msgid "confirmed"
+#~ msgstr "Potvrđen"
+
+#~ msgid "Packing lists by Journal"
+#~ msgstr "Tovarne liste prema Pregledu"
+
+#~ msgid "Quantities"
+#~ msgstr "Količine"
+
+#~ msgid "Journal"
+#~ msgstr "Pregled"
+
+#~ msgid "This Month"
+#~ msgstr "Ovaj mjesec"
+
+#~ msgid "Sales by Journal"
+#~ msgstr "Prodaje po Pregledu"
+
+#~ msgid "Invoicing Methods"
+#~ msgstr "Načini Izrade Računa"
+
+#~ msgid "Packing to invoice"
+#~ msgstr "Od pakiranja do izrade Računa"
+
+#~ msgid "Journal Information"
+#~ msgstr "Obavjest o Pregledu"
+
+#~ msgid "Stats on packing by invoice method"
+#~ msgstr "Statistike o Pakiranju prema načinu izrade Računa"
+
+#~ msgid "States"
+#~ msgstr "Stanja"
+
+#~ msgid "Packing by Journal"
+#~ msgstr "Pakiranje prema Pregledu"
+
+#~ msgid "Close Journal"
+#~ msgstr "Zatvori Pregled"
+
+#~ msgid "Packing to Invoice"
+#~ msgstr "Od pakiranja do izrade Računa"
+
+#~ msgid "Approved sales"
+#~ msgstr "Dozvoljene prodaje"
+
+#~ msgid "Done"
+#~ msgstr "Gotovo"
+
+#~ msgid "invoiced"
+#~ msgstr "Izdan račun"
+
+#~ msgid "Monthly sales"
+#~ msgstr "Mjesečne prodaje"

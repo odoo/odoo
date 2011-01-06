@@ -100,6 +100,9 @@
                                  invisible="context.get('invisible_section', True)" />
                              <field name="user_id" />
                              <field name="state" />
+                             <button name="case_cancel" string="Cancel"
+                                 states="draft,open,pending" type="object"
+                                 icon="gtk-cancel" />
                              <button name="case_open" string="Open"
                                  states="draft,pending" type="object"
                                  icon="gtk-go-forward" />
@@ -113,9 +116,6 @@
                              <button name="case_escalate" string="Escalate"
                                  states="open,draft,pending" type="object"
                                  icon="gtk-go-up" />
-                             <button name="case_cancel" string="Cancel"
-                                 states="draft,open,pending" type="object"
-                                 icon="gtk-cancel" />
                          </tree>
                     </field>
                 </page>

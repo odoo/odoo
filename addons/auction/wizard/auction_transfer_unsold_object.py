@@ -29,7 +29,7 @@ class auction_transfer_unsold_object(osv.osv):
         _name = 'auction.transfer.unsold.object'
         _description = 'To transfer unsold objects'
 
-        def _start(self, cr, uid, context):
+        def _start(self, cr, uid, context=None):
             """ 
             To initialize auction_id_from
             @param self: The object pointer.
@@ -40,7 +40,7 @@ class auction_transfer_unsold_object(osv.osv):
             @return: auction_id_from
             """
             lots_obj = self.pool.get('auction.lots')
-            rec = lots_obj.browse(cr, uid, context['active_id'], context)
+            rec = lots_obj.browse(cr, uid, context.get('active_id', False), context=context)
             auction_from = rec and rec.auction_id.id or False
             return  auction_from
         
@@ -53,7 +53,7 @@ class auction_transfer_unsold_object(osv.osv):
             'auction_id_from': _start,
         }
         
-        def transfer_unsold_object(self, cr, uid, ids, context):
+        def transfer_unsold_object(self, cr, uid, ids, context=None):
             """ 
             To Transfer the unsold object
             @param self: The object pointer.
@@ -63,15 +63,16 @@ class auction_transfer_unsold_object(osv.osv):
             @param context: A standard dictionary 
             @return: 
             """
+            if context is None: context = {}
             bid_line_obj = self.pool.get('auction.bid_line')
             lots_obj = self.pool.get('auction.lots')
             lot_history_obj = self.pool.get('auction.lot.history')
-            line_ids= bid_line_obj.search(cr, uid, [('lot_id','in',context['active_ids'])])
+            line_ids= bid_line_obj.search(cr, uid, [('lot_id','in',context.get('active_ids', []))])
             bid_line_obj.unlink(cr, uid, line_ids)
             
-            res = self.browse(cr, uid, ids)        
+            res = self.browse(cr, uid, ids, context=context)        
             unsold_ids = lots_obj.search(cr,uid,[('auction_id','=',res[0].auction_id_from.id),('state','=','unsold')])
-            for rec in lots_obj.browse(cr, uid, unsold_ids, context):
+            for rec in lots_obj.browse(cr, uid, unsold_ids, context=context):
                 new_id = lot_history_obj.create(cr, uid, {'auction_id':rec.auction_id.id,'lot_id':rec.id,'price': rec.obj_ret, 'name': rec.auction_id.auction1})
                 up_auction = lots_obj.write(cr, uid, [rec.id], {'auction_id': res[0].auction_id_to.id,
                                                                                                 'obj_ret':None,
@@ -81,6 +82,6 @@ class auction_transfer_unsold_object(osv.osv):
                                                                                                 'ach_inv_id':None,
                                                                                                 'sel_inv_id':None,
                                                                                                 'state':'draft'})
-            return {}    
+            return {'type': 'ir.actions.act_window_close'}    
         
 auction_transfer_unsold_object()

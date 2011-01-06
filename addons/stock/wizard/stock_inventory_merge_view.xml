@@ -12,7 +12,7 @@
 				    	<label string="Do you want to merge theses inventories ?"/>
 				 <separator colspan="4"/>
     				<group colspan="4" col="6">
-					<button special="cancel" string="Cancel" icon='gtk-cancel'/>
+					<button special="cancel" string="_Cancel" icon='gtk-cancel'/>
 					<button name="do_merge" string="Yes" type="object" icon="gtk-apply"/>
 					</group>			
 				</form>
@@ -22,6 +22,7 @@
 			res_model="stock.inventory.merge"
 			src_model="stock.inventory"
 			view_mode="form"
+                        multi="True"
 			target="new"        
 			key2="client_action_multi"    
 			id="action_view_stock_merge_inventories"/>	

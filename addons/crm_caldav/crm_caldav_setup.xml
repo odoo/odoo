@@ -1,0 +1,287 @@
+<?xml version="1.0"?>
+<openerp>
+<data noupdate="1">
+
+    <record id="basic_calendar_meetings0" model="basic.calendar">
+        <field eval="1" name="has_webcal"/>
+        <field name="description">Meetings per user</field>
+        <field name="calendar_color">#1E25FF</field>
+        <field model="document.directory" name="collection_id" ref="caldav.document_directory_c0"/>
+        <field name="type">vevent</field>
+        <field name="name">Meetings</field>
+    </record>
+
+    <record id="basic_calendar_lines_attendee0" model="basic.calendar.lines">
+        <field name="calendar_id" ref="basic_calendar_meetings0"/>
+        <field name="domain">[]</field>
+        <field name="name">attendee</field>
+        <field name="object_id" ref="base_calendar.model_calendar_attendee"/>
+    </record>
+
+    <record id="basic_calendar_lines_valarm0" model="basic.calendar.lines">
+        <field name="calendar_id" ref="basic_calendar_meetings0"/>
+        <field name="domain">[]</field>
+        <field name="name">valarm</field>
+        <field name="object_id" ref="base_calendar.model_calendar_alarm"/>
+    </record>
+
+    <record id="basic_calendar_lines_vevent0" model="basic.calendar.lines">
+        <field name="calendar_id" ref="basic_calendar_meetings0"/>
+        <field name="domain">[('user_id','=', dctx_user_id)]</field>
+        <field name="name">vevent</field>
+        <field name="object_id" ref="crm.model_crm_meeting"/>
+    </record>
+
+
+    <record id="basic_calendar_fields_1" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_attendee"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_alarm_attendee_ids"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_2" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_trigger_duration"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_res_alarm_trigger_duration"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_3" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_description"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_alarm_description"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_4" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_attach"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_alarm_attach"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_5" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_trigger_occurs"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_res_alarm_trigger_occurs"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_6" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_trigger_interval"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_res_alarm_trigger_interval"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_7" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_summary"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_alarm_name"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_8" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_duration"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_res_alarm_duration"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_9" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_repeat"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_res_alarm_repeat"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_10" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_action"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_alarm_action"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_11" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_alarm_trigger_related"/>
+        <field name="type_id" ref="basic_calendar_lines_valarm0"/>
+        <field name="field_id" ref="base_calendar.field_res_alarm_trigger_related"/>
+        <field name="fn">field</field>
+    </record>
+
+    <record id="basic_calendar_fields_12" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_organizer"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="crm.field_crm_meeting_organizer"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_13" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_uid"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_id"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_14" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_recurrence-id"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_recurrent_id"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_15" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_vtimezone"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_vtimezone"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_16" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_attendee"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="crm.field_crm_meeting_attendee_ids"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_17" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_rrule"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_rrule"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_18" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_dtend"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_date_deadline"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_19" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_valarm"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_base_calendar_alarm_id"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_20" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_location"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_location"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_21" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_exrule"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_exrule"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_22" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_status"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="crm.field_crm_meeting_state"/>
+        <field name="mapping">{'tentative': 'draft', 'confirmed': 'open', 'cancelled': 'cancel'}</field>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_23" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_exdate"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_exdate"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_24" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_dtstamp"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_date"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_25" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_description"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_description"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_26" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_dtstart"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_date"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_27" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_class"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_class"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_28" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_created"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_create_date"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_29" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_url"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_base_calendar_url"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_30" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_event_summary"/>
+        <field name="type_id" ref="basic_calendar_lines_vevent0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_event_name"/>
+        <field name="fn">field</field>
+    </record>
+
+    <record id="basic_calendar_fields_31" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_cn"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_cn"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_32" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_sent-by"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_sent_by"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_33" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_language"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_language"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_34" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_delegated-from"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_delegated_from"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_35" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_member"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_member"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_36" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_cutype"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_cutype"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_37" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_role"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_role"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_38" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_partstat"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_state"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_39" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_delegated-to"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_delegated_to"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_40" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_dir"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_dir"/>
+        <field name="fn">field</field>
+    </record>
+    <record id="basic_calendar_fields_41" model="basic.calendar.fields">
+        <field name="name" ref="caldav.field_attendee_rsvp"/>
+        <field name="type_id" ref="basic_calendar_lines_attendee0"/>
+        <field name="field_id" ref="base_calendar.field_calendar_attendee_rsvp"/>
+        <field name="fn">field</field>
+    </record>
+
+</data>
+</openerp>

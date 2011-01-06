@@ -2,7 +2,15 @@
 <openerp>
     <data>
 
-        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17" groups="base.group_system,base.res_groups_email_template_admin"/>
+        <menuitem
+            name="Marketing"
+            icon="terp-crm"
+            id="base.marketing_menu"
+            sequence="17"
+            groups="marketing.group_marketing_user,marketing.group_marketing_manager"
+            web_icon="images/marketing.png"
+            web_icon_hover="images/marketing-hover.png"/>
+
 
         <record id="view_marketing_installer" model="ir.ui.view">
             <field name="name">marketing.installer.view</field>
@@ -50,6 +58,7 @@
         <record id="marketing_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_marketing_installer"/>
             <field name="sequence">3</field>
+            <field name="restart">always</field>
         </record>
 
     </data>

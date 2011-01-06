@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
-            <menuitem icon="STOCK_PREFERENCES" id="base.menu_tools" name="Tools" sequence="28"/>
-            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools"
-                        groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user,group_survey_user" sequence="2"/>
+            <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
             <menuitem name="Define Surveys" id="menu_define_survey"
-                 groups="base.group_tool_manager,base.group_tool_user,base.group_system,group_survey_user"
+                 groups="base.group_tool_manager"
                  parent="menu_surveys" />
-            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user,group_survey_user"/>
+            <menuitem id="menu_answer_surveys" name="Answer Surveys" parent="menu_surveys" groups="base.group_tool_user,base.group_tool_manager,group_survey_user"/>
             <menuitem name="Reporting" parent="base.menu_tools"
                 id="base.menu_lunch_reporting" sequence="6"/>
             <menuitem name="Surveys" id="menu_reporting" parent="base.menu_lunch_reporting" sequence="2"/>
@@ -184,6 +181,8 @@
                             </field>
                             <group col="9" colspan="4">
                                 <field name="state"/>
+                                <button name="survey_cancel"
+                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
                                 <button name="survey_draft"
                                     string="Set to draft" states="cancel,close" type="object"
                                     icon="gtk-new"/>
@@ -191,8 +190,6 @@
                                     states="draft" type="object" icon="gtk-go-forward"/>
                                 <button name="survey_close"
                                     string="Close" states="open" type="object" icon="gtk-close"/>
-                                <button name="survey_cancel"
-                                    string="Cancel" states="open" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Other">
@@ -206,6 +203,9 @@
                             </group>
                             <separator colspan="4" string="Survey Details"/>
                             <field name="note" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="Invited User">
+                            <field name="invited_user_ids" nolabel="1" readonly="1"/>
                         </page>
                         <page string="History">
                             <field name="date_open" select="1"/>
@@ -261,20 +261,20 @@
             <field name="arch" type="xml">
                 <search string="Search Survey">
                    <group col='10' colspan='4'>
-                        <filter icon="terp-document-new" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
+                        <filter icon="terp-check" string="Current" domain="[('state','in', ('draft', 'open'))]"/>
                         <separator orientation="vertical"/>
                         <field name="title" select="1"/>
                         <field name="type" select="1" widget="selection"/>
-                        <field name="responsible_id" select="1" default="1">
+                        <field name="responsible_id" select="1">
                             <filter string="MY" icon="terp-personal" domain="[('responsible_id','=',uid)]" help="My Survey(s)"/>
                         </field>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
-	                   <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'responsible_id'}"/>
+                       <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'responsible_id'}"/>
                         <separator orientation="vertical"/>
-	                   <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'type'}"/>
-	                   <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
+                       <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'type'}"/>
+                       <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
                    </group>
                </search>
             </field>
@@ -287,12 +287,13 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="survey_tree"></field>
             <field name="search_view_id" ref="survey_search"/>
+            <field name="help">You can create survey for different purposes: recruitment interviews, employee's periodical evaluations, marketing campaigns, etc. A survey is made of pages containing questions of several types: text, multiple choices, etc. You can edit survey manually or click on the 'Edit Survey' for a WYSIWYG interface.</field>
         </record>
 
 
         <menuitem name="Surveys" id="menu_survey_form"
             action="action_survey_form1" parent="menu_define_survey"
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system,group_survey_user"/>
+            groups="base.group_tool_manager"/>
 
         <!--
             Survey Pages
@@ -492,7 +493,7 @@
 
         <menuitem name="Survey Pages" id="menu_survey_page_form1"
             action="action_survey_page_form" parent='menu_define_survey'
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system,group_survey_user"/>
+            groups="base.group_tool_manager"/>
 
         <record model="ir.ui.view" id="survey_page_wizard_test1">
             <field name="name">survey_page_wizard_test</field>
@@ -1062,10 +1063,10 @@
                      <field name="response" readonly="1"/>
                     <group colspan="4" col="6">
                      <field name="state"/>
-                         <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
+                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
+                        <button name="survey_req_draft" string="Set to Draft" states="cancel,done" type="object" icon="gtk-new"/>
                         <button name="survey_req_waiting_answer" string="Watting Answer" states="draft" type="object" icon="gtk-new"/>
                         <button name="survey_req_done" string="Done" states="waiting_answer" type="object" icon="gtk-ok"/>
-                        <button name="survey_req_cancel" string="Cancelled" states="waiting_answer" type="object" icon="gtk-cancel"/>
                     </group>
                 </form>
             </field>
@@ -1098,17 +1099,17 @@
                         <separator orientation="vertical"/>
                         <field name="survey_id" widget="selection" select="1"/>
                         <field name="email" select="1"/>
-                        <field name="user_id" select="1" default="1">
+                        <field name="user_id" select="1">
                         <filter string="MY" icon="terp-personal" domain="[('user_id','=',uid)]"/>
                         </field>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="20">
-	                    <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="User" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
-	                    <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>
+                        <filter string="Survey" icon="terp-stock_align_left_24" domain="[]"  context="{'group_by':'survey_id'}"/>
                         <separator orientation="vertical"/>
-	                    <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]"  context="{'group_by':'state'}"/>
                     </group>
                </search>
             </field>
@@ -1126,7 +1127,7 @@
 
         <menuitem name="Survey Requests" id="menu_survey_type_form1"
             action="action_survey_request_tree" parent='menu_answer_surveys'
-            groups="base.group_tool_manager,base.group_tool_user,base.group_system,group_survey_user"/>
+            groups="base.group_tool_manager"/>
 
         <!--
             Survey Type
@@ -1193,7 +1194,7 @@
             src_model="survey.question"/>
 
         <menuitem name="Answer a Survey" id="menu_run_survey_form" sequence="2"
-            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_manager,base.group_tool_user,base.group_system,base.group_user,group_survey_user" icon="STOCK_INDEX"/>
+            action="action_view_survey_name" parent="menu_answer_surveys"            groups="base.group_tool_user,base.group_tool_manager,group_survey_user" icon="STOCK_INDEX"/>
 
     </data>
 </openerp>

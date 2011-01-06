@@ -21,14 +21,12 @@
 import time
 from report import report_sxw
 
-
 rml_parents = {
     'tr': 1,
     'li': 1,
     'story': 0,
     'section': 0
 }
-
 
 class sale_order_1(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
@@ -43,13 +41,12 @@ class sale_order_1(report_sxw.rml_parse):
     def sale_order_lines(self, sale_order):
         result = []
         sub_total = {}
-        info = []
         order_lines = []
         res = {}
-
-        ids = self.pool.get('sale.order.line').search(self.cr, self.uid, [('order_id', '=', sale_order.id)])
+        obj_order_line = self.pool.get('sale.order.line')
+        ids = obj_order_line.search(self.cr, self.uid, [('order_id', '=', sale_order.id)])
         for id in range(0, len(ids)):
-            order = self.pool.get('sale.order.line').browse(self.cr, self.uid, ids[id], self.context.copy())
+            order = obj_order_line.browse(self.cr, self.uid, ids[id], self.context.copy())
             order_lines.append(order)
 
         i = 1
@@ -131,6 +128,7 @@ class sale_order_1(report_sxw.rml_parse):
 
             result.append(res)
         return result
+
 report_sxw.report_sxw('report.sale.order.layout', 'sale.order', 'addons/sale_layout/report/report_sale_layout.rml', parser=sale_order_1)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -44,8 +44,6 @@ class project_compute_phases(osv.osv_memory):
         """
         Compute the phases for scheduling.
         """
-        if context is None:
-            context = {}
         project_pool = self.pool.get('project.project')
         data = self.read(cr, uid, ids, [], context=context)[0]
         if not data['project_id'] and data['target_project'] == 'one':
@@ -67,10 +65,11 @@ class project_compute_phases(osv.osv_memory):
             context = {}
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
-        result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_project_phase_list')
+        result = mod_obj._get_id(cr, uid, 'project_long_term', 'act_project_phase')
         id = mod_obj.read(cr, uid, [result], ['res_id'])[0]['res_id']
         result = act_obj.read(cr, uid, [id], context=context)[0]
-        result['context'] = {"search_default_project_id":data['project_id'], "search_default_responsible_id":uid, "search_default_current": 1}
+        result['target'] = 'current'
+        result['context'] = {"search_default_project_id":data['project_id'], "default_project_id":data['project_id'], "search_default_responsible_id":uid, "search_default_current": 1}
         return result
 
 project_compute_phases()

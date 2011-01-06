@@ -1,5 +1,5 @@
 -
-  In order to test the 'Make Invoices' wizard of sale module in the Open-ERP, 
+  In order to test the 'Make Invoices' wizard of sale module in the Open-ERP,
   I create two Sale order,group them and create invoice.
 -
   I create a Sale Order for Slider Mobile for qty 100 having order_policy manual.
@@ -28,7 +28,7 @@
     shop_id: sale.shop
 -
   I confirm the Sale Order.
-- 
+-
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
 -
   I create a Sale Order for products Slider Mobile and LG Viewty Smart for qty 100 having order_policy manual.
@@ -56,7 +56,7 @@
         product_id: sale.product_product_lgviewtysmart0
         product_uos_qty: 100.0
         th_weight: 0.0
-        type: make_to_order      
+        type: make_to_order
     order_policy: manual
     partner_id: sale.res_partner_cleartrail0
     partner_invoice_id: sale.res_partner_address_2
@@ -65,75 +65,10 @@
     picking_policy: direct
     pricelist_id: product.list0
     shop_id: sale.shop
-- 
+-
   I confirm the Sale Order.
-- 
+-
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so4}
--
-  Then I cancel the sale order line
--
-  I click on the "Cancel" button of sale order line and verify that it gives a warning message.
--
-  !python {model: sale.order.line}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
-    sol = so.order_line[1] 
-    try:
-        self.button_cancel(cr, uid, [sol.id], {"lang": "en_US", "tz": False, "active_model":
-          "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
-          "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
-          })  
-    except:
-        pass
--   
-  I verify that picking has been generated for the sale order.
-- 
-  !python {model: sale.order}: |
-    so = self.browse(cr, uid, ref("sale_order_so4"))
-    assert so.picking_ids,"Picking has not been generated for sale_order_so4"
--
-  Then I cancel its related stock move from Outgoing Products
--
-  !python {model: stock.move}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
-    pick_obj = self.pool.get('stock.picking')
-    pick_id = pick_obj.search(cr, uid, [('origin', '=', so.name),('type','=','out')])
-    pick_brw = pick_obj.browse(cr,uid,pick_id)[0]
-    move_obj = self.pool.get('stock.move')
-    move_id = move_obj.search(cr, uid, [('picking_id', '=', pick_brw.name),('name','=','LG Viewty Smart')])
-    self.action_cancel(cr,uid,move_id)
--    
-  Then I cancel its related stock move from Delivery Order
-- 
-  !python {model: stock.move}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
-    pick_obj = self.pool.get('stock.picking')
-    pick_id = pick_obj.search(cr, uid, [('origin', '=', so.name),('type','=','delivery')])
-    pick_brw = pick_obj.browse(cr,uid,pick_id)[0]
-    move_obj = self.pool.get('stock.move')
-    move_id = move_obj.search(cr, uid, [('picking_id', '=', pick_brw.name),('name','=','LG Viewty Smart')])
-    self.action_cancel(cr,uid,move_id)
--
-  Then I cancel the sale order line for LG Viewty Smart
--
-  !python {model: sale.order.line}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
-    sol = so.order_line[1] 
-    self.button_cancel(cr, uid, [sol.id], {"lang": "en_US", "tz": False, "active_model":
-      "ir.ui.menu", "active_ids": [ref("sale.menu_invoicing_sales_order_lines")],
-      "search_default_uninvoiced": 1, "active_id": ref("sale.menu_invoicing_sales_order_lines"),
-      })
--
-  I verify that the state of sale order line is cancel  
--
-  !python {model: sale.order.line}: |
-    sale_order_obj = self.pool.get('sale.order')
-    so = sale_order_obj.browse(cr, uid, ref("sale_order_so4"))
-    chk = self.search(cr, uid, [('order_id', '=', so.name),('state','=','cancel')])
-    assert chk,"Sale order line has not been cancelled"
 -
   Then I click on the "Make Invoices" button
 -
@@ -154,8 +89,8 @@
     inv = self.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|')])
     assert inv, "Invoices has not been generated"
 -
-  I verify that an account invoice line with origin 'Test_SO004' is created 
-- 
+  I verify that an account invoice line with origin 'Test_SO004' is created
+-
   !python {model: account.invoice.line}: |
     sale_order_obj = self.pool.get('sale.order')
     acc_inv_obj = self.pool.get('account.invoice')
@@ -164,7 +99,7 @@
     inv_line = self.search(cr, uid, [('origin','=',so.name),('name','=','Slider Mobile'),('invoice_id','=',inv)])
     assert inv_line, "Account invoice line has not been created"
 -
-  I verify that an account invoice line with origin 'Test_SO003' is created 
+  I verify that an account invoice line with origin 'Test_SO003' is created
 -
   !python {model: account.invoice.line}: |
     sale_order_obj = self.pool.get('sale.order')
@@ -184,7 +119,7 @@
         wf_service.trg_validate(uid, 'account.invoice',id,'invoice_open', cr)
 -
   I assign an analytic journal to the bank journal
-- 
+-
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
 -
@@ -200,7 +135,7 @@
         ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
         name='tst')
 -
-  I verify the invoice is in Paid state 
+  I verify the invoice is in Paid state
 -
   !python {model: account.invoice}: |
     invoice_id = self.search(cr, uid, [('origin','=','Test_SO004|Test_SO003|'),('state','=','paid')])

@@ -9,9 +9,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                   <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
-		   <filter icon="terp-accessories-archiver" string="Consumable"
-                        domain="[('type','=', 'consumable')]"/>                   
+                   <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>                   
                    <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
                    <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
@@ -19,7 +17,7 @@
                    <separator orientation="vertical"/>
                    <field name="default_code"/>
                    <field name="name"/>
-                   <field name="categ_id" widget="selection" operator="child_of"/>
+                   <field name="categ_id" widget="selection" operator="child_of" groups="base.group_extended"/>
                    <newline/>
                    <group expand="0" string="Extended Filters..." groups="base.group_extended">
                        <field name="pricelist_id" widget="selection" context="{'pricelist': self}" />
@@ -53,9 +51,9 @@
                     <field name="qty_available"/>
                     <field name="virtual_available"/>
                     <field name="lst_price"/>
-                    <field name="standard_price"/>
                     <field name="price" invisible="not context.get('pricelist',False)"/>
-                    <field name="state"/>
+                    <field name="standard_price"/>
+                    <field name="state" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -89,8 +87,17 @@
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
-                                <field name="procure_method"/>
+                                <field name="procure_method" groups="base.group_extended"/>
                                 <field name="supply_method"/>
+                            </group>
+                            <group colspan="2" col="2">
+                                <separator string="Base Prices" colspan="2"/>
+                                <field groups="base.group_extended" name="cost_method"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                <field name="list_price"/>
+                                <newline/>
+                                <field name="price_margin" groups="product.group_product_variant"/>
+                                <field name="price_extra" groups="product.group_product_variant"/>
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
@@ -100,17 +107,17 @@
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
-                            <group colspan="2" col="2" name="status">
+                            <group colspan="2" col="2" name="status" groups="base.group_extended">
                                 <separator string="Status" colspan="2"/>
-                                <field name="categ_id" select="1"/>
+                                <field name="categ_id"/>
                                 <field name="state"/>
-                                <field groups="base.group_extended" name="product_manager"/>
+                                <field name="product_manager"/>
                             </group>
 
                             <group colspan="2" col="2" name="uom">
                                 <separator string="Unit of Measure" colspan="2"/>
-                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" widget="selection"/>
-                                <field name="uom_po_id" widget="selection"/>
+                                <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
+                                <field name="uom_po_id" groups="base.group_extended"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
@@ -142,18 +149,7 @@
                             </group>
 
                         </page>
-                        <page string="Prices &amp; Suppliers">
-                            <separator string="Base Prices" colspan="4"/>
-                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                            <field name="list_price"/>
-                            <newline/>
-                            <field name="price_margin" groups="base.group_extended"/>
-                            <field name="price_extra" groups="base.group_extended"/>
-                            <newline/>
-                            <field groups="base.group_extended" name="cost_method"/>
-                            <newline/>
-                            <field groups="base.group_extended" name="seller_id"/>
-                            <newline/>
+                        <page string="Suppliers">
                             <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
@@ -197,12 +193,11 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
-            <field name="help">In OpenERP, a product is something you can buy and sell. It can be a raw material, a stockable product, a consumable or a service. The product form contains a detailed information on the products like procurement logistic, sales price, product category, suppliers, etc.</field>
+            <field name="help">You must define a Product for everything you buy or sell. Products can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" groups="base.group_system,group_product_manager"/>
 
-        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9" groups="group_product_manager,base.group_sale_salesman,base.group_system"/>
-        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1" groups="base.group_sale_salesman,base.group_sale_manager,base.group_system,group_product_manager"/>
+        <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
+        <menuitem action="product.product_normal_action" id="product.menu_products" parent="base.menu_product" sequence="1"/>
 
         <record id="product_normal_action_puchased" model="ir.actions.act_window">
             <field name="name">Products</field>
@@ -212,6 +207,7 @@
             <field name="domain">[('purchase_ok','=',1)]</field>
             <field name="view_id" ref="product_product_tree_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
+            <field name="help">Products can be purchased and/or sold. They can be raw materials, stockable products, consumables or services. The Product form contains detailed information about your products related to procurement logistics, sales price, product category, suppliers and so on.</field>
         </record>
 
         <record id="product_category_form_view" model="ir.ui.view">
@@ -257,7 +253,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="product_category_tree_view"/>
-            <field name="help">This is a hyerarchical structure of your product's categories, you can enter a category to browse all products in this category and his children.</field>
+            <field name="help">Here is a list of all your products classified by category. You can click a category to get the list of all products linked to this category or to a child of this category.</field>
         </record>
         <menuitem
             action="product_category_action"
@@ -306,9 +302,7 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="uom_type"/>
                     <field name="factor"/>
-                    <field name="rounding"/>
                 </tree>
             </field>
         </record>
@@ -353,6 +347,7 @@
             <field name="res_model">product.uom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_uom_tree_view"/>
+            <field name="help">Create and manage the units of measure you want to be used in your system. You can define a conversion rate between several Units of Measure within the same category.</field>
         </record>
         <menuitem id="next_id_16" name="Units of Measure" parent="prod_config_main" sequence="65"/>
         <menuitem action="product_uom_form_action" id="menu_product_uom_form_action" parent="next_id_16"/>
@@ -373,6 +368,7 @@
             <field name="res_model">product.uom.categ</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Create and manage the units of measure categories you want to be used in your system. If several units of measure are in the same category, they can be converted to each other. For example, in the unit of measure category "Time", you will have the following UoM: Hours, Days.</field>
         </record>
         <menuitem action="product_uom_categ_form_action" id="menu_product_uom_categ_form_action" parent="product.next_id_16" sequence="5"/>
 
@@ -404,6 +400,7 @@
             <field name="res_model">product.ul</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help">Create and manage your packaging dimensions and types you want to be maintained in your system.</field>
         </record>
         <menuitem
             action="product_ul_form_action" groups="base.group_extended" id="menu_product_ul_form_action" parent="prod_config_main" sequence="3"/>
@@ -461,8 +458,7 @@
                     <field name="product_name" groups="base.group_extended"/>
                     <field name="product_code" groups="base.group_extended"/>
                     <field name="min_qty"/>
-                    <field name="product_uom" widget="selection"/>
-                    <field name="qty"/>
+                    <field name="product_uom"/>
                     <field name="delay"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field colspan="4" groups="base.group_extended" name="pricelist_ids" nolabel="1" widget="one2many_list">
@@ -487,7 +483,7 @@
                     <field name="sequence" string="Seq"/>
                     <field name="name"/>
                     <field name="delay"/>
-                    <field name="qty"/>
+                    <field name="min_qty"/>
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 </tree>
             </field>
@@ -534,7 +530,7 @@
                     <field name="name"/>
                     <field name="categ_id"/>
                     <field name="type"/>
-                    <field name="state"/>
+                    <field name="state" groups="base.group_extended"/>
                 </tree>
             </field>
         </record>
@@ -559,8 +555,15 @@
                             <group colspan="2" col="2">
                                 <separator string="Procurement" colspan="2"/>
                                 <field name="type"/>
-                                <field name="procure_method"/>
+                                <field name="procure_method" groups="base.group_extended"/>
                                 <field name="supply_method"/>
+                            </group>
+
+                            <group colspan="2" col="2">
+                                <separator string="Base Prices" colspan="2"/>
+                                <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                <field name="list_price"/>
+                                <field groups="base.group_extended" name="cost_method"/>
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
@@ -570,17 +573,17 @@
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group>
 
-                            <group colspan="2" col="2" name="status">
+                            <group colspan="2" col="2" name="status" groups="base.group_extended">
                                 <separator string="Status" colspan="2"/>
                                 <field name="categ_id" select="1"/>
                                 <field name="state"/>
-                                <field groups="base.group_extended" name="product_manager"/>
+                                <field name="product_manager"/>
                             </group>
 
                             <group colspan="2" col="2" name="uom">
                                 <separator string="UOM" colspan="2"/>
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
-                                <field name="uom_po_id"/>
+                                <field name="uom_po_id" groups="base.group_extended"/>
                             </group>
 
                             <group colspan="2" col="2" name="uos" groups="product.group_uos">
@@ -609,12 +612,7 @@
                             </group>
 
                         </page>
-                        <page string="Prices &amp; Suppliers">
-                            <separator string="Base Prices" colspan="4"/>
-                            <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
-                            <field name="list_price"/>
-                            <field groups="base.group_extended" name="cost_method"/>
-                            <newline/>
+                        <page string="Suppliers">
                             <field colspan="4" name="seller_ids" nolabel="1"/>
                         </page>
                         <page string="Descriptions">
@@ -637,5 +635,12 @@
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_tree_view"/>
         </record>
+        <record id="ir_ui_view_sc_product0" model="ir.ui.view_sc">
+            <field name="name">Products</field>
+            <field name="resource">ir.ui.menu</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="res_id" ref="product.menu_products"/>
+        </record>
+
     </data>
 </openerp>

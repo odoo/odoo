@@ -6,7 +6,7 @@
 
        <menuitem name="Configuration"
            id="knowledge.menu_document_configuration"
-           parent="knowledge.menu_document" sequence="50" groups="base.group_system" />
+           parent="knowledge.menu_document" sequence="50"/>
 
        <menuitem name="Wiki" id="menu_wiki_configuration"
            parent="knowledge.menu_document_configuration" sequence="2" />
@@ -85,8 +85,8 @@
         </record>
 
         <!-- wiki Tree view For child -->
-        <record id="view_wiki_tree_childs" model="ir.ui.view">
-            <field name="name">wiki.wiki.tree.childs</field>
+        <record id="view_wiki_tree_children" model="ir.ui.view">
+            <field name="name">wiki.wiki.tree.children</field>
             <field name="model">wiki.wiki</field>
             <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
@@ -187,7 +187,7 @@
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_wiki_tree"/>
             <field name="search_view_id" ref="view_wiki_filter"/>
-            <field name="help">Wiki Pages  allows you to share ideas and questions with your coworkers. You can create a new document that can be link to one or several applications (CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. There is a basic wiki editing for text format.</field>
+            <field name="help">With Wiki Pages you can share ideas and questions with your coworkers. You can create a new document that can be linked to one or several applications (CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. There is a basic wiki editing for text format.</field>
         </record>
 
         <menuitem parent="knowledge.menu_document2"

@@ -33,7 +33,7 @@ class vat_listing_clients(osv.osv_memory):
         'amount': fields.float('Amount'),
         'turnover': fields.float('Turnover'),
             }
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
         return [(r['id'], r['name'] or '' + ' - ' + r['vat'] or '') \
@@ -52,7 +52,7 @@ class partner_vat(osv.osv_memory):
     """ Vat Listing """
     _name = "partner.vat"
 
-    def get_partner(self, cursor, user, ids, context={}):
+    def get_partner(self, cursor, user, ids, context=None):
         obj_period = self.pool.get('account.period')
         obj_partner = self.pool.get('res.partner')
         obj_vat_lclient = self.pool.get('vat.listing.clients')
@@ -131,14 +131,14 @@ class partner_vat_list(osv.osv_memory):
         'file_save' : fields.binary('Save File', readonly=True),
         }
 
-    def _get_partners(self, cursor, user, context={}):
+    def _get_partners(self, cursor, user, context=None):
         return context.get('partner_ids', [])
 
     _defaults={
         'partner_ids': _get_partners
             }
 
-    def create_xml(self, cursor, user, ids, context={}):
+    def create_xml(self, cursor, user, ids, context=None):
         datas = []
         obj_sequence = self.pool.get('ir.sequence')
         obj_users = self.pool.get('res.users')
@@ -146,7 +146,6 @@ class partner_vat_list(osv.osv_memory):
         obj_fyear = self.pool.get('account.fiscalyear')
         obj_addr = self.pool.get('res.partner.address')
         obj_vat_lclient = self.pool.get('vat.listing.clients')
-        obj_model_data = self.pool.get('ir.model.data')
 
         seq_controlref = obj_sequence.get(cursor, user, 'controlref')
         seq_declarantnum = obj_sequence.get(cursor, user, 'declarantnum')
@@ -206,9 +205,9 @@ class partner_vat_list(osv.osv_memory):
             seq += 1
             sum_tax += line['amount']
             sum_turnover += line['turnover']
-            data_clientinfo += '\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>' + line['country'] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line['amount'] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line['turnover'] * 100)) +'</TurnOver>\n</ClientList>'
+            data_clientinfo += '\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>' + line['country'] +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(round(line['amount'] * 100))) +'</Amount>\n\t<TurnOver>'+str(int(round(line['turnover'] * 100))) +'</TurnOver>\n</ClientList>'
 
-        data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(sum_turnover * 100)) +'" TaxSum="'+ str(int(sum_tax * 100)) +'" />'
+        data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(round(sum_turnover * 100))) +'" TaxSum="'+ str(int(round(sum_tax * 100))) +'" />'
         data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n</VatList>'
         msg = 'Save the File with '".xml"' extension.'
         file_save = base64.encodestring(data_file.encode('utf8'))

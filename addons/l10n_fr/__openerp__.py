@@ -35,7 +35,7 @@
 
 Credits: Sistheo Zeekom CrysaLEAD
 """,
-    "depends" : ['base', 'account', 'account_chart', 'account_report', 'base_vat'],
+    "depends" : ['base', 'account', 'account_chart', 'base_vat'],
     "init_xml" : [],
     "update_xml" : [
         "fr_report_demo.xml",
@@ -44,7 +44,6 @@ Credits: Sistheo Zeekom CrysaLEAD
         "fr_pcg_taxes_demo.xml",
         "fr_tax_demo.xml",
         "fr_fiscal_templates_demo.xml",
-        "fr_pcg_account_report_demo.xml",
         "security/ir.model.access.csv",
         "wizard/fr_report_bilan_view.xml",
         "wizard/fr_report_compute_resultant_view.xml",

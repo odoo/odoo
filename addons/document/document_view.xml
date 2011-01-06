@@ -82,7 +82,6 @@
                     <group colspan="4" col="4" attrs="{'invisible': [('type','!=','ressource')]}">
                         <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"
                             attrs="{'required': [('type','=','ressource')] }"/>
-                        <field name="resource_find_all" groups="base.group_extended" />
                         <newline/>
                         <field name="resource_field"     domain="[('model_id','=',ressource_type_id), ('ttype', 'in', ('char', 'selection', 'date', 'datetime'))]"/>
                         <field name="ressource_tree"/>
@@ -92,6 +91,9 @@
                     <group colspan="4" col="4">
                         <field name="ressource_parent_type_id"/>
                         <field name="ressource_id" select="2" readonly="1"/>
+                    </group>
+                    <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('resource_parent_type_id','=',False)]}">
+                        <field name="resource_find_all" groups="base.group_extended" />
                     </group>
 
                 </page>
@@ -106,7 +108,7 @@
                             <field name="extension"/>
                             <field name="include_name"/>
                             <separator string="PDF Report" colspan="4"/>
-                            <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
+                            <field name="report_id" domain="[ ('type','=','ressource'),('model_id','=',parent.ressource_type_id)]"/>
                         </form>
                         <tree string="Contents">
                             <field name="sequence" string="Seq."/>
@@ -148,6 +150,8 @@
                 <field name="name"/>
                 <field name="type"/>
                 <field name="user_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="storage_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
             </tree>
@@ -161,16 +165,20 @@
             <field name="arch" type="xml">
                 <search string="Search Document Directory">
                     <filter string="Static" domain="[('type','=','directory')]"/>
-                    <filter string="Resources" domain="[('type','=','ressource')]"/>
+                    <filter string="Resources" icon="terp-personal" domain="[('type','=','ressource')]"/>
                     <separator orientation="vertical"/>
                     <field name="name" />
                     <field name="user_id" />
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="storage_id" />
                     <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Storage" domain="[]" context="{'group_by':'storage_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                        <filter string="Storage" domain="[]" icon="terp-accessories-archiver" context="{'group_by':'storage_id'}"/>
+                        <separator orientation="vertical" groups="base.group_multi_company"/>
+                        <filter string="Company" domain="[]" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     </group>
                </search>
             </field>
@@ -277,37 +285,44 @@
         </field>
     </record>
 
-    <record id="view_attach_filter" model="ir.ui.view">
-            <field name="name">IR Attachment</field>
+    <record id="view_attach_filter_inherit0" model="ir.ui.view">
+            <field name="name">IR Attachment0</field>
             <field name="model">ir.attachment</field>
             <field name="type">search</field>
+            <field name="inherit_id" ref="base.view_attachment_search"/>
             <field name="arch" type="xml">
-             <search string="Document">
-             <filter icon="terp-go-month" string="Month"
-                    domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-%%m-01'))]"
-                />
-                 <separator orientation="vertical"/>
-                 <field name="name"/>
-                 <field name="parent_id" />
-                 <field name="user_id">
-                    <filter icon="terp-personal"
-                        domain="[('user_id','=', False)]"
-                        help="Filter on my documents" />
-                 </field>
-                <field name="partner_id"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <newline/>
-                <group expand="0" string="Group By...">
-                    <filter string="Partner" icon="terp-personal" domain="[]"
-                       context="{'group_by':'partner_id'}"  groups="base.group_extended"/>
-                    <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
-                    <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
+                <field name="create_uid" position="replace">
+                    <field name="user_id">
+                            <filter icon="terp-personal"
+                                domain="[('user_id','=',uid)]"
+                                help="Filter on my documents" />
+                        </field>
+                    <field name="parent_id" />
+                    <field name="index_content"/>
+                </field>
+            </field>
+    </record>
+
+
+    <record id="view_attach_filter_inherit2" model="ir.ui.view">
+
+            <field name="name">IR Attachment2</field>
+            <field name="model">ir.attachment</field>
+            <field name="type">search</field>
+            <field name="inherit_id" ref="base.view_attachment_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="/search/group[@string='Group By...']" position="attributes">
+                    <attribute name="groups">base.group_extended</attribute>
+                </xpath>
+                <filter string="Owner" position="replace">
                     <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
-                    <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                </group>
-              </search>
-             </field>
-         </record>
+                    <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                    <filter string="Directory" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
+                </filter>
+            </field>
+    </record>
+
+
     <record model="ir.ui.view" id="view_document_file_tree">
         <field name="name">ir.attachment</field>
         <field name="model">ir.attachment</field>
@@ -318,6 +333,7 @@
                 <field name="name"/>
                 <field name="parent_id" />
                 <field name="user_id"/>
+                <field name="company_id"/>
                 <field name="create_date"/>
                 <field name="write_date"/>
                 <field name="partner_id" groups="base.group_extended" />
@@ -332,8 +348,7 @@
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">ir.attachment</field>
         <field name="view_type">form</field>
-        <field name="search_view_id" ref="view_attach_filter"/>
-        <field name="help">Documents give your access to all attached documents; it's a repository of all attached documents (mails, documents attached to a project, etc.)</field>
+        <field name="help">The Documents repository gives you access to all attachments, such as mails, project documents, invoices etc.</field>
     </record>
     <menuitem name="Documents" id="menu_document_doc" parent="knowledge.menu_document" sequence="0"/>
     <menuitem
@@ -403,15 +418,11 @@
         src_model="res.partner"
         groups="base.group_extended"/>
 
-    <act_window 
-    	context="{'search_default_parent_id': [active_id]}"
-        id="zoom_directory" name="Related Documents"
+    <act_window
+        domain="[('parent_id', '=', active_id)]"
+    	id="zoom_directory" name="Related Documents"
         res_model="ir.attachment"
         src_model="document.directory"/>
-
-
-
-
 </data>
 </openerp>
 

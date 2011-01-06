@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-02 20:31+0000\n"
-"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-26 07:53+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:07+0000\n"
+"X-Launchpad-Export-Date: 2010-12-27 04:40+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -24,16 +25,6 @@ msgid ""
 msgstr ""
 "Número de horas que pueden ser facturadas más aquellas que ya han sido "
 "facturadas."
-
-#. module: account_analytic_analysis
-#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
-msgid "Hours summary by user"
-msgstr "Resumen de horas por usuario"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,last_invoice_date:0
-msgid "Last Invoice Date"
-msgstr "Fecha última factura"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,remaining_ca:0
@@ -47,25 +38,10 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Calculado utilizando la fórmula: Cantidad máxima - Horas totales."
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all
-msgid "All Analytic Accounts"
-msgstr "Todas las cuentas analíticas"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_open
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_open
-msgid "My Current Accounts"
-msgstr "Mis cuentas actuales"
-
-#. module: account_analytic_analysis
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_invoice_date:0
-msgid "Date of the last invoice created for this analytic account."
-msgstr "Fecha de la última factura creada para esta cuenta analítica."
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "AccessError"
+msgstr "Error de acceso"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,ca_theorical:0
@@ -73,28 +49,38 @@ msgid "Theorical Revenue"
 msgstr "Ingresos teóricos"
 
 #. module: account_analytic_analysis
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de acción."
+#: help:account.analytic.account,last_invoice_date:0
+msgid "Date of the last invoice created for this analytic account."
+msgstr "Fecha de la última factura creada para esta cuenta analítica."
+
+#. module: account_analytic_analysis
+#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
+msgid ""
+"\n"
+"This module is for modifying account analytic view to show\n"
+"important data to project manager of services companies.\n"
+"Adds menu to show relevant information to each manager..\n"
+"\n"
+"You can also view the report of account analytic summary\n"
+"user-wise as well as month wise.\n"
+msgstr ""
+"\n"
+"Este módulo modifica la vista de cuenta analítica para mostrar\n"
+"datos importantes para el director de proyectos en empresas de servicios.\n"
+"Añade menú para mostrar información relevante para cada director.\n"
+"\n"
+"También puede ver el informe del resumen contable analítico\n"
+"a nivel de usuario, así como a nivel mensual.\n"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,last_invoice_date:0
+msgid "Last Invoice Date"
+msgstr "Fecha última factura"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,theorical_margin:0
 msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Calculado usando la fórmula: Ingresos teóricos - Costes totales"
-
-#. module: account_analytic_analysis
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_new
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_new
-msgid "New Analytic Account"
-msgstr "Nueva cuenta analítica"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,theorical_margin:0
@@ -107,17 +93,6 @@ msgid "Real Margin Rate (%)"
 msgstr "Tasa de margen real (%)"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_open
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_open
-msgid "Current Analytic Accounts"
-msgstr "Cuentas analíticas actuales"
-
-#. module: account_analytic_analysis
-#: help:account.analytic.account,last_worked_date:0
-msgid "Date of the latest work done on this account."
-msgstr "Fecha del último trabajo realizado en esta cuenta."
-
-#. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
 msgid ""
 "If invoice from the costs, this is the date of the latest work or cost that "
@@ -128,7 +103,7 @@ msgstr ""
 
 #. module: account_analytic_analysis
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_invoicing
-msgid "Invoicing"
+msgid "Billing"
 msgstr "Facturación"
 
 #. module: account_analytic_analysis
@@ -173,16 +148,9 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed_pending
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_to_valid_pending
-msgid "My Pending Accounts"
-msgstr "Mis cuentas pendientes"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_hr_tree_invoiced_my
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_hr_tree_invoiced_my
-msgid "My Uninvoiced Entries"
-msgstr "Mis entradas no facturadas"
+#: field:account.analytic.account,ca_to_invoice:0
+msgid "Uninvoiced Amount"
+msgstr "Importe no facturado"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,real_margin:0
@@ -190,36 +158,14 @@ msgid "Computed using the formula: Invoiced Amount - Total Costs."
 msgstr "Calculado utilizando la fórmula: Importe facturado - Costes totales."
 
 #. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_managed
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_analytic_account_managed
-msgid "My Accounts"
-msgstr "Mis cuentas"
-
-#. module: account_analytic_analysis
-#: model:ir.module.module,description:account_analytic_analysis.module_meta_information
-msgid ""
-"Modify account analytic view to show\n"
-"important data for project manager of services companies.\n"
-"Add menu to show relevant information for each manager."
-msgstr ""
-"Modifica la vista de cuenta analítica para mostrar\n"
-"datos importantes para el director de proyectos en empresas de servicios.\n"
-"Añade menú para mostrar información relevante para cada director."
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_non_invoiced:0
 msgid "Uninvoiced Hours"
 msgstr "Horas no facturadas"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,hours_quantity:0
-msgid "Hours Tot"
-msgstr "Horas totales"
-
-#. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_account
-msgid "Analytic Accounts"
-msgstr "Cuentas analíticas"
+#: help:account.analytic.account,last_worked_date:0
+msgid "Date of the latest work done on this account."
+msgstr "Fecha del último trabajo realizado en esta cuenta."
 
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
@@ -227,30 +173,25 @@ msgid "report_account_analytic"
 msgstr "Informes contabilidad analítica"
 
 #. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
+msgid "Hours Summary by User"
+msgstr "Resumen de horas por usuario"
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,ca_invoiced:0
 msgid "Invoiced Amount"
 msgstr "Importe facturado"
 
 #. module: account_analytic_analysis
-#: model:ir.ui.menu,name:account_analytic_analysis.next_id_71
-msgid "Financial Project Management"
-msgstr "Gestión de proyectos financieros"
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#, python-format
+msgid "You try to bypass an access rule (Document type: %s)."
+msgstr "Ha intentado saltarse una regla de acceso (tipo de documento: %s)."
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_worked_invoiced_date:0
 msgid "Date of Last Invoiced Cost"
 msgstr "Fecha del último coste facturado"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_to_invoice:0
-msgid "Uninvoiced Amount"
-msgstr "Importe no facturado"
-
-#. module: account_analytic_analysis
-#: model:ir.actions.act_window,name:account_analytic_analysis.action_account_analytic_all_pending
-#: model:ir.ui.menu,name:account_analytic_analysis.menu_action_account_analytic_all_pending
-msgid "Pending Analytic Accounts"
-msgstr "Cuentas analíticas pendientes"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,hours_qtt_invoiced:0
@@ -330,6 +271,7 @@ msgstr "Mes"
 #. module: account_analytic_analysis
 #: field:account_analytic_analysis.summary.month,account_id:0
 #: field:account_analytic_analysis.summary.user,account_id:0
+#: model:ir.model,name:account_analytic_analysis.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Cuenta analítica"
 
@@ -346,10 +288,89 @@ msgid "All Uninvoiced Entries"
 msgstr "Todas las entradas no facturadas"
 
 #. module: account_analytic_analysis
+#: field:account.analytic.account,hours_quantity:0
+msgid "Hours Tot"
+msgstr "Horas totales"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "¡Error! No puede crear cuentas analíticas recursivas."
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
 msgid ""
 "Total of costs for this account. It includes real costs (from invoices) and "
 "indirect costs, like time spent on timesheets."
 msgstr ""
 "Costes totales para esta cuenta. Incluye costes reales (desde facturas) y "
-"costes indirectos, como el tiempo empleado en hojas de trabajo (horarios)."
+"costes indirectos, como el tiempo empleado en hojas de servicio (horarios)."
+
+#~ msgid "Hours summary by user"
+#~ msgstr "Resumen de horas por usuario"
+
+#~ msgid "All Analytic Accounts"
+#~ msgstr "Todas las cuentas analíticas"
+
+#~ msgid "My Current Accounts"
+#~ msgstr "Mis cuentas actuales"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "New Analytic Account"
+#~ msgstr "Nueva cuenta analítica"
+
+#~ msgid "Current Analytic Accounts"
+#~ msgstr "Cuentas analíticas actuales"
+
+#~ msgid "Invoicing"
+#~ msgstr "Facturación"
+
+#~ msgid "My Pending Accounts"
+#~ msgstr "Mis cuentas pendientes"
+
+#~ msgid "My Uninvoiced Entries"
+#~ msgstr "Mis entradas no facturadas"
+
+#~ msgid "My Accounts"
+#~ msgstr "Mis cuentas"
+
+#~ msgid "Analytic Accounts"
+#~ msgstr "Cuentas analíticas"
+
+#~ msgid "Financial Project Management"
+#~ msgstr "Gestión de proyectos financieros"
+
+#~ msgid "Pending Analytic Accounts"
+#~ msgstr "Cuentas analíticas pendientes"
+
+#~ msgid ""
+#~ "Modify account analytic view to show\n"
+#~ "important data for project manager of services companies.\n"
+#~ "Add menu to show relevant information for each manager."
+#~ msgstr ""
+#~ "Modifica la vista de cuenta analítica para mostrar\n"
+#~ "datos importantes para el director de proyectos en empresas de servicios.\n"
+#~ "Añade menú para mostrar información relevante para cada director."
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de acción."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "¡Error! No puede crear menús recursivos"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"

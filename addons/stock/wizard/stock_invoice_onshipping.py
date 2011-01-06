@@ -24,100 +24,108 @@ from osv import fields, osv
 from tools.translate import _
 
 class stock_invoice_onshipping(osv.osv_memory):
+
+    def _get_journal_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+
+        model = context.get('active_model')
+        if not model or model != 'stock.picking':
+            return []
+
+        model_pool = self.pool.get(model)
+        acct_obj = self.pool.get('account.journal')
+        res_ids = context and context.get('active_ids', [])
+        vals=[]
+        pick_types = list(set(map(lambda x: x.type, model_pool.browse(cr, uid, res_ids, context=context))))
+        for type in pick_types:
+            if type == 'out':
+               value = acct_obj.search(cr, uid, [('type', 'in',('sale','purchase_refund') )])
+               for jr_type in acct_obj.browse(cr, uid, value, context=context):
+                   t1 = jr_type.id,jr_type.name
+                   vals.append(t1)
+
+            elif type == 'in':
+               value = acct_obj.search(cr, uid, [('type', 'in',('purchase','sale_refund') )])
+               for jr_type in acct_obj.browse(cr, uid, value, context=context):
+                   t1 = jr_type.id,jr_type.name
+                   vals.append(t1)
+            else:
+               value = acct_obj.search(cr, uid, [('type', 'in',('cash','bank','general','situation') )])
+               for jr_type in acct_obj.browse(cr, uid, value, context=context):
+                   t1 = jr_type.id,jr_type.name
+                   vals.append(t1)
+        return vals
+
+
     _name = "stock.invoice.onshipping"
     _description = "Stock Invoice Onshipping"
+
+
     _columns = {
-        'journal_id': fields.many2one('account.journal', 'Destination Journal', required=True),
+        'journal_id': fields.selection(_get_journal_id, 'Destination Journal',required=True),
         'group': fields.boolean("Group by partner"),
-        'type': fields.selection([('out_invoice', 'Customer Invoice'),
-                    ('in_invoice', 'Supplier Invoice'),
-                    ('out_refund', 'Customer Refund'),
-                    ('in_refund', 'Supplier Refund')] , 'Type', required=True),
         'invoice_date': fields.date('Invoiced date'),
     }
 
-    def _get_type(self, cr, uid, context=None):
-        """ To get invoice type.
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: The ID or list of IDs if we want more than one
-        @param context: A standard dictionary
-        @return: Invoice type
-        """
+
+    def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}
-        picking_obj = self.pool.get('stock.picking')
-        usage = 'customer'
-        pick = picking_obj.browse(cr, uid, context['active_id'], context=context)
-        if pick.invoice_state == 'invoiced':
-            raise osv.except_osv(_('UserError'), _('Invoice is already created.'))
-        if pick.invoice_state == 'none':
-            raise osv.except_osv(_('UserError'), _('This picking does not require any invoicing.'))
-        if pick.move_lines:
-            usage = pick.move_lines[0].location_id.usage
+        res = super(stock_invoice_onshipping, self).view_init(cr, uid, fields_list, context=context)
+        pick_obj = self.pool.get('stock.picking')
+        count = 0
+        active_ids = context.get('active_ids',[])
+        for pick in pick_obj.browse(cr, uid, active_ids, context=context):
+            if pick.invoice_state != '2binvoiced':
+                count += 1
+        if len(active_ids) == 1 and count:
+            raise osv.except_osv(_('Warning !'), _('This picking list does not require invoicing.'))
+        if len(active_ids) == count:
+            raise osv.except_osv(_('Warning !'), _('None of these picking lists require invoicing.'))
+        return res
 
-        if pick.type == 'out' and usage == 'supplier':
-            type = 'in_refund'
-        elif pick.type == 'out' and usage == 'customer':
-            type = 'out_invoice'
-        elif pick.type == 'in' and usage == 'supplier':
-            type = 'in_invoice'
-        elif pick.type == 'in' and usage == 'customer':
-            type = 'out_refund'
-        else:
-            type = 'out_invoice'
-        return type
 
-    _defaults = {
-        'type': _get_type,
-    }
 
-    def create_invoice(self, cr, uid, ids, context):
-        """ To create invoice
-        @param self: The object pointer.
-        @param cr: A database cursor
-        @param uid: ID of the user currently logged in
-        @param ids: the ID or list of IDs if we want more than one
-        @param context: A standard dictionary
-        @return: Invoice ids
-        """
-        result = []
-        picking_obj = self.pool.get('stock.picking')
-        mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
+    def create_invoice(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        picking_pool = self.pool.get('stock.picking')
+        data_pool = self.pool.get('ir.model.data')
+        onshipdata_obj = self.read(cr, uid, ids[0], ['journal_id', 'group', 'invoice_date'])
+        if context.get('new_picking', False):
+            onshipdata_obj['id'] = onshipdata_obj.new_picking
+            onshipdata_obj[ids] = onshipdata_obj.new_picking
 
-        for onshipdata_obj in self.read(cr, uid, ids, ['journal_id', 'group', 'type', 'invoice_date']):
-            if context.get('new_picking', False):
-                onshipdata_obj[id] = onshipdata_obj.new_picking
-                onshipdata_obj[ids] = onshipdata_obj.new_picking
+        context['date_inv'] = onshipdata_obj['invoice_date']
+        invoice_ids = []
+        active_ids = context.get('active_ids', [])
+        active_picking = picking_pool.browse(cr, uid, context.get('active_id',False), context=context)
+        inv_type = picking_pool._get_invoice_type(active_picking)
 
-            type = onshipdata_obj['type']
-            context['date_inv'] = onshipdata_obj['invoice_date']
-            res = picking_obj.action_invoice_create(cr, uid,context['active_ids'],
-                  journal_id = onshipdata_obj['journal_id'],
-                  group=onshipdata_obj['group'],
-                  type=type,
-                  context=context)
-            invoice_ids = res.values()
-            if not invoice_ids:
-                raise osv.except_osv(_('Error'), _('Invoice is not created'))
-
-            if type == 'out_invoice':
-                xml_id = 'action_invoice_tree1'
-            elif type == 'in_invoice':
-                xml_id = 'action_invoice_tree2'
-            elif type == 'out_refund':
-                xml_id = 'action_invoice_tree3'
-            else:
-                xml_id = 'action_invoice_tree4'
-
-            result = mod_obj._get_id(cr, uid, 'account', xml_id)
-            id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
-            result = act_obj.read(cr, uid, id['res_id'], context=context)
-            result['res_id'] = invoice_ids
-            result['context'] = context
-            return result
+        res = picking_pool.action_invoice_create(cr, uid, active_ids,
+              journal_id = onshipdata_obj['journal_id'],
+              group = onshipdata_obj['group'],
+              type = None,
+              context=context)
+        invoice_ids += res.values()
+        if not invoice_ids:
+            raise osv.except_osv(_('Error'), _('No Invoices were created'))
+        action_model = False
+        action = {}
+        if inv_type == "out_invoice":
+            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree1")
+        elif inv_type == "in_invoice":
+            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree2")
+        elif inv_type == "out_refund":
+            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree3")
+        elif inv_type == "in_refund":
+            action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree4")
+        if action_model:
+            action_pool = self.pool.get(action_model)
+            action = action_pool.read(cr, uid, action_id, context=context)
+            action['domain'] = "[('id','in', ["+','.join(map(str,invoice_ids))+"])]"
+        return action
 
 stock_invoice_onshipping()
 

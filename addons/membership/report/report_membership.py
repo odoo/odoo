@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,16 +15,26 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from osv import fields, osv
 import tools
+import decimal_precision as dp
 
+STATE = [
+    ('none', 'Non Member'),
+    ('canceled', 'Cancelled Member'),
+    ('old', 'Old Member'),
+    ('waiting', 'Waiting Member'),
+    ('invoiced', 'Invoiced Member'),
+    ('free', 'Free Member'),
+    ('paid', 'Paid Member'),
+]
 
 class report_membership(osv.osv):
-    '''Membership by Years'''
+    '''Membership Analysis'''
 
     _name = 'report.membership'
     _description = __doc__
@@ -32,96 +42,103 @@ class report_membership(osv.osv):
     _rec_name = 'year'
     _columns = {
         'year': fields.char('Year', size=4, readonly=True, select=1),
-        'month':fields.selection([('01', 'January'), ('02', 'February'), \
+        'month': fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'date': fields.datetime('Create Date', readonly=True),                          
-        'canceled_number': fields.integer('Canceled', readonly=True),
-        'waiting_number': fields.integer('Waiting', readonly=True),
-        'invoiced_number': fields.integer('Invoiced', readonly=True),
-        'paid_number': fields.integer('Paid', readonly=True),
-        'canceled_amount': fields.float('Canceled', digits=(16, 2), readonly=True),
-        'waiting_amount': fields.float('Waiting', digits=(16, 2), readonly=True),
-        'invoiced_amount': fields.float('Invoiced', digits=(16, 2), readonly=True),
-        'paid_amount': fields.float('Paid', digits=(16, 2), readonly=True),
-        'currency': fields.many2one('res.currency', 'Currency', readonly=True,
-            select=2),
-            
-        'state':fields.selection([('draft', 'Non Member'),
-                                  ('cancel', 'Cancelled Member'),
-                                    ('done', 'Old Member'),
-                                   ('open', 'Invoiced Member'),
-                                    ('free', 'Free Member'), ('paid', 'Paid Member')], 'State'),
-        'partner_id': fields.many2one('res.partner', 'Members', readonly=True, select=3),
-        'membership_id': fields.many2one('product.product', 'Membership', readonly=True, select=3) 
-                
-
-}
+        'date_from': fields.datetime('Start Date', readonly=True, help="Start membership date"),
+        'date_to': fields.datetime('End Date', readonly=True, help="End membership date"),
+        'num_waiting': fields.integer('# Waiting', readonly=True),
+        'num_invoiced': fields.integer('# Invoiced', readonly=True),
+        'num_paid': fields.integer('# Paid', readonly=True),
+        'tot_pending': fields.float('Pending Amount', digits_compute= dp.get_precision('Account'), readonly=True),
+        'tot_earned': fields.float('Earned Amount', digits_compute= dp.get_precision('Account'), readonly=True),
+        'partner_id': fields.many2one('res.partner', 'Member', readonly=True),
+        'associate_member_id': fields.many2one('res.partner', 'Associate Member', readonly=True),
+        'membership_id': fields.many2one('product.product', 'Membership Product', readonly=True),
+        'membership_state': fields.selection(STATE, 'Current Membership State', readonly=True),
+        'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
+        'company_id': fields.many2one('res.company', 'Company', readonly=True)
+        }
 
     def init(self, cr):
         '''Create the view'''
         tools.drop_view_if_exists(cr, 'report_membership')
         cr.execute("""
-    CREATE OR REPLACE VIEW report_membership AS (
+        CREATE OR REPLACE VIEW report_membership AS (
         SELECT
-        MIN(id) as id,
-        COUNT(ncanceled) as canceled_number,
-        COUNT(npaid) as paid_number,
-        COUNT(ninvoiced) as invoiced_number,
-        COUNT(nwaiting) as waiting_number,
-        SUM(acanceled) as canceled_amount,
-        SUM(apaid) as paid_amount,
-        SUM(ainvoiced) as invoiced_amount,
-        SUM(awaiting) as waiting_amount,
+        MIN(id) AS id,
+        partner_id,
+        user_id,
+        membership_state,
+        associate_member_id,
+        membership_amount,
+        date_from,
+        date_to,
         year,
         month,
-        date,
-        partner_id,
+        COUNT(num_waiting) AS num_waiting,
+        COUNT(num_invoiced) AS num_invoiced,
+        COUNT(num_paid) AS num_paid,
+        SUM(tot_pending) AS tot_pending,
+        SUM(tot_earned) AS tot_earned,
         membership_id,
-        state,
-        currency
-        
-        FROM (SELECT
-            CASE WHEN ai.state = 'cancel' THEN ml.id END AS ncanceled,
-            CASE WHEN ai.state = 'paid' THEN ml.id END AS npaid,
-            CASE WHEN ai.state = 'open' THEN ml.id END AS ninvoiced,
-            CASE WHEN (ai.state = 'draft' OR ai.state = 'proforma')
-                THEN ml.id END AS nwaiting,
-            CASE WHEN ai.state = 'cancel'
-                THEN SUM(ail.price_unit * ail.quantity * (1 - ail.discount / 100))
-            ELSE 0 END AS acanceled,
-            CASE WHEN ai.state = 'paid'
-                THEN SUM(ail.price_unit * ail.quantity * (1 - ail.discount / 100))
-            ELSE 0 END AS apaid,
-            CASE WHEN ai.state = 'open'
-                THEN SUM(ail.price_unit * ail.quantity * (1 - ail.discount / 100))
-            ELSE 0 END AS ainvoiced,
-            CASE WHEN (ai.state = 'draft' OR ai.state = 'proforma')
-                THEN SUM(ail.price_unit * ail.quantity * (1 - ail.discount / 100))
-            ELSE 0 END AS awaiting,
-            TO_CHAR(ml.date_from, 'YYYY') AS year,
-            TO_CHAR(ml.date_from, 'MM')as month,
-            TO_CHAR(ml.date_from, 'YYYY-MM-DD') as date,
-            ai.partner_id AS partner_id,
-            ai.currency_id AS currency,
-            ai.state as state,
-            MIN(ml.id) AS id,
-            ml.membership_id AS membership_id
-            FROM membership_membership_line ml
-            JOIN (account_invoice_line ail
-                LEFT JOIN account_invoice ai
-                ON (ail.invoice_id = ai.id))
-            ON (ml.account_invoice_line = ail.id)
-            JOIN res_partner p
-            ON (ml.partner = p.id)
-            GROUP BY TO_CHAR(ml.date_from, 'YYYY'),  TO_CHAR(ml.date_from, 'MM'), TO_CHAR(ml.date_from, 'YYYY-MM-DD'), ai.state, ai.partner_id,
-            ai.currency_id, ml.id, ml.membership_id) AS foo
-        GROUP BY year, month, date, currency, partner_id, membership_id, state)
-                """)
-        
+        company_id
+        FROM
+        (SELECT
+            MIN(p.id) AS id,
+            p.id AS partner_id,
+            p.user_id AS user_id,
+            p.membership_state AS membership_state,
+            p.associate_member AS associate_member_id,
+            p.membership_amount AS membership_amount,
+            TO_CHAR(p.membership_start, 'YYYY-MM-DD') AS date_from,
+            TO_CHAR(p.membership_stop, 'YYYY-MM-DD') AS date_to,
+            TO_CHAR(p.membership_start, 'YYYY') AS year,
+            TO_CHAR(p.membership_start,'MM') AS month,
+            CASE WHEN ml.state = 'waiting'  THEN ml.id END AS num_waiting,
+            CASE WHEN ml.state = 'invoiced' THEN ml.id END AS num_invoiced,
+            CASE WHEN ml.state = 'paid'     THEN ml.id END AS num_paid,
+            CASE WHEN ml.state IN ('waiting', 'invoiced') THEN SUM(il.price_subtotal) ELSE 0 END AS tot_pending,
+            CASE WHEN ml.state = 'paid' OR p.membership_state = 'old' THEN SUM(il.price_subtotal) ELSE 0 END AS tot_earned,
+            ml.membership_id AS membership_id,
+            p.company_id AS company_id
+            FROM res_partner p
+            LEFT JOIN membership_membership_line ml ON (ml.partner = p.id)
+            LEFT JOIN account_invoice_line il ON (ml.account_invoice_line = il.id)
+            LEFT JOIN account_invoice ai ON (il.invoice_id = ai.id)
+            WHERE p.membership_state != 'none'
+            GROUP BY
+              p.id,
+              p.user_id,
+              p.membership_state,
+              p.associate_member,
+              p.membership_amount,
+              TO_CHAR(p.membership_start, 'YYYY-MM-DD'),
+              TO_CHAR(p.membership_stop, 'YYYY-MM-DD'),
+              TO_CHAR(p.membership_start, 'YYYY'),
+              TO_CHAR(p.membership_start,'MM'),
+              ml.membership_id,
+              p.company_id,
+              ml.state,
+              ml.id
+        ) AS foo
+        GROUP BY
+            year,
+            month,
+            date_from,
+            date_to,
+            partner_id,
+            user_id,
+            membership_id,
+            company_id,
+            membership_state,
+            associate_member_id,
+            membership_amount
+        )""")
+
 report_membership()
 
-#
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

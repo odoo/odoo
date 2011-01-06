@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    	<record id="view_purchase_order_group" model="ir.ui.view">
+        <record id="view_purchase_order_group" model="ir.ui.view">
             <field name="name">Merger Purchase Orders</field>
             <field name="model">purchase.order.group</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Merge orders">
-        			<separator string="Are you sure you want to merge these orders ?" colspan="4"/>
-       				<newline/>
-    				<label string="
-Please note that: &#13; &#13;  
-Orders will only be merged if: &#13;  
-* Purchase Orders are in draft &#13;  
-* Purchase Orders belong to the same supplier &#13;  
-* Purchase Orders are have same stock location, same pricelist &#13; &#13;   
-Lines will only be merged if: &#13;  
-* Order lines are exactly the same except for the product,quantity and unit &#13;
-" colspan="4"/>				
-				    <newline/>    				
-        			<separator string="" colspan="4" />
-					<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            	    <button name="merge_orders" string="Merge orders" type="object" icon="gtk-convert"/>
-    			</form>
+                    <separator string="Are you sure you want to merge these orders ?" colspan="4"/>
+                       <newline/>
+                    <label string="
+Please note that: &#10; &#10;
+Orders will only be merged if: &#10;
+* Purchase Orders are in draft &#10;
+* Purchase Orders belong to the same supplier &#10;
+* Purchase Orders are have same stock location, same pricelist &#10; &#10;
+Lines will only be merged if: &#10;
+* Order lines are exactly the same except for the product,quantity and unit &#10;
+" colspan="4"/>                
+                    <newline/>                    
+                    <separator string="" colspan="4" />
+                    <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                    <button name="merge_orders" string="Merge orders" type="object" icon="gtk-convert"/>
+                </form>
             </field>
-		</record>
+        </record>
 
-         <act_window name="Merge Purchase orders"		    
-		    res_model="purchase.order.group"
-		    src_model="purchase.order"
-		    view_mode="form"
-		    target="new"        
+        <act_window name="Merge Purchase orders"            
+            res_model="purchase.order.group"
+            src_model="purchase.order"
+            view_mode="form"
+            target="new"
+            multi="True"        
             key2="client_action_multi"    
-		    id="action_view_purchase_order_group"/>	
-		    			
+            groups="base.group_extended"
+            id="action_view_purchase_order_group"/>    
+                        
     </data>
 </openerp>
 

@@ -7,72 +7,66 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-02 21:31+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:59+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Date :"
-msgstr "Päiväys"
-
-#. module: account_followup
-#: wizard_field:account_followup.followup.print.all,next,partner_ids:0
-msgid "Partners"
-msgstr "Kumppanit"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Customer Ref :"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid "Follwoup Summary"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
-#: model:ir.ui.menu,name:account_followup.menu_account_move_open_unreconcile_payable
-msgid "All payable entries"
+#: view:account_followup.followup:0
+msgid "Search Followup"
 msgstr ""
 
 #. module: account_followup
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
-
-#. module: account_followup
-#: field:account_followup.followup.line,description:0
-msgid "Printed Message"
-msgstr "Tulostettu viesti"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Amount In Currency"
+#: model:ir.module.module,description:account_followup.module_meta_information
+msgid ""
+"\n"
+"    Modules to automate letters for unpaid invoices, with multi-level "
+"recalls.\n"
+"\n"
+"    You can define your multiple levels of recall through the menu:\n"
+"        Accounting/Configuration/Miscellaneous/Follow-Ups\n"
+"\n"
+"    Once it is defined, you can automatically print recalls every day\n"
+"    through simply clicking on the menu:\n"
+"        Accounting/Periodical Processing/Billing/Send followups\n"
+"\n"
+"    It will generate a PDF with all the letters according to the the\n"
+"    different levels of recall defined. You can define different policies\n"
+"    for different companies. You can also send mail to the customer.\n"
+"\n"
+"    Note that if you want to change the followup level for a given "
+"partner/account entry, you can do from in the menu:\n"
+"        Accounting/Reporting/Generic Reporting/Partner Accounts/Follow-ups "
+"Sent\n"
+"\n"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Due"
+#: view:account_followup.stat:0
+msgid "Group By..."
 msgstr ""
 
 #. module: account_followup
-#: view:account.move.line:0
-msgid "Total debit"
-msgstr "Kokonais debet"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(user_signature)s: User name"
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"\n"
+"\n"
+"E-Mail sent to following Partners successfully. !\n"
+"\n"
 msgstr ""
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Select partners"
-msgstr "Valitse kumppanit"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -81,178 +75,129 @@ msgid "Follow-Up"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,debit:0
-msgid "Debit"
-msgstr "Debet"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Email Settings"
-msgstr "Sähköpostin asetukset"
-
-#. module: account_followup
-#: field:account_followup.stat,account_type:0
-msgid "Account Type"
-msgstr "Tili tyyppi"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Ref"
-msgstr ""
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(followup_amount)s: Total Amount Due"
-msgstr ""
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(date)s: Current Date"
-msgstr ""
-
-#. module: account_followup
-#: field:account.move.line,followup_date:0
-msgid "Latest Follow-up"
-msgstr ""
-
-#. module: account_followup
-#: field:account_followup.followup.line,followup_id:0
-#: field:account_followup.stat,followup_id:0
-msgid "Follow Ups"
-msgstr ""
-
-#. module: account_followup
-#: wizard_field:account_followup.followup.print.all,init,date:0
-msgid "Follow-up Sending Date"
-msgstr ""
-
-#. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,description:0
-#: rml:account_followup.followup.print:0
-msgid "Description"
-msgstr "Kuvaus"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Balance:"
-msgstr "Balanssi"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "VAT:"
-msgstr ""
-
-#. module: account_followup
 #: field:account_followup.followup,company_id:0
+#: view:account_followup.stat:0
+#: field:account_followup.stat,company_id:0
+#: field:account_followup.stat.by.partner,company_id:0
 msgid "Company"
 msgstr "Yritys"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
+#: report:account_followup.followup.print:0
 msgid "Invoice Date"
 msgstr "Laskupäivä"
 
 #. module: account_followup
-#: wizard_field:account_followup.followup.print.all,next,email_subject:0
+#: field:account.followup.print.all,email_subject:0
 msgid "Email Subject"
 msgstr "Sähköpostin aihe"
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Paid"
-msgstr "Maksettu"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(line)s: Account Move lines"
-msgstr ""
-
-#. module: account_followup
-#: field:account_followup.stat,date_followup:0
-msgid "Latest followup"
-msgstr ""
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Partner entries"
-msgstr ""
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup_line
-msgid "Follow-Ups Criteria"
-msgstr ""
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Partner Selection"
-msgstr "Kumppanin valinta"
-
-#. module: account_followup
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Virheellinen XML näkymäarkkitehtuurille!"
-
-#. module: account_followup
-#: field:account_followup.followup.line,start:0
-msgid "Type of Term"
-msgstr "Termin tyyppi"
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,init:0
-msgid "Follow-up and Date Selection"
-msgstr ""
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Select partners to remind"
-msgstr "Valitse muitutettavat kumppanit"
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Li."
-msgstr ""
-
-#. module: account_followup
-#: model:account_followup.followup.line,description:account_followup.demo_followup_line1
+#: model:ir.actions.act_window,help:account_followup.action_followup_stat
 msgid ""
-"\n"
-"Dear %(partner_name)s,\n"
-"\n"
-"Exception made if there was a mistake of ours, it seems that the following "
-"amount staid unpaid. Please, take appropriate measures in order to carry out "
-"this payment in the next 8 days.\n"
-"\n"
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department at (+32).10.68.94.39.\n"
-"\n"
-"Best Regards,\n"
-"\t\t\t"
+"Follow up on the reminders sent over to your partners for unpaid invoices."
 msgstr ""
 
 #. module: account_followup
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
+#: view:account.followup.print.all:0
+#: view:account_followup.followup.line:0
+msgid "Legend"
+msgstr ""
 
 #. module: account_followup
-#: wizard_button:account_followup.followup.print.all,summary,end:0
+#: view:account.followup.print.all:0
 msgid "Ok"
 msgstr "OK"
 
 #. module: account_followup
-#: field:account_followup.followup,name:0
-#: field:account_followup.followup.line,name:0
-msgid "Name"
-msgstr "Nimi"
+#: view:account.followup.print.all:0
+msgid "Select Partners to Remind"
+msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,date_move:0
-msgid "First move"
-msgstr "Ensimmäinen liike"
+#: constraint:account.move.line:0
+msgid "You can not create move line on closed account."
+msgstr ""
+
+#. module: account_followup
+#: field:account.followup.print,date:0
+msgid "Follow-up Sending Date"
+msgstr ""
+
+#. module: account_followup
+#: sql_constraint:account.move.line:0
+msgid "Wrong credit or debit value in accounting entry !"
+msgstr ""
+
+#. module: account_followup
+#: selection:account_followup.followup.line,start:0
+msgid "Net Days"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
+#: model:ir.ui.menu,name:account_followup.account_followup_menu
+msgid "Follow-Ups"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat.by.partner:0
+msgid "Balance > 0"
+msgstr ""
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total debit"
+msgstr "Kokonais debet"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(heading)s: Move line header"
+msgstr ""
+
+#. module: account_followup
+#: view:res.company:0
+#: field:res.company,follow_up_msg:0
+msgid "Follow-up Message"
+msgstr ""
+
+#. module: account_followup
+#: field:account.followup.print,followup_id:0
+msgid "Follow-up"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "VAT:"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: field:account_followup.stat,partner_id:0
+#: field:account_followup.stat.by.partner,partner_id:0
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Date :"
+msgstr "Päiväys"
+
+#. module: account_followup
+#: field:account.followup.print.all,partner_ids:0
+msgid "Partners"
+msgstr "Kumppanit"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid "Invoices Reminder"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_followup
+msgid "Account Follow Up"
+msgstr ""
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -260,27 +205,43 @@ msgid "End of Month"
 msgstr "Kuukauden loppu"
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(company_name)s: User's Company name"
+#: view:account_followup.stat:0
+msgid "Not Litigation"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
-#: model:ir.ui.menu,name:account_followup.menu_account_move_open_unreconcile
-msgid "All receivable entries"
+#: view:account.followup.print.all:0
+msgid "%(user_signature)s: User name"
 msgstr ""
 
 #. module: account_followup
-#: view:account_followup.followup:0
-msgid "Lines"
-msgstr "Rivit"
+#: field:account_followup.stat,debit:0
+msgid "Debit"
+msgstr "Debet"
 
 #. module: account_followup
-#: model:ir.actions.wizard,name:account_followup.action_account_followup_all_wizard
-#: model:ir.ui.menu,name:account_followup.account_followup_wizard_menu
-msgid "Send followups"
+#: view:account.followup.print:0
+msgid ""
+"This feature allows you to send reminders to partners with pending invoices. "
+"You can send them the default message for unpaid invoices or manually enter "
+"a message should you need to remind them of a specific information."
 msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Ref"
+msgstr ""
+
+#. module: account_followup
+#: help:account_followup.followup.line,sequence:0
+msgid "Gives the sequence order when displaying a list of follow-up lines."
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,email_body:0
+msgid "Email body"
+msgstr "Sähköposti runko"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -288,66 +249,10 @@ msgid "Follow-up Level"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,credit:0
-msgid "Credit"
-msgstr "Luotto"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat
-msgid "Followup statistics"
+#: field:account_followup.stat,date_followup:0
+#: field:account_followup.stat.by.partner,date_followup:0
+msgid "Latest followup"
 msgstr ""
-
-#. module: account_followup
-#: wizard_button:account_followup.followup.print.all,init,next:0
-msgid "Continue"
-msgstr "Jatka"
-
-#. module: account_followup
-#: model:ir.module.module,shortdesc:account_followup.module_meta_information
-msgid "Accounting follow-ups management"
-msgstr ""
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,summary:0
-#: wizard_field:account_followup.followup.print.all,summary,summary:0
-msgid "Summary"
-msgstr ""
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "Follow-Up Lines"
-msgstr ""
-
-#. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Document : Customer account statement"
-msgstr ""
-
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Follow-Up lines"
-msgstr ""
-
-#. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(company_currency)s: User's Company Currency"
-msgstr ""
-
-#. module: account_followup
-#: field:account_followup.stat,balance:0
-msgid "Balance"
-msgstr "Saldo"
-
-#. module: account_followup
-#: help:account_followup.followup.print.all,init,date:0
-msgid ""
-"This field allow you to select a forecast date to plan your follow-ups"
-msgstr ""
-
-#. module: account_followup
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Kokonaisluotto"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -371,47 +276,64 @@ msgid ""
 "Details of due payments is printed below.\n"
 "\n"
 "Best Regards,\n"
-"\t\t\t"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Sub-Total:"
+#: field:account.followup.print.all,partner_lang:0
+msgid "Send Email in Partner Language"
 msgstr ""
 
 #. module: account_followup
-#: selection:account_followup.followup.line,start:0
-msgid "Net Days"
+#: constraint:account.move.line:0
+msgid ""
+"You can not create move line on receivable/payable account without partner"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
-#: model:ir.actions.act_window,name:account_followup.action_followup_stat
-#: model:ir.model,name:account_followup.model_account_followup_followup
-#: model:ir.ui.menu,name:account_followup.account_followup_menu
-#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat
-msgid "Follow-Ups"
+#: view:account.followup.print.all:0
+msgid "Partner Selection"
+msgstr "Kumppanin valinta"
+
+#. module: account_followup
+#: field:account_followup.followup.line,description:0
+msgid "Printed Message"
+msgstr "Tulostettu viesti"
+
+#. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
+#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
+msgid "Send followups"
 msgstr ""
 
 #. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-#: wizard_field:account_followup.followup.print.all,next,email_body:0
-msgid "Email body"
-msgstr "Sähköposti runko"
-
-#. module: account_followup
-#: field:account_followup.stat,date_move_last:0
-msgid "Last move"
+#: view:account_followup.stat.by.partner:0
+msgid "Partner to Remind"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
-msgid "Maturity"
+#: field:account_followup.followup.line,followup_id:0
+#: field:account_followup.stat,followup_id:0
+msgid "Follow Ups"
 msgstr ""
 
 #. module: account_followup
-#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
-msgid "Followup Report"
+#: model:account_followup.followup.line,description:account_followup.demo_followup_line1
+msgid ""
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Exception made if there was a mistake of ours, it seems that the following "
+"amount staid unpaid. Please, take appropriate measures in order to carry out "
+"this payment in the next 8 days.\n"
+"\n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void. Do not hesitate to contact our accounting "
+"department at (+32).10.68.94.39.\n"
+"\n"
+"Best Regards,\n"
 msgstr ""
 
 #. module: account_followup
@@ -432,18 +354,329 @@ msgid ""
 "our accounting department at (+32).10.68.94.39.\n"
 "\n"
 "Best Regards,\n"
-"\t\t\t"
 msgstr ""
 
 #. module: account_followup
-#: rml:account_followup.followup.print:0
+#: view:account.followup.print.all:0
+msgid "Send Mails"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Currency"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
+msgid "Followup Statistics by Partner"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.module.module,shortdesc:account_followup.module_meta_information
+msgid "Accounting follow-ups management"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,blocked:0
+msgid "Blocked"
+msgstr ""
+
+#. module: account_followup
+#: help:account.followup.print,date:0
+msgid ""
+"This field allow you to select a forecast date to plan your follow-ups"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Due"
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid "Select Partners"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Email Settings"
+msgstr "Sähköpostin asetukset"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "Print Follow Ups"
+msgstr ""
+
+#. module: account_followup
+#: field:account.move.line,followup_date:0
+msgid "Latest Follow-up"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Sub-Total:"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Balance:"
+msgstr "Balanssi"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Followup Statistics"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Paid"
+msgstr "Maksettu"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "%(user_signature)s: User Name"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_move_line
+msgid "Journal Items"
+msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Company must be same for its related account and period."
+msgstr ""
+
+#. module: account_followup
+#: field:account.followup.print.all,email_conf:0
+msgid "Send email confirmation"
+msgstr "Lähetä sähköpostivarmennus"
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"All E-mails have been successfully sent to Partners:.\n"
+"\n"
+msgstr ""
+
+#. module: account_followup
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(company_name)s: User's Company name"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.followup:0
+msgid "Followup Lines"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,credit:0
+msgid "Credit"
+msgstr "Luotto"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
 msgid "Maturity Date"
 msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "Legend"
+msgid "%(partner_name)s: Partner Name"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Follow-Up lines"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(company_currency)s: User's Company Currency"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: field:account_followup.stat,balance:0
+#: field:account_followup.stat.by.partner,balance:0
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: account_followup
+#: field:account_followup.followup.line,start:0
+msgid "Type of Term"
+msgstr "Termin tyyppi"
+
+#. module: account_followup
+#: model:ir.model,name:account_followup.model_account_followup_print
+#: model:ir.model,name:account_followup.model_account_followup_print_all
+msgid "Print Followup & Send Mail to Customers"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,date_move_last:0
+#: field:account_followup.stat.by.partner,date_move_last:0
+msgid "Last move"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
+msgid "Followup Report"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat,period_id:0
+msgid "Period"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+msgid "Cancel"
+msgstr "Peruuta"
+
+#. module: account_followup
+#: view:account_followup.followup.line:0
+msgid "Follow-Up Lines"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Litigation"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,max_followup_id:0
+msgid "Max Follow Up Level"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
+msgid "Payable Items"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(followup_amount)s: Total Amount Due"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: view:account_followup.followup.line:0
+msgid "%(date)s: Current Date"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Followup Level"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.followup:0
+#: field:account_followup.followup,description:0
+#: report:account_followup.followup.print:0
+msgid "Description"
+msgstr "Kuvaus"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "This Fiscal year"
+msgstr ""
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Partner entries"
+msgstr ""
+
+#. module: account_followup
+#: help:account.followup.print.all,partner_lang:0
+msgid ""
+"Do not change message text, if you want to send email in partner language, "
+"or configure from company"
+msgstr ""
+
+#. module: account_followup
+#: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
+msgid "Receivable Items"
+msgstr ""
+
+#. module: account_followup
+#: view:account_followup.stat:0
+#: model:ir.actions.act_window,name:account_followup.action_followup_stat
+#: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
+msgid "Follow-ups Sent"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup,name:0
+#: field:account_followup.followup.line,name:0
+msgid "Name"
+msgstr "Nimi"
+
+#. module: account_followup
+#: field:account_followup.stat,date_move:0
+#: field:account_followup.stat.by.partner,date_move:0
+msgid "First move"
+msgstr "Ensimmäinen liike"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Li."
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Maturity"
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:0
+#, python-format
+msgid ""
+"E-Mail not sent to following Partners, Email not available !\n"
+"\n"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print:0
+msgid "Continue"
+msgstr "Jatka"
+
+#. module: account_followup
+#: field:account_followup.followup.line,delay:0
+msgid "Days of delay"
+msgstr "Viivästyspäivä"
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Document : Customer account statement"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: account_followup
+#: view:account.move.line:0
+msgid "Total credit"
+msgstr "Kokonaisluotto"
+
+#. module: account_followup
+#: view:account.followup.print.all:0
+msgid "%(line)s: Ledger Posting lines"
 msgstr ""
 
 #. module: account_followup
@@ -452,46 +685,40 @@ msgid "Sequence"
 msgstr ""
 
 #. module: account_followup
-#: wizard_view:account_followup.followup.print.all,next:0
-msgid "%(heading)s: Move line header"
+#: view:account_followup.followup.line:0
+msgid "%(company_name)s: User's Company Name"
 msgstr ""
 
 #. module: account_followup
-#: view:account_followup.followup.line:0
-#: wizard_view:account_followup.followup.print.all,next:0
+#: report:account_followup.followup.print:0
+msgid "Customer Ref :"
+msgstr ""
+
+#. module: account_followup
+#: view:account.followup.print.all:0
 msgid "%(partner_name)s: Partner name"
 msgstr ""
 
 #. module: account_followup
-#: wizard_field:account_followup.followup.print.all,next,email_conf:0
-msgid "Send email confirmation"
-msgstr "Lähetä sähköpostivarmennus"
-
-#. module: account_followup
-#: wizard_field:account_followup.followup.print.all,init,followup_id:0
-msgid "Follow-up"
+#: view:account_followup.stat:0
+msgid "Latest Followup Date"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.stat,name:0
-msgid "Partner"
-msgstr "Kumppani"
-
-#. module: account_followup
-#: wizard_button:account_followup.followup.print.all,init,end:0
-#: wizard_button:account_followup.followup.print.all,next,end:0
-msgid "Cancel"
-msgstr "Peruuta"
-
-#. module: account_followup
-#: field:account_followup.followup.line,delay:0
-msgid "Days of delay"
-msgstr "Viivästyspäivä"
-
-#. module: account_followup
-#: wizard_button:account_followup.followup.print.all,next,print:0
-msgid "Print Follow Ups & Send Mails"
+#: model:ir.model,name:account_followup.model_account_followup_followup_line
+msgid "Follow-Up Criteria"
 msgstr ""
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "You can not create move line on view account."
+msgstr ""
+
+#~ msgid "Select partners"
+#~ msgstr "Valitse kumppanit"
+
+#~ msgid "Account Type"
+#~ msgstr "Tili tyyppi"
 
 #, python-format
 #~ msgid ""
@@ -501,3 +728,19 @@ msgstr ""
 #~ "Sähköpostia ei lehetetty seuraaville kumppaneille, Sähköposti ei ole "
 #~ "saatavilla\n"
 #~ "\n"
+
+#~ msgid "Select partners to remind"
+#~ msgstr "Valitse muitutettavat kumppanit"
+
+#~ msgid "Lines"
+#~ msgstr "Rivit"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Virheellinen XML näkymäarkkitehtuurille!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."

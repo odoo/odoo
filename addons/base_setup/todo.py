@@ -49,22 +49,28 @@ class base_setup_company(osv.osv_memory):
     def _get_all_countries(self, cr, uid, context=None):
         return self._get_all(cr, uid, 'res.country', context=context)
 
+    def _show_company_data(self, cr, uid, context=None):
+        # We only want to show the default company data in demo mode, otherwise users tend to forget
+        # to fill in the real company data in their production databases
+        return self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'module_meta_information').demo
+
+
     def default_get(self, cr, uid, fields_list=None, context=None):
         """ get default company if any, and the various other fields
         from the company's fields
         """
-        base_mod = self.pool.get('ir.module.module').search(cr, uid, [('name','ilike','base')])
-        base_mod_rec = self.pool.get('ir.module.module').browse(cr, uid, base_mod)[0]
         defaults = super(base_setup_company, self)\
               .default_get(cr, uid, fields_list=fields_list, context=context)
         companies = self.pool.get('res.company')
         company_id = companies.search(cr, uid, [], limit=1, order="id")
         if not company_id or 'company_id' not in fields_list:
             return defaults
-        company = companies.browse(cr, uid, company_id[0])
+        company = companies.browse(cr, uid, company_id[0], context=context)
         defaults['company_id'] = company.id
-        if not base_mod_rec.demo:
+
+        if not self._show_company_data(cr, uid, context=context):
             return defaults
+
         defaults['currency'] = company.currency_id.id
         for field in ['name','logo','rml_header1','rml_footer1','rml_footer2']:
             defaults[field] = company[field]
@@ -86,7 +92,7 @@ class base_setup_company(osv.osv_memory):
         'street2':fields.char('Street 2', size=128),
         'zip':fields.char('Zip Code', size=24),
         'city':fields.char('City', size=128),
-        'state_id':fields.selection(_get_all_states, 'State'),
+        'state_id':fields.selection(_get_all_states, 'Fed. State'),
         'country_id':fields.selection(_get_all_countries, 'Country'),
         'email':fields.char('E-mail', size=64),
         'phone':fields.char('Phone', size=64),
@@ -104,8 +110,8 @@ Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07''')
 We suggest you to put bank information here:
 IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701'''),
         'logo':fields.binary('Logo'),
-        'account_no':fields.char('Account No', size=64),
-        'website': fields.char('Web', size=64),
+        'account_no':fields.char('Bank Account No', size=64),
+        'website': fields.char('Company Website', size=64, help="Example: http://openerp.com"),
     }
 
     def execute(self, cr, uid, ids, context=None):
@@ -164,8 +170,8 @@ class res_currency(osv.osv):
             return []
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','code'], context, load='_classic_write')
-        return [(x['id'], tools.ustr(x['name']) + ' (' + tools.ustr(x['code']) + ')')   for x in reads]
+        reads = self.read(cr, uid, ids, ['name','symbol'], context, load='_classic_write')
+        return [(x['id'], tools.ustr(x['name']) + (x['symbol'] and (' (' + tools.ustr(x['symbol']) + ')') or '')) for x in reads]
 
 res_currency()
 

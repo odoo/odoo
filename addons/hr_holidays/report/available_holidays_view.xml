@@ -1,110 +1,24 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
-<!-- available holidays report -->
-
-        <record id="view_hr_available_holidays_report_tree" model="ir.ui.view">
-            <field name="name">available.holidays.report.tree</field>
-            <field name="model">available.holidays.report</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-               <tree string="Available Holidays">
-                    <field name="employee_id" invisible="1"/>
-                    <field name="category_id" invisible="1"/>
-                    <field name="holiday_status_id" invisible="1"/>
-                    <field name="department_id" invisible="1"/>
-                    <field name="day" invisible="1"/>
-                    <field name="month" invisible="1"/>
-                    <field name="year" invisible="1"/>
-                    <field name="date" invisible="1"/>
-                    <field name="max_leave" sum="Allocated Leaves"/>
-                    <field name="taken_leaves" sum="Taken Leaves"/>
-                    <field name="remaining_leave" sum="Remaining Leaves"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_hr_available_holidays_report_graph" model="ir.ui.view">
-            <field name="name">available.holidays.report.graph</field>
-            <field name="model">available.holidays.report</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph orientation="horizontal" string="Available Holidays" type="bar">
-                    <field name="employee_id"/>
-                    <field name="max_leave" operator="+"/>
-                    <field name="taken_leaves" operator="+"/>
-                    <field name="remaining_leave" operator="+"/>
-               		<field name="month" group = "True" operator="+" invisible="1"/>
-                    <field group="True" name="holiday_status_id"/>
-                </graph>
-            </field>
-        </record>
-
-        <record id="view_hr_available_holidays_report_search" model="ir.ui.view">
-	        <field name="name">available.holidays.report.search</field>
-	        <field name="model">available.holidays.report</field>
-	        <field name="type">search</field>
-	        <field name="arch" type="xml">
-	            <search string="Leaves">
-	            	<group>
-		            	<filter icon="terp-go-year" string="This Year"
-			                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date.today()-datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"
-			                    help="Leaves in this year"/>
-		                <filter icon="terp-go-month" string="This Month" name="month"
-		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]" help="Leaves in this month"/>
-			            <filter icon="terp-go-week" string="    7 Days    " separator="1"
-		                    domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')), ('date','&gt;',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]" help="Leaves during last 7 days"/>
-		                <separator orientation="vertical"/>
-                    <field name="employee_id"/>
-		            </group>
-	                <newline/>
-	                <group expand="0" string="Extended Filters..." colspan="10" col="12">
-	                    <field name="holiday_status_id" widget="selection"/>
-	                	<field name="department_id" widget="selection"/>
-	                </group>
-	                <newline/>
-                    <group expand="1" string="Group By..." colspan="10" col="12">
-                        <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
-                        <filter icon="terp-personal" string="Employee"
-                          name="user" context="{'group_by':'employee_id'}"
-                          help="Leaves by employee"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" context="{'group_by':'holiday_status_id'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
-                        <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
-                        <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
-                    </group>
-	            </search>
-	        </field>
-	    </record>
-
-        <record id="action_hr_available_holidays_report" model="ir.actions.act_window">
-            <field name="name">Available Holidays</field>
-            <field name="res_model">available.holidays.report</field>
+        <record model="ir.actions.act_window" id="action_hr_available_holidays_report">
+            <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph</field>
-            <field name="context">{'search_default_month':1,'search_default_user':1,'group_by':[], "search_default_user_id": uid, 'group_by_no_leaf':1}</field>
-            <field name="view_id" ref="view_hr_available_holidays_report_search"/>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="view_holiday_simple"/>
+            <field name="context">{'search_default_group_employee': 1, 'search_default_group_type': 1}</field>
+            <field name="domain">[('holiday_type','=','employee')]</field>
+            <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
 
-        <record model="ir.actions.act_window.view" id="action_hr_available_holidays_report_tree">
-                <field name="sequence" eval="1"/>
-                <field name="view_mode">tree</field>
-                <field name="view_id" ref="view_hr_available_holidays_report_tree"/>
-                <field name="act_window_id" ref="action_hr_available_holidays_report"/>
-        </record>
+        <menuitem
+            name="Leaves Analysis" 
+            id="menu_hr_available_holidays_report_tree" 
+            action="action_hr_available_holidays_report" 
+            parent="menu_hr_reporting_holidays"/>
 
-        <record model="ir.actions.act_window.view" id="action_hr_available_holidays_report_graph">
-                <field name="sequence" eval="2"/>
-                <field name="view_mode">graph</field>
-                <field name="view_id" ref="view_hr_available_holidays_report_graph"/>
-                <field name="act_window_id" ref="action_hr_available_holidays_report"/>
-        </record>
 
-        <menuitem name="Available Holidays" id="menu_hr_available_holidays_report_tree" action="action_hr_available_holidays_report" parent="menu_hr_reporting_holidays"/>
-
-	</data>
+    </data>
 </openerp>
 

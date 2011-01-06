@@ -25,9 +25,11 @@ class auction_payer(osv.osv_memory):
     _name = "auction.payer"
     _description = "Auction payer"
     
-    def payer(self, cr, uid, ids, context):
+    def payer(self, cr, uid, ids, context=None):
+        if context is None: 
+            context = {}
         self.pool.get('auction.lots').write(cr, uid, context.get('active_ids', []), {'is_ok':True, 'state':'paid'})
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
 auction_payer()
 
@@ -38,15 +40,17 @@ class auction_payer_sel(osv.osv_memory):
     _name = "auction.payer.sel"
     _description = "Auction payment for seller"
     
-    def payer_sel(self, cr, uid, ids, context):
+    def payer_sel(self, cr, uid, ids, context=None):
         """
         This function Update auction lots object and seller paid  true.
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of auction payer sel’s IDs.
         """
-        self.pool.get('auction.lots').write(cr, uid, context['active_ids'], {'paid_vnd':True})
-        return {}
+        if context is None: 
+            context = {}
+        self.pool.get('auction.lots').write(cr, uid, context.get('active_ids', []), {'paid_vnd':True})
+        return {'type': 'ir.actions.act_window_close'}
     
 auction_payer_sel()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

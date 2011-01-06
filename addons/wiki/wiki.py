@@ -54,7 +54,7 @@ class wiki_group(osv.osv):
         'method': lambda *a: 'page',
     }
 
-    def open_wiki_page(self, cr, uid, ids, context):
+    def open_wiki_page(self, cr, uid, ids, context=None):
 
         """ Opens Wiki Page of Group
         @param cr: the current row, from the database cursor,
@@ -62,8 +62,6 @@ class wiki_group(osv.osv):
         @param ids: List of open wiki group’s IDs
         @return: dictionay of open wiki window on give group id
         """
-        if not context:
-            context = {}
         if type(ids) in (int,long,):
             ids = [ids]
         group_id = False
@@ -88,7 +86,7 @@ class wiki_group(osv.osv):
             value['view_type'] = 'form'
             value['view_mode'] = 'tree,form'
         elif group.method == 'tree':
-            view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'wiki.wiki.tree.childs')])
+            view_id = self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'wiki.wiki.tree.children')])
             value['view_id'] = view_id
             value['domain'] = [('group_id', '=', group.id), ('parent_id', '=', False)]
             value['view_type'] = 'tree'
@@ -108,9 +106,9 @@ class wiki_wiki2(osv.osv):
         'name': fields.char('Title', size=256, select=True, required=True),
         'write_uid': fields.many2one('res.users', "Last Contributor", select=True),
         'text_area': fields.text("Content"),
-        'create_uid': fields.many2one('res.users', 'Author', select=True),
-        'create_date': fields.datetime("Created on", select=True),
-        'write_date': fields.datetime("Modification Date", select=True),
+        'create_uid': fields.many2one('res.users', 'Author', select=True, readonly=True),
+        'create_date': fields.datetime("Created on", select=True, readonly=True),
+        'write_date': fields.datetime("Modification Date", select=True, readonly=True),
         'tags': fields.char('Keywords', size=1024, select=True),
         'history_id': fields.one2many('wiki.wiki.history', 'wiki_id', 'History Lines'),
         'minor_edit': fields.boolean('Minor edit', select=True),
@@ -131,7 +129,7 @@ class wiki_wiki2(osv.osv):
         'minor_edit': lambda *a: True,
     }
 
-    def onchange_group_id(self, cr, uid, ids, group_id, content, context={}):
+    def onchange_group_id(self, cr, uid, ids, group_id, content, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks,
@@ -140,7 +138,7 @@ class wiki_wiki2(osv.osv):
 
         if (not group_id) or content:
             return {}
-        grp = self.pool.get('wiki.groups').browse(cr, uid, group_id)
+        grp = self.pool.get('wiki.groups').browse(cr, uid, group_id, context=context)
         section = '0'
         for page in grp.page_ids:
             if page.section: section = page.section
@@ -184,16 +182,15 @@ class wiki_wiki2(osv.osv):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
-        id = super(wiki_wiki2, self).create(cr, uid, vals, context)
-        self.create_history(cr, uid, [id], vals, context)
-        return id
+        wiki_id = super(wiki_wiki2, self).create(cr, uid,
+                             vals, context)
+        self.create_history(cr, uid, [wiki_id], vals, context)
+        return wiki_id
 
     def write(self, cr, uid, ids, vals, context=None):
 
         """ @param cr: the current row, from the database cursor,
             @param uid: the current user’s ID for security checks, """
-
         result = super(wiki_wiki2, self).write(cr, uid, ids, vals, context)
         self.create_history(cr, uid, ids, vals, context)
         return result

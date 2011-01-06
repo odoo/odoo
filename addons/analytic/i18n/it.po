@@ -7,52 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-06-18 10:59+0000\n"
-"PO-Revision-Date: 2010-08-17 10:07+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-12-16 03:21+0000\n"
+"Last-Translator: Davide Corio - Domsense <davide.corio@domsense.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "Conto figlio"
-
-#. module: analytic
-#: help:account.analytic.line,amount_currency:0
-msgid ""
-"The amount expressed in the related account currency if not equal to the "
-"company one."
-msgstr ""
-"L'importo espresso nella valuta del conto non è uguale a quella della "
-"Compagnia"
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
+msgstr "Conti figli"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account Name"
-msgstr "Nome del conto"
+msgstr "Nome Conto"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
 msgstr "Specifica la quantità da sommare"
-
-#. module: analytic
-#: help:account.analytic.line,currency_id:0
-msgid "The related account currency if not equal to the company one."
-msgstr "La relativa valuta del conto non è uguale a quella della Compagnia"
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -145,13 +123,9 @@ msgid "Description"
 msgstr "Descrizione"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price."
-msgstr ""
-"Calcolato multiplicando la quantità e il prezzo dato nel campo "
-"\"costo/prezzo del prodotto\""
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "Normale"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -181,14 +155,23 @@ msgstr "Data"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
-#: field:account.analytic.line,currency_id:0
 msgid "Account currency"
 msgstr "Valuta del Conto"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
-msgstr "Visualizza"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Quantità"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Calcolato moltiplicando la quantità ed il prezzo specificato nel prezzo di "
+"costo del Prodotto. Sempre espresso nella valuta principale aziendale."
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -221,15 +204,18 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr "Data Inizio"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "Errore! Non è possibile creare conti analitici ricorsivi."
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Quantità"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr ""
+"Se si seleziona il Tipo di Visualizzazione, significa che si vuol permettere "
+"la creazione delle voci del giornale che usano quell'account."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -240,11 +226,6 @@ msgstr "Data Fine"
 #: field:account.analytic.account,code:0
 msgid "Account Code"
 msgstr "Codifica Conto"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
-msgstr "Normale"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -259,19 +240,19 @@ msgid "Analytic Account"
 msgstr "Conto Analitico"
 
 #. module: analytic
-#: field:account.analytic.account,company_currency_id:0
-msgid "Currency"
-msgstr "Valuta"
-
-#. module: analytic
-#: field:account.analytic.line,amount_currency:0
-msgid "Amount currency"
-msgstr "Importo valuta"
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "Visualizza"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
-msgid "Associated Partner"
-msgstr "Partner associato"
+msgid "Partner"
+msgstr "Partner"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "Data Inizio"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -282,3 +263,53 @@ msgstr "Aperto"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Voci Conto Analitico"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
+#~ "speciali!"
+
+#~ msgid ""
+#~ "Calculated by multiplying the quantity and the price given in the Product's "
+#~ "cost price."
+#~ msgstr ""
+#~ "Calcolato multiplicando la quantità e il prezzo dato nel campo "
+#~ "\"costo/prezzo del prodotto\""
+
+#~ msgid "Currency"
+#~ msgstr "Valuta"
+
+#~ msgid "Associated Partner"
+#~ msgstr "Partner associato"
+
+#~ msgid ""
+#~ "The amount expressed in the related account currency if not equal to the "
+#~ "company one."
+#~ msgstr ""
+#~ "L'importo espresso nella valuta del conto non è uguale a quella della "
+#~ "Compagnia"
+
+#~ msgid "The related account currency if not equal to the company one."
+#~ msgstr "La relativa valuta del conto non è uguale a quella della Compagnia"
+
+#~ msgid "Amount currency"
+#~ msgstr "Importo valuta"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Le regole non sono supportate per oggetti osv_memory !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Il nome del gruppo deve essere unico!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "Rule must have at least one checked access right !"
+#~ msgstr "La regola deve avere almento un diritto di accesso spuntato!"

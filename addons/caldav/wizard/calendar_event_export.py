@@ -37,8 +37,11 @@ class calendar_event_export(osv.osv_memory):
         """
         Get Default value for Name field.
         """
-        if not context:
+        if context is None:
             context = {}
+        else:
+            context= context.copy()
+        context['uid'] = uid
         model = context.get('model', 'basic.calendar')
         model_obj = self.pool.get(model)
         res = super(calendar_event_export, self).default_get( cr, uid, fields, context=context)

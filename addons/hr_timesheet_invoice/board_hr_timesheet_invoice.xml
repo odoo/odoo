@@ -11,7 +11,7 @@
             <field name="view_mode">graph,tree</field>
         </record>
 
-        <record id="board_hr_timesheet_invoice_form" model="ir.ui.view">
+       <!--  <record id="board_hr_timesheet_invoice_form" model="ir.ui.view">
             <field name="name">board.hr.timesheet.invoice</field>
             <field name="model">board.board</field>
              <field name="type">form</field>
@@ -22,10 +22,10 @@
                     <action colspan="4" height="160" name="%(act_my_account)d" string="Accounts to invoice" width="510"/>
                 </xpath>
             </field>
-        </record>
+        </record> -->
 
         <!-- Need to merge in above view -->
-        <record id="board_hr_timesheet_invoice_report_form1" model="ir.ui.view">
+        <!--<record id="board_hr_timesheet_invoice_report_form1" model="ir.ui.view">
             <field name="name">board.hr.timesheet.invoice</field>
             <field name="model">board.board</field>
             <field name="type">form</field>
@@ -35,7 +35,7 @@
                     <action colspan="4" height="220" name="%(action_account_analytic_line_to_invoice)d" string="Costs to invoice"/>
                 </xpath>
             </field>
-        </record>
+        </record> -->
 
         <record id="view_timesheet_uninvoiced_line_tree" model="ir.ui.view">
             <field name="name">timesheet.uninvoiced.line.tree</field>
@@ -68,7 +68,7 @@
             <field name="inherit_id" ref="hr.board_hr_manager_form"/>
             <field name="arch" type="xml">
                 <xpath expr="/form/hpaned/child1" position="inside">
-                    <action colspan="4" height="220" name="%(action_timesheet_uninvoiced_line)d" string="Uninvoice lines with billing rate" />
+                    <action colspan="4" height="220" name="%(action_timesheet_uninvoiced_line)d" string="Uninvoice Lines With Billing Rate" />
                 </xpath>
             </field>
         </record>

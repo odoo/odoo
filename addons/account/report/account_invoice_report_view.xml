@@ -73,19 +73,19 @@
                            domain="[('state','not in', ('draft','cancel'))]"
                            help = "Open and Paid Invoices"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-sale" string="Customer"
+                    <filter icon="terp-personal" string="Customer"
                             name="customer"
                             domain="['|', ('type','=','out_invoice'),('type','=','out_refund')]"
                             help="Customer Invoices And Refunds"/>
-                    <filter icon="terp-purchase"
-                            string="Vendor"
+                    <filter icon="terp-personal"
+                            string="Supplier"
                             separator="1"
                             domain="['|', ('type','=','in_invoice'),('type','=','in_refund')]"
-                            help="Vendor Invoices And Refunds"/>
+                            help="Supplier Invoices And Refunds"/>
                    <separator orientation="vertical"/>
                    <filter icon="terp-dolar" string="Invoice"
                             domain="['|', ('type','=','out_invoice'),('type','=','in_invoice')]"
-                            help="Customer And Vendor Invoices"/>
+                            help="Customer And Supplier Invoices"/>
                    <filter icon="terp-dolar_ok!"
                             string="Refund"
                             separator="1"
@@ -94,8 +94,8 @@
                    <separator orientation="vertical"/>
                    <field name="partner_id"/>
                    <field name="user_id" />
-                   <field name="date" string="Date Invoiced"/>
-                   <field name="categ_id" />
+                   <field name="date" string="Invoice Date"/>
+                   <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 </group>
                 <newline/>
                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
@@ -110,7 +110,7 @@
                 </group>
                 <newline/>
                 <group expand="1" string="Group By...">
-                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
+                    <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
                     <filter string="Salesman" name='user' icon="terp-personal" context="{'group_by':'user_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id','set_visible':True,'residual_invisible':True}"/>
@@ -139,9 +139,9 @@
         <field name="res_model">account.invoice.report</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,graph</field>
-        <field name="context">{'search_default_current':1,'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
+        <field name="context">{'search_default_current':1, 'search_default_partner':1, 'search_default_customer':1, 'search_default_date': time.strftime('%Y-01-01'), 'group_by':[], 'group_by_no_leaf':1,}</field>
         <field name="search_view_id" ref="view_account_invoice_report_search"/>
-        <field name="help">A tool search lets you know statistics on invoices that match your needs.</field>
+        <field name="help">From this report, you can have an overview of the amount invoiced to your customer as well as payment delays. The tool search can also be used to personalise your Invoices reports and so, match this analysis to your needs.</field>
 
     </record>
 

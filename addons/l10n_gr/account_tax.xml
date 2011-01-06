@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+
+    <data noupdate="False">
+
+    <!-- VAT Code Definitions -->
+
+    <!-- Invoiced VAT -->
+
+    <!-- Input VAT -->
+
+    <record id="vat_code_chart_root" model="account.tax.code.template">
+        <field name="name">Πίνακες φόρου</field>
+    </record>
+
+    <record id="vat_code_balance_net" model="account.tax.code.template">
+        <field name="name">Υπόλοιπο ΦΠΑ </field>
+        <field name="parent_id" ref="vat_code_chart_root"/>
+    	<field name="code">501-511</field>
+    </record>
+
+    <record id="vat_code_input" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εισροών</field>
+        <field name="parent_id" ref="vat_code_balance_net"/>
+    </record>
+
+    <record id="vat_code_input_restgr" model="account.tax.code.template">
+        <field name="name">Λοιπή Ελλάδα εκτός Αιγαίου</field>
+        <field name="parent_id" ref="vat_code_input"/>
+    </record>
+
+    <record id="vat_code_input_9" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εισροών 9%</field>
+    	<field name="code">371</field>
+        <field name="parent_id" ref="vat_code_input_restgr"/>
+    </record>
+
+    <record id="vat_code_input_4" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εισροών 4,5%</field>
+    	<field name="code">372</field>
+        <field name="parent_id" ref="vat_code_input_restgr"/>
+    </record>
+
+    <record id="vat_code_input_19" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εισροών 19%</field>
+    	<field name="code">373</field>
+        <field name="parent_id" ref="vat_code_input_restgr"/>
+    </record>
+
+    <record id="vat_code_input_aeg" model="account.tax.code.template">
+        <field name="name">Νησιά Αιγαίου</field>
+        <field name="parent_id" ref="vat_code_input"/>
+    </record>
+
+    <record id="vat_code_input_6" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εισροών 6%</field>
+    	<field name="code">374</field>
+        <field name="parent_id" ref="vat_code_input_aeg"/>
+    </record>
+
+    <record id="vat_code_input_3" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εισροών 3%</field>
+    	<field name="code">375</field>
+        <field name="parent_id" ref="vat_code_input_aeg"/>
+    </record>
+
+    <record id="vat_code_input_13" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εισροών 13%</field>
+    	<field name="code">376</field>
+        <field name="parent_id" ref="vat_code_input_aeg"/>
+    </record>
+
+    <record id="vat_code_output" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εκροών</field>
+        <field name="parent_id" ref="vat_code_balance_net"/>
+    </record>
+
+    <record id="vat_code_output_restgr" model="account.tax.code.template">
+        <field name="name">Λοιπή Ελλάδα εκτός Αιγαίου</field>
+        <field name="parent_id" ref="vat_code_output"/>
+    </record>
+
+    <record id="vat_code_output_9" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εκροών 9%</field>
+    	<field name="code">331</field>
+        <field name="parent_id" ref="vat_code_output_restgr"/>
+    </record>
+
+    <record id="vat_code_output_4" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εκροών 4,5%</field>
+    	<field name="code">332</field>
+        <field name="parent_id" ref="vat_code_output_restgr"/>
+    </record>
+
+    <record id="vat_code_output_19" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εκροών 19%</field>
+    	<field name="code">333</field>
+        <field name="parent_id" ref="vat_code_output_restgr"/>
+    </record>
+
+    <record id="vat_code_output_aeg" model="account.tax.code.template">
+        <field name="name">Νησιά Αιγαίου</field>
+        <field name="parent_id" ref="vat_code_output"/>
+    </record>
+
+    <record id="vat_code_output_6" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εκροών 6%</field>
+    	<field name="code">334</field>
+        <field name="parent_id" ref="vat_code_output_aeg"/>
+    </record>
+
+    <record id="vat_code_output_3" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εκροών 3%</field>
+    	<field name="code">335</field>
+        <field name="parent_id" ref="vat_code_output_aeg"/>
+    </record>
+
+    <record id="vat_code_output_13" model="account.tax.code.template">
+        <field name="name">ΦΠΑ Εκροών 13%</field>
+    	<field name="code">336</field>
+        <field name="parent_id" ref="vat_code_output_aeg"/>
+    </record>
+
+    <record id="sum_output" model="account.tax.code.template">
+        <field name="name">Σύνολο Εκροών</field>
+    	<field name="code">311</field>
+        <field name="parent_id" ref="vat_code_chart_root"/>
+    </record>
+
+    <record id="sum_output_307" model="account.tax.code.template">
+        <field name="name">Σύνολο Φορολ/τέων Εκροών</field>
+    	<field name="code">307</field>
+        <field name="parent_id" ref="sum_output"/>
+    </record>
+
+    <record id="output_301" model="account.tax.code.template">
+        <field name="name">Εκροές 9%</field>
+    	<field name="code">301</field>
+        <field name="parent_id" ref="sum_output_307"/>
+    </record>
+
+    <record id="output_302" model="account.tax.code.template">
+        <field name="name">Εκροές 4.5%</field>
+    	<field name="code">302</field>
+        <field name="parent_id" ref="sum_output_307"/>
+    </record>
+
+    <record id="output_303" model="account.tax.code.template">
+        <field name="name">Εκροές 19%</field>
+    	<field name="code">303</field>
+        <field name="parent_id" ref="sum_output_307"/>
+    </record>
+
+    <!-- Other tax columns -->
+
+    <record id="sum_input" model="account.tax.code.template">
+        <field name="name">Σύνολο Φορολ/τέων εισροών</field>
+        <field name="parent_id" ref="vat_code_chart_root"/>
+    </record>
+
+    <record id="sum_input_358" model="account.tax.code.template">
+        <field name="name">Σύνολο Φορολ/τέων εισροών</field>
+    	<field name="code">358</field>
+        <field name="parent_id" ref="vat_code_chart_root"/>
+    </record>
+
+    <record id="input_351" model="account.tax.code.template">
+        <field name="name">Εισροές 9%</field>
+    	<field name="code">351</field>
+        <field name="parent_id" ref="sum_input_358"/>
+    </record>
+
+    <record id="input_352" model="account.tax.code.template">
+        <field name="name">Εισροές 4.5%</field>
+    	<field name="code">352</field>
+        <field name="parent_id" ref="sum_input_358"/>
+    </record>
+
+    <record id="input_353" model="account.tax.code.template">
+        <field name="name">Εισροές 19%</field>
+    	<field name="code">353</field>
+        <field name="parent_id" ref="sum_input_358"/>
+    </record>
+
+    <!-- Chart Template -->
+
+    <record id="l10n_gr_chart_template" model="account.chart.template">
+        <field name="name">Πρότυπο Ελληνικού Λογιστικού Σχεδίου</field>
+        <field name="account_root_id" ref="chartgr_0"/>
+        <field name="tax_code_root_id" ref="vat_code_chart_root"/>
+        <field name="bank_account_view_id" ref="chartgr_38_03"/>
+        <field name="property_account_receivable" ref="chartgr_31"/>
+        <field name="property_account_payable"  ref="chartgr_50"/>
+        <field name="property_account_expense_categ" ref="chartgr_64"/>
+        <field name="property_account_income_categ" ref="chartgr_72"/>
+    </record>
+
+    <!-- VAT Codes -->
+    <!-- Purchases + Input VAT -->
+
+    <record id="ivat19" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_gr_chart_template"/>
+        <field name="name">Εισροές 19</field>
+        <field eval="0.19" name="amount"/>
+        <field name="type">percent</field>
+    	<field name="type_tax_use">sale</field>
+        <field name="account_collected_id" ref="chartgr_54_00"/>
+        <field name="account_paid_id" ref="chartgr_54_00"/>
+        <field name="base_code_id" ref="input_353"/>
+        <field name="tax_code_id" ref="vat_code_input_19"/>
+
+    <!-- refunds: <field name="ref_base_code_id" ref="vat_code_purch_S"/>
+        <field name="ref_tax_code_id" ref="vat_code_input_S"/> -->
+    </record>
+
+    <!-- revise the tax.. -->
+
+    <record id="ovat19" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_gr_chart_template"/>
+        <field name="name">Outputs 19</field>
+        <field eval="0.19" name="amount"/>
+        <field name="type">percent</field>
+    	<field name="type_tax_use">purchase</field>
+        <field name="account_collected_id" ref="chartgr_54_00"/>
+        <field name="account_paid_id" ref="chartgr_54_00"/>
+        <field name="base_code_id" ref="output_303"/>
+        <field name="tax_code_id" ref="vat_code_output_19"/>
+    <!-- refunds: <field name="ref_base_code_id" ref="vat_code_purch_S"/>
+        <field name="ref_tax_code_id" ref="vat_code_input_S"/> -->
+    </record>
+
+    </data>
+</openerp>

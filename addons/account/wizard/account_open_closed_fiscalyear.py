@@ -18,6 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 from osv import fields, osv
 from tools.translate import _
 
@@ -29,16 +30,20 @@ class account_open_closed_fiscalyear(osv.osv_memory):
                                  'Fiscal Year to Open', required=True, help='Select Fiscal Year which you want to remove entries for its End of year entries journal'),
     }
 
-    def remove_entries(self, cr, uid, ids, context={}):
-        data = self.read(cr, uid, ids, [])[0]
-        data_fyear = self.pool.get('account.fiscalyear').browse(cr, uid, data['fyear_id'])
+    def remove_entries(self, cr, uid, ids, context=None):
+        fy_obj = self.pool.get('account.fiscalyear')
+        move_obj = self.pool.get('account.move')
+
+        data = self.read(cr, uid, ids, [], context=context)[0]
+        data_fyear = fy_obj.browse(cr, uid, data['fyear_id'], context=context)
         if not data_fyear.end_journal_period_id:
             raise osv.except_osv(_('Error'), _('No journal for ending writing has been defined for the fiscal year'))
         period_journal = data_fyear.end_journal_period_id
-        ids_move = self.pool.get('account.move').search(cr, uid, [('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
+        ids_move = move_obj.search(cr, uid, [('journal_id','=',period_journal.journal_id.id),('period_id','=',period_journal.period_id.id)])
         if ids_move:
             cr.execute('delete from account_move where id IN %s', (tuple(ids_move),))
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_open_closed_fiscalyear()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

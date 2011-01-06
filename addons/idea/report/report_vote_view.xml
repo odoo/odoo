@@ -33,12 +33,12 @@
                             domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-01-01'))]"
                             help="Idea Vote created in curren year"/>
                         <filter icon="terp-go-month" string="   Month   "
-                            domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                            domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                             help="Idea Vote created in current month"/>
                         <filter icon="terp-go-month"
                              string="    Month-1    "
                              separator="1"
-                             domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                             domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
                              help="Idea Vote created last month"/>
                          <separator orientation="vertical"/>
                          <filter icon="terp-go-today"
@@ -91,7 +91,7 @@
             <field name="context">{'search_default_User':1,'search_default_State':1,'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
 
-        <menuitem action="action_report_vote_all" id="menu_report_vote_all" parent="menu_idea_reporting" sequence="1" groups="base.group_tool_manager,base.group_system"/>
+        <menuitem action="action_report_vote_all" id="menu_report_vote_all" parent="menu_idea_reporting" sequence="1" groups="base.group_tool_manager"/>
     </data>
 </openerp>
 

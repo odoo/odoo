@@ -30,7 +30,7 @@
 #
 ##############################################################################
 
-from mx import DateTime
+from datetime import datetime
 
 from osv import fields, osv
 from tools import mod10r
@@ -71,8 +71,8 @@ class account_invoice(osv.osv):
             if invoice.move_id:
                 for line in invoice.move_id.line_id:
                     if not line.date_maturity or \
-                            DateTime.strptime(line.date_maturity, '%Y-%m-%d') \
-                            < DateTime.now():
+                            datetime.strptime(line.date_maturity, '%Y-%m-%d') \
+                            < datetime.today():
                         res[invoice.id] += line.amount_to_pay
         return res
 
@@ -96,13 +96,13 @@ class account_invoice(osv.osv):
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
     ## @return a boolean True if valid False if invalid
-    def _check_bvr(self, cr, uid, ids):
+    def _check_bvr(self, cr, uid, ids, context=None):
         """
         Function to validate a bvr reference like :
         0100054150009>132000000000000000000000014+ 1300132412>
         The validation is based on l10n_ch
         """
-        invoices = self.browse(cr,uid,ids)
+        invoices = self.browse(cr,uid,ids, context=context)
         for invoice in invoices:
             if invoice.reference_type == 'bvr':
                 if not invoice.reference:
@@ -123,10 +123,10 @@ class account_invoice(osv.osv):
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
     ## @return a boolean True if valid False if invalid
-    def _check_reference_type(self, cursor, user, ids):
+    def _check_reference_type(self, cursor, user, ids, context=None):
         """Check the customer invoice reference type depending
         on the BVR reference type and the invoice partner bank type"""
-        for invoice in self.browse(cursor, user, ids):
+        for invoice in self.browse(cursor, user, ids, context=context):
             if invoice.type in 'in_invoice':
                 if invoice.partner_bank_id and \
                         invoice.partner_bank_id.state in \

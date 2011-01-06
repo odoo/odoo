@@ -51,9 +51,11 @@
             <field name="target">new</field>
         </record>
 
-         register configuration wizard
+<!--    register configuration wizard  -->
+         
         <record id="config_wizard_step_case_section_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_view_document_ics_config_directories"/>
+            <field name="restart">always</field>
         </record>
      </data>
 </openerp>

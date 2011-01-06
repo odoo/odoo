@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-06-18 10:59:19+0000\n"
-"PO-Revision-Date: 2010-06-18 10:59:19+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56:53+0000\n"
+"PO-Revision-Date: 2011-01-03 16:56:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,16 +21,6 @@ msgid "Child Accounts"
 msgstr ""
 
 #. module: analytic
-#: help:account.analytic.line,amount_currency:0
-msgid "The amount expressed in the related account currency if not equal to the company one."
-msgstr ""
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account Name"
 msgstr ""
@@ -38,11 +28,6 @@ msgstr ""
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
-
-#. module: analytic
-#: help:account.analytic.line,currency_id:0
-msgid "The related account currency if not equal to the company one."
 msgstr ""
 
 #. module: analytic
@@ -115,8 +100,8 @@ msgid "Description"
 msgstr ""
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid "Calculated by multiplying the quantity and the price given in the Product's cost price."
+#: selection:account.analytic.account,type:0
+msgid "Normal"
 msgstr ""
 
 #. module: analytic
@@ -147,13 +132,18 @@ msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
-#: field:account.analytic.line,currency_id:0
 msgid "Account currency"
 msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr ""
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid "Calculated by multiplying the quantity and the price given in the Product's cost price. Always expressed in the company main currency."
 msgstr ""
 
 #. module: analytic
@@ -177,6 +167,11 @@ msgid "Contact"
 msgstr ""
 
 #. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! The currency has to be the same as the currency of the selected company"
+msgstr ""
+
+#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Cancelled"
 msgstr ""
@@ -187,14 +182,13 @@ msgid "Balance"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
+#: help:account.analytic.account,type:0
+msgid "If you select the View Type, it means you won't allow to create journal entries using that account."
 msgstr ""
 
 #. module: analytic
@@ -205,11 +199,6 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Account Code"
-msgstr ""
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
 msgstr ""
 
 #. module: analytic
@@ -225,18 +214,18 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,company_currency_id:0
-msgid "Currency"
-msgstr ""
-
-#. module: analytic
-#: field:account.analytic.line,amount_currency:0
-msgid "Amount currency"
+#: selection:account.analytic.account,type:0
+msgid "View"
 msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
-msgid "Associated Partner"
+msgid "Partner"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
 msgstr ""
 
 #. module: analytic

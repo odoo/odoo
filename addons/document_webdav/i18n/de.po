@@ -7,25 +7,213 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-05-30 15:14+0000\n"
-"PO-Revision-Date: 2010-08-03 06:08+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-29 12:24+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-31 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
-#. module: document_webdav_old
-#: model:ir.module.module,description:document_webdav_old.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"\t* WebDav Interface\n"
-"\t* User Authentification\n"
-"\t* Document Indexation\n"
+#. module: document_webdav
+#: constraint:document.directory:0
+msgid "Error! You can not create recursive Directories."
+msgstr "Fehler ! Sie können keine rekursiven Verzeichnisse anlegen."
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+#: field:document.webdav.dir.property,namespace:0
+msgid "Namespace"
+msgstr "Namensbereich"
+
+#. module: document_webdav
+#: field:document.directory,dav_prop_ids:0
+msgid "DAV properties"
+msgstr "DAV Eigenschaften"
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Group By..."
+msgstr "Gruppierung..."
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "These properties will be added to WebDAV requests"
+msgstr "Diese Eigenschaften werden bei WebDav Anfragen angefügt"
+
+#. module: document_webdav
+#: code:addons/document_webdav/webdav.py:0
+#, python-format
+msgid "PyWebDAV Import Error!"
 msgstr ""
-"Das ist ein komplettes  Dokument Management System:\n"
-"\t* WebDav Interface\n"
-"\t* Benutzer Authentifizierung\n"
-"\t* Dokument Verschlagwortung\n"
+
+#. module: document_webdav
+#: model:ir.module.module,description:document_webdav.module_meta_information
+msgid ""
+" With this module, the WebDAV server for the documents is activated.\n"
+"        You can then use any compatible browser to remotely see the "
+"attachments of OpenObject.\n"
+"\n"
+"        After installation, the webDAV server can be controlled by a "
+"[webdav] section in the server's config.\n"
+"        Server Configuration Parameter:\n"
+"        [webdav]\n"
+"        ; enable = True ; Serve webdav over the http(s) servers\n"
+"        ; vdir = webdav ; the directory that webdav will be served at\n"
+"          ; this default val means that webdav will be\n"
+"          ; on \"http://localhost:8069/webdav/\n"
+"        ; verbose = True ; Turn on the verbose messages of webdav\n"
+"        ; debug = True ; Turn on the debugging messages of webdav\n"
+"          ; since the messages are routed to the python logging, with\n"
+"          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
+"          ; these options on\n"
+msgstr ""
+" Durch dieses Modul wird der WebDAV Server für gemeinsame Dokumente "
+"aktiviert.\n"
+"        Verwenden Sie einfach einen beliebigen Browser, um Remote auf "
+"Dokumentenanhänge zuzugreifen.\n"
+"\n"
+"        Nach der Installation kann der WebDAV Server durch eine [webdav] "
+"Sektion in der Server Konfiguration gesteuert werden.\n"
+"        Folgendermassen kann dann eine Konfiguration aussehen:\n"
+"        [webdav]\n"
+"        ; enable = True ; Bereitstellung von WebDAV über den http(s) "
+"servers\n"
+"        ; vdir = webdav ; Verzeichnis für WebDAV auf dem Server\n"
+"          ; dieser Standard Eintrag bedeutet dass WebDAV über\n"
+"          ; \"http://localhost:8069/webdav/\" erreicht werden kann\n"
+"        ; verbose = True ; Aktivieren von \"verbose messages of webdav\"\n"
+"        ; debug = True ; Aktivieren von \"debugging messages of webdav\"\n"
+"          ; Hinweis: since the messages are routed to the python logging, "
+"with\n"
+"          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
+"          ; these options on\n"
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory cannot be parent of itself!"
+msgstr "Das Verzeichnis kann nicht sich selbst übergeordnet werden"
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "Dynamic context"
+msgstr "Dyn. Kontext"
+
+#. module: document_webdav
+#: view:document.directory:0
+msgid "WebDAV properties"
+msgstr "WebDav Eigenschaften"
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "The directory name must be unique !"
+msgstr "Das Verzeichnis muss eindeutig sein"
+
+#. module: document_webdav
+#: code:addons/document_webdav/webdav.py:0
+#, python-format
+msgid ""
+"Please install PyWebDAV from "
+"http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
+"0.9.4.tar.gz&can=2&q=/"
+msgstr ""
+"Bitte installieren Sie PyWebDAV von hier:  "
+"http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-"
+"0.9.4.tar.gz&can=2&q=/"
+
+#. module: document_webdav
+#: model:ir.ui.menu,name:document_webdav.menu_dir_props
+msgid "DAV properties for folders"
+msgstr "DAV Eigenschaften für Verzeichnisse"
+
+#. module: document_webdav
+#: view:document.directory:0
+#: view:document.webdav.dir.property:0
+msgid "Properties"
+msgstr "Eigenschaften"
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,name:0
+msgid "Name"
+msgstr "Bezeichnung"
+
+#. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_dir_property
+msgid "document.webdav.dir.property"
+msgstr ""
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,value:0
+msgid "Value"
+msgstr "Wert"
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,dir_id:0
+#: model:ir.model,name:document_webdav.model_document_directory
+msgid "Directory"
+msgstr "Verzeichnis"
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Dir"
+msgstr "Verzeichnis"
+
+#. module: document_webdav
+#: model:ir.module.module,shortdesc:document_webdav.module_meta_information
+msgid "WebDAV server for Document Management"
+msgstr "WebDAV Server für Dokumentenmanagement"
+
+#. module: document_webdav
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage"
+msgstr ""
+"Das Verzeichnis muss ein Hauptverzeichnis oder einen Speicher zugewiesen "
+"haben"
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
+msgid "Search Document storage"
+msgstr "Diese Eigenschaften werden bei WebDav Anfragen angefügt"
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,do_subst:0
+msgid "Substitute"
+msgstr "Substituiere"
+
+#~ msgid ""
+#~ "This is a complete document management system:\n"
+#~ "\t* WebDav Interface\n"
+#~ "\t* User Authentification\n"
+#~ "\t* Document Indexation\n"
+#~ msgstr ""
+#~ "Das ist ein komplettes  Dokument Management System:\n"
+#~ "\t* WebDav Interface\n"
+#~ "\t* Benutzer Authentifizierung\n"
+#~ "\t* Dokument Verschlagwortung\n"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Das Objekt muss mit einem x_ beginnen und darf keine Sonderzeichen "
+#~ "beinhalten !"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

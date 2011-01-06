@@ -19,13 +19,12 @@
 ##############################################################################
 
 import time
-
 import pooler
-import rml_parse
 from report import report_sxw
 from common_report_header import common_report_header
+from tools.translate import _
 
-class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
+class report_pl_account_horizontal(report_sxw.rml_parse, common_report_header):
 
     def __init__(self, cr, uid, name, context=None):
         super(report_pl_account_horizontal, self).__init__(cr, uid, name, context=context)
@@ -36,13 +35,13 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         self.result_temp = []
         self.localcontext.update( {
             'time': time,
-            'get_lines' : self.get_lines,
-            'get_lines_another' : self.get_lines_another,
+            'get_lines': self.get_lines,
+            'get_lines_another': self.get_lines_another,
             'get_currency': self._get_currency,
             'get_data': self.get_data,
-            'sum_dr' : self.sum_dr,
-            'sum_cr' : self.sum_cr,
-            'final_result' : self.final_result,
+            'sum_dr': self.sum_dr,
+            'sum_cr': self.sum_cr,
+            'final_result': self.final_result,
             'get_fiscalyear': self._get_fiscalyear,
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
@@ -53,20 +52,28 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
             'get_company':self._get_company,
+            'get_target_move': self._get_target_move,
         })
         self.context = context
+
+    def set_context(self, objects, data, ids, report_type=None):
+        new_ids = ids
+        if (data['model'] == 'ir.ui.menu'):
+            new_ids = 'chart_account_id' in data['form'] and [data['form']['chart_account_id']] or []
+            objects = self.pool.get('account.account').browse(self.cr, self.uid, new_ids)
+        return super(report_pl_account_horizontal, self).set_context(objects, data, new_ids, report_type=report_type)
 
 
     def final_result(self):
         return self.res_pl
 
     def sum_dr(self):
-        if self.res_pl['type'] == 'Net Profit C.F.B.L.':
+        if self.res_pl['type'] == _('Net Profit'):
             self.result_sum_dr += self.res_pl['balance']
         return self.result_sum_dr
 
     def sum_cr(self):
-        if self.res_pl['type'] == 'Net Loss C.F.B.L.':
+        if self.res_pl['type'] == _('Net Loss'):
             self.result_sum_cr += self.res_pl['balance']
         return self.result_sum_cr
 
@@ -75,7 +82,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         db_pool = pooler.get_pool(self.cr.dbname)
 
         account_pool = db_pool.get('account.account')
-        year_pool = db_pool.get('account.fiscalyear')
+        currency_pool = db_pool.get('res.currency')
 
         types = [
             'expense',
@@ -85,7 +92,7 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
         ctx = self.context.copy()
         ctx['fiscalyear'] = data['form'].get('fiscalyear_id', False)
 
-        if data['form']['filter'] == 'filter_period' :
+        if data['form']['filter'] == 'filter_period':
             ctx['periods'] =  data['form'].get('periods', False)
         elif data['form']['filter'] == 'filter_date':
             ctx['date_from'] = data['form'].get('date_from', False)
@@ -100,23 +107,24 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             accounts_temp = []
             for account in accounts:
                 if (account.user_type.report_type) and (account.user_type.report_type == typ):
+                    currency = account.currency_id and account.currency_id or account.company_id.currency_id
                     if typ == 'expense' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_dr += abs(account.debit - account.credit)
                     if typ == 'income' and account.type <> 'view' and (account.debit <> account.credit):
                         self.result_sum_cr += abs(account.debit - account.credit)
                     if data['form']['display_account'] == 'bal_movement':
-                        if account.credit > 0 or account.debit > 0 or account.balance > 0 :
+                        if currency_pool.is_zero(self.cr, self.uid, currency, account.credit) > 0 or currency_pool.is_zero(self.cr, self.uid, currency, account.debit) > 0 or currency_pool.is_zero(self.cr, self.uid, currency, account.balance) != 0:
                             accounts_temp.append(account)
                     elif data['form']['display_account'] == 'bal_solde':
-                        if  account.balance != 0:
+                        if currency_pool.is_zero(self.cr, self.uid, currency, account.balance) != 0:
                             accounts_temp.append(account)
                     else:
                         accounts_temp.append(account)
             if self.result_sum_dr > self.result_sum_cr:
-                self.res_pl['type'] = 'Net Loss C.F.B.L.'
+                self.res_pl['type'] = _('Net Loss')
                 self.res_pl['balance'] = (self.result_sum_dr - self.result_sum_cr)
             else:
-                self.res_pl['type'] = 'Net Profit C.F.B.L.'
+                self.res_pl['type'] = _('Net Profit')
                 self.res_pl['balance'] = (self.result_sum_cr - self.result_sum_dr)
             self.result[typ] = accounts_temp
             cal_list[typ] = self.result[typ]
@@ -125,12 +133,12 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
             for i in range(0,max(len(cal_list['expense']),len(cal_list['income']))):
                 if i < len(cal_list['expense']) and i < len(cal_list['income']):
                     temp={
-                          'code' : cal_list['expense'][i].code,
-                          'name' : cal_list['expense'][i].name,
+                          'code': cal_list['expense'][i].code,
+                          'name': cal_list['expense'][i].name,
                           'level': cal_list['expense'][i].level,
                           'balance':cal_list['expense'][i].balance,
-                          'code1' : cal_list['income'][i].code,
-                          'name1' : cal_list['income'][i].name,
+                          'code1': cal_list['income'][i].code,
+                          'name1': cal_list['income'][i].name,
                           'level1': cal_list['income'][i].level,
                           'balance1':cal_list['income'][i].balance,
                           }
@@ -138,24 +146,24 @@ class report_pl_account_horizontal(rml_parse.rml_parse, common_report_header):
                 else:
                     if i < len(cal_list['income']):
                         temp={
-                              'code' : '',
-                              'name' : '',
+                              'code': '',
+                              'name': '',
                               'level': False,
                               'balance':False,
-                              'code1' : cal_list['income'][i].code,
-                              'name1' : cal_list['income'][i].name,
+                              'code1': cal_list['income'][i].code,
+                              'name1': cal_list['income'][i].name,
                               'level1': cal_list['income'][i].level,
                               'balance1':cal_list['income'][i].balance,
                               }
                         self.result_temp.append(temp)
                     if  i < len(cal_list['expense']):
                         temp={
-                              'code' : cal_list['expense'][i].code,
-                              'name' : cal_list['expense'][i].name,
+                              'code': cal_list['expense'][i].code,
+                              'name': cal_list['expense'][i].name,
                               'level': cal_list['expense'][i].level,
                               'balance':cal_list['expense'][i].balance,
-                              'code1' : '',
-                              'name1' : '',
+                              'code1': '',
+                              'name1': '',
                               'level1': False,
                               'balance1':False,
                               }

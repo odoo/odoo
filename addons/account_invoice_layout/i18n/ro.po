@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-02 22:02+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:08+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:33+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -22,20 +22,14 @@ msgid "Sub Total"
 msgstr "Subtotal"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Invoice Date:"
-msgstr "Data facturii"
-
-#. module: account_invoice_layout
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Note:"
 msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-"special !"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Cancelled Invoice"
 msgstr "Factură anulată"
 
@@ -46,19 +40,16 @@ msgid "Title"
 msgstr "Titlu"
 
 #. module: account_invoice_layout
-#: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
+#: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
+#: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
 msgid "Invoices with Layout and Message"
 msgstr "Facturi cu layout si mesaj"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Disc. (%)"
 msgstr "Disc. (%)"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "(Incl. taxes):"
-msgstr "(inclusiv taxe):"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -66,9 +57,9 @@ msgid "Note"
 msgstr "Notă"
 
 #. module: account_invoice_layout
-#: wizard_button:wizard.notify_message,init,print:0
-msgid "Print"
-msgstr "Tipărire"
+#: model:ir.model,name:account_invoice_layout.model_notify_message
+msgid "Notify By Messages"
+msgstr "Notificare cu mesaje"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
@@ -78,22 +69,46 @@ msgstr ""
 "Această notificare va apărea în partea de jos a facturii la tipărire."
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Unit Price"
 msgstr "Preţ unitar"
 
 #. module: account_invoice_layout
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nume invalid de model în definirea acţiunii"
+#: model:ir.module.module,description:account_invoice_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides some features to improve the layout of the "
+"invoices.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of an invoice\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    Moreover, there is one option which allows you to print all the selected "
+"invoices with a given special message at the bottom of it. This feature can "
+"be very useful for printing your invoices with end-of-year wishes, special "
+"punctual conditions...\n"
+"\n"
+"    "
+msgstr ""
 
 #. module: account_invoice_layout
-#: model:ir.model,name:account_invoice_layout.model_notify_message
-msgid "Notify By Messages"
-msgstr "Notificare cu mesaje"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "VAT :"
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Document"
+msgstr ""
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "PRO-FORMA"
 msgstr "Proformă"
 
@@ -113,32 +128,35 @@ msgid "Notification Message"
 msgstr "Mesaj de notificare"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr "Referinţă client:"
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Produs"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid ")"
-msgstr ")"
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Scriere mesaje"
 
 #. module: account_invoice_layout
-#: field:account.invoice.line,state:0
-msgid "Type"
-msgstr "Tip"
+#: help:account.invoice.line,sequence:0
+msgid "Gives the sequence order when displaying a list of invoice lines."
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Price"
 msgstr "Preț"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "/ ("
-msgstr "/ ("
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Invoice Date"
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Taxes:"
 msgstr "Taxe:"
 
@@ -148,39 +166,15 @@ msgid "Source Account"
 msgstr "Cont sursă"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Scriere mesaje"
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Anulare"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Base"
 msgstr "Bază"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
-msgstr "Fax :"
-
-#. module: account_invoice_layout
-#: field:notify.message,msg:0
-msgid "Special Message"
-msgstr "Mesaj special"
-
-#. module: account_invoice_layout
-#: view:notify.message:0
-msgid "Write a notification or a wishful message."
-msgstr "Scrieţi o notificare sau un mesaj cu dorinţe"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Tel. :"
-msgstr "Tel. :"
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid pentru arhitectura machetei de afișare !"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -188,12 +182,43 @@ msgid "Page Break"
 msgstr "Întrerupere pagină"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Document:"
-msgstr "Document:"
+#: view:notify.message:0
+#: field:notify.message,msg:0
+msgid "Special Message"
+msgstr "Mesaj special"
 
 #. module: account_invoice_layout
-#: wizard_view:wizard.notify_message,init:0
+#: help:account.invoice.special.msg,message:0
+msgid "Message to Print at the bottom of report"
+msgstr ""
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Quantity"
+msgstr "Cantitate"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Partner Ref."
+msgstr ""
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: model:ir.model,name:account_invoice_layout.model_account_invoice
+#: report:notify_account.invoice:0
+msgid "Invoice"
+msgstr "Factură"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Total:"
+msgstr ""
+
+#. module: account_invoice_layout
+#: view:account.invoice.special.msg:0
 msgid "Select Message"
 msgstr "Selectare mesaj"
 
@@ -203,32 +228,31 @@ msgid "Messages"
 msgstr "Mesaje"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr "Produs"
-
-#. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoices with Layout"
 msgstr "Facturi cu layout"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Description / Taxes"
 msgstr "Descriere / Taxe"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Amount"
 msgstr "Sumă"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Description/Taxes"
-msgstr "Descriere/Taxe"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Tel. :"
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Draft Invoice"
 msgstr "Factură ciornă"
 
@@ -238,19 +262,20 @@ msgid "Sequence Number"
 msgstr "Număr secvenţă"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Quantity"
-msgstr "Cantitate"
+#: model:ir.model,name:account_invoice_layout.model_account_invoice_special_msg
+msgid "Account Invoice Special Message"
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Refund"
 msgstr "Restituire"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr "TVA :"
+#: field:account.invoice.line,state:0
+msgid "Type"
+msgstr "Tip"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -258,56 +283,120 @@ msgid "Separator Line"
 msgstr "Linie de separare"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
+msgid "Invoices Layout Improvement"
+msgstr ""
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Supplier Invoice"
 msgstr "Factură furnizor"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Note :"
-msgstr "Notă:"
+#: view:account.invoice.special.msg:0
+msgid "Print"
+msgstr "Tipărire"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Tax"
 msgstr "Taxă"
 
 #. module: account_invoice_layout
-#: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
-msgid "account_invoice_layout"
-msgstr "account_invoice_layout"
+#: model:ir.model,name:account_invoice_layout.model_account_invoice_line
+msgid "Invoice Line"
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total (Excl. taxes):"
-msgstr "Total (fără taxe):"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Net Total:"
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Invoice"
-msgstr "Factură"
+#: view:notify.message:0
+msgid "Write a notification or a wishful message."
+msgstr "Scrieţi o notificare sau un mesaj cu dorinţe"
 
 #. module: account_invoice_layout
-#: wizard_button:wizard.notify_message,init,end:0
-msgid "Cancel"
-msgstr "Anulare"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Fax :"
+msgstr ""
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "Be Expert with the Experts..."
+msgstr ""
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
 msgid "Supplier Refund"
 msgstr "Restituire la furnizor"
 
 #. module: account_invoice_layout
-#: wizard_field:wizard.notify_message,init,message:0
+#: field:account.invoice.special.msg,message:0
 msgid "Message"
 msgstr "Mesaj"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr "Total"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Toate mesajele de notificare"
+
+#~ msgid "Invoice Date:"
+#~ msgstr "Data facturii"
+
+#~ msgid "account_invoice_layout"
+#~ msgstr "account_invoice_layout"
+
+#~ msgid "Fax :"
+#~ msgstr "Fax :"
+
+#~ msgid "Tel. :"
+#~ msgstr "Tel. :"
+
+#~ msgid "VAT :"
+#~ msgstr "TVA :"
+
+#~ msgid "Total"
+#~ msgstr "Total"
+
+#~ msgid "(Incl. taxes):"
+#~ msgstr "(inclusiv taxe):"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
+#~ "special !"
+
+#~ msgid "Customer Ref:"
+#~ msgstr "Referinţă client:"
+
+#~ msgid ")"
+#~ msgstr ")"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nume invalid de model în definirea acţiunii"
+
+#~ msgid "/ ("
+#~ msgstr "/ ("
+
+#~ msgid "Document:"
+#~ msgstr "Document:"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
+
+#~ msgid "Note :"
+#~ msgstr "Notă:"
+
+#~ msgid "Description/Taxes"
+#~ msgstr "Descriere/Taxe"
+
+#~ msgid "Total (Excl. taxes):"
+#~ msgstr "Total (fără taxe):"

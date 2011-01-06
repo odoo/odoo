@@ -31,7 +31,6 @@ class report_designer_installer(osv.osv_memory):
                                 "upload the report using the same wizard."),
         'base_report_creator':fields.boolean('Query Builder',help="Allows you to create any statistic "
                                 "reports  on several objects. It's a SQL query builder and browser for end users."),
-        'olap':fields.boolean('Business Intelligence Report',help="Helps you manage Online Analytical Process with the mdx query and provides Cube Designing and Cube Browsing"),
     }
 report_designer_installer()
 

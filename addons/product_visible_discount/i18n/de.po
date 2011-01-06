@@ -7,23 +7,31 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-03-25 12:11+0000\n"
-"PO-Revision-Date: 2010-08-23 06:41+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-31 10:56+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_visible_discount
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML-Code für diese Ansicht!"
+#: code:addons/product_visible_discount/product_visible_discount.py:0
+#, python-format
+msgid "No Purchase Pricelist Found !"
+msgstr "Keine Einkaufspreisliste gefunden !"
 
 #. module: product_visible_discount
-#: model:ir.module.module,description:product_visible_discount.module_name_translation
+#: code:addons/product_visible_discount/product_visible_discount.py:0
+#, python-format
+msgid "No Sale Pricelist Found "
+msgstr "Keine Verkaufspreisliste gefunden ! "
+
+#. module: product_visible_discount
+#: model:ir.module.module,description:product_visible_discount.module_meta_information
 msgid ""
 "\n"
 "    This module lets you calculate discounts on Sale Order lines and Invoice "
@@ -39,8 +47,72 @@ msgid ""
 "Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
 "    "
 msgstr ""
+"\n"
+"    Mit Hilfe dieser Anwendung können Sie für Positionen in "
+"Verkaufsaufträgen und Ausgangsrechnungen auf Basis der Partner Preisliste "
+"den entsprechenden Rabatt kalkulieren und ausweisen.\n"
+"    Zu diesem Zweck wurde eine neue Checkbox \"Anzeige Rabatt\" zum Formular "
+"der Preislisten ergänzt.\n"
+"    Beispiel:\n"
+"        Für das Produkt PC1 und den Partner \"Asustek\": Ausgehend von einem "
+"Listenpreis = 450 und einem Preis gemäß Asustek Preisliste = 225.\n"
+"        Wenn die Checkbox in der Preisliste aktiviert wurde, erhalten wir "
+"folgende Anzeige für die Auftragsposition: Preis: 450, Rabatt=50,00, "
+"Nettopreis= 225.\n"
+"        Wenn die Checkbox nicht aktiviert wurde, erhalten wir hingegen "
+"folgende Anzeige: Preis=450, Rabatt=0,00, Nettopreis=225.\n"
+"    "
 
 #. module: product_visible_discount
+#: model:ir.module.module,shortdesc:product_visible_discount.module_meta_information
 #: field:product.pricelist,visible_discount:0
 msgid "Visible Discount"
 msgstr "sichtbarer Nachlass"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Rechnungsposition"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:0
+#, python-format
+msgid "You must first define a pricelist for Customer !"
+msgstr "Sie müssen zuerst eine Preisliste für den Kunden hinterlegen!"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_product_pricelist
+msgid "Pricelist"
+msgstr "Preisliste"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:0
+#, python-format
+msgid "You must first define a pricelist for Supplier !"
+msgstr "Sie müssen zuerst eine Preisliste für den Lieferanten hinterlegen!"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Auftragsposition"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML-Code für diese Ansicht!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
+#~ "Sonderzeichen haben !"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Verkaufsauftragsposition"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"

@@ -73,7 +73,8 @@
                 <search string="Search Followup">
                    <group col="10" colspan="4">
                         <field name="name"/>
-                    </group>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                   </group>
                </search>
             </field>
         </record>
@@ -85,7 +86,8 @@
             <field name="search_view_id" ref="view_account_followup_filter"/>
             <field name="view_type">form</field>
         </record>
-        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_configuration_misc" groups="base.group_system"/>
+        <menuitem action="action_account_followup_definition_form" id="account_followup_menu"
+            parent="account.menu_configuration_misc"/>
 
         <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Followup Report"/>
 
@@ -142,7 +144,7 @@
             name="Receivable Items"
             res_model="account.move.line"
             src_model=""
-            view="account_move_line_partner_tree"/>
+            view_id="account_move_line_partner_tree"/>
 
       <!--<menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/> -->
 
@@ -152,7 +154,7 @@
             name="Payable Items"
             res_model="account.move.line"
             src_model=""
-            view="account_move_line_partner_tree"/>
+            view_id="account_move_line_partner_tree"/>
 
       <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
 

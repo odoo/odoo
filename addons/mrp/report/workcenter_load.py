@@ -21,7 +21,6 @@
 
 from report.render import render
 from report.interface import report_int
-from pychart import *
 import time
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
@@ -30,6 +29,8 @@ from report.misc import choice_colors
 
 import random
 import StringIO
+
+from pychart import *
 
 
 theme.use_color = 1
@@ -79,7 +80,7 @@ class report_custom(report_int):
                 year = i/52
                 week = i%52
                 d = date(year, 1, 1)
-                
+
                 dates[i] = {
                     'name' :"Week #%d" % week,
                     'start':(d + timedelta(days=-d.weekday(), weeks=week)).strftime('%Y-%m-%d'),
@@ -101,7 +102,7 @@ class report_custom(report_int):
             return dates
         return {}
 
-    def create(self, cr, uid, ids, datas, context={}):
+    def create(self, cr, uid, ids, datas, context=None):
         assert len(ids), 'You should provide some ids!'
         colors = choice_colors(len(ids))
         cr.execute(
@@ -124,11 +125,16 @@ class report_custom(report_int):
             x_index.append((dates[date]['name'], date))
         pdf_string = StringIO.StringIO()
         can = canvas.init(fname=pdf_string, format='pdf')
+        can.set_title("Work Center Loads")
         chart_object.set_defaults(line_plot.T, line_style=None)
         if datas['form']['measure_unit'] == 'cycles':
             y_label = "Load (Cycles)"
         else:
             y_label = "Load (Hours)"
+
+        # For add the report header on the top of the report.
+        tb = text_box.T(loc=(300, 500), text="/hL/15/bWork Center Loads", line_style=None)
+        tb.draw()
         ar = area.T(legend = legend.T(),
                     x_grid_style = line_style.gray70_dash1,
                     x_axis = axis.X(label="Periods", format="/a90/hC%s"),
@@ -137,7 +143,6 @@ class report_custom(report_int):
                     y_range = (0, None),
                     size = (640,480))
         bar_plot.fill_styles.reset();
-
         # select workcenters
         cr.execute(
             "SELECT mw.id, rs.name FROM mrp_workcenter mw, resource_resource rs " \

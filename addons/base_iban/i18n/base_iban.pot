@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01:51+0000\n"
-"PO-Revision-Date: 2009-08-28 16:01:51+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:16+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:16+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,14 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: base_iban
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: model:ir.module.module,shortdesc:base_iban.module_meta_information
+msgid "Create IBAN bank accounts"
+msgstr ""
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:120
+#, python-format
+msgid "The IBAN does not seems to be correct. You should have entered something like this %s"
 msgstr ""
 
 #. module: base_iban
@@ -28,6 +34,11 @@ msgstr ""
 #. module: base_iban
 #: help:res.partner.bank,iban:0
 msgid "International Bank Account Number"
+msgstr ""
+
+#. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
 msgstr ""
 
 #. module: base_iban
@@ -46,7 +57,12 @@ msgid "iban"
 msgstr ""
 
 #. module: base_iban
-#: model:ir.module.module,shortdesc:base_iban.module_meta_information
+#: code:addons/base_iban/base_iban.py:121
+#, python-format
+msgid "The IBAN is invalid, It should begin with the country code"
+msgstr ""
+
+#. module: base_iban
 #: field:res.partner.bank,iban:0
 msgid "IBAN"
 msgstr ""
@@ -54,6 +70,14 @@ msgstr ""
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
+msgstr ""
+
+#. module: base_iban
+#: model:ir.module.module,description:base_iban.module_meta_information
+msgid "\n"
+"This module installs the base for IBAN (International Bank Account Number) bank accounts and checks for its validity.\n"
+"\n"
+"    "
 msgstr ""
 
 #. module: base_iban

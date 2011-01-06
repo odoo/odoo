@@ -6,20 +6,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2009-11-09 16:41+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2010-10-27 08:07+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:52+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_iban
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
+#: model:ir.module.module,shortdesc:base_iban.module_meta_information
+msgid "Create IBAN bank accounts"
+msgstr "Loo IBAN pangakontosid"
+
+#. module: base_iban
+#: code:addons/base_iban/base_iban.py:0
+#, python-format
+msgid ""
+"The IBAN does not seems to be correct. You should have entered something "
+"like this %s"
+msgstr ""
+"IBAN ei tundu olevat õige. Sul peaks olema sisestatud midagi sellist %s"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -32,6 +41,11 @@ msgid "International Bank Account Number"
 msgstr "Rahvusvaheline konto number (IBAN)"
 
 #. module: base_iban
+#: model:ir.model,name:base_iban.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr "Pangakontod"
+
+#. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_country_field
 msgid "country_id"
 msgstr "country_id"
@@ -42,12 +56,27 @@ msgid "bic"
 msgstr "bic"
 
 #. module: base_iban
+#: model:ir.module.module,description:base_iban.module_meta_information
+msgid ""
+"\n"
+"This module installs the base for IBAN (International Bank Account Number) "
+"bank accounts and checks for its validity\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_iban_field
 msgid "iban"
 msgstr "iban"
 
 #. module: base_iban
-#: model:ir.module.module,shortdesc:base_iban.module_meta_information
+#: code:addons/base_iban/base_iban.py:0
+#, python-format
+msgid "The IBAN is invalid, It should begin with the country code"
+msgstr "IBAN on vigane. See peaks algama riigi koodiga"
+
+#. module: base_iban
 #: field:res.partner.bank,iban:0
 msgid "IBAN"
 msgstr "IBAN"
@@ -61,3 +90,10 @@ msgstr "IBAN konto"
 #: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field
 msgid "acc_number"
 msgstr "acc_number"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Vigane XML vaate arhitektuurile!"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "Objekti nimi peab algama x_ ja ei tohi sisaldada erimärke!"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2009-09-08 13:25+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:13+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: audittrail
@@ -23,9 +23,9 @@ msgid "Audit Trail"
 msgstr "감사 트레일"
 
 #. module: audittrail
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
 
 #. module: audittrail
@@ -34,31 +34,42 @@ msgid "Log"
 msgstr "로그"
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Subscribed"
 msgstr "등록됨"
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value : "
-msgstr "옛 값: "
+#: model:ir.model,name:audittrail.model_audittrail_rule
+msgid "Audittrail Rule"
+msgstr ""
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Create"
-msgstr "만들기"
-
-#. module: audittrail
-#: wizard_view:audittrail.view.log,init:0
+#: view:audittrail.view.log:0
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
 msgid "Audit Logs"
 msgstr "감사 로그"
 
 #. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Group By..."
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: field:audittrail.rule,state:0
 msgid "State"
 msgstr "상태"
 
 #. module: audittrail
+#: view:audittrail.rule:0
+msgid "_Subscribe"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
 #: selection:audittrail.rule,state:0
 msgid "Draft"
 msgstr "초안"
@@ -69,18 +80,15 @@ msgid "Old Value"
 msgstr "옛 값"
 
 #. module: audittrail
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: audittrail
-#: model:ir.actions.wizard,name:audittrail.wizard_audittrail_log
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_view_log
 msgid "View log"
 msgstr "로그 보기"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log_line
-msgid "audittrail.log.line"
+#: help:audittrail.rule,log_read:0
+msgid ""
+"Select this if you want to keep track of read/open on any record of the "
+"object of this rule"
 msgstr ""
 
 #. module: audittrail
@@ -89,7 +97,7 @@ msgid "Method"
 msgstr "방법"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,from:0
+#: field:audittrail.view.log,from:0
 msgid "Log From"
 msgstr "로그 (From)"
 
@@ -104,14 +112,21 @@ msgid "Resource Id"
 msgstr "리소스 ID"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Write"
-msgstr "쓰기"
+#: help:audittrail.rule,user_id:0
+msgid "if  User is not added then it will applicable for all users"
+msgstr ""
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail
-msgid "Audittrails"
+#: help:audittrail.rule,log_workflow:0
+msgid ""
+"Select this if you want to keep track of workflow on any record of the "
+"object of this rule"
 msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,user_id:0
+msgid "Users"
+msgstr "사용자"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -119,16 +134,12 @@ msgid "Log Lines"
 msgstr "로그 라인"
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "Subscribe"
-msgstr "등록"
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
+msgid "Rules"
+msgstr "규칙"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Read"
-msgstr "읽기"
-
-#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
 msgid "Object"
@@ -140,7 +151,7 @@ msgid "AuditTrail Rule"
 msgstr "감사트레일 규칙"
 
 #. module: audittrail
-#: wizard_field:audittrail.view.log,init,to:0
+#: field:audittrail.view.log,to:0
 msgid "Log To"
 msgstr "로그 대상"
 
@@ -150,25 +161,47 @@ msgid "New Value Text: "
 msgstr "새 값 텍스트: "
 
 #. module: audittrail
-#: model:ir.module.module,description:audittrail.module_meta_information
-msgid ""
-"Allows the administrator to track every user operations on all objects of "
-"the system.\n"
-"    Subscribe Rules for read, write, create and delete on objects and check "
-"logs"
+#: view:audittrail.rule:0
+msgid "Search Audittrail Rule"
 msgstr ""
-"관리자가 시스템의 모든 오브젝트들에 대한 사용자 오퍼레이션을 추적할 수 있도록 허용.\n"
-"    오브젝트에 대한 읽기, 쓰기, 만들기 그리고 삭제 규칙을 등록하고, 로그를 체크."
 
 #. module: audittrail
+#: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
+msgid "Audit Rules"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+msgid "Old Value : "
+msgstr "옛 값: "
+
+#. module: audittrail
+#: field:audittrail.log,name:0
+msgid "Resource Name"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
 #: field:audittrail.log,timestamp:0
 msgid "Date"
 msgstr "날짜"
 
 #. module: audittrail
-#: field:audittrail.log,user_id:0
-msgid "User"
-msgstr "사용자"
+#: help:audittrail.rule,log_write:0
+msgid ""
+"Select this if you want to keep track of modification on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,object_id:0
+msgid "Select object for which you want to generate log."
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -176,24 +209,38 @@ msgid "Old Value Text : "
 msgstr "옛 값 텍스트: "
 
 #. module: audittrail
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: field:audittrail.rule,log_workflow:0
+msgid "Log Workflow"
 msgstr ""
 
 #. module: audittrail
-#: field:audittrail.log,name:0
-msgid "Name"
-msgstr "이름"
+#: model:ir.module.module,description:audittrail.module_meta_information
+msgid ""
+"\n"
+"    This module gives the administrator the rights\n"
+"    to track every user operation on all the objects\n"
+"    of the system.\n"
+"\n"
+"    Administrator can subscribe rules for read,write and\n"
+"    delete on objects and can check logs.\n"
+"    "
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_read:0
+msgid "Log Reads"
+msgstr ""
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:0
+#, python-format
+msgid "Change audittrail depends -- Setting rule as DRAFT"
+msgstr "감사트레일 의존을 변경 -- 규칙을 '초안'으로 설정"
 
 #. module: audittrail
 #: field:audittrail.log,line_ids:0
 msgid "Log lines"
 msgstr "로그 라인"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree_sub
-msgid "Subscribed Rules"
-msgstr "등록된 규칙들"
 
 #. module: audittrail
 #: field:audittrail.log.line,field_id:0
@@ -206,8 +253,26 @@ msgid "AuditTrail Rules"
 msgstr "감사트레일 규칙"
 
 #. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_rule
-msgid "audittrail.rule"
+#: help:audittrail.rule,log_unlink:0
+msgid ""
+"Select this if you want to keep track of deletion on any record of the "
+"object of this rule"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: field:audittrail.log,user_id:0
+msgid "User"
+msgstr "사용자"
+
+#. module: audittrail
+#: field:audittrail.rule,action_id:0
+msgid "Action ID"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.rule:0
+msgid "Users (if User is not added then it will applicable for all users)"
 msgstr ""
 
 #. module: audittrail
@@ -216,13 +281,8 @@ msgid "UnSubscribe"
 msgstr "등록 취소"
 
 #. module: audittrail
-#: field:audittrail.rule,log_write:0
-msgid "Log writes"
-msgstr "로그 쓰기"
-
-#. module: audittrail
-#: model:ir.model,name:audittrail.model_audittrail_log
-msgid "audittrail.log"
+#: field:audittrail.rule,log_unlink:0
+msgid "Log Deletes"
 msgstr ""
 
 #. module: audittrail
@@ -231,12 +291,17 @@ msgid "Field Description"
 msgstr "필드 설명"
 
 #. module: audittrail
-#: selection:audittrail.log,method:0
-msgid "Delete"
-msgstr "삭제"
+#: view:audittrail.log:0
+msgid "Search Audittrail Log"
+msgstr ""
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,open:0
+#: field:audittrail.rule,log_write:0
+msgid "Log Writes"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.view.log:0
 msgid "Open Logs"
 msgstr "로그 열기"
 
@@ -251,29 +316,9 @@ msgid "Rule Name"
 msgstr "규칙 이름"
 
 #. module: audittrail
-#: field:audittrail.rule,log_read:0
-msgid "Log reads"
-msgstr "로그 읽기"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
-msgid "Logs"
-msgstr "로그"
-
-#. module: audittrail
 #: field:audittrail.log.line,new_value:0
 msgid "New Value"
 msgstr "새 값"
-
-#. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_log_tree2
-msgid "View Logs"
-msgstr "로그 보기"
-
-#. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log creates"
-msgstr "로그 만들기"
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -281,9 +326,15 @@ msgid "AuditTrail Logs"
 msgstr "감사트레일 로그"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
-msgid "Rules"
-msgstr "규칙"
+#: model:ir.model,name:audittrail.model_audittrail_log
+msgid "Audittrail Log"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,log_action:0
+msgid ""
+"Select this if you want to keep track of actions on the object of this rule"
+msgstr ""
 
 #. module: audittrail
 #: view:audittrail.log:0
@@ -291,9 +342,11 @@ msgid "New Value : "
 msgstr "새 값: "
 
 #. module: audittrail
-#: field:audittrail.rule,user_id:0
-msgid "Users"
-msgstr "사용자"
+#: sql_constraint:audittrail.rule:0
+msgid ""
+"There is a rule defined on this object\n"
+" You can not define other on the same!"
+msgstr ""
 
 #. module: audittrail
 #: field:audittrail.log.line,old_value_text:0
@@ -301,19 +354,80 @@ msgid "Old value Text"
 msgstr "옛 값 텍스트"
 
 #. module: audittrail
-#: wizard_button:audittrail.view.log,init,end:0
+#: view:audittrail.view.log:0
 msgid "Cancel"
 msgstr "취소"
 
 #. module: audittrail
-#: field:audittrail.rule,log_unlink:0
-msgid "Log deletes"
-msgstr "로그 삭제"
+#: model:ir.model,name:audittrail.model_audittrail_view_log
+msgid "View Log"
+msgstr ""
+
+#. module: audittrail
+#: model:ir.model,name:audittrail.model_audittrail_log_line
+msgid "Log Line"
+msgstr ""
+
+#. module: audittrail
+#: field:audittrail.rule,log_action:0
+msgid "Log Action"
+msgstr ""
+
+#. module: audittrail
+#: help:audittrail.rule,log_create:0
+msgid ""
+"Select this if you want to keep track of creation on any record of the "
+"object of this rule"
+msgstr ""
+
+#~ msgid "Create"
+#~ msgstr "만들기"
+
+#~ msgid "Write"
+#~ msgstr "쓰기"
+
+#~ msgid "Subscribe"
+#~ msgstr "등록"
+
+#~ msgid "Read"
+#~ msgstr "읽기"
+
+#~ msgid ""
+#~ "Allows the administrator to track every user operations on all objects of "
+#~ "the system.\n"
+#~ "    Subscribe Rules for read, write, create and delete on objects and check "
+#~ "logs"
+#~ msgstr ""
+#~ "관리자가 시스템의 모든 오브젝트들에 대한 사용자 오퍼레이션을 추적할 수 있도록 허용.\n"
+#~ "    오브젝트에 대한 읽기, 쓰기, 만들기 그리고 삭제 규칙을 등록하고, 로그를 체크."
 
 #, python-format
 #~ msgid "WARNING:audittrail is not part of the pool"
 #~ msgstr "경고: 감사트레일은 풀의 구성 부분이 아님."
 
-#, python-format
-#~ msgid "Change audittrail depends -- Setting rule as DRAFT"
-#~ msgstr "감사트레일 의존을 변경 -- 규칙을 '초안'으로 설정"
+#~ msgid "Log writes"
+#~ msgstr "로그 쓰기"
+
+#~ msgid "Subscribed Rules"
+#~ msgstr "등록된 규칙들"
+
+#~ msgid "Delete"
+#~ msgstr "삭제"
+
+#~ msgid "Logs"
+#~ msgstr "로그"
+
+#~ msgid "Log reads"
+#~ msgstr "로그 읽기"
+
+#~ msgid "Log creates"
+#~ msgstr "로그 만들기"
+
+#~ msgid "View Logs"
+#~ msgstr "로그 보기"
+
+#~ msgid "Name"
+#~ msgstr "이름"
+
+#~ msgid "Log deletes"
+#~ msgstr "로그 삭제"

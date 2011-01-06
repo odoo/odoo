@@ -111,8 +111,20 @@ class hr_contract(osv.osv):
         'notes': fields.text('Notes'),
     }
     _defaults = {
-        'date_start': time.strftime("%Y-%m-%d"),
+        'date_start': lambda *a: time.strftime("%Y-%m-%d"),
     }
+
+    def _check_dates(self, cr, uid, ids, context=None):
+        for contract in self.read(cr, uid, ids, ['date_start', 'date_end'], context=context):
+             if contract['date_start'] and contract['date_end'] and contract['date_start'] > contract['date_end']:
+                 return False
+        return True
+
+    _constraints = [
+        (_check_dates, 'Error! contract start-date must be lower then contract end-date.', ['date_start', 'date_end'])
+    ]
+
+
 
 hr_contract()
 

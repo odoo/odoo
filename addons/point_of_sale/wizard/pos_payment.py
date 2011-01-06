@@ -19,16 +19,18 @@
 #
 ##############################################################################
 
-from osv import osv,fields
+import time
+
+from osv import osv, fields
 from tools.translate import _
 import pos_box_entries
-import time
+
 
 class pos_make_payment(osv.osv_memory):
     _name = 'pos.make.payment'
     _description = 'Point of Sale Payment'
 
-    def default_get(self, cr, uid, fields, context):
+    def default_get(self, cr, uid, fields, context=None):
         """
          To get default values for the object.
          @param self: The object pointer.
@@ -38,40 +40,40 @@ class pos_make_payment(osv.osv_memory):
          @param context: A standard dictionary
          @return: A dictionary which of fields with values.
         """
+        if context is None:
+            context = {}
+        journal_obj = self.pool.get('account.journal')
+        order_obj = self.pool.get('pos.order')
         res = super(pos_make_payment, self).default_get(cr, uid, fields, context=context)
-        active_id = context and context.get('active_id',False)
+        active_id = context and context.get('active_id', False)
         if active_id:
-            j_obj = self.pool.get('account.journal')
             cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
-                        "WHERE user_id=%d ORDER BY journal_id"% (uid,))
+                        "WHERE user_id = %d ORDER BY journal_id"% (uid, ))
             j_ids = map(lambda x1: x1[0], cr.fetchall())
-            journal = j_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)])
-
+            journal = journal_obj.search(cr, uid, [('type', '=', 'cash'), ('id', 'in', j_ids)], context=context)
             journal = journal and journal[0] or False
-
-            order_obj=self.pool.get('pos.order')
-            order = order_obj.browse(cr, uid, active_id, context)
+            order = order_obj.browse(cr, uid, active_id, context=context)
             #get amount to pay
             amount = order.amount_total - order.amount_paid
             if amount <= 0.0:
                 context.update({'flag': True})
                 order_obj.action_paid(cr, uid, [active_id], context)
             elif order.amount_paid > 0.0:
-                order_obj.write(cr, uid, [active_id], {'state': 'advance'})
+                order_obj.write(cr, uid, [active_id], {'state': 'advance'}, context=context)
             invoice_wanted_checked = False
 
             current_date = time.strftime('%Y-%m-%d')
 
             if 'journal' in fields:
-                res.update({'journal':journal})
+                res.update({'journal': journal})
             if 'amount' in fields:
-                res.update({'amount':amount})
+                res.update({'amount': amount})
             if 'invoice_wanted' in fields:
-                res.update({'invoice_wanted':invoice_wanted_checked})
+                res.update({'invoice_wanted': invoice_wanted_checked})
             if 'payment_date' in fields:
-                res.update({'payment_date':current_date})
+                res.update({'payment_date': current_date})
             if 'payment_name'  in fields:
-                res.update({'payment_name':'Payment'})
+                res.update({'payment_name': 'Payment'})
             if 'partner_id' in fields:
                 res.update({'partner_id': order.partner_id.id or False})
             if 'pricelist_id' in fields:
@@ -79,10 +81,12 @@ class pos_make_payment(osv.osv_memory):
         return res
 
     def view_init(self, cr, uid, fields_list, context=None):
+        if context is None:
+            context = {}
         super(pos_make_payment, self).view_init(cr, uid, fields_list, context=context)
         active_id = context and context.get('active_id', False) or False
         if active_id:
-            order = self.pool.get('pos.order').browse(cr, uid, active_id)
+            order = self.pool.get('pos.order').browse(cr, uid, active_id, context=context)
             if not order.lines:
                 raise osv.except_osv(_('Error!'),_('No order lines defined for this sale '))
         return True
@@ -99,15 +103,15 @@ class pos_make_payment(osv.osv_memory):
              @return: New arch of view.
 
         """
-
-
         result = super(pos_make_payment, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
+        if context is None:
+            context = {}
         active_model = context.get('active_model')
-        active_id = context.get('active_id', False)
+        active_id = context and context.get('active_id', False) or False
         if not active_id or (active_model and active_model != 'pos.order'):
             return result
 
-        order = self.pool.get('pos.order').browse(cr, uid, active_id)
+        order = self.pool.get('pos.order').browse(cr, uid, active_id, context=context)
         if order.amount_total == order.amount_paid:
             result['arch'] = """ <form string="Make Payment" colspan="4">
                             <group col="2" colspan="2">
@@ -132,62 +136,62 @@ class pos_make_payment(osv.osv_memory):
             amount = amount - product.list_price
         return {'value': {'amount': amount}}
 
-    def check(self, cr, uid, ids, context):
-
+    def check(self, cr, uid, ids, context=None):
         """Check the order:
         if the order is not paid: continue payment,
         if the order is paid print invoice (if wanted) or ticket.
         """
-        active_id = context and context.get('active_id',False)
         order_obj = self.pool.get('pos.order')
-        order = order_obj.browse(cr, uid, active_id, context)
+        if context is None:
+            context = {}
+        active_id = context and context.get('active_id', False)
+        order = order_obj.browse(cr, uid, active_id, context=context)
         amount = order.amount_total - order.amount_paid
-        data =  self.read(cr, uid, ids)[0]
-        invoice_wanted = data['invoice_wanted']
-        is_accompte = data['is_acc']
+        data =  self.read(cr, uid, ids, context=context)[0]
         # Todo need to check ...
-        if is_accompte:
-            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], -1.0, context)
+        if data['is_acc']:
+            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], -1.0, context=context)
             amount = order.amount_total - order.amount_paid - price
-        
+
         if amount != 0.0:
-            order_obj.write(cr, uid, [active_id], {'invoice_wanted': invoice_wanted, 'partner_id': data['partner_id']})
+            order_obj.write(cr, uid, [active_id], {'invoice_wanted': data['invoice_wanted'], 'partner_id': data['partner_id']}, context=context)
             order_obj.add_payment(cr, uid, active_id, data, context=context)
 
         if order_obj.test_paid(cr, uid, [active_id]):
-            if data['partner_id'] and invoice_wanted:
-                order_obj.action_invoice(cr, uid, [active_id], context)
-                order_obj.create_picking(cr, uid, [active_id], context)
-                if context.get('return'):
-                    order_obj.write(cr, uid, [active_id],{'state':'done'})
+            if data['partner_id'] and data['invoice_wanted']:
+                order_obj.action_invoice(cr, uid, [active_id], context=context)
+                order_obj.create_picking(cr, uid, [active_id], context=context)
+                if context.get('return', False):
+                    order_obj.write(cr, uid, [active_id], {'state':'done'}, context=context)
                 else:
-                    order_obj.write(cr, uid, [active_id],{'state':'paid'})
-                return self.create_invoice(cr, uid, ids, context)
+                    order_obj.write(cr, uid, [active_id],{'state':'paid'}, context=context)
+                return self.create_invoice(cr, uid, ids, context=context)
             else:
                 context.update({'flag': True})
-                order_obj.action_paid(cr, uid, [active_id], context)
-                if context.get('return'):
-                    order_obj.write(cr, uid, [active_id],{'state':'done'})
+                order_obj.action_paid(cr, uid, [active_id], context=context)
+                if context.get('return', False):
+                    order_obj.write(cr, uid, [active_id], {'state':'done'}, context=context)
                 else:
-                    order_obj.write(cr, uid, [active_id],{'state':'paid'})
-                return self.print_report(cr, uid, ids, context)
+                    order_obj.write(cr, uid, [active_id], {'state':'paid'}, context=context)
+                return self.print_report(cr, uid, ids, context=context)
 
         if order.amount_paid > 0.0:
             context.update({'flag': True})
             # Todo need to check
-            order_obj.action_paid(cr, uid, [active_id], context)
-            order_obj.write(cr, uid, [active_id],{'state': 'advance'})
-            return self.print_report(cr, uid, ids, context)
+            order_obj.action_paid(cr, uid, [active_id], context=context)
+            order_obj.write(cr, uid, [active_id], {'state': 'advance'}, context=context)
+            return self.print_report(cr, uid, ids, context=context)
         return {}
 
 
-    def create_invoice(self, cr, uid, ids, context):
+    def create_invoice(self, cr, uid, ids, context=None):
         """
           Create  a invoice
         """
-        active_ids = [context and context.get('active_id',False)]
+        if context is None:
+            context = {}
+        active_ids = [context and context.get('active_id', False)]
         datas = {'ids': active_ids}
-        datas['form'] = {}
         return {
             'type' : 'ir.actions.report.xml',
             'report_name':'pos.invoice',
@@ -203,28 +207,25 @@ class pos_make_payment(osv.osv_memory):
          @param context: A standard dictionary
          @return : retrun report
         """
-        if not context:
-            context={}
-        active_id=context.get('active_id',[])
+        if context is None:
+            context = {}
+        active_id = context.get('active_id', [])
         datas = {'ids' : [active_id]}
-        res =  {}
-        datas['form'] = res
-
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'pos.receipt',
             'datas': datas,
-       }
+        }
 
     _columns = {
-        'journal':fields.selection(pos_box_entries.get_journal, "Cash Register",required=True),
+        'journal': fields.selection(pos_box_entries.get_journal, "Cash Register", required=True),
         'product_id': fields.many2one('product.product', "Advance"),
-        'amount':fields.float('Amount', digits=(16,2) ,required= True),
+        'amount': fields.float('Amount', digits=(16,2), required= True),
         'payment_name': fields.char('Payment name', size=32, required=True),
         'payment_date': fields.date('Payment date', required=True),
         'is_acc': fields.boolean('Advance'),
         'invoice_wanted': fields.boolean('Invoice'),
-        'num_sale':fields.char('Num.File', size=32),
+        'num_sale': fields.char('Num.File', size=32),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
     }

@@ -102,7 +102,7 @@ class account_analytic_quantity_cost_ledger(report_sxw.rml_parse):
 
     def _sum_quantity(self, accounts, date1, date2, journals):
         ids = map(lambda x: x.id, accounts)
-        if not len(ids):
+        if not ids:
             return 0.0
         if not journals:
             self.cr.execute("SELECT sum(unit_amount) \

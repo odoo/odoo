@@ -1,6 +1,7 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_document_directory_all","document.directory all","model_document_directory",,1,0,0,0
 "access_document_directory_group_document_manager","document.directory document manager","model_document_directory","base.group_system",1,1,1,1
+"access_document_directory_group_knowledge","document.directory modify","model_document_directory","base.group_document_user",1,1,1,1
 "access_document_directory_group_system","document.directory group system","model_document_directory","base.group_system",1,1,1,1
 "access_document_directory_content_all","document.directory.content all","model_document_directory_content",,1,0,0,0
 "access_document_directory_content_group_document_manager","document.directory.content document manager","model_document_directory_content","base.group_system",1,1,1,1
@@ -24,3 +25,4 @@
 "access_report_document_file_group_system","report.document.file group system","model_report_document_file","base.group_system",1,0,0,0
 "access_report_document_wall_group_document_manager","report.document.wall document manager","model_report_document_wall","base.group_system",1,0,0,0
 "access_report_document_wall_group_system","report.document.wall group system","model_report_document_wall","base.group_system",1,0,0,0
+"access_report_document_user_knowledgeuser","report.document.user knowledgeuser","document.model_report_document_user","base.group_document_user",1,0,0,0

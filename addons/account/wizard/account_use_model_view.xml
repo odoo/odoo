@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
             <form string="Create Entries From Models">
                     <separator string="This wizard will create recurring accounting entries" colspan="4"/>
-                    <label string="Select recurring to create a manualy recurring accounting entries" width="400"/>
+                    <label string="Create manual recurring entries in a chosen journal." width="400"/>
                     <field name="model" colspan="4" nolabel="1"/>
                     <separator colspan="4"/>
                     <group colspan="4" col="2">
@@ -38,12 +38,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Use Model">
-                    <group colspan="4" col="6" width="300" height="70">
-                        <label string = "Are you sure you want to create entries?" colspan="2"/>
-                        <newline/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-execute" string="Ok" name="create_entries" type="object" default_focus='1'/>
-                   </group>
+                    <label string = "Are you sure you want to create entries?" colspan="2"/>
+                    <newline/>
+                    <button icon="gtk-cancel" special="cancel" string="Cancel"/>
+                    <button icon="gtk-execute" string="Ok" name="create_entries" type="object" default_focus='1'/>
                </form>
             </field>
         </record>

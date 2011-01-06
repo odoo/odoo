@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import time
-import netsvc
 from osv import fields, osv
 
 class product_category(osv.osv):
@@ -75,5 +73,7 @@ class product_template(osv.osv):
             view_load=True,
             help="This account will be used for invoices instead of the default one to value expenses for the current product"),
     }
+
 product_template()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

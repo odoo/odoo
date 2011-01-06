@@ -4,7 +4,7 @@
 
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 	xmlns:html="http://www.w3.org/1999/xhtml"
-	title="&title.label;" onload="myPrefObserver.register();"  unload="myPrefObserver.unregister()" height="410" width="900">
+	title="&title.label;" onload="myPrefObserver.register();myPrefObserver.webregister();"  unload="myPrefObserver.unregister()" height="430" width="900">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
@@ -17,8 +17,9 @@
   </tabs>
   <tabpanels>
     <tabpanel id="configtab">
-    	<vbox >
-	      	<groupbox id="gpConnection" width="770" height="300" align ="center" >
+    	<vbox style="border:1px solid black">
+	      	<groupbox id="gpConnection" align ="center" >
+ <separator class="groove-thin" orient="horizontal" width="94"/> 
 			  <caption label="&gpConnection.label;"/>
 				<hbox>
 					<label  align="right" id="url"  value="&txturl.label;" width="80" />
@@ -44,9 +45,31 @@
 					<spacer width="290"/>
 					<button align="center" id="btconnection" label="&connection.label;" oncommand="testConnection();" image="&imageok.value;" width="100"/>
 				</hbox>
+                <separator class="groove-thin" orient="horizontal" width="94"/> 
 			</groupbox>
 		</vbox>
+
+        <separator class="groove-thin" orient="horizontal" width="10"/> 
+        <vbox style="border:1px solid black" width="94">
+      <groupbox id="webgroup" > 
+        <vbox>
+         <caption label="&webConnection.label;"/>
+        </vbox>
+        <separator class="groove-thin" orient="horizontal" width="10"/> 
+        <hbox>
+        <label  align="right" id="url"  value="&txtweburl.label;" width="80" />
+		<textbox id="txtweburl" width="200" readonly="true"/>
+        </hbox>
+     
+        <hbox >
+		    <spacer width="113"/>
+		    <button align="center" id="websetconnection" label="&setconnection.label;" oncommand="openConfigChangeweb();" image="&imagesearch.value;"/>
+         <button align="center" id="webopenconnection" label="&openconnection.label;" oncommand="testConnection_web();" image="&imageok.value;"/>
+		</hbox>
+</groupbox>  
+ </vbox>
     </tabpanel>
+ 
     <tabpanel id="objecttab">
 		<groupbox id="gpObject" width="700" >
 		<caption label="&listDocument.header;"/>
@@ -65,7 +88,7 @@
                         <button id="btobjectdelete" label="&documentdelete.label;" oncommand="deleteDocument();" image="&imagecancel.value;"/>
 					</hbox>
 					
-					<listbox id="listObjectListBox" flex="1" rows="10">
+					<listbox id="listObjectListBox" flex="1" rows="12">
 				        <listhead>
 						<listheader label="Title"/>
 				        	<listheader label="&listDocumentListBox.header;"/>
@@ -87,26 +110,30 @@
     <tabpanel id="abouttab">
 		<groupbox id="gpAbout" width="770" align="center">
 			<caption label="&gpAbout.label;"/>
-			<image src="chrome://openerp_plugin/skin/developped_by.png" sizemode="stretch" align="center"/>
+			<description>&openerp.paresent;</description>
+			<image src="chrome://openerp_plugin/skin/logo.png" sizemode="stretch" align="center"/>
+
 			<description> </description>
 			<description> </description>
 			<description>&develop.value;</description>
+			<image src="chrome://openerp_plugin/skin/developped_by.png" sizemode="stretch" align="center"/>
 			<description> </description>
 			<description> </description>
 			<description>&information.value;</description>
 			<description><html:a href="&openerp.value;">&openerp.value;</html:a></description>
+			
 			<description><html:a href="&axelor.value;">&axelor.value;</html:a></description>
 			<description><html:a href="&tinyerp.value;">&tinyerp.value;</html:a></description>
 			<description> </description>
 			<description> </description>
 			<description>Copyright © 2006-TODAY OpenERP SA All Rights Reserved.</description>
-			<description>OpenERP is a trademark of the OpenERP SA Company. OpenERP Web is jointly developed by OpenERP SA and Axelor.</description>
+			<description>OpenERP is a trademark of the OpenERP SA Company. OpenERP Web is jointly developed by OpenERP SA &amp; Axelor.</description>
 			<description>Licenced under the terms of <html:a href="https://tiny.odoo.com/LICENSE.txt"> OpenERP Public License (OEPL) v1.1 (https://tiny.odoo.com/LICENSE.txt)</html:a> </description>
 		</groupbox>
     </tabpanel>
   </tabpanels>
 </tabbox>
-<hbox align="center">
+<hbox>
 	<spacer width="800"/>
 	<button label="&close.label;" oncommand="close();" image="&imagecancel.value;"/>
 </hbox>

@@ -29,7 +29,7 @@ class project_gtd_context(osv.osv):
     _name = "project.gtd.context"
     _description = "Context"
     _columns = {
-        'name': fields.char('Context', size=64, required=True, select=1),
+        'name': fields.char('Context', size=64, required=True, select=1, translate=1),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of contexts."),
     }
     _defaults = {
@@ -44,7 +44,7 @@ class project_gtd_timebox(osv.osv):
     _name = "project.gtd.timebox"
     _order = "sequence"
     _columns = {
-        'name': fields.char('Timebox', size=64, required=True, select=1),
+        'name': fields.char('Timebox', size=64, required=True, select=1, translate=1),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of timebox."),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
     }
@@ -104,11 +104,12 @@ class project_task(osv.osv):
         res = super(project_task,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         search_extended = False
         timebox_obj = self.pool.get('project.gtd.timebox')
-        if res['type'] == 'search':
-            tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]))
-            search_extended ='''<newline/><group col="%d" expand="1" string="%s" groups="project_gtd.group_project_getting">''' % (len(tt)+7,_('Getting Things Done'))
+        access_pool = self.pool.get('ir.model.access')
+        if (res['type'] == 'search') and access_pool.check_groups(cr, uid, "project_gtd.group_project_getting"):
+            tt = timebox_obj.browse(cr, uid, timebox_obj.search(cr,uid,[]), context=context)
+            search_extended ='''<newline/><group col="%d" expand="%d" string="%s">''' % (len(tt)+7,1,_('Getting Things Done'))
             search_extended += '''<filter domain="[('timebox_id','=', False)]" context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Undefined Timebox" string="%s"/>''' % (_('Inbox'),)
-            search_extended += '''<filter context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Undefined Timebox" string="%s"/>''' % (_('GTD'),)
+            search_extended += '''<filter context="{'set_editable':True,'set_visible':True,'gtd_visible':True,'user_invisible':True}" icon="gtk-new" help="Getting things done" string="%s"/>''' % (_('GTD'),)
             search_extended += '''<separator orientation="vertical"/>'''
             for time in tt:
                 if time.icon:
@@ -122,9 +123,9 @@ class project_task(osv.osv):
             </group>
             </search> '''
         if search_extended:
-            res['arch'] = res['arch'].replace('</search>',search_extended)
+            res['arch'] = unicode(res['arch'], 'utf8').replace('</search>', search_extended)
             attrs_sel = self.pool.get('project.gtd.context').name_search(cr, uid, '', [], context=context)
-            context_id_info = self.pool.get('project.task').fields_get(cr, uid, ['context_id'])
+            context_id_info = self.pool.get('project.task').fields_get(cr, uid, ['context_id'], context=context)
             context_id_info['context_id']['selection'] = attrs_sel
             res['fields'].update(context_id_info)
         return res

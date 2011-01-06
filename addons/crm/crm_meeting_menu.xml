@@ -9,6 +9,7 @@
         src_model="res.partner"
         view_mode="calendar,tree,form,gantt"
         context="{'search_default_partner_id': active_id, 'default_duration': 4.0}"
+        domain="[('partner_id', '=', active_id)]"
     />
 
     <record model="ir.actions.act_window" id="crm_case_categ_meet_create_partner">
@@ -51,7 +52,7 @@
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
         <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
-        <field name="help">The calendar of meetings is shared between sales teams and fully integrated with the others applications like the employee holidays. You can also synchronize meetings with your mobile phone using the caldav interface.</field>
+        <field name="help">The meeting calendar is shared between the sales teams and fully integrated with other applications such as the employee holidays or the business opportunities. You can also synchronize meetings with your mobile phone using the caldav interface.</field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet">
@@ -92,7 +93,7 @@
         sequence="1" />
 
     <record id="ir_ui_view_sc_calendar0" model="ir.ui.view_sc">
-        <field name="name">Calendar</field>
+        <field name="name">Meetings</field>
         <field name="resource">ir.ui.menu</field>
         <field name="user_id" ref="base.user_root"/>
         <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
@@ -106,12 +107,13 @@
          <field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view" />
         <field name="domain">[('ref','like','crm.meeting,')]</field>
          <field name="context">{"search_default_toreview":1, "search_default_user_id":uid}</field>
+        <field name="help">With Meeting Invitations you can create and manage the meeting invitations sent/to be sent to your colleagues/partners. You can not only invite OpenERP users, but also external parties, such as a customer.</field>
      </record>
 
     <menuitem id="menu_attendee_invitations"
             name="Meeting Invitations" parent="crm.menu_meeting_sale"
             sequence="10" action="action_view_attendee_form"
-            groups="base.group_extended" />
+            groups="base.group_no_one" />
 
 </data>
 </openerp>

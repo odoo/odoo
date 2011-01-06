@@ -30,16 +30,16 @@
 #    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #
@@ -140,27 +140,15 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             ErrorDialog("Connection Refuse...","Please enter valid Login/Password")
             self.win.endExecute()
         try:
-
-            ids  = self.sock.execute(sDatabase,UID,sPassword, 'res.groups' ,  'search', [('name','=','OpenOfficeReportDesigner')])
             ids_module =self.sock.execute(sDatabase, UID, sPassword, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
-            dict_groups =self.sock.execute(sDatabase, UID,sPassword, 'res.groups' , 'read',ids,['users'])
         except :
             import traceback,sys
             info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
             self.logobj.log_write('ServerParameter', LOG_ERROR, info)
 
-        if not len(ids) :
-            ErrorDialog("Group Not Found!!!  Create a group  named  \n\n"'"OpenOfficeReportDesigner"'"  \n\n  ","","Group Name Error")
-            self.logobj.log_write('Group Error',LOG_WARNING, ':Create a  group OpenOfficeReportDesigner   using database %s' % (sDatabase))
-            self.win.endExecute()
         if not len(ids_module):
             ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
             self.logobj.log_write('Module Not Found',LOG_WARNING, ':base_report_designer not install in  database %s' % (sDatabase))
-            self.win.endExecute()
-
-        if UID not in dict_groups[0]['users']:
-            ErrorDialog("Connection Refuse...","You have not access these Report Designer")
-            self.logobj.log_write('Connection Refuse',LOG_WARNING, " Not Access Report Designer ")
             self.win.endExecute()
         else:
             desktop=getDesktop()
@@ -192,6 +180,10 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
         Change(aVal,url)
         if aVal[1]== -1:
            self.win.getEditText("lstDatabase")
+           self.win.removeListBoxItems("lstDatabase", 0, self.win.getListBoxItemCount("lstDatabase"))
+           self.win.setEditText("txtHost",aVal[0])
+           for i in range(len(aVal[1])):
+                self.lstDatabase.addItem(aVal[1][i],i)
         elif aVal[1]==0:
             ErrorDialog(aVal[0],"")
         else:

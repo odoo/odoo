@@ -6,34 +6,105 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-08-17 09:43+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"PO-Revision-Date: 2011-01-01 13:29+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:59+0000\n"
+"X-Launchpad-Export-Date: 2011-01-02 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:0
+#, python-format
+msgid ""
+"The Vat does not seems to be correct. You should have entered something like "
+"this %s"
+msgstr ""
+"La partita IVA non sembra essere corretta. E' necessario inserire un valore "
+"simile a: %s"
 
 #. module: base_vat
 #: model:ir.module.module,description:base_vat.module_meta_information
 msgid ""
-"Enable the VAT Number for the partner. Check the validity of that VAT Number."
+"\n"
+"    Enable the VAT Number for the partner. Check the validity of that VAT "
+"Number.\n"
+"\n"
+"    This module follows the methods stated at http://sima-pc.com/nif.php "
+"for\n"
+"    checking the validity of VAT Number assigned to partners in European "
+"countries.\n"
+"    "
 msgstr ""
-"Abilitare il numero di P.Iva per il Partner. Controllare la validità."
+"\n"
+"    Abilita la partita IVA per il partner. Controlla la validità del valore "
+"fornito.\n"
+"\n"
+"    Questo modulo segue i metofi definiti in http://sima-pc.com/nif.php per\n"
+"    controllare la validità del numero assegnato ai partner nei paesi "
+"europei.\n"
+"    "
 
 #. module: base_vat
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valido per Visualizzazione Architettura!"
+#: model:ir.module.module,shortdesc:base_vat.module_meta_information
+msgid "Base VAT - To check VAT number validity"
+msgstr "Base VAT - Per controllare la correttezza della Partita IVA"
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Errore! Non è possibile creare membri associati ricorsivi."
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:0
+#, python-format
+msgid "The VAT is invalid, It should begin with the country code"
+msgstr "La partita IVA non è valida, deve cominciare con il \"codice paese\""
+
+#. module: base_vat
+#: help:res.partner,vat_subjected:0
+msgid ""
+"Check this box if the partner is subjected to the VAT. It will be used for "
+"the VAT legal statement."
+msgstr ""
+"Selezionare questa casella se il partner è soggetto a IVA. Sarà usata nelle "
+"dichiarazioni IVA"
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_res_partner
+msgid "Partner"
+msgstr "Partner"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
 msgstr "Soggetto a dichiarazione IVA"
 
-#. module: base_vat
-#: model:ir.module.module,shortdesc:base_vat.module_meta_information
-msgid "VAT"
-msgstr "Partita IVA"
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valido per Visualizzazione Architettura!"
+
+#~ msgid ""
+#~ "Enable the VAT Number for the partner. Check the validity of that VAT Number."
+#~ msgstr ""
+#~ "Abilitare il numero di P.Iva per il Partner. Controllare la validità."
+
+#~ msgid "VAT"
+#~ msgstr "Partita IVA"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Il nome dell'oggetto deve cominbiare per \"x_\" e non deve contenere "
+#~ "caratteri speciali!"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Il nome del modulo deve essere unico!"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "L'ID certificato del modulo deve essere unico!"

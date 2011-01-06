@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-19 12:50+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-09-09 07:22+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:18+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -25,8 +25,6 @@ msgstr "Događaj počinje"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Hourly"
 msgstr "Po satu"
 
@@ -46,15 +44,18 @@ msgstr ""
 "komponentu kalendara"
 
 #. module: base_calendar
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event.edit.all,name:0
 msgid "Title"
 msgstr "Naslov"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Monthly"
 msgstr "Mjesečno"
@@ -63,6 +64,11 @@ msgstr "Mjesečno"
 #: view:calendar.attendee:0
 msgid "Invited User"
 msgstr "Pozvani korisnik"
+
+#. module: base_calendar
+#: view:base.calendar.set.exrule:0
+msgid "Select range to Exclude"
+msgstr ""
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -97,6 +103,12 @@ msgid "Fourth"
 msgstr "Četvrti"
 
 #. module: base_calendar
+#: help:calendar.event,count:0
+#: help:calendar.todo,count:0
+msgid "Repeat max that times"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,show_as:0
 #: field:calendar.todo,show_as:0
 msgid "Show as"
@@ -120,6 +132,8 @@ msgstr "Javni"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Hours"
 msgstr "Sati"
@@ -171,9 +185,9 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr "Indikator da li se očekuje odgovor"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
+msgstr "Osnovni alarm"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -206,19 +220,16 @@ msgid "Tue"
 msgstr "Uto"
 
 #. module: base_calendar
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
+
+#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Godišnje"
-
-#. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
-msgstr "Događaj završava"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -239,16 +250,17 @@ msgstr "Soba"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Days"
 msgstr "Dana"
 
 #. module: base_calendar
-#: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "No Repeat"
-msgstr "Bez ponavljanja"
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+msgid "Invitation Detail"
+msgstr "Detalji poziva"
 
 #. module: base_calendar
 #: code:addons/base_calendar/base_calendar.py:0
@@ -264,9 +276,9 @@ msgid "Chair Person"
 msgstr "Voditelj"
 
 #. module: base_calendar
-#: selection:calendar.alarm,action:0
-msgid "Procedure"
-msgstr "Procedura"
+#: view:calendar.event:0
+msgid "Exclude range"
+msgstr ""
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -281,6 +293,8 @@ msgstr "Otkazano"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Minutes"
 msgstr "Minute"
@@ -302,23 +316,25 @@ msgstr "Tip poziva"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Secondly"
 msgstr "Drugo"
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
-msgstr "Datum događaja"
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
+msgstr "Događaj završava"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Group By..."
 msgstr "Grupiraj prema..."
+
+#. module: base_calendar
+#: help:base_calendar.invite.attendee,email:0
+msgid "Provide external email address who will receive this invitation."
+msgstr ""
 
 #. module: base_calendar
 #: help:calendar.attendee,partner_id:0
@@ -331,12 +347,10 @@ msgid "Specify the type of Invitation"
 msgstr "Odredite tip poziva"
 
 #. module: base_calendar
-#: help:calendar.event,exrule:0
-#: help:calendar.todo,exrule:0
-msgid ""
-"defines a rule or repeating pattern for an exception to a recurrence set"
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Years"
 msgstr ""
-"Definira pravilo ili ponavljajući uzorak za iznimku u skupu ponavljanja"
 
 #. module: base_calendar
 #: field:calendar.alarm,event_end_date:0
@@ -348,6 +362,12 @@ msgstr "Datum završetka događaja"
 #: selection:calendar.attendee,role:0
 msgid "Optional Participation"
 msgstr "Neobvezno sudjelovanje"
+
+#. module: base_calendar
+#: help:calendar.event,interval:0
+#: help:calendar.todo,interval:0
+msgid "Repeat every x"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.event,date_deadline:0
@@ -411,11 +431,6 @@ msgstr "Uredi sve događaje"
 #: field:calendar.todo,attendee_ids:0
 msgid "Attendees"
 msgstr "Sudionici"
-
-#. module: base_calendar
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Neispravan naziv modela u definiciji akcije"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -505,6 +520,12 @@ msgid "Repeat Until"
 msgstr "Ponavljaj dok"
 
 #. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Seconds"
+msgstr ""
+
+#. module: base_calendar
 #: view:calendar.event:0
 msgid "Visibility"
 msgstr "Vidljivost"
@@ -552,19 +573,9 @@ msgid "Delegrated To"
 msgstr "Proslijeđeno"
 
 #. module: base_calendar
-#: constraint:ir.cron:0
-msgid "Invalid arguments"
-msgstr "Neispravni argumenti"
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required Reply"
 msgstr "Očekivan odgovor"
-
-#. module: base_calendar
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Neispravan XML za arhitekturu View-a"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -585,9 +596,7 @@ msgstr "Privatno"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Daily"
 msgstr "Dnevno"
@@ -611,6 +620,12 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base_calendar
+#: help:calendar.event,rrule_type:0
+#: help:calendar.todo,rrule_type:0
+msgid "Let the event automatically repeat at that interval"
+msgstr ""
+
+#. module: base_calendar
 #: view:calendar.attendee:0
 #: view:calendar.event:0
 msgid "Delegate"
@@ -622,11 +637,6 @@ msgstr "Proslijedi"
 #: field:calendar.attendee,partner_id:0
 msgid "Partner"
 msgstr "Stranka"
-
-#. module: base_calendar
-#: view:base.calendar.set.exrule:0
-msgid "Select data for ExRule"
-msgstr "Odaberi podatke za pravilo iznimke"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -650,6 +660,12 @@ msgstr "Prvi"
 #: view:calendar.event:0
 msgid "Privacy"
 msgstr "Privatnost"
+
+#. module: base_calendar
+#: field:calendar.event,vtimezone:0
+#: field:calendar.todo,vtimezone:0
+msgid "Timezone"
+msgstr "Vremenska zona"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -734,6 +750,12 @@ msgid "Decline"
 msgstr "Otkaži"
 
 #. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Weeks"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.attendee,cutype:0
 msgid "Group"
 msgstr "Grupa"
@@ -761,10 +783,10 @@ msgid "Fri"
 msgstr "Pet"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-msgid "Invitation Detail"
-msgstr "Detalji poziva"
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Count can not be Negative"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.attendee,member:0
@@ -794,21 +816,9 @@ msgid "Attachment"
 msgstr "Privitak"
 
 #. module: base_calendar
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
-msgstr "Pogreška ! Ne možete kreirati rekurzivne izbornike."
-
-#. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation From"
 msgstr "Poziv od"
-
-#. module: base_calendar
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv objekta mora počinjati s x_ i ne smije sadržavati posebne znakove !"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -883,9 +893,11 @@ msgid "June"
 msgstr "Lipanj"
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
-msgstr "Osnovni alarm"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
+msgstr "Datum događaja"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -900,15 +912,9 @@ msgid "Delegated From"
 msgstr "Proslijeđeno od"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
 #: field:calendar.attendee,user_id:0
 msgid "User"
 msgstr "Korisnik"
-
-#. module: base_calendar
-#: view:calendar.event:0
-msgid "ExRule"
-msgstr "Pravilo iznimke"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -929,6 +935,11 @@ msgid "Indicate the groups that the attendee belongs to"
 msgstr "Označite grupe kojima sudionik pripada"
 
 #. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+msgid "Data"
+msgstr ""
+
+#. module: base_calendar
 #: field:base.calendar.set.exrule,mo:0
 #: field:calendar.event,mo:0
 #: field:calendar.todo,mo:0
@@ -941,6 +952,13 @@ msgstr "Pon"
 #: field:calendar.todo,count:0
 msgid "Count"
 msgstr "Broj"
+
+#. module: base_calendar
+#: selection:base.calendar.set.exrule,freq:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "No Repeat"
+msgstr "Bez ponavljanja"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -996,6 +1014,12 @@ msgid "Wednesday"
 msgstr "Srijeda"
 
 #. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:0
+#, python-format
+msgid "Interval can not be Negative"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.alarm,name:0
 #: view:calendar.event:0
 msgid "Summary"
@@ -1018,6 +1042,11 @@ msgstr "Poziv"
 #: field:calendar.alarm,action:0
 msgid "Action"
 msgstr "Akcija"
+
+#. module: base_calendar
+#: help:base_calendar.invite.attendee,type:0
+msgid "Select whom you want to Invite"
+msgstr ""
 
 #. module: base_calendar
 #: help:calendar.alarm,duration:0
@@ -1056,9 +1085,7 @@ msgstr "Pretraži događaje"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
 #: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,freq:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Weekly"
 msgstr "Tjedno"
@@ -1080,6 +1107,11 @@ msgstr ""
 #: field:calendar.todo,recurrent_id:0
 msgid "Recurrent ID date"
 msgstr "Ponavljajući ID datuma"
+
+#. module: base_calendar
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.alarm,state:0
@@ -1145,6 +1177,11 @@ msgid "Tuesday"
 msgstr "Utorak"
 
 #. module: base_calendar
+#: selection:calendar.alarm,action:0
+msgid "Procedure"
+msgstr "Procedura"
+
+#. module: base_calendar
 #: help:calendar.alarm,description:0
 msgid ""
 "Provides a more complete                             description of the "
@@ -1180,6 +1217,7 @@ msgid "Tentative"
 msgstr "Neodlučan"
 
 #. module: base_calendar
+#: view:calendar.attendee:0
 #: view:calendar.event:0
 #: field:calendar.event,user_id:0
 #: field:calendar.todo,user_id:0
@@ -1232,6 +1270,14 @@ msgid "Details"
 msgstr "Detalji"
 
 #. module: base_calendar
+#: help:calendar.event,exrule:0
+#: help:calendar.todo,exrule:0
+msgid ""
+"Defines a rule or repeating pattern of time to exclude from the recurring "
+"rule."
+msgstr ""
+
+#. module: base_calendar
 #: field:base.calendar.set.exrule,month_list:0
 #: field:calendar.event,month_list:0
 #: field:calendar.todo,month_list:0
@@ -1239,10 +1285,9 @@ msgid "Month"
 msgstr "Mjesec"
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
-msgstr "Pozovi"
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
+msgstr "Vanjska e-pošta"
 
 #. module: base_calendar
 #: help:calendar.event,rrule:0
@@ -1306,6 +1351,12 @@ msgid "ir.values"
 msgstr ""
 
 #. module: base_calendar
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
+msgstr "Pozovi"
+
+#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Objects"
 msgstr "Objekti"
@@ -1340,8 +1391,6 @@ msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 msgid "Minutely"
 msgstr "U minutama"
 
@@ -1362,6 +1411,12 @@ msgstr "Datum završetka"
 #: selection:calendar.todo,month_list:0
 msgid "February"
 msgstr "Veljača"
+
+#. module: base_calendar
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+msgid "Months"
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
@@ -1481,10 +1536,10 @@ msgid "Sequence"
 msgstr "Redoslijed"
 
 #. module: base_calendar
-#: field:calendar.event,vtimezone:0
-#: field:calendar.todo,vtimezone:0
-msgid "Timezone"
-msgstr "Vremenska zona"
+#: help:calendar.event,alarm_id:0
+#: help:calendar.todo,alarm_id:0
+msgid "Set an alarm at this time, before the event occurs"
+msgstr ""
 
 #. module: base_calendar
 #: selection:base_calendar.invite.attendee,type:0
@@ -1534,9 +1589,11 @@ msgid "Duration"
 msgstr "Trajanje"
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
-msgstr "Vanjska e-pošta"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid ""
+"Create specific calendar alarms that can be assigned to calendar events or "
+"meetings."
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
@@ -1563,3 +1620,31 @@ msgstr ""
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr "Peti"
+
+#~ msgid ""
+#~ "defines a rule or repeating pattern for an exception to a recurrence set"
+#~ msgstr ""
+#~ "Definira pravilo ili ponavljajući uzorak za iznimku u skupu ponavljanja"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Neispravan naziv modela u definiciji akcije"
+
+#~ msgid "Invalid arguments"
+#~ msgstr "Neispravni argumenti"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Neispravan XML za arhitekturu View-a"
+
+#~ msgid "Select data for ExRule"
+#~ msgstr "Odaberi podatke za pravilo iznimke"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Pogreška ! Ne možete kreirati rekurzivne izbornike."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Naziv objekta mora počinjati s x_ i ne smije sadržavati posebne znakove !"
+
+#~ msgid "ExRule"
+#~ msgstr "Pravilo iznimke"

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Cost Ledger" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Cost Ledger.pdf">
+  <template pageSize="(595.0,842.0)" title="Cost Ledger" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
-      <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
+      <frame id="first" x1="28.0" y1="30.0" width="539" height="785"/>
     </pageTemplate>
   </template>
   <stylesheet>
@@ -120,53 +120,9 @@
     <images/>
   </stylesheet>
   <story>
-    <blockTable colWidths="161.0,161.0,161.0" repeatRows="1" style="Table1">
-      <tr>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_header_Centre">Cost Ledger</para>
-        </td>
-        <td>
-          <para style="terp_header_Right">
-            <font color="white"> </font>
-          </para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="161.0,161.0,161.0" style="Table_Date_Sub_detail">
-      <tr>
-        <td>
-          <para style="terp_tblheader_General_Centre">Period from </para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Period to</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Printing date</para>
-        </td>
-      </tr>
-    </blockTable>
-    <blockTable colWidths="161.0,161.0,161.0" style="Table_Sub_Content">
-      <tr>
-        <td>
-          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date1'],date = True) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date2'],date = True) ]]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]]</para>
-        </td>
-      </tr>
-    </blockTable>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
-    <blockTable colWidths="63.0,249.0,57.0,57.0,57.0" style="Table_Header_Title">
+  <pto>
+  <pto_header>
+  <blockTable colWidths="53.0,276.0,70.0,71.0,68.0" style="Table_Header_Title">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date/Code</para>
@@ -185,10 +141,73 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
+  </pto_header>
+    <blockTable colWidths="179.0,179.0,180.0" repeatRows="1" style="Table1">
+      <tr>
+        <td>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
+        </td>
+        <td>
+          <para style="terp_header_Centre">Cost Ledger</para>
+        </td>
+        <td>
+          <para style="terp_header_Right">
+            <font color="white"> </font>
+          </para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="179.0,179.0,179.0" style="Table_Date_Sub_detail">
+      <tr>
+        <td>
+          <para style="terp_tblheader_General_Centre">Period from </para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">Period to</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_General_Centre">Printing date</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="179.0,179.0,179.0" style="Table_Sub_Content">
+      <tr>
+        <td>
+          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date1'],date = True) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ formatLang(data['form']['date2'],date = True) ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'),date_time = True) ]]</para>
+        </td>
+      </tr>
+    </blockTable>
+    <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="62.0,250.0,57.0,56.0,57.0" style="Table_Grant_Total">
+    <blockTable colWidths="53.0,276.0,70.0,71.0,68.0" style="Table_Header_Title">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Date/Code</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">J.C. /Move name</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Debit</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Credit</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Balance</para>
+        </td>
+      </tr>
+    </blockTable>
+    <blockTable colWidths="56.0,273.0,70.0,70.0,70.0" style="Table_Grant_Total">
       <tr>
         <td>
           <para style="terp_default_Bold_9">Total:</para>
@@ -199,22 +218,19 @@
           </para>
         </td>
         <td>
-          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_debit(objects,data['form']['date1'],data['form']['date2'])) ]]</para>
+          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_debit(objects,data['form']['date1'],data['form']['date2'])) ]] </para>
         </td>
         <td>
-          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_credit(objects,data['form']['date1'],data['form']['date2'])) ]]</para>
+          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_credit(objects,data['form']['date1'],data['form']['date2'])) ]] </para>
         </td>
         <td>
           <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_balance(objects,data['form']['date1'],data['form']['date2'])) ]] [[ company.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_2">
-      <font color="white"> </font>
-    </para>
     <section>
-      <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
-      <blockTable colWidths="62.0,249.0,57.0,57.0,57.0" style="Table_Account_Detail">
+      <para style="terp_default_2">[[ repeatIn(objects,'o') ]]</para>
+      <blockTable colWidths="56.0,273.0,70.0,70.0,70.0" style="Table_Account_Detail">
         <tr>
           <td>
             <para style="terp_default_Bold_9">[[ o.code ]]</para>
@@ -223,22 +239,19 @@
             <para style="terp_default_Bold_9">[[ o.complete_name ]]</para>
           </td>
           <td>
-            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_debit(o.id,data['form']['date1'],data['form']['date2'])) ]]</para>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_debit(o.id,data['form']['date1'],data['form']['date2'])) ]] </para>
           </td>
           <td>
-            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_credit(o.id,data['form']['date1'],data['form']['date2'])) ]]</para>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_credit(o.id,data['form']['date1'],data['form']['date2'])) ]] </para>
           </td>
           <td>
             <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_balance(o.id,data['form']['date1'],data['form']['date2']))]] [[ company.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_2">
-        <font color="white"> </font>
-      </para>
       <section>
-        <para style="Standard">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
-        <blockTable colWidths="62.0,249.0,58.0,56.0,57.0" style="Table_Move_Line_Detail">
+        <para style="terp_default_2">[[ repeatIn(lines_g(o.id,data['form']['date1'],data['form']['date2']),'move_g') ]]</para>
+        <blockTable colWidths="56.0,273.0,70.0,70.0,70.0" style="Table_Move_Line_Detail">
           <tr>
             <td>
               <para style="terp_default_Bold_9">[[ move_g['code'] ]]</para>
@@ -247,22 +260,19 @@
               <para style="terp_default_Bold_9">[[ move_g['name'] ]]</para>
             </td>
             <td>
-              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['debit']) ]]</para>
+              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['debit']) ]] </para>
             </td>
             <td>
-              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['credit']) ]]</para>
+              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['credit']) ]] </para>
             </td>
             <td>
               <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['balance']) ]] [[ company.currency_id.symbol ]]</para>
             </td>
           </tr>
         </blockTable>
-        <para style="terp_default_2">
-          <font color="white"> </font>
-        </para>
         <section>
-          <para style="terp_default_9">[[ repeatIn(lines_a(move_g['id'],o.id,data['form']['date1'],data['form']['date2']),'move_a') ]]</para>
-          <blockTable colWidths="60.0,46.0,204.0,59.0,55.0,58.0" style="Table_Move_Line_Content">
+          <para style="terp_default_2">[[ repeatIn(lines_a(move_g['id'],o.id,data['form']['date1'],data['form']['date2']),'move_a') ]]</para>
+          <blockTable colWidths="56.0,56.0,217.0,70.0,70.0,70.0" style="Table_Move_Line_Content">
             <tr>
               <td>
                 <para style="terp_default_9_Italic">[[ formatLang(move_a['date'],date = True) ]]</para>
@@ -274,13 +284,13 @@
                 <para style="terp_default_9_Italic">[[ move_a['name'] ]]</para>
               </td>
               <td>
-                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['debit'] )]]</para>
+                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['debit'] )]] </para>
               </td>
               <td>
-                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['credit']) ]]</para>
+                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['credit']) ]] </para>
               </td>
               <td>
-                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['balance']) ]]</para>
+                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['balance']) ]] [[ company.currency_id.symbol]]</para>
               </td>
             </tr>
           </blockTable>
@@ -288,13 +298,8 @@
             <font color="white"> </font>
           </para>
         </section>
-        <para style="terp_default_8">
-          <font color="white"> </font>
-        </para>
       </section>
     </section>
-    <para style="terp_default_8">
-      <font color="white"> </font>
-    </para>
+    </pto>
   </story>
 </document>

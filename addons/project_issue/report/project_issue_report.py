@@ -35,34 +35,11 @@ class project_issue_report(osv.osv):
     _name = "project.issue.report"
     _auto = False
 
-    def _get_data(self, cr, uid, ids, field_names, arg, context=None):
-        if context is None:
-            context = {}
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current users ID for security checks,
-            @param ids: List of case and section Datas IDs
-            @param context: A standard dictionary for contextual values """
-
-        res = {}
-
-        for report in self.browse(cr, uid, ids, context):
-            res[report.id]= {
-                'avg_answers': 0.0,
-                'perc_done' : 0.0,
-                'perc_cancel': 0.0
-            }
-            #TODO: Calculate
-
-        return res
-
     _columns = {
         'name': fields.char('Year', size=64, required=False, readonly=True),
         'user_id':fields.many2one('res.users', 'Responsible', readonly=True),
-        'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
+        'section_id':fields.many2one('crm.case.section', 'Sale Team', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'avg_answers': fields.function(_get_data, group_operator='avg', string='Avg. Answers', multi='avg_answers', method=True, type="integer"),
-        'perc_done': fields.function(_get_data, group_operator='avg', string='%Done', multi='perc_done', method=True, type="float"),
-        'perc_cancel': fields.function(_get_data, group_operator='avg', string='%Cancel', multi='perc_cancel', method=True, type="float"),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -75,7 +52,7 @@ class project_issue_report(osv.osv):
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Date of Closing', readonly=True),
         'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue')]"),
-        'type_id': fields.many2one ('project.task.type', 'Stage'),
+        'type_id': fields.many2one('project.task.type', 'Stage'),
         'nbr': fields.integer('# of Issues', readonly=True),
         'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True),
         'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True),

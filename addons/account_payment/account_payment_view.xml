@@ -34,11 +34,29 @@
                     <field name="amount_to_pay"/>
                     <field name="amount_currency"/>
                     <field name="currency_id"/>
+                    <field name="period_id" invisible="1"/>
                 </tree>
             </field>
         </record>
 
-        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="6"/>
+        <menuitem id="menu_main_payment" name="Payment" parent="account.menu_finance" sequence="7"/>
+
+        <record id="view_payment_mode_search" model="ir.ui.view">
+            <field name="name">payment.mode.search</field>
+            <field name="model">payment.mode</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <form string="Payment Mode">
+                    <field name="name"/>
+                    <field name="journal" widget='selection'/>
+                    <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                    <newline/>
+                    <group expand="0" string="Group By...">
+                      <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal'}"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
         <record id="view_payment_mode_tree" model="ir.ui.view">
             <field name="name">payment.mode.tree</field>
@@ -52,6 +70,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_payment_mode_form" model="ir.ui.view">
             <field name="name">payment.mode.form</field>
             <field name="model">payment.mode</field>
@@ -70,6 +89,7 @@
             <field name="res_model">payment.mode</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_payment_mode_search"/>
         </record>
 
         <menuitem action="action_payment_mode_form" id="menu_action_payment_mode_form" parent="account.menu_configuration_misc"/>
@@ -142,7 +162,7 @@
                     <group col="4" colspan="2">
                          <button name="cancel" states="draft,open" string="Cancel" icon="gtk-cancel"/>
                          <button name="open" states="draft" string="Confirm Payments"  icon="gtk-apply"/>
-                         <button name="%(action_account_payment_make_payment)d" states="open" string="Make Payments" type="action" icon="gtk-execute"/>
+                         <button name="set_done" states="open" string="Make Payments" type="object" icon="gtk-execute"/>
                          <button name="set_to_draft" states="cancel" string="Set to draft" type="object" icon="gtk-convert"/>
                     </group>
                 </form>
@@ -165,7 +185,7 @@
                     <field name="state"/>
                     <button name="cancel" states="draft,open" string="Cancel" icon="gtk-cancel"/>
                     <button name="open" states="draft" string="Confirm Payments"  icon="gtk-apply"/>
-                    <button name="%(action_account_payment_make_payment)d" states="open" string="Make Payments" type="action" icon="gtk-execute"/>
+                    <button name="set_done" states="open" string="Make Payments"  type ="object" icon="gtk-execute"/>
                 </tree>
             </field>
         </record>
@@ -201,6 +221,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_payment_order_search"/>
+            <field name="help">A payment order is a payment request from your company to pay a supplier invoice or a customer credit note. Here you can register all payment orders that should be done, keep track of all payment orders and mention the invoice reference and the partner the payment should be done for.</field>
         </record>
 
         <menuitem action="action_payment_order_tree" id="menu_action_payment_order_form" parent="menu_main_payment" sequence="3"/>
@@ -241,7 +262,6 @@
                              <field name="state"/>
                         </page>
                         <page string="Information">
-
                             <separator colspan="4" string="General Information"/>
                             <group colspan="2">
                                 <field name="amount" select="1"/>

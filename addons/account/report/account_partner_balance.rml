@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="partner_balance.pdf">
-  <template pageSize="(595.0,842.0)" title="Partner Balance" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Partner Balance.pdf">
+  <template pageSize="(595.0,842.0)" title="Partner Balance" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="57.0" y1="57.0" width="481" height="728"/>
     </pageTemplate>
@@ -189,7 +189,7 @@
        	<td><para style="terp_tblheader_General_Centre">Journals</para></td>
 		<td><para style="terp_tblheader_General_Centre">Filter By [[ get_filter(data)!='No Filter' and get_filter(data) ]]</para></td>
 		<td><para style="terp_tblheader_General_Centre">Partner's</para></td>
-        <td><para style="terp_tblheader_General_Centre">Printing Date</para></td>
+        <td><para style="terp_tblheader_General_Centre">Target Moves</para></td>
       </tr>
 	<tr>
        <td><para style="terp_default_Centre_8">[[ get_account(data) or removeParentNode('para') ]]</para></td>
@@ -219,7 +219,7 @@
         	 </blockTable>
         	</td>
 	<td> <para style="terp_default_Centre_9">[[ get_partners()  ]]</para></td>
-	<td><para style="terp_default_Centre_8">[[ formatLang(time.strftime('%Y-%m-%d %H:%M:%S'), date_time = True) ]] </para></td>
+	<td><para style="terp_default_Centre_8">[[ get_target_move(data) ]] </para></td>
 	</tr>
 	</blockTable>
 
@@ -227,7 +227,7 @@
       <font color="white"> </font>
     </para>
     <para style="P12a"></para>
-	 <blockTable colWidths="80.0,170.0,70.0,70.0,70.0,80.0" repeatRows="1" style="Table2">
+	 <blockTable colWidths="80.0,140.0,80.0,80.0,80.0,80.0" repeatRows="1" style="Table2">
       <tr>
         <td><para style="P12a">Code</para></td>
         <td><para style="P12a">(Account/Partner) Name</para></td>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="Invoice" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+<document filename="Invoices.pdf">
+  <template pageSize="(595.0,842.0)" title="Invoices" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="28.0" y1="28.0" width="539" height="786"/>
     </pageTemplate>
@@ -27,6 +27,10 @@
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table_General_Detail_Content">
       <blockAlignment value="LEFT"/>
@@ -41,6 +45,10 @@
       <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="2,0" stop="2,-1"/>
       <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="2,0" stop="2,0"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="2,-1" stop="2,-1"/>
+      <lineStyle kind="LINEBEFORE" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEAFTER" colorName="#e6e6e6" start="3,0" stop="3,-1"/>
+      <lineStyle kind="LINEABOVE" colorName="#e6e6e6" start="3,0" stop="3,0"/>
+      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Tableau6">
       <blockAlignment value="LEFT"/>
@@ -60,7 +68,6 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="4,-1" stop="4,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="5,-1" stop="5,-1"/>
-      <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="6,-1" stop="6,-1"/>
     </blockTableStyle>
     <blockTableStyle id="Table1">
       <blockAlignment value="LEFT"/>
@@ -175,6 +182,28 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="283.0,71.0,57.0,57.0,71.0" style="Tableau6">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Description / Taxes</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Centre">Quantity</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Unit Price</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Disc. (%)</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Price</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_default_8">[[ setLang(o.partner_id.lang) ]]</para>
     <blockTable colWidths="302.0,237.0" style="Tableau2">
@@ -185,18 +214,18 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ o.partner_id.title or '' ]] [[ o.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ o.address_invoice_id.street ]]</para>
-          <para style="terp_default_9">[[ o.address_invoice_id.street2 or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ o.address_invoice_id.zip or '' ]][[ o.address_invoice_id.city or '' ]]</para>
-          <para style="terp_default_9">[[ (o.address_invoice_id.state_id and o.address_invoice_id.state_id.name) or removeParentNode('para')]]</para>
-          <para style="terp_default_9">[[ o.address_invoice_id.country_id and o.address_invoice_id.country_id.name or '' ]]</para>
-          <para style="terp_default_9">
+          <para style="terp_default_8">[[ (o.partner_id and o.partner_id.title and o.partner_id.title.name) or '' ]] [[ (o.partner_id and o.partner_id.name) or '' ]]</para>
+          <para style="terp_default_8">[[ (o.address_invoice_id and o.address_invoice_id.street) or '' ]]</para>
+          <para style="terp_default_8">[[ (o.address_invoice_id and o.address_invoice_id.street2) or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">[[ (o.address_invoice_id and o.address_invoice_id.zip) or '' ]] [[ (o.address_invoice_id and o.address_invoice_id.city) or '' ]]</para>
+          <para style="terp_default_8">[[ (o.address_invoice_id and o.address_invoice_id.state_id and o.address_invoice_id.state_id.name) or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">[[ (o.address_invoice_id and o.address_invoice_id.country_id and o.address_invoice_id.country_id.name) or '' ]]</para>
+          <para style="terp_default_8">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tel. : [[ o.address_invoice_id.phone or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">Fax : [[ o.address_invoice_id.fax or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">VAT : [[ o.partner_id.vat or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">Tel. : [[ (o.address_invoice_id and o.address_invoice_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">Fax : [[ (o.address_invoice_id and o.address_invoice_id.fax) or removeParentNode('para') ]]</para>
+          <para style="terp_default_8">VAT : [[ (o.partner_id and o.partner_id.vat) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -216,36 +245,42 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="180.0,179.0,180.0" style="Table_Invoice_General_Header">
+    <blockTable colWidths="132.50,132.50,132.50,132.50" style="Table_Invoice_General_Header">
       <tr>
         <td>
-          <para style="terp_tblheader_General_Centre">Document</para>
+          <para style="terp_tblheader_General_Centre">Description</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Invoice Date</para>
         </td>
+	<td>
+          <para style="terp_tblheader_General_Centre">Origin</para>
+        </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Partner Ref.</para>
+          <para style="terp_tblheader_General_Centre">Your Reference</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="179.0,179.0,180.0" style="Table_General_Detail_Content">
+    <blockTable colWidths="132.50,132.50,132.50,132.50" style="Table_General_Detail_Content">
       <tr>
         <td>
-          <para style="terp_default_Centre_8">[[ o.name ]]<font color="white"> </font></para>
+          <para style="terp_default_Centre_8">[[ o.name ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(o.date_invoice,date=True) ]]</para>
         </td>
+	<td>
+          <para style="terp_default_Centre_9">[[ o.name or '' ]]</para>
+        </td>
         <td>
-          <para style="terp_default_Centre_8">[[ o.address_invoice_id.partner_id.ref or '' ]]</para>
+          <para style="terp_default_Centre_9">[[ (o.address_invoice_id and o.address_invoice_id.partner_id and o.address_invoice_id.partner_id.ref) or ' ' ]]</para>
         </td>
       </tr>
     </blockTable>
     <para style="Standard">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="284.0,64.0,64.0,52.0,75.0" style="Tableau6">
+    <blockTable colWidths="283.0,71.0,57.0,57.0,71.0" style="Tableau6">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Description / Taxes</para>
@@ -266,7 +301,7 @@
     </blockTable>
     <section>
       <para style="terp_default_8">[[ repeatIn(invoice_lines(o), 'a') ]]</para>
-      <blockTable colWidths="4.0,280.0,44.0,21.0,66.0,53.0,71.0" style="Table_Invoice_Line_Content">
+      <blockTable colWidths="4.0,280.0,71.0,57.0,57.0,71.0" style="Table_Invoice_Line_Content">
         <tr>
           <td>
             <para style="terp_default_9">[[ a['type']=='text' and removeParentNode('blockTable')]]</para>
@@ -275,10 +310,7 @@
             <para style="terp_default_9"><font face="Helvetica">[[ ((a['type']=='title' or a['type']=='subtotal') and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]]</font>[[ a['name'] ]] [[ a['type']=='article' and ('/ (' + a['tax_types'] + ')' ) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]]</font>[[ a['quantity'] ]]</para>
-          </td>
-          <td>
-            <para style="terp_default_Right_9">[[ a['uos'] ]]</para>
+            <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]]</font>[[ a['quantity'] ]] [[ a['uos'] ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9"><font face="Helvetica">[[ (a['type']=='subtotal' and ( setTag('para','para',{'fontName':'Helvetica-bold'}))) or removeParentNode('font') ]]</font>[[ a['price_unit'] ]]</para>
@@ -297,12 +329,7 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_Note">Note: [[ (a['note'] and format(a['note'] or '')) or removeParentNode('tr') ]]</para>
-            <para style="terp_default_Note">
-              <font color="white"> </font>
-            </para>
-          </td>
-          <td>
+            <para style="terp_default_Note">Note: [[ (a['note'] and format(a['note'])) or removeParentNode('tr') ]]</para>
             <para style="terp_default_Note">
               <font color="white"> </font>
             </para>
@@ -337,15 +364,15 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_9">[[ a['type']=='text' and format(a['name'] or '') or removeParentNode('blockTable') ]]</para>
+            <para style="terp_default_9">[[ a['type']=='text' and format(a['name']) or removeParentNode('blockTable') ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ a['type']=='text' and '' ]]</para>
           </td>
         </tr>
       </blockTable>
-      <para style="terp_default_1">[[ a['type']!='break' and removeParentNode('pageBreak')]]</para>
-      <blockTable colWidths="284.0,64.0,64.0,52.0,75.0" style="Table2">
+      <pageBreak style="terp_default_1">[[ a['type']!='break' and removeParentNode('pageBreak')]]</pageBreak>
+      <blockTable colWidths="283.0,71.0,57.0,57.0,71.0" style="Table2">
         <tr>
           <td>
             <para style="terp_tblheader_Details">Description / Taxes [[ a['type']!='break' and removeParentNode('blockTable')]]</para>
@@ -365,7 +392,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="405.0,59.0,74.0" style="Tableau3">
+    <blockTable colWidths="395.0,59.0,85.0" style="Tableau3">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -376,11 +403,11 @@
           <para style="terp_default_9">Net Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_untaxed, dp='Account') ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="405.0,59.0,74.0" style="Table4">
+    <blockTable colWidths="395.0,59.0,85.0" style="Table4">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -391,11 +418,11 @@
           <para style="terp_default_9">Taxes:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(o.amount_tax, dp='Account') ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="405.0,59.0,74.0" style="Table6">
+    <blockTable colWidths="395.0,59.0,85.0" style="Table6">
       <tr>
         <td>
           <para style="terp_default_9">
@@ -406,7 +433,7 @@
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total, digits=get_digits(dp='Account')) ]] [[ o.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(o.amount_total, dp='Account') ]] [[ o.currency_id.symbol ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -416,10 +443,10 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="105.0,52.0,62.0,320.0" style="Table7">
+    <blockTable colWidths="205.0,71.0,71.0,191.0" style="Table7">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">Tax</para>
+          <para style="terp_tblheader_Details">Tax [[ o.tax_line==[] and removeParentNode('blockTable') ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Base</para>
@@ -434,21 +461,18 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_1">
-      <font color="white"> </font>
-    </para>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.tax_line,'t') ]]</para>
-      <blockTable colWidths="105.0,51.0,63.0,320.0" style="Table8">
+      <blockTable colWidths="206.0,71.0,71.0,191.0" style="Table8">
         <tr>
           <td>
             <para style="terp_default_8">[[ t.name ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_8">[[ formatLang(t.base, digits=get_digits(dp='Account')) ]]</para>
+            <para style="terp_default_Right_8">[[ formatLang(t.base, dp='Account') ]] [[ o.currency_id.symbol ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_8">[[ (t.tax_code_id and t.tax_code_id.notprintable) and removeParentNode('blockTable') or '' ]] [[ formatLang(t.amount, digits=get_digits(dp='Account')) ]]</para>
+            <para style="terp_default_Right_8">[[ (t.tax_code_id and t.tax_code_id.notprintable) and removeParentNode('blockTable') or '' ]] [[ formatLang(t.amount, dp='Account') ]] [[ o.currency_id.symbol ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_8">
@@ -461,13 +485,10 @@
         <font color="white"> </font>
       </para>
     </section>
-    <para style="terp_default_space">
-      <font color="white"> </font>
-    </para>
     <blockTable colWidths="539.0" style="Table_Coment_Payment_Term">
       <tr>
         <td>
-          <para style="terp_default_9">[[ format(o.comment or '') or removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_9">[[ format(o.comment or removeParentNode('blockTable')) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -477,12 +498,13 @@
     <blockTable colWidths="539.0" style="Table_Payment_Terms">
       <tr>
         <td>
-          <para style="terp_default_9">[[ o.payment_term and o.payment_term.name  + " :\n" + format(o.payment_term.note or '') or removeParentNode('blockTable') ]]</para>
+          <para style="terp_default_9"><font face="Helvetica" size="10.0">[[ o.payment_term and o.payment_term.name ]] </font>: <font face="Helvetica" size="10.0">[[ (o.payment_term and o.payment_term.note and format(o.payment_term.note)) or removeParentNode('blockTable') ]]</font></para>
         </td>
       </tr>
     </blockTable>
     <para style="Standard">
       <font color="white"> </font>
     </para>
+  </pto>
   </story>
 </document>

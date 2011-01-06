@@ -8,13 +8,24 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account.account_common_report_view" />
             <field name="arch" type="xml">
-               <field name="fiscalyear_id" position="after">
-                    <field name="display_account"/>
-                    <field name="target_move"/>
-                    <field name="display_type"/>
-                    <field name="reserve_account_id" required="0" invisible="1"/>
-                    <newline/>
-               </field>
+            <data>
+            <xpath expr="//field[@name='chart_account_id']" position="replace">
+                <field name="chart_account_id" widget="selection" on_change="onchange_chart_id(chart_account_id)"/>
+            </xpath>
+            <xpath expr="//field[@name='journal_ids']" position="replace">
+                <field name="journal_ids" colspan="4" nolabel="1" required="0" readonly="1"/>
+            </xpath>
+            <xpath expr="/form/label[@string='']" position="replace">
+                <separator string="Balance Sheet" colspan="4"/>
+                <label nolabel="1" colspan="4" string="This report allows you to print or generate a pdf of your trial balance allowing you to quickly check the balance of each of your accounts in a single report"/>
+            </xpath>
+            <xpath expr="//field[@name='target_move']" position="after">
+                <field name="display_account"/>
+                <field name="reserve_account_id" required="1"/>
+                <field name="display_type"/>
+                <newline/>
+            </xpath>
+            </data>
             </field>
         </record>
 
@@ -31,6 +42,7 @@
        <menuitem icon="STOCK_PRINT"
             name="Balance Sheet"
             action="action_account_bs_report"
+            groups="group_account_user,group_account_manager"
             id="menu_account_bs_report"
             parent="final_accounting_reports"/>
 

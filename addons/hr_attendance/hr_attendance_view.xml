@@ -52,11 +52,11 @@
                 <search string="Hr Attendance Search">
                     <filter icon="terp-stock_align_left_24" string="My Attendances" domain="[('employee_id.user_id.id', '=', uid)]" />
                     <separator orientation="vertical"/>
-                    <filter icon="terp-go-today" string="Today" domain="[('name::date','=',current_date)]" />
+                    <filter icon="terp-go-today" string="Today" name="today" domain="[('name::date','=',current_date)]" />
                     <separator orientation="vertical"/>
-                    <field name="employee_id"   />
-                    <field name="name"    />
-                    <field name="action"   />
+                    <field name="employee_id"/>
+                    <field name="name"/>
+                    <field name="action"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter name="employee" string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
@@ -72,16 +72,16 @@
             <field name="res_model">hr.attendance</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{"search_default_employee":1}</field>
+            <field name="context">{"search_default_today":1}</field>
             <field name="search_view_id" ref="view_hr_attendance_filter" />
-            <field name="help">Time Tracking functionality aims to manage employee's attendances on the basis of the actions (Sign in/Sign out) performed by them. You can also link this to an attendance machine using OpenERP's webservices features.</field>
+            <field name="help">The Time Tracking functionality aims to manage employee attendances from Sign in/Sign out actions. You can also link this feature to an attendance device using OpenERP's web service features.</field>
         </record>
 
-        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="3"/>
+        <menuitem id="menu_hr_time_tracking" name="Time Tracking" parent="hr.menu_hr_root" sequence="3" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
-        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="4"/>
+        <menuitem id="menu_hr_attendance" name="Attendances" parent="hr.menu_hr_root" sequence="4" groups="base.group_user,base.group_hr_user,base.group_hr_manager"/>
 
-        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" groups="base.group_hr_user" sequence="3"/>
+        <menuitem action="open_view_attendance" id="menu_open_view_attendance" parent="menu_hr_attendance" sequence="20"/>
 
         <record id="edit_attendance_reason" model="ir.ui.view">
             <field name="name">hr.action.reason.form</field>
@@ -89,8 +89,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Define attendance reason">
-                    <field colspan="4" name="name"  />
-                    <field name="action_type" />
+                    <field colspan="4" name="name" select="1"/>
+                    <field name="action_type" select="1"/>
                 </form>
             </field>
         </record>
@@ -101,7 +101,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Attendance reasons">
-                    <field name="name"/>
+                    <field name="name" />
                     <field name="action_type"/>
                 </tree>
             </field>
@@ -116,7 +116,9 @@
             <field name="view_id" ref="view_attendance_reason"/>
         </record>
 
-        <menuitem sequence="2" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Time Tracking" />
+        <menuitem 
+            sequence="2" id="hr.menu_open_view_attendance_reason_new_config" parent="hr.menu_hr_configuration" name="Attendances"
+            groups="base.group_extended"/>
         <menuitem action="open_view_attendance_reason" id="menu_open_view_attendance_reason" parent="hr.menu_open_view_attendance_reason_new_config"/>
 
         <record id="hr_attendance_employee" model="ir.ui.view">
@@ -127,8 +129,8 @@
             <field name="arch" type="xml">
                 <field name="coach_id" position="after">
                     <group colspan="2">
-                        <button name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}"/>
-                        <button name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}"/>
+                        <button name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
+                        <button name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
                     </group>
                     <field name="state"/>
                     <newline/>

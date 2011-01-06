@@ -1,8 +1,14 @@
 # -*- encoding: utf-8 -*-
 
 #
-# Copyright P. Christeas <p_christ@hol.gr> 2008,2009
+# Copyright P. Christeas <p_christ@hol.gr> 2008-2010
 #
+# Disclaimer: Many of the functions below borrow code from the
+#   python-webdav library (http://code.google.com/p/pywebdav/ ),
+#   which they import and override to suit OpenERP functionality.
+# python-webdav was written by: Simon Pamies <s.pamies@banality.de>
+#                               Christian Scholz <mrtopf@webdav.de>
+#                               Vince Spicer <vince@vince.ca>
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -28,7 +34,6 @@
 
 
 import netsvc
-import tools
 from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
@@ -36,9 +41,14 @@ from service.websrv_lib import HTTPDir, FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
-from string import atoi,split
+import re
+from string import atoi
 from DAV.errors import *
+from DAV.utils import IfParser, TagList
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
+from xml.dom import minidom
+
+khtml_re = re.compile(r' KHTML/([0-9\.]+) ')
 
 def OpenDAVConfig(**kw):
     class OpenDAV:
@@ -57,7 +67,7 @@ def OpenDAVConfig(**kw):
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
     protocol_version = 'HTTP/1.1'
-    _HTTP_OPTIONS= { 'DAV' : ['1',],
+    _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
                             'PROPFIND', 'PROPPATCH', 'OPTIONS', 'MKCOL',
                             'DELETE', 'TRACE', 'REPORT', ]
@@ -81,19 +91,27 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
 
     def setup(self):
         self.davpath = '/'+config.get_misc('webdav','vdir','webdav')
-        self.baseuri = "http://%s:%d/"% (self.server.server_name, self.server.server_port)
+        addr, port = self.server.server_name, self.server.server_port
+        server_proto = getattr(self.server,'proto', 'http').lower()
+        try:
+            if hasattr(self.request, 'getsockname'):
+                addr, port = self.request.getsockname()
+        except Exception, e:
+            self.log_error("Cannot calculate own address: %s" , e)
+        # Too early here to use self.headers
+        self.baseuri = "%s://%s:%d/"% (server_proto, addr, port)
         self.IFACE_CLASS  = openerp_dav_handler(self, self.verbose)
 
     def copymove(self, CLASS):
         """ Our uri scheme removes the /webdav/ component from there, so we
         need to mangle the header, too.
         """
-        dest = self.headers['Destination']
         up = urlparse.urlparse(urllib.unquote(self.headers['Destination']))
         if up.path.startswith(self.davpath):
             self.headers['Destination'] = up.path[len(self.davpath):]
         else:
             raise DAV_Forbidden("Not allowed to copy/move outside webdav path")
+        # TODO: locks
         DAVRequestHandler.copymove(self, CLASS)
 
     def get_davpath(self):
@@ -123,6 +141,16 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         # the BufferingHttpServer will send Connection: close , while
         # the BaseHTTPRequestHandler will only accept int code.
         # workaround both of them.
+        if self.command == 'PROPFIND' and int(code) == 404:
+            kh = khtml_re.search(self.headers.get('User-Agent',''))
+            if kh and (kh.group(1) < '4.5'):
+                # There is an ugly bug in all khtml < 4.5.x, where the 404
+                # response is treated as an immediate error, which would even
+                # break the flow of a subsequent PUT request. At the same time,
+                # the 200 response  (rather than 207 with content) is treated
+                # as "path not exist", so we send this instead
+                # https://bugs.kde.org/show_bug.cgi?id=166081
+                code = 200
         BaseHTTPRequestHandler.send_response(self, int(code), message)
 
     def send_header(self, key, value):
@@ -156,8 +184,6 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             etag = None
 
             for match in self.headers['If-Match'].split(','):
-                if match.startswith('"') and match.endswith('"'):
-                    match = match[1:-1]
                 if match == '*':
                     if dc.exists(uri):
                         test = True
@@ -208,8 +234,9 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         if self.headers.has_key("Content-Type"):
             ct=self.headers['Content-Type']
         try:
-            location = dc.put(uri,body,ct)
+            location = dc.put(uri, body, ct)
         except DAV_Error, (ec,dd):
+            self.log_error("Cannot PUT to %s: %s", uri, dd)
             return self.send_status(ec)
 
         headers = {}
@@ -244,6 +271,139 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         except DAV_Error, (ec, dd):
             return self.send_status(ec)
 
+    def do_UNLOCK(self):
+        """ Unlocks given resource """
+
+        dc = self.IFACE_CLASS
+        self.log_message('UNLOCKing resource %s' % self.headers)
+
+        uri = urlparse.urljoin(self.get_baseuri(dc), self.path)
+        uri = urllib.unquote(uri)
+
+        token = self.headers.get('Lock-Token', False)
+        if token:
+            token = token.strip()
+            if token[0] == '<' and token[-1] == '>':
+                token = token[1:-1]
+            else:
+                token = False
+
+        if not token:
+            return self.send_status(400, 'Bad lock token')
+
+        try:
+            res = dc.unlock(uri, token)
+        except DAV_Error, (ec, dd):
+            return self.send_status(ec, dd)
+        
+        if res == True:
+            self.send_body(None, '204', 'OK', 'Resource unlocked.')
+        else:
+            # We just differentiate the description, for debugging purposes
+            self.send_body(None, '204', 'OK', 'Resource not locked.')
+
+    def do_LOCK(self):
+        """ Attempt to place a lock on the given resource.
+        """
+
+        dc = self.IFACE_CLASS
+        lock_data = {}
+
+        self.log_message('LOCKing resource %s' % self.headers)
+
+        body = None
+        if self.headers.has_key('Content-Length'):
+            l = self.headers['Content-Length']
+            body = self.rfile.read(atoi(l))
+
+        depth = self.headers.get('Depth', 'infinity')
+
+        uri = urlparse.urljoin(self.get_baseuri(dc), self.path)
+        uri = urllib.unquote(uri)
+        self.log_message('do_LOCK: uri = %s' % uri)
+
+        ifheader = self.headers.get('If')
+
+        if ifheader:
+            ldif = IfParser(ifheader)
+            if isinstance(ldif, list):
+                if len(ldif) !=1 or (not isinstance(ldif[0], TagList)) \
+                        or len(ldif[0].list) != 1:
+                    raise DAV_Error(400, "Cannot accept multiple tokens")
+                ldif = ldif[0].list[0]
+                if ldif[0] == '<' and ldif[-1] == '>':
+                    ldif = ldif[1:-1]
+
+            lock_data['token'] = ldif
+
+        if not body:
+            lock_data['refresh'] = True
+        else:
+            lock_data['refresh'] = False
+            lock_data.update(self._lock_unlock_parse(body))
+
+        if lock_data['refresh'] and not lock_data.get('token', False):
+            raise DAV_Error(400, 'Lock refresh must specify token')
+
+        lock_data['depth'] = depth
+
+        try:
+            created, data, lock_token = dc.lock(uri, lock_data)
+        except DAV_Error, (ec, dd):
+            return self.send_status(ec, dd)
+
+        headers = {}
+        if not lock_data['refresh']:
+            headers['Lock-Token'] = '<%s>' % lock_token
+
+        if created:
+            self.send_body(data, '201', 'Created',  ctype='text/xml', headers=headers)
+        else:
+            self.send_body(data, '200', 'OK', ctype='text/xml', headers=headers)
+
+    def _lock_unlock_parse(self, body):
+        # Override the python-webdav function, with some improvements
+        # Unlike the py-webdav one, we also parse the owner minidom elements into
+        # pure pythonic struct.
+        doc = minidom.parseString(body)
+
+        data = {}
+        owners = []
+        for info in doc.getElementsByTagNameNS('DAV:', 'lockinfo'):
+            for scope in info.getElementsByTagNameNS('DAV:', 'lockscope'):
+                for scc in scope.childNodes:
+                    if scc.nodeType == info.ELEMENT_NODE \
+                            and scc.namespaceURI == 'DAV:':
+                        data['lockscope'] = scc.localName
+                        break
+            for ltype in info.getElementsByTagNameNS('DAV:', 'locktype'):
+                for ltc in ltype.childNodes:
+                    if ltc.nodeType == info.ELEMENT_NODE \
+                            and ltc.namespaceURI == 'DAV:':
+                        data['locktype'] = ltc.localName
+                        break
+            for own in info.getElementsByTagNameNS('DAV:', 'owner'):
+                for ono in own.childNodes:
+                    if ono.nodeType == info.TEXT_NODE:
+                        if ono.data:
+                            owners.append(ono.data)
+                    elif ono.nodeType == info.ELEMENT_NODE \
+                            and ono.namespaceURI == 'DAV:' \
+                            and ono.localName == 'href':
+                        href = ''
+                        for hno in ono.childNodes:
+                            if hno.nodeType == info.TEXT_NODE:
+                                href += hno.data
+                        owners.append(('href','DAV:', href))
+
+            if len(owners) == 1:
+                data['lockowner'] = owners[0]
+            elif not owners:
+                pass
+            else:
+                data['lockowner'] = owners
+        return data
+
 from service.http_server import reg_http_service,OpenERPAuthProvider
 
 class DAVAuthProvider(OpenERPAuthProvider):
@@ -264,8 +424,7 @@ try:
         handler.debug = config.get_misc('webdav','debug',True)
         _dc = { 'verbose' : verbose,
                 'directory' : directory,
-                'lockemulation' : False,
-
+                'lockemulation' : True,
                 }
 
         conf = OpenDAVConfig(**_dc)

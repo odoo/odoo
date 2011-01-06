@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-06-30 15:09+0000\n"
-"PO-Revision-Date: 2010-06-21 15:56+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-12-21 08:06+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product_expiry
-#: field:product.product,life_time:0
-msgid "Product lifetime"
-msgstr "Durée limite de consommation"
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Production lot"
+msgstr "Lot de production"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_from_product_template
@@ -37,29 +37,65 @@ msgid "Products date of expiry"
 msgstr "Dates de péremption des produits"
 
 #. module: product_expiry
-#: constraint:product.template:0
+#: field:product.product,life_time:0
+msgid "Product Life Time"
+msgstr "Durée de vie du produit"
+
+#. module: product_expiry
+#: help:stock.production.lot,use_date:0
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"The date on which the lot starts deteriorating without becoming dangerous."
 msgstr ""
-"Erreur: l'unité de mesure par défaut et l'unité de mesure d'achat doivent "
-"faire partie de la même catégorie"
 
 #. module: product_expiry
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue"
+#: field:product.product,use_time:0
+msgid "Product Use Time"
+msgstr "Durée d'utilisation du produit"
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
-msgid "The date the lot may become dangerous and should not be consumed."
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
 msgstr ""
-"La date à laquelle le lot peut devenir dangereux et ne doit plus être "
-"consommé."
+"La combinaison du numéro de série et de la référence interne doit être "
+"unique !"
+
+#. module: product_expiry
+#: help:stock.production.lot,removal_date:0
+msgid "The date on which the lot should be removed."
+msgstr "La date à laquelle le lot doit être enlevé."
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_product_product
+msgid "Product"
+msgstr "Produit"
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"The number of days after which an alert should be notified about the "
+"production lot."
+msgstr ""
+"Le nombre de jours après lesquelles une alerte doit être affichée à propos "
+"du lot de production."
+
+#. module: product_expiry
+#: field:product.product,removal_time:0
+msgid "Product Removal Time"
+msgstr "Durée avant retrait du produit"
 
 #. module: product_expiry
 #: field:stock.production.lot,removal_date:0
 msgid "Removal Date"
 msgstr "Date de retrait"
+
+#. module: product_expiry
+#: help:stock.production.lot,life_date:0
+msgid ""
+"The date on which the lot may become dangerous and should not be consumed."
+msgstr ""
+"La date à laquelle le lot peut devenir dangereux et ne doit pas être "
+"consommé."
 
 #. module: product_expiry
 #: model:ir.module.module,description:product_expiry.module_meta_information
@@ -96,13 +132,6 @@ msgid "Dates"
 msgstr "Dates"
 
 #. module: product_expiry
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Erreur: l'unité de vente doit appartenir à une catégorie différente que "
-"l'unité de mesure"
-
-#. module: product_expiry
 #: field:stock.production.lot,life_date:0
 msgid "End of Life Date"
 msgstr "Date limite de consommation"
@@ -111,12 +140,6 @@ msgstr "Date limite de consommation"
 #: field:stock.production.lot,use_date:0
 msgid "Best before Date"
 msgstr "Date limite d'utilisation optimale"
-
-#. module: product_expiry
-#: help:stock.production.lot,use_date:0
-msgid "The date the lot starts deteriorating without becoming dangerous."
-msgstr ""
-"La date à laquelle le lot commencera à se déteriorer sans devenir dangereux."
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_jambon_product_template
@@ -130,20 +153,9 @@ msgstr ""
 "Le nombre de jours après lesquels un lot de production doit être retiré."
 
 #. module: product_expiry
-#: field:product.product,use_time:0
-#: field:stock.production.lot,dlc:0
-msgid "Product usetime"
-msgstr "Durée limite d'utilisation optimale"
-
-#. module: product_expiry
 #: field:stock.production.lot,alert_date:0
 msgid "Alert Date"
 msgstr "Date d'alerte"
-
-#. module: product_expiry
-#: field:product.product,removal_time:0
-msgid "Product removal time"
-msgstr "Durée avant retrait"
 
 #. module: product_expiry
 #: help:product.product,use_time:0
@@ -169,11 +181,52 @@ msgstr ""
 "et ne doit plus être consommé."
 
 #. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid "The date the lot should be removed."
-msgstr "La date à laquelle le lot doit être retiré."
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"The date on which an alert should be notified about the production lot."
+msgstr ""
+"La date à laquelle une alerte doit être affichée à propos du lot de "
+"production."
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
-msgid "Product alert time"
-msgstr "Durée avant alerte"
+msgid "Product Alert Time"
+msgstr "Durée avant alerte sur le produit"
+
+#~ msgid "Product lifetime"
+#~ msgstr "Durée limite de consommation"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erreur: l'unité de mesure par défaut et l'unité de mesure d'achat doivent "
+#~ "faire partie de la même catégorie"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML non valide pour l'architecture de la vue"
+
+#~ msgid "The date the lot may become dangerous and should not be consumed."
+#~ msgstr ""
+#~ "La date à laquelle le lot peut devenir dangereux et ne doit plus être "
+#~ "consommé."
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Erreur: l'unité de vente doit appartenir à une catégorie différente que "
+#~ "l'unité de mesure"
+
+#~ msgid "The date the lot starts deteriorating without becoming dangerous."
+#~ msgstr ""
+#~ "La date à laquelle le lot commencera à se déteriorer sans devenir dangereux."
+
+#~ msgid "Product usetime"
+#~ msgstr "Durée limite d'utilisation optimale"
+
+#~ msgid "Product removal time"
+#~ msgstr "Durée avant retrait"
+
+#~ msgid "The date the lot should be removed."
+#~ msgstr "La date à laquelle le lot doit être retiré."
+
+#~ msgid "Product alert time"
+#~ msgstr "Durée avant alerte"

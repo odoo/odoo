@@ -18,9 +18,7 @@
 #
 ##############################################################################
 
-from osv import fields,osv
-import pooler
-from tools import config
+from osv import fields, osv
 
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
@@ -31,20 +29,23 @@ class sale_order_line(osv.osv):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag)
+        frm_cur = self.pool.get('res.users').browse(cr, uid, uid).company_id.currency_id.id
+        to_cur = self.pool.get('res.partner').browse(cr, uid, partner_id).property_product_pricelist.currency_id.id
         if product:
             purchase_price = self.pool.get('product.product').browse(cr, uid, product).standard_price
-            res['value'].update({'purchase_price':purchase_price})
+            price = self.pool.get('res.currency').compute(cr, uid, frm_cur, to_cur, purchase_price, round=False)
+            res['value'].update({'purchase_price': price})
         return res
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
-        for line in self.browse(cr, uid, ids):
+        for line in self.browse(cr, uid, ids, context=context):
             res[line.id] = 0
             if line.product_id:
                 if line.purchase_price:
-                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.purchase_price*line.product_uos_qty),2)
+                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.purchase_price*line.product_uos_qty), 2)
                 else:
-                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.product_id.standard_price*line.product_uos_qty),2)
+                    res[line.id] = round((line.price_unit*line.product_uos_qty*(100.0-line.discount)/100.0) -(line.product_id.standard_price*line.product_uos_qty), 2)
         return res
 
     _columns = {
@@ -66,7 +67,7 @@ class sale_order(osv.osv):
         return result
 
     _columns = {
-        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price"),
+        'margin': fields.function(_product_margin, method=True, string='Margin', store=True, help="It gives profitability by calculating the difference between the Unit Price and Cost Price."),
     }
 
 sale_order()
@@ -75,19 +76,19 @@ class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
     _columns = {
-        'invoice_ids': fields.many2many('account.invoice', 'picking_invoice_rel', 'picking_id', 'invoice_id', 'Invoices', domain=[('type','=','out_invoice')]),
+        'invoice_ids': fields.many2many('account.invoice', 'picking_invoice_rel', 'picking_id', 'invoice_id', 'Invoices', domain=[('type', '=', 'out_invoice')]),
     }
 
-    def create_invoice(self, cr, uid, ids, *args):
+    def action_invoice_create(self, cr, uid, ids, journal_id=False,
+            group=False, type='out_invoice', context=None):
         # need to carify with new requirement
         invoice_ids = []
-        margin_deduce = 0.0
         picking_obj = self.pool.get('stock.picking')
-        picking_obj.write(cr, uid, ids, {'invoice_state' : '2binvoiced'})
-        res = picking_obj.action_invoice_create(cr, uid, ids, type='out_invoice', context={})
+        res = super(stock_picking, self).action_invoice_create(cr, uid, ids, journal_id=False,
+            group=False, type='out_invoice', context=None)
         invoice_ids = res.values()
-        picking_obj.write(cr, uid, ids,{'invoice_ids': [[6,0,invoice_ids]]})
-        return True
+        picking_obj.write(cr, uid, ids, {'invoice_ids': [[6, 0, invoice_ids]]})
+        return res
 
 stock_picking()
 
@@ -96,17 +97,18 @@ class account_invoice_line(osv.osv):
     _columns = {
         'cost_price': fields.float('Cost Price', digits=(16, 2)),
     }
-    def write(self, cr, uid, ids, vals, context={}):
+    def write(self, cr, uid, ids, vals, context=None):
         if vals.get('product_id', False):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']
         return super(account_invoice_line, self).write(cr, uid, ids, vals, context)
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         if vals.get('product_id',False):
             res = self.pool.get('product.product').read(cr, uid, [vals['product_id']], ['standard_price'])
             vals['cost_price'] = res[0]['standard_price']
         return super(account_invoice_line, self).create(cr, uid, vals, context)
-    
+
 account_invoice_line()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

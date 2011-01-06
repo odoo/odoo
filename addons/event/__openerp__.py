@@ -24,7 +24,7 @@
     'name': 'Event',
     'version': '0.1',
     'category': 'Generic Modules/Association',
-    'description': """Oraganization and management of Event.
+    'description': """Organization and management of Event.
 
     This module allow you
         * to manage your events and their registrations
@@ -39,7 +39,7 @@
                 Events / Reporting
 """,
     'author': 'OpenERP SA',
-    'depends': ['crm', 'base_contact', 'account'],
+    'depends': ['crm', 'base_contact', 'account', 'marketing'],
     'init_xml': [],
     'update_xml': [
         'security/event_security.xml',

@@ -19,36 +19,35 @@
 #
 ##############################################################################
 
-import time
-import operator
-
 from osv import fields
 from osv import osv
 
 class account_analytic_journal(osv.osv):
     _name = 'account.analytic.journal'
+    _description = 'Analytic Journal'
     _columns = {
-        'name' : fields.char('Journal Name', size=64, required=True),
-        'code' : fields.char('Journal Code', size=8),
-        'active' : fields.boolean('Active', help="If the active field is set to true, it will allow you to hide the analytic journal without removing it."),
+        'name': fields.char('Journal Name', size=64, required=True),
+        'code': fields.char('Journal Code', size=8),
+        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the analytic journal without removing it."),
         'type': fields.selection([('sale','Sale'), ('purchase','Purchase'), ('cash','Cash'), ('general','General'), ('situation','Situation')], 'Type', size=32, required=True, help="Gives the type of the analytic journal. When it needs for a document (eg: an invoice) to create analytic entries, OpenERP will look for a matching journal of the same type."),
-        'line_ids' : fields.one2many('account.analytic.line', 'journal_id', 'Lines'),
+        'line_ids': fields.one2many('account.analytic.line', 'journal_id', 'Lines'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
     }
     _defaults = {
-        'active': lambda *a: True,
-        'type': lambda *a: 'general',
+        'active': True,
+        'type': 'general',
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
+
 account_analytic_journal()
 
 class account_journal(osv.osv):
     _inherit="account.journal"
 
     _columns = {
-        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal',help="Journal for analytic entries"),
+        'analytic_journal_id':fields.many2one('account.analytic.journal','Analytic Journal', help="Journal for analytic entries"),
     }
+
 account_journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

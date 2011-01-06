@@ -27,8 +27,8 @@ class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
     _description = "Invoice Rate"
     _columns = {
-        'name': fields.char('Internal name', size=128, required=True),
-        'customer_name': fields.char('Name', size=128, help="Name of the customer"),
+        'name': fields.char('Internal name', size=128, required=True, translate=True),
+        'customer_name': fields.char('Name', size=128, help="Label for the customer"),
         'factor': fields.float('Discount (%)', required=True, help="Discount in percentage"),
     }
     _defaults = {
@@ -41,17 +41,17 @@ hr_timesheet_invoice_factor()
 class account_analytic_account(osv.osv):
     def _invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         obj_invoice = self.pool.get('account.invoice')
-        if context is None:
-            context = {}
         res = {}
 
-        cr.execute('select account_id as account_id, l.invoice_id from hr_analytic_timesheet h left join account_analytic_line l on (h.line_id=l.id)')
+        cr.execute('SELECT account_id as account_id, l.invoice_id '
+                'FROM hr_analytic_timesheet h LEFT JOIN account_analytic_line l '
+                    'ON (h.line_id=l.id) '
+                    'WHERE l.account_id = ANY(%s)', (ids,))
         account_to_invoice_map = {}
         for rec in cr.dictfetchall():
             account_to_invoice_map.setdefault(rec['account_id'], []).append(rec['invoice_id'])
 
         for account in self.browse(cr, uid, ids, context=context):
-            invoiced = {}
             invoice_ids = filter(None, list(set(account_to_invoice_map.get(account.id, []))))
             for invoice in obj_invoice.browse(cr, uid, invoice_ids, context=context):
                 res.setdefault(account.id, 0.0)
@@ -63,7 +63,8 @@ class account_analytic_account(osv.osv):
 
     _inherit = "account.analytic.account"
     _columns = {
-        'pricelist_id' : fields.many2one('product.pricelist', 'Sale Pricelist'),
+        'pricelist_id': fields.many2one('product.pricelist', 'Sale Pricelist',
+            help="The product to invoice is defined on the employee form, the price will be deduced by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price'),
         'amount_invoiced': fields.function(_invoiced_calc, method=True, string='Invoiced Amount',
             help="Total invoiced"),
@@ -75,6 +76,19 @@ class account_analytic_account(osv.osv):
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
     }
+    
+    def set_close(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'close'}, context=context)
+    
+    def set_cancel(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
+    
+    def set_open(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'open'}, context=context)
+      
+    def set_pending(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'state':'pending'}, context=context)
+
 account_analytic_account()
 
 
@@ -86,14 +100,10 @@ class account_analytic_line(osv.osv):
     }
 
     def unlink(self, cursor, user, ids, context=None):
-        if context is None:
-            context = {}
         return super(account_analytic_line,self).unlink(cursor, user, ids,
                 context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if context is None:
-            context = {}
         self._check_inv(cr, uid, ids, vals)
         return super(account_analytic_line,self).write(cr, uid, ids, vals,
                 context=context)
@@ -110,8 +120,6 @@ class account_analytic_line(osv.osv):
         return True
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         default = default.copy()
@@ -140,8 +148,6 @@ class hr_analytic_timesheet(osv.osv):
         return res
 
     def copy(self, cursor, user, obj_id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         default = default.copy()
@@ -162,6 +168,7 @@ class account_invoice(osv.osv):
             obj_analytic_account = self.pool.get('account.analytic.account')
             for il in iml:
                 if il['account_analytic_id']:
+		    # *-* browse (or refactor to avoid read inside the loop)
                     to_invoice = obj_analytic_account.read(cr, uid, [il['account_analytic_id']], ['to_invoice'])[0]['to_invoice']
                     if to_invoice:
                         il['analytic_lines'][0][2]['to_invoice'] = to_invoice[0]

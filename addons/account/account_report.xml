@@ -3,22 +3,23 @@
     <data>
         <report auto="False" id="account_general_ledger" menu="False" model="account.account" name="account.general.ledger" rml="account/report/account_general_ledger.rml" string="General Ledger"/>
         <report auto="False" id="account_3rdparty_ledger" menu="False" model="res.partner" name="account.third_party_ledger" rml="account/report/account_partner_ledger.rml" string="Partner Ledger"/>
-        <report auto="False" id="account_3rdparty_ledger_other" menu="False" model="res.partner" name="account.third_party_ledger_other" rml="account/report/account_partner_ledger_other.rml" string="Partner Other Ledger"/>
+        <report auto="False" id="account_3rdparty_ledger_other" menu="False" model="res.partner" name="account.third_party_ledger_other" rml="account/report/account_partner_ledger_other.rml" string="Partner Ledger"/>
         <report auto="False" id="account_account_balance" menu="False" model="account.account" name="account.account.balance" rml="account/report/account_balance.rml" string="Trial Balance"/>
         <report auto="False" id="account_3rdparty_account_balance" menu="False" model="account.account" name="account.partner.balance" rml="account/report/account_partner_balance.rml" string="Partner Balance"/>
-        <report auto="False" id="account_central_journal" model="account.journal.period" name="account.central.journal" rml="account/report/account_central_journal.rml" string="Central Journals" header="False"/>
-        <report auto="False" id="account_general_journal" model="account.journal.period" name="account.general.journal" rml="account/report/account_general_journal.rml" string="General Journals" header="False"/>
-        <report auto="False" id="account_journal" model="account.journal.period" name="account.journal.period.print" rml="account/report/account_journal.rml" string="Journals" header="False"/>
-        <report auto="False" id="account_overdue" model="res.partner" name="account.overdue" rml="account/report/overdue.rml" string="Overdue Payments"/>
+        <report auto="False" id="account_central_journal" model="account.journal.period" name="account.central.journal" rml="account/report/account_central_journal.rml" string="Central Journal" header="False"/>
+        <report auto="False" id="account_general_journal" model="account.journal.period" name="account.general.journal" rml="account/report/account_general_journal.rml" string="General Journal" header="False"/>
+        <report auto="False" id="account_journal" model="account.journal.period" name="account.journal.period.print" rml="account/report/account_journal.rml" string="Journal" header="False"/>
+        <report auto="False" id="account_overdue" model="res.partner" name="account.overdue" rml="account/report/account_print_overdue.rml" string="Overdue Payments"/>
         <report
             auto="False"
             id="account_invoices"
             model="account.invoice"
             name="account.invoice"
-            rml="account/report/invoice.rml"
+            rml="account/report/account_print_invoice.rml"
             string="Invoices"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/',''))"
-            attachment_use="1"/>
+            attachment_use="1"
+            multi="True"/>
         <report id="account_transfers" model="account.transfer" name="account.transfer" string="Transfers" xml="account/report/transfer.xml" xsl="account/report/transfer.xsl"/>
         <report auto="False" id="account_intracom" menu="False" model="account.move.line" name="account.intracom" string="IntraCom"/>
 
@@ -30,14 +31,14 @@
             menu="False"
             model="account.tax.code"
             name="account.vat.declaration"
-            rml="account/report/tax_report.rml"
+            rml="account/report/account_tax_report.rml"
             string="Taxes Report"/>
 
         <report id="report_account_voucher_new"
             string="Print Voucher"
             model="account.move"
             name="account.move.voucher"
-            rml="account/report/voucher_print.rml"
+            rml="account/report/account_voucher_print.rml"
             auto="False"
             header = "False"
             menu="True"/>
@@ -45,6 +46,7 @@
         <menuitem
             id="menu_tax_report"
             name="Taxes"
+            groups="group_account_user,group_account_manager"
             parent="account.menu_finance_generic_reporting" sequence="3"/>
 
         <report id="account_account_balance_landscape"

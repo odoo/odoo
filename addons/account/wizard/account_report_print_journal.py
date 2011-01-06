@@ -30,19 +30,16 @@ class account_print_journal(osv.osv_memory):
         'sort_selection': fields.selection([('date', 'Date'),
                                             ('ref', 'Reference Number'),],
                                             'Entries Sorted By', required=True),
-        'target_move': fields.selection([('all', 'All Entries'),
-                                        ('posted', 'All Posted Entries')], 'Target Moves', required=True)
     }
     _defaults = {
         'sort_selection': 'date',
-        'target_move': 'all'
     }
 
     def _print_report(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
         data = self.pre_print_report(cr, uid, ids, data, context=context)
-        data['form'].update(self.read(cr, uid, ids, ['sort_selection','target_move'])[0])
+        data['form'].update(self.read(cr, uid, ids, ['sort_selection'], context=context)[0])
         return {'type': 'ir.actions.report.xml', 'report_name': 'account.journal.period.print', 'datas': data}
 
 account_print_journal()

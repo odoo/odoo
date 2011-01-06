@@ -18,12 +18,11 @@
                         <filter icon="terp-check"
                             string="Current"
                             domain="[('state','in',('draft','open'))]"/>
-                        <filter icon="terp-check"
+                        <filter icon="terp-dialog-close"
                             string="Closed"
                             domain="[('state','=','done')]"/>
                         <separator orientation="vertical" />
                         <field name="section_id"
-                            default="context.get('section_id', False)"
                             widget="selection"
                             context="{'invisible_section': False}"/>
                         <field name="grade_id"/>
@@ -34,7 +33,7 @@
                    <group  expand="0" string="Extended Filters..." groups="base.group_extended">
                       <field name="partner_id"/>
                       <separator orientation="vertical"/>
-                      <field name="stage_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]" />
+                      <field name="stage_id" widget="selection" domain="[('type', '=', 'opportunity')]" />
                       <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.lead')]"/>
                       <separator orientation="vertical"/>
                       <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -47,7 +46,7 @@
                    <group  expand="1" string="Group By...">
                        <filter string="Salesman" name="user" icon="terp-personal"
                             domain="[]" context="{'group_by':'user_id'}" />
-                       <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_assigned_id'}" />
+                       <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_assigned_id'}" />
                        <filter string="Country" icon="terp-go-home" context="{'group_by':'country_id'}" />
                         <separator orientation="vertical" />
                         <filter string="Section" icon="terp-personal+"
@@ -87,7 +86,20 @@
             </field>
         </record>
 
+<!-- Crm Lead Assign report Graph View -->
 
+        <record id="view_report_crm_lead_assign_graph" model="ir.ui.view">
+            <field name="name">crm.lead.assign.graph</field>
+            <field name="model">crm.lead.report.assign</field>
+            <field name="type">graph</field>
+            <field name="arch" type="xml">
+                <graph orientation="horizontal" string="Lead Assign" type="bar">
+                    <field name="state"/>
+                    <field name="nbr" operator="+"/>
+                    <field group="True" name="user_id"/>
+                </graph>
+            </field>
+        </record>
 
         <record id="view_report_crm_opportunity_assign_tree" model="ir.ui.view">
             <field name="name">crm.lead.assign.report.tree</field>
@@ -140,6 +152,13 @@
             <field name="view_id" ref="view_report_crm_opportunity_assign_tree"/>
             <field name="act_window_id" ref="action_report_crm_opportunity_assign"/>
        </record>
+       
+       <record model="ir.actions.act_window.view" id="action_report_crm_lead_assign_graph">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">graph</field>
+            <field name="view_id" ref="view_report_crm_lead_assign_graph"/>
+            <field name="act_window_id" ref="action_report_crm_opportunity_assign"/>
+       </record>       
 
        <menuitem id="menu_report_crm_opportunities_assign_tree"
            groups="base.group_extended"

@@ -7,20 +7,40 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-02 14:37+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Albanian <sq@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:12+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:42+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
-#: constraint:ir.model:0
+#: view:crm_profiling.questionnaire:0
+msgid "Questions List"
+msgstr ""
+
+#. module: crm_profiling
+#: model:ir.module.module,description:crm_profiling.module_meta_information
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"\n"
+"    This module allows users to perform segmentation within partners.\n"
+"    It uses the profiles criteria from the earlier segmentation module and "
+"improve it. Thanks to the new concept of questionnaire. You can now regroup "
+"questions into a questionnaire and directly use it on a partner.\n"
+"\n"
+"    It also has been merged with the earlier CRM & SRM segmentation tool "
+"because they were overlapping.\n"
+"\n"
+"    The menu items related are in \"CRM & SRM\\Configuration\\"
+"Segmentations\"\n"
+"\n"
+"\n"
+"    * Note: this module is not compatible with the module segmentation, "
+"since it's the same which has been renamed.\n"
+"    "
 msgstr ""
 
 #. module: crm_profiling
@@ -36,18 +56,23 @@ msgid "Open Questionnaire"
 msgstr ""
 
 #. module: crm_profiling
-#: field:crm.segmentation,child_ids:0
-msgid "Child Profiles"
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic related questionnaires that will be used to "
+"guide your team(s) in the sales cycle by helping them to ask the right "
+"questions. Using the segmentation tool, you will be able to automatically "
+"assign a partner to a category based on his answers to the different "
+"questionnaires."
 msgstr ""
 
 #. module: crm_profiling
-#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
-msgid "crm_profiling management"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
 msgstr ""
 
 #. module: crm_profiling
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
+#: view:crm.segmentation:0
+msgid "Partner Segmentations"
 msgstr ""
 
 #. module: crm_profiling
@@ -57,11 +82,22 @@ msgid "Answer"
 msgstr ""
 
 #. module: crm_profiling
+#: model:ir.model,name:crm_profiling.model_crm_segmentation
+msgid "Partner Segmentation"
+msgstr ""
+
+#. module: crm_profiling
 #: view:res.partner:0
 msgid "Profiling"
 msgstr ""
 
 #. module: crm_profiling
+#: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
+msgid "Crm Profiling management - To Perform Segmentation within Partners"
+msgstr ""
+
+#. module: crm_profiling
+#: view:crm_profiling.questionnaire:0
 #: field:crm_profiling.questionnaire,description:0
 msgid "Description"
 msgstr ""
@@ -89,11 +125,6 @@ msgid "Use a questionnaire"
 msgstr ""
 
 #. module: crm_profiling
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 #: model:ir.actions.act_window,name:crm_profiling.open_questionnaires
 #: model:ir.ui.menu,name:crm_profiling.menu_segm_questionnaire
@@ -101,10 +132,11 @@ msgid "Questionnaires"
 msgstr ""
 
 #. module: crm_profiling
-#: field:crm_profiling.questionnaire,name:0
-#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
-#: wizard_view:open_questionnaire,init:0
-msgid "Questionnaire"
+#: help:crm.segmentation,profiling_active:0
+msgid ""
+"Check                             this box if you want to use this tab as "
+"part of the                              segmentation rule. If not checked, "
+"the criteria beneath will be ignored"
 msgstr ""
 
 #. module: crm_profiling
@@ -129,10 +161,8 @@ msgid "Included Answers"
 msgstr ""
 
 #. module: crm_profiling
-#: help:crm.segmentation,profiling_active:0
-msgid ""
-"Check this box if you want to use this tab as part of the segmentation rule. "
-"If not checked, the criteria beneath will be ignored"
+#: field:crm.segmentation,child_ids:0
+msgid "Child Profiles"
 msgstr ""
 
 #. module: crm_profiling
@@ -155,8 +185,17 @@ msgid "Cancel"
 msgstr ""
 
 #. module: crm_profiling
-#: view:crm.segmentation:0
-msgid "Partner Segmentations"
+#: model:ir.model,name:crm_profiling.model_res_partner
+msgid "Partner"
+msgstr ""
+
+#. module: crm_profiling
+#: code:addons/crm_profiling/crm_profiling.py:0
+#: field:crm_profiling.questionnaire,name:0
+#: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
+#: wizard_view:open_questionnaire,init:0
+#, python-format
+msgid "Questionnaire"
 msgstr ""
 
 #. module: crm_profiling

@@ -35,21 +35,27 @@ def lengthmonth(year, month):
 
 class report_custom(report_rml):
 
-    def get_month_name(self, cr, uid, month):
+    def get_month_name(self, cr, uid, month, context=None):
         _months = {1:_("January"), 2:_("February"), 3:_("March"), 4:_("April"), 5:_("May"), 6:_("June"), 7:_("July"), 8:_("August"), 9:_("September"), 10:_("October"), 11:_("November"), 12:_("December")}
         return _months[month]
-    def get_weekday_name(self, cr, uid, weekday):
+    def get_weekday_name(self, cr, uid, weekday, context=None):
         _weekdays = {1:_('Mon'), 2:_('Tue'), 3:_('Wed'), 4:_('Thu'), 5:_('Fri'), 6:_('Sat'), 7:_('Sun')}
         return _weekdays[weekday]
 
     def create_xml(self, cr, uid, ids, data, context):
 
+        # Get the user id from the selected employee record
+        emp_id = data['form']['employee_id']
+        emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        user_id = emp_obj.browse(cr, uid, emp_id).user_id.id
+        empl_name = emp_obj.browse(cr, uid, emp_id).name
+ 
         # Computing the dates (start of month: som, and end of month: eom)
         som = datetime.date(data['form']['year'], data['form']['month'], 1)
         eom = som + datetime.timedelta(lengthmonth(som.year, som.month))
 
-        date_xml = ['<date month="%s" year="%d" />' % (self.get_month_name(cr, uid, som.month), som.year), '<days>']
-        date_xml += ['<day number="%d" name="%s" weekday="%d" />' % (x, self.get_weekday_name(cr, uid, som.replace(day=x).weekday()+1), som.replace(day=x).weekday()+1) for x in range(1, lengthmonth(som.year, som.month)+1)]
+        date_xml = ['<date month="%s" year="%d" />' % (self.get_month_name(cr, uid, som.month, context=context), som.year), '<days>']
+        date_xml += ['<day number="%d" name="%s" weekday="%d" />' % (x, self.get_weekday_name(cr, uid, som.replace(day=x).weekday()+1, context=context), som.replace(day=x).weekday()+1) for x in range(1, lengthmonth(som.year, som.month)+1)]
 
         date_xml.append('</days>')
         date_xml.append('<cols>2.5cm%s,2cm</cols>\n' % (',0.7cm' * lengthmonth(som.year, som.month)))
@@ -63,7 +69,7 @@ class report_custom(report_rml):
             "and product_uom_id = unit.id "\
             "and line.user_id=%s and line.date >= %s and line.date < %s "
             "order by line.date",
-            (data['form']['user_id'], som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
+            (user_id, som.strftime('%Y-%m-%d'), eom.strftime('%Y-%m-%d')))
 
         # Sum attendence by account, then by day
         accounts = {}
@@ -84,7 +90,7 @@ class report_custom(report_rml):
         <date>%s</date>
         <company>%s</company>
         </header>
-        ''' %  (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+        ''' %  (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,user_id).company_id.name)
 
         account_xml = []
         for account, telems in accounts.iteritems():
@@ -96,10 +102,6 @@ class report_custom(report_rml):
             account_xml.append('\n'.join([xml % (day, amount) for day, amount in telems.iteritems()]))
             account_xml.append('</account>')
 
-        # Computing the employee
-        cr.execute("select name from res_users where id=%s", (data['form']['user_id'],))
-        emp = cr.fetchone()[0]
-
         # Computing the xml
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
@@ -107,7 +109,7 @@ class report_custom(report_rml):
         <employee>%s</employee>
         %s
         </report>
-        ''' % (header_xml,toxml(emp), '\n'.join(date_xml) + '\n'.join(account_xml))
+        ''' % (header_xml,toxml(empl_name), '\n'.join(date_xml) + '\n'.join(account_xml))
         return xml
 
 report_custom('report.hr.analytical.timesheet', 'hr.employee', '', 'addons/hr_timesheet/report/user_timesheet.xsl')

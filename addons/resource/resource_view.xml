@@ -11,6 +11,8 @@
             <field name="arch" type="xml">
                 <search string="Search Resource">
                    <group col='15' colspan='4'>
+                       <filter string="Inactive" icon="terp-gdu-smart-failing" domain="[('active','=',False)]"/>
+                       <separator orientation="vertical"/>
                        <field name="name"/>
                        <field name="user_id" string="User"/>
                        <field name="resource_type"/>
@@ -24,7 +26,7 @@
                         <separator orientation="vertical" groups="base.group_multi_company"/>
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical" />
-                        <filter string="Working Time" icon="terp-go-today" domain="[]" context="{'group_by':'calendar_id'}"/>
+                        <filter string="Working Period" icon="terp-go-today" domain="[]" context="{'group_by':'calendar_id'}"/>
                     </group>
                </search>
             </field>
@@ -35,7 +37,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Working Period">
+                <search string="Search Working Time">
                    <group col='15' colspan='4'>
                        <field name="name" string="Name"/>
                        <field name="manager"/>
@@ -55,7 +57,7 @@
                        <field name="name" string="Reason"/>
                        <field name="resource_id" string="Resource"/>
                        <field name="company_id" string="Company" widget="selection" groups="base.group_multi_company"/>
-                       <field name="calendar_id" string="Working Time" widget="selection"/>
+                       <field name="calendar_id" string="Working Period" widget="selection"/>
                    </group>
                    <newline/>
                    <group expand="0" string="Group By..." colspan="4" col="20">
@@ -74,7 +76,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Working Period">
+                <form string="Working Time">
                     <field name="name"/>
                     <field name="manager"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -89,7 +91,7 @@
             <field name="model">resource.calendar</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Working Period">
+                <tree string="Working Time">
                     <field name="name"/>
                     <field name="manager" select="1"/>
                     <field name="company_id" select="1" groups="base.group_multi_company"/>
@@ -98,7 +100,7 @@
         </record>
 
         <record id="action_resource_calendar_form" model="ir.actions.act_window">
-            <field name="name">Working Period</field>
+            <field name="name">Working Time</field>
             <field name="res_model">resource.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -114,8 +116,8 @@
                 <tree string="Working Time">
                     <field name="name"/>
                     <field name="dayofweek"/>
-                    <field name="hour_from" widget="float_time"/>
-                    <field name="hour_to" widget="float_time"/>
+                    <field name="hour_from" widget="float_time" />
+                    <field name="hour_to" widget="float_time" />
                 </tree>
             </field>
         </record>
@@ -140,7 +142,7 @@
             <field name="model">resource.calendar.leaves</field>
             <field name="type">calendar</field>
             <field name="arch" type="xml">
-                <calendar color="resource_id" date_start="date_from" string="Resource">
+                <calendar color="resource_id" date_start="date_from" date_stop="date_to" string="Resource">
                     <field name="name"/>
                 </calendar>
             </field>
@@ -168,13 +170,19 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Resource">
-                    <field name="name" />
-                    <field name="user_id" attrs="{'required':[('resource_type','=','user')]}"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    <field name="resource_type" />
-                    <field name="calendar_id" widget="selection"/>
-                    <field name="time_efficiency" groups="base.group_extended"/>
+                   <group colspan="4" col="6">
+                    <field name="name" colspan="4"/>
                     <field name="active"/>
+                    <field name="resource_type" />
+                    <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
+                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                   </group>
+                   <notebook colspan="4">
+                     <page string="General Information">
+                       <field name="calendar_id" string="Working Period"/>
+                       <field name="time_efficiency" groups="base.group_extended"/>
+                     </page>
+	           </notebook>
                 </form>
             </field>
         </record>
@@ -189,7 +197,7 @@
                     <field name="user_id" />
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="resource_type" />
-                    <field name="calendar_id" />
+                    <field name="calendar_id" string="Working Period"/>
                     <field name="time_efficiency" groups="base.group_extended"/>
                 </tree>
             </field>
@@ -201,7 +209,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_resource_resource_search"/>
-            <field name="help">There you can find clusters of your resources type involved in a specific project phase as well as their workload.</field>
+            <field name="help">Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours.</field>
         </record>
 
         <record id="resource_calendar_leave_form" model="ir.ui.view">
@@ -217,7 +225,7 @@
                        </group>
                        <group colspan="2" col="2">
                            <field name="date_from"/>
-                           <field name="calendar_id"/>
+                           <field name="calendar_id" string="Working Period"/>
                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                        </group>
                        <group colspan="2" col="2">
@@ -248,6 +256,7 @@
             <field name="view_mode">tree,form,calendar</field>
             <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
         </record>
-
+       <menuitem id="menu_resource_config" name="Resource" parent="base.menu_base_config" sequence="5" groups="base.group_extended"/>
+       <menuitem action="resource.action_resource_calendar_leave_tree" id="menu_view_resource_calendar_leaves_search" parent="menu_resource_config" sequence="1"/>
     </data>
 </openerp>

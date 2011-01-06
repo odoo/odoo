@@ -1,27 +1,33 @@
 -
-  Print the Analytic Budget Report in Normal mode
+  Print the Analytic Budget Report through wizard
 -
   !python {model: account.analytic.account}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'account.analytic.account', 'form': {'date1':time.strftime("%Y-01-01"),'date2':time.strftime('%Y-%m-%d'),'id':ref('account.analytic_root'),'context':{}}}
-    (data, format) = netsvc.LocalService('report.account.analytic.account.budget').create(cr, uid, [ref('account.analytic_root')], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account_budget-analytic_budget_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'account.analytic.account','active_ids': [ref('account.analytic_root')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_budget_analytic',wiz_data=data_dict, context=ctx, our_module='account_budget')
+
 -
-  Print the Budget Report in Normal mode
+  Print the Budget Report through wizard
 -
   !python {model: account.budget.post}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'account.budget.post', 'form': {'date1':time.strftime("%Y-01-01"),'date2':time.strftime('%Y-%m-%d'),'id':ref('account_budget.account_budget_post_sales0'),'context':{}}}
-    (data, format) = netsvc.LocalService('report.account.analytic.account.budget').create(cr, uid, [ref('account_budget.account_budget_post_sales0')], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account_budget-budget_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'account.budget.post','active_ids': [ref('account_budget.account_budget_post_sales0')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_budget_report',wiz_data=data_dict, context=ctx, our_module='account_budget')
+
 -
-  Print the CrossOvered Budget Report in Normal mode
+  Print the CrossOvered Budget Report mode through wizard
 -
   !python {model: crossovered.budget}: |
     import netsvc, tools, os, time
-    data_dict = {'model': 'account.budget.post', 'form': {'date_from':time.strftime("%Y-01-01"),'date_to':time.strftime('%Y-%m-%d'),'report':'analytic-full','id':ref('account_budget.crossovered_budget_budgetoptimistic0'),'context':{}}}
-    (data, format) = netsvc.LocalService('report.crossovered.budget.report').create(cr, uid, [ref('account_budget.crossovered_budget_budgetoptimistic0')], data_dict, {})
-    if tools.config['test_report_directory']:
-       file(os.path.join(tools.config['test_report_directory'], 'account_budget-crossovered_budget_report.'+format), 'wb+').write(data)
+    ctx={}
+    ctx.update({'model': 'account.budget.post','active_ids': [ref('account_budget.crossovered_budget_budgetoptimistic0')]})
+    data_dict = {}
+    from tools import test_reports
+    test_reports.try_report_action(cr, uid, 'action_account_budget_crossvered_report',wiz_data=data_dict, context=ctx, our_module='account_budget')
+

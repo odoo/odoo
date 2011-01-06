@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--Account Journal Internal Number of account move line-->
+
+        <record id="sp_journal_col3" model="account.journal.column">
+            <field name="view_id" ref="account.account_sp_journal_view"/>
+            <field name="name">Internal Number</field>
+            <field name="field">internal_sequence_number</field>
+            <field eval="True" name="required"/>
+            <field eval="2" name="sequence"/>
+        </record>
+
+        <record id="journal_col1" model="account.journal.column">
+            <field name="view_id" ref="account.account_journal_view"/>
+            <field name="name">Internal Number</field>
+            <field name="field">internal_sequence_number</field>
+            <field eval="True" name="required"/>
+            <field eval="2" name="sequence"/>
+        </record>
+
+        <record id="bank_col3" model="account.journal.column">
+            <field name="view_id" ref="account.account_journal_bank_view"/>
+            <field name="name">Internal Number</field>
+            <field name="field">internal_sequence_number</field>
+            <field eval="True" name="required"/>
+            <field eval="2" name="sequence"/>
+        </record>
+
+        <record id="bank_col3_multi" model="account.journal.column">
+            <field name="view_id" ref="account.account_journal_bank_view_multi"/>
+            <field name="name">Internal Number</field>
+            <field name="field">internal_sequence_number</field>
+            <field eval="True" name="required"/>
+            <field eval="2" name="sequence"/>
+        </record>
+
+        <record id="sp_refund_journal_col3" model="account.journal.column">
+            <field name="view_id" ref="account.account_sp_refund_journal_view"/>
+            <field name="name">Internal Number</field>
+            <field name="field">internal_sequence_number</field>
+            <field eval="True" name="required"/>
+            <field eval="2" name="sequence"/>
+        </record>
+    </data>
+
+</openerp>

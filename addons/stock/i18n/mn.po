@@ -7,19 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-29 10:24+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-20 10:04+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:38+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
-#: selection:stock.location,allocation_method:0
-msgid "LIFO"
+#: field:product.product,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr "Гарах Цувралыг Хөтлөх"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_ups_upload
+msgid "Stock ups upload"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Variation Account is not specified for Product Category: %s"
 msgstr ""
 
 #. module: stock
@@ -28,127 +39,305 @@ msgid "Chained Location If Fixed"
 msgstr "Хэлхээ байрлал (Тогтмол бол)"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SAVE"
-msgstr "Бараа хадгалах"
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Put in a new pack"
+msgstr "Шинэ баглаанд оруулах"
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_15
-msgid "Sub Products"
-msgstr ""
+#: field:stock.move.split.lines,action:0
+msgid "Action"
+msgstr "Үйлдэл"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-account"
-msgstr ""
+#: view:stock.production.lot:0
+msgid "Upstream Traceability"
+msgstr "Сөрөг урсгалыг Хөтлөх боломж"
 
 #. module: stock
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
+#: model:ir.actions.act_window,name:stock.action_stock_line_date
+#: model:ir.ui.menu,name:stock.menu_report_stock_line_date
+msgid "Last Product Inventories"
+msgstr "Сүүлчийн Бараа, Бүтээгдэхүүн"
 
 #. module: stock
-#: model:ir.module.module,shortdesc:stock.module_meta_information
-#: model:ir.ui.menu,name:stock.menu_stock_root
-msgid "Inventory Management"
-msgstr "Нөөцийн менежмент"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SORT_ASCENDING"
-msgstr ""
+#: view:stock.move:0
+msgid "Today"
+msgstr "Өнөөдөр"
 
 #. module: stock
 #: field:stock.production.lot.revision,indice:0
-msgid "Revision"
+msgid "Revision Number"
+msgstr "Шинэчлэлийн Дугаар"
+
+#. module: stock
+#: view:stock.move.memory:0
+msgid "Product Moves"
+msgstr "Барааны хөдөлгөөн"
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_picking_tree
+msgid ""
+"This is the list of all delivery orders that must be prepared, according to "
+"your different sales orders and your logistics rules."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_FORWARD"
+#: model:ir.actions.act_window,name:stock.action_stock_move_report
+#: model:ir.ui.menu,name:stock.menu_action_stock_move_report
+#: view:report.stock.move:0
+msgid "Moves Analysis"
+msgstr "Хөдөлгөөний шинжилгээ"
+
+#. module: stock
+#: help:stock.production.lot,ref:0
+msgid ""
+"Internal reference number in case it differs from the manufacturer's serial "
+"number"
 msgstr ""
 
 #. module: stock
-#: rml:lot.location:0
-msgid "Total :"
-msgstr "Нийт:"
+#: view:stock.picking:0
+msgid "Picking list"
+msgstr "Агуулахын баримт"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_100"
-msgstr ""
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: field:report.stock.inventory,product_qty:0
+#: field:report.stock.move,product_qty:0
+#: field:stock.change.product.qty,new_quantity:0
+#: field:stock.inventory.line,product_qty:0
+#: field:stock.inventory.line.split,qty:0
+#: report:stock.inventory.move:0
+#: field:stock.move,product_qty:0
+#: field:stock.move.consume,product_qty:0
+#: field:stock.move.memory,quantity:0
+#: field:stock.move.scrap,product_qty:0
+#: field:stock.move.split,qty:0
+#: field:stock.move.split.lines,quantity:0
+#: field:stock.move.split.lines.exist,quantity:0
+#: report:stock.picking.list:0
+#: field:stock.report.prodlots,qty:0
+#: field:stock.report.tracklots,name:0
+#: field:stock.split.into,quantity:0
+#, python-format
+msgid "Quantity"
+msgstr "Тоо хэмжээ"
 
 #. module: stock
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
+#: view:report.stock.move:0
+#: field:report.stock.move,day:0
+msgid "Day"
+msgstr "Өдөр"
+
+#. module: stock
+#: view:stock.inventory:0
+#: field:stock.inventory.line.split,product_uom:0
+#: view:stock.move:0
+#: field:stock.move.split,product_uom:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
 msgid "UoM"
-msgstr ""
+msgstr "Хэмжих нэгж"
 
 #. module: stock
-#: model:ir.actions.wizard,name:stock.return_picking
-msgid "Return packing"
-msgstr "Савлагааг буцаах"
+#: model:ir.actions.act_window,name:stock.action_inventory_form
+#: model:ir.ui.menu,name:stock.menu_action_inventory_form
+msgid "Physical Inventories"
+msgstr ""
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
+#: view:report.stock.move:0
+#: field:stock.change.standard.price,stock_journal:0
 msgid "Stock journal"
 msgstr "Барааны журнал"
 
 #. module: stock
-#: wizard_view:stock.fill_inventory,init:0
-msgid "Fill Inventory for specific location"
+#: view:report.stock.move:0
+msgid "Incoming"
+msgstr "Орох"
+
+#. module: stock
+#: help:product.category,property_stock_account_output_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"outgoing stock moves will be posted in this account. This is the default "
+"value for all products in this category, it can also directly be set on each "
+"product."
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.report.xml,name:stock.report_picking_list
-#: view:stock.picking:0
-#: field:stock.picking.move.wizard,picking_id:0
-msgid "Packing list"
-msgstr "Савлагааны жагсаалт"
-
-#. module: stock
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
-msgid "Amount"
-msgstr "Хэмжээ"
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Products Received"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Missing partial picking data for move #%s"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree4
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree4
-msgid "Incoming Products"
-msgstr "Бүтээгдэхүүнүүдийн  орлого"
+#: model:ir.actions.act_window,name:stock.action_partial_move
+msgid "Deliver/Receive Products"
+msgstr ""
 
 #. module: stock
+#: code:addons/stock/report/report_stock.py:0
+#, python-format
+msgid "You cannot delete any record!"
+msgstr "Та бичлэг устгаж болохгүй!"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_splitinto.py:0
+#, python-format
+msgid ""
+"The current move line is already assigned to a pack, please remove it first "
+"if you really want to change it '             #                        'for "
+"this product: \"%s\" (id: %d)"
+msgstr ""
+
+#. module: stock
+#: selection:stock.picking,invoice_state:0
+msgid "Not Applicable"
+msgstr ""
+
+#. module: stock
+#: help:stock.tracking,serial:0
+msgid "Other reference or serial number"
+msgstr "Өөр код эсвэл серийн дугаар"
+
+#. module: stock
+#: field:stock.move,origin:0
+#: view:stock.picking:0
+#: field:stock.picking,origin:0
+msgid "Origin"
+msgstr "Эх үүсэл"
+
+#. module: stock
+#: view:report.stock.lines.date:0
+msgid "Non Inv"
+msgstr ""
+
+#. module: stock
+#: view:stock.tracking:0
+msgid "Pack Identification"
+msgstr "Савлагааны Дугаар"
+
+#. module: stock
+#: view:stock.move:0
+#: field:stock.move,picking_id:0
 #: field:stock.picking,name:0
-#: field:stock.tracking,serial:0
+#: view:stock.production.lot:0
 msgid "Reference"
-msgstr "Ишлэл"
+msgstr "Маршрутын дугаар"
 
 #. module: stock
-#: wizard_field:stock.invoice_onshipping,init,group:0
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Products to Process"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_location_form
+msgid ""
+"Define your locations in order to reflect to your warehouse structure and "
+"organization. OpenERP is able to manage physical locations (warehouses, "
+"shelves, bin, etc), partners location (customers, suppliers) and virtual "
+"locations which are the counter-part of the stock operations like the "
+"manufacturing orders consummations, the inventories, etc. Every stock "
+"operation in OpenERP moves the products from one location to another one. "
+"For instance, if you receive products from a supplier, OpenERP will move "
+"products from the Supplier location into the Stock location. Each report can "
+"be performed on physicals, partners or virtual locations."
+msgstr ""
+
+#. module: stock
+#: constraint:product.category:0
+msgid "Error ! You can not create recursive categories."
+msgstr ""
+
+#. module: stock
+#: help:stock.fill.inventory,set_stock_zero:0
+msgid ""
+"If checked, all product quantities will be set to zero to help ensure a real "
+"physical inventory is done"
+msgstr ""
+"Тэмдэглэгдсэн бол бүх барааны тоо хэмжээ нь тэг болж тооллого таарч байгаа "
+"баталгааг хангахад туслана."
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_inventory_form
+msgid ""
+"The Periodical Inventories are used when you count your number of products "
+"available per location. You can use it, once a year, when you do the general "
+"inventory or, once you need it, to correct the current stock level of a "
+"product."
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_split_lines
+msgid "Split lines"
+msgstr "Мөрийг хуваах"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You cannot cancel picking because stock move is in done state !"
+msgstr ""
+"Цуглуулах ажлыг цуцлах боломжгүй. Учир нь барааны шилжилт хийгдсэн төлөвт "
+"байна !"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Сэрэмжлүүлэг!"
+
+#. module: stock
+#: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
 msgstr "Түншлэлийн групп"
 
 #. module: stock
-#: field:stock.picking,address_id:0
+#: help:stock.move,state:0
+msgid ""
+"When the stock move is created it is in the 'Draft' state.\n"
+" After that it is set to 'Confirmed' state.\n"
+" If stock is available state is set to 'Available'.\n"
+" When the picking is done the state is 'Done'.                               "
+"   \n"
+"The state is 'Waiting' if the move is waiting for another one."
+msgstr ""
+"Барааны хөдөлгөөнийг үүсгэсэн дараа 'Ноорог' төлөвтэй байна.\n"
+" Дараа нь 'Батлагдсан' төлөвт оруулна.\n"
+" Бараа байвал 'Байгаа' төлөвтэй байна.\n"
+" Цуглуулах ажил хийгдсэн дараа 'Хийгдсэн' төлөвт шилжинэ.                    "
+"              \n"
+"Харин өөр хөдөлгөөнийг хүлээж байгаа бол 'Хүлээж байгаа' төлөвтэй байна."
+
+#. module: stock
+#: model:ir.model,name:stock.model_res_partner
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,partner_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,partner_id:0
+#: view:stock.move:0
+#: field:stock.move,partner_id:0
+#: view:stock.picking:0
+#: field:stock.picking,partner_id:0
 msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: stock
-#: help:product.product,track_incoming:0
-msgid "Force to use a Production Lot during receptions"
+#: help:stock.move.memory,currency:0
+msgid "Currency in which Unit cost is expressed"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,move_history_ids:0
-#: field:stock.move,move_history_ids2:0
-msgid "Move History"
-msgstr "Хөдөлгөөний түүх"
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "No invoicing"
+msgstr "Нэмэжлэх байхгүй"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -158,27 +347,39 @@ msgid "Production lot"
 msgstr "Үйлдвэрлэлийн цуврал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_NEW"
-msgstr ""
+#: help:stock.incoterms,code:0
+msgid "Code for Incoterms"
+msgstr "Олон Улсын Худалдааны Нөхцөл"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CANCEL"
-msgstr ""
+#: field:stock.tracking,move_ids:0
+msgid "Moves for this pack"
+msgstr "Энэ баглааны хөдөлгөөн"
 
 #. module: stock
+#: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Internal Location"
-msgstr "Дотоод байршил"
+msgstr "Дотоод байрлал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PRINT"
-msgstr ""
+#: view:stock.inventory:0
+msgid "Confirm Inventory"
+msgstr "Нөөц батлах"
 
 #. module: stock
-#: rml:stock.picking.list:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,state:0
+#: view:report.stock.move:0
+#: field:report.stock.move,state:0
+#: view:stock.inventory:0
+#: field:stock.inventory,state:0
+#: field:stock.inventory.line,state:0
+#: view:stock.move:0
+#: field:stock.move,state:0
+#: view:stock.picking:0
+#: field:stock.picking,state:0
+#: report:stock.picking.list:0
 msgid "State"
 msgstr "Төлөв"
 
@@ -188,104 +389,174 @@ msgid "Real Stock Value"
 msgstr "Жинхэнэ барааны өртөг"
 
 #. module: stock
-#: view:stock.move:0
-msgid "UOM"
+#: field:report.stock.move,day_diff2:0
+msgid "Lag (Days)"
 msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_action_traceability
+msgid "Action traceability "
+msgstr ""
+
+#. module: stock
+#: field:stock.location,posy:0
+msgid "Shelves (Y)"
+msgstr "Багана (Y)"
+
+#. module: stock
+#: view:stock.move:0
+msgid "UOM"
+msgstr "Хэмжих нэгж"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
 #: selection:stock.move,state:0
+#: view:stock.picking:0
 #: selection:stock.picking,state:0
+#: view:stock.production.lot:0
 #: field:stock.production.lot,stock_available:0
 msgid "Available"
 msgstr "Бэлэн"
 
 #. module: stock
-#: view:stock.move:0
-msgid "Make Parcel"
-msgstr "Баглаа хийх"
+#: view:stock.picking:0
+#: field:stock.picking,min_date:0
+msgid "Expected Date"
+msgstr "Төлөвлөгөөт огноо"
 
 #. module: stock
-#: wizard_view:stock.partial_picking,end2:0
-msgid "Packing result"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:stock.action_outgoing_product_board
+msgid "Outgoing Product"
+msgstr "Гарж буй бараа"
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_warehouse_form
+msgid ""
+"Create and manage your warehouses and assign them a location from here"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_QUIT"
+#: field:report.stock.move,product_qty_in:0
+msgid "In Qty"
 msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#, python-format
+msgid "No product in this location."
+msgstr "Энэ байрлалд бараа алга."
 
 #. module: stock
 #: field:stock.warehouse,lot_output_id:0
 msgid "Location Output"
-msgstr "Гаралтын байршил"
+msgstr "Гаралтын байрлал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_TOP"
+#: model:ir.actions.act_window,name:stock.split_into
+#: model:ir.model,name:stock.model_stock_split_into
+msgid "Split into"
+msgstr "Хуваах"
+
+#. module: stock
+#: field:stock.move,price_currency_id:0
+msgid "Currency for average price"
+msgstr "Валютын дундаж үнэ"
+
+#. module: stock
+#: help:product.template,property_stock_account_input:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"incoming stock moves will be posted in this account. If not set on the "
+"product, the one from the product category is used."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ABOUT"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-hr"
-msgstr ""
-
-#. module: stock
+#: field:report.stock.inventory,location_type:0
 #: field:stock.location,usage:0
 msgid "Location Type"
 msgstr "Төрөл"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-purchase"
+#: help:report.stock.move,type:0
+#: help:stock.picking,type:0
+msgid "Shipping type specify, goods coming in or going out."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DND"
+#: model:ir.actions.report.xml,name:stock.report_move_labels
+msgid "Item Labels"
 msgstr ""
 
 #. module: stock
-#: rml:stock.picking.list:0
+#: model:ir.model,name:stock.model_report_stock_move
+msgid "Moves Statistics"
+msgstr ""
+
+#. module: stock
+#: view:stock.production.lot:0
+msgid "Product Lots Filter"
+msgstr "Барааны сери шүүх"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: report:stock.inventory.move:0
+#: report:stock.picking.list:0
 msgid "["
 msgstr "["
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Products Sent"
-msgstr "Илгээсэн бүтээгдэхүүнүүд"
+#: help:stock.production.lot,stock_available:0
+msgid ""
+"Current quantity of products with this Production Lot Number available in "
+"company warehouses"
+msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_FIRST"
-msgstr ""
+#: field:stock.move,move_history_ids:0
+msgid "Move History (child moves)"
+msgstr "Хөдөлгөөний түүх(дэд хөдөлгөөн)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree6
+#: field:stock.picking,move_lines:0
 msgid "Internal Moves"
 msgstr "Дотооддоо шилжих"
 
 #. module: stock
-#: field:stock.move,product_packaging:0
-msgid "Packaging"
+#: field:stock.move,location_dest_id:0
+msgid "Destination Location"
+msgstr "Хүрэх байрлал"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can not process picking without stock moves"
 msgstr ""
 
 #. module: stock
-#: rml:stock.picking.list:0
+#: field:stock.move,product_packaging:0
+msgid "Packaging"
+msgstr "Савлагаа"
+
+#. module: stock
+#: report:stock.picking.list:0
 msgid "Order(Origin)"
 msgstr "Захиалга(Эх сурвалж)"
 
 #. module: stock
-#: rml:lot.location:0
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Grand Total:"
-msgstr ""
+msgstr "Нийт:"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_inventory_control
+msgid "Inventory Control"
+msgstr "Барааны Хяналт"
 
 #. module: stock
 #: view:stock.location:0
@@ -294,35 +565,44 @@ msgid "Additional Information"
 msgstr "Нэмэлт мэдээлэл"
 
 #. module: stock
-#: selection:stock.invoice_onshipping,init,type:0
-msgid "Customer Refund"
-msgstr "Харилцагч буцааж төлөх"
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+msgid "Location / Product"
+msgstr "Байрлал / Бүтээдэхүүн"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_FLOPPY"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Reception"
+msgstr ""
+
+#. module: stock
+#: field:stock.tracking,serial:0
+msgid "Additional Reference"
 msgstr ""
 
 #. module: stock
 #: view:stock.production.lot.revision:0
 msgid "Production Lot Revisions"
-msgstr ""
+msgstr "Барааны серийн хяналт"
 
 #. module: stock
-#: view:stock.location:0
-msgid "Stock location"
-msgstr "Барааны байрлал"
+#: help:product.product,track_outgoing:0
+msgid ""
+"Forces to specify a Production Lot for all moves containing this product and "
+"going to a Customer Location"
+msgstr ""
 
 #. module: stock
 #: field:stock.location,complete_name:0
 #: field:stock.location,name:0
 msgid "Location Name"
-msgstr "Нэр"
+msgstr "Байрлал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNINDENT"
-msgstr ""
+#: view:stock.inventory:0
+msgid "Posted Inventory"
+msgstr "Зарласан нөөц"
 
 #. module: stock
 #: view:stock.move:0
@@ -331,47 +611,44 @@ msgid "Move Information"
 msgstr "Хөдөлгөөний мэдээлэл"
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Unreceived Products"
+#: view:report.stock.move:0
+msgid "Outgoing"
+msgstr "Гаргалт"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "August"
+msgstr "8 сар"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_tracking_form
+#: model:ir.model,name:stock.model_stock_tracking
+#: model:ir.ui.menu,name:stock.menu_action_tracking_form
+#: view:stock.tracking:0
+msgid "Packs"
+msgstr "Савлагаа"
+
+#. module: stock
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: stock
-#: field:stock.inventory,state:0
-#: field:stock.move,state:0
-#: field:stock.picking,state:0
-msgid "Status"
-msgstr "Төлөв"
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Борлуулалт болон худалдан авалт"
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_customers
-msgid "Customers"
-msgstr "Харилцагчид"
+#: selection:report.stock.move,month:0
+msgid "June"
+msgstr "6 сар"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNDERLINE"
-msgstr ""
-
-#. module: stock
-#: view:stock.picking.move.wizard:0
-msgid "Move Lines"
-msgstr "Шилжих шугамууд"
-
-#. module: stock
-#: wizard_field:stock.fill_inventory,init,recursive:0
-msgid "Include all childs for the location"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "Bad Lot Assignation !"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/stock.py:0
-#, python-format
-msgid "You are moving %.2f products but only %.2f available in this lot."
+#: model:ir.actions.act_window,help:stock.action_out_picking_move
+msgid ""
+"The 'Deliver Products' menu lists all products you have to deliver to your "
+"customers. You can process the deliveries directly from this list, line by "
+"or line or through the Delivery Orders menu."
 msgstr ""
 
 #. module: stock
@@ -382,49 +659,67 @@ msgstr "Нийлүүлэлтийг байрлал"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_production_lot_form
 #: model:ir.ui.menu,name:stock.menu_action_production_lot_form
+#: field:stock.inventory.line.split,line_exist_ids:0
+#: field:stock.inventory.line.split,line_ids:0
+#: field:stock.move.split,line_exist_ids:0
+#: field:stock.move.split,line_ids:0
 msgid "Production Lots"
-msgstr ""
+msgstr "Барааны серүүд"
 
 #. module: stock
-#: rml:stock.picking.list:0
+#: report:stock.picking.list:0
 msgid "Recipient"
+msgstr "Хүлээн авагч"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_location_tree
+#: model:ir.ui.menu,name:stock.menu_action_location_tree
+msgid "Location Structure"
+msgstr "Байрлалын бүтэц"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "October"
+msgstr "10 сар"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_inventory_line
+msgid "Inventory Line"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.wizard,name:stock.track_line
-msgid "Track line"
+#: help:product.category,property_stock_journal:0
+msgid ""
+"When doing real-time inventory valuation, this is the Accounting Journal in "
+"which entries will be automatically posted when stock moves are processed."
 msgstr ""
 
 #. module: stock
-#: field:stock.location,child_ids:0
-msgid "Contains"
-msgstr "Агуулагч"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_BOLD"
+#: model:ir.actions.act_window,name:stock.action_partial_picking
+msgid "Process Picking"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-graph"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Receptions"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PREFERENCES"
+#: help:stock.inventory.line.split,use_exist:0
+#: help:stock.move.split,use_exist:0
+msgid ""
+"Check this option to select existing lots in the list below, otherwise you "
+"should enter new ones line by line."
 msgstr ""
 
 #. module: stock
-#: rml:lot.location:0
-#: field:stock.inventory.line,product_qty:0
-#: field:stock.move,product_qty:0
-#: rml:stock.picking.list:0
-#: field:stock.report.prodlots,name:0
-msgid "Quantity"
-msgstr "Тоо хэмжээ"
+#: field:stock.move,move_dest_id:0
+msgid "Destination Move"
+msgstr ""
 
 #. module: stock
+#: view:stock.move:0
 #: view:stock.picking:0
 msgid "Process Now"
 msgstr "Одооны үйл явц"
@@ -432,21 +727,17 @@ msgstr "Одооны үйл явц"
 #. module: stock
 #: field:stock.location,address_id:0
 msgid "Location Address"
-msgstr "Хаяг"
+msgstr "Байрлалын хаяг"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is consumed with"
+msgstr ""
 
 #. module: stock
 #: help:stock.move,prodlot_id:0
 msgid "Production lot is used to put a serial number on the production"
-msgstr ""
-
-#. module: stock
-#: model:stock.location,name:stock.stock_location_13
-msgid "Stock Level 1"
-msgstr "Барааны түвшин-1"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_REWIND"
 msgstr ""
 
 #. module: stock
@@ -455,13 +746,13 @@ msgid "Location Input"
 msgstr "Оролтын байршил"
 
 #. module: stock
-#: view:res.partner:0
-msgid "Stock Properties"
-msgstr "Барааны шинж чанар"
+#: help:stock.picking,date:0
+msgid "Date of Order"
+msgstr ""
 
 #. module: stock
-#: wizard_button:stock.partial_picking,init,split:0
-msgid "Make Picking"
+#: selection:product.product,valuation:0
+msgid "Periodical (manual)"
 msgstr ""
 
 #. module: stock
@@ -475,74 +766,112 @@ msgid "IT Suppliers"
 msgstr "IT Нийлүүлэгчид"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_move_form3
-#: model:ir.ui.menu,name:stock.menu_action_move_form3
-msgid "Draft Moves"
-msgstr "Ноорог шилжүүлэх"
+#: model:ir.actions.act_window,name:stock.action_inventory_form_draft
+msgid "Draft Physical Inventories"
+msgstr ""
 
 #. module: stock
-#: field:report.stock.lines.date,product_id:0
-msgid "Product Id"
-msgstr "Бүтээгдэхүүний дугаар"
+#: selection:report.stock.inventory,location_type:0
+#: selection:stock.location,usage:0
+msgid "Transit Location for Inter-Companies Transfers"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_change_product_quantity
+#: model:ir.model,name:stock.model_stock_change_product_qty
+#: view:stock.change.product.qty:0
+msgid "Change Product Quantity"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_inventory_merge
+msgid "Merge Inventory"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future P&L"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree4
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree4
+#: view:stock.picking:0
+msgid "Incoming Shipments"
+msgstr ""
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Scrap"
+msgstr ""
+
+#. module: stock
+#: field:stock.location,child_ids:0
+msgid "Contains"
+msgstr "Агуулагч"
+
+#. module: stock
+#: view:board.board:0
+msgid "Incoming Products Delay"
+msgstr ""
+
+#. module: stock
+#: view:stock.location:0
+msgid "Stock Locations"
+msgstr ""
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: field:stock.move,price_unit:0
+msgid "Unit Price"
+msgstr "Нэгж Үнэ"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_split_lines_exist
+msgid "Exist Split lines"
+msgstr ""
+
+#. module: stock
+#: field:stock.move,date_expected:0
+msgid "Scheduled Date"
+msgstr ""
+
+#. module: stock
+#: view:stock.tracking:0
+msgid "Pack Search"
+msgstr ""
+
+#. module: stock
+#: selection:stock.move,priority:0
+msgid "Urgent"
+msgstr "Яаралтай"
+
+#. module: stock
+#: view:stock.picking:0
+#: report:stock.picking.list:0
+msgid "Journal"
+msgstr ""
+
+#. module: stock
+#: help:stock.picking,location_id:0
+msgid ""
+"Keep empty if you produce at the location where the finished products are "
+"needed.Set a location if you produce at a fixed location. This can be a "
+"partner location if you subcontract the manufacturing operations."
+msgstr ""
 
 #. module: stock
 #: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Борлуулалт болон худалдан авалт"
-
-#. module: stock
-#: selection:stock.invoice_onshipping,init,type:0
-msgid "Customer Invoice"
-msgstr "Харилцагчийн нэхэмжлэл"
-
-#. module: stock
-#: field:product.template,property_stock_inventory:0
-msgid "Inventory Location"
-msgstr "Нөөцийн байрлал"
-
-#. module: stock
-#: help:product.product,track_production:0
-msgid "Force to use a Production Lot during production order"
+msgid "Inventory Properties"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CUT"
-msgstr ""
-
-#. module: stock
-#: help:product.template,property_stock_inventory:0
-msgid ""
-"For the current product (template), this stock location will be used, "
-"instead of the default one, as the source location for stock moves generated "
-"when you do an inventory"
-msgstr ""
-
-#. module: stock
-#: help:product.category,property_stock_account_output_categ:0
-msgid "This account will be used to value the output stock"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_FIT"
-msgstr ""
-
-#. module: stock
-#: help:product.category,property_stock_journal:0
-msgid ""
-"This journal will be used for the accounting move generated by stock move"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_calendar_delivery
-#: model:ir.ui.menu,name:stock.menu_picking_calendar_delivery
-msgid "Calendar of Deliveries"
-msgstr ""
-
-#. module: stock
-#: field:product.product,track_incoming:0
-msgid "Track Incomming Lots"
+#: field:report.stock.move,day_diff:0
+msgid "Execution Lead Time (Days)"
 msgstr ""
 
 #. module: stock
@@ -551,29 +880,38 @@ msgid "Stock by Location"
 msgstr "Барааны байрлал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SAVE_AS"
+#: help:stock.move,address_id:0
+msgid ""
+"Optional address where goods are to be delivered, specifically used for "
+"allotment"
+msgstr "Барааг хүргэх хаяг, ялангуяа хуваарилалт хийхэд"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Month-1"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_report_prodlots
-msgid "Stock report by production lots"
+#: help:stock.location,active:0
+msgid ""
+"By unchecking the active field, you may hide a location without deleting it."
 msgstr ""
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_picking_list
+msgid "Packing list"
+msgstr "Савлагааны жагсаалт"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
 msgid "Virtual Stock"
-msgstr ""
+msgstr "Виртуаль агуулах"
 
 #. module: stock
+#: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "View"
-msgstr "Дэлгэц"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_ERROR"
-msgstr ""
+msgstr "Харах"
 
 #. module: stock
 #: field:stock.location,parent_left:0
@@ -581,38 +919,28 @@ msgid "Left Parent"
 msgstr ""
 
 #. module: stock
-#: field:report.stock.lines.date,create_date:0
-msgid "Latest Date of Inventory"
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Delivery Information"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_INDEX"
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#, python-format
+msgid "Stock Inventory is done"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_BOTTOM"
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_form
-#: model:ir.ui.menu,name:stock.menu_action_picking_form
-msgid "New Reception Packing"
-msgstr "Шинэ савлагаа хүлээн авах"
-
-#. module: stock
-#: wizard_field:stock.move.track,init,quantity:0
-msgid "Quantity per lot"
-msgstr "Цувралын дугаарын дундаж хэмжээ"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_move_form2
-#: model:ir.ui.menu,name:stock.menu_action_move_form2
-#: view:stock.move:0
-#: view:stock.picking:0
-msgid "Stock Moves"
-msgstr "Барааны хөдөлгөөн"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid ""
+"There is no stock output account defined for this product: \"%s\" (id: %d)"
+msgstr ""
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -620,13 +948,57 @@ msgid "Production Location"
 msgstr "Үйлдвэрлэлийн байрлал"
 
 #. module: stock
-#: field:stock.move,tracking_id:0
-msgid "Tracking Lot"
+#: help:stock.picking,address_id:0
+msgid "Address of partner"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GO_FORWARD"
+#: model:res.company,overdue_msg:stock.res_company_shop0
+#: model:res.company,overdue_msg:stock.res_company_tinyshop0
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Please find in attachment a reminder of all your unpaid invoices, for a "
+"total amount due of:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
+msgstr ""
+
+#. module: stock
+#: help:stock.location,usage:0
+msgid ""
+"* Supplier Location: Virtual location representing the source location for "
+"products coming from your suppliers\n"
+"                       \n"
+"* View: Virtual location used to create a hierarchical structures for your "
+"warehouse, aggregating its child locations ; can't directly contain "
+"products\n"
+"                       \n"
+"* Internal Location: Physical locations inside your own warehouses,\n"
+"                       \n"
+"* Customer Location: Virtual location representing the destination location "
+"for products sent to your customers\n"
+"                       \n"
+"* Inventory: Virtual location serving as counterpart for inventory "
+"operations used to correct stock levels (Physical inventories)\n"
+"                       \n"
+"* Procurement: Virtual location serving as temporary counterpart for "
+"procurement operations when the source (supplier or production) is not known "
+"yet. This location should be empty when the procurement scheduler has "
+"finished running.\n"
+"                       \n"
+"* Production: Virtual counterpart location for production operations: this "
+"location consumes the raw material and produces finished products\n"
+"                      "
 msgstr ""
 
 #. module: stock
@@ -635,23 +1007,20 @@ msgid "Author"
 msgstr "Зохиогч"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNDELETE"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_EXECUTE"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_QUESTION"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Delivery Order"
 msgstr ""
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
 msgid "Manual Operation"
+msgstr "Гар аргаар тохируулах"
+
+#. module: stock
+#: view:stock.location:0
+#: view:stock.move:0
+msgid "Supplier"
 msgstr ""
 
 #. module: stock
@@ -660,29 +1029,58 @@ msgid "Date Done"
 msgstr "Биелсэн огноо"
 
 #. module: stock
-#: rml:stock.picking.list:0
+#: report:stock.picking.list:0
 msgid "Expected Shipping Date"
+msgstr "Тээвэрлэлтийг товлосон огноо"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "March"
 msgstr ""
 
 #. module: stock
-#: rml:stock.picking.list:0
-msgid "Shipping Address :"
-msgstr "Усан тээврийн хаяг"
-
-#. module: stock
-#: view:stock.tracking:0
-msgid "Tracking/Serial"
+#: model:ir.actions.act_window,name:stock.action_view_stock_inventory_line_split
+#: model:ir.model,name:stock.model_stock_inventory_line_split
+#: view:stock.inventory:0
+#: view:stock.inventory.line:0
+msgid "Split inventory lines"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SELECT_FONT"
+#: view:stock.inventory:0
+msgid "Physical Inventory"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PASTE"
+#: help:stock.location,chained_company_id:0
+msgid ""
+"The company the Picking List containing the chained move will belong to "
+"(leave empty to use the default company determination rules"
 msgstr ""
+
+#. module: stock
+#: help:stock.location,chained_picking_type:0
+msgid ""
+"Shipping Type of the Picking List that will contain the chained move (leave "
+"empty to automatically detect the type based on the source and destination "
+"locations)."
+msgstr ""
+"Цуглуулах жагсаалтын Хүргэх төрөл буюу дараалсан гинжин хөдөлгөөнүүд (анхы "
+"болон хүргэх байрлалаас хамаарч автоматаар сонгохоор бол хоосон үлдээ)"
+
+#. module: stock
+#: view:stock.move.split:0
+msgid "Lot number"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: field:stock.inventory.line,product_uom:0
+#: field:stock.move.consume,product_uom:0
+#: field:stock.move.scrap,product_uom:0
+#, python-format
+msgid "Product UOM"
+msgstr "Хэмжих нэгж"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_partner
@@ -690,14 +1088,15 @@ msgid "Partner Locations"
 msgstr "Харилцагчийн байршил"
 
 #. module: stock
-#: help:stock.move,tracking_id:0
-msgid ""
-"Tracking lot is the code that will be put on the logistical unit/pallet"
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+msgid "Total quantity"
 msgstr ""
 
 #. module: stock
-#: view:stock.tracking:0
-msgid "Tracking Number"
+#: model:ir.actions.act_window,name:stock.move_consume
+#: view:stock.move.consume:0
+msgid "Consume Move"
 msgstr ""
 
 #. module: stock
@@ -706,18 +1105,105 @@ msgid "European Customers"
 msgstr "Европын харилцагчиид"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-stock"
+#: help:stock.location,chained_delay:0
+msgid "Delay between original move and chained move in days"
 msgstr ""
 
 #. module: stock
-#: rml:stock.picking.list:0
-msgid "Packing List:"
+#: view:stock.fill.inventory:0
+msgid "Import current product inventory from the following location"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_RECORD"
+#: help:stock.location,chained_auto_packing:0
+msgid ""
+"This is used only if you select a chained location type.\n"
+"The 'Automatic Move' value will create a stock move after the current one "
+"that will be validated automatically. With 'Manual Operation', the stock "
+"move has to be validated by a worker. With 'Automatic No Step Added', the "
+"location is replaced in the original move."
+msgstr ""
+"Хэлхээт байрлалын төрлийг сонгосон үед хэрэглэгдэнэ. 'Автомат хөдөлгөөн' "
+"сонговол хэлхээт хөдөлгөөний баримт автоматаар үүсч автоматаар "
+"гүйцэтгэгдэнэ.(нэмэлт гар ажиллагаа орохгүй). 'Гараар' сонговол хэлхээт "
+"хөдөлгөөний баримтыг ажилтан гараар гүйцэтгэнэ. 'Нэмэлт хөдөлгөөн үүсэхгүй' "
+"сонговол хэлхээт хөдөлгөөн үүсэхгүй харин үндсэн хөдөлгөөний хүргэх байрлал "
+"нь хэлхээт байрлалаар солигдоно."
+
+#. module: stock
+#: view:stock.production.lot:0
+msgid "Downstream Traceability"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_stock_journal_form
+msgid ""
+"The stock journals system allows you assign each stock operation into a "
+"specific journal according to the type of operation to perform or the "
+"worker/team that should perform the operation. Examples of stock journals "
+"may be: quality control, pick lists, packing, etc."
+msgstr ""
+
+#. module: stock
+#: help:product.template,property_stock_production:0
+msgid ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated by production "
+"orders"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Can not create Journal Entry, Output Account defined on this product and "
+"Variant account on category of this product are same."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is in draft state."
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_ups_final
+msgid "Stock ups final"
+msgstr ""
+
+#. module: stock
+#: field:stock.location,chained_auto_packing:0
+msgid "Chaining Type"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "To be refunded/invoiced"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_shop0
+msgid "Shop 1"
+msgstr ""
+
+#. module: stock
+#: view:stock.change.product.qty:0
+#: view:stock.change.standard.price:0
+#: view:stock.fill.inventory:0
+#: view:stock.inventory.merge:0
+#: view:stock.invoice.onshipping:0
+#: view:stock.location.product:0
+#: view:stock.move:0
+#: view:stock.move.track:0
+#: view:stock.picking:0
+#: view:stock.split.into:0
+msgid "_Cancel"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+msgid "Ready"
 msgstr ""
 
 #. module: stock
@@ -726,62 +1212,72 @@ msgid "Calendar View"
 msgstr "Хуанли харах"
 
 #. module: stock
-#: wizard_field:stock.location.products,init,from_date:0
+#: view:stock.picking:0
+msgid "Additional Info"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Operation forbidden"
+msgstr ""
+
+#. module: stock
+#: field:stock.location.product,from_date:0
 msgid "From"
 msgstr "Эхлэл"
 
 #. module: stock
-#: rml:stock.picking.list:0
-msgid "weight"
-msgstr "Жин"
-
-#. module: stock
-#: rml:stock.picking.list:0
-msgid "Non Assigned Products:"
-msgstr "Эрсдэлгүй бүтээгдэхүүнүүд"
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "You may only return pickings that are Confirmed, Available or Done!"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
+#: field:stock.picking,invoice_state:0
 msgid "Invoice Control"
 msgstr "Нэхэмжлэлийн удирдлага"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot_revision
 msgid "Production lot revisions"
-msgstr ""
+msgstr "Барааны серийн дугаарын хяналт"
 
 #. module: stock
 #: view:stock.picking:0
-msgid "Packing Done"
+msgid "Internal Picking List"
 msgstr ""
 
 #. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
 msgid "Waiting"
 msgstr "Хүлээлт"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree2
-#: model:ir.actions.act_window,name:stock.action_picking_tree7
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree7
-#: model:ir.ui.menu,name:stock.menu_picking_waiting
-msgid "Available Packing"
+#: view:stock.move:0
+#: selection:stock.move.split.lines,action:0
+#: view:stock.picking:0
+msgid "Split"
+msgstr "Хуваах"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Search Stock Picking"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_warehouse
-#: view:stock.warehouse:0
-msgid "Warehouse"
-msgstr "Агуулах"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-report"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Company is not specified in Location"
 msgstr ""
 
 #. module: stock
-#: wizard_field:stock.invoice_onshipping,init,type:0
+#: view:report.stock.move:0
+#: field:stock.partial.move,type:0
 msgid "Type"
 msgstr "Төрөл"
 
@@ -791,57 +1287,62 @@ msgid "Generic IT Suppliers"
 msgstr "Ерөнхий IT нийлүүлэгч"
 
 #. module: stock
-#: model:ir.actions.report.xml,name:stock.report_location_overview_all
-msgid "Location Content (With children)"
+#: report:stock.picking.list:0
+msgid "Picking List:"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_FILE"
+#: field:stock.inventory,date:0
+#: field:stock.move,create_date:0
+#: field:stock.production.lot,date:0
+#: field:stock.tracking,date:0
+msgid "Creation Date"
 msgstr ""
 
 #. module: stock
 #: field:report.stock.lines.date,id:0
 msgid "Inventory Line Id"
+msgstr "Бүртгэлийн мөрний дугаар"
+
+#. module: stock
+#: help:stock.location,address_id:0
+msgid "Address of  customer or supplier."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_EDIT"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CONNECT"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_all
-#: model:ir.ui.menu,name:stock.menu_action_picking_all
-#: wizard_field:stock.picking.make,init,pickings:0
+#: view:report.stock.move:0
+#: field:report.stock.move,picking_id:0
 msgid "Packing"
 msgstr "Савлагаа"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GO_DOWN"
-msgstr ""
-
-#. module: stock
+#: selection:report.stock.inventory,location_type:0
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
-msgstr "Харилцагчийн байрлал"
+msgstr "Хэрэглэгчийн байрлал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_OK"
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Invalid action !"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree9
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree9
-msgid "New Internal Packing"
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Receive Information"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_location_overview
+#: report:lot.stock.overview:0
+msgid "Location Inventory Overview"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_replacement
+msgid "Stock Replacement"
 msgstr ""
 
 #. module: stock
@@ -855,82 +1356,166 @@ msgid "None"
 msgstr "Хоосон"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action3
-#: model:ir.actions.wizard,name:stock.action2
-#: model:ir.actions.wizard,name:stock.action_lot4
+#: view:stock.tracking:0
 msgid "Downstream traceability"
+msgstr "Доод хөдөлгөөнийг хянах"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "No Invoices were created"
 msgstr ""
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_14
-msgid "Finished products"
-msgstr "Дууссан бүтээгдэхүүнүүд"
+#: model:stock.location,name:stock.stock_location_company
+msgid "OpenERP S.A."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Receive"
+msgstr ""
+
+#. module: stock
+#: help:stock.incoterms,active:0
+msgid ""
+"By unchecking the active field, you may hide an INCOTERM without deleting it."
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+#: field:stock.picking,date:0
+msgid "Order Date"
+msgstr ""
 
 #. module: stock
 #: field:stock.location,location_id:0
 msgid "Parent Location"
-msgstr "Толгой байршил"
+msgstr "Толгой байрлал"
 
 #. module: stock
-#: field:stock.inventory,date:0
-msgid "Date create"
-msgstr "Үүсэх огноо"
+#: help:stock.picking,state:0
+msgid ""
+"* Draft: not confirmed yet and will not be scheduled until confirmed\n"
+"* Confirmed: still waiting for the availability of products\n"
+"* Available: products reserved, simply waiting for confirmation.\n"
+"* Waiting: waiting for another move to proceed before it becomes "
+"automatically available (e.g. in Make-To-Order flows)\n"
+"* Done: has been processed, can't be modified or cancelled anymore\n"
+"* Cancelled: has been cancelled, can't be confirmed anymore"
+msgstr ""
 
 #. module: stock
-#: wizard_button:inventory.merge.stock.zero,init,merge:0
-msgid "Set to Zero"
-msgstr "Тэглэх"
+#: help:stock.location,company_id:0
+msgid "Let this field empty if this location is shared between all companies"
+msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
-msgid "All Stock Moves"
-msgstr "Бүх барааны шилжилт"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Please provide a positive quantity to scrap!"
+msgstr ""
 
 #. module: stock
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Алдаатай XML-н архитектур харах"
+#: field:stock.location,chained_delay:0
+msgid "Chaining Lead Time"
+msgstr ""
 
 #. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Cannot deliver products which are already delivered !"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_invoice_onshipping
+msgid "Stock Invoice Onshipping"
+msgstr ""
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
 #: field:res.partner,property_stock_supplier:0
 #: selection:stock.location,usage:0
 msgid "Supplier Location"
 msgstr "Нийлүүлэгчийн байрлал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_HELP"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "were scrapped"
 msgstr ""
 
 #. module: stock
-#: selection:stock.move,priority:0
-msgid "Urgent"
-msgstr "Яаралтай"
-
-#. module: stock
-#: help:product.category,property_stock_account_input_categ:0
-msgid "This account will be used to value the input stock"
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Partial"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_INFO"
+#: selection:report.stock.move,month:0
+msgid "September"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,date:0
-#: field:stock.tracking,date:0
-msgid "Date Created"
-msgstr "Үүсгэсэн огноо"
+#: help:stock.picking,backorder_id:0
+msgid ""
+"If this picking was split this field links to the picking that contains the "
+"other part that has been processed already."
+msgstr ""
 
 #. module: stock
+#: model:ir.model,name:stock.model_report_stock_inventory
+msgid "Stock Statistics"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: field:stock.move.memory,currency:0
+#, python-format
+msgid "Currency"
+msgstr ""
+
+#. module: stock
+#: field:product.product,track_production:0
+msgid "Track Manufacturing Lots"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_inventory_merge.py:0
+#, python-format
+msgid ""
+"Please select multiple physical inventories to merge in the list view."
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_product_stock_move_open
+#: model:ir.actions.act_window,name:stock.action_move_form2
+#: model:ir.ui.menu,name:stock.menu_action_move_form2
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
+#: view:stock.tracking:0
+msgid "Stock Moves"
+msgstr "Барааны хөдөлгөөн"
+
+#. module: stock
+#: selection:report.stock.move,type:0
+#: selection:stock.location,chained_picking_type:0
 #: selection:stock.picking,type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "Илгээлт амжилттай"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Cancel Availability"
+msgstr "Бэлэн байдлыг цуцлах"
+
+#. module: stock
+#: help:stock.move,date_expected:0
+msgid "Scheduled date for the processing of this move"
 msgstr ""
 
 #. module: stock
@@ -939,131 +1524,175 @@ msgid "Created Moves"
 msgstr "Шилжилт үүссэн"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GO_BACK"
+#: model:stock.location,name:stock.stock_location_14
+msgid "Shelf 2"
 msgstr ""
 
 #. module: stock
-#: selection:stock.picking,invoice_state:0
-msgid "To Be Invoiced"
-msgstr "Ирээдүйн нэхэмжлэл"
+#: field:stock.report.tracklots,tracking_id:0
+msgid "Tracking lot"
+msgstr ""
+
+#. module: stock
+#: help:stock.location,posx:0
+#: help:stock.location,posy:0
+#: help:stock.location,posz:0
+msgid "Optional localization details, for information purpose only"
+msgstr ""
 
 #. module: stock
 #: view:product.product:0
 #: view:product.template:0
 msgid "Counter-Part Locations Properties"
+msgstr "Тооцоолох хэсгийн байршилын шинж чанар"
+
+#. module: stock
+#: view:stock.location:0
+msgid "Localization"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUSTIFY_FILL"
+#: model:ir.model,name:stock.model_stock_report_tracklots
+msgid "Stock report by tracking lots"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Delivered Qty"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.track_line
+#: view:stock.inventory.line.split:0
+#: view:stock.move.split:0
+msgid "Split in lots"
+msgstr ""
+
+#. module: stock
+#: view:stock.move.split:0
+msgid "Production Lot Numbers"
+msgstr ""
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,date:0
+#: field:report.stock.move,date:0
+#: view:stock.inventory:0
+#: report:stock.inventory.move:0
 #: view:stock.move:0
-#: field:stock.move,date_planned:0
+#: field:stock.move,date:0
+#: field:stock.partial.move,date:0
+#: field:stock.partial.picking,date:0
+#: view:stock.picking:0
 msgid "Date"
-msgstr "Огноо"
+msgstr "Үүсгэсэн огноо"
 
 #. module: stock
-#: view:product.product:0
-msgid "Stocks"
-msgstr "Бараанууд"
-
-#. module: stock
-#: field:stock.location,allocation_method:0
-msgid "Allocation Method"
-msgstr "Хуваарилалтын арга"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-administration"
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Extended Filters..."
 msgstr ""
 
 #. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
-msgstr "Хадгалах байршил"
+msgstr "Хадгалах байрлал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_APPLY"
+#: code:addons/stock/wizard/stock_inventory_merge.py:0
+#, python-format
+msgid "Merging is only allowed on draft inventories."
 msgstr ""
 
 #. module: stock
-#: wizard_view:stock.partial_picking,end2:0
-msgid "The packing has been successfully made !"
+#: model:ir.ui.menu,name:stock.menu_dashboard_stock
+msgid "Dashboard"
 msgstr ""
 
 #. module: stock
-#: field:stock.move,address_id:0
-#: field:stock.picking.move.wizard,address_id:0
-msgid "Dest. Address"
+#: model:ir.model,name:stock.model_stock_move_track
+msgid "Track moves"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_inventory_form
-#: model:ir.ui.menu,name:stock.menu_action_inventory_form
-msgid "Periodical Inventory"
-msgstr "Тогтмол нөөц"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-crm"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_STRIKETHROUGH"
-msgstr ""
-
-#. module: stock
-#: rml:lot.stock.overview_all:0
 #: field:stock.incoterms,code:0
 msgid "Code"
 msgstr "Код"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-partner"
+#: view:stock.inventory.line.split:0
+msgid "Lots Number"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_inventory_form_draft
-#: model:ir.ui.menu,name:stock.menu_action_inventory_form_draft
-msgid "Draft Periodical Inventories"
-msgstr "Ноорог тогтмол нөөц"
+#: model:ir.actions.act_window,name:stock.open_board_warehouse
+#: model:ir.ui.menu,name:stock.menu_board_warehouse
+msgid "Warehouse Dashboard"
+msgstr ""
 
 #. module: stock
-#: wizard_button:inventory.merge,init,end:0
-#: wizard_button:inventory.merge.stock.zero,init,end:0
-#: wizard_button:stock.fill_inventory,init,end:0
-#: wizard_button:stock.invoice_onshipping,init,end:0
-#: wizard_button:stock.location.products,init,end:0
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can not remove a lot line !"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_scrap
 #: view:stock.move:0
-#: wizard_button:stock.move.split,init,end:0
-#: wizard_button:stock.move.track,init,end:0
-#: wizard_button:stock.partial_picking,init,end:0
+#: view:stock.move.scrap:0
 #: view:stock.picking:0
-#: wizard_button:stock.picking.make,init,end:0
-#: view:stock.picking.move.wizard:0
-#: wizard_button:stock.return.picking,init,end:0
+msgid "Scrap Products"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You cannot remove the picking which is in %s state !"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory.line.split:0
+#: view:stock.move.consume:0
+#: view:stock.move.scrap:0
+#: view:stock.move.split:0
+#: view:stock.picking:0
 msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.act_stock_return_picking
+#: model:ir.model,name:stock.model_stock_return_picking
+msgid "Return Picking"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory:0
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Split in production lots"
 msgstr "Бүтээгдэхүүний цувралын дугаар хуваах"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory
-#: field:stock.inventory,name:0
-#: field:stock.inventory.line,inventory_id:0
-#: selection:stock.location,usage:0
-msgid "Inventory"
-msgstr "Нөөц"
+#: model:ir.model,name:stock.model_stock_location
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,location_id:0
+#: field:stock.change.product.qty,location_id:0
+#: field:stock.fill.inventory,location_id:0
+#: field:stock.inventory.line,location_id:0
+#: report:stock.inventory.move:0
+#: view:stock.location:0
+#: view:stock.move:0
+#: field:stock.move.consume,location_id:0
+#: field:stock.move.scrap,location_id:0
+#: field:stock.picking,location_id:0
+#: report:stock.picking.list:0
+#: field:stock.report.prodlots,location_id:0
+#: field:stock.report.tracklots,location_id:0
+msgid "Location"
+msgstr "Агуулахын байрлал"
 
 #. module: stock
 #: view:product.template:0
@@ -1071,31 +1700,45 @@ msgid "Information"
 msgstr "Мэдээлэл"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MISSING_IMAGE"
+#: report:stock.picking.list:0
+msgid "Shipping Address :"
+msgstr "Усан тээврийн хаяг"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Provide the quantities of the returned products."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SPELL_CHECK"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Can not create Journal Entry, Input Account defined on this product and "
+"Variant account on category of this product are same."
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_tracking
-msgid "Stock Tracking Lots"
+#: view:stock.change.standard.price:0
+msgid "Cost Price"
 msgstr ""
 
 #. module: stock
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
-#: field:stock.move,price_unit:0
-msgid "Unit Price"
-msgstr "Нэгж Үнэ"
+#: view:product.product:0
+#: field:product.product,valuation:0
+msgid "Inventory Valuation"
+msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
+msgid "Create Invoice"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
 msgid "Process Later"
-msgstr "Дараагийн үйл ажиллагаа"
+msgstr "Батлах"
 
 #. module: stock
 #: help:res.partner,property_stock_supplier:0
@@ -1103,6 +1746,8 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for goods you receive from the current partner"
 msgstr ""
+"Заяамалынх нь оронд энэ агуулахын байршилыг тухайн харилцагчаас хүлээж авч "
+"байгаа барааны анхдагч байршил болгож ашиглана"
 
 #. module: stock
 #: field:stock.warehouse,partner_address_id:0
@@ -1110,290 +1755,90 @@ msgid "Owner Address"
 msgstr "Эзэмшигчийн хаяг"
 
 #. module: stock
-#: field:stock.location,parent_right:0
-msgid "Right Parent"
+#: help:stock.move,price_unit:0
+msgid ""
+"Technical field used to record the product cost set by the user during a "
+"picking confirmation (when average price costing method is used)"
 msgstr ""
 
 #. module: stock
-#: field:stock.picking,origin:0
-msgid "Origin Reference"
-msgstr "Эх сурвалжийн лавлагаа"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_move_form4
-#: model:ir.ui.menu,name:stock.menu_action_move_form4
-msgid "Available Moves"
+#: model:ir.actions.act_window,help:stock.action_stock_move_report
+msgid ""
+"Moves Analysis allows you to easily check and analyse your company stock "
+"moves. Use this report when you want to analyse the different routes taken "
+"by your products and inventory management performance."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_HARDDISK"
+#: field:report.stock.move,day_diff1:0
+msgid "Planned Lead Time (Days)"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_relate_picking
-msgid "Related Picking"
-msgstr "Холбоотой савлагаа"
-
-#. module: stock
-#: field:stock.incoterms,name:0
-#: field:stock.move,name:0
-#: field:stock.picking.move.wizard,name:0
-#: field:stock.warehouse,name:0
-msgid "Name"
-msgstr "Нэр"
-
-#. module: stock
-#: view:stock.inventory.line:0
-msgid "Stock Inventory Lines"
-msgstr "Барааны нөөцийн шугам"
-
-#. module: stock
-#: wizard_button:stock.location.products,init,open:0
-msgid "Open Products"
-msgstr "Нээлттэй бүтээгдэхүүнүүд"
-
-#. module: stock
-#: rml:stock.picking.list:0
-msgid "]"
-msgstr "]"
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Input Packing List"
-msgstr "Савлагаанд орох жагсаалт"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_picking
-#: field:stock.move,picking_id:0
-msgid "Packing List"
-msgstr "Савалгааны жагсаалт"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_COPY"
-msgstr ""
-
-#. module: stock
-#: selection:stock.invoice_onshipping,init,type:0
-msgid "Supplier Refund"
-msgstr "Нийлүүлэгчийн буцаалт"
-
-#. module: stock
-#: model:ir.model,name:stock.model_stock_move
-msgid "Stock Move"
-msgstr "Бараа шилжих"
-
-#. module: stock
-#: field:product.category,property_stock_account_output_categ:0
-#: field:product.template,property_stock_account_output:0
-msgid "Stock Output Account"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,chained_auto_packing:0
-msgid "Automatic No Step Added"
-msgstr ""
-
-#. module: stock
-#: wizard_view:stock.location.products,init:0
-msgid "Stock Location Analysis"
-msgstr "Байршлын шинжилгээ"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CDROM"
-msgstr ""
-
-#. module: stock
-#: selection:stock.picking,invoice_state:0
-msgid "Not from Packing"
-msgstr "Савлагаанаас биш"
-
-#. module: stock
-#: view:stock.location:0
-msgid "Chained Locations"
-msgstr "Холбоотой байршлууд"
-
-#. module: stock
-#: model:stock.location,name:stock.location_inventory
-msgid "Inventory loss"
-msgstr "Нөөцийн алдагдал"
-
-#. module: stock
-#: field:stock.production.lot,ref:0
-msgid "Internal Ref"
-msgstr "Дотоод реф"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REFRESH"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_STOP"
-msgstr ""
-
-#. module: stock
-#: wizard_view:stock.move.track,init:0
-msgid "Tracking a move"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_FIND_AND_REPLACE"
-msgstr ""
-
-#. module: stock
-#: view:stock.picking:0
-msgid "Validate"
-msgstr "Батлах"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_WARNING"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_IN"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CONVERT"
-msgstr ""
-
-#. module: stock
-#: field:stock.move,note:0
-#: view:stock.picking:0
-#: field:stock.picking,note:0
-msgid "Notes"
-msgstr "Тэмдэглэл"
-
-#. module: stock
-#: field:stock.picking,move_lines:0
-#: field:stock.picking.move.wizard,move_ids:0
-msgid "Move lines"
-msgstr "Шилжих шугам"
-
-#. module: stock
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
-msgid "Value"
-msgstr "Өртөг"
-
-#. module: stock
-#: field:stock.picking,type:0
-msgid "Shipping Type"
-msgstr "Хөдөлгөөний төрөл"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.act_product_location_open
-msgid "Products"
-msgstr "Бүтээгдэхүүнүүд"
-
-#. module: stock
-#: field:stock.picking,move_type:0
-msgid "Delivery Method"
-msgstr "Хүргэх арга"
-
-#. module: stock
-#: model:ir.actions.wizard,name:stock.partial_picking
-msgid "Partial packing"
-msgstr "Дутуу савлагаа"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-calendar"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ITALIC"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_YES"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.act_stock_picking_move_wizard
-msgid "Fill From Unreceived Products"
-msgstr ""
-
-#. module: stock
-#: field:stock.move,move_dest_id:0
-msgid "Dest. Move"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_inventory_form_new
-#: model:ir.ui.menu,name:stock.menu_action_inventory_form_new
-msgid "New Periodical Inventory"
-msgstr ""
-
-#. module: stock
-#: field:stock.production.lot,revisions:0
-msgid "Revisions"
-msgstr "Хяналт"
-
-#. module: stock
-#: selection:stock.location,allocation_method:0
-msgid "FIFO"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree2_delivery
-#: model:ir.ui.menu,name:stock.menu_picking_waiting_delivery
-msgid "Delivery Orders to Process"
-msgstr "Захиалга хүргэлийн үйл явц"
-
-#. module: stock
-#: field:stock.move,priority:0
-msgid "Priority"
-msgstr "Урьтамж"
-
-#. module: stock
-#: wizard_field:inventory.merge.stock.zero,init,location_id:0
-#: model:ir.model,name:stock.model_stock_location
-#: rml:lot.location:0
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
-#: wizard_field:stock.fill_inventory,init,location_id:0
-#: field:stock.inventory.line,location_id:0
-#: field:stock.picking,location_id:0
-#: rml:stock.picking.list:0
-#: field:stock.report.prodlots,location_id:0
-msgid "Location"
-msgstr "Байршил"
-
-#. module: stock
-#: field:stock.picking,invoice_state:0
-msgid "Invoice Status"
-msgstr "Нэхэмжлэх арга"
-
-#. module: stock
-#: rml:lot.location:0
-msgid "Units"
-msgstr "Хэмжих нэгж"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUSTIFY_LEFT"
+#: field:stock.change.standard.price,new_price:0
+msgid "Price"
 msgstr ""
 
 #. module: stock
 #: view:stock.inventory:0
-msgid "Cancel Inventory"
-msgstr "Нөөц цуцлах"
+msgid "Search Inventory"
+msgstr ""
 
 #. module: stock
-#: model:ir.actions.report.xml,name:stock.report_product_history
-msgid "Future Stock Forecast"
-msgstr "Ирээдүйн барааг урьдчилан хэлэх"
+#: field:stock.move.track,quantity:0
+msgid "Quantity per lot"
+msgstr "Цувралын дугаарын дундаж хэмжээ"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"There is no stock input account defined for this product or its category: "
+"\"%s\" (id: %d)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Received Qty"
+msgstr ""
+
+#. module: stock
+#: field:stock.production.lot,ref:0
+msgid "Internal Reference"
+msgstr ""
+
+#. module: stock
+#: help:stock.production.lot,prefix:0
+msgid ""
+"Optional prefix to prepend when displaying this serial number: PREFIX/SERIAL "
+"[INT_REF]"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_stock_fill_inventory
+#: model:ir.model,name:stock.model_stock_fill_inventory
+#: view:stock.fill.inventory:0
+msgid "Import Inventory"
+msgstr ""
+
+#. module: stock
+#: field:stock.incoterms,name:0
+#: field:stock.move,name:0
+#: field:stock.warehouse,name:0
+msgid "Name"
+msgstr "Маршрутын нэр"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is done."
+msgstr ""
+
+#. module: stock
+#: view:product.product:0
+msgid "Stocks"
+msgstr "Бараанууд"
 
 #. module: stock
 #: model:ir.module.module,description:stock.module_meta_information
@@ -1410,110 +1855,603 @@ msgid ""
 "* Bar code supported\n"
 "* Rapid detection of mistakes through double entry system\n"
 "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+"* Dashboard for warehouse that includes:\n"
+"    * Products to receive in delay (date < = today)\n"
+"    * Procurement in exception\n"
+"    * Graph : Number of Receive products vs planned (bar graph on week par "
+"day)\n"
+"    * Graph : Number of Delivery products vs planned (bar graph on week par "
+"day)\n"
 "    "
+msgstr ""
+
+#. module: stock
+#: help:product.template,property_stock_inventory:0
+msgid ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated when you do an "
+"inventory"
+msgstr ""
+
+#. module: stock
+#: view:report.stock.lines.date:0
+msgid "Stockable"
+msgstr ""
+
+#. module: stock
+#: selection:product.product,valuation:0
+msgid "Real Time (automated)"
+msgstr ""
+
+#. module: stock
+#: help:stock.move,tracking_id:0
+msgid "Logistical shipping unit: pallet, box, pack ..."
+msgstr ""
+
+#. module: stock
+#: view:stock.change.product.qty:0
+#: view:stock.change.standard.price:0
+msgid "_Apply"
+msgstr ""
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: report:stock.inventory.move:0
+#: report:stock.picking.list:0
+msgid "]"
+msgstr "]"
+
+#. module: stock
+#: field:product.template,property_stock_inventory:0
+msgid "Inventory Location"
+msgstr "Нөөцийн байрлал"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+msgid "Total value"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_move_form2
+msgid ""
+"This menu gives you the full traceability of inventory operations made on a "
+"specific product. You can filter on the product to see all the past or "
+"future movements made on the product."
+msgstr ""
+
+#. module: stock
+#: help:stock.location,chained_journal_id:0
+msgid ""
+"Inventory Journal in which the chained move will be written, if the Chaining "
+"Type is not Transparent (no journal is used if left empty)"
+msgstr ""
+
+#. module: stock
+#: view:board.board:0
+#: model:ir.actions.act_window,name:stock.action_incoming_product_board
+msgid "Incoming Product"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+msgid "Creation"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: field:stock.move.memory,cost:0
+#, python-format
+msgid "Cost"
+msgstr ""
+
+#. module: stock
+#: field:product.category,property_stock_account_input_categ:0
+#: field:product.template,property_stock_account_input:0
+#: field:stock.change.standard.price,stock_account_input:0
+msgid "Stock Input Account"
+msgstr "Барааны орлогын данс"
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
+#: model:ir.ui.menu,name:stock.menu_warehouse_config
+msgid "Warehouse Management"
+msgstr ""
+
+#. module: stock
+#: selection:stock.picking,move_type:0
+msgid "Partial Delivery"
+msgstr ""
+
+#. module: stock
+#: selection:stock.location,chained_auto_packing:0
+msgid "Automatic No Step Added"
+msgstr "Нэмэлт хөдөлгөөн үүсгэхгүй"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Product "
+msgstr ""
+
+#. module: stock
+#: view:stock.location.product:0
+msgid "Stock Location Analysis"
+msgstr "Байршлын шинжилгээ"
+
+#. module: stock
+#: help:stock.move,date:0
+msgid ""
+"Move date: scheduled date until move is done, then date of actual move "
+"processing"
+msgstr ""
+
+#. module: stock
+#: field:report.stock.lines.date,date:0
+msgid "Latest Inventory Date"
+msgstr ""
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: view:stock.inventory:0
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
+msgid "Group By..."
+msgstr ""
+
+#. module: stock
+#: view:stock.location:0
+msgid "Chained Locations"
+msgstr "Хэлхээтэй байрлал"
+
+#. module: stock
+#: model:stock.location,name:stock.location_inventory
+msgid "Inventory loss"
+msgstr "Нөөцийн алдагдал"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Document"
+msgstr ""
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Input Picking List"
+msgstr ""
+
+#. module: stock
+#: field:stock.move,product_uom:0
+#: field:stock.move.memory,product_uom:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Products: "
+msgstr ""
+
+#. module: stock
+#: help:product.product,track_production:0
+msgid ""
+"Forces to specify a Production Lot for all moves containing this product and "
+"generated by a Manufacturing Order"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.track_line_old
+#: view:stock.move.track:0
+msgid "Tracking a move"
+msgstr "Тээвэрлэлтийн хөдөлгөөн"
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_picking_tree6
+msgid ""
+"The Internal Moves lists all inventory operations you have to perform in "
+"your warehouse. All operations can be categorized into stock journals, so "
+"that each worker has it's own list of operations to perform in his own "
+"journal. Most operations are prepared automatically by OpenERP according to "
+"your pre-configured logistics rules but you can also record manual stock "
+"operations."
+msgstr ""
+
+#. module: stock
+#: view:product.product:0
+msgid "Update"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Set to Draft"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_journal_form
+#: model:ir.ui.menu,name:stock.menu_action_stock_journal_form
+msgid "Stock Journals"
+msgstr ""
+
+#. module: stock
+#: selection:report.stock.move,type:0
+msgid "Others"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Could not find any difference between standard price and new price!"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_partial_picking
+msgid "Partial Picking"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_scrapped
+#: field:stock.move,scrapped:0
+msgid "Scrapped"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Products "
+msgstr ""
+
+#. module: stock
+#: field:product.product,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr ""
+
+#. module: stock
+#: view:board.board:0
+msgid "Warehouse board"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Qty"
+msgstr ""
+
+#. module: stock
+#: field:product.category,property_stock_variation:0
+msgid "Stock Variation Account"
+msgstr ""
+
+#. module: stock
+#: field:stock.move,note:0
+#: view:stock.picking:0
+#: field:stock.picking,note:0
+msgid "Notes"
+msgstr "Тэмдэглэл"
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+msgid "Value"
+msgstr "Өртөг"
+
+#. module: stock
+#: field:report.stock.move,type:0
+#: field:stock.location,chained_picking_type:0
+#: field:stock.picking,type:0
+msgid "Shipping Type"
+msgstr "Хөдөлгөөний төрөл"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can only delete draft moves."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: model:ir.actions.act_window,name:stock.act_product_location_open
+#: model:ir.ui.menu,name:stock.menu_stock_products_menu
+#: view:stock.inventory:0
+#: view:stock.picking:0
+#, python-format
+msgid "Products"
+msgstr "Бүтээгдэхүүнүүд"
+
+#. module: stock
+#: view:stock.change.standard.price:0
+msgid "Change Price"
+msgstr ""
+
+#. module: stock
+#: field:stock.picking,move_type:0
+msgid "Delivery Method"
+msgstr "Хүргэх арга"
+
+#. module: stock
+#: help:report.stock.move,location_dest_id:0
+#: help:stock.move,location_dest_id:0
+#: help:stock.picking,location_dest_id:0
+msgid "Location where the system will stock the finished products."
+msgstr ""
+
+#. module: stock
+#: help:product.category,property_stock_variation:0
+msgid ""
+"When real-time inventory valuation is enabled on a product, this account "
+"will hold the current value of the products."
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"There is no stock output account defined for this product or its category: "
+"\"%s\" (id: %d)"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move
+msgid "Stock Move"
+msgstr "Бараа шилжих"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Delay(Days)"
+msgstr ""
+
+#. module: stock
+#: field:stock.move.memory,move_id:0
+msgid "Move"
+msgstr ""
+
+#. module: stock
+#: help:stock.picking,min_date:0
+msgid "Expected date for the picking to be processed"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "P&L Qty"
+msgstr ""
+
+#. module: stock
+#: view:stock.production.lot:0
+#: field:stock.production.lot,revisions:0
+msgid "Revisions"
+msgstr "Хяналт"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "This operation will cancel the shipment. Do you want to continue?"
+msgstr ""
+
+#. module: stock
+#: help:product.product,valuation:0
+msgid ""
+"If real-time valuation is enabled for a product, the system will "
+"automatically write journal entries corresponding to stock moves.The "
+"inventory variation account set on the product category will represent the "
+"current inventory value, and the stock input and stock output account will "
+"hold the counterpart moves for incoming and outgoing products."
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_stock_inventory_report
+msgid ""
+"Inventory Analysis allows you to easily check and analyse your company stock "
+"levels. Sort and group by selection criteria in order to better analyse and "
+"manage your company  activities."
+msgstr ""
+
+#. module: stock
+#: help:report.stock.move,location_id:0
+#: help:stock.move,location_id:0
+msgid ""
+"Sets a location if you produce at a fixed location. This can be a partner "
+"location if you subcontract the manufacturing operations."
+msgstr ""
+
+#. module: stock
+#: view:stock.invoice.onshipping:0
+msgid "Create"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Dates"
+msgstr ""
+
+#. module: stock
+#: field:stock.move,priority:0
+msgid "Priority"
+msgstr "Урьтамж"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Source"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#: model:ir.model,name:stock.model_stock_inventory
+#: selection:report.stock.inventory,location_type:0
+#: field:stock.inventory.line,inventory_id:0
+#: report:stock.inventory.move:0
+#: selection:stock.location,usage:0
+#, python-format
+msgid "Inventory"
+msgstr "Хадгалах"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: stock
+#: sql_constraint:stock.production.lot:0
+msgid ""
+"The combination of serial number and internal reference must be unique !"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#, python-format
+msgid "Currency in which Unit Cost is expressed"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_ups
+msgid "Stock ups"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Cancel Inventory"
+msgstr "Нөөц цуцлах"
+
+#. module: stock
+#: field:stock.move.split.lines,name:0
+#: field:stock.move.split.lines.exist,name:0
+msgid "Tracking serial"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/report/report_stock.py:0
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_replacement_result
+msgid "Stock Replacement result"
 msgstr ""
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
 msgid "Fixed Location"
-msgstr "Тогтоосон байрлал"
+msgstr "Тогтмол байрлал"
 
 #. module: stock
-#: constraint:ir.model:0
+#: model:ir.actions.act_window,help:stock.action_production_lot_form
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"This is the list of all the production lots (serial numbers) you recorded. "
+"After having selected a lot, you can get the up-stream or down-stream "
+"traceability of the products contained in lot."
 msgstr ""
 
 #. module: stock
-#: field:stock.picking,min_date:0
-msgid "Planned Date"
-msgstr "Төлөвлөсөн огноо"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree
-msgid "Outgoing Products"
-msgstr "Бүтээгдэхүүний зардал"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_COLOR_PICKER"
+#: selection:report.stock.move,month:0
+msgid "July"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.report.xml,name:stock.report_lot_location
-msgid "Lots by location"
-msgstr "Цувралуудын байрлал"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DELETE"
+#: view:report.stock.lines.date:0
+msgid "Consumable"
 msgstr ""
 
 #. module: stock
-#: model:account.journal,name:stock.stock_journal
+#: model:ir.actions.act_window,help:stock.action_stock_line_date
+msgid ""
+"Display the last inventories done on your products and easily sort them with "
+"specific filtering criteria. If you do frequent and partial inventories, you "
+"need this report in order to ensure that the stock of each product is "
+"controlled at least once a year."
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_product_history
+msgid "Stock Level Forecast"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_journal
+#: field:report.stock.move,stock_journal:0
+#: view:stock.journal:0
+#: field:stock.journal,name:0
+#: field:stock.picking,stock_journal_id:0
 msgid "Stock Journal"
 msgstr "Барааны журнал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CLEAR"
-msgstr ""
-
-#. module: stock
-#: field:stock.production.lot,date:0
-msgid "Created Date"
-msgstr "Үүсгэсэн огноо"
-
-#. module: stock
+#: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Procurement"
-msgstr "Татан авалт"
+msgstr "Бэлтгэн нийлүүлэх"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
 msgid "Maxtor Suppliers"
+msgstr "Макстор нийлүүлэгчид"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_change_product_qty.py:0
+#: code:addons/stock/wizard/stock_change_standard_price.py:0
+#, python-format
+msgid "Active ID is not set in Context"
 msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Force Availability"
+msgstr "боломжийг хурдасгах"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.move_scrap
+#: view:stock.move.scrap:0
+msgid "Scrap Move"
 msgstr ""
 
 #. module: stock
-#: wizard_view:stock.location.products,init:0
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: model:ir.actions.act_window,name:stock.action_reception_picking_move
+#: model:ir.ui.menu,name:stock.menu_action_pdct_in
+#: view:stock.move:0
+#, python-format
+msgid "Receive Products"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#: model:ir.actions.act_window,name:stock.action_out_picking_move
+#: model:ir.ui.menu,name:stock.menu_action_pdct_out
+#, python-format
+msgid "Deliver Products"
+msgstr ""
+
+#. module: stock
+#: view:stock.location.product:0
 msgid "View Stock of Products"
 msgstr "Барааны агуулах харах"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-mrp"
+#: view:stock.picking:0
+msgid "Internal Picking list"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree3_delivery
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree3_delivery
-msgid "Future Delivery Orders"
-msgstr "Ирээлүйн захиалга хүргэлт"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GO_UP"
+#: view:report.stock.move:0
+#: field:report.stock.move,month:0
+msgid "Month"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SORT_DESCENDING"
+#: help:stock.picking,date_done:0
+msgid "Date of Completion"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_tracking_form
-#: model:ir.ui.menu,name:stock.menu_action_tracking_form
-msgid "Tracking Lots"
+#: help:stock.tracking,active:0
+msgid ""
+"By unchecking the active field, you may hide a pack without deleting it."
 msgstr ""
 
 #. module: stock
-#: wizard_button:inventory.merge,init,merge:0
+#: view:stock.inventory.merge:0
 msgid "Yes"
 msgstr "Тийм"
 
@@ -1523,13 +2461,42 @@ msgid "Inventories"
 msgstr "Нөөц"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_HOME"
+#: view:report.stock.move:0
+msgid "Todo"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PROPERTIES"
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,company_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,company_id:0
+#: field:stock.inventory,company_id:0
+#: field:stock.inventory.line,company_id:0
+#: field:stock.location,company_id:0
+#: field:stock.move,company_id:0
+#: field:stock.picking,company_id:0
+#: field:stock.production.lot,company_id:0
+#: field:stock.production.lot.revision,company_id:0
+#: field:stock.warehouse,company_id:0
+msgid "Company"
+msgstr ""
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Back Orders"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid ""
+"There is no stock input account defined for this product: \"%s\" (id: %d)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Can not consume a move with negative or zero quantity !"
 msgstr ""
 
 #. module: stock
@@ -1538,16 +2505,24 @@ msgid "Real Stock"
 msgstr "Жинхэнэ бараа"
 
 #. module: stock
-#: model:ir.actions.wizard,name:stock.wizard_fill_inventory
-#: wizard_view:stock.fill_inventory,init:0
-#: wizard_button:stock.fill_inventory,init,fill_inventory:0
+#: view:stock.fill.inventory:0
 msgid "Fill Inventory"
 msgstr "Нөөцийг дүүргэх"
 
 #. module: stock
-#: wizard_view:stock.invoice_onshipping,init:0
-msgid "Create invoices"
-msgstr "Нэхэмжлэл үүсгэх"
+#: constraint:product.template:0
+msgid ""
+"Error: The default UOM and the purchase UOM must be in the same category."
+msgstr ""
+
+#. module: stock
+#: help:product.category,property_stock_account_input_categ:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"incoming stock moves will be posted in this account. This is the default "
+"value for all products in this category, it can also directly be set on each "
+"product."
+msgstr ""
 
 #. module: stock
 #: field:stock.production.lot.revision,date:0
@@ -1555,14 +2530,19 @@ msgid "Revision Date"
 msgstr "Залруулсан огноо"
 
 #. module: stock
-#: rml:stock.picking.list:0
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,prodlot_id:0
+#: view:stock.move:0
+#: field:stock.move.split.lines,lot_id:0
+#: field:stock.move.split.lines.exist,lot_id:0
+#: report:stock.picking.list:0
 msgid "Lot"
 msgstr "Цувралын дугаар"
 
 #. module: stock
-#: wizard_view:inventory.merge.stock.zero,init:0
-msgid "Set Stock to Zero"
-msgstr "Барааг тэглэх"
+#: view:stock.move.split:0
+msgid "Production Lot Number"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,product_uos_qty:0
@@ -1570,49 +2550,38 @@ msgid "Quantity (UOS)"
 msgstr "Тоо хэмжээ"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree5
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree5
-msgid "Packing to Process"
-msgstr "Савлах үйл явц"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_STOP"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"You are moving %.2f %s products but only %.2f %s available in this lot."
 msgstr ""
 
 #. module: stock
 #: view:stock.move:0
 msgid "Set Available"
+msgstr "боломжтой болгох"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Contact Address :"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.wizard,name:stock.make_picking
-#: wizard_view:stock.picking.make,init:0
-msgid "Make packing"
-msgstr "Савлагаа хийх"
-
-#. module: stock
-#: field:stock.picking,backorder_id:0
+#: field:stock.move,backorder_id:0
 msgid "Back Order"
 msgstr "Эх захиалга"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DND_MULTIPLE"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REMOVE"
-msgstr ""
-
-#. module: stock
 #: field:stock.incoterms,active:0
 #: field:stock.location,active:0
-#: field:stock.picking,active:0
 #: field:stock.tracking,active:0
 msgid "Active"
 msgstr "Идэвхитэй"
+
+#. module: stock
+#: model:ir.module.module,shortdesc:stock.module_meta_information
+msgid "Inventory Management"
+msgstr "Нөөцийн менежмент"
 
 #. module: stock
 #: view:product.template:0
@@ -1620,43 +2589,71 @@ msgid "Properties"
 msgstr "Шинж чанар"
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Error, no partner !"
+msgstr ""
+
+#. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
 #: model:ir.model,name:stock.model_stock_incoterms
-#: model:ir.ui.menu,name:stock.menu_action_incoterms_tree
 #: view:stock.incoterms:0
 msgid "Incoterms"
 msgstr "Инкотерм"
 
 #. module: stock
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
+#: report:stock.inventory.move:0
 msgid "Total:"
 msgstr "Нийт:"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIALOG_AUTHENTICATION"
+#: help:stock.incoterms,name:0
+msgid ""
+"Incoterms are series of sales terms.They are used to divide transaction "
+"costs and responsibilities between buyer and seller and reflect state-of-the-"
+"art transportation practices."
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_OUT"
+#: help:stock.fill.inventory,recursive:0
+msgid ""
+"If checked, products contained in child locations of selected location will "
+"be included as well."
 msgstr ""
 
 #. module: stock
-#: wizard_field:stock.move.track,init,tracking_prefix:0
+#: field:stock.move.track,tracking_prefix:0
 msgid "Tracking prefix"
+msgstr "Тээвэрлэлтийн урьдчилсан нөхцөл"
+
+#. module: stock
+#: field:stock.inventory,name:0
+msgid "Inventory Reference"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,allocation_method:0
-msgid "Nearest"
-msgstr "Орчим"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Internal picking"
+msgstr ""
 
 #. module: stock
-#: wizard_field:stock.location.products,init,to_date:0
+#: view:stock.location.product:0
+msgid "Open Product"
+msgstr ""
+
+#. module: stock
+#: field:stock.location.product,to_date:0
 msgid "To"
 msgstr "Төгсгөл"
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Process"
+msgstr ""
 
 #. module: stock
 #: field:stock.production.lot.revision,name:0
@@ -1664,36 +2661,48 @@ msgid "Revision Name"
 msgstr "Хяналтын нэр"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_SELECT_COLOR"
-msgstr ""
+#: model:ir.model,name:stock.model_stock_warehouse
+#: model:ir.ui.menu,name:stock.menu_stock_root
+#: view:stock.warehouse:0
+msgid "Warehouse"
+msgstr "Агуулах"
 
 #. module: stock
-#: view:stock.inventory:0
-msgid "Confirm Inventory"
-msgstr "Нөөц батлах"
+#: view:stock.location.product:0
+msgid ""
+"(Keep empty to open the current situation. Adjust HH:MM:SS to 00:00:00 to "
+"filter all resources of the day for the 'From' date and 23:59:59 for the "
+"'To' date)"
+msgstr ""
 
 #. module: stock
 #: view:product.category:0
 msgid "Accounting Stock Properties"
-msgstr "Барааны шинж чанарын бүртгэл"
+msgstr "Дансны агуулахын мэдээлэл"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_NO"
+#: model:ir.actions.act_window,name:stock.action_picking_tree_out
+msgid "Customers Packings"
 msgstr ""
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_workshop
-msgid "Workshop"
-msgstr "Ажлын хэсэг"
-
-#. module: stock
+#: selection:report.stock.inventory,state:0
+#: view:report.stock.move:0
+#: selection:report.stock.move,state:0
 #: selection:stock.inventory,state:0
+#: view:stock.move:0
 #: selection:stock.move,state:0
+#: view:stock.picking:0
 #: selection:stock.picking,state:0
 msgid "Done"
 msgstr "Дууссан"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_change_standard_price
+#: model:ir.model,name:stock.model_stock_change_standard_price
+#: view:stock.change.standard.price:0
+msgid "Change Standard Price"
+msgstr ""
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations_virtual
@@ -1701,14 +2710,9 @@ msgid "Virtual Locations"
 msgstr "Виртуаль байршил"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REDO"
-msgstr ""
-
-#. module: stock
-#: model:stock.location,name:stock.stock_location_company
-msgid "Tiny sprl"
-msgstr "Tiny sprl"
+#: selection:stock.picking,invoice_state:0
+msgid "To Be Invoiced"
+msgstr "Ирээдүйн нэхэмжлэл"
 
 #. module: stock
 #: field:stock.inventory,date_done:0
@@ -1716,13 +2720,20 @@ msgid "Date done"
 msgstr "Бэлэн болсон огноо"
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Please put a partner on the picking list if you want to generate invoice."
+msgstr ""
+
+#. module: stock
 #: selection:stock.move,priority:0
 msgid "Not urgent"
 msgstr "Яаралтай бус"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_CLOSE"
+#: view:stock.move:0
+msgid "To Do"
 msgstr ""
 
 #. module: stock
@@ -1732,51 +2743,70 @@ msgid "Warehouses"
 msgstr "Агуулах"
 
 #. module: stock
-#: help:product.product,track_outgoing:0
-msgid "Force to use a Production Lot during deliveries"
+#: field:stock.journal,user_id:0
+msgid "Responsible"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Split move lines in two"
-msgstr "Шилжих шугамыг 2 хуваах"
+#: model:ir.actions.act_window,name:stock.action_stock_inventory_report
+#: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
+#: view:report.stock.inventory:0
+msgid "Inventory Analysis"
+msgstr ""
 
 #. module: stock
-#: wizard_field:stock.invoice_onshipping,init,journal_id:0
+#: field:stock.invoice.onshipping,journal_id:0
 msgid "Destination Journal"
 msgstr "Журналын зориулалт"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.act_stock_production_lot_2_stock_report_prodlots
+#: model:ir.actions.act_window,name:stock.act_stock_tracking_lot_2_stock_report_tracklots
 #: model:stock.location,name:stock.stock_location_stock
 msgid "Stock"
 msgstr "Бараа"
 
 #. module: stock
-#: rml:lot.location:0
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: model:ir.model,name:stock.model_product_product
+#: model:ir.ui.menu,name:stock.menu_stock_product
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,product_id:0
+#: field:report.stock.lines.date,product_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,product_id:0
 #: field:stock.inventory.line,product_id:0
+#: field:stock.inventory.line.split,product_id:0
+#: report:stock.inventory.move:0
+#: view:stock.move:0
 #: field:stock.move,product_id:0
+#: field:stock.move.consume,product_id:0
+#: field:stock.move.memory,product_id:0
+#: field:stock.move.scrap,product_id:0
+#: field:stock.move.split,product_id:0
+#: view:stock.production.lot:0
 #: field:stock.production.lot,product_id:0
 #: field:stock.report.prodlots,product_id:0
+#: field:stock.report.tracklots,product_id:0
+#, python-format
 msgid "Product"
-msgstr "Бүтээгдэхүүн"
+msgstr "Бараа"
 
 #. module: stock
-#: wizard_button:stock.return.picking,init,return:0
-msgid "Return"
-msgstr "Буцаах"
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Invoicing"
+msgstr ""
 
 #. module: stock
-#: field:stock.picking,auto_picking:0
-msgid "Auto-Packing"
-msgstr "Автомат савлагаа"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Please provide Proper Quantity !"
+msgstr ""
 
 #. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
-msgstr ""
+msgstr "UOS бараа"
 
 #. module: stock
 #: field:stock.location,posz:0
@@ -1784,14 +2814,35 @@ msgid "Height (Z)"
 msgstr "Өндөр (Z)"
 
 #. module: stock
-#: field:stock.inventory.line,product_uom:0
-#: field:stock.move,product_uom:0
-msgid "Product UOM"
-msgstr "Барааны Х.Нэгж"
+#: field:stock.ups,weight:0
+msgid "Lot weight"
+msgstr ""
 
 #. module: stock
-#: rml:lot.stock.overview:0
-#: rml:lot.stock.overview_all:0
+#: model:ir.model,name:stock.model_stock_move_consume
+#: view:stock.move.consume:0
+msgid "Consume Products"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Insufficient Stock in Lot !"
+msgstr ""
+
+#. module: stock
+#: field:stock.location,parent_right:0
+msgid "Right Parent"
+msgstr ""
+
+#. module: stock
+#: field:stock.picking,address_id:0
+msgid "Address"
+msgstr ""
+
+#. module: stock
+#: report:lot.stock.overview:0
+#: report:lot.stock.overview_all:0
 msgid "Variants"
 msgstr "Хувилбарууд"
 
@@ -1806,56 +2857,45 @@ msgid "Suppliers"
 msgstr "Нийлүүлэгчид"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUMP_TO"
+#: field:report.stock.inventory,value:0
+#: field:report.stock.move,value:0
+msgid "Total Value"
 msgstr ""
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-tools"
+#: field:stock.move.memory,wizard_id:0
+msgid "Wizard"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.report.xml,name:stock.report_location_overview
-msgid "Location Overview"
-msgstr "Байрлалын ерөнхий байдал"
-
-#. module: stock
-#: model:ir.actions.wizard,name:stock.location_product
+#: model:ir.actions.act_window,name:stock.action_view_stock_location_product
+#: model:ir.model,name:stock.model_stock_location_product
 msgid "Products by Location"
 msgstr "Бүтээгдэхүүний байрлал"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNDO"
+#: field:stock.fill.inventory,recursive:0
+msgid "Include children"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.wizard,name:stock.move_split
-msgid "Split move line"
-msgstr "Шилжих шугам хуваах"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-sale"
+#: model:stock.location,name:stock.stock_location_components
+msgid "Shelf 1"
 msgstr ""
 
 #. module: stock
-#: field:stock.production.lot,name:0
-msgid "Serial"
-msgstr "Сериал"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ADD"
+#: view:stock.move:0
+msgid "Order"
 msgstr ""
 
 #. module: stock
-#: field:stock.location,chained_delay:0
-msgid "Chained Delay (days)"
-msgstr "Цуваа зогссон(өдрүүд)"
+#: field:stock.tracking,name:0
+msgid "Pack Reference"
+msgstr ""
 
 #. module: stock
+#: view:report.stock.move:0
+#: field:report.stock.move,location_id:0
 #: field:stock.move,location_id:0
 msgid "Source Location"
 msgstr "Гарах байршил"
@@ -1866,237 +2906,25 @@ msgid "Accounting Entries"
 msgstr "Дансны бичилт"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_PAUSE"
-msgstr ""
-
-#. module: stock
-#: view:product.product:0
-msgid "Lots"
-msgstr "Цувралын дугаарууд"
-
-#. module: stock
-#: selection:stock.picking,move_type:0
-msgid "All at once"
-msgstr "Нэг мөсөн"
-
-#. module: stock
-#: field:product.product,track_outgoing:0
-msgid "Track Outging Lots"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_stock_line_date
-#: model:ir.model,name:stock.model_report_stock_lines_date
-#: model:ir.ui.menu,name:stock.menu_report_stock_line_date
-#: view:report.stock.lines.date:0
-msgid "Dates of Inventories"
-msgstr "Нөөцөлсөн огноо"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PRINT_PREVIEW"
-msgstr ""
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_FIND"
-msgstr ""
-
-#. module: stock
-#: view:stock.inventory:0
-msgid "Lot Inventory"
-msgstr "Цувралын дугаарын нөөц"
-
-#. module: stock
-#: help:stock.location,chained_auto_packing:0
-msgid ""
-"This is used only if you selected a chained location type.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
-msgstr ""
-
-#. module: stock
-#: field:stock.location,icon:0
-msgid "Icon"
-msgstr "Зураг"
-
-#. module: stock
-#: field:stock.tracking,name:0
-msgid "Tracking"
-msgstr ""
-
-#. module: stock
-#: wizard_button:stock.move.track,init,track:0
-#: wizard_button:stock.picking.make,init,make:0
-msgid "Ok"
-msgstr "Тийм"
-
-#. module: stock
-#: help:product.template,property_stock_account_input:0
-msgid ""
-"This account will be used, instead of the default one, to value input stock"
-msgstr ""
-
-#. module: stock
-#: model:stock.location,name:stock.stock_location_8
-msgid "Non European Customers"
-msgstr "Европын харилцагч биш"
-
-#. module: stock
-#: model:stock.location,name:stock.stock_location_components
-msgid "Components"
-msgstr "Бүрэлдэхүүн хэсэг"
-
-#. module: stock
-#: wizard_view:inventory.merge,init:0
-msgid "Do you want to merge theses inventories ?"
-msgstr "Эдгээр нөөцийг нэгтгэхийг та хүсч байна уу?"
-
-#. module: stock
-#: field:stock.picking,max_date:0
-msgid "Max. Planned Date"
-msgstr ""
-
-#. module: stock
-#: view:stock.inventory:0
-msgid "Posted Inventory"
-msgstr "Зарласан нөөц"
-
-#. module: stock
-#: selection:stock.picking,type:0
-msgid "Getting Goods"
-msgstr ""
-
-#. module: stock
-#: view:stock.location:0
-msgid "Stock Location"
-msgstr "Барааны байршил"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_PLAY"
-msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree_delivery
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree_delivery
-msgid "Delivery Orders"
-msgstr "Хүргэх захиалгууд"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_OPEN"
-msgstr "Бараа_Нээх"
-
-#. module: stock
-#: help:res.partner,property_stock_customer:0
-msgid ""
-"This stock location will be used, instead of the default one, as the "
-"destination location for goods you send to this partner"
-msgstr ""
-
-#. module: stock
-#: selection:stock.move,state:0
-#: selection:stock.picking,state:0
-msgid "Confirmed"
-msgstr "Баталсан"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_PREVIOUS"
-msgstr ""
-
-#. module: stock
 #: view:stock.move:0
-msgid "Confirm"
-msgstr "Бататгах"
-
-#. module: stock
 #: view:stock.picking:0
-msgid "Check Availability"
+msgid "Unit Of Measure"
 msgstr ""
 
 #. module: stock
-#: wizard_view:inventory.merge,init:0
-#: model:ir.actions.wizard,name:stock.wizard_merge_inventory
-msgid "Merge inventories"
-msgstr "Нөөцийг нэгтгэх"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_location_tree
-#: model:ir.ui.menu,name:stock.menu_action_location_tree
-msgid "Stock Locations Structure"
-msgstr "Бараа байрлах бүтэц"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DISCONNECT"
-msgstr "Бараа_тусгаарлах"
-
-#. module: stock
-#: help:product.template,property_stock_account_output:0
-msgid ""
-"This account will be used, instead of the default one, to value output stock"
+#: report:stock.picking.list:0
+msgid "Total"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Confirm (Do Not Process Now)"
-msgstr "Батлах(Одоо үйл ажиллагаа хийхгүй)"
-
-#. module: stock
-#: field:stock.tracking,move_ids:0
-msgid "Moves Tracked"
+#: model:stock.location,name:stock.stock_location_intermediatelocation0
+msgid "Internal Shippings"
 msgstr ""
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.next_id_61
-msgid "Reporting"
-msgstr "Мэдээлэл"
-
-#. module: stock
-#: model:ir.actions.wizard,name:stock.wizard_invoice_onshipping
-#: wizard_button:stock.invoice_onshipping,init,create_invoice:0
-msgid "Create invoice"
-msgstr "Нэхэмжлэл үүсгэх"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_NETWORK"
-msgstr "Бараа_Сүлжээ"
-
-#. module: stock
-#: model:ir.ui.menu,name:stock.menu_stock_configuration
-msgid "Configuration"
-msgstr "Тохиргоо"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-project"
+#: field:stock.change.standard.price,enable_stock_in_out_acc:0
+msgid "Enable Related Account"
 msgstr ""
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.act_product_product_2_stock_report_prodlots
-#: model:ir.actions.act_window,name:stock.act_stock_location_2_stock_report_prodlots
-#: model:ir.actions.act_window,name:stock.action_stock_report_prodlots_form
-#: model:ir.ui.menu,name:stock.menu_stock_report_prodlots
-#: view:stock.report.prodlots:0
-msgid "Stock by Lots"
-msgstr "Барааны цувралын жагсаалт"
-
-#. module: stock
-#: field:stock.move,auto_validate:0
-msgid "Auto Validate"
-msgstr "Автоматаар батлах"
-
-#. module: stock
-#: field:stock.location,chained_auto_packing:0
-#: selection:stock.location,chained_auto_packing:0
-msgid "Automatic Move"
-msgstr "Автомат хөдөлгөөн"
 
 #. module: stock
 #: field:stock.location,stock_virtual_value:0
@@ -2104,14 +2932,490 @@ msgid "Virtual Stock Value"
 msgstr "Бодит бус барааны өртөг"
 
 #. module: stock
-#: selection:stock.move,state:0
-#: selection:stock.picking,state:0
-msgid "Canceled"
-msgstr "Цуцлагдсан"
+#: view:product.product:0
+#: view:stock.inventory.line.split:0
+#: view:stock.move.split:0
+msgid "Lots"
+msgstr "Цувралын дугаарууд"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_GOTO_LAST"
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "New pack"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+msgid "Destination"
+msgstr ""
+
+#. module: stock
+#: selection:stock.picking,move_type:0
+msgid "All at once"
+msgstr "Нэг мөсөн"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"Quantities, UoMs, Products and Locations cannot be modified on stock moves "
+"that have already been processed (except by the Administrator)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Productions"
+msgstr ""
+
+#. module: stock
+#: view:stock.picking:0
+msgid "To Invoice"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Return lines"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_lines_date
+#: view:report.stock.lines.date:0
+msgid "Dates of Inventories"
+msgstr "Нөөцөлсөн огноо"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Total incoming quantity"
+msgstr ""
+
+#. module: stock
+#: field:report.stock.move,product_qty_out:0
+msgid "Out Qty"
+msgstr ""
+
+#. module: stock
+#: field:stock.production.lot,move_ids:0
+msgid "Moves for this production lot"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#, python-format
+msgid "Message !"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Put in current pack"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Lot Inventory"
+msgstr "Серийн бүртгэл"
+
+#. module: stock
+#: view:stock.move:0
+msgid "Reason"
+msgstr ""
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Delivery Order:"
+msgstr ""
+
+#. module: stock
+#: field:stock.location,icon:0
+msgid "Icon"
+msgstr "Тэмдэг зураг"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "UserError"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory.line.split:0
+#: view:stock.move.consume:0
+#: view:stock.move.scrap:0
+#: view:stock.move.split:0
+#: view:stock.move.track:0
+#: view:stock.split.into:0
+msgid "Ok"
+msgstr "Тийм"
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_8
+msgid "Non European Customers"
+msgstr "Европын харилцагч биш"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/stock_fill_inventory.py:0
+#: code:addons/stock/wizard/stock_splitinto.py:0
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid ""
+"There is no inventory variation account defined on the product category: "
+"\"%s\" (id: %d)"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory.merge:0
+msgid "Do you want to merge theses inventories ?"
+msgstr "Эдгээр нөөцийг нэгтгэхийг та хүсч байна уу?"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: stock
+#: field:stock.location,chained_location_type:0
+msgid "Chained Location Type"
+msgstr "Хэлхээт байрлалын төрөл"
+
+#. module: stock
+#: help:stock.picking,move_type:0
+msgid "It specifies goods to be delivered all at once or by direct delivery"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "This picking list does not require invoicing."
+msgstr ""
+
+#. module: stock
+#: selection:report.stock.move,type:0
+#: selection:stock.location,chained_picking_type:0
+#: selection:stock.picking,type:0
+msgid "Getting Goods"
+msgstr "Барааг хүлээж авах"
+
+#. module: stock
+#: help:stock.location,chained_location_type:0
+msgid ""
+"Determines whether this location is chained to another location, i.e. any "
+"incoming product in this location \n"
+"should next go to the chained location. The chained location is determined "
+"according to the type :\n"
+"* None: No chaining at all\n"
+"* Customer: The chained location will be taken from the Customer Location "
+"field on the Partner form of the Partner that is specified in the Picking "
+"list of the incoming products.\n"
+"* Fixed Location: The chained location is taken from the next field: Chained "
+"Location if Fixed."
+msgstr ""
+"Тухайн байрлал дээр бараа орлогод авахад залгуулаад ирсэн тоо хэмжээгээр өөр "
+"байрлал руу зарлага гаргах агуулахын баримтыг систем автоматаар үүсгэх "
+"эсэхийг тодорхойлно. Үүнийг хэлхээт хөдөлгөөн гэх ба дараах төрлүүдээр "
+"хийгдэнэ :\n"
+"* Хоосон: Уг байрлалаас хэлхээт хөдөлгөөн хийгдэхгүй\n"
+"* Хэрэглэгч: Уг байрлал дээр орлого авагдахад дагаад хэрэглэгч байрлал руу "
+"зарлага хийгдэх баримт автоматаар үүснэ\n"
+"* Тогтмол байрлал: Уг байрлал дээр орлого авагдахад дагаад өөр байрлал руу "
+"зарлага хийгдэх баримт үүснэ. Хэлхээт байрлал талбарт зарлага хийх байрлалыг "
+"сонгож өгнө."
+
+#. module: stock
+#: code:addons/stock/wizard/stock_inventory_merge.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_location_tree
+msgid ""
+"This is the structure of your company's warehouses and locations. You can "
+"click on a location in order to get the list of the products and their stock "
+"level in this particular location and all its children."
+msgstr ""
+
+#. module: stock
+#: help:res.partner,property_stock_customer:0
+msgid ""
+"This stock location will be used, instead of the default one, as the "
+"destination location for goods you send to this partner"
+msgstr ""
+"энэ агуулахын байршил нь заяамал агуулахынх нь оронд захиалагч руу илгээсэн "
+"барааны хүрэх газар болж ашиглагдана"
+
+#. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
+#: selection:stock.inventory,state:0
+#: selection:stock.move,state:0
+#: view:stock.picking:0
+#: selection:stock.picking,state:0
+msgid "Confirmed"
+msgstr "Баталсан"
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Confirm"
+msgstr "Бататгах"
+
+#. module: stock
+#: help:stock.location,icon:0
+msgid "Icon show in  hierarchical tree view"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_view_stock_merge_inventories
+#: view:stock.inventory.merge:0
+msgid "Merge inventories"
+msgstr "Нөөцийг нэгтгэх"
+
+#. module: stock
+#: help:stock.change.product.qty,new_quantity:0
+msgid "This quantity is expressed in the Default UoM of the product."
+msgstr ""
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Reception:"
+msgstr ""
+
+#. module: stock
+#: help:stock.location,scrap_location:0
+msgid ""
+"Check this box to allow using this location to put scrapped/damaged goods."
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.act_relate_picking
+msgid "Related Picking"
+msgstr "Холбоотой агуулахын баримт"
+
+#. module: stock
+#: view:report.stock.move:0
+msgid "Total outgoing quantity"
+msgstr ""
+
+#. module: stock
+#: field:stock.picking,backorder_id:0
+msgid "Back Order of"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#: help:stock.move.memory,cost:0
+#, python-format
+msgid "Unit Cost for this product line"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_category
+#: view:report.stock.inventory:0
+#: field:report.stock.inventory,product_categ_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,categ_id:0
+msgid "Product Category"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_change_product_qty.py:0
+#, python-format
+msgid "INV: "
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.next_id_61
+msgid "Reporting"
+msgstr "Тайлан"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid " for the "
+msgstr ""
+
+#. module: stock
+#: view:stock.split.into:0
+msgid "Quantity to leave in the current pack"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
+#: view:stock.invoice.onshipping:0
+msgid "Create invoice"
+msgstr "Нэхэмжлэл үүсгэх"
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_tracking_form
+msgid ""
+"This is the list of all your packs. After having selected a Pack, you can "
+"get the up-stream or down-stream traceability of the products contained in "
+"the pack."
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_configuration
+msgid "Configuration"
+msgstr "Тохиргоо"
+
+#. module: stock
+#: field:stock.inventory.line.split,use_exist:0
+#: field:stock.move.split,use_exist:0
+msgid "Existing Lots"
+msgstr ""
+
+#. module: stock
+#: field:product.product,location_id:0
+#: view:stock.location:0
+msgid "Stock Location"
+msgstr "Барааны байршил"
+
+#. module: stock
+#: help:stock.change.standard.price,new_price:0
+msgid ""
+"If cost price is increased, stock variation account will be debited and "
+"stock output account will be credited with the value = (difference of amount "
+"* quantity available).\n"
+"If cost price is decreased, stock variation account will be creadited and "
+"stock input account will be debited."
+msgstr ""
+
+#. module: stock
+#: field:stock.location,chained_journal_id:0
+msgid "Chaining Journal"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Not enough stock, unable to reserve the products."
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_customers
+msgid "Customers"
+msgstr "Харилцагчид"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is cancelled."
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_reception_picking_move
+msgid ""
+"You will find here the list of all products you are waiting for, according "
+"to your preceding purchase orders. Once you receive an order, you can filter "
+"based on the name of the supplier or the purchase order reference. Then you "
+"can confirm all products received using the buttons on the right of each "
+"line."
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory.line:0
+msgid "Stock Inventory Lines"
+msgstr "Барааны нөөцийн шугам"
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
+#, python-format
+msgid "Process Document"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Deliveries"
+msgstr ""
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Additional info"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+#: field:stock.move,tracking_id:0
+msgid "Pack"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+#: view:stock.picking:0
+msgid "Date Expected"
+msgstr ""
+
+#. module: stock
+#: model:ir.actions.act_window,help:stock.action_picking_tree4
+msgid ""
+"The Incoming Shipments is the list of all orders you will receive from your "
+"supplier. An incoming shipment contains a list of products to be received "
+"according to the original purchase order. You can validate the shipment "
+"totally or partially."
+msgstr ""
+
+#. module: stock
+#: field:stock.move,auto_validate:0
+msgid "Auto Validate"
+msgstr "Автоматаар батлах"
+
+#. module: stock
+#: report:stock.picking.list:0
+msgid "Weight"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_product_template
+msgid "Product Template"
+msgstr ""
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "December"
+msgstr ""
+
+#. module: stock
+#: selection:stock.location,chained_auto_packing:0
+msgid "Automatic Move"
+msgstr "Автоматаар хөдөлгөөн хийх"
+
+#. module: stock
+#: help:stock.production.lot,name:0
+msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
+msgstr ""
+
+#. module: stock
+#: view:stock.picking:0
+msgid "Return Products"
+msgstr ""
+
+#. module: stock
+#: view:stock.inventory:0
+msgid "Validate Inventory"
+msgstr ""
+
+#. module: stock
+#: help:stock.move,price_currency_id:0
+msgid ""
+"Technical field used to record the currency chosen by the user during a "
+"picking confirmation (when average price costing method is used)"
+msgstr ""
+
+#. module: stock
+#: model:ir.ui.menu,name:stock.menu_stock_products_moves
+msgid "Products Moves"
 msgstr ""
 
 #. module: stock
@@ -2120,29 +3424,43 @@ msgid "Invoiced"
 msgstr "Нэхэмжилсэн"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_DIRECTORY"
-msgstr "Бараа_Удирдлага"
-
-#. module: stock
-#: help:product.template,property_stock_production:0
-msgid ""
-"For the current product (template), this stock location will be used, "
-"instead of the default one, as the source location for stock moves generated "
-"by production orders"
+#: field:stock.move,address_id:0
+msgid "Destination Address"
 msgstr ""
 
 #. module: stock
-#: view:stock.picking.move.wizard:0
-msgid "Add"
-msgstr "Нэмэх"
+#: field:stock.picking,max_date:0
+msgid "Max. Expected Date"
+msgstr ""
 
 #. module: stock
+#: field:stock.picking,auto_picking:0
+msgid "Auto-Picking"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_shop1
+msgid "Shop 2"
+msgstr ""
+
+#. module: stock
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr ""
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:report.stock.move:0
+#: selection:report.stock.move,type:0
+#: view:stock.location:0
+#: selection:stock.location,chained_picking_type:0
 #: selection:stock.picking,type:0
 msgid "Internal"
 msgstr "Дотоод"
 
 #. module: stock
+#: selection:report.stock.inventory,state:0
+#: selection:report.stock.move,state:0
 #: selection:stock.inventory,state:0
 #: selection:stock.move,state:0
 #: selection:stock.picking,state:0
@@ -2150,57 +3468,111 @@ msgid "Draft"
 msgstr "Ноорог"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUSTIFY_CENTER"
+#: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
+#: report:stock.inventory.move:0
+msgid "Stock Inventory"
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree3
-#: model:ir.actions.act_window,name:stock.action_picking_tree8
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree3
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree8
-msgid "Confirmed Packing Waiting Availability"
+#: help:report.stock.inventory,state:0
+msgid ""
+"When the stock move is created it is in the 'Draft' state.\n"
+" After that it is set to 'Confirmed' state.\n"
+" If stock is available state is set to 'Avaiable'.\n"
+" When the picking it done the state is 'Done'.              \n"
+"The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
 
 #. module: stock
-#: field:stock.location,posy:0
-msgid "Shelves (Y)"
-msgstr "Багана (Y)"
-
-#. module: stock
-#: model:ir.actions.wizard,name:stock.wizard_merge_inventory_zero
-msgid "Set Stock to 0"
-msgstr "Барааг тэглэх"
-
-#. module: stock
-#: view:stock.location:0
-msgid "Localisation"
-msgstr "Байршуулалт"
-
-#. module: stock
-#: wizard_view:inventory.merge.stock.zero,init:0
-msgid "Do you want to set stocks to zero ?"
-msgstr "Барааг тэглэхийг хүсч байна уу?"
-
-#. module: stock
-#: selection:stock.picking,move_type:0
-msgid "Direct Delivery"
-msgstr "Шууд хүргэлт"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_REVERT_TO_SAVED"
+#: view:board.board:0
+msgid "Outgoing Products Delay"
 msgstr ""
 
 #. module: stock
-#: field:product.product,track_production:0
-msgid "Track Production Lots"
+#: field:stock.move.split.lines,use_exist:0
+msgid "Existing Lot"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Please specify at least one non-zero quantity!"
+msgstr ""
+
+#. module: stock
+#: help:product.template,property_stock_procurement:0
+msgid ""
+"For the current product, this stock location will be used, instead of the "
+"default one, as the source location for stock moves generated by procurements"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is ready to process."
+msgstr ""
+
+#. module: stock
+#: help:stock.picking,origin:0
+msgid "Reference of the document that produced this picking."
+msgstr ""
+
+#. module: stock
+#: field:stock.fill.inventory,set_stock_zero:0
+msgid "Set to zero"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "None of these picking lists require invoicing."
+msgstr ""
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "November"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Unplanned Qty"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "is scheduled"
+msgstr ""
+
+#. module: stock
+#: field:stock.location,chained_company_id:0
+msgid "Chained Company"
 msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
-msgid "Split in Two"
-msgstr "2 хуваах"
+msgid "Check Availability"
+msgstr "Бэлэн байдлыг шалгах"
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "January"
+msgstr ""
+
+#. module: stock
+#: help:product.product,track_incoming:0
+msgid ""
+"Forces to specify a Production Lot for all moves containing this product and "
+"coming from a Supplier Location"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_product_stock_move_futur_open
@@ -2208,53 +3580,67 @@ msgid "Future Stock Moves"
 msgstr "Ирээдүйд шилжүүлэх бараа"
 
 #. module: stock
-#: help:product.template,property_stock_procurement:0
-msgid ""
-"For the current product (template), this stock location will be used, "
-"instead of the default one, as the source location for stock moves generated "
-"by procurements"
+#: field:stock.move,move_history_ids2:0
+msgid "Move History (parent moves)"
 msgstr ""
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_picking_move_wizard
-msgid "stock.picking.move.wizard"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Stock"
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#, python-format
+msgid "Error"
+msgstr ""
+
+#. module: stock
+#: field:stock.ups.final,xmlfile:0
+msgid "XML File"
+msgstr ""
+
+#. module: stock
+#: view:stock.change.product.qty:0
+msgid "Select Quantity"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/wizard/stock_partial_picking.py:0
 #: model:res.request.link,name:stock.req_link_tracking
+#: field:stock.inventory.line,prod_lot_id:0
+#: report:stock.inventory.move:0
 #: field:stock.move,prodlot_id:0
+#: field:stock.move.memory,prodlot_id:0
+#: field:stock.move.split.lines.exist,prodlot_id:0
 #: view:stock.production.lot:0
+#: field:stock.production.lot,name:0
+#, python-format
 msgid "Production Lot"
 msgstr "Үйлдвэрлэлийн цуврал"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_traceability
-#: model:ir.ui.menu,name:stock.next_id_62
+#: view:stock.move:0
+#: view:stock.picking:0
+#: view:stock.production.lot:0
+#: view:stock.tracking:0
 msgid "Traceability"
 msgstr "Мөрдөгдөх чанар"
 
 #. module: stock
-#: field:stock.picking,date:0
-msgid "Date Order"
-msgstr "Захиалсан огноо"
-
-#. module: stock
-#: selection:stock.invoice_onshipping,init,type:0
-msgid "Supplier Invoice"
-msgstr "Нийлүүлэгчийн нэхэмжлэл"
+#: view:stock.picking:0
+msgid "To invoice"
+msgstr ""
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
 #: model:ir.ui.menu,name:stock.menu_action_location_form
+#: view:stock.picking:0
 msgid "Locations"
-msgstr "Байршлууд"
-
-#. module: stock
-#: help:stock.move,date_planned:0
-msgid ""
-"Scheduled date for the movement of the products or real date if the move is "
-"done."
-msgstr ""
+msgstr "Байрлалууд"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2262,101 +3648,201 @@ msgid "General Information"
 msgstr "Ерөнхий мэдээлэл"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-product"
+#: field:stock.production.lot,prefix:0
+msgid "Prefix"
 msgstr ""
 
 #. module: stock
-#: wizard_button:stock.partial_picking,end2,end:0
-msgid "Close"
-msgstr "Хаах"
-
-#. module: stock
-#: model:ir.actions.report.xml,name:stock.report_move_labels
-msgid "Print Item Labels"
-msgstr "Шошго хэвлэх"
+#: code:addons/stock/wizard/stock_splitinto.py:0
+#, python-format
+msgid ""
+"Total quantity after split exceeds the quantity to split for this product: "
+"\"%s\" (id: %d)"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
+#: field:stock.partial.move,product_moves:0
 msgid "Moves"
 msgstr "Шилжих"
 
 #. module: stock
-#: field:stock.move,location_dest_id:0
+#: view:report.stock.move:0
+#: field:report.stock.move,location_dest_id:0
 #: field:stock.picking,location_dest_id:0
 msgid "Dest. Location"
 msgstr "Хүрэх байршил"
 
 #. module: stock
-#: wizard_button:stock.move.split,init,split:0
-msgid "Split"
-msgstr "Хуваах"
+#: help:stock.move,product_packaging:0
+msgid ""
+"It specifies attributes of packaging like type, quantity of packaging,etc."
+msgstr ""
 
 #. module: stock
-#: field:stock.location,account_id:0
-msgid "Inventory Account"
-msgstr "Нөөцийн данс"
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "quantity."
+msgstr ""
 
 #. module: stock
-#: wizard_view:inventory.merge.stock.zero,init:0
-msgid "Set Stocks to Zero"
-msgstr "Барааг  тэглэх"
+#: model:ir.model,name:stock.model_stock_move_memory
+msgid "stock.move.memory"
+msgstr ""
 
 #. module: stock
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: stock
+#: view:stock.move:0
+msgid "Expected"
+msgstr ""
+
+#. module: stock
+#: selection:report.stock.inventory,location_type:0
 #: model:stock.location,name:stock.location_production
 #: selection:stock.location,usage:0
 msgid "Production"
-msgstr "Үйлдвэрлэл"
+msgstr "Үйлдвэрлэлийн"
 
 #. module: stock
-#: model:ir.ui.menu,name:stock.menu_traceability_low
-msgid "Low Level"
-msgstr "Нам түвшин"
+#: view:stock.split.into:0
+msgid "Split Move"
+msgstr ""
 
 #. module: stock
-#: rml:stock.picking.list:0
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid ""
+"There are no products to return (only lines in Done state and not fully "
+"returned yet can be returned)!"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_move_split
+msgid "Split in Production lots"
+msgstr ""
+
+#. module: stock
+#: view:report.stock.inventory:0
+msgid "Real"
+msgstr ""
+
+#. module: stock
+#: report:stock.picking.list:0
+#: view:stock.production.lot.revision:0
 #: field:stock.production.lot.revision,description:0
 msgid "Description"
 msgstr "Тодорхойлолт"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_INDENT"
+#: selection:report.stock.move,month:0
+msgid "May"
 msgstr ""
 
 #. module: stock
-#: selection:stock.picking,type:0
-msgid "Delivery"
-msgstr "Хүргэлт"
+#: code:addons/stock/wizard/stock_partial_move.py:0
+#, python-format
+msgid "Deliver"
+msgstr ""
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action5
-#: model:ir.actions.wizard,name:stock.action4
-#: model:ir.actions.wizard,name:stock.action_lot2
+#: help:product.template,property_stock_account_output:0
+msgid ""
+"When doing real-time inventory valuation, counterpart Journal Items for all "
+"outgoing stock moves will be posted in this account. If not set on the "
+"product, the one from the product category is used."
+msgstr ""
+
+#. module: stock
+#: view:stock.tracking:0
 msgid "Upstream traceability"
+msgstr "Дээд хөдөлгөөнийг хянах"
+
+#. module: stock
+#: model:ir.actions.report.xml,name:stock.report_location_overview_all
+#: report:lot.stock.overview_all:0
+msgid "Location Content"
 msgstr ""
 
 #. module: stock
-#: field:product.category,property_stock_account_input_categ:0
-#: field:product.template,property_stock_account_input:0
-msgid "Stock Input Account"
-msgstr "Барааны орлогын данс"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Produced Qty"
+msgstr ""
 
 #. module: stock
-#: field:stock.location,chained_location_type:0
-msgid "Chained Location Type"
-msgstr "Хэлхээ байрлалын төрөл"
+#: field:product.category,property_stock_account_output_categ:0
+#: field:product.template,property_stock_account_output:0
+#: field:stock.change.standard.price,stock_account_output:0
+msgid "Stock Output Account"
+msgstr "Агуулахын зарлагын данс"
 
 #. module: stock
+#: view:stock.move:0
+msgid "Picking"
+msgstr ""
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_report_prodlots
+msgid "Stock report by production lots"
+msgstr "Барааны цувралаар хийгдсэн агуулахын тайлан"
+
+#. module: stock
+#: view:stock.location:0
 #: selection:stock.location,chained_location_type:0
+#: view:stock.move:0
 msgid "Customer"
-msgstr "Хэрэглэгч"
+msgstr "Хэрэглэгчийн"
 
 #. module: stock
-#: model:ir.actions.act_window,name:stock.action_location_tree_3
-#: model:ir.ui.menu,name:stock.menu_action_location_tree_3
-msgid "Locations' Values"
-msgstr "Байршлын өртөг"
+#: selection:report.stock.move,month:0
+msgid "February"
+msgstr ""
+
+#. module: stock
+#: view:stock.production.lot:0
+msgid "Production Lot Identification"
+msgstr ""
+
+#. module: stock
+#: field:stock.location,scrap_location:0
+#: view:stock.move.scrap:0
+msgid "Scrap Location"
+msgstr ""
+
+#. module: stock
+#: selection:report.stock.move,month:0
+msgid "April"
+msgstr "4 сар"
+
+#. module: stock
+#: view:report.stock.inventory:0
+#: view:stock.move:0
+msgid "Future"
+msgstr "Ирээдүй"
+
+#. module: stock
+#: field:stock.invoice.onshipping,invoice_date:0
+msgid "Invoiced date"
+msgstr "Нэхэмжилсэн огноо"
+
+#. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree
+#: view:stock.picking:0
+msgid "Outgoing Deliveries"
+msgstr "Гарч байгаа Хүргэлт"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/stock_invoice_onshipping.py:0
+#: code:addons/stock/wizard/stock_return_picking.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Анхааруулга !"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_output
@@ -2364,32 +3850,856 @@ msgid "Output"
 msgstr "Гаралт"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_JUSTIFY_RIGHT"
-msgstr ""
+#: selection:stock.move.split.lines,action:0
+msgid "Keep in one lot"
+msgstr "Нэг цувралд үлдээх"
 
 #. module: stock
-#: model:ir.model,name:stock.model_stock_inventory_line
-msgid "Inventory line"
-msgstr "Нөөцийн шугам"
+#: view:product.product:0
+msgid "Cost Price:"
+msgstr "Өртөг Үнэ:"
 
 #. module: stock
-#: view:stock.picking:0
-msgid "Others info"
-msgstr "Бусад мэдээлэл"
+#: help:stock.move,move_dest_id:0
+msgid "Optional: next stock move when chaining them"
+msgstr "Сонголттой: дараалсан хөдөлгөөний үе дах барааны дараагийн хөдөлгөөн"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_MEDIA_NEXT"
-msgstr ""
-
-#. module: stock
-#: view:stock.move:0
-#: view:stock.picking:0
-msgid "Move State"
-msgstr "Шилжих төлөв"
+#: view:report.stock.move:0
+#: field:report.stock.move,year:0
+msgid "Year"
+msgstr "Жил"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
 msgstr "Физик байршил"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_partial_move
+msgid "Partial Move"
+msgstr "Хэсэгчилсэн Хөдөлгөөн"
+
+#~ msgid "Move History"
+#~ msgstr "Хөдөлгөөний түүх"
+
+#~ msgid "Supplier Refund"
+#~ msgstr "Нийлүүлэгчийн буцаалт"
+
+#~ msgid "Invoice Status"
+#~ msgstr "Нэхэмжлэх арга"
+
+#~ msgid "Created Date"
+#~ msgstr "Үүсгэсэн огноо"
+
+#~ msgid "Create invoices"
+#~ msgstr "Нэхэмжлэл үүсгэх"
+
+#~ msgid "Serial"
+#~ msgstr "Сериал"
+
+#~ msgid "Add"
+#~ msgstr "Нэмэх"
+
+#~ msgid "Supplier Invoice"
+#~ msgstr "Нийлүүлэгчийн нэхэмжлэл"
+
+#~ msgid "Delivery"
+#~ msgstr "Хүргэлт"
+
+#~ msgid "STOCK_SAVE"
+#~ msgstr "Бараа хадгалах"
+
+#~ msgid "Total :"
+#~ msgstr "Нийт:"
+
+#~ msgid "Return packing"
+#~ msgstr "Савлагааг буцаах"
+
+#~ msgid "Amount"
+#~ msgstr "Хэмжээ"
+
+#~ msgid "Incoming Products"
+#~ msgstr "Бүтээгдэхүүнүүдийн  орлого"
+
+#~ msgid "Make Parcel"
+#~ msgstr "Баглаа хийх"
+
+#~ msgid "Products Sent"
+#~ msgstr "Илгээсэн бүтээгдэхүүнүүд"
+
+#~ msgid "Customer Refund"
+#~ msgstr "Харилцагч буцааж төлөх"
+
+#~ msgid "Stock location"
+#~ msgstr "Барааны байрлал"
+
+#~ msgid "Status"
+#~ msgstr "Төлөв"
+
+#~ msgid "Move Lines"
+#~ msgstr "Шилжих шугамууд"
+
+#~ msgid "Stock Level 1"
+#~ msgstr "Барааны түвшин-1"
+
+#~ msgid "Stock Properties"
+#~ msgstr "Барааны шинж чанар"
+
+#~ msgid "Draft Moves"
+#~ msgstr "Ноорог шилжүүлэх"
+
+#~ msgid "Product Id"
+#~ msgstr "Бүтээгдэхүүний дугаар"
+
+#~ msgid "Customer Invoice"
+#~ msgstr "Харилцагчийн нэхэмжлэл"
+
+#~ msgid "New Reception Packing"
+#~ msgstr "Шинэ савлагаа хүлээн авах"
+
+#~ msgid "weight"
+#~ msgstr "Жин"
+
+#~ msgid "Non Assigned Products:"
+#~ msgstr "Эрсдэлгүй бүтээгдэхүүнүүд"
+
+#~ msgid "Finished products"
+#~ msgstr "Дууссан бүтээгдэхүүнүүд"
+
+#~ msgid "Date create"
+#~ msgstr "Үүсэх огноо"
+
+#~ msgid "Set to Zero"
+#~ msgstr "Тэглэх"
+
+#~ msgid "All Stock Moves"
+#~ msgstr "Бүх барааны шилжилт"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Алдаатай XML-н архитектур харах"
+
+#~ msgid "Date Created"
+#~ msgstr "Үүсгэсэн огноо"
+
+#~ msgid "Allocation Method"
+#~ msgstr "Хуваарилалтын арга"
+
+#~ msgid "Periodical Inventory"
+#~ msgstr "Тогтмол нөөц"
+
+#~ msgid "Draft Periodical Inventories"
+#~ msgstr "Ноорог тогтмол нөөц"
+
+#~ msgid "Origin Reference"
+#~ msgstr "Эх сурвалжийн лавлагаа"
+
+#~ msgid "Open Products"
+#~ msgstr "Нээлттэй бүтээгдэхүүнүүд"
+
+#~ msgid "Input Packing List"
+#~ msgstr "Савлагаанд орох жагсаалт"
+
+#~ msgid "Packing List"
+#~ msgstr "Савалгааны жагсаалт"
+
+#~ msgid "Not from Packing"
+#~ msgstr "Савлагаанаас биш"
+
+#~ msgid "Internal Ref"
+#~ msgstr "Дотоод реф"
+
+#~ msgid "Validate"
+#~ msgstr "Батлах"
+
+#~ msgid "Move lines"
+#~ msgstr "Шилжих шугам"
+
+#~ msgid "Partial packing"
+#~ msgstr "Дутуу савлагаа"
+
+#~ msgid "Delivery Orders to Process"
+#~ msgstr "Захиалга хүргэлийн үйл явц"
+
+#~ msgid "Units"
+#~ msgstr "Хэмжих нэгж"
+
+#~ msgid "Future Stock Forecast"
+#~ msgstr "Ирээдүйн барааг урьдчилан хэлэх"
+
+#~ msgid "Planned Date"
+#~ msgstr "Төлөвлөсөн огноо"
+
+#~ msgid "Outgoing Products"
+#~ msgstr "Бүтээгдэхүүний зардал"
+
+#~ msgid "Lots by location"
+#~ msgstr "Цувралуудын байрлал"
+
+#~ msgid "Future Delivery Orders"
+#~ msgstr "Ирээлүйн захиалга хүргэлт"
+
+#~ msgid "Set Stock to Zero"
+#~ msgstr "Барааг тэглэх"
+
+#~ msgid "Packing to Process"
+#~ msgstr "Савлах үйл явц"
+
+#~ msgid "Make packing"
+#~ msgstr "Савлагаа хийх"
+
+#~ msgid "Nearest"
+#~ msgstr "Орчим"
+
+#~ msgid "Workshop"
+#~ msgstr "Ажлын хэсэг"
+
+#~ msgid "Tiny sprl"
+#~ msgstr "Tiny sprl"
+
+#~ msgid "Split move lines in two"
+#~ msgstr "Шилжих шугамыг 2 хуваах"
+
+#~ msgid "Return"
+#~ msgstr "Буцаах"
+
+#~ msgid "Auto-Packing"
+#~ msgstr "Автомат савлагаа"
+
+#~ msgid "Location Overview"
+#~ msgstr "Байрлалын ерөнхий байдал"
+
+#~ msgid "Split move line"
+#~ msgstr "Шилжих шугам хуваах"
+
+#~ msgid "Chained Delay (days)"
+#~ msgstr "Цуваа зогссон(өдрүүд)"
+
+#~ msgid "Components"
+#~ msgstr "Бүрэлдэхүүн хэсэг"
+
+#~ msgid "Delivery Orders"
+#~ msgstr "Хүргэх захиалгууд"
+
+#~ msgid "STOCK_OPEN"
+#~ msgstr "Бараа_Нээх"
+
+#~ msgid "Stock Locations Structure"
+#~ msgstr "Бараа байрлах бүтэц"
+
+#~ msgid "STOCK_DISCONNECT"
+#~ msgstr "Бараа_тусгаарлах"
+
+#~ msgid "Confirm (Do Not Process Now)"
+#~ msgstr "Батлах(Одоо үйл ажиллагаа хийхгүй)"
+
+#~ msgid "STOCK_NETWORK"
+#~ msgstr "Бараа_Сүлжээ"
+
+#~ msgid "Stock by Lots"
+#~ msgstr "Барааны цувралын жагсаалт"
+
+#~ msgid "Canceled"
+#~ msgstr "Цуцлагдсан"
+
+#~ msgid "STOCK_DIRECTORY"
+#~ msgstr "Бараа_Удирдлага"
+
+#~ msgid "Set Stock to 0"
+#~ msgstr "Барааг тэглэх"
+
+#~ msgid "Localisation"
+#~ msgstr "Байршуулалт"
+
+#~ msgid "Do you want to set stocks to zero ?"
+#~ msgstr "Барааг тэглэхийг хүсч байна уу?"
+
+#~ msgid "Direct Delivery"
+#~ msgstr "Шууд хүргэлт"
+
+#~ msgid "Split in Two"
+#~ msgstr "2 хуваах"
+
+#~ msgid "Date Order"
+#~ msgstr "Захиалсан огноо"
+
+#~ msgid "Close"
+#~ msgstr "Хаах"
+
+#~ msgid "Print Item Labels"
+#~ msgstr "Шошго хэвлэх"
+
+#~ msgid "Low Level"
+#~ msgstr "Нам түвшин"
+
+#~ msgid "Locations' Values"
+#~ msgstr "Байршлын өртөг"
+
+#~ msgid "Others info"
+#~ msgstr "Бусад мэдээлэл"
+
+#~ msgid "Move State"
+#~ msgstr "Шилжих төлөв"
+
+#~ msgid "LIFO"
+#~ msgstr "Сүүлд орсон нь эхэнд гарна"
+
+#~ msgid "Sub Products"
+#~ msgstr "Дэд бүтээгдэхүүн"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Моделийн нэр алдаатай."
+
+#~ msgid "Revision"
+#~ msgstr "Хяналт"
+
+#~ msgid "Fill Inventory for specific location"
+#~ msgstr "Бодит байрлалын нөөцийг дүүргэх"
+
+#~ msgid "Products Received"
+#~ msgstr "Бараа хүлээн авах"
+
+#~ msgid "Unreceived Products"
+#~ msgstr "Бараа хүлээн аваагүй"
+
+#~ msgid "Packing List:"
+#~ msgstr "Савлагааны жагсаалт"
+
+#~ msgid ""
+#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
+#~ "structured stock locations.\n"
+#~ "Thanks to the double entry management, the inventory controlling is powerful "
+#~ "and flexible:\n"
+#~ "* Moves history and planning,\n"
+#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
+#~ "* Stock valuation (standard or average price, ...)\n"
+#~ "* Robustness faced with Inventory differences\n"
+#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
+#~ "* Bar code supported\n"
+#~ "* Rapid detection of mistakes through double entry system\n"
+#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
+#~ "    "
+#~ msgstr ""
+#~ "OpenERP бүртгэлийн менежментийн модуль нь олон тооны агуулах, олон тооны мөн "
+#~ "тодорхой бүтэцтэй агуулахын байршилыг зохион байгуулж чаддагДавхар нэвтрэх "
+#~ "боломжтой менежментийн ачаар, бүртгэлийн хяналт чадалтай мөн уян хатан "
+#~ "чанартай болсон:төлөвлөгөө болон түүхийг шилжүүлдэг, янз бүрийн бүртгэлийн "
+#~ "аргууд, агуулахын барагцаалал (үнийн стандарт эсвэл дундаж), бүртгэлийн "
+#~ "өөрчлөлттэй зэрэгцсэн тогтвортой байдал, дүрмийг автоматаар дахин шинэчлэх "
+#~ "(агуулахын төвшин), дэмжигдсэн коддавхар нэвтрэлтийн системийн алдааг "
+#~ "илрүүлэх, мөрдөгдөх чанар (өссөн/багассан, барааны цуврал, серийн дугаар)\n"
+#~ "    "
+
+#~ msgid "Force to use a Production Lot during deliveries"
+#~ msgstr "Тарааж байх үед барааны цувралыг хурдасгах"
+
+#~ msgid "Track Outging Lots"
+#~ msgstr "гаралтын цувралын замыг тодорхойлох"
+
+#~ msgid ""
+#~ "This is used only if you selected a chained location type.\n"
+#~ "The 'Automatic Move' value will create a stock move after the current one "
+#~ "that will be validated automatically. With 'Manual Operation', the stock "
+#~ "move has to be validated by a worker. With 'Automatic No Step Added', the "
+#~ "location is replaced in the original move."
+#~ msgstr ""
+#~ "энэ нь таныг бэхлэгдсэн байршилын төрлийг сонгох үед ашиглагданаавтомат "
+#~ "шилжилтийн утга нь автоматаар батлагдах одоогийн агуулахын шилжилтийн "
+#~ "дараагийн шилжилтийг үүсгэнэ. гар удирдлагыг ашиглавал агуулахын шилжилт "
+#~ "заавал ажилтнаар баталгаажих хэрэгтэй болно. Алхам нэмэгдээгүй автоматыг "
+#~ "ашиглавал байршил нь одоогийн шилжилтийн байрлалаар солигдоно."
+
+#~ msgid "Max. Planned Date"
+#~ msgstr "төлөвлөгдсөн огнооны хамгийн дээд хязгаар"
+
+#~ msgid "Moves Tracked"
+#~ msgstr "шилжилтийн зам гаргах"
+
+#~ msgid ""
+#~ "For the current product (template), this stock location will be used, "
+#~ "instead of the default one, as the source location for stock moves generated "
+#~ "by production orders"
+#~ msgstr ""
+#~ "барааны захиалгаар боловсруулагдсан агуулахын шилжилтийн анхны байрлал "
+#~ "болгохын тулд заяамал агуулахынх нь оронд тухайн бараанд энэ агуулахын "
+#~ "байрлалыг ашиглана"
+
+#~ msgid "Confirmed Packing Waiting Availability"
+#~ msgstr "батлагдсан хүлээлтийн багц"
+
+#~ msgid "Track Production Lots"
+#~ msgstr "барааны хэв маягийн багц"
+
+#~ msgid ""
+#~ "For the current product (template), this stock location will be used, "
+#~ "instead of the default one, as the source location for stock moves generated "
+#~ "by procurements"
+#~ msgstr ""
+#~ "Татан авалтаар биелэгдсэн агуулахын шилжилтийн анхны байрлал болгох "
+#~ "зорилгоор заяамал агуулахынх нь оронд энэ агуулахын байршил тухайн бараанд "
+#~ "ашиглагдана,"
+
+#~ msgid ""
+#~ "Scheduled date for the movement of the products or real date if the move is "
+#~ "done."
+#~ msgstr "Барааг шилжүүлэх төлөвлөгдсөн огноо эсвэл шилжилт хийгдсэн огноо"
+
+#~ msgid "terp-account"
+#~ msgstr "terp-account"
+
+#~ msgid "terp-hr"
+#~ msgstr "terp-hr"
+
+#~ msgid "terp-purchase"
+#~ msgstr "terp-purchase"
+
+#, python-format
+#~ msgid "Bad Lot Assignation !"
+#~ msgstr "Хүчингүй сери олгосон байна!"
+
+#~ msgid "Track line"
+#~ msgstr "Тээвэрлэлтийн мөр"
+
+#~ msgid "terp-graph"
+#~ msgstr "terp-graph"
+
+#~ msgid "This account will be used to value the output stock"
+#~ msgstr "Энэ данс Агуулахын гаралтыг дүгнэхэд ашиглагдана"
+
+#~ msgid ""
+#~ "This journal will be used for the accounting move generated by stock move"
+#~ msgstr ""
+#~ "Энэ журнал нь Агуулахын шилжилтээр боловсруулагдсан санхүүгийн шилжилтэнд "
+#~ "ашиглагдана"
+
+#~ msgid "Calendar of Deliveries"
+#~ msgstr "Хүргэлтийн календар"
+
+#~ msgid "Track Incomming Lots"
+#~ msgstr "Ирэх тээвэрлэлтийн сери"
+
+#~ msgid "Latest Date of Inventory"
+#~ msgstr "Бүртгэлийн сүүлийн огноо"
+
+#~ msgid "Tracking Lot"
+#~ msgstr "Тээвэрлэлтийн сери"
+
+#~ msgid "Tracking/Serial"
+#~ msgstr "Тээвэрлэлт/Сериал"
+
+#~ msgid ""
+#~ "Tracking lot is the code that will be put on the logistical unit/pallet"
+#~ msgstr "цувралын замыг тодорхойлох нь хоёрдогч нэгжид байрлах код юм"
+
+#~ msgid "Tracking Number"
+#~ msgstr "Тээвэрлэлтийн дугаар"
+
+#~ msgid "terp-stock"
+#~ msgstr "terp-stock"
+
+#~ msgid "Packing Done"
+#~ msgstr "Савласан"
+
+#~ msgid "Available Packing"
+#~ msgstr "Боломжит савлагаа"
+
+#~ msgid "terp-report"
+#~ msgstr "terp-report"
+
+#~ msgid "Location Content (With children)"
+#~ msgstr "Байршилын багтаамж"
+
+#~ msgid "New Internal Packing"
+#~ msgstr "Дотоод шинэ багцлалт"
+
+#~ msgid "This account will be used to value the input stock"
+#~ msgstr "Энэ данс нь агуулахын оролтыг дүгнэхийн тулд ашиглагдана"
+
+#~ msgid "terp-administration"
+#~ msgstr "terp-administration"
+
+#~ msgid "The packing has been successfully made !"
+#~ msgstr "Багцлалт амжилттай хийгдлээ"
+
+#~ msgid "Dest. Address"
+#~ msgstr "Дэст Хаяг"
+
+#~ msgid "terp-crm"
+#~ msgstr "terp-crm"
+
+#~ msgid "terp-partner"
+#~ msgstr "terp-partner"
+
+#~ msgid "Stock Tracking Lots"
+#~ msgstr "Агуулахын тээвэрлэлтийн сери"
+
+#~ msgid "Available Moves"
+#~ msgstr "Шилжих боломжтой"
+
+#~ msgid "terp-calendar"
+#~ msgstr "terp-calendar"
+
+#~ msgid "Fill From Unreceived Products"
+#~ msgstr "Ирээгүй бараануудаас бэлтгэх"
+
+#~ msgid "New Periodical Inventory"
+#~ msgstr "Үечилсэн бүртгэл"
+
+#~ msgid "FIFO"
+#~ msgstr "Эхэнд орсон нь эхэнд гарна."
+
+#~ msgid "terp-mrp"
+#~ msgstr "terp-mrp"
+
+#~ msgid "Tracking Lots"
+#~ msgstr "Тээвэрлэлтийн серүүд"
+
+#~ msgid "terp-tools"
+#~ msgstr "terp-tools"
+
+#~ msgid "terp-sale"
+#~ msgstr "terp-sale"
+
+#~ msgid "Tracking"
+#~ msgstr "Тээвэрлэлт"
+
+#~ msgid ""
+#~ "This account will be used, instead of the default one, to value input stock"
+#~ msgstr ""
+#~ "Агуулахын оролтыг дүгнэхийн тулд заяамалынх нь оронд энэ данс хэрэглэгдэнэ"
+
+#~ msgid ""
+#~ "This account will be used, instead of the default one, to value output stock"
+#~ msgstr ""
+#~ "Агуулахын гаралтыг дүгнэхийн тулд заяамалын оронд энэ данс  ашиглагдана"
+
+#~ msgid "terp-project"
+#~ msgstr "terp-project"
+
+#~ msgid "terp-product"
+#~ msgstr "terp-product"
+
+#~ msgid "Inventory line"
+#~ msgstr "Бүртгэлийн мөр"
+
+#~ msgid "stock.picking.move.wizard"
+#~ msgstr "Агуулахын барааг шилжүүлэх визард"
+
+#~ msgid "STOCK_SORT_ASCENDING"
+#~ msgstr "STOCK_SORT_ASCENDING"
+
+#~ msgid "STOCK_MEDIA_FORWARD"
+#~ msgstr "STOCK_MEDIA_FORWARD"
+
+#~ msgid "STOCK_ZOOM_100"
+#~ msgstr "STOCK_ZOOM_100"
+
+#~ msgid "STOCK_NEW"
+#~ msgstr "STOCK_NEW"
+
+#~ msgid "STOCK_CANCEL"
+#~ msgstr "STOCK_CANCEL"
+
+#~ msgid "STOCK_PRINT"
+#~ msgstr "STOCK_PRINT"
+
+#~ msgid "Packing result"
+#~ msgstr "Савлагааны үр дүн"
+
+#~ msgid "STOCK_QUIT"
+#~ msgstr "STOCK_QUIT"
+
+#~ msgid "STOCK_GOTO_TOP"
+#~ msgstr "STOCK_GOTO_TOP"
+
+#~ msgid "STOCK_ABOUT"
+#~ msgstr "STOCK_ABOUT"
+
+#~ msgid "STOCK_DND"
+#~ msgstr "STOCK_DND"
+
+#~ msgid "STOCK_GOTO_FIRST"
+#~ msgstr "STOCK_GOTO_FIRST"
+
+#~ msgid "STOCK_FLOPPY"
+#~ msgstr "STOCK_FLOPPY"
+
+#~ msgid "STOCK_UNINDENT"
+#~ msgstr "STOCK_UNINDENT"
+
+#~ msgid "STOCK_UNDERLINE"
+#~ msgstr "STOCK_UNDERLINE"
+
+#~ msgid "STOCK_BOLD"
+#~ msgstr "STOCK_BOLD"
+
+#~ msgid "STOCK_PREFERENCES"
+#~ msgstr "STOCK_PREFERENCES"
+
+#~ msgid "STOCK_MEDIA_REWIND"
+#~ msgstr "STOCK_MEDIA_REWIND"
+
+#~ msgid "Make Picking"
+#~ msgstr "Агуулахын баримт хийх"
+
+#~ msgid "STOCK_CUT"
+#~ msgstr "STOCK_CUT"
+
+#~ msgid "STOCK_ZOOM_FIT"
+#~ msgstr "STOCK_ZOOM_FIT"
+
+#~ msgid "STOCK_SAVE_AS"
+#~ msgstr "STOCK_SAVE_AS"
+
+#~ msgid "STOCK_DIALOG_ERROR"
+#~ msgstr "STOCK_DIALOG_ERROR"
+
+#~ msgid "STOCK_INDEX"
+#~ msgstr "STOCK_INDEX"
+
+#~ msgid "STOCK_GOTO_BOTTOM"
+#~ msgstr "STOCK_GOTO_BOTTOM"
+
+#~ msgid "STOCK_GO_FORWARD"
+#~ msgstr "STOCK_GO_FORWARD"
+
+#~ msgid "STOCK_UNDELETE"
+#~ msgstr "STOCK_UNDELETE"
+
+#~ msgid "STOCK_EXECUTE"
+#~ msgstr "STOCK_EXECUTE"
+
+#~ msgid "STOCK_DIALOG_QUESTION"
+#~ msgstr "STOCK_DIALOG_QUESTION"
+
+#~ msgid "STOCK_SELECT_FONT"
+#~ msgstr "STOCK_SELECT_FONT"
+
+#~ msgid "STOCK_PASTE"
+#~ msgstr "STOCK_PASTE"
+
+#~ msgid "STOCK_MEDIA_RECORD"
+#~ msgstr "STOCK_MEDIA_RECORD"
+
+#~ msgid "STOCK_FILE"
+#~ msgstr "STOCK_FILE"
+
+#~ msgid "STOCK_EDIT"
+#~ msgstr "STOCK_EDIT"
+
+#~ msgid "STOCK_CONNECT"
+#~ msgstr "STOCK_CONNECT"
+
+#~ msgid "STOCK_GO_DOWN"
+#~ msgstr "STOCK_GO_DOWN"
+
+#~ msgid "STOCK_OK"
+#~ msgstr "STOCK_OK"
+
+#~ msgid "STOCK_HELP"
+#~ msgstr "STOCK_HELP"
+
+#~ msgid "STOCK_DIALOG_INFO"
+#~ msgstr "STOCK_DIALOG_INFO"
+
+#~ msgid "STOCK_GO_BACK"
+#~ msgstr "STOCK_GO_BACK"
+
+#~ msgid "STOCK_JUSTIFY_FILL"
+#~ msgstr "STOCK_JUSTIFY_FILL"
+
+#~ msgid "STOCK_APPLY"
+#~ msgstr "STOCK_APPLY"
+
+#~ msgid "STOCK_STRIKETHROUGH"
+#~ msgstr "STOCK_STRIKETHROUGH"
+
+#~ msgid "STOCK_MISSING_IMAGE"
+#~ msgstr "STOCK_MISSING_IMAGE"
+
+#~ msgid "STOCK_SPELL_CHECK"
+#~ msgstr "STOCK_SPELL_CHECK"
+
+#~ msgid "STOCK_HARDDISK"
+#~ msgstr "STOCK_HARDDISK"
+
+#~ msgid "STOCK_COPY"
+#~ msgstr "STOCK_COPY"
+
+#~ msgid "STOCK_CDROM"
+#~ msgstr "STOCK_CDROM"
+
+#~ msgid "STOCK_REFRESH"
+#~ msgstr "STOCK_REFRESH"
+
+#~ msgid "STOCK_STOP"
+#~ msgstr "STOCK_STOP"
+
+#~ msgid "STOCK_FIND_AND_REPLACE"
+#~ msgstr "STOCK_FIND_AND_REPLACE"
+
+#~ msgid "STOCK_DIALOG_WARNING"
+#~ msgstr "STOCK_DIALOG_WARNING"
+
+#~ msgid "STOCK_ZOOM_IN"
+#~ msgstr "STOCK_ZOOM_IN"
+
+#~ msgid "STOCK_CONVERT"
+#~ msgstr "STOCK_CONVERT"
+
+#~ msgid "STOCK_ITALIC"
+#~ msgstr "STOCK_ITALIC"
+
+#~ msgid "STOCK_YES"
+#~ msgstr "STOCK_YES"
+
+#~ msgid "Dest. Move"
+#~ msgstr "Хүргэх хөдөлгөөн"
+
+#~ msgid "STOCK_JUSTIFY_LEFT"
+#~ msgstr "STOCK_JUSTIFY_LEFT"
+
+#~ msgid "STOCK_COLOR_PICKER"
+#~ msgstr "STOCK_COLOR_PICKER"
+
+#~ msgid "STOCK_DELETE"
+#~ msgstr "STOCK_DELETE"
+
+#~ msgid "STOCK_CLEAR"
+#~ msgstr "STOCK_CLEAR"
+
+#~ msgid "STOCK_GO_UP"
+#~ msgstr "STOCK_GO_UP"
+
+#~ msgid "STOCK_SORT_DESCENDING"
+#~ msgstr "STOCK_SORT_DESCENDING"
+
+#~ msgid "STOCK_HOME"
+#~ msgstr "STOCK_HOME"
+
+#~ msgid "STOCK_PROPERTIES"
+#~ msgstr "STOCK_PROPERTIES"
+
+#~ msgid "STOCK_MEDIA_STOP"
+#~ msgstr "STOCK_MEDIA_STOP"
+
+#~ msgid "STOCK_DND_MULTIPLE"
+#~ msgstr "STOCK_DND_MULTIPLE"
+
+#~ msgid "STOCK_REMOVE"
+#~ msgstr "STOCK_REMOVE"
+
+#~ msgid "STOCK_DIALOG_AUTHENTICATION"
+#~ msgstr "STOCK_DIALOG_AUTHENTICATION"
+
+#~ msgid "STOCK_ZOOM_OUT"
+#~ msgstr "STOCK_ZOOM_OUT"
+
+#~ msgid "STOCK_SELECT_COLOR"
+#~ msgstr "STOCK_SELECT_COLOR"
+
+#~ msgid "STOCK_NO"
+#~ msgstr "STOCK_NO"
+
+#~ msgid "STOCK_REDO"
+#~ msgstr "STOCK_REDO"
+
+#~ msgid "STOCK_CLOSE"
+#~ msgstr "STOCK_CLOSE"
+
+#~ msgid "STOCK_JUMP_TO"
+#~ msgstr "STOCK_JUMP_TO"
+
+#~ msgid "STOCK_UNDO"
+#~ msgstr "STOCK_UNDO"
+
+#~ msgid "STOCK_ADD"
+#~ msgstr "STOCK_ADD"
+
+#~ msgid "STOCK_MEDIA_PAUSE"
+#~ msgstr "STOCK_MEDIA_PAUSE"
+
+#~ msgid "STOCK_PRINT_PREVIEW"
+#~ msgstr "STOCK_PRINT_PREVIEW"
+
+#~ msgid "STOCK_FIND"
+#~ msgstr "STOCK_FIND"
+
+#~ msgid "STOCK_MEDIA_PLAY"
+#~ msgstr "STOCK_MEDIA_PLAY"
+
+#~ msgid "STOCK_MEDIA_PREVIOUS"
+#~ msgstr "STOCK_MEDIA_PREVIOUS"
+
+#~ msgid "STOCK_GOTO_LAST"
+#~ msgstr "STOCK_GOTO_LAST"
+
+#~ msgid "STOCK_JUSTIFY_CENTER"
+#~ msgstr "STOCK_JUSTIFY_CENTER"
+
+#~ msgid "STOCK_REVERT_TO_SAVED"
+#~ msgstr "STOCK_REVERT_TO_SAVED"
+
+#~ msgid "STOCK_INDENT"
+#~ msgstr "STOCK_INDENT"
+
+#~ msgid "STOCK_JUSTIFY_RIGHT"
+#~ msgstr "STOCK_JUSTIFY_RIGHT"
+
+#~ msgid "STOCK_MEDIA_NEXT"
+#~ msgstr "STOCK_MEDIA_NEXT"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектийн нэр нь x_ - ээр эхлэх ёстой ба тусгай тэмдэглэгээ агуулахгүй байх"
+
+#~ msgid "Inventory Account"
+#~ msgstr "Агуулахын данс"
+
+#~ msgid "Set Stocks to Zero"
+#~ msgstr "Барааг тэглэх"
+
+#, python-format
+#~ msgid ""
+#~ "Do not Found Partial data of Stock Move Line :%s' %(move.id))\n"
+#~ "            product_qty = partial_data.get('product_qty',0.0)\n"
+#~ "            move_product_qty[move.id] = product_qty\n"
+#~ "            product_uom = partial_data.get('product_uom',False)\n"
+#~ "            product_price = partial_data.get('product_price',0.0)\n"
+#~ "            product_currency = partial_data.get('product_currency',False)\n"
+#~ "            prodlot_ids[move.id] = partial_data.get('prodlot_id"
+#~ msgstr ""
+#~ "Агуулахын Хөдөлгөөний Мөрийн зарим өгөгдөл олдсонгүй :%s' %(move.id))\n"
+#~ "            product_qty = partial_data.get('product_qty',0.0)\n"
+#~ "            move_product_qty[move.id] = product_qty\n"
+#~ "            product_uom = partial_data.get('product_uom',False)\n"
+#~ "            product_price = partial_data.get('product_price',0.0)\n"
+#~ "            product_currency = partial_data.get('product_currency',False)\n"
+#~ "            prodlot_ids[move.id] = partial_data.get('prodlot_id"
+
+#, python-format
+#~ msgid ""
+#~ "There is no journal defined '\\n                                'on the "
+#~ "product category: \"%s\" (id: %d)"
+#~ msgstr ""
+#~ "Бүтээгдэхүүний категори: \"%s\" (id: %d) '\\n                                "
+#~ "' журнал тодорхойлогдоогүй байна."
+
+#~ msgid "terp-emblem-important"
+#~ msgstr "terp-emblem-important"
+
+#~ msgid "terp-mail-forward"
+#~ msgstr "terp-mail-forward"
+
+#~ msgid "terp-stock_effects-object-colorize"
+#~ msgstr "terp-stock_effects-object-colorize"
+
+#~ msgid "terp-folder-blue"
+#~ msgstr "terp-folder-blue"
+
+#~ msgid "terp-dialog-close"
+#~ msgstr "terp-dialog-close"
+
+#~ msgid "terp-personal-"
+#~ msgstr "terp-personal-"

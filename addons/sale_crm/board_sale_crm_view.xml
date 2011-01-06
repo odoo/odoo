@@ -16,7 +16,7 @@
 	        <field name="model">account.invoice.report</field>
 	        <field name="type">tree</field>
 	        <field name="arch" type="xml">
-	            <tree string="Turnover By Months">
+	            <tree string="Monthly Turnover">
 	                <field name="month"/>
 	                <field name="price_total"/>
 	            </tree>
@@ -28,7 +28,7 @@
 	        <field name="model">account.invoice.report</field>
 	        <field name="type">graph</field>
 	        <field name="arch" type="xml">
-	            <graph string="Turnover By Months" type="bar">
+	            <graph string="Monthly Turnover" type="bar">
 	                <field name="month"/>
 	                <field name="price_total" operator="+"/>
 	            </graph>
@@ -51,55 +51,43 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="crm.board_crm_form"/>
             <field name="arch" type="xml">
-	            <xpath expr="/form/hpaned/child1/action[@name='%(crm.act_my_meetings)d']" position="after">
+	            <xpath expr="/form/hpaned/child1/action[@name='%(crm.act_my_oppor)d']" position="after">
 		            <action
 		                string="My Quotations"
 		                name="%(action_quotation_for_sale_crm)d"
 		                colspan="4"
 		                height="150"
 		                width="510"/>
-	            </xpath>        
+	            </xpath>
             </field>
         </record>
-        
-         <record model="ir.ui.view" id="board_crm_form_inherit_child2">
-            <field name="name">board.crm.form.inherit.child2</field>
-            <field name="model">board.board</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="crm.board_crm_form"/>
-            <field name="arch" type="xml">
-	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="after">
-		            <action
-		                string="Turnover By Months"
-		                name="%(action_turnover_by_month)d"
-		                colspan="4"/>
-	            </xpath>  
-            </field>
-        </record>
-        
-        <record model="ir.ui.view" id="board_crm_form_inherit_replace1">
+
+      <record model="ir.ui.view" id="board_crm_form_inherit_replace1">
             <field name="name">board.crm.form.inherit.replace1</field>
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="crm.board_crm_form"/>
             <field name="arch" type="xml">
-	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="attributes">          
-	                <attribute name="string">My Sales Pipeline</attribute>
+	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_sales_pipeline)d']" position="replace">
+	                <action
+		                string="Monthly Turnover"
+		                name="%(action_turnover_by_month)d"
+		                colspan="4"/>
 	            </xpath>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="board_crm_form_inherit_replace2">
             <field name="name">board.crm.form.inherit.replace2</field>
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="inherit_id" ref="crm.board_crm_form"/>
             <field name="arch" type="xml">
-	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_my_oppor_stage)d']" position="attributes">          
-	                <attribute name="string">Revenue by stage</attribute>
+	            <xpath expr="/form/hpaned/child2/action[@name='%(crm.act_my_oppor_stage)d']" position="attributes">
+	                <attribute name="string">Opportunities by Stage</attribute>
 	            </xpath>
             </field>
         </record>
-        
+
     </data>
 </openerp>

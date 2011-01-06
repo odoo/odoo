@@ -18,7 +18,7 @@
             <field name="name">Production Lot</field>
             <field name="object">stock.production.lot</field>
         </record>
-        
+
         <!--
     Resource: stock.location
     -->
@@ -26,65 +26,83 @@
             <field name="name">Physical Locations</field>
             <field name="usage">view</field>
             <field name="icon">terp-stock</field>
+            <field name="company_id"></field>
         </record>
         <record id="stock_location_locations_partner" model="stock.location">
             <field name="name">Partner Locations</field>
             <field name="usage">view</field>
             <field name="icon">terp-partner</field>
+            <field name="posz">1</field>
+            <field name="company_id"></field>
         </record>
         <record id="stock_location_locations_virtual" model="stock.location">
             <field name="name">Virtual Locations</field>
             <field name="usage">view</field>
             <field name="icon">terp-mrp</field>
+            <field name="posz">1</field>
+            <field name="company_id"></field>
         </record>
         <record id="stock_location_scrapped" model="stock.location">
             <field name="name">Scrapped</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="scrap_location">True</field>
             <field name="usage">inventory</field>
+            <field name="company_id"></field>
         </record>
-        
+
         <record id="location_inventory" model="stock.location">
             <field name="name">Inventory loss</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="usage">inventory</field>
+            <field name="company_id"></field>
         </record>
         <record id="location_procurement" model="stock.location">
             <field name="name">Procurements</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="usage">procurement</field>
+            <field name="company_id"></field>
         </record>
         <record id="location_production" model="stock.location">
             <field name="name">Production</field>
             <field name="location_id" ref="stock_location_locations_virtual"/>
             <field name="usage">production</field>
+            <field name="company_id"></field>
         </record>
         <record id="stock_location_suppliers" model="stock.location">
             <field name="name">Suppliers</field>
             <field name="location_id" ref="stock_location_locations_partner"/>
             <field name="usage">supplier</field>
+            <field name="company_id"></field>
         </record>
         <record id="stock_location_customers" model="stock.location">
             <field name="name">Customers</field>
             <field name="location_id" ref="stock_location_locations_partner"/>
             <field name="usage">customer</field>
+            <field name="company_id"></field>
         </record>
         <record id="stock_location_company" model="stock.location">
-            <field model="res.company" name="name" search="[]" use="name"/>
+            <field name="name" model="res.company" search="[]" use="name"/>
             <field name="usage">view</field>
             <field name="location_id" ref="stock_location_locations"/>
+        </record>
+
+        <record id="journal_delivery" model="stock.journal">
+            <field name="name">Delivery Orders</field>
         </record>
         <record id="stock_location_output" model="stock.location">
             <field name="name">Output</field>
             <field name="location_id" ref="stock_location_company"/>
             <field name="usage">internal</field>
             <field name="chained_location_type">customer</field>
+            <field name="chained_auto_packing">transparent</field>
+            <field name="chained_picking_type">out</field>
+            <field name="chained_journal_id" ref="journal_delivery"/>
         </record>
         <record id="stock_location_stock" model="stock.location">
             <field name="name">Stock</field>
             <field name="location_id" ref="stock_location_company"/>
         </record>
-        
+
         <!--
     Properties
     -->
@@ -98,7 +116,11 @@
             <field name="fields_id" search="[('model','=','res.partner'),('name','=','property_stock_customer')]"/>
             <field eval="'stock.location,'+str(stock_location_customers)" name="value"/>
         </record>
-        
+
+        <record id="base.main_partner" model="res.partner">
+            <field name="property_stock_customer" eval="ref('stock_location_stock')"/>
+        </record>
+
         <record forcecreate="True" id="property_stock_procurement" model="ir.property">
             <field name="name">property_stock_procurement</field>
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_procurement')]"/>
@@ -114,7 +136,13 @@
             <field name="fields_id" search="[('model','=','product.template'),('name','=','property_stock_production')]"/>
             <field eval="'stock.location,'+str(location_production)" name="value"/>
         </record>
-        
+
+
+        <record forcecreate="True" id="decimal_shipping_delay" model="decimal.precision">
+            <field name="name">Shipping Delay</field>
+            <field name="digits" eval="2"/>
+        </record>
+
         <!--
     Resource: stock.warehouse
     -->

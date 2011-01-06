@@ -94,7 +94,7 @@ class crm_lead(osv.osv):
         'partner_assigned_id': fields.many2one('res.partner', 'Assigned Partner', help="Partner this case has been forwarded/assigned to.", select=True),
         'date_assign': fields.date('Assignation Date', help="Last date this case was forwarded/assigned to a partner"),
     }
-    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context={}):
+    def onchange_assign_id(self, cr, uid, ids, partner_assigned_id, context=None):
         """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
             @param self: The object pointer
             @param cr: the current row, from the database cursor,
@@ -171,7 +171,8 @@ class crm_lead(osv.osv):
                                         AND partner_weight > 0) AS d
                                   ORDER BY distance LIMIT 1""", (result[1],result[0]))
                     res = cr.dictfetchone()
-                    part_ids.append(res['id'])
+                    if res:
+                        part_ids.append(res['id'])
 
                 total = 0
                 toassign = []

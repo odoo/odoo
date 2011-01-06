@@ -7,36 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-06-18 10:59+0000\n"
+"POT-Creation-Date: 2010-12-21 19:43+0000\n"
 "PO-Revision-Date: 2010-08-03 00:15+0000\n"
 "Last-Translator: mga (Open ERP) <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
 msgstr "Konta podrzędne"
-
-#. module: analytic
-#: help:account.analytic.line,amount_currency:0
-msgid ""
-"The amount expressed in the related account currency if not equal to the "
-"company one."
-msgstr ""
-"Kwota wyrażona w walucie konta, jeśli waluta jest inna niż waluta firmy."
-
-#. module: analytic
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -47,11 +31,6 @@ msgstr "Nazwa konta"
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
 msgstr "Określa ilość do obliczeń."
-
-#. module: analytic
-#: help:account.analytic.line,currency_id:0
-msgid "The related account currency if not equal to the company one."
-msgstr "Waluta konta, jeśli waluta jest inna niż firmy."
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -133,11 +112,9 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: analytic
-#: help:account.analytic.line,amount:0
-msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price."
-msgstr ""
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "Normalne"
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -167,14 +144,21 @@ msgstr "Data"
 
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
-#: field:account.analytic.line,currency_id:0
 msgid "Account currency"
 msgstr "Waluta konta"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
-msgstr "Widok"
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Ilość"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
@@ -207,15 +191,16 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr "Data rozpoczęcia"
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Ilość"
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -226,11 +211,6 @@ msgstr "Data końcowa"
 #: field:account.analytic.account,code:0
 msgid "Account Code"
 msgstr "Kod konta"
-
-#. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
-msgstr "Normalne"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -245,19 +225,19 @@ msgid "Analytic Account"
 msgstr "Konto analityczne"
 
 #. module: analytic
-#: field:account.analytic.account,company_currency_id:0
-msgid "Currency"
-msgstr "Waluta"
-
-#. module: analytic
-#: field:account.analytic.line,amount_currency:0
-msgid "Amount currency"
-msgstr "Waluta kwoty"
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "Widok"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
-msgid "Associated Partner"
-msgstr "Przypisany partner"
+msgid "Partner"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "Data rozpoczęcia"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -268,3 +248,27 @@ msgstr "Otwarte"
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Zapisy analityczne"
+
+#~ msgid ""
+#~ "The amount expressed in the related account currency if not equal to the "
+#~ "company one."
+#~ msgstr ""
+#~ "Kwota wyrażona w walucie konta, jeśli waluta jest inna niż waluta firmy."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
+#~ "specjalnych !"
+
+#~ msgid "The related account currency if not equal to the company one."
+#~ msgstr "Waluta konta, jeśli waluta jest inna niż firmy."
+
+#~ msgid "Currency"
+#~ msgstr "Waluta"
+
+#~ msgid "Associated Partner"
+#~ msgstr "Przypisany partner"
+
+#~ msgid "Amount currency"
+#~ msgstr "Waluta kwoty"

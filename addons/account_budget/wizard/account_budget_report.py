@@ -21,35 +21,32 @@
 import time
 
 from osv import fields, osv
-from tools.translate import _
+
 
 class account_budget_report(osv.osv_memory):
 
-    _name = 'account.budget.report'
-    _description = 'Account Budget report for analytic account'
+    _name = "account.budget.report"
+    _description = "Account Budget report for analytic account"
     _columns = {
-        'date1': fields.date('Start of period', required=True),
-        'date2': fields.date('End of period', required=True),
+        'date_from': fields.date('Start of period', required=True),
+        'date_to': fields.date('End of period', required=True),
     }
     _defaults= {
-        'date1': time.strftime('%Y-01-01'),
-        'date2': time.strftime('%Y-%m-%d'),
+        'date_from': lambda *a: time.strftime('%Y-01-01'),
+        'date_to': lambda *a: time.strftime('%Y-%m-%d'),
     }
 
     def check_report(self, cr, uid, ids, context=None):
         datas = {}
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids)[0]
+        data = self.read(cr, uid, ids, context=context)[0]
         datas = {
              'ids': context.get('active_ids',[]),
              'model': 'account.budget.post',
              'form': data
         }
-
-        data_model = self.pool.get(datas['model']).browse(cr, uid, context['active_id'])
-        if not data_model.dotation_ids:
-            raise osv.except_osv(_('Insufficient Data!'),_('No Depreciation or Master Budget Expenses Found on Budget %s!') % data_model.name)
+        datas['form']['report']='analytic-full'
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'account.budget',

@@ -34,7 +34,7 @@
         <record id="action_idea_post_vote_values" model="ir.values">
             <field name="model_id" ref="model_account_period" />
             <field name="object" eval="1" />
-            <field name="name"></field>
+            <field name="name">Close a Period</field>
             <field name="key2">client_action_multi</field>
             <field name="value" eval="'ir.actions.act_window,' + str(ref('action_account_period_close'))"/>
             <field name="key">action</field>

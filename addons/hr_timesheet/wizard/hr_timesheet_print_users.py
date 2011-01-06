@@ -30,17 +30,15 @@ class analytical_timesheet_employees(osv.osv_memory):
         'month': fields.selection([(x, datetime.date(2000, x, 1).strftime('%B')) for x in range(1, 13)],
                                   'Month', required=True),
         'year': fields.integer('Year', required=True),
-        'user_ids': fields.many2many('res.users', 'timesheet_users_rel', 'timesheet_id', 'user_id', 'Users', required=True)
+        'employee_ids': fields.many2many('hr.employee', 'timesheet_employee_rel', 'timesheet_id', 'employee_id', 'employees', required=True)
                 }
 
     _defaults = {
-         'month': datetime.date.today().month,
-         'year': datetime.date.today().year,
+         'month': lambda *a: datetime.date.today().month,
+         'year': lambda *a: datetime.date.today().year,
              }
 
     def print_report(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
         data = self.read(cr, uid, ids, context=context)[0]
         datas = {
              'ids': [],

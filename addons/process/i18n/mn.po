@@ -1,3 +1,9 @@
+# #-#-#-#-#  mn.po (OpenERP Server 6.0.0-rc1)  #-#-#-#-#
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+# 	* process
+#
+# #-#-#-#-#  mn1.po (openobject-addons)  #-#-#-#-#
 # Mongolian translation for openobject-addons
 # Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
 # This file is distributed under the same license as the openobject-addons package.
@@ -7,41 +13,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
-"PO-Revision-Date: 2010-09-29 11:25+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"PO-Revision-Date: 2010-11-25 19:18+0000\n"
 "Last-Translator: ub121 <ubs121@gmail.com>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-30 04:39+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:14+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: process
+#: model:ir.model,name:process.model_process_node
 #: view:process.node:0
 #: view:process.process:0
 msgid "Process Node"
 msgstr "Процессын зангилаа"
 
 #. module: process
-#: constraint:ir.model:0
+#: help:process.process,active:0
 msgid ""
-"The Object name must start with x_ and not contain any special character !"
+"If the active field is set to False, it will allow you to hide the process "
+"without removing it."
 msgstr ""
-"Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
-"болохгүй!"
-
-#. module: process
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
-
-#. module: process
-#: view:process.node:0
-#: view:process.process:0
-#: view:process.transition:0
-msgid "Roles from Workflow"
-msgstr "Ажлын урсгалын дүрүүд"
 
 #. module: process
 #: field:process.node,menu_id:0
@@ -49,11 +43,15 @@ msgid "Related Menu"
 msgstr "Харгалзах цэс"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
 #: field:process.transition,action_ids:0
 msgid "Buttons"
 msgstr "Товчнууд"
+
+#. module: process
+#: view:process.node:0
+#: view:process.process:0
+msgid "Group By..."
+msgstr "Бүлэглэх..."
 
 #. module: process
 #: selection:process.node,kind:0
@@ -62,10 +60,8 @@ msgstr "Төлөв"
 
 #. module: process
 #: view:process.node:0
-#: view:process.process:0
-#: view:process.transition:0
-msgid "Details"
-msgstr "Дэлгэрэнгүй"
+msgid "Kind Of Node"
+msgstr "Зангилааны төрөл"
 
 #. module: process
 #: field:process.node,help_url:0
@@ -74,7 +70,6 @@ msgstr "Тусламжын вэб сайт"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_node_form
-#: model:ir.model,name:process.model_process_node
 #: model:ir.ui.menu,name:process.menu_process_node_form
 #: view:process.node:0
 #: view:process.process:0
@@ -95,6 +90,11 @@ msgid "Conditions"
 msgstr "Нөхцөл"
 
 #. module: process
+#: view:process.transition:0
+msgid "Search Process Transition"
+msgstr "Хайх"
+
+#. module: process
 #: field:process.condition,node_id:0
 msgid "Node"
 msgstr "Зангилаа"
@@ -107,7 +107,7 @@ msgstr "Ажлын урсгалын триггер"
 #. module: process
 #: field:process.transition,note:0
 msgid "Description"
-msgstr "Тодорхойлолт"
+msgstr "Тайлбар"
 
 #. module: process
 #: model:ir.model,name:process.model_process_transition_action
@@ -116,7 +116,9 @@ msgstr "Процесс шилжилтийн үйлдлүүд"
 
 #. module: process
 #: field:process.condition,model_id:0
+#: view:process.node:0
 #: field:process.node,model_id:0
+#: view:process.process:0
 #: field:process.process,model_id:0
 msgid "Object"
 msgstr "Объект"
@@ -127,6 +129,7 @@ msgid "Source Node"
 msgstr "Гарсан зангилаа"
 
 #. module: process
+#: view:process.transition:0
 #: field:process.transition,transition_ids:0
 msgid "Workflow Transitions"
 msgstr "Ажлын урсгалын шилжилтүүд"
@@ -137,14 +140,13 @@ msgid "Action ID"
 msgstr "Үйлдлийн ID"
 
 #. module: process
+#: model:ir.model,name:process.model_process_transition
 #: view:process.transition:0
 msgid "Process Transition"
 msgstr "Процессын шилжилт"
 
 #. module: process
 #: model:ir.model,name:process.model_process_condition
-#: view:process.node:0
-#: view:process.process:0
 msgid "Condition"
 msgstr "Нөхцөл"
 
@@ -154,9 +156,10 @@ msgid "Dummy"
 msgstr "Хиймэл"
 
 #. module: process
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Дэлгэцийн XML алдаатай!"
+#: model:ir.actions.act_window,name:process.action_process_form
+#: model:ir.ui.menu,name:process.menu_process_form
+msgid "Processes"
+msgstr "Процесс"
 
 #. module: process
 #: field:process.condition,name:0
@@ -168,41 +171,28 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: process
-#: field:process.transition,role_ids:0
-msgid "Roles"
-msgstr "Дүрүүд"
-
-#. module: process
 #: field:process.node,transition_in:0
 msgid "Starting Transitions"
 msgstr "Эхлэлийн шилжилт"
 
 #. module: process
+#: view:process.node:0
 #: field:process.node,note:0
+#: view:process.process:0
 #: field:process.process,note:0
 #: view:process.transition:0
 msgid "Notes"
 msgstr "Тэмдэглэл"
 
 #. module: process
-#: view:process.node:0
-#: view:process.process:0
 #: field:process.transition.action,transition_id:0
 msgid "Transition"
 msgstr "Шилжилт"
 
 #. module: process
-#: view:process.node:0
 #: view:process.process:0
-#: view:process.transition:0
-msgid "Roles Required"
-msgstr "Шаардагдах дүрүүд"
-
-#. module: process
-#: view:process.node:0
-#: view:process.process:0
-msgid "Extra Information"
-msgstr "Нэмэлт Мэдээлэл"
+msgid "Search Process"
+msgstr "Хайх"
 
 #. module: process
 #: selection:process.node,kind:0
@@ -216,6 +206,16 @@ msgid "Active"
 msgstr "Идэвхитэй"
 
 #. module: process
+#: view:process.transition:0
+msgid "Associated Groups"
+msgstr "Холбогдох бүлэг"
+
+#. module: process
+#: field:process.node,model_states:0
+msgid "States Expression"
+msgstr "Төлвийн илэрхийлэл"
+
+#. module: process
 #: selection:process.transition.action,state:0
 msgid "Action"
 msgstr "Үйлдэл"
@@ -226,9 +226,34 @@ msgid "Starting Flow"
 msgstr "Эхлэх урсгал"
 
 #. module: process
+#: model:ir.module.module,description:process.module_meta_information
+msgid ""
+"\n"
+"     This module shows the basic processes involved\n"
+"     in the selected modules and in the sequence they\n"
+"     occur\n"
+"\n"
+"     Note: This applies to the modules containing modulename_process_xml\n"
+"     for e.g product/process/product_process_xml\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: process
 #: field:process.condition,model_states:0
 msgid "Expression"
 msgstr "Илэрхийлэл"
+
+#. module: process
+#: field:process.transition,group_ids:0
+msgid "Required Groups"
+msgstr "Шаардлагатай бүлэг"
+
+#. module: process
+#: view:process.node:0
+#: view:process.process:0
+msgid "Incoming Transitions"
+msgstr "Ирж буй өөрчлөлт"
 
 #. module: process
 #: field:process.transition.action,state:0
@@ -241,34 +266,42 @@ msgid "Ending Transitions"
 msgstr "Төгсгөлийн шилжилт"
 
 #. module: process
-#: model:ir.actions.act_window,name:process.action_process_form
 #: model:ir.model,name:process.model_process_process
-#: model:ir.ui.menu,name:process.menu_process_form
 #: field:process.node,process_id:0
 #: view:process.process:0
 msgid "Process"
 msgstr "Процесс"
 
 #. module: process
-#: model:ir.module.module,shortdesc:process.module_meta_information
-msgid "Enterprise Process"
-msgstr "Байгууллагын процесс"
+#: view:process.node:0
+msgid "Search ProcessNode"
+msgstr "Хайлт"
 
 #. module: process
 #: view:process.node:0
 #: view:process.process:0
+msgid "Other Conditions"
+msgstr "Бусад нөхцөл"
+
+#. module: process
+#: model:ir.module.module,shortdesc:process.module_meta_information
+#: model:ir.ui.menu,name:process.menu_process
+msgid "Enterprise Process"
+msgstr "Байгууллагын процесс"
+
+#. module: process
 #: view:process.transition:0
 msgid "Actions"
 msgstr "Үйлдлүүд"
 
 #. module: process
-#: field:process.node,model_states:0
-msgid "States Expression"
-msgstr "Төлвийн илэрхийлэл"
+#: view:process.node:0
+#: view:process.process:0
+msgid "Properties"
+msgstr "Шинж чанар"
 
 #. module: process
 #: model:ir.actions.act_window,name:process.action_process_transition_form
-#: model:ir.model,name:process.model_process_transition
 #: model:ir.ui.menu,name:process.menu_process_transition_form
 msgid "Process Transitions"
 msgstr "Процессын шилжилт"
@@ -290,11 +323,6 @@ msgid "Outgoing Transitions"
 msgstr "Гарах шилжилтүүд"
 
 #. module: process
-#: model:ir.ui.menu,name:process.menu_process
-msgid "Enterprise Processes"
-msgstr "Байгууллагын процессууд"
-
-#. module: process
 #: view:process.node:0
 #: view:process.process:0
 msgid "Transitions"
@@ -304,3 +332,36 @@ msgstr "Шилжилтүүд"
 #: selection:process.transition.action,state:0
 msgid "Object Method"
 msgstr "Объектын метод"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Объектын нэрний эхлэл x_ байх ёстой бөгөөд бусад тусгай тэмдэгтийг агуулж "
+#~ "болохгүй!"
+
+#~ msgid "Details"
+#~ msgstr "Дэлгэрэнгүй"
+
+#~ msgid "Roles Required"
+#~ msgstr "Шаардагдах дүрүүд"
+
+#~ msgid "Roles"
+#~ msgstr "Дүрүүд"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Дэлгэцийн XML алдаатай!"
+
+#~ msgid "Enterprise Processes"
+#~ msgstr "Байгууллагын процессууд"
+
+#~ msgid "Roles from Workflow"
+#~ msgstr "Ажлын урсгалын дүрүүд"
+
+#~ msgid "Extra Information"
+#~ msgstr "Нэмэлт Мэдээлэл"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Алдаа! Та рекурсив цэс үүсгэж чадахгүй."

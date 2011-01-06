@@ -7,6 +7,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_plain_ftp(timeout=2.0)
         assert ftp.sock and (ftp.lastresp == '220'), ftp.lastresp
+        ftp.close()
 -
     I read the list of databases at port 8021 and confirm our db is
     there
@@ -15,6 +16,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_login(cr, uid, self)
         assert cr.dbname in ftp.nlst("/")
+        ftp.close()
 -
     I try to locate the default "Documents" folder in the db.
 -
@@ -22,6 +24,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_login(cr, uid, self)
         ftp.cwd('Documents')
+        ftp.close()
 -
     I create a "test.txt" file at the server (directly). The file
     should have the "abcd" content
@@ -32,6 +35,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         fdata = StringIO('abcd')
         ftp.storbinary('STOR test.txt', fdata)
+        ftp.close()
 -
     I look for the "test.txt" file at the server
 -
@@ -39,6 +43,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         assert ftp.nlst("test.txt") == ['test.txt']
+        ftp.close()
 -
     I check that the content of "test.txt" is "abcd"
 -
@@ -46,7 +51,9 @@
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        assert te.get_ftp_fulldata(ftp, "test.txt") == 'abcd'
+        gotdata = te.get_ftp_fulldata(ftp, "test.txt")
+        ftp.close()
+        assert gotdata == 'abcd', 'Data: %r' % gotdata
 -
     I append the string 'defgh' to "test.txt"
 -
@@ -56,6 +63,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         fdata = StringIO('defgh')
         ftp.storbinary('APPE test.txt', fdata)
+        ftp.close()
 -
     I check that the content of "text.txt" is 'abcddefgh'
 -
@@ -63,7 +71,9 @@
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        assert te.get_ftp_fulldata(ftp, "test.txt") == 'abcddefgh'
+        gotdata = te.get_ftp_fulldata(ftp, "test.txt")
+        ftp.close()
+        assert gotdata == 'abcddefgh', 'Data: %r' % gotdata
 -
     I try to cd into an non-existing folder 'Not-This'
 -
@@ -77,7 +87,9 @@
         except ftplib.error_perm:
             pass
         except OSError, err:
+            ftp.close()
             assert err.errno == 2, err.errno
+        ftp.close()
 -
     I create a "test2.txt" file through FTP.
 -
@@ -87,6 +99,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         fdata = StringIO('abcd')
         ftp.storbinary('STOR test2.txt', fdata)
+        ftp.close()
 -
     I look for the "test2.txt" file at the server
 -
@@ -101,6 +114,7 @@
         from cStringIO import StringIO
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         ftp.delete('test2.txt')
+        ftp.close()
 -
     I check at the server that test2.txt is deleted
 -
@@ -116,6 +130,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         fdata = StringIO('abcd')
         ftp.storbinary('STOR test2.txt', fdata)
+        ftp.close()
 -
     I delete the test2.txt from the server (RPC).
 -
@@ -137,6 +152,7 @@
         except ftplib.error_perm: # 550 error: 'path not exists'
             nlst_result = []
         assert "test2.txt" not in nlst_result, "Files: %r" % nlst_result
+        ftp.close()
 -
     I create a "test-name.txt" file
 -
@@ -146,6 +162,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         fdata = StringIO('abcd')
         ftp.storbinary('STOR test-name.txt', fdata)
+        ftp.close()
 -
     I rename the "test-name.txt" file through ftp.
 -
@@ -153,6 +170,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         ftp.rename("test-name.txt", "test-renamed.txt")
+        ftp.close()
 -
     I check that test-name.txt has been renamed.
 -
@@ -166,6 +184,7 @@
         except error_perm, e:
             pass
         assert ftp.nlst("test-renamed.txt") == ['test-renamed.txt']
+        ftp.close()
 -
     I create a new folder 'Test-Folder2' through FTP
 -
@@ -173,6 +192,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
         ftp.mkd("Test-Folder2")
+        ftp.close()
 -
     I create a file 'test3.txt' at the 'Test-Folder2'
 -
@@ -182,6 +202,7 @@
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
         fdata = StringIO('abcd')
         ftp.storbinary('STOR test3.txt', fdata)
+        ftp.close()
 -
     I try to retrieve test3.txt
 -
@@ -189,6 +210,7 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
         assert ftp.nlst("test3.txt") == ['test3.txt'], "File test3.txt is not there!"
+        ftp.close()
 -
     I create a new folder, 'Test-Folder3', through FTP
     I try to move test3.txt to 'Test-Folder3'
@@ -196,10 +218,17 @@
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
-        ftp.mkd("Test-Folder2")
+        ftp.mkd("Test-Folder3")
+        ftp.close()
         # TODO move
 -
     I remove the 'Test-Folder3'
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        ftp.rmd("Test-Folder3")
+        ftp.close()
 -
     I check that test3.txt is removed.
 -
@@ -214,6 +243,7 @@
         for i in range(0, 200):
             fdata.seek(0)
             ftp.storbinary('STOR test-name%s.txt' %i, fdata)
+        ftp.close()
 -
     I list the 200 files, check speed
 -
@@ -228,3 +258,37 @@
 -
     I move the 200 files to 'Test-Folder2'
     # TODO
+
+-
+    I delete the 200 files
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Test-Folder2')
+        # TODO speed
+        ftp.delete('test3.txt')
+        for i in range(0, 200):
+            ftp.delete('test-name%s.txt' %i)
+        ftp.close()
+ 
+-
+    I delete the "test.txt" and "test-renamed.txt" file        
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        # TODO speed
+        ftp.delete('test.txt')
+        ftp.delete('test-renamed.txt')
+        ftp.close()  
+              
+-
+    I remove the 'Test-Folder2'
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        ftp.rmd("Test-Folder2")
+        ftp.close()

@@ -2,12 +2,8 @@
 <openerp>
     <data>
         <menuitem id="base.dashboard" name="Dashboards" sequence="2" parent="base.reporting_menu"/>
-        <menuitem
-            id="menu_hr_deshboard"
-            name="Human Resources"
-            parent="base.dashboard"/>
 
-	<!-- This board view will be complete by other hr_* modules-->
+    <!-- This board view will be complete by other hr_* modules-->
         <record id="board_hr_form" model="ir.ui.view">
             <field name="name">board.hr.form</field>
             <field name="model">board.board</field>
@@ -32,6 +28,13 @@
             <field name="usage">menu</field>
             <field name="view_id" ref="board_hr_form"/>
         </record>
+        <menuitem
+            id="menu_hr_deshboard"
+            name="Human Resources"
+            parent="base.dashboard"
+            action="open_board_hr"/>
+
         <menuitem id="menu_hr_root" icon="terp-hr" name="Human Resources" sequence="15" action="open_board_hr"/>
+
     </data>
 </openerp>

@@ -6,28 +6,193 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-09-09 07:19+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:05+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: idea
-#: field:idea.category,name:0
-#: field:idea.idea,category_id:0
-msgid "Category"
-msgstr "Kategorija"
+#: help:idea.category,visibility:0
+msgid "If True creator of the idea will be visible to others"
+msgstr ""
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_select
+msgid "Idea select"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+#: view:idea.vote:0
+#: model:ir.ui.menu,name:idea.menu_idea_vote
+msgid "Votes"
+msgstr "Balsai"
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,comment_ids:0
+msgid "Comments"
+msgstr "Komentarai"
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Submit Vote"
+msgstr ""
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_report_vote_all
+#: model:ir.ui.menu,name:idea.menu_report_vote_all
+msgid "Ideas Analysis"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+#: view:idea.idea:0
+#: view:idea.vote:0
+#: view:report.vote:0
+msgid "Group By..."
+msgstr ""
+
+#. module: idea
+#: model:ir.module.module,description:idea.module_meta_information
+msgid ""
+"\n"
+"    This module allows your user to easily and efficiently participate in "
+"the innovation of the enterprise.\n"
+"    It allows everybody to express ideas about different subjects.\n"
+"    Then, other users can comment on these ideas and vote for particular "
+"ideas.\n"
+"    Each idea has a score based on the different votes.\n"
+"    The managers can obtain an easy view on best ideas from all the users.\n"
+"    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
+msgstr ""
+
+#. module: idea
+#: model:ir.module.module,shortdesc:idea.module_meta_information
+msgid "Idea Manager"
+msgstr "Idėjos vadovas"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "March"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Idea must be in 'Open' state before vote for that idea."
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,day:0
+msgid "Day"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Refuse"
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,count_votes:0
+msgid "Count of votes"
+msgstr "Balsų skaičiavimas"
+
+#. module: idea
+#: model:ir.model,name:idea.model_report_vote
+msgid "Idea Vote Statistics"
+msgstr ""
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
-msgid "Very Good"
-msgstr "Labai gerai"
+msgid "Bad"
+msgstr "Blogas"
+
+#. module: idea
+#: selection:report.vote,idea_state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+msgid "Category of ideas"
+msgstr "Idėjų kategorija"
+
+#. module: idea
+#: code:addons/idea/idea.py:0
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Your comment"
+msgstr "Jūsų komentaras"
+
+#. module: idea
+#: view:report.vote:0
+msgid "   Month   "
+msgstr ""
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_vote
+msgid "Idea Vote"
+msgstr ""
+
+#. module: idea
+#: field:idea.category,parent_id:0
+msgid "Parent Categories"
+msgstr "Pirminės kategorijos"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Very Bad"
+msgstr "Labai blogai"
+
+#. module: idea
+#: view:idea.vote:0
+msgid "Ideas vote"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,nbr:0
+msgid "# of Lines"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/wizard/idea_post_vote.py:0
+#, python-format
+msgid "You can not give Vote for this idea more than %s times"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+msgid "Ideas Categories"
+msgstr ""
+
+#. module: idea
+#: help:idea.idea,description:0
+msgid "Content of the idea"
+msgstr "Idėjos turinys"
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_category
+msgid "Idea Category"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
@@ -36,35 +201,27 @@ msgid "Statistics"
 msgstr "Statistika"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_my_idea
-#: model:ir.ui.menu,name:idea.menu_idea_idea_my_idea
-msgid "My Ideas"
-msgstr "Mano idėjos"
-
-#. module: idea
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: idea
 #: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Not Voted"
 msgstr "Nebalstuota"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open_my
-#: model:ir.ui.menu,name:idea.menu_idea_idea_open_my
-msgid "My Open Ideas"
-msgstr "Mano atviros idėjos"
+#: sql_constraint:idea.category:0
+msgid "The name of the category must be unique"
+msgstr ""
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea
-#: model:ir.ui.menu,name:idea.menu_ideas
-#: model:ir.ui.menu,name:idea.menu_ideas1
-msgid "Ideas"
-msgstr "Idėjos"
+#: model:ir.model,name:idea.model_idea_select
+msgid "select idea"
+msgstr ""
+
+#. module: idea
+#: view:idea.stat:0
+msgid "stat"
+msgstr ""
 
 #. module: idea
 #: field:idea.category,child_ids:0
@@ -72,119 +229,62 @@ msgid "Child Categories"
 msgstr "Žemesniosios kategorijos"
 
 #. module: idea
+#: view:idea.select:0
+msgid "Next"
+msgstr ""
+
+#. module: idea
 #: view:idea.idea:0
-msgid "New Idea"
-msgstr "Nauja idėja"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_category_tree
-#: model:ir.ui.menu,name:idea.menu_idea_category_tree
-msgid "Ideas by Categories"
-msgstr "Idėjos pagal kategorijas"
-
-#. module: idea
-#: field:idea.vote,score:0
-#: field:idea.vote.stat,score:0
-msgid "Score"
-msgstr "Įvertinimas"
-
-#. module: idea
-#: selection:idea.idea,state:0
-msgid "Draft"
-msgstr "Juodraštis"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_vote
-msgid "Idea's vote"
-msgstr ""
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_vote_stat
-msgid "Statistics on Votes"
-msgstr "Balsavimų statistika"
-
-#. module: idea
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekto pavadinimas turi prasidėti su x_ ir jame negali būti specialių "
-"simbolių"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_category
-msgid "Category for an idea"
-msgstr "Idėjos kategorija"
-
-#. module: idea
-#: model:ir.module.module,shortdesc:idea.module_meta_information
-msgid "Idea Manager"
-msgstr "Idėjos vadovas"
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
-msgid "Vote Statistics"
-msgstr "Balsavimo statistikos"
-
-#. module: idea
-#: selection:idea.idea,state:0
-msgid "Opened"
-msgstr "Atviros"
-
-#. module: idea
 #: field:idea.idea,state:0
-msgid "Status"
-msgstr "Būsena"
+#: view:report.vote:0
+#: field:report.vote,idea_state:0
+msgid "State"
+msgstr ""
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Good"
 msgstr "Geras"
 
 #. module: idea
-#: field:idea.idea,description:0
-msgid "Description"
-msgstr "Aprašymas"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Normal"
-msgstr "Normali"
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_reporting
-msgid "Reporting"
-msgstr "Ataskaitos"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_vote_stat
-msgid "Idea Votes Statistics"
-msgstr "Idėjos balsų statistikos"
-
-#. module: idea
-#: model:ir.model,name:idea.model_idea_vote
-msgid "idea.vote"
-msgstr "idea.vote"
-
-#. module: idea
-#: field:idea.comment,user_id:0
-#: field:idea.vote,user_id:0
-msgid "User"
-msgstr "Naudotojas"
+#: help:idea.idea,open_date:0
+msgid "Date when an idea opened"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
-msgid "Your comment"
-msgstr "Jūsų komentaras"
+msgid "Idea Detail"
+msgstr ""
 
 #. module: idea
-#: model:ir.ui.menu,name:idea.menu_config
-msgid "Configuration"
-msgstr "Nustatymai"
+#: help:idea.idea,state:0
+msgid ""
+"When the Idea is created the state is 'Draft'.\n"
+" It is             opened by the user, the state is 'Opened'.            \n"
+"If the idea is accepted, the state is 'Accepted'."
+msgstr ""
+
+#. module: idea
+#: field:idea.category,visibility:0
+#: field:idea.idea,visibility:0
+msgid "Open Idea?"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "July"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+#: selection:idea.idea,state:0
+#: view:report.vote:0
+#: selection:report.vote,idea_state:0
+msgid "Accepted"
+msgstr ""
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category
@@ -193,8 +293,169 @@ msgid "Categories"
 msgstr "Kategorijos"
 
 #. module: idea
-#: view:idea.stat:0
-msgid "stat"
+#: view:report.vote:0
+msgid "    Month-1    "
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,open_date:0
+msgid "Open date"
+msgstr ""
+
+#. module: idea
+#: field:idea.idea,vote_ids:0
+#: model:ir.actions.act_window,name:idea.action_idea_post_vote
+msgid "Vote"
+msgstr "Balsuoti"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_vote_stat
+#: model:ir.ui.menu,name:idea.menu_idea_vote_stat
+msgid "Vote Statistics"
+msgstr "Balsavimo statistikos"
+
+#. module: idea
+#: field:idea.idea,vote_limit:0
+msgid "Maximum Vote per User"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+msgid "Parent Category"
+msgstr ""
+
+#. module: idea
+#: field:idea.comment,content:0
+#: view:idea.idea:0
+#: view:idea.post.vote:0
+#: field:idea.vote,comment:0
+#: model:ir.model,name:idea.model_idea_comment
+msgid "Comment"
+msgstr "Komentuoti"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "September"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "December"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,month:0
+msgid "Month"
+msgstr ""
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
+#: model:ir.actions.act_window,name:idea.action_idea_idea_open
+msgid "Open Ideas"
+msgstr "Atviros idėjos"
+
+#. module: idea
+#: view:idea.category:0
+#: field:idea.category,name:0
+#: view:idea.idea:0
+#: field:idea.idea,category_id:0
+#: view:report.vote:0
+#: field:report.vote,category_id:0
+msgid "Category"
+msgstr "Kategorija"
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Very Good"
+msgstr "Labai gerai"
+
+#. module: idea
+#: view:report.vote:0
+msgid "  Year  "
+msgstr ""
+
+#. module: idea
+#: selection:idea.idea,state:0
+#: selection:report.vote,idea_state:0
+msgid "Opened"
+msgstr "Atviros"
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_vote
+msgid "Idea's Votes"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "New Idea"
+msgstr "Nauja idėja"
+
+#. module: idea
+#: view:idea.vote.stat:0
+msgid "vote_stat of ideas"
+msgstr ""
+
+#. module: idea
+#: model:ir.actions.act_window,name:idea.action_idea_category_tree
+#: model:ir.ui.menu,name:idea.menu_idea_category_tree
+msgid "Ideas by Categories"
+msgstr "Idėjos pagal kategorijas"
+
+#. module: idea
+#: selection:idea.idea,state:0
+#: selection:report.vote,idea_state:0
+msgid "Draft"
+msgstr "Juodraštis"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "August"
+msgstr ""
+
+#. module: idea
+#: selection:idea.idea,my_vote:0
+#: selection:idea.post.vote,vote:0
+#: selection:idea.vote,score:0
+#: selection:idea.vote.stat,score:0
+msgid "Normal"
+msgstr "Normali"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "June"
+msgstr ""
+
+#. module: idea
+#: field:report.vote,creater_id:0
+#: field:report.vote,user_id:0
+msgid "User Name"
+msgstr ""
+
+#. module: idea
+#: model:ir.model,name:idea.model_idea_vote_stat
+msgid "Idea Votes Statistics"
+msgstr "Idėjos balsų statistikos"
+
+#. module: idea
+#: field:idea.comment,user_id:0
+#: view:idea.vote:0
+#: field:idea.vote,user_id:0
+#: view:report.vote:0
+msgid "User"
+msgstr "Naudotojas"
+
+#. module: idea
+#: field:idea.vote,date:0
+msgid "Date"
+msgstr ""
+
+#. module: idea
+#: view:idea.post.vote:0
+msgid "Post"
 msgstr ""
 
 #. module: idea
@@ -203,41 +464,20 @@ msgid "My Vote"
 msgstr "Mano balsas"
 
 #. module: idea
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Netinkamas XML peržiūros struktūrai!"
-
-#. module: idea
-#: view:idea.vote:0
-msgid "Votes"
-msgstr "Balsai"
-
-#. module: idea
-#: model:ir.module.module,description:idea.module_meta_information
-msgid ""
-"This module allows your user to easily and efficiently participate in the "
-"innovation of the enterprise. It allows everybody to express ideas about "
-"different subjects. Then, others users can comment these ideas and vote for "
-"particular ideas. Each idea as a score based on the different votes. The "
-"managers can obtain an easy view on best ideas from all the users. Once "
-"installed, check the menu 'Ideas' in the 'Tools' main menu."
+#: selection:report.vote,month:0
+msgid "October"
 msgstr ""
 
 #. module: idea
 #: field:idea.comment,create_date:0
-#: field:idea.idea,create_date:0
+#: field:idea.idea,created_date:0
 msgid "Creation date"
 msgstr "Sukūrimo data"
 
 #. module: idea
-#: field:idea.idea,count_votes:0
-msgid "Count of votes"
-msgstr "Balsų skaičiavimas"
-
-#. module: idea
-#: field:idea.vote.stat,nbr:0
-msgid "Number of Votes"
-msgstr "Balsų kiekis"
+#: selection:report.vote,month:0
+msgid "January"
+msgstr ""
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
@@ -245,36 +485,152 @@ msgid "idea.idea"
 msgstr "idea.idea"
 
 #. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_draft_my
-#: model:ir.ui.menu,name:idea.menu_idea_idea_draft_my
-msgid "My Draft Ideas"
-msgstr "Mano juodraštinės idėjos"
+#: field:idea.category,summary:0
+msgid "Summary"
+msgstr "Suvestinė"
 
 #. module: idea
-#: field:idea.idea,vote_ids:0
-msgid "Vote"
-msgstr "Balsuoti"
+#: field:idea.idea,name:0
+msgid "Idea Summary"
+msgstr "Idėjos suvestinė"
 
 #. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Bad"
-msgstr "Blogas"
+#: selection:report.vote,month:0
+msgid "November"
+msgstr ""
 
 #. module: idea
 #: view:idea.idea:0
+msgid "History"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+msgid "Vots Statistics"
+msgstr ""
+
+#. module: idea
+#: field:report.vote,date:0
+msgid "Date Order"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+#: field:idea.idea,user_id:0
+#: view:report.vote:0
+msgid "Creator"
+msgstr "Kūrėjas"
+
+#. module: idea
+#: view:idea.post.vote:0
+#: model:ir.ui.menu,name:idea.menu_give_vote
+msgid "Give Vote"
+msgstr ""
+
+#. module: idea
+#: help:idea.idea,vote_limit:0
+msgid "Set to one if  you require only one Vote per user"
+msgstr ""
+
+#. module: idea
+#: view:idea.post.vote:0
+msgid "Cancel"
+msgstr "Atšaukti"
+
+#. module: idea
+#: view:idea.select:0
+msgid "Close"
+msgstr "Užverti"
+
+#. module: idea
+#: view:idea.idea:0
+#: view:report.vote:0
+msgid "Open"
+msgstr "Atverti"
+
+#. module: idea
+#: view:report.vote:0
+msgid "Idea Vote Analysis"
+msgstr ""
+
+#. module: idea
+#: view:idea.idea:0
+#: model:ir.actions.act_window,name:idea.action_idea_idea
 #: model:ir.ui.menu,name:idea.menu_idea_idea
-msgid "All Ideas"
-msgstr "Visos idėjos"
+#: model:ir.ui.menu,name:idea.menu_ideas
+#: model:ir.ui.menu,name:idea.menu_ideas1
+msgid "Ideas"
+msgstr "Idėjos"
 
 #. module: idea
-#: view:idea.comment:0
+#: model:ir.model,name:idea.model_idea_post_vote
+msgid "Post vote"
+msgstr ""
+
+#. module: idea
 #: view:idea.idea:0
-#: field:idea.idea,comment_ids:0
-#: model:ir.model,name:idea.model_idea_comment
-msgid "Comments"
-msgstr "Komentarai"
+msgid "Current"
+msgstr ""
+
+#. module: idea
+#: field:idea.vote.stat,score:0
+#: field:report.vote,score:0
+msgid "Score"
+msgstr "Įvertinimas"
+
+#. module: idea
+#: view:idea.vote:0
+msgid "Comments:"
+msgstr ""
+
+#. module: idea
+#: view:idea.category:0
+#: field:idea.idea,description:0
+#: field:idea.post.vote,note:0
+msgid "Description"
+msgstr "Aprašymas"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "May"
+msgstr ""
+
+#. module: idea
+#: selection:idea.idea,state:0
+#: view:report.vote:0
+msgid "Refused"
+msgstr ""
+
+#. module: idea
+#: code:addons/idea/idea.py:0
+#, python-format
+msgid "Draft/Accepted/Cancelled ideas Could not be voted"
+msgstr ""
+
+#. module: idea
+#: view:idea.vote:0
+msgid "Vote date"
+msgstr ""
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "February"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+msgid "    Today    "
+msgstr ""
+
+#. module: idea
+#: field:idea.vote.stat,nbr:0
+msgid "Number of Votes"
+msgstr "Balsų kiekis"
+
+#. module: idea
+#: selection:report.vote,month:0
+msgid "April"
+msgstr ""
 
 #. module: idea
 #: field:idea.idea,count_comments:0
@@ -282,89 +638,9 @@ msgid "Count of comments"
 msgstr "Komentarų kiekis"
 
 #. module: idea
-#: field:idea.idea,title:0
-msgid "Idea Summary"
-msgstr "Idėjos suvestinė"
-
-#. module: idea
-#: view:idea.category:0
-msgid "Category of ideas"
-msgstr "Idėjų kategorija"
-
-#. module: idea
-#: field:idea.category,summary:0
-msgid "Summary"
-msgstr "Suvestinė"
-
-#. module: idea
-#: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
-#: model:ir.actions.act_window,name:idea.action_idea_idea_open
-#: model:ir.ui.menu,name:idea.menu_idea_idea_open
-msgid "Open Ideas"
-msgstr "Atviros idėjos"
-
-#. module: idea
-#: view:idea.idea:0
-#: view:idea.vote.stat:0
-msgid "vote_stat of ideas"
+#: field:idea.vote,score:0
+msgid "Vote Status"
 msgstr ""
-
-#. module: idea
-#: view:idea.comment:0
-#: field:idea.comment,content:0
-#: view:idea.idea:0
-msgid "Comment"
-msgstr "Komentuoti"
-
-#. module: idea
-#: field:idea.category,parent_id:0
-msgid "Parent Categories"
-msgstr "Pirminės kategorijos"
-
-#. module: idea
-#: field:idea.idea,user_id:0
-msgid "Creator"
-msgstr "Kūrėjas"
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_tools
-msgid "Tools"
-msgstr "Įrankiai"
-
-#. module: idea
-#: field:idea.comment,idea_id:0
-#: view:idea.idea:0
-#: field:idea.vote,idea_id:0
-#: field:idea.vote.stat,idea_id:0
-msgid "Idea"
-msgstr "Idėja"
-
-#. module: idea
-#: selection:idea.idea,my_vote:0
-#: selection:idea.vote,score:0
-#: selection:idea.vote.stat,score:0
-msgid "Very Bad"
-msgstr "Labai blogai"
-
-#. module: idea
-#: selection:idea.idea,state:0
-msgid "Canceled"
-msgstr "Atšaukta"
-
-#. module: idea
-#: model:ir.ui.menu,name:idea.menu_idea_vote
-msgid "All Votes"
-msgstr "Visi balsai"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Cancel"
-msgstr "Atšaukti"
-
-#. module: idea
-#: view:idea.idea:0
-msgid "Close"
-msgstr "Užverti"
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
@@ -372,11 +648,82 @@ msgid "Average Score"
 msgstr "Vidurkis"
 
 #. module: idea
-#: view:idea.idea:0
-msgid "Open"
-msgstr "Atverti"
+#: field:idea.comment,idea_id:0
+#: field:idea.select,idea_id:0
+#: view:idea.vote:0
+#: field:idea.vote,idea_id:0
+#: field:idea.vote.stat,idea_id:0
+#: model:ir.ui.menu,name:idea.menu_idea_reporting
+#: view:report.vote:0
+#: field:report.vote,idea_id:0
+msgid "Idea"
+msgstr "Idėja"
 
 #. module: idea
-#: help:idea.idea,description:0
-msgid "Content of the idea"
-msgstr "Idėjos turinys"
+#: view:idea.idea:0
+msgid "Accept"
+msgstr ""
+
+#. module: idea
+#: field:idea.post.vote,vote:0
+msgid "Post Vote"
+msgstr ""
+
+#. module: idea
+#: view:report.vote:0
+#: field:report.vote,year:0
+msgid "Year"
+msgstr ""
+
+#. module: idea
+#: view:idea.select:0
+msgid "Select Idea for Vote"
+msgstr ""
+
+#~ msgid "Configuration"
+#~ msgstr "Nustatymai"
+
+#~ msgid "My Ideas"
+#~ msgstr "Mano idėjos"
+
+#~ msgid "My Open Ideas"
+#~ msgstr "Mano atviros idėjos"
+
+#~ msgid "Status"
+#~ msgstr "Būsena"
+
+#~ msgid "Category for an idea"
+#~ msgstr "Idėjos kategorija"
+
+#~ msgid "Reporting"
+#~ msgstr "Ataskaitos"
+
+#~ msgid "My Draft Ideas"
+#~ msgstr "Mano juodraštinės idėjos"
+
+#~ msgid "All Ideas"
+#~ msgstr "Visos idėjos"
+
+#~ msgid "Tools"
+#~ msgstr "Įrankiai"
+
+#~ msgid "All Votes"
+#~ msgstr "Visi balsai"
+
+#~ msgid "Canceled"
+#~ msgstr "Atšaukta"
+
+#~ msgid "idea.vote"
+#~ msgstr "idea.vote"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Objekto pavadinimas turi prasidėti su x_ ir jame negali būti specialių "
+#~ "simbolių"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Netinkamas XML peržiūros struktūrai!"
+
+#~ msgid "Statistics on Votes"
+#~ msgstr "Balsavimų statistika"

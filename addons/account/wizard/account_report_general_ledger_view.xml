@@ -8,15 +8,20 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="account_common_report_view" />
             <field name="arch" type="xml">
-               <field name="fiscalyear_id" position="after">
-                   <field name="display_account"/>
-                   <field name="target_move"/>
-                   <field name="sortby"/>
-                   <field name="landscape"/>
-                   <field name="initial_balance" attrs="{'readonly':[('fiscalyear_id','=', False)]}"/>
-                   <field name="amount_currency"/>
-                   <newline/>
-               </field>
+            <data>
+            <xpath expr="/form/label[@string='']" position="replace">
+                <separator string="General Ledger" colspan="4"/>
+                <label nolabel="1" colspan="4" string="This report allows you to print or generate a pdf of your general ledger with details of all your account journals"/>
+            </xpath>
+            <xpath expr="//field[@name='target_move']" position="after">
+                <field name="display_account"/>
+                <field name="sortby"/>
+                <field name="landscape"/>
+                <field name="initial_balance" attrs="{'readonly':[('fiscalyear_id','=', False)]}"/>
+                <field name="amount_currency"/>
+                <newline/>
+            </xpath>
+            </data>
             </field>
         </record>
 
@@ -57,6 +62,7 @@
             name="General Ledger"
             parent="account.final_accounting_reports"
             action="action_account_general_ledger_menu"
+            groups="group_account_manager,group_account_user"
             id="menu_general_ledger"
            />
 

@@ -1,8 +1,9 @@
 "id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
 "access_procurement","procurement.order","model_procurement_order","base.group_user",1,0,0,0
-"access_stock_warehouse_orderpoint","stock.warehouse.orderpoint","model_stock_warehouse_orderpoint","stock.group_stock_manager",1,1,1,1
+"access_procurement_stock_manager","procurement.order stock.manager","model_procurement_order","stock.group_stock_manager",1,1,1,1
+"access_procurement_stock_user","procurement.order stock.user","model_procurement_order","stock.group_stock_user",1,1,1,1
+"access_stock_warehouse_orderpoint","stock.warehouse.orderpoint","model_stock_warehouse_orderpoint","stock.group_stock_user",1,0,0,0
 "access_stock_warehouse_orderpoint_system","stock.warehouse.orderpoint system","model_stock_warehouse_orderpoint","stock.group_stock_manager",1,1,1,1
-"access_stock_warehouse_orderpoint_user","stock.warehouse.orderpoint user","model_stock_warehouse_orderpoint","base.group_system",1,0,0,0
 "access_mrp_property_group","mrp.property.group","model_mrp_property_group","stock.group_stock_manager",1,1,1,1
 "access_mrp_property","mrp.property","model_mrp_property","stock.group_stock_manager",1,1,1,1
 "access_mrp_property_group","mrp.property.group","model_mrp_property_group","base.group_user",1,0,0,0

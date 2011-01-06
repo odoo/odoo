@@ -241,7 +241,7 @@
             <para style="P7">[[ round(l.discount) ]]</para>
           </td>
           <td>
-            <para style="P7">[[ comma_me(l.price_subtotal) ]] [[o.currency_id.code ]]</para>
+            <para style="P7">[[ comma_me(l.price_subtotal) ]] [[o.currency_id.symbol ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -293,7 +293,7 @@
                 <para style="P13">Total (excl. taxes):</para>
               </td>
               <td>
-                <para style="P13">[[ comma_me(o.amount_untaxed) ]] [[o.currency_id.code ]]</para>
+                <para style="P13">[[ comma_me(o.amount_untaxed) ]] [[o.currency_id.symbol ]]</para>
               </td>
             </tr>
             <tr>
@@ -301,7 +301,7 @@
                 <para style="P13">Taxes:</para>
               </td>
               <td>
-                <para style="P13">[[ comma_me(o.amount_tax) ]] [[o.currency_id.code ]]</para>
+                <para style="P13">[[ comma_me(o.amount_tax) ]] [[o.currency_id.symbol ]]</para>
               </td>
             </tr>
             <tr>
@@ -309,7 +309,7 @@
                 <para style="P14">Total <font face="Helvetica">(incl. taxes):</font></para>
               </td>
               <td>
-                <para style="P17">[[ comma_me(o.amount_total) ]] [[o.currency_id.code ]]</para>
+                <para style="P17">[[ comma_me(o.amount_total) ]] [[o.currency_id.symbol ]]</para>
               </td>
             </tr>
           </blockTable>

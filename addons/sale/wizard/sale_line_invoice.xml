@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-    	<record id="view_sale_order_line_make_invoice" model="ir.ui.view">
-            <field name="name">Sale OrderLine Make Invoice</field>
+        <record id="view_sale_order_line_make_invoice" model="ir.ui.view">
+            <field name="name">Sales OrderLine Make Invoice</field>
             <field name="model">sale.order.line.make.invoice</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
              <form string="Create invoices">
-    			<separator colspan="4" string="Do you really want to create the invoice(s) ?" />
-              	<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-               	<button name="make_invoices" string="Create Invoices" type="object" icon="gtk-ok"/>
-             </form>
+                 <separator colspan="4" string="Do you really want to create the invoice(s) ?" />
+                 <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                 <button name="make_invoices" string="Create Invoices" type="object" icon="terp-gtk-go-back-rtl"/>
+            </form>
             </field>
-		</record>
+        </record>
 
-		<record id="action_view_sale_order_line_make_invoice" model="ir.actions.act_window">
+        <record id="action_view_sale_order_line_make_invoice" model="ir.actions.act_window">
             <field name="name">Make Invoices</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line.make.invoice</field>
@@ -23,7 +23,7 @@
             <field name="view_id" ref="view_sale_order_line_make_invoice"/>
             <field name="target">new</field>
         </record>
-        
+
         <record model="ir.values" id="sale_order_line_make_invoice">
             <field name="model_id" ref="sale.model_sale_order_line" />
             <field name="object" eval="1" />

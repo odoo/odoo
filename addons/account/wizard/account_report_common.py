@@ -20,8 +20,6 @@
 ##############################################################################
 
 import time
-import datetime
-from datetime import timedelta
 from lxml import etree
 
 from osv import fields, osv
@@ -40,10 +38,13 @@ class account_common_report(osv.osv_memory):
         'journal_ids': fields.many2many('account.journal', 'account_common_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
         'date_from': fields.date("Start Date"),
         'date_to': fields.date("End Date"),
-                }
+        'target_move': fields.selection([('posted', 'All Posted Entries'),
+                                         ('all', 'All Entries'),
+                                        ], 'Target Moves', required=True),
+
+        }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        mod_obj = self.pool.get('ir.model.data')
         res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if context.get('active_model', False) == 'account.account' and view_id:
             doc = etree.XML(res['arch'])
@@ -85,7 +86,7 @@ class account_common_report(osv.osv_memory):
         return res
 
     def _get_account(self, cr, uid, context=None):
-        accounts = self.pool.get('account.account').search(cr, uid, [], limit=1)
+        accounts = self.pool.get('account.account').search(cr, uid, [('parent_id', '=', False)], limit=1)
         return accounts and accounts[0] or False
 
     def _get_fiscalyear(self, cr, uid, context=None):
@@ -97,18 +98,17 @@ class account_common_report(osv.osv_memory):
         return self.pool.get('account.journal').search(cr, uid ,[])
 
     _defaults = {
-            'fiscalyear_id' : _get_fiscalyear,
+            'fiscalyear_id': _get_fiscalyear,
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
+            'target_move': 'posted',
     }
 
     def _build_contexts(self, cr, uid, ids, data, context=None):
         if context is None:
             context = {}
         result = {}
-        period_obj = self.pool.get('account.period')
-        fiscal_obj = self.pool.get('account.fiscalyear')
         result['fiscalyear'] = 'fiscalyear_id' in data['form'] and data['form']['fiscalyear_id'] or False
         result['journal_ids'] = 'journal_ids' in data['form'] and data['form']['journal_ids'] or False
         result['chart_account_id'] = 'chart_account_id' in data['form'] and data['form']['chart_account_id'] or False
@@ -118,7 +118,8 @@ class account_common_report(osv.osv_memory):
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
                 raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
-            result['periods'] = period_obj.build_ctx_periods(cr, uid, data['form']['period_from'], data['form']['period_to'])
+            result['period_from'] = data['form']['period_from']
+            result['period_to'] = data['form']['period_to']
         return result
 
     def _print_report(self, cr, uid, ids, data, context=None):
@@ -127,11 +128,10 @@ class account_common_report(osv.osv_memory):
     def check_report(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        obj_move = self.pool.get('account.move.line')
         data = {}
         data['ids'] = context.get('active_ids', [])
         data['model'] = context.get('active_model', 'ir.ui.menu')
-        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id'])[0]
+        data['form'] = self.read(cr, uid, ids, ['date_from',  'date_to',  'fiscalyear_id', 'journal_ids', 'period_from', 'period_to',  'filter',  'chart_account_id', 'target_move'])[0]
         used_context = self._build_contexts(cr, uid, ids, data, context=context)
         data['form']['periods'] = used_context.get('periods', False) and used_context['periods'] or []
         data['form']['used_context'] = used_context

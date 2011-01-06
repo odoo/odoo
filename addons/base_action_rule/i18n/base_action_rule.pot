@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-08-19 12:20:41+0000\n"
-"PO-Revision-Date: 2010-08-19 12:20:41+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57:13+0000\n"
+"PO-Revision-Date: 2011-01-03 16:57:13+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,13 +31,8 @@ msgid "Partner Category"
 msgstr ""
 
 #. module: base_action_rule
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid "Check this if you want the rule to send a reminder by email to the user."
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
 msgstr ""
 
 #. module: base_action_rule
@@ -61,6 +56,11 @@ msgid "Set State to"
 msgstr ""
 
 #. module: base_action_rule
+#: field:base.action.rule,act_email_from:0
+msgid "Email From"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Body"
 msgstr ""
@@ -71,7 +71,12 @@ msgid "Days"
 msgstr ""
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr ""
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:313
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -103,11 +108,6 @@ msgstr ""
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Email Reminders"
-msgstr ""
-
-#. module: base_action_rule
-#: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr ""
 
@@ -127,8 +127,8 @@ msgid "%(object_subject)s = Object subject"
 msgstr ""
 
 #. module: base_action_rule
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
+#: view:base.action.rule:0
+msgid "Email Reminders"
 msgstr ""
 
 #. module: base_action_rule
@@ -139,6 +139,11 @@ msgstr ""
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid "Use automated actions to automatically trigger actions for various screens. Example: a lead created by a specific user may be automatically set to a specific sales team, or an opportunity which still has status pending after 14 days might trigger an automatic reminder email."
 msgstr ""
 
 #. module: base_action_rule
@@ -203,6 +208,11 @@ msgid "None"
 msgstr ""
 
 #. module: base_action_rule
+#: help:base.action.rule,act_email_to:0
+msgid "Use a python expression to specify the right field on which one than we will use for the 'To' field of the header"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user_phone)s = Responsible phone"
 msgstr ""
@@ -230,6 +240,11 @@ msgid "Call Object Method"
 msgstr ""
 
 #. module: base_action_rule
+#: field:base.action.rule,act_email_to:0
+msgid "Email To"
+msgstr ""
+
+#. module: base_action_rule
 #: help:base.action.rule,act_mail_to_watchers:0
 msgid "Check this if you want the rule to mark CC(mail to any other person defined in actions)."
 msgstr ""
@@ -245,8 +260,8 @@ msgid "Note"
 msgstr ""
 
 #. module: base_action_rule
-#: constraint:ir.ui.menu:0
-msgid "Error ! You can not create recursive Menu."
+#: help:base.action.rule,act_email_from:0
+msgid "Use a python expression to specify the right field on which one than we will use for the 'From' field of the header"
 msgstr ""
 
 #. module: base_action_rule
@@ -270,7 +285,7 @@ msgid "Active"
 msgstr ""
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: code:addons/base_action_rule/base_action_rule.py:314
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
 msgstr ""
@@ -322,6 +337,11 @@ msgid "%(object_description)s = Object description"
 msgstr ""
 
 #. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr ""
+
+#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
 msgstr ""
@@ -329,11 +349,6 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Information"
-msgstr ""
-
-#. module: base_action_rule
-#: constraint:ir.model:0
-msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: base_action_rule
@@ -372,8 +387,8 @@ msgid "Mail body"
 msgstr ""
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
+#: help:base.action.rule,act_remind_user:0
+msgid "Check this if you want the rule to send a reminder by email to the user."
 msgstr ""
 
 #. module: base_action_rule

@@ -22,18 +22,36 @@
 
 import xml.dom.minidom
 domimpl = xml.dom.minidom.getDOMImplementation()
+from xml.dom.minicompat import StringTypes
+
 import urlparse
 import urllib
 from osv import osv
+from tools.translate import _
 
 try:
     from DAV import utils
     from DAV.propfind import PROPFIND
+    from DAV.report import REPORT
 except ImportError:
-    raise osv.except_osv('PyWebDAV Import Error!','Please install PyWebDAV \
-from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/')
+    raise osv.except_osv(_('PyWebDAV Import Error!'), _('Please install PyWebDAV from http://code.google.com/p/pywebdav/downloads/detail?name=PyWebDAV-0.9.4.tar.gz&can=2&q=/'))
 
 import tools
+
+class Text2(xml.dom.minidom.Text):
+    def writexml(self, writer, indent="", addindent="", newl=""):
+        data = "%s%s%s" % (indent, self.data, newl)
+        data = data.replace("&", "&amp;").replace("<", "&lt;")
+        data = data.replace(">", "&gt;")
+        writer.write(data)
+
+def createText2Node(doc, data):
+    if not isinstance(data, StringTypes):
+        raise TypeError, "node contents must be a string"
+    t = Text2()
+    t.data = data
+    t.ownerDocument = doc
+    return t
 
 
 super_mk_prop_response = PROPFIND.mk_prop_response
@@ -48,7 +66,7 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     re=doc.createElement("D:response")
     # append namespaces to response
     nsnum=0
-    namespaces = self.namespaces
+    namespaces = self.namespaces[:]
     if 'DAV:' in namespaces:
         namespaces.remove('DAV:')
     for nsname in namespaces:
@@ -67,6 +85,8 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
                     string: text node
                     tuple ('elem', 'ns') for empty sub-node <ns:elem />
                     tuple ('elem', 'ns', sub-elems) for sub-node with elements
+                    tuple ('elem', 'ns', sub-elems, {attrs}) for sub-node with 
+                            optional elements and attributes
                     list, of above tuples
         """
         if ns == 'DAV:':
@@ -108,13 +128,21 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
             ve=doc.createElement(ns_prefix+v[0])
             if need_ns:
                 ve.setAttribute("xmlns:ns"+str(nsnum), v[1])
-            if len(v) > 2 and isinstance(v[2], list):
-                # support nested elements like:
-                # ( 'elem', 'ns:', [('sub-elem1', 'ns1'), ...]
-                _prop_elem_child(ve, v[1], v[2], ns_prefix)
+            if len(v) > 2 and v[2] is not None:
+                if isinstance(v[2], (list, tuple)):
+                    # support nested elements like:
+                    # ( 'elem', 'ns:', [('sub-elem1', 'ns1'), ...]
+                    _prop_elem_child(ve, v[1], v[2], ns_prefix)
+                else:
+                    vt=createText2Node(doc,tools.ustr(v[2]))
+                    ve.appendChild(vt)
+            if len(v) > 3 and v[3]:
+                assert isinstance(v[3], dict)
+                for ak, av in v[3].items():
+                    ve.setAttribute(ak, av)
             pnode.appendChild(ve)
         else:
-            ve=doc.createTextNode(tools.ustr(v))
+            ve=createText2Node(doc, tools.ustr(v))
             pnode.appendChild(ve)
 
     # write href information
@@ -124,7 +152,12 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
         fileloc = fileloc.encode('utf-8')
     href=doc.createElement("D:href")
     davpath = self._dataclass.parent.get_davpath()
-    hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
+    if uparts[0] and uparts[1]:
+        hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
+    else:
+        # When the request has been relative, we don't have enough data to
+        # reply with absolute url here.
+        hurl = '%s%s' % (davpath, urllib.quote(fileloc))
     huri=doc.createTextNode(hurl)
     href.appendChild(huri)
     re.appendChild(href)
@@ -133,6 +166,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
     ps=doc.createElement("D:propstat")
     if good_props:
         re.appendChild(ps)
+    s=doc.createElement("D:status")
+    t=doc.createTextNode("HTTP/1.1 200 OK")
+    s.appendChild(t)
+    ps.appendChild(s)
 
     gp=doc.createElement("D:prop")
     for ns in good_props.keys():
@@ -141,15 +178,11 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
         else:
             ns_prefix="ns"+str(namespaces.index(ns))+":"
         for p,v in good_props[ns].items():
-            if not v:
+            if v is None:
                 continue
             _prop_child(gp, ns, p, v)
 
     ps.appendChild(gp)
-    s=doc.createElement("D:status")
-    t=doc.createTextNode("HTTP/1.1 200 OK")
-    s.appendChild(t)
-    ps.appendChild(s)
     re.appendChild(ps)
 
     # now write the errors!
@@ -159,6 +192,10 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
         for ecode in bad_props.keys():
             ps=doc.createElement("D:propstat")
             re.appendChild(ps)
+            s=doc.createElement("D:status")
+            t=doc.createTextNode(utils.gen_estring(ecode))
+            s.appendChild(t)
+            ps.appendChild(s)
             bp=doc.createElement("D:prop")
             ps.appendChild(bp)
 
@@ -172,10 +209,6 @@ def mk_prop_response(self, uri, good_props, bad_props, doc):
                 pe=doc.createElement(ns_prefix+str(p))
                 bp.appendChild(pe)
 
-            s=doc.createElement("D:status")
-            t=doc.createTextNode(utils.gen_estring(ecode))
-            s.appendChild(t)
-            ps.appendChild(s)
             re.appendChild(ps)
 
     # return the new response element
@@ -198,7 +231,12 @@ def mk_propname_response(self,uri,propnames,doc):
         fileloc = fileloc.encode('utf-8')
     href=doc.createElement("D:href")
     davpath = self._dataclass.parent.get_davpath()
-    hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
+    if uparts[0] and uparts[1]:
+        hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
+    else:
+        # When the request has been relative, we don't have enough data to
+        # reply with absolute url here.
+        hurl = '%s%s' % (davpath, urllib.quote(fileloc))
     huri=doc.createTextNode(hurl)
     href.appendChild(huri)
     re.appendChild(href)
@@ -230,3 +268,51 @@ def mk_propname_response(self,uri,propnames,doc):
 PROPFIND.mk_prop_response = mk_prop_response
 PROPFIND.mk_propname_response = mk_propname_response
 
+def mk_lock_response(self, uri, props):
+    """ Prepare the data response to a DAV LOCK command
+    
+    This function is here, merely to be in the same file as the
+    ones above, that have similar code.
+    """
+    doc = domimpl.createDocument('DAV:', "D:prop", None)
+    ms = doc.documentElement
+    ms.setAttribute("xmlns:D", "DAV:")
+    # ms.tagName = 'D:multistatus'
+    namespaces = []
+    nsnum = 0
+    propgen = Prop2xml(doc, namespaces, nsnum)
+    # write href information
+    uparts=urlparse.urlparse(uri)
+    fileloc=uparts[2]
+    if isinstance(fileloc, unicode):
+        fileloc = fileloc.encode('utf-8')
+    davpath = self.parent.get_davpath()
+    if uparts[0] and uparts[1]:
+        hurl = '%s://%s%s%s' % (uparts[0], uparts[1], davpath, urllib.quote(fileloc))
+    else:
+        # When the request has been relative, we don't have enough data to
+        # reply with absolute url here.
+        hurl = '%s%s' % (davpath, urllib.quote(fileloc))
+        
+    props.append( ('lockroot', 'DAV:', ('href', 'DAV:', (hurl))))
+    pld = doc.createElement('D:lockdiscovery')
+    ms.appendChild(pld)
+    propgen._prop_child(pld, 'DAV:', 'activelock', props)
+
+    return doc.toxml(encoding="utf-8")
+
+super_create_prop = REPORT.create_prop
+
+def create_prop(self):
+    try:
+        if (self.filter is not None) and self._depth == "0":
+            hrefs = self.filter.getElementsByTagNameNS('DAV:', 'href')
+            if hrefs:
+                self._depth = "1"
+    except Exception:
+        pass
+    return super_create_prop(self)
+
+REPORT.create_prop = create_prop
+
+#eof

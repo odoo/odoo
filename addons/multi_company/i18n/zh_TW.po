@@ -7,42 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-12-08 11:46+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-01-26 11:01+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:16+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: multi_company
-#: help:multi_company.default,object_id:0
-msgid "Object affect by this rules"
-msgstr ""
-
-#. module: multi_company
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-
-#. module: multi_company
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr ""
-
-#. module: multi_company
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr ""
 
 #. module: multi_company
 #: model:res.company,overdue_msg:multi_company.res_company_odoo
@@ -51,19 +24,36 @@ msgstr ""
 #: model:res.company,overdue_msg:multi_company.res_company_oerp_in
 #: model:res.company,overdue_msg:multi_company.res_company_oerp_us
 msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(partner_name)s,\n"
+"\n"
+"Please find in attachment a reminder of all your unpaid invoices, for a "
+"total amount due of:\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"        "
 msgstr ""
 
 #. module: multi_company
-#: field:multi_company.default,company_dest_id:0
-msgid "Default Company"
+#: model:product.category,name:multi_company.Odoo1
+msgid "Odoo Offers"
 msgstr ""
 
 #. module: multi_company
-#: field:multi_company.default,object_id:0
-msgid "Object"
+#: view:multi_company.default:0
+msgid "Returning"
+msgstr ""
+
+#. module: multi_company
+#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
+msgid "Multi-Companies"
 msgstr ""
 
 #. module: multi_company
@@ -73,81 +63,9 @@ msgid "Multi Company"
 msgstr ""
 
 #. module: multi_company
-#: model:ir.module.module,description:multi_company.module_meta_information
-msgid ""
-"This module add the possibility to easily manage \n"
-"    the default value for each object\n"
-"    "
-msgstr ""
-
-#. module: multi_company
-#: field:multi_company.default,company_id:0
-msgid "Main Company"
-msgstr ""
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Condition"
-msgstr ""
-
-#. module: multi_company
-#: help:multi_company.default,company_dest_id:0
-msgid "Company to store the current record"
-msgstr ""
-
-#. module: multi_company
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
-
-#. module: multi_company
-#: field:multi_company.default,name:0
-msgid "Name"
-msgstr ""
-
-#. module: multi_company
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-
-#. module: multi_company
-#: model:product.category,name:multi_company.Odoo1
-msgid "Odoo Offers"
-msgstr ""
-
-#. module: multi_company
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: multi_company
-#: help:multi_company.default,name:0
-msgid "Name it to easily find a record"
-msgstr ""
-
-#. module: multi_company
-#: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
-msgid "Multi company"
-msgstr ""
-
-#. module: multi_company
-#: model:ir.model,name:multi_company.model_multi_company_default
-msgid "multi_company.default"
-msgstr ""
-
-#. module: multi_company
-#: help:multi_company.default,company_id:0
-msgid "Company where the user is connected"
-msgstr ""
-
-#. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
+#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
-msgstr ""
-
-#. module: multi_company
-#: field:multi_company.default,expression:0
-msgid "Expression"
 msgstr ""
 
 #. module: multi_company
@@ -156,37 +74,20 @@ msgid "Odoo Offer"
 msgstr ""
 
 #. module: multi_company
-#: field:multi_company.default,sequence:0
-msgid "Sequence"
-msgstr ""
-
-#. module: multi_company
-#: constraint:product.category:0
-msgid "Error ! You can not create recursive categories."
-msgstr ""
-
-#. module: multi_company
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: multi_company
-#: help:multi_company.default,expression:0
-msgid "Expression, must be True to match"
-msgstr ""
-
-#. module: multi_company
-#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
-msgid "Default company per Object"
-msgstr ""
-
-#. module: multi_company
-#: code:addons/multi_company/multi_company.py:0
-#, python-format
-msgid " (copy)"
+#: view:multi_company.default:0
+msgid "Matching"
 msgstr ""
 
 #. module: multi_company
 #: view:multi_company.default:0
-msgid "Matching"
+msgid "Condition"
+msgstr ""
+
+#. module: multi_company
+#: model:ir.module.module,description:multi_company.module_meta_information
+msgid ""
+"\n"
+"    Multicompany module is for managing a multicompany environment.\n"
+"    This module is the base module for other multicompany modules.\n"
+"    "
 msgstr ""

@@ -6,36 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-08-28 16:01+0000\n"
+"POT-Creation-Date: 2010-12-21 19:44+0000\n"
 "PO-Revision-Date: 2010-08-03 03:27+0000\n"
 "Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 04:54+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
-
-#. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid ">="
-msgstr ">="
-
-#. module: delivery
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "销售&采购"
-
-#. module: delivery
-#: view:delivery.grid:0
-msgid "Destination"
-msgstr "目的地"
+#: report:sale.shipping:0
+msgid "Order Ref."
+msgstr ""
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
@@ -43,44 +27,42 @@ msgid "Delivery by Poste"
 msgstr "邮递送货"
 
 #. module: delivery
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "无效的视图结构xml文件!"
+#: view:delivery.grid:0
+msgid "Destination"
+msgstr "目的地"
 
 #. module: delivery
-#: constraint:res.partner:0
-msgid "Error ! You can not create recursive associated members."
-msgstr "错误！您不能创建递归的相关成员。"
+#: field:stock.move,weight_net:0
+msgid "Net weight"
+msgstr ""
 
 #. module: delivery
-#: field:delivery.grid,state_ids:0
-msgid "States"
-msgstr "状态"
+#: view:stock.picking:0
+msgid "Delivery Order"
+msgstr ""
 
 #. module: delivery
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "在动作定义中使用了无效的模快名。"
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No price available !"
+msgstr ""
 
 #. module: delivery
-#: help:res.partner,property_delivery_carrier:0
-msgid "This delivery method will be used when invoicing from packing."
-msgstr "这交货方式将用在包装的发票上"
+#: model:ir.model,name:delivery.model_delivery_grid_line
+msgid "Delivery Grid Line"
+msgstr ""
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid
-msgid "Delivery Grid"
+#: view:delivery.grid:0
+msgid "Delivery grids"
 msgstr "交货表格"
 
 #. module: delivery
-#: field:delivery.grid,zip_from:0
-msgid "Start Zip"
-msgstr "开始邮编"
-
-#. module: delivery
-#: selection:delivery.grid.line,price_type:0
-msgid "Fixed"
-msgstr "固定的"
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+#: field:stock.picking,volume:0
+msgid "Volume"
+msgstr "体积"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -88,26 +70,138 @@ msgid "Grid Line"
 msgstr "表格行"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
-msgid "Delivery Pricelist"
-msgstr "交货价格表"
+#: model:ir.actions.report.xml,name:delivery.report_shipping
+msgid "Delivery order"
+msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_picking_tree5
-#: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
-msgid "Generate Draft Invoices On Receptions"
-msgstr "在接收产生发票草稿"
+#: view:res.partner:0
+msgid "Deliveries Properties"
+msgstr "交货属性"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_grid_line
-msgid "Delivery line of grid"
-msgstr "交货表格行"
+#: model:ir.actions.act_window,name:delivery.action_picking_tree4
+msgid "Picking to be invoiced"
+msgstr ""
 
 #. module: delivery
-#: model:ir.ui.menu,name:delivery.menu_delivery
-msgid "Delivery"
-msgstr "交货"
+#: help:delivery.grid,sequence:0
+msgid "Gives the sequence order when displaying a list of delivery grid."
+msgstr ""
+
+#. module: delivery
+#: view:delivery.grid:0
+#: field:delivery.grid,country_ids:0
+msgid "Countries"
+msgstr "国家"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Delivery Order :"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,variable_factor:0
+msgid "Variable Factor"
+msgstr "可变因素"
+
+#. module: delivery
+#: selection:delivery.grid.line,price_type:0
+msgid "Fixed"
+msgstr "固定的"
+
+#. module: delivery
+#: view:delivery.sale.order:0
+#: field:delivery.sale.order,carrier_id:0
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+#: field:res.partner,property_delivery_carrier:0
+#: field:sale.order,carrier_id:0
+msgid "Delivery Method"
+msgstr "交货方式"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_move
+msgid "Stock Move"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr ""
+
+#. module: delivery
+#: field:stock.picking,carrier_tracking_ref:0
+msgid "Carrier Tracking Ref"
+msgstr ""
+
+#. module: delivery
+#: field:stock.picking,weight_net:0
+msgid "Net Weight"
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: delivery
+#: view:delivery.grid:0
+msgid "Grid definition"
+msgstr "表格定义"
+
+#. module: delivery
+#: view:delivery.sale.order:0
+msgid "_Cancel"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,operator:0
+msgid "Operator"
+msgstr "运算符"
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_res_partner
+msgid "Partner"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_grid
+msgid "Delivery Grid"
+msgstr "交货表格"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Invoiced to"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_stock_picking
+msgid "Picking List"
+msgstr ""
+
+#. module: delivery
+#: model:ir.model,name:delivery.model_delivery_sale_order
+msgid "Make Delievery"
+msgstr ""
+
+#. module: delivery
+#: model:ir.module.module,description:delivery.module_meta_information
+msgid ""
+"Allows you to add delivery methods in sale orders and picking.\n"
+"     You can define your own carrier and delivery grids for prices.\n"
+"     When creating invoices from picking, OpenERP is able to add and compute "
+"the shipping line.\n"
+"\n"
+"     "
+msgstr ""
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -120,9 +214,84 @@ msgid "Grid"
 msgstr "表格"
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Deliveries Properties"
-msgstr "交货属性"
+#: help:delivery.grid,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"grid without removing it."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid,zip_to:0
+msgid "To Zip"
+msgstr "到达邮编"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Order Date"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid,name:0
+msgid "Grid Name"
+msgstr "表格名"
+
+#. module: delivery
+#: view:stock.move:0
+msgid "Weights"
+msgstr ""
+
+#. module: delivery
+#: field:stock.picking,number_of_packages:0
+msgid "Number of Packages"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+#: report:sale.shipping:0
+#: field:stock.move,weight:0
+#: field:stock.picking,weight:0
+msgid "Weight"
+msgstr "重量"
+
+#. module: delivery
+#: help:delivery.carrier,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the delivery "
+"carrier without removing it."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid available !"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,operator:0
+msgid ">="
+msgstr ">="
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "Order not in draft state !"
+msgstr ""
+
+#. module: delivery
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "错误！您不能创建递归的相关成员。"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Lot"
+msgstr ""
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -131,9 +300,133 @@ msgid "Active"
 msgstr "有效"
 
 #. module: delivery
-#: view:delivery.grid:0
-msgid "Grid definition"
-msgstr "表格定义"
+#: report:sale.shipping:0
+msgid "Shipping Date"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.carrier,product_id:0
+msgid "Delivery Product"
+msgstr "产品交货"
+
+#. module: delivery
+#: view:delivery.grid.line:0
+msgid "Condition"
+msgstr "条件"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery method(s) you want your sales to be processed "
+"with. Each delivery method can be assigned to a pricelist which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+
+#. module: delivery
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,price_type:0
+#: field:delivery.grid.line,type:0
+msgid "Variable"
+msgstr "可变的"
+
+#. module: delivery
+#: help:res.partner,property_delivery_carrier:0
+msgid "This delivery method will be used when invoicing from picking."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid.line,max_value:0
+msgid "Maximum Value"
+msgstr "最大值"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Quantity"
+msgstr ""
+
+#. module: delivery
+#: field:delivery.grid,zip_from:0
+msgid "Start Zip"
+msgstr "开始邮编"
+
+#. module: delivery
+#: help:sale.order,carrier_id:0
+msgid ""
+"Complete this field if you plan to invoice the shipping based on picking."
+msgstr ""
+
+#. module: delivery
+#: field:delivery.carrier,partner_id:0
+msgid "Carrier Partner"
+msgstr "运输业务伙伴"
+
+#. module: delivery
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "销售&采购"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery pricelist allows you to compute the cost and sales price of the "
+"delivery based on the weight of the products and other criteria. You can "
+"define several pricelists for one delivery method, for each region such as "
+"countries or a zone in a specific country defined by a zip code range."
+msgstr ""
+
+#. module: delivery
+#: selection:delivery.grid.line,operator:0
+msgid "<="
+msgstr "<="
+
+#. module: delivery
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "成本价"
+
+#. module: delivery
+#: view:delivery.sale.order:0
+msgid "Create Deliveries"
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_cost
+#: view:sale.order:0
+msgid "Delivery Costs"
+msgstr "交货成本"
+
+#. module: delivery
+#: report:sale.shipping:0
+msgid "Description"
+msgstr ""
+
+#. module: delivery
+#: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
+msgid "Delivery Pricelist"
+msgstr "交货价格表"
+
+#. module: delivery
+#: field:delivery.carrier,price:0
+#: selection:delivery.grid.line,type:0
+#: selection:delivery.grid.line,variable_factor:0
+msgid "Price"
+msgstr "价格"
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid matching for this carrier !"
+msgstr ""
+
+#. module: delivery
+#: model:ir.ui.menu,name:delivery.menu_delivery
+msgid "Delivery"
+msgstr "交货"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -147,24 +440,10 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: field:delivery.carrier,product_id:0
-msgid "Delivery Product"
-msgstr "产品交货"
-
-#. module: delivery
-#: view:delivery.grid.line:0
-msgid "Condition"
-msgstr "条件"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_delivery_carrier
-msgid "Carrier and delivery grids"
-msgstr "货运公司和交货表格"
-
-#. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "成本价"
+#: code:addons/delivery/stock.py:0
+#, python-format
+msgid "The carrier %s (id: %d) has no delivery grid!"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -172,74 +451,19 @@ msgid "Name"
 msgstr "名称"
 
 #. module: delivery
-#: constraint:product.template:0
-msgid "Error: UOS must be in a different category than the UOM"
-msgstr "错误:销售单位必须和计量单位在不同的分类."
-
-#. module: delivery
-#: field:delivery.grid,country_ids:0
-msgid "Countries"
-msgstr "国家"
-
-#. module: delivery
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
-
-#. module: delivery
-#: view:sale.order:0
-msgid "Notes"
-msgstr "备注"
-
-#. module: delivery
-#: field:delivery.grid.line,variable_factor:0
-msgid "Variable Factor"
-msgstr "可变因素"
-
-#. module: delivery
-#: selection:delivery.grid.line,price_type:0
-#: field:delivery.grid.line,type:0
-msgid "Variable"
-msgstr "可变的"
-
-#. module: delivery
-#: field:delivery.grid,name:0
-msgid "Grid Name"
-msgstr "表格名"
-
-#. module: delivery
 #: view:delivery.carrier:0
 #: field:delivery.carrier,name:0
 #: field:delivery.grid,carrier_id:0
+#: model:ir.model,name:delivery.model_delivery_carrier
+#: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
 msgid "Carrier"
 msgstr "运输公司"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,volume:0
-msgid "Volume"
-msgstr "体积"
-
-#. module: delivery
-#: field:delivery.grid.line,max_value:0
-msgid "Maximum Value"
-msgstr "最大值"
-
-#. module: delivery
-#: wizard_button:delivery.sale.order,init,delivery:0
-msgid "Add Delivery Costs"
-msgstr "增加交货成本"
-
-#. module: delivery
-#: wizard_field:delivery.sale.order,init,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
-#: field:res.partner,property_delivery_carrier:0
-msgid "Delivery Method"
-msgstr "交货方式"
+#: view:delivery.sale.order:0
+msgid "_Apply"
+msgstr ""
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -247,9 +471,10 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: field:delivery.grid.line,operator:0
-msgid "Operator"
-msgstr "运算符"
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "The order state have to be draft to add delivery lines."
+msgstr ""
 
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
@@ -262,51 +487,9 @@ msgid "Delivery Grids"
 msgstr "交货表格"
 
 #. module: delivery
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-#: field:stock.picking,weight:0
-msgid "Weight"
-msgstr "重量"
-
-#. module: delivery
 #: field:delivery.grid,sequence:0
 msgid "Sequence"
 msgstr "序列"
-
-#. module: delivery
-#: field:delivery.carrier,partner_id:0
-msgid "Carrier Partner"
-msgstr "运输业务伙伴"
-
-#. module: delivery
-#: model:ir.module.module,description:delivery.module_meta_information
-msgid ""
-"Allows you to add delivery methods in sales orders and packing. You can "
-"define your own carrier and delivery grids for prices. When creating "
-"invoices from picking, Open ERP is able to add and compute the shipping line."
-msgstr "允许你在销售单和包装中增加交货方式. 你能定义自己的运输公司和交货表格的价格. 当创建包装发票时, 系统可以增加和计算运输明细"
-
-#. module: delivery
-#: field:delivery.grid,zip_to:0
-msgid "To Zip"
-msgstr "到达邮编"
-
-#. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_picking_tree4
-#: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
-msgid "Packing to be invoiced"
-msgstr "包装要开发票"
-
-#. module: delivery
-#: help:sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on packing."
-msgstr "如果你计划根据运输这包装开发票请完整填写这字段"
-
-#. module: delivery
-#: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
-msgid "Delivery Costs"
-msgstr "交货成本"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
@@ -314,41 +497,72 @@ msgid "Sale Price"
 msgstr "销售价格"
 
 #. module: delivery
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "错误:无效EAN编码"
-
-#. module: delivery
 #: view:delivery.grid:0
-msgid "Delivery grids"
-msgstr "交货表格"
-
-#. module: delivery
-#: wizard_button:delivery.sale.order,init,end:0
-msgid "Cancel"
-msgstr "取消"
-
-#. module: delivery
-#: field:sale.order,carrier_id:0
-msgid "Delivery method"
-msgstr "交货方式"
-
-#. module: delivery
-#: field:delivery.carrier,price:0
-#: selection:delivery.grid.line,type:0
-#: selection:delivery.grid.line,variable_factor:0
-msgid "Price"
-msgstr "价格"
-
-#. module: delivery
-#: constraint:res.partner:0
-msgid "The VAT doesn't seem to be correct."
-msgstr "这增值税似乎不正确"
+#: field:delivery.grid,state_ids:0
+msgid "States"
+msgstr "状态"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "价格类型"
 
-#~ msgid "<="
-#~ msgstr "<="
+#~ msgid "Cancel"
+#~ msgstr "取消"
+
+#~ msgid "Notes"
+#~ msgstr "备注"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
+#~ msgid "Generate Draft Invoices On Receptions"
+#~ msgstr "在接收产生发票草稿"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "错误:销售单位必须和计量单位在不同的分类."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr "错误:默认的计量单位和这货物的计量单位必须是同一类型."
+
+#~ msgid "Packing to be invoiced"
+#~ msgstr "包装要开发票"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "错误:无效EAN编码"
+
+#~ msgid "The VAT doesn't seem to be correct."
+#~ msgstr "这增值税似乎不正确"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "在动作定义中使用了无效的模快名。"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "无效的视图结构xml文件!"
+
+#~ msgid "Delivery line of grid"
+#~ msgstr "交货表格行"
+
+#~ msgid "Carrier and delivery grids"
+#~ msgstr "货运公司和交货表格"
+
+#~ msgid "Add Delivery Costs"
+#~ msgstr "增加交货成本"
+
+#~ msgid ""
+#~ "Complete this field if you plan to invoice the shipping based on packing."
+#~ msgstr "如果你计划根据运输这包装开发票请完整填写这字段"
+
+#~ msgid "Delivery method"
+#~ msgstr "交货方式"
+
+#~ msgid ""
+#~ "Allows you to add delivery methods in sales orders and packing. You can "
+#~ "define your own carrier and delivery grids for prices. When creating "
+#~ "invoices from picking, Open ERP is able to add and compute the shipping line."
+#~ msgstr "允许你在销售单和包装中增加交货方式. 你能定义自己的运输公司和交货表格的价格. 当创建包装发票时, 系统可以增加和计算运输明细"
+
+#~ msgid "This delivery method will be used when invoicing from packing."
+#~ msgstr "这交货方式将用在包装的发票上"

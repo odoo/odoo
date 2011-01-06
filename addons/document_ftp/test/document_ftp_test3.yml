@@ -5,10 +5,10 @@
         from document_ftp import test_easyftp as te
         ftp = te.get_plain_ftp(timeout=1.0)
 -
-    I create a folder called 'οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½' in the server.
+    I create in the server a folder called 'Δοκιμαστικός Φάκελλος'
 -
     !record {model: document.directory, id: dir_itests }:
-        name: 'οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½'
+        name: 'Δοκιμαστικός Φάκελλος'
         parent_id: document.dir_root
 -
     And then I create another folder, under it, through FTP
@@ -16,67 +16,77 @@
     !python {model: ir.attachment}: |
         cr.commit()
         from document_ftp import test_easyftp as te
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½')
-        ftp.mkd("οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½")
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος')
+        ftp.mkd("Φάκελλος από κάτω")
 -
     I check that this folder exists at the server
 -
-    !assert {model: document.directory, id: , search: "[('name','=','οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½')]" }:
+    !assert {model: document.directory, id: , search: "[('name','=','Φάκελλος από κάτω')]" }:
       - parent_id != False
 -
-    I login with FTP and check that 'οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½' is there
+    I login with FTP and check that 'Δοκιμαστικός Φάκελλος' is there
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½')
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/Φάκελλος από κάτω')
 -
-    I create a file named 'οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½' into that folder
--
-    !python {model: ir.attachment}: |
-        from document_ftp import test_easyftp as te
-        from cStringIO import StringIO
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½')
-        fdata = StringIO('οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½ utf-8')
-        ftp.storbinary('STOR οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½.txt', fdata)
--
-    I remove the 'οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½.txt' file
+    I create a file named 'Δοκιμή' into that folder
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½')
-        ftp.delete('οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½.txt')
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/Φάκελλος από κάτω')
+        fdata = StringIO('κείμενο με utf-8')
+        ftp.storbinary('STOR Δοκιμή.txt', fdata)
 -
-    I rename 'οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½' into 'οΏ½οΏ½οΏ½οΏ½οΏ½'
--
-    !python {model: ir.attachment}: |
-        from document_ftp import test_easyftp as te
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½')
-        ftp.rename("οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½", "οΏ½οΏ½οΏ½οΏ½οΏ½")
--
-    I place a file 'file οΏ½3' in 'οΏ½οΏ½οΏ½οΏ½οΏ½'
+    I remove the 'Δοκιμή.txt' file
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½/οΏ½οΏ½οΏ½οΏ½οΏ½')
-        fdata = StringIO('οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½')
-        ftp.storbinary('STOR file οΏ½3.txt', fdata)
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/Φάκελλος από κάτω')
+        ftp.delete('Δοκιμή.txt')
+-
+    I rename 'Φάκελλος από κάτω' into 'άλλος'
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος')
+        ftp.rename("Φάκελλος από κάτω", "άλλος")
+-
+    I place a file 'file Φ3' in 'άλλος'
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/άλλος')
+        fdata = StringIO('κι άλλο κείμενο')
+        ftp.storbinary('STOR file Φ3.txt', fdata)
 -
     I rename the file into file+range(1..200) (large filename)
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½/οΏ½οΏ½οΏ½οΏ½οΏ½')
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/άλλος')
         vuvuzela = 'b'+''.join('z' * 200)+'!'
-        ftp.rename("file οΏ½3.txt", vuvuzela)
+        ftp.rename("file Φ3.txt", vuvuzela)
 -
     I delete the file with the large name
 -
     !python {model: ir.attachment}: |
         from document_ftp import test_easyftp as te
         from cStringIO import StringIO
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½ οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½οΏ½/οΏ½οΏ½οΏ½οΏ½οΏ½')
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Δοκιμαστικός Φάκελλος/άλλος')
         vuvuzela = 'b'+''.join('z' * 200)+'!'
         ftp.delete(vuvuzela)
+
+-
+    I delete the testing folders
+-
+    !python {model: ir.attachment}: |
+        from document_ftp import test_easyftp as te
+        from cStringIO import StringIO
+        ftp = te.get_ftp_folder(cr, uid, self, 'Documents')
+        ftp.rmd('Δοκιμαστικός Φάκελλος/άλλος')
+        ftp.rmd('Δοκιμαστικός Φάκελλος')

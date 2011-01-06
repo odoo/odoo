@@ -7,270 +7,235 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-11-25 14:28+0000\n"
-"PO-Revision-Date: 2010-06-21 15:57+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-28 08:37+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-29 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_margin
-#: selection:report.account.invoice,type:0
-#: selection:report.account.invoice.category,type:0
-#: selection:report.account.invoice.partner,type:0
-#: selection:report.account.invoice.partner.product,type:0
+#: view:report.account.invoice.product:0
+msgid "Category"
+msgstr "Categoría"
+
+#. module: sale_margin
 #: selection:report.account.invoice.product,type:0
-#: selection:stock.invoice_onshipping,init,type:0
 msgid "Customer Refund"
 msgstr "Factura de abono de cliente"
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_report_account_invoice_product
-msgid "report.account.invoice.product"
-msgstr "informe.contabilidad.factura.producto"
-
-#. module: sale_margin
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
-
-#. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_invoice_by_product
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_by_product
-msgid "Invoices by Product"
-msgstr "Facturas por producto"
-
-#. module: sale_margin
-#: selection:report.account.invoice,type:0
-#: selection:report.account.invoice.category,type:0
-#: selection:report.account.invoice.partner,type:0
-#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
-#: selection:stock.invoice_onshipping,init,type:0
 msgid "Customer Invoice"
 msgstr "Factura de cliente"
 
 #. module: sale_margin
-#: wizard_view:stock.invoice_onshipping,init:0
-msgid "Create invoices"
-msgstr "Crear facturas"
+#: selection:report.account.invoice.product,month:0
+msgid "February"
+msgstr "Febrero"
 
 #. module: sale_margin
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "¡XML inválido para la definición de la vista!"
+#: view:report.account.invoice.product:0
+msgid "Current"
+msgstr "Actual"
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_report_account_invoice_partner_product
-msgid "report.account.invoice.partner.product"
-msgstr "informe.contabilidad.factura.empresa.producto"
+#: view:report.account.invoice.product:0
+msgid "Group By..."
+msgstr "Agrupar por..."
 
 #. module: sale_margin
-#: selection:report.account.invoice,type:0
-#: selection:report.account.invoice.category,type:0
-#: selection:report.account.invoice.partner,type:0
-#: selection:report.account.invoice.partner.product,type:0
-#: selection:report.account.invoice.product,type:0
-#: selection:stock.invoice_onshipping,init,type:0
-msgid "Supplier Invoice"
-msgstr "Factura de proveedor"
-
-#. module: sale_margin
-#: field:report.account.invoice,state:0
-#: field:report.account.invoice.category,state:0
-#: field:report.account.invoice.partner,state:0
-#: field:report.account.invoice.partner.product,state:0
+#: view:report.account.invoice.product:0
 #: field:report.account.invoice.product,state:0
 msgid "State"
 msgstr "Estado"
 
 #. module: sale_margin
-#: view:stock.picking:0
-msgid "Create Invoice"
-msgstr "Crear factura"
+#: model:ir.module.module,description:sale_margin.module_meta_information
+msgid ""
+" \n"
+"    This module adds the 'Margin' on sales order,\n"
+"    which gives the profitability by calculating the difference between the "
+"Unit Price and Cost Price\n"
+"    "
+msgstr ""
+" \n"
+"    Este módulo añade el 'Margen' en el pedido de venta,\n"
+"    que proporciona la rentabilidad calculando la diferencia entre el precio "
+"unidad y el precio de coste\n"
+"    "
 
 #. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
+#: view:report.account.invoice.product:0
 #: selection:report.account.invoice.product,state:0
 msgid "Draft"
 msgstr "Borrador"
 
 #. module: sale_margin
-#: constraint:ir.actions.act_window:0
-msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
-
-#. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_month_product
-msgid "All Months"
-msgstr "Todos los meses"
-
-#. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_partner_product_tree
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_partner_product_tree_all
-msgid "report.account.invoice.partner.product.tree"
-msgstr "informe.contabilidad.factura.empresa.producto.árbol"
-
-#. module: sale_margin
-#: field:report.account.invoice,type:0
-#: field:report.account.invoice.category,type:0
-#: field:report.account.invoice.partner,type:0
-#: field:report.account.invoice.partner.product,type:0
-#: field:report.account.invoice.product,type:0
-#: wizard_field:stock.invoice_onshipping,init,type:0
-msgid "Type"
-msgstr "Tipo"
-
-#. module: sale_margin
-#: wizard_field:stock.invoice_onshipping,init,journal_id:0
-msgid "Destination Journal"
-msgstr "Diario de destino"
-
-#. module: sale_margin
-#: view:stock.picking:0
-msgid "Supplier Invoices"
-msgstr "Facturas de proveedor"
-
-#. module: sale_margin
-#: field:report.account.invoice.partner.product,product_id:0
-#: field:report.account.invoice.product,product_id:0
-msgid "Product"
-msgstr "Producto"
-
-#. module: sale_margin
-#: view:report.account.invoice.partner:0
-msgid "Invoices by partner"
-msgstr "Facturas por empresa"
-
-#. module: sale_margin
-#: view:report.account.invoice.category:0
-msgid "Invoices by category"
-msgstr "Facturas por categoría"
-
-#. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Paid"
 msgstr "Pagado"
 
 #. module: sale_margin
-#: model:ir.actions.wizard,name:sale_margin.wizard_picking_invoice_create
-#: wizard_button:stock.invoice_onshipping,init,create_invoice:0
-msgid "Create invoice"
-msgstr "Crear factura"
+#: model:ir.model,name:sale_margin.model_stock_picking
+msgid "Picking List"
+msgstr "Lista de empaquetado"
 
 #. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_category_tree
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_category_tree_all
-msgid "report.account.invoice.category.tree"
-msgstr "informe.contabilidad.factura.categoría.árbol"
+#: help:sale.order,margin:0
+msgid ""
+"It gives profitability by calculating the difference between the Unit Price "
+"and Cost Price."
+msgstr ""
+"Proporciona la rentabilidad calculando la diferencia entre el precio unidad "
+"y el precio de coste."
 
 #. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_invoice_by_partner_product
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_by_partner_product
-msgid "Invoices by Partner and Product"
-msgstr "Facturas por empresa y producto"
+#: field:report.account.invoice.product,type:0
+msgid "Type"
+msgstr "Tipo"
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_report_account_invoice_category
-msgid "report.account.invoice.category"
-msgstr "informe.contabilidad.factura.categoría"
+#: model:ir.model,name:sale_margin.model_report_account_invoice_product
+msgid "Invoice Statistics"
+msgstr "Estadísticas de facturas"
 
 #. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_this_month_product
+#: view:report.account.invoice.product:0
+#: field:report.account.invoice.product,product_id:0
+msgid "Product"
+msgstr "Producto"
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
+msgid "Invoice by Partner"
+msgstr "Facturas por empresa"
+
+#. module: sale_margin
+#: selection:report.account.invoice.product,month:0
+msgid "August"
+msgstr "Agosto"
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
+#: selection:report.account.invoice.product,state:0
+msgid "Pro-forma"
+msgstr "Pro-forma"
+
+#. module: sale_margin
+#: selection:report.account.invoice.product,month:0
+msgid "May"
+msgstr "Mayo"
+
+#. module: sale_margin
+#: selection:report.account.invoice.product,month:0
+msgid "June"
+msgstr "Junio"
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
+msgid "Date Invoiced"
+msgstr "Fecha de facturación"
+
+#. module: sale_margin
+#: model:ir.module.module,shortdesc:sale_margin.module_meta_information
+msgid "Margins in Sales Order"
+msgstr "Márgenes en pedidos de venta"
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
+msgid "Search Margin"
+msgstr "Buscar margen"
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
+msgid "This Year"
+msgstr "Este año"
+
+#. module: sale_margin
+#: field:report.account.invoice.product,date:0
+msgid "Date"
+msgstr "Fecha"
+
+#. module: sale_margin
+#: selection:report.account.invoice.product,month:0
+msgid "July"
+msgstr "Julio"
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
+msgid "Extended Filters..."
+msgstr "Filtros extendidos..."
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
 msgid "This Month"
 msgstr "Este Mes"
 
 #. module: sale_margin
-#: field:report.account.invoice.category,categ_id:0
+#: view:report.account.invoice.product:0
+#: field:report.account.invoice.product,day:0
+msgid "Day"
+msgstr "Día"
+
+#. module: sale_margin
+#: field:report.account.invoice.product,categ_id:0
 msgid "Categories"
 msgstr "Categorías"
 
 #. module: sale_margin
 #: field:account.invoice.line,cost_price:0
-#: field:report.account.invoice,cost_price:0
-#: field:report.account.invoice.category,cost_price:0
-#: field:report.account.invoice.partner,cost_price:0
-#: field:report.account.invoice.partner.product,cost_price:0
 #: field:report.account.invoice.product,cost_price:0
 #: field:sale.order.line,purchase_price:0
 msgid "Cost Price"
 msgstr "Precio coste"
 
 #. module: sale_margin
-#: wizard_field:stock.invoice_onshipping,init,group:0
-msgid "Group by partner"
-msgstr "Agrupar por empresa"
+#: selection:report.account.invoice.product,month:0
+msgid "October"
+msgstr "Octubre"
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_report_account_invoice_partner
-msgid "report.account.invoice.partner"
-msgstr "informe.contabilidad.factura.empresa"
+#: selection:report.account.invoice.product,month:0
+msgid "January"
+msgstr "Enero"
 
 #. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_invoice_by_partner
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_by_partner
-msgid "Invoices by Partner"
-msgstr "Facturas por empresa"
+#: view:report.account.invoice.product:0
+#: field:report.account.invoice.product,year:0
+msgid "Year"
+msgstr "Año"
 
 #. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_invoice_by_category
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_by_category
-msgid "Invoices by Category"
-msgstr "Facturas por categoría"
+#: selection:report.account.invoice.product,month:0
+msgid "September"
+msgstr "Septiembre"
 
 #. module: sale_margin
-#: view:report.account.invoice.partner.product:0
-msgid "Invoices by partner and product"
-msgstr "Facturas por empresa y producto"
+#: selection:report.account.invoice.product,month:0
+msgid "April"
+msgstr "Abril"
 
 #. module: sale_margin
-#: field:report.account.invoice,amount:0
-#: field:report.account.invoice.category,amount:0
-#: field:report.account.invoice.partner,amount:0
-#: field:report.account.invoice.partner.product,amount:0
 #: field:report.account.invoice.product,amount:0
 msgid "Amount"
 msgstr "Importe"
 
 #. module: sale_margin
-#: wizard_field:stock.invoice_onshipping,init,invoice_date:0
-msgid "Invoiced date"
-msgstr "fecha facturada"
-
-#. module: sale_margin
-#: selection:report.account.invoice,type:0
-#: selection:report.account.invoice.category,type:0
-#: selection:report.account.invoice.partner,type:0
-#: selection:report.account.invoice.partner.product,type:0
 #: selection:report.account.invoice.product,type:0
-#: selection:stock.invoice_onshipping,init,type:0
 msgid "Supplier Refund"
 msgstr "Factura de abono de proveedor"
 
 #. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_partner_tree
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_partner_tree_all
-msgid "report.account.invoice.partner.tree"
-msgstr "informe.contabilidad.factura.empresa.árbol"
+#: selection:report.account.invoice.product,month:0
+msgid "March"
+msgstr "Marzo"
 
 #. module: sale_margin
-#: field:report.account.invoice,margin:0
-#: field:report.account.invoice.category,margin:0
-#: field:report.account.invoice.partner,margin:0
-#: field:report.account.invoice.partner.product,margin:0
 #: field:report.account.invoice.product,margin:0
 #: field:sale.order,margin:0
 #: field:sale.order.line,margin:0
@@ -278,10 +243,11 @@ msgid "Margin"
 msgstr "Margen"
 
 #. module: sale_margin
-#: field:report.account.invoice,quantity:0
-#: field:report.account.invoice.category,quantity:0
-#: field:report.account.invoice.partner,quantity:0
-#: field:report.account.invoice.partner.product,quantity:0
+#: selection:report.account.invoice.product,month:0
+msgid "November"
+msgstr "Noviembre"
+
+#. module: sale_margin
 #: field:report.account.invoice.product,quantity:0
 msgid "Quantity"
 msgstr "Cantidad"
@@ -292,84 +258,207 @@ msgid "Invoices by product"
 msgstr "Facturas por producto"
 
 #. module: sale_margin
-#: model:ir.module.module,shortdesc:sale_margin.module_meta_information
-msgid "Margins in Sale Orders"
-msgstr "Márgenes en pedidos de venta"
+#: selection:report.account.invoice.product,type:0
+msgid "Supplier Invoice"
+msgstr "Factura de proveedor"
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_report_account_invoice
-msgid "report.account.invoice"
-msgstr "informe.contabilidad.factura"
-
-#. module: sale_margin
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_all_invoice_by_invoices
-#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_by_invoices
-#: view:report.account.invoice:0
-#: view:stock.picking:0
 #: field:stock.picking,invoice_ids:0
 msgid "Invoices"
 msgstr "Facturas"
 
 #. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
-#: selection:report.account.invoice.product,state:0
-msgid "Pro-forma"
-msgstr "Pro-forma"
+#: selection:report.account.invoice.product,month:0
+msgid "December"
+msgstr "Diciembre"
 
 #. module: sale_margin
-#: field:report.account.invoice,name:0
-#: field:report.account.invoice.category,name:0
-#: field:report.account.invoice.partner,name:0
-#: field:report.account.invoice.partner.product,name:0
-#: field:report.account.invoice.product,name:0
+#: model:ir.model,name:sale_margin.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Línea de factura"
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
+#: field:report.account.invoice.product,month:0
 msgid "Month"
 msgstr "Mes"
 
 #. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Canceled"
 msgstr "Cancelada"
 
 #. module: sale_margin
+#: model:ir.actions.act_window,help:sale_margin.action_report_account_invoice_report
+msgid ""
+"This report gives you an overview of all the invoices generated by the "
+"system. You can sort and group your results by specific selection criteria "
+"to quickly find what you are looking for."
+msgstr ""
+"Este informe ofrece una visión general de todas las facturas generadas por "
+"el sistema. Puede ordenar y agrupar los resultados por criterios específicos "
+"de selección para encontrar rápidamente lo que busca."
+
+#. module: sale_margin
 #: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_product
+msgid "Invoice Report"
+msgstr "Informe de factura"
+
+#. module: sale_margin
+#: view:report.account.invoice.product:0
+msgid "Done"
+msgstr "Realizado"
+
+#. module: sale_margin
+#: model:ir.ui.menu,name:sale_margin.menu_report_account_invoice_reoirt
 msgid "Invoice"
 msgstr "Factura"
 
 #. module: sale_margin
-#: wizard_button:stock.invoice_onshipping,init,end:0
-msgid "Cancel"
-msgstr "Cancelar"
+#: view:stock.picking:0
+msgid "Customer Invoices"
+msgstr "Facturas de cliente"
 
 #. module: sale_margin
-#: field:report.account.invoice.partner,partner_id:0
-#: field:report.account.invoice.partner.product,partner_id:0
+#: view:report.account.invoice.product:0
+#: field:report.account.invoice.product,partner_id:0
 msgid "Partner"
 msgstr "Empresa"
 
 #. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_tree
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_tree_all
-msgid "report.account.invoice.tree"
-msgstr "informe.contabilidad.factura.árbol"
+#: model:ir.model,name:sale_margin.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venta"
 
 #. module: sale_margin
-#: selection:report.account.invoice,state:0
-#: selection:report.account.invoice.category,state:0
-#: selection:report.account.invoice.partner,state:0
-#: selection:report.account.invoice.partner.product,state:0
 #: selection:report.account.invoice.product,state:0
 msgid "Open"
 msgstr "Abierta"
 
 #. module: sale_margin
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_product_tree
-#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_product_tree_all
-msgid "report.account.invoice.product.tree"
-msgstr "informe.contabilidad.factura.producto.árbol"
+#: model:ir.actions.act_window,name:sale_margin.action_report_account_invoice_report
+msgid "Invoice Analysis"
+msgstr "Análisis de facturas"
+
+#. module: sale_margin
+#: model:ir.model,name:sale_margin.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea pedido de venta"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
+#~ "especial!"
+
+#~ msgid "report.account.invoice.partner.product"
+#~ msgstr "informe.contabilidad.factura.empresa.producto"
+
+#~ msgid "report.account.invoice.product"
+#~ msgstr "informe.contabilidad.factura.producto"
+
+#~ msgid "Invoices by Product"
+#~ msgstr "Facturas por producto"
+
+#~ msgid "Create invoices"
+#~ msgstr "Crear facturas"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "¡XML inválido para la definición de la vista!"
+
+#~ msgid "All Months"
+#~ msgstr "Todos los meses"
+
+#~ msgid "Destination Journal"
+#~ msgstr "Diario de destino"
+
+#~ msgid "report.account.invoice.partner.product.tree"
+#~ msgstr "informe.contabilidad.factura.empresa.producto.árbol"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nombre de modelo no válido en la definición de la acción."
+
+#~ msgid "Create Invoice"
+#~ msgstr "Crear factura"
+
+#~ msgid "Supplier Invoices"
+#~ msgstr "Facturas de proveedor"
+
+#~ msgid "Invoices by Partner and Product"
+#~ msgstr "Facturas por empresa y producto"
+
+#~ msgid "report.account.invoice.category"
+#~ msgstr "informe.contabilidad.factura.categoría"
+
+#~ msgid "Create invoice"
+#~ msgstr "Crear factura"
+
+#~ msgid "report.account.invoice.category.tree"
+#~ msgstr "informe.contabilidad.factura.categoría.árbol"
+
+#~ msgid "Invoices by category"
+#~ msgstr "Facturas por categoría"
+
+#~ msgid "Invoices by partner"
+#~ msgstr "Facturas por empresa"
+
+#~ msgid "report.account.invoice.partner.tree"
+#~ msgstr "informe.contabilidad.factura.empresa.árbol"
+
+#~ msgid "Invoices by partner and product"
+#~ msgstr "Facturas por empresa y producto"
+
+#~ msgid "Invoices by Category"
+#~ msgstr "Facturas por categoría"
+
+#~ msgid "Group by partner"
+#~ msgstr "Agrupar por empresa"
+
+#~ msgid "Invoices by Partner"
+#~ msgstr "Facturas por empresa"
+
+#~ msgid "report.account.invoice.partner"
+#~ msgstr "informe.contabilidad.factura.empresa"
+
+#~ msgid "Margins in Sale Orders"
+#~ msgstr "Márgenes en pedidos de venta"
+
+#~ msgid "report.account.invoice"
+#~ msgstr "informe.contabilidad.factura"
+
+#~ msgid "Cancel"
+#~ msgstr "Cancelar"
+
+#~ msgid "report.account.invoice.product.tree"
+#~ msgstr "informe.contabilidad.factura.producto.árbol"
+
+#~ msgid "report.account.invoice.tree"
+#~ msgstr "informe.contabilidad.factura.árbol"
+
+#~ msgid "Invoiced date"
+#~ msgstr "fecha facturada"
+
+#~ msgid "Sale Order Line"
+#~ msgstr "Línea pedido de venta"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Error! No puede crear un menú recursivo."
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "¡El ID del certificado del módulo debe ser único!"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Sale Order"
+#~ msgstr "Pedido de venta"
+
+#~ msgid ""
+#~ "It gives profitability by calculating the difference between the Unit Price "
+#~ "and Cost Price"
+#~ msgstr ""
+#~ "Da la rentabilidad calculando la diferencia entre precio unitario y precio "
+#~ "de coste"
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

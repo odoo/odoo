@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<openerp>
+    <data>
+
+        <report
+            id="pos_invoice_report"
+            string="Invoice"
+            model="pos.order"
+            name="pos.invoice"
+            auto="False"
+            multi="True"
+            rml="account/report/account_print_invoice.rml"
+             />
+
+        <report
+            id="pos_lines_detail"
+            string="Details of Sales"
+            model="pos.order"
+            name="pos.details"
+            auto="False"
+            multi="True"
+            menu="False"
+            rml="point_of_sale/report/pos_details.rml"
+             />
+
+        <report
+            id="pos_details_summary"
+            string="Sales (summary)"
+            model="pos.order"
+            name="pos.details_summary"
+            auto="False"
+            multi="True"
+            rml="point_of_sale/report/pos_details_summary.rml"
+             />
+
+        <report
+            id="pos_lines_report"
+            string="Pos Lines"
+            model="pos.order"
+            name="pos.lines"
+            auto="False"
+            multi="True"
+            rml="point_of_sale/report/pos_lines.rml"
+             />
+
+        <report
+            id="pos_payment_report"
+            string="Payment Report For Sale"
+            model="pos.order"
+            name="pos.payment.report"
+            auto="False"
+            multi="True"
+            menu="True"
+            rml="point_of_sale/report/pos_payment_report.rml"
+             />
+
+        <report
+            id="pos_sales_user"
+            string="Sales Report"
+            model="pos.order"
+            name="pos.sales.user"
+            auto="False"
+            multi="True"
+            menu="False"
+            rml="point_of_sale/report/pos_sales_user.rml"
+             />
+
+        <report
+            id="pos_sales_user_today"
+            string="Today's Sales"
+            model="pos.order"
+            name="pos.sales.user.today"
+            auto="False"
+            multi="True"
+            menu="False"
+            rml="point_of_sale/report/pos_sales_user_today.rml"
+             />
+
+        <report
+            id="pos_payment_report_date"
+            string="Payment Report"
+            model="pos.order"
+            name="pos.payment.report.date"
+            auto="False"
+            multi="True"
+            menu="False"
+            rml="point_of_sale/report/pos_payment_report_date.rml"
+             />
+        <report
+            id="pos_payment_report_user"
+            string="Today's Payment By User"
+            model="pos.order"
+            name="pos.payment.report.user"
+            auto="False"
+            multi="True"
+            menu="False"
+            rml="point_of_sale/report/pos_payment_report_user.rml"
+             />
+        <report
+            id="pos_sales_user_today_current_user"
+            string="Today's Sales by Current User"
+            model="pos.order"
+            name="pos.sales.user.today.current.user"
+            auto="False"
+            multi="True"
+            menu="False"
+            rml="point_of_sale/report/pos_sales_user_today_current_user.rml"
+             />
+
+
+    </data>
+</openerp>

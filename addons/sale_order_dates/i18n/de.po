@@ -7,43 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-08-09 12:18+0000\n"
-"PO-Revision-Date: 2010-08-31 08:16+0000\n"
-"Last-Translator: Ferdinand-chricar <Unknown>\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"PO-Revision-Date: 2010-12-31 10:35+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:18+0000\n"
+"X-Launchpad-Export-Date: 2011-01-01 05:05+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_order_dates
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Fehlerhafter XML-Code für diese Ansicht!"
-
-#. module: sale_order_dates
-#: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objektname muss mit \"x_\" beginnen und darf keine Sonderzeichen "
-"beinhalten!"
-
-#. module: sale_order_dates
-#: model:ir.module.module,shortdesc:sale_order_dates.module_meta_information
-msgid "Sale Order Dates"
-msgstr "Verkaufsauftrag Datum"
+#: help:sale.order,requested_date:0
+msgid "Date on which customer has requested for sales."
+msgstr "Datum der Anfrage an Vertrieb"
 
 #. module: sale_order_dates
 #: field:sale.order,commitment_date:0
 msgid "Commitment Date"
-msgstr "Bestätigungsdatum"
-
-#. module: sale_order_dates
-#: model:ir.model,name:sale_order_dates.model_sale_order
-msgid "Sale Order"
-msgstr "Verkaufsauftrag"
+msgstr "Datum Liefervereinbarung"
 
 #. module: sale_order_dates
 #: field:sale.order,effective_date:0
@@ -51,13 +34,75 @@ msgid "Effective Date"
 msgstr "Effektives Datum"
 
 #. module: sale_order_dates
-#: model:ir.module.module,description:sale_order_dates.module_meta_information
-msgid "Add commitment, requested and effective dates on the sale order.\n"
-msgstr ""
-"fügt Bestätigungsdatum, Anfragedatum und effektives Datum zum "
-"Verkaufsauftrag hinzu\n"
+#: model:ir.module.module,shortdesc:sale_order_dates.module_meta_information
+msgid "Sales Order Dates"
+msgstr "Verkaufsauftragsdaten"
+
+#. module: sale_order_dates
+#: help:sale.order,effective_date:0
+msgid "Date on which picking is created."
+msgstr "Datum der Erstellung des Lieferauftrags"
 
 #. module: sale_order_dates
 #: field:sale.order,requested_date:0
 msgid "Requested Date"
-msgstr "Anfrage Datum"
+msgstr "Datum Wunschtermin"
+
+#. module: sale_order_dates
+#: model:ir.model,name:sale_order_dates.model_sale_order
+msgid "Sales Order"
+msgstr "Verkaufsauftrag"
+
+#. module: sale_order_dates
+#: model:ir.module.module,description:sale_order_dates.module_meta_information
+msgid ""
+"\n"
+"Add commitment, requested and effective dates on the sales order.\n"
+msgstr ""
+"\n"
+"Ergänzt weitere essentielle Daten für den Verkaufsauftrags, z.B. Datum der "
+"Erstellung, Bestätigungsdatum, \n"
+"Wunschliefertermin etc.\n"
+
+#. module: sale_order_dates
+#: help:sale.order,commitment_date:0
+msgid "Date on which delivery of products is to be made."
+msgstr "Vereinbarter Liefertermin"
+
+#~ msgid "Sale Order Dates"
+#~ msgstr "Verkaufsauftrag Datum"
+
+#~ msgid "Add commitment, requested and effective dates on the sale order.\n"
+#~ msgstr ""
+#~ "fügt Bestätigungsdatum, Anfragedatum und effektives Datum zum "
+#~ "Verkaufsauftrag hinzu\n"
+
+#~ msgid "Sale Order"
+#~ msgstr "Verkaufsauftrag"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Der Objektname muss mit \"x_\" beginnen und darf keine Sonderzeichen "
+#~ "beinhalten!"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Fehlerhafter XML-Code für diese Ansicht!"
+
+#~ msgid "Date on which picking is created"
+#~ msgstr "Datum der Lieferscheinerstellung"
+
+#~ msgid "Date on which delivery of products is to be made"
+#~ msgstr "Termin der laut Liefervereinbarung als Lieferzeit versprochen wurde."
+
+#~ msgid "Date on which customer has requested for sales"
+#~ msgstr "Termin den Kunde bei Vertrieb angefragt hat."
+
+#~ msgid "Size of the field can never be less than 1 !"
+#~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid "The certificate ID of the module must be unique !"
+#~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "The name of the module must be unique !"
+#~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

@@ -13,7 +13,7 @@
                     <field name="invoice_date"/>
                     <separator string="" colspan="6"/>
                     <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    <button name="make_invoices" string="Create Invoices" type="object" icon="gtk-ok"/>
+                    <button name="make_invoices" string="Create Invoices" type="object" icon="terp-gtk-go-back-rtl"/>
                </form>
             </field>
         </record>
@@ -26,6 +26,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_sale_order_make_invoice"/>
             <field name="target">new</field>
+            <field name="multi">True</field>
         </record>
         
         <record model="ir.values" id="sale_order_make_invoice">

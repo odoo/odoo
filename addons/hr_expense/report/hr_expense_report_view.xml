@@ -15,7 +15,7 @@
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
                 <field name="invoice_id" invisible="1"/>
-                <field name="analytic_account" invisible="1"/>
+                <field name="analytic_account" invisible="1" groups="analytic.group_analytic_accounting"/>
                 <field name="department_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="currency_id" invisible="1"/>
@@ -58,31 +58,32 @@
                       help="Expenses during current year"/>
                   <filter icon="terp-go-month" string="   Month   "
                       name="month"
-                      domain="[('date','&lt;=', time.strftime('%%Y-%%m-%%d')),('date','&gt;=',time.strftime('%%Y-%%m-01'))]"
+                      domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
                       help="Expenses during current month"/>
                 <filter icon="terp-go-month" string="    Month-1    " separator="1"
-                      domain="[('date','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]" help="Expenses during last month"/>
+                      domain="[('date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
+                      help="Expenses during last month"/>
                   <separator orientation="vertical"/>
                     <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]"
                     help = "Confirm Expenses"/>
-                    <filter string="Accepted" icon="terp-camera_test" domain="[('state','=','accepted')]"
-                      help = "Accepted Expenses"/>
+                    <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]"
+                      help = "Approved Expenses"/>
                     <separator orientation="vertical"/>
-                    <filter string="Invoiced" icon="terp-dolar" domain="[('state','=','invoiced')]"
+                    <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]"
                       help = "Invoiced Expenses"/>
                     <separator orientation="vertical"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
             </group>
             <newline/>
-            <group expand="0" string="Extended filters..." groups="base.group_extended">
+            <group expand="0" string="Extended Filters..." groups="base.group_extended">
                 <field name="product_id"/>
                 <separator orientation="vertical"/>
                 <field name="user_id"/>
                 <separator orientation="vertical"/>
                 <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                 <newline/>
-                <field name="date"/>
+                <field name="date" string="Creation Date"/>
                 <field name="date_confirm"/>
                 <field name="date_valid"/>
             </group>
@@ -93,15 +94,15 @@
                 <filter string="Department" icon="terp-personal+" context="{'group_by':'department_id'}"/>
                 <separator orientation="vertical"/>
                 <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                <separator orientation="vertical"/>
-                <filter string="Analytic account" icon="terp-folder-green" context="{'group_by':'analytic_account'}"/>
-                <separator orientation="vertical"/>
+                <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
+                <filter string="Analytic account" icon="terp-folder-green" context="{'group_by':'analytic_account'}" groups="analytic.group_analytic_accounting"/>
+                <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                 <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
                 <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                 <separator orientation="vertical"/>
-                <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Group by Create Date"/>
-                <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of Create Date"/>
-                <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of Create Date"/>
+                <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Creation Date"/>
+                <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Creation Date"/>
+                <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Creation Date"/>
             </group>
             </search>
         </field>

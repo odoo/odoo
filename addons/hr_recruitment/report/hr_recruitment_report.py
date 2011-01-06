@@ -21,6 +21,8 @@
 import tools
 from osv import fields,osv
 from hr_recruitment import hr_recruitment
+from decimal_precision import decimal_precision as dp
+
 
 AVAILABLE_STATES = [
     ('draft','New'),
@@ -36,26 +38,10 @@ class hr_recruitment_report(osv.osv):
     _auto = False
     _rec_name = 'date'
 
-    def _get_data(self, cr, uid, ids, field_name, arg, context={}):
-
-        """ @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of case and section Data’s IDs
-            @param context: A standard dictionary for contextual values """
-
-        res = {}
-        state_perc = 0.0
-        avg_ans = 0.0
-        #TODO: Calculate avg_answer, perc_done, perc_cancel
-        return res
-
     _columns = {
-        'user_id':fields.many2one('res.users', 'User', readonly=True),
+        'user_id': fields.many2one('res.users', 'User', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
-        'avg_answers': fields.function(_get_data, string='Avg. Answers', method=True, type="integer"),
-        'perc_done': fields.function(_get_data, string='%Done', method=True, type="float"),
-        'perc_cancel': fields.function(_get_data, string='%Cancel', method=True, type="float"),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -70,19 +56,18 @@ class hr_recruitment_report(osv.osv):
         'job_id': fields.many2one('hr.job', 'Applied Job',readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
         'type_id': fields.many2one('hr.recruitment.degree', 'Degree'),
-        'department_id':fields.many2one('hr.department','Department',readonly=True),
+        'department_id': fields.many2one('hr.department','Department',readonly=True),
         'priority': fields.selection(hr_recruitment.AVAILABLE_PRIORITIES, 'Appreciation'),
-        'salary_prop' : fields.float("Salary Proposed"),
-        'salary_prop_avg' : fields.float("Avg Salary Proposed", group_operator="avg"),
-        'salary_exp' : fields.float("Salary Expected"),
+        'salary_prop' : fields.float("Salary Proposed", digits_compute=dp.get_precision('Account')),
+        'salary_prop_avg' : fields.float("Avg Salary Proposed", group_operator="avg", digits_compute=dp.get_precision('Account')),
+        'salary_exp' : fields.float("Salary Expected", digits_compute=dp.get_precision('Account')),
         'partner_id': fields.many2one('res.partner', 'Partner',readonly=True),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact Name',readonly=True),
-        'available' : fields.float("Availability"),
+        'available': fields.float("Availability"),
         'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
-
     }
     _order = 'date desc'
     def init(self, cr):

@@ -3,8 +3,8 @@
     <data>
            <!-- Fund Raising Configuration Menu -->
         <menuitem id="menu_config_fundrising" name="Fund Raising"
-        groups="base.group_extended"
-        parent="base.menu_base_config" sequence="8" />
+            groups="base.group_extended"
+            parent="base.menu_base_config" sequence="8" />
 
         <!-- Fund Raising Categories Form View -->
 
@@ -15,6 +15,7 @@
             <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
             <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
             <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="help">Manage and define the fund raising categories you want to be maintained in the system.</field>
         </record>
 
         <menuitem action="crm_fund_categ_action" name="Categories"
@@ -28,9 +29,12 @@
             <field name="res_model">crm.case.stage</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="crm.crm_case_stage_tree"/>
-            <field name="domain">[('object_id.model', '=', 'crm.fundraising')]</field>
-            <field name="context">{'object_id':'crm.fundraising'}</field>
+            <field name="domain">[('type', '=', 'fundraising')]</field>
+            <field name="context">{'type':'fundraising'}</field>
+            <field name="help">Create and manage fund raising activity categories you want to be maintained in the system.</field>
         </record>
+        
+
 
          <menuitem action="crm_fundraising_stage_act"
             groups="base.group_extended" name="Stages"
@@ -54,6 +58,9 @@
                     <field name="user_id" />
                     <field name="state" />
                     <field name="partner_id" invisible="1"/>
+                    <button name="case_cancel" string="Cancel"
+                        states="draft,open,pending" type="object"
+                        icon="gtk-cancel" />
                     <button name="case_open" string="Open"
                         states="draft,pending" type="object"
                         icon="gtk-go-forward" />
@@ -66,9 +73,6 @@
                     <button name="case_close" string="Done"
                         states="open,draft,pending" type="object"
                         icon="gtk-close" />
-                    <button name="case_cancel" string="Cancel"
-                        states="draft,open,pending" type="object"
-                        icon="gtk-cancel" />
                     <button name="case_reset" string="Reset to Draft"
                         states="done,cancel" type="object" icon="gtk-convert" />
                 </tree>
@@ -115,6 +119,9 @@
                             <separator colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state"/>
+                                <button name="case_cancel" string="Cancel"
+                                    states="draft,open,pending" type="object"
+                                    icon="gtk-cancel" />
                                 <button name="case_open" string="Open"
                                     states="draft,pending" type="object"
                                     icon="gtk-go-forward" />
@@ -128,15 +135,12 @@
                                 <button name="case_close" string="Done"
                                     states="open,draft,pending" type="object"
                                     icon="gtk-close" />
-                                <button name="case_cancel" string="Cancel"
-                                    states="draft,open,pending" type="object"
-                                    icon="gtk-cancel" />
                                 <button name="case_reset"
                                     string="Reset to Draft" states="done,cancel"
                                     type="object" icon="gtk-convert" />
                             </group>
                         </page>
-                        <page string="History" groups="base.group_extended">
+                        <page string="Communication &amp; History" groups="base.group_extended">
                             <group colspan="4">
                                 <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                             </group>
@@ -273,9 +277,9 @@
                                     help="Unassigned" />
                             </field>
                             <field name="section_id" select="1" widget="selection" string="Sales Team">
-                                <filter icon="terp-personal+"
+                                <filter icon="terp-personal+" groups="base.group_extended"
                                     domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                                    help="My section" />
+                                    help="My Sales Team(s)" />
                             </field>
                         </group>
                         <newline/>

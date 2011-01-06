@@ -1,8 +1,12 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+
+        <menuitem name="Association" id="base.menu_association" icon="terp-calendar" sequence="9"/>
         <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
+
         <menuitem name="Events Organisation" id="base.menu_event_main" parent="base.marketing_menu" />
+        <menuitem name="Events Organisation" id="base.menu_event_association" parent="base.menu_association" />
 
     <!-- EVENTS  -->
 
@@ -34,7 +38,10 @@
             <field name="view_type">form</field>
         </record>
         <menuitem name="Configuration" id="base.menu_marketing_config_root" parent="base.marketing_menu" sequence="30" groups="base.group_extended"/>
+        <menuitem name="Configuration" id="base.menu_marketing_config_association" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+
         <menuitem name="Types of Events" id="menu_event_type" action="action_event_type" parent="base.menu_marketing_config_root" groups="base.group_extended"/>
+        <menuitem name="Types of Events" id="menu_event_type_association" action="action_event_type" parent="base.menu_marketing_config_association" groups="base.group_extended"/>
 
     <!-- Events Organisation/CONFIGURATION/EVENTS -->
 
@@ -58,7 +65,7 @@
                             <separator string="Invoice Information" colspan="4"/>
                             <field name="product_id" on_change="onchange_product(product_id)" colspan="4"/>
                             <field name="unit_price"/>
-                            <field name="pricelist_id" domain="[('type','=','sale')]" groups="base.group_extended"/>
+                            <field name="pricelist_id" widget="selection" domain="[('type','=','sale')]" groups="base.group_extended"/>
                         </group>
                         <group colspan="2" col="2">
                             <separator string="Contact" colspan="4"/>
@@ -76,10 +83,10 @@
                         <field name="note" colspan="4" nolabel="1"/>
                         <field name="state" select="1"/>
                         <group col="4" colspan="2">
-                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
+                           <button string="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                            <button string="Event Done" name="button_done" states="confirm" type="object" icon="gtk-jump-to"/>
-                           <button string="Set To Draft" name="button_draft" states="confirm,cancel,done" type="object" icon="gtk-convert"/>
+                           <button string="Set To Draft" name="button_draft" states="cancel" type="object" icon="gtk-convert"/>
                         </group>
                     </page>
                     <page string="Speakers">
@@ -171,6 +178,8 @@
                     <field name="date_end"/>
                     <field name="register_min"/>
                     <field name="register_current"/>
+                    <field name="section_id" invisible="context.get('invisible_section', True)"/>
+                    <field name="user_id"/>
                     <field name="state"/>
                     <button string="Confirm Event" help="Confirm Event" name="button_confirm" states="draft" type="object" icon="gtk-apply"/>
                     <button string="Cancel Event" help="Cancel Event" name="button_cancel" states="draft,confirm" type="object" icon="gtk-cancel"/>
@@ -219,27 +228,33 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <group col="10" colspan="4">
-                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Current Events"/>
-                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','confirm')]" help="Open Events"/>
+                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'confirm'))]" help="Events in draft or confirmed state"/>
+                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
                         <separator orientation="vertical"/>
-                        <field name="name" string="Event" select="1"/>
-                        <field name="state" select="1"/>
+                        <field name="name" select="1"/>
                         <field name="user_id" widget="selection">
-                               <filter icon="terp-personal"
-                                    string="My Events"
-                                    help="My Events"
-                                    domain="[('user_id','=',uid)]"/>
+                        <filter icon="terp-personal"
+                              string="My Events"
+                                help="My Events"
+                              domain="[('user_id','=',uid)]"/>
                         </field>
                         <field name="date_begin" select="1"/>
+                        <field name="section_id" widget="selection" groups="base.group_extended">
+                          <filter icon="terp-personal+"
+                                  context="{'invisible_section': False}"
+                                  domain="[('section_id.user_id','=',uid)]"
+                                  groups="base.group_extended"
+                                  help="My Sales Team(s)"/>
+                        </field>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="12">
-                        <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
-                        <filter string="state" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Responsible"  icon="terp-personal" context="{'group_by': 'user_id'}"/>
                         <separator orientation="vertical"/>
-                        <filter string="Creation" icon="terp-go-month"
+                        <filter string="Event Type" icon="terp-crm"  context="{'group_by':'type'}"/>
+                        <filter string="State" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Beginning Date" icon="terp-go-month"
                             domain="[]" context="{'group_by':'date_begin'}"/>
                     </group>
                 </search>
@@ -254,8 +269,9 @@
            <field name="res_model">event.event</field>
            <field name="view_type">form</field>
            <field name="view_mode">tree,form,calendar,graph</field>
-           <field name="context">{"search_default_draft": "1"}</field>
+           <field name="context">{"search_default_draft": "1", "search_default_section_id": section_id}</field>
            <field name="search_view_id" ref="view_event_search"/>
+           <field name="help">Event is the low level object used by meeting and others documents that should be synchronized with mobile devices or calendar applications through caldav. Most of the users should work in the Calendar menu, and not in the list of events.</field>
        </record>
 
       <act_window
@@ -264,7 +280,7 @@
             res_model="event.registration"
             src_model="event.event"
             view_mode="tree,form,calendar,graph"
-            context="{'search_default_event_id': [active_id]}"
+            domain="[('event_id','=',active_id)]"
             view_type="form"/>
 
       <act_window
@@ -277,6 +293,7 @@
             view_type="form"/>
 
        <menuitem name="Events" id="menu_event_event" action="action_event_view" parent="base.menu_event_main" />
+       <menuitem name="Events" id="menu_event_event_assiciation" action="action_event_view" parent="base.menu_event_association" />
 
     <!-- EVENTS/REGISTRATIONS/EVENTS  -->
 
@@ -287,11 +304,11 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Registration">
-                    <field name="date" string="Date"/>
-                    <field name="event_id"/>
                     <field name="partner_id"/>
+                    <field name="event_id"/>
                     <field name="nb_register"/>
-                    <field name="price_subtotal"/>
+                    <field name="price_subtotal" sum="Total"/>
+                    <field name="user_id"/>
                     <field name="state"/>
                     <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                     <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
@@ -310,8 +327,8 @@
                         <field name="event_id" on_change="onchange_event(event_id, partner_invoice_id)" domain="[('state','in',('draft','confirm'))]"/>
                         <field name="create_date" string="Registration Date"/>
                         <field name="name"/>
-                        <field name="partner_id" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
-                        <field name="user_id"/>
+                        <field name="partner_id" attrs="{'readonly':[('state','!=', 'draft')]}" required="1" on_change="onchange_partner_id(partner_id,event_id)" />
+                        <field name="user_id" attrs="{'readonly':[('state','!=', 'draft')]}" />
                         <field name="tobe_invoiced"/>
                     </group>
                     <notebook colspan="4">
@@ -335,9 +352,9 @@
                             <separator string="" colspan="4"/>
                             <group col="8" colspan="4">
                                 <field name="state" select="1" colspan="2"/>
+                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                 <button name="button_reg_close" string="Close Registration" states="open" type="object" icon="gtk-close"/>
                                 <button name="check_confirm" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                             </group>
                         </page>
                         <page string="Extra Info">
@@ -431,7 +448,7 @@
             <field name="type">calendar</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar color="event_id" date_start="date" date_delay="duration" string="Event Registration">
+                <calendar color="event_id" date_start="date" date_delay="date_closed" string="Event Registration">
                     <field name="event_id"/>
                     <field name="partner_invoice_id"/>
                 </calendar>
@@ -460,27 +477,26 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <group col="12" colspan="4">
-                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'open'))]" help="Current Registrations"/>
-                        <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]" help="Open Registrations"/>
+                        <filter icon="terp-check" string="Current" name="draft" domain="[('state','in',('draft', 'open'))]" help="Registrations in unconfirmed or confirmed state"/>
+                        <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
                         <separator orientation="vertical"/>
                         <field name="partner_id" />
                         <field name="event_id" widget="selection"/>
-                        <field name="state" select="1"/>
-
                         <field name="user_id" widget="selection">
-                              <filter icon="terp-personal"
-                                    string="My Registration"
-                                    help="My Registration"
-                                    domain="[('user_id','=',uid)]"/>
+                        <filter icon="terp-personal"
+                              string="My Registrations"
+                                help="My Registrations"
+                              domain="[('user_id','=',uid)]"/>
                         </field>
+                        <field name="state" select="1"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group By...">
+                        <filter string="Responsible"  icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                        <separator orientation="vertical"/>
                         <filter string="Event" icon="terp-crm" domain="[]" context="{'group_by':'event_id'}"/>
                         <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <separator orientation="vertical"/>
-                        <filter string="Partner" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <filter string="Responsible"  icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                    </group>
                 </search>
             </field>
@@ -500,6 +516,12 @@
             name="Registrations"
             id="menu_action_registration" parent="base.menu_event_main"
             action="action_registration"/>
+
+        <menuitem
+            name="Registrations"
+            id="menu_action_registration_association" parent="base.menu_event_association"
+            action="action_registration"/>
+
         <menuitem name="Reporting" id="base.menu_report_association" parent="base.marketing_menu" sequence="20"/>
     </data>
 </openerp>

@@ -21,12 +21,12 @@
 
 
 {
-    "name" : "Share Calendar using Caldav", 
-    "version" : "1.0", 
+    "name" : "Share Calendar using CalDAV", 
+    "version" : "1.1", 
     "depends" : [
                     "base", 
                     "document_webdav",
-                ], 
+                ],
      'description': """
     This module Contains basic functionality for caldav system like:  
   - Webdav server that provides remote access to calendar
@@ -34,7 +34,10 @@
   - Customize calendar event and todo attribute with any of OpenERP model
   - Provides iCal Import/Export functionality
 
-    To access OpenERP Calendar using caldav to remote site use the URL like:
+    To access Calendars using CalDAV clients, point them to:
+        http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c
+
+    To access OpenERP Calendar using WebCal to remote site use the URL like:
         http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics
 
       Where,
@@ -53,7 +56,8 @@
                     'wizard/calendar_event_export_view.xml',
                     'wizard/calendar_event_import_view.xml',
                     'wizard/calendar_event_subscribe_view.xml',
-                    'caldav_view.xml'
+                    'caldav_view.xml',
+                    'caldav_setup.xml'
                     ], 
     "installable" : True, 
     "active" : False, 

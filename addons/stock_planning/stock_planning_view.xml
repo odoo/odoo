@@ -3,7 +3,7 @@
     <data>
         <menuitem id="menu_stock_period_main"
                   name="Stock and Sales Periods"
-                  parent="base.menu_base_config" groups="base.group_system" sequence="20"/>
+                  parent="base.menu_base_config" sequence="20"/>
 
         <!-- Periods tree and form section -->
 
@@ -40,7 +40,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record id="view_stock_period_search" model="ir.ui.view">
             <field name="name">stock.period.search</field>
             <field name="model">stock.period</field>
@@ -178,11 +178,11 @@
                 </graph>
             </field>
         </record>
-        
+
         <!-- Forecast section -->
-        
-        <menuitem id="menu_stock_sale_forecast" name="Sales Forecasts" 
-                parent="base.menu_base_partner" sequence="6" groups="base.group_extended,base.group_system"/>
+
+        <menuitem id="menu_stock_sale_forecast" name="Sales Forecasts"
+                parent="base.menu_base_partner" sequence="6" groups="base.group_extended"/>
 
         <record id="view_stock_sale_forecast_filter" model="ir.ui.view">
             <field name="name">stock.sale.forecast.list.select</field>
@@ -198,8 +198,8 @@
                     <field name="create_uid"/>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}"/>
-                        <filter string="Warehouse " icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                        <separator orientation="vertical"/>
                        <filter string='Default UOM' icon="terp-mrp" domain="[]" context="{'group_by' : 'product_uom'}" />
@@ -224,7 +224,7 @@
                   action="action_view_stock_sale_forecast_form"/>
 
         <!-- Planning section -->
-        
+
         <menuitem id="menu_stock_planning_main" name="Stock Planning" parent="stock.menu_stock_root" sequence="2"/>
 
         <record id="view_stock_planning_form" model="ir.ui.view">
@@ -302,8 +302,8 @@
                     <field name="product_id"/>
                     <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
-                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}"/>
-                        <filter string="Warehouse " icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}"/>
+                        <filter string="Warehouse " icon="terp-go-home" domain="[]" context="{'group_by':'warehouse_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]"  context="{'group_by':'product_id'}"/>
                        <separator orientation="vertical"/>
                     </group>
@@ -319,6 +319,7 @@
             <field name="arch" type="xml">
                 <tree string="Master Procurement Schedule" colors ="blue:line_time=='Past';black:line_time=='Future'">
                     <field name="period_id"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="product_id" on_change="product_id_change(product_id)" />
                     <field name="product_uom"/>
                     <field name="warehouse_forecast" string="Forecast"/>

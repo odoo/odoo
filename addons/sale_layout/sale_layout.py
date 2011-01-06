@@ -6,40 +6,36 @@
 #    $Id$
 #
 #    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
+#    it under the terms of the GNU Affero General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
+#    GNU Affero General Public License for more details.
 #
-#    You should have received a copy of the GNU General Public License
+#    You should have received a copy of the GNU Affero General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-from osv import fields,osv
-from tools import config
+from osv import fields, osv
 import decimal_precision as dp
-from tools.translate import _
 
 class sale_order_line(osv.osv):
 
     def _amount_line(self, cr, uid, ids, field_name, arg, context=None):
-        tax_obj = self.pool.get('account.tax')
-        cur_obj = self.pool.get('res.currency')
         res = {}
-        context = context or {}
         for line in self.browse(cr, uid, ids, context=context):
-            if line.layout_type=='article':
+            if line.layout_type == 'article':
                 return super(sale_order_line, self)._amount_line(cr, uid, ids, field_name, arg, context)
         return res
-    def invoice_line_create(self, cr, uid, ids, context={}):
+
+    def invoice_line_create(self, cr, uid, ids, context=None):
         new_ids = []
         list_seq = []
-        for line in self.browse(cr, uid, ids, context):
+        for line in self.browse(cr, uid, ids, context=context):
             if line.layout_type == 'article':
                 new_ids.append(line.id)
                 list_seq.append(line.sequence)
@@ -52,33 +48,33 @@ class sale_order_line(osv.osv):
         return invoice_line_ids
 
     def onchange_sale_order_line_view(self, cr, uid, id, type, context={}, *args):
-            temp ={}
-            temp['value']= {}
-            if (not type):
-                return {}
-            if type != 'article':
-                temp = {
-                    'value': {
-                    'product_id': False,
-                    'uos_id': False,
-                    'account_id': False,
-                    'price_unit': 0.0,
-                    'price_subtotal': 0.0,
-                    'quantity': 0,
-                    'discount': 0.0,
-                    'invoice_line_tax_id': False,
-                    'account_analytic_id': False,
-                    'product_uom_qty':0.0,
-                    },
-                }
-                if type == 'line':
-                    temp['value']['name'] = ' '
-                if type == 'break':
-                    temp['value']['name'] = ' '
-                if type == 'subtotal':
-                    temp['value']['name'] = 'Sub Total'
-                return temp
+        temp = {}
+        temp['value'] = {}
+        if (not type):
             return {}
+        if type != 'article':
+            temp = {
+                'value': {
+                'product_id': False,
+                'uos_id': False,
+                'account_id': False,
+                'price_unit': 0.0,
+                'price_subtotal': 0.0,
+                'quantity': 0,
+                'discount': 0.0,
+                'invoice_line_tax_id': False,
+                'account_analytic_id': False,
+                'product_uom_qty': 0.0,
+                },
+            }
+            if type == 'line':
+                temp['value']['name'] = ' '
+            if type == 'break':
+                temp['value']['name'] = ' '
+            if type == 'subtotal':
+                temp['value']['name'] = 'Sub Total'
+            return temp
+        return {}
 
     def create(self, cr, user, vals, context=None):
         if vals.has_key('layout_type'):
@@ -101,45 +97,41 @@ class sale_order_line(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default['layout_type'] = self.browse(cr, uid, id).layout_type
+        default['layout_type'] = self.browse(cr, uid, id, context=context).layout_type
         return super(sale_order_line, self).copy(cr, uid, id, default, context)
 
-
-    _name = "sale.order.line"
     _order = "order_id, sequence asc"
-    _description = "Sale Order line"
+    _description = "Sales Order line"
     _inherit = "sale.order.line"
     _columns = {
         'layout_type': fields.selection([
-                ('article','Product'),
-                ('title','Title'),
-                ('text','Note'),
-                ('subtotal','Sub Total'),
-                ('line','Separator Line'),
-                ('break','Page Break'),]
+                ('article', 'Product'),
+                ('title', 'Title'),
+                ('text', 'Note'),
+                ('subtotal', 'Sub Total'),
+                ('line', 'Separator Line'),
+                ('break', 'Page Break'),]
             ,'Layout Type', select=True, required=True),
-        'sequence': fields.integer('Sequence Number'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft':[('readonly',False)]}),
+        'sequence': fields.integer('Layout Sequence'),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Sale Price'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uom_qty': fields.float('Quantity (UoM)', digits=(16,2)),
         'product_uom': fields.many2one('product.uom', 'Product UoM'),
     }
 
     _defaults = {
-        'layout_type': lambda *a: 'article',
+        'layout_type': 'article',
     }
 
 sale_order_line()
 
 class one2many_mod2(fields.one2many):
     def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if not context:
-            context = {}
         if not values:
             values = {}
         res = {}
         for id in ids:
             res[id] = []
-        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id,'in',ids),('layout_type','=','article')], limit=self._limit)
+        ids2 = obj.pool.get(self._obj).search(cr, user, [(self._fields_id, 'in', ids), ('layout_type', '=', 'article')], limit=self._limit)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             res[r[self._fields_id]].append( r['id'] )
         return res
@@ -155,8 +147,8 @@ class sale_order(osv.osv):
 
     _inherit = "sale.order"
     _columns = {
-        'abstract_line_ids': fields.one2many('sale.order.line', 'order_id', 'Order Lines',readonly=True, states={'draft':[('readonly',False)]}),
-        'order_line': one2many_mod2('sale.order.line', 'order_id', 'Order Lines',readonly=True, states={'draft':[('readonly',False)]}),
+        'abstract_line_ids': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
+        'order_line': one2many_mod2('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)]}),
     }
 
 sale_order()

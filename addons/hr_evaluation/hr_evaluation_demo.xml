@@ -1599,31 +1599,31 @@ Once the form had been filled, the employee send it to his supervisor.
         </record>
     </data>
 
-		<data>
-		  <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">
-		   <field name="name">Run Employee Evaluation</field>
-		   <field eval="True" name="active" />
-		   <field name="user_id" ref="base.user_root" />
-		   <field name="interval_number">1</field>
-		   <field name="interval_type">minutes</field>
-		   <field name="numbercall">-1</field>
-		   <field eval="'hr.employee'" name="model" />
-		   <field eval="'run_employee_evaluation'" name="function" />
-		   <field eval="'(False,)'" name="args" />
-		  </record>
+        <data>
+          <record forcecreate="True" id="ir_cron_scheduler_evaluation" model="ir.cron">
+           <field name="name">Run Employee Evaluation</field>
+           <field eval="True" name="active" />
+           <field name="user_id" ref="base.user_root" />
+           <field name="interval_number">1</field>
+           <field name="interval_type">minutes</field>
+           <field name="numbercall">-1</field>
+           <field eval="'hr.employee'" name="model" />
+           <field eval="'run_employee_evaluation'" name="function" />
+           <field eval="'(False,)'" name="args" />
+          </record>
 
         <record id="property_rule_evaluation" model="ir.rule">
             <field name="name">Employee Evaluation</field>
             <field model="ir.model" name="model_id" ref="model_hr_evaluation_evaluation"/>
             <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
-            <field name="groups" eval="[(6,0,[ref('base.group_user')])]"/>
+            <field name="groups" eval="[(4,ref('base.group_hr_user'))]"/>
         </record>
         <record id="property_rule_evaluation_manager" model="ir.rule">
             <field name="name">Manager Evaluation</field>
             <field model="ir.model" name="model_id" ref="model_hr_evaluation_evaluation"/>
             <field name="domain_force">['|',('employee_id.user_id','=',user.id),('employee_id.parent_id.user_id','=',user.id )]</field>
-            <field name="groups" eval="[(6,0,[ref('base.group_hr_user'),ref('base.group_hr_manager')])]"/>
+            <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
         </record>
-		 </data>
+         </data>
 
 </openerp>

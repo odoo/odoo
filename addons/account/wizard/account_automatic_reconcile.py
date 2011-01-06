@@ -21,7 +21,6 @@
 
 import time
 
-import netsvc
 from osv import osv, fields
 from tools.translate import _
 
@@ -43,15 +42,19 @@ class account_automatic_reconcile(osv.osv_memory):
         'allow_write_off': fields.boolean('Allow write off')
     }
 
-    def _get_reconciled(self, cr, uid, context={}):
+    def _get_reconciled(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         return context.get('reconciled', 0)
 
-    def _get_unreconciled(self, cr, uid, context={}):
+    def _get_unreconciled(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         return context.get('unreconciled', 0)
 
     _defaults = {
-        'date1': time.strftime('%Y-01-01'),
-        'date2': time.strftime('%Y-%m-%d'),
+        'date1': lambda *a: time.strftime('%Y-01-01'),
+        'date2': lambda *a: time.strftime('%Y-%m-%d'),
         'reconciled': _get_reconciled,
         'unreconciled': _get_unreconciled,
         'power': 2
@@ -150,12 +153,12 @@ class account_automatic_reconcile(osv.osv_memory):
         for account_id in form['account_ids']:
             params = (account_id,)
             if not allow_write_off:
-                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL 
-                AND state <> 'draft' GROUP BY partner_id 
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
+                AND state <> 'draft' GROUP BY partner_id
                 HAVING ABS(SUM(debit-credit)) = 0.0 AND count(*)>0"""
             else:
-                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL 
-                AND state <> 'draft' GROUP BY partner_id 
+                query = """SELECT partner_id FROM account_move_line WHERE account_id=%s AND reconcile_id IS NULL
+                AND state <> 'draft' GROUP BY partner_id
                 HAVING ABS(SUM(debit-credit)) < %s AND count(*)>0"""
                 params += (max_amount,)
             # reconcile automatically all transactions from partners whose balance is 0
@@ -171,12 +174,12 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND reconcile_id IS NULL",
                     (account_id, partner_id))
                 line_ids = [id for (id,) in cr.fetchall()]
-                if len(line_ids):
+                if line_ids:
                     reconciled += len(line_ids)
                     if allow_write_off:
                         move_line_obj.reconcile(cr, uid, line_ids, 'auto', form['writeoff_acc_id'], form['period_id'], form['journal_id'], context)
                     else:
-                        move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context={})
+                        move_line_obj.reconcile_partial(cr, uid, line_ids, 'manual', context=context)
 
             # get the list of partners who have more than one unreconciled transaction
             cr.execute(
@@ -200,7 +203,8 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND partner_id=%s " \
                     "AND reconcile_id IS NULL " \
                     "AND state <> 'draft' " \
-                    "AND debit > 0",
+                    "AND debit > 0 " \
+                    "ORDER BY date_maturity",
                     (account_id, partner_id))
                 debits = cr.fetchall()
 
@@ -212,7 +216,8 @@ class account_automatic_reconcile(osv.osv_memory):
                     "AND partner_id=%s " \
                     "AND reconcile_id IS NULL " \
                     "AND state <> 'draft' " \
-                    "AND credit > 0",
+                    "AND credit > 0 " \
+                    "ORDER BY date_maturity",
                     (account_id, partner_id))
                 credits = cr.fetchall()
 

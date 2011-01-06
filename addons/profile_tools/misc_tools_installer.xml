@@ -19,16 +19,18 @@
           </separator>
           <xpath expr="//label[@string='description']"
                  position="attributes">
-            <attribute name="string">Here are applications that can help you improve your organization without being key in its management.</attribute>
+            <attribute name="string">Extra Tools are applications that can help you improve your organization although they are not key for company management.</attribute>
           </xpath>
           <xpath expr="//button[@string='Install Modules']" position="attributes">
               <attribute name="string">Configure</attribute>
           </xpath>
           <group colspan="8">
+            <field name="share"/>
             <field name="lunch"/>
             <field name="idea"/>
             <field name="survey"/>
             <field name="subscription" groups="base.group_extended"/>
+            <field name="pad"/>
           </group>
         </data>
       </field>
@@ -46,6 +48,7 @@
 
     <record id="misc_tools_installer_todo" model="ir.actions.todo">
       <field name="action_id" ref="action_misc_tools_installer"/>
+        <field name="restart">always</field>
       <field name="sequence">3</field>
     </record>
   </data>

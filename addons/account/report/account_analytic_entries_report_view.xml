@@ -16,7 +16,7 @@
                 <field name="partner_id" invisible="1"/>
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="currency_id" invisible="1"/>
-                <field name="account_id" invisible="1"/>
+                <field name="account_id" invisible="1" groups="analytic.group_analytic_accounting"/>
                 <field name="general_account_id" invisible="1"/>
                 <field name="journal_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
@@ -49,35 +49,25 @@
                             help="Analytic Entries during last 7 days"/>
                     <separator orientation="vertical"/>
                     <field name="date" />
-                    <field name="account_id" />
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="product_id" />
                     <field name="user_id">
                     <filter icon="terp-personal" domain="[('user_id','=',uid)]" help="My Entries"/>
                     </field>
                 </group>
                 <newline/>
-                <group expand="0" string="Extended Filters..." groups="base.group_extended">
-                    <field name="currency_id" widget="selection"/>
-                    <field name="general_account_id" widget="selection"/>
-                    <field name="product_uom_id" widget="selection"/>
-                    <field name="journal_id" widget="selection"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="account_id"/>
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                </group>
-                <newline/>
-                <group expand="1" string="Group By...">
+                <group expand="0" string="Group By...">
                     <filter string="User" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
-                    <filter string="Partner" icon="terp-personal" context="{'group_by':'partner_id'}"/>
-                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
                     <separator orientation="vertical"/>
-                    <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
-                    <filter string="General Account" icon="terp-folder-green" context="{'group_by':'general_account_id'}"/>
+                    <filter string="Account" name="Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
+                    <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
                     <filter string="Journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
                     <filter string="Product UOM" icon="terp-mrp" context="{'group_by':'product_uom_id'}"/>
+                    <separator orientation="vertical" groups="base.group_multi_company"/>
+                    <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                     <separator orientation="vertical"/>
                     <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}"/>
                     <filter string="Month" name="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
@@ -105,10 +95,13 @@
         <field name="view_mode">tree,graph</field>
         <field name="context">{'search_default_month':1, 'group_by_no_leaf':1, 'search_default_Account':1, 'search_default_Month':1, 'group_by':[]}</field>
         <field name="search_view_id" ref="view_analytic_entries_report_search"/>
-        <field name="help">A tool search lets you know statistics on your analytics records that match your needs.</field>
+        <field name="help">From this view, have an analysis of your different analytic entries following the analytic account you defined matching your business need. Use the tool search to analyse information about analytic entries generated in the system.</field>
     </record>
 
-    <menuitem action="action_analytic_entries_report" id="menu_action_analytic_entries_report" parent="account.menu_finance_statistic_report_statement" sequence="4"/>
+    <menuitem action="action_analytic_entries_report"
+        id="menu_action_analytic_entries_report"
+        groups="analytic.group_analytic_accounting"
+        parent="account.menu_finance_statistic_report_statement" sequence="4"/>
 
 </data>
 </openerp>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <document filename="test.pdf">
-  <template pageSize="(595.0,842.0)" title="HR Expenses" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
+  <template pageSize="(595.0,842.0)" title="Expenses" author="OpenERP S.A. (sales@openerp.com)" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="16.0" y1="57.0" width="522" height="728"/>
     </pageTemplate>
@@ -68,10 +68,8 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
       <lineStyle kind="LINEABOVE" colorName="#ffffff" start="0,0" stop="0,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="1,0" stop="1,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#ffffff" start="2,0" stop="2,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="3,0" stop="3,0"/>
-      <lineStyle kind="LINEABOVE" colorName="#000000" start="4,0" stop="4,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="1,0" stop="1,0"/>
+      <lineStyle kind="LINEABOVE" colorName="#000000" start="2,0" stop="2,0"/>
     </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
@@ -111,13 +109,38 @@
     <images/>
   </stylesheet>
   <story>
+  <pto>
+  <pto_header>
+    <blockTable colWidths="60.0,200.0,50.0,70.0,70.0,85.0" style="Table_hr_expense_line_header">
+      <tr>
+        <td>
+          <para style="terp_tblheader_Details">Date</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Name</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details">Ref.</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Unit Price</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Qty</para>
+        </td>
+        <td>
+          <para style="terp_tblheader_Details_Right">Price</para>
+        </td>
+      </tr>
+    </blockTable>
+  </pto_header>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <para style="terp_header_Centre">HR Expenses [[ o.name or '' ]]</para>
-    <para style="terp_default_8">
-      <font color="white"> </font>
+    <para style="terp_header_Centre">HR Expenses</para>
+    <para style="terp_tblheader_General_Centre">
+      <font face="Helvetica" size="9.0">[[ o.name or '' ]]</font>
     </para>
     <para style="terp_default_8">
       <font color="white"> </font>
@@ -151,7 +174,7 @@
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="49.0,204.0,45.0,80.0,53.0,91.0" style="Table_hr_expense_line_header">
+    <blockTable colWidths="60.0,200.0,50.0,70.0,70.0,85.0" style="Table_hr_expense_line_header">
       <tr>
         <td>
           <para style="terp_tblheader_Details">Date</para>
@@ -160,16 +183,16 @@
           <para style="terp_tblheader_Details">Name</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Ref.</para>
+          <para style="terp_tblheader_Details">Ref.</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">Unit Price</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Qty</para>
+          <para style="terp_tblheader_Details_Right">Qty</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">Total Price([[ o.currency_id.code ]])</para>
+          <para style="terp_tblheader_Details_Right">Price</para>
         </td>
       </tr>
     </blockTable>
@@ -178,10 +201,10 @@
     </para>
     <section>
       <para style="terp_default_8">[[ repeatIn(o.line_ids,'line') ]]</para>
-      <blockTable colWidths="49.0,204.0,46.0,79.0,53.0,92.0" style="Table_expense_line">
+      <blockTable colWidths="60.0,200.0,50.0,70.0,70.0,85.0" style="Table_expense_line">
         <tr>
           <td>
-            <para style="terp_default_9">[[ formatLang(line.date_value,date = True) ]]</para>
+            <para style="terp_default_9">[[ formatLang(line.date_value,date=True) ]]</para>
           </td>
           <td>
             <para style="terp_default_9">[[ line.name or '' ]] [[ line.description or '' ]]</para>
@@ -231,7 +254,7 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="57.0,171.0,171.0,32.0,92.0" style="Table_Final_total">
+    <blockTable colWidths="365.0,70.0,100.0" style="Table_Final_total">
       <tr>
         <td>
           <para style="terp_default_8">
@@ -239,17 +262,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_8">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_default_8">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">Total:</para>
+          <para style="terp_tblheader_Details">Total:</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">[[ formatLang(o.amount) ]] [[ o.currency_id.symbol ]]</para>
@@ -259,7 +272,7 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ setTag('para','xpre') ]] [[ o.note or '' ]] </para>
+    <para style="terp_default_9">[[ setTag('para','xpre') ]] [[ o.note or '' ]]</para>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
@@ -272,5 +285,6 @@
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">This document must be dated and signed for reimbursement</para>
+  </pto>
   </story>
 </document>

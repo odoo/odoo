@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-11-26 08:45+0000\n"
+"POT-Creation-Date: 2010-12-21 19:45+0000\n"
 "PO-Revision-Date: 2010-08-22 05:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-09-29 05:17+0000\n"
+"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_layout
@@ -23,17 +23,26 @@ msgid "Sub Total"
 msgstr "Wartość"
 
 #. module: sale_layout
+#: model:ir.module.module,description:sale_layout.module_meta_information
+msgid ""
+"\n"
+"    This module provides features to improve the layout of the Sales Order.\n"
+"\n"
+"    It gives you the possibility to\n"
+"        * order all the lines of a sales order\n"
+"        * add titles, comment lines, sub total lines\n"
+"        * draw horizontal lines and put page breaks\n"
+"\n"
+"    "
+msgstr ""
+
+#. module: sale_layout
 #: selection:sale.order.line,layout_type:0
 msgid "Title"
 msgstr "Tytuł"
 
 #. module: sale_layout
-#: model:ir.module.module,shortdesc:sale_layout.module_meta_information
-msgid "sale_layout"
-msgstr ""
-
-#. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Disc. (%)"
 msgstr "Up. (%)"
 
@@ -43,12 +52,12 @@ msgid "Note"
 msgstr "Notatka"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Unit Price"
 msgstr "Cena jedn."
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Order N°"
 msgstr "Nr zamówienia"
 
@@ -58,7 +67,7 @@ msgid "Order Lines"
 msgstr "Pozycje zamówienia"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Disc.(%)"
 msgstr "Up.(%)"
 
@@ -69,9 +78,13 @@ msgstr "Typ układu"
 
 #. module: sale_layout
 #: view:sale.order:0
-#: view:sale.order.line:0
 msgid "Seq."
 msgstr "Num."
+
+#. module: sale_layout
+#: view:sale.order:0
+msgid "UoM"
+msgstr "JM"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -79,22 +92,7 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: sale_layout
-#: model:ir.module.module,description:sale_layout.module_meta_information
-msgid ""
-"\n"
-"    This module provides some features to improve the layout of the Sale "
-"Order.\n"
-"\n"
-"    It gives you the possibility to\n"
-"        * order all the lines of an sale order\n"
-"        * add titles, comment lines, sub total lines\n"
-"        * draw horizontal lines and put page breaks    \n"
-"\n"
-"    "
-msgstr ""
-
-#. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Description"
 msgstr "Opis"
 
@@ -104,7 +102,7 @@ msgid "Manual Description"
 msgstr "Opis ręczny"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Our Salesman"
 msgstr "Nasz sprzedawca"
 
@@ -119,17 +117,17 @@ msgid "Invoice Lines"
 msgstr "Pozycje faktury"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Quantity"
 msgstr "Ilość"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Quotation N°"
 msgstr "Nr oferty"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "VAT"
 msgstr ""
 
@@ -144,14 +142,14 @@ msgid "Properties"
 msgstr "Właściwości"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Invoice address :"
 msgstr "Adres do faktury :"
 
 #. module: sale_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
+#: model:ir.module.module,shortdesc:sale_layout.module_meta_information
+msgid "Sale Order Layout"
+msgstr ""
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -164,37 +162,37 @@ msgid "Notes"
 msgstr "Uwagi"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Date Ordered"
 msgstr "Data zamówienia"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Shipping address :"
 msgstr "Adres do wysyłki :"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Taxes"
 msgstr "Podatki"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Net Total :"
 msgstr "Suma netto :"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Tel. :"
 msgstr "Tel. :"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Total :"
 msgstr "Suma :"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Payment Terms"
 msgstr "Warunki Płatności"
 
@@ -214,14 +212,19 @@ msgid "Separator Line"
 msgstr "Linia rozdzielająca"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Your Reference"
 msgstr "Twój odnośnik"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "Sales order lines"
-msgstr "Pozycje zamówienia sprzedaży"
+#: report:sale.order.layout:0
+msgid "Quotation Date"
+msgstr ""
+
+#. module: sale_layout
+#: report:sale.order.layout:0
+msgid "TVA :"
+msgstr "VAT :"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -234,9 +237,9 @@ msgid "States"
 msgstr "Stany"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
-msgid "TVA :"
-msgstr "VAT :"
+#: view:sale.order:0
+msgid "Sales order lines"
+msgstr "Pozycje zamówienia sprzedaży"
 
 #. module: sale_layout
 #: model:ir.actions.report.xml,name:sale_layout.sale_order_1
@@ -249,14 +252,19 @@ msgid "Extra Info"
 msgstr "Dodatkowe informacje"
 
 #. module: sale_layout
-#: view:sale.order:0
-msgid "UoM"
-msgstr "JM"
+#: report:sale.order.layout:0
+msgid "Taxes :"
+msgstr "Podatki :"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Fax :"
 msgstr "Faks :"
+
+#. module: sale_layout
+#: model:ir.model,name:sale_layout.model_sale_order
+msgid "Sales Order"
+msgstr ""
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -264,16 +272,19 @@ msgid "Order Line"
 msgstr "Pozycja zamówienia"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
+#: report:sale.order.layout:0
 msgid "Price"
 msgstr "Cena"
 
 #. module: sale_layout
-#: rml:sale.order.layout:0
-msgid "Taxes :"
-msgstr "Podatki :"
+#: model:ir.model,name:sale_layout.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
 
 #. module: sale_layout
 #: view:sale.order:0
 msgid "Stock Moves"
 msgstr "Przesunięcia zapasów"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
