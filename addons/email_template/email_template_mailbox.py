@@ -63,34 +63,19 @@ class email_template_mailbox(osv.osv):
         return True
     
     def send_this_mail(self, cr, uid, ids=None, context=None):
+        #previous method to send email (link with email account can be found at the revision 4172 and below
         result = True
         attachment_pool = self.pool.get('ir.attachment')
         for id in (ids or []):
             try:
                 account_obj = self.pool.get('email_template.account')
                 values = self.read(cr, uid, id, [], context) 
-                #payload = {}
                 attach_to_send = None
+                
                 if values['attachments_ids']:
-                    #for attid in values['attachments_ids']:
-                        #attachment = attachment_pool.browse(cr, uid, attid, context)#,['datas_fname','datas'])
-                        #payload[attachment.datas_fname] = attachment.datas
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, values['attachments_ids'], ['datas_fname','datas', 'name'])
                     attach_to_send = map(lambda x: (x['datas_fname'] or x['name'], base64.decodestring(x['datas'])), attach_to_send)
-                #work around to uniformize send email while waiting for a merge of fetchmail, email_template, mailgate
-                #using tools.send_email instead
-                #No need to use email account
-                #result = account_obj.send_mail(cr, uid,
-                #              [values['account_id'][0]],
-                #              {'To':values.get('email_to') or u'',
-                #               'CC':values.get('email_cc') or u'',
-                #               'BCC':values.get('email_bcc') or u'',
-                #               'Reply-To':values.get('reply_to') or u''},
-                #              values['subject'] or u'',
-                #              {'text':values.get('body_text') or u'', 'html':values.get('body_html') or u''},
-                #              payload=payload,
-                #              message_id=values['message_id'], 
-                #              context=context)
+                
                 if values.get('body_html'):
                     body = values.get('body_html')
                     subtype = "html"
