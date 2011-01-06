@@ -256,7 +256,7 @@ class bvr_import_wizard(osv.osv_memory):
         if res:
             data['form']['file'] = res['file']
         _import(self, cr, uid, data, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 bvr_import_wizard()
 

@@ -1776,7 +1776,7 @@ class stock_move(osv.osv):
         picking_obj = self.pool.get('stock.picking')
         pick_id= picking_obj.create(cr, uid, {
                                 'name': pick_name,
-                                'origin': str(picking.origin or ''),
+                                'origin': tools.ustr(picking.origin or ''),
                                 'type': ptype,
                                 'note': picking.note,
                                 'move_type': picking.move_type,

@@ -57,8 +57,8 @@
                          help="Convert to Opportunity" icon="gtk-go-forward"
                          type="object"/>
                     <newline />
-                    <field name="section_id" widget="selection" />
                     <field name="user_id" />
+                    <field name="section_id" widget="selection" />
                     <field name="stage_id" domain="[('type','=','lead'),('section_ids', '=', section_id)]" />
                     <group col="2" colspan="1">
                         <button name="stage_previous" string=""
@@ -89,7 +89,7 @@
                         <field name="state_id"/>
                     </group>
                     <group colspan="2" col="3">
-                        <separator string="Communication" colspan="4" col="3"/>
+                        <separator string="Communication  History" colspan="4" col="3"/>
                         <field name="email_from" widget="email"/>
                         <newline/>
                         <field name="phone"/>
@@ -160,7 +160,7 @@
                         <field name="day_close"/>
                     </group>
                  </page>
-                 <page string="History" groups="base.group_extended">
+                 <page string="Communication &amp; History" groups="base.group_extended">
                    <group colspan="4">
                        <field colspan="4" name="email_cc" widget="char" size="512"/>
                    </group>

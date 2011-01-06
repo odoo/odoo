@@ -155,7 +155,7 @@
                                     <field name="resolution" colspan="2" nolabel="1"/>
                                 </group>
                             </page>
-                            <page string="History" groups="base.group_extended">
+                            <page string="Communication &amp; History" groups="base.group_extended">
                                 <group colspan="4">
                                     <field colspan="4" name="email_cc" string="Global CC" widget="char"/>
                                 </group>
@@ -168,7 +168,7 @@
                                             context="{'mail':'reply', 'model': 'crm.claim', 'include_original' : True}"
                                             icon="terp-mail-replied" type="action" attrs="{'invisible': [('history', '!=', True)]}" />
                                     </tree>
-                                    <form string="History">
+                                    <form string="Communication &amp; History">
                                         <group col="4" colspan="4">
                                             <field name="email_from"/>
                                             <field name="date"/>
@@ -226,20 +226,6 @@
             </field>
         </record>
 
-        <!-- Claim Graph view -->
-
-        <record model="ir.ui.view" id="crm_case_graph_view_stage_cost">
-            <field name="name">CRM -Graph</field>
-            <field name="model">crm.claim</field>
-            <field name="type">graph</field>
-            <field name="arch" type="xml">
-                <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
-                    <field name="stage_id"/>
-                    <field name="planned_cost" operator="+"/>
-                    <field name="planned_revenue" operator="+"/>
-                </graph>
-            </field>
-        </record>
 
         <!-- Crm claim Search view -->
 
