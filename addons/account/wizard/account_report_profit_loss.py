@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
-
 from osv import osv, fields
 
 class account_pl_report(osv.osv_memory):

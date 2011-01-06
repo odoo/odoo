@@ -116,7 +116,7 @@ class stock_split_move_line(osv.osv_memory):
                 new_obj = move_obj.copy(cr, uid, move.id, {'product_qty' : new_qty, 'product_uos_qty': new_uos_qty, 'state':move.state})
                 uos_qty = quantity / move.product_qty * move.product_uos_qty
                 move_obj.write(cr, uid, [move.id], {'product_qty' : quantity, 'product_uos_qty': uos_qty})
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
 stock_split_move_line()
 

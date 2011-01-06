@@ -50,7 +50,7 @@ class crm_add_note(osv.osv_memory):
                 act = 'case_' + obj.state
                 getattr(case_pool, act)(cr, uid, [case.id])
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def default_get(self, cr, uid, fields, context=None):
         """

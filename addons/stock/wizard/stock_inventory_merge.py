@@ -84,7 +84,7 @@ class stock_inventory_merge(osv.osv_memory):
                     'product_qty': quantity,
                 })
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 stock_inventory_merge()
 

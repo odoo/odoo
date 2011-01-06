@@ -57,7 +57,7 @@ class lunch_cashbox_clean(osv.osv_memory):
          #       'box': box_id,
          #       'active': True,
          #   })
-         return {}
+         return {'type': 'ir.actions.act_window_close'}
 
 lunch_cashbox_clean()
 

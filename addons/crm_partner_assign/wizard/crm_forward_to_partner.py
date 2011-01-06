@@ -198,7 +198,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         to_write.update({'email_cc' : ', '.join(new_cc) })
         case_pool.write(cr, uid, case.id, to_write, context=context)
 
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
     def get_lead_details(self, cr, uid, lead_id, context=None):
         body = []

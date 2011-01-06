@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import time
 from osv import fields, osv
 
 class purchase_double_validation_installer(osv.osv_memory):
