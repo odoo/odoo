@@ -476,7 +476,7 @@ class OpenERPDispatcher:
     def log(self, title, msg, channel=logging.DEBUG_RPC, depth=2):
         logger = logging.getLogger(title)
         if logger.isEnabledFor(channel):
-            for line in pformat(msg, depth=depth).split('\n'):
+            for line in pformat(msg, depth=100).split('\n'):
                 logger.log(channel, line)
 
     def dispatch(self, service_name, method, params):

@@ -280,7 +280,7 @@ class res_config_installer(osv.osv_memory):
     ``res.config``). Hooks and additionals *are not run* when skipping
     installation, even for already installed addons.
 
-    Again, setup your hooks accordinly.
+    Again, setup your hooks accordingly.
 
     .. [#] note that since a mapping key needs to be hashable, it's
            possible to use a tuple or a frozenset, but not a list or a

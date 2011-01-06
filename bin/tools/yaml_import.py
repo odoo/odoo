@@ -684,8 +684,12 @@ class YamlInterpreter(object):
         if node.auto:
             values['auto'] = eval(node.auto)
         if node.sxw:
-            sxw_content = misc.file_open(node.sxw).read()
-            values['report_sxw_content'] = sxw_content
+            sxw_file = misc.file_open(node.sxw)
+            try:
+                sxw_content = sxw_file.read()
+                values['report_sxw_content'] = sxw_content
+            finally:
+                sxw_file.close()
         if node.header:
             values['header'] = eval(node.header)
         values['multi'] = node.multi and eval(node.multi)

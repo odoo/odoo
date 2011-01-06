@@ -316,7 +316,11 @@ def load_information_from_description_file(module):
     for filename in ['__openerp__.py', '__terp__.py']:
         description_file = get_module_resource(module, filename)
         if description_file :
-            return eval(tools.file_open(description_file).read())
+            desc_f = tools.file_open(description_file)
+            try:
+                return eval(desc_f.read())
+            finally:
+                desc_f.close()
 
     #TODO: refactor the logger in this file to follow the logging guidelines
     #      for 6.0
@@ -355,11 +359,14 @@ def upgrade_graph(graph, cr, module_list, force=None):
             continue
 
         if os.path.isfile(terp_file) or zipfile.is_zipfile(mod_path+'.zip'):
+            terp_f = tools.file_open(terp_file)
             try:
-                info = eval(tools.file_open(terp_file).read())
-            except:
+                info = eval(terp_f.read())
+            except Exception:
                 logger.notifyChannel('init', netsvc.LOG_ERROR, 'module %s: eval file %s' % (module, terp_file))
                 raise
+            finally:
+                terp_f.close()
             if info.get('installable', True):
                 packages.append((module, info.get('depends', []), info))
             else:
@@ -628,29 +635,33 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=
             logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, filename))
             _, ext = os.path.splitext(filename)
             fp = tools.file_open(opj(m, filename))
-            if ext == '.csv':
-                noupdate = (kind == 'init')
-                tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode, noupdate=noupdate)
-            elif ext == '.sql':
-                process_sql_file(cr, fp)
-            elif ext == '.yml':
-                tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
-            else:
-                tools.convert_xml_import(cr, m, fp, idref, mode=mode, **kwargs)
-            fp.close()
+            try:
+                if ext == '.csv':
+                    noupdate = (kind == 'init')
+                    tools.convert_csv_import(cr, m, os.path.basename(filename), fp.read(), idref, mode=mode, noupdate=noupdate)
+                elif ext == '.sql':
+                    process_sql_file(cr, fp)
+                elif ext == '.yml':
+                    tools.convert_yaml_import(cr, m, fp, idref, mode=mode, **kwargs)
+                else:
+                    tools.convert_xml_import(cr, m, fp, idref, mode=mode, **kwargs)
+            finally:
+                fp.close()
 
     def load_demo_xml(cr, m, idref, mode):
         for xml in package.data.get('demo_xml', []):
             name, ext = os.path.splitext(xml)
             logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading %s' % (m, xml))
             fp = tools.file_open(opj(m, xml))
-            if ext == '.csv':
-                tools.convert_csv_import(cr, m, os.path.basename(xml), fp.read(), idref, mode=mode, noupdate=True)
-            elif ext == '.yml':
-                tools.convert_yaml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
-            else:
-                tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
-            fp.close()
+            try:
+                if ext == '.csv':
+                    tools.convert_csv_import(cr, m, os.path.basename(xml), fp.read(), idref, mode=mode, noupdate=True)
+                elif ext == '.yml':
+                    tools.convert_yaml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
+                else:
+                    tools.convert_xml_import(cr, m, fp, idref, mode=mode, noupdate=True, **kwargs)
+            finally:
+                fp.close()
 
     def load_data(cr, module_name, id_map, mode):
         _load_data(cr, module_name, id_map, mode, 'data')
@@ -678,17 +689,18 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=
             log.info("module %s: loading %s", module_name, filename)
             pathname = os.path.join(module_name, filename)
             file = tools.file_open(pathname)
-            # TODO manage .csv file with noupdate == (kind == 'init')
-            if ext == '.sql':
-                process_sql_file(cr, file)
-            elif ext == '.csv':
-                noupdate = (kind == 'init')
-                tools.convert_csv_import(cr, module_name, pathname, file.read(), id_map, mode, noupdate)
-            elif ext == '.yml':
-                tools.convert_yaml_import(cr, module_name, file, id_map, mode, noupdate)
-            else:
-                tools.convert_xml_import(cr, module_name, file, id_map, mode, noupdate)
-            file.close()
+            try:
+                if ext == '.sql':
+                    process_sql_file(cr, file)
+                elif ext == '.csv':
+                    noupdate = (kind == 'init')
+                    tools.convert_csv_import(cr, module_name, pathname, file.read(), id_map, mode, noupdate)
+                elif ext == '.yml':
+                    tools.convert_yaml_import(cr, module_name, file, id_map, mode, noupdate)
+                else:
+                    tools.convert_xml_import(cr, module_name, file, id_map, mode, noupdate)
+            finally:
+                file.close()
 
     # **kwargs is passed directly to convert_xml_import
     if not status:

@@ -257,8 +257,12 @@ class ir_ui_menu(osv.osv):
     def read_image(self, path):
         path_info = path.split(',')
         icon_path = addons.get_module_resource(path_info[0],path_info[1])
-        icon = tools.file_open(icon_path,'rb').read()
-        return base64.encodestring(icon)
+        icon_file = tools.file_open(icon_path,'rb')
+        try:
+            icon = icon_file.read()
+            return base64.encodestring(icon)
+        finally:
+            icon_file.close()
 
     def _get_image_icon(self, cr, uid, ids, name, args, context=None):
         res = {}

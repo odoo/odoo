@@ -220,7 +220,11 @@ class res_company(osv.osv):
 </header>"""
     def _get_header(self,cr,uid,ids):
         try :
-            return tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml')).read()
+            header_file = tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml'))
+            try:
+                return header_file.read()
+            finally:
+                header_file.close()
         except:
             return """
     <header>

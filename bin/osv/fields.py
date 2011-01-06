@@ -679,7 +679,7 @@ def get_nice_size(a):
 def sanitize_binary_value(dict_item):
     # binary fields should be 7-bit ASCII base64-encoded data,
     # but we do additional sanity checks to make sure the values
-    # will are not something else that won't pass via xmlrpc
+    # are not something else that won't pass via xmlrpc
     index, value = dict_item
     if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
         # these builtin types are meant to pass untouched
@@ -703,7 +703,7 @@ def sanitize_binary_value(dict_item):
     # Note: when this happens, decoding on the other endpoint
     # is not likely to produce the expected output, but this is
     # just a safety mechanism (in these cases base64 data or
-    # xmlrpc.Binary values should be used instead
+    # xmlrpc.Binary values should be used instead)
     return index, tools.ustr(value)
 
 
