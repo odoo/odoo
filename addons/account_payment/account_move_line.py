@@ -19,7 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from operator import itemgetter
 from osv import fields, osv
 from tools.translate import _
 
@@ -43,7 +43,7 @@ class account_move_line(osv.osv):
                         WHERE move_line_id = ml.id
                         AND po.state != 'cancel') as amount
                     FROM account_move_line ml
-                    WHERE id in (%s)""" % (",".join(map(str, ids))))
+                    WHERE id in %s""", (tuple(ids),))
         r=dict(cr.fetchall())
         return r
 
@@ -59,8 +59,10 @@ class account_move_line(osv.osv):
         END - coalesce(sum(pl.amount_currency), 0)
         FROM payment_line pl
         INNER JOIN payment_order po ON (pl.order_id = po.id)
-        WHERE move_line_id = l.id AND po.state != 'cancel')''' \
-        + x[1] + str(x[2])+' ',args))
+        WHERE move_line_id = l.id
+        AND po.state != 'cancel'
+        ) %(operator)s %%s ''' % {'operator': x[1]}, args))
+        sql_args = tuple(map(itemgetter(2), args))
 
         cr.execute(('''select id
             from account_move_line l
@@ -69,7 +71,7 @@ class account_move_line(osv.osv):
                 where type=%s and active)
             and reconcile_id is null
             and credit > 0
-            and ''' + where + ' and ' + query), ('payable',) )
+            and ''' + where + ' and ' + query), ('payable',)+sql_args )
 
         res = cr.fetchall()
         if not len(res):

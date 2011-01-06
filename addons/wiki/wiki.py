@@ -137,11 +137,11 @@ class Wiki(osv.osv):
 Wiki()
 
 class History(osv.osv):
-    _name="wiki.wiki.history"
-    _description="Wiki History"
-    _rec_name="date_time"
+    _name = "wiki.wiki.history"
+    _description = "Wiki History"
+    _rec_name = "summary"
     _order = 'id DESC'
-    _columns={
+    _columns = {
       'create_date':fields.datetime("Date",select=True),
       'text_area':fields.text("Text area"),
       'minor_edit':fields.boolean('This is a major edit ?',select=True),
@@ -157,8 +157,13 @@ class History(osv.osv):
         history_pool = self.pool.get('wiki.wiki.history')
         text1 = history_pool.read(cr, uid, [v1], ['text_area'])[0]['text_area']
         text2 = history_pool.read(cr, uid, [v2], ['text_area'])[0]['text_area']
-        line1 = text1.splitlines(1)
-        line2 = text2.splitlines(1)
+        line1 = line2 = ''
+        if text1:
+            line1 = text1.splitlines(1)
+        if text2:
+            line2 = text2.splitlines(1)
+        if (not line1 and not line2) or (line1 == line2):
+            raise osv.except_osv(_('Warning !'), _('There are no chnages in revisions'))
         diff = difflib.HtmlDiff()
         return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
 History()

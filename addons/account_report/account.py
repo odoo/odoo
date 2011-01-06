@@ -25,6 +25,7 @@ from osv import fields, osv
 import pooler
 from tools.misc import currency
 from tools.translate import _
+from tools.safe_eval import safe_eval
 
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
@@ -123,7 +124,7 @@ class account_report(osv.osv):
 #            else:
 #                fld_name = 'expression'
             try:
-                val = eval(getattr(rep,'expression'), objdict)
+                val = safe_eval(getattr(rep,'expression'), objdict)
             except:
                 val = 0.0
 

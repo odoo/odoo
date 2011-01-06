@@ -119,8 +119,10 @@ class report_account_analytic_planning_stat(osv.osv):
         result = {}
         for line in self.browse(cr, uid, ids, context):
             where = ''
+            sqlarg = ()
             if line.user_id:
-                where='user_id='+str(line.user_id.id)+' and '
+                where='user_id=%s and '
+                sqlarg = (line.user_id.id,)
             cr.execute('''select
                     sum(planned_hours)
                 from
@@ -129,11 +131,11 @@ class report_account_analytic_planning_stat(osv.osv):
                 '''+where+'''
                     project_id in (select id from project_project where category_id=%s) and
                     date_close>=%s and
-                    date_close<=%s''', (
-                line.account_id.id,
-                line.planning_id.date_from,
-                line.planning_id.date_to)
-            )
+                    date_close<=%s''',
+                        sqlarg + (
+                           line.account_id.id,
+                           line.planning_id.date_from,
+                           line.planning_id.date_to))
             result[line.id] = cr.fetchone()[0]
         return result
     _columns = {

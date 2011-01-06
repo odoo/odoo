@@ -216,7 +216,7 @@ class mrp_bom(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 500
         while len(ids):
-            cr.execute('select distinct bom_id from mrp_bom where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct bom_id from mrp_bom where id in %s', (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -300,21 +300,6 @@ class mrp_bom(osv.osv):
                 result2 = result2 + res[1]
         return result, result2
 
-    def set_indices(self, cr, uid, ids, context = {}):
-        if not ids or (ids and not ids[0]):
-            return True
-        res = self.read(cr, uid, ids, ['revision_ids', 'revision_type'])
-        rev_ids = res[0]['revision_ids']
-        idx = 1
-        new_idx = []
-        for rev_id in rev_ids:
-            if res[0]['revision_type'] == 'numeric':
-                self.pool.get('mrp.bom.revision').write(cr, uid, [rev_id], {'indice' : idx})
-            else:
-                self.pool.get('mrp.bom.revision').write(cr, uid, [rev_id], {'indice' : "%c"%(idx+96,)})
-            idx+=1
-        return True
-
 mrp_bom()
 
 class mrp_bom_revision(osv.osv):
@@ -347,29 +332,6 @@ class mrp_production(osv.osv):
     _description = 'Production'
     _date_name  = 'date_planned'
 
-    def _get_sale_order(self,cr,uid,ids,field_name=False):
-        move_obj=self.pool.get('stock.move')
-        def get_parent_move(move_id):
-            move = move_obj.browse(cr,uid,move_id)
-            if move.move_dest_id:
-                return get_parent_move(move.move_dest_id.id)
-            return move_id
-        productions=self.read(cr,uid,ids,['id','move_prod_id'])
-        res={}
-        for production in productions:
-            res[production['id']]=False
-            if production.get('move_prod_id',False):
-                parent_move_line=get_parent_move(production['move_prod_id'][0])
-                if parent_move_line:
-                    move = move_obj.browse(cr,uid,parent_move_line)
-                    #TODO: fix me sale module can not be used here, 
-                    #as may be mrp can be installed without sale module
-                    if field_name=='name':
-                        res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.name or False
-                    if field_name=='client_order_ref':
-                        res[production['id']]=move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
-        return res
-
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context={}):
         result = {}
         for prod in self.browse(cr, uid, ids, context=context):
@@ -393,12 +355,6 @@ class mrp_production(osv.osv):
         for prod in self.browse(cr, uid, ids, context=context):
             result[prod.id] = prod.date_planned[:10]
         return result
-
-    def _sale_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        return self._get_sale_order(cr,uid,ids,field_name='name')
-
-    def _sale_ref_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        return self._get_sale_order(cr,uid,ids,field_name='client_order_ref')
 
     _columns = {
         'name': fields.char('Reference', size=64, required=True),
@@ -438,8 +394,6 @@ class mrp_production(osv.osv):
         'hour_total': fields.function(_production_calc, method=True, type='float', string='Total Hours', multi='workorder'),
         'cycle_total': fields.function(_production_calc, method=True, type='float', string='Total Cycles', multi='workorder'),
 
-        'sale_name': fields.function(_sale_name_calc, method=True, type='char', string='Sale Name'),
-        'sale_ref': fields.function(_sale_ref_calc, method=True, type='char', string='Sale Ref'),
     }
     _defaults = {
         'priority': lambda *a: '1',
@@ -855,6 +809,17 @@ class mrp_procurement(osv.osv):
                 return True
         return False
 
+    def get_phantom_bom_id(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            if procurement.move_id and procurement.move_id.product_id.supply_method=='produce' \
+                 and procurement.move_id.product_id.procure_method=='make_to_order':
+                    phantom_bom_id = self.pool.get('mrp.bom').search(cr, uid, [
+                        ('product_id', '=', procurement.move_id.product_id.id),
+                        ('bom_id', '=', False),
+                        ('type', '=', 'phantom')]) 
+                    return phantom_bom_id 
+        return False
+
     def check_move_cancel(self, cr, uid, ids, context={}):
         res = True
         ok = False
@@ -997,9 +962,9 @@ class mrp_procurement(osv.osv):
                     })
                     self.write(cr, uid, [procurement.id], {'move_id': id, 'close_move':1})
                 else:
-                    # TODO: check this
-                    if procurement.procure_method=='make_to_stock' and procurement.move_id.state in ('waiting',):
-                        id = self.pool.get('stock.move').write(cr, uid, [procurement.move_id.id], {'state':'confirmed'})
+                    if procurement.procure_method=='make_to_stock' and procurement.move_id.state in ('draft','waiting',):
+                        # properly call action_confirm() on stock.move to abide by the location chaining etc.
+                        id = self.pool.get('stock.move').action_confirm(cr, uid, [procurement.move_id.id], context=context)
         self.write(cr, uid, ids, {'state':'confirmed','message':''})
         return True
 
@@ -1115,7 +1080,7 @@ class mrp_procurement(osv.osv):
         todo = []
         todo2 = []
         for proc in self.browse(cr, uid, ids):
-            if proc.close_move:
+            if proc.close_move and proc.move_id:
                 if proc.move_id.state not in ('done','cancel'):
                     todo2.append(proc.move_id.id)
             else:
@@ -1176,10 +1141,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active'),
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
-        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True),
-        'location_id': fields.many2one('stock.location', 'Location', required=True),
-        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','=','product')]),
-        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True ),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
+        'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
+        'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type','=','product')], ondelete="cascade"),
+        'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_min_qty': fields.float('Min Quantity', required=True,
             help="When the virtual stock goes belong the Min Quantity, Open ERP generates "\
             "a procurement to bring the virtual stock to the Max Quantity."),
@@ -1188,7 +1153,7 @@ class stock_warehouse_orderpoint(osv.osv):
             "a procurement to bring the virtual stock to the Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will by rounded up to this multiple."),
-        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order')
+        'procurement_id': fields.many2one('mrp.procurement', 'Purchase Order', ondelete="set null")
     }
     _defaults = {
         'active': lambda *a: 1,
@@ -1197,6 +1162,11 @@ class stock_warehouse_orderpoint(osv.osv):
         'name': lambda x,y,z,c: x.pool.get('ir.sequence').get(y,z,'mrp.warehouse.orderpoint') or '',
         'product_uom': lambda sel, cr, uid, context: context.get('product_uom', False),
     }
+    
+    _sql_constraints = [
+        ( 'qty_multiple_check', 'CHECK( qty_multiple > 0 )', _('Qty Multiple must be greater than zero.')),
+    ]
+    
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id, context={}):
         if warehouse_id:
             w=self.pool.get('stock.warehouse').browse(cr,uid,warehouse_id, context)
@@ -1239,7 +1209,6 @@ class StockMove(osv.osv):
                 factor = move.product_qty
                 bom_point = self.pool.get('mrp.bom').browse(cr, uid, bis[0])
                 res = self.pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor, [])
-                dest = move.product_id.product_tmpl_id.property_stock_production.id
                 state = 'confirmed'
                 if move.state=='assigned':
                     state='assigned'
@@ -1251,10 +1220,8 @@ class StockMove(osv.osv):
                         'product_qty': line['product_qty'],
                         'product_uos': line['product_uos'],
                         'product_uos_qty': line['product_uos_qty'],
-                        'move_dest_id': move.id,
                         'state': state,
                         'name': line['name'],
-                        'location_dest_id': dest,
                         'move_history_ids': [(6,0,[move.id])],
                         'move_history_ids2': [(6,0,[])],
                         'procurements': []
@@ -1277,10 +1244,9 @@ class StockMove(osv.osv):
                     wf_service = netsvc.LocalService("workflow")
                     wf_service.trg_validate(uid, 'mrp.procurement', proc_id, 'button_confirm', cr)
                 self.pool.get('stock.move').write(cr, uid, [move.id], {
-                    'location_id': move.location_dest_id.id,
+                    'location_id': move.location_dest_id.id, # src and dest locations identical to have correct inventory, dummy move
                     'auto_validate': True,
                     'picking_id': False,
-                    'location_id': dest,
                     'state': 'waiting'
                 })
                 for m in self.pool.get('mrp.procurement').search(cr, uid, [('move_id','=',move.id)], context):

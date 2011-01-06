@@ -104,7 +104,7 @@
     
       <para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
     
-      <blockTable colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+      <blockTable rowHeights="0.65cm" colWidths="66.0,35.0,150.0, 90.0,60.0,335.0,50.0,69.0,72.0,64.0,58.0" style="tbl_content">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
       	<tr>
         	<td>
           		<blockTable colWidths="404.0,375.0,69.0,72.0,64.0,59.00" style="Table5">
@@ -114,7 +114,7 @@
 		    			<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
 		    			<td alignment="right"><para style="P9b"><u>[[ formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
 		    			<td><para style="P9b"><u>[[ formatLang(sum_solde_account(o, data['form'])) ]]</u></para></td>
-		    			<td><para style="P9b"><u> [[ formatLang(sum_currency_amount_account(o, data['form'])) ]]</u></para></td>
+		    			<td><para style="P9b"><u> [[ formatLang(sum_currency_amount_account(a, data['form'])) ]] [[ get_currency() ]]</u></para></td>
 		   			</tr>
 	    		</blockTable>
 	    	</td>
@@ -165,10 +165,10 @@
 	
 		<para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
 		
-		<blockTable colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_content">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+		<blockTable rowHeights="0.65cm" colWidths="66.0,35.0,166.0,90.0,60.0,378.0,50.0,69.0,72.0,64.0" style="tbl_content">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         	<tr>
          		<td>
-	      			<blockTable colWidths="405.0,435.0,69.0,72.0,64.0" style="Table5">
+	      			<blockTable colWidths="405.0,435.0,69.0,72.0,64.0" style="Table5" rowHeights="0.65cm">
 						<tr>
 			 	 			<td><para style="Standard">[[ o.code ]] [[ o.name ]]</para></td>
 			  				<td><para style="Standard"></para></td>

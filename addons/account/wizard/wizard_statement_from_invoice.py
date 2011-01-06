@@ -41,14 +41,14 @@ FIELDS = {
 
 START_FIELD = {
     'date': {'string': 'Date payment', 'type': 'date','required':True, 'default': lambda *a: time.strftime('%Y-%m-%d')},
-    'journal_id': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase","cash"])]', 'help': 'This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals.'},
+    'journal_ids': {'string': 'Journal', 'type': 'many2many', 'relation': 'account.journal', 'domain': '[("type","in",["sale","purchase","cash"])]', 'help': 'This field allow you to choose the accounting journals you want for filtering the invoices. If you left this field empty, it will search on all sale, purchase and cash journals.'},
 }
 
 START_FORM = '''<?xml version="1.0"?>
 <form string="Import Invoices in Statement">
     <label string="Choose Journal and Payment Date" colspan="4"/>
     <field name="date"/>
-    <field name="journal_id" colspan="4"/>
+    <field name="journal_ids" colspan="4"/>
 </form>'''
 
 def _search_invoices(obj, cr, uid, data, context):
@@ -73,7 +73,7 @@ def _search_invoices(obj, cr, uid, data, context):
         if move_line_id:
             repeated_move_line_ids += move_line_id
         
-    journal_ids = data['form']['journal_id'][0][2]
+    journal_ids = data['form']['journal_ids'][0][2]
 
     if journal_ids == []:
         journal_ids = journal_obj.search(cr, uid, [('type', 'in', ('sale','cash','purchase'))], context=context)
@@ -120,14 +120,20 @@ def _populate_statement(obj, cursor, user, data, context):
         # else:
         ctx['date'] = line_date
         amount = 0.0
+        
+        if line.debit > 0:
+            amount = line.debit
+        elif line.credit > 0:
+            amount = -line.credit
+                
         if line.amount_currency:
             amount = currency_obj.compute(cursor, user, line.currency_id.id,
                 statement.currency.id, line.amount_currency, context=ctx)
-        else:
-            if line.debit > 0:
-                amount=line.debit
-            elif line.credit > 0:
-                amount=-line.credit
+        elif (line.invoice and line.invoice.currency_id.id <> statement.currency.id):
+            amount = currency_obj.compute(cursor, user, line.invoice.currency_id.id,
+                statement.currency.id, amount, context=ctx)
+            
+            
         reconcile_id = statement_reconcile_obj.create(cursor, user, {
             'line_ids': [(6, 0, [line.id])]
             }, context=context)

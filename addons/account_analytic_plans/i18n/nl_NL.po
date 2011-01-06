@@ -4,40 +4,37 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:50+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:43:23+0000\n"
+"PO-Revision-Date: 2010-09-02 13:43:23+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
-msgstr "Account4 Id"
+msgstr "Rekening4 Id"
 
 #. module: account_analytic_plans
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: account_analytic_plans
 #: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
 #: model:ir.actions.wizard,name:account_analytic_plans.account_analytic_account_inverted_balance_report
 msgid "Crossovered Analytic"
-msgstr ""
+msgstr "Overgehevelde kostenplaats"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
-msgstr "Account5 Id"
+msgstr "Rekening5 Id"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date2:0
@@ -52,7 +49,7 @@ msgstr "Account3 Id"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
 msgid "Rate (%)"
-msgstr "Tarief ( %)"
+msgstr "Tarief (%)"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan:0
@@ -61,57 +58,85 @@ msgstr "Tarief ( %)"
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Kostenplaatsschema"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+msgstr "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
 msgid "Analytic Instance Line"
-msgstr ""
+msgstr "Analytic Instance Line"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
-msgstr ""
+msgstr "Kostenverdelingsregels"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr "Distributiecode"
+#: wizard_button:wizard.crossovered.analytic,init,print:0
+msgid "Print"
+msgstr "Afdrukken"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "To Date"
+msgstr "To Date"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
 msgid "Plan Id"
-msgstr "Plan Id"
+msgstr "Schema-ID"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
 msgid "Analytic Distribution's Models"
-msgstr ""
+msgstr "Kostenverdelingsmodellen"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Account Name"
-msgstr "Rekeningnaam"
+msgstr "Naam rekening"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
-msgstr "Kostenplaats distributie regel"
+msgstr "Kostenverdelingsregel"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Currency:"
-msgstr "Valuta:"
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "Verdelingscode"
 
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
 msgid "Plan Name"
-msgstr "Plan naam"
+msgstr "Naam schema"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Printing date"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -126,7 +151,7 @@ msgstr "Laat geen lege regels zien"
 #. module: account_analytic_plans
 #: wizard_view:wizard.crossovered.analytic,init:0
 msgid "Select Information"
-msgstr "Selecteer informatie"
+msgstr "Kies informatie"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -138,7 +163,7 @@ msgstr "Er bestaat al een model met deze naam en code!"
 #: field:account.analytic.plan.instance,journal_id:0
 #: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
 msgid "Analytic Journal"
-msgstr "Kostenplaats dagboek"
+msgstr "Kostenplaatsdagboek"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -151,13 +176,9 @@ msgid "Analytic Account Ref."
 msgstr "Kostenplaats ref."
 
 #. module: account_analytic_plans
-#: field:account.analytic.default,analytics_id:0
-#: view:account.analytic.plan.instance:0
-#: field:account.analytic.plan.instance,name:0
-#: field:account.invoice.line,analytics_id:0
-#: field:account.move.line,analytics_id:0
-msgid "Analytic Distribution"
-msgstr "Kostenplaats distributie"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account :"
+msgstr "Analytic Account :"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -183,12 +204,7 @@ msgstr "Model aanmaken"
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
 msgid "Default Entries"
-msgstr "Standaard invoer"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "to"
-msgstr "aan"
+msgstr "Standaard boekingen"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -203,13 +219,18 @@ msgstr "Fout"
 #: field:account.journal,plan_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr "Kostenplaats plannen"
+msgstr "Kostenplaatsschema's"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
 #, python-format
 msgid "User Error"
 msgstr "Gebruikersfout"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,min_required:0
+msgid "Minimum Allowed (%)"
+msgstr "Minimaal toegestaan (%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
@@ -224,28 +245,26 @@ msgstr "Maximaal toegestaan(%)"
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
 msgid "Distribution Model Saved"
-msgstr "Koatenplaatsmodel opgeslagen"
+msgstr "Kostenverdelingsmodel opgeslagen"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
-msgstr ""
+msgstr "Analytic Plan Instance"
 
 #. module: account_analytic_plans
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave!"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
-msgstr "Kostenplaatsmodellen"
+msgstr "Kostenverdelingsmodellen"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
+msgid "This module allows to use several analytic plans, according to the general journal,\n"
 "so that multiple analytic lines are created when the invoice or the entries\n"
 "are confirmed.\n"
 "\n"
@@ -270,43 +289,61 @@ msgid ""
 "Plan2:\n"
 "    Eric: 100%\n"
 "\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
+"So when this line of invoice will be confirmed, it will generate 3 analytic lines,\n"
 "for one account entry.\n"
 "        "
-msgstr ""
+msgstr "Deze module stelt u in staat verschillende kostenplaatsschema's te gebuiken, volgens het algemeen dagboek, zodat meerdere boekingen gemaakt worden wanneer de facturen of de boekingen bevestigd worden.\n"
+"\n"
+"U kunt bijv. de volgende kostenplaatsstructuur instellen:\n"
+"  Projecten\n"
+"      Project 1\n"
+"          Deelproject 1.1\n"
+"          Deelproject 1.2\n"
+"      Project 2\n"
+"  Verkoper\n"
+"      Jan\n"
+"       Kees\n"
+"\n"
+"Hier hebben we twee schema's: projecten en verkoper. Een factuurregel moet\n"
+"in staat zijn boekingen te doen in beide schema's: deelproject 1.1 en Kees.\n"
+"Het bedrag kan gesplitst worden. Het volgende voorbeeld is voor een factuur\n"
+"die beide deelprojecten raakt en is toegewezen aan een verkoper:\n"
+"\n"
+"Plan1:\n"
+"    Deelproject 1.1: 50%\n"
+"    Deelproject 1.2: 50%\n"
+"Plan2:\n"
+"    Kees: 100%\n"
+"\n"
+"Dus wanneer deze factuurregel wordt bevestigd,dan genereert deze drie\n"
+"kostenplaatsboekingen voor één normale boeking.\n"
+"        "
 
 #. module: account_analytic_plans
 #: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
 msgid "Multiple-plans management in Analytic Accounting"
-msgstr ""
+msgstr "Meedere schema's beheren in kostenplaatsen"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Lines"
-msgstr ""
+msgstr "Kostenpalatsboekingen"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,min_required:0
-msgid "Minimum Allowed (%)"
-msgstr "Minimaal toegestaan (%)"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Crossovered Analytic -"
+msgstr "Crossovered Analytic -"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
-msgstr "Plan van model"
+msgstr "Schema"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
 msgstr "Account2 Id"
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#, python-format
-msgid "The Total Should be Between %s and %s"
-msgstr ""
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/create_model.py:0
@@ -322,7 +359,7 @@ msgstr "Bedrag"
 #. module: account_analytic_plans
 #: help:account.analytic.plan.line,root_analytic_id:0
 msgid "Root account of this plan."
-msgstr ""
+msgstr "Hoofdrekening van dit schema."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
@@ -347,32 +384,36 @@ msgstr "Code"
 #. module: account_analytic_plans
 #: wizard_button:create.model,info,end:0
 msgid "OK"
-msgstr "OK"
+msgstr "Ok"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
-msgstr ""
+msgstr "Hoofdrekening"
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
-msgstr "Print"
+#: wizard_view:create.model,info:0
+msgid "This distribution model has been saved. You will be able to reuse it later."
+msgstr "Dit kostenverdelingsmodel is opgeslagen. U kunt het later opnieuw gebruiken."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
-msgstr "Volgorde"
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Period from"
-msgstr "Periode vanaf"
+msgstr "Reeks"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Kostenplaats"
+
+#. module: account_analytic_plans
+#: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
+#: field:account.analytic.plan.instance,name:0
+#: field:account.invoice.line,analytics_id:0
+#: field:account.move.line,analytics_id:0
+msgid "Analytic Distribution"
+msgstr "Kostenverdeling"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
@@ -381,21 +422,15 @@ msgid "Value Error"
 msgstr "Waarde fout"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date:"
-msgstr "Print datum"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr "Het totaal dient tussen %s en %s te liggen"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
-msgstr ""
-
-#. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid ""
-"This distribution model has been saved. You will be able to reuse it later."
-msgstr ""
-"Dit kostenplaatsmodel is opgeslagen. U kunt het later opnieuw gebruiken."
+msgstr "Kostenverdelingsmodellen"
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0
@@ -411,3 +446,9 @@ msgstr "Begindatum"
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
 msgstr "op"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "From Date"
+msgstr "From Date"
+

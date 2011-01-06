@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:45+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:43:23+0000\n"
+"PO-Revision-Date: 2010-09-02 13:43:23+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -37,12 +36,12 @@ msgstr "Geen werknemer gedefinieerd voor uw gebruiker!"
 #. module: hr_timesheet
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: hr_timesheet
 #: field:hr.employee,journal_id:0
 msgid "Analytic Journal"
-msgstr "Analytisch dagboek"
+msgstr "Kostenplaatsdagboek"
 
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result_end:0
@@ -61,8 +60,6 @@ msgid "Work done stats"
 msgstr "Statistiek gedane arbeid"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.ui.menu,name:hr_timesheet.next_id_48
 msgid "Timesheet"
 msgstr "Urenstaat"
@@ -77,7 +74,7 @@ msgstr "Ma"
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
 msgid "Sign in"
-msgstr "inschrijven"
+msgstr "Inklokken"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
@@ -143,7 +140,7 @@ msgstr "Begindatum"
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,account_id:0
 msgid "Analytic Account"
-msgstr "Analytische rekening"
+msgstr "Kostenplaats"
 
 #. module: hr_timesheet
 #: model:process.process,name:hr_timesheet.process_process_timesheetprocess0
@@ -176,11 +173,6 @@ msgid "Sun"
 msgstr "Zon"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-msgid "Sum"
-msgstr "Som"
-
-#. module: hr_timesheet
 #: wizard_button:hr.analytical.timesheet,init,report:0
 #: wizard_button:hr.analytical.timesheet.my,init,report:0
 #: wizard_button:hr.analytical.timesheet_users,init,report:0
@@ -190,35 +182,33 @@ msgstr "Afdrukken"
 #. module: hr_timesheet
 #: model:product.template,name:hr_timesheet.product_consultant_product_template
 msgid "Consultancy - Senior Developer"
-msgstr "Consultancy - Senior Developer"
+msgstr "Consultancy - Senior ontwikkelaar"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
 #, python-format
-msgid ""
-"No analytic journal available for this employee.\n"
-"Define an employee for the selected user and assign an analytic journal."
-msgstr ""
-"Geen kostenplaats journaal aanwezig voor deze werknemer.\n"
-"Definieer een werknemer voor de geselecteerde gebruiker en wijs een "
-"kostenplaats journaal toe."
+msgid "No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal."
+msgstr "No analytic journal available for this employee.\nDefine an employee for the selected user and assign an analytic journal."
 
 #. module: hr_timesheet
 #: model:product.uom,name:hr_timesheet.uom_hour
 msgid "Hour"
-msgstr "Uur:"
+msgstr "Uur"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Timesheet Lines"
-msgstr "Urenstaat regels"
+msgstr "Regels urenstaten"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "July"
-msgstr "Juli"
+msgstr "July"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -230,7 +220,7 @@ msgstr "di"
 #. module: hr_timesheet
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave!"
 
 #. module: hr_timesheet
 #: constraint:product.template:0
@@ -245,39 +235,43 @@ msgstr "Kies gebruikers"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "March"
-msgstr "Maart"
+msgstr "March"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
 msgid "Timesheet line"
-msgstr "Urenstaat regel"
+msgstr "Regel urenstaat"
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Total cost"
-msgstr "Totale kost"
+msgstr "Totale kosten"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form_my
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form_my
 msgid "My Working Hours of The Day"
-msgstr "Mijn werkuren van de dag"
+msgstr "Mijn werkuren van vandaag"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "September"
 msgstr "September"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:0
-#: code:addons/hr_timesheet/report/users_timesheet.py:0
-#, python-format
-msgid "December"
-msgstr "December"
+#: view:hr.analytic.timesheet:0
+msgid "Timesheet Line"
+msgstr "Regel urenstaat"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -322,11 +316,8 @@ msgstr "Vr"
 
 #. module: hr_timesheet
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde "
-"categorie liggen."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde categorie liggen."
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
@@ -346,22 +337,28 @@ msgstr "Klok in status"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "August"
-msgstr "Augustus"
+msgstr "August"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "June"
-msgstr "Juni"
+msgstr "June"
 
 #. module: hr_timesheet
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_my
 #: model:ir.ui.menu,name:hr_timesheet.menu_wizard_hr_timesheet_my
 msgid "Print My Timesheet"
-msgstr "Print mijn urenstaat"
+msgstr "Druk mijn urenstaat af"
 
 #. module: hr_timesheet
 #: wizard_field:hr.analytical.timesheet,init,user_id:0
@@ -372,6 +369,9 @@ msgstr "Gebruiker"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "November"
 msgstr "November"
@@ -384,27 +384,28 @@ msgstr "Afsluitdatum"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "October"
-msgstr "Oktober"
+msgstr "October"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/hr_timesheet.py:0
 #, python-format
-msgid ""
-"No analytic account defined on the project.\n"
-"Please set one or we can not automatically fill the timesheet."
-msgstr ""
-"Geen kostenplaats gedefinieerd op het project.\n"
-"A.u.b. een kostenplaats selecteren, anders kan de urenstaat niet automatisch "
-"ingevuld worden."
+msgid "No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet."
+msgstr "No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "January"
-msgstr "Januari"
+msgstr "January"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -420,17 +421,27 @@ msgstr "Analyse-statistieken"
 #: wizard_field:hr_timesheet.si_so,sign_in,name:0
 #: wizard_field:hr_timesheet.si_so,sign_out,name:0
 msgid "Employee's name"
-msgstr "Naam Werknemer"
+msgstr "Naam werknemer"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_in:0
 msgid "General Information"
-msgstr "Algemene Informatie"
+msgstr "Algemene informatie"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Analysis summary"
-msgstr "Analyse samenvatting"
+msgstr "Samenvatting analyse"
+
+#. module: hr_timesheet
+#: code:addons/hr_timesheet/report/user_timesheet.py:0
+#: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
+#, python-format
+msgid "December"
+msgstr "December"
 
 #. module: hr_timesheet
 #: wizard_button:hr.analytical.timesheet,init,end:0
@@ -456,25 +467,18 @@ msgstr "Kies uw maand"
 
 #. module: hr_timesheet
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: hr_timesheet
 #: model:product.uom.categ,name:hr_timesheet.uom_categ_wtime
 msgid "Working Time"
-msgstr "Werktijd"
+msgstr "Gewerkte tijd"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_out,server_date:0
 msgid "Current Date"
 msgstr "Huidige datum"
-
-#. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Timesheet Line"
-msgstr "Urenstaat regel"
 
 #. module: hr_timesheet
 #: wizard_field:hr_timesheet.si_so,sign_in,server_date:0
@@ -496,14 +500,17 @@ msgstr "Gebruikers"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_today_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_act_hr_timesheet_line_evry1_today_form
 msgid "Working Hours of The Day"
-msgstr "Werkuren van de dag"
+msgstr "Werkuren van vandaag"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "May"
-msgstr "Mei"
+msgstr "May"
 
 #. module: hr_timesheet
 #: wizard_view:hr_timesheet.si_so,sign_out:0
@@ -520,14 +527,17 @@ msgstr "Werkuren"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "February"
-msgstr "Februari"
+msgstr "February"
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic line"
-msgstr "Analytische lijn"
+msgstr "Kostenplaatsboeking"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
@@ -539,6 +549,9 @@ msgstr "Do"
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:0
 #: code:addons/hr_timesheet/report/users_timesheet.py:0
+#: selection:hr.analytical.timesheet,init,month:0
+#: selection:hr.analytical.timesheet.my,init,month:0
+#: selection:hr.analytical.timesheet_users,init,month:0
 #, python-format
 msgid "April"
 msgstr "April"
@@ -546,7 +559,7 @@ msgstr "April"
 #. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_out,si_result:0
 msgid "Start Working"
-msgstr "Start met werken"
+msgstr "Begin met werken"
 
 #. module: hr_timesheet
 #: constraint:product.product:0
@@ -566,48 +579,7 @@ msgid "Year"
 msgstr "Jaar"
 
 #. module: hr_timesheet
-#: xsl:hr.analytical.timesheet:0
-#: xsl:hr.analytical.timesheet_users:0
-msgid "Total"
-msgstr "Totaal"
-
-#. module: hr_timesheet
 #: wizard_button:hr_timesheet.si_so,sign_in,so_result:0
 msgid "Change Work"
 msgstr "Verander taak"
 
-#~ msgid "décembre"
-#~ msgstr "december"
-
-#~ msgid "novembre"
-#~ msgstr "november"
-
-#~ msgid "avril"
-#~ msgstr "april"
-
-#~ msgid "janvier"
-#~ msgstr "januari"
-
-#~ msgid "février"
-#~ msgstr "februari"
-
-#~ msgid "juillet"
-#~ msgstr "juli"
-
-#~ msgid "août"
-#~ msgstr "augustus"
-
-#~ msgid "mars"
-#~ msgstr "maart"
-
-#~ msgid "octobre"
-#~ msgstr "oktober"
-
-#~ msgid "juin"
-#~ msgstr "juni"
-
-#~ msgid "septembre"
-#~ msgstr "september"
-
-#~ msgid "mai"
-#~ msgstr "mei"

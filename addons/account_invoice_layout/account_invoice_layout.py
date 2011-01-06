@@ -170,6 +170,7 @@ class account_invoice_line(osv.osv):
 
     _defaults = {
         'state': lambda *a: 'article',
+        'sequence': lambda *a : 0,
 #       'account_id': _default_account
     }
 account_invoice_line()

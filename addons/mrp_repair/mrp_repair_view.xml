@@ -113,7 +113,7 @@
     		                                    <field name="invoiced"/>
                                             </group>
                                             <newline/>
-                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&gt;&gt;','purchase')]"/>
+                                            <field colspan="4" name="tax_id" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                          </page>
 										 <page string="History" groups="base.group_extended">
                                             <field colspan="4" name="invoice_line_id" />

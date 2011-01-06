@@ -1,17 +1,19 @@
-#, fuzzy
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* mrp_repair
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:36+0000\n"
+"POT-Creation-Date: 2010-09-02 14:06:04+0000\n"
+"PO-Revision-Date: 2010-09-02 14:06:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -53,6 +55,12 @@ msgstr ""
 #: field:mrp.repair.fee,product_uom_qty:0
 #: rml:repair.order:0
 msgid "Quantity"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No product defined on Fees!"
 msgstr ""
 
 #. module: mrp_repair
@@ -104,6 +112,12 @@ msgid "Net Total :"
 msgstr ""
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Warning !"
+msgstr ""
+
+#. module: mrp_repair
 #: rml:repair.order:0
 msgid "VAT"
 msgstr ""
@@ -139,6 +153,12 @@ msgid "Partner"
 msgstr ""
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr ""
+
+#. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_quotation
 msgid "Repairs in quotation"
@@ -169,6 +189,11 @@ msgstr ""
 #: field:mrp.repair,prodlot_id:0
 #: rml:repair.order:0
 msgid "Lot Number"
+msgstr ""
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
 msgstr ""
 
 #. module: mrp_repair
@@ -207,6 +232,12 @@ msgid "Start Repair"
 msgstr ""
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Error !"
+msgstr ""
+
+#. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
 msgstr ""
@@ -238,8 +269,8 @@ msgid "Pricelist"
 msgstr ""
 
 #. module: mrp_repair
-#: help:mrp.repair,state:0
-msgid "Gives the state of the Repair Order"
+#: field:mrp.repair,name:0
+msgid "Repair Ref"
 msgstr ""
 
 #. module: mrp_repair
@@ -261,16 +292,18 @@ msgstr ""
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
-msgid ""
-"The garantee limit is computed as: last move date + warranty defined on "
-"selected product. If the current date is below the garantee limit, each "
-"operation and fee you will add will be set as 'not to invoiced' by default. "
-"Note that you can change manually afterwards."
+msgid "The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."
 msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repair Line"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner and invoicing address in the repair form !"
 msgstr ""
 
 #. module: mrp_repair
@@ -332,12 +365,6 @@ msgid "Invoiced"
 msgstr ""
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
-#, python-format
-msgid "You have to select a partner in the repair form !"
-msgstr ""
-
-#. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
 msgid "No"
 msgstr ""
@@ -355,8 +382,8 @@ msgid "Add"
 msgstr ""
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Draft"
+#: wizard_view:mrp.repair.make_invoice,init:0
+msgid "Do you really want to create the invoice(s) ?"
 msgstr ""
 
 #. module: mrp_repair
@@ -367,8 +394,7 @@ msgstr ""
 
 #. module: mrp_repair
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: mrp_repair
@@ -399,9 +425,7 @@ msgstr ""
 
 #. module: mrp_repair
 #: wizard_view:mrp.repair.cancel,display:0
-msgid ""
-"This operation  will  cancel the  Repair process, but  will not cancel it's "
-"Invoice. Do you want to continue?"
+msgid "This operation  will  cancel the  Repair process, but  will not cancel it's Invoice. Do you want to continue?"
 msgstr ""
 
 #. module: mrp_repair
@@ -420,13 +444,19 @@ msgid "Confirm Repair"
 msgstr ""
 
 #. module: mrp_repair
-#: rml:repair.order:0
-msgid "Repair Quotation"
+#: wizard_view:mrp.repair.cancel,display:0
+msgid "Cancel Repair...??"
 msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
+msgstr ""
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for product \"%s\"."
 msgstr ""
 
 #. module: mrp_repair
@@ -505,10 +535,7 @@ msgstr ""
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
-msgid ""
-"This field allow you to change the workflow of the repair order. If value "
-"selected is different from 'No Invoice', it also allow you to select the "
-"pricelist and invoicing address."
+msgid "This field allow you to change the workflow of the repair order. If value selected is different from 'No Invoice', it also allow you to select the pricelist and invoicing address."
 msgstr ""
 
 #. module: mrp_repair
@@ -516,11 +543,6 @@ msgstr ""
 #: field:mrp.repair.line,price_unit:0
 #: rml:repair.order:0
 msgid "Unit Price"
-msgstr ""
-
-#. module: mrp_repair
-#: wizard_view:mrp.repair.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
 msgstr ""
 
 #. module: mrp_repair
@@ -548,11 +570,7 @@ msgstr ""
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
-msgid ""
-"Check this box if you want to manage the delivery once the product is "
-"repaired. If cheked, it will create a packing with selected product. Note "
-"that you can select the locations in the Info tab, if you have the extended "
-"view."
+msgid "Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a packing with selected product. Note that you can select the locations in the Info tab, if you have the extended view."
 msgstr ""
 
 #. module: mrp_repair
@@ -587,8 +605,8 @@ msgid "Make invoices"
 msgstr ""
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Ref"
+#: help:mrp.repair,state:0
+msgid "Gives the state of the Repair Order"
 msgstr ""
 
 #. module: mrp_repair
@@ -603,8 +621,8 @@ msgid "Remove"
 msgstr ""
 
 #. module: mrp_repair
-#: wizard_view:mrp.repair.cancel,display:0
-msgid "Cancel Repair...??"
+#: rml:repair.order:0
+msgid "Repair Quotation"
 msgstr ""
 
 #. module: mrp_repair
@@ -656,8 +674,7 @@ msgstr ""
 
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
-msgid ""
-"This field allow you to choose the parner that will be invoiced and delivered"
+msgid "This field allow you to choose the parner that will be invoiced and delivered"
 msgstr ""
 
 #. module: mrp_repair
@@ -675,3 +692,4 @@ msgstr ""
 #, python-format
 msgid "No partner !"
 msgstr ""
+

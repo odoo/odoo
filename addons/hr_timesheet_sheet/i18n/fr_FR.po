@@ -4,29 +4,28 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 12:29+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:45:58+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:58+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_review0
 msgid "Review end of day check day is complete"
-msgstr ""
+msgstr "Review end of day check day is complete"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
-msgid ""
-"You can not have 2 timesheets that overlaps !\n"
+msgid "You can not have 2 timesheets that overlaps !\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
+msgstr "You can not have 2 timesheets that overlaps !\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -45,7 +44,7 @@ msgstr "Pas d'employé définit pour cet utilisateur !"
 #. module: hr_timesheet_sheet
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_attendance:0
@@ -73,7 +72,7 @@ msgstr "Aujourd'hui"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
 msgid "Confirm timesheet sheet"
-msgstr ""
+msgstr "Confirm timesheet sheet"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -89,14 +88,14 @@ msgid "Set to Draft"
 msgstr "Mettre au brouillon"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
-msgid "Defines employee's timesheet entry"
-msgstr "Définir l'écriture de la feuille de temps de l'employé"
+#: field:hr_timesheet_sheet.sheet,date_to:0
+msgid "Date to"
+msgstr "Date de fin"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "Draft Timesheet sheet"
-msgstr ""
+msgstr "Draft Timesheet sheet"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.wizard,name:hr_timesheet_sheet.act_hr_timesheet_sheet_form_my_current
@@ -139,7 +138,7 @@ msgstr "Feuille de temps validée"
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid "You must select a Current date wich is in the timesheet dates !"
-msgstr ""
+msgstr "You must select a Current date wich is in the timesheet dates !"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -158,6 +157,14 @@ msgid "Phone call encoding"
 msgstr "Encoder les appels téléphoniques"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot enter an attendance ' \\n"
+"                            'date outside the current timesheet dates!"
+msgstr "You cannot enter an attendance ' \\n"
+"                            'date outside the current timesheet dates!"
+
+#. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Day"
 msgstr "Feuilles de Présence par Jour"
@@ -171,16 +178,20 @@ msgstr "Avertissement !"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Defines the task work entry into timesheet line"
-msgstr ""
+msgstr "Defines the task work entry into timesheet line"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
-msgid ""
-"Allowed difference between the sign in/out and the timesheet computation for "
-"one sheet. Set this to 0 if you do not want any control."
-msgstr ""
-"La différence permise entre le sign in/out and le calcul de la timesheet "
-"pour une feuille. Mettez cette valeur à 0 si vous ne voulez aucun contrôle."
+msgid "Allowed difference between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
+msgstr "La différence permise entre le sign in/out and le calcul de la timesheet pour une feuille. Mettez cette valeur à 0 si vous ne voulez aucun contrôle."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot enter an attendance ' \\n"
+"                        'date outside the current timesheet dates!"
+msgstr "You cannot enter an attendance ' \\n"
+"                        'date outside the current timesheet dates!"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -210,7 +221,7 @@ msgstr "Date de début"
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
 msgid "Hr Timesheet Process"
-msgstr ""
+msgstr "Hr Timesheet Process"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_analyticcost0
@@ -263,7 +274,7 @@ msgstr "Nouveau"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheetconfirming0
 msgid "Timesheet sheet confirm at the end of the period"
-msgstr ""
+msgstr "Timesheet sheet confirm at the end of the period"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
@@ -285,11 +296,8 @@ msgstr "Lignes des Feuilles de Présence"
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
-msgid ""
-"Please verify that the total difference of the sheet is lower than %.2f !"
-msgstr ""
-"Merci de vérifier que la différence totale de la fiche est inférieure à %.2f "
-"!"
+msgid "Please verify that the total difference of the sheet is lower than %.2f !"
+msgstr "Merci de vérifier que la différence totale de la fiche est inférieure à %.2f !"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
@@ -305,7 +313,7 @@ msgstr "Pas d'employé défini"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Invalid action !"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
@@ -417,8 +425,7 @@ msgstr "Feuille de Feuilles de Présence"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign out from an other date than today"
-msgstr ""
-"Vous ne pouvez pas pointer la sortie pour un autre jour qu'aujourdhui"
+msgstr "Vous ne pouvez pas pointer la sortie pour un autre jour qu'aujourdhui"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
@@ -426,9 +433,9 @@ msgid "Status"
 msgstr "État"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0
-msgid "Date to"
-msgstr "Date de fin"
+#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
+msgid "Defines employee's timesheet entry"
+msgstr "Définir l'écriture de la feuille de temps de l'employé"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
@@ -439,7 +446,7 @@ msgstr "État actuel"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet !"
-msgstr ""
+msgstr "You cannot modify an entry in a confirmed timesheet !"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
@@ -465,8 +472,7 @@ msgstr "Date"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr ""
-"Vous ne pouvez pas modifier une entrée d'une feuille de temps confirmée !"
+msgstr "Vous ne pouvez pas modifier une entrée d'une feuille de temps confirmée !"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
@@ -503,12 +509,12 @@ msgstr "Fait"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Attendance entry moves into the timesheet"
-msgstr ""
+msgstr "Attendance entry moves into the timesheet"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_createanalyticcose0
 msgid "Creates your analytic cost accoording to quantity"
-msgstr ""
+msgstr "Creates your analytic cost accoording to quantity"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_timesheetline0
@@ -522,22 +528,25 @@ msgstr "Feuille de Feuilles de Présence"
 
 #. module: hr_timesheet_sheet
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères "
-"spéciaux !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Cannot delete Sheet(s) which are already confirmed !"
-msgstr ""
+msgstr "Cannot delete Sheet(s) which are already confirmed !"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Timesheet is validate by project manager."
 msgstr "La feuille de temps est validée par le responsable du projet"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!"
+msgstr "The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_phonecall0
@@ -580,8 +589,14 @@ msgstr "Pointer la sortie"
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
+msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
+msgstr "Cannot delete Sheet(s) which have attendance entries encoded !"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
 msgid "You can not duplicate a timesheet !"
-msgstr ""
+msgstr "You can not duplicate a timesheet !"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -603,7 +618,7 @@ msgstr "hr_timesheet_sheet.sheet"
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Absent"
-msgstr ""
+msgstr "Absent"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
@@ -628,8 +643,7 @@ msgstr "Taux de facturation"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_phonecallencoding0
 msgid "Encode how much time u spent on phone call"
-msgstr ""
-"Encoder combien de temps vous avez passé sur les appels téléphoniques"
+msgstr "Encoder combien de temps vous avez passé sur les appels téléphoniques"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_reviewofwork0
@@ -678,3 +692,4 @@ msgstr "Total"
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_validate
 msgid "My Department's Timesheet to Validate"
 msgstr "Les feuilles de temps de mon département à valider"
+

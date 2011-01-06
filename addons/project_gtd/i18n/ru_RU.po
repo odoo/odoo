@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-10-02 18:53+0000\n"
-"Last-Translator: Andy Lemz <andy.lemz@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:57:40+0000\n"
+"PO-Revision-Date: 2010-09-02 13:57:40+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_daily.py:0
@@ -35,11 +34,8 @@ msgstr "Отображаемые столбцы"
 
 #. module: project_gtd
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -79,6 +75,7 @@ msgstr "Приоритет"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_inbox
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
 #: model:ir.ui.menu,name:project_gtd.menu_open_time_myinbox
 msgid "My Inbox"
 msgstr "Мои входящие"
@@ -91,7 +88,7 @@ msgstr "Проект по умолчанию"
 #. module: project_gtd
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Недопустимое имя модели в определении действия"
+msgstr "Invalid model name in the action definition."
 
 #. module: project_gtd
 #: field:project.gtd.timebox,context4_id:0
@@ -104,9 +101,9 @@ msgid "Set to Timebox"
 msgstr "Установить период"
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,type:0
-msgid "Other"
-msgstr "Прочие"
+#: field:project.gtd.timebox,type:0
+msgid "Type"
+msgstr "Тип"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_effective_hours:0
@@ -143,16 +140,6 @@ msgid "Timebox tasks selection"
 msgstr "Выбор задач периода"
 
 #. module: project_gtd
-#: field:project.gtd.timebox,type:0
-msgid "Type"
-msgstr "Тип"
-
-#. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
-msgid "Inbox Tasks"
-msgstr "Входящие задания"
-
-#. module: project_gtd
 #: model:ir.actions.wizard,name:project_gtd.open_gtd_timebox_empty
 msgid "Empty Timebox"
 msgstr "Пустой период"
@@ -177,11 +164,6 @@ msgstr "Пользователь"
 #: model:ir.ui.menu,name:project_gtd.menu_open_time_daily_inbox
 msgid "My Daily Timebox"
 msgstr "Мой дневной период"
-
-#. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_context
-msgid "project.gtd.context"
-msgstr "Контекст"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,context1_id:0
@@ -215,6 +197,7 @@ msgstr "Контекст 6"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
+#: model:ir.model,name:project_gtd.model_project_gtd_context
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
 #: view:project.gtd.timebox:0
 msgid "Contexts"
@@ -239,6 +222,7 @@ msgstr "Проект"
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_all
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree_my
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_my_timeboxes
+#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
 msgid "My Timeboxes"
 msgstr "Мои периоды"
 
@@ -295,6 +279,11 @@ msgid "Tasks"
 msgstr "Задания"
 
 #. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.project_normal_action_tree
+msgid "TimeBox"
+msgstr "TimeBox"
+
+#. module: project_gtd
 #: field:project.gtd.context,sequence:0
 msgid "Sequence"
 msgstr "Последовательность"
@@ -305,14 +294,19 @@ msgid "Child Timeboxes"
 msgstr "Подчиненный период"
 
 #. module: project_gtd
-#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
-msgid "All My Timeboxes"
-msgstr "Все мои периоды"
+#: selection:project.gtd.timebox,type:0
+msgid "Other"
+msgstr "Прочие"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_deadline:0
 msgid "Deadline"
 msgstr "Срок"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "TimeBox Configuration"
+msgstr "TimeBox Configuration"
 
 #. module: project_gtd
 #: wizard_field:project.gtd.timebox.fill,init,timebox_id:0
@@ -338,3 +332,4 @@ msgstr "Запланированные часы"
 #: selection:project.gtd.timebox,type:0
 msgid "Weekly"
 msgstr "Еженедельно"
+

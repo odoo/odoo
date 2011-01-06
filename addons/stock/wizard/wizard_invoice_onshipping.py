@@ -60,32 +60,35 @@ invoice_fields = {
 }
 
 
-def _get_type(obj, cr, uid, data, context):
+def _get_type(obj, cr, uid, data, context=None):
     picking_obj = pooler.get_pool(cr.dbname).get('stock.picking')
-    usage = 'customer'
-    pick = picking_obj.browse(cr, uid, data['id'], context)
+    src_usage = dest_usage = None
+    pick = picking_obj.browse(cr, uid, data['id'], context=context)
     if pick.invoice_state == 'invoiced':
         raise wizard.except_wizard(_('UserError'), _('Invoice is already created.'))
     if pick.invoice_state == 'none':
         raise wizard.except_wizard(_('UserError'), _('Invoice cannot be created from Packing.'))
 
     if pick.move_lines:
-        usage = pick.move_lines[0].location_id.usage
+        src_usage = pick.move_lines[0].location_id.usage
+        dest_usage = pick.move_lines[0].location_dest_id.usage
 
-    if pick.type == 'out' and usage == 'supplier':
+    if pick.type == 'out' and dest_usage == 'supplier':
         type = 'in_refund'
-    elif pick.type == 'out' and usage == 'customer':
+    elif pick.type == 'out' and dest_usage == 'customer':
         type = 'out_invoice'
-    elif pick.type == 'in' and usage == 'supplier':
+    elif pick.type == 'in' and src_usage == 'supplier':
         type = 'in_invoice'
-    elif pick.type == 'in' and usage == 'customer':
+    elif pick.type == 'in' and src_usage == 'customer':
         type = 'out_refund'
     else:
         type = 'out_invoice'
     return {'type': type}
 
 
-def _create_invoice(obj, cr, uid, data, context):
+def _create_invoice(obj, cr, uid, data, context=None):
+    if context is None:
+        context = {}
     if data['form'].get('new_picking', False):
         data['id'] = data['form']['new_picking']
         data['ids'] = [data['form']['new_picking']]
@@ -97,12 +100,12 @@ def _create_invoice(obj, cr, uid, data, context):
     type = data['form']['type']
 
     res = picking_obj.action_invoice_create(cr, uid, data['ids'],
-            journal_id = data['form']['journal_id'], group=data['form']['group'],
-            type=type, context= context)
+            journal_id=data['form']['journal_id'], group=data['form']['group'],
+            type=type, context=context)
 
     invoice_ids = res.values()
     if not invoice_ids:
-        raise  wizard.except_wizard(_('Error'), _('Invoice is not created'))
+        raise wizard.except_wizard(_('Error'), _('Invoice is not created'))
 
     if type == 'out_invoice':
         xml_id = 'action_invoice_tree5'
@@ -114,9 +117,10 @@ def _create_invoice(obj, cr, uid, data, context):
         xml_id = 'action_invoice_tree12'
 
     result = mod_obj._get_id(cr, uid, 'account', xml_id)
-    id = mod_obj.read(cr, uid, result, ['res_id'])
-    result = act_obj.read(cr, uid, id['res_id'])
+    id = mod_obj.read(cr, uid, result, ['res_id'], context=context)
+    result = act_obj.read(cr, uid, id['res_id'], context=context)
     result['res_id'] = invoice_ids
+    result['context'] = context
     return result
 
 
@@ -146,6 +150,4 @@ class make_invoice_onshipping(wizard.interface):
 
 make_invoice_onshipping("stock.invoice_onshipping")
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

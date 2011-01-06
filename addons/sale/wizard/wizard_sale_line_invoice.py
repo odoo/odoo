@@ -24,17 +24,15 @@ import wizard
 import netsvc
 import ir
 import pooler
+from tools.translate import _
 
 invoice_form = """<?xml version="1.0"?>
 <form string="Create invoices">
-    <separator colspan="4" string="Do you really want to create the invoices ?" />
-    <field name="grouped" />
+    <separator colspan="4" string="Do you really want to create the invoice(s) ?" />
 </form>
 """
 
-invoice_fields = {
-    'grouped' : {'string':'Group the invoices', 'type':'boolean', 'default': lambda *a: False}
-}
+invoice_fields = {}
 
 def _makeInvoices(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
@@ -61,7 +59,7 @@ def _makeInvoices(self, cr, uid, data, context):
             'currency_id' : order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': pay_term,
-            'fiscal_position': order.partner_id.property_account_position.id
+            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id
         }
         inv_id = pool.get('account.invoice').create(cr, uid, inv)
         return inv_id
@@ -86,7 +84,10 @@ def _makeInvoices(self, cr, uid, data, context):
             wf_service = netsvc.LocalService('workflow')
             wf_service.trg_validate(uid, 'sale.order', line.order_id.id, 'all_lines', cr)
             pool.get('sale.order').write(cr,uid,[line.order_id.id],{'state' : 'progress'})
-
+    
+    if not invoices:
+         raise wizard.except_wizard(_('Warning'),_('Invoice cannot be created for this Sale Order Line due to one of the following reasons:\n1.The state of this sale order line is either "draft" or "cancel"!\n2.The Sale Order Line is Invoiced!'))
+    
     for result in invoices.values():
         order = result[0][0].order_id
         il = map(lambda x: x[1], result)

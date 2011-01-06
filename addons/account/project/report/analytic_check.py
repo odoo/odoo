@@ -44,7 +44,6 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
     def _lines_p(self, date1, date2):
         res = []
         acc_obj = self.pool.get('account.account')
-       # print"3333333acc_obj3333333",acc_obj.read(self.cr, self.uid, self.ids, ['name', 'code','user_type'])
 
         for a in acc_obj.read(self.cr, self.uid, self.ids, ['name', 'code']):
             self.cr.execute("SELECT sum(debit), sum(credit) \
@@ -56,12 +55,12 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
 
             self.cr.execute("SELECT abs(sum(amount)) AS balance \
                     FROM account_analytic_line \
-                    WHERE date>=%s AND date<=%s AND amount>0 AND general_account_id = %s", (date1, date2, a['id']))
+                    WHERE date>=%s AND date<=%s AND amount<0 AND general_account_id = %s", (date1, date2, a['id']))
             (ad,) = self.cr.fetchone()
             ad = ad or 0.0
             self.cr.execute("SELECT abs(sum(amount)) AS balance \
                     FROM account_analytic_line \
-                    WHERE date>=%s AND date<=%s AND amount<0 AND general_account_id = %s", (date1, date2, a['id']))
+                    WHERE date>=%s AND date<=%s AND amount>0 AND general_account_id = %s", (date1, date2, a['id']))
             (ac,) = self.cr.fetchone()
             ac = ac or 0.0
 
@@ -78,41 +77,6 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
             self.sum_ana_cred += ac
 
         return res
-
-#    def _lines_p(self, date1, date2):
-#        res = []
-#        acc_obj = self.pool.get('account.account')
-#        for a in acc_obj.read(self.cr, self.uid, self.ids, ['name', 'code','sign']):
-#            self.cr.execute("SELECT sum(debit), sum(credit) \
-#                    FROM account_move_line \
-#                    WHERE date>=%s AND date<=%s AND state<>'draft' AND account_id = %s", (date1, date2, a['id']))
-#            (gd, gc) = self.cr.fetchone()
-#            gd = gd or 0.0
-#            gc = gc or 0.0
-#
-#            self.cr.execute("SELECT abs(sum(amount)) AS balance \
-#                    FROM account_analytic_line \
-#                    WHERE date>=%s AND date<=%s AND amount*%s>0 AND general_account_id = %s", (date1, date2, a['sign'], a['id']))
-#            (ad,) = self.cr.fetchone()
-#            ad = ad or 0.0
-#            self.cr.execute("SELECT abs(sum(amount)) AS balance \
-#                    FROM account_analytic_line \
-#                    WHERE date>=%s AND date<=%s AND amount*%s<0 AND general_account_id = %s", (date1, date2, a['sign'], a['id']))
-#            (ac,) = self.cr.fetchone()
-#            ac = ac or 0.0
-#
-#            res.append({'code': a['code'], 'name': a['name'],
-#                'gen_debit': gd,
-#                'gen_credit': gc,
-#                'ana_debit': ad,
-#                'ana_credit': ac,
-#                'delta_debit': gd - ad,
-#                'delta_credit': gc - ac,})
-#            self.sum_gen_deb += gd
-#            self.sum_gen_cred += gc
-#            self.sum_ana_deb += ad
-#            self.sum_ana_cred += ac
-#        return res
 
     def _gen_deb(self, date1, date2):
         return self.sum_gen_deb
@@ -133,6 +97,5 @@ class account_analytic_analytic_check(report_sxw.rml_parse):
         return (self._gen_cred(date1,date2)-self._ana_cred(date1,date2))
 
 report_sxw.report_sxw('report.account.analytic.account.analytic.check', 'account.analytic.account', 'addons/account/project/report/analytic_check.rml',parser=account_analytic_analytic_check, header=False)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

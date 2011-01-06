@@ -21,7 +21,7 @@
 ##############################################################################
 
 
-from osv import fields,osv
+from osv import fields, osv
 
 class ir_sequence_fiscalyear(osv.osv):
     _name = 'account.sequence.fiscalyear'
@@ -43,7 +43,11 @@ class ir_sequence(osv.osv):
     _columns = {
         'fiscal_ids' : fields.one2many('account.sequence.fiscalyear', 'sequence_main_id', 'Sequences')
     }
-    def get_id(self, cr, uid, sequence_id, test='id=%s', context={}):
+
+    def get_id(self, cr, uid, sequence_id, test='id=%s', context=None):
+
+        if context is None:
+            context = {}
         if test not in ('id=%s', 'code=%s'):
             raise ValueError('invalid test')
         cr.execute('select id from ir_sequence where '+test+' and active=%s', (sequence_id, True,))

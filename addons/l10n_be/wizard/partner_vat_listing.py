@@ -98,16 +98,16 @@ class wizard_vat(wizard.interface):
                 country = ads.country_id.code
 
         sender_date = time.strftime('%Y-%m-%d')
-        
+        comp_name = obj_cmpny.name
         data_file = '<?xml version="1.0"?>\n<VatList xmlns="http://www.minfin.fgov.be/VatList" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.minfin.fgov.be/VatList VatList.xml" RecipientId="VAT-ADMIN" SenderId="'+ str(company_vat) + '"'
-        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ tools.ustr(data['form']['mand_id']) + '" SenderDate="'+ str(sender_date)+ '"'
+        data_file +=' ControlRef="'+ cref + '" MandataireId="'+ data['form']['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
         if data['form']['test_xml']:
             data_file += ' Test="0"'
         data_file += ' VersionTech="1.2">'
-        data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t\t<Street>'+ tools.ustr(street) +'</Street>\n\t\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>'
-        data_file += '\n\t\t<Country>'+ tools.ustr(country) +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
-        data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+tools.ustr(obj_cmpny.name)+'</Name>\n\t<Street>'+ tools.ustr(street) +'</Street>\n\t<CityAndZipCode>'+ tools.ustr(zip_city) +'</CityAndZipCode>\n\t<Country>'+ tools.ustr(country) +'</Country>\n</CompanyInfo>'
-        data_period = '\n<Period>'+ tools.ustr(obj_year.date_stop[:4]) +'</Period>'
+        data_file += '\n<AgentRepr DecNumber="1">\n\t<CompanyInfo>\n\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t<Name>'+ comp_name +'</Name>\n\t\t<Street>'+ street +'</Street>\n\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>'
+        data_file += '\n\t\t<Country>'+ country +'</Country>\n\t</CompanyInfo>\n</AgentRepr>'
+        data_comp = '\n<CompanyInfo>\n\t<VATNum>'+str(company_vat)+'</VATNum>\n\t<Name>'+ comp_name +'</Name>\n\t<Street>'+ street +'</Street>\n\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t<Country>'+ country +'</Country>\n</CompanyInfo>'
+        data_period = '\n<Period>'+ obj_year.date_stop[:4] +'</Period>'
         error_message = []
 
         for p_id in p_id_list:
@@ -176,7 +176,7 @@ class wizard_vat(wizard.interface):
             data_clientinfo +='\n<ClientList SequenceNum="'+str(seq)+'">\n\t<CompanyInfo>\n\t\t<VATNum>'+line['vat'] +'</VATNum>\n\t\t<Country>'+tools.ustr(line['country']) +'</Country>\n\t</CompanyInfo>\n\t<Amount>'+str(int(line['amount'] * 100)) +'</Amount>\n\t<TurnOver>'+str(int(line['turnover'] * 100)) +'</TurnOver>\n</ClientList>'
 
         data_decl ='\n<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" TurnOverSum="'+ str(int(sum_turnover * 100)) +'" TaxSum="'+ str(int(sum_tax * 100)) +'" />'
-        data_file += tools.ustr(data_decl) + tools.ustr(data_comp) + tools.ustr(data_period) + tools.ustr(data_clientinfo) + '\n</VatList>'
+        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n</VatList>'
 
         data['form']['msg'] = 'Save the File with '".xml"' extension.'
         data['form']['file_save'] = base64.encodestring(data_file.encode('utf8'))

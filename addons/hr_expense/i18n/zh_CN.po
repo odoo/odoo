@@ -4,48 +4,47 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 12:06+0000\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
-msgstr "已确认费用申请"
+msgstr "已确认费用"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_line
 msgid "Expense Line"
-msgstr "费用申请明细"
+msgstr "费用明细"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reimbursement0
 msgid "The accoutant reimburse the expenses"
-msgstr "会计偿还费用"
+msgstr "会计人员报销这费用"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all_confirm
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all_confirm
 msgid "Expenses waiting validation"
-msgstr "费用等待批准生效"
+msgstr "费用等待批准"
 
 #. module: hr_expense
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "操作定义中使用了无效的模式名称。"
+msgstr "在行动定义中的模式名称无效"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_confirm:0
 msgid "Date Confirmed"
-msgstr "确认时间"
+msgstr "日期已确认"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -61,23 +60,23 @@ msgstr "设为草稿"
 #: model:ir.actions.act_window,name:hr_expense.expense_my_confirm
 #: model:ir.ui.menu,name:hr_expense.menu_expense_my_confirm
 msgid "My expenses waiting validation"
-msgstr "我的待批准生效费用"
+msgstr "我等待批准的费用"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all
 msgid "All expenses"
-msgstr "所有费用申请"
+msgstr "所有费用"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
-msgstr "已批准"
+msgstr "批准"
 
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
 msgid "UoM"
-msgstr "计量单位"
+msgstr "单位"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -98,41 +97,39 @@ msgstr "已取消"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Validation"
-msgstr "生效"
+msgstr "批准"
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
-msgid ""
-"Determine if the product can be visible in the list of product within a "
-"selection from an HR expense sheet line."
-msgstr ""
+msgid "Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."
+msgstr "确定该产品可以在人力资源费用表明细中显示的产品列表"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Accepted"
-msgstr "已支付"
+msgstr "已同意"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 #: field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
-msgstr "引用"
+msgstr "参考"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Certified honest and conform,"
-msgstr ""
+msgstr "证明是诚实和遵守约定"
 
 #. module: hr_expense
 #: model:ir.actions.report.xml,name:hr_expense.hr_expenses
 msgid "Print HR expenses"
-msgstr "打印人事费用"
+msgstr "打印人力资源费用"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
 msgid "Refuse expense"
-msgstr "拒绝费用申请"
+msgstr "拒绝费用"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -143,20 +140,18 @@ msgstr "确认"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_supplierinvoice0
 msgid "The accoutant validates the sheet"
-msgstr "会计验证该单据"
+msgstr "会计人员使这表生效"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:0
 #, python-format
-msgid ""
-"Please configure Default Expanse account for Product purchase, "
-"`property_account_expense_categ`"
-msgstr ""
+msgid "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
+msgstr "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
 msgid "Analytic account"
-msgstr "分析科目"
+msgstr "辅助核算项目"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_supplierinvoice0
@@ -183,79 +178,73 @@ msgstr "数量"
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Total Price"
-msgstr "总价"
+msgstr "价格合计"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_reinvoicing0
 msgid "Some costs may be reinvoices to the customer"
-msgstr ""
+msgstr "有些成本可以要重开发票给客户"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_my
 #: model:ir.ui.menu,name:hr_expense.menu_expense_my
 msgid "My Expenses"
-msgstr "我的费用申请"
+msgstr "我的费用"
 
 #. module: hr_expense
 #: field:hr.expense.expense,id:0
 msgid "Sheet ID"
-msgstr ""
+msgstr "表ID"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimburseexpense0
 msgid "Reimburse expense"
-msgstr "付还费用"
+msgstr "报销费用"
 
 #. module: hr_expense
 #: field:hr.expense.expense,journal_id:0
 msgid "Force Journal"
-msgstr ""
+msgstr "强制分类帐"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_my_new
 #: model:ir.ui.menu,name:hr_expense.menu_expense_my_new
 msgid "New Expenses Sheet"
-msgstr ""
+msgstr "新的费用表"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
 msgid "After creating invoice, reimburse expenses"
-msgstr ""
+msgstr "报销费用后创建发票"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
-msgstr "付还"
+msgstr "报销"
 
 #. module: hr_expense
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效的 XML 视图架构！"
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
-#, python-format
-msgid "The employee must have a contact address"
-msgstr ""
+msgstr "无效XML视图结构!"
 
 #. module: hr_expense
 #: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 msgid "Expense"
-msgstr "费用申请"
+msgstr "费用"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
-msgstr "费用申请明细"
+msgstr "费用明细"
 
 #. module: hr_expense
 #: field:hr.expense.expense,currency_id:0
@@ -263,19 +252,25 @@ msgid "Currency"
 msgstr "货币"
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a working address"
+msgstr "The employee must have a working address"
+
+#. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
 msgid "Employee encode all his expenses"
-msgstr ""
+msgstr "员工编码所有的费用"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已开发票"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
 msgid "Reimbursed"
-msgstr "已付还"
+msgstr "报销"
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -294,29 +289,28 @@ msgstr "草稿"
 
 #. module: hr_expense
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Accounting data"
-msgstr "会计数据"
+msgstr "会计日期"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveexpense0
 msgid "Expense is approved."
-msgstr "费用申请已批准"
+msgstr "费用已批准"
 
 #. module: hr_expense
 #: field:hr.expense.expense,amount:0
 msgid "Total Amount"
-msgstr "总额"
+msgstr "金额合计"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_draftexpenses0
 msgid "Draft Expenses"
-msgstr "费用申请草稿"
+msgstr "费用草稿"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_id:0
@@ -328,59 +322,59 @@ msgstr "用户"
 #: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
-msgstr "时间"
+msgstr "日期"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Total:"
-msgstr "总计："
+msgstr "合计:"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "HR Expenses"
-msgstr "人事费用"
+msgstr "人力资源费用"
 
 #. module: hr_expense
 #: field:hr.expense.expense,date_valid:0
 msgid "Date Validated"
-msgstr ""
+msgstr "日期已生效"
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
 msgid "Account Move"
-msgstr ""
+msgstr "凭证"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
 msgid "The employee validates his expense sheet"
-msgstr ""
+msgstr "员工使这费用表生效"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_refused0
 msgid "The direct manager refuses the sheet.Reset as draft."
-msgstr ""
+msgstr "管理者直接拒绝这表重新设为草稿"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expenses Sheet"
-msgstr ""
+msgstr "费用表"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all_invoiced
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all_invoiced
 msgid "Expenses waiting payment"
-msgstr "等待支付的费用申请"
+msgstr "费用等待支付"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_my_draft
 #: model:ir.ui.menu,name:hr_expense.menu_expense_my_draft
 msgid "My Draft expenses"
-msgstr "我的费用申请草稿"
+msgstr "我的费用草稿"
 
 #. module: hr_expense
 #: model:ir.module.module,shortdesc:hr_expense.module_meta_information
 msgid "Human Resources Expenses Tracking"
-msgstr ""
+msgstr "人力资源费用跟踪"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -397,49 +391,49 @@ msgstr "取消"
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
 msgid "Reinvoice"
-msgstr ""
+msgstr "重开发票"
 
 #. module: hr_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense Process"
-msgstr "费用申请流程"
+msgstr "费用处理"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Other Info"
-msgstr "其他信息"
+msgstr "其它信息"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all_draft
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all_draft
 msgid "Draft expenses"
-msgstr ""
+msgstr "费用草稿"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_confirmexpense0
 msgid "Confirm expense"
-msgstr "确认费用申请"
+msgstr "确认费用"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_approveexpense0
 msgid "Approve expense"
-msgstr "批准费用申请"
+msgstr "批准费用"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_accept0
 msgid "Accept"
-msgstr ""
+msgstr "同意"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "This document must be dated and signed for reimbursement"
-msgstr ""
+msgstr "这报销单据必须有日期和签名"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
 msgid "Expense is refused."
-msgstr "费用申请被拒绝。"
+msgstr "费用已拒绝"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -451,7 +445,7 @@ msgstr "单价"
 #: model:ir.actions.act_window,name:hr_expense.expense_all_valid
 #: model:ir.ui.menu,name:hr_expense.menu_expense_all_valid
 msgid "Expenses waiting invoice"
-msgstr "等待发票的费用申请"
+msgstr "费用等待发票"
 
 #. module: hr_expense
 #: field:hr.expense.line,product_id:0
@@ -461,18 +455,18 @@ msgstr "产品"
 #. module: hr_expense
 #: field:hr.expense.line,description:0
 msgid "Description"
-msgstr "描述"
+msgstr "说明"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: field:hr.expense.expense,name:0
 msgid "Expense Sheet"
-msgstr ""
+msgstr "费用表"
 
 #. module: hr_expense
 #: field:hr.expense.line,unit_quantity:0
 msgid "Quantities"
-msgstr ""
+msgstr "数量"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_refused0
@@ -482,12 +476,12 @@ msgstr "已拒绝"
 #. module: hr_expense
 #: field:product.product,hr_expense_ok:0
 msgid "Can be Expensed"
-msgstr ""
+msgstr "可支出"
 
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "Ref."
-msgstr ""
+msgstr "参考"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
@@ -497,7 +491,7 @@ msgstr "批准用户"
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "(Date and signature)"
-msgstr ""
+msgstr "(日期和签名)"
 
 #. module: hr_expense
 #: rml:hr.expense:0
@@ -507,7 +501,7 @@ msgstr "名称"
 #. module: hr_expense
 #: field:hr.expense.line,name:0
 msgid "Short Description"
-msgstr "简述"
+msgstr "简短说明"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveinvoice0
@@ -517,30 +511,31 @@ msgstr "创建供应商发票"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_approved0
 msgid "The direct manager approves the sheet"
-msgstr ""
+msgstr "管理者直接批准这表"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "序号"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
 msgid "Expense is confirmed."
-msgstr "费用申请已确认。"
+msgstr "费用已确认"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
 #: model:ir.ui.menu,name:hr_expense.next_id_49
 msgid "Expenses"
-msgstr "费用申请"
+msgstr "费用"
 
 #. module: hr_expense
 #: field:hr.expense.line,total_amount:0
 msgid "Total"
-msgstr "总计"
+msgstr "合计"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
-msgstr ""
+msgstr "重开发票"
+

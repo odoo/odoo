@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 11:42+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:47:43+0000\n"
+"PO-Revision-Date: 2010-09-02 13:47:43+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -221,7 +220,7 @@ msgstr "in Rechnung gestelltes Mitglied kann aufgenommenes Mitglied werden"
 #. module: membership
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr "Fehler: UOS sollte in einer anderen Kategorie sein als UOM"
+msgstr "Fehler: Die Verkaufseinheit sollte in einer anderen Kategorie sein als die Mengeneinheit"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_membership_products
@@ -283,11 +282,8 @@ msgstr "MItglieder Verkaufspreisliste Version"
 
 #. module: membership
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fehler: Die Standard UOM sowie die Beschaffungs UOM muss in derselben "
-"Kategorie sein."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Fehler: Die Standard Mengeneinheit sowie die Beschaffungs Mengeneinheit muss in derselben Kategorie sein."
 
 #. module: membership
 #: help:res.partner,membership_amount:0
@@ -377,6 +373,11 @@ msgid "Old members"
 msgstr "Ehemalige Mitglieder"
 
 #. module: membership
+#: constraint:product.pricelist.item:0
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+
+#. module: membership
 #: field:res.partner,membership_amount:0
 msgid "Membership amount"
 msgstr "Mitgliedsbetrag"
@@ -444,11 +445,8 @@ msgstr "Buchung Rechnungsposition"
 
 #. module: membership
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -537,3 +535,4 @@ msgstr "Jahr"
 #: field:res.partner,membership_state:0
 msgid "Current membership state"
 msgstr "Aktueller Mitgliedschaft Status"
+

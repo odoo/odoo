@@ -95,22 +95,30 @@ class sale_order(osv.osv):
         for id in ids:
             res[id] = [0.0, 0.0]
         cr.execute('''SELECT
-                p.sale_id,sum(m.product_qty), m.state
+                p.sale_id,sum(m.product_qty), mp.state as mp_state, m.state as state, p.type as tp
             FROM
                 stock_move m
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
+            LEFT JOIN
+                mrp_procurement mp on (mp.move_id=m.id)
             WHERE
-                p.sale_id in ('''+','.join(map(str, ids))+''')
-            GROUP BY m.state, p.sale_id''')
-        for oid, nbr, state in cr.fetchall():
+                p.sale_id in %s
+            GROUP BY m.state, mp.state, p.sale_id, p.type''', (tuple(ids),))
+
+        for oid, nbr, state, move_state, type_pick in cr.fetchall():
             if state == 'cancel':
                 continue
-            if state == 'done':
+            res[oid][1] += nbr or 0.0
+            if state == 'done' or move_state == 'done':
                 res[oid][0] += nbr or 0.0
-                res[oid][1] += nbr or 0.0
-            else:
-                res[oid][1] += nbr or 0.0
+            
+            if type_pick == 'in':#which  clearly means that this is a returned picking
+                res[oid][1] -= 2*nbr or 0.0 # Deducting the return picking qty
+                if state == 'done' or move_state == 'done':
+                    nbr += nbr
+                res[oid][0] -= nbr or 0.0
+                
         for r in res:
             if not res[r][1]:
                 res[r] = 0.0
@@ -268,7 +276,7 @@ class sale_order(osv.osv):
         'partner_invoice_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['invoice'])['invoice'],
         'partner_order_id': lambda self, cr, uid, context: context.get('partner_id', False) and  self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['contact'])['contact'],
         'partner_shipping_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').address_get(cr, uid, [context['partner_id']], ['delivery'])['delivery'],
-        'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist.id,
+#        'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist.id,
     }
     _order = 'name desc'
 
@@ -297,7 +305,7 @@ class sale_order(osv.osv):
     def action_cancel_draft(self, cr, uid, ids, *args):
         if not len(ids):
             return False
-        cr.execute('select id from sale_order_line where order_id in ('+','.join(map(str, ids))+')', ('draft',))
+        cr.execute('select id from sale_order_line where order_id in %s', (tuple(ids),))
         line_ids = map(lambda x: x[0], cr.fetchall())
         self.write(cr, uid, ids, {'state': 'draft', 'invoice_ids': [], 'shipped': 0})
         self.pool.get('sale.order.line').write(cr, uid, line_ids, {'invoiced': False, 'state': 'draft', 'invoice_lines': [(6, 0, [])]})
@@ -393,7 +401,7 @@ class sale_order(osv.osv):
             'currency_id': order.pricelist_id.currency_id.id,
             'comment': order.note,
             'payment_term': pay_term,
-            'fiscal_position': order.partner_id.property_account_position.id
+            'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id
         }
         inv_obj = self.pool.get('account.invoice')
         inv.update(self._inv_get(cr, uid, order))
@@ -442,32 +450,53 @@ class sale_order(osv.osv):
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
         return res
 
-    def action_invoice_cancel(self, cr, uid, ids, context={}):
+    def action_invoice_cancel(self, cr, uid, ids, context=None):
         for sale in self.browse(cr, uid, ids):
             for line in sale.order_line:
+                #
+                # Check if the line is invoiced (has asociated invoice
+                # lines from non-cancelled invoices).
+                #
                 invoiced = False
                 for iline in line.invoice_lines:
-                    if iline.invoice_id and iline.invoice_id.state == 'cancel':
-                        continue
-                    else:
+                    if iline.invoice_id and iline.invoice_id.state != 'cancel':
                         invoiced = True
-                self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced})
-        self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False})
+                        break
+                # Update the line (only when needed)
+                if line.invoiced != invoiced:
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced}, context=context)
+        self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False}, context=context)
         return True
     
-    def action_invoice_end(self, cr, uid, ids, context={}):
-        for order in self.browse(cr, uid, ids):
-            val = {'invoiced': True}
-            if order.state == 'invoice_except':
-                val['state'] = 'progress'
-                
+    def action_invoice_end(self, cr, uid, ids, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            #
+            # Update the sale order lines state (and invoiced flag).
+            #
             for line in order.order_line:
-                towrite = []
+                vals = {}
+                #
+                # Check if the line is invoiced (has asociated invoice
+                # lines from non-cancelled invoices).
+                #
+                invoiced = False
+                for iline in line.invoice_lines:
+                    if iline.invoice_id and iline.invoice_id.state != 'cancel':
+                        invoiced = True
+                        break
+                if line.invoiced != invoiced:
+                    vals['invoiced'] = invoiced
+                # If the line was in exception state, now it gets confirmed.
                 if line.state == 'exception':
-                    towrite.append(line.id)
-                if towrite:
-                    self.pool.get('sale.order.line').write(cr, uid, towrite, {'state': 'confirmed'}, context=context)
-            self.write(cr, uid, [order.id], val)
+                    vals['state'] = 'confirmed'
+                # Update the line (only when needed).
+                if vals:
+                    self.pool.get('sale.order.line').write(cr, uid, [line.id], vals, context=context)
+            #
+            # Update the sale order state.
+            #
+            if order.state == 'invoice_except':
+                self.write(cr, uid, [order.id], {'state' : 'progress'}, context=context)
             
         return True
     
@@ -916,7 +945,6 @@ class sale_order_line(osv.osv):
         if partner_id:
             lang = partner_obj.browse(cr, uid, partner_id).lang
         context = {'lang': lang, 'partner_id': partner_id}
-
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
@@ -987,7 +1015,7 @@ class sale_order_line(osv.osv):
                         'product_uos':
                         [('category_id', '=', uos_category_id)]}
 
-        elif uos: # only happens if uom is False
+        elif uos and not uom: # only happens if uom is False
             result['product_uom'] = product_obj.uom_id and product_obj.uom_id.id
             result['product_uom_qty'] = qty_uos / product_obj.uos_coeff
             result['th_weight'] = result['product_uom_qty'] * product_obj.weight
@@ -1032,7 +1060,7 @@ class sale_order_line(osv.osv):
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False):
         res = self.product_id_change(cursor, user, ids, pricelist, product,
-                qty=0, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
+                qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
                 date_order=date_order)
         if 'product_uom' in res['value']:

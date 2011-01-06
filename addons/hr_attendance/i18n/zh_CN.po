@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:47+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
@@ -24,9 +23,8 @@ msgstr "出勤"
 
 #. module: hr_attendance
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
@@ -35,21 +33,18 @@ msgstr ""
 #: model:ir.actions.wizard,name:hr_attendance.si_so
 #: model:ir.ui.menu,name:hr_attendance.menu_si_so
 msgid "Sign in / Sign out"
-msgstr "签入/签出"
+msgstr "签入/ 签出"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
 #, python-format
-msgid ""
-"You tried to sign with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
+msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
+msgid "(*) A positive delay means that the employee worked less than recorded."
+msgstr "(*)正数表示员工工作小于记录"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -59,12 +54,12 @@ msgstr "员工出勤"
 #. module: hr_attendance
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "无效XML视图结构!"
 
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
 msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr "你可以进行签入签出操作了"
+msgstr "你现在准备签入或签出"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -76,7 +71,7 @@ msgstr "签出"
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Delay"
-msgstr ""
+msgstr "推延"
 
 #. module: hr_attendance
 #: wizard_field:hr.si_so,init,name:0
@@ -89,22 +84,27 @@ msgstr "员工姓名"
 #: wizard_button:hr.attendance.print_month,init,print:0
 #: wizard_button:hr.attendance.print_week,init,print:0
 msgid "Print Timesheet"
-msgstr ""
+msgstr "打印时间表"
 
 #. module: hr_attendance
 #: model:ir.actions.wizard,name:hr_attendance.wizard_attendance_error
 msgid "Print Attendance Error Report"
-msgstr ""
+msgstr "打印出勤错误报表"
+
+#. module: hr_attendance
+#: wizard_view:hr.si_so,si_ask_so:0
+msgid "You did not sign out the last time. Please enter the date and time you signed out."
+msgstr "You did not sign out the last time. Please enter the date and time you signed out."
 
 #. module: hr_attendance
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "在行动定义中的模式名称无效"
 
 #. module: hr_attendance
 #: model:ir.actions.wizard,name:hr_attendance.print_week
 msgid "Print Timesheet by week"
-msgstr ""
+msgstr "打印这周时间表"
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
@@ -112,15 +112,20 @@ msgid "Employee"
 msgstr "员工"
 
 #. module: hr_attendance
+#: wizard_field:hr.si_so,si_ask_so,last_time:0
+msgid "Your last sign out"
+msgstr "你最近的签出"
+
+#. module: hr_attendance
 #: wizard_view:hr.attendance.print_week,init:0
 #: wizard_view:hr.attendance.report,init:0
 msgid "Select a time span"
-msgstr ""
+msgstr "选择时间长度"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
-msgstr ""
+msgstr "记录日期"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -131,52 +136,44 @@ msgstr "签入"
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Total period:"
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to sign out with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
+msgstr "总周期:"
 
 #. module: hr_attendance
 #: field:hr.attendance,action_desc:0
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
 msgid "Action reason"
-msgstr "动作原因"
+msgstr "动作理由"
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "March"
-msgstr ""
+msgstr "3月"
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "August"
-msgstr ""
+msgstr "8月"
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "May"
-msgstr ""
+msgstr "5月"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
-msgstr ""
+msgstr "A sign-out must be right after a sign-in !"
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "June"
-msgstr ""
+msgstr "6月"
 
 #. module: hr_attendance
 #: model:ir.actions.wizard,name:hr_attendance.print_month
 msgid "Print Timesheet by month"
-msgstr ""
+msgstr "打印这月时间表"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -187,28 +184,28 @@ msgstr "签出"
 #. module: hr_attendance
 #: model:ir.module.module,shortdesc:hr_attendance.module_meta_information
 msgid "Attendances Of Employees"
-msgstr ""
+msgstr "员工出勤"
 
 #. module: hr_attendance
 #: field:hr.action.reason,name:0
 msgid "Reason"
-msgstr "理由"
+msgstr "原因"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "错误:登入必须要先登出"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "The sign-out date must be in the past"
-msgstr ""
+msgstr "The sign-out date must be in the past"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Date Signed"
-msgstr ""
+msgstr "签到日期"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -218,14 +215,13 @@ msgstr "日期"
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "July"
-msgstr ""
+msgstr "7月"
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,si_ask_so:0
-msgid ""
-"You did not signed out the last time. Please enter the date and time you "
-"signed out."
-msgstr "你上次没有签出，请输入你签出的时间。"
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -236,12 +232,12 @@ msgstr "出勤原因"
 #: wizard_field:hr.attendance.print_week,init,init_date:0
 #: wizard_field:hr.attendance.report,init,init_date:0
 msgid "Starting Date"
-msgstr ""
+msgstr "开始日期"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
 msgid "Present"
-msgstr "出席"
+msgstr "现在"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -251,43 +247,43 @@ msgstr "缺勤"
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "February"
-msgstr ""
+msgstr "2月"
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "October"
-msgstr ""
+msgstr "10月"
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,si_ask_so,last_time:0
-msgid "Your last sign out"
-msgstr "您最近的签出"
+#: wizard_button:hr.si_so,so_wo_si,end:0
+msgid "Ok"
+msgstr "Ok"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "The Sign-in date must be in the past"
-msgstr ""
+msgstr "The Sign-in date must be in the past"
 
 #. module: hr_attendance
 #: wizard_field:hr.attendance.print_month,init,year:0
 msgid "Year"
-msgstr ""
+msgstr "年份"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Min Delay"
-msgstr ""
+msgstr "主要推延"
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action's type"
-msgstr "操作类型"
+msgstr "动作类型"
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
 msgid "Define attendance reason"
-msgstr "定义出勤理由"
+msgstr "定义出勤原因"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -299,7 +295,7 @@ msgstr "签入"
 #. module: hr_attendance
 #: wizard_view:hr.attendance.report,init:0
 msgid "Analysis Information"
-msgstr ""
+msgstr "分析信息"
 
 #. module: hr_attendance
 #: wizard_field:hr.si_so,init,state:0
@@ -309,102 +305,106 @@ msgstr "当前状态"
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "January"
-msgstr ""
+msgstr "1月"
+
+#. module: hr_attendance
+#: wizard_view:hr.si_so,so_wo_si:0
+msgid "Sign-Out Entry must follow Sign-In."
+msgstr "Sign-Out Entry must follow Sign-In."
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "April"
-msgstr ""
+msgstr "4月"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "出勤"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Attendance Errors"
-msgstr ""
+msgstr "出勤错误"
 
 #. module: hr_attendance
 #: field:hr.attendance,action:0
 #: selection:hr.attendance,action:0
 msgid "Action"
-msgstr "操作"
+msgstr "动作"
 
 #. module: hr_attendance
 #: wizard_button:hr.attendance.report,init,print:0
 msgid "Print Attendance Report"
-msgstr ""
+msgstr "打印出勤报表"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
 msgid "Attendance Reasons"
-msgstr ""
+msgstr "出勤原因"
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "November"
-msgstr ""
+msgstr "11月"
 
 #. module: hr_attendance
 #: wizard_view:hr.attendance.report,init:0
 msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr ""
+msgstr "Bellow这种推延, 这错误被认为是自愿的"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "UserError"
 
 #. module: hr_attendance
 #: wizard_field:hr.attendance.report,init,max_delay:0
 msgid "Max. Delay (Min)"
-msgstr ""
+msgstr "最大推延(最小)"
 
 #. module: hr_attendance
 #: wizard_view:hr.attendance.print_week,init:0
 msgid "Select a starting and a end date"
-msgstr ""
+msgstr "选择一开始日期和结束日期"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/print_attendance_error.py:0
 #, python-format
 msgid "No Data Available"
-msgstr ""
+msgstr "No Data Available"
 
 #. module: hr_attendance
 #: wizard_field:hr.attendance.print_week,init,end_date:0
 #: wizard_field:hr.attendance.report,init,end_date:0
 msgid "Ending Date"
-msgstr ""
+msgstr "结束日期"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/print_attendance_error.py:0
 #, python-format
 msgid "No records found for your selection!"
-msgstr ""
+msgstr "No records found for your selection!"
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,so_ask_si:0
-msgid ""
-"You did not signed in the last time. Please enter the date and time you "
-"signed in."
-msgstr "你上次没有签入。请输入你签入的时间。"
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "September"
-msgstr ""
+msgstr "9月"
 
 #. module: hr_attendance
 #: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
 msgid "Attendance Error Report"
-msgstr ""
+msgstr "出勤错误报表"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -414,28 +414,34 @@ msgstr "员工出勤"
 #. module: hr_attendance
 #: wizard_view:hr.attendance.print_month,init:0
 msgid "Select a month"
-msgstr ""
+msgstr "选择月份"
 
 #. module: hr_attendance
 #: wizard_field:hr.attendance.print_month,init,month:0
 msgid "Month"
-msgstr ""
+msgstr "月份"
 
 #. module: hr_attendance
 #: model:ir.module.module,description:hr_attendance.module_meta_information
 msgid "This module aims to manage employee's attendances."
-msgstr ""
+msgstr "这模块的目的是管理员工的出勤"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
+#: wizard_view:hr.si_so,so_wo_si:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
+
+#. module: hr_attendance
+#: wizard_view:hr.si_so,so_ask_si:0
+msgid "You did not sign in the last time. Please enter the date and time you signed in."
+msgstr "You did not sign in the last time. Please enter the date and time you signed in."
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "December"
-msgstr ""
+msgstr "12月"
 
 #. module: hr_attendance
 #: wizard_button:hr.attendance.print_month,init,end:0
@@ -450,23 +456,16 @@ msgstr "取消"
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Operation"
-msgstr ""
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to sign in with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
+msgstr "操作"
 
 #. module: hr_attendance
 #: wizard_field:hr.si_so,so_ask_si,last_time:0
 msgid "Your last sign in"
-msgstr "您最近的签入"
+msgstr "你最近的签入"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
-msgstr ""
+msgstr "A sign-in must be right after a sign-out !"
+

@@ -4,22 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-11-10 02:52+0000\n"
-"Last-Translator: MephSnake <Unknown>\n"
+"POT-Creation-Date: 2010-09-02 14:01:22+0000\n"
+"PO-Revision-Date: 2010-09-02 14:01:22+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: l10n_be
-#: selection:vat.intra.xml,init,trimester:0
-msgid "Oct/Nov/Dec"
-msgstr "Oct/Nov/Dic"
+#: wizard_view:list.vat.detail,go:0
+#: wizard_view:vat.intra.xml,go:0
+msgid "XML File has been Created."
+msgstr "El archivo XML ha sido Creado."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_receiv
@@ -40,9 +40,9 @@ msgid "No partner has a VAT Number asociated with him."
 msgstr "Ninguna empresa tiene un número fiscal asociado."
 
 #. module: l10n_be
-#: wizard_field:vat.intra.xml,init,trimester:0
-msgid "Trimester Number"
-msgstr "Número de trimestre"
+#: help:wizard.account.xml.vat.declaration,init,client_nihil:0
+msgid "Thick this case only if it concerns only the last statement on the civil or cessation of activity"
+msgstr "Thick this case only if it concerns only the last statement on the civil or cessation of activity"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers
@@ -85,19 +85,31 @@ msgid "File created"
 msgstr "Archivo creado"
 
 #. module: l10n_be
-#: selection:vat.intra.xml,init,trimester:0
-msgid "Apr/May/Jun"
-msgstr "Abr/May/Jun"
+#: code:addons/l10n_be/wizard/wizard_vat_intra.py:0
+#, python-format
+msgid "Wrong Period Code"
+msgstr "Wrong Period Code"
+
+#. module: l10n_be
+#: model:ir.module.module,shortdesc:l10n_be.module_meta_information
+msgid "Belgium - Plan Comptable Minimum Normalise"
+msgstr "Bélgica - Plan Contable mínimo Normalizado"
+
+#. module: l10n_be
+#: code:addons/l10n_be/wizard/wizard_vat_intra.py:0
+#, python-format
+msgid "The period code you entered is not valid."
+msgstr "The period code you entered is not valid."
+
+#. module: l10n_be
+#: model:account.account.type,name:l10n_be.user_type_stock
+msgid "Stock et Encours"
+msgstr "Valores y pendientes"
 
 #. module: l10n_be
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
-msgstr "¡Error! No puedes crear plantillas de cuentas recursivas."
-
-#. module: l10n_be
-#: selection:vat.intra.xml,init,trimester:0
-msgid "Jul/Aug/Sep"
-msgstr "Jul/Ago/Sep"
+msgstr "Error ! Usted no puede crear plantillas de cuentas recursivas."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
@@ -117,14 +129,19 @@ msgid "This wizard will create an XML file for Vat Intra"
 msgstr "Este asistente creará un archivo XML para el IVA Intra"
 
 #. module: l10n_be
-#: model:ir.module.module,shortdesc:l10n_be.module_meta_information
-msgid "Belgium - Plan Comptable Minimum Normalise"
-msgstr "Bélgica - Plan Contable mínimo Normalizado"
+#: wizard_field:wizard.account.xml.vat.declaration,init,client_nihil:0
+msgid "Last Declaration of Entreprise"
+msgstr "Last Declaration of Entreprise"
 
 #. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
 msgid "Select Fiscal Year"
 msgstr "Seleccionar el año fiscal"
+
+#. module: l10n_be
+#: wizard_field:wizard.account.xml.vat.declaration,init,ask_resitution:0
+msgid "Ask Restitution"
+msgstr "Ask Restitution"
 
 #. module: l10n_be
 #: wizard_view:vat.intra.xml,init:0
@@ -140,7 +157,7 @@ msgstr "Periodo de delcaración de IVA"
 #. module: l10n_be
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
-msgstr "¡Error! No puedes crear Códigos de Impuestos recursivos."
+msgstr "¡Error! No puede crear códigos de impuesto recursivos."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_payable
@@ -156,6 +173,11 @@ msgstr "Régimen Nacional"
 #: wizard_view:wizard.account.xml.vat.declaration,init:0
 msgid "Select Period"
 msgstr "Seleccionar periodo"
+
+#. module: l10n_be
+#: help:vat.intra.xml,init,period_ids:0
+msgid "Select here the period(s) you want to include in your intracom declaration"
+msgstr "Select here the period(s) you want to include in your intracom declaration"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
@@ -180,13 +202,14 @@ msgid "Ok"
 msgstr "Acceptar"
 
 #. module: l10n_be
+#: wizard_field:wizard.account.xml.vat.declaration,init,ask_payment:0
+msgid "Ask Payment"
+msgstr "Ask Payment"
+
+#. module: l10n_be
 #: wizard_view:list.vat.detail,init:0
-msgid ""
-"This wizard will create an XML file for Vat details and total invoiced "
-"amounts per partner."
-msgstr ""
-"Este asistente creará un archivo XML para la información relativa al IVA y "
-"el total de los importes facturados por socio."
+msgid "This wizard will create an XML file for Vat details and total invoiced amounts per partner."
+msgstr "Este asistente creará un archivo XML para la información relativa al IVA y el total de los importes facturados por socio."
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,limit_amount:0
@@ -200,8 +223,12 @@ msgid "Annual Listing of VAT-Subjected Customers"
 msgstr "Anual de venta de IVA Sometido para Clientes"
 
 #. module: l10n_be
+#: wizard_field:vat.intra.xml,init,period_ids:0
+msgid "Period(s)"
+msgstr "Period(s)"
+
+#. module: l10n_be
 #: wizard_field:list.vat.detail,init,fyear:0
-#: wizard_field:vat.intra.xml,init,fyear:0
 msgid "Fiscal Year"
 msgstr "Año Fiscal"
 
@@ -211,9 +238,25 @@ msgid "XML Flie has been Created."
 msgstr "El archivo XML ha sido creado"
 
 #. module: l10n_be
-#: model:account.account.type,name:l10n_be.user_type_stock
-msgid "Stock et Encours"
-msgstr "Valores y pendientes"
+#: help:vat.intra.xml,init,period_code:0
+msgid "This is where you have to set the period code for the intracom declaration using the format: ppyyyy\n"
+"\n"
+"  PP can stand for a month: from '01' to '12'.\n"
+"  PP can stand for a trimester: '31','32','33','34'\n"
+"      The first figure means that it is a trimester,\n"
+"      The second figure identify the trimester.\n"
+"  PP can stand for a complete fiscal year: '00'.\n"
+"  YYYY stands for the year (4 positions).\n"
+""
+msgstr "This is where you have to set the period code for the intracom declaration using the format: ppyyyy\n"
+"\n"
+"  PP can stand for a month: from '01' to '12'.\n"
+"  PP can stand for a trimester: '31','32','33','34'\n"
+"      The first figure means that it is a trimester,\n"
+"      The second figure identify the trimester.\n"
+"  PP can stand for a complete fiscal year: '00'.\n"
+"  YYYY stands for the year (4 positions).\n"
+""
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/account_vat_declaration.py:0
@@ -229,28 +272,15 @@ msgstr "Declaraciones de Bélgica"
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,test_xml:0
-#: wizard_field:vat.intra.xml,init,test_xml:0
 msgid "Test XML file"
 msgstr "Prueba de archivo XML"
 
 #. module: l10n_be
 #: model:ir.actions.todo,note:l10n_be.config_call_account_template
-msgid ""
-"Generate Chart of Accounts from a Chart Template. You will be asked to pass "
-"the name of the company, the chart template to follow, the no. of digits to "
-"generate the code for your accounts and Bank account, currency to create "
-"Journals. Thus,the pure copy of chart Template is generated.\n"
-"This is the same wizard that runs from Financial "
-"Management/Configuration/Financial Accounting/Financial Accounts/Generate "
-"Chart of Accounts from a Chart Template."
-msgstr ""
-"Genere el Plan contable de una Plantilla de Carta. Le pedirán pasar el "
-"nombre de la empresa, la plantilla de carta para seguir, el número. de "
-"dígitos para generar el código para sus cuentas y Cuenta bancaria, dinero "
-"para crear Diarios. Así, como la copia de carta por la Plantilla generada.\n"
-"Esto es el mismo mago que corre de la Gestión "
-"financiera/configuración/Contabilidad financiera/Consideración "
-"Financiera/Genera el Plan contable de una Plantilla de Carta."
+msgid "Generate Chart of Accounts from a Chart Template. You will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate the code for your accounts and Bank account, currency to create Journals. Thus,the pure copy of chart Template is generated.\n"
+"This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial Accounts/Generate Chart of Accounts from a Chart Template."
+msgstr "Genere el Plan contable de una Plantilla de Carta. Le pedirán pasar el nombre de la empresa, la plantilla de carta para seguir, el número. de dígitos para generar el código para sus cuentas y Cuenta bancaria, dinero para crear Diarios. Así, como la copia de carta por la Plantilla generada.\n"
+"Esto es el mismo mago que corre de la Gestión financiera/configuración/Contabilidad financiera/Consideración Financiera/Genera el Plan contable de una Plantilla de Carta."
 
 #. module: l10n_be
 #: wizard_field:list.vat.detail,init,mand_id:0
@@ -282,10 +312,9 @@ msgid "General Information"
 msgstr "Información General"
 
 #. module: l10n_be
-#: wizard_view:list.vat.detail,go:0
-#: wizard_view:vat.intra.xml,go:0
-msgid "XML File has been Created."
-msgstr "El archivo XML ha sido Creado."
+#: wizard_field:vat.intra.xml,init,period_code:0
+msgid "Period Code"
+msgstr "Period Code"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_financiers
@@ -310,7 +339,3 @@ msgstr "Régimen Intra-Comunitario"
 msgid "Partner VAT intra"
 msgstr "Socio dentro del IVA"
 
-#. module: l10n_be
-#: selection:vat.intra.xml,init,trimester:0
-msgid "Jan/Feb/Mar"
-msgstr "Ene/Feb/Mar"

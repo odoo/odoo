@@ -55,7 +55,7 @@ def search_entries(self, cr, uid, data, context):
 
     # Search for move line to pay:
     domain = [('reconcile_id', '=', False),('account_id.type', '=', 'payable'),('amount_to_pay', '>', 0)]
-    domain = domain + ['|',('date_maturity','<',search_due_date),('date_maturity','=',False)]
+    domain = domain + ['|',('date_maturity','<=',search_due_date),('date_maturity','=',False)]
     line_ids = line_obj.search(cr, uid, domain, context=context)
     FORM.string = '''<?xml version="1.0"?>
 <form string="Populate Payment:">

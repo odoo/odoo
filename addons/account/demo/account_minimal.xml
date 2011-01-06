@@ -41,6 +41,11 @@
             <field name="code">cash</field>
             <field name="close_method">balance</field>
         </record>
+        <record id="account_type_tax" model="account.account.type">
+            <field name="name">Tax</field> 
+            <field name="code">Tax</field>
+            <field name="close_method">unreconciled</field>
+        </record>
 
         <!--
         Chart of Account
@@ -129,6 +134,31 @@ only if you selected demo data during your database creation. Modules can
 do black box testing on entries on this chart of account, without modifying
 your own chart of account.
 </field>
+        </record>
+        <record id="a_taxes" model="account.account">
+            <field name="name">Taxes</field>
+            <field name="code">x 445000</field>
+            <field name="type">other</field>
+            <field eval="ref('minimal_0')" name="parent_id"/>
+            <field name="user_type" ref="account_type_tax"/>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="note">
+This chart of account is used for automated testing purpose. It is installed
+only if you selected demo data during your database creation. Modules can
+do black box testing on entries on this chart of account, without modifying
+your own chart of account.
+</field>
+        </record>
+        <!--
+        Tax
+        -->
+        <record model="account.tax" id="t_vat">
+            <field name="name">x VAT</field>
+            <field name="amount" eval="0.196"/>
+            <field name="type">percent</field>
+            <field name="account_paid_id" ref="a_taxes"/>
+            <field name="account_collected_id" ref="a_taxes"/>
+            <field name="ref_tax_sign" eval="-1"/>
         </record>
 
         <!-- Properties -->

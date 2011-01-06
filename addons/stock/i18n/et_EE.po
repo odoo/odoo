@@ -4,94 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-09-18 18:54+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: stock
-#: code:addons/stock/wizard/wizard_inventory.py:0
-#, python-format
-msgid "No product in this location."
-msgstr "Tooted puuduvad selles asukohas."
-
-#. module: stock
-#: field:stock.warehouse,lot_output_id:0
-msgid "Location Output"
-msgstr "Väljundasukoht"
-
-#. module: stock
-#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
-#, python-format
-msgid "Invoice cannot be created from Packing."
-msgstr "Ei saa luua arvet pakkimisest."
-
-#. module: stock
-#: selection:stock.location,chained_auto_packing:0
-msgid "Manual Operation"
-msgstr "Käsitsi opereerimine"
-
-#. module: stock
-#: wizard_field:stock.location.products,init,from_date:0
-msgid "From"
-msgstr "Alates"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "terp-administration"
-msgstr "terp-administratsioon"
-
-#. module: stock
-#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
-#, python-format
-msgid "Invoice is not created"
-msgstr "Arvet pole loodud"
-
-#. module: stock
-#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
-#, python-format
-msgid "Invoice is already created."
-msgstr "Arve on juba loodud."
-
-#. module: stock
-#: field:stock.move,priority:0
-msgid "Priority"
-msgstr "Prioriteet"
-
-#. module: stock
-#: code:addons/stock/report_stock.py:0
-#, python-format
-msgid "Error !"
-msgstr "Viga!"
-
-#. module: stock
-#: model:ir.actions.act_window,name:stock.action_picking_tree5
-#: model:ir.ui.menu,name:stock.menu_action_picking_tree5
-msgid "Packing to Process"
-msgstr "Pakid töödelda"
-
-#. module: stock
-#: field:stock.move,product_uos:0
-msgid "Product UOS"
-msgstr "Toote MüÜ"
-
-#. module: stock
-#: selection:stock.invoice_onshipping,init,type:0
-msgid "Supplier Invoice"
-msgstr "Tarnija arve"
-
-#. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Stock"
-msgstr "Tuleviku laoseis"
+#: field:product.product,track_outgoing:0
+msgid "Track Outgoing Lots"
+msgstr "Track Outgoing Lots"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -145,6 +72,11 @@ msgid "STOCK_MEDIA_FORWARD"
 msgstr "STOCK_MEDIA_FORWARD"
 
 #. module: stock
+#: rml:lot.location:0
+msgid "Total :"
+msgstr "Kokku :"
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_ZOOM_100"
 msgstr "STOCK_ZOOM_100"
@@ -153,7 +85,7 @@ msgstr "STOCK_ZOOM_100"
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "UoM"
-msgstr ""
+msgstr "Mõõtühik"
 
 #. module: stock
 #: model:ir.actions.wizard,name:stock.return_picking
@@ -181,7 +113,7 @@ msgstr "Pakkimislist"
 #: code:addons/stock/report_stock.py:0
 #, python-format
 msgid "You cannot delete any record!"
-msgstr ""
+msgstr "Sa ei saa kustutada ühtegi kirjet!"
 
 #. module: stock
 #: rml:lot.stock.overview:0
@@ -195,10 +127,10 @@ msgid "Products Received"
 msgstr "Tooted saabunud"
 
 #. module: stock
-#: code:addons/stock/product.py:0
+#: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
-msgid "Futur Productions"
-msgstr "Tooted tulevikus"
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree4
@@ -211,12 +143,6 @@ msgstr "Saabuvad tooted"
 #: field:stock.tracking,serial:0
 msgid "Reference"
 msgstr "Viide"
-
-#. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Receptions"
-msgstr ""
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,group:0
@@ -304,6 +230,17 @@ msgid "STOCK_QUIT"
 msgstr "STOCK_QUIT"
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_inventory.py:0
+#, python-format
+msgid "No product in this location."
+msgstr "Tooted puuduvad selles asukohas."
+
+#. module: stock
+#: field:stock.warehouse,lot_output_id:0
+msgid "Location Output"
+msgstr "Väljundasukoht"
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GOTO_TOP"
 msgstr "STOCK_GOTO_TOP"
@@ -322,6 +259,12 @@ msgstr "terp-hr"
 #: field:stock.location,usage:0
 msgid "Location Type"
 msgstr "Asukoha tüüp"
+
+#. module: stock
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice cannot be created from Packing."
+msgstr "Ei saa luua arvet pakkimisest."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -360,9 +303,11 @@ msgid "Order(Origin)"
 msgstr "Järjestus(päritolu)"
 
 #. module: stock
-#: field:stock.production.lot,name:0
-msgid "Serial"
-msgstr "Seerianumber"
+#: rml:lot.location:0
+#: rml:lot.stock.overview:0
+#: rml:lot.stock.overview_all:0
+msgid "Grand Total:"
+msgstr "Grand Total:"
 
 #. module: stock
 #: view:stock.location:0
@@ -435,6 +380,12 @@ msgid "Move Lines"
 msgstr "Liiguta read"
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Caution!"
+msgstr "Caution!"
+
+#. module: stock
 #: wizard_field:stock.fill_inventory,init,recursive:0
 msgid "Include all childs for the location"
 msgstr "Kaasa kõik alamad asukohale"
@@ -476,9 +427,10 @@ msgid "terp-graph"
 msgstr "terp-graph"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_PREFERENCES"
-msgstr "STOCK_PREFERENCES"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Receptions"
+msgstr "Future Receptions"
 
 #. module: stock
 #: rml:lot.location:0
@@ -551,6 +503,12 @@ msgid "Product Id"
 msgstr "Toote id"
 
 #. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future P&L"
+msgstr "Future P&L"
+
+#. module: stock
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Müügid ja ostud"
@@ -576,24 +534,25 @@ msgid "STOCK_CUT"
 msgstr "STOCK_CUT"
 
 #. module: stock
-#: help:product.template,property_stock_inventory:0
-msgid ""
-"For the current product (template), this stock location will be used, "
-"instead of the default one, as the source location for stock moves generated "
-"when you do an inventory"
-msgstr ""
-"Vaikimisi asukoha asemel kasutatakse selle toote (malli) jaoks seda lao "
-"asukohta inventuuri tegemisel genereeritud lao liikumiste lähteasukohana."
+#: selection:stock.location,icon:0
+msgid "STOCK_ZOOM_IN"
+msgstr "STOCK_ZOOM_IN"
 
 #. module: stock
-#: field:stock.move,date_planned:0
-msgid "Scheduled Date"
-msgstr ""
+#: help:product.template,property_stock_inventory:0
+msgid "For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory"
+msgstr "Vaikimisi asukoha asemel kasutatakse selle toote (malli) jaoks seda lao asukohta inventuuri tegemisel genereeritud lao liikumiste lähteasukohana."
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
 msgid "This account will be used to value the output stock"
 msgstr "Seda kontot kasutatakse lao väljundväärtuse hindamiseks"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "Bad Lot Assignation !"
+msgstr "Bad Lot Assignation !"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -602,22 +561,14 @@ msgstr "STOCK_ZOOM_FIT"
 
 #. module: stock
 #: help:product.category,property_stock_journal:0
-msgid ""
-"This journal will be used for the accounting move generated by stock move"
-msgstr ""
-"Seda päevikut kasutatakse laoseisu liikumise poolt genereeritud "
-"raamatupidamise liikumise jaoks"
+msgid "This journal will be used for the accounting move generated by stock move"
+msgstr "Seda päevikut kasutatakse laoseisu liikumise poolt genereeritud raamatupidamise liikumise jaoks"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_calendar_delivery
 #: model:ir.ui.menu,name:stock.menu_picking_calendar_delivery
 msgid "Calendar of Deliveries"
 msgstr "Tarnete kalender"
-
-#. module: stock
-#: field:product.product,track_incoming:0
-msgid "Track Incomming Lots"
-msgstr "Jälgi saabuvaid partiisid"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
@@ -665,6 +616,12 @@ msgid "STOCK_INDEX"
 msgstr "STOCK_INDEX"
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_partial_picking.py:0
+#, python-format
+msgid "Back Order %s Assigned to this Packing."
+msgstr "Back Order %s Assigned to this Packing."
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_GOTO_BOTTOM"
 msgstr "STOCK_GOTO_BOTTOM"
@@ -676,9 +633,9 @@ msgid "New Reception Packing"
 msgstr "Uus vastuvõtmise pakend"
 
 #. module: stock
-#: wizard_field:stock.move.track,init,quantity:0
+#: wizard_field:mrp.stock.move.track,init,quantity:0
 msgid "Quantity per lot"
-msgstr "Kogus partii kohta"
+msgstr "Quantity per lot"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_move_form2
@@ -724,6 +681,11 @@ msgid "STOCK_DIALOG_QUESTION"
 msgstr "STOCK_DIALOG_QUESTION"
 
 #. module: stock
+#: selection:stock.location,chained_auto_packing:0
+msgid "Manual Operation"
+msgstr "Käsitsi opereerimine"
+
+#. module: stock
 #: field:stock.picking,date_done:0
 msgid "Date Done"
 msgstr "Tegemise kuupäev"
@@ -755,16 +717,8 @@ msgstr "Partneri asukohad"
 
 #. module: stock
 #: help:stock.move,tracking_id:0
-msgid ""
-"Tracking lot is the code that will be put on the logistical unit/pallet"
-msgstr ""
-"Jälgimispartii on kood, mis pannakse logistilisele üksusele/kaubaalusele"
-
-#. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Deliveries"
-msgstr ""
+msgid "Tracking lot is the code that will be put on the logistical unit/pallet"
+msgstr "Jälgimispartii on kood, mis pannakse logistilisele üksusele/kaubaalusele"
 
 #. module: stock
 #: view:stock.tracking:0
@@ -791,7 +745,7 @@ msgstr "Pakkeleht:"
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "Kasutaja Viga"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -802,12 +756,17 @@ msgstr "STOCK_MEDIA_RECORD"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You can only delete draft moves."
-msgstr ""
+msgstr "Sa saad kustutada ainult liigutamise mustandeid."
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Calendar View"
 msgstr "Kalendrivaade"
+
+#. module: stock
+#: wizard_field:stock.location.products,init,from_date:0
+msgid "From"
+msgstr "Alates"
 
 #. module: stock
 #: rml:stock.picking.list:0
@@ -924,9 +883,9 @@ msgid "General Informations"
 msgstr "Üldinfo"
 
 #. module: stock
-#: selection:stock.location,chained_location_type:0
-msgid "None"
-msgstr "Puudub"
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3
@@ -961,9 +920,9 @@ msgid "All Stock Moves"
 msgstr "Kõik lao liikumised"
 
 #. module: stock
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr "Vigane XML vaate arhitektuurile!"
+#: selection:stock.location,icon:0
+msgid "STOCK_UNINDENT"
+msgstr "STOCK_UNINDENT"
 
 #. module: stock
 #: field:res.partner,property_stock_supplier:0
@@ -990,7 +949,7 @@ msgstr "Seda kontot kasutatakse lao sisendväärtuse hindamiseks"
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Invoice state"
-msgstr ""
+msgstr "Arve olek"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1038,7 +997,7 @@ msgstr "Kaasosade asukohtade omadused"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Delivered Qty"
-msgstr ""
+msgstr "Tarnitud kogus"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1062,6 +1021,11 @@ msgid "Allocation Method"
 msgstr "Paigutamise viis"
 
 #. module: stock
+#: selection:stock.location,icon:0
+msgid "terp-administration"
+msgstr "terp-administratsioon"
+
+#. module: stock
 #: field:stock.warehouse,lot_stock_id:0
 msgid "Location Stock"
 msgstr "Lao asukoht"
@@ -1072,16 +1036,22 @@ msgid "STOCK_APPLY"
 msgstr "STOCK_APPLY"
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Invoice is not created"
+msgstr "Arvet pole loodud"
+
+#. module: stock
 #: code:addons/stock/wizard/inventory_merge.py:0
 #, python-format
 msgid "Merging is only allowed on draft inventories."
-msgstr ""
+msgstr "Liitmine on lubatud ainult mustand inventuuridele."
 
 #. module: stock
 #: code:addons/stock/wizard/inventory_merge.py:0
 #, python-format
 msgid "Please select at least two inventories."
-msgstr ""
+msgstr "Palun vali vähemalt kaks inventuuri."
 
 #. module: stock
 #: wizard_view:stock.partial_picking,end2:0
@@ -1122,15 +1092,10 @@ msgid "terp-partner"
 msgstr "terp-partner"
 
 #. module: stock
-#: rml:stock.picking.list:0
-msgid "Qty"
-msgstr ""
-
-#. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "You can not remove a lot line !"
-msgstr ""
+msgstr "Sa ei saa eemaldada partii rida!"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form_draft
@@ -1139,14 +1104,19 @@ msgid "Draft Periodical Inventories"
 msgstr "Perioodiliste inventuuride mustandid"
 
 #. module: stock
+#: selection:stock.location,icon:0
+msgid "STOCK_PREFERENCES"
+msgstr "STOCK_PREFERENCES"
+
+#. module: stock
 #: wizard_button:inventory.merge,init,end:0
 #: wizard_button:inventory.merge.stock.zero,init,end:0
+#: wizard_button:mrp.stock.move.track,init,end:0
 #: wizard_button:stock.fill_inventory,init,end:0
 #: wizard_button:stock.invoice_onshipping,init,end:0
 #: wizard_button:stock.location.products,init,end:0
 #: view:stock.move:0
 #: wizard_button:stock.move.split,init,end:0
-#: wizard_button:stock.move.track,init,end:0
 #: wizard_button:stock.partial_picking,init,end:0
 #: view:stock.picking:0
 #: wizard_button:stock.picking.make,init,end:0
@@ -1178,7 +1148,7 @@ msgstr "Informatsioon"
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Provide the quantities of the returned products."
-msgstr ""
+msgstr "Määra tagastatud toodete kogused."
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1187,8 +1157,8 @@ msgstr "STOCK_MISSING_IMAGE"
 
 #. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_SPELL_CHECK"
-msgstr "STOCK_SPELL_CHECK"
+msgid "STOCK_REMOVE"
+msgstr "STOCK_REMOVE"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_tracking
@@ -1209,12 +1179,8 @@ msgstr "Töötle hiljem"
 
 #. module: stock
 #: help:res.partner,property_stock_supplier:0
-msgid ""
-"This stock location will be used, instead of the default one, as the source "
-"location for goods you receive from the current partner"
-msgstr ""
-"Seda lao asukohta kasutatakse lähetasukohana kaupadele, vaikimisi asukoha "
-"asemel, mis sa saad käesolevalt partnerilt."
+msgid "This stock location will be used, instead of the default one, as the source location for goods you receive from the current partner"
+msgstr "Seda lao asukohta kasutatakse lähetasukohana kaupadele, vaikimisi asukoha asemel, mis sa saad käesolevalt partnerilt."
 
 #. module: stock
 #: field:stock.warehouse,partner_address_id:0
@@ -1241,7 +1207,7 @@ msgstr "Saadaval liikumised"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Received Qty"
-msgstr ""
+msgstr "Laekunud kogus"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1293,12 +1259,6 @@ msgid "STOCK_COPY"
 msgstr "STOCK_COPY"
 
 #. module: stock
-#: code:addons/stock/product.py:0
-#, python-format
-msgid "Futur Qty"
-msgstr ""
-
-#. module: stock
 #: selection:stock.invoice_onshipping,init,type:0
 msgid "Supplier Refund"
 msgstr "Tarnija hüvitis"
@@ -1330,11 +1290,10 @@ msgid "STOCK_CDROM"
 msgstr "STOCK_CDROM"
 
 #. module: stock
-#: code:addons/stock/stock.py:0
 #: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
 #, python-format
-msgid "Error"
-msgstr ""
+msgid "Invoice is already created."
+msgstr "Arve on juba loodud."
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -1365,7 +1324,7 @@ msgstr "STOCK_REFRESH"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Products: "
-msgstr ""
+msgstr "Tooted: "
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1373,9 +1332,9 @@ msgid "STOCK_STOP"
 msgstr "STOCK_STOP"
 
 #. module: stock
-#: wizard_view:stock.move.track,init:0
+#: wizard_view:mrp.stock.move.track,init:0
 msgid "Tracking a move"
-msgstr "Liikumise jälgimine"
+msgstr "Tracking a move"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1388,14 +1347,20 @@ msgid "Validate"
 msgstr "Valideeri"
 
 #. module: stock
+#: field:product.product,track_incoming:0
+msgid "Track Incoming Lots"
+msgstr "Track Incoming Lots"
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_DIALOG_WARNING"
 msgstr "STOCK_DIALOG_WARNING"
 
 #. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_ZOOM_IN"
-msgstr "STOCK_ZOOM_IN"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Qty"
+msgstr "Future Qty"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1432,6 +1397,13 @@ msgid "Products"
 msgstr "Tooted"
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#: selection:stock.location,chained_location_type:0
+#, python-format
+msgid "None"
+msgstr "None"
+
+#. module: stock
 #: field:stock.picking,move_type:0
 msgid "Delivery Method"
 msgstr "Tarneviis"
@@ -1465,7 +1437,7 @@ msgstr "Täida saamata toodetest"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "P&L Qty"
-msgstr ""
+msgstr "Kasumi ja kahjumi kogus"
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -1495,6 +1467,11 @@ msgid "Delivery Orders to Process"
 msgstr "Saatmiskorraldused töötlemiseks"
 
 #. module: stock
+#: field:stock.move,priority:0
+msgid "Priority"
+msgstr "Prioriteet"
+
+#. module: stock
 #: wizard_field:inventory.merge.stock.zero,init,location_id:0
 #: model:ir.model,name:stock.model_stock_location
 #: rml:lot.location:0
@@ -1514,6 +1491,11 @@ msgid "Invoice Status"
 msgstr "Arve olek"
 
 #. module: stock
+#: rml:lot.location:0
+msgid "Units"
+msgstr "Ühikud"
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_JUSTIFY_LEFT"
 msgstr "STOCK_JUSTIFY_LEFT"
@@ -1529,12 +1511,15 @@ msgid "Future Stock Forecast"
 msgstr "Tulevase laoseisu ennustus"
 
 #. module: stock
+#: code:addons/stock/report_stock.py:0
+#, python-format
+msgid "Error !"
+msgstr "Viga!"
+
+#. module: stock
 #: model:ir.module.module,description:stock.module_meta_information
-msgid ""
-"OpenERP Stock Management module can manage multi-warehouses, multi and "
-"structured stock locations.\n"
-"Thanks to the double entry management, the inventory controlling is powerful "
-"and flexible:\n"
+msgid "OpenERP Stock Management module can manage multi-warehouses, multi and structured stock locations.\n"
+"Thanks to the double entry management, the inventory controlling is powerful and flexible:\n"
 "* Moves history and planning,\n"
 "* Different inventory methods (FIFO, LIFO, ...)\n"
 "* Stock valuation (standard or average price, ...)\n"
@@ -1544,17 +1529,13 @@ msgid ""
 "* Rapid detection of mistakes through double entry system\n"
 "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
 "    "
-msgstr ""
-"Open ERP laohalduse moodul suudab majandada multi-ladusid, multi ja "
-"struktureeritud lao asukohti.\n"
-"Tänu topeltsisestuse haldusele on inventuuri kontrollimine võimas ja "
-"paindlik.\n"
+msgstr "Open ERP laohalduse moodul suudab majandada multi-ladusid, multi ja struktureeritud lao asukohti.\n"
+"Tänu topeltsisestuse haldusele on inventuuri kontrollimine võimas ja paindlik.\n"
 "* Liikumiste ajalugu ja planeerimine\n"
 "* Erinevad inventuuri meetodid (FIFO, LIFO, ...)\n"
 "* Laoseisu väärtuse hindamine (standard ja keskmine hind, ...)\n"
 "* Stabiilsus vastamisi inventuuri erinevustega\n"
-"* Automaatsed reorganiseerimise reeglid (laovarude tase, täppisajastus, "
-"...)\n"
+"* Automaatsed reorganiseerimise reeglid (laovarude tase, täppisajastus, ...)\n"
 "* Ribakoodi toetus\n"
 "* Kiire vigade avastamine läbi topeltsisestus süsteemi\n"
 "* Jägitavus (ülesvoolu/allavoolu, tootmispartiid, seerianumbrid, ..)\n"
@@ -1567,10 +1548,8 @@ msgstr "Fikseeritud asukoht"
 
 #. module: stock
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: stock
 #: field:stock.picking,min_date:0
@@ -1581,7 +1560,7 @@ msgstr "Planeeritud kuupäev"
 #: code:addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "No production sequence defined"
-msgstr ""
+msgstr "Tootmisjada pole määratletud"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -1724,6 +1703,12 @@ msgid "Quantity (UOS)"
 msgstr "Kogus (TÜ)"
 
 #. module: stock
+#: model:ir.actions.act_window,name:stock.action_picking_tree5
+#: model:ir.ui.menu,name:stock.menu_action_picking_tree5
+msgid "Packing to Process"
+msgstr "Pakid töödelda"
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_MEDIA_STOP"
 msgstr "STOCK_MEDIA_STOP"
@@ -1740,9 +1725,10 @@ msgid "Make packing"
 msgstr "Loo pakendamine"
 
 #. module: stock
+#: wizard_field:stock.partial_picking,end2,back_order_notification:0
 #: field:stock.picking,backorder_id:0
 msgid "Back Order"
-msgstr "Täitmata tellimus"
+msgstr "Back Order"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1750,9 +1736,15 @@ msgid "STOCK_DND_MULTIPLE"
 msgstr "STOCK_DND_MULTIPLE"
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_return.py:0
+#, python-format
+msgid "You cannot return a packing with a product quantity zero or less!"
+msgstr "You cannot return a packing with a product quantity zero or less!"
+
+#. module: stock
 #: selection:stock.location,icon:0
-msgid "STOCK_REMOVE"
-msgstr "STOCK_REMOVE"
+msgid "STOCK_SPELL_CHECK"
+msgstr "STOCK_SPELL_CHECK"
 
 #. module: stock
 #: field:stock.incoterms,active:0
@@ -1771,7 +1763,7 @@ msgstr "Omadused"
 #: code:addons/stock/stock.py:0
 #, python-format
 msgid "Error, no partner !"
-msgstr ""
+msgstr "Viga, puudub partner!"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -1780,6 +1772,12 @@ msgstr ""
 #: view:stock.incoterms:0
 msgid "Incoterms"
 msgstr "Tarneklausel"
+
+#. module: stock
+#: rml:lot.stock.overview:0
+#: rml:lot.stock.overview_all:0
+msgid "Total:"
+msgstr "Kokku:"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -1792,9 +1790,9 @@ msgid "STOCK_ZOOM_OUT"
 msgstr "STOCK_ZOOM_OUT"
 
 #. module: stock
-#: wizard_field:stock.move.track,init,tracking_prefix:0
+#: wizard_field:mrp.stock.move.track,init,tracking_prefix:0
 msgid "Tracking prefix"
-msgstr "Jälgimise eesliide"
+msgstr "Tracking prefix"
 
 #. module: stock
 #: selection:stock.location,allocation_method:0
@@ -1866,9 +1864,8 @@ msgstr "Teostamise kuupäev"
 #. module: stock
 #: code:addons/stock/stock.py:0
 #, python-format
-msgid ""
-"Please put a partner on the picking list if you want to generate invoice."
-msgstr ""
+msgid "Please put a partner on the picking list if you want to generate invoice."
+msgstr "Palun sisesta partner noppelehele, kui sa soovid genereerida arvet."
 
 #. module: stock
 #: selection:stock.move,priority:0
@@ -1895,6 +1892,14 @@ msgstr "Sunni tootmispartii kasutamist kättetoimetamisel"
 #: view:stock.picking:0
 msgid "Split move lines in two"
 msgstr "Jaota liigutamise read kaheks"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "There is no journal defined '\\n"
+"                            'on the product category: \"%s\" (id: %d)"
+msgstr "There is no journal defined '\\n"
+"                            'on the product category: \"%s\" (id: %d)"
 
 #. module: stock
 #: wizard_field:stock.invoice_onshipping,init,journal_id:0
@@ -1929,6 +1934,17 @@ msgid "Auto-Packing"
 msgstr "Automaatpakkimine"
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You are moving %.2f products but only %.2f available in this lot."
+msgstr "You are moving %.2f products but only %.2f available in this lot."
+
+#. module: stock
+#: field:stock.move,product_uos:0
+msgid "Product UOS"
+msgstr "Toote MüÜ"
+
+#. module: stock
 #: field:stock.location,posz:0
 msgid "Height (Z)"
 msgstr "Kõrgus (Z)"
@@ -1940,10 +1956,24 @@ msgid "Product UOM"
 msgstr "Toote MÜ"
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You cannot remove the picking which is in %s state !"
+msgstr "You cannot remove the picking which is in %s state !"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "There is no stock output account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
+msgstr "There is no stock output account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
+
+#. module: stock
 #: rml:lot.stock.overview:0
 #: rml:lot.stock.overview_all:0
 msgid "Variants"
-msgstr ""
+msgstr "Variandid"
 
 #. module: stock
 #: field:stock.location,posx:0
@@ -1991,6 +2021,11 @@ msgid "terp-sale"
 msgstr "terp-sale"
 
 #. module: stock
+#: field:stock.production.lot,name:0
+msgid "Serial"
+msgstr "Seerianumber"
+
+#. module: stock
 #: selection:stock.location,icon:0
 msgid "STOCK_ADD"
 msgstr "STOCK_ADD"
@@ -2026,15 +2061,16 @@ msgid "All at once"
 msgstr "Kõik korraga"
 
 #. module: stock
-#: field:product.product,track_outgoing:0
-msgid "Track Outging Lots"
-msgstr "Jälgi väljuvaid partiisid"
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Productions"
+msgstr "Future Productions"
 
 #. module: stock
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "Return lines"
-msgstr ""
+msgstr "Tagastusread"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
@@ -2058,7 +2094,7 @@ msgstr "STOCK_FIND"
 #: code:addons/stock/wizard/wizard_inventory.py:0
 #, python-format
 msgid "Message !"
-msgstr ""
+msgstr "Sõnum!"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2067,18 +2103,10 @@ msgstr "Partii inventuur"
 
 #. module: stock
 #: help:stock.location,chained_auto_packing:0
-msgid ""
-"This is used only if you selected a chained location type.\n"
-"The 'Automatic Move' value will create a stock move after the current one "
-"that will be validated automatically. With 'Manual Operation', the stock "
-"move has to be validated by a worker. With 'Automatic No Step Added', the "
-"location is replaced in the original move."
-msgstr ""
-"Seda kasutatakse ainult siis, kui sa valid seotud asukoha tüübi.\n"
-"'Automaatne liigutamine' väärtus loob lao liikumise pärast praegust, mis "
-"valideeritakse automaatselt. Väärtusega 'Manuaalne operatsioon' peab lao "
-"liikumine olema valideeritud töötaja poolt. Väärtusega 'Automaatset sammu ei "
-"lisata' asendatakse asukoht esialgse liikumisega."
+msgid "This is used only if you selected a chained location type.\n"
+"The 'Automatic Move' value will create a stock move after the current one that will be validated automatically. With 'Manual Operation', the stock move has to be validated by a worker. With 'Automatic No Step Added', the location is replaced in the original move."
+msgstr "Seda kasutatakse ainult siis, kui sa valid seotud asukoha tüübi.\n"
+"'Automaatne liigutamine' väärtus loob lao liikumise pärast praegust, mis valideeritakse automaatselt. Väärtusega 'Manuaalne operatsioon' peab lao liikumine olema valideeritud töötaja poolt. Väärtusega 'Automaatset sammu ei lisata' asendatakse asukoht esialgse liikumisega."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -2091,18 +2119,15 @@ msgid "Tracking"
 msgstr "Jälgimine"
 
 #. module: stock
-#: wizard_button:stock.move.track,init,track:0
+#: wizard_button:mrp.stock.move.track,init,track:0
 #: wizard_button:stock.picking.make,init,make:0
 msgid "Ok"
-msgstr "Olgu"
+msgstr "Ok"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
-msgid ""
-"This account will be used, instead of the default one, to value input stock"
-msgstr ""
-"Seda kontot kasutatakse, vaikimisi konto asemel, et hinnata lao "
-"sisendväärtust"
+msgid "This account will be used, instead of the default one, to value input stock"
+msgstr "Seda kontot kasutatakse, vaikimisi konto asemel, et hinnata lao sisendväärtust"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
@@ -2114,7 +2139,7 @@ msgstr "Mitte-Euroopa kliendid"
 #: code:addons/stock/wizard/wizard_track_line.py:0
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Viga!"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_components
@@ -2125,6 +2150,12 @@ msgstr "Komponendid"
 #: wizard_view:inventory.merge,init:0
 msgid "Do you want to merge theses inventories ?"
 msgstr "Kas sa tahad liita need inventuurid?"
+
+#. module: stock
+#: selection:stock.move,state:0
+#: selection:stock.picking,state:0
+msgid "Cancelled"
+msgstr "Cancelled"
 
 #. module: stock
 #: field:stock.picking,max_date:0
@@ -2151,7 +2182,7 @@ msgstr "STOCK_MEDIA_PLAY"
 #: code:addons/stock/wizard/inventory_merge_zero.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Hoiatus"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_delivery
@@ -2166,12 +2197,8 @@ msgstr "STOCK_OPEN"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
-msgid ""
-"This stock location will be used, instead of the default one, as the "
-"destination location for goods you send to this partner"
-msgstr ""
-"Seda lao asukohta kasutatakse, vaikimisi asukoha asemel, sihtasukohana "
-"kaupadele mis sa saadad sellele partnerile."
+msgid "This stock location will be used, instead of the default one, as the destination location for goods you send to this partner"
+msgstr "Seda lao asukohta kasutatakse, vaikimisi asukoha asemel, sihtasukohana kaupadele mis sa saadad sellele partnerile."
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -2213,11 +2240,8 @@ msgstr "STOCK_DISCONNECT"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
-msgid ""
-"This account will be used, instead of the default one, to value output stock"
-msgstr ""
-"Seda kontot kasutatakse, vaikimisi konto asemel, et hinnata lao "
-"väljundväärtust"
+msgid "This account will be used, instead of the default one, to value output stock"
+msgstr "Seda kontot kasutatakse, vaikimisi konto asemel, et hinnata lao väljundväärtust"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2248,13 +2272,19 @@ msgstr "STOCK_NETWORK"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
 msgid "Configuration"
-msgstr "Seadistus"
+msgstr "Seadistused"
 
 #. module: stock
 #: code:addons/stock/wizard/inventory_merge_zero.py:0
 #, python-format
 msgid "Please select one and only one inventory !"
-msgstr ""
+msgstr "Palun vali ainult üks inventuur!"
+
+#. module: stock
+#: code:addons/stock/product.py:0
+#, python-format
+msgid "Future Deliveries"
+msgstr "Future Deliveries"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2276,6 +2306,11 @@ msgid "Auto Validate"
 msgstr "Kinnita automaatselt"
 
 #. module: stock
+#: rml:stock.picking.list:0
+msgid "Weight"
+msgstr "Weight"
+
+#. module: stock
 #: field:stock.location,chained_auto_packing:0
 #: selection:stock.location,chained_auto_packing:0
 msgid "Automatic Move"
@@ -2285,17 +2320,6 @@ msgstr "Automaatne liigutamine"
 #: field:stock.location,stock_virtual_value:0
 msgid "Virtual Stock Value"
 msgstr "Virtuaalse lao väärtus"
-
-#. module: stock
-#: selection:stock.location,icon:0
-msgid "STOCK_UNINDENT"
-msgstr "STOCK_UNINDENT"
-
-#. module: stock
-#: selection:stock.move,state:0
-#: selection:stock.picking,state:0
-msgid "Canceled"
-msgstr "Tühistatud"
 
 #. module: stock
 #: selection:stock.location,icon:0
@@ -2314,13 +2338,8 @@ msgstr "STOCK_DIRECTORY"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
-msgid ""
-"For the current product (template), this stock location will be used, "
-"instead of the default one, as the source location for stock moves generated "
-"by production orders"
-msgstr ""
-"Vaikimisi asukoha asemel kasutatakse selle toote (malli) jaoks seda lao "
-"asukohta tootmiskorralduste poolt genereeritud lao liikumiste lähteasukohana."
+msgid "For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated by production orders"
+msgstr "Vaikimisi asukoha asemel kasutatakse selle toote (malli) jaoks seda lao asukohta tootmiskorralduste poolt genereeritud lao liikumiste lähteasukohana."
 
 #. module: stock
 #: view:stock.picking.move.wizard:0
@@ -2391,7 +2410,7 @@ msgstr "Jälgi tootmispartiisid"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Unplanned Qty"
-msgstr ""
+msgstr "Planeerimata kogus"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2406,18 +2425,20 @@ msgstr "Tulevased lao liikumised"
 #. module: stock
 #: code:addons/stock/product.py:0
 #, python-format
-msgid "Futur P&L"
-msgstr ""
+msgid "Future Stock"
+msgstr "Future Stock"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#: code:addons/stock/wizard/wizard_invoice_onshipping.py:0
+#, python-format
+msgid "Error"
+msgstr "Viga"
 
 #. module: stock
 #: help:product.template,property_stock_procurement:0
-msgid ""
-"For the current product (template), this stock location will be used, "
-"instead of the default one, as the source location for stock moves generated "
-"by procurements"
-msgstr ""
-"Vaikimisi asukoha asemel kasutatakse selle toote (malli) jaoks seda lao "
-"asukohta hangete poolt genereeritud lao liikumiste lähteasukohana."
+msgid "For the current product (template), this stock location will be used, instead of the default one, as the source location for stock moves generated by procurements"
+msgstr "Vaikimisi asukoha asemel kasutatakse selle toote (malli) jaoks seda lao asukohta hangete poolt genereeritud lao liikumiste lähteasukohana."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_move_wizard
@@ -2443,16 +2464,26 @@ msgid "Date Order"
 msgstr "Tellimuse kuupäev"
 
 #. module: stock
+#: selection:stock.invoice_onshipping,init,type:0
+msgid "Supplier Invoice"
+msgstr "Tarnija arve"
+
+#. module: stock
 #: code:addons/stock/wizard/wizard_return.py:0
 #, python-format
 msgid "to be invoiced"
-msgstr ""
+msgstr "arveldamiseks"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_form
 #: model:ir.ui.menu,name:stock.menu_action_location_form
 msgid "Locations"
 msgstr "Asukohad"
+
+#. module: stock
+#: help:stock.move,date_planned:0
+msgid "Scheduled date for the movement of the products or real date if the move is done."
+msgstr "Scheduled date for the movement of the products or real date if the move is done."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2512,6 +2543,12 @@ msgid "Low Level"
 msgstr "Alamtase"
 
 #. module: stock
+#: code:addons/stock/wizard/wizard_track_line.py:0
+#, python-format
+msgid "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
+msgstr "Before splitting the production lots,make sure this move has a Picking attached !\nYou must save the move before performing this operation."
+
+#. module: stock
 #: rml:stock.picking.list:0
 #: field:stock.production.lot.revision,description:0
 msgid "Description"
@@ -2538,7 +2575,7 @@ msgstr "Ülesvoolu jälgitavus"
 #: code:addons/stock/product.py:0
 #, python-format
 msgid "Produced Qty"
-msgstr ""
+msgstr "Toodetud kogus"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0
@@ -2563,6 +2600,14 @@ msgid "Locations' Values"
 msgstr "Asukohtade väärtused"
 
 #. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "There is no stock input account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
+msgstr "There is no stock input account defined ' \\n"
+"                                        'for this product: \"%s\" (id: %d)"
+
+#. module: stock
 #: model:stock.location,name:stock.stock_location_output
 msgid "Output"
 msgstr "Väljastus"
@@ -2576,6 +2621,12 @@ msgstr "STOCK_JUSTIFY_RIGHT"
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory line"
 msgstr "Inventuuri rida"
+
+#. module: stock
+#: code:addons/stock/stock.py:0
+#, python-format
+msgid "You can not create new moves."
+msgstr "You can not create new moves."
 
 #. module: stock
 #: view:stock.picking:0
@@ -2602,3 +2653,4 @@ msgstr "STOCK_REDO"
 #: model:stock.location,name:stock.stock_location_locations
 msgid "Physical Locations"
 msgstr "Füüsilised asukohad"
+

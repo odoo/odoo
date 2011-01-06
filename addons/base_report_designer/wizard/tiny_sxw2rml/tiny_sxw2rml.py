@@ -318,27 +318,32 @@ class PyOpenOffice(object):
         return new_c
 
 def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
-    import libxslt
-    import libxml2
+    from lxml import etree
+    from StringIO import StringIO
+
     tool = PyOpenOffice(output, save_pict = save_pict)
     res = tool.unpackNormalize(sxw_file)
-    styledoc = libxml2.parseDoc(xsl)
-    style = libxslt.parseStylesheetDoc(styledoc)
-    doc = libxml2.parseMemory(res,len(res))
-    result = style.applyStylesheet(doc, None)
-
-    root = result.xpathEval("/document/stylesheet")
+    
+    f = StringIO(xsl)
+    styledoc = etree.parse(f)
+    style = etree.XSLT(styledoc)
+    
+    f = StringIO(res)
+    doc = etree.parse(f)
+    result = style(doc)
+    root = etree.XPathEvaluator(result)("/document/stylesheet")
+    
     if root:
         root=root[0]
-        images = libxml2.newNode("images")
+        images = etree.Element("images")
         for img in tool.images:
-            node = libxml2.newNode('image')
-            node.setProp('name', img)
-            node.setContent( base64.encodestring(tool.images[img]))
-            images.addChild(node)
-        root.addNextSibling(images)
+            node = etree.Element('image', name=img)
+            node.text = base64.encodestring(tool.images[img])
+            images.append(node)
+        root.append(images)
+
     try:
-        xml = style.saveResultToString(result)
+        xml = str(result)
         return xml
     except:
         return result
@@ -358,7 +363,7 @@ if __name__ == "__main__":
     import StringIO
 
     fname = sys.argv[1]
-    f = StringIO.StringIO(file(fname).read())
+    f = fname
     xsl_file = 'normalized_oo2rml.xsl'
     z = zipfile.ZipFile(fname,"r")
     mimetype = z.read('mimetype')

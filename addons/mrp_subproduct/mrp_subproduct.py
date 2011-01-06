@@ -60,18 +60,20 @@ class mrp_production(osv.osv):
     _inherit= 'mrp.production'   
 
     def action_confirm(self, cr, uid, ids):
-         picking_id=super(mrp_production,self).action_confirm(cr, uid, ids)
-         for production in self.browse(cr, uid, ids):
-             source = production.product_id.product_tmpl_id.property_stock_production.id
-             for sub_product in production.bom_id.sub_products:
-                 qty1 = sub_product.product_qty
-                 qty2 = production.product_uos and production.product_uos_qty or False
-                 if sub_product.subproduct_type=='variable':
+        picking_id=super(mrp_production,self).action_confirm(cr, uid, ids)
+        for production in self.browse(cr, uid, ids):
+            source = production.product_id.product_tmpl_id.property_stock_production.id
+            if not production.bom_id:
+                continue
+            for sub_product in production.bom_id.sub_products:
+                qty1 = sub_product.product_qty
+                qty2 = production.product_uos and production.product_uos_qty or False
+                if sub_product.subproduct_type=='variable':
                     if production.product_qty:
                         qty1 *= production.product_qty / (production.bom_id.product_qty or 1.0)
                     if production.product_uos_qty:
                         qty2 *= production.product_uos_qty / (production.bom_id.product_uos_qty or 1.0)
-                 data = {
+                data = {
                     'name':'PROD:'+production.name,
                     'date_planned': production.date_planned,
                     'product_id': sub_product.product_id.id,
@@ -84,9 +86,9 @@ class mrp_production(osv.osv):
                     'move_dest_id': production.move_prod_id.id,
                     'state': 'waiting',
                     'production_id':production.id
-                 }
-                 sub_prod_ids=self.pool.get('stock.move').create(cr, uid,data)
-         return picking_id
+                }
+                sub_prod_ids=self.pool.get('stock.move').create(cr, uid,data)
+        return picking_id
 
 mrp_production()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

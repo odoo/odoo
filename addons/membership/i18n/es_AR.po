@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 11:42+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 14:00:26+0000\n"
+"PO-Revision-Date: 2010-09-02 14:00:26+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -35,7 +34,7 @@ msgstr "Socio pagado"
 #. module: membership
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: membership
 #: field:report.partner_member.year,currency:0
@@ -132,9 +131,7 @@ msgstr "De"
 #. module: membership
 #: constraint:membership.membership_line:0
 msgid "Error, this membership product is out of date"
-msgstr ""
-"Error, este producto para socios está caducado (intervalo de fechas "
-"desfasado)"
+msgstr "Error, este producto para socios está caducado (intervalo de fechas desfasado)"
 
 #. module: membership
 #: wizard_button:wizard_invoice_membership,init,ok:0
@@ -187,7 +184,7 @@ msgstr "Socios por años"
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_reporting
 msgid "Reporting"
-msgstr "Informe"
+msgstr "Reporte"
 
 #. module: membership
 #: view:res.partner:0
@@ -285,11 +282,8 @@ msgstr "Versión de Precio de Lista de socio"
 
 #. module: membership
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Error: La UdM por defecto y la UdM de compra deben estar en la misma "
-"categoría."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Error: La UdM predeterminada y la UdM de compra deben estar en la misma categoría."
 
 #. module: membership
 #: help:res.partner,membership_amount:0
@@ -370,13 +364,18 @@ msgstr "Socios facturados"
 #. module: membership
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "You cannot have 2 pricelist versions that overlap!"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members_old
 #: model:ir.ui.menu,name:membership.menu_members_old
 msgid "Old members"
 msgstr "Socios antiguos"
+
+#. module: membership
+#: constraint:product.pricelist.item:0
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 
 #. module: membership
 #: field:res.partner,membership_amount:0
@@ -446,11 +445,8 @@ msgstr "Línea factura"
 
 #. module: membership
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
-"especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún caracter especial!"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -539,3 +535,4 @@ msgstr "Año"
 #: field:res.partner,membership_state:0
 msgid "Current membership state"
 msgstr "Estado actual del socio"
+

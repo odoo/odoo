@@ -20,7 +20,6 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields, osv
 
 class res_partner_contact(osv.osv):
@@ -73,15 +72,20 @@ class res_partner_contact(osv.osv):
             addr += (r.get('first_name', '') or '')
             res.append((r['id'], addr))
         return res
+    def name_search(self, cr, uid, name='', args=None, operator='ilike', context=None, limit=None):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        if name:
+            ids = self.search(cr, uid, ['|',('name', operator, name),('first_name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context=context)
 res_partner_contact()
 
 class res_partner_address(osv.osv):
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        if context and context.has_key('address_partner_id' ) and context['address_partner_id']:
-            args.append(('partner_id', '=', context['address_partner_id']))
-        return super(res_partner_address, self).search(cr, user, args, offset, limit, order, context, count)
 
     #overriding of the name_get defined in base in order to remove the old contact name
     def name_get(self, cr, user, ids, context={}):
@@ -117,33 +121,13 @@ class res_partner_job(osv.osv):
             res.append((r.id, self.pool.get('res.partner.contact').name_get(cr, uid, [r.contact_id.id])[0][1] + funct))
         return res
 
-    def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        job_ids = []
-        for arg in args:
-            if arg[0] == 'address_id':
-                self._order = 'sequence_partner'
-            elif arg[0] == 'contact_id':
-                self._order = 'sequence_contact'
-
-                contact_obj = self.pool.get('res.partner.contact')
-                search_arg = ['|', ('first_name', 'ilike', arg[2]), ('name', 'ilike', arg[2])]
-                contact_ids = contact_obj.search(cr, user, search_arg, offset=offset, limit=limit, order=order, context=context, count=count)
-                contacts = contact_obj.browse(cr, user, contact_ids, context=context)
-                for contact in contacts:
-                    job_ids.extend([item.id for item in contact.job_ids])
-
-        res = super(res_partner_job,self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
-        if job_ids:
-            res = list(set(res + job_ids))
-
-        return res
-
     _name = 'res.partner.job'
     _description ='Contact Partner Function'
     _order = 'sequence_contact'
     _columns = {
-        'name': fields.related('address_id','partner_id', type='many2one', relation='res.partner', string='Partner'),
-        'address_id':fields.many2one('res.partner.address','Address'),
+        'name': fields.related('address_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
+        'address_id':fields.many2one('res.partner.address','Address',
+                                     domain="[('partner_id', '=', name)]"),
         'contact_id':fields.many2one('res.partner.contact','Contact', required=True, ondelete='cascade'),
         'function_id': fields.many2one('res.partner.function','Partner Function'),
         'sequence_contact':fields.integer('Contact Seq.',help='Order of importance of this address in the list of addresses of the linked contact'),
@@ -162,6 +146,18 @@ class res_partner_job(osv.osv):
         'sequence_contact' : lambda *a: 0,
         'state' : lambda *a: 'current',
     }
+
+    def onchange_partner(self, cr, uid, _, partner_id, context=None):
+        return {'value': {'address_id': False}}
+
+    def onchange_address(self, cr, uid, _, address_id, context=None):
+        partner_id = False
+        if address_id:
+            address = self.pool.get('res.partner.address')\
+                        .browse(cr, uid, address_id, context)
+            partner_id = address.partner_id.id
+        return {'value': {'name': partner_id}}
+
 res_partner_job()
 
 

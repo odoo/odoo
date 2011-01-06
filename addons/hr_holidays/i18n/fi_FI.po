@@ -1,18 +1,728 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_holidays
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-04-10 12:59+0000\n"
-"PO-Revision-Date: 2009-11-13 07:55+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-09-02 13:45:06+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
+msgid "New Holidays Request"
+msgstr "New Holidays Request"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_all_holiday
+msgid "All Holidays Requests"
+msgstr "All Holidays Requests"
+
+#. module: hr_holidays
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,remaining_leaves:0
+msgid "Remaining Leaves"
+msgstr "Remaining Leaves"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_holiday_waiting
+msgid "Requests Awaiting for Validation"
+msgstr "Requests Awaiting for Validation"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Blue"
+msgstr "Light Blue"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Brown"
+msgstr "Brown"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: view:hr.holidays.per.user:0
+#: model:process.transition,name:hr_holidays.process_transition_employeeholidays0
+msgid "Employee Holidays"
+msgstr "Employee Holidays"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Set to Draft"
+msgstr "Set to Draft"
+
+#. module: hr_holidays
+#: view:hr.holidays.per.user:0
+#: field:hr.holidays.per.user,holiday_ids:0
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+#: model:process.node,name:hr_holidays.process_node_holidays0
+msgid "Holidays"
+msgstr "Holidays"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Cyan"
+msgstr "Light Cyan"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Green"
+msgstr "Light Green"
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_employeedeclaration0
+msgid "Employee Declaration"
+msgstr "Employee Declaration"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: selection:hr.holidays,state:0
+#: model:process.transition.action,name:hr_holidays.process_transition_action_validate0
+msgid "Validate"
+msgstr "Validate"
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_refusedrequest0
+msgid "Refused Request"
+msgstr "Refused Request"
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_approved0
+msgid "Approved"
+msgstr "Approved"
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Both"
+msgstr "Both"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: model:process.transition.action,name:hr_holidays.process_transition_action_reufse0
+msgid "Refuse"
+msgstr "Refuse"
+
+#. module: hr_holidays
+#: wizard_button:hr.holidays.summary,notify,end:0
+#: wizard_button:hr.holidays.summary.employee,notify,end:0
+msgid "Ok"
+msgstr "Ok"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday
+msgid "My Holidays Requests"
+msgstr "My Holidays Requests"
+
+#. module: hr_holidays
+#: field:hr.holidays,notes:0
+#: field:hr.holidays.per.user,notes:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: hr_holidays
+#: field:hr.holidays,holiday_status:0
+#: field:hr.holidays.log,holiday_status:0
+#: field:hr.holidays.per.user,holiday_status:0
+msgid "Holiday's Status"
+msgstr "Holiday's Status"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_refusedrequest0
+msgid "Request is refused."
+msgstr "Request is refused."
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays
+msgid "Holidays Management"
+msgstr "Holidays Management"
+
+#. module: hr_holidays
+#: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
+msgid "Summary Of Holidays"
+msgstr "Summary Of Holidays"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_calendar0
+msgid "The holiday is set in the calendar"
+msgstr "The holiday is set in the calendar"
+
+#. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Holiday status"
+msgstr "Holiday status"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays_status
+msgid "Holidays Status"
+msgstr "Holidays Status"
+
+#. module: hr_holidays
+#: field:hr.holidays,date_to:0
+msgid "Vacation end day"
+msgstr "Vacation end day"
+
+#. module: hr_holidays
+#: view:hr.holidays.per.user:0
+msgid "Holidays Allowed"
+msgstr "Holidays Allowed"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_legaldeclaration0
+msgid "Legal Declaration Document to declare new employee"
+msgstr "Legal Declaration Document to declare new employee"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Magenta"
+msgstr "Magenta"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays_per_user
+msgid "Holidays Per User"
+msgstr "Holidays Per User"
+
+#. module: hr_holidays
+#: view:hr.holidays.status:0
+msgid "Define holiday status"
+msgstr "Define holiday status"
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Confirmed"
+msgstr "Confirmed"
+
+#. module: hr_holidays
+#: wizard_field:hr.holidays.summary,init,date_from:0
+#: wizard_field:hr.holidays.summary.employee,init,date_from:0
+msgid "From"
+msgstr "From"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: model:process.transition.action,name:hr_holidays.process_transition_action_confirm0
+msgid "Confirm"
+msgstr "Confirm"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_waiting
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_waiting
+msgid "My Awaiting Confirmation Holidays Requests"
+msgstr "My Awaiting Confirmation Holidays Requests"
+
+#. module: hr_holidays
+#: field:hr.holidays,user_id:0
+msgid "Employee_id"
+msgstr "Employee_id"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_holidaysdefinition0
+msgid "Encoding of annual available holidays."
+msgstr "Encoding of annual available holidays."
+
+#. module: hr_holidays
+#: field:hr.holidays,employee_id:0
+#: field:hr.holidays.log,employee_id:0
+#: field:hr.holidays.per.user,employee_id:0
+msgid "Employee"
+msgstr "Employee"
+
+#. module: hr_holidays
+#: selection:hr.holidays,state:0
+msgid "Waiting Validation"
+msgstr "Waiting Validation"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_employeeholidays0
+msgid "Employee get holidays"
+msgstr "Employee get holidays"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Salmon"
+msgstr "Light Salmon"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Wheat"
+msgstr "Wheat"
+
+#. module: hr_holidays
+#: field:hr.holidays.log,nb_holidays:0
+msgid "Number of Holidays Requested"
+msgstr "Number of Holidays Requested"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.act_hr_employee_holiday_request
+msgid "My Holiday Requests"
+msgstr "My Holiday Requests"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: view:hr.holidays.per.user:0
+msgid "Number of Days"
+msgstr "Number of Days"
+
+#. module: hr_holidays
+#: field:hr.holidays.status,name:0
+#: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
+#: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
+msgid "Holiday Status"
+msgstr "Holiday Status"
+
+#. module: hr_holidays
+#: wizard_view:hr.holidays.summary,init:0
+#: wizard_view:hr.holidays.summary.employee,init:0
+msgid "Report Options"
+msgstr "Report Options"
+
+#. module: hr_holidays
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Virheellinen XML näkymäarkkitehtuurille!"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_approved0
+msgid "His manager approves the request"
+msgstr "His manager approves the request"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_holidaysdefrequest0
+msgid "If holidays available, employee can take it and fill it."
+msgstr "If holidays available, employee can take it and fill it."
+
+#. module: hr_holidays
+#: wizard_view:hr.holidays.summary.employee,notify:0
+msgid "You have to select at least 1 Employee. Try again."
+msgstr "You have to select at least 1 Employee. Try again."
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_validate
+msgid "My Validated Holidays Requests"
+msgstr "My Validated Holidays Requests"
+
+#. module: hr_holidays
+#: wizard_field:hr.holidays.summary.employee,init,emp:0
+msgid "Employee(s)"
+msgstr "Employee(s)"
+
+#. module: hr_holidays
+#: field:hr.holidays,number_of_days:0
+msgid "Number of Days in this Holiday Request"
+msgstr "Number of Days in this Holiday Request"
+
+#. module: hr_holidays
+#: view:hr.holidays.per.user:0
+#: model:ir.actions.act_window,name:hr_holidays.action_holidays_per_user
+#: model:ir.ui.menu,name:hr_holidays.menu_open_holidays_per_user
+msgid "Holidays Per Employee"
+msgstr "Holidays Per Employee"
+
+#. module: hr_holidays
+#: field:hr.holidays.status,limit:0
+msgid "Allow to override Limit"
+msgstr "Allow to override Limit"
+
+#. module: hr_holidays
+#: field:hr.holidays.log,holiday_user_id:0
+msgid "Holidays user"
+msgstr "Holidays user"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Lavender"
+msgstr "Lavender"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays_log
+msgid "hr.holidays.log"
+msgstr "hr.holidays.log"
+
+#. module: hr_holidays
+#: model:ir.actions.wizard,name:hr_holidays.wizard_holidays_summary
+msgid "Print Summary of Employee's Holidays"
+msgstr "Print Summary of Employee's Holidays"
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_calendar0
+msgid "Calendar"
+msgstr "Calendar"
+
+#. module: hr_holidays
+#: field:hr.holidays,date_from:0
+msgid "Vacation start day"
+msgstr "Vacation start day"
+
+#. module: hr_holidays
+#: model:ir.module.module,description:hr_holidays.module_meta_information
+msgid "Human Ressources: Holidays tracking and workflow\n"
+"\n"
+"    This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.\n"
+"\n"
+"    Note that:\n"
+"    - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in\n"
+"                HR / Configuration / Holidays Status\n"
+"    - An employee can make a negative holiday request (holiday request of -2 days for example), this is considered by the system as an ask for more off-days. It will increase his total of that holiday status available (if the request is accepted).\n"
+"    - There are two ways to print the employee's holidays:\n"
+"        * The first will allow to choose employees by department and is used by clicking the menu item located in\n"
+"                HR / Holidays Request / Print Summary of Holidays\n"
+"        * The second will allow you to choose the holidays report for specific employees. Go on the list\n"
+"                HR / Employees / Employees\n"
+"            then select the ones you want to choose, click on the print icon and select the option\n"
+"                'Print Summary of Employee's Holidays'\n"
+"    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in\n"
+"                Administration / Users / Users\n"
+"            for example, you maybe will do it for the user 'admin'.\n"
+""
+msgstr "Human Ressources: Holidays tracking and workflow\n"
+"\n"
+"    This module allows you to manage holidays and holidays requests. For each employee, you can also define a number of available holidays per holiday status.\n"
+"\n"
+"    Note that:\n"
+"    - A synchronisation with an internal agenda (use of the CRM module) is possible: in order to automatically create a case when an holiday request is accepted, you have to link the holidays status to a case section. You can set up this info and your colour preferences in\n"
+"                HR / Configuration / Holidays Status\n"
+"    - An employee can make a negative holiday request (holiday request of -2 days for example), this is considered by the system as an ask for more off-days. It will increase his total of that holiday status available (if the request is accepted).\n"
+"    - There are two ways to print the employee's holidays:\n"
+"        * The first will allow to choose employees by department and is used by clicking the menu item located in\n"
+"                HR / Holidays Request / Print Summary of Holidays\n"
+"        * The second will allow you to choose the holidays report for specific employees. Go on the list\n"
+"                HR / Employees / Employees\n"
+"            then select the ones you want to choose, click on the print icon and select the option\n"
+"                'Print Summary of Employee's Holidays'\n"
+"    - The wizard allows you to choose if you want to print either the Confirmed & Validated holidays or only the Validated ones. These states must be set up by a user from the group 'HR' and with the role 'holidays'. You can define these features in the security tab from the user data in\n"
+"                Administration / Users / Users\n"
+"            for example, you maybe will do it for the user 'admin'.\n"
+""
+
+#. module: hr_holidays
+#: wizard_view:hr.holidays.summary,notify:0
+#: wizard_view:hr.holidays.summary.employee,notify:0
+msgid "Notification"
+msgstr "Notification"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_holidaysrequest0
+msgid "Employee fills in a request for holidays"
+msgstr "Employee fills in a request for holidays"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_setholiday0
+msgid "Holiday is set in the calendar."
+msgstr "Holiday is set in the calendar."
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Coral"
+msgstr "Light Coral"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_available
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_available
+msgid "My Available Holidays"
+msgstr "My Available Holidays"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Black"
+msgstr "Black"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_refuse
+msgid "My Refused Holidays Requests"
+msgstr "My Refused Holidays Requests"
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_setholiday0
+msgid "Set Holiday"
+msgstr "Set Holiday"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_my_holiday_draft
+msgid "My Draft Holidays Requests"
+msgstr "My Draft Holidays Requests"
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,max_leaves:0
+msgid "Maximum Leaves Allowed"
+msgstr "Maximum Leaves Allowed"
+
+#. module: hr_holidays
+#: field:hr.holidays,state:0
+msgid "Status"
+msgstr "Status"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Ivory"
+msgstr "Ivory"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Either there is no Employee defined, or no User attached with it."
+msgstr "Either there is no Employee defined, or no User attached with it."
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday
+msgid "My Holidays Request"
+msgstr "My Holidays Request"
+
+#. module: hr_holidays
+#: field:hr.holidays.status,color_name:0
+msgid "Color of the status"
+msgstr "Color of the status"
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+msgid "Both Validated and Confirmed"
+msgstr "Both Validated and Confirmed"
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,leaves_taken:0
+msgid "Leaves Already Taken"
+msgstr "Leaves Already Taken"
+
+#. module: hr_holidays
+#: selection:hr.holidays,state:0
+msgid "draft"
+msgstr "draft"
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,user_id:0
+msgid "User"
+msgstr "User"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_employeedeclaration0
+msgid "Document for employee"
+msgstr "Document for employee"
+
+#. module: hr_holidays
+#: field:hr.holidays.log,date:0
+msgid "Date"
+msgstr "Date"
+
+#. module: hr_holidays
+#: field:hr.holidays.status,section_id:0
+msgid "Section"
+msgstr "Section"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "Attention!"
+msgstr "Attention!"
+
+#. module: hr_holidays
+#: field:hr.holidays,manager_id:0
+msgid "Holiday manager"
+msgstr "Holiday manager"
+
+#. module: hr_holidays
+#: field:hr.holidays.per.user,active:0
+#: field:hr.holidays.status,active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_draft
+msgid "My Holidays Request Draft"
+msgstr "My Holidays Request Draft"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "You can not cancel this holiday request. first You have to make its case in draft state."
+msgstr "You can not cancel this holiday request. first You have to make its case in draft state."
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_approvedrequest0
+msgid "Approved Request"
+msgstr "Approved Request"
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_holidaysrequest0
+msgid "Holidays Request"
+msgstr "Holidays Request"
+
+#. module: hr_holidays
+#: model:ir.ui.menu,name:hr_holidays.menu_action_holiday_waiting
+msgid "Holidays Requests Awaiting for Validation"
+msgstr "Holidays Requests Awaiting for Validation"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "General"
+msgstr "General"
+
+#. module: hr_holidays
+#: view:hr.holidays.per.user:0
+msgid "General Information"
+msgstr "General Information"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+#: selection:hr.holidays,state:0
+#: wizard_button:hr.holidays.summary,init,end:0
+#: wizard_button:hr.holidays.summary.employee,init,end:0
+msgid "Cancel"
+msgstr "Cancel"
+
+#. module: hr_holidays
+#: model:process.transition,name:hr_holidays.process_transition_holidaysdefrequest0
+msgid "Holidays def Request"
+msgstr "Holidays def Request"
+
+#. module: hr_holidays
+#: selection:hr.holidays.summary,init,holiday_type:0
+#: selection:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Validated"
+msgstr "Validated"
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_refuse
+msgid "My Holidays Request Refused"
+msgstr "My Holidays Request Refused"
+
+#. module: hr_holidays
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
+
+#. module: hr_holidays
+#: wizard_button:hr.holidays.summary,init,checkdept:0
+#: wizard_button:hr.holidays.summary.employee,init,checkemp:0
+msgid "Print"
+msgstr "Print"
+
+#. module: hr_holidays
+#: model:ir.actions.wizard,name:hr_holidays.holidays_summary
+#: model:ir.ui.menu,name:hr_holidays.menu_holidays_summary
+msgid "Print Summary of Holidays"
+msgstr "Print Summary of Holidays"
+
+#. module: hr_holidays
+#: wizard_field:hr.holidays.summary,init,depts:0
+msgid "Department(s)"
+msgstr "Department(s)"
+
+#. module: hr_holidays
+#: field:hr.holidays,name:0
+msgid "Description"
+msgstr "Description"
+
+#. module: hr_holidays
+#: selection:hr.holidays,state:0
+#: model:process.node,name:hr_holidays.process_node_refused0
+msgid "Refused"
+msgstr "Refused"
+
+#. module: hr_holidays
+#: model:process.transition,note:hr_holidays.process_transition_approvedrequest0
+msgid "Request is approved."
+msgstr "Request is approved."
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_holidaysdefinition0
+msgid "Holidays Definition"
+msgstr "Holidays Definition"
+
+#. module: hr_holidays
+#: wizard_field:hr.holidays.summary,init,holiday_type:0
+#: wizard_field:hr.holidays.summary.employee,init,holiday_type:0
+msgid "Select Holiday Type"
+msgstr "Select Holiday Type"
+
+#. module: hr_holidays
+#: field:hr.holidays,case_id:0
+msgid "Case"
+msgstr "Case"
+
+#. module: hr_holidays
+#: field:hr.holidays,holiday_user_id:0
+msgid "Holiday per user"
+msgstr "Holiday per user"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_holidays0
+msgid "Encode number of available holidays"
+msgstr "Encode number of available holidays"
+
+#. module: hr_holidays
+#: model:process.node,name:hr_holidays.process_node_legaldeclaration0
+msgid "Secretariat Social"
+msgstr "Secretariat Social"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Violet"
+msgstr "Violet"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Red"
+msgstr "Red"
+
+#. module: hr_holidays
+#: model:ir.module.module,shortdesc:hr_holidays.module_meta_information
+msgid "Human Resources: Holidays management"
+msgstr "Human Resources: Holidays management"
+
+#. module: hr_holidays
+#: model:process.process,name:hr_holidays.process_process_holidaysprocess0
+msgid "Holidays Process"
+msgstr "Holidays Process"
+
+#. module: hr_holidays
+#: wizard_view:hr.holidays.summary,notify:0
+msgid "You have to select at least 1 Department. Try again."
+msgstr "You have to select at least 1 Department. Try again."
+
+#. module: hr_holidays
+#: model:ir.actions.act_window,name:hr_holidays.action_my_holiday_validate
+msgid "My Holidays Request Validated"
+msgstr "My Holidays Request Validated"
+
+#. module: hr_holidays
+#: field:hr.holidays.log,holiday_req_id:0
+msgid "Holiday Request ID"
+msgstr "Holiday Request ID"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Yellow"
+msgstr "Light Yellow"
+
+#. module: hr_holidays
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Pink"
+msgstr "Light Pink"
+
+#. module: hr_holidays
+#: model:process.node,note:hr_holidays.process_node_refused0
+msgid "His manager refuses the request"
+msgstr "His manager refuses the request"
+
+#. module: hr_holidays
+#: code:addons/hr_holidays/hr.py:0
+#, python-format
+msgid "You Cannot Validate leaves while available leaves are less than asked leaves."
+msgstr "You Cannot Validate leaves while available leaves are less than asked leaves."
+

@@ -4,18 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-12-01 19:06+0000\n"
-"Last-Translator: Jordi Esteve - http://www.zikzakmedia.com "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-09-02 14:01:22+0000\n"
+"PO-Revision-Date: 2010-09-02 14:01:22+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: document
 #: code:addons/document/document.py:0
@@ -25,17 +23,13 @@ msgstr "¡El nombre del directorio contiene caracteres especiales!"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
-msgid ""
-"Select an object here and Open ERP will create a mapping for each of these "
-"objects, using the given domain, when browsing through FTP."
-msgstr ""
-"Seleccione aquí un objeto y OpenERP creará un mapeo para cada uno de estos "
-"objetos, utilizando el dominio dado, cuando navegue mediante FTP."
+msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
+msgstr "Seleccione aquí un objeto y OpenERP creará un mapeo para cada uno de estos objetos, utilizando el dominio dado, cuando navegue mediante FTP."
 
 #. module: document
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nombre de modelo no válido en la definición de la acción."
+msgstr "Nombre de modelo no válido en la definición de acción."
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content_type
@@ -44,12 +38,8 @@ msgstr "Tipo de contenido del directorio"
 
 #. module: document
 #: view:document.configuration.wizard:0
-msgid ""
-"This wizard will automatically configure the document management system "
-"according to modules installed on your system."
-msgstr ""
-"Este asistente configurará automáticamente el sistema de gestión de "
-"documentos según los módulos instalados en su sistema."
+msgid "This wizard will automatically configure the document management system according to modules installed on your system."
+msgstr "Este asistente configurará automáticamente el sistema de gestión de documentos según los módulos instalados en su sistema."
 
 #. module: document
 #: field:document.directory,file_ids:0
@@ -69,12 +59,8 @@ msgstr "Gestión de documentos"
 
 #. module: document
 #: help:document.configuration.wizard,host:0
-msgid ""
-"Put here the server address or IP. Keep localhost if you don't know what to "
-"write."
-msgstr ""
-"Introduzca aquí la dirección del servidor o IP. Dejar localhost si no sabe "
-"que escribir."
+msgid "Put here the server address or IP. Keep localhost if you don't know what to write."
+msgstr "Introduzca aquí la dirección del servidor o IP. Dejar localhost si no sabe que escribir."
 
 #. module: document
 #: view:ir.attachment:0
@@ -185,20 +171,13 @@ msgstr "¡El nombre del directorio debe ser único!"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
-msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Marque esta opción si desea utilizar la misma estructura de árbol como el "
-"objeto seleccionado en el sistema."
+msgid "Check this if you want to use the same tree structure as the object selected in the system."
+msgstr "Marque esta opción si desea utilizar la misma estructura de árbol como el objeto seleccionado en el sistema."
 
 #. module: document
 #: help:document.directory,domain:0
-msgid ""
-"Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Use un dominio si desea aplicar un filtro automático en los recursos "
-"visibles."
+msgid "Use a domain if you want to apply an automatic filter on visible resources."
+msgstr "Use un dominio si desea aplicar un filtro automático en los recursos visibles."
 
 #. module: document
 #: field:document.configuration.wizard,host:0
@@ -320,7 +299,7 @@ msgstr "Fecha creación"
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_configuration
 msgid "Document Configuration"
-msgstr "Configuración documento"
+msgstr "Configuración de documentos"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_config_auto_directory
@@ -329,12 +308,8 @@ msgstr "Auto configurar directorio"
 
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
-msgid ""
-"This wizard will configure the URL of the server of the document management "
-"system."
-msgstr ""
-"Este asistente configurará la dirección URL del servidor del sistema de "
-"gestión de documentos."
+msgid "This wizard will configure the URL of the server of the document management system."
+msgstr "Este asistente configurará la dirección URL del servidor del sistema de gestión de documentos."
 
 #. module: document
 #: view:ir.attachment:0
@@ -350,6 +325,31 @@ msgstr "ID modelo"
 #: view:ir.attachment:0
 msgid "Preview"
 msgstr "Vista previa"
+
+#. module: document
+#: model:ir.module.module,description:document.module_meta_information
+msgid "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
+msgstr "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -415,13 +415,8 @@ msgstr "Autor"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
-"Si aquí introduce un objeto, esta plantilla de directorio aparecerá debajo "
-"de todos estos objetos. No ponga un directorio padre si selecciona un modelo "
-"padre."
+msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
+msgstr "Si aquí introduce un objeto, esta plantilla de directorio aparecerá debajo de todos estos objetos. No ponga un directorio padre si selecciona un modelo padre."
 
 #. module: document
 #: view:document.directory:0
@@ -445,20 +440,13 @@ msgstr "ID recurso"
 
 #. module: document
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
 
 #. module: document
 #: help:document.directory.content,include_name:0
-msgid ""
-"Check this field if you want that the name of the file start by the record "
-"name."
-msgstr ""
-"Marque esta opción si desea que el nombre del archivo empiece por el nombre "
-"del registro."
+msgid "Check this field if you want that the name of the file start by the record name."
+msgstr "Marque esta opción si desea que el nombre del archivo empiece por el nombre del registro."
 
 #. module: document
 #: selection:document.directory,type:0
@@ -487,22 +475,10 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: document
+#: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "Navegar por los archivos usando FTP"
-
-#. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * FTP Interface\n"
-"    * User Authentication\n"
-"    * Document Indexation\n"
-msgstr ""
-"Sistema de gestión de documentos completo:\n"
-"    * Interfaz FTP\n"
-"    * Autenticación de usuarios\n"
-"    * Indexación de documentos\n"
+msgstr "Browse Files Using FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -534,3 +510,4 @@ msgstr "Configurar automáticamente"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Tipo de documento"
+

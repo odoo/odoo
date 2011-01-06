@@ -4,28 +4,23 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 14:07+0000\n"
+"POT-Creation-Date: 2010-09-02 13:56:45+0000\n"
+"PO-Revision-Date: 2010-09-02 13:56:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: base_report_creator
 #: help:base_report_creator.report.filter,expression:0
-msgid ""
-"Provide an expression for the field based on which you want to filter the "
-"records.\n"
+msgid "Provide an expression for the field based on which you want to filter the records.\n"
 " e.g. res_partner.id=3"
-msgstr ""
-"Daţi o expresie pentru câmpul pe baza căruia vreţi să filtraţi "
-"înregistrările\n"
-" de ex: res_partner.id=3"
+msgstr "Provide an expression for the field based on which you want to filter the records.\n"
+" e.g. res_partner.id=3"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_type:0
@@ -50,10 +45,13 @@ msgstr "Mod grafic"
 #. module: base_report_creator
 #: code:addons/base_report_creator/base_report_creator.py:0
 #, python-format
-msgid ""
-"These is/are model(s) (%s) in selection which is/are not related to any "
-"other model"
-msgstr ""
+msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
+msgstr "These is/are model(s) (%s) in selection which is/are not related to any other model"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Legend"
+msgstr "Legend"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -69,6 +67,12 @@ msgstr "Valoare"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_set_filter_fields
 msgid "Set Filter Fields"
 msgstr "Setare câmpuri de filtrare"
+
+#. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "UserError"
+msgstr "UserError"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
@@ -118,12 +122,12 @@ msgstr "Rapoarte personalizate"
 #: code:addons/base_report_creator/base_report_creator.py:0
 #, python-format
 msgid "No Related Models!!"
-msgstr ""
+msgstr "No Related Models!!"
 
 #. module: base_report_creator
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nume invalid de model în definirea acţiunii"
+msgstr "Invalid model name in the action definition."
 
 #. module: base_report_creator
 #: wizard_view:base_report_creator.report.menu.create,init:0
@@ -161,6 +165,11 @@ msgid "Valid"
 msgstr "Valid"
 
 #. module: base_report_creator
+#: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
+msgid "Custom Report"
+msgstr "Custom Report"
+
+#. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Add filter"
 msgstr "Adăugare filtru"
@@ -169,6 +178,13 @@ msgstr "Adăugare filtru"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
 msgid "Create Menu for Report"
 msgstr "Creare meniu pentru raport"
+
+#. module: base_report_creator
+#: selection:base_report_creator.report,view_type1:0
+#: selection:base_report_creator.report,view_type2:0
+#: selection:base_report_creator.report,view_type3:0
+msgid "Form"
+msgstr "Form"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type3:0
@@ -190,9 +206,15 @@ msgid "Starting Date"
 msgstr "Data de început"
 
 #. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "No Wizards available for this object!"
+msgstr "No Wizards available for this object!"
+
+#. module: base_report_creator
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid pentru arhitectura machetei de afișare !"
+msgstr "Invalid XML for View Architecture!"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type1:0
@@ -210,6 +232,11 @@ msgstr "Grupuri autorizate"
 #: field:base_report_creator.report,view_graph_orientation:0
 msgid "Graph Orientation"
 msgstr "Orientare grafic"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Use %(uid)s to filter by the connected user"
+msgstr "Use %(uid)s to filter by the connected user"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -372,11 +399,8 @@ msgstr "Revocare"
 
 #. module: base_report_creator
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-"special !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_type1:0
@@ -392,6 +416,11 @@ msgstr "Întârziere"
 #: field:base_report_creator.report.fields,field_id:0
 msgid "Field"
 msgstr "Câmp"
+
+#. module: base_report_creator
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Unique Colors"
+msgstr "Unique Colors"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -410,26 +439,25 @@ msgstr "A treia afişare"
 
 #. module: base_report_creator
 #: model:ir.module.module,description:base_report_creator.module_meta_information
-msgid ""
-"This modules allows you to create any statistic\n"
+msgid "This modules allows you to create any statistic\n"
 "report on several object. It's a SQL query builder and browser\n"
 "for and users.\n"
 "\n"
 "After installing the module, it adds a menu to define custom report in\n"
 "the \"Dashboard\" menu.\n"
-msgstr ""
-"Acest modul vă permite să creaţi orice rapoart statistic\n"
+""
+msgstr "Acest modul vă permite să creaţi orice rapoart statistic\n"
 "Pe mai multe obiecte. Este un constructor şi analizor de interogări SQL\n"
 "pentru utilizatori.\n"
 "\n"
-"După instalare, modulul adaugă un meniu pentru definirea de rapoarte "
-"personalizate\n"
+"După instalare, modulul adaugă un meniu pentru definirea de rapoarte personalizate\n"
 "în meniul \"Panou\".\n"
+""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Uniq Colors"
-msgstr "Culori unice"
+msgid "End Date"
+msgstr "End Date"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0
@@ -507,3 +535,4 @@ msgstr "Câmpuri de afişat"
 #: field:base_report_creator.report,filter_ids:0
 msgid "Filters"
 msgstr "Filtre"
+

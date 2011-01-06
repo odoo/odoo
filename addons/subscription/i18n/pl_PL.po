@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:11+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:54:04+0000\n"
+"PO-Revision-Date: 2010-09-02 13:54:04+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -30,15 +29,19 @@ msgstr "Obiekt"
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
+msgid "Please provide another source document.\nThis one does not exist !"
+msgstr "Please provide another source document.\nThis one does not exist !"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
+msgstr "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
 msgid "First Date"
-msgstr ""
+msgstr "Pierwsza data"
 
 #. module: subscription
 #: field:subscription.document.fields,field:0
@@ -53,7 +56,7 @@ msgstr "Historia subskrypcji"
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Draft"
-msgstr "Roboczy"
+msgstr "Projekt"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -63,20 +66,17 @@ msgstr "Bieżąca data"
 #. module: subscription
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: subscription
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków specjalnych !"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Weeks"
-msgstr "Tygodni"
+msgstr "Tygodnie"
 
 #. module: subscription
 #: field:subscription.subscription,state:0
@@ -84,30 +84,35 @@ msgid "Status"
 msgstr "Stan"
 
 #. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 msgid "Subscription document fields"
-msgstr ""
+msgstr "Pola dokumentu subskrypcji"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
 msgid "Interval Qty"
-msgstr ""
+msgstr "Il. interwałów"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Stop"
-msgstr "Stop"
+msgstr "Zatrzymaj"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Ustaw na projekt"
 
 #. module: subscription
 #: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr ""
+msgid "Module allows to create new documents and add subscription on that document."
+msgstr "Moduł pozwala tworzyć dokumenty i dodawać subskrypcję do nich."
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -127,7 +132,7 @@ msgstr "Użytkownik"
 #. module: subscription
 #: field:subscription.subscription,interval_type:0
 msgid "Interval Unit"
-msgstr ""
+msgstr "Jednostka interwału"
 
 #. module: subscription
 #: field:subscription.subscription.history,date:0
@@ -137,7 +142,7 @@ msgstr "Data"
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.menu_subscription_config
 msgid "Configuration"
-msgstr "Ustawienia"
+msgstr "Konfiguracja"
 
 #. module: subscription
 #: field:subscription.subscription,exec_init:0
@@ -152,13 +157,13 @@ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Zamówienie sprzedaży"
 
 #. module: subscription
 #: field:subscription.document,name:0
 #: field:subscription.subscription,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -173,7 +178,7 @@ msgstr "Uwagi"
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Months"
-msgstr "Miesięcy"
+msgstr "Miesiące"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -183,22 +188,22 @@ msgstr "Dni"
 #. module: subscription
 #: model:ir.module.module,shortdesc:subscription.module_meta_information
 msgid "Subscription and recurring operations"
-msgstr ""
+msgstr "Subskrypcje i operacje powtarzalne"
 
 #. module: subscription
 #: field:subscription.subscription,active:0
 msgid "Active"
-msgstr "Aktywny"
+msgstr "Aktywne"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 msgid "Subscription document"
-msgstr ""
+msgstr "Dokument subskrypcji"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
 msgid "Cron Job"
-msgstr ""
+msgstr "Nazwa w planiście"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
@@ -220,7 +225,7 @@ msgstr "Dane subskrypcji"
 #: view:subscription.document:0
 #: field:subscription.document.fields,document_id:0
 msgid "Subscription Document"
-msgstr ""
+msgstr "Dokument subskrypcji"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -230,7 +235,7 @@ msgstr "Fałsz"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Process"
-msgstr "Proces"
+msgstr "Uruchom"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
@@ -248,41 +253,42 @@ msgstr "Subskrypcje"
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
-msgstr ""
+msgstr "Typy dokumentów"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
 msgid "Wrong Source Document !"
-msgstr ""
+msgstr "Wrong Source Document !"
 
 #. module: subscription
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
-msgstr ""
+msgstr "Pola dokumentu subskrypcji"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Done"
-msgstr "Gotowe"
+msgstr "Wykonano"
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Faktura"
 
 #. module: subscription
 #: field:subscription.document.fields,value:0
 msgid "Default Value"
-msgstr ""
+msgstr "Wartość domyślna"
 
 #. module: subscription
 #: view:subscription.subscription:0
 #: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
-msgstr ""
+msgstr "Utworzone dokumenty"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.menu_tools
 msgid "Tools"
 msgstr "Narzędzia"
+

@@ -56,17 +56,17 @@ def _fill_inventory(self, cr, uid, data, context):
     pool = pooler.get_pool(cr.dbname)
     inventory_line_obj = pooler.get_pool(cr.dbname).get('stock.inventory.line')
     location_obj = pooler.get_pool(cr.dbname).get('stock.location')
-    res={}
-    res_location={}
+    res = {}
+    res_location = {}
     if data['form']['recursive'] :
         location_ids = location_obj.search(cr, uid, [('location_id', 'child_of', [data['form']['location_id']])])
         for location in location_ids :
-            res=location_obj._product_get(cr, uid, location)
-            res_location[location]=res
+            res = location_obj._product_get(cr, uid, location)
+            res_location[location] = res
     else:
         context.update({'compute_child':False})
-        res=location_obj._product_get(cr, uid, data['form']['location_id'],context=context)
-        res_location[data['form']['location_id']]=res
+        res = location_obj._product_get(cr, uid, data['form']['location_id'],context=context)
+        res_location[data['form']['location_id']] = res
 
     product_ids=[]
     for location in res_location.keys():

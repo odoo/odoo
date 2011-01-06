@@ -20,11 +20,27 @@
 #
 ##############################################################################
 
-from osv import fields, osv
 from tools.translate import _
 import pooler
 
 from base_module_quality import base_module_quality
+
+class CounterCursor(object):
+    def __init__(self, real_cursor):
+        self.cr = real_cursor
+        self.count = 0
+
+    def reset(self):
+        self.count = 0
+
+    def execute(self, query, params=None):
+        if query.lower().startswith('select '):
+            self.count += 1
+        return self.cr.execute(query, params)
+
+    def __getattr__(self, attr):
+        return getattr(self.cr, attr)
+
 
 class quality_test(base_module_quality.abstract_quality_check):
 
@@ -37,7 +53,6 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
 """)
         self.min_score = 30
-        return None
 
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)
@@ -46,7 +61,9 @@ This test checks the speed of the module. Note that at least 5 demo data is need
 
         # remove osv_memory class becaz it does not have demo data
         if obj_list:
-            cr.execute("select w.res_model from ir_actions_todo as t left join ir_act_window as w on t.action_id=w.id where w.res_model in ('%s')"% ("','".join(obj_list)))
+            cr.execute("SELECT w.res_model FROM ir_actions_todo AS t "\
+                       "LEFT JOIN ir_act_window AS w ON t.action_id=w.id "\
+                       "WHERE w.res_model IN %s", (tuple(obj_list),))
             res = cr.fetchall()
             for remove_obj in res:
                 if remove_obj and (remove_obj[0] in obj_list):
@@ -63,6 +80,7 @@ This test checks the speed of the module. Note that at least 5 demo data is need
         result_dict = {}
         result_dict2 = {}
         self.result_details += _("<html>O(1) means that the number of SQL requests to read the object does not depand on the number of objects we are reading. This feature is hardly wished.\n</html>")
+        ccr = CounterCursor(cr)
         for obj, ids in obj_ids.items():
             code_base_complexity = 0
             code_half_complexity = 0
@@ -73,22 +91,22 @@ This test checks the speed of the module. Note that at least 5 demo data is need
             list2 = []
             if size:
                 speed_list = []
-                #we perform the operation twice, and count the number of queries in the second run. This allows to avoid the cache effect. (like translated terms that asks for more queries)
                 try:
-                    pool.get(obj).read(cr, uid, [ids[0]])
-                    cnt = cr.count
-                    pool.get(obj).read(cr, uid, [ids[0]])
-                    code_base_complexity = cr.count - cnt
-
-                    pool.get(obj).read(cr, uid, ids[:size/2])
-                    cnt = cr.count
-                    pool.get(obj).read(cr, uid, ids[:size/2])
-                    code_half_complexity = cr.count - cnt
-
+                    # perform the operation once to put data in cache
                     pool.get(obj).read(cr, uid, ids)
-                    cnt = cr.count
-                    pool.get(obj).read(cr, uid, ids)
-                    code_size_complexity = cr.count - cnt
+
+                    ccr.reset()
+                    pool.get(obj).read(ccr, uid, [ids[0]])
+                    code_base_complexity = ccr.count
+
+                    ccr.reset()
+                    pool.get(obj).read(ccr, uid, ids[:size/2])
+                    code_half_complexity = ccr.count
+
+                    ccr.reset()
+                    pool.get(obj).read(ccr, uid, ids)
+                    code_size_complexity = ccr.count
+
                 except Exception, e:
                     list2 = [obj, _("Error in Read method")]
                     speed_list = [obj, size, code_base_complexity, code_half_complexity, code_size_complexity, _("Error in Read method:" + str(e))]

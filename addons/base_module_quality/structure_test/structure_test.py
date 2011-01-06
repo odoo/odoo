@@ -23,7 +23,6 @@ import os
 
 from tools.translate import _
 from base_module_quality import base_module_quality
-import pooler
 
 class quality_test(base_module_quality.abstract_quality_check):
 
@@ -39,7 +38,6 @@ This test checks if the module satisfy tiny structure
         self.count = 0
         self.recur = True
         self.min_score = 30
-        return None
 
     def run_test_struct(self, cr, uid, module_path):
         len_module = len(module_path.split('/'))

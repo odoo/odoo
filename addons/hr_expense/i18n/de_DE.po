@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:57+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:47:43+0000\n"
+"PO-Revision-Date: 2010-09-02 13:47:43+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -77,7 +76,7 @@ msgstr "Akzeptiert"
 #. module: hr_expense
 #: field:hr.expense.line,uom_id:0
 msgid "UoM"
-msgstr "UoM"
+msgstr "ME"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -102,11 +101,8 @@ msgstr "Validierung"
 
 #. module: hr_expense
 #: help:product.product,hr_expense_ok:0
-msgid ""
-"Determine if the product can be visible in the list of product within a "
-"selection from an HR expense sheet line."
-msgstr ""
-"Legt fest, ob dieses Produkt im Bereich Personalausgaben auswählbar ist"
+msgid "Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."
+msgstr "Legt fest, ob dieses Produkt im Bereich Personalausgaben auswählbar ist"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -149,12 +145,8 @@ msgstr "Der Finanzbuchhalter validiert die Ausgaben"
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:0
 #, python-format
-msgid ""
-"Please configure Default Expanse account for Product purchase, "
-"`property_account_expense_categ`"
-msgstr ""
-"Bitte definieren Sie das Standard Aufwandskonto für Produkt Einkäufe,  "
-"`property_account_expense_categ`"
+msgid "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
+msgstr "Bitte definieren Sie das Standard Aufwandskonto für Produkt Einkäufe,  `property_account_expense_categ`"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
@@ -242,12 +234,6 @@ msgid "Invalid XML for View Architecture!"
 msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
-#, python-format
-msgid "The employee must have a contact address"
-msgstr "Der Mitarbeiter benötigt eine Kontakt Adresse."
-
-#. module: hr_expense
 #: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 msgid "Expense"
@@ -264,6 +250,12 @@ msgstr "Ausgabekategorien"
 #: field:hr.expense.expense,currency_id:0
 msgid "Currency"
 msgstr "Währung"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a working address"
+msgstr "The employee must have a working address"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_draftexpenses0
@@ -297,11 +289,8 @@ msgstr "Entwurf"
 
 #. module: hr_expense
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -363,9 +352,7 @@ msgstr "Der Mitarbeiter bestätigt seine Ausgabenerfassung"
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_refused0
 msgid "The direct manager refuses the sheet.Reset as draft."
-msgstr ""
-"Der Vorgesetzte verwirft die Ausgabenerfassung. Der Status wird "
-"zurückgesetzt auf Entwurf."
+msgstr "Der Vorgesetzte verwirft die Ausgabenerfassung. Der Status wird zurückgesetzt auf Entwurf."
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -441,8 +428,7 @@ msgstr "Akzeptieren"
 #. module: hr_expense
 #: rml:hr.expense:0
 msgid "This document must be dated and signed for reimbursement"
-msgstr ""
-"Dieses Dokument muss für die Rückerstattung datiert und unterschrieben sein"
+msgstr "Dieses Dokument muss für die Rückerstattung datiert und unterschrieben sein"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_refuseexpense0
@@ -453,7 +439,7 @@ msgstr "Ausgabe wurde verworfen"
 #: rml:hr.expense:0
 #: field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
-msgstr "Preis/UoM"
+msgstr "Preis/ME"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.expense_all_valid
@@ -530,7 +516,7 @@ msgstr "Der Vorgesetzte akzeptiert die Ausgabenliste"
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
-msgstr "Sequenzer"
+msgstr "Sequenz"
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
@@ -546,9 +532,10 @@ msgstr "Spesenerfassung"
 #. module: hr_expense
 #: field:hr.expense.line,total_amount:0
 msgid "Total"
-msgstr "Betrag gesammt"
+msgstr "Betrag gesamt"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "Weiterberechnung"
+

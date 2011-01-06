@@ -126,7 +126,7 @@
             <field name="arch" type="xml">
                 <separator string="Notes" position="before">
                     <field name="id" invisible="True"/>
-                    <field name="carrier_id" context="{'order_id':id}"/>
+                    <field name="carrier_id" context="{'order_id': active_id}"/>
                 </separator>
             </field>
         </record>
@@ -139,6 +139,30 @@
             <field name="arch" type="xml">
                 <field name="address_id" position="after">
                     <field name="carrier_id"/>
+                    <field name="weight"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_picking_withweight_in_form" model="ir.ui.view">
+            <field name="name">stock.picking_withweight.in.form.view</field>
+            <field name="type">form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_in_form"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="weight"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_picking_withweight_internal_form" model="ir.ui.view">
+            <field name="name">stock.picking_withweight.internal.form.view</field>
+            <field name="type">form</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
                     <field name="weight"/>
                 </field>
             </field>

@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:43+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:54:04+0000\n"
+"PO-Revision-Date: 2010-09-02 13:54:04+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: warning
 #: field:product.product,purchase_line_warn:0
@@ -42,25 +41,20 @@ msgid "Warning when Purchasing this Product"
 msgstr "Ostrzeżenie przy kupowaniu tego produktu"
 
 #. module: warning
-#: code:addons/warning/warning.py:0
-#, python-format
-msgid "Alert for ' + product_info.name +' !"
-msgstr ""
-
-#. module: warning
 #: view:product.product:0
 #: view:res.partner:0
 msgid "Warnings"
 msgstr "Ostrzeżenia"
 
 #. module: warning
+#: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
 #: selection:res.partner,picking_warn:0
 #: selection:res.partner,purchase_warn:0
 #: selection:res.partner,sale_warn:0
 msgid "Blocking Message"
-msgstr "Informacja blokująca"
+msgstr "Blocking Message"
 
 #. module: warning
 #: view:res.partner:0
@@ -90,7 +84,7 @@ msgstr "Faktura"
 #. module: warning
 #: model:ir.module.module,shortdesc:warning.module_meta_information
 msgid "Module for Warnings form onchange Event"
-msgstr ""
+msgstr "Module for Warnings form onchange Event"
 
 #. module: warning
 #: view:product.product:0
@@ -105,7 +99,7 @@ msgstr "Zamówienie sprzedaży"
 #. module: warning
 #: field:res.partner,picking_warn:0
 msgid "Stock Picking"
-msgstr ""
+msgstr "Stock Picking"
 
 #. module: warning
 #: field:res.partner,purchase_warn:0
@@ -123,20 +117,16 @@ msgid "Message for Purchase Order"
 msgstr "Notatka dla zamówienia zakupu"
 
 #. module: warning
+#: code:addons/warning/warning.py:0
 #: help:product.product,purchase_line_warn:0
 #: help:product.product,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
 #: help:res.partner,picking_warn:0
 #: help:res.partner,purchase_warn:0
 #: help:res.partner,sale_warn:0
-msgid ""
-"Selecting the \"Warning\" option will notify user with the message, "
-"Selecting \"Blocking Message\" will throw an exception with the message and "
-"block the flow. The Message has to be written in the next field."
-msgstr ""
-"Wybór \"Ostrzeżenie\" spowoduje ostrzeżenie użytkownika informacją. Wybór "
-"\"Informacja blokująca\" spowoduje wyświetlenie wyjątku z tekstem informacji "
-"i zablowowanie dalszego działania. Informację wpisz w następnym polu."
+#, python-format
+msgid "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+msgstr "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
 
 #. module: warning
 #: field:res.partner,invoice_warn_msg:0
@@ -146,17 +136,23 @@ msgstr "Informacja dla faktury"
 #. module: warning
 #: model:ir.module.module,description:warning.module_meta_information
 msgid "Module for Warnings form onchange Event."
-msgstr ""
+msgstr "Module for Warnings form onchange Event."
 
 #. module: warning
 #: view:res.partner:0
 msgid "Warning on the Picking"
-msgstr ""
+msgstr "Warning on the Picking"
 
 #. module: warning
 #: view:res.partner:0
 msgid "Warning on the Purchase Order"
 msgstr "Ostrzeżenie dla zamówienia zakupu"
+
+#. module: warning
+#: code:addons/warning/warning.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "Warning for %s"
 
 #. module: warning
 #: view:res.partner:0
@@ -176,4 +172,5 @@ msgstr "Ostrzeżenie"
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
 msgid "Message for Stock Picking"
-msgstr ""
+msgstr "Message for Stock Picking"
+

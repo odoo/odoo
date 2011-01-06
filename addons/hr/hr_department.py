@@ -44,7 +44,8 @@ class hr_department(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from hr_department where id in ('+','.join(map(str,ids))+')')
+            cr.execute('SELECT DISTINCT parent_id FROM hr_department '\
+                       'WHERE id IN %s', (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False

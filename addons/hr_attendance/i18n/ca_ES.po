@@ -4,18 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-12-06 23:19+0000\n"
-"Last-Translator: Jordi Esteve - http://www.zikzakmedia.com "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-09-02 13:37:33+0000\n"
+"PO-Revision-Date: 2010-09-02 13:37:33+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
@@ -25,11 +23,8 @@ msgstr "Assistència"
 
 #. module: hr_attendance
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
@@ -43,20 +38,13 @@ msgstr "Registra entrada/sortida"
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
 #, python-format
-msgid ""
-"You tried to sign with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Heu intentat registrar amb una data anterior a un altre esdeveniment!\n"
-"Poseu-vos en contacte amb l'administrador per corregir les assistències."
+msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Un valor positiu significa que l'empleat ha treballat menys del "
-"programat."
+msgid "(*) A positive delay means that the employee worked less than recorded."
+msgstr "(*) Un valor positiu significa que l'empleat ha treballat menys del programat."
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -71,8 +59,7 @@ msgstr "﻿XML invàlid per a la definició de la vista!"
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
 msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr ""
-"Està llest per registrar les entrades i sortides en el control de assistència"
+msgstr "Està llest per registrar les entrades i sortides en el control de assistència"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -105,6 +92,11 @@ msgid "Print Attendance Error Report"
 msgstr "Imprimeix informe d'errors d'assistència"
 
 #. module: hr_attendance
+#: wizard_view:hr.si_so,si_ask_so:0
+msgid "You did not sign out the last time. Please enter the date and time you signed out."
+msgstr "You did not sign out the last time. Please enter the date and time you signed out."
+
+#. module: hr_attendance
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
 msgstr "Nom de model no vàlid en la definició de l'acció."
@@ -118,6 +110,11 @@ msgstr "Imprimeix full d'assistència per setmana"
 #: field:hr.attendance,employee_id:0
 msgid "Employee"
 msgstr "Empleat"
+
+#. module: hr_attendance
+#: wizard_field:hr.si_so,si_ask_so,last_time:0
+msgid "Your last sign out"
+msgstr "El seu últim registre sortida"
 
 #. module: hr_attendance
 #: wizard_view:hr.attendance.print_week,init:0
@@ -140,17 +137,6 @@ msgstr "Registra entrada"
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Total period:"
 msgstr "Total període:"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to sign out with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Heu intentat registrar una sortida amb una data anterior a un altre "
-"esdeveniment!\n"
-"Poseu-vos en contacte amb l'administrador per corregir les assistències."
 
 #. module: hr_attendance
 #: field:hr.attendance,action_desc:0
@@ -208,9 +194,7 @@ msgstr "Motiu"
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Error: Registre d'entrada (resp. Registre de sortida) ha de seguir al "
-"Registre de sortida (resp. Registre d'entrada)"
+msgstr "Error: Registre d'entrada (resp. Registre de sortida) ha de seguir al Registro de sortida (resp. Registre d'entrada)"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
@@ -234,13 +218,10 @@ msgid "July"
 msgstr "Juliol"
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,si_ask_so:0
-msgid ""
-"You did not signed out the last time. Please enter the date and time you "
-"signed out."
-msgstr ""
-"No heu registrat la darrera sortida. Si us plau introduïu la data i hora en "
-"que vau sortir."
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -274,9 +255,9 @@ msgid "October"
 msgstr "Octubre"
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,si_ask_so,last_time:0
-msgid "Your last sign out"
-msgstr "El seu últim registre sortida"
+#: wizard_button:hr.si_so,so_wo_si,end:0
+msgid "Ok"
+msgstr "Ok"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
@@ -327,6 +308,11 @@ msgid "January"
 msgstr "Gener"
 
 #. module: hr_attendance
+#: wizard_view:hr.si_so,so_wo_si:0
+msgid "Sign-Out Entry must follow Sign-In."
+msgstr "Sign-Out Entry must follow Sign-In."
+
+#. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
 msgid "April"
 msgstr "Abril"
@@ -368,8 +354,7 @@ msgstr "Novembre"
 #. module: hr_attendance
 #: wizard_view:hr.attendance.report,init:0
 msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr ""
-"Encara que indiqueu aquest retard, es considera que l'error és voluntari"
+msgstr "Encara que indiqueu aquest retard, es considera que l'error és voluntari"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
@@ -406,13 +391,10 @@ msgid "No records found for your selection!"
 msgstr "No s'han trobat registres en la seva selecció!"
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,so_ask_si:0
-msgid ""
-"You did not signed in the last time. Please enter the date and time you "
-"signed in."
-msgstr ""
-"No heu registrat la darrera entrada. Si us plau introduïu la data i hora en "
-"que vau entrar."
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
@@ -446,9 +428,15 @@ msgstr "Aquest mòdul serveix per gestionar l'assistència dels empleats"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
+#: wizard_view:hr.si_so,so_wo_si:0
 #, python-format
 msgid "Warning"
-msgstr "Avís"
+msgstr "Warning"
+
+#. module: hr_attendance
+#: wizard_view:hr.si_so,so_ask_si:0
+msgid "You did not sign in the last time. Please enter the date and time you signed in."
+msgstr "You did not sign in the last time. Please enter the date and time you signed in."
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
@@ -471,17 +459,6 @@ msgid "Operation"
 msgstr "Operació"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to sign in with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Heu intentat registrar una entrada amb una data anterior a un altre "
-"esdeveniment!\n"
-"Poseu-vos en contacte amb l'administrador per corregir les assistències."
-
-#. module: hr_attendance
 #: wizard_field:hr.si_so,so_ask_si,last_time:0
 msgid "Your last sign in"
 msgstr "El seu últim registre entrada"
@@ -491,3 +468,4 @@ msgstr "El seu últim registre entrada"
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
 msgstr "Un registre d'entrada ha d'estar després d'un registre de sortida!"
+

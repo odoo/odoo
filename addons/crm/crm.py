@@ -75,7 +75,9 @@ class crm_case_section(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from crm_case_section where id in ('+','.join(map(str,ids))+')')
+            cr.execute('SELECT DISTINCT parent_id FROM crm_case_section '\
+                       'WHERE id IN %s',
+                       (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -622,7 +624,10 @@ class crm_case(osv.osv):
                 if not destination:
                     src,dest = dest,src
                     if case.user_id.signature:
-                        body += '\n\n%s' % (case.user_id.signature)
+                        if body:
+                            body += '\n\n%s' % (case.user_id.signature)
+                        else:
+                            body = '\n\n%s' % (case.user_id.signature)
                 dest = [dest]
 
                 attach_to_send = None

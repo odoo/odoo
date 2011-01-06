@@ -33,11 +33,11 @@ class product_product(osv.osv):
             return _('Products: ')+self.pool.get('stock.location').browse(cr, user, context['location'], context).name
         return res
 
-    def get_product_available(self,cr,uid,ids,context=None):
-        if not context:
+    def get_product_available(self, cr, uid, ids, context=None):
+        if context is None:
             context = {}
-        states=context.get('states',[])
-        what=context.get('what',())
+        states = context.get('states',[])
+        what = context.get('what',())
         if not ids:
             ids = self.search(cr, uid, [])
         res = {}.fromkeys(ids, 0.0)
@@ -70,9 +70,9 @@ class product_product(osv.osv):
         # build the list of ids of children of the location given by id
         if context.get('compute_child',True):
             child_location_ids = self.pool.get('stock.location').search(cr, uid, [('location_id', 'child_of', location_ids)])
-            location_ids= len(child_location_ids) and child_location_ids or location_ids
+            location_ids = child_location_ids or location_ids
         else:
-            location_ids= location_ids
+            location_ids = location_ids
 
         states_str = ','.join(map(lambda s: "'%s'" % s, states))
 
@@ -89,37 +89,43 @@ class product_product(osv.osv):
 
         from_date=context.get('from_date',False)
         to_date=context.get('to_date',False)
-        date_str=False
+        date_str = ''
+        date_args = ()
         if from_date and to_date:
-            date_str="date_planned>='%s' and date_planned<='%s'"%(from_date,to_date)
+            date_str = "and date_planned>=%s and date_planned<=%s"
+            date_args = (from_date, to_date)
         elif from_date:
-            date_str="date_planned>='%s'"%(from_date)
+            date_str = "and date_planned>=%s"
+            date_args = (from_date,)
         elif to_date:
-            date_str="date_planned<='%s'"%(to_date)
+            date_str = "and date_planned<=%s"
+            date_args = (to_date,)
 
         if 'in' in what:
             # all moves from a location out of the set to a location in the set
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id not in ('+location_ids_str+') '\
-                'and location_dest_id in ('+location_ids_str+') '\
-                'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') +''\
-                'group by product_id,product_uom'
-            )
+                'where location_id not in %s '\
+                'and location_dest_id in %s '\
+                'and product_id in %s '\
+                'and state in %s '+ date_str + ' '\
+                'group by product_id,product_uom',
+                (tuple(location_ids), tuple(location_ids), tuple(ids),
+                 tuple(states)) + date_args)
             results = cr.fetchall()
         if 'out' in what:
             # all moves from a location in the set to a location out of the set
             cr.execute(
                 'select sum(product_qty), product_id, product_uom '\
                 'from stock_move '\
-                'where location_id in ('+location_ids_str+') '\
-                'and location_dest_id not in ('+location_ids_str+') '\
-                'and product_id in ('+prod_ids_str+') '\
-                'and state in ('+states_str+') '+ (date_str and 'and '+date_str+' ' or '') + ''\
-                'group by product_id,product_uom'
-            )
+                'where location_id in %s '\
+                'and location_dest_id not in %s '\
+                'and product_id in %s '\
+                'and state in %s '+ date_str + ' '\
+                'group by product_id,product_uom',
+                (tuple(location_ids), tuple(location_ids), tuple(ids),
+                 tuple(states)) + date_args)
             results2 = cr.fetchall()
         uom_obj = self.pool.get('product.uom')
         uoms = map(lambda x: x[2], results) + map(lambda x: x[2], results2)
@@ -168,45 +174,47 @@ class product_product(osv.osv):
         'incoming_qty': fields.function(_product_available, method=True, type='float', string='Incoming', help="Quantities of products that are planned to arrive in selected locations or all internal if none have been selected.", multi='qty_available'),
         'outgoing_qty': fields.function(_product_available, method=True, type='float', string='Outgoing', help="Quantities of products that are planned to leave in selected locations or all internal if none have been selected.", multi='qty_available'),
         'track_production' : fields.boolean('Track Production Lots' , help="Force to use a Production Lot during production order"),
-        'track_incoming' : fields.boolean('Track Incomming Lots', help="Force to use a Production Lot during receptions"),
-        'track_outgoing' : fields.boolean('Track Outging Lots', help="Force to use a Production Lot during deliveries"),
+        'track_incoming' : fields.boolean('Track Incoming Lots', help="Force to use a Production Lot during receptions"),
+        'track_outgoing' : fields.boolean('Track Outgoing Lots', help="Force to use a Production Lot during deliveries"),
     }
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False):
+        if not context:
+            context = {}
         res = super(product_product,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar)
-        if ('location' in context) and context['location']:
+        if context.get('location'):
             location_info = self.pool.get('stock.location').browse(cr, uid, context['location'])
             fields=res.get('fields',{})
             if fields:
                 if location_info.usage == 'supplier':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Receptions')
+                        res['fields']['virtual_available']['string'] = _('Future Receptions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Received Qty')
 
                 if location_info.usage == 'internal':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Stock')
+                        res['fields']['virtual_available']['string'] = _('Future Stock')
 
                 if location_info.usage == 'customer':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Deliveries')
+                        res['fields']['virtual_available']['string'] = _('Future Deliveries')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Delivered Qty')
 
                 if location_info.usage == 'inventory':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur P&L')
+                        res['fields']['virtual_available']['string'] = _('Future P&L')
                     res['fields']['qty_available']['string'] = _('P&L Qty')
 
                 if location_info.usage == 'procurement':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Qty')
+                        res['fields']['virtual_available']['string'] = _('Future Qty')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Unplanned Qty')
 
                 if location_info.usage == 'production':
                     if fields.get('virtual_available'):
-                        res['fields']['virtual_available']['string'] = _('Futur Productions')
+                        res['fields']['virtual_available']['string'] = _('Future Productions')
                     if fields.get('qty_available'):
                         res['fields']['qty_available']['string'] = _('Produced Qty')
 

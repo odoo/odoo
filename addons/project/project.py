@@ -64,10 +64,11 @@ class project(osv.osv):
                 FROM
                     project_task 
                 WHERE
-                    project_id in ('''+','.join(map(str,ids2))+''') AND
+                    project_id in %s AND
                     state<>'cancelled'
                 GROUP BY
-                    project_id''')
+                    project_id''',
+                       (tuple(ids2),))
             progress = dict(map(lambda x: (x[0], (x[1],x[2],x[3])), cr.fetchall()))
         for project in self.browse(cr, uid, ids, context=context):
             s = [0.0,0.0,0.0]
@@ -166,7 +167,7 @@ class project(osv.osv):
             default['name'] = proj.name+_(' (copy)')
         res = super(project, self).copy(cr, uid, id, default, context)
         ids = self.search(cr, uid, [('parent_id','child_of', [res])])
-        cr.execute('update project_task set active=True where project_id in ('+','.join(map(str,ids))+')')
+        cr.execute('update project_task set active=True where project_id in %s', (tuple(ids),))
         return res
 
     def duplicate_template(self, cr, uid, ids,context={}):
@@ -228,8 +229,7 @@ class task(osv.osv):
 
 # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context):
-        task_set = ','.join(map(str, ids))
-        cr.execute(("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id in (%s) GROUP BY task_id") % (task_set,))
+        cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id in %s GROUP BY task_id", (tuple(ids),))
         hours = dict(cr.fetchall())
         res = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -258,6 +258,7 @@ class task(osv.osv):
     def copy_data(self, cr, uid, id, default={},context={}):
         default = default or {}
         default['work_ids'] = []
+        default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         return super(task, self).copy_data(cr, uid, id, default, context)
 
     _columns = {
@@ -302,6 +303,19 @@ class task(osv.osv):
     }
     _order = "sequence, priority, date_deadline, id"
 
+    def _check_recursion(self, cr, uid, ids):
+        level = 100
+        while len(ids):
+            cr.execute('select distinct parent_id from project_task where id in %s', (tuple(ids),))
+            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
+            if not level:
+                return False
+            level -= 1
+        return True
+
+    _constraints = [
+        (_check_recursion, _('Error ! You cannot create recursive tasks.'), ['parent_id'])
+    ]
     #
     # Override view according to the company definition
     #

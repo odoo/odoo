@@ -233,7 +233,7 @@
             <field name="act_from" ref="act_confirm"/>
             <field name="act_to" ref="act_confirm_wait"/>
             <field name="signal">button_check</field>
-            <field name="condition">not test_cancel()</field>
+            <field name="condition">not test_cancel() and not get_phantom_bom_id()</field>
         </record>
         <record id="trans_confirm_wait_confirm_mto" model="workflow.transition">
             <field name="act_from" ref="act_confirm_wait"/>

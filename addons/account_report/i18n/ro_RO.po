@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 11:59+0000\n"
+"POT-Creation-Date: 2010-09-02 13:56:45+0000\n"
+"PO-Revision-Date: 2010-09-02 13:56:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_report
 #: field:account.report.history,name:0
@@ -31,7 +30,7 @@ msgstr "Selectaţi un fişier PDF"
 #. module: account_report
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nume invalid de model în definirea acţiunii"
+msgstr "Invalid model name in the action definition."
 
 #. module: account_report
 #: view:account.report.report:0
@@ -72,7 +71,7 @@ msgstr "Sumar tabular"
 #: code:addons/account_report/wizard/wizard_print_indicators.py:0
 #, python-format
 msgid "Please select maximum 8 records to fit the page-width."
-msgstr ""
+msgstr "Please select maximum 8 records to fit the page-width."
 
 #. module: account_report
 #: view:account.report.report:0
@@ -187,7 +186,7 @@ msgstr "Bun"
 #: code:addons/account_report/account.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: account_report
 #: view:account.report.history:0
@@ -197,7 +196,7 @@ msgstr "Istoric raportare cont"
 #. module: account_report
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid pentru arhitectura machetei de afișare !"
+msgstr "Invalid XML for View Architecture!"
 
 #. module: account_report
 #: help:account.report.report,badness_limit:0
@@ -223,6 +222,11 @@ msgstr "Credit cont"
 #: wizard_view:print.indicators,init:0
 msgid "Select the criteria based on which Indicators will be printed."
 msgstr "Alegere criterii după care se face tipărirea indicatorilor"
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "report('REPORT_CODE')"
+msgstr "report('REPORT_CODE')"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -253,13 +257,8 @@ msgstr "Stare"
 
 #. module: account_report
 #: help:account.report.report,disp_tree:0
-msgid ""
-"When the indicators are printed, if one indicator is set with this field to "
-"True, then it will display one more graphs with all its children in tree"
-msgstr ""
-"Când se tipăresc indicatori, dacă un indicator are acest câmp setat pe True, "
-"acesta va afişa un grafic suplimentar, cu toate obiectele subordonate, în "
-"mod arbore."
+msgid "When the indicators are printed, if one indicator is set with this field to True, then it will display one more graphs with all its children in tree"
+msgstr "Când se tipăresc indicatori, dacă un indicator are acest câmp setat pe True, acesta va afişa un grafic suplimentar, cu toate obiectele subordonate, în mod arbore."
 
 #. module: account_report
 #: selection:account.report.report,status:0
@@ -302,9 +301,14 @@ msgid "Expression :"
 msgstr "Expresie:"
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "report('REPORT_CODE')"
-msgstr "report('REPORT_CODE')"
+#: rml:print.indicators:0
+msgid "COL 2"
+msgstr "COL 2"
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "COL 1"
+msgstr "COL 1"
 
 #. module: account_report
 #: field:account.report.report,expression:0
@@ -362,11 +366,8 @@ msgstr "Subordonate"
 
 #. module: account_report
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-"special !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: account_report
 #: help:account.report.report,goodness_limit:0
@@ -421,12 +422,8 @@ msgstr "Alte rapoarte"
 
 #. module: account_report
 #: view:account.report.report:0
-msgid ""
-"Note: The second arguement 'fiscalyear' and 'period' are optional "
-"arguements.If the value is -1,previous fiscalyear or period is considered."
-msgstr ""
-"Notă: Al doilea argument 'fiscalyear' şi 'period' sunt opţionale. Dacă "
-"valoarea este -1, se consideră anum fiscal precedent."
+msgid "Note: The second arguement 'fiscalyear' and 'period' are optional arguements.If the value is -1,previous fiscalyear or period is considered."
+msgstr "Notă: Al doilea argument 'fiscalyear' şi 'period' sunt opţionale. Dacă valoarea este -1, se consideră anum fiscal precedent."
 
 #. module: account_report
 #: rml:print.indicators:0
@@ -476,10 +473,8 @@ msgstr "Selectare criterii"
 #. module: account_report
 #: code:addons/account_report/account.py:0
 #, python-format
-msgid ""
-"You cannot delete an indicator history record. You may have to delete the "
-"concerned Indicator!"
-msgstr ""
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
+msgstr "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -503,7 +498,7 @@ msgstr "Raportare particularizată"
 #: code:addons/account_report/wizard/wizard_print_indicators.py:0
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "User Error!"
 
 #. module: account_report
 #: rml:print.indicators:0
@@ -522,12 +517,8 @@ msgstr "Indicatori -"
 
 #. module: account_report
 #: help:account.report.report,disp_graph:0
-msgid ""
-"If the field is set to True, information will be printed as a Graph, "
-"otherwise as an array."
-msgstr ""
-"Dacă este setat pe True, informaţia se fa tipări ca grafic, altfel se va "
-"tipări ca matrice"
+msgid "If the field is set to True, information will be printed as a Graph, otherwise as an array."
+msgstr "Dacă este setat pe True, informaţia se fa tipări ca grafic, altfel se va tipări ca matrice"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -551,13 +542,11 @@ msgstr "1cm 27.7cm 20cm 27.7cm"
 
 #. module: account_report
 #: model:ir.module.module,description:account_report.module_meta_information
-msgid ""
-"Financial and accounting reporting\n"
+msgid "Financial and accounting reporting\n"
 "    Fiscal statements\n"
 "    Indicators\n"
 "    "
-msgstr ""
-"Raportare financiar contabilă\n"
+msgstr "Raportare financiar contabilă\n"
 "    Declaraţii fiscale\n"
 "    Indicatori\n"
 "    "
@@ -566,3 +555,4 @@ msgstr ""
 #: selection:account.report.report,type:0
 msgid "Fiscal Statement"
 msgstr "Declaraţie fiscală"
+

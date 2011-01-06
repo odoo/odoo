@@ -4,36 +4,39 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:11+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
 #: field:subscription.subscription.history,document_id:0
 msgid "Source Document"
-msgstr "源单据"
+msgstr "源文档"
 
 #. module: subscription
 #: field:subscription.document,model:0
 msgid "Object"
-msgstr ""
+msgstr "对象"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
+msgid "Please provide another source document.\nThis one does not exist !"
+msgstr "Please provide another source document.\nThis one does not exist !"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
+msgstr "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -43,53 +46,58 @@ msgstr "首次日期"
 #. module: subscription
 #: field:subscription.document.fields,field:0
 msgid "Field"
-msgstr "字段名称"
+msgstr "字段"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
 msgid "Subscription history"
-msgstr ""
+msgstr "预订历史"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Draft"
-msgstr ""
+msgstr "草稿"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "Current Date"
-msgstr ""
+msgstr "当前日期"
 
 #. module: subscription
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "在行动定义中的模式名称无效"
 
 #. module: subscription
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Weeks"
-msgstr ""
+msgstr "周"
 
 #. module: subscription
 #: field:subscription.subscription,state:0
 msgid "Status"
-msgstr ""
+msgstr "状态"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error !"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 msgid "Subscription document fields"
-msgstr ""
+msgstr "预订文档字段"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
 msgid "Interval Qty"
-msgstr "号码间隔"
+msgstr "间隔数量"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -99,23 +107,22 @@ msgstr "停止"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Set to Draft"
-msgstr "报送单据"
+msgstr "设为草稿"
 
 #. module: subscription
 #: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr ""
+msgid "Module allows to create new documents and add subscription on that document."
+msgstr "模块允许创建新的文档和在文档增加预订"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Running"
-msgstr ""
+msgstr "运行"
 
 #. module: subscription
 #: view:subscription.subscription.history:0
 msgid "Subscription History"
-msgstr "多次订货历史"
+msgstr "预订历史"
 
 #. module: subscription
 #: field:subscription.subscription,user_id:0
@@ -125,7 +132,7 @@ msgstr "用户"
 #. module: subscription
 #: field:subscription.subscription,interval_type:0
 msgid "Interval Unit"
-msgstr "单位间隔"
+msgstr "间隔单位"
 
 #. module: subscription
 #: field:subscription.subscription.history,date:0
@@ -140,17 +147,17 @@ msgstr "设置"
 #. module: subscription
 #: field:subscription.subscription,exec_init:0
 msgid "Number of documents"
-msgstr "呼入号码"
+msgstr "文档号码"
 
 #. module: subscription
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "无效XML视图结构!"
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "销售订单"
 
 #. module: subscription
 #: field:subscription.document,name:0
@@ -166,32 +173,32 @@ msgstr "字段"
 #. module: subscription
 #: field:subscription.subscription,notes:0
 msgid "Notes"
-msgstr "注解"
+msgstr "备注"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Months"
-msgstr ""
+msgstr "月"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
 msgid "Days"
-msgstr ""
+msgstr "日"
 
 #. module: subscription
 #: model:ir.module.module,shortdesc:subscription.module_meta_information
 msgid "Subscription and recurring operations"
-msgstr ""
+msgstr "预定和经常性操作"
 
 #. module: subscription
 #: field:subscription.subscription,active:0
 msgid "Active"
-msgstr "活动的"
+msgstr "有效"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 msgid "Subscription document"
-msgstr ""
+msgstr "预订文档"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
@@ -202,28 +209,28 @@ msgstr "定时作业"
 #: model:ir.model,name:subscription.model_subscription_subscription
 #: field:subscription.subscription.history,subscription_id:0
 msgid "Subscription"
-msgstr ""
+msgstr "预订"
 
 #. module: subscription
 #: field:subscription.subscription,partner_id:0
 msgid "Partner"
-msgstr "伙伴"
+msgstr "业务伙伴"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Subsription Data"
-msgstr "多次订货数据"
+msgstr "预订数据"
 
 #. module: subscription
 #: view:subscription.document:0
 #: field:subscription.document.fields,document_id:0
 msgid "Subscription Document"
-msgstr "多次订货文档"
+msgstr "预订文档"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
 msgid "False"
-msgstr ""
+msgstr "假"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -234,40 +241,40 @@ msgstr "处理"
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 msgid "All Subscriptions"
-msgstr ""
+msgstr "所有预订"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.next_id_45
 #: view:subscription.subscription:0
 msgid "Subscriptions"
-msgstr "多次订货"
+msgstr "预订"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
-msgstr "单据类型"
+msgstr "文档类型"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
 msgid "Wrong Source Document !"
-msgstr ""
+msgstr "Wrong Source Document !"
 
 #. module: subscription
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
-msgstr "多次订货文档字段"
+msgstr "预订文档字段"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
 msgid "Done"
-msgstr ""
+msgstr "完成"
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "发票"
 
 #. module: subscription
 #: field:subscription.document.fields,value:0
@@ -283,4 +290,5 @@ msgstr "文档已建立"
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.menu_tools
 msgid "Tools"
-msgstr ""
+msgstr "工具"
+

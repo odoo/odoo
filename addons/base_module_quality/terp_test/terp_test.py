@@ -36,7 +36,6 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.bool_installed_only = False
         self.no_terp = False
         self.ponderation = 2
-        return None
 
     def run_test_terp(self, cr, uid, module_path):
         list_files = os.listdir(module_path)

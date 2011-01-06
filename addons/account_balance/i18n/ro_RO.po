@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 13:27+0000\n"
+"POT-Creation-Date: 2010-09-02 13:56:45+0000\n"
+"PO-Revision-Date: 2010-09-02 13:56:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,show_columns:0
@@ -32,9 +31,10 @@ msgid "Entries Selection Based on"
 msgstr "Selectare înregistrări după"
 
 #. module: account_balance
-#: help:account.balance.account.balance.report,init,select_account:0
-msgid "Keep empty for comparision to its parent"
-msgstr "Lasaţi necompletat pentru comparare cu contul părinte"
+#: wizard_view:account.balance.account.balance.report,backtoinit:0
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "Notification"
+msgstr "Notificare"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,period_manner:0
@@ -48,23 +48,6 @@ msgid "Account balance"
 msgstr "Sold cont"
 
 #. module: account_balance
-#: wizard_button:account.balance.account.balance.report,init,checkyear:0
-msgid "Print"
-msgstr "Tipărire"
-
-#. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Printing date:"
-msgstr ""
-
-#. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "at"
-msgstr ""
-
-#. module: account_balance
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
 msgid "Account Name"
@@ -73,8 +56,13 @@ msgstr "Denumire cont"
 #. module: account_balance
 #: rml:account.account.balance.landscape:0
 #: rml:account.balance.account.balance:0
-msgid "Currency:"
-msgstr ""
+msgid "Debit"
+msgstr "Debit"
+
+#. module: account_balance
+#: wizard_button:account.balance.account.balance.report,init,checkyear:0
+msgid "Print"
+msgstr "Tipărire"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
@@ -97,15 +85,18 @@ msgid "Select Fiscal Year(s)(Maximum Three Years)"
 msgstr "Selectare an(i) fiscal(i) (maxim trei ani)"
 
 #. module: account_balance
+#: wizard_field:account.balance.account.balance.report,init,select_account:0
+msgid "Select Reference Account(for  % comparision)"
+msgstr "Selectare cont referinţă (pentru comparare %)"
+
+#. module: account_balance
 #: model:ir.actions.wizard,name:account_balance.wizard_account_balance_report
 msgid "Account balance-Compare Years"
 msgstr "Sold conturi - compară ani"
 
 #. module: account_balance
 #: model:ir.module.module,description:account_balance.module_meta_information
-msgid ""
-"Account Balance Module is an added functionality to the Financial Management "
-"module.\n"
+msgid "Account Balance Module is an added functionality to the Financial Management module.\n"
 "\n"
 "    This module gives you the various options for printing balance sheet.\n"
 "\n"
@@ -113,27 +104,21 @@ msgid ""
 "\n"
 "    2. You can set the cash or percentage comparison between two years.\n"
 "\n"
-"    3. You can set the referential account for the percentage comparison for "
-"particular years.\n"
+"    3. You can set the referential account for the percentage comparison for particular years.\n"
 "\n"
-"    4. You can select periods as an actual date or periods as creation "
-"date.\n"
+"    4. You can select periods as an actual date or periods as creation date.\n"
 "\n"
 "    5. You have an option to print the desired report in Landscape format.\n"
 "    "
-msgstr ""
-"Modulul Sold cont este o funcţionalitate adăugată la modulul Management "
-"financiar.\n"
+msgstr "Modulul Sold cont este o funcţionalitate adăugată la modulul Management financiar.\n"
 "\n"
-"    Acest modul vă oferă opţiuni variate pentru tipărirea extraselor de "
-"cont\n"
+"    Acest modul vă oferă opţiuni variate pentru tipărirea extraselor de cont\n"
 "\n"
 "    1. Puteţi compara extrasele pentru diferiţi ani\n"
 "\n"
 "    2. Puteţi opta pentru comparare monetară sau procentuală între doi ani\n"
 "\n"
-"    3. Puteţi alege un cont de referinţă pentru comparare procentuală faţă "
-"de un anumit an\n"
+"    3. Puteţi alege un cont de referinţă pentru comparare procentuală faţă de un anumit an\n"
 "\n"
 "    4. Puteţi selecta perioade după data actuală sau după data creării\n"
 "\n"
@@ -143,8 +128,7 @@ msgstr ""
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You have to select 'Landscape' option. Please Check it."
-msgstr ""
-"Trebuie să selectaţi opţiunea 'landscape' (vedere). Verificaţi, vă rog."
+msgstr "Trebuie să selectaţi opţiunea 'landscape' (vedere). Verificaţi, vă rog."
 
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,landscape:0
@@ -162,15 +146,26 @@ msgid "With balance is not equal to 0"
 msgstr "Cu sold diferit de zero"
 
 #. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Total :"
+msgstr "Total :"
+
+#. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Account Balance -"
+msgstr "Account Balance -"
+
+#. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,format_perc:0
 msgid "Show Comparision in %"
 msgstr "Afişează comparaţia în %"
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,backtoinit:0
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid "Notification"
-msgstr "Notificare"
+#: wizard_view:account.balance.account.balance.report,init:0
+msgid "Select Period"
+msgstr "Selectare perioadă"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
@@ -189,12 +184,6 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Total:"
-msgstr ""
-
-#. module: account_balance
 #: selection:account.balance.account.balance.report,init,compare_pattern:0
 msgid "Cash"
 msgstr "Numerar"
@@ -210,15 +199,10 @@ msgid "Show Accounts"
 msgstr "Afişează conturi"
 
 #. module: account_balance
-#: wizard_view:account.balance.account.balance.report,zero_years:0
-msgid ""
-"You may have selected the compare options with more than 1 year with "
-"credit/debit columns and % option.This can lead contents to be printed out "
-"of the paper.Please try again."
-msgstr ""
-"S-ar putea să fi selectat opţiunile de comparare cu mai mult de 1 an, cu "
-"coloanele debit/credit şi opţiunea %. Toate acestea ar putea genera un "
-"raport ce nu se încadrează în pagină. Reîncercaţi."
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Credit"
+msgstr "Credit"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
@@ -231,42 +215,36 @@ msgid "Accounting and financial management-Compare Accounts"
 msgstr "Management financiar contabil - Comparare conturi"
 
 #. module: account_balance
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Year :"
+msgstr "Year :"
+
+#. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
 msgid "You can select maximum 3 years. Please check again."
 msgstr "Puteţi selecta maxim 3 ani. Reîncercaţi."
 
 #. module: account_balance
-#: wizard_field:account.balance.account.balance.report,init,select_account:0
-msgid "Select Reference Account(for  % comparision)"
-msgstr "Selectare cont referinţă (pentru comparare %)"
+#: rml:account.account.balance.landscape:0
+#: rml:account.balance.account.balance:0
+msgid "Balance"
+msgstr "Balance"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid ""
-"3. You have selected 'Percentage' option with more than 2 years, but you "
-"have not selected landscape format."
-msgstr ""
-"3. Aţi selectat opţiunea 'Procentaj' pe mai mult de 2 ani, dar nu aţi ales "
-"formatul vedere."
-
-#. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Code"
-msgstr ""
+msgid "3. You have selected 'Percentage' option with more than 2 years, but you have not selected landscape format."
+msgstr "3. Aţi selectat opţiunea 'Procentaj' pe mai mult de 2 ani, dar nu aţi ales formatul vedere."
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid ""
-"You might have done following mistakes. Please correct them and try again."
-msgstr ""
-"Poate aţi făcut vreuna din următoarele greşeli. Corectaţi şi reîncercaţi."
+msgid "You might have done following mistakes. Please correct them and try again."
+msgstr "Poate aţi făcut vreuna din următoarele greşeli. Corectaţi şi reîncercaţi."
 
 #. module: account_balance
-#: rml:account.account.balance.landscape:0
-#: rml:account.balance.account.balance:0
-msgid "Account Information"
-msgstr ""
+#: help:account.balance.account.balance.report,init,select_account:0
+msgid "Keep empty for comparision to its parent"
+msgstr "Lasaţi necompletat pentru comparare cu contul părinte"
 
 #. module: account_balance
 #: selection:account.balance.account.balance.report,init,period_manner:0
@@ -280,16 +258,18 @@ msgstr "An fiscal"
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,backtoinit:0
-msgid ""
-"2. You have not selected 'Percentage' option, but you have selected more "
-"than 2 years."
-msgstr ""
-"2. Nu aţi selectat opţiunea 'procentaj', dar aţi selectat mai mult de 2 ani."
+msgid "2. You have not selected 'Percentage' option, but you have selected more than 2 years."
+msgstr "2. Nu aţi selectat opţiunea 'procentaj', dar aţi selectat mai mult de 2 ani."
 
 #. module: account_balance
 #: wizard_field:account.balance.account.balance.report,init,periods:0
 msgid "Periods"
 msgstr "Perioade"
+
+#. module: account_balance
+#: wizard_view:account.balance.account.balance.report,zero_years:0
+msgid "You may have selected the compare options with more than 1 year with credit/debit columns and % option.This can lead contents to be printed out of the paper.Please try again."
+msgstr "S-ar putea să fi selectat opţiunile de comparare cu mai mult de 1 an, cu coloanele debit/credit şi opţiunea %. Toate acestea ar putea genera un raport ce nu se încadrează în pagină. Reîncercaţi."
 
 #. module: account_balance
 #: wizard_button:account.balance.account.balance.report,init,end:0
@@ -303,10 +283,6 @@ msgstr "Trebuie să selectaţi cel puţin 1 an fiscal. Reîncercaţi."
 
 #. module: account_balance
 #: wizard_view:account.balance.account.balance.report,init:0
-msgid "Select Period"
-msgstr "Selectare perioadă"
-
-#. module: account_balance
-#: wizard_view:account.balance.account.balance.report,init:0
 msgid "Customize Report"
 msgstr "Raport personalizat"
+

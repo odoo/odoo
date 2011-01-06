@@ -28,17 +28,17 @@ def _get_answers(cr, uid, ids):
     query = """
     select distinct(answer)
     from profile_question_yes_rel
-    where profile in (%s)"""% ','.join([str(i) for i in ids ])
+    where profile in %s"""
 
-    cr.execute(query)
+    cr.execute(query, (tuple(ids),))
     ans_yes = [x[0] for x in cr.fetchall()]
 
     query = """
     select distinct(answer)
     from profile_question_no_rel
-    where profile in (%s)"""% ','.join([str(i) for i in ids ])
+    where profile in %s"""
 
-    cr.execute(query)
+    cr.execute(query, (tuple(ids),))
     ans_no = [x[0] for x in cr.fetchall()]
 
     return [ans_yes, ans_no]
@@ -50,7 +50,8 @@ def _get_parents(cr, uid, ids):
      select distinct(parent_id)
      from crm_segmentation
      where parent_id is not null
-     and id in (%s)""" % ','.join([str(i) for i in ids ]))
+     and id in %s""",
+               (tuple(ids),))
 
     parent_ids = [x[0] for x in cr.fetchall()]
 
@@ -86,30 +87,31 @@ def test_prof(cr, uid, seg_id, pid, answers_ids = []):
 
 
 def _recompute_categ(self, cr, uid, pid, answers_ids):
-    ok =  []
     cr.execute('''
-        select r.category_id 
+        select r.category_id
         from res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id) 
         where r.partner_id = %s and (s.exclusif = false or s.exclusif is null)
         ''', (pid,))
-    for x in cr.fetchall():
-        ok.append(x[0])
+    categories = [x[0] for x in cr.fetchall()]
 
     query = '''
-        select id, categ_id 
-        from crm_segmentation 
-        where profiling_active = true''' 
-    if ok != []:
-        query = query +''' and categ_id not in(%s)'''% ','.join([str(i) for i in ok ])
-    query = query + ''' order by id '''
+        select id, categ_id
+        from crm_segmentation
+        where profiling_active = true'''
+    if not categories:
+        query_params = ()
+    else:
+        query += ' and categ_id not in %s'
+        query_params = (tuple(categories),)
+    query += ' order by id '
 
-    cr.execute(query)
+    cr.execute(query, query_params)
     segm_cat_ids = cr.fetchall()
 
     for (segm_id, cat_id) in segm_cat_ids:
         if test_prof(cr, uid, segm_id, pid, answers_ids):
-            ok.append(cat_id)
-    return ok
+            categories.append(cat_id)
+    return categories
 
 
 class question(osv.osv):

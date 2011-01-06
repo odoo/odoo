@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-06-25 19:13+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
@@ -24,10 +23,8 @@ msgstr "Kohalviibimine"
 
 #. module: hr_attendance
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
@@ -41,17 +38,13 @@ msgstr "Logi Sisse / Välja"
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
 #, python-format
-msgid ""
-"You tried to sign with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
+msgid "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A positive delay means that the employee worked less than recorded."
-msgstr ""
-"(*) Positiivne viivitus tähendab, et töötaja töötas vähem kui salvestatud"
+msgid "(*) A positive delay means that the employee worked less than recorded."
+msgstr "(*) Positiivne viivitus tähendab, et töötaja töötas vähem kui salvestatud"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -66,8 +59,7 @@ msgstr "Vigane XML vaate arhitektuurile!"
 #. module: hr_attendance
 #: wizard_view:hr.si_so,init:0
 msgid "You are now ready to sign in or out of the attendance follow up"
-msgstr ""
-"Sa oled nüüd valmis sisse või välja logima kohalviibimise täiendusele"
+msgstr "Sa oled nüüd valmis sisse või välja logima kohalviibimise täiendusele"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -100,6 +92,11 @@ msgid "Print Attendance Error Report"
 msgstr "Prindi kohalviibimise veaaruanne"
 
 #. module: hr_attendance
+#: wizard_view:hr.si_so,si_ask_so:0
+msgid "You did not sign out the last time. Please enter the date and time you signed out."
+msgstr "You did not sign out the last time. Please enter the date and time you signed out."
+
+#. module: hr_attendance
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
 msgstr "Vigane mudeli nimi toimingu definitsioonis."
@@ -113,6 +110,11 @@ msgstr "Prindi tööajaleht nädala kaupa"
 #: field:hr.attendance,employee_id:0
 msgid "Employee"
 msgstr "Töötaja"
+
+#. module: hr_attendance
+#: wizard_field:hr.si_so,si_ask_so,last_time:0
+msgid "Your last sign out"
+msgstr "Sinu viimane välja logimine"
 
 #. module: hr_attendance
 #: wizard_view:hr.attendance.print_week,init:0
@@ -135,14 +137,6 @@ msgstr "Logi sisse"
 #: rml:report.hr.timesheet.attendance.error:0
 msgid "Total period:"
 msgstr "Kogu periood:"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to sign out with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
 
 #. module: hr_attendance
 #: field:hr.attendance,action_desc:0
@@ -169,7 +163,7 @@ msgstr "Mai"
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
-msgstr ""
+msgstr "A sign-out must be right after a sign-in !"
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
@@ -200,15 +194,13 @@ msgstr "Põhjus"
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Viga: Sisse logimine (vast. välja logimine) peab järgnema välja logimisele "
-"(vast. sisse logimine)"
+msgstr "Viga: Sisse logimine (vast. välja logimine) peab järgnema välja logimisele (vast. sisse logimine)"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "The sign-out date must be in the past"
-msgstr ""
+msgstr "The sign-out date must be in the past"
 
 #. module: hr_attendance
 #: rml:report.hr.timesheet.attendance.error:0
@@ -226,13 +218,10 @@ msgid "July"
 msgstr "Juuli"
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,si_ask_so:0
-msgid ""
-"You did not signed out the last time. Please enter the date and time you "
-"signed out."
-msgstr ""
-"Sa ei loginud välja eelmine kord. Palun sisesta kuupäev ja kellaaeg, millal "
-"sa välja logisid."
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign out with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -266,15 +255,15 @@ msgid "October"
 msgstr "Oktoober"
 
 #. module: hr_attendance
-#: wizard_field:hr.si_so,si_ask_so,last_time:0
-msgid "Your last sign out"
-msgstr "Sinu viimane välja logimine"
+#: wizard_button:hr.si_so,so_wo_si,end:0
+msgid "Ok"
+msgstr "Ok"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "The Sign-in date must be in the past"
-msgstr ""
+msgstr "The Sign-in date must be in the past"
 
 #. module: hr_attendance
 #: wizard_field:hr.attendance.print_month,init,year:0
@@ -317,6 +306,11 @@ msgstr "Praegune olek"
 #: selection:hr.attendance.print_month,init,month:0
 msgid "January"
 msgstr "Jaanuar"
+
+#. module: hr_attendance
+#: wizard_view:hr.si_so,so_wo_si:0
+msgid "Sign-Out Entry must follow Sign-In."
+msgstr "Sign-Out Entry must follow Sign-In."
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
@@ -366,7 +360,7 @@ msgstr "Allpool seda viivitust loetakse viga tahtlikuks."
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "UserError"
 
 #. module: hr_attendance
 #: wizard_field:hr.attendance.report,init,max_delay:0
@@ -397,13 +391,10 @@ msgid "No records found for your selection!"
 msgstr "Sinu valikus ei leitud kirjeid."
 
 #. module: hr_attendance
-#: wizard_view:hr.si_so,so_ask_si:0
-msgid ""
-"You did not signed in the last time. Please enter the date and time you "
-"signed in."
-msgstr ""
-"Sa ei loginud sisse eelmine kord. Palun sisesta kuupäev ja kellaaeg, millal "
-"sa sisse logisid."
+#: code:addons/hr_attendance/hr_attendance.py:0
+#, python-format
+msgid "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
+msgstr "You tried to sign in with a date anterior to another event !\nTry to contact the administrator to correct attendances."
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
@@ -437,9 +428,15 @@ msgstr "Selle mooduli eesmärk on hallata töötajate kohalviibimisi."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/hr_attendance.py:0
+#: wizard_view:hr.si_so,so_wo_si:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
+
+#. module: hr_attendance
+#: wizard_view:hr.si_so,so_ask_si:0
+msgid "You did not sign in the last time. Please enter the date and time you signed in."
+msgstr "You did not sign in the last time. Please enter the date and time you signed in."
 
 #. module: hr_attendance
 #: selection:hr.attendance.print_month,init,month:0
@@ -462,14 +459,6 @@ msgid "Operation"
 msgstr "Operatsioon"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
-#, python-format
-msgid ""
-"You tried to sign in with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-
-#. module: hr_attendance
 #: wizard_field:hr.si_so,so_ask_si,last_time:0
 msgid "Your last sign in"
 msgstr "Sinu viimane sisse logimine"
@@ -478,4 +467,5 @@ msgstr "Sinu viimane sisse logimine"
 #: code:addons/hr_attendance/wizard/sign_in_out.py:0
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
-msgstr ""
+msgstr "A sign-in must be right after a sign-out !"
+

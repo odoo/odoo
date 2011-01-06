@@ -60,7 +60,6 @@ class pos_order(osv.osv):
         return {'value': {'pricelist_id': pricelist}}
 
     def _amount_total(self, cr, uid, ids, field_name, arg, context):
-        id_set = ",".join(map(str, ids))
         cr.execute("""
         SELECT
             p.id,
@@ -69,7 +68,7 @@ class pos_order(osv.osv):
                 ) AS amount
         FROM pos_order p
             LEFT OUTER JOIN pos_order_line l ON (p.id=l.order_id)
-        WHERE p.id IN (""" + id_set +""") GROUP BY p.id """)
+        WHERE p.id IN %s GROUP BY p.id """, (tuple(ids),))
         res = dict(cr.fetchall())
 
         for rec in self.browse(cr, uid, ids, context):
@@ -113,8 +112,8 @@ class pos_order(osv.osv):
         return res
 
     def payment_get(self, cr, uid, ids, context=None):
-        cr.execute("select id from pos_payment where order_id in (%s)" % \
-                    ','.join([str(i) for i in ids]))
+        cr.execute("select id from pos_payment where order_id in %s",
+                    (tuple(ids),))
         return [i[0] for i in cr.fetchall()]
 
     def _sale_journal_get(self, cr, uid, context):
@@ -516,7 +515,8 @@ class pos_order(osv.osv):
                 'reference': order.name,
                 'partner_id': order.partner_id.id,
                 'comment': order.note or '',
-                'price_type': 'tax_included'
+                'price_type': 'tax_included',
+                'journal_id': order.sale_journal.id
             }
             inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', order.partner_id.id)['value'])
 
@@ -631,7 +631,7 @@ class pos_order(osv.osv):
                 # Create a move for the line
                 account_move_line_obj.create(cr, uid, {
                     'name': order.name,
-                    'date': order.date_order,
+                    'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': move_id,
                     'account_id': income_account,
@@ -657,7 +657,7 @@ class pos_order(osv.osv):
 
                     account_move_line_obj.create(cr, uid, {
                         'name': order.name,
-                        'date': order.date_order,
+                        'date': order.date_order[:10],
                         'ref': order.name,
                         'move_id': move_id,
                         'account_id': income_account,
@@ -676,7 +676,7 @@ class pos_order(osv.osv):
             for key, amount in group_tax.items():
                 account_move_line_obj.create(cr, uid, {
                     'name': order.name,
-                    'date': order.date_order,
+                    'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': move_id,
                     'account_id': key[account_pos],
@@ -692,7 +692,7 @@ class pos_order(osv.osv):
             # counterpart
             to_reconcile.append(account_move_line_obj.create(cr, uid, {
                 'name': order.name,
-                'date': order.date_order,
+                'date': order.date_order[:10],
                 'ref': order.name,
                 'move_id': move_id,
                 'account_id': order_account,
@@ -741,7 +741,7 @@ class pos_order(osv.osv):
                 }, context=context)
                 account_move_line_obj.create(cr, uid, {
                     'name': order.name,
-                    'date': order.date_order,
+                    'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': payment_move_id,
                     'account_id': payment_account,
@@ -753,7 +753,7 @@ class pos_order(osv.osv):
                 }, context=context)
                 to_reconcile.append(account_move_line_obj.create(cr, uid, {
                     'name': order.name,
-                    'date': order.date_order,
+                    'date': order.date_order[:10],
                     'ref': order.name,
                     'move_id': payment_move_id,
                     'account_id': order_account,

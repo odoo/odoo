@@ -4,36 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-07-24 13:58+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"POT-Creation-Date: 2010-09-02 13:45:58+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:58+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: account_payment
-#: model:ir.module.module,shortdesc:account_payment.module_meta_information
-msgid "Payment Management"
-msgstr "Gestion des paiements"
-
-#. module: account_payment
-#: help:payment.line,communication:0
-msgid ""
-"Used as the message between ordering customer and current company. Depicts "
-"'What do you want to say to the recipient about this order ?'"
-msgstr ""
-"Utilisé comme message entre le client et la société actuelle. Décrit : \"Que "
-"voulez vous dire au destinataire à propos de cette commande ?\""
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_payment
 #: field:payment.order,date_planned:0
 msgid "Scheduled date if fixed"
-msgstr "Date prévue si fixe"
+msgstr "Scheduled date if fixed"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -53,7 +38,7 @@ msgstr "Sélectionnez le mode de paiement à appliquer"
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom de modèle non valide dans la définition de l'action."
+msgstr "Invalid model name in the action definition."
 
 #. module: account_payment
 #: view:payment.line:0
@@ -64,21 +49,15 @@ msgstr "Compte du Partenaire principal"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
+msgid "The amount which should be paid at the current date\n"
 "minus the amount which is already in payment order"
-msgstr ""
-"Le montant qui doit être payé à la date courante\n"
+msgstr "Le montant qui doit être payé à la date courante\n"
 "moins le montant qui se trouve déjà dans l'ordre de paiement"
 
 #. module: account_payment
 #: help:payment.line,date:0
-msgid ""
-"If no payment date is specified, the bank will treat this payment line "
-"directly"
-msgstr ""
-"Si aucune date de paiement n'est spécifiée, la banque traitera cette ligne "
-"de paiement directement"
+msgid "If no payment date is specified, the bank will treat this payment line directly"
+msgstr "Si aucune date de paiement n'est spécifiée, la banque traitera cette ligne de paiement directement"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
@@ -94,6 +73,11 @@ msgstr "Libre"
 #: wizard_field:populate_payment,search,entries:0
 msgid "Entries"
 msgstr "Ecritures"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Used Account"
+msgstr "Used Account"
 
 #. module: account_payment
 #: wizard_field:populate_payment,init,duedate:0
@@ -117,9 +101,9 @@ msgid "Amount"
 msgstr "Montant"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Execution date:"
-msgstr "Date d'exécution :"
+#: help:payment.mode,type:0
+msgid "Select the Payment Type for the Payment Mode."
+msgstr "Choisissez le type de paiement pour le mode de paiement."
 
 #. module: account_payment
 #: view:payment.order:0
@@ -136,6 +120,11 @@ msgstr "Annulé"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form_new
 msgid "New Payment Order"
 msgstr "Nouvel ordre de paiement"
+
+#. module: account_payment
+#: field:payment.order,total:0
+msgid "Total"
+msgstr "Total"
 
 #. module: account_payment
 #: rml:payment.order:0
@@ -155,12 +144,14 @@ msgid "Directly"
 msgstr "Directement"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment Line"
-msgstr "Ligne de paiement"
+#: rml:payment.order:0
+msgid "Value date"
+msgstr "Value date"
+
+#. module: account_payment
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
+msgstr "Gestion des paiements"
 
 #. module: account_payment
 #: field:payment.type,suitable_bank_types:0
@@ -188,15 +179,19 @@ msgid "Payment lines"
 msgstr "Lignes de paiement"
 
 #. module: account_payment
-#: help:payment.order,date_planned:0
-msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
-"Sélectionnez une date si vous avez choisi \"Date fixe\" comme date préférée"
+#: rml:payment.order:0
+msgid "Execution Type"
+msgstr "Execution Type"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
 msgstr "Structuré"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Amount in currency"
+msgstr "Amount in currency"
 
 #. module: account_payment
 #: field:payment.order,state:0
@@ -228,12 +223,8 @@ msgstr "Réf. facture"
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
-msgid ""
-"Choose an option for the Payment Order:'Fixed' stands for a date specified "
-"by you.'Directly' stands for the direct execution.'Due date' stands for the "
-"scheduled date of execution."
-msgstr ""
-"Choisissez une option pour l'ordre de paiement : \r\n"
+msgid "Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."
+msgstr "Choisissez une option pour l'ordre de paiement : \r\n"
 "« Date fixe » signifie une date déterminée par vous. \r\n"
 "« Directement » signifie un exécution directe. \r\n"
 "« Date d'échéance » représente la date d'exécution prévue."
@@ -242,12 +233,12 @@ msgstr ""
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr "Débit total"
+msgstr "Total débit"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
@@ -273,7 +264,7 @@ msgstr "Compte de destination"
 #. module: account_payment
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue !"
+msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: account_payment
 #: wizard_button:populate_payment,init,end:0
@@ -308,6 +299,12 @@ msgid "Communication Type"
 msgstr "Type de communication"
 
 #. module: account_payment
+#: field:payment.line,partner_id:0
+#: rml:payment.order:0
+msgid "Partner"
+msgstr "Partenaire"
+
+#. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Due date"
 msgstr "Date d'échéance"
@@ -328,10 +325,11 @@ msgid "Mode of Payment"
 msgstr "Mode de paiement"
 
 #. module: account_payment
+#: rml:payment.order:0
 #: view:payment.type:0
 #: help:payment.type,name:0
 msgid "Payment Type"
-msgstr "Type de paiement"
+msgstr "Payment Type"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -344,12 +342,6 @@ msgid "Draft"
 msgstr "Brouillon"
 
 #. module: account_payment
-#: field:payment.line,partner_id:0
-#: rml:payment.order:0
-msgid "Partner"
-msgstr "Partenaire"
-
-#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "Le message remplaçant \"Communication\"."
@@ -358,7 +350,7 @@ msgstr "Le message remplaçant \"Communication\"."
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "No partner defined on entry line"
-msgstr ""
+msgstr "No partner defined on entry line"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -366,9 +358,14 @@ msgid "Address of the Ordering Customer."
 msgstr "Adresse du client qui a passé la commande"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr "Crédit total"
+#: wizard_field:populate_statement,init,date_select:0
+msgid "Select Date"
+msgstr "Select Date"
+
+#. module: account_payment
+#: help:payment.order,date_planned:0
+msgid "Select a date if you have chosen Preferred Date to be fixed."
+msgstr "Select a date if you have chosen Preferred Date to be fixed."
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_payment
@@ -387,28 +384,24 @@ msgid "Payment Lines"
 msgstr "Lignes de paiement"
 
 #. module: account_payment
-#: rml:payment.order:0
+#: wizard_field:populate_statement,init,d_date:0
 msgid "Date"
 msgstr "Date"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Reference:"
-msgstr "Référence :"
-
-#. module: account_payment
 #: help:payment.line,move_line_id:0
-msgid ""
-"This Entry Line will be referred for the information of the ordering "
-"customer."
-msgstr ""
-"Cette ligne d'écriture servira de référence pour les information sur le "
-"client ayant passé la commande."
+msgid "This Entry Line will be referred for the information of the ordering customer."
+msgstr "Cette ligne d'écriture servira de référence pour les information sur le client ayant passé la commande."
 
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
 msgstr "Date de paiement"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Total:"
+msgstr "Total:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
@@ -417,13 +410,14 @@ msgstr "Date de création"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
+#: selection:populate_statement,init,date_select:0
 msgid "Maturity Date"
 msgstr "Date d'échéance"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr "Importer les lignes de paiement"
+#: selection:populate_statement,init,date_select:0
+msgid "Fixed Date"
+msgstr "Fixed Date"
 
 #. module: account_payment
 #: help:payment.type,code:0
@@ -489,11 +483,8 @@ msgstr "Informations"
 
 #. module: account_payment
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
-"caractères spéciaux !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_pay_payment
@@ -523,6 +514,11 @@ msgid "Search Payment lines"
 msgstr "Chercher parmi les lignes de paiement"
 
 #. module: account_payment
+#: selection:populate_statement,init,date_select:0
+msgid "Current Date"
+msgstr "Current Date"
+
+#. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
 msgstr "Montant dans la devise du partenaire"
@@ -535,7 +531,7 @@ msgstr "Communication 2"
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank account"
-msgstr "Compte bancaire destination"
+msgstr "Compte bancaire de destination"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -555,8 +551,17 @@ msgstr "Confirmer les paiements"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
+#: rml:payment.order:0
 msgid "Company Currency"
 msgstr "Devise de la société"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
+#: view:payment.order:0
+msgid "Payment Line"
+msgstr "Ligne de paiement"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main
@@ -567,15 +572,30 @@ msgid "Payment"
 msgstr "Paiement"
 
 #. module: account_payment
+#: rml:payment.order:0
+msgid "Payment Order / Payment"
+msgstr "Payment Order / Payment"
+
+#. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
 msgstr "Ligne d'écriture"
+
+#. module: account_payment
+#: help:payment.line,communication:0
+msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"
+msgstr "Utilisé comme message entre le client et la société actuelle. Décrit : \"Que voulez vous dire au destinataire à propos de cette commande ?\""
 
 #. module: account_payment
 #: field:payment.mode,name:0
 #: field:payment.type,name:0
 msgid "Name"
 msgstr "Nom"
+
+#. module: account_payment
+#: view:account.move.line:0
+msgid "Total credit"
+msgstr "Total crédit"
 
 #. module: account_payment
 #: wizard_button:populate_payment,init,search:0
@@ -592,9 +612,7 @@ msgstr "Informations sur l'écriture"
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-msgstr ""
-"Aucun compte bancaire n'a été défini pour le partenaire '+ "
-"line.partner_id.name+ '."
+msgstr "Aucun compte bancaire n'a été défini pour le partenaire '+ line.partner_id.name+ '."
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
@@ -619,9 +637,14 @@ msgid "Payment type"
 msgstr "Type de paiement"
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr "Total"
+#: rml:payment.order:0
+msgid "Invoice reference"
+msgstr "Invoice reference"
+
+#. module: account_payment
+#: selection:populate_statement,init,date_select:0
+msgid "Payment Order Date"
+msgstr "Payment Order Date"
 
 #. module: account_payment
 #: wizard_button:populate_statement,init,add:0
@@ -629,15 +652,15 @@ msgid "_Add"
 msgstr "_Ajouter"
 
 #. module: account_payment
-#: help:payment.mode,type:0
-msgid "Select the Payment Type for the Payment Mode."
-msgstr "Choisissez le type de paiement pour le mode de paiement."
-
-#. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_mode
 #: field:payment.order,mode:0
 msgid "Payment mode"
 msgstr "Mode de paiement"
+
+#. module: account_payment
+#: view:account.bank.statement:0
+msgid "Import payment lines"
+msgstr "Importer les lignes de paiement"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -648,3 +671,9 @@ msgstr "Compte bancaire pour le mode de paiement"
 #: field:payment.mode,journal:0
 msgid "Journal"
 msgstr "Journal"
+
+#. module: account_payment
+#: help:populate_statement,init,date_select:0
+msgid "The selected date will be used for statement lines"
+msgstr "The selected date will be used for statement lines"
+

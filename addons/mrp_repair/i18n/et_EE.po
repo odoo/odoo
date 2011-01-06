@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-07-16 18:35+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -57,6 +56,12 @@ msgstr "Printimise kuupäev"
 #: rml:repair.order:0
 msgid "Quantity"
 msgstr "Kogus"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No product defined on Fees!"
+msgstr "No product defined on Fees!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -107,6 +112,12 @@ msgid "Net Total :"
 msgstr "Neto :"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
+
+#. module: mrp_repair
 #: rml:repair.order:0
 msgid "VAT"
 msgstr "KM"
@@ -142,6 +153,12 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for partner \"%s\"."
+msgstr "No account defined for partner \"%s\"."
+
+#. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_quotation_tree
 #: model:ir.ui.menu,name:mrp_repair.menu_repair_quotation
 msgid "Repairs in quotation"
@@ -173,6 +190,11 @@ msgstr "Remondikorralduse N° :"
 #: rml:repair.order:0
 msgid "Lot Number"
 msgstr "Seerianumber"
+
+#. module: mrp_repair
+#: selection:mrp.repair.line,state:0
+msgid "Draft"
+msgstr "Mustand"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -210,6 +232,12 @@ msgid "Start Repair"
 msgstr "Alusta remonti"
 
 #. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
 msgid "Quantity (UoM)"
 msgstr "Kogus (MÜ)"
@@ -241,9 +269,9 @@ msgid "Pricelist"
 msgstr "Hinnakiri"
 
 #. module: mrp_repair
-#: help:mrp.repair,state:0
-msgid "Gives the state of the Repair Order"
-msgstr "Annab remondikorralduse oleku"
+#: field:mrp.repair,name:0
+msgid "Repair Ref"
+msgstr "Remondiviide"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -264,21 +292,19 @@ msgstr "Vigane XML vaate arhitektuurile!"
 
 #. module: mrp_repair
 #: help:mrp.repair,guarantee_limit:0
-msgid ""
-"The garantee limit is computed as: last move date + warranty defined on "
-"selected product. If the current date is below the garantee limit, each "
-"operation and fee you will add will be set as 'not to invoiced' by default. "
-"Note that you can change manually afterwards."
-msgstr ""
-"Garantiilimiit on arvutatud nii: viimase liikumise kuupäev + määratletud "
-"garantii valitud tootel. Kui käesolev kuupäev on allpool garantiilimiiti "
-"siis iga lisatav operatsioon ja tasu seatakse vaikimisi 'mitte arveldada'. "
-"Sa saad seda hiljem käsitsi muuta."
+msgid "The garantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the garantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."
+msgstr "Garantiilimiit on arvutatud nii: viimase liikumise kuupäev + määratletud garantii valitud tootel. Kui käesolev kuupäev on allpool garantiilimiiti siis iga lisatav operatsioon ja tasu seatakse vaikimisi 'mitte arveldada'. Sa saad seda hiljem käsitsi muuta."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Repair Line"
 msgstr "Remondi rida"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "You have to select a partner and invoicing address in the repair form !"
+msgstr "You have to select a partner and invoicing address in the repair form !"
 
 #. module: mrp_repair
 #: rml:repair.order:0
@@ -339,12 +365,6 @@ msgid "Invoiced"
 msgstr "Arveldatud"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
-#, python-format
-msgid "You have to select a partner in the repair form !"
-msgstr "Sa pead valima partneri remondi vormil!"
-
-#. module: mrp_repair
 #: wizard_button:mrp.repair.cancel,display,end:0
 msgid "No"
 msgstr "Ei"
@@ -362,9 +382,9 @@ msgid "Add"
 msgstr "Lisa"
 
 #. module: mrp_repair
-#: selection:mrp.repair.line,state:0
-msgid "Draft"
-msgstr "Mustand"
+#: wizard_view:mrp.repair.make_invoice,init:0
+msgid "Do you really want to create the invoice(s) ?"
+msgstr "Do you really want to create the invoice(s) ?"
 
 #. module: mrp_repair
 #: model:ir.actions.act_window,name:mrp_repair.action_repair_order_form
@@ -374,10 +394,13 @@ msgstr "Uus remont"
 
 #. module: mrp_repair
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
+#. module: mrp_repair
+#: field:mrp.repair,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Untaxed Amount"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,state:0
@@ -402,12 +425,8 @@ msgstr "Hinnakiri tuleb valitud partnerilt vaikimisi."
 
 #. module: mrp_repair
 #: wizard_view:mrp.repair.cancel,display:0
-msgid ""
-"This operation  will  cancel the  Repair process, but  will not cancel it's "
-"Invoice. Do you want to continue?"
-msgstr ""
-"See operatsioon tühistab remondiprotsessi, aga ei tühista selle arvet. Kas "
-"soovid jätkata?"
+msgid "This operation  will  cancel the  Repair process, but  will not cancel it's Invoice. Do you want to continue?"
+msgstr "See operatsioon tühistab remondiprotsessi, aga ei tühista selle arvet. Kas soovid jätkata?"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -425,14 +444,20 @@ msgid "Confirm Repair"
 msgstr "Kinnita remont"
 
 #. module: mrp_repair
-#: rml:repair.order:0
-msgid "Repair Quotation"
-msgstr "Remondi hinnapakkumine"
+#: wizard_view:mrp.repair.cancel,display:0
+msgid "Cancel Repair...??"
+msgstr "Loobu remondist...??"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "End Repair"
 msgstr "Remondi lõpp"
+
+#. module: mrp_repair
+#: code:addons/mrp_repair/mrp_repair.py:0
+#, python-format
+msgid "No account defined for product \"%s\"."
+msgstr "No account defined for product \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -510,14 +535,8 @@ msgstr "Tooteremondi moodul"
 
 #. module: mrp_repair
 #: help:mrp.repair,invoice_method:0
-msgid ""
-"This field allow you to change the workflow of the repair order. If value "
-"selected is different from 'No Invoice', it also allow you to select the "
-"pricelist and invoicing address."
-msgstr ""
-"See väli võimaldab sul muuta remondikorralduse töövoogu. Kui valitud väärtus "
-"pole 'Arveta' siis võimaldab see sul valida hinnakirja ja arveldamise "
-"aadressi."
+msgid "This field allow you to change the workflow of the repair order. If value selected is different from 'No Invoice', it also allow you to select the pricelist and invoicing address."
+msgstr "See väli võimaldab sul muuta remondikorralduse töövoogu. Kui valitud väärtus pole 'Arveta' siis võimaldab see sul valida hinnakirja ja arveldamise aadressi."
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,price_unit:0
@@ -525,11 +544,6 @@ msgstr ""
 #: rml:repair.order:0
 msgid "Unit Price"
 msgstr "Ühiku hind"
-
-#. module: mrp_repair
-#: wizard_view:mrp.repair.make_invoice,init:0
-msgid "Do you really want to create the invoices ?"
-msgstr "Kas soovid tõesti luua arved ?"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,name:0
@@ -556,15 +570,8 @@ msgstr "Arve korrigeeritud"
 
 #. module: mrp_repair
 #: help:mrp.repair,deliver_bool:0
-msgid ""
-"Check this box if you want to manage the delivery once the product is "
-"repaired. If cheked, it will create a packing with selected product. Note "
-"that you can select the locations in the Info tab, if you have the extended "
-"view."
-msgstr ""
-"Vali see kast, kui soovid hallata tarneid peale remondi lõppu. Kui on "
-"valitud luuakse pakkimine valitud tootele. Pane tähele, et saad määrata "
-"tarneasukohad infoaknas, kui sul on laiendatud vaade."
+msgid "Check this box if you want to manage the delivery once the product is repaired. If cheked, it will create a packing with selected product. Note that you can select the locations in the Info tab, if you have the extended view."
+msgstr "Vali see kast, kui soovid hallata tarneid peale remondi lõppu. Kui on valitud luuakse pakkimine valitud tootele. Pane tähele, et saad määrata tarneasukohad infoaknas, kui sul on laiendatud vaade."
 
 #. module: mrp_repair
 #: field:mrp.repair.line,type:0
@@ -598,9 +605,9 @@ msgid "Make invoices"
 msgstr "Loo arved"
 
 #. module: mrp_repair
-#: field:mrp.repair,name:0
-msgid "Repair Ref"
-msgstr "Remondiviide"
+#: help:mrp.repair,state:0
+msgid "Gives the state of the Repair Order"
+msgstr "Annab remondikorralduse oleku"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -614,9 +621,9 @@ msgid "Remove"
 msgstr "Eemalda"
 
 #. module: mrp_repair
-#: wizard_view:mrp.repair.cancel,display:0
-msgid "Cancel Repair...??"
-msgstr "Loobu remondist...??"
+#: rml:repair.order:0
+msgid "Repair Quotation"
+msgstr "Remondi hinnapakkumine"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom:0
@@ -667,11 +674,8 @@ msgstr "staatused"
 
 #. module: mrp_repair
 #: help:mrp.repair,partner_id:0
-msgid ""
-"This field allow you to choose the parner that will be invoiced and delivered"
-msgstr ""
-"See väli lubab sul valida partneri kellele tehakse arve ja tarnitakse "
-"toode(ed)"
+msgid "This field allow you to choose the parner that will be invoiced and delivered"
+msgstr "See väli lubab sul valida partneri kellele tehakse arve ja tarnitakse toode(ed)"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_total:0
@@ -688,3 +692,4 @@ msgstr "Valmis remondiks"
 #, python-format
 msgid "No partner !"
 msgstr "Partner puudub!"
+

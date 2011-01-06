@@ -125,7 +125,7 @@
             </field>
         </record>
         
-        <act_window domain="[('partner_id', '=', active_id),('reconcile_id','=',False),('account_id.reconcile', '=', True)]" id="account.act_account_partner_account_move_unreconciled" name="Receivables &amp; Payables" res_model="account.move.line" view="account_move_line_partner_tree"/>
+        <act_window domain="[('partner_id', '=', active_id),('reconcile_id','=',False),('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]" id="account.act_account_partner_account_move_unreconciled" name="Receivables &amp; Payables" res_model="account.move.line" view="account_move_line_partner_tree"/>
         
         <act_window domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]" id="act_account_partner_account_move_all" name="All receivable entries" res_model="account.move.line" src_model="" view="account_move_line_partner_tree"/>
         

@@ -500,7 +500,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_invoice')]</field>
+            <field name="domain">[('state','not in',['draft','cancel','proforma','proforma2']),('reconciled','=',False),('type','=','out_invoice')]</field>
             <field name="context">{'type':'out_invoice'}</field>
         </record>
         <record id="action_invoice_tree7_view1" model="ir.actions.act_window.view">
@@ -544,7 +544,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','in_invoice')]</field>
+            <field name="domain">[('state','not in',['draft','cancel','proforma','proforma2']),('reconciled','=',False),('type','=','in_invoice')]</field>
             <field name="context">{'type':'in_invoice'}</field>
         </record>
         <record id="action_invoice_tree9_view1" model="ir.actions.act_window.view">
@@ -588,7 +588,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','out_refund')]</field>
+            <field name="domain">[('state','not in',['draft','cancel','proforma','proforma2']),('reconciled','=',False),('type','=','out_refund')]</field>
             <field name="context">{'type':'out_refund'}</field>
         </record>
         <record id="action_invoice_tree11_view1" model="ir.actions.act_window.view">
@@ -632,7 +632,7 @@
             <field name="res_model">account.invoice</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar,graph</field>
-            <field name="domain">[('state','not in',['draft','cancel']),('reconciled','=',False),('type','=','in_refund')]</field>
+            <field name="domain">[('state','not in',['draft','cancel','proforma','proforma2']),('reconciled','=',False),('type','=','in_refund')]</field>
             <field name="context">{'type':'in_refund'}</field>
         </record>
         <record id="action_invoice_tree13_view1" model="ir.actions.act_window.view">
@@ -651,9 +651,23 @@
 
         <act_window domain="[('partner_id','=',active_id)]" id="act_res_partner_2_account_invoice_opened" name="Invoices" res_model="account.invoice" src_model="res.partner"/>
 
-        <act_window domain="[('journal_id','=',active_id),('state','!=','draft'),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
+        <record id="act_res_partner_2_account_invoice_opened_view1" model="ir.actions.act_window.view">
+            <field eval="1" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="act_res_partner_2_account_invoice_opened"/>
+        </record>
+        <record id="act_res_partner_2_account_invoice_opened_view2" model="ir.actions.act_window.view">
+            <field eval="2" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="invoice_form"/>
+            <field name="act_window_id" ref="act_res_partner_2_account_invoice_opened"/>
+        </record>
+
+        <act_window domain="[('journal_id','=',active_id),('state','not in',['draft','cancel','proforma','proforma2']),('reconciled','=',False)]" id="act_account_journal_2_account_invoice_opened" name="Unpaid invoices" res_model="account.invoice" src_model="account.journal"/>
 
         <act_window domain="[('account_analytic_id', '=', active_id)]" id="act_account_analytic_account_2_account_invoice_line" name="Invoice lines" res_model="account.invoice.line" src_model="account.analytic.account"/>
+		
+		<act_window domain="[('partner_id', '=', partner_id), ('account_id.type', 'in', ['receivable', 'payable']), ('reconcile_id','=',False)]" id="act_account_invoice_account_move_unreconciled" name="Unreconciled Receivables &amp; Payables" res_model="account.move.line" src_model="account.invoice"/>
 
     </data>
 </openerp>

@@ -12,8 +12,12 @@
                         <field name="fiscal_ids" nolabel="1" colspan="4">
                             <tree string="Fiscal Year Sequences" editable="bottom">
                                 <field name="fiscalyear_id"/>
-                                <field name="sequence_id"/>
+                                <field name="sequence_id" domain="[('code','=',parent.code)]"/>
                             </tree>
+                            <form string="Fiscal Year Sequence">
+                                <field name="fiscalyear_id"/>
+                                <field name="sequence_id" domain="[('code','=',parent.code)]"/>
+                            </form>
                         </field>
                     </page>
                 </page>

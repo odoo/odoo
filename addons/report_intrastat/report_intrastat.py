@@ -65,7 +65,7 @@ class report_intrastat(osv.osv):
         'name': fields.many2one('account.period', 'Period', readonly=True, select=True),
         'supply_units':fields.float('Supply Units', readonly=True),
         'ref':fields.char('Origin',size=64, readonly=True),
-        'code': fields.char('Country code', size="2", readonly=True),
+        'code': fields.char('Country code', size=2, readonly=True),
         'intrastat_id': fields.many2one('report.intrastat.code', 'Intrastat code', readonly=True),
         'weight': fields.float('Weight', readonly=True),
         'value': fields.float('Value', readonly=True),
@@ -119,7 +119,7 @@ class report_intrastat(osv.osv):
                     left join account_invoice_line inv_line on inv_line.invoice_id=inv.id
                     left join (product_template pt
                         left join product_product pp on (pp.product_tmpl_id = pt.id))
-                    on (inv_line.product_id = pt.id)
+                    on (inv_line.product_id = pp.id)
                     left join product_uom uom on uom.id=inv_line.uos_id
                     left join product_uom puom on puom.id = pt.uom_id
                     left join report_intrastat_code intrastat on pt.intrastat_id = intrastat.id

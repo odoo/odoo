@@ -1,18 +1,647 @@
-# Estonian translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* event
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-04-10 12:38+0000\n"
-"PO-Revision-Date: 2009-04-20 07:09+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Estonian <et@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: event
+#: field:event.event,date_end:0
+#: field:report.event.registration,date_end:0
+msgid "Ending date"
+msgstr "Lõpu kuupäev"
+
+#. module: event
+#: field:event.event,register_min:0
+msgid "Minimum Registrations"
+msgstr "Miinimum registreerimised"
+
+#. module: event
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Vigane mudeli nimi toimingu definitsioonis."
+
+#. module: event
+#: field:event.event,mail_registr:0
+msgid "Registration Email"
+msgstr "Registreerimise Email"
+
+#. module: event
+#: model:crm.case.section,name:event.event_0_crm_case_section
+msgid "Concert of Bon Jovi"
+msgstr "Bon Jovi kontsert"
+
+#. module: event
+#: field:event.event,mail_confirm:0
+msgid "Confirmation Email"
+msgstr "Kinnitus Email"
+
+#. module: event
+#: constraint:crm.case.section:0
+msgid "Error ! You cannot create recursive sections."
+msgstr "Viga! Sa ei saa luua rekursiivseid sektsioone."
+
+#. module: event
+#: model:ir.model,name:event.model_event_registration
+msgid "Event Registration"
+msgstr "Sündmuse registreerimine"
+
+#. module: event
+#: model:ir.actions.wizard,name:event.event_reg_invoice
+msgid "Make Invoice"
+msgstr "Loo arve"
+
+#. module: event
+#: field:report.event.type.registration,draft_state:0
+msgid "Draft Registrations"
+msgstr "Registreerimiste mustand"
+
+#. module: event
+#: view:report.event.registration:0
+msgid "Event on Registration"
+msgstr "Registreerimise sündmus"
+
+#. module: event
+#: wizard_button:event.reg_make_invoice,init,end:0
+msgid "Ok"
+msgstr "Ok"
+
+#. module: event
+#: field:event.event,mail_auto_confirm:0
+msgid "Mail Auto Confirm"
+msgstr "Autokinnituse meil"
+
+#. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Ooperi pilet"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Error!"
+msgstr "Viga!"
+
+#. module: event
+#: view:event.event:0
+msgid "Confirm Event"
+msgstr "Kinnita sündmus"
+
+#. module: event
+#: model:crm.case.section,name:event.event_1_crm_case_section
+msgid "Opera of Verdi"
+msgstr "Verdi ooper"
+
+#. module: event
+#: field:report.event.registration,draft_state:0
+msgid "Draft Registration"
+msgstr "Registreerimise mustand"
+
+#. module: event
+#: wizard_view:event.reg_make_invoice,init:0
+msgid "Create Invoices"
+msgstr "Loo arved"
+
+#. module: event
+#: model:ir.module.module,description:event.module_meta_information
+msgid "Organization and management of events.\n"
+"\n"
+"    This module allow you\n"
+"        * to manage your events and their registrations\n"
+"        * to use emails to automatically confirm and send acknowledgements for any registration to an event\n"
+"        * ...\n"
+"\n"
+"    Note that:\n"
+"    - You can define new types of events in\n"
+"                Events / Configuration / Types of Events\n"
+"    - You can access predefined reports about number of registration per event or per event category in :\n"
+"                Events / Reporting\n"
+""
+msgstr "Organization and management of events.\n"
+"\n"
+"    This module allow you\n"
+"        * to manage your events and their registrations\n"
+"        * to use emails to automatically confirm and send acknowledgements for any registration to an event\n"
+"        * ...\n"
+"\n"
+"    Note that:\n"
+"    - You can define new types of events in\n"
+"                Events / Configuration / Types of Events\n"
+"    - You can access predefined reports about number of registration per event or per event category in :\n"
+"                Events / Reporting\n"
+""
+
+#. module: event
+#: view:event.registration:0
+msgid "Extra Info"
+msgstr "Täiendav info"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Warning!"
+
+#. module: event
+#: view:event.registration:0
+msgid "Registration"
+msgstr "Registreerimine"
+
+#. module: event
+#: field:event.type,name:0
+#: model:ir.model,name:event.model_event_type
+msgid "Event type"
+msgstr "Sündmuse liik"
+
+#. module: event
+#: view:event.event:0
+#: model:ir.model,name:event.model_event_event
+#: model:ir.module.module,shortdesc:event.module_meta_information
+#: field:report.event.registration,name:0
+msgid "Event"
+msgstr "Sündmus"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Confirmed"
+msgstr "Kinnitatud"
+
+#. module: event
+#: wizard_view:event.confirm_registration,split:0
+msgid "Registration Confirmation"
+msgstr "Registreerimise kinnitus"
+
+#. module: event
+#: view:event.registration:0
+msgid "Dates"
+msgstr "Kuupäevad"
+
+#. module: event
+#: field:event.event,register_current:0
+#: model:ir.actions.act_window,name:event.action_registration_confirm
+#: model:ir.ui.menu,name:event.menu_action_registration_confirm
+msgid "Confirmed Registrations"
+msgstr "Kinnitatud registreerimised"
+
+#. module: event
+#: field:event.event,mail_auto_registr:0
+msgid "Mail Auto Register"
+msgstr "Autoregistreerimise mail"
+
+#. module: event
+#: view:event.registration:0
+msgid "Badge"
+msgstr "Tunnusmärk"
+
+#. module: event
+#: field:event.event,section_id:0
+msgid "Case section"
+msgstr "Juhtumi jaotis"
+
+#. module: event
+#: field:event.registration,tobe_invoiced:0
+msgid "To be Invoiced"
+msgstr "Tehakse arve"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_event
+msgid "All Events"
+msgstr "Kõik sündmused"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_report_event
+msgid "Reporting"
+msgstr "Aruandlus"
+
+#. module: event
+#: view:event.registration:0
+msgid "Cancel Registration"
+msgstr "Loobu registreerimisest"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_action_event_categories
+msgid "Events by Categories"
+msgstr "Sündmused kategooria järgi"
+
+#. module: event
+#: wizard_view:event.confirm_registration,split:0
+msgid "The event limit is reached. What do you want to do?"
+msgstr "Sündmuste limiidipiir on saavutatud. Mida sa soovid teha?"
+
+#. module: event
+#: field:report.event.type.registration,confirm_state:0
+msgid "Confirm Registrations"
+msgstr "Kinnita registreerimised"
+
+#. module: event
+#: view:event.registration:0
+msgid "References"
+msgstr "Viited"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type_registration
+#: model:ir.ui.menu,name:event.menu_report_event_type_registration
+#: view:report.event.type.registration:0
+msgid "Registration By Event Types"
+msgstr "Registreerimine sündmuse liigijärgi"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_config
+msgid "Configuration"
+msgstr "Seadistused"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
+msgstr "Sa pead määrama vastuse aadressi, et saada kirja osalejale. Sa sad teha seda oma sündmuse postituse kaardil. See on ka koht kus sa saad määrata, et registreerimisel ei saadetaks automaatselt e-kirja."
+
+#. module: event
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Vigane XML vaate arhitektuurile!"
+
+#. module: event
+#: wizard_button:event.confirm_registration,split,confirm:0
+msgid "Confirm Anyway"
+msgstr "Kinnita siiski"
+
+#. module: event
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Viga: TÜ kategooria peab erinema MÜ kategooriast"
+
+#. module: event
+#: view:event.event:0
+msgid "Parent Category"
+msgstr "Peaktegooria"
+
+#. module: event
+#: view:event.registration:0
+msgid "Registration Invoiced"
+msgstr "Registreerimine arveks tehtud"
+
+#. module: event
+#: field:report.event.type.registration,nbevent:0
+msgid "Number Of Events"
+msgstr "Sündmuste arv"
+
+#. module: event
+#: view:event.event:0
+msgid "Cancel Event"
+msgstr "Loobu sündmusest"
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rej_reason:0
+msgid "Error Messages"
+msgstr "Veateated"
+
+#. module: event
+#: view:event.event:0
+msgid "Mailing"
+msgstr "Postitan"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Kontserdi pilet"
+
+#. module: event
+#: field:event.event,register_prospect:0
+#: model:ir.actions.act_window,name:event.action_registration_draft
+#: model:ir.ui.menu,name:event.menu_action_registration_draft
+msgid "Unconfirmed Registrations"
+msgstr "Kinnitamatta registreerimised"
+
+#. module: event
+#: field:event.registration,partner_invoice_id:0
+msgid "Partner Invoiced"
+msgstr "Partnerile arve tehtud"
+
+#. module: event
+#: view:event.registration:0
+msgid "Communication history"
+msgstr "Kommunikatsiooni alalugu"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Canceled"
+msgstr "Katkestatud"
+
+#. module: event
+#: view:event.event:0
+msgid "Event Done"
+msgstr "Sündmus valmis"
+
+#. module: event
+#: field:event.registration,badge_name:0
+msgid "Badge Name"
+msgstr "Embleemi nimi"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_registration
+#: model:ir.ui.menu,name:event.menu_report_event_registration
+msgid "Events On Registrations"
+msgstr "Registreerimiste sündmused"
+
+#. module: event
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Viga: vaikimisi mõõtühik ja ostu mõõtühik peavad olema samast kategooriast."
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_created:0
+msgid "Invoice Created"
+msgstr "Arve loodud"
+
+#. module: event
+#: view:event.event:0
+msgid "Statistics"
+msgstr "Statistika"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Draft"
+msgstr "Mustand"
+
+#. module: event
+#: view:event.event:0
+msgid "Event description"
+msgstr "Sündmuse kirjeldus"
+
+#. module: event
+#: model:ir.model,name:event.model_report_event_type_registration
+msgid "Event type on registration"
+msgstr "Registreerimise sündmuse liik"
+
+#. module: event
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+
+#. module: event
+#: field:event.registration,event_id:0
+msgid "Event Related"
+msgstr "Seotud sündmus"
+
+#. module: event
+#: model:crm.case.section,name:event.case_section_event
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.action_event_view
+msgid "Events"
+msgstr "Sündmused"
+
+#. module: event
+#: field:event.registration,nb_register:0
+msgid "Number of Registration"
+msgstr "Registreerimiste arv"
+
+#. module: event
+#: view:event.event:0
+#: field:event.event,state:0
+#: view:event.registration:0
+msgid "Status"
+msgstr "Olek"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_categories
+msgid "Events by section"
+msgstr "Sündmused sektsioonijärgi"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_action_registration
+msgid "All Registrations"
+msgstr "Kõik registreerimised"
+
+#. module: event
+#: help:event.event,mail_auto_registr:0
+msgid "Check this box if you want to use the automatic mailing for new registration"
+msgstr "Märgi see kast, kui sa tahad kasutada automaatset kirja saatmist uuel registreerimisel"
+
+#. module: event
+#: view:event.event:0
+msgid "Set To Draft"
+msgstr "Sea mustandiks"
+
+#. module: event
+#: view:event.registration:0
+#: model:ir.actions.wizard,name:event.event_confirm_registration
+#: field:report.event.registration,confirm_state:0
+msgid "Confirm Registration"
+msgstr "Kinnita registreerimine"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You should specify Partner Email for registration \"%s\" !"
+msgstr "You should specify Partner Email for registration \"%s\" !"
+
+#. module: event
+#: view:event.registration:0
+msgid "History"
+msgstr "Ajalugu"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Types of Events"
+msgstr "Sündmuste liigid"
+
+#. module: event
+#: field:event.registration,contact_id:0
+msgid "Partner Contact"
+msgstr "Partneri kontakt"
+
+#. module: event
+#: view:event.event:0
+msgid "Auto Confirmation Email"
+msgstr "Automaatne kinnitamise e-kiri"
+
+#. module: event
+#: view:event.event:0
+#: view:event.registration:0
+msgid "General"
+msgstr "Üldine"
+
+#. module: event
+#: view:event.registration:0
+msgid "Send Reminder"
+msgstr "Saada meeldetuletus"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Done"
+msgstr "Valmis"
+
+#. module: event
+#: field:event.event,date_begin:0
+#: field:report.event.registration,date_begin:0
+msgid "Beginning date"
+msgstr "Alguskuupäev"
+
+#. module: event
+#: field:event.registration,invoice_id:0
+msgid "Invoice"
+msgstr "Arve"
+
+#. module: event
+#: model:ir.model,name:event.model_report_event_registration
+msgid "Events on registrations"
+msgstr "Sündmused registreerimisel"
+
+#. module: event
+#: wizard_button:event.confirm_registration,split,end:0
+msgid "Cancel"
+msgstr "Katkesta"
+
+#. module: event
+#: wizard_button:event.reg_make_invoice,init,open:0
+msgid "Open"
+msgstr "Ava"
+
+#. module: event
+#: field:event.registration,badge_title:0
+msgid "Badge Title"
+msgstr "Embleemi pealkiri"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_new_event_form
+#: model:ir.ui.menu,name:event.menu_event_new_event
+msgid "New event"
+msgstr "Uus sündmus"
+
+#. module: event
+#: field:event.registration,unit_price:0
+msgid "Unit Price"
+msgstr "Ühiku hind"
+
+#. module: event
+#: model:crm.case.section,name:event.event_2_crm_case_section
+msgid "Conference on ERP Buisness"
+msgstr "ERP äri konverents"
+
+#. module: event
+#: field:event.registration,badge_partner:0
+msgid "Badge Partner"
+msgstr "Partneri embleem"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_view_confirm
+#: model:ir.ui.menu,name:event.menu_event_event_confirm
+msgid "Confirmed Events"
+msgstr "Kinnitatud sündmused"
+
+#. module: event
+#: field:event.event,register_max:0
+#: field:report.event.registration,register_max:0
+msgid "Maximum Registrations"
+msgstr "Maks. registreerimised"
+
+#. module: event
+#: field:event.event,type:0
+msgid "Type"
+msgstr "Tüüp"
+
+#. module: event
+#: help:event.event,mail_registr:0
+msgid "This email will be sent when someone subscribes to the event."
+msgstr "See e-kiri saadetakse, kui keegi ühineb sündmusega."
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Pilet konverentsile"
+
+#. module: event
+#: field:event.registration,case_id:0
+msgid "Case"
+msgstr "Juhtum"
+
+#. module: event
+#: view:event.event:0
+msgid "Name"
+msgstr "Nimi"
+
+#. module: event
+#: help:event.event,mail_auto_confirm:0
+msgid "Check this box if you want ot use the automatic confirmation emailing or the reminder"
+msgstr "Märgi see kast, kui sa tahad automaatset kinnitamise või meeldetuletuse kirja saatmist."
+
+#. module: event
+#: help:event.event,mail_confirm:0
+msgid "This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."
+msgstr "See e-kiri saadetakse, kui sündmus kinnitatakse või keegi ühineb kinnitatud sündmusega. See on ka kiri, mis saaadetakse sündmuse meelde tuletuseks."
+
+#. module: event
+#: field:event.event,product_id:0
+msgid "Product"
+msgstr "Toode"
+
+#. module: event
+#: field:event.registration,invoice_label:0
+msgid "Label Invoice"
+msgstr "Märgista arve"
+
+#. module: event
+#: view:event.registration:0
+msgid "Payments"
+msgstr "Maksed"
+
+#. module: event
+#: view:event.type:0
+#: field:report.event.type.registration,name:0
+msgid "Event Type"
+msgstr "Sündmuse tüüp"
+
+#. module: event
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.actions.wizard,name:event.wizard_event_registration
+msgid "Registrations"
+msgstr "Registreerimised"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_view_draft
+#: model:ir.ui.menu,name:event.menu_event_event_draft
+msgid "Draft Events"
+msgstr "Sündmuste mustandid"
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
+msgstr "Arve väljapraagitud"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_main
+msgid "Events Organisation"
+msgstr "Sündmuste organiseerimine"
+
+#. module: event
+#: view:event.registration:0
+msgid "Actions"
+msgstr "Toimingud"
+
+#. module: event
+#: model:ir.actions.wizard,name:event.wizard_event_reg_partners
+msgid "List Register Partners"
+msgstr "Registreeritud partnerite nimekiri"
+
+#. module: event
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Viga: Vigane EAN kood"
+
+#. module: event
+#: view:event.event:0
+msgid "Auto Registration Email"
+msgstr "Automaatne registreerimise e-kiri"
+

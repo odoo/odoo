@@ -284,6 +284,13 @@ class account_bank_statement(osv.osv):
                                 _('Account move line "%s" is not valid') % line.name)
 
                 if move.reconcile_id and move.reconcile_id.line_ids:
+                    ## Search if move has already a partial reconciliation
+                    previous_partial = False
+                    for line_reconcile_move in move.reconcile_id.line_ids:
+                        if line_reconcile_move.reconcile_partial_id:
+                            previous_partial = True
+                            break
+                    ##
                     torec += map(lambda x: x.id, move.reconcile_id.line_ids)
                     #try:
                     if abs(move.reconcile_amount-move.amount)<0.0001:
@@ -293,8 +300,15 @@ class account_bank_statement(osv.osv):
                         for entry in move.reconcile_id.line_new_ids:
                             writeoff_acc_id = entry.account_id.id
                             break
+                        ## If we have already a partial reconciliation
+                        ## We need to make a partial reconciliation
+                        ## To add this amount to previous paid amount
+                        if previous_partial:
+                            account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
+                        ## If it's the first reconciliation, we do a full reconciliation as regular
+                        else:
+                            account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
 
-                        account_move_line_obj.reconcile(cr, uid, torec, 'statement', writeoff_acc_id=writeoff_acc_id, writeoff_period_id=st.period_id.id, writeoff_journal_id=st.journal_id.id, context=context)
                     else:
                         account_move_line_obj.reconcile_partial(cr, uid, torec, 'statement', context)
                     #except:
@@ -353,6 +367,15 @@ class account_bank_statement(osv.osv):
                 raise osv.except_osv(_('Invalid action !'), _('Cannot delete bank statement which are already confirmed !'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}    
+        default = default.copy()
+        default['move_line_ids'] = []
+        return super(account_bank_statement, self).copy(cr, uid, id, default, context)
     
 account_bank_statement()
 
@@ -529,35 +552,40 @@ class account_bank_statement_line(osv.osv):
 
     def onchange_partner_id(self, cursor, user, line_id, partner_id, type, currency_id,
             context={}):
+        res = {'value': {}}
         if not partner_id:
-            return {}
-        res_currency_obj = self.pool.get('res.currency')
-        res_users_obj = self.pool.get('res.users')
-
-        company_currency_id = res_users_obj.browse(cursor, user, user,
-                context=context).company_id.currency_id.id
-
-        if not currency_id:
-            currency_id = company_currency_id
-
-        part = self.pool.get('res.partner').browse(cursor, user, partner_id,
+            return res
+        line = self.browse(cursor, user, line_id)
+  
+        if not line or (line and not line[0].account_id):
+            part = self.pool.get('res.partner').browse(cursor, user, partner_id,
                 context=context)
-        if type == 'supplier':
-            account_id = part.property_account_payable.id
-        else:
-            account_id =  part.property_account_receivable.id
+            if type == 'supplier':
+                account_id = part.property_account_payable.id
+            else:
+                account_id =  part.property_account_receivable.id
+            res['value']['account_id'] = account_id
 
-        cursor.execute('SELECT sum(debit-credit) \
+        if not line or (line and not line[0].amount):
+            res_users_obj = self.pool.get('res.users')
+            res_currency_obj = self.pool.get('res.currency')
+            company_currency_id = res_users_obj.browse(cursor, user, user,
+                    context=context).company_id.currency_id.id
+            if not currency_id:
+                currency_id = company_currency_id
+
+            cursor.execute('SELECT sum(debit-credit) \
                 FROM account_move_line \
                 WHERE (reconcile_id is null) \
                     AND partner_id = %s \
                     AND account_id=%s', (partner_id, account_id))
-        res = cursor.fetchone()
-        balance = res and res[0] or 0.0
+            pgres = cursor.fetchone()
+            balance = pgres and pgres[0] or 0.0
 
-        balance = res_currency_obj.compute(cursor, user, company_currency_id,
+            balance = res_currency_obj.compute(cursor, user, company_currency_id,
                 currency_id, balance, context=context)
-        return {'value': {'amount': balance, 'account_id': account_id}}
+            res['value']['amount'] = balance
+        return res
 
     def _reconcile_amount(self, cursor, user, ids, name, args, context=None):
         if not ids:

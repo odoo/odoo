@@ -9,7 +9,7 @@
             <field name="product_min_qty">5.0</field>
             <field model="product.uom" name="product_uom" search="[]"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
-            <field model="product.product" name="product_id" search="[('default_code','=','MB1')]"/>
+            <field model="product.product" name="product_id" ref="product.product_product_mb1"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
         </record>
         <record id="stock_warehouse_orderpoint_1" model="stock.warehouse.orderpoint">
@@ -17,7 +17,7 @@
             <field name="product_min_qty">10.0</field>
             <field model="product.uom" name="product_uom" search="[]"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
-            <field model="product.product" name="product_id" search="[('default_code','=','CPU1')]"/>
+            <field model="product.product" name="product_id" ref="product.product_product_cpu1"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
         </record>
         <record id="stock_warehouse_orderpoint_2" model="stock.warehouse.orderpoint">
@@ -25,7 +25,7 @@
             <field name="product_min_qty">10.0</field>
             <field model="product.uom" name="product_uom" search="[]"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
-            <field model="product.product" name="product_id" search="[('default_code','=','HDD1')]"/>
+            <field model="product.product" name="product_id" ref="product.product_product_hdd1"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
         </record>
         <record id="stock_warehouse_orderpoint_3" model="stock.warehouse.orderpoint">
@@ -33,7 +33,7 @@
             <field name="product_min_qty">10.0</field>
             <field model="product.uom" name="product_uom" search="[]"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
-            <field model="product.product" name="product_id" search="[('default_code','=','FAN')]"/>
+            <field model="product.product" name="product_id" ref="product.product_product_fan"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
         </record>
         <record id="stock_warehouse_orderpoint_4" model="stock.warehouse.orderpoint">
@@ -41,7 +41,7 @@
             <field name="product_min_qty">3.0</field>
             <field model="product.uom" name="product_uom" search="[]"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
-            <field model="product.product" name="product_id" search="[('default_code','=','PC1')]"/>
+            <field model="product.product" name="product_id" ref="product.product_product_pc1"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
         </record>
         <record id="stock_warehouse_orderpoint_5" model="stock.warehouse.orderpoint">
@@ -49,7 +49,7 @@
             <field name="product_min_qty">10.0</field>
             <field model="product.uom" name="product_uom" search="[]"/>
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
-            <field model="product.product" name="product_id" search="[('default_code','=','TOW1')]"/>
+            <field model="product.product" name="product_id" ref="product.product_product_tow1"/>
             <field name="location_id" ref="stock.stock_location_stock"/>
         </record>
     </data>

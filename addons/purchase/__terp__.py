@@ -44,7 +44,9 @@
         'partner_view.xml',
         'process/purchase_process.xml'
     ],
-    'demo_xml': ['purchase_demo.xml'],
+    'demo_xml': [
+        'purchase_demo.xml',
+        'test/purchase_test.xml'],
     'installable': True,
     'active': False,
     'certificate': '0057234283549',

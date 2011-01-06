@@ -1,18 +1,647 @@
-# Bulgarian translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* event
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-04-10 12:38+0000\n"
-"PO-Revision-Date: 2009-04-20 06:40+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Bulgarian <bg@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-09-02 13:36:45+0000\n"
+"PO-Revision-Date: 2010-09-02 13:36:45+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: event
+#: field:event.event,date_end:0
+#: field:report.event.registration,date_end:0
+msgid "Ending date"
+msgstr "Крайна дата"
+
+#. module: event
+#: field:event.event,register_min:0
+msgid "Minimum Registrations"
+msgstr "Минимални регистрации"
+
+#. module: event
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Invalid model name in the action definition."
+
+#. module: event
+#: field:event.event,mail_registr:0
+msgid "Registration Email"
+msgstr "E-mal за регистрация"
+
+#. module: event
+#: model:crm.case.section,name:event.event_0_crm_case_section
+msgid "Concert of Bon Jovi"
+msgstr "Концерт на Bon Jovi"
+
+#. module: event
+#: field:event.event,mail_confirm:0
+msgid "Confirmation Email"
+msgstr "E-mail за потвърждение"
+
+#. module: event
+#: constraint:crm.case.section:0
+msgid "Error ! You cannot create recursive sections."
+msgstr "Error ! You cannot create recursive sections."
+
+#. module: event
+#: model:ir.model,name:event.model_event_registration
+msgid "Event Registration"
+msgstr "Регистрация за събитие"
+
+#. module: event
+#: model:ir.actions.wizard,name:event.event_reg_invoice
+msgid "Make Invoice"
+msgstr "Създаване на фактура"
+
+#. module: event
+#: field:report.event.type.registration,draft_state:0
+msgid "Draft Registrations"
+msgstr "Регистрации в проект"
+
+#. module: event
+#: view:report.event.registration:0
+msgid "Event on Registration"
+msgstr "Събитие при регистрация"
+
+#. module: event
+#: wizard_button:event.reg_make_invoice,init,end:0
+msgid "Ok"
+msgstr "Добре"
+
+#. module: event
+#: field:event.event,mail_auto_confirm:0
+msgid "Mail Auto Confirm"
+msgstr "E-mail при автоматично потвърждения"
+
+#. module: event
+#: model:product.template,name:event.event_product_1_product_template
+msgid "Ticket for Opera"
+msgstr "Билет за опера"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Error!"
+msgstr "Грешка!"
+
+#. module: event
+#: view:event.event:0
+msgid "Confirm Event"
+msgstr "Потвърждение на събитие"
+
+#. module: event
+#: model:crm.case.section,name:event.event_1_crm_case_section
+msgid "Opera of Verdi"
+msgstr "Опера на Верди"
+
+#. module: event
+#: field:report.event.registration,draft_state:0
+msgid "Draft Registration"
+msgstr "Проект на регистрация"
+
+#. module: event
+#: wizard_view:event.reg_make_invoice,init:0
+msgid "Create Invoices"
+msgstr "Създаване на фактура"
+
+#. module: event
+#: model:ir.module.module,description:event.module_meta_information
+msgid "Organization and management of events.\n"
+"\n"
+"    This module allow you\n"
+"        * to manage your events and their registrations\n"
+"        * to use emails to automatically confirm and send acknowledgements for any registration to an event\n"
+"        * ...\n"
+"\n"
+"    Note that:\n"
+"    - You can define new types of events in\n"
+"                Events / Configuration / Types of Events\n"
+"    - You can access predefined reports about number of registration per event or per event category in :\n"
+"                Events / Reporting\n"
+""
+msgstr "Организация и управление на събития.\n"
+"\n"
+"    Този позволява\n"
+"        *да управлявате събитията си и регистеацията им\n"
+"        *да използвате ел. поща за автоматично потвърждение и изпращане на потвърждение към всяка регистрация за събитие\n"
+"        * ,,,\n"
+"\n"
+"    Обърнете внимание на:\n"
+"        - Може да задавате нови видове събития чрез\n"
+"                Събития/Конфигурация/Видове събития\n"
+"        - Имате достъп до предварително зададдени справки за броя на регистрации за събитие или за събитие в категория чрез:\n"
+"                Събития/Справки\n"
+""
+
+#. module: event
+#: view:event.registration:0
+msgid "Extra Info"
+msgstr "Допълнителна информация"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Warning!"
+
+#. module: event
+#: view:event.registration:0
+msgid "Registration"
+msgstr "Регистрация"
+
+#. module: event
+#: field:event.type,name:0
+#: model:ir.model,name:event.model_event_type
+msgid "Event type"
+msgstr "Вид събитие"
+
+#. module: event
+#: view:event.event:0
+#: model:ir.model,name:event.model_event_event
+#: model:ir.module.module,shortdesc:event.module_meta_information
+#: field:report.event.registration,name:0
+msgid "Event"
+msgstr "Събитие"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Confirmed"
+msgstr "Потвърден"
+
+#. module: event
+#: wizard_view:event.confirm_registration,split:0
+msgid "Registration Confirmation"
+msgstr "Потвърждаване на регистрация"
+
+#. module: event
+#: view:event.registration:0
+msgid "Dates"
+msgstr "Дати"
+
+#. module: event
+#: field:event.event,register_current:0
+#: model:ir.actions.act_window,name:event.action_registration_confirm
+#: model:ir.ui.menu,name:event.menu_action_registration_confirm
+msgid "Confirmed Registrations"
+msgstr "Потвърдени регистрации"
+
+#. module: event
+#: field:event.event,mail_auto_registr:0
+msgid "Mail Auto Register"
+msgstr "Mail Auto Register"
+
+#. module: event
+#: view:event.registration:0
+msgid "Badge"
+msgstr "Значка"
+
+#. module: event
+#: field:event.event,section_id:0
+msgid "Case section"
+msgstr "Case section"
+
+#. module: event
+#: field:event.registration,tobe_invoiced:0
+msgid "To be Invoiced"
+msgstr "За фактуриране"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_event
+msgid "All Events"
+msgstr "Всички събития"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_report_event
+msgid "Reporting"
+msgstr "Справки"
+
+#. module: event
+#: view:event.registration:0
+msgid "Cancel Registration"
+msgstr "Отказ от регистрация"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_action_event_categories
+msgid "Events by Categories"
+msgstr "Събития по категория"
+
+#. module: event
+#: wizard_view:event.confirm_registration,split:0
+msgid "The event limit is reached. What do you want to do?"
+msgstr "Границата на събитието е достигната. Какво искате да направите?"
+
+#. module: event
+#: field:report.event.type.registration,confirm_state:0
+msgid "Confirm Registrations"
+msgstr "Потвърждаване на регистрацията"
+
+#. module: event
+#: view:event.registration:0
+msgid "References"
+msgstr "Препратки"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type_registration
+#: model:ir.ui.menu,name:event.menu_report_event_type_registration
+#: view:report.event.type.registration:0
+msgid "Registration By Event Types"
+msgstr "Регистрации по видове събития"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_config
+msgid "Configuration"
+msgstr "Настройка"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
+msgstr "You must define a reply-to address in order to mail the participant. You can do this in the Mailing tab of your event. Note that this is also the place where you can configure your event to not send emails automaticly while registering"
+
+#. module: event
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Невалиден XML за преглед на архитектурата"
+
+#. module: event
+#: wizard_button:event.confirm_registration,split,confirm:0
+msgid "Confirm Anyway"
+msgstr "Изрично потвърждение"
+
+#. module: event
+#: constraint:product.template:0
+msgid "Error: UOS must be in a different category than the UOM"
+msgstr "Грешка: Продажни Единици трябва да е в различна категория от Мерни Единици"
+
+#. module: event
+#: view:event.event:0
+msgid "Parent Category"
+msgstr "Родителска категория"
+
+#. module: event
+#: view:event.registration:0
+msgid "Registration Invoiced"
+msgstr "Регистрацията фактурирана"
+
+#. module: event
+#: field:report.event.type.registration,nbevent:0
+msgid "Number Of Events"
+msgstr "Брой събития"
+
+#. module: event
+#: view:event.event:0
+msgid "Cancel Event"
+msgstr "Отказ на събитие"
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rej_reason:0
+msgid "Error Messages"
+msgstr "Съобщение за грешка"
+
+#. module: event
+#: view:event.event:0
+msgid "Mailing"
+msgstr "Изпращане на поща"
+
+#. module: event
+#: model:product.template,name:event.event_product_0_product_template
+msgid "Ticket for Concert"
+msgstr "Билет за концерт"
+
+#. module: event
+#: field:event.event,register_prospect:0
+#: model:ir.actions.act_window,name:event.action_registration_draft
+#: model:ir.ui.menu,name:event.menu_action_registration_draft
+msgid "Unconfirmed Registrations"
+msgstr "Непотвърдени регистрации"
+
+#. module: event
+#: field:event.registration,partner_invoice_id:0
+msgid "Partner Invoiced"
+msgstr "Партрньора фактуриран"
+
+#. module: event
+#: view:event.registration:0
+msgid "Communication history"
+msgstr "История на комуникацията"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Canceled"
+msgstr "Прекратен"
+
+#. module: event
+#: view:event.event:0
+msgid "Event Done"
+msgstr "Събитието приключило"
+
+#. module: event
+#: field:event.registration,badge_name:0
+msgid "Badge Name"
+msgstr "Име на значката"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_registration
+#: model:ir.ui.menu,name:event.menu_report_event_registration
+msgid "Events On Registrations"
+msgstr "Събития в регистрация"
+
+#. module: event
+#: constraint:product.template:0
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Грешка: Мер. ед. по подрабиране и мер. ед. на поръчката трябва да са от една и съща категория"
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_created:0
+msgid "Invoice Created"
+msgstr "Фактурата създадена"
+
+#. module: event
+#: view:event.event:0
+msgid "Statistics"
+msgstr "Статистики"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Draft"
+msgstr "Проект"
+
+#. module: event
+#: view:event.event:0
+msgid "Event description"
+msgstr "Описание на събитие"
+
+#. module: event
+#: model:ir.model,name:event.model_report_event_type_registration
+msgid "Event type on registration"
+msgstr "Вид събитие в регистрация"
+
+#. module: event
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
+
+#. module: event
+#: field:event.registration,event_id:0
+msgid "Event Related"
+msgstr "Свързано събитие"
+
+#. module: event
+#: model:crm.case.section,name:event.case_section_event
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.action_event_view
+msgid "Events"
+msgstr "Събития"
+
+#. module: event
+#: field:event.registration,nb_register:0
+msgid "Number of Registration"
+msgstr "Брой регистрации"
+
+#. module: event
+#: view:event.event:0
+#: field:event.event,state:0
+#: view:event.registration:0
+msgid "Status"
+msgstr "Състояние"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_categories
+msgid "Events by section"
+msgstr "Събития по секция"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_action_registration
+msgid "All Registrations"
+msgstr "Всички регистрации"
+
+#. module: event
+#: help:event.event,mail_auto_registr:0
+msgid "Check this box if you want to use the automatic mailing for new registration"
+msgstr "Отметнете ако искате при нови регисрации да използвате автоматично известяване чрез email"
+
+#. module: event
+#: view:event.event:0
+msgid "Set To Draft"
+msgstr "Изпратено в проект"
+
+#. module: event
+#: view:event.registration:0
+#: model:ir.actions.wizard,name:event.event_confirm_registration
+#: field:report.event.registration,confirm_state:0
+msgid "Confirm Registration"
+msgstr "Потвърждаване на регистрация"
+
+#. module: event
+#: code:addons/event/event.py:0
+#, python-format
+msgid "You should specify Partner Email for registration \"%s\" !"
+msgstr "You should specify Partner Email for registration \"%s\" !"
+
+#. module: event
+#: view:event.registration:0
+msgid "History"
+msgstr "История"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_type
+msgid "Types of Events"
+msgstr "Видове събития"
+
+#. module: event
+#: field:event.registration,contact_id:0
+msgid "Partner Contact"
+msgstr "Контакт на партньор"
+
+#. module: event
+#: view:event.event:0
+msgid "Auto Confirmation Email"
+msgstr "Email за автоматично потвърждаване"
+
+#. module: event
+#: view:event.event:0
+#: view:event.registration:0
+msgid "General"
+msgstr "Основни"
+
+#. module: event
+#: view:event.registration:0
+msgid "Send Reminder"
+msgstr "Изпращане на напомняне"
+
+#. module: event
+#: selection:event.event,state:0
+msgid "Done"
+msgstr "Приключен"
+
+#. module: event
+#: field:event.event,date_begin:0
+#: field:report.event.registration,date_begin:0
+msgid "Beginning date"
+msgstr "Начална дата"
+
+#. module: event
+#: field:event.registration,invoice_id:0
+msgid "Invoice"
+msgstr "Фактура"
+
+#. module: event
+#: model:ir.model,name:event.model_report_event_registration
+msgid "Events on registrations"
+msgstr "Събития в регистрация"
+
+#. module: event
+#: wizard_button:event.confirm_registration,split,end:0
+msgid "Cancel"
+msgstr "Отказ"
+
+#. module: event
+#: wizard_button:event.reg_make_invoice,init,open:0
+msgid "Open"
+msgstr "Отваряне"
+
+#. module: event
+#: field:event.registration,badge_title:0
+msgid "Badge Title"
+msgstr "Име на значка"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_new_event_form
+#: model:ir.ui.menu,name:event.menu_event_new_event
+msgid "New event"
+msgstr "Ново събитие"
+
+#. module: event
+#: field:event.registration,unit_price:0
+msgid "Unit Price"
+msgstr "Единична цена"
+
+#. module: event
+#: model:crm.case.section,name:event.event_2_crm_case_section
+msgid "Conference on ERP Buisness"
+msgstr "Конференция по ERP"
+
+#. module: event
+#: field:event.registration,badge_partner:0
+msgid "Badge Partner"
+msgstr "Значка на партньор"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_view_confirm
+#: model:ir.ui.menu,name:event.menu_event_event_confirm
+msgid "Confirmed Events"
+msgstr "Потвърдени събития"
+
+#. module: event
+#: field:event.event,register_max:0
+#: field:report.event.registration,register_max:0
+msgid "Maximum Registrations"
+msgstr "Максимално регистрации"
+
+#. module: event
+#: field:event.event,type:0
+msgid "Type"
+msgstr "Вид"
+
+#. module: event
+#: help:event.event,mail_registr:0
+msgid "This email will be sent when someone subscribes to the event."
+msgstr "Този email ще бъде изпратен когато някой се запише за събитието"
+
+#. module: event
+#: model:product.template,name:event.event_product_2_product_template
+msgid "Ticket for Conference"
+msgstr "Билет за конференция"
+
+#. module: event
+#: field:event.registration,case_id:0
+msgid "Case"
+msgstr "Case"
+
+#. module: event
+#: view:event.event:0
+msgid "Name"
+msgstr "Име"
+
+#. module: event
+#: help:event.event,mail_auto_confirm:0
+msgid "Check this box if you want ot use the automatic confirmation emailing or the reminder"
+msgstr "Отметнете ако искате автоматичен email за потвърждение или напомняне"
+
+#. module: event
+#: help:event.event,mail_confirm:0
+msgid "This email will be sent when the event gets confimed or when someone subscribes to a confirmed event. This is also the email sent to remind someone about the event."
+msgstr "Този email ще бъде изпратен когото събитието бъде потвърдено или някой се запише за потвърдено събитие. Също така ще бъде изпратен за помняне за събитието."
+
+#. module: event
+#: field:event.event,product_id:0
+msgid "Product"
+msgstr "Продукт"
+
+#. module: event
+#: field:event.registration,invoice_label:0
+msgid "Label Invoice"
+msgstr "Label Invoice"
+
+#. module: event
+#: view:event.registration:0
+msgid "Payments"
+msgstr "Плащания"
+
+#. module: event
+#: view:event.type:0
+#: field:report.event.type.registration,name:0
+msgid "Event Type"
+msgstr "Вид събитие"
+
+#. module: event
+#: view:event.event:0
+#: model:ir.actions.act_window,name:event.action_registration
+#: model:ir.actions.wizard,name:event.wizard_event_registration
+msgid "Registrations"
+msgstr "Регистрации"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_view_draft
+#: model:ir.ui.menu,name:event.menu_event_event_draft
+msgid "Draft Events"
+msgstr "Събития в проект"
+
+#. module: event
+#: wizard_field:event.reg_make_invoice,init,inv_rejected:0
+msgid "Invoice Rejected"
+msgstr "Фактурата отказана"
+
+#. module: event
+#: model:ir.ui.menu,name:event.menu_event_main
+msgid "Events Organisation"
+msgstr "Отганизация на събития"
+
+#. module: event
+#: view:event.registration:0
+msgid "Actions"
+msgstr "Действия"
+
+#. module: event
+#: model:ir.actions.wizard,name:event.wizard_event_reg_partners
+msgid "List Register Partners"
+msgstr "Списък на регистрираните партньори"
+
+#. module: event
+#: constraint:product.product:0
+msgid "Error: Invalid ean code"
+msgstr "Грешка: Невалиден бар код"
+
+#. module: event
+#: view:event.event:0
+msgid "Auto Registration Email"
+msgstr "Email за автоматична регистрация"
+

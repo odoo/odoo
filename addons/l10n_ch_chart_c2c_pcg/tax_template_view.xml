@@ -3,7 +3,7 @@
 #  tax_template_view.xml
 #
 #  Created by Nicolas Bessi on 12.02.09.
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+#  Copyright (c) 2010 CamptoCamp. All rights reserved.
 # -->
 <openerp>
     <data>
@@ -22,27 +22,25 @@
                     <field name="account_paid_id"
                         on_change="on_change_paid(name, account_paid_id)" select="1"/>
                     <group col="4" colspan="4">
-						<button icon="gtk-cancel" name="action_cancel" string="Cancel" type="object"/>
+                        <button icon="gtk-cancel" name="action_cancel" string="Cancel" type="object"/>
                         <button icon="gtk-ok" name="action_new" string="Next" type="object"/>
                     </group>
                 </form>
             </field>
         </record>
-		<record id="action_config_tax" model="ir.actions.act_window">
+        <record id="action_config_tax" model="ir.actions.act_window">
             <field name="name">Configure Journal</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.tax.template.todo</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
-			<field name="view_id" ref="view_tax_template_form_todo"/>
+            <field name="view_id" ref="view_tax_template_form_todo"/>
             <field name="target">new</field>
         </record>
-
-
         <record id="action_config_tax_todo" model="ir.actions.todo">
             <field name="name">Finalize your tax configuration</field>
             <field name="note">Set account on financial taxes defined by 
-			Camptocamp l10n_ch_c2c_pcg module</field>
+            Camptocamp l10n_ch_c2c_pcg module</field>
             <field name="action_id" ref="action_config_tax"/>
             <field name="sequence">5</field>
         </record>

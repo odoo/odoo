@@ -25,6 +25,8 @@
                     <field name="partner_id"/>
                     <field name="ref"/>
                     <field name="name"/>
+                    <field name="journal_id"/>
+                    <field name="account_id"/>
                     <field name="date_maturity"/>
                     <field name="date"/>
                     <field name="debit" sum="Total debit"/>
@@ -271,7 +273,6 @@
                     <field name="currency"/>
                     <field name="bank_id" domain="[('partner_id', '=', partner_id)]"/>
                     <field name="move_line_id" on_change="onchange_move_line(move_line_id,parent.mode)"/>
-                    <field domain="[('partner_id', '=', partner_id)]" name="bank_id"/>
                     <field name="create_date"/>
                     <field name="name"/>
                 </tree>

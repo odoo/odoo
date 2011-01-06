@@ -29,7 +29,7 @@
     Subscribe Rules for read, write, create and delete on objects and check logs""",
     'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'account', 'purchase', 'mrp'],
+    'depends': ['base'],
     'init_xml': [],
     'update_xml': [
         'audittrail_view.xml',

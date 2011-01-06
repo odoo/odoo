@@ -1,0 +1,517 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_budget
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.12\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-09-02 13:59:30+0000\n"
+"PO-Revision-Date: 2010-09-02 13:59:30+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_budget
+#: field:crossovered.budget,creating_user_id:0
+msgid "Responsible User"
+msgstr "Odgovorni uporabnik"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "% performance"
+msgstr "% performance"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.open_budget_post_form
+#: model:ir.ui.menu,name:account_budget.menu_budget_post_form
+msgid "Budgetary Positions"
+msgstr "Budgetary Positions"
+
+#. module: account_budget
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Napačno ime modela v definiciji dejanja."
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "Printed at:"
+msgstr "Natisnjeno:"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "Confirm"
+msgstr "Potrditev"
+
+#. module: account_budget
+#: field:crossovered.budget,validating_user_id:0
+msgid "Validate User"
+msgstr "Potrdi uporabnika"
+
+#. module: account_budget
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Naziv objekta se mora začeti z 'x_' in ne sme vsebovati posebnih znakov."
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Confirmed"
+msgstr "Potrjeno"
+
+#. module: account_budget
+#: code:addons/account_budget/wizard/wizard_budget_report.py:0
+#, python-format
+msgid "Insufficient Data!"
+msgstr "Premalo podatkov!"
+
+#. module: account_budget
+#: field:account.budget.post.dotation,period_id:0
+msgid "Period"
+msgstr "Obdobje"
+
+#. module: account_budget
+#: wizard_field:account.budget.report,init,date2:0
+#: wizard_field:wizard.analytic.account.budget.report,init,date_to:0
+#: wizard_field:wizard.crossovered.budget,init,date_to:0
+#: wizard_field:wizard.crossovered.budget.summary,init,date_to:0
+msgid "End of period"
+msgstr "Konec obdobja"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "Printing date:"
+msgstr "Tiskano dne:"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Draft"
+msgstr "Osnutek"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "at"
+msgstr "pri"
+
+#. module: account_budget
+#: view:account.budget.post:0
+msgid "Dotations"
+msgstr "Dotacije"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "Performance"
+msgstr "Zmogljivost"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "Currency:"
+msgstr "Valuta:"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "From"
+msgstr "Od"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,percentage:0
+msgid "Percentage"
+msgstr "Delež"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "Results"
+msgstr "Rezultati"
+
+#. module: account_budget
+#: field:crossovered.budget,state:0
+msgid "Status"
+msgstr "Stanje"
+
+#. module: account_budget
+#: model:ir.module.module,description:account_budget.module_meta_information
+msgid "This module allows accountants to manage analytic and crossovered budgets.\n"
+"\n"
+"Once the Master Budgets and the Budgets defined (in Financial\n"
+"Management/Budgets/), the Project Managers can set the planned amount on each\n"
+"Analytic Account.\n"
+"\n"
+"The accountant has the possibility to see the total of amount planned for each\n"
+"Budget and Master Budget in order to ensure the total planned is not\n"
+"greater/lower than what he planned for this Budget/Master Budget. Each list of\n"
+"record can also be switched to a graphical view of it.\n"
+"\n"
+"Three reports are available:\n"
+"    1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+"\n"
+"    2. The second is a summary of the previous one, it only gives the spreading, for the selected Budgets, of the Analytic Accounts.\n"
+"\n"
+"    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.\n"
+"\n"
+""
+msgstr "This module allows accountants to manage analytic and crossovered budgets.\n"
+"\n"
+"Once the Master Budgets and the Budgets defined (in Financial\n"
+"Management/Budgets/), the Project Managers can set the planned amount on each\n"
+"Analytic Account.\n"
+"\n"
+"The accountant has the possibility to see the total of amount planned for each\n"
+"Budget and Master Budget in order to ensure the total planned is not\n"
+"greater/lower than what he planned for this Budget/Master Budget. Each list of\n"
+"record can also be switched to a graphical view of it.\n"
+"\n"
+"Three reports are available:\n"
+"    1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts per Master Budgets.\n"
+"\n"
+"    2. The second is a summary of the previous one, it only gives the spreading, for the selected Budgets, of the Analytic Accounts.\n"
+"\n"
+"    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts, of the Master Budgets per Budgets.\n"
+"\n"
+""
+
+#. module: account_budget
+#: rml:account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "%"
+msgstr "%"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "Description"
+msgstr "Opis"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+msgid "Analytic Account :"
+msgstr "Analitični konto:"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: field:crossovered.budget.lines,practical_amount:0
+#: rml:crossovered.budget.report:0
+msgid "Practical Amount"
+msgstr "Praktični znesek"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "A/c No."
+msgstr "A/c No."
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "to"
+msgstr "do"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "Total :"
+msgstr "Skupaj:"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: field:crossovered.budget.lines,planned_amount:0
+#: rml:crossovered.budget.report:0
+msgid "Planned Amount"
+msgstr "Načrtovani znesek"
+
+#. module: account_budget
+#: code:addons/account_budget/wizard/wizard_budget_report.py:0
+#, python-format
+msgid "No Dotations or Master Budget Expenses Found on Budget %s!"
+msgstr "No Dotations or Master Budget Expenses Found on Budget %s!"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "Period Budget"
+msgstr "Proračun obdobja"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "Budget Analysis"
+msgstr "Analize proračuna"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+#: selection:crossovered.budget,state:0
+msgid "Done"
+msgstr "Zaključeno"
+
+#. module: account_budget
+#: view:crossovered.budget:0
+msgid "Validate"
+msgstr "Preveri"
+
+#. module: account_budget
+#: wizard_view:account.budget.report,init:0
+msgid "Select period"
+msgstr "Izberi obdobje"
+
+#. module: account_budget
+#: wizard_view:wizard.crossovered.budget,init:0
+#: wizard_view:wizard.crossovered.budget.summary,init:0
+msgid "Select Options"
+msgstr "Izberi možnosti"
+
+#. module: account_budget
+#: wizard_view:wizard.analytic.account.budget.report,init:0
+msgid "Select Dates Period"
+msgstr "Izberi obdobje datumov"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "Perc(%)"
+msgstr "Odst.(%)"
+
+#. module: account_budget
+#: field:crossovered.budget,date_to:0
+#: field:crossovered.budget.lines,date_to:0
+msgid "End Date"
+msgstr "Končni datum"
+
+#. module: account_budget
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Neveljaven XML za arhitekturo pogleda."
+
+#. module: account_budget
+#: field:crossovered.budget.lines,theoritical_amount:0
+msgid "Theoritical Amount"
+msgstr "Teoretični znesek"
+
+#. module: account_budget
+#: field:account.budget.post,name:0
+#: field:account.budget.post.dotation,name:0
+#: field:crossovered.budget,name:0
+msgid "Name"
+msgstr "Naziv"
+
+#. module: account_budget
+#: model:ir.actions.wizard,name:account_budget.wizard_crossovered_budget_menu_1
+msgid "Print Summary of Budgets"
+msgstr "Izpiši povzetek proračunov"
+
+#. module: account_budget
+#: model:ir.actions.wizard,name:account_budget.wizard_budget_spread
+msgid "Spread amount"
+msgstr "Spread amount"
+
+#. module: account_budget
+#: view:account.analytic.account:0
+#: view:account.budget.post:0
+msgid "Lines"
+msgstr "Postavke"
+
+#. module: account_budget
+#: rml:account.budget:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget.lines,crossovered_budget_id:0
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
+#: model:ir.actions.wizard,name:account_budget.wizard_budget_report
+#: model:ir.model,name:account_budget.model_crossovered_budget
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
+msgid "Budget"
+msgstr "Proračun"
+
+#. module: account_budget
+#: code:addons/account_budget/crossovered_budget.py:0
+#, python-format
+msgid "Error!"
+msgstr "Napaka!"
+
+#. module: account_budget
+#: field:account.budget.post.dotation,amount:0
+#: wizard_field:account.budget.spread,init,amount:0
+msgid "Amount"
+msgstr "Znesek"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,paid_date:0
+msgid "Paid Date"
+msgstr "Datum plačila"
+
+#. module: account_budget
+#: model:ir.actions.act_window,name:account_budget.action_account_budget_post_tree
+#: model:ir.ui.menu,name:account_budget.menu_action_account_budget_post_tree
+#: model:ir.ui.menu,name:account_budget.next_id_31
+msgid "Budgets"
+msgstr "Proračuni"
+
+#. module: account_budget
+#: code:addons/account_budget/crossovered_budget.py:0
+#, python-format
+msgid "The General Budget '%s' has no Accounts!"
+msgstr "The General Budget '%s' has no Accounts!"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Cancelled"
+msgstr "Preklicano"
+
+#. module: account_budget
+#: view:account.budget.post.dotation:0
+#: model:ir.model,name:account_budget.model_account_budget_post_dotation
+msgid "Budget Dotation"
+msgstr "Budget Dotation"
+
+#. module: account_budget
+#: view:account.budget.post.dotation:0
+msgid "Budget Dotations"
+msgstr "Budget Dotations"
+
+#. module: account_budget
+#: rml:account.budget:0
+msgid "Budget Item Detail"
+msgstr "Budget Item Detail"
+
+#. module: account_budget
+#: view:account.budget.post:0
+#: field:crossovered.budget.lines,general_budget_id:0
+#: model:ir.model,name:account_budget.model_account_budget_post
+msgid "Budgetary Position"
+msgstr "Budgetary Position"
+
+#. module: account_budget
+#: wizard_field:account.budget.report,init,date1:0
+#: wizard_field:wizard.analytic.account.budget.report,init,date_from:0
+#: wizard_field:wizard.crossovered.budget,init,date_from:0
+#: wizard_field:wizard.crossovered.budget.summary,init,date_from:0
+msgid "Start of period"
+msgstr "Začetek obdobja"
+
+#. module: account_budget
+#: model:ir.actions.report.xml,name:account_budget.account_analytic_account_budget
+#: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
+#: model:ir.actions.wizard,name:account_budget.account_analytic_account_budget_report
+#: model:ir.actions.wizard,name:account_budget.wizard_crossovered_budget_menu
+msgid "Print Budgets"
+msgstr "Izpiši proračune"
+
+#. module: account_budget
+#: field:account.budget.post,code:0
+#: field:crossovered.budget,code:0
+msgid "Code"
+msgstr "Oznaka"
+
+#. module: account_budget
+#: field:account.budget.post.dotation,tot_planned:0
+msgid "Total Planned Amount"
+msgstr "Skupni načrtovani znesek"
+
+#. module: account_budget
+#: field:account.budget.post.dotation,post_id:0
+msgid "Item"
+msgstr "Element"
+
+#. module: account_budget
+#: wizard_button:account.budget.report,init,report:0
+#: wizard_button:wizard.analytic.account.budget.report,init,report:0
+#: wizard_button:wizard.crossovered.budget,init,report:0
+#: wizard_button:wizard.crossovered.budget.summary,init,report:0
+msgid "Print"
+msgstr "Natisni"
+
+#. module: account_budget
+#: field:account.budget.post,dotation_ids:0
+msgid "Spreading"
+msgstr "Razširjanje ..."
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "Theoretical Amount"
+msgstr "Teoretični znesek"
+
+#. module: account_budget
+#: wizard_field:account.budget.spread,init,fiscalyear:0
+msgid "Fiscal Year"
+msgstr "Poslovno leto"
+
+#. module: account_budget
+#: field:crossovered.budget.lines,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Analitični konto"
+
+#. module: account_budget
+#: rml:crossovered.budget.report:0
+msgid "Budget :"
+msgstr "Proračun:"
+
+#. module: account_budget
+#: rml:account.budget:0
+#: view:account.budget.post:0
+#: wizard_view:account.budget.spread,init:0
+#: wizard_button:account.budget.spread,init,spread:0
+msgid "Spread"
+msgstr "Razširi"
+
+#. module: account_budget
+#: view:account.budget.post:0
+#: field:account.budget.post,account_ids:0
+msgid "Accounts"
+msgstr "Konti"
+
+#. module: account_budget
+#: model:ir.actions.report.xml,name:account_budget.account_budget
+msgid "Print Budget"
+msgstr "Natisni proračun"
+
+#. module: account_budget
+#: view:account.analytic.account:0
+#: field:account.analytic.account,crossovered_budget_line:0
+#: view:account.budget.post:0
+#: field:account.budget.post,crossovered_budget_line:0
+#: view:crossovered.budget:0
+#: field:crossovered.budget,crossovered_budget_line:0
+#: view:crossovered.budget.lines:0
+#: model:ir.actions.act_window,name:account_budget.act_account_analytic_account_cb_lines
+#: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_lines_view
+#: model:ir.model,name:account_budget.model_crossovered_budget_lines
+#: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_lines_view
+msgid "Budget Lines"
+msgstr "Vrstice proračuna"
+
+#. module: account_budget
+#: wizard_button:account.budget.report,init,end:0
+#: wizard_button:account.budget.spread,init,end:0
+#: view:crossovered.budget:0
+#: wizard_button:wizard.analytic.account.budget.report,init,end:0
+#: wizard_button:wizard.crossovered.budget,init,end:0
+#: wizard_button:wizard.crossovered.budget.summary,init,end:0
+msgid "Cancel"
+msgstr "Prekliči"
+
+#. module: account_budget
+#: model:ir.module.module,shortdesc:account_budget.module_meta_information
+msgid "Budget Management"
+msgstr "Budget Management"
+
+#. module: account_budget
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Datum začetka"
+
+#. module: account_budget
+#: rml:account.analytic.account.budget:0
+#: rml:crossovered.budget.report:0
+msgid "Analysis from"
+msgstr "Analiza od"
+
+#. module: account_budget
+#: selection:crossovered.budget,state:0
+msgid "Validated"
+msgstr "Potrjeno"
+

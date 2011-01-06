@@ -7,7 +7,15 @@
 			id="wizard_notify_message"
 			keyword="client_print_multi"
 			/>
-
+			
+	<report id="account_invoices_layout_message"
+			menu="False"
+			string="Invoices with Layout and Message"
+			model="account.invoice"
+			name="notify_account.invoice"
+			rml="account_invoice_layout/report/special_message_invoice.rml"
+			auto="False"/>
+			
 	<report id="account_invoices_1"
 			string="Invoices with Layout"
 			model="account.invoice"

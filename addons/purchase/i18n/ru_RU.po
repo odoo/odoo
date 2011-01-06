@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:52+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:57:40+0000\n"
+"PO-Revision-Date: 2010-09-02 13:57:40+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -24,27 +23,27 @@ msgstr "Счета получены и оплачены"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 msgid "Supplier Invoice pre-generated on receptions for control"
-msgstr ""
+msgstr "Supplier Invoice pre-generated on receptions for control"
 
 #. module: purchase
 #: field:purchase.order,location_id:0
 msgid "Destination"
-msgstr ""
+msgstr "Destination"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
-msgstr ""
+msgstr "From Picking"
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Validated By"
-msgstr ""
+msgstr "Утверждено"
 
 #. module: purchase
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: purchase
 #: field:purchase.order,partner_id:0
@@ -57,31 +56,25 @@ msgid "Delivery"
 msgstr "Доставка"
 
 #. module: purchase
-#: wizard_view:purchase.order.merge,init:0
-msgid ""
-"Please note that orders will only be merged if they are to the same partner "
-"and going to the same location, and lines will only be merged if they are "
-"exactly the same except for the quantity and unit."
-msgstr ""
-"Учтите, что заказы могут быть объединены, только если они относятся к одному "
-"партнеру и местоположению, а позиции могут быть объединены, только если они "
-"абсолютно одинаковы, кроме количества."
-
-#. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "No Pricelist !"
+
+#. module: purchase
+#: field:purchase.order.line,product_qty:0
+msgid "Quantity"
+msgstr "Количество"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Packing"
-msgstr ""
+msgstr "Packing"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
 msgid "Confirmed Purchase"
-msgstr ""
+msgstr "Подтвержденные Заказы"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -96,16 +89,12 @@ msgstr "Каталог по умолчанию для закупок"
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
 msgid "Create invoice"
-msgstr ""
+msgstr "Create invoice"
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
-msgid ""
-"This pricelist will be used, instead of the default one, for purchases from "
-"the current partner"
-msgstr ""
-"Для закупок у данного партнера вместо каталога по умолчанию будет "
-"применяться указанный каталог."
+msgid "This pricelist will be used, instead of the default one, for purchases from the current partner"
+msgstr "Для закупок у данного партнера вместо каталога по умолчанию будет применяться указанный каталог."
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -115,26 +104,22 @@ msgstr "Факс  :"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
 msgid "Create invoice from product recept"
-msgstr ""
+msgstr "Создать счет из принятого товара"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
-msgid ""
-"The pricelist sets the currency used for this purchase order. It also "
-"computes the supplier price for the selected products/quantities."
-msgstr ""
-"Валюта, используемая в заказе на закупку, определяется катклогом. Так же "
-"производится расчет для выбранной продукции / количества."
+msgid "The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."
+msgstr "Валюта, используемая в заказе на закупку, определяется катклогом. Так же производится расчет для выбранной продукции / количества."
 
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
 msgid "Purchase Process"
-msgstr ""
+msgstr "Процесс заказа"
 
 #. module: purchase
-#: field:purchase.order.line,product_qty:0
-msgid "Quantity"
-msgstr "Количество"
+#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
+msgid "Invoice from Packing list"
+msgstr "Invoice from Packing list"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -167,12 +152,8 @@ msgstr "Примечания"
 
 #. module: purchase
 #: rml:purchase.order:0
-msgid "N°"
-msgstr ""
-
-#. module: purchase
-#: rml:purchase.order:0
 #: field:purchase.order,amount_tax:0
+#: view:purchase.order.line:0
 #: field:purchase.order.line,taxes_id:0
 msgid "Taxes"
 msgstr "Налоги"
@@ -194,7 +175,7 @@ msgstr "Ссылка на заказ"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Net Total :"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -203,21 +184,8 @@ msgstr "Отменено"
 
 #. module: purchase
 #: help:purchase.order,state:0
-msgid ""
-"The state of the purchase order or the quotation request. A quotation is a "
-"purchase order in a 'Draft' state. Then the order has to be confirmed by the "
-"user, the state switch to 'Confirmed'. Then the supplier must confirm the "
-"order to change the state to 'Approved'. When the purchase order is paid and "
-"received, the state becomes 'Done'. If a cancel action occurs in the invoice "
-"or in the reception of goods, the state becomes in exception."
-msgstr ""
-"Состояние заказа на закупку или запроса предложения. Предложение - это заказ "
-"на закупку в состоянии 'Черновик'. Когда заказ подтвержден пользователем, "
-"статус меняется на 'Подтверждено'. Затем поставщик должен подтвердить заказ "
-"для изменения состояния в 'Утверждено'. Когда заказ на закупку оплачен и "
-"получен, состояние меняется на 'Выполнено'. Если возникает отмена в процессе "
-"расчетов или поставки товаров, состояние устанавливается в 'Исключительная "
-"ситуация'."
+msgid "The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception."
+msgstr "Состояние заказа на закупку или запроса предложения. Предложение - это заказ на закупку в состоянии 'Черновик'. Когда заказ подтвержден пользователем, статус меняется на 'Подтверждено'. Затем поставщик должен подтвердить заказ для изменения состояния в 'Утверждено'. Когда заказ на закупку оплачен и получен, состояние меняется на 'Выполнено'. Если возникает отмена в процессе расчетов или поставки товаров, состояние устанавливается в 'Исключительная ситуация'."
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -227,28 +195,34 @@ msgstr "Происхождение"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
 msgid "Incoming Products"
-msgstr ""
+msgstr "Поступающие товары"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "Purchase order is confirmed by the user."
-msgstr ""
+msgstr "Purchase order is confirmed by the user."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr ""
+msgstr "Изменено вручную"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
-msgstr ""
+msgstr "You must first cancel all invoices attached to this purchase order."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
-msgstr ""
+msgstr "Reference"
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:0
+#, python-format
+msgid "Cannot delete Purchase Order(s) which are in %s State!"
+msgstr "Cannot delete Purchase Order(s) which are in %s State!"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -258,7 +232,7 @@ msgstr "НДС :"
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Tel.:"
-msgstr ""
+msgstr "Тел.:"
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -277,19 +251,17 @@ msgstr "Проверил(а)"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
-msgid ""
-"From Order: a draft invoice will be pre-generated based on the purchase "
-"order. The accountant will just have to validate this invoice for control.\n"
-"From Picking: a draft invoice will be pre-genearted based on validated "
-"receptions.\n"
-"Manual: no invoice will be pre-generated. The accountant will have to encode "
-"manually."
-msgstr ""
+msgid "From Order: a draft invoice will be pre-generated based on the purchase order. The accountant will just have to validate this invoice for control.\n"
+"From Picking: a draft invoice will be pre-genearted based on validated receptions.\n"
+"Manual: no invoice will be pre-generated. The accountant will have to encode manually."
+msgstr "From Order: a draft invoice will be pre-generated based on the purchase order. The accountant will just have to validate this invoice for control.\n"
+"From Picking: a draft invoice will be pre-genearted based on validated receptions.\n"
+"Manual: no invoice will be pre-generated. The accountant will have to encode manually."
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Invoice based on deliveries"
-msgstr ""
+msgstr "Invoice based on deliveries"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -304,16 +276,14 @@ msgstr "Позиция заказа"
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid ""
-"You have to select a pricelist in the purchase form !\n"
-"Please set one before choosing a product."
-msgstr ""
+msgid "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
+msgstr "You have to select a pricelist in the purchase form !\nPlease set one before choosing a product."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Wrong Product UOM !"
-msgstr ""
+msgstr "Wrong Product UOM !"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -323,7 +293,7 @@ msgstr "Подтверждено"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Product Receipt"
-msgstr ""
+msgstr "Product Receipt"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
@@ -339,7 +309,7 @@ msgstr "Управление счетами"
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr ""
+msgstr "RFQ"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -349,7 +319,7 @@ msgstr "В ожидании"
 #. module: purchase
 #: field:purchase.order,picking_ids:0
 msgid "Picking List"
-msgstr ""
+msgstr "Picking List"
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0
@@ -364,12 +334,12 @@ msgstr "Позиции заказа"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirm Purchase order from Request for quotation without origin"
-msgstr ""
+msgstr "Confirm Purchase order from Request for quotation without origin"
 
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Fax:"
-msgstr ""
+msgstr "Fax:"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -379,7 +349,7 @@ msgstr "Сумма до налогов"
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Expected Date"
-msgstr ""
+msgstr "Ожидаемая дата"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -390,12 +360,12 @@ msgstr "Адрес поставки :"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Error !"
 
 #. module: purchase
 #: field:purchase.order,minimum_planned_date:0
 msgid "Planned Date"
-msgstr ""
+msgstr "Планируемая дата"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -405,7 +375,7 @@ msgstr "Утверждено поставщком"
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Order"
-msgstr ""
+msgstr "From Order"
 
 #. module: purchase
 #: model:ir.actions.wizard,name:purchase.purchase_order_merge
@@ -415,13 +385,13 @@ msgstr "Объединить закупки"
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
-msgstr ""
+msgstr "Reservation Destination"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Invalid action !"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -436,7 +406,7 @@ msgstr "Каталог"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "When controlling invoice from orders"
-msgstr ""
+msgstr "When controlling invoice from orders"
 
 #. module: purchase
 #: constraint:ir.ui.view:0
@@ -446,17 +416,22 @@ msgstr "Неправильный XML для просмотра архитект�
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "Pre-generated supplier invoice to control based on order"
-msgstr ""
+msgstr "Pre-generated supplier invoice to control based on order"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+msgid "Product purchases"
+msgstr "Product purchases"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
 msgid "Invoice from Purchase"
-msgstr ""
+msgstr "Счет из заказа"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "Packing is created for the products reception control."
-msgstr ""
+msgstr "Packing is created for the products reception control."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -466,12 +441,12 @@ msgstr "Вручную"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirming Purchase"
-msgstr ""
+msgstr "Подтверждение заказа"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "Approve Purchase order after Confirming"
-msgstr ""
+msgstr "Approve Purchase order after Confirming"
 
 #. module: purchase
 #: selection:purchase.order,state:0
@@ -481,7 +456,7 @@ msgstr "Исключительная ситуация поставки"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Encoded manually by the user."
-msgstr ""
+msgstr "Зашифровано вручную пользователем"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -491,10 +466,8 @@ msgstr "Кол-во"
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
-msgid ""
-"This is computed as the minimum scheduled date of all purchase order lines' "
-"products."
-msgstr ""
+msgid "This is computed as the minimum scheduled date of all purchase order lines' products."
+msgstr "This is computed as the minimum scheduled date of all purchase order lines' products."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
@@ -503,21 +476,18 @@ msgstr "Заказы на закупку"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
-msgid ""
-"Put an address if you want to deliver directly from the supplier to the "
-"customer.In this case, it will remove the warehouse link and set the "
-"customer location."
-msgstr ""
+msgid "Put an address if you want to deliver directly from the supplier to the customer.In this case, it will remove the warehouse link and set the customer location."
+msgstr "Put an address if you want to deliver directly from the supplier to the customer.In this case, it will remove the warehouse link and set the customer location."
 
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr ""
+msgstr "Запрос на расценки"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
 msgid "Confirm Purchase order from Request for quotation"
-msgstr ""
+msgstr "Confirm Purchase order from Request for quotation"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -526,9 +496,8 @@ msgstr "Подтвердить заказ на закупку"
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
-msgid ""
-"This is the list of picking list that have been generated for this purchase"
-msgstr ""
+msgid "This is the list of picking list that have been generated for this purchase"
+msgstr "This is the list of picking list that have been generated for this purchase"
 
 #. module: purchase
 #: model:ir.module.module,shortdesc:purchase.module_meta_information
@@ -544,7 +513,7 @@ msgstr "Ссылка на партнера"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Налоги :"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0
@@ -554,10 +523,8 @@ msgstr "Выставлен счет"
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid ""
-"You have to select a product UOM in the same category than the purchase UOM "
-"of the product"
-msgstr ""
+msgid "You have to select a product UOM in the same category than the purchase UOM of the product"
+msgstr "You have to select a product UOM in the same category than the purchase UOM of the product"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -573,10 +540,8 @@ msgstr "Позиция заказа на закупку"
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
-msgid ""
-"You have to select a partner in the purchase form !\n"
-"Please set one partner before choosing a product."
-msgstr ""
+msgid "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
+msgstr "You have to select a partner in the purchase form !\nPlease set one partner before choosing a product."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -586,18 +551,18 @@ msgstr "Вид календаря"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Set to Draft"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 msgid "Purchase order is approved by supplier."
-msgstr ""
+msgstr "Purchase order is approved by supplier."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
 #: model:process.node,name:purchase.process_node_invoicecontrol0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Draft Invoice"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order
@@ -607,17 +572,22 @@ msgstr "Заказ на закупку"
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 msgid "Request for quotation is proposed by the system."
-msgstr ""
+msgstr "Request for quotation is proposed by the system."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 msgid "Packing Invoice"
-msgstr ""
+msgstr "Packing Invoice"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
 msgid "Creates invoice from packin list"
-msgstr ""
+msgstr "Creates invoice from packin list"
+
+#. module: purchase
+#: help:purchase.order,date_order:0
+msgid "Date on which this document has been created."
+msgstr "Date on which this document has been created."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -625,15 +595,20 @@ msgid "Delivery & Invoices"
 msgstr "Доставка и счета"
 
 #. module: purchase
-#: help:purchase.order,origin:0
-msgid "Reference of the document that generated this purchase order request."
-msgstr ""
+#: field:purchase.order,date_order:0
+msgid "Date"
+msgstr "Date"
+
+#. module: purchase
+#: model:process.node,name:purchase.process_node_approvepurchaseorder0
+msgid "Approved Purchase"
+msgstr "Approved Purchase"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "There is no expense account defined for this product: \"%s\" (id:%d)"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -643,7 +618,7 @@ msgstr "Тел. :"
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
 msgid "After Purchase order , Create invoice."
-msgstr ""
+msgstr "After Purchase order , Create invoice."
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -653,12 +628,12 @@ msgstr "Запланированная дата"
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Our Order Reference"
-msgstr ""
+msgstr "Our Order Reference"
 
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "TVA:"
-msgstr ""
+msgstr "TVA:"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -668,7 +643,7 @@ msgstr "Вычислить"
 #. module: purchase
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "You cannot have 2 pricelist versions that overlap!"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -678,27 +653,37 @@ msgstr "Отмена заказа на закупку"
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Create Packing list"
-msgstr ""
+msgstr "Create Packing list"
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
+
+#. module: purchase
+#: constraint:product.pricelist.item:0
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "When purchase order is approved , it creates its packing list."
-msgstr ""
+msgstr "When purchase order is approved , it creates its packing list."
 
 #. module: purchase
-#: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
-msgid "Invoice from Packing list"
-msgstr ""
+#: view:purchase.order.line:0
+msgid "History"
+msgstr "History"
 
 #. module: purchase
 #: field:purchase.order,state:0
 msgid "Order Status"
 msgstr "Статус заказа"
+
+#. module: purchase
+#: help:purchase.order,origin:0
+msgid "Reference of the document that generated this purchase order request."
+msgstr "Reference of the document that generated this purchase order request."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -708,7 +693,7 @@ msgstr "Подитог"
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr ""
+msgstr "Default Purchase Pricelist Version"
 
 #. module: purchase
 #: rml:purchase.order:0
@@ -719,7 +704,12 @@ msgstr "Цена за ед."
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Fiscal Position"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Request for Quotation N°"
+msgstr "Запрос на расценки №"
 
 #. module: purchase
 #: field:purchase.order,invoice_id:0
@@ -734,9 +724,15 @@ msgid "Cancel"
 msgstr "Отмена"
 
 #. module: purchase
+#: view:purchase.order:0
+#: view:purchase.order.line:0
+msgid "Purchase Order Lines"
+msgstr "Purchase Order Lines"
+
+#. module: purchase
 #: view:res.partner:0
 msgid "Purchases Properties"
-msgstr ""
+msgstr "Свойства заказов"
 
 #. module: purchase
 #: field:purchase.order.line,order_id:0
@@ -757,11 +753,8 @@ msgstr "Объединить заказы"
 
 #. module: purchase
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Название объекта должно начинаться с x_  и не должно содержать специальных "
-"символов !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Название объекта должно начинаться с x_  и не должно содержать специальных символов !"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action_new
@@ -784,17 +777,17 @@ msgstr "Запрос предложения"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Out Packing"
-msgstr ""
+msgstr "Out Packing"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Control invoices on receptions"
-msgstr ""
+msgstr "Control invoices on receptions"
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Date Req."
-msgstr ""
+msgstr "Date Req."
 
 #. module: purchase
 #: field:purchase.order,date_approve:0
@@ -805,14 +798,14 @@ msgstr "Дата утверждения"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
+msgstr "Could not cancel this purchase order !"
 
 #. module: purchase
 #: model:ir.module.module,description:purchase.module_meta_information
-msgid ""
-"Module for purchase management\n"
+msgid "Module for purchase management\n"
 "    Request for quotation, Create Supplier Invoice, Print Order..."
-msgstr ""
+msgstr "Module for purchase management\n"
+"    Request for quotation, Create Supplier Invoice, Print Order..."
 
 #. module: purchase
 #: field:purchase.order.line,product_id:0
@@ -823,24 +816,22 @@ msgstr "Продукция"
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "No Partner!"
-msgstr ""
+msgstr "No Partner!"
 
 #. module: purchase
-#: rml:purchase.order:0
-#: field:purchase.order.line,name:0
-#: rml:purchase.quotation:0
-msgid "Description"
-msgstr "Описание"
+#: view:purchase.order.line:0
+msgid "Invoicing"
+msgstr "Invoicing"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "Product recept invoice"
-msgstr ""
+msgstr "Product recept invoice"
 
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Expected Delivery address:"
-msgstr ""
+msgstr "Expected Delivery address:"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_form_action3
@@ -851,7 +842,7 @@ msgstr "Заказ на закупку в ожидании утверждени�
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
 msgid "Confirming Purchase Order"
-msgstr ""
+msgstr "Confirming Purchase Order"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -861,34 +852,39 @@ msgstr "Ед.изм. продукции"
 #. module: purchase
 #: rml:purchase.quotation:0
 msgid "Regards,"
-msgstr ""
+msgstr "Regards,"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
 msgid "Reservation"
-msgstr ""
+msgstr "Резервирование"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr ""
+msgstr "Could not cancel purchase order !"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "Purchase Invoice"
-msgstr ""
+msgstr "Purchase Invoice"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:0
 #, python-format
 msgid "You must first cancel all packing attached to this purchase order."
-msgstr ""
+msgstr "You must first cancel all packing attached to this purchase order."
 
 #. module: purchase
 #: rml:purchase.order:0
 msgid "Your Order Reference"
-msgstr ""
+msgstr "Your Order Reference"
+
+#. module: purchase
+#: rml:purchase.order:0
+msgid "Purchase Order Confirmation N°"
+msgstr "Purchase Order Confirmation N°"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -925,17 +921,24 @@ msgstr "Контроль счетов"
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
-msgstr ""
+msgstr "Approve"
 
 #. module: purchase
-#: model:process.node,name:purchase.process_node_approvepurchaseorder0
-msgid "Approved Purchase"
-msgstr ""
+#: rml:purchase.order:0
+#: field:purchase.order.line,name:0
+#: rml:purchase.quotation:0
+msgid "Description"
+msgstr "Описание"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
 msgid "From Packing list, Create invoice."
-msgstr ""
+msgstr "From Packing list, Create invoice."
+
+#. module: purchase
+#: field:purchase.order,amount_total:0
+msgid "Total"
+msgstr "Всего"
 
 #. module: purchase
 #: wizard_view:purchase.order.merge,init:0
@@ -945,14 +948,15 @@ msgstr "Вы уверены, что хотите объединить данны
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approving Purchase Order"
-msgstr ""
+msgstr "Approving Purchase Order"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
 msgid "After approved purchase order , it comes into the supplier invoice"
-msgstr ""
+msgstr "After approved purchase order , it comes into the supplier invoice"
 
 #. module: purchase
-#: field:purchase.order,amount_total:0
-msgid "Total"
-msgstr "Всего"
+#: view:purchase.order.line:0
+msgid "Stock Moves"
+msgstr "Stock Moves"
+

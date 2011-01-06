@@ -4,29 +4,28 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-07-06 19:06+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_review0
 msgid "Review end of day check day is complete"
-msgstr ""
+msgstr "Review end of day check day is complete"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
-msgid ""
-"You can not have 2 timesheets that overlaps !\n"
+msgid "You can not have 2 timesheets that overlaps !\n"
 "Please use the menu 'My Current Timesheet' to avoid this problem."
-msgstr ""
+msgstr "You can not have 2 timesheets that overlaps !\n"
+"Please use the menu 'My Current Timesheet' to avoid this problem."
 
 #. module: hr_timesheet_sheet
 #: field:hr.analytic.timesheet,sheet_id:0
@@ -40,7 +39,7 @@ msgstr "Leht"
 #: code:addons/hr_timesheet_sheet/wizard/wizard_timesheet_current.py:0
 #, python-format
 msgid "No employee defined for your user !"
-msgstr ""
+msgstr "No employee defined for your user !"
 
 #. module: hr_timesheet_sheet
 #: constraint:ir.actions.act_window:0
@@ -89,9 +88,9 @@ msgid "Set to Draft"
 msgstr "Sea mustandiks"
 
 #. module: hr_timesheet_sheet
-#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
-msgid "Defines employee's timesheet entry"
-msgstr "Määrab töötaja tööajalehe kirje"
+#: field:hr_timesheet_sheet.sheet,date_to:0
+msgid "Date to"
+msgstr "Kuupäevani"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
@@ -139,13 +138,13 @@ msgstr "Valideeritud tööajaleht"
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid "You must select a Current date wich is in the timesheet dates !"
-msgstr ""
+msgstr "You must select a Current date wich is in the timesheet dates !"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign in from an other date than today"
-msgstr ""
+msgstr "You can not sign in from an other date than today"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -158,6 +157,14 @@ msgid "Phone call encoding"
 msgstr "Telefonikõne arvutamine"
 
 #. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot enter an attendance ' \\n"
+"                            'date outside the current timesheet dates!"
+msgstr "You cannot enter an attendance ' \\n"
+"                            'date outside the current timesheet dates!"
+
+#. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_account
 msgid "Timesheet by Day"
 msgstr "Tööajaleht päeva kaupa"
@@ -166,19 +173,25 @@ msgstr "Tööajaleht päeva kaupa"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Warning !"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Defines the task work entry into timesheet line"
-msgstr ""
+msgstr "Defines the task work entry into timesheet line"
 
 #. module: hr_timesheet_sheet
 #: help:res.company,timesheet_max_difference:0
-msgid ""
-"Allowed difference between the sign in/out and the timesheet computation for "
-"one sheet. Set this to 0 if you do not want any control."
-msgstr ""
+msgid "Allowed difference between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
+msgstr "Allowed difference between the sign in/out and the timesheet computation for one sheet. Set this to 0 if you do not want any control."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "You cannot enter an attendance ' \\n"
+"                        'date outside the current timesheet dates!"
+msgstr "You cannot enter an attendance ' \\n"
+"                        'date outside the current timesheet dates!"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.day:0
@@ -208,7 +221,7 @@ msgstr "Kuupäevast"
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
 msgid "Hr Timesheet Process"
-msgstr ""
+msgstr "Hr Timesheet Process"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_analyticcost0
@@ -251,7 +264,7 @@ msgstr "Kinnita tööajaleht"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "Control by the project manager"
-msgstr ""
+msgstr "Control by the project manager"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -283,9 +296,8 @@ msgstr "Tööajalehe read"
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
-msgid ""
-"Please verify that the total difference of the sheet is lower than %.2f !"
-msgstr ""
+msgid "Please verify that the total difference of the sheet is lower than %.2f !"
+msgstr "Please verify that the total difference of the sheet is lower than %.2f !"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheetsheet0
@@ -301,7 +313,7 @@ msgstr "Ühtegi töötajat pole määratud"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Invalid action !"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_confirmedtimesheet0
@@ -326,7 +338,7 @@ msgstr "Vigane XML vaate arhitektuurile!"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Daily View"
-msgstr ""
+msgstr "Daily View"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
@@ -360,12 +372,12 @@ msgstr "Telefonikõne"
 #: field:hr_timesheet_sheet.sheet,total_timesheet_day:0
 #: view:hr_timesheet_sheet.sheet.day:0
 msgid "Total Timesheet"
-msgstr ""
+msgstr "Total Timesheet"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_reviewofwork0
 msgid "Review of work"
-msgstr ""
+msgstr "Review of work"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
@@ -380,7 +392,7 @@ msgstr "Kuu"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "Encode Your hours and Sign in / out"
-msgstr ""
+msgstr "Encode Your hours and Sign in / out"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_review0
@@ -413,7 +425,7 @@ msgstr "Tööajalehed kinnitamiseks"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not sign out from an other date than today"
-msgstr ""
+msgstr "You can not sign out from an other date than today"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
@@ -421,9 +433,9 @@ msgid "Status"
 msgstr "Staatus"
 
 #. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet,date_to:0
-msgid "Date to"
-msgstr "Kuupäevani"
+#: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
+msgid "Defines employee's timesheet entry"
+msgstr "Määrab töötaja tööajalehe kirje"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state_attendance:0
@@ -434,7 +446,7 @@ msgstr "Praegune staatus"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet !"
-msgstr ""
+msgstr "You cannot modify an entry in a confirmed timesheet !"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
@@ -460,7 +472,7 @@ msgstr "Kuupäev"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr ""
+msgstr "You can not modify an entry in a confirmed timesheet !"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,user_id:0
@@ -497,12 +509,12 @@ msgstr "Tehtud"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Attendance entry moves into the timesheet"
-msgstr ""
+msgstr "Attendance entry moves into the timesheet"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_createanalyticcose0
 msgid "Creates your analytic cost accoording to quantity"
-msgstr ""
+msgstr "Creates your analytic cost accoording to quantity"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_timesheetline0
@@ -516,21 +528,25 @@ msgstr "Tööajaleht kontode kaupa"
 
 #. module: hr_timesheet_sheet
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
 msgid "Cannot delete Sheet(s) which are already confirmed !"
-msgstr ""
+msgstr "Cannot delete Sheet(s) which are already confirmed !"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "Timesheet is validate by project manager."
 msgstr "Tööajaleht on valideeritud projektijuhi poolt."
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
+msgid "The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!"
+msgstr "The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_phonecall0
@@ -573,8 +589,14 @@ msgstr "Logi välja"
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
 #, python-format
+msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
+msgstr "Cannot delete Sheet(s) which have attendance entries encoded !"
+
+#. module: hr_timesheet_sheet
+#: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:0
+#, python-format
 msgid "You can not duplicate a timesheet !"
-msgstr ""
+msgstr "You can not duplicate a timesheet !"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -606,7 +628,7 @@ msgstr "Perioodi lõpus (nädal/kuu)"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_timesheetdraft0
 msgid "timesheet entry is into draft state."
-msgstr ""
+msgstr "timesheet entry is into draft state."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_analyticcost0
@@ -626,7 +648,7 @@ msgstr "Arvuta aeg, mis sa kulutasid telefonikõnele"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_reviewofwork0
 msgid "Review of your work at the end of the day"
-msgstr ""
+msgstr "Review of your work at the end of the day"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
@@ -670,3 +692,4 @@ msgstr "Kokku"
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_department_validate
 msgid "My Department's Timesheet to Validate"
 msgstr "Minu osakonna tööajalehed valideerida"
+

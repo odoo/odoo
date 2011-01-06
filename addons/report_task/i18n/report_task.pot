@@ -1,17 +1,19 @@
-#, fuzzy
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* report_task
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:36+0000\n"
+"POT-Creation-Date: 2010-09-02 14:06:04+0000\n"
+"PO-Revision-Date: 2010-09-02 14:06:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: report_task
 #: selection:report.closed.task,state:0
@@ -27,8 +29,7 @@ msgstr ""
 
 #. module: report_task
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: report_task
@@ -122,8 +123,7 @@ msgstr ""
 
 #. module: report_task
 #: model:ir.module.module,description:report_task.module_meta_information
-msgid ""
-"Gives statistics on tasks by user on projects to check the pipeline of users."
+msgid "Gives statistics on tasks by user on projects to check the pipeline of users."
 msgstr ""
 
 #. module: report_task
@@ -168,3 +168,95 @@ msgstr ""
 #: field:report.closed.task,project_id:0
 msgid "Project"
 msgstr ""
+
+#. module: report_task
+#: field:report.task.user.pipeline.open,task_nbr:0
+msgid "Task Number"
+msgstr ""
+
+#. module: report_task
+#: model:ir.model,name:report_task.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr ""
+
+#. module: report_task
+#: model:ir.model,name:report_task.model_report_task_user_pipeline_open
+msgid "Tasks by user and project"
+msgstr ""
+
+#. module: report_task
+#: view:report.closed.task:0
+msgid "Planned"
+msgstr ""
+
+#. module: report_task
+#: selection:report.closed.task,state:0
+#: selection:report.task.user.pipeline.open,task_state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: report_task
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr ""
+
+#. module: report_task
+#: field:report.task.user.pipeline.open,task_progress:0
+msgid "Task Progress"
+msgstr ""
+
+#. module: report_task
+#: field:report.closed.task,date_close:0
+msgid "Date Closed"
+msgstr ""
+
+#. module: report_task
+#: field:report.closed.task,user_id:0
+msgid "Assigned to"
+msgstr ""
+
+#. module: report_task
+#: field:report.closed.task,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: report_task
+#: model:ir.model,name:report_task.model_report_closed_task
+msgid "Closed Task Report"
+msgstr ""
+
+#. module: report_task
+#: field:report.timesheet.task.user,name:0
+msgid "Month"
+msgstr ""
+
+#. module: report_task
+#: selection:report.closed.task,priority:0
+msgid "Urgent"
+msgstr ""
+
+#. module: report_task
+#: field:report.closed.task,date_deadline:0
+msgid "Deadline"
+msgstr ""
+
+#. module: report_task
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr ""
+
+#. module: report_task
+#: view:report.closed.task:0
+msgid "Closed Tasks"
+msgstr ""
+
+#. module: report_task
+#: selection:report.task.user.pipeline.open,task_state:0
+msgid "Open"
+msgstr ""
+
+#. module: report_task
+#: field:report.closed.task,planned_hours:0
+msgid "Planned Hours"
+msgstr ""
+

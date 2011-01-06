@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:34+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:54:03+0000\n"
+"PO-Revision-Date: 2010-09-02 13:54:03+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_report
 #: field:account.report.history,name:0
@@ -31,7 +30,7 @@ msgstr "Wybierz plik PDF"
 #. module: account_report
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: account_report
 #: view:account.report.report:0
@@ -61,7 +60,7 @@ msgstr "Inne"
 #. module: account_report
 #: view:account.report.report:0
 msgid "balance(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "balance(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: rml:print.indicators:0
@@ -72,8 +71,7 @@ msgstr "Podsumowanie tabelaryczne"
 #: code:addons/account_report/wizard/wizard_print_indicators.py:0
 #, python-format
 msgid "Please select maximum 8 records to fit the page-width."
-msgstr ""
-"Proszę wybrac maksymalnie 8 rekordów, aby nie przekroczyć szerokości strony."
+msgstr "Proszę wybrac maksymalnie 8 rekordów, aby nie przekroczyć szerokości strony."
 
 #. module: account_report
 #: view:account.report.report:0
@@ -135,7 +133,7 @@ msgstr "Historia wskaźnika"
 #. module: account_report
 #: view:account.report.report:0
 msgid "credit(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "credit(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -213,7 +211,7 @@ msgstr "Wybierz kryteria"
 #. module: account_report
 #: view:account.report.report:0
 msgid "debit(['ACCOUNT_CODE',],fiscalyear)"
-msgstr ""
+msgstr "debit(['ACCOUNT_CODE',],fiscalyear)"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -224,6 +222,11 @@ msgstr "Konto Ma:"
 #: wizard_view:print.indicators,init:0
 msgid "Select the criteria based on which Indicators will be printed."
 msgstr "Wybierz kryteria, na których będą oparte drukowane wskaźniki."
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "report('REPORT_CODE')"
+msgstr "report('REPORT_CODE')"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -254,12 +257,8 @@ msgstr "Stan"
 
 #. module: account_report
 #: help:account.report.report,disp_tree:0
-msgid ""
-"When the indicators are printed, if one indicator is set with this field to "
-"True, then it will display one more graphs with all its children in tree"
-msgstr ""
-"Jeśli wskaźnik jest ustawiony na Prawda, to kiedy będzie drukowany, "
-"wyświetli jeden dodatkowy wykres ze wszystkimi swoimi podrzędnymi w drzewie"
+msgid "When the indicators are printed, if one indicator is set with this field to True, then it will display one more graphs with all its children in tree"
+msgstr "Jeśli wskaźnik jest ustawiony na Prawda, to kiedy będzie drukowany, wyświetli jeden dodatkowy wykres ze wszystkimi swoimi podrzędnymi w drzewie"
 
 #. module: account_report
 #: selection:account.report.report,status:0
@@ -302,9 +301,14 @@ msgid "Expression :"
 msgstr "Wyrażenie:"
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "report('REPORT_CODE')"
-msgstr ""
+#: rml:print.indicators:0
+msgid "COL 2"
+msgstr "COL 2"
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "COL 1"
+msgstr "COL 1"
 
 #. module: account_report
 #: field:account.report.report,expression:0
@@ -331,7 +335,7 @@ msgstr "Kod"
 #. module: account_report
 #: field:account.report.history,tmp:0
 msgid "temp"
-msgstr ""
+msgstr "temp"
 
 #. module: account_report
 #: field:account.report.history,period_id:0
@@ -362,11 +366,8 @@ msgstr "Podrzędne"
 
 #. module: account_report
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków specjalnych !"
 
 #. module: account_report
 #: help:account.report.report,goodness_limit:0
@@ -384,7 +385,7 @@ msgstr "Drukuj wskaźniki"
 #. module: account_report
 #: view:account.report.report:0
 msgid "+ - * / ( )"
-msgstr ""
+msgstr "+ - * / ( )"
 
 #. module: account_report
 #: rml:accounting.report:0
@@ -421,17 +422,13 @@ msgstr "Inne raporty"
 
 #. module: account_report
 #: view:account.report.report:0
-msgid ""
-"Note: The second arguement 'fiscalyear' and 'period' are optional "
-"arguements.If the value is -1,previous fiscalyear or period is considered."
-msgstr ""
-"Uwaga: Argumenty 'fiscalyear' i 'period' są opcjonalne. Wartość -1 będzie "
-"oznaczała poprzedni okres lub rok podatkowy."
+msgid "Note: The second arguement 'fiscalyear' and 'period' are optional arguements.If the value is -1,previous fiscalyear or period is considered."
+msgstr "Uwaga: Argumenty 'fiscalyear' i 'period' są opcjonalne. Wartość -1 będzie oznaczała poprzedni okres lub rok podatkowy."
 
 #. module: account_report
 #: rml:print.indicators:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: account_report
 #: model:ir.actions.act_window,name:account_report.action_account_report_tree_view_fiscal
@@ -476,15 +473,13 @@ msgstr "Wybierz kryteria"
 #. module: account_report
 #: code:addons/account_report/account.py:0
 #, python-format
-msgid ""
-"You cannot delete an indicator history record. You may have to delete the "
-"concerned Indicator!"
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
 msgstr "Nie możesz usunąć historii wskaźnika. Możesz usunąć wskaźnik!"
 
 #. module: account_report
 #: view:account.report.report:0
 msgid "tax_code(['ACCOUNT_TAX_CODE',],period)"
-msgstr ""
+msgstr "tax_code(['ACCOUNT_TAX_CODE',],period)"
 
 #. module: account_report
 #: field:account.report.history,fiscalyear_id:0
@@ -522,12 +517,8 @@ msgstr "Wskaźniki -"
 
 #. module: account_report
 #: help:account.report.report,disp_graph:0
-msgid ""
-"If the field is set to True, information will be printed as a Graph, "
-"otherwise as an array."
-msgstr ""
-"Jeśli pole jest ustawione na Prawda, to informacja będzie drukowana jako "
-"wykres, w przeciwnym przypadku jako macierz."
+msgid "If the field is set to True, information will be printed as a Graph, otherwise as an array."
+msgstr "Jeśli pole jest ustawione na Prawda, to informacja będzie drukowana jako wykres, w przeciwnym przypadku jako macierz."
 
 #. module: account_report
 #: view:account.report.report:0
@@ -547,17 +538,15 @@ msgstr "Kwota"
 #. module: account_report
 #: rml:print.indicators:0
 msgid "1cm 27.7cm 20cm 27.7cm"
-msgstr ""
+msgstr "1cm 27.7cm 20cm 27.7cm"
 
 #. module: account_report
 #: model:ir.module.module,description:account_report.module_meta_information
-msgid ""
-"Financial and accounting reporting\n"
+msgid "Financial and accounting reporting\n"
 "    Fiscal statements\n"
 "    Indicators\n"
 "    "
-msgstr ""
-"Raportowanie finansowo-księgowe\n"
+msgstr "Raportowanie finansowo-księgowe\n"
 "    Deklaracje podatkowe\n"
 "    Wskaźniki\n"
 "    "
@@ -566,3 +555,4 @@ msgstr ""
 #: selection:account.report.report,type:0
 msgid "Fiscal Statement"
 msgstr "Deklaracja podatkowa"
+

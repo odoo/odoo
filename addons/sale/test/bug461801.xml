@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<!-- 
+            Illustrate bug #461801
+            Sale order line in state 'done' but order in state 'draft'
+        -->
+
+		<!-- Resource: sale.order -->
+		<record id="bug461801" model="sale.order">
+			<field name="shop_id" ref="shop" />
+			<field name="name">lp:461801</field>
+			<field name="note">This Order was created to assert that the following bug is fixed:
+				https://bugs.launchpad.net/openobject-addons/+bug/461801
+            </field>
+			<field model="product.pricelist" name="pricelist_id" search="[]" />
+			<field name="user_id" ref="base.user_demo" />
+			<field name="partner_id" ref="base.res_partner_3" />
+			<field name="partner_invoice_id" ref="base.res_partner_address_zen" />
+			<field name="partner_shipping_id" ref="base.res_partner_address_zen" />
+			<field name="partner_order_id" ref="base.res_partner_address_zen" />
+		</record>
+		<record id="bug461801_line1" model="sale.order.line">
+			<field name="order_id" ref="bug461801" />
+			<field name="name">[PC2] Basic+ PC (assembly on order)</field>
+			<field name="product_id" ref="product.product_product_pc2" />
+			<field name="product_uom" ref="product.product_uom_unit" />
+			<field name="product_uom_qty">4</field>
+			<field name="price_unit">750</field>
+			<field name="type">make_to_order</field>
+			<field name="delay">15</field>
+		</record>
+		<!-- confirm order -->
+		<workflow action="order_confirm" model="sale.order" ref="bug461801" />
+		<assert id="bug461801" model="sale.order" severity="warning" string="the sale order is confirmed and has a packing">
+			<test expr="picking_ids[0].state">confirmed</test>
+			<test expr="len(picking_ids) == 1" />
+		</assert>
+
+		<!-- cancel packing -->
+		<function model="stock.picking" name="action_cancel">
+			<value eval="[obj(ref('bug461801')).picking_ids[0].id]" model="sale.order" />
+		</function>
+		<assert id="bug461801" model="sale.order" severity="warning" string="the sale order's first picking is cancelled">
+			<test expr="picking_ids[0].state">cancel</test>
+		</assert>
+
+		<!-- cancel the order -->
+		<function model="sale.order" name="action_cancel">
+			<value eval="[ref('bug461801')]" model="sale.order" />
+		</function>
+		<assert id="bug461801" model="sale.order" severity="warning" string="the sale order is cancelled">
+			<test expr="state">cancel</test>
+		</assert>
+
+		<!-- set the order to draft -->
+		<function model="sale.order" name="action_cancel_draft">
+			<value eval="[ref('bug461801')]" model="sale.order" />
+		</function>
+		<assert id="bug461801" model="sale.order" severity="warning" string="the sale order is cancelled">
+			<test expr="state">draft</test>
+		</assert>
+
+		<!-- add a 2nd line -->
+		<record id="bug461801_line2" model="sale.order.line">
+			<field name="order_id" ref="bug461801" />
+			<field name="name">[PC1] Basic PC</field>
+			<field name="product_id" ref="product.product_product_pc1" />
+			<field name="product_uom" ref="product.product_uom_unit" />
+			<field name="product_uom_qty">1</field>
+			<field name="price_unit">450</field>
+			<field name="type">make_to_stock</field>
+			<field name="delay">2</field>
+		</record>
+		<assert id="bug461801_line2" model="sale.order.line" severity="warning" string="the new line in the sale order is draft">
+			<test expr="state">draft</test>
+		</assert>
+
+		<!-- force new computation of totals (change something on the order) -->
+        <record id="bug461801" model="sale.order">
+            <field name="client_order_ref">Test</field>
+        </record>
+		<assert id="bug461801_line2" model="sale.order.line" severity="error" string="the new line in the sale order remains draft when totals are computed">
+			<test expr="state">draft</test>
+		</assert>
+	</data>
+</openerp>

@@ -35,9 +35,7 @@
     Customer and Supplier Invoices
     Bank statements
     """,
-    'author': 'Tiny',
     'website': 'http://www.openerp.com',
-    'depends': ['product', 'base', 'process'],
     'init_xml': [],
     'update_xml': [
         'security/account_security.xml',
@@ -67,7 +65,8 @@
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
         'demo/account_minimal.xml',
-        'account_unit_test.xml'
+        'test/invoice_basic_test.xml',
+        'test/invoice_bug452854_test.xml',
     ],
     'installable': True,
     'active': False,

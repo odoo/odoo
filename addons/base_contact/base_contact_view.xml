@@ -44,7 +44,7 @@
                         <field name="job_ids" colspan="4" nolabel="1" mode="tree,form">
                             <form string="Functions and Addresses">
                                 <field name="function_id"/>
-                                <field name="address_id" context="{'address_partner_id': name}"/>
+                                <field name="address_id"/>
                                 <field name="name"/>
                                 <field name="sequence_contact"/>
                                 <field name="phone"/>
@@ -330,23 +330,19 @@
         <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Contact Functions">
-                <notebook>
-                    <page string="General">
-                        <field name="name" select="1"/>
-                        <field name="address_id" select="1" context="{'address_partner_id': name}"/>
-                        <field name="contact_id" select="1"/>
-                        <field name="function_id" select="1"/>
-                        <field name="email" select="2" widget="email"/>
-                        <field name="phone" select="2"/>
-                        <field name="fax"/>
-                        <field name="extension"/>
-                        <field name="sequence_contact" select="2" groups="base.group_user"/>
-                        <field name="sequence_partner" select="2" groups="base.group_user"/>
-                        <field name="date_start" groups="base.group_user"/>
-                        <field name="date_stop" groups="base.group_user"/>
-                        <field name="state" select="2" />
-                    </page>
-                </notebook>
+                <field name="name" select="1" on_change="onchange_partner(name)"/>
+                <field name="address_id" select="1" attrs="{'required': [('name', '!=', False)]}" on_change="onchange_address(address_id)"/>
+                <field name="contact_id" select="1"/>
+                <field name="function_id" select="1"/>
+                <field name="email" select="2" widget="email"/>
+                <field name="phone" select="2"/>
+                <field name="fax"/>
+                <field name="extension"/>
+                <field name="sequence_contact" select="2" groups="base.group_user"/>
+                <field name="sequence_partner" select="2" groups="base.group_user"/>
+                <field name="date_start" groups="base.group_user"/>
+                <field name="date_stop" groups="base.group_user"/>
+                <field name="state" select="2" />
             </form>
         </field>
     </record>

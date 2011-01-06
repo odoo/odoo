@@ -77,8 +77,11 @@ def _makeInvoices(self, cr, uid, data, context):
             inv_reject = inv_reject + 1
             inv_rej_reason += "ID "+str(reg.id)+": Registration doesn't have any partner to invoice. \n"
             continue
-        partner_address_list = reg.partner_invoice_id and pool_obj.get('res.partner').address_get(cr, uid, [reg.partner_invoice_id.id], adr_pref=['invoice'])
-        partner_address_id = partner_address_list['invoice']
+        else:
+            val_invoice = pool_obj.get('account.invoice').onchange_partner_id(cr, uid, [], 'out_invoice', reg.partner_invoice_id.id, False, False)
+            val_invoice['value'].update({'partner_id': reg.partner_invoice_id.id})
+            partner_address_id = val_invoice['value']['address_invoice_id']
+
         if not partner_address_id:
             inv_reject = inv_reject + 1
             inv_rej_reason += "ID "+str(reg.id)+": Registered partner doesn't have an address to make the invoice. \n"
@@ -91,33 +94,24 @@ def _makeInvoices(self, cr, uid, data, context):
             tax_ids.append(tax.id)
 
         vals = value['value']
+        c_name = reg.contact_id and ('-' + pool_obj.get('res.partner.contact').name_get(cr, uid, [reg.contact_id.id])[0][1]) or ''
         vals.update({
-            'name': reg.name,
+            'name': reg.invoice_label + c_name,
             'price_unit': reg.unit_price,
             'quantity': reg.nb_register,
             'product_id':reg.event_id.product_id.id,
             'invoice_line_tax_id': [(6,0,tax_ids)],
         })
         inv_line_ids = obj_event_reg._create_invoice_lines(cr, uid, [reg.id], vals)
-
-        inv = {
-            'name': reg.invoice_label,
+        val_invoice['value'].update({
             'origin': reg.invoice_label,
-            'type': 'out_invoice',
             'reference': False,
-            'account_id': reg.partner_invoice_id.property_account_receivable.id,
-            'partner_id': reg.partner_invoice_id.id,
-            'address_invoice_id':partner_address_id,
-            'address_contact_id':partner_address_id,
             'invoice_line': [(6,0,[inv_line_ids])],
-            'currency_id' :reg.partner_invoice_id.property_product_pricelist.currency_id.id,
             'comment': "",
-            'payment_term':reg.partner_invoice_id.property_payment_term.id,
-            'fiscal_position': reg.partner_invoice_id.property_account_position.id
-        }
+        })
 
         inv_obj = pool_obj.get('account.invoice')
-        inv_id = inv_obj.create(cr, uid, inv)
+        inv_id = inv_obj.create(cr, uid, val_invoice['value'])
         list_inv.append(inv_id)
         obj_event_reg.write(cr, uid,reg.id, {'invoice_id' : inv_id,'state':'done'})
         obj_event_reg._history(cr, uid,[reg.id], 'Invoiced', history=True)

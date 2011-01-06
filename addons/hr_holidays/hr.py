@@ -76,7 +76,8 @@ class hr_holidays_per_user(osv.osv):
             if ids_request:
                 holidays = obj_holiday.browse(cr, uid, ids_request)
                 for holiday in holidays:
-                    days += holiday.number_of_days
+                    if holiday.number_of_days > 0:
+                        days += holiday.number_of_days
             days = holiday_user.max_leaves - days
             result[holiday_user.id] = days
         return result
@@ -110,7 +111,7 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name' : fields.char('Description', required=True, readonly=True, size=64, states={'draft':[('readonly',False)]}),
-        'state': fields.selection([('draft', 'draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate', 'Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Validation'), ('refuse', 'Refused'), ('validate', 'Validate'), ('cancel', 'Cancel')], 'Status', readonly=True),
         'date_from' : fields.datetime('Vacation start day', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'date_to' : fields.datetime('Vacation end day',required=True,readonly=True, states={'draft':[('readonly',False)]}),
         'holiday_status' : fields.many2one("hr.holidays.status", "Holiday's Status", required=True,readonly=True, states={'draft':[('readonly',False)]}),
@@ -118,7 +119,7 @@ class hr_holidays(osv.osv):
         'user_id':fields.many2one('res.users', 'Employee_id', states={'draft':[('readonly',False)]}, select=True, readonly=True),
         'manager_id' : fields.many2one('hr.employee', 'Holiday manager', invisible=False, readonly=True),
         'notes' : fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
-        'number_of_days': fields.float('Number of Days in this Holiday Request', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'number_of_days': fields.float('Number of Days in this Holiday Request', required=True, readonly=True, states={'draft': [('readonly', False)]}, help="An employee can make a negative holiday request (holiday request of -2 days for example), this is considered by the system as an ask for more off-days. It will increase his total of that holiday status available (if the request is accepted). For the same, make sure the days you enter are negative and both the dates are same."),
         'case_id': fields.many2one('crm.case', 'Case'),
         'holiday_user_id': fields.many2one('hr.holidays.per.user', 'Holiday per user')
     }
@@ -145,14 +146,20 @@ class hr_holidays(osv.osv):
                         self.pool.get('crm.case').unlink(cr,uid,[record.case_id.id])
                         
     def _check_date(self, cr, uid, ids):
-        if ids:
-            cr.execute('select number_of_days from hr_holidays where id in ('+','.join(map(str, ids))+')')
-            res =  cr.fetchall()
-            if res and res[0][0] < 0:
+        for rec in self.read(cr, uid, ids, ['number_of_days','date_from','date_to']):
+            if rec['number_of_days'] == 0.0:
                 return False
+            date_from = time.strptime(rec['date_from'], '%Y-%m-%d %H:%M:%S')
+            date_to = time.strptime(rec['date_to'], '%Y-%m-%d %H:%M:%S')
+            if rec['number_of_days'] < 0:
+                if date_from <> date_to:
+                    return False
+            else:
+                if date_from > date_to:
+                    return False
         return True
 
-    _constraints = [(_check_date, 'Start date should not be larger than end date! ', ['number_of_days'])]
+    _constraints = [(_check_date, 'The Holiday request seems invalid due to one of the following reasons:\n1. Start date is greater than End date!\n2. Number of Day(s) asked for leave(s) are zero!\n3. You are requesting more holidays by putting negative days,but both the dates are not same! ', ['number_of_days'])]
 
     def create(self, cr, uid, vals, *args, **kwargs):
         id_holiday = super(hr_holidays, self).create(cr, uid, vals, *args, **kwargs)
@@ -254,17 +261,18 @@ class hr_holidays(osv.osv):
 
     def check_holidays(self,cr,uid,ids):
 
+        holiday_user_pool = self.pool.get('hr.holidays.per.user')
         for record in self.browse(cr, uid, ids):
             leave_asked = record.number_of_days
-            holiday_id=self.pool.get('hr.holidays.per.user').search(cr, uid, [('employee_id','=', record.employee_id.id),('holiday_status','=',record.holiday_status.id)])
+            holiday_id = holiday_user_pool.search(cr, uid, [('employee_id','=', record.employee_id.id),('holiday_status','=',record.holiday_status.id)])
             if leave_asked>=0.00:
                 if holiday_id:
-                    obj_holidays_per_user=self.pool.get('hr.holidays.per.user').browse(cr, uid,holiday_id[0])
-                    leaves_rest=obj_holidays_per_user.max_leaves - obj_holidays_per_user.leaves_taken
+                    obj_holidays_per_user = holiday_user_pool.browse(cr, uid,holiday_id[0])
+                    leaves_rest = obj_holidays_per_user.max_leaves - obj_holidays_per_user.leaves_taken
                     if not obj_holidays_per_user.holiday_status.limit:
                         if leaves_rest < leave_asked:
                             raise osv.except_osv(_('Attention!'),_('You Cannot Validate leaves while available leaves are less than asked leaves.'))
-                    self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken + leave_asked})
+                    holiday_user_pool.write(cr,uid,obj_holidays_per_user.id,{'leaves_taken':obj_holidays_per_user.leaves_taken + leave_asked})
                 if record.holiday_status.section_id:
                     vals={}
                     vals['name']=record.name
@@ -280,17 +288,17 @@ class hr_holidays(osv.osv):
                     self.write(cr, uid, ids, {'case_id':case_id})
             else:
                 if holiday_id:
-                    obj_holidays_per_user=self.pool.get('hr.holidays.per.user').browse(cr, uid,holiday_id[0])
-                    note=obj_holidays_per_user.notes or ''
-                    notes= note + '\n***' + time.strftime('%Y-%m-%d %H:%M:%S') + ' ' + record.name
-                    self.pool.get('hr.holidays.per.user').write(cr,uid,obj_holidays_per_user.id,{'max_leaves':obj_holidays_per_user.max_leaves + abs(leave_asked),'notes':notes})
+                    obj_holidays_per_user = holiday_user_pool.browse(cr, uid,holiday_id[0])
+                    note = obj_holidays_per_user.notes or ''
+                    notes = note + '\n*** Reference Id [' + str(record.id) + '] : ' + str(abs(leave_asked)) + ' leaves added on ' + time.strftime('%Y-%m-%d %H:%M:%S') + ' Description: ' + record.name
+                    holiday_user_pool.write(cr,uid,obj_holidays_per_user.id,{'max_leaves':obj_holidays_per_user.max_leaves + abs(leave_asked),'notes':notes})
                 else:
-                    vals={}
-                    vals['employee_id']=record.employee_id.id
-                    vals['holiday_status']=record.holiday_status.id
-                    vals['max_leaves']=abs(leave_asked)
-                    vals['leaves_taken']=0.00
-                    self.pool.get('hr.holidays.per.user').create(cr,uid,vals)
+                    vals = {}
+                    vals['employee_id'] = record.employee_id.id
+                    vals['holiday_status'] = record.holiday_status.id
+                    vals['max_leaves'] = abs(leave_asked)
+                    vals['leaves_taken'] = 0.00
+                    holiday_user_pool.create(cr,uid,vals)
 
         return True
 hr_holidays()

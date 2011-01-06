@@ -4,47 +4,41 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:30+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:43:23+0000\n"
+"PO-Revision-Date: 2010-09-02 13:43:23+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Max. Margin"
-msgstr "Max. Marge"
+msgstr "Max. marge"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Base Price"
-msgstr "Basis Prijs"
+msgstr "Basisprijs"
 
 #. module: product
 #: help:product.template,standard_price:0
-msgid ""
-"The cost of the product for accounting stock valuation. It can serves as a "
-"base price for supplier price."
-msgstr ""
+msgid "The cost of the product for accounting stock valuation. It can serves as a base price for supplier price."
+msgstr "De kosten van het product voor het waarderen van de voorraad. Het kan dienen als basis voor een leveranciersprijs."
 
 #. module: product
 #: selection:product.template,type:0
 msgid "Service"
-msgstr "Service"
+msgstr "Dienst"
 
 #. module: product
 #: help:product.template,purchase_ok:0
-msgid ""
-"Determine if the product is visible in the list of products within a "
-"selection from a purchase order line."
-msgstr ""
-"Deze checkbox bepaald of het product kan worden opgenomen in de inkooporder."
+msgid "Determine if the product is visible in the list of products within a selection from a purchase order line."
+msgstr "Bepaal of het product zichtbaar is in de lijst van producten binnen een keuze voor een bestelopdrachtregel."
 
 #. module: product
 #: help:product.supplierinfo,name:0
@@ -63,64 +57,48 @@ msgstr "Onsite Senior Intervention"
 
 #. module: product
 #: help:product.supplierinfo,qty:0
-msgid ""
-"The minimal quantity to purchase for this supplier, expressed in the default "
-"unit of measure."
-msgstr "Het minimale aantal om in te kopen voor deze leverancier."
+msgid "The minimal quantity to purchase for this supplier, expressed in the default unit of measure."
+msgstr "Het minimale aantal om in te kopen voor deze leverancier, uitgedrukt in de standaard meeteenheid."
 
 #. module: product
 #: field:product.template,weight_net:0
 msgid "Net weight"
-msgstr "Netto gewicht"
+msgstr "Nettogewicht"
 
 #. module: product
-#: help:product.product,incoming_qty:0
-msgid ""
-"Quantities of products that are planned to arrive in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Aantallen producten die gepland zijn om te worden ontvangen op de gekozen "
-"locaties, of alle interne als geen locaties zijn gekozen"
+#: model:ir.model,name:product.model_product_uom_categ
+msgid "Product uom categ"
+msgstr "Cat. producteenh."
 
 #. module: product
 #: help:product.product,virtual_available:0
-msgid ""
-"Futur stock for this product according to the selected location or all "
-"internal if none have been selected. Computed as: Real Stock - Outgoing + "
-"Incoming."
-msgstr ""
-"Toekomstige voorraad van dit project op de gekozen locaties of alle interne "
-"als geen locatie is gekozen. Berekend als Werkelijke voorraad - Uitgaand + "
-"Inkomend"
+msgid "Futur stock for this product according to the selected location or all internal if none have been selected. Computed as: Real Stock - Outgoing + Incoming."
+msgstr "Toekomstige voorraad van dit project op de gekozen locaties of alle interne als geen locatie is gekozen. Berekend als Werkelijke voorraad - Uitgaand + Inkomend"
 
 #. module: product
-#: field:product.packaging,width:0
-msgid "Width"
-msgstr "Breedte"
+#: field:product.price.type,field:0
+msgid "Product Field"
+msgstr "Productveld"
 
 #. module: product
 #: help:product.pricelist.item,product_tmpl_id:0
-msgid ""
-"Set a template if this rule only apply to a template of product. Keep empty "
-"for all products"
-msgstr ""
-"Selecteer een producttemplate als deze prijslijstregel betrekking heeft op "
-"één product. Laat deze leeg als dit niet zo is."
+msgid "Set a template if this rule only apply to a template of product. Keep empty for all products"
+msgstr "Kies een sjabloon als deze regel uitsluitend betrekking heeft op een productsjabloon. Laat deze leeg voor alle producten"
 
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procure Method"
-msgstr "Bestelmethode"
+msgstr "Verwervingsmethode"
 
 #. module: product
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: product
 #: model:process.process,name:product.process_process_productprocess0
 msgid "Product Process"
-msgstr "Product proces"
+msgstr "Productproces"
 
 #. module: product
 #: help:product.price.type,field:0
@@ -136,7 +114,7 @@ msgstr "Standaardprijs"
 #: code:addons/product/product.py:0
 #, python-format
 msgid "Products: "
-msgstr "Producten: "
+msgstr "Products: "
 
 #. module: product
 #: help:product.packaging,height:0
@@ -144,9 +122,10 @@ msgid "The height of the package"
 msgstr "De hoogte van de verpakking"
 
 #. module: product
+#: rml:product.pricelist:0
 #: view:product.pricelist:0
 msgid "Products Price List"
-msgstr "Productenprijslijst"
+msgstr "Products Price List"
 
 #. module: product
 #: model:product.category,name:product.cat1
@@ -161,7 +140,7 @@ msgstr "Kit Keyboard + Mouse"
 #. module: product
 #: field:product.price.type,name:0
 msgid "Price Name"
-msgstr "Naam"
+msgstr "Naam prijs"
 
 #. module: product
 #: field:product.product,price:0
@@ -176,7 +155,7 @@ msgstr "Bedrijf"
 #. module: product
 #: field:product.template,rental:0
 msgid "Rentable Product"
-msgstr ""
+msgstr "Verhuurbaar product"
 
 #. module: product
 #: field:product.product,lst_price:0
@@ -192,7 +171,7 @@ msgstr "Soorten prijzen"
 #. module: product
 #: selection:product.template,type:0
 msgid "Stockable Product"
-msgstr "Voorraad Art."
+msgstr "Voorraadartikel"
 
 #. module: product
 #: model:product.category,name:product.product_category_services
@@ -201,18 +180,14 @@ msgstr "Diensten"
 
 #. module: product
 #: help:product.template,list_price:0
-msgid ""
-"Base price for computing the customer price. Sometimes called the catalog "
-"price."
-msgstr ""
-"Basisprijs voor het berekenen van de verkoopprijs. Soms ook catalogusprijs "
-"genoemd."
+msgid "Base price for computing the customer price. Sometimes called the catalog price."
+msgstr "Basisprijs voor het berekenen van de verkoopprijs. Soms ook catalogusprijs genoemd."
 
 #. module: product
 #: code:addons/product/pricelist.py:0
 #, python-format
 msgid "Partner section of the product form"
-msgstr "Leveranciers sectie op productformulier"
+msgstr "Partner section of the product form"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -222,12 +197,12 @@ msgstr "Processor AMD Athlon XP 2200+"
 #. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
-msgstr "Geef deze prijssoort een naam"
+msgstr "Naam van deze prijssoort"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
 msgid "Starting date for this pricelist version to be valid."
-msgstr ""
+msgstr "Datum vanaf wanneer deze prijslijstversie geldig wordt."
 
 #. module: product
 #: field:product.product,incoming_qty:0
@@ -237,7 +212,7 @@ msgstr "Inkomend"
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "Maak Op Vooraad"
+msgstr "Maak op voorraad"
 
 #. module: product
 #: view:product.product:0
@@ -252,17 +227,13 @@ msgstr "Silent fan"
 
 #. module: product
 #: help:product.template,supply_method:0
-msgid ""
-"Produce will generate production order or tasks, according to the product "
-"type. Purchase will trigger purchase orders when requested."
-msgstr ""
-"Bij een eigen geproduceerd product maakt het systeem productieorders aan. "
-"Bij te kopen producten wordt een concept-inkooporder gegenereerd."
+msgid "Produce will generate production order or tasks, according to the product type. Purchase will trigger purchase orders when requested."
+msgstr "Produceren zal een productie-opdracht of -taken genereren, overeenkomend met de productsoort. Inkopen zal een bestelopdracht genereren."
 
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
 msgid "You can see the list of suppliers for that product."
-msgstr ""
+msgstr "U kunt de lijst van leveranciers voor dat product bekijken."
 
 #. module: product
 #: help:product.packaging,rows:0
@@ -278,26 +249,22 @@ msgstr "Verkoopprijslijst"
 #. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
 msgid "If Other Pricelist"
-msgstr "Advies Prijslijst"
+msgstr "Indien anders prijslijst"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_normal_action
-#: model:ir.actions.act_window,name:product.product_normal_action_tree
-#: model:ir.ui.menu,name:product.menu_main_product
-#: model:ir.ui.menu,name:product.menu_products
-#: view:product.product:0
-msgid "Products"
-msgstr "Producten"
+#: rml:product.pricelist:0
+msgid "Price List Name:"
+msgstr "Price List Name:"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "New Price ="
-msgstr "Nieuw prijs ="
+msgstr "Nieuwe prijs ="
 
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Virtual Stock"
-msgstr "Economische Voorraad"
+msgstr "Virtuele voorraad"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -308,16 +275,12 @@ msgstr "Vastgezet"
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Afmetingseenheden categoriën"
+msgstr "Categorieën meeteenheden"
 
 #. module: product
 #: help:product.pricelist.item,product_id:0
-msgid ""
-"Set a product if this rule only apply to one product. Keep empty for all "
-"products"
-msgstr ""
-"Voeg een product toe als deze prijslijstregel betrekking heeft op één "
-"product. Laat deze leeg als dit niet zo is."
+msgid "Set a product if this rule only apply to one product. Keep empty for all products"
+msgstr "Voeg een product toe als deze prijslijstregel betrekking heeft op één product. Laat deze leeg als dit niet zo is."
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_type
@@ -340,12 +303,17 @@ msgstr "Prijsberekeningen"
 #. module: product
 #: field:product.pricelist.item,name:0
 msgid "Rule Name"
-msgstr "Regelnaam"
+msgstr "Naam regel"
 
 #. module: product
 #: model:ir.ui.menu,name:product.menu_config_product
 msgid "Configuration"
 msgstr "Instellingen"
+
+#. module: product
+#: field:product.packaging,width:0
+msgid "Width"
+msgstr "Breedte"
 
 #. module: product
 #: field:product.packaging,rows:0
@@ -360,12 +328,12 @@ msgstr "Fout ! U kunt geen recursieve categorieën aanmaken."
 #. module: product
 #: field:product.template,uom_id:0
 msgid "Default UoM"
-msgstr "Standaard afmetings eenheid"
+msgstr "Standaard meeteenheid"
 
 #. module: product
 #: field:product.template,produce_delay:0
 msgid "Manufacturing Lead Time"
-msgstr "Productietijd"
+msgstr "Opzettijd productie"
 
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
@@ -376,17 +344,17 @@ msgstr "Prijslijst Leverancier"
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Pallet Dimension"
-msgstr ""
+msgstr "Afmetingen pallet"
 
 #. module: product
 #: field:product.pricelist.item,base:0
 msgid "Based on"
-msgstr "Gebasseerd Op"
+msgstr "Gebaseerd op"
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
 msgid "Keyboard"
-msgstr "Keyboard"
+msgstr "Toetsenbord"
 
 #. module: product
 #: field:product.supplierinfo,name:0
@@ -396,7 +364,7 @@ msgstr "Relatie"
 #. module: product
 #: field:product.template,sale_delay:0
 msgid "Customer Lead Time"
-msgstr "Levertijd verkoop"
+msgstr "Voorbereidingstijd klant"
 
 #. module: product
 #: model:product.template,name:product.product_product_25_product_template
@@ -405,14 +373,8 @@ msgstr "Muis"
 
 #. module: product
 #: help:product.template,cost_method:0
-msgid ""
-"Standard Price: the cost price is fixed and recomputed periodically (usually "
-"at the end of the year), Average Price: the cost price is recomputed at each "
-"reception of products."
-msgstr ""
-"Standaardprijs: De kostprijs is vast en word periodiek herberekend (meestal "
-"aan het eind van het jaar). Gemiddelde prijs: De kostprijs wordt elke keer "
-"dat het product wordt gebruikt opnieuw berekend"
+msgid "Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."
+msgstr "Standaardprijs: de kostprijs is vast en word periodiek herberekend (meestal aan het eind van het jaar), Gemiddelde prijs: de kostprijs wordt bij elke binnenkomst van producten opnieuw berekend"
 
 #. module: product
 #: field:product.pricelist,name:0
@@ -420,9 +382,18 @@ msgid "Pricelist Name"
 msgstr "Naam prijslijst"
 
 #. module: product
+#: field:product.price.type,active:0
+#: field:product.pricelist,active:0
+#: field:product.pricelist.version,active:0
+#: field:product.product,active:0
+#: field:product.uom,active:0
+msgid "Active"
+msgstr "Actief"
+
+#. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
-msgstr "Alt. Leveranciers"
+msgstr "Relaties"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -432,7 +403,7 @@ msgstr "Gemiddelde prijs"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Create new Product"
-msgstr "Nieuw product"
+msgstr "Maak nieuw product"
 
 #. module: product
 #: help:product.pricelist.item,name:0
@@ -442,7 +413,7 @@ msgstr "Specifieke naam van deze prijslijstregel."
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Min. Margin"
-msgstr "Min. Marge"
+msgstr "Min. marge"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -457,12 +428,12 @@ msgstr "Processor AMD Athlon XP 1800+"
 #. module: product
 #: selection:product.template,state:0
 msgid "In Production"
-msgstr "In Productie"
+msgstr "In productie"
 
 #. module: product
 #: field:product.category,child_id:0
 msgid "Child Categories"
-msgstr ""
+msgstr "Subcategorieën"
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -472,7 +443,7 @@ msgstr "Accessoires"
 #. module: product
 #: field:product.supplierinfo,sequence:0
 msgid "Priority"
-msgstr "Prioriteit (0=Heel Urgent)"
+msgstr "Prioriteit"
 
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
@@ -488,7 +459,7 @@ msgstr "Factor"
 #. module: product
 #: wizard_button:product.price_list,init,price:0
 msgid "Print"
-msgstr "Print"
+msgstr "Afdrukken"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -498,7 +469,7 @@ msgstr "Leveranciersinfo"
 #. module: product
 #: field:product.ul,type:0
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: product
 #: wizard_field:product.price_list,init,price_list:0
@@ -509,7 +480,7 @@ msgstr "Prijslijst"
 #: view:product.product:0
 #: view:product.template:0
 msgid "UOM"
-msgstr "Eenh."
+msgstr "ME"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
@@ -537,17 +508,20 @@ msgstr "Diversen"
 #. module: product
 #: help:product.pricelist.item,base:0
 msgid "The mode for computing the price for this rule."
-msgstr ""
+msgstr "De modus van prijsberekening voor deze regel."
 
 #. module: product
-#: model:ir.model,name:product.model_product_ul
-msgid "Shipping Unit"
-msgstr "Verzendeenheid"
+#: model:ir.actions.act_window,name:product.product_uom_form_action
+#: model:ir.ui.menu,name:product.menu_product_uom_form_action
+#: model:ir.ui.menu,name:product.next_id_16
+#: view:product.uom:0
+msgid "Units of Measure"
+msgstr "Meeteenheden (ME)"
 
 #. module: product
 #: field:product.product,partner_ref:0
 msgid "Customer ref"
-msgstr "Klant ref."
+msgstr "Ref. klant"
 
 #. module: product
 #: field:product.supplierinfo,qty:0
@@ -562,17 +536,17 @@ msgstr "PC"
 #. module: product
 #: field:pricelist.partnerinfo,min_quantity:0
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
-msgstr "Levertijd Leverancier"
+msgstr "Levertijd leverancier"
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
 msgid "Default Public Pricelist Version"
-msgstr ""
+msgstr "Standaard publieke prijslijstversie"
 
 #. module: product
 #: field:product.pricelist.type,key:0
@@ -582,21 +556,17 @@ msgstr "Sleutel"
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
-msgstr "Prijslijst Versie"
+msgstr "Prijslijstversie"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Rules Test Match"
-msgstr "Voldoen aan Testregels"
+msgstr "Voldoen aan testregels"
 
 #. module: product
 #: help:res.partner,property_product_pricelist:0
-msgid ""
-"This pricelist will be used, instead of the default one,                     "
-"for sales to the current partner"
-msgstr ""
-"Deze prijslijst wordt gehanteerd in plaats van de standaard for de verkopen "
-"richting deze relatie."
+msgid "This pricelist will be used, instead of the default one,                     for sales to the current partner"
+msgstr "Deze prijslijst wordt gehanteerd in plaats van de standaard for de verkopen richting deze relatie."
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist
@@ -618,7 +588,7 @@ msgstr "De valuta waarin het veld is weergegeven"
 #: code:addons/product/pricelist.py:0
 #, python-format
 msgid "Other Pricelist"
-msgstr "Andere prijslijst"
+msgstr "Other Pricelist"
 
 #. module: product
 #: help:product.template,weight:0
@@ -633,16 +603,17 @@ msgstr "Doos"
 #. module: product
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave!"
 
 #. module: product
 #: help:product.template,sale_ok:0
-msgid ""
-"Determine if the product can be visible in the list of product within a "
-"selection from a sale order line."
-msgstr ""
-"Deze checkbox bepaald of het product wordt opgenomen in de lijst van "
-"producten bij een verkooporderregel."
+msgid "Determine if the product can be visible in the list of product within a selection from a sale order line."
+msgstr "Bepaald of het product wordt opgenomen in de lijst van producten bij een verkoopopdrachtregel."
+
+#. module: product
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Verkopen & Inkopen"
 
 #. module: product
 #: constraint:product.template:0
@@ -652,30 +623,22 @@ msgstr "Fout: UOS moet in een andere categorie staan dan de maateenheid"
 #. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
-msgstr "Hoofd Categorie"
+msgstr "Hoofdcategorie"
 
 #. module: product
 #: selection:product.template,state:0
 msgid "In Development"
-msgstr "In Ontwikkeling"
+msgstr "In ontwikkeling"
 
 #. module: product
 #: help:product.pricelist.type,key:0
-msgid ""
-"Used in the code to select specific prices based on the context. Keep "
-"unchanged."
-msgstr ""
-"Wordt gebruikt in de code om een specieke prijs te bepalen gebaseerd op de "
-"context. Niet wijzigen."
+msgid "Used in the code to select specific prices based on the context. Keep unchanged."
+msgstr "Wordt gebruikt in de code om een specieke prijs te bepalen gebaseerd op de context. Niet wijzigen."
 
 #. module: product
 #: help:product.product,outgoing_qty:0
-msgid ""
-"Quantities of products that are planned to leave in selected locations or "
-"all internal if none have been selected."
-msgstr ""
-"Aantal producten dat gepland is om de gekozen locatie te verlaten of alle "
-"interne als geen locaties zijn gekozen."
+msgid "Quantities of products that are planned to leave in selected locations or all internal if none have been selected."
+msgstr "Aantal producten dat gepland is om de gekozen locatie te verlaten of alle interne als geen locaties zijn gekozen."
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -684,17 +647,14 @@ msgstr "Totaal pakketgewicht"
 
 #. module: product
 #: help:product.template,procure_method:0
-msgid ""
-"'Make to Stock': When needed, take from the stock or wait until re-"
-"supplying. 'Make to Order': When needed, purchase or produce for the "
-"procurement request."
-msgstr ""
+msgid "'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."
+msgstr "'Maak op voorraad': wanneer nodig, neem uit de voorraad of wacht op herbevoorrading. 'Maak op bestelling': wanneer nodig, bestel of produceer voor het verwervingsverzoek."
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
-msgstr "Levering"
+msgstr "Verwerving"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_category_action
@@ -709,11 +669,8 @@ msgstr "HDD Seagate 7200.8 80GB"
 
 #. module: product
 #: help:product.pricelist.version,active:0
-msgid ""
-"When a version is duplicated it is set to non active, so that the dates do "
-"not overlaps with original version. You should change the dates and "
-"reactivate the pricelist"
-msgstr ""
+msgid "When a version is duplicated it is set to non active, so that the dates do not overlaps with original version. You should change the dates and reactivate the pricelist"
+msgstr "Wanneer een versie gedupliceerd wordt, wordt deze op nonactief gezet, zodat de data niet overlappen met het orgineel. U dient de data te wijzigen en de prijslijst te activeren."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -723,7 +680,7 @@ msgstr "HDD Seagate 7200.8 160GB"
 #. module: product
 #: view:product.product:0
 msgid "Product Variant"
-msgstr "Product Variant"
+msgstr "Productvariant"
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -755,17 +712,17 @@ msgstr "EAN13"
 #: view:product.template:0
 #: field:product.template,description_sale:0
 msgid "Sale Description"
-msgstr "Verkoop Omschrijving"
+msgstr "Omschrijving verkoop"
 
 #. module: product
 #: field:product.template,uos_id:0
 msgid "Unit of Sale"
-msgstr "Alt. Eenheid"
+msgstr "Verkoopeenheid (VE)"
 
 #. module: product
 #: field:product.template,mes_type:0
 msgid "Measure Type"
-msgstr "Maateenheid"
+msgstr "Maateenheid (ME)"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -773,23 +730,19 @@ msgid "Weight"
 msgstr "Gewicht"
 
 #. module: product
-#: model:product.template,name:product.product_product_22_product_template
-msgid "Processor on demand"
-msgstr "Processor on demand"
+#: rml:product.pricelist:0
+msgid "Currency :"
+msgstr "Currency :"
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
-msgid ""
-"Name of the product for this partner, will be used when printing a request "
-"for quotation. Keep empty to use the internal one."
-msgstr ""
-"Naam van het product voor deze relatie, deze wordt gebruikt op de "
-"inkoopdocumenten. Laat deze leeg om de eigen productnaam te gebruiken."
+msgid "Name of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."
+msgstr "Naam van het product voor deze relatie. Deze wordt gebruikt bij het afdrukken van offertes. Laat deze leeg om de eigen productnaam te gebruiken."
 
 #. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
-msgstr "Verkrijging"
+msgstr "Bevoorradingsmethode"
 
 #. module: product
 #: model:product.category,name:product.product_category_11
@@ -799,7 +752,7 @@ msgstr "IT components kits"
 #. module: product
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
-msgstr "Afmetingseenheden categoriën"
+msgstr "Categorieën meeteenheden"
 
 #. module: product
 #: view:product.supplierinfo:0
@@ -836,7 +789,12 @@ msgstr "Omschrijvingen"
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Suppliers of Product"
-msgstr ""
+msgstr "Productleveranciers"
+
+#. module: product
+#: model:ir.model,name:product.model_pricelist_partnerinfo
+msgid "pricelist.partnerinfo"
+msgstr "pricelist.partnerinfo"
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -846,16 +804,12 @@ msgstr "Startdatum"
 #. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
-msgstr "Verkoopinstellingen"
+msgstr "Verkoopeigenschappen"
 
 #. module: product
 #: help:product.product,qty_available:0
-msgid ""
-"Current quantities of products in selected locations or all internal if none "
-"have been selected."
-msgstr ""
-"Actueel aantal producten op de gekozen locaties of op alle interne als geen "
-"locaties zijn gekozen."
+msgid "Current quantities of products in selected locations or all internal if none have been selected."
+msgstr "Actueel aantal producten op de gekozen locaties of op alle interne als geen locaties zijn gekozen."
 
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
@@ -874,9 +828,8 @@ msgstr "Categorie"
 
 #. module: product
 #: help:product.pricelist.item,min_quantity:0
-msgid ""
-"The rule only applies if the partner buys/sells more than this quantity."
-msgstr ""
+msgid "The rule only applies if the partner buys/sells more than this quantity."
+msgstr "De regel wordt alleen toegepast wanneer de partner meer koopt/verkoopt dan deze hoeveelheid."
 
 #. module: product
 #: model:product.template,name:product.product_product_ram_product_template
@@ -884,9 +837,15 @@ msgid "DDR 256MB PC400"
 msgstr "DDR 256MB PC400"
 
 #. module: product
+#: code:addons/product/product.py:0
+#, python-format
+msgid "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!"
+msgstr "Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!"
+
+#. module: product
 #: field:product.product,qty_available:0
 msgid "Real Stock"
-msgstr "Aanwezige Voorraad"
+msgstr "Aanwezige voorraad"
 
 #. module: product
 #: view:product.category:0
@@ -895,15 +854,18 @@ msgstr "Productcategorieën"
 
 #. module: product
 #: help:product.uom,category_id:0
-msgid ""
-"Unit of Measure of a category can be converted between each others in the "
-"same category."
-msgstr ""
+msgid "Unit of Measure of a category can be converted between each others in the same category."
+msgstr "De meeteenheid van een categorie kan geconverteerd worden naar andere meeteenheden binnen dezelfde categorie."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "Product Meeteenheid"
+msgstr "Meeteenheid product"
+
+#. module: product
+#: help:product.product,incoming_qty:0
+msgid "Quantities of products that are planned to arrive in selected locations or all internal if none have been selected."
+msgstr "Aantallen producten die gepland zijn om te worden ontvangen op de gekozen locaties, of alle interne als geen locaties zijn gekozen"
 
 #. module: product
 #: field:product.template,sale_ok:0
@@ -917,11 +879,8 @@ msgstr "Complete PC met randapparatuur"
 
 #. module: product
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde "
-"categorie liggen."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde categorie liggen."
 
 #. module: product
 #: model:product.template,name:product.product_product_mb2_product_template
@@ -936,7 +895,7 @@ msgstr "Ratio"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Products Listprices Items"
-msgstr "Productprijslijst Items"
+msgstr "Productprijslijst items"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -955,21 +914,18 @@ msgstr "Aantal per verpakking"
 
 #. module: product
 #: help:product.template,uos_id:0
-msgid ""
-"Used by companies that manages two unit of measure: invoicing and stock "
-"management. For example, in food industries, you will manage a stock of ham "
-"but invoice in Kg. Keep empty to use the default UOM."
-msgstr ""
-"Wordt gebruikt door bedrijven die twee maateenheden hanteren voor facturatie "
-"en voorraad beheer. Bijvoorbeeld in de voedselsector is het gebruikelijk om "
-"een voorraad ham te beheren maar te factureren per Kg. Leeg laten om de "
-"standaard maateenheid te gebruiken."
+msgid "Used by companies that manages two unit of measure: invoicing and stock management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM."
+msgstr "Used by companies that manages two unit of measure: invoicing and stock management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM."
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Leveringen & voorraadlocaties"
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "Could not resolve product category, ' \\n"
+"                                    'you have defined cyclic categories ' \\n"
+"                                    'of products!"
+msgstr "Could not resolve product category, ' \\n"
+"                                    'you have defined cyclic categories ' \\n"
+"                                    'of products!"
 
 #. module: product
 #: view:product.product:0
@@ -993,27 +949,27 @@ msgstr "Kopen"
 #: view:product.pricelist:0
 #: view:product.pricelist.version:0
 msgid "Pricelist Version"
-msgstr "Prijslijst Versie"
+msgstr "Prijslijstversie"
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
 msgid "Price Rounding"
-msgstr "Prijsafronding"
+msgstr "Afronding prijs"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
 msgid "Public Price"
-msgstr "Adviesprijs"
+msgstr "Verkoopprijs"
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "Max. prijsmarge"
 
 #. module: product
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Verkopen & Inkopen"
+#: model:ir.actions.report.xml,name:product.report_product_pricelist
+msgid "Product Pricelist"
+msgstr "Product Pricelist"
 
 #. module: product
 #: model:product.category,name:product.product_category_10
@@ -1028,17 +984,22 @@ msgstr "Het gewicht van de lege UL"
 #. module: product
 #: help:product.packaging,code:0
 msgid "The code of the transport unit."
-msgstr "Transportcode eenheid"
+msgstr "De code van de transporteenheid"
+
+#. module: product
+#: model:product.template,name:product.product_product_22_product_template
+msgid "Processor on demand"
+msgstr "Processor on demand"
 
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase UoM"
-msgstr "Inkoopeenheid"
+msgstr "Besteleenheid"
 
 #. module: product
 #: view:product.price.type:0
 msgid "Products Price Type"
-msgstr "Soort prijs"
+msgstr "Soort productprijs"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -1048,7 +1009,7 @@ msgstr "Productmanager"
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Price Extra"
-msgstr "Prijs voor variant"
+msgstr "Extra prijs voor variant"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan_product_template
@@ -1062,18 +1023,13 @@ msgstr "Informatie over een leverancier"
 
 #. module: product
 #: help:product.product,packaging:0
-msgid ""
-"Gives the different ways to package the same product. This has no impact on "
-"the packing order and is mainly used if you use the EDI module."
-msgstr ""
-"Geeft de verschillende manieren van verpakken van hetzelfde product aan. Dit "
-"heeft geen effect op de verpakkingsvolgorde. Dit wordt voornamelijk gebruikt "
-"als er gebruik wordt maakt van de EDI-module."
+msgid "Gives the different ways to package the same product. This has no impact on the packing order and is mainly used if you use the EDI module."
+msgstr "Geeft de verschillende manieren van verpakken van hetzelfde product aan. Dit heeft geen effect op de verpakkingsvolgorde. Het wordt voornamelijk gebruikt als er gebruik wordt maakt van de EDI-module."
 
 #. module: product
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
-msgstr "Marge Prijs van variant"
+msgstr "Marge variantprijs"
 
 #. module: product
 #: wizard_view:product.price_list,init:0
@@ -1086,39 +1042,33 @@ msgid "Medium PC"
 msgstr "Medium PC"
 
 #. module: product
-#: model:ir.model,name:product.model_pricelist_partnerinfo
-msgid "pricelist.partnerinfo"
-msgstr "pricelist.partnerinfo"
+#: model:product.template,name:product.advance_product_0_product_template
+msgid "Advance Product"
+msgstr "Voorlopig product"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
 #: field:product.template,standard_price:0
 msgid "Cost Price"
-msgstr "Standaardprijs"
+msgstr "Kostprijs"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description_purchase:0
 msgid "Purchase Description"
-msgstr "Inkoop Omschrijving"
+msgstr "Omschrijving bestelling"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Second UoM"
-msgstr "Tweede Maateenheid"
+msgstr "Tweede meeteenheid"
 
 #. module: product
 #: help:product.template,seller_delay:0
-msgid ""
-"This is the average delay in days between the purchase order confirmation "
-"and the reception of goods for this product and for the default supplier. It "
-"is used by the scheduler to order requests based on reordering delays."
-msgstr ""
-"Dit is de gemiddelde periode in de dagen tussen de bestelling en de "
-"bevestiging van het ontvangst van goederen voor dit product en voor de "
-"standaardleverancier. Dit wordt gebruikt voor de bestelplanner."
+msgid "This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."
+msgstr "Dit is de gemiddelde vertraging in dagen tussen de bevestiging van de bestelopdracht en de ontvangst van goederen voor dit product en voor de standaardleverancier. Dit wordt gebruikt door de planner om verzoeken te sorteren op vertraging in nabestelling."
 
 #. module: product
 #: model:product.category,name:product.product_category_4
@@ -1139,12 +1089,17 @@ msgstr "Lengte van het pakket"
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "Min. prijsmarge"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_km
+msgid "Km"
+msgstr "Km"
 
 #. module: product
 #: help:product.packaging,ean:0
 msgid "The EAN code of the package unit."
-msgstr "De barcode van de verpakkings eenheid"
+msgstr "De barcode van de verpakkingseenheid"
 
 #. module: product
 #: field:product.template,weight:0
@@ -1152,24 +1107,27 @@ msgid "Gross weight"
 msgstr "Massa"
 
 #. module: product
-#: field:product.price.type,active:0
-#: field:product.pricelist,active:0
-#: field:product.pricelist.version,active:0
-#: field:product.product,active:0
-#: field:product.uom,active:0
-msgid "Active"
-msgstr "Actief"
+#: field:product.packaging,weight_ul:0
+msgid "Empty Package Weight"
+msgstr "Leeg pakketgewicht"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_cm
+msgid "cm"
+msgstr "cm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
-msgstr "Product Categorie"
+msgstr "Productcategorie"
 
 #. module: product
-#: field:product.price.type,field:0
-msgid "Product Field"
-msgstr "Productveld"
+#: code:addons/product/pricelist.py:0
+#: constraint:product.pricelist.item:0
+#, python-format
+msgid "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
+msgstr "Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
@@ -1185,12 +1143,17 @@ msgstr "Geeft aan of het product bruikbaar is."
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Partner Product Code"
-msgstr "Artikelnummer relatie"
+msgstr "Productcode relatie"
 
 #. module: product
 #: model:product.category,name:product.product_category_3
 msgid "Computer Stuff"
 msgstr "Computer spullen"
+
+#. module: product
+#: rml:product.pricelist:0
+msgid "Printing Date :"
+msgstr "Printing Date :"
 
 #. module: product
 #: field:product.packaging,code:0
@@ -1201,15 +1164,15 @@ msgstr "Code"
 
 #. module: product
 #: help:product.uom,factor_inv:0
-msgid ""
-"The coefficient for the formula:\n"
+msgid "The coefficient for the formula:\n"
 "coeff (base unit) = 1 (this unit). Factor = 1 / Rate."
-msgstr ""
+msgstr "De coëfficient voor de formule:\n"
+"coeff (basiseenheid) = 1 (deze eenheid) .  Factor = 1 / Ratio"
 
 #. module: product
 #: view:product.supplierinfo:0
 msgid "Seq"
-msgstr "Volgorde"
+msgstr "Reeks"
 
 #. module: product
 #: model:product.category,name:product.product_category_8
@@ -1224,7 +1187,7 @@ msgstr "Variabel"
 #. module: product
 #: help:product.template,uom_id:0
 msgid "Default Unit of Measure used for all stock operation."
-msgstr "Deze eenheid wordt gebruikt in de voorraadregistratie."
+msgstr "Standaard meeteenheid voor alle voorraadhandelingen"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -1235,18 +1198,14 @@ msgid "Product Template"
 msgstr "Productsjabloon"
 
 #. module: product
-#: field:product.category,sequence:0
-#: field:product.packaging,sequence:0
-#: field:product.pricelist.item,sequence:0
-msgid "Sequence"
-msgstr "Volgorde"
+#: model:ir.model,name:product.model_product_ul
+msgid "Shipping Unit"
+msgstr "Verzendeenheid"
 
 #. module: product
 #: help:product.uom,rounding:0
-msgid ""
-"The computed quantity will be a multiple of this value. Use 1.0 for products "
-"that can not be split."
-msgstr ""
+msgid "The computed quantity will be a multiple of this value. Use 1.0 for products that can not be split."
+msgstr "De berekende hoeveelheid zal een veelvoud van deze waarde zijn. Gebruik 1.0 voor producten die niet opgesplitst kunnen worden."
 
 #. module: product
 #: field:product.packaging,height:0
@@ -1261,19 +1220,19 @@ msgstr "Maatwerk PC"
 #. module: product
 #: help:product.pricelist.version,date_end:0
 msgid "Ending date for this pricelist version to be valid."
-msgstr ""
+msgstr "Einddatum van de geldigheid van deze prijslijstversie."
 
 #. module: product
 #: field:pricelist.partnerinfo,suppinfo_id:0
 msgid "Partner Information"
-msgstr "Relatie Informatie"
+msgstr "Informatie relatie"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
 #: field:product.template,type:0
 msgid "Product Type"
-msgstr "Producttype"
+msgstr "Soort product"
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1289,7 +1248,7 @@ msgstr "Alle producten"
 #. module: product
 #: wizard_button:product.price_list,init,end:0
 msgid "Cancel"
-msgstr "Annuleer"
+msgstr "Annuleren"
 
 #. module: product
 #: help:product.packaging,qty:0
@@ -1299,7 +1258,7 @@ msgstr "Het totale aantal producten dat op een pallet of in een doos past."
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
 msgid "Pricelist item"
-msgstr "Prijslijst Artikel"
+msgstr "Prijslijst item"
 
 #. module: product
 #: model:ir.actions.wizard,name:product.report_wizard_price
@@ -1310,7 +1269,7 @@ msgstr "Prijslijst"
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr "Publieke Prijslijst"
+msgstr "Verkoopprijslijst"
 
 #. module: product
 #: model:product.template,name:product.product_product_21_product_template
@@ -1342,14 +1301,12 @@ msgstr "Informatie"
 #. module: product
 #: view:product.product:0
 msgid "Codes"
-msgstr ""
+msgstr "Codes"
 
 #. module: product
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: product
 #: wizard_field:product.price_list,init,qty4:0
@@ -1365,7 +1322,12 @@ msgstr "Aantal-5"
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Other Info"
-msgstr "Overige gegevens"
+msgstr "Overige informatie"
+
+#. module: product
+#: model:product.uom,name:product.product_uom_m
+msgid "m"
+msgstr "m"
 
 #. module: product
 #: view:product.product:0
@@ -1376,17 +1338,12 @@ msgstr "Vertragingen"
 #. module: product
 #: field:product.pricelist.version,items_id:0
 msgid "Price List Items"
-msgstr "Prijslijst Artikelen"
+msgstr "Prijslijst items"
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
-msgid ""
-"Code of the product for this partner, will be used when printing a request "
-"for quotation. Keep empty to use the internal one."
-msgstr ""
-"Artikelnummer van het product voor deze relatie, dit nummer wordt geprint op "
-"de inkoopdocumenten. Laat deze leeg om het interne artikelnummer te "
-"gebruiken."
+msgid "Code of the product for this partner, will be used when printing a request for quotation. Keep empty to use the internal one."
+msgstr "Productcode voor deze relatie. Dit zal gebruikt worden bij het afdrukken van een offerte-aanvraag. Laat deze leeg om de interne productcode gebruiken."
 
 #. module: product
 #: selection:product.template,state:0
@@ -1396,12 +1353,12 @@ msgstr "Verouderd"
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
-msgstr ""
+msgstr "Pallet"
 
 #. module: product
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
-msgstr "Eenheidsprijs"
+msgstr "Prijs per eenheid"
 
 #. module: product
 #: field:product.template,warranty:0
@@ -1415,11 +1372,8 @@ msgstr "Verpakken per laag"
 
 #. module: product
 #: help:product.template,type:0
-msgid ""
-"Will change the way procurements are processed. Consumables are stockable "
-"products with infinite stock, or for use when you have no stock management "
-"in the system."
-msgstr ""
+msgid "Will change the way procurements are processed. Consumables are stockable products with infinite stock, or for use when you have no stock management in the system."
+msgstr "Wijzigt de manier waarop verwervingsverzoeken worden verwerkt. Verbruiksartikelen zijn voorraadartikelen met oneindige voorraad, of voor gebruik wanneer u geen voorraadbeheer in het systeem gebruikt."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -1429,7 +1383,12 @@ msgstr "Leveranciers met hun productnaam, prijs e.d."
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
 msgid "Price type"
-msgstr "Soort Prijs"
+msgstr "Soort prijs"
+
+#. module: product
+#: model:product.template,name:product.product_product_27_product_template
+msgid "CAT5e Grey UTP cable"
+msgstr "CAT5e Grey UTP cable"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1450,6 +1409,7 @@ msgstr "Volume"
 #. module: product
 #: field:pricelist.partnerinfo,name:0
 #: field:product.packaging,name:0
+#: rml:product.pricelist:0
 #: view:product.product:0
 #: view:product.template:0
 #: field:product.template,description:0
@@ -1470,20 +1430,19 @@ msgstr "Productomschrijving"
 #. module: product
 #: view:product.pricelist.item:0
 msgid " ) + "
-msgstr ""
+msgstr " ) + "
 
 #. module: product
 #: help:product.template,sale_delay:0
-msgid ""
-"This is the average time between the confirmation of the customer order and "
-"the delivery of the finished products. It's the time you promise to your "
-"customers."
-msgstr ""
+msgid "This is the average time between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."
+msgstr "Dit is de gemiddelde tijd tussen de bevestiging van de klantorder en de levering van het eindproduct. Het is de tijd die u uw klant belooft."
 
 #. module: product
-#: model:ir.model,name:product.model_product_uom_categ
-msgid "Product uom categ"
-msgstr "Product eenh. Cat."
+#: help:product.template,uos_coeff:0
+msgid "Coefficient to convert UOM to UOS\n"
+" uos = uom * coeff"
+msgstr "Coefficient to convert UOM to UOS\n"
+" uos = uom * coeff"
 
 #. module: product
 #: wizard_field:product.price_list,init,qty3:0
@@ -1493,7 +1452,7 @@ msgstr "Aantal-3"
 #. module: product
 #: model:product.ul,name:product.product_ul_box
 msgid "Box 20x20x40"
-msgstr ""
+msgstr "Doos 20x20x40"
 
 #. module: product
 #: selection:product.template,supply_method:0
@@ -1503,17 +1462,22 @@ msgstr "Maken"
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Maak Op Order"
+msgstr "Maak op bestelling"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr "Prijs Toeslag"
+msgstr "Prijs toeslag"
 
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "U kunt geen twee overlappende prijslijsten hebben!"
+
+#. module: product
+#: rml:product.pricelist:0
+msgid "units"
+msgstr "units"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -1538,7 +1502,7 @@ msgstr "Mainboard ASUStek A7N8X"
 #. module: product
 #: field:product.template,loc_case:0
 msgid "Case"
-msgstr "Zaak"
+msgstr "Dossier"
 
 #. module: product
 #: field:product.pricelist.version,date_end:0
@@ -1569,23 +1533,22 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: product
-#: help:product.template,uos_coeff:0
-msgid ""
-"Coefficient to convert UOM to UOS\n"
-" uom = uos * coeff"
-msgstr ""
-"Coëfficiënt om Meeteenheid naar Verkoopeenheid te converteren\n"
-"Meeteenheid = Verkoopeenheid * coëfficiënt"
-
-#. module: product
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr "In te Kopen"
+msgstr "In te kopen"
+
+#. module: product
+#: code:addons/product/pricelist.py:0
+#, python-format
+msgid "No active version for the selected pricelist !\n' \\n"
+"                                'Please create or activate one."
+msgstr "No active version for the selected pricelist !\n' \\n"
+"                                'Please create or activate one."
 
 #. module: product
 #: field:product.template,uos_coeff:0
 msgid "UOM -> UOS Coeff"
-msgstr "Omrek. factor"
+msgstr "ME -> VE coëff"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu2_product_template
@@ -1606,13 +1569,19 @@ msgstr "Kostenmethode"
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Palletization"
-msgstr ""
+msgstr "Palletstapeling"
 
 #. module: product
 #: code:addons/product/pricelist.py:0
+#: code:addons/product/product.py:0
 #, python-format
 msgid "Warning !"
-msgstr "Waarschuwing!"
+msgstr "Warning !"
+
+#. module: product
+#: help:product.template,volume:0
+msgid "The volume in m3."
+msgstr "Het volume in m3."
 
 #. module: product
 #: view:product.product:0
@@ -1627,33 +1596,34 @@ msgstr "Het gewicht van een een doos/pallet vol met producten"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
-msgid ""
-"Sets the price so that it is a multiple of this value.\n"
+msgid "Sets the price so that it is a multiple of this value.\n"
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
-msgstr ""
+msgstr "Zet de prijs op een veelvoud van dit bedrag.\n"
+"Afronding wordt toegepast na de korting en voor de naheffing.\n"
+"Om prijzen te laten eindigen op 9.99, zet de afronding op 10 en de naheffing op -0.01"
 
 #. module: product
 #: selection:product.template,state:0
 msgid "End of Lifecycle"
-msgstr "Einde Levensloop"
+msgstr "Einde levensloop"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "Producten & prijslijsten"
 
 #. module: product
 #: help:product.uom,factor:0
-msgid ""
-"The coefficient for the formula:\n"
+msgid "The coefficient for the formula:\n"
 "1 (base unit) = coeff (this unit). Rate = 1 / Factor."
-msgstr ""
+msgstr "De coëfficient voor de formule:\n"
+" 1 (basiseenheid) = coëff (deze eenheid) .  Factor = 1 / Ratio"
 
 #. module: product
 #: help:product.template,weight_net:0
 msgid "The net weight in Kg."
-msgstr "Netto gewicht in Kg."
+msgstr "Netto gewicht in kg."
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
@@ -1670,12 +1640,14 @@ msgstr "Uitstel van levering"
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action
 #: field:product.pricelist,version_id:0
 msgid "Pricelist Versions"
-msgstr "Versies prijslijsten"
+msgstr "Prijslijstversies"
 
 #. module: product
-#: field:product.packaging,weight_ul:0
-msgid "Empty Package Weight"
-msgstr "Leeg pakketgewicht"
+#: field:product.category,sequence:0
+#: field:product.packaging,sequence:0
+#: field:product.pricelist.item,sequence:0
+msgid "Sequence"
+msgstr "Reeks"
 
 #. module: product
 #: field:product.template,list_price:0
@@ -1684,14 +1656,8 @@ msgstr "Verkoopprijs"
 
 #. module: product
 #: help:product.template,produce_delay:0
-msgid ""
-"Average time to produce this product. This is only for the production order "
-"and, if it is a multi-level bill of material, it's only for the level of "
-"this product. Different delays will be summed for all levels and purchase "
-"orders."
-msgstr ""
-"Gemiddelde tijd om dit product te produceren. Dit geldt alleen voor een "
-"productieorder."
+msgid "Average time to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different delays will be summed for all levels and purchase orders."
+msgstr "Gemiddelde tijd om dit product te produceren. Dit geldt alleen voor een productieorder. Als het een multi-niveau materiaallijst gaat, geld dit alleen voor het niveau van dit product. Verschillende vertragingen zullen worden gesommeerd voor alle niveau's en bestelopdrachten."
 
 #. module: product
 #: wizard_field:product.price_list,init,qty1:0
@@ -1700,6 +1666,7 @@ msgstr "Aantal-1"
 
 #. module: product
 #: field:product.packaging,length:0
+#: model:product.uom.categ,name:product.product_uom_categ_m
 msgid "Length"
 msgstr "Lengte"
 
@@ -1709,32 +1676,20 @@ msgid "Private"
 msgstr "Privé"
 
 #. module: product
-#: help:product.supplierinfo,delay:0
-msgid ""
-"Delay in days between the confirmation of the purchase order and the "
-"reception of the products in your warehouse. Used by the scheduler for "
-"automatic computation of the purchase order planning."
-msgstr ""
-"Vertraging in dagen tussen de bevestiging van de inkooporder en de ontvangst "
-"van de producten in het magazijn. Dit gegeven wordt gebruikt bij de "
-"inkooporder planning."
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Leveringen & voorraadlocaties"
 
 #. module: product
-#: model:ir.actions.act_window,name:product.product_uom_form_action
-#: model:ir.ui.menu,name:product.menu_product_uom_form_action
-#: model:ir.ui.menu,name:product.next_id_16
-#: view:product.uom:0
-msgid "Units of Measure"
-msgstr "Afmetingseenheden"
+#: help:product.supplierinfo,delay:0
+msgid "Delay in days between the confirmation of the purchase order and the reception of the products in your warehouse. Used by the scheduler for automatic computation of the purchase order planning."
+msgstr "Vertraging in dagen tussen de bevestiging van de inkooporder en de ontvangst van de producten in het magazijn. Dit gegeven wordt gebruikt bij de inkooporder planning."
 
 #. module: product
 #: help:product.template,uom_po_id:0
-msgid ""
-"Default Unit of Measure used for purchase orders. It must in the same "
-"category than the default unit of measure."
-msgstr ""
-"Deze eenheid wordt standaard gebruikt bij de inkooporders. Deze eenheid moet "
-"in dezelfde categorie zitten als de standaardmeeteenheid."
+msgid "Default Unit of Measure used for purchase orders. It must in the same category than the default unit of measure."
+msgstr "Deze eenheid wordt standaard gebruikt bij de inkooporders. Deze eenheid moet in dezelfde categorie zitten als de standaardmeeteenheid."
 
 #. module: product
 #: constraint:product.product:0
@@ -1744,16 +1699,12 @@ msgstr "Fout, ongeldige EAN-code"
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
 msgid "Min. Quantity"
-msgstr "Min. Hoeveelheid"
+msgstr "Min. hoeveelheid"
 
 #. module: product
 #: help:product.pricelist.item,categ_id:0
-msgid ""
-"Set a category of product if this rule only apply to products of a category "
-"and his childs. Keep empty for all products"
-msgstr ""
-"Selecteer een productcategory als deze prijslijstregel alleen betrekking "
-"heeft op één categorie. Laat deze leeg als dit niet zo is."
+msgid "Set a category of product if this rule only apply to products of a category and his childs. Keep empty for all products"
+msgstr "Selecteer een productcategorie als deze regel alleen betrekking heeft op producten van één categorie en diens subcategorieën. Laat deze leeg voor alle producten."
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1761,21 +1712,26 @@ msgid "Products Labels"
 msgstr "Productlabel"
 
 #. module: product
-#: help:product.template,volume:0
-msgid "The volume in m3."
-msgstr "Het volume in m3."
+#: model:ir.actions.act_window,name:product.product_normal_action
+#: model:ir.actions.act_window,name:product.product_normal_action_tree
+#: model:ir.ui.menu,name:product.menu_main_product
+#: model:ir.ui.menu,name:product.menu_products
+#: view:product.product:0
+msgid "Products"
+msgstr "Producten"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box
 msgid "Box 30x40x60"
-msgstr ""
+msgstr "Doos 30x40x60"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "KGM"
-msgstr "Kg"
+msgstr "kg"
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Korting"
+

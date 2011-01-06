@@ -25,6 +25,8 @@ import time
 import tools
 from osv import fields,osv,orm
 from tools.translate import _
+from tools import ustr
+from tools.safe_eval import safe_eval
 
 #class ir_model_fields(osv.osv):
 #   _inherit = 'ir.model.fields'
@@ -64,9 +66,9 @@ class report_creator(osv.osv):
                 if key not in fields_to_export:
                     continue
                 if isinstance(value,tuple):
-                    datas.append(str(value[1]))
+                    datas.append(ustr(value[1]))
                 else:
-                    datas.append(str(value))
+                    datas.append(ustr(value))
             final_datas += [datas]
         return {'datas':final_datas}
         
@@ -109,9 +111,11 @@ class report_creator(osv.osv):
             
         arch = '<?xml version="1.0" encoding="utf-8"?>\n'
         if view_type=='graph':
-            arch +='<graph string="%s" type="%s" orientation="%s">' % (report.name, report.view_graph_type,report.view_graph_orientation)
+            orientation_eval = {'horz':'horizontal','vert' :'vertical'}
+            orientation = safe_eval(report.view_graph_orientation,orientation_eval)
+            arch +='<graph string="%s" type="%s" orientation="%s">' % (report.name, report.view_graph_type, orientation)
+            i = 0
             for val in ('x','y'):
-                i = 0
                 for f in report.field_ids:
                     if f.graph_mode==val:
                         if f.field_id.model:
@@ -348,7 +352,8 @@ class report_creator(osv.osv):
                     fields.append('\t'+t+'.'+f.field_id.name+' as field'+str(i))
                 else:
                     fields.append('\t'+f.group_method+'('+t+'.'+f.field_id.name+')'+' as field'+str(i))
-                groupby.append(t+'.'+f.field_id.name)
+                if f.group_method == 'group':
+                    groupby.append(t+'.'+f.field_id.name)
                 i+=1
             models = self._path_get(cr, uid, obj.model_ids, obj.filter_ids)
             check = self._id_get(cr, uid, ids[0], context)

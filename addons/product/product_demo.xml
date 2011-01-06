@@ -54,6 +54,40 @@
             <field name="name">IT components kits</field>
         </record>
         
+        <!--
+    Resource: product.uom.categ
+    -->
+
+        <record id="product_uom_categ_m" model="product.uom.categ">
+            <field name="name">Length</field>
+        </record>
+        
+        <!--
+    Resource: product.uom
+    -->
+        <record id="product_uom_m" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_m"/>
+            <field name="name">m</field>
+            <field name="factor_inv">1</field>
+            <field name="factor">1</field>
+        </record>
+        <record id="product_uom_km" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_m"/>
+            <field name="name">Km</field>
+            <field name="factor_inv">1000</field>
+            <field name="factor">0.001</field>
+        </record>
+        <record id="product_uom_cm" model="product.uom">
+            <field name="category_id" ref="product_uom_categ_m"/>
+            <field name="factor_inv">0.01</field>
+            <field name="factor">100</field>
+            <field name="name">cm</field>
+        </record>
+        
+        <!-- 
+    Resource: product.ul 
+    -->
+        
         <record id="product_ul_box" model="product.ul">
             <field name="name">Box 20x20x40</field>
             <field name="type">box</field>
@@ -163,7 +197,7 @@
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_cpu3" model="product.product">
-            <field name="default_code">CPU2</field>
+            <field name="default_code">CPU3</field>
             <field name="list_price">150.0</field>
             <field name="standard_price">100.0</field>
             <field name="uom_id" ref="product_uom_unit"/>
@@ -302,7 +336,7 @@
             <field name="categ_id" ref="product_category_10"/>
         </record>
         <record id="product_product_22" model="product.product">
-            <field name="default_code">CPU_GEN</field>
+            <field name="default_code">CPU_DEM</field>
             <field name="supply_method">produce</field>
             <field name="list_price">150.0</field>
             <field name="standard_price">100.0</field>
@@ -351,6 +385,27 @@
             <field name="name">Kit Keyboard + Mouse</field>
             <field name="categ_id" ref="product_category_11"/>
         </record>
+        <record id="product_product_27" model="product.product">
+            <field name="default_code">UTP5</field>
+            <field name="list_price">3</field>
+            <field name="standard_price">2</field>
+            <field name="uom_id" ref="product_uom_m"/>
+            <field name="uom_po_id" ref="product_uom_km"/>
+            <field name="name">CAT5e Grey UTP cable</field>
+            <field name="categ_id" ref="product_category_accessories"/>
+        </record>
+
+        <!-- sale advance demo.. -->
+		<!-- Demo Data for Product -->
+		<record id="advance_product_0" model="product.product">
+			<field name="name">Advance Product</field>
+			<field name="categ_id" ref="cat1"/>
+			<field name="type">service</field>
+			<field name="list_price">150.0</field>
+			<field name="standard_price">100.0</field>
+			<field name="uom_id" ref="product_uom_unit"/>
+			<field name="uom_po_id" ref="product_uom_unit"/>
+		</record>
         
         <record id="supplierinfo1" model="product.supplierinfo">
             <field name="name" ref="base.res_partner_asus"/>

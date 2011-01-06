@@ -368,6 +368,7 @@
             <field name="name">stock.location.tree</field>
             <field name="model">stock.location</field>
             <field name="type">tree</field>
+            <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <tree string="Stock location" colors="blue:usage=='view';darkred:usage=='internal'">
                     <field name="complete_name"/>
@@ -554,7 +555,7 @@
                                     <button name="%(track_line)d" string="Split in production lots" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
-                                    <group>
+                                    <group colspan="2">
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                         <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
@@ -649,7 +650,7 @@
                                     <field groups="base.group_extended" name="tracking_id" select="1"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
-                                    <group>
+                                    <group colspan="2">
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                         <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
@@ -844,7 +845,7 @@
                                     <button name="%(track_line)d" string="Split in production lots" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
-                                    <group>
+                                    <group colspan="2">
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                         <button name="action_cancel" states="assigned" string="Cancel" type="object"/>
@@ -1036,7 +1037,7 @@
                                     <button groups="base.group_extended" name="%(track_line)d" string="Split in production lots" type="action"/>
                                     <separator colspan="4" string="Move State"/>
                                     <field name="state" select="1"/>
-                                    <group>
+                                    <group colspan="2">
                                         <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
                                         <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
                                         <button name="action_cancel" states="assigned" string="Cancel" type="object"/>

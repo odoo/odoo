@@ -43,7 +43,7 @@ class invoice_create(wizard.interface):
             if obj_acc.invoice_id and obj_acc.invoice_id.state !='cancel':
                 raise wizard.except_wizard(_('Warning'),_('The analytic entry "%s" is already invoiced!')%(obj_acc.name,))
         
-        cr.execute("SELECT distinct(account_id) from account_analytic_line where id IN (%s)"% (','.join(map(str,data['ids'])),))
+        cr.execute("SELECT distinct(account_id) from account_analytic_line where id IN %s", (tuple(data['ids']),))
         account_ids = cr.fetchall()
         return {'accounts': [x[0] for x in account_ids]}
 
@@ -96,9 +96,10 @@ class invoice_create(wizard.interface):
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount) " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
-                        "AND id IN (" + ','.join([str(x) for x in data['ids']]) + ") " \
+                        "AND id IN %s " \
                         "AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice", (account.id,))
+                    "GROUP BY product_id,to_invoice",
+                       (account.id, tuple(data['ids'])))
 
             for product_id,factor_id,qty in cr.fetchall():
                 product = pool.get('product.product').browse(cr, uid, product_id, context2)
@@ -144,11 +145,12 @@ class invoice_create(wizard.interface):
                 #
                 cr.execute("SELECT * "  # TODO optimize this
                            "  FROM account_analytic_line"
-                           " WHERE account_id=%%s"
-                           "   AND id IN (%s)"
-                           "   AND product_id=%%s"
-                           "   AND to_invoice=%%s" % ','.join(['%s']*len(data['ids'])),
-                           tuple([account.id]+ data['ids']+[ product_id, factor_id]))
+                           " WHERE account_id=%s"
+                           "   AND id IN %s"
+                           "   AND product_id=%s"
+                           "   AND to_invoice=%s"
+                           " ORDER BY account_analytic_line.date",
+                           (account.id, tuple(data['ids']), product_id, factor_id))
                 line_ids = cr.dictfetchall()
                 note = []
                 for line in line_ids:
@@ -158,7 +160,7 @@ class invoice_create(wizard.interface):
                         details.append(line['date'])
                     if data['form']['time']:
                         if line['product_uom_id']:
-                            details.append("%s %s" % (line['unit_amount'], pool.get('product.uom').browse(cr, uid, [line['product_uom_id']])[0].name))
+                            details.append("%s %s" % (line['unit_amount'], pool.get('product.uom').browse(cr, uid, [line['product_uom_id']],context2)[0].name))
                         else:
                             details.append("%s" % (line['unit_amount'], ))
                     if data['form']['name']:
@@ -169,8 +171,9 @@ class invoice_create(wizard.interface):
 
                 curr_line['note'] = "\n".join(map(lambda x: x or '',note))
                 pool.get('account.invoice.line').create(cr, uid, curr_line)
-                strids = ','.join(map(str, data['ids']))
-                cr.execute("update account_analytic_line set invoice_id=%%s WHERE account_id = %%s and id IN (%s)" % strids, (last_invoice,account.id,))
+                cr.execute("UPDATE account_analytic_line SET invoice_id=%s "\
+                           "WHERE account_id = %s AND id IN %s",
+                           (last_invoice,account.id, tuple(data['ids'])))
                 
         pool.get('account.invoice').button_reset_taxes(cr, uid, [last_invoice], context)
         

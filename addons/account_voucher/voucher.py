@@ -104,7 +104,7 @@ class account_voucher(osv.osv):
             ],'Type', readonly=True, select=True , size=128),
         'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}, domain=[('type','<>','view')]),
         'payment_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=False, states={'proforma':[('readonly',True)]}),
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'narration':fields.text('Narration', readonly=True, states={'draft':[('readonly',False)]}, required=True),
@@ -300,9 +300,9 @@ class account_voucher(osv.osv):
                 name = self.pool.get('ir.sequence').get_id(cr, uid, journal.sequence_id.id)
 
             move = {
-                'name': name, 
+                'name' : name, 
                 'journal_id': journal_id, 
-                'voucher_type':inv.type,
+                'type' : inv.type,
                 'narration' : inv.narration
             }
             if inv.period_id:
@@ -407,7 +407,8 @@ class account_voucher(osv.osv):
     def action_number(self, cr, uid, ids, *args):
         cr.execute('SELECT id, type, number, move_id, reference ' \
                 'FROM account_voucher ' \
-                'WHERE id IN ('+','.join(map(str,ids))+')')
+                'WHERE id IN %s',
+                   (tuple(ids),))
         for (id, invtype, number, move_id, reference) in cr.fetchall():
             if not number:
                 number = self.pool.get('ir.sequence').get(cr, uid, invtype)
@@ -488,7 +489,7 @@ class VoucherLine(osv.osv):
     _columns = {
         'voucher_id':fields.many2one('account.voucher', 'Voucher'),
         'name':fields.char('Description', size=256, required=True),
-        'account_id':fields.many2one('account.account','Account', required=True),
+        'account_id':fields.many2one('account.account','Account', required=True, domain=[('type','<>','view')]),
         'partner_id': fields.many2one('res.partner', 'Partner', change_default=True),
         'amount':fields.float('Amount'),
         'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Type'),

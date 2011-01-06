@@ -4,30 +4,26 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:49+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:54:04+0000\n"
+"PO-Revision-Date: 2010-09-02 13:54:04+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: delivery
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków "
-"specjalnych !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Nazwa obiektu musi zaczynać się od x_ oraz nie może zawierać znaków specjalnych !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid ">="
-msgstr ""
+msgstr ">="
 
 #. module: delivery
 #: view:res.partner:0
@@ -52,22 +48,22 @@ msgstr "XML niewłaściwy dla tej architektury wyświetlania!"
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Error ! You can not create recursive associated members."
 
 #. module: delivery
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr "Stany"
+msgstr "Regiony"
 
 #. module: delivery
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nieprawidłowa nazwa modelu w definicji akcji."
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packing."
-msgstr ""
+msgstr "Ta metoda dostawy będzie stosowana przy fakturowaniu z wydania zewnętrznego."
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -127,7 +123,7 @@ msgstr "Pozycja tabeli opłat za dostawy"
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr "Dostawa"
+msgstr "Wydanie zewnętrzne"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -169,7 +165,7 @@ msgstr "="
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr ""
+msgstr "Dostawa jako produkt"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -203,8 +199,7 @@ msgstr "Kraje"
 
 #. module: delivery
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr "Błąd: domyślna JM i zakupowa JM muszą być tej samej kategorii."
 
 #. module: delivery
@@ -306,11 +301,8 @@ msgstr "Partner - przwoźnik"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
-msgid ""
-"Allows you to add delivery methods in sales orders and packing. You can "
-"define your own carrier and delivery grids for prices. When creating "
-"invoices from picking, Open ERP is able to add and compute the shipping line."
-msgstr ""
+msgid "Allows you to add delivery methods in sales orders and packing. You can define your own carrier and delivery grids for prices. When creating invoices from picking, Open ERP is able to add and compute the shipping line."
+msgstr "Allows you to add delivery methods in sales orders and packing. You can define your own carrier and delivery grids for prices. When creating invoices from picking, Open ERP is able to add and compute the shipping line."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -321,15 +313,13 @@ msgstr "Do kodu poczt."
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
-"Żadna pozycja nie jest zgodna z zamówieniem w wybranej tabeli opłat za "
-"dostawy !"
+msgstr "Żadna pozycja nie jest zgodna z zamówieniem w wybranej tabeli opłat za dostawy !"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packing to be invoiced"
-msgstr ""
+msgstr "Packing to be invoiced"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
@@ -339,9 +329,8 @@ msgstr "Nie ma ceny !"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on packing."
-msgstr ""
+msgid "Complete this field if you plan to invoice the shipping based on packing."
+msgstr "Complete this field if you plan to invoice the shipping based on packing."
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
@@ -401,3 +390,4 @@ msgstr "VAT wygląda na niepoprawny"
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Typ ceny"
+

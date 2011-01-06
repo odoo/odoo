@@ -6464,6 +6464,22 @@
             <field name="parent_id" ref="vat_code_out"/>
             <field name="name">Operations avec TVA a 21%</field>
         </record>
+        <record id="vat_code_a44" model="account.tax.code.template">
+            <field name="code">44</field>
+            <field name="name">Services intra-communautaires et ABC</field>
+            <field name="parent_id" ref="vat_code_out"/>
+        </record>
+        <record id="vat_code_a44a" model="account.tax.code.template">
+            <field name="code">44a</field>
+            <field name="name">Services intra-communautaires</field>
+            <field name="parent_id" ref="vat_code_a44"/>
+        </record>
+        <record id="vat_code_a44b" model="account.tax.code.template">
+            <field name="code">44b</field>
+            <field name="name">ABC intra-communautaires</field>
+            <field name="parent_id" ref="vat_code_a44"/>
+        </record>
+
         <record id="vat_code_a45" model="account.tax.code.template">
             <field name="code">45</field>
             <field name="name">Operations avec TVA due par le cocontractant</field>
@@ -6484,7 +6500,7 @@
             <field name="parent_id" ref="vat_code_out"/>
         </record>
         <record id="vat_code_a48" model="account.tax.code.template">
-            <field name="name">Notes de credit aux operations grille 46</field>
+            <field name="name">Notes de credit aux operations des grilles 44, 46</field>
             <field name="code">48</field>
             <field eval="-1" name="sign"/>
             <field name="parent_id" ref="vat_code_a4X"/>
@@ -6521,7 +6537,7 @@
         </record>
         <record id="vat_code_a55" model="account.tax.code.template">
             <field name="code">55</field>
-            <field name="name">TVA sur operations des grilles 86</field>
+            <field name="name">TVA sur operations des grilles 86, 88</field>
             <field name="parent_id" ref="vat_code_tax_out"/>
         </record>
         <record id="vat_code_a56" model="account.tax.code.template">
@@ -6593,7 +6609,7 @@
         <record id="vat_code_a84" model="account.tax.code.template">
             <field name="code">84</field>
             <field eval="-1" name="sign"/>
-            <field name="name">Notes de credits sur operations case 86</field>
+            <field name="name">Notes de credits sur operations grilles 86, 88</field>
             <field name="parent_id" ref="vat_code_in_nc"/>
         </record>
         <record id="vat_code_a85" model="account.tax.code.template">
@@ -6604,7 +6620,7 @@
         </record>
         <record id="vat_code_a86" model="account.tax.code.template">
             <field name="code">86</field>
-            <field name="name">Acquisition intra-communautaires et ventes ABC</field>
+            <field name="name">Acquisitions intra-communautaires et ventes ABC</field>
             <field name="parent_id" ref="vat_code_in"/>
         </record>
         <record id="vat_code_a87" model="account.tax.code.template">
@@ -6612,6 +6628,12 @@
             <field name="name">Autres operations</field>
             <field name="parent_id" ref="vat_code_in"/>
         </record>
+        <record id="vat_code_a88" model="account.tax.code.template">
+            <field name="code">88</field>
+            <field name="name">Acquisitions intra-communautaires de services</field>
+            <field name="parent_id" ref="vat_code_in"/>
+        </record>
+
 
             <!-- Chart template -->
         <record id="l10nbe_chart_template" model="account.chart.template">
@@ -6631,7 +6653,7 @@
         <record id="vat_0_co" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Cocontractants 0%</field>
-            <field name="description">NSCS 0</field>
+            <field name="description">V-NAT-CO 0</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="base_code_id" ref="vat_code_a45"/>
@@ -6641,7 +6663,7 @@
         <record id="vat_0" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">TVA 0%</field>
-            <field name="description">NSS 0</field>
+            <field name="description">V-NAT 0</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="base_code_id" ref="vat_code_a00"/>
@@ -6651,7 +6673,7 @@
         <record id="vat_6" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">TVA 6%</field>
-            <field name="description">NSS 6</field>
+            <field name="description">V-NAT 6</field>
             <field eval="0.06" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable06"/>
@@ -6665,7 +6687,7 @@
         <record id="vat_12" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">TVA 12%</field>
-            <field name="description">NSS 12</field>
+            <field name="description">V-NAT 12</field>
             <field eval="0.12" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable12"/>
@@ -6678,8 +6700,22 @@
         </record>
         <record id="vat_21" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
-            <field name="name">TVA 21%</field>
-            <field name="description">NSS 21</field>
+            <field name="name">TVA 21% Marchandises et Biens Divers</field>
+            <field name="description">V-NAT 21</field>
+            <field eval="0.21" name="amount"/>
+            <field name="type">percent</field>
+            <field name="account_collected_id" ref="vat_payable21"/>
+            <field name="account_paid_id" ref="vat_payable21"/>
+            <field name="base_code_id" ref="vat_code_a03"/>
+            <field name="tax_code_id" ref="vat_code_a54"/>
+            <field name="ref_base_code_id" ref="vat_code_a49"/>
+            <field name="ref_tax_code_id" ref="vat_code_a64"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="vat_21_s" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="name">TVA 21% Services</field>
+            <field name="description">V-NAT-S 21</field>
             <field eval="0.21" name="amount"/>
             <field name="type">percent</field>
             <field name="account_collected_id" ref="vat_payable21"/>
@@ -6691,11 +6727,12 @@
             <field name="type_tax_use">sale</field>
         </record>
 
+
     <!-- Purchases VAT -->
         <record id="vat_0_buy_bsd" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Biens et Services Divers Déductibles 0%</field>
-            <field name="description">NSGSD 0</field>
+            <field name="description">A-NAT 0</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6724,7 +6761,7 @@
         <record id="vat_0_buy_mar" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Marchandises Déductibles 0%</field>
-            <field name="description">NSTF 0</field>
+            <field name="description">A-NAT-M 0</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6753,7 +6790,7 @@
         <record id="vat_6_buy_bsd" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Biens et Services Divers Déductibles 6%</field>
-            <field name="description">NSGSD 6</field>
+            <field name="description">A-NAT 6</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6786,7 +6823,7 @@
         <record id="vat_12_buy_bsd" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Biens et Services Divers Déductibles 12%</field>
-            <field name="description">NSGSD 12</field>
+            <field name="description">A-NAT 12</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6819,7 +6856,7 @@
         <record id="vat_21_buy_bsd" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Biens Déductibles 21%</field>
-            <field name="description">NSGSD 21</field>
+            <field name="description">A-NAT-B 21</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6852,7 +6889,7 @@
         <record id="vat_21_buy_ser" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Services Divers Déductibles 21%</field>
-            <field name="description">NSGSD 21</field>
+            <field name="description">A-NAT-S 21</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6887,7 +6924,7 @@
         <record id="vat_6_buy_mar" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Marchandises Déductibles 6%</field>
-            <field name="description">NSTF 6</field>
+            <field name="description">A-NAT-M 6</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6920,7 +6957,7 @@
         <record id="vat_12_buy_mar" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Marchandises Déductibles 12%</field>
-            <field name="description">NSTF 12</field>
+            <field name="description">A-NAT-M 12</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6953,7 +6990,7 @@
         <record id="vat_21_buy_mar" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Marchandises Déductibles 21%</field>
-            <field name="description">NSTF 21</field>
+            <field name="description">A-NAT-M 21</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -6989,7 +7026,7 @@
         <record id="vat_XO" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">TVA 0% Exportations</field>
-            <field name="description">ISEXP 0</field>
+            <field name="description">V-EXTRA 0</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="base_code_id" ref="vat_code_a47"/>
@@ -7000,7 +7037,7 @@
         <record id="vat_XO_buy" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Hors U.E</field>
-            <field name="description">ISWIV 99.99</field>
+            <field name="description">A-EXTRA 99.99</field>
             <field eval="0.9999" name="amount"/>
             <field name="type">percent</field>
             <field name="account_paid_id" ref="vat_refund0"/>
@@ -7017,19 +7054,41 @@
     <!-- Sales VAT -->
         <record id="vat_IO" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
-            <field name="name">TVA 0% Intracommunautaire</field>
-            <field name="description">VI 0</field>
+            <field name="name">TVA 0% Intracommunautaire (Biens et Marchandises)</field>
+            <field name="description">V-INTRA 0</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
             <field name="base_code_id" ref="vat_code_a46"/>
             <field name="ref_base_code_id" ref="vat_code_a48"/>
             <field name="type_tax_use">sale</field>
         </record>
+        <record id="vat_IO_S" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="name">TVA 0% Services Intracommunautaires</field>
+            <field name="description">V-INTRA-S 0</field>
+            <field eval="0.00" name="amount"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_a44a"/>
+            <field name="ref_base_code_id" ref="vat_code_a48"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+        <record id="vat_IO_abc" model="account.tax.template">
+            <field name="chart_template_id" ref="l10nbe_chart_template"/>
+            <field name="name">TVA 0% ABC Intracommunautaire</field>
+            <field name="description">V-INTRA-ABC 0</field>
+            <field eval="0.00" name="amount"/>
+            <field name="type">percent</field>
+            <field name="base_code_id" ref="vat_code_a44b"/>
+            <field name="ref_base_code_id" ref="vat_code_a48"/>
+            <field name="type_tax_use">sale</field>
+        </record>
+
+
     <!-- Purchases VAT -->
        <record id="vat_IO_buy_21b" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Biens Déductibles 21%</field>
-            <field name="description">ESGD 21</field>
+            <field name="description">A-INTRA-B 21</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -7076,7 +7135,7 @@
        <record id="vat_IO_buy_21m" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Marchandises Déductibles 21%</field>
-            <field name="description">ESTD 21</field>
+            <field name="description">A-INTRA-M 21</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -7123,7 +7182,7 @@
        <record id="vat_IO_buy_21s" model="account.tax.template">
             <field name="chart_template_id" ref="l10nbe_chart_template"/>
             <field name="name">Services Divers Déductibles 21%</field>
-            <field name="description">ESSDD 21</field>
+            <field name="description">A-INTRA-S 21</field>
             <field eval="1.00" name="amount"/>
             <field name="type">percent</field>
             <field eval="1" name="child_depend"/>
@@ -7139,7 +7198,7 @@
             <field name="account_collected_id" ref="vat_refund21"/>
             <field name="base_code_id" ref="vat_code_a82"/>
             <field name="tax_code_id" ref="vat_code_a59"/>
-            <field name="ref_base_code_id" ref="vat_code_a85"/>
+            <field name="ref_base_code_id" ref="vat_code_a84"/>
             <field name="type_tax_use">purchase</field>
         </record>
         <record id="vat_IO_buy_21s_2" model="account.tax.template">
@@ -7150,8 +7209,8 @@
             <field name="type">percent</field>
             <field name="account_paid_id" ref="vat_payable21"/>
             <field name="account_collected_id" ref="vat_payable21"/>
-            <field name="base_code_id" ref="vat_code_a87"/>
-            <field name="tax_code_id" ref="vat_code_a56"/>
+            <field name="base_code_id" ref="vat_code_a88"/>
+            <field name="tax_code_id" ref="vat_code_a55"/>
             <field eval="-1" name="tax_sign"/>
             <field name="ref_base_code_id" ref="vat_code_a82"/>
             <field eval="-1" name="ref_base_sign"/>
@@ -7163,7 +7222,7 @@
             <field name="name">Services Divers Déductibles 21% (3)</field>
             <field eval="0.00" name="amount"/>
             <field name="type">percent</field>
-            <field name="ref_base_code_id" ref="vat_code_a87"/>
+            <field name="ref_base_code_id" ref="vat_code_a88"/>
             <field eval="-1" name="ref_base_sign"/>
             <field name="type_tax_use">purchase</field>
         </record>

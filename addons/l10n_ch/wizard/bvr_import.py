@@ -5,7 +5,7 @@
 #
 #  Created by Nicolas Bessi based on Credric Krier contribution
 #
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+#  Copyright (c) 2010 CamptoCamp. All rights reserved.
 ##############################################################################
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,6 +29,7 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""Wizard that will import v11 File from your bank"""
 import wizard
 import pooler
 import base64
@@ -50,29 +51,33 @@ ASK_FIELDS = {
     },
 }
 
+## @param cursor a psycopg cursor
+## @param user res.user.id that is currently loged
+## @Reference ESR/BVR reference 
+## See Postfinance Manuel BVR chapter 3.5.x 
+## @context context dict
+## @return a list of account invoice lines
 def _reconstruct_invoice_ref(cursor, user, reference, context):
-    ###
+    """Fetch invices line linked to the BVR/ESR references"""
     id_invoice = False
-    # On fait d'abord une recherche sur toutes les factures
-    # we now searhc for company
+    # We first search on all invoices
+    # we now search for company
     user_obj=pooler.get_pool(cursor.dbname).get('res.users')
     user_current=user_obj.browse(cursor, user, user)
-    
-    ##
-    
-    cursor.execute("SELECT inv.id,inv.number from account_invoice AS inv where inv.company_id = " + str(user_current.company_id.id))
+    cursor.execute("SELECT inv.id,inv.number from account_invoice AS \
+        inv where inv.company_id = " + str(user_current.company_id.id))
     result_invoice = cursor.fetchall()
     
     for inv_id,inv_name in result_invoice:
-        inv_name =  re.sub('[^0-9]', '0', str(inv_name))
+        inv_name =  re.sub('[^0-9]', '', str(inv_name))
         if inv_name == reference:
             id_invoice = inv_id
             break
     if  id_invoice:
         cursor.execute('SELECT l.id ' \
-                    'FROM account_move_line l, account_invoice i ' \
-                    'WHERE l.move_id = i.move_id AND l.reconcile_id is NULL  ' \
-                        'AND i.id in (' + ','.join([str(x) for x in [id_invoice]]) + ')')
+            'FROM account_move_line l, account_invoice i ' \
+            'WHERE l.move_id = i.move_id AND l.reconcile_id is NULL  ' \
+            'AND i.id in (' + ','.join([str(x) for x in [id_invoice]]) + ')')
         inv_line = []
         for id_line in cursor.fetchall():
             inv_line.append(id_line[0])
@@ -80,7 +85,16 @@ def _reconstruct_invoice_ref(cursor, user, reference, context):
     else:
         return []
     return True
+    
+    
+## @obj wizard object
+## @param cursor a psycopg cursor
+## @param user res.user.id that is currently loged
+## @data wizzard data
+## @context context dict
+## @return a wizzard dict    
 def _import(obj, cursor, user, data, context):
+    """import the recieve file in the bank statement and do the reconciliation"""
 
     pool = pooler.get_pool(cursor.dbname)
     statement_line_obj = pool.get('account.bank.statement.line')
@@ -91,12 +105,11 @@ def _import(obj, cursor, user, data, context):
     attachment_obj = pool.get('ir.attachment')
     file = data['form']['file']
     statement_id = data['id']
-
     records = []
     total_amount = 0
     total_cost = 0
     find_total = False
-
+    #we recieve the file in base 64 so we decode it
     for lines in base64.decodestring(file).split("\n"):
         # Manage files without carriage return
         while lines:
@@ -135,8 +148,8 @@ def _import(obj, cursor, user, data, context):
 
                 if record['reference'] != mod10r(record['reference'][:-1]):
                     raise wizard.except_wizard(_('Error'),
-                            _('Recursive mod10 is invalid for reference: %s') % \
-                                    record['reference'])
+                        _('Recursive mod10 is invalid for reference: %s') % \
+                                record['reference'])
 
                 if line[2] == '5':
                     record['amount'] *= -1
@@ -145,10 +158,19 @@ def _import(obj, cursor, user, data, context):
                 total_cost += record['cost']
                 records.append(record)
 
-    model_fields_ids = model_fields_obj.search(cursor, user, [
-        ('name', 'in', ['property_account_receivable', 'property_account_payable']),
-        ('model', '=', 'res.partner'),
-        ], context=context)
+    model_fields_ids = model_fields_obj.search(
+                            cursor, 
+                            user, 
+                            [
+                                ('name', 'in', [
+                                                'property_account_receivable', 
+                                                'property_account_payable'
+                                                ]
+                                ),
+                                ('model', '=', 'res.partner'),
+                            ], 
+                            context=context
+                        )
     property_ids = property_obj.search(cursor, user, [
         ('fields_id', 'in', model_fields_ids),
         ('res_id', '=', False),
@@ -156,7 +178,8 @@ def _import(obj, cursor, user, data, context):
 
     account_receivable = False
     account_payable = False
-    for property in property_obj.browse(cursor, user, property_ids, context=context):
+    for property in property_obj.browse(cursor, user, 
+        property_ids, context=context):
         if property.fields_id.name == 'property_account_receivable':
             account_receivable = int(property.value.split(',')[1])
         elif property.fields_id.name == 'property_account_payable':
@@ -164,7 +187,6 @@ def _import(obj, cursor, user, data, context):
 
     for record in records:
         # Remove the 11 first char because it can be adherent number
-        # TODO check if 11 is the right number
         reference = record['reference'][11:-1].lstrip('0')
         values = {
             'name': 'IN '+ reference,
@@ -185,7 +207,8 @@ def _import(obj, cursor, user, data, context):
         line2reconcile = False
         partner_id = False
         account_id = False
-        for line in move_line_obj.browse(cursor, user, line_ids, context=context):
+        for line in move_line_obj.browse(cursor, user, 
+            line_ids, context=context):
             if line.partner_id.id:
                 partner_id = line.partner_id.id
             if record['amount'] >= 0:
@@ -210,9 +233,14 @@ def _import(obj, cursor, user, data, context):
         values['partner_id'] = partner_id
 
         if line2reconcile:
-            values['reconcile_id'] = statement_reconcile_obj.create(cursor, user, {
-                'line_ids': [(6, 0, [line2reconcile])],
-                }, context=context)
+            values['reconcile_id'] = statement_reconcile_obj.create(
+                                    cursor, 
+                                    user, 
+                                    {
+                                        'line_ids': [(6, 0, [line2reconcile])],
+                                    }, 
+                                    context=context
+                                )
 
         statement_line_obj.create(cursor, user, values, context=context)
     attachment_obj.create(cursor, user, {
@@ -226,6 +254,7 @@ def _import(obj, cursor, user, data, context):
 
 
 class BVRImport(wizard.interface):
+    "Wizard that will import v11 File from your bank"
     states = {
         'init': {
             'actions': [],

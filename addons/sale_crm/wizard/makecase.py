@@ -42,6 +42,7 @@ def _make_case(obj, cursor, uid, data, context=None):
             'section_id': data['form']['section'],
             'partner_id': partner_id,
             'description': data['form']['description'],
+            'user_id': data['form']['user'] or uid
             }))
 
     result = mod_obj._get_id(cursor, uid, 'crm', 'crm_case_categ0-act')

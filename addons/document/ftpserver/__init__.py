@@ -27,7 +27,9 @@ import abstracted_fs
 import netsvc
 
 from tools import config
-HOST = ''
+
+DEFAULT_HOST = '0.0.0.0' # all interfaces
+HOST = config.get('ftp_server_host')
 PORT = int(config.get('ftp_server_port', 8021))
 PASSIVE_PORTS = None
 pps = config.get('ftp_server_passive_ports', '').split(':')
@@ -70,7 +72,7 @@ class ftp_server(threading.Thread):
         try:
             ip_addr = _detect_ip_addr()
         except:
-            ip_addr = ''
+            ip_addr = DEFAULT_HOST
         return ip_addr
 
 
@@ -87,11 +89,11 @@ class ftp_server(threading.Thread):
         ftpserver.logline = lambda msg: None
         ftpserver.logerror = lambda msg: self.log(netsvc.LOG_ERROR, msg)
 
-        HOST = self.detect_ip_addr()
-        address = (HOST, PORT)
+        address = (HOST or self.detect_ip_addr(), PORT)
         ftpd = ftpserver.FTPServer(address, ftpserver.FTPHandler)
         ftpd.serve_forever()
 ds = ftp_server()
+ds.daemon = True
 ds.start()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

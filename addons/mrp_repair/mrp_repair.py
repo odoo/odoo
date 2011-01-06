@@ -260,7 +260,7 @@ class mrp_repair(osv.osv):
             if repair.state in ('draft','cancel') or repair.invoice_id:
                 continue
             if not (repair.partner_id.id and repair.partner_invoice_id.id):
-                raise osv.except_osv(_('No partner !'),_('You have to select a partner in the repair form !'))
+                raise osv.except_osv(_('No partner !'),_('You have to select a partner and invoicing address in the repair form !'))
             comment=repair.quotation_notes
             if (repair.invoice_method != 'none'):
                 if group and repair.partner_invoice_id.id in invoices_group:
@@ -273,12 +273,14 @@ class mrp_repair(osv.osv):
                     }
                     invoice_obj.write(cr, uid, [inv_id],invoice_vals,context=context)
                 else:
-                    a = repair.partner_id.property_account_receivable.id
+                    if not repair.partner_id.property_account_receivable:
+                        raise osv.except_osv(_('Error !'), _('No account defined for partner "%s".') % repair.partner_id.name )
+                    account_id = repair.partner_id.property_account_receivable.id
                     inv = {
                         'name': repair.name,
                         'origin':repair.name,
                         'type': 'out_invoice',
-                        'account_id': a,
+                        'account_id': account_id,
                         'partner_id': repair.partner_id.id,
                         'address_invoice_id': repair.address_id.id,
                         'currency_id': repair.pricelist_id.currency_id.id,
@@ -296,11 +298,19 @@ class mrp_repair(osv.osv):
                             name = repair.name + '-' + operation.name
                         else:
                             name = operation.name
-                        invoice_line_id=self.pool.get('account.invoice.line').create(cr, uid, {
+                        
+                        if operation.product_id.property_account_income:
+                            account_id = operation.product_id.property_account_income.id
+                        elif operation.product_id.categ_id.property_account_income_categ:
+                            account_id = operation.product_id.categ_id.property_account_income_categ.id
+                        else:
+                            raise osv.except_osv(_('Error !'), _('No account defined for product "%s".') % operation.product_id.name )
+
+                        invoice_line_id = self.pool.get('account.invoice.line').create(cr, uid, {
                             'invoice_id': inv_id,
                             'name': name,
                             'origin':repair.name,
-                            'account_id': operation.product_id and operation.product_id.property_account_income and operation.product_id.property_account_income.id,
+                            'account_id': account_id, 
                             'quantity' : operation.product_uom_qty,
                             'invoice_line_tax_id': [(6,0,[x.id for x in operation.tax_id])],
                             'uos_id' : operation.product_uom.id,
@@ -315,11 +325,19 @@ class mrp_repair(osv.osv):
                             name = repair.name + '-' + fee.name
                         else:
                             name = fee.name
-                        invoice_fee_id=self.pool.get('account.invoice.line').create(cr, uid, {
+                        if not fee.product_id:
+                            raise osv.except_osv(_('Warning !'), _('No product defined on Fees!'))
+                        if fee.product_id.property_account_income:
+                            account_id = fee.product_id.property_account_income.id
+                        elif fee.product_id.categ_id.property_account_income_categ:
+                            account_id = fee.product_id.categ_id.property_account_income_categ.id
+                        else:
+                            raise osv.except_osv(_('Error !'), _('No account defined for product "%s".') % fee.product_id.name)
+                        invoice_fee_id = self.pool.get('account.invoice.line').create(cr, uid, {
                             'invoice_id': inv_id,
                             'name': name,
                             'origin':repair.name,
-                            'account_id': a,
+                            'account_id': account_id,
                             'quantity': fee.product_uom_qty,
                             'invoice_line_tax_id': [(6,0,[x.id for x in fee.tax_id])],
                             'uos_id': fee.product_uom.id,

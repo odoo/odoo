@@ -20,8 +20,10 @@
 #
 ##############################################################################
 import time
-import netsvc
 
+from operator import itemgetter
+
+import netsvc
 from osv import fields, osv
 
 from tools.misc import currency
@@ -31,6 +33,26 @@ import mx.DateTime
 from mx.DateTime import RelativeDateTime, now, DateTime, localtime
 
 from tools import config
+
+def check_cycle(self, cr, uid, ids):
+    """ climbs the ``self._table.parent_id`` chains for 100 levels or
+    until it can't find any more parent(s)
+
+    Returns true if it runs out of parents (no cycle), false if
+    it can recurse 100 times without ending all chains
+    """
+    level = 100
+    while len(ids):
+        cr.execute('SELECT DISTINCT parent_id '\
+                   'FROM '+self._table+' '\
+                   'WHERE id IN %s '\
+                   'AND parent_id IS NOT NULL',
+                   (tuple(ids),))
+        ids = map(itemgetter(0), cr.fetchall())
+        if not level:
+            return False
+        level -= 1
+    return True
 
 class account_payment_term(osv.osv):
     _name = "account.payment.term"
@@ -149,6 +171,7 @@ class account_account(osv.osv):
     _name = "account.account"
     _description = "Account"
     _parent_store = True
+    logger = netsvc.Logger()
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -195,43 +218,67 @@ class account_account(osv.osv):
             ids3 = self._get_children_and_consol(cr, uid, ids3, context)
         return ids2 + ids3
 
-    def __compute(self, cr, uid, ids, field_names, arg, context={}, query=''):
-        #compute the balance/debit/credit accordingly to the value of field_name for the given account ids
+    def __compute(self, cr, uid, ids, field_names, arg=None, context=None,
+                  query='', query_params=()):
+        """ compute the balance, debit and/or credit for the provided
+        account ids
+
+        Arguments:
+        `ids`: account ids
+        `field_names`: the fields to compute (a list of any of
+                       'balance', 'debit' and 'credit')
+        `arg`: unused fields.function stuff
+        `query`: additional query filter (as a string)
+        `query_params`: parameters for the provided query string
+                        (__compute will handle their escaping) as a
+                        tuple
+        """
         mapping = {
-            'balance': "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance ",
-            'debit': "COALESCE(SUM(l.debit), 0) as debit ",
-            'credit': "COALESCE(SUM(l.credit), 0) as credit "
+            'balance': "COALESCE(SUM(l.debit),0) " \
+                       "- COALESCE(SUM(l.credit), 0) as balance",
+            'debit': "COALESCE(SUM(l.debit), 0) as debit",
+            'credit': "COALESCE(SUM(l.credit), 0) as credit"
         }
         #get all the necessary accounts
-        ids2 = self._get_children_and_consol(cr, uid, ids, context)
-        acc_set = ",".join(map(str, ids2))
+        children_and_consolidated = self._get_children_and_consol(
+            cr, uid, ids, context=context)
         #compute for each account the balance/debit/credit from the move lines
         accounts = {}
-        if ids2:
+        if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
 
             wheres = [""]
-            if query:
+            if query.strip():
                 wheres.append(query.strip())
-            if aml_query:
+            if aml_query.strip():
                 wheres.append(aml_query.strip())
-            query = " AND ".join(wheres)
-
-            cr.execute(("SELECT l.account_id as id, " +\
-                    ' , '.join(map(lambda x: mapping[x], field_names)) +
-                    "FROM " \
-                        "account_move_line l " \
-                    "WHERE " \
-                        "l.account_id IN (%s) " \
-                        + query +
-                    " GROUP BY l.account_id") % (acc_set, ))
+            filters = " AND ".join(wheres)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Filters: %s'%filters)
+            # IN might not work ideally in case there are too many
+            # children_and_consolidated, in that case join on a
+            # values() e.g.:
+            # SELECT l.account_id as id FROM account_move_line l
+            # INNER JOIN (VALUES (id1), (id2), (id3), ...) AS tmp (id)
+            # ON l.account_id = tmp.id
+            # or make _get_children_and_consol return a query and join on that
+            request = ("SELECT l.account_id as id, " +\
+                       ' , '.join(map(mapping.__getitem__, field_names)) +
+                       " FROM account_move_line l" \
+                       " WHERE l.account_id IN %s " \
+                            + filters +
+                       " GROUP BY l.account_id")
+            params = (tuple(children_and_consolidated),) + query_params
+            cr.execute(request, params)
+            self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                      'Status: %s'%cr.statusmessage)
 
             for res in cr.dictfetchall():
                 accounts[res['id']] = res
 
-
         # consolidate accounts with direct children
-        brs = list(self.browse(cr, uid, ids2, context=context))
+        children_and_consolidated.reverse()
+        brs = list(self.browse(cr, uid, children_and_consolidated, context=context))
         sums = {}
         while brs:
             current = brs[0]
@@ -250,8 +297,9 @@ class account_account(osv.osv):
                     if current.child_id:
                         sums[current.id][fn] += sum(sums[child.id][fn] for child in current.child_id)
         res = {}
+        null_result = dict((fn, 0.0) for fn in field_names)
         for id in ids:
-            res[id] = sums[id]
+            res[id] = sums.get(id, null_result)
         return res
 
     def _get_company_currency(self, cr, uid, ids, field_name, arg, context={}):
@@ -289,7 +337,7 @@ class account_account(osv.osv):
         ], 'Internal Type', required=True,),
 
         'user_type': fields.many2one('account.account.type', 'Account Type', required=True),
-        'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade'),
+        'parent_id': fields.many2one('account.account', 'Parent', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids': fields.one2many('account.account','parent_id','Children'),
         'child_consol_ids': fields.many2many('account.account', 'account_account_consol_rel', 'child_id', 'parent_id', 'Consolidated Children'),
         'child_id': fields.function(_get_child_ids, method=True, type='many2many', relation="account.account", string="Child Accounts"),
@@ -340,8 +388,10 @@ class account_account(osv.osv):
         if (obj_self in obj_self.child_consol_ids) or (p_id and (p_id is obj_self.id)):
             return False
         while(ids):
-            cr.execute('select distinct child_id from account_account_consol_rel where parent_id in ('+','.join(map(str, ids))+')')
-            child_ids = filter(None, map(lambda x: x[0], cr.fetchall()))
+            cr.execute('SELECT DISTINCT child_id '\
+                       'FROM account_account_consol_rel '\
+                       'WHERE parent_id IN %s', (tuple(ids),))
+            child_ids = map(itemgetter(0), cr.fetchall())
             c_ids = child_ids
             if (p_id and (p_id in c_ids)) or (obj_self.id in c_ids):
                 return False
@@ -425,18 +475,49 @@ class account_account(osv.osv):
     def _check_moves(self, cr, uid, ids, method, context):
         line_obj = self.pool.get('account.move.line')
         account_ids = self.search(cr, uid, [('id', 'child_of', ids)])
+
         if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
             if method == 'write':
                 raise osv.except_osv(_('Error !'), _('You cannot deactivate an account that contains account moves.'))
             elif method == 'unlink':
                 raise osv.except_osv(_('Error !'), _('You cannot remove an account which has account entries!. '))
+        
+        
+        #Checking whether the account is set as a property to any Partner or not
+        value = 'account.account,' + str(ids[0])
+        partner_prop_acc = self.pool.get('ir.property').search(cr, uid, [('value','=',value)], context=context)
+        if partner_prop_acc:
+            raise osv.except_osv(_('Warning !'), _('You cannot remove/deactivate an account which is set as a property to any Partner!'))
+        
         return True
     
+    def _check_allow_type_change(self, cr, uid, ids, new_type, context):
+        group1 = ['payable', 'receivable', 'other']
+        group2 = ['consolidation','view']
+        
+        line_obj = self.pool.get('account.move.line')
+        for account in self.browse(cr, uid, ids, context=context):
+            old_type = account.type
+            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])])
+            
+            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+                #Check for 'Closed' type
+                if old_type == 'closed' and new_type !='closed':
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains account entries!"))
+            
+                #Check for change From group1 to group2 and vice versa
+                if (old_type in group1 and new_type in group2) or (old_type in group2 and new_type in group1):
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from '%s' to '%s' type as it contains account entries!") % (old_type,new_type,))
+           
+        return True
+        
     def write(self, cr, uid, ids, vals, context=None):
-        if not context:
+        if context is None:
             context = {}
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context)
+        if 'type' in vals.keys(): 
+            self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
     
     def unlink(self, cr, uid, ids, context={}):
@@ -525,14 +606,14 @@ class account_journal(osv.osv):
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
         if not args:
-            args=[]
-        if not context:
-            context={}
+            args = []
+        if context is None:
+            context = {}
         ids = []
         if name:
-            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context=context)
 account_journal()
 
@@ -597,6 +678,19 @@ class account_fiscalyear(osv.osv):
             else:
                 return False
         return ids[0]
+    
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if args is None:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
+    
 account_fiscalyear()
 
 class account_period(osv.osv):
@@ -669,6 +763,18 @@ class account_period(osv.osv):
                     cr.execute('update account_journal_period set state=%s where period_id=%s', (mode, id))
                     cr.execute('update account_period set state=%s where id=%s', (mode, id))
         return True
+    
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if args is None:
+            args = []
+        if context is None:
+            context = {}
+        ids = []
+        if name:
+            ids = self.search(cr, user, [('code','ilike',name)]+ args, limit=limit)
+        if not ids:
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
+        return self.name_get(cr, user, ids, context=context)
 
 account_period()
 
@@ -766,28 +872,35 @@ class account_move(osv.osv):
 
     def _amount_compute(self, cr, uid, ids, name, args, context, where =''):
         if not ids: return {}
-        cr.execute('select move_id,sum(debit) from account_move_line where move_id in ('+','.join(map(str,ids))+') group by move_id')
+        cr.execute('SELECT move_id, SUM(debit) '\
+                   'FROM account_move_line '\
+                   'WHERE move_id IN %s '\
+                   'GROUP BY move_id', (tuple(ids),))
         result = dict(cr.fetchall())
         for id in ids:
             result.setdefault(id, 0.0)
         return result
     
     def _search_amount(self, cr, uid, obj, name, args, context):
-        ids = []
-        cr.execute('select move_id,sum(debit) from account_move_line group by move_id')
-        result = dict(cr.fetchall())
-
-        for item in args:
-            if item[1] == '>=':
-                res = [('id', 'in', [k for k,v in result.iteritems() if v >= item[2]])]
+        ids = set()
+        for cond in args:
+            amount = cond[2]
+            if isinstance(cond[2],(list,tuple)):
+                if cond[1] in ['in','not in']:
+                    amount = tuple(cond[2])
+                else:
+                    continue
             else:
-                res = [('id', 'in', [k for k,v in result.iteritems() if v <= item[2]])]    
-            ids += res
-
-        if not ids:    
-            return [('id', '>', '0')]
-
-        return ids
+                if cond[1] in ['=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of']:
+                    continue
+            
+            cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]) ,(amount,))
+            res_ids = set(id[0] for id in cr.fetchall())
+            ids = ids and (ids & res_ids) or res_ids
+        if ids:
+            return [('id','in',tuple(ids))]
+        else:    
+            return [('id', '=', '0')]
 
     _columns = {
         'name': fields.char('Number', size=64, required=True),
@@ -861,9 +974,12 @@ class account_move(osv.osv):
                     if new_name:
                         self.write(cr, uid, [move.id], {'name':new_name})
 
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('posted',))
+            cr.execute('UPDATE account_move '\
+                       'SET state=%s '\
+                       'WHERE id IN %s',
+                       ('posted', tuple(ids)))
         else:
-            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !'))
+            raise osv.except_osv(_('Integrity Error !'), _('You can not validate a non-balanced entry !\nMake sure you have configured Payment Term properly !\nIt should contain atleast one Payment Term Line with type "Balance" !'))
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
@@ -874,7 +990,9 @@ class account_move(osv.osv):
             if not line.journal_id.update_posted:
                 raise osv.except_osv(_('Error !'), _('You can not modify a posted entry of this journal !\nYou should set the journal to allow cancelling entries if you want to do that.'))
         if len(ids):
-            cr.execute('update account_move set state=%s where id in ('+','.join(map(str,ids))+')', ('draft',))
+            cr.execute('UPDATE account_move '\
+                       'SET state=%s '\
+                       'WHERE id IN %s', ('draft', tuple(ids)))
         return True
 
     def write(self, cr, uid, ids, vals, context={}):
@@ -906,7 +1024,6 @@ class account_move(osv.osv):
                         l[2]['period_id'] = default_period
                 context['period_id'] = default_period
 
-        accnt_journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'])
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
@@ -947,6 +1064,7 @@ class account_move(osv.osv):
         return amount
 
     def _centralise(self, cr, uid, move, mode, context=None):
+        assert (mode in ('debit', 'credit')), 'Invalid Mode' #to prevent sql injection
         if context is None:
             context = {}
 
@@ -993,8 +1111,8 @@ class account_move(osv.osv):
             line_id2 = res[0]
         else:
             line_id2 = 0
-
-        cr.execute('select sum('+mode+') from account_move_line where move_id=%s and id<>%s', (move.id, line_id2))
+        
+        cr.execute('SELECT SUM(%s) FROM account_move_line WHERE move_id=%%s AND id!=%%s' % (mode,), (move.id, line_id2))
         result = cr.fetchone()[0] or 0.0
         cr.execute('update account_move_line set '+mode2+'=%s where id=%s', (result, line_id))
         return True
@@ -1005,9 +1123,11 @@ class account_move(osv.osv):
     def validate(self, cr, uid, ids, context={}):
         if context and ('__last_update' in context):
             del context['__last_update']
-        ok = True
+
+        valid_moves = [] #Maintains a list of moves which can be responsible to create analytic entries
+
         for move in self.browse(cr, uid, ids, context):
-            #unlink analytic lines on move_lines
+            # Unlink old analytic lines on move_lines
             for obj_line in move.line_id:
                 for obj in obj_line.analytic_lines:
                     self.pool.get('account.analytic.line').unlink(cr,uid,obj.id)
@@ -1016,11 +1136,11 @@ class account_move(osv.osv):
             amount = 0
             line_ids = []
             line_draft_ids = []
-            company_id=None
+            company_id = None
             for line in move.line_id:
                 amount += line.debit - line.credit
                 line_ids.append(line.id)
-                if line.state=='draft':
+                if line.state == 'draft':
                     line_draft_ids.append(line.id)
 
                 if not company_id:
@@ -1030,48 +1150,71 @@ class account_move(osv.osv):
 
                 if line.account_id.currency_id:
                     if line.account_id.currency_id.id != line.currency_id.id and (line.account_id.currency_id.id != line.account_id.company_id.currency_id.id or line.currency_id):
-                        raise osv.except_osv(_('Error'), _("""Couldn't create move with currency different from the secondary currency of the account "%s - %s". Clear the secondary currency field of the account definition if you want to accept all currencies.""" % (line.account_id.code, line.account_id.name)))
+                        raise osv.except_osv(_('Error'), _("Couldn't create move with currency different from the secondary currency of the account '%s - %s'. Clear the secondary currency field of the account definition if you want to accept all currencies.") % (line.account_id.code, line.account_id.name))
 
-            if abs(amount) < 0.0001:
+            # Check that the move balances, the tolerance for debit/credit must
+            # be smaller than the smallest value according to price accuracy
+            # (hence the +1 below)
+            # Example:
+            #    difference == 0.01 is OK iff price_accuracy <= 1!
+            #    difference == 0.0001 is OK iff price_accuracy <= 3!
+            if abs(amount) < 10 ** -(int(config['price_accuracy'])+1):
+                # If the move is balanced
+                # Add to the list of valid moves
+                # (analytic lines will be created later for valid moves)
+                valid_moves.append(move)
+
+                # Check whether the move lines are confirmed
+                
                 if not len(line_draft_ids):
                     continue
+                # Update the move lines (set them as valid)
+
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
                     'journal_id': move.journal_id.id,
                     'period_id': move.period_id.id,
                     'state': 'valid'
                 }, context, check=False)
-                todo = []
+
                 account = {}
                 account2 = {}
-                if journal.type not in ('purchase','sale'):
-                    continue
+                
+                if journal.type in ('purchase','sale'):
 
-                for line in move.line_id:
-                    code = amount = 0
-                    key = (line.account_id.id, line.tax_code_id.id)
-                    if key in account2:
-                        code = account2[key][0]
-                        amount = account2[key][1] * (line.debit + line.credit)
-                    elif line.account_id.id in account:
-                        code = account[line.account_id.id][0]
-                        amount = account[line.account_id.id][1] * (line.debit + line.credit)
-                    if (code or amount) and not (line.tax_code_id or line.tax_amount):
-                        self.pool.get('account.move.line').write(cr, uid, [line.id], {
-                            'tax_code_id': code,
-                            'tax_amount': amount
-                        }, context, check=False)
+                    for line in move.line_id:
+                        code = amount = 0
+                        key = (line.account_id.id, line.tax_code_id.id)
+                        if key in account2:
+                            code = account2[key][0]
+                            amount = account2[key][1] * (line.debit + line.credit)
+                        elif line.account_id.id in account:
+                            code = account[line.account_id.id][0]
+                            amount = account[line.account_id.id][1] * (line.debit + line.credit)
+                        if (code or amount) and not (line.tax_code_id or line.tax_amount):
+                            self.pool.get('account.move.line').write(cr, uid, [line.id], {
+                                'tax_code_id': code,
+                                'tax_amount': amount
+                            }, context, check=False)
+                            
+            elif journal.centralisation:
+                # If the move is not balanced, it must be centralised...
+
+                # Add to the list of valid moves
+                # (analytic lines will be created later for valid moves)
+                valid_moves.append(move)
+
                 #
-                # Compute VAT
+                # Update the move lines (set them as valid)
                 #
-                continue
-            if journal.centralisation:
+                
                 self._centralise(cr, uid, move, 'debit', context=context)
                 self._centralise(cr, uid, move, 'credit', context=context)
                 self.pool.get('account.move.line').write(cr, uid, line_draft_ids, {
                     'state': 'valid'
                 }, context, check=False)
-                continue
             else:
+                # We can't validate it (it's unbalanced)
+                # Setting the lines as draft
                 self.pool.get('account.move.line').write(cr, uid, line_ids, {
                     'journal_id': move.journal_id.id,
                     'period_id': move.period_id.id,
@@ -1079,13 +1222,14 @@ class account_move(osv.osv):
                     #'tax_amount': False,
                     'state': 'draft'
                 }, context, check=False)
-                ok = False
-        if ok:
-            list_ids = []
-            for tmp in move.line_id:
-                list_ids.append(tmp.id)
-            self.pool.get('account.move.line').create_analytic_lines(cr, uid, list_ids, context)
-        return ok
+
+        # Create analytic lines for the valid moves
+        
+        for record in valid_moves:
+            self.pool.get('account.move.line').create_analytic_lines(cr, uid, [line.id for line in record.line_id], context)
+
+        return len(valid_moves) > 0
+
 account_move()
 
 class account_move_reconcile(osv.osv):
@@ -1142,25 +1286,28 @@ class account_tax_code(osv.osv):
 
     This code is used for some tax declarations.
     """
-    def _sum(self, cr, uid, ids, name, args, context, where =''):
-        ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
+    def _sum(self, cr, uid, ids, name, args, context,
+             where ='', where_params=()):
+        parent_ids = tuple(self.search(
+            cr, uid, [('parent_id', 'child_of', ids)]))
         if context.get('based_on', 'invoices') == 'payments':
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line, \
                         account_move AS move \
                         LEFT JOIN account_invoice invoice ON \
                             (invoice.move_id = move.id) \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
+                    WHERE line.tax_code_id in %s '+where+' \
                         AND move.id = line.move_id \
                         AND ((invoice.state = \'paid\') \
                             OR (invoice.id IS NULL)) \
-                    GROUP BY line.tax_code_id')
+                    GROUP BY line.tax_code_id',
+                       (parent_ids,)+where_params)
         else:
             cr.execute('SELECT line.tax_code_id, sum(line.tax_amount) \
                     FROM account_move_line AS line \
-                    WHERE line.tax_code_id in ('+acc_set+') '+where+' \
-                    GROUP BY line.tax_code_id')
+                    WHERE line.tax_code_id in %s '+where+' \
+                    GROUP BY line.tax_code_id',
+                       (parent_ids,)+where_params)
         res=dict(cr.fetchall())
         for record in self.browse(cr, uid, ids, context):
             def _rec_get(record):
@@ -1177,12 +1324,14 @@ class account_tax_code(osv.osv):
         else:
             fiscalyear_id = self.pool.get('account.fiscalyear').find(cr, uid, exception=False)
         where = ''
+        where_params = ()
         if fiscalyear_id:
             pids = map(lambda x: str(x.id), self.pool.get('account.fiscalyear').browse(cr, uid, fiscalyear_id).period_ids)
             if pids:
-                where = ' and period_id in (' + (','.join(pids))+')'
+                where = ' and period_id in %s'
+                where_params = (tuple(pids),)
         return self._sum(cr, uid, ids, name, args, context,
-                where=where)
+                where=where, where_params=where_params)
 
     def _sum_period(self, cr, uid, ids, name, args, context):
         if 'period_id' in context and context['period_id']:
@@ -1193,13 +1342,14 @@ class account_tax_code(osv.osv):
                 return dict.fromkeys(ids, 0.0)
             period_id = period_id[0]
         return self._sum(cr, uid, ids, name, args, context,
-                where=' and line.period_id='+str(period_id))
+                         where=' and line.period_id=%s',
+                         where_params=(period_id,))
 
     _name = 'account.tax.code'
     _description = 'Tax Code'
     _rec_name = 'code'
     _columns = {
-        'name': fields.char('Tax Case Name', size=64, required=True),
+        'name': fields.char('Tax Case Name', size=64, required=True, translate=True),
         'code': fields.char('Case Code', size=64),
         'info': fields.text('Description'),
         'sum': fields.function(_sum_year, method=True, string="Year Sum"),
@@ -1212,7 +1362,14 @@ class account_tax_code(osv.osv):
         'notprintable':fields.boolean("Not Printable in Invoice", help="Check this box if you don't want any VAT related to this Tax Code to appear on invoices"),
     }
 
-
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=80):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = self.search(cr, user, ['|',('name',operator,name),('code',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
+        
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
@@ -1232,15 +1389,15 @@ class account_tax_code(osv.osv):
         'sign': lambda *args: 1.0,
         'notprintable': lambda *a: False,
     }
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default.update({'line_ids': []})
+        return super(account_tax_code, self).copy(cr, uid, id, default, context)
+
+    _check_recursion = check_cycle
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
@@ -1854,16 +2011,7 @@ class account_account_template(osv.osv):
         'type' : lambda *a :'view',
     }
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select parent_id from account_account_template where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
+    _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id'])
     ]
@@ -1913,16 +2061,7 @@ class account_tax_code_template(osv.osv):
         return [(x['id'], (x['code'] and x['code'] + ' - ' or '') + x['name']) \
                 for x in reads]
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from account_tax_code_template where id in ('+','.join(map(str,ids))+')')
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
+    _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive Tax Codes.', ['parent_id'])
     ]

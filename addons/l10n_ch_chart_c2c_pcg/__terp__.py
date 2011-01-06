@@ -1,10 +1,9 @@
 # -*- encoding: utf-8 -*-
-# Copyright (c) 2008 CamptoCamp SA
 #
 #  __init__.py
 #
 #  Created by Vincent Renaville on 12.02.09.
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+#  Copyright (c) 2010 CamptoCamp. All rights reserved.
 #
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -23,31 +22,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-
 {
     "name" : "Suisse - Plan comptable general pour PME STERCHI",
     "version" : "1.0",
     "depends" : [
-					"account",
+                    "account",
                     "account_chart",
-					"l10n_ch"
+                    "l10n_ch"
                 ],
     "author" : "Camptocamp",
     "description": "Swiws account chart that add also tax template definition",
     "website" : "camptocamp.com",
     "category" : "Localisation/Account Charts",
     "init_xml" : [
-					'account.xml',
-					'vat.xml'
-				],
+                    'account.xml',
+                    'vat.xml'
+                ],
     "demo_xml" : [ ],
     "update_xml" : [
-						'wizard.xml',
-						'tax_template_view.xml',
-						'security/ir.model.access.csv',
-					],
+                        'wizard.xml',
+                        'tax_template_view.xml',
+                        'security/ir.model.access.csv',
+                    ],
 
     "active": False,
     "installable": True
 }
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

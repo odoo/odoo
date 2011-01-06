@@ -104,7 +104,7 @@ class hr_timesheet_sheet(osv.osv):
                 LEFT JOIN hr_timesheet_sheet_sheet_day AS day \
                     ON (sheet.id = day.sheet_id \
                         AND day.name = sheet.date_current) \
-                WHERE sheet.id in (' + ','.join([str(x) for x in ids]) + ')')
+                WHERE sheet.id in %s', (tuple(ids),))
         return dict(cr.fetchall())
 
     def _total(self, cr, uid, ids, name, args, context):
@@ -112,8 +112,8 @@ class hr_timesheet_sheet(osv.osv):
                 FROM hr_timesheet_sheet_sheet s \
                     LEFT JOIN hr_timesheet_sheet_sheet_day d \
                         ON (s.id = d.sheet_id) \
-                WHERE s.id in ('+ ','.join(map(str, ids)) + ') \
-                GROUP BY s.id')
+                WHERE s.id in %s \
+                GROUP BY s.id', (tuple(ids),))
         return dict(cr.fetchall())
 
     def _state_attendance(self, cr, uid, ids, name, args, context):
@@ -135,17 +135,27 @@ class hr_timesheet_sheet(osv.osv):
                 result[sheet_id] = emp.state
         return result
 
+
+    def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
+        ids_signin = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_in')])
+        ids_signout = self.pool.get('hr.attendance').search(cr,uid,[('sheet_id', '=', sheet_id),('action','=','sign_out')])
+
+        if len(ids_signin) != len(ids_signout):
+            raise osv.except_osv(('Warning !'),_('The timesheet cannot be validated as it does not contain equal no. of sign ins and sign outs!'))
+        return True
+
     def copy(self, cr, uid, ids, *args, **argv):
         raise osv.except_osv(_('Error !'), _('You can not duplicate a timesheet !'))
 
     def button_confirm(self, cr, uid, ids, context):
         for sheet in self.browse(cr, uid, ids, context):
+            self.check_employee_attendance_state(cr, uid, sheet.id, context)
             di = sheet.user_id.company_id.timesheet_max_difference
             if (abs(sheet.total_difference) < di) or not di:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
             else:
-                raise osv.except_osv(_('Warning !'), _('Please verify that the total difference of the sheet is lower than %.2f !') %(di,))
+                raise osv.except_osv(_('Warning !'), _('Please verify that the total difference of the sheet is lower than %.2f !') %(di,))   
         return True
 
     def date_today(self, cr, uid, ids, context):
@@ -330,8 +340,8 @@ class hr_timesheet_line(osv.osv):
                         ON (s.date_to >= al.date \
                             AND s.date_from <= al.date \
                             AND s.user_id = al.user_id) \
-                WHERE l.id in (' + ','.join([str(x) for x in ids]) + ') \
-                GROUP BY l.id')
+                WHERE l.id in %s \
+                GROUP BY l.id', (tuple(ids),))
         res = dict(cursor.fetchall())
         sheet_names = {}
         for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
@@ -346,7 +356,7 @@ class hr_timesheet_line(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args, context):
+    def _sheet_search(self, cursor, user, obj, name, args, context=None):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -448,8 +458,8 @@ class hr_attendance(osv.osv):
                         ON (s.date_to >= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
                             AND s.date_from <= to_date(to_char(a.name, 'YYYY-MM-dd'),'YYYY-MM-dd') \
                             AND s.user_id = e.user_id) \
-                WHERE a.id in (" + ",".join([str(x) for x in ids]) + ") \
-                GROUP BY a.id")
+                WHERE a.id in %s \
+                GROUP BY a.id", (tuple(ids),))
         res = dict(cursor.fetchall())
         sheet_names = {}
         for sheet_id, name in sheet_obj.name_get(cursor, user, res.values(),
@@ -463,7 +473,7 @@ class hr_attendance(osv.osv):
                 res[line_id] = False
         return res
 
-    def _sheet_search(self, cursor, user, obj, name, args):
+    def _sheet_search(self, cursor, user, obj, name, args, context=None):
         if not len(args):
             return []
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')

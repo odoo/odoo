@@ -4,35 +4,36 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 12:31+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:55:51+0000\n"
+"PO-Revision-Date: 2010-09-02 13:55:51+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Sub Total"
-msgstr "Sub Total"
+msgstr "Sub-total"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Invoice Date:"
-msgstr "Data da Factura"
+msgid "Note:"
+msgstr "Note:"
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"O nome do Objecto deve começar com x_ e não pode conter nenhum caractere "
-"especial !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "O nome do objecto deve começar com x_ e não pode conter um carácter especial!"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Cancelled Invoice"
+msgstr "Cancelled Invoice"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -43,7 +44,7 @@ msgstr "Título"
 #. module: account_invoice_layout
 #: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
 msgid "Invoices with Layout and Message"
-msgstr "Facturas com layout e mensagem"
+msgstr "Facturas com Layout e Mensagem"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -62,8 +63,7 @@ msgstr "Imprimir"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
-msgid ""
-"This notification will appear at the bottom of the Invoices when printed."
+msgid "This notification will appear at the bottom of the Invoices when printed."
 msgstr "Esta notificação aparecera no rodapé da factura quando imprimida."
 
 #. module: account_invoice_layout
@@ -74,12 +74,22 @@ msgstr "Preço Unitário"
 #. module: account_invoice_layout
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome de modelo inválido na definição da acção"
 
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
 msgid "Notify By Messages"
 msgstr "Notificar por mensagens"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "VAT :"
+msgstr "VAT :"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Document"
+msgstr "Document"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -102,19 +112,14 @@ msgid "Notification Message"
 msgstr "Mensagem de notficação"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr "Referençia do cliente:"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Description"
-msgstr "Descrição"
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Produto"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "account_invoice_layout"
-msgstr ""
+msgstr "account_invoice_layout"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -128,8 +133,8 @@ msgstr "Preço"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Canceled Invoice"
-msgstr "Facturas canceladas"
+msgid "Invoice Date"
+msgstr "Invoice Date"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -144,7 +149,7 @@ msgstr "Conta de Origem"
 #. module: account_invoice_layout
 #: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
 msgid "Write Messages"
-msgstr ""
+msgstr "Escrever mensagens"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -152,9 +157,9 @@ msgid "Base"
 msgstr "Base"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
-msgstr "Fax :"
+#: selection:account.invoice.line,state:0
+msgid "Page Break"
+msgstr "Quebra de Página"
 
 #. module: account_invoice_layout
 #: field:notify.message,msg:0
@@ -168,8 +173,8 @@ msgstr "Escreva uma notificação ou uma mensagem construtiva."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Tel. :"
-msgstr "Tel.   :"
+msgid "Partner Ref."
+msgstr "Partner Ref."
 
 #. module: account_invoice_layout
 #: constraint:ir.ui.view:0
@@ -177,14 +182,14 @@ msgid "Invalid XML for View Architecture!"
 msgstr "XML inválido para a arquitectura de vista"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Page Break"
-msgstr "Quebra de Página"
+#: rml:account.invoice.layout:0
+msgid "Fax :"
+msgstr "Fax :"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Document:"
-msgstr ""
+msgid "Total:"
+msgstr "Total:"
 
 #. module: account_invoice_layout
 #: wizard_view:wizard.notify_message,init:0
@@ -197,14 +202,14 @@ msgid "Messages"
 msgstr "Mensagens"
 
 #. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr "Produto"
-
-#. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoices with Layout"
 msgstr "Facturas com disposição"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Description / Taxes"
+msgstr "Description / Taxes"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -213,13 +218,8 @@ msgstr "Montante"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (excl. taxes):"
-msgstr "Total (taxas excluídas)"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes"
-msgstr "Impostos"
+msgid "Tel. :"
+msgstr "Tel. :"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -242,11 +242,6 @@ msgid "Refund"
 msgstr "Reembolso"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr "VAT :"
-
-#. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
 msgstr "Linha separadora"
@@ -263,8 +258,8 @@ msgstr "Taxa"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "(incl. taxes):"
-msgstr "(taxas incluidos)"
+msgid "Net Total:"
+msgstr "Net Total:"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -287,11 +282,7 @@ msgid "Message"
 msgstr "Mensagem"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr "Total"
-
-#. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Todas as mensagens de notificação"
+

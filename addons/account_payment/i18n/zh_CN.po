@@ -4,253 +4,264 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 12:36+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_payment
 #: field:payment.order,date_planned:0
 msgid "Scheduled date if fixed"
-msgstr ""
+msgstr "Scheduled date if fixed"
 
 #. module: account_payment
 #: field:payment.line,currency:0
 msgid "Partner Currency"
-msgstr ""
+msgstr "业务伙伴货币"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Set to draft"
-msgstr ""
+msgstr "设为草稿"
 
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr ""
+msgstr "选择使用的付款方式"
 
 #. module: account_payment
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "在行动定义中的模式名称无效"
 
 #. module: account_payment
 #: view:payment.line:0
 #: field:payment.line,info_owner:0
 #: view:payment.order:0
 msgid "Owner Account"
-msgstr ""
+msgstr "所有者科目"
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
-msgid ""
-"The amount which should be paid at the current date\n"
+msgid "The amount which should be paid at the current date\n"
 "minus the amount which is already in payment order"
-msgstr ""
+msgstr "在当前日期应支付的金额\n"
+"减去的金额在付款单中"
 
 #. module: account_payment
 #: help:payment.line,date:0
-msgid ""
-"If no payment date is specified, the bank will treat this payment line "
-"directly"
-msgstr ""
+msgid "If no payment date is specified, the bank will treat this payment line directly"
+msgstr "如果没有指定付款日期将直接由银行付款"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred date"
-msgstr ""
+msgstr "首选日期"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr ""
+msgstr "免费"
 
 #. module: account_payment
 #: wizard_field:populate_payment,search,entries:0
 msgid "Entries"
-msgstr ""
+msgstr "凭证"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Used Account"
+msgstr "Used Account"
 
 #. module: account_payment
 #: wizard_field:populate_payment,init,duedate:0
 msgid "Due Date"
-msgstr ""
+msgstr "到期日期"
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr ""
+msgstr "凭证行"
 
 #. module: account_payment
 #: wizard_button:populate_payment,search,create:0
 msgid "_Add to payment order"
-msgstr ""
+msgstr "增加到付款单"
 
 #. module: account_payment
 #: rml:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
-msgstr ""
+msgstr "金额"
 
 #. module: account_payment
-#: rml:payment.order:0
-msgid "Execution date:"
-msgstr ""
+#: help:payment.mode,type:0
+msgid "Select the Payment Type for the Payment Mode."
+msgstr "选择这付款方式的付款类型"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr ""
+msgstr "公司货币的合计"
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "已取消"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form_new
 msgid "New Payment Order"
-msgstr ""
+msgstr "新付款单"
+
+#. module: account_payment
+#: field:payment.order,total:0
+msgid "Total"
+msgstr "合计"
 
 #. module: account_payment
 #: rml:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
-msgstr ""
+msgstr "关联单号"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr ""
+msgstr "付款单"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
-msgstr ""
+msgstr "直接"
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
-#: model:ir.model,name:account_payment.model_payment_line
-#: view:payment.line:0
-#: view:payment.order:0
-msgid "Payment Line"
-msgstr ""
+#: rml:payment.order:0
+msgid "Value date"
+msgstr "Value date"
+
+#. module: account_payment
+#: model:ir.module.module,shortdesc:account_payment.module_meta_information
+msgid "Payment Management"
+msgstr "付款管理"
 
 #. module: account_payment
 #: field:payment.type,suitable_bank_types:0
 msgid "Suitable bank types"
-msgstr ""
+msgstr "合适的银行类型"
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Amount Total"
-msgstr ""
+msgstr "金额合计"
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "确认"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
-msgstr ""
+msgstr "发票有效日期"
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
 msgid "Payment lines"
-msgstr ""
+msgstr "付款明细"
 
 #. module: account_payment
-#: help:payment.order,date_planned:0
-msgid "Select a date if you have chosen Preferred Date to be fixed."
-msgstr ""
+#: rml:payment.order:0
+msgid "Execution Type"
+msgstr "Execution Type"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
-msgstr ""
+msgstr "已安排"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Amount in currency"
+msgstr "Amount in currency"
 
 #. module: account_payment
 #: field:payment.order,state:0
 msgid "State"
-msgstr ""
+msgstr "状态"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Transaction Information"
-msgstr ""
+msgstr "交易信息"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "付款方式"
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
 msgid "Effective Date"
-msgstr ""
+msgstr "有效日期"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
 msgid "Invoice Ref."
-msgstr ""
+msgstr "发票关联单号"
 
 #. module: account_payment
 #: help:payment.order,date_prefered:0
-msgid ""
-"Choose an option for the Payment Order:'Fixed' stands for a date specified "
-"by you.'Directly' stands for the direct execution.'Due date' stands for the "
-"scheduled date of execution."
-msgstr ""
+msgid "Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."
+msgstr "选择付款单选项‘固定’由你指定一个指定的日期. ‘直接’表示直接执行. ‘到期日期’指定一个时间表的日期执行."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "错误！"
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr ""
+msgstr "借方合计"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution date"
-msgstr ""
+msgstr "执行日期"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr ""
+msgstr "固定日期"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
 msgid "Destination Account"
-msgstr ""
+msgstr "目标科目"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Desitination Account"
-msgstr ""
+msgstr "目标科目"
 
 #. module: account_payment
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "无效XML视图结构!"
 
 #. module: account_payment
 #: wizard_button:populate_payment,init,end:0
@@ -262,105 +273,106 @@ msgstr "取消(_C)"
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
-msgstr ""
+msgstr "已创建"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Select Invoices to Pay"
-msgstr ""
+msgstr "选择发票支付"
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
-msgstr ""
+msgstr "当前金额合计"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Make Payments"
-msgstr ""
+msgstr "建立付款"
 
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr ""
-
-#. module: account_payment
-#: model:ir.module.module,shortdesc:account_payment.module_meta_information
-msgid "Payment Management"
-msgstr ""
-
-#. module: account_payment
-#: selection:payment.order,date_prefered:0
-msgid "Due date"
-msgstr ""
-
-#. module: account_payment
-#: field:account.invoice,amount_to_pay:0
-msgid "Amount to be paid"
-msgstr ""
-
-#. module: account_payment
-#: help:payment.line,info_owner:0
-msgid "Address of the Main Partner"
-msgstr ""
-
-#. module: account_payment
-#: help:payment.mode,name:0
-msgid "Mode of Payment"
-msgstr ""
-
-#. module: account_payment
-#: view:payment.type:0
-#: help:payment.type,name:0
-msgid "Payment Type"
-msgstr ""
-
-#. module: account_payment
-#: help:payment.line,amount_currency:0
-msgid "Payment amount in the partner currency"
-msgstr ""
-
-#. module: account_payment
-#: selection:payment.order,state:0
-msgid "Draft"
-msgstr ""
+msgstr "沟通类型"
 
 #. module: account_payment
 #: field:payment.line,partner_id:0
 #: rml:payment.order:0
 msgid "Partner"
-msgstr ""
+msgstr "业务伙伴"
+
+#. module: account_payment
+#: selection:payment.order,date_prefered:0
+msgid "Due date"
+msgstr "到期日期"
+
+#. module: account_payment
+#: field:account.invoice,amount_to_pay:0
+msgid "Amount to be paid"
+msgstr "应支付金额"
+
+#. module: account_payment
+#: help:payment.line,info_owner:0
+msgid "Address of the Main Partner"
+msgstr "主要业务伙伴地址"
+
+#. module: account_payment
+#: help:payment.mode,name:0
+msgid "Mode of Payment"
+msgstr "付款方式"
+
+#. module: account_payment
+#: rml:payment.order:0
+#: view:payment.type:0
+#: help:payment.type,name:0
+msgid "Payment Type"
+msgstr "Payment Type"
+
+#. module: account_payment
+#: help:payment.line,amount_currency:0
+msgid "Payment amount in the partner currency"
+msgstr "在业务伙伴货币的货币金额"
+
+#. module: account_payment
+#: selection:payment.order,state:0
+msgid "Draft"
+msgstr "草稿"
 
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr ""
+msgstr "沟通的消息"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "No partner defined on entry line"
-msgstr ""
+msgstr "在凭证行没定义业务伙伴"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
 msgid "Address of the Ordering Customer."
-msgstr ""
+msgstr "客户订单地址"
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
-msgstr ""
+#: wizard_field:populate_statement,init,date_select:0
+msgid "Select Date"
+msgstr "Select Date"
+
+#. module: account_payment
+#: help:payment.order,date_planned:0
+msgid "Select a date if you have chosen Preferred Date to be fixed."
+msgstr "Select a date if you have chosen Preferred Date to be fixed."
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_payment
 msgid "Populate payment"
-msgstr ""
+msgstr "填入付款"
 
 #. module: account_payment
 #: field:payment.order,user_id:0
 msgid "User"
-msgstr ""
+msgstr "用户"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.act_account_invoice_2_payment_line
@@ -369,172 +381,184 @@ msgid "Payment Lines"
 msgstr "付款明细"
 
 #. module: account_payment
-#: rml:payment.order:0
+#: wizard_field:populate_statement,init,d_date:0
 msgid "Date"
-msgstr ""
-
-#. module: account_payment
-#: rml:payment.order:0
-msgid "Reference:"
-msgstr ""
+msgstr "Date"
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
-msgid ""
-"This Entry Line will be referred for the information of the ordering "
-"customer."
-msgstr ""
+msgid "This Entry Line will be referred for the information of the ordering customer."
+msgstr "这凭证行将在这客户订单作为关联单号"
 
 #. module: account_payment
 #: field:payment.line,date:0
 msgid "Payment Date"
-msgstr ""
+msgstr "付款日期"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Total:"
+msgstr "Total:"
 
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation date"
-msgstr ""
+msgstr "创建日期"
 
 #. module: account_payment
 #: field:payment.line,ml_maturity_date:0
+#: selection:populate_statement,init,date_select:0
 msgid "Maturity Date"
-msgstr ""
+msgstr "付款到期日期"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr ""
+#: selection:populate_statement,init,date_select:0
+msgid "Fixed Date"
+msgstr "Fixed Date"
 
 #. module: account_payment
 #: help:payment.type,code:0
 msgid "Specify the Code for Payment Type"
-msgstr ""
+msgstr "指定付款类型代码"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
 msgid "Amount to pay"
-msgstr ""
+msgstr "支付金额"
 
 #. module: account_payment
 #: field:payment.line,amount:0
 msgid "Amount in Company Currency"
-msgstr ""
+msgstr "公司使用货币的金额"
 
 #. module: account_payment
 #: help:payment.line,partner_id:0
 msgid "The Ordering Customer"
-msgstr ""
+msgstr "客户订单"
 
 #. module: account_payment
 #: field:payment.type,code:0
 msgid "Code"
-msgstr ""
+msgstr "代码"
 
 #. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
-msgstr ""
+msgstr "你的关联单号"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Payment order"
-msgstr ""
+msgstr "付款单"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "General Information"
-msgstr ""
+msgstr "一般信息"
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Done"
-msgstr ""
+msgstr "完成"
 
 #. module: account_payment
 #: field:payment.line,communication:0
 msgid "Communication"
-msgstr ""
+msgstr "沟通"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Information"
-msgstr ""
+msgstr "信息"
 
 #. module: account_payment
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_pay_payment
 msgid "Pay"
-msgstr ""
+msgstr "支付"
 
 #. module: account_payment
 #: model:ir.actions.report.xml,name:account_payment.payment_order1
 #: model:ir.model,name:account_payment.model_payment_order
 msgid "Payment Order"
-msgstr ""
+msgstr "付款单"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_draft
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_draft
 msgid "Draft Payment Order"
-msgstr ""
+msgstr "付款单草稿"
 
 #. module: account_payment
 #: help:payment.line,amount:0
 msgid "Payment amount in the company currency"
-msgstr ""
+msgstr "在公司货币的付款金额"
 
 #. module: account_payment
 #: wizard_view:populate_payment,init:0
 msgid "Search Payment lines"
-msgstr ""
+msgstr "查询付款明细"
+
+#. module: account_payment
+#: selection:populate_statement,init,date_select:0
+msgid "Current Date"
+msgstr "Current Date"
 
 #. module: account_payment
 #: field:payment.line,amount_currency:0
 msgid "Amount in Partner Currency"
-msgstr ""
+msgstr "业务伙伴使用货币的金额"
 
 #. module: account_payment
 #: field:payment.line,communication2:0
 msgid "Communication 2"
-msgstr ""
+msgstr "沟通2"
 
 #. module: account_payment
 #: field:payment.line,bank_id:0
 msgid "Destination Bank account"
-msgstr ""
+msgstr "目标银行账号"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Cash Journal for the Payment Mode"
-msgstr ""
+msgstr "现金付款方式的业务类型"
 
 #. module: account_payment
 #: field:payment.mode,bank_id:0
 #: rml:payment.order:0
 msgid "Bank account"
-msgstr ""
+msgstr "银行账号"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr ""
+msgstr "确认付款"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
+#: rml:payment.order:0
 msgid "Company Currency"
-msgstr ""
+msgstr "公司货币"
+
+#. module: account_payment
+#: model:ir.actions.act_window,name:account_payment.action_payment_line_form
+#: model:ir.model,name:account_payment.model_payment_line
+#: view:payment.line:0
+#: view:payment.order:0
+msgid "Payment Line"
+msgstr "付款明细"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.menu_main
@@ -542,92 +566,111 @@ msgstr ""
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment"
-msgstr ""
+msgstr "付款"
+
+#. module: account_payment
+#: rml:payment.order:0
+msgid "Payment Order / Payment"
+msgstr "Payment Order / Payment"
 
 #. module: account_payment
 #: field:payment.line,move_line_id:0
 msgid "Entry line"
-msgstr ""
+msgstr "凭证行"
 
 #. module: account_payment
 #: help:payment.line,communication:0
-msgid ""
-"Used as the message between ordering customer and current company. Depicts "
-"'What do you want to say to the recipient about this order ?'"
-msgstr ""
+msgid "Used as the message between ordering customer and current company. Depicts 'What do you want to say to the recipient about this order ?'"
+msgstr "用作订购客户和当前公司之间的消息.描述你在这订单想要说的?"
 
 #. module: account_payment
 #: field:payment.mode,name:0
 #: field:payment.type,name:0
 msgid "Name"
-msgstr ""
+msgstr "名称"
+
+#. module: account_payment
+#: view:account.move.line:0
+msgid "Total credit"
+msgstr "贷方合计"
 
 #. module: account_payment
 #: wizard_button:populate_payment,init,search:0
 msgid "_Search"
-msgstr ""
+msgstr "查找"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Entry Information"
-msgstr ""
+msgstr "信息"
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:0
 #, python-format
 msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
-msgstr ""
+msgstr "Partner '+ line.partner_id.name+ ' has no bank account defined"
 
 #. module: account_payment
 #: model:ir.actions.wizard,name:account_payment.wizard_populate_statement
 msgid "Populate Statement with Payment lines"
-msgstr ""
+msgstr "填入付款明细"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
 msgid "Order"
-msgstr ""
+msgstr "付款单"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_open
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_open
 msgid "Payment Orders to Validate"
-msgstr ""
+msgstr "确认付款单"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_type
 #: field:payment.mode,type:0
 msgid "Payment type"
-msgstr ""
+msgstr "付款类型"
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr ""
+#: rml:payment.order:0
+msgid "Invoice reference"
+msgstr "Invoice reference"
+
+#. module: account_payment
+#: selection:populate_statement,init,date_select:0
+msgid "Payment Order Date"
+msgstr "Payment Order Date"
 
 #. module: account_payment
 #: wizard_button:populate_statement,init,add:0
 msgid "_Add"
-msgstr "添加(_A)"
-
-#. module: account_payment
-#: help:payment.mode,type:0
-msgid "Select the Payment Type for the Payment Mode."
-msgstr ""
+msgstr "增加"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_mode
 #: field:payment.order,mode:0
 msgid "Payment mode"
-msgstr ""
+msgstr "付款方式"
+
+#. module: account_payment
+#: view:account.bank.statement:0
+msgid "Import payment lines"
+msgstr "进项付款明细"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
-msgstr ""
+msgstr "这付款方式的银行账号"
 
 #. module: account_payment
 #: field:payment.mode,journal:0
 msgid "Journal"
-msgstr ""
+msgstr "业务类型"
+
+#. module: account_payment
+#: help:populate_statement,init,date_select:0
+msgid "The selected date will be used for statement lines"
+msgstr "The selected date will be used for statement lines"
+

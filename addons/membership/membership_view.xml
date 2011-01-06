@@ -53,8 +53,8 @@
                     <page string="Membership">
                         <field name="membership" readonly="0"/>
                         <newline/>
-                        <field name="membership_date_from" readonly="0"/>
-                        <field name="membership_date_to" readonly="0"/>
+                        <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}" />
+                        <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}" />
                     </page>
                 </page>
             </field>

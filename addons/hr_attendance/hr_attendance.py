@@ -68,8 +68,8 @@ class hr_attendance(osv.osv):
             and name <= (select name from hr_attendance where id=%s)
             order by name desc
             limit 2
-            ''' % (id, id)
-            cr.execute(sql)
+            '''
+            cr.execute(sql, (id, id))
             atts = cr.fetchall()
             if not ((len(atts)==1 and atts[0][0] == 'sign_in') or (atts[0][0] != atts[1][0] and atts[0][1] != atts[1][1])):
                 return False
@@ -98,7 +98,7 @@ class hr_employee(osv.osv):
                     ON (hr_attendance.employee_id = foo.employee_id \
                         AND hr_attendance.name = foo.name) \
                 WHERE hr_attendance.employee_id \
-                    in (' + ','.join([str(x) for x in ids]) + ')')
+                    in %s', (tuple(ids),))
         for res in cr.fetchall():
             result[res[1]] = res[0] == 'sign_in' and 'present' or 'absent'
         return result

@@ -1,21 +1,19 @@
-# Finnish translation for openobject-addons
-# Copyright (c) 2009 Rosetta Contributors and Canonical Ltd 2009
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2009.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_invoice_layout
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-08-07 07:34+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Finnish <fi@li.org>\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-09-02 13:45:06+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:06+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -24,14 +22,18 @@ msgstr "Välisumma"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Invoice Date:"
-msgstr "Laskutuspäivä:"
+msgid "Note:"
+msgstr "Note:"
 
 #. module: account_invoice_layout
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr "Objektin nimen tulee alkaa x_ ja se ei saa sisältää erikoismerkkejä!"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Cancelled Invoice"
+msgstr "Cancelled Invoice"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -42,7 +44,7 @@ msgstr "Otsikko"
 #. module: account_invoice_layout
 #: model:ir.actions.wizard,name:account_invoice_layout.wizard_notify_message
 msgid "Invoices with Layout and Message"
-msgstr ""
+msgstr "Laskut joissa sommittelu ja viesti"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -61,9 +63,8 @@ msgstr "Tulosta"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
-msgid ""
-"This notification will appear at the bottom of the Invoices when printed."
-msgstr "Tämä ilmoitus näkyy tulostetun laskun alaosassa."
+msgid "This notification will appear at the bottom of the Invoices when printed."
+msgstr "Tämä huomautus on näkyvillä laskujen alaosassa kun ne tulostetaan."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -73,12 +74,22 @@ msgstr "Yksikköhinta"
 #. module: account_invoice_layout
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
 
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
 msgid "Notify By Messages"
-msgstr "Ilmoitus Viestittäin"
+msgstr "Huomautus viesteittäin"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "VAT :"
+msgstr "VAT :"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Document"
+msgstr "Document"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
@@ -93,27 +104,22 @@ msgstr "Laskurivit"
 #. module: account_invoice_layout
 #: view:account.invoice.line:0
 msgid "Seq."
-msgstr ""
+msgstr "Sarja"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_finan_config_notify_message
 msgid "Notification Message"
-msgstr "Ilmoituksen Viesti"
+msgstr "Huomautuksen viesti"
 
 #. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Customer Ref:"
-msgstr "Asiakkaan Viite:"
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Description"
-msgstr "Kuvaus"
+#: selection:account.invoice.line,state:0
+msgid "Product"
+msgstr "Tuote"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "account_invoice_layout"
-msgstr ""
+msgstr "account_invoice_layout"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -123,177 +129,160 @@ msgstr "Tyyppi"
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Price"
-msgstr ""
+msgstr "Hinta"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Canceled Invoice"
-msgstr ""
+msgid "Invoice Date"
+msgstr "Invoice Date"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Taxes:"
-msgstr ""
+msgstr "Verot:"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
 msgid "Source Account"
-msgstr ""
+msgstr "Lähdetili"
 
 #. module: account_invoice_layout
 #: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
 msgid "Write Messages"
-msgstr ""
+msgstr "Kirjoita viestejä"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Base"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Fax :"
-msgstr ""
-
-#. module: account_invoice_layout
-#: field:notify.message,msg:0
-msgid "Special Message"
-msgstr ""
-
-#. module: account_invoice_layout
-#: view:notify.message:0
-msgid "Write a notification or a wishful message."
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Tel. :"
-msgstr ""
-
-#. module: account_invoice_layout
-#: constraint:ir.ui.view:0
-msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "Pohja"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Page Break"
-msgstr ""
+msgstr "Sivunvaihto"
+
+#. module: account_invoice_layout
+#: field:notify.message,msg:0
+msgid "Special Message"
+msgstr "Erikoisviesti"
+
+#. module: account_invoice_layout
+#: view:notify.message:0
+msgid "Write a notification or a wishful message."
+msgstr "Kirjoita viesti tai toivotus."
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Document:"
-msgstr ""
+msgid "Partner Ref."
+msgstr "Partner Ref."
+
+#. module: account_invoice_layout
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "Virheellinen XML näkymäarkkitehtuurille!"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Fax :"
+msgstr "Fax :"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Total:"
+msgstr "Total:"
 
 #. module: account_invoice_layout
 #: wizard_view:wizard.notify_message,init:0
 msgid "Select Message"
-msgstr ""
+msgstr "Valitse viesti"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Messages"
-msgstr ""
-
-#. module: account_invoice_layout
-#: selection:account.invoice.line,state:0
-msgid "Product"
-msgstr ""
+msgstr "Viestit"
 
 #. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoices with Layout"
-msgstr ""
+msgstr "Laskut joissa sommittelu"
+
+#. module: account_invoice_layout
+#: rml:account.invoice.layout:0
+msgid "Description / Taxes"
+msgstr "Description / Taxes"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Amount"
-msgstr ""
+msgstr "Summa"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "Total (excl. taxes):"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Taxes"
-msgstr ""
+msgid "Tel. :"
+msgstr "Tel. :"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Luonnoslasku"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,sequence:0
 msgid "Sequence Number"
-msgstr ""
+msgstr "Sarjan numero"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Quantity"
-msgstr ""
+msgstr "Määrä"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Refund"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "VAT :"
-msgstr ""
+msgstr "Hyvitys"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
-msgstr ""
+msgstr "Erotinrivi"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Invoice"
-msgstr ""
+msgstr "Toimittajan lasku"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Tax"
-msgstr ""
+msgstr "Vero"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
-msgid "(incl. taxes):"
-msgstr ""
+msgid "Net Total:"
+msgstr "Net Total:"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Invoice"
-msgstr ""
+msgstr "Lasku"
 
 #. module: account_invoice_layout
 #: wizard_button:wizard.notify_message,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "Peruuta"
 
 #. module: account_invoice_layout
 #: rml:account.invoice.layout:0
 msgid "Supplier Refund"
-msgstr ""
+msgstr "Toimittajan hyvitys"
 
 #. module: account_invoice_layout
 #: wizard_field:wizard.notify_message,init,message:0
 msgid "Message"
-msgstr ""
-
-#. module: account_invoice_layout
-#: rml:account.invoice.layout:0
-msgid "Total"
-msgstr ""
+msgstr "Viesti"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
-msgstr ""
+msgstr "Kaikki huomautuksien viestit"
 
-#~ msgid "Document"
-#~ msgstr "Dokumentti"

@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution	
+#    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>). All Rights Reserved
 #    $Id$
 #
@@ -19,10 +19,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 import time
 import operator
 
+import netsvc
 from osv import fields
 from osv import osv
 
@@ -33,47 +33,52 @@ from osv import osv
 class account_analytic_account(osv.osv):
     _name = 'account.analytic.account'
     _description = 'Analytic Accounts'
+    logger = netsvc.Logger()
 
     def _credit_calc(self, cr, uid, ids, name, arg, context={}):
-        r = {}
-        acc_set = ",".join(map(str, ids))
-        
-        for i in ids:
-            r.setdefault(i,0.0)
-            
-        if not acc_set:
-            return r
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  'Entering _credit_calc; ids:%s'%ids)
+        if not ids: return {}
 
         where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount<0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
+        if context.get('from_date'):
+            where_date += " AND l.date >= %(from_date)s"
+        if context.get('to_date'):
+            where_date += " AND l.date <= %(to_date)s"
+
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount), 0) "
+                   "FROM account_analytic_account a "
+                   "LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s)"
+                   " WHERE l.amount < 0 AND a.id IN %%(ids)s "
+                   "GROUP BY a.id" % (where_date),
+                   dict(context, ids=tuple(ids)))
         r = dict(cr.fetchall())
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_credit_calc results: %s'%r)
         for i in ids:
             r.setdefault(i,0.0)
         return r
 
     def _debit_calc(self, cr, uid, ids, name, arg, context={}):
-        r = {}
-        acc_set = ",".join(map(str, ids))
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  'Entering _debit_calc; ids:%s'%ids)
+        if not ids: return {}
 
-        for i in ids:
-            r.setdefault(i,0.0)
-            
-        if not acc_set:
-            return r
-        
         where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE l.amount>0 and a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
-        r= dict(cr.fetchall())
+        if context.get('from_date'):
+            where_date += " AND l.date >= %(from_date)s"
+        if context.get('to_date'):
+            where_date += " AND l.date <= %(to_date)s"
+
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount), 0) "
+                   "FROM account_analytic_account a "
+                   "LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s)"
+                   " WHERE l.amount > 0 AND a.id IN %%(ids)s "
+                   "GROUP BY a.id" % (where_date),
+                   dict(context, ids=tuple(ids)))
+        r = dict(cr.fetchall())
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_debut_calc results: %s'%r)
         for i in ids:
             r.setdefault(i,0.0)
         return r
@@ -81,35 +86,49 @@ class account_analytic_account(osv.osv):
     def _balance_calc(self, cr, uid, ids, name, arg, context={}):
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
-        
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  'Entering _balance_calc; ids:%s; ids2:%s'%(
+                            ids, ids2))
+
         for i in ids:
             res.setdefault(i,0.0)
-            
-        if not acc_set:
+
+        if not ids2:
             return res
-        
+
         where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
-        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) FROM account_analytic_account a LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s) WHERE a.id IN (%s) GROUP BY a.id" % (where_date,acc_set))
-        
+        if context.get('from_date'):
+            where_date += " AND l.date >= %(from_date)s"
+        if context.get('to_date'):
+            where_date += " AND l.date <= %(to_date)s"
+
+        cr.execute("SELECT a.id, COALESCE(SUM(l.amount),0) "
+                   "FROM account_analytic_account a "
+                   "LEFT JOIN account_analytic_line l ON (a.id=l.account_id %s)"
+                   " WHERE a.id IN %%(ids)s "
+                   "GROUP BY a.id" % (where_date),
+                   dict(context, ids=tuple(ids2)))
+
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_balance_calc, (id, sum): %s'%res)
 
-        cr.execute("SELECT a.id, r.currency_id FROM account_analytic_account a INNER JOIN res_company r ON (a.company_id = r.id) where a.id in (%s)" % acc_set)
+        cr.execute("SELECT a.id, r.currency_id "
+                   "FROM account_analytic_account a "
+                   "INNER JOIN res_company r ON (a.company_id = r.id) "
+                   "WHERE a.id in %s", (tuple(ids2),))
 
-        currency= dict(cr.fetchall())
+        currency = dict(cr.fetchall())
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_balance_calc currency: %s'%currency)
 
         res_currency= self.pool.get('res.currency')
         for id in ids:
             if id not in ids2:
                 continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child <> id:
+                if child != id:
                     res.setdefault(id, 0.0)
                     if  currency[child]<>currency[id]:
                         res[id] += res_currency.compute(cr, uid, currency[child], currency[id], res.get(child, 0.0), context=context)
@@ -125,36 +144,40 @@ class account_analytic_account(osv.osv):
         return dict([(i, res[i]) for i in ids ])
 
     def _quantity_calc(self, cr, uid, ids, name, arg, context={}):
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_quantity_calc ids:%s'%ids)
         #XXX must convert into one uom
         res = {}
         ids2 = self.search(cr, uid, [('parent_id', 'child_of', ids)])
-        acc_set = ",".join(map(str, ids2))
-        
+
         for i in ids:
             res.setdefault(i,0.0)
-            
-        if not acc_set:
+
+        if not ids2:
             return res
-        
+
         where_date = ''
-        if context.get('from_date',False):
-            where_date += " AND l.date >= '" + context['from_date'] + "'"
-        if context.get('to_date',False):
-            where_date += " AND l.date <= '" + context['to_date'] + "'"
-            
+        if context.get('from_date'):
+            where_date += " AND l.date >= %(from_date)s"
+        if context.get('to_date'):
+            where_date += " AND l.date <= %(to_date)s"
+
         cr.execute('SELECT a.id, COALESCE(SUM(l.unit_amount), 0) \
                 FROM account_analytic_account a \
-                    LEFT JOIN account_analytic_line l ON (a.id = l.account_id ' + where_date + ') \
-                WHERE a.id IN ('+acc_set+') GROUP BY a.id')
+                    LEFT JOIN account_analytic_line l ON (a.id = l.account_id %s) \
+                WHERE a.id IN %%(ids)s GROUP BY a.id'%(where_date),
+                   dict(context, ids=tuple(ids2)))
 
         for account_id, sum in cr.fetchall():
             res[account_id] = sum
+        self.logger.notifyChannel('addons.'+self._name, netsvc.LOG_DEBUG,
+                                  '_quantity_calc, (id, sum): %s'%res)
 
         for id in ids:
             if id not in ids2:
                 continue
             for child in self.search(cr, uid, [('parent_id', 'child_of', [id])]):
-                if child <> id:
+                if child != id:
                     res.setdefault(id, 0.0)
                     res[id] += res.get(child, 0.0)
         return dict([(i, res[i]) for i in ids])
@@ -299,4 +322,3 @@ class account_journal(osv.osv):
 account_journal()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

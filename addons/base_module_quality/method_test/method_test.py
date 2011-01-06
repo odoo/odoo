@@ -35,7 +35,6 @@ This test checks if the module classes are raising exception when calling basic 
 """)
         self.bool_installed_only = True
         self.min_score = 60
-        return None
 
     def run_test(self, cr, uid, module_path):
         pool = pooler.get_pool(cr.dbname)

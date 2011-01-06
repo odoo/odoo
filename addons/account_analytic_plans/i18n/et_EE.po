@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-07-29 18:28+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
@@ -23,16 +22,14 @@ msgstr "Konto4 Id"
 
 #. module: account_analytic_plans
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: account_analytic_plans
 #: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
 #: model:ir.actions.wizard,name:account_analytic_plans.account_analytic_account_inverted_balance_report
 msgid "Crossovered Analytic"
-msgstr ""
+msgstr "Crossovered Analytic"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
@@ -64,19 +61,42 @@ msgid "Analytic Plan"
 msgstr "Analüütiline plaan"
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+msgstr "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
 msgid "Analytic Instance Line"
-msgstr ""
+msgstr "Analytic Instance Line"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
-msgstr ""
+msgstr "Analytic Distribution Lines"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr ""
+#: wizard_button:wizard.crossovered.analytic,init,print:0
+msgid "Print"
+msgstr "Prindi"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "To Date"
+msgstr "To Date"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
@@ -86,7 +106,7 @@ msgstr "Plaani id"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
 msgid "Analytic Distribution's Models"
-msgstr ""
+msgstr "Analytic Distribution's Models"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -96,12 +116,12 @@ msgstr "Konto nimi"
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
-msgstr ""
+msgstr "Analytic Distribution Line"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Currency:"
-msgstr "Valuuta:"
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "Distribution Code"
 
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
@@ -112,6 +132,11 @@ msgstr "Vigane mudeli nimi toimingu definitsioonis."
 #: field:account.analytic.plan.line,name:0
 msgid "Plan Name"
 msgstr "Plaani nimi"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Printing date"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -132,7 +157,7 @@ msgstr "Vali informatsioon"
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "A model having this name and code already exists !"
-msgstr ""
+msgstr "A model having this name and code already exists !"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
@@ -151,13 +176,9 @@ msgid "Analytic Account Ref."
 msgstr "Analüütilise konto viide"
 
 #. module: account_analytic_plans
-#: field:account.analytic.default,analytics_id:0
-#: view:account.analytic.plan.instance:0
-#: field:account.analytic.plan.instance,name:0
-#: field:account.invoice.line,analytics_id:0
-#: field:account.move.line,analytics_id:0
-msgid "Analytic Distribution"
-msgstr "Analüütiline jaotus"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account :"
+msgstr "Analytic Account :"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -168,7 +189,7 @@ msgstr "Analüütilise plaani rida"
 #: code:addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "No analytic plan defined !"
-msgstr ""
+msgstr "No analytic plan defined !"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -186,16 +207,11 @@ msgid "Default Entries"
 msgstr "Vaikimisi kirjed"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "to"
-msgstr ""
-
-#. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #: code:addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan:0
@@ -209,7 +225,12 @@ msgstr "Analüütilised plaanid"
 #: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "User Error"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,min_required:0
+msgid "Minimum Allowed (%)"
+msgstr "Minimaalselt lubatud (%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
@@ -224,12 +245,12 @@ msgstr "Maksimaalselt lubatud (%)"
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
 msgid "Distribution Model Saved"
-msgstr ""
+msgstr "Distribution Model Saved"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
-msgstr ""
+msgstr "Analytic Plan Instance"
 
 #. module: account_analytic_plans
 #: constraint:ir.ui.view:0
@@ -239,13 +260,11 @@ msgstr "Vigane XML vaate arhitektuurile!"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
-msgstr ""
+msgstr "Distribution Models"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
+msgid "This module allows to use several analytic plans, according to the general journal,\n"
 "so that multiple analytic lines are created when the invoice or the entries\n"
 "are confirmed.\n"
 "\n"
@@ -270,16 +289,42 @@ msgid ""
 "Plan2:\n"
 "    Eric: 100%\n"
 "\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
+"So when this line of invoice will be confirmed, it will generate 3 analytic lines,\n"
 "for one account entry.\n"
 "        "
-msgstr ""
+msgstr "This module allows to use several analytic plans, according to the general journal,\n"
+"so that multiple analytic lines are created when the invoice or the entries\n"
+"are confirmed.\n"
+"\n"
+"For example, you can define the following analytic structure:\n"
+"  Projects\n"
+"      Project 1\n"
+"          SubProj 1.1\n"
+"          SubProj 1.2\n"
+"      Project 2\n"
+"  Salesman\n"
+"      Eric\n"
+"      Fabien\n"
+"\n"
+"Here, we have two plans: Projects and Salesman. An invoice line must\n"
+"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+"Fabien. The amount can also be split. The following example is for\n"
+"an invoice that touches the two subproject and assigned to one salesman:\n"
+"\n"
+"Plan1:\n"
+"    SubProject 1.1 : 50%\n"
+"    SubProject 1.2 : 50%\n"
+"Plan2:\n"
+"    Eric: 100%\n"
+"\n"
+"So when this line of invoice will be confirmed, it will generate 3 analytic lines,\n"
+"for one account entry.\n"
+"        "
 
 #. module: account_analytic_plans
 #: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
 msgid "Multiple-plans management in Analytic Accounting"
-msgstr ""
+msgstr "Multiple-plans management in Analytic Accounting"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
@@ -288,9 +333,9 @@ msgid "Analytic Plan Lines"
 msgstr "Analüütilise plaani read"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,min_required:0
-msgid "Minimum Allowed (%)"
-msgstr "Minimaalselt lubatud (%)"
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Crossovered Analytic -"
+msgstr "Crossovered Analytic -"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
@@ -303,16 +348,10 @@ msgid "Account2 Id"
 msgstr "Konto2 Id"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#, python-format
-msgid "The Total Should be Between %s and %s"
-msgstr ""
-
-#. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "Please put a name and a code before saving the model !"
-msgstr ""
+msgstr "Please put a name and a code before saving the model !"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
@@ -355,9 +394,9 @@ msgid "Root Account"
 msgstr "Root konto"
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
-msgstr "Prindi"
+#: wizard_view:create.model,info:0
+msgid "This distribution model has been saved. You will be able to reuse it later."
+msgstr "This distribution model has been saved. You will be able to reuse it later."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -365,36 +404,35 @@ msgid "Sequence"
 msgstr "Järjekord"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Period from"
-msgstr "Periood alates"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
 msgstr "Analüütiline konto"
 
 #. module: account_analytic_plans
+#: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
+#: field:account.analytic.plan.instance,name:0
+#: field:account.invoice.line,analytics_id:0
+#: field:account.move.line,analytics_id:0
+msgid "Analytic Distribution"
+msgstr "Analüütiline jaotus"
+
+#. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "Value Error"
-msgstr ""
+msgstr "Value Error"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date:"
-msgstr "Printimise kuupäev:"
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr "The Total Should be Between %s and %s"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
-msgstr ""
-
-#. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid ""
-"This distribution model has been saved. You will be able to reuse it later."
-msgstr ""
+msgstr "Analytic Distribution's models"
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0
@@ -410,3 +448,9 @@ msgstr "Alguskuupäev"
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
 msgstr "kell"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "From Date"
+msgstr "From Date"
+

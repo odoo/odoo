@@ -30,6 +30,7 @@ import time
 import datetime
 import pooler
 import base64
+from tools.translate import _
 
 form_intra = """<?xml version="1.0"?>
 <form string="Partner VAT Intra">
@@ -37,13 +38,12 @@ form_intra = """<?xml version="1.0"?>
     <page string="General Information">
     <label string="This wizard will create an XML file for Vat Intra" colspan="4"/>
     <newline/>
-    <field name="fyear" />
+    <field name="period_code"/>
+    <newline/>
+    <field name="period_ids"/>
     <newline/>
     <field name="mand_id" help="This identifies the representative of the sending company. This is a string of 14 characters"/>
     <newline/>
-    <field name="trimester" help="it will be the first digit of period" />
-    <newline/>
-    <field name="test_xml" help="Set the XML output as test file"/>
     </page>
     <page string="European Countries">
     <field name="country_ids" colspan="4" nolabel="1" />
@@ -51,14 +51,18 @@ form_intra = """<?xml version="1.0"?>
     </notebook>
 </form>"""
 fields_intra = {
-    'trimester': {'string': 'Trimester Number', 'type': 'selection', 'selection':[
-            ('1','Jan/Feb/Mar'),
-            ('2','Apr/May/Jun'),
-            ('3','Jul/Aug/Sep'),
-            ('4','Oct/Nov/Dec')], 'required': True},
-    'test_xml': {'string':'Test XML file', 'type':'boolean'},
+    'period_code': {'string':'Period Code','type':'char','size':'6','required': True, 'help': '''This is where you have to set the period code for the intracom declaration using the format: ppyyyy
+
+  PP can stand for a month: from '01' to '12'.
+  PP can stand for a trimester: '31','32','33','34'
+      The first figure means that it is a trimester,
+      The second figure identify the trimester.
+  PP can stand for a complete fiscal year: '00'.
+  YYYY stands for the year (4 positions).
+'''
+},
+    'period_ids': {'string': 'Period(s)', 'type': 'many2many', 'relation': 'account.period', 'required': True, 'help': 'Select here the period(s) you want to include in your intracom declaration'},
     'mand_id':{'string':'MandataireId','type':'char','size':'14','required': True},
-    'fyear': {'string': 'Fiscal Year', 'type': 'many2one', 'relation': 'account.fiscalyear', 'required': True},
     'country_ids': {
         'string': 'European Countries',
         'type': 'many2many',
@@ -89,19 +93,16 @@ class parter_vat_intra(wizard.interface):
     def _create_xml(self, cr, uid, data, context):
         pool = pooler.get_pool(cr.dbname)
         data_cmpny = pool.get('res.users').browse(cr, uid, uid).company_id
-        data_fiscal = pool.get('account.fiscalyear').browse(cr,uid,data['form']['fyear'])
         company_vat = data_cmpny.partner_id.vat
-
         if not company_vat:
             raise wizard.except_wizard('Data Insufficient','No VAT Number Associated with Main Company!')
 
         seq_controlref = pool.get('ir.sequence').get(cr, uid,'controlref')
         seq_declarantnum = pool.get('ir.sequence').get(cr, uid,'declarantnum')
-        cref = company_vat + seq_controlref
-        dnum = cref + seq_declarantnum
-        if len(data_fiscal.date_start.split('-')[0]) < 4:
-            raise wizard.except_wizard('Data Insufficient','Trimester year should be length of 4 digits!')
-        period_trimester = data['form']['trimester'] + data_fiscal.date_start.split('-')[0]
+        cref = company_vat[2:] + seq_controlref[-4:]
+        dnum = cref + seq_declarantnum[-5:]
+        if len(data['form']['period_code']) != 6:
+            raise wizard.except_wizard(_('Wrong Period Code'), _('The period code you entered is not valid.'))
 
         street = zip_city = country = ''
         addr = pool.get('res.partner').address_get(cr, uid, [data_cmpny.partner_id.id], ['invoice'])
@@ -119,110 +120,42 @@ class parter_vat_intra(wizard.interface):
                 country = ads.country_id.code
 
         sender_date = time.strftime('%Y-%m-%d')
+        comp_name = data_cmpny.name
         data_file = '<?xml version="1.0"?>\n<VatIntra xmlns="http://www.minfin.fgov.be/VatIntra" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" RecipientId="VAT-ADMIN" SenderId="' + str(company_vat) + '"'
         data_file +=' ControlRef="' + cref + '" MandataireId="' + data['form']['mand_id'] + '" SenderDate="'+ str(sender_date)+ '"'
-        if data['form']['test_xml']:
-            data_file += ' Test="1"'
-        data_file += ' VersionTech="1.2">'
-        data_file +='\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>'
-        data_file +='\n\t\t\t<Country>' + str(country) +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
+        data_file += ' VersionTech="1.3">'
+        data_file +='\n\t<AgentRepr DecNumber="1">\n\t\t<CompanyInfo>\n\t\t\t<VATNum>' + str(company_vat)+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+  zip_city +'</CityAndZipCode>'
+        data_file +='\n\t\t\t<Country>' + country +'</Country>\n\t\t</CompanyInfo>\n\t</AgentRepr>'
 
-        data_comp ='\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat)+'</VATNum>\n\t\t\t<Name>'+str(data_cmpny.name)+'</Name>\n\t\t\t<Street>'+ str(street) +'</Street>\n\t\t\t<CityAndZipCode>'+ str(zip_city) +'</CityAndZipCode>\n\t\t\t<Country>'+ str(country) +'</Country>\n\t\t</CompanyInfo>'
-        data_period = '\n\t\t<Period>'+ str(period_trimester) +'</Period>' #trimester
+        data_comp ='\n\t\t<CompanyInfo>\n\t\t\t<VATNum>'+str(company_vat[2:])+'</VATNum>\n\t\t\t<Name>'+ comp_name +'</Name>\n\t\t\t<Street>'+ street +'</Street>\n\t\t\t<CityAndZipCode>'+ zip_city +'</CityAndZipCode>\n\t\t\t<Country>'+ country +'</Country>\n\t\t</CompanyInfo>'
+        data_period = '\n\t\t<Period>'+ data['form']['period_code'] +'</Period>' #trimester
 
         error_message = []
         seq = 0
         amount_sum = 0
-        p_id_list = pool.get('res.partner').search(cr,uid,[('vat','!=',False)])
-        if not p_id_list:
-            raise wizard.except_wizard('Data Insufficient!','No partner has a VAT Number asociated with him.')
 
-        nb_period = len(data_fiscal.period_ids)
-        fiscal_periods = data_fiscal.period_ids
-
-        if data['form']['trimester'] == '1':
-            if nb_period == 12:
-                start_date = fiscal_periods[0].date_start
-                end_date = fiscal_periods[2].date_stop
-            elif nb_period == 4:
-                start_date = fiscal_periods[0].date_start
-                end_date = fiscal_periods[0].date_stop
-        elif data['form']['trimester'] == '2':
-            if nb_period == 12:
-                start_date = fiscal_periods[3].date_start
-                end_date = fiscal_periods[5].date_stop
-            elif nb_period == 4:
-                start_date = fiscal_periods[1].date_start
-                end_date = fiscal_periods[1].date_stop
-        elif data['form']['trimester'] == '3':
-            if nb_period == 12:
-                start_date = fiscal_periods[6].date_start
-                end_date = fiscal_periods[8].date_stop
-            elif nb_period == 4:
-                start_date = fiscal_periods[2].date_start
-                end_date = fiscal_periods[2].date_stop
-        elif data['form']['trimester'] == '4':
-            if nb_period == 12:
-                start_date = fiscal_periods[9].date_start
-                end_date = fiscal_periods[11].date_stop
-            elif nb_period == 4:
-                start_date = fiscal_periods[3].date_start
-                end_date = fiscal_periods[3].date_stop
-
-        period = "to_date('" + str(start_date) + "','yyyy-mm-dd') and to_date('" + str(end_date) +"','yyyy-mm-dd')"
-        record = {}
-
-        for p_id in p_id_list:
-            list_partner = []
-            partner = pool.get('res.partner').browse(cr, uid, p_id)
-            go_ahead = False
-            country_code = ''
-            for ads in partner.address:
-                if ads.type == 'default' and (ads.country_id and ads.country_id.id in data['form']['country_ids'][0][2]):
-                    go_ahead = True
-                    country_code = ads.country_id.code
-                    break
-            if not go_ahead:
-                continue
-
-            cr.execute('select sum(debit)-sum(credit) as amount from account_move_line l left join account_account a on (l.account_id=a.id) where a.type in ('"'receivable'"') and l.partner_id=%%s and l.date between %s' % (period,), (p_id,))
-            res = cr.dictfetchall()
-            list_partner.append(res[0]['amount'])
-            list_partner.append('T') #partner.ref ...should be check
-            list_partner.append(partner.vat)
-            list_partner.append(country_code)
-            #...deprecated...
-#            addr = pool.get('res.partner').address_get(cr, uid, [partner.id], ['invoice'])
-#            if addr.get('invoice',False):
-#                ads = pool.get('res.partner.address').browse(cr,uid,[addr['invoice']])[0]
-#
-#                if ads.country_id:
-#                    code_country = ads.country_id.code
-#                    list_partner.append(code_country)
-#                else:
-#                    error_message.append('Data Insufficient! : '+ 'The Partner "'+partner.name + '"'' has no country associated with its Invoice address!')
-#            if len(list_partner)<4:
-#                list_partner.append('')
-#                error_message.append('Data Insufficient! : '+ 'The Partner "'+partner.name + '"'' has no Invoice address!')
-#            list_partner.append(code_country or 'not avail')
-            record[p_id] = list_partner
-
-        if len(error_message):
-            data['form']['msg'] = 'Exception : \n' +'-'*50+'\n'+ '\n'.join(error_message)
-            return data['form']
+        list_partner = []
         data_clientinfo = ''
-
-        for r in record:
+        cr.execute('''SELECT l.partner_id AS partner_id, p.vat AS vat, t.code AS intra_code, SUM(l.tax_amount) AS amount 
+                      FROM account_move_line l 
+                      LEFT JOIN account_tax_code t ON (l.tax_code_id = t.id) 
+                      LEFT JOIN res_partner p ON (l.partner_id = p.id) 
+                      WHERE t.code IN ('44a','44b','88') 
+                       AND l.period_id IN %s 
+                      GROUP BY l.partner_id, p.vat, t.code''', (tuple(data['form']['period_ids'][0][2]), ))
+        for row in cr.dictfetchall():
             seq += 1
-            amt = record[r][0] or 0
+            amt = row['amount'] or 0
             amt = int(amt * 100)
             amount_sum += amt
-            data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+record[r][2] +'</VATNum>\n\t\t\t\t<Country>'+record[r][3] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Period>'+str(period_trimester) +'</Period>\n\t\t\t<Code>'+str(record[r][1]) +'</Code>\n\t\t</ClientList>'
+            intra_code = row['intra_code'] == '88' and 'L' or (row['intra_code'] == '44b' and 'T' or (row['intra_code'] == '44a' and 'S' or ''))
+            data_clientinfo +='\n\t\t<ClientList SequenceNum="'+str(seq)+'">\n\t\t\t<CompanyInfo>\n\t\t\t\t<VATNum>'+row['vat'][2:] +'</VATNum>\n\t\t\t\t<Country>'+row['vat'][:2] +'</Country>\n\t\t\t</CompanyInfo>\n\t\t\t<Amount>'+str(amt) +'</Amount>\n\t\t\t<Code>'+str(intra_code) +'</Code>\n\t\t</ClientList>'
+
         amount_sum = int(amount_sum)
         data_decl = '\n\t<DeclarantList SequenceNum="1" DeclarantNum="'+ dnum + '" ClientNbr="'+ str(seq) +'" AmountSum="'+ str(amount_sum) +'" >'
-        data_file += str(data_decl) + str(data_comp) + str(data_period) + str(data_clientinfo) + '\n\t</DeclarantList>\n</VatIntra>'
+        data_file += data_decl + data_comp + str(data_period) + data_clientinfo + '\n\t</DeclarantList>\n</VatIntra>'
         data['form']['msg'] = 'Save the File with '".xml"' extension.'
-        data['form']['file_save'] = base64.encodestring(data_file)
+        data['form']['file_save'] = base64.encodestring(data_file.encode('utf8'))
         return data['form']
 
     states = {

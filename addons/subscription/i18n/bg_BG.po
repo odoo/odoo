@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:11+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:36:45+0000\n"
+"PO-Revision-Date: 2010-09-02 13:36:45+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -30,15 +29,19 @@ msgstr "Обект"
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
+msgid "Please provide another source document.\nThis one does not exist !"
+msgstr "Please provide another source document.\nThis one does not exist !"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
+msgstr "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
 msgid "First Date"
-msgstr ""
+msgstr "Първа дата"
 
 #. module: subscription
 #: field:subscription.document.fields,field:0
@@ -48,7 +51,7 @@ msgstr "Поле"
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
 msgid "Subscription history"
-msgstr ""
+msgstr "Хронология на абонаментите"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -63,15 +66,12 @@ msgstr "Текуща дата"
 #. module: subscription
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: subscription
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални "
-"символи!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Името на обекта трябва да започва с \"x_\" и да не съдържа никакви специални символи!"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -84,30 +84,35 @@ msgid "Status"
 msgstr "Състояние"
 
 #. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
 msgid "Subscription document fields"
-msgstr ""
+msgstr "Полета на абонаментен документ"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
 msgid "Interval Qty"
-msgstr ""
+msgstr "Колич. интервал"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Stop"
-msgstr "Стоп"
+msgstr "Спри"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Промени в Проект"
 
 #. module: subscription
 #: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr ""
+msgid "Module allows to create new documents and add subscription on that document."
+msgstr "Модълът позволява създаване на нови документи и добавяне на абонаменти за този документ."
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -117,7 +122,7 @@ msgstr "Изпълнява се"
 #. module: subscription
 #: view:subscription.subscription.history:0
 msgid "Subscription History"
-msgstr ""
+msgstr "Хронология на абонамент"
 
 #. module: subscription
 #: field:subscription.subscription,user_id:0
@@ -127,7 +132,7 @@ msgstr "Потребител"
 #. module: subscription
 #: field:subscription.subscription,interval_type:0
 msgid "Interval Unit"
-msgstr ""
+msgstr "Единица интервал"
 
 #. module: subscription
 #: field:subscription.subscription.history,date:0
@@ -152,7 +157,7 @@ msgstr "Невалиден XML за преглед на архитектурат
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
 msgid "Sale Order"
-msgstr ""
+msgstr "Поръчка за продажба"
 
 #. module: subscription
 #: field:subscription.document,name:0
@@ -183,7 +188,7 @@ msgstr "Дни"
 #. module: subscription
 #: model:ir.module.module,shortdesc:subscription.module_meta_information
 msgid "Subscription and recurring operations"
-msgstr ""
+msgstr "Абонаменти и повтарящи се действия"
 
 #. module: subscription
 #: field:subscription.subscription,active:0
@@ -193,12 +198,12 @@ msgstr "Активен"
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 msgid "Subscription document"
-msgstr ""
+msgstr "Абонаментен документ"
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
 msgid "Cron Job"
-msgstr ""
+msgstr "Cron Job"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
@@ -214,13 +219,13 @@ msgstr "Партньор"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Subsription Data"
-msgstr ""
+msgstr "Данни за абонамента("
 
 #. module: subscription
 #: view:subscription.document:0
 #: field:subscription.document.fields,document_id:0
 msgid "Subscription Document"
-msgstr ""
+msgstr "Абонаментен документ"
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -236,30 +241,30 @@ msgstr "Процес"
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 msgid "All Subscriptions"
-msgstr ""
+msgstr "Всички абонаменти"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.next_id_45
 #: view:subscription.subscription:0
 msgid "Subscriptions"
-msgstr ""
+msgstr "Абонаменти"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
-msgstr ""
+msgstr "Видове документи"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
 msgid "Wrong Source Document !"
-msgstr ""
+msgstr "Wrong Source Document !"
 
 #. module: subscription
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
-msgstr ""
+msgstr "Полета на абонаментен документ"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -286,3 +291,4 @@ msgstr "Създадени документи"
 #: model:ir.ui.menu,name:subscription.menu_tools
 msgid "Tools"
 msgstr "Инструменти"
+

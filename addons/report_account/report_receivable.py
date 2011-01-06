@@ -105,9 +105,9 @@ class report_aged_receivable(osv.osv):
            date1,date2 = period['name'].split(' to ')
            query = "SELECT SUM(credit-debit) FROM account_move_line AS line, account_account as ac  \
                         WHERE (line.account_id=ac.id) AND ac.type='receivable' \
-                            AND (COALESCE(line.date,date) BETWEEN '%s' AND  '%s') \
-                            AND (reconcile_id IS NULL) AND ac.active"%(str(date2),str(date1))
-           cr.execute(query)
+                            AND (COALESCE(line.date,date) BETWEEN %s AND  %s) \
+                            AND (reconcile_id IS NULL) AND ac.active"
+           cr.execute(query, (date2, date1))
            amount = cr.fetchone()
            amount = amount[0] or 0.00
            res[period['id']] = amount

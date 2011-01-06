@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <!-- Resource: purchase.order -->
+        <!--
+		Optional fields:
+		'name': fields.char('Order Description', size=64, required=True, select=True),
+		'origin': fields.char('Origin', size=64),
+		'ref': fields.char('Order Reference', size=64),
+		'partner_ref': fields.char('Partner Reference', size=64),
+		'dest_address_id':fields.many2one('res.partner.address', 'Destination Address', states={'posted':[('readonly',True)]}),
+		'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
+		'invoice_method': fields.selection([('manual','Manual'),('order','From order'),('picking','From picking')], 'Invoicing method', required=True),
+		
+		Mandatory fields:
+		'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
+		'partner_id':fields.many2one('res.partner', 'Partner', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, change_default=True),
+		'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True, states={'posted':[('readonly',True)]}),
+		'location_id': fields.many2one('stock.location', 'Delivery destination', required=True),
+
+		*2many relationships:
+		'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order State', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
+		'invoice_id': fields.many2one('account.invoice', 'Invoice', readonly=True),
+		-->
+        <record model="purchase.order" id="smoke_test_purchase_1">
+            <field name="name">PURCHASE-SMOKE-TEST-1</field>
+            <field name="dest_address_id" search="[]" model="res.partner.address"/>
+            <field name="pricelist_id" ref="list0"/>
+            <field name="partner_id" search="[]" model="res.partner"/>
+            <field name="partner_address_id" search="[]" model="res.partner.address"/>
+            <field name="location_id" ref="stock.stock_location_stock"/>
+        </record>
+        <!-- Resource: purchase.order.line -->
+        <!--
+		Optinal fields:
+		'name': fields.char('Description', size=64, required=True),
+		'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
+		'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
+		'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
+		'notes': fields.text('Notes'),
+		'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
+		
+		Mandatory fields:
+		'date_planned': fields.date('Date Promised', required=True),
+		'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
+		'price_unit': fields.float('Unit Price', required=True, digits=(16, int(config['price_accuracy']))),
+		'order_id': fields.many2one('purchase.order', 'Order Ref', select=True, required=True, ondelete='cascade'),
+		-->
+        <record model="purchase.order.line" id="smoke_test_purchase_1_line_1">
+            <field name="order_id" ref="smoke_test_purchase_1"/>
+            <field name="name">[PC1] Basic PC</field>
+            <field name="date_planned" eval="time.strftime('%Y-%m-%d', time.localtime(time.time() + 2 * 86400))" />
+            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">450</field>
+            <field name="product_qty">2</field>
+        </record>
+        <record model="purchase.order.line" id="smoke_test_purchase_1_line_2">
+            <field name="order_id" ref="smoke_test_purchase_1"/>
+            <field name="name">[MB1] Mainboard ASUStek A7N8X</field>
+            <field name="date_planned" eval="time.strftime('%Y-%m-%d', time.localtime(time.time() + 2 * 86400))" />
+            <field name="product_id" ref="product.product_product_mb1"/>
+            <field name="product_uom" ref="product.product_uom_unit"/>
+            <field name="price_unit">88</field>
+            <field name="product_qty">3</field>
+        </record>
+        
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="The amount of Test purchase is correctly computed" severity="error">
+            <test expr="sum([l.price_subtotal for l in order_line]) == amount_untaxed" />
+        </assert>
+        
+        <workflow model="purchase.order" ref="smoke_test_purchase_1" action="purchase_confirm" />
+        
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase is now confirmed">
+            <test expr="state">confirmed</test>
+        </assert>
+        
+        <workflow model="purchase.order" ref="smoke_test_purchase_1" action="purchase_approve" uid="base.user_root" />
+        
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase is now in progress">
+            <test expr="state">approved</test>
+        </assert>
+        
+        <!-- Treat generated invoice -->
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase has now a corresponding invoice" severity="fatal">
+            <test expr="bool(invoice_id)" />
+        </assert>
+        
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase's invoice has the same amount and is currently a draft" severity="error">
+            <test expr="invoice_id.amount_untaxed == amount_untaxed" />
+            <test expr="invoice_id.amount_total == amount_total" />
+            <test expr="invoice_id.state">draft</test>
+        </assert>
+        
+        <workflow model="account.invoice" action="invoice_open">
+            <value model="purchase.order" eval="obj(ref('smoke_test_purchase_1')).invoice_id.id" />
+        </workflow>
+        
+        <function model="account.invoice" name="pay_and_reconcile">
+            <value model="purchase.order" eval="[obj(ref('smoke_test_purchase_1')).invoice_id.id]" />
+            <value eval="1164" />
+           	<value eval="ref('account.cash')"/>
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
+            <value eval="ref('account.bank_journal')" />
+            <value eval="ref('account.cash')"/>
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
+            <value eval="ref('account.bank_journal')" />
+        </function>
+        
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase's invoice is now paid" severity="error">
+            <test expr="invoice_id.state">paid</test>
+        </assert>
+        
+        <!-- Treat generated picking -->
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase has now a corresponding packing" severity="fatal">
+            <test expr="len(picking_ids) == 1" />
+        </assert>
+        
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase's packing will be sent to the good address" severity="error">
+            <test expr="picking_ids[0].address_id == partner_address_id" />
+        </assert>
+        
+        <!-- Do the same as in wizard_partial_picking lines 143-144 -->
+        <function model="stock.picking" name="action_move">
+            <value model="purchase.order" eval="[obj(ref('smoke_test_purchase_1')).picking_ids[0].id]" />
+        </function>
+        
+        <workflow model="stock.picking" action="button_done">
+            <value model="purchase.order" eval="obj(ref('smoke_test_purchase_1')).picking_ids[0].id" />
+        </workflow>
+        
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase's packing is now done" severity="error">
+            <test expr="picking_ids[0].state">done</test>
+        </assert>
+        
+        <assert model="purchase.order" id="smoke_test_purchase_1" string="Test purchase is now completed" severity="fatal">
+            <test expr="state">done</test>
+        </assert>
+    </data>
+</openerp>
+ 

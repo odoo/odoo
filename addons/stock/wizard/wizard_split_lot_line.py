@@ -38,7 +38,7 @@ def make_default(val):
 
 def _get_moves(self, cr, uid, data, context):
     pick_obj = pooler.get_pool(cr.dbname).get('stock.picking')
-    pick = pick_obj.browse(cr, uid, [data['id']])[0]
+    pick = pick_obj.browse(cr, uid, [data['id']], context=context)[0]
     res = {}
     fields.clear()
     arch_lst = ['<?xml version="1.0"?>', '<form string="Split lines">', '<label string="Indicate here the quantity of the new line. A quantity of zero will not split the line." colspan="4"/>']

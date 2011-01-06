@@ -36,7 +36,7 @@ sur_form = '''<?xml version="1.0"?>
 </form>'''
 
 sur_fields = {
-    'date': {'string':'Operation date','type':'date', 'required':'False'},
+    'date': {'string':'Operation date','type':'date', 'required':'False', 'default':time.strftime('%Y-%m-%d'), 'help' : 'This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!'},
     'period':{'string': 'Force period', 'type': 'many2one',
         'relation': 'account.period', 'required': False},
     'description':{'string':'Description', 'type':'char', 'required':'True'},
@@ -191,7 +191,7 @@ class wiz_refund(wizard.interface):
             xml_id = 'action_invoice_tree5'
         elif inv.type == 'in_invoice':
             xml_id = 'action_invoice_tree8'
-        elif type == 'out_refund':
+        elif inv.type == 'out_refund':
             xml_id = 'action_invoice_tree10'
         else:
             xml_id = 'action_invoice_tree12'

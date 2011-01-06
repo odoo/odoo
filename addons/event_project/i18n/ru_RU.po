@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:21+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:57:40+0000\n"
+"PO-Revision-Date: 2010-09-02 13:57:40+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: event_project
 #: constraint:ir.ui.view:0
@@ -24,22 +23,23 @@ msgstr "Неправильный XML для просмотра архитект�
 #. module: event_project
 #: model:ir.actions.wizard,name:event_project.wizard_event_task
 msgid "Tasks"
-msgstr ""
+msgstr "Задачи"
 
 #. module: event_project
 #: code:addons/event_project/wizard/event_task.py:0
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Ошибка !"
 
 #. module: event_project
 #: model:ir.module.module,description:event_project.module_meta_information
-msgid ""
-"Organization and management of events.\n"
+msgid "Organization and management of events.\n"
 "\n"
-"    This module allow you to create retro planning for managing your "
-"events.\n"
-msgstr ""
+"    This module allow you to create retro planning for managing your events.\n"
+""
+msgstr "Организация и управление событиями\n"
+"    Данный модуль позволяет создавать ретро планирование для управления Вашими событиями\n"
+""
 
 #. module: event_project
 #: view:event.event:0
@@ -49,7 +49,7 @@ msgstr "Оставшиеся задания"
 #. module: event_project
 #: model:ir.module.module,shortdesc:event_project.module_meta_information
 msgid "Event - Project"
-msgstr ""
+msgstr "Событие - Проект"
 
 #. module: event_project
 #: field:event.event,project_id:0
@@ -59,22 +59,15 @@ msgid "Project"
 msgstr "Проект"
 
 #. module: event_project
+#: code:addons/event_project/wizard/event_task.py:0
+#, python-format
+msgid "No project defined for this event.\nYou can create one with the retro-planning button !"
+msgstr "No project defined for this event.\nYou can create one with the retro-planning button !"
+
+#. module: event_project
 #: field:event.event,task_ids:0
 msgid "Project tasks"
 msgstr "Задания проекта"
-
-#. module: event_project
-#: code:addons/event_project/wizard/event_task.py:0
-#, python-format
-msgid ""
-"No project defined for this event.\n"
-"You can create one with the retro-planning button !"
-msgstr ""
-
-#. module: event_project
-#: wizard_button:event.project,init,end:0
-msgid "Cancel"
-msgstr "Отмена"
 
 #. module: event_project
 #: wizard_button:event.project,init,done:0
@@ -95,3 +88,4 @@ msgstr "Событие"
 #: view:event.event:0
 msgid "Tasks management"
 msgstr "Управление заданиями"
+

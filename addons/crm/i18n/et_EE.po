@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-06-25 19:53+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -42,12 +41,12 @@ msgstr "Meeleolu arvutamine"
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.next_id_52
 msgid "All Cases"
-msgstr "Kõik Juhtumid"
+msgstr "All Cases"
 
 #. module: crm
 #: wizard_view:crm.case.section.menu,init:0
 msgid "this wizard will create all sub-menus, within the selected menu."
-msgstr ""
+msgstr "this wizard will create all sub-menus, within the selected menu."
 
 #. module: crm
 #: field:crm.case.rule,act_remind_partner:0
@@ -83,12 +82,8 @@ msgstr "Kõik Avatud "
 
 #. module: crm
 #: help:crm.segmentation,som_interval_default:0
-msgid ""
-"Default state of mind for period preceeding the 'Max Interval' computation. "
-"This is the starting state of mind by default if the partner has no event."
-msgstr ""
-"Vaikimisi meeleolu 'Maks. intervall' arvutamise eelnevale perioodile. See on "
-"vaikimisi algusmeeleolu, kui partneril puuduvad sündmused."
+msgid "Default state of mind for period preceeding the 'Max Interval' computation. This is the starting state of mind by default if the partner has no event."
+msgstr "Vaikimisi meeleolu 'Maks. intervall' arvutamise eelnevale perioodile. See on vaikimisi algusmeeleolu, kui partneril puuduvad sündmused."
 
 #. module: crm
 #: selection:crm.segmentation,state:0
@@ -145,7 +140,7 @@ msgstr "Segmenteerimise kirjeldus"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_user)s = Responsible name"
-msgstr ""
+msgstr "%(case_user)s = Responsible name"
 
 #. module: crm
 #: field:crm.case.section,allow_unlink:0
@@ -166,6 +161,7 @@ msgstr "Minu "
 #. module: crm
 #: view:crm.case:0
 #: view:crm.case.history:0
+#: model:ir.actions.act_window,name:crm.crm_case_section_open_act
 #: model:ir.ui.menu,name:crm.next_id_51
 msgid "Cases"
 msgstr "Juhtumid"
@@ -184,21 +180,15 @@ msgid "<"
 msgstr "<"
 
 #. module: crm
-#: help:crm.segmentation,categ_id:0
-msgid ""
-"The partner category that will be added to partners that match the "
-"segmentation criterions after computation."
-msgstr ""
-"Partneri kategooria mis lisatakse partneritele, kes vastavad segmenteerimise "
-"kriteeriumitele pärast arvutamist."
+#: view:crm.case.rule:0
+msgid "%(case_description)s = Case description"
+msgstr "%(case_description)s = Juhtumi kirjeldus"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"You can not escalate this case.\n"
-"You are already at the top level."
-msgstr ""
+msgid "You can not escalate this case.\nYou are already at the top level."
+msgstr "You can not escalate this case.\nYou are already at the top level."
 
 #. module: crm
 #: field:crm.case,email_cc:0
@@ -286,16 +276,18 @@ msgstr "Reegel Nimi"
 
 #. module: crm
 #: help:crm.case.rule,act_remind_partner:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the partner."
-msgstr ""
-"Märgi see kui soovid,et reegel saadaks meeldetuletuse e-posti teel "
-"partnerile."
+msgid "Check this if you want the rule to send a reminder by email to the partner."
+msgstr "Märgi see kui soovid,et reegel saadaks meeldetuletuse e-posti teel partnerile."
 
 #. module: crm
 #: field:crm.case.rule,trg_priority_to:0
 msgid "Maximim Priority"
 msgstr "Maksimaalne Prioriteet"
+
+#. module: crm
+#: help:crm.segmentation,som_interval_decrease:0
+msgid "If the partner has not purchased (or bought) during a period, decrease the state of mind by this factor. It's a multiplication"
+msgstr "If the partner has not purchased (or bought) during a period, decrease the state of mind by this factor. It's a multiplication"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu17:0
@@ -335,10 +327,12 @@ msgid "Operator"
 msgstr "Operaator"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Draft"
 msgstr "Mustand"
 
@@ -355,7 +349,7 @@ msgstr "Juhtumi Kategooria"
 #. module: crm
 #: view:crm.case:0
 msgid "Estimates"
-msgstr ""
+msgstr "Estimates"
 
 #. module: crm
 #: view:crm.case:0
@@ -365,62 +359,44 @@ msgstr "Täiendav info"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_subject)s = Case subject"
-msgstr ""
+msgstr "%(case_subject)s = Case subject"
 
 #. module: crm
 #: model:ir.module.module,description:crm.module_meta_information
-msgid ""
-"The generic Open ERP Customer Relationship Management\n"
+msgid "The generic Open ERP Customer Relationship Management\n"
 "system enables a group of people to intelligently and efficiently manage\n"
 "leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.\n"
 "It manages key tasks such as communication, identification, prioritization,\n"
 "assignment, resolution and notification.\n"
 "\n"
-"Open ERP ensures that all cases are successfully tracked by users, customers "
-"and\n"
-"suppliers. It can automatically send reminders, escalate the request, "
-"trigger\n"
-"specific methods and lots of others actions based on your enterprise own "
-"rules.\n"
+"Open ERP ensures that all cases are successfully tracked by users, customers and\n"
+"suppliers. It can automatically send reminders, escalate the request, trigger\n"
+"specific methods and lots of others actions based on your enterprise own rules.\n"
 "\n"
-"The greatest thing about this system is that users don't need to do "
-"anything\n"
-"special. They can just send email to the request tracker. Open ERP will "
-"take\n"
+"The greatest thing about this system is that users don't need to do anything\n"
+"special. They can just send email to the request tracker. Open ERP will take\n"
 "care of thanking them for their message, automatically routing it to the\n"
-"appropriate staff, and making sure all future correspondence gets to the "
-"right\n"
+"appropriate staff, and making sure all future correspondence gets to the right\n"
 "place.\n"
 "\n"
 "The CRM module has a email gateway for the synchronisation interface\n"
 "between mails and Open ERP."
-msgstr ""
-"Üldine Open ERP kliendisuhetehalduse süsteem võimaldab inimeste grupil\n"
-"intelligentselt ja efektiivselt hallata juhtimisi, võimalusi, ülesandeid, "
-"küsimusi,\n"
-"päringuid, vigu, kampaaniaid, nõudeid jms. See haldab võtmeülesandeid nagu "
-"nt\n"
-"kommunikatsioon, identifitseerimine, prioriteriseerimine, kohustusi, "
-"lahendusi\n"
+msgstr "Üldine Open ERP kliendisuhetehalduse süsteem võimaldab inimeste grupil\n"
+"intelligentselt ja efektiivselt hallata juhtimisi, võimalusi, ülesandeid, küsimusi,\n"
+"päringuid, vigu, kampaaniaid, nõudeid jms. See haldab võtmeülesandeid nagu nt\n"
+"kommunikatsioon, identifitseerimine, prioriteriseerimine, kohustusi, lahendusi\n"
 "ja teavitusi.\n"
 "\n"
-"Open ERP kindlustab, et kõiki juhtumeid saab edukalt jälgida kasutajate, "
-"klientide\n"
-"ja tarnijate poolt. See suudab automaatselt saada meeldetuletusi, "
-"eskaleerida päringuid,\n"
-"käivitada spetsiifilisi meetodeid ja palju muid toiminguid sinu ettevõtte "
-"reeglite põhjal.\n"
+"Open ERP kindlustab, et kõiki juhtumeid saab edukalt jälgida kasutajate, klientide\n"
+"ja tarnijate poolt. See suudab automaatselt saada meeldetuletusi, eskaleerida päringuid,\n"
+"käivitada spetsiifilisi meetodeid ja palju muid toiminguid sinu ettevõtte reeglite põhjal.\n"
 "\n"
-"Parim asi selle süsteemi juures on see, et kasutaja ei pea tegema midagi "
-"erilist.\n"
-"Nad saavad lihtsalt saata e-kirja päringujälgijasse. Open ERP hoolitseb "
-"selle eest, et\n"
-"neid tänataks kirja eest, kiri automaatselt edasi suunataks sobivale "
-"personalile ja\n"
+"Parim asi selle süsteemi juures on see, et kasutaja ei pea tegema midagi erilist.\n"
+"Nad saavad lihtsalt saata e-kirja päringujälgijasse. Open ERP hoolitseb selle eest, et\n"
+"neid tänataks kirja eest, kiri automaatselt edasi suunataks sobivale personalile ja\n"
 "tehakse kindlaks, et kõik tulevased kirjavahetused jõuavad õigesse kohta.\n"
 "\n"
-"KSH moodulil on e-posti lüüs sünkroniseerimise liidese jaoks kirjade ja Open "
-"ERP-i vahel."
+"KSH moodulil on e-posti lüüs sünkroniseerimise liidese jaoks kirjade ja Open ERP-i vahel."
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu5:0
@@ -480,7 +456,7 @@ msgstr "Valikuline avaldis"
 #: model:ir.actions.act_window,name:crm.crm_case_history_my-act
 #: model:ir.ui.menu,name:crm.menu_crm_case_history_my-act
 msgid "My Histories"
-msgstr "Minu Ajalood"
+msgstr "My Histories"
 
 #. module: crm
 #: field:crm.segmentation,segmentation_line:0
@@ -495,7 +471,7 @@ msgstr "Sinu toiming"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Excluded Answers :"
-msgstr ""
+msgstr "Excluded Answers :"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_section_act
@@ -567,17 +543,13 @@ msgstr "Kõik mustandid "
 
 #. module: crm
 #: help:crm.segmentation,som_interval_max:0
-msgid ""
-"The computation is made on all events that occured during this interval, the "
-"past X periods."
-msgstr ""
-"Arvutuamine tehakse kõigil sündmustel, mis leidsid aset selle intervalli "
-"jooksul, pärast X perioodi."
+msgid "The computation is made on all events that occured during this interval, the past X periods."
+msgstr "Arvutuamine tehakse kõigil sündmustel, mis leidsid aset selle intervalli jooksul, pärast X perioodi."
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(partner_email)s = Partner email"
-msgstr ""
+msgstr "%(partner_email)id = Partneri e-mail"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_segmentation_line
@@ -609,18 +581,18 @@ msgstr "Meeldetuletus manusega"
 #: wizard_field:crm.case.section.menu,design_menu,menu10:0
 #: wizard_field:crm.case.section.menu,design_menu,menu10_option:0
 msgid "All Late "
-msgstr ""
+msgstr "All Late "
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu3:0
 #: wizard_field:crm.case.section.menu,design_menu,menu3_option:0
 msgid "My Late "
-msgstr ""
+msgstr "My Late "
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_crm_configuration
 msgid "Configuration"
-msgstr "Seadistus"
+msgstr "Seadistused"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_case_categ_crm_case_opened
@@ -636,6 +608,11 @@ msgstr "Avatud juhtumid"
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ-act
 msgid "Categories"
 msgstr "Kategooriad"
+
+#. module: crm
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "Vigased argumendid"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu2:0
@@ -717,10 +694,8 @@ msgstr "Sea vastutajaks"
 
 #. module: crm
 #: view:crm.case.rule:0
-msgid ""
-"The rule use a AND operator. The case must match all non empty fields so "
-"that the rule execute the action described in the 'Actions' tab."
-msgstr ""
+msgid "The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab."
+msgstr "See reegel kasutab AND operaatorit. Juhtum peab sobima kõigi tühjade väljadega nii, et reegel käivitab 'Toimingud' kaardil kirjeldatud toimingu."
 
 #. module: crm
 #: field:crm.case,history_line:0
@@ -730,17 +705,17 @@ msgstr "Suhtlus"
 #. module: crm
 #: field:crm.segmentation,partner_id:0
 msgid "Max Partner ID processed"
-msgstr ""
+msgstr "Maks Partner ID töödeldud"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Condition on Communication History"
-msgstr ""
+msgstr "Condition on Communication History"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(email_from)s = Partner email"
-msgstr ""
+msgstr "%(email_vorm)id = Partner email"
 
 #. module: crm
 #: field:crm.case.categ,section_id:0
@@ -804,23 +779,19 @@ msgstr "Päevi Perioodis"
 #: selection:crm.case.section.menu,design_menu,menu8_option:0
 #: selection:crm.case.section.menu,design_menu,menu9_option:0
 msgid "Calendar"
-msgstr "Kalender"
+msgstr "Calendar"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"No E-Mail ID Found for the Responsible Partner or missing reply address in "
-"section!"
-msgstr ""
+msgid "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
+msgstr "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"No E-Mail ID Found for your Company address or missing reply address in "
-"section!"
-msgstr ""
+msgid "No E-Mail ID Found for your Company address or missing reply address in section!"
+msgstr "No E-Mail ID Found for your Company address or missing reply address in section!"
 
 #. module: crm
 #: field:crm.case,ref:0
@@ -835,7 +806,7 @@ msgstr "Viide 2"
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Sales Purchase"
-msgstr ""
+msgstr "Müükide ost"
 
 #. module: crm
 #: field:crm.case,categ_id:0
@@ -850,22 +821,20 @@ msgstr "Logi"
 
 #. module: crm
 #: help:crm.case.rule,act_email_cc:0
-msgid ""
-"These people will receive a copy of the futur communication between partner "
-"and users by email"
-msgstr ""
-"Need isikud saavad koopia tulevasest kommunikatsioonist partneri ja "
-"kasutajate vahel e-postiga."
+msgid "These people will receive a copy of the futur communication between partner and users by email"
+msgstr "Need isikud saavad koopia tulevasest kommunikatsioonist partneri ja kasutajate vahel e-postiga."
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
+#, python-format
 msgid "Historize"
 msgstr "Arhiveeri"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(partner)s = Partner name"
-msgstr ""
+msgstr "%(partner)id = Partneri nimi"
 
 #. module: crm
 #: selection:crm.case.section.menu,design_menu,menu10_option:0
@@ -940,7 +909,7 @@ msgstr "Suletud"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_user_phone)s = Responsible phone"
-msgstr ""
+msgstr "%(juhtumi_kasutaja_telefon)id = Vastutaja telefon"
 
 #. module: crm
 #: field:crm.case.rule,trg_date_range:0
@@ -949,12 +918,8 @@ msgstr "Viivitus pärast päästiku kuupäeva"
 
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
-msgid ""
-"Check if you want to use this tab as part of the segmentation rule. If not "
-"checked, the criteria beneath will be ignored"
-msgstr ""
-"Märgista see, kui sa tahad kasutada seda kaarti segmenteerimisreegli osana. "
-"Kui pole märgistatud siis allolevat kriteeriumi ignoreeritakse."
+msgid "Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored"
+msgstr "Märgista see, kui sa tahad kasutada seda kaarti segmenteerimisreegli osana. Kui pole märgistatud siis allolevat kriteeriumi ignoreeritakse."
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -968,30 +933,31 @@ msgid "Open Cases"
 msgstr "Avatud Juhtumid"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Pending"
 msgstr "Pooleliolev"
 
 #. module: crm
 #: wizard_view:crm.case.section.menu,init:0
-msgid ""
-"You may want to create a new parent menu to put all the created menus in."
-msgstr ""
+msgid "You may want to create a new parent menu to put all the created menus in."
+msgstr "You may want to create a new parent menu to put all the created menus in."
 
 #. module: crm
 #: field:crm.case,state:0
 msgid "Status"
-msgstr "Staatus"
+msgstr "Status"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "No E-Mail ID Found for your Company address!"
 
 #. module: crm
 #: field:crm.case.rule,act_section_id:0
@@ -1001,17 +967,12 @@ msgstr "Sea jaotis"
 #. module: crm
 #: field:crm.segmentation,state:0
 msgid "Execution Status"
-msgstr ""
+msgstr "Täideviimise olek"
 
 #. module: crm
 #: help:crm.segmentation,som_interval:0
-msgid ""
-"A period is the average number of days between two cycle of sale or purchase "
-"for this segmentation. It's mainly used to detect if a partner has not "
-"purchased or buy for a too long time, so we suppose that his state of mind "
-"has decreased because he probably bought goods to another supplier. Use this "
-"functionality for recurring businesses."
-msgstr ""
+msgid "A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionality for recurring businesses."
+msgstr "A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionality for recurring businesses."
 
 #. module: crm
 #: selection:crm.case,priority:0
@@ -1022,9 +983,11 @@ msgid "Normal"
 msgstr "Normaalne"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Escalate"
 msgstr "Eskaleeri"
 
@@ -1080,12 +1043,8 @@ msgstr "Kõik määramata "
 
 #. module: crm
 #: help:crm.case.rule,act_remind_attach:0
-msgid ""
-"Check this if you want that all documents attached to the case be attached "
-"to the reminder email sent."
-msgstr ""
-"Märgi see, kui sa tahad et kõik juhtumile lisatud dokumendid manustataks "
-"saadetavale meeldetuletuse e-kirjale."
+msgid "Check this if you want that all documents attached to the case be attached to the reminder email sent."
+msgstr "Märgi see, kui sa tahad et kõik juhtumile lisatud dokumendid manustataks saadetavale meeldetuletuse e-kirjale."
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
@@ -1116,24 +1075,23 @@ msgstr "Ülemmenüü"
 #. module: crm
 #: field:crm.segmentation,exclusif:0
 msgid "Exclusive"
-msgstr ""
+msgstr "Eksklusiivne"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"Can not send mail with empty body,you should have description in the body"
-msgstr ""
+msgid "Can not send mail with empty body,you should have description in the body"
+msgstr "Can not send mail with empty body,you should have description in the body"
 
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Included Answers :"
-msgstr ""
+msgstr "Included Answers :"
 
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_id)s = Case ID"
-msgstr ""
+msgstr "%(juhtumi_id)d = Juhtumi ID"
 
 #. module: crm
 #: selection:crm.case.rule,trg_date_type:0
@@ -1186,7 +1144,7 @@ msgstr "Loodud menüüd"
 #. module: crm
 #: field:crm.case.log,name:0
 msgid "Action"
-msgstr "Toiming"
+msgstr "Action"
 
 #. module: crm
 #: view:crm.case.categ:0
@@ -1196,7 +1154,7 @@ msgstr "Juhtumi Kategooria"
 #. module: crm
 #: field:crm.segmentation,som_interval_decrease:0
 msgid "Decrease (0>1)"
-msgstr ""
+msgstr "Kahanemine (0>1)"
 
 #. module: crm
 #: view:crm.segmentation.line:0
@@ -1206,9 +1164,8 @@ msgstr "Partneri Segmenteerimise Read"
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"You must define a responsible user for this case in order to use this action!"
-msgstr ""
+msgid "You must define a responsible user for this case in order to use this action!"
+msgstr "Peate määratlema vastutav kasutaja Sel juhul, et kasutada seda tegevust!"
 
 #. module: crm
 #: view:crm.case:0
@@ -1240,7 +1197,7 @@ msgstr "Järjekord"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "%(case_user_email)s = Responsible email"
-msgstr ""
+msgstr "%(case_user_email)s = Responsible email"
 
 #. module: crm
 #: view:crm.case:0
@@ -1258,11 +1215,17 @@ msgid "Complete this if you use the mail gateway."
 msgstr "Täida see kui kasutad e-posti võrguväravat."
 
 #. module: crm
+#: help:crm.segmentation,categ_id:0
+msgid "The partner category that will be added to partners that match the segmentation criterions after computation."
+msgstr "Partneri kategooria mis lisatakse partneritele, kes vastavad segmenteerimise kriteeriumitele pärast arvutamist."
+
+#. module: crm
 #: view:crm.case:0
 msgid "Communication history"
 msgstr "Kommunikatsiooni alalugu"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
@@ -1270,29 +1233,34 @@ msgstr "Kommunikatsiooni alalugu"
 #: selection:crm.case.rule,trg_state_to:0
 #: wizard_button:crm.case.section.menu,design_menu,end:0
 #: wizard_button:crm.case.section.menu,init,end:0
+#, python-format
 msgid "Cancel"
 msgstr "Loobu"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Close"
 msgstr "Sulge"
 
 #. module: crm
 #: model:ir.actions.report.xml,name:crm.crm_business_opportunities_report
 msgid "Business Opportunities"
-msgstr ""
+msgstr "Äri võimalused"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Open"
 msgstr "Avatud"
 
@@ -1318,10 +1286,8 @@ msgstr "Vastutav kasutaja"
 
 #. module: crm
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: crm
 #: view:res.partner.events:0
@@ -1390,7 +1356,7 @@ msgstr "ava"
 #. module: crm
 #: field:crm.case.rule,trg_max_history:0
 msgid "Maximum Communication History"
-msgstr ""
+msgstr "Maximum Communication History"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu11:0
@@ -1410,9 +1376,8 @@ msgstr "Maili keha"
 
 #. module: crm
 #: help:crm.case.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
+msgid "Check this if you want the rule to send a reminder by email to the user."
+msgstr "Märgi see kui soovid reeglit saata meeldetuletus mailiga kasutajale."
 
 #. module: crm
 #: field:crm.case,probability:0
@@ -1431,7 +1396,7 @@ msgstr "Segmenteerimised"
 #. module: crm
 #: field:crm.segmentation.line,operator:0
 msgid "Mandatory / Optional"
-msgstr ""
+msgstr "Mandatory / Optional"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_name:0
@@ -1440,12 +1405,8 @@ msgstr "Müügisumma"
 
 #. module: crm
 #: help:crm.case.section,reply_to:0
-msgid ""
-"The email address put in the 'Reply-To' of all emails sent by Open ERP about "
-"cases in this section"
-msgstr ""
-"Vastamise aadress kõigil Open ERP poolt selles osas olevate juhtumite kohta "
-"saadetud e-kirjadel."
+msgid "The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"
+msgstr "Vastamise aadress kõigil Open ERP poolt selles osas olevate juhtumite kohta saadetud e-kirjadel."
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -1456,7 +1417,7 @@ msgstr "Juhtumi Reegel"
 #. module: crm
 #: help:crm.case,date_deadline:0
 msgid "Deadline Date is automatically computed from Start Date + Duration"
-msgstr ""
+msgstr "Deadline Date is automatically computed from Start Date + Duration"
 
 #. module: crm
 #: selection:crm.segmentation.line,expr_operator:0
@@ -1464,9 +1425,11 @@ msgid "="
 msgstr "="
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: field:crm.case.log,case_id:0
 #: model:ir.model,name:crm.model_crm_case
 #: model:res.request.link,name:crm.req_link_case
+#, python-format
 msgid "Case"
 msgstr "Juhtum"
 
@@ -1478,21 +1441,12 @@ msgstr "Kuud"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on Priority Range"
-msgstr ""
+msgstr "Seisukorrad prioriteedi vahemikus"
 
 #. module: crm
 #: field:crm.segmentation,name:0
 msgid "Name"
 msgstr "Nimi"
-
-#. module: crm
-#: help:crm.segmentation,som_interval_decrease:0
-msgid ""
-"If the partner has not purchased (or buied) during a period, decrease the "
-"state of mind by this factor. It's a multiplication"
-msgstr ""
-"Kui partner pole ostnud perioodi jooksul siis alanda meeleolu selle teguri "
-"võrra. See on korrutis."
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu8:0
@@ -1550,7 +1504,7 @@ msgstr "Kõik ajalood"
 #. module: crm
 #: help:crm.case.section,allow_unlink:0
 msgid "Allows to delete non draft cases"
-msgstr ""
+msgstr "Allows to delete non draft cases"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu4:0
@@ -1575,14 +1529,8 @@ msgstr "ID"
 
 #. module: crm
 #: help:crm.segmentation,exclusif:0
-msgid ""
-"Check if the category is limited to partners that match the segmentation "
-"criterions. If checked, remove the category from partners that doesn't match "
-"segmentation criterions"
-msgstr ""
-"Kontrolli kas kategooria on limiteeritud partneritega mis vastavad "
-"segmenteerimise kriteeriumitele. Kui on kontrollitud, eemalda kategooria "
-"partneritelt mis ei vasta segmenteerimise kriteeriumitele."
+msgid "Check if the category is limited to partners that match the segmentation criterions. If checked, remove the category from partners that doesn't match segmentation criterions"
+msgstr "Kontrolli kas kategooria on limiteeritud partneritega mis vastavad segmenteerimise kriteeriumitele. Kui on kontrollitud, eemalda kategooria partneritelt mis ei vasta segmenteerimise kriteeriumitele."
 
 #. module: crm
 #: field:crm.case,log_ids:0
@@ -1597,7 +1545,7 @@ msgstr "Vormivaade"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on Timing"
-msgstr ""
+msgstr "Ajastamise olukorrad"
 
 #. module: crm
 #: view:crm.case:0
@@ -1617,12 +1565,7 @@ msgstr "Juhtumi kirjeldus"
 #. module: crm
 #: field:crm.case.rule,act_mail_to_watchers:0
 msgid "Mail to watchers (Cc)"
-msgstr ""
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_section_open_act
-msgid "crm.case.section.open"
-msgstr "crm.case.section.open"
+msgstr "Mail to watchers (Cc)"
 
 #. module: crm
 #: view:crm.case:0
@@ -1663,7 +1606,7 @@ msgstr "Partner"
 #. module: crm
 #: view:crm.case.rule:0
 msgid "Conditions on States"
-msgstr ""
+msgstr "Staatuste seisukord"
 
 #. module: crm
 #: wizard_view:crm.case.section.menu,design_menu:0
@@ -1674,3 +1617,4 @@ msgstr "Uuenda Väljapakutud Menüüd Loomiseks"
 #: field:crm.case.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Päästiku kuupäev"
+

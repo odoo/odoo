@@ -4,54 +4,52 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 12:04+0000\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
-msgstr ""
+msgstr "项目4ID"
 
 #. module: account_analytic_plans
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: account_analytic_plans
 #: model:ir.actions.report.xml,name:account_analytic_plans.account_analytic_account_crossovered_analytic
 #: model:ir.actions.wizard,name:account_analytic_plans.account_analytic_account_inverted_balance_report
 msgid "Crossovered Analytic"
-msgstr ""
+msgstr "交叉辅助核算"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
-msgstr ""
+msgstr "项目5ID"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date2:0
 msgid "End Date"
-msgstr ""
+msgstr "结束日期"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
-msgstr ""
+msgstr "项目3ID"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
 msgid "Rate (%)"
-msgstr ""
+msgstr "比率(%)"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan:0
@@ -60,141 +58,160 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_action
 msgid "Analytic Plan"
-msgstr ""
+msgstr "辅助核算方案"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
+#, python-format
+msgid "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
+msgstr "There are no Analytic lines related to Account %s' % name))\n"
+"        return {}\n"
+"\n"
+"    states = {\n"
+"        'init': {\n"
+"            'actions': [],\n"
+"            'result': {'type':'form', 'arch':form, 'fields':fields, 'state':[('end','Cancel"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
 msgid "Analytic Instance Line"
-msgstr ""
+msgstr "辅助核算实例明细"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
-msgstr ""
+msgstr "辅助核算分配明细"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,code:0
-msgid "Distribution Code"
-msgstr ""
+#: wizard_button:wizard.crossovered.analytic,init,print:0
+msgid "Print"
+msgstr "打印"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "To Date"
+msgstr "To Date"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
 msgid "Plan Id"
-msgstr ""
+msgstr "方案ID"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
 msgid "Analytic Distribution's Models"
-msgstr ""
+msgstr "辅助核算分配模型"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Account Name"
-msgstr ""
+msgstr "项目名称"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
-msgstr ""
+msgstr "辅助核算分配明细"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Currency:"
-msgstr ""
+#: field:account.analytic.plan.instance,code:0
+msgid "Distribution Code"
+msgstr "分配代码"
 
 #. module: account_analytic_plans
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "在行动定义中的模式名称无效"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
 msgid "Plan Name"
-msgstr ""
+msgstr "方案名"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Printing date"
+msgstr "Printing date"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Percentage"
-msgstr ""
+msgstr "百分比"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,empty_line:0
 msgid "Dont show empty lines"
-msgstr ""
+msgstr "不要显示空行"
 
 #. module: account_analytic_plans
 #: wizard_view:wizard.crossovered.analytic,init:0
 msgid "Select Information"
-msgstr ""
+msgstr "选择信息"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "A model having this name and code already exists !"
-msgstr ""
+msgstr "有该名称和代码的模块已经存在！"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: wizard_field:wizard.crossovered.analytic,init,journal_ids:0
 msgid "Analytic Journal"
-msgstr ""
+msgstr "辅助核算类型"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
-msgstr ""
+msgstr "100.00%"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,ref:0
 msgid "Analytic Account Ref."
-msgstr ""
+msgstr "关联的辅助核算项目"
 
 #. module: account_analytic_plans
-#: field:account.analytic.default,analytics_id:0
-#: view:account.analytic.plan.instance:0
-#: field:account.analytic.plan.instance,name:0
-#: field:account.invoice.line,analytics_id:0
-#: field:account.move.line,analytics_id:0
-msgid "Analytic Distribution"
-msgstr ""
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Analytic Account :"
+msgstr "Analytic Account :"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 msgid "Analytic Plan Line"
-msgstr ""
+msgstr "辅助核算方案明细"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "No analytic plan defined !"
-msgstr ""
+msgstr "未定义辅助核算计划"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
-msgstr ""
+msgstr "关联的辅助核算项目:"
 
 #. module: account_analytic_plans
 #: model:ir.actions.wizard,name:account_analytic_plans.create_model
 msgid "Create Model"
-msgstr ""
+msgstr "创建模型"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
 msgid "Default Entries"
-msgstr ""
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "to"
-msgstr ""
+msgstr "默认凭证"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #: code:addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "错误"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan:0
@@ -202,49 +219,52 @@ msgstr ""
 #: field:account.journal,plan_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan
 msgid "Analytic Plans"
-msgstr ""
+msgstr "辅助核算方案"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/wizard_crossovered_analytic.py:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "用户错误"
+
+#. module: account_analytic_plans
+#: field:account.analytic.plan.line,min_required:0
+msgid "Minimum Allowed (%)"
+msgstr "最小允许(%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
 msgid "Account1 Id"
-msgstr ""
+msgstr "项目1ID"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
 msgid "Maximum Allowed (%)"
-msgstr ""
+msgstr "最大允许(%)"
 
 #. module: account_analytic_plans
 #: wizard_view:create.model,info:0
 msgid "Distribution Model Saved"
-msgstr ""
+msgstr "分配模型保存"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
-msgstr ""
+msgstr "辅助核算方案实例"
 
 #. module: account_analytic_plans
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "无效XML视图结构!"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
-msgstr ""
+msgstr "分配模型"
 
 #. module: account_analytic_plans
 #: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
+msgid "This module allows to use several analytic plans, according to the general journal,\n"
 "so that multiple analytic lines are created when the invoice or the entries\n"
 "are confirmed.\n"
 "\n"
@@ -269,143 +289,160 @@ msgid ""
 "Plan2:\n"
 "    Eric: 100%\n"
 "\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
+"So when this line of invoice will be confirmed, it will generate 3 analytic lines,\n"
 "for one account entry.\n"
 "        "
-msgstr ""
+msgstr "这模块允许使用几个辅助核算方案并根据业务类型生成,\n"
+"所以当开发票或确认凭证时建立多个辅助核算明细.\n"
+"例如,你可以定义以下辅助核算结构:\n"
+"      项目\n"
+"        项目1\n"
+"                      子项目1.1\n"
+"                      子项目1.2 \n"
+"              项目2\n"
+"      业务员\n"
+"        小李\n"
+"        小张\n"
+"这里我们有两个项目和业务员,发票要能做有两个项目和业务员的辅助核算凭证：\n"
+"    下面的例子: 发票涉及两个项目和一个业务员.\n"
+"       方案1:\n"
+"             子项目1.1 :50%\n"
+"             子项目1.2 :50%\n"
+"       方案2:\n"
+"             小李:100%\n"
+"因此当这发票的辅助核算凭证有3个辅助核算明细\n"
+"        "
 
 #. module: account_analytic_plans
 #: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
 msgid "Multiple-plans management in Analytic Accounting"
-msgstr ""
+msgstr "辅助核算会计的多方案管理"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.line:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Lines"
-msgstr ""
+msgstr "辅助核算方案明细"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.line,min_required:0
-msgid "Minimum Allowed (%)"
-msgstr ""
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "Crossovered Analytic -"
+msgstr "Crossovered Analytic -"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
-msgstr ""
+msgstr "模型方案"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
-msgstr ""
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#, python-format
-msgid "The Total Should be Between %s and %s"
-msgstr ""
+msgstr "项目2ID"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/create_model.py:0
 #, python-format
 msgid "Please put a name and a code before saving the model !"
-msgstr ""
+msgstr "保存模式之前，请输入名称和编码！"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Amount"
-msgstr ""
+msgstr "金额"
 
 #. module: account_analytic_plans
 #: help:account.analytic.plan.line,root_analytic_id:0
 msgid "Root account of this plan."
-msgstr ""
+msgstr "这方案的根辅助核算项目"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
 msgid "Account6 Id"
-msgstr ""
+msgstr "项目6ID"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Quantity"
-msgstr ""
+msgstr "数量"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
 msgid "Account Id"
-msgstr ""
+msgstr "项目ID"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "Code"
-msgstr ""
+msgstr "代码"
 
 #. module: account_analytic_plans
 #: wizard_button:create.model,info,end:0
 msgid "OK"
-msgstr ""
+msgstr "确定"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
-msgstr ""
+msgstr "根项"
 
 #. module: account_analytic_plans
-#: wizard_button:wizard.crossovered.analytic,init,print:0
-msgid "Print"
-msgstr ""
+#: wizard_view:create.model,info:0
+msgid "This distribution model has been saved. You will be able to reuse it later."
+msgstr "这分配模型已经保存.你将在以后能重复使用"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
 msgid "Sequence"
-msgstr ""
-
-#. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Period from"
-msgstr ""
+msgstr "序列"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "辅助核算项目"
+
+#. module: account_analytic_plans
+#: field:account.analytic.default,analytics_id:0
+#: view:account.analytic.plan.instance:0
+#: field:account.analytic.plan.instance,name:0
+#: field:account.invoice.line,analytics_id:0
+#: field:account.move.line,analytics_id:0
+msgid "Analytic Distribution"
+msgstr "辅助核算分配"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:0
 #, python-format
 msgid "Value Error"
-msgstr ""
+msgstr "Value Error"
 
 #. module: account_analytic_plans
-#: rml:account.analytic.account.crossovered.analytic:0
-msgid "Printing date:"
-msgstr ""
+#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#, python-format
+msgid "The Total Should be Between %s and %s"
+msgstr "合计应该在 %s 和 %s 之间"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_plan_instance_action
 msgid "Analytic Distribution's models"
-msgstr ""
-
-#. module: account_analytic_plans
-#: wizard_view:create.model,info:0
-msgid ""
-"This distribution model has been saved. You will be able to reuse it later."
-msgstr ""
+msgstr "辅助核算分配模型"
 
 #. module: account_analytic_plans
 #: wizard_button:wizard.crossovered.analytic,init,end:0
 msgid "Cancel"
-msgstr ""
+msgstr "取消"
 
 #. module: account_analytic_plans
 #: wizard_field:wizard.crossovered.analytic,init,date1:0
 msgid "Start Date"
-msgstr ""
+msgstr "开始日期"
 
 #. module: account_analytic_plans
 #: rml:account.analytic.account.crossovered.analytic:0
 msgid "at"
-msgstr ""
+msgstr "在"
+
+#. module: account_analytic_plans
+#: rml:account.analytic.account.crossovered.analytic:0
+msgid "From Date"
+msgstr "From Date"
+

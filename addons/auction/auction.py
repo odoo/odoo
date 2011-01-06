@@ -56,7 +56,9 @@ class auction_dates(osv.osv):
                 tmp[id]=sum[0]
         return tmp
 
-    def name_get(self, cr, uid, ids, context={}):
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
         reads = self.read(cr, uid, ids, ['name', 'auction1'], context)
@@ -95,12 +97,19 @@ class auction_dates(osv.osv):
         RETURN: True
         """
         # objects vendus mais non factures
-        cr.execute('select count(*) as c from auction_lots where auction_id in ('+','.join(map(str,ids))+') and state=%s and obj_price>0', ('draft',))
+        cr.execute('SELECT COUNT(*) AS c '
+                   'FROM auction_lots '
+                   'WHERE auction_id IN %s '
+                   'AND state=%s AND obj_price>0', (tuple(ids), 'draft'))
         nbr = cr.fetchone()[0]
         ach_uids = {}
-        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str,ids))+') and state=%s and obj_price>0', ('draft',))
+        cr.execute('SELECT id FROM auction_lots '
+                   'WHERE auction_id IN %s '
+                   'AND state=%s AND obj_price>0', (tuple(ids), 'draft'))
         r=self.pool.get('auction.lots').lots_invoice(cr, uid, [x[0] for x in cr.fetchall()],{},None)
-        cr.execute('select id from auction_lots where auction_id in ('+','.join(map(str,ids))+') and obj_price>0')
+        cr.execute('SELECT id FROM auction_lots '
+                   'WHERE auction_id IN %s '
+                   'AND obj_price>0', (tuple(ids),))
         ids2 = [x[0] for x in cr.fetchall()]
     #   for auction in auction_ids:
         c=self.pool.get('auction.lots').seller_trans_create(cr, uid, ids2,{})
@@ -113,7 +122,9 @@ auction_dates()
 # Deposits
 #----------------------------------------------------------
 def _inv_uniq(cr, ids):
-    cr.execute('select name from auction_deposit where id in ('+','.join(map(lambda x: str(x), ids))+')')
+    cr.execute('SELECT name FROM auction_deposit '
+               'WHERE id IN %s',
+               (tuple(ids),))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_deposit where name=%s', (datas[0],))
         if cr.fetchone()[0]>1:
@@ -221,7 +232,7 @@ class auction_lot_category(osv.osv):
     }
 auction_lot_category()
 
-def _type_get(self, cr, uid,ids):
+def _type_get(self, cr, uid,context=None):
     cr.execute('select name, name from auction_lot_category order by name')
     return cr.fetchall()
 
@@ -229,7 +240,9 @@ def _type_get(self, cr, uid,ids):
 # Lots
 #----------------------------------------------------------
 def _inv_constraint(cr, ids):
-    cr.execute('select id, bord_vnd_id, lot_num from auction_lots where id in ('+','.join(map(lambda x: str(x), ids))+')')
+    cr.execute('SELECT id, bord_vnd_id, lot_num FROM auction_lots '
+               'WHERE id IN %s',
+               (tuple(ids),))
     for datas in cr.fetchall():
         cr.execute('select count(*) from auction_lots where bord_vnd_id=%s and lot_num=%s', (datas[1],datas[2]))
         if cr.fetchone()[0]>1:
@@ -463,15 +476,19 @@ class auction_lots(osv.osv):
     ]
 
 
-    def name_get(self, cr, user, ids, context={}):
+    def name_get(self, cr, user, ids, context=None):
+        if context is None:
+            context = {}
         if not len(ids):
             return []
         result = [ (r['id'], str(r['obj_num'])+' - '+r['name']) for r in self.read(cr, user, ids, ['name','obj_num'])]
         return result
 
-    def name_search(self, cr, user, name, args=[], operator='ilike', context={}):
+    def name_search(self, cr, user, name, args=[], operator='ilike', context=None):
+        if context is None:
+            context = {}
         try:
-            ids = self.search(cr, user, [('obj_num','=',int(name))]+ args)
+            ids = self.search(cr, user, [('obj_num','=',int(name))]+ args,context=context)
         except:
             ids = []
         if not ids:

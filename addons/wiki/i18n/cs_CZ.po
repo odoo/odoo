@@ -4,34 +4,31 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 12:04+0000\n"
+"POT-Creation-Date: 2010-09-02 13:40:51+0000\n"
+"PO-Revision-Date: 2010-09-02 13:40:51+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
 msgid "wizard.wiki.history.show_diff"
-msgstr ""
+msgstr "wizard.wiki.history.show_diff"
 
 #. module: wiki
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Jméno objektu musí začínat znakem x_ a nesmí obsahovat žádný speciální znak!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_groups_link
 msgid "Wiki Groups Links"
-msgstr ""
+msgstr "Wiki odkazy skupiny"
 
 #. module: wiki
 #: field:wiki.wiki,create_uid:0
@@ -39,14 +36,16 @@ msgid "Author"
 msgstr "Tvůrce"
 
 #. module: wiki
+#: code:addons/wiki/wizard/open_page.py:0
 #: model:ir.actions.wizard,name:wiki.wizard_open_page
+#, python-format
 msgid "Open Page"
-msgstr "Otevřená sránka"
+msgstr "Open Page"
 
 #. module: wiki
 #: field:wiki.groups.link,action_id:0
 msgid "Menu"
-msgstr "Menu"
+msgstr "Nabídka"
 
 #. module: wiki
 #: field:wiki.groups,child_ids:0
@@ -79,7 +78,7 @@ msgstr "Malá editace"
 #. module: wiki
 #: field:wiki.wiki,text_area:0
 msgid "Content"
-msgstr ""
+msgstr "Obsah"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document_configuration
@@ -100,12 +99,12 @@ msgstr "Wiki skupina"
 #. module: wiki
 #: field:wiki.wiki,name:0
 msgid "Title"
-msgstr "Nadpis"
+msgstr "Název"
 
 #. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
-msgstr ""
+msgstr "Linky historie"
 
 #. module: wiki
 #: field:wiki.groups,template:0
@@ -113,9 +112,15 @@ msgid "Wiki Template"
 msgstr "Wiki šablona"
 
 #. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no chnages in revisions"
+msgstr "There are no chnages in revisions"
+
+#. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
 msgid "Document Management - Wiki"
-msgstr ""
+msgstr "Správa dokumentů - Wiki"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -130,17 +135,23 @@ msgstr "Popis"
 #. module: wiki
 #: field:wiki.wiki,section:0
 msgid "Section"
-msgstr ""
+msgstr "Sekce"
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "History Differance"
-msgstr ""
+msgstr "Rozdílnost historie"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,page:0
 msgid "Group Home Page"
 msgstr "Hlavní stránka skupiny"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: wiki
 #: field:wiki.wiki,write_uid:0
@@ -150,12 +161,12 @@ msgstr "Poslední autor"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_view_diff
 msgid "Differences"
-msgstr ""
+msgstr "Rozdíly"
 
 #. module: wiki
 #: help:wiki.wiki,section:0
 msgid "Use page section code like 1.2.1"
-msgstr ""
+msgstr "Use page section code like 1.2.1"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -165,7 +176,7 @@ msgstr "Šablona stránky"
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document2
 msgid "Document Management"
-msgstr ""
+msgstr "Document Management"
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -175,7 +186,7 @@ msgstr "Datum"
 #. module: wiki
 #: wizard_view:wiki.make.index,init:0
 msgid "Want to create a Index on Selected Pages ? "
-msgstr ""
+msgstr "Chcete vytvořit index na vybraných stránkách ? "
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -186,28 +197,28 @@ msgstr "Nastavení"
 #: field:wiki.groups,home:0
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
-msgstr ""
+msgstr "Stránky"
 
 #. module: wiki
 #: code:addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "You need to select minimum 1 or maximum 2 history revision!"
-msgstr ""
+msgstr "You need to select minimum 1 or maximum 2 history revision!"
 
 #. module: wiki
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Invalidní XML pro zobrazení architektury!"
+msgstr "Invalid XML for View Architecture!"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
 msgid "Text area"
-msgstr ""
+msgstr "Textová plocha"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_parent_id:0
 msgid "Parent Menu"
-msgstr ""
+msgstr "Rodičovská nabídka"
 
 #. module: wiki
 #: field:wiki.wiki,create_date:0
@@ -223,13 +234,13 @@ msgstr "Poznámky"
 #: wizard_view:wiki.create.menu,init:0
 #: wizard_view:wiki.make.index,init:0
 msgid "Menu Information"
-msgstr ""
+msgstr "Informace nabídky"
 
 #. module: wiki
 #: field:wiki.groups,parent_id:0
 #: field:wiki.groups.link,group_id:0
 msgid "Parent Group"
-msgstr ""
+msgstr "Rodičovská skupina"
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -240,13 +251,13 @@ msgstr "Shrnutí"
 #. module: wiki
 #: field:wiki.groups,create_date:0
 msgid "Created Date"
-msgstr ""
+msgstr "Vytvořené datum"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_history
 #: model:ir.ui.menu,name:wiki.menu_action_history
 msgid "All Page Histories"
-msgstr ""
+msgstr "Historie všech stránek"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
@@ -256,7 +267,7 @@ msgstr "wiki.wiki"
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "Wiki Differance"
-msgstr ""
+msgstr "Rozdílnost Wiki"
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
@@ -267,7 +278,7 @@ msgstr "Wiki Id"
 #: code:addons/wiki/wizard/open_page.py:0
 #, python-format
 msgid "No action found"
-msgstr ""
+msgstr "No action found"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_name:0
@@ -293,7 +304,7 @@ msgstr "Wiki"
 #. module: wiki
 #: field:wiki.wiki,write_date:0
 msgid "Modification Date"
-msgstr ""
+msgstr "Datum změny"
 
 #. module: wiki
 #: model:ir.actions.wizard,name:wiki.wizard_make_index
@@ -332,7 +343,7 @@ msgstr "Wiki skupiny"
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
 msgid "Modify By"
-msgstr ""
+msgstr "Upraveno od"
 
 #. module: wiki
 #: field:wiki.wiki,toc:0
@@ -349,7 +360,7 @@ msgstr "Upozornění"
 #: wizard_button:wiki.create.menu,init,end:0
 #: wizard_button:wiki.make.index,init,end:0
 msgid "Cancel"
-msgstr "Ukončení"
+msgstr "Zrušit"
 
 #. module: wiki
 #: field:wizard.wiki.history.show_diff,diff:0
@@ -359,4 +370,5 @@ msgstr "Rozdíl"
 #. module: wiki
 #: field:wiki.wiki,review:0
 msgid "Need Review"
-msgstr "Nemá kontrolu"
+msgstr "Potřebuje kontrolu"
+

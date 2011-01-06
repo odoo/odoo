@@ -45,7 +45,7 @@ sale_fields = {
         'relation': 'res.partner',
         'help': 'Use this partner if there is no partner on the case'},
     'picking_policy': {'string': 'Packing Policy', 'type': 'selection',
-        'selection': [('direct','Direct Delivery'),('one','All at once')]},
+        'selection': [('direct', 'Partial Delivery'), ('one', 'Complete Delivery')]},
     'products': {'string': 'Products', 'type': 'many2many',
         'relation': 'product.product'},
     'analytic_account': {'string': 'Analytic Account', 'type': 'many2one',
@@ -113,12 +113,17 @@ class make_sale(wizard.interface):
 
             if data['form']['analytic_account']:
                 vals['project_id'] = data['form']['analytic_account']
+
+            vals.update( sale_obj.onchange_partner_id(cr, uid, [], partner_id).get('value',{}) )
             new_id = sale_obj.create(cr, uid, vals)
             for product_id in data['form']['products'][0][2]:
-                value = sale_line_obj.product_id_change(cr, uid, [], pricelist,
-                        product_id, qty=1, partner_id=partner_id, fiscal_position=fpos)['value']
-                value['product_id'] = product_id
-                value['order_id'] = new_id
+                value = {
+                    'price_unit': 0.0,
+                    'product_id': product_id,
+                    'order_id': new_id,
+                }
+                value.update( sale_line_obj.product_id_change(cr, uid, [], pricelist,
+                        product_id, qty=1, partner_id=partner_id, fiscal_position=fpos)['value'] )
                 value['tax_id'] = [(6,0,value['tax_id'])]
                 sale_line_obj.create(cr, uid, value)
 

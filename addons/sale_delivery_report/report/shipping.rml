@@ -201,7 +201,7 @@
             <para style="terp_default_9">[[line.product_id.code ]] [[ line.product_id and line.product_id.name or '']]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ (line.prodlot_id and (line.prodlot_id.name + '/' + line.prodlot_id.ref)) or ' ' ]]</para>
+            <para style="terp_default_Centre_9">[[ (line.prodlot_id and (line.prodlot_id.name + (line.prodlot_id.ref and ('/' + line.prodlot_id.ref) or ''))) or ' ' ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.product_qty) ]]</para>

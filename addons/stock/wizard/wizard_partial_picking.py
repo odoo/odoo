@@ -71,7 +71,7 @@ def _get_moves(self, cr, uid, data, context):
                 'type' : 'float', 'required' : True, 'default' : make_default(quantity)}
 
         if (pick.type == 'in') and (m.product_id.cost_method == 'average'):
-            price=0
+            price = m.product_id.standard_price
             if hasattr(m, 'purchase_line_id') and m.purchase_line_id:
                 price=m.purchase_line_id.price_unit
 

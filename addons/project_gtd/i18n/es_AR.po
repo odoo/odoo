@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:33+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 14:00:26+0000\n"
+"PO-Revision-Date: 2010-09-02 14:00:26+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_daily.py:0
@@ -35,11 +34,8 @@ msgstr "Columnas visibles"
 
 #. module: project_gtd
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún caracter "
-"especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún caracter especial!"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -79,6 +75,7 @@ msgstr "Prioridad"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.act_timebox_tasks_my_inbox
+#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
 #: model:ir.ui.menu,name:project_gtd.menu_open_time_myinbox
 msgid "My Inbox"
 msgstr "Mi bandeja de entrada"
@@ -91,7 +88,7 @@ msgstr "Proyecto predeterminado"
 #. module: project_gtd
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Invalid model name in the action definition."
 
 #. module: project_gtd
 #: field:project.gtd.timebox,context4_id:0
@@ -104,9 +101,9 @@ msgid "Set to Timebox"
 msgstr "Establecer como cronograma"
 
 #. module: project_gtd
-#: selection:project.gtd.timebox,type:0
-msgid "Other"
-msgstr "Otro"
+#: field:project.gtd.timebox,type:0
+msgid "Type"
+msgstr "Tipo"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_effective_hours:0
@@ -143,16 +140,6 @@ msgid "Timebox tasks selection"
 msgstr "Selección tareas del cronograma"
 
 #. module: project_gtd
-#: field:project.gtd.timebox,type:0
-msgid "Type"
-msgstr "Tipo"
-
-#. module: project_gtd
-#: model:ir.actions.act_window,name:project_gtd.open_gtd_task_inbox
-msgid "Inbox Tasks"
-msgstr "Tareas de bandeja de entrada"
-
-#. module: project_gtd
 #: model:ir.actions.wizard,name:project_gtd.open_gtd_timebox_empty
 msgid "Empty Timebox"
 msgstr "Cronograma vacío"
@@ -177,11 +164,6 @@ msgstr "Usuario"
 #: model:ir.ui.menu,name:project_gtd.menu_open_time_daily_inbox
 msgid "My Daily Timebox"
 msgstr "Mi cronograma diario"
-
-#. module: project_gtd
-#: model:ir.model,name:project_gtd.model_project_gtd_context
-msgid "project.gtd.context"
-msgstr "project.gtd.context"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,context1_id:0
@@ -215,6 +197,7 @@ msgstr "Contexto 6"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
+#: model:ir.model,name:project_gtd.model_project_gtd_context
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_contexts
 #: view:project.gtd.timebox:0
 msgid "Contexts"
@@ -239,6 +222,7 @@ msgstr "Proyecto"
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_all
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree_my
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_my_timeboxes
+#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
 msgid "My Timeboxes"
 msgstr "Mis cronogramas"
 
@@ -295,6 +279,11 @@ msgid "Tasks"
 msgstr "Tareas"
 
 #. module: project_gtd
+#: model:ir.actions.act_window,name:project_gtd.project_normal_action_tree
+msgid "TimeBox"
+msgstr "TimeBox"
+
+#. module: project_gtd
 #: field:project.gtd.context,sequence:0
 msgid "Sequence"
 msgstr "Secuencia"
@@ -305,14 +294,19 @@ msgid "Child Timeboxes"
 msgstr "Cronogramas hijos"
 
 #. module: project_gtd
-#: model:ir.ui.menu,name:project_gtd.menu_open_time_allinbox
-msgid "All My Timeboxes"
-msgstr "Todos mis cronogramas"
+#: selection:project.gtd.timebox,type:0
+msgid "Other"
+msgstr "Otro"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,col_deadline:0
 msgid "Deadline"
 msgstr "Fecha límite"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "TimeBox Configuration"
+msgstr "TimeBox Configuration"
 
 #. module: project_gtd
 #: wizard_field:project.gtd.timebox.fill,init,timebox_id:0
@@ -338,3 +332,4 @@ msgstr "Horas planeadas"
 #: selection:project.gtd.timebox,type:0
 msgid "Weekly"
 msgstr "Semanal"
+

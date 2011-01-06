@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-09-28 07:12+0000\n"
-"Last-Translator: Raimon Esteve <resteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-09-02 14:01:21+0000\n"
+"PO-Revision-Date: 2010-09-02 14:01:21+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
@@ -23,11 +22,8 @@ msgstr "asistente.wiki.historial.mostrar_dif"
 
 #. module: wiki
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_groups_link
@@ -40,9 +36,11 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: wiki
+#: code:addons/wiki/wizard/open_page.py:0
 #: model:ir.actions.wizard,name:wiki.wizard_open_page
+#, python-format
 msgid "Open Page"
-msgstr "Abrir página"
+msgstr "Open Page"
 
 #. module: wiki
 #: field:wiki.groups.link,action_id:0
@@ -114,6 +112,12 @@ msgid "Wiki Template"
 msgstr "Plantilla Wiki"
 
 #. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no chnages in revisions"
+msgstr "There are no chnages in revisions"
+
+#. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
 msgid "Document Management - Wiki"
 msgstr "Gestión de documentos - Wiki"
@@ -142,6 +146,12 @@ msgstr "Diferencia historial"
 #: wizard_field:wiki.create.menu,init,page:0
 msgid "Group Home Page"
 msgstr "Página de inicio del grupo"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: wiki
 #: field:wiki.wiki,write_uid:0
@@ -193,8 +203,7 @@ msgstr "Páginas"
 #: code:addons/wiki/wizard/show_diff.py:0
 #, python-format
 msgid "You need to select minimum 1 or maximum 2 history revision!"
-msgstr ""
-"¡Debe seleccionar como mínimo 1 o como máximo 2 revisiones históricas!"
+msgstr "¡Debe seleccionar como mínimo 1 o como máximo 2 revisiones históricas!"
 
 #. module: wiki
 #: constraint:ir.ui.view:0
@@ -362,3 +371,4 @@ msgstr "Dif."
 #: field:wiki.wiki,review:0
 msgid "Need Review"
 msgstr "Necesita revisión"
+

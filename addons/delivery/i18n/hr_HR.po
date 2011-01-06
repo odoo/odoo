@@ -4,25 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 11:59+0000\n"
+"POT-Creation-Date: 2010-09-02 13:40:01+0000\n"
+"PO-Revision-Date: 2010-09-02 13:40:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: delivery
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Naziv Objekta mora početi sa x_ i ne smije sadržavati nikakve specijalne "
-"znakove !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -47,7 +43,7 @@ msgstr "Dostava Poštom"
 #. module: delivery
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Nevažeći XML za Arhitekturu Prikaza!"
+msgstr "Invalid XML for View Architecture!"
 
 #. module: delivery
 #: constraint:res.partner:0
@@ -57,17 +53,17 @@ msgstr "Greška ! Ne možete kreirati rekurzivno pridružene članove."
 #. module: delivery
 #: field:delivery.grid,state_ids:0
 msgid "States"
-msgstr "Države"
+msgstr "Stanja"
 
 #. module: delivery
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nevažeće ime modela u definiciji akcije."
+msgstr "Invalid model name in the action definition."
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packing."
-msgstr ""
+msgstr "Ovaj će način isporuke biti korišten kada se Račun radi kod Pakiranja."
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -77,7 +73,7 @@ msgstr "Dostavna Mreža"
 #. module: delivery
 #: field:delivery.grid,zip_from:0
 msgid "Start Zip"
-msgstr ""
+msgstr "?Start Zip"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -88,24 +84,24 @@ msgstr "Fiksno"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "The order state have to be draft to add delivery lines."
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr ""
+msgstr "?Grid line"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr "Cijenik Dostave"
+msgstr "Cjenik Dostave"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree5
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
 msgid "Generate Draft Invoices On Receptions"
-msgstr ""
+msgstr "Generiraj Nacrte Računa kod Zaprimanja"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -117,12 +113,12 @@ msgstr "Varijabla"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "No grid matching for this carrier !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery line of grid"
-msgstr ""
+msgstr "? Delivery line of grid"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -132,7 +128,7 @@ msgstr "Dostava"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Grid Lines"
-msgstr ""
+msgstr "?Grid line"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -159,7 +155,7 @@ msgstr "Definicija mreže"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr ""
+msgstr "Težina * Volumen"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -169,7 +165,7 @@ msgstr "="
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr ""
+msgstr "Proizvod za Isporuku"
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -179,7 +175,7 @@ msgstr "Uvjet"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_carrier
 msgid "Carrier and delivery grids"
-msgstr ""
+msgstr "Mreža Prijevoza i Isporuka"
 
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
@@ -194,7 +190,7 @@ msgstr "Naziv"
 #. module: delivery
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
+msgstr "Greška: UOS mora biti u kategoriji drogačijoj od one u kojoj je UOM"
 
 #. module: delivery
 #: field:delivery.grid,country_ids:0
@@ -203,9 +199,8 @@ msgstr "Zemlje"
 
 #. module: delivery
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Greška: Predefinirani UOM i UOM kupnje moraju biti u istoj kategoriji."
 
 #. module: delivery
 #: view:sale.order:0
@@ -221,7 +216,7 @@ msgstr "Varijabilni Faktor"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid avaible !"
-msgstr ""
+msgstr "No grid avaible !"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -234,14 +229,14 @@ msgstr "Naziv Mreže"
 #: field:delivery.grid,carrier_id:0
 #: field:stock.picking,carrier_id:0
 msgid "Carrier"
-msgstr "Nosač"
+msgstr "Prijevoznik"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
 msgid "Volume"
-msgstr "Zapremina"
+msgstr "Volumen"
 
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
@@ -274,13 +269,13 @@ msgstr "Operator"
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
 msgid "Carriers and deliveries"
-msgstr ""
+msgstr "Prijevoznici i Isporuke"
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Order not in draft state !"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -302,44 +297,40 @@ msgstr "Sekvenca"
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
-msgstr ""
+msgstr "Partner Prijevoznik"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
-msgid ""
-"Allows you to add delivery methods in sales orders and packing. You can "
-"define your own carrier and delivery grids for prices. When creating "
-"invoices from picking, Open ERP is able to add and compute the shipping line."
-msgstr ""
+msgid "Allows you to add delivery methods in sales orders and packing. You can define your own carrier and delivery grids for prices. When creating invoices from picking, Open ERP is able to add and compute the shipping line."
+msgstr "Omogućuje Vam da dodate načine isporuke Prodajnim narudžbama i pakiranjima. Možete odrediti vlastitog prijevoznika i cjenike  mreže isporuke. Kada se Računi kreiraju kod preuzimanja, Open ERP može dodati i izračunati način i troškove otpreme."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
-msgstr ""
+msgstr "Na Pošt. Broj"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
+msgstr "No line matched this order in the choosed delivery grids !"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packing to be invoiced"
-msgstr ""
+msgstr "Pakiranje za koje treba izdati račun"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
-msgstr ""
+msgstr "No price available !"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on packing."
-msgstr ""
+msgid "Complete this field if you plan to invoice the shipping based on packing."
+msgstr "Popunite ovo polje ako planirate Otpremu fakturirati na bazi Pakiranja."
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
@@ -354,7 +345,7 @@ msgstr "Prodajna Cijena"
 #. module: delivery
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Greška: Nepravilan ean kod"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -365,18 +356,18 @@ msgstr "Dostavne mreže"
 #: code:addons/delivery/stock.py:0
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "The carrier %s (id: %d) has no delivery grid!"
 
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
 msgid "Cancel"
-msgstr "Poništi"
+msgstr "Otkaži"
 
 #. module: delivery
 #: code:addons/delivery/stock.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Warning"
 
 #. module: delivery
 #: field:sale.order,carrier_id:0
@@ -393,9 +384,10 @@ msgstr "Cijena"
 #. module: delivery
 #: constraint:res.partner:0
 msgid "The VAT doesn't seem to be correct."
-msgstr ""
+msgstr "PDV nije točno naveden."
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Vrsta Cijene"
+

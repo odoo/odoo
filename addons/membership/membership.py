@@ -148,8 +148,8 @@ class membership_line(osv.osv):
             )
         JOIN account_invoice ai ON (
             ai.id = ail.invoice_id)
-        WHERE ml.id in (%s)
-        ''' % ','.join([str(id) for id in ids]))
+        WHERE ml.id in %s
+        ''', (tuple(ids),))
 
         res = cr.fetchall()
         for r in res:
@@ -162,8 +162,9 @@ class membership_line(osv.osv):
         res = {}
         for line in self.browse(cr, uid, ids):
             cr.execute('''
-            SELECT i.state FROM
-            account_invoice i WHERE
+            SELECT i.state, i.id FROM
+            account_invoice i 
+            WHERE
             i.id = (
                 SELECT l.invoice_id FROM
                 account_invoice_line l WHERE
@@ -186,6 +187,10 @@ class membership_line(osv.osv):
                 state = 'invoiced'
             elif istate == 'paid':
                 state = 'paid'
+                inv = self.pool.get('account.invoice').browse(cr, uid, fetched[1])
+                for payment in inv.payment_ids:
+                    if payment.invoice and payment.invoice.type == 'out_refund':
+                        state = 'canceled'
             elif istate == 'cancel':
                 state = 'canceled'
             res[line.id] = state
@@ -253,11 +258,15 @@ class Partner(osv.osv):
             s = 4
             if partner_data.member_lines:
                 for mline in partner_data.member_lines:
-                    if mline.date_from <= today and mline.date_to >= today:
+                    if mline.date_to >= today:
                         if mline.account_invoice_line and mline.account_invoice_line.invoice_id:
                             mstate = mline.account_invoice_line.invoice_id.state
                             if mstate == 'paid':
                                 s = 0
+                                inv = mline.account_invoice_line.invoice_id
+                                for payment in inv.payment_ids:
+                                    if payment.invoice.type == 'out_refund':
+                                        s = 2
                                 break
                             elif mstate == 'open' and s!=0:
                                 s = 1
@@ -332,14 +341,17 @@ class Partner(osv.osv):
         '''Return the cancel date of membership'''
         res = {}
         member_line_obj = self.pool.get('membership.membership_line')
-        for partner_id in ids:
-            line_id = member_line_obj.search(cr, uid, [('partner', '=', partner_id)],
-                    limit=1, order='date_cancel')
-            if line_id:
-                res[partner_id] = member_line_obj.read(cr, uid, line_id[0],
-                        ['date_cancel'])['date_cancel']
+        for partner in self.browse(cr, uid, ids, context=context):
+            if partner.membership_state != 'canceled':
+                res[partner.id] = False
             else:
-                res[partner_id] = False
+                line_id = member_line_obj.search(cr, uid, [('partner', '=', partner.id)],
+                        limit=1, order='date_cancel')
+                if line_id:
+                    res[partner.id] = member_line_obj.read(cr, uid, line_id[0],
+                            ['date_cancel'])['date_cancel']
+                else:
+                    res[partner.id] = False
         return res
 
     def _get_partners(self, cr, uid, ids, context={}):
@@ -349,20 +361,23 @@ class Partner(osv.osv):
             ids+=ids2
         return ids
 
+    def __get_membership_state(self, *args, **kwargs):
+        return self._membership_state(*args, **kwargs)
+
     _columns = {
         'associate_member': fields.many2one('res.partner', 'Associate member'),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
         'free_member': fields.boolean('Free member'),
         'membership_amount': fields.float(
-                    'Membership amount', digites=(16, 2),
+                    'Membership amount', digits=(16, 2),
                     help='The price negociated by the partner'),
         'membership_state': fields.function(
-                    _membership_state, method = True,
+                    __get_membership_state, method = True,
                     string = 'Current membership state', type = 'selection',
                     selection = STATE ,store = {
                         'account.invoice':(_get_invoice_partner,['state'], 10),
                         'membership.membership_line':(_get_partner_id,['state'], 10),
-                        'res.partner':(_get_partners, ['free_member', 'membership_state'], 10)
+                        'res.partner':(_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                         }
                     ),
         'membership_start': fields.function(
@@ -388,7 +403,7 @@ class Partner(osv.osv):
                     _membership_cancel, method = True,
                     string = 'Cancel membership date', type='date',
                     store = {
-                        'account.invoice':(_get_invoice_partner,['state'], 10),
+                        'account.invoice':(_get_invoice_partner,['state'], 11),
                         'membership.membership_line':(_get_partner_id,['state'], 10),
                         'res.partner':(lambda self,cr,uid,ids,c={}:ids, ['free_member'], 10)
                         }
@@ -402,7 +417,7 @@ class Partner(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct associate_member from res_partner where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct associate_member from res_partner where id in %s', (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -412,7 +427,16 @@ class Partner(osv.osv):
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive associated members.', ['associate_member'])
     ]
-
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}    
+        default = default.copy()
+        default['member_lines'] = []
+        return super(Partner, self).copy(cr, uid, id, default, context)
+    
 Partner()
 
 class product_template(osv.osv):
@@ -482,81 +506,7 @@ class ReportPartnerMemberYear(osv.osv):
     _auto = False
     _rec_name = 'year'
     _columns = {
-        'year': fields.char('Year', size='4', readonly=True, select=1),
-        'canceled_number': fields.integer('Canceled', readonly=True),
-        'waiting_number': fields.integer('Waiting', readonly=True),
-        'invoiced_number': fields.integer('Invoiced', readonly=True),
-        'paid_number': fields.integer('Paid', readonly=True),
-        'canceled_amount': fields.float('Canceled', digits=(16, 2), readonly=True),
-        'waiting_amount': fields.float('Waiting', digits=(16, 2), readonly=True),
-        'invoiced_amount': fields.float('Invoiced', digits=(16, 2), readonly=True),
-        'paid_amount': fields.float('Paid', digits=(16, 2), readonly=True),
-        'currency': fields.many2one('res.currency', 'Currency', readonly=True,
-            select=2),
-    }
-
-    def init(self, cr):
-        '''Create the view'''
-        cr.execute("""
-    CREATE OR REPLACE VIEW report_partner_member_year AS (
-        SELECT
-        MIN(id) AS id,
-        COUNT(ncanceled) as canceled_number,
-        COUNT(npaid) as paid_number,
-        COUNT(ninvoiced) as invoiced_number,
-        COUNT(nwaiting) as waiting_number,
-        SUM(acanceled) as canceled_amount,
-        SUM(apaid) as paid_amount,
-        SUM(ainvoiced) as invoiced_amount,
-        SUM(awaiting) as waiting_amount,
-        year,
-        currency
-        FROM (SELECT
-            CASE WHEN ai.state = 'cancel' THEN ml.id END AS ncanceled,
-            CASE WHEN ai.state = 'paid' THEN ml.id END AS npaid,
-            CASE WHEN ai.state = 'open' THEN ml.id END AS ninvoiced,
-            CASE WHEN (ai.state = 'draft' OR ai.state = 'proforma')
-                THEN ml.id END AS nwaiting,
-            CASE WHEN ai.state = 'cancel'
-                THEN SUM(ail.price_unit * ail.quantity * (1 - ail.discount / 100))
-            ELSE 0 END AS acanceled,
-            CASE WHEN ai.state = 'paid'
-                THEN SUM(ail.price_unit * ail.quantity * (1 - ail.discount / 100))
-            ELSE 0 END AS apaid,
-            CASE WHEN ai.state = 'open'
-                THEN SUM(ail.price_unit * ail.quantity * (1 - ail.discount / 100))
-            ELSE 0 END AS ainvoiced,
-            CASE WHEN (ai.state = 'draft' OR ai.state = 'proforma')
-                THEN SUM(ail.price_unit * ail.quantity * (1 - ail.discount / 100))
-            ELSE 0 END AS awaiting,
-            TO_CHAR(ml.date_from, 'YYYY') AS year,
-            ai.currency_id AS currency,
-            MIN(ml.id) AS id
-            FROM membership_membership_line ml
-            JOIN (account_invoice_line ail
-                LEFT JOIN account_invoice ai
-                ON (ail.invoice_id = ai.id))
-            ON (ml.account_invoice_line = ail.id)
-            JOIN res_partner p
-            ON (ml.partner = p.id)
-            GROUP BY TO_CHAR(ml.date_from, 'YYYY'), ai.state,
-            ai.currency_id, ml.id) AS foo
-        GROUP BY year, currency)
-                """)
-
-ReportPartnerMemberYear()
-
-
-class ReportPartnerMemberYearNew(osv.osv):
-    '''New Membership by Years'''
-
-    _name = 'report.partner_member.year_new'
-    _description = __doc__
-    _auto = False
-    _rec_name = 'year'
-
-    _columns = {
-        'year': fields.char('Year', size='4', readonly=True, select=1),
+        'year': fields.char('Year', size=4, readonly=True, select=1),
         'canceled_number': fields.integer('Canceled', readonly=True),
         'waiting_number': fields.integer('Waiting', readonly=True),
         'invoiced_number': fields.integer('Invoiced', readonly=True),
@@ -629,7 +579,7 @@ class ReportPartnerMemberYearNew(osv.osv):
     _auto = False
     _rec_name = 'year'
     _columns = {
-        'year': fields.char('Year', size='4', readonly=True, select=1),
+        'year': fields.char('Year', size=4, readonly=True, select=1),
         'canceled_number': fields.integer('Canceled', readonly=True),
         'waiting_number': fields.integer('Waiting', readonly=True),
         'invoiced_number': fields.integer('Invoiced', readonly=True),
@@ -709,22 +659,23 @@ class account_invoice_line(osv.osv):
         res = super(account_invoice_line, self).write(cr, uid, ids, vals, context=context)
         member_line_obj = self.pool.get('membership.membership_line')
         for line in self.browse(cr, uid, ids):
-            ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',line.id)])
-            if line.product_id and line.product_id.membership and not ml_ids:
-                # Product line has changed to a membership product
-                date_from = line.product_id.membership_date_from
-                date_to = line.product_id.membership_date_to
-                if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
-                    date_from = line.invoice_id.date_invoice
-                line_id = member_line_obj.create(cr, uid, {
-                    'partner': line.invoice_id.partner_id.id,
-                    'date_from': date_from,
-                    'date_to': date_to,
-                    'account_invoice_line': line.id,
-                    })
-            if line.product_id and not line.product_id.membership and ml_ids:
-                # Product line has changed to a non membership product
-                member_line_obj.unlink(cr, uid, ml_ids, context=context)
+            if line.invoice_id.type == 'out_invoice':
+                ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',line.id)])
+                if line.product_id and line.product_id.membership and not ml_ids:
+                    # Product line has changed to a membership product
+                    date_from = line.product_id.membership_date_from
+                    date_to = line.product_id.membership_date_to
+                    if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
+                        date_from = line.invoice_id.date_invoice
+                    line_id = member_line_obj.create(cr, uid, {
+                        'partner': line.invoice_id.partner_id.id,
+                        'date_from': date_from,
+                        'date_to': date_to,
+                        'account_invoice_line': line.id,
+                        })
+                if line.product_id and not line.product_id.membership and ml_ids:
+                    # Product line has changed to a non membership product
+                    member_line_obj.unlink(cr, uid, ml_ids, context=context)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
@@ -739,20 +690,21 @@ class account_invoice_line(osv.osv):
     def create(self, cr, uid, vals, context={}):
         result = super(account_invoice_line, self).create(cr, uid, vals, context)
         line = self.browse(cr, uid, result)
-        member_line_obj = self.pool.get('membership.membership_line')
-        ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',line.id)])
-        if line.product_id and line.product_id.membership and not ml_ids:
-            # Product line is a membership product
-            date_from = line.product_id.membership_date_from
-            date_to = line.product_id.membership_date_to
-            if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
-                date_from = line.invoice_id.date_invoice
-            line_id = member_line_obj.create(cr, uid, {
-                'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
-                'date_from': date_from,
-                'date_to': date_to,
-                'account_invoice_line': line.id,
-                })
+        if line.invoice_id.type == 'out_invoice':
+            member_line_obj = self.pool.get('membership.membership_line')
+            ml_ids = member_line_obj.search(cr, uid, [('account_invoice_line','=',line.id)])
+            if line.product_id and line.product_id.membership and not ml_ids:
+                # Product line is a membership product
+                date_from = line.product_id.membership_date_from
+                date_to = line.product_id.membership_date_to
+                if line.invoice_id.date_invoice > date_from and line.invoice_id.date_invoice < date_to:
+                    date_from = line.invoice_id.date_invoice
+                line_id = member_line_obj.create(cr, uid, {
+                    'partner': line.invoice_id.partner_id and line.invoice_id.partner_id.id or False,
+                    'date_from': date_from,
+                    'date_to': date_to,
+                    'account_invoice_line': line.id,
+                    })
         return result
 
 account_invoice_line()

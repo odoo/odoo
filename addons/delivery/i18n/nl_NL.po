@@ -4,24 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:49+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:43:23+0000\n"
+"PO-Revision-Date: 2010-09-02 13:43:23+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: delivery
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -41,17 +38,17 @@ msgstr "Afleveradres"
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
 msgid "Delivery by Poste"
-msgstr ""
+msgstr "Aflevering per post"
 
 #. module: delivery
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave!"
 
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fout! U kunt geen recursieve geassocieerde leden aanmaken."
 
 #. module: delivery
 #: field:delivery.grid,state_ids:0
@@ -61,12 +58,12 @@ msgstr "Provincies"
 #. module: delivery
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packing."
-msgstr ""
+msgstr "Deze leveringsmethode wordt gebruikt bij het \"Facturering op basis van verzending\""
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -87,7 +84,7 @@ msgstr "Vast"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
-msgstr ""
+msgstr "De order moet in status \"Concept\" zijn om leveringsregels toe te voegen"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -116,7 +113,7 @@ msgstr "Variabel"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Geen leveringsmatrix match gevonden voor deze vervoerder!"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -141,7 +138,7 @@ msgstr "Planning"
 #. module: delivery
 #: view:res.partner:0
 msgid "Deliveries Properties"
-msgstr ""
+msgstr "Afleveringseigenschappen"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -202,11 +199,8 @@ msgstr "Landen"
 
 #. module: delivery
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde "
-"categorie liggen."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Fout: de standaard meeteenheid en de inkoopeenheid moet in de zelfde categorie liggen."
 
 #. module: delivery
 #: view:sale.order:0
@@ -222,7 +216,7 @@ msgstr "Variabele Factor"
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "No grid avaible !"
-msgstr ""
+msgstr "Geen leveringsmatrix beschikbaar!"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -252,7 +246,7 @@ msgstr "Maximumwaarde"
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,delivery:0
 msgid "Add Delivery Costs"
-msgstr ""
+msgstr "Afleveringskosten toevoegen"
 
 #. module: delivery
 #: wizard_field:delivery.sale.order,init,carrier_id:0
@@ -265,7 +259,7 @@ msgstr "Verzendwijze"
 #. module: delivery
 #: field:sale.order,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -275,13 +269,13 @@ msgstr "Operator"
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
 msgid "Carriers and deliveries"
-msgstr ""
+msgstr "Transporteurs en leveringen"
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:0
 #, python-format
 msgid "Order not in draft state !"
-msgstr ""
+msgstr "Order niet in status \"Concept\"!"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -307,11 +301,8 @@ msgstr "Transporteur"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
-msgid ""
-"Allows you to add delivery methods in sales orders and packing. You can "
-"define your own carrier and delivery grids for prices. When creating "
-"invoices from picking, Open ERP is able to add and compute the shipping line."
-msgstr ""
+msgid "Allows you to add delivery methods in sales orders and packing. You can define your own carrier and delivery grids for prices. When creating invoices from picking, Open ERP is able to add and compute the shipping line."
+msgstr "Hiermee kunt u afleveringsmethoden toe voegen in verkooporders en picking. U kunt uw eigen transporteur en leveringsroosters met prijzen configureren. Bij het aanmaken van facturen op basis van verzending, is OpenERP in staat om een verzendregel te berekenen en toe te voegen aan de factuur."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -322,30 +313,29 @@ msgstr "Poscode Afleverradres"
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
+msgstr "Geen bijpassende regel gevonden voor deze order in de gekozen leveringsmatrix!"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree3
 msgid "Packing to be invoiced"
-msgstr ""
+msgstr "Te factureren verzending"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:0
 #, python-format
 msgid "No price available !"
-msgstr ""
+msgstr "Geen prijs beschikbaar!"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on packing."
-msgstr ""
+msgid "Complete this field if you plan to invoice the shipping based on packing."
+msgstr "Vul dit veld in als u van plan te facturen op basis van verzending."
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
 msgid "Delivery Costs"
-msgstr ""
+msgstr "Afleveringskosten"
 
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
@@ -366,7 +356,7 @@ msgstr "Afleverplanningen"
 #: code:addons/delivery/stock.py:0
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "De vervoerder %s (id: %d) heeft geen leveringsmatrix!"
 
 #. module: delivery
 #: wizard_button:delivery.sale.order,init,end:0
@@ -377,7 +367,7 @@ msgstr "Annuleren"
 #: code:addons/delivery/stock.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Waarschuwing"
 
 #. module: delivery
 #: field:sale.order,carrier_id:0
@@ -400,3 +390,4 @@ msgstr "De BTW lijkt niet correct te zijn."
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Soort Prijs"
+

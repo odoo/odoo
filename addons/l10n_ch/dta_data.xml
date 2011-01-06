@@ -1,150 +1,162 @@
 <?xml version="1.0"?>
 <openerp>
-	<data>
+    <data>
 
 
-	<!-- Memo :
-	   Mandatory for all kind of dta payment:
-	   * for the partner bank:
-	     - a bank name
-	   * for the company:
-	     - iban
-	   Mandatory for iban payment:
-	   * for the partner:
-	     - iban
-	     - BIC / iban or a city
-	   Mandatory for bvrpost/bvrbank payment:
-	   * for the partner:
-	     - bvr ref number on the partner bank
-	   Mandatory for bvbank payment:
-	   * for the partner:
-	     - bank number
-	   Mandatory for bvpost payment:
-	   * for the partner:
-	     - post number
-	-->
+    <!-- Memo :
+       Mandatory for all kind of dta payment:
+       * for the partner bank:
+         - a bank name
+       * for the company:
+         - iban
+       Mandatory for iban payment:
+       * for the partner:
+         - iban
+         - BIC / iban or a city
+       Mandatory for bvrpost/bvrbank payment:
+       * for the partner:
+         - bvr ref number on the partner bank
+       Mandatory for bvbank payment:
+       * for the partner:
+         - bank number
+       Mandatory for bvpost payment:
+       * for the partner:
+         - post number
+    -->
 
 
   <!-- Define new types -->
   <record model="res.partner.bank.type" id="bank_dta">
-	<field name="name">Ordering party DTA</field>
-	<field name="code">dta_company</field>
+    <field name="name">Ordering party DTA</field>
+    <field name="code">dta_company</field>
   </record>
 
   <record model="res.partner.bank.type" id="dta_iban">
-	<field name="name">DTA-IBAN</field>
-	<field name="code">dta_iban</field>
+    <field name="name">DTA-IBAN</field>
+    <field name="code">dta_iban</field>
   </record>
 
   <record model="res.partner.bank.type" id="bvrbank">
-	<field name="name">DTA-BVRBANK</field>
-	<field name="code">bvrbank</field>
+    <field name="name">DTA-BVRBANK</field>
+    <field name="code">bvrbank</field>
   </record>
 
   <record model="res.partner.bank.type" id="bvrpost">
-	<field name="name">DTA-BVRPOST</field>
-	<field name="code">bvrpost</field>
+    <field name="name">DTA-BVRPOST</field>
+    <field name="code">bvrpost</field>
   </record>
 
   <record model="res.partner.bank.type" id="bvpost">
-	<field name="name">DTA-BVPOST</field>
-	<field name="code">bvpost</field>
+    <field name="name">DTA-BVPOST</field>
+    <field name="code">bvpost</field>
   </record>
 
   <record model="res.partner.bank.type" id="bvbank">
-	<field name="name">DTA-BVBANK</field>
-	<field name="code">bvbank</field>
+    <field name="name">DTA-BVBANK</field>
+    <field name="code">bvbank</field>
   </record>
 
 
 
   <!-- Adjust the fields attributes for dta_company-->
   <record model="res.partner.bank.type.field" id="iban_field">
-	<field name="name">iban</field>
-	<field name="bank_type_id" ref="bank_dta"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">iban</field>
+    <field name="bank_type_id" ref="bank_dta"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
 
 
   <!-- Adjust the fields attributes for dta_iban-->
   <record model="res.partner.bank.type.field" id="iban_field_iban">
-	<field name="name">iban</field>
-	<field name="bank_type_id" ref="dta_iban"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">iban</field>
+    <field name="bank_type_id" ref="dta_iban"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
   <record model="res.partner.bank.type.field" id="bank_field_iban">
-	<field name="name">bank</field>
-	<field name="bank_type_id" ref="dta_iban"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">bank</field>
+    <field name="bank_type_id" ref="dta_iban"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
 
 
   <!-- Adjust the fields attributes for bvrbank-->
   <record model="res.partner.bank.type.field" id="bank_field_bvrbank">
-	<field name="name">bank</field>
-	<field name="bank_type_id" ref="bvrbank"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">bank</field>
+    <field name="bank_type_id" ref="bvrbank"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
   <record model="res.partner.bank.type.field" id="bvr_num_field_bvrbank">
-	<field name="name">bvr_number</field>
-	<field name="bank_type_id" ref="bvrbank"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">bvr_number</field>
+    <field name="bank_type_id" ref="bvrbank"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
 
   <!-- Adjust the fields attributes for bvrpost-->
   <record model="res.partner.bank.type.field" id="bank_field_bvrpost">
-	<field name="name">bank</field>
-	<field name="bank_type_id" ref="bvrpost"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">bank</field>
+    <field name="bank_type_id" ref="bvrpost"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
   <record model="res.partner.bank.type.field" id="bvr_num_field_bvrpost">
-	<field name="name">bvr_number</field>
-	<field name="bank_type_id" ref="bvrpost"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">bvr_number</field>
+    <field name="bank_type_id" ref="bvrpost"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
 
   <!-- Adjust the fields attributes for bvpost -->
   <record model="res.partner.bank.type.field" id="bank_field_bvpost">
-	<field name="name">bank</field>
-	<field name="bank_type_id" ref="bvpost"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">bank</field>
+    <field name="bank_type_id" ref="bvpost"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
   <record model="res.partner.bank.type.field" id="post_field_bvpost">
-	<field name="name">post_number</field>
-	<field name="bank_type_id" ref="bvpost"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">post_number</field>
+    <field name="bank_type_id" ref="bvpost"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
 
   <!-- Adjust the fields attributes for bvbank -->
+  <record model="res.partner.bank.type.field" id="iban_field_bvbank">
+    <field name="name">iban</field>
+    <field name="bank_type_id" ref="bvbank"/>
+    <field name="required" eval="False"/>
+    <field name="readonly" eval="False"/>
+  </record>
   <record model="res.partner.bank.type.field" id="bank_field_bvbank">
-	<field name="name">bank</field>
-	<field name="bank_type_id" ref="bvbank"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">bank</field>
+    <field name="bank_type_id" ref="bvbank"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
   <record model="res.partner.bank.type.field" id="acc_num_field_bvbank">
-	<field name="name">acc_number</field>
-	<field name="bank_type_id" ref="bvbank"/>
-	<field name="required" eval="True"/>
-	<field name="readonly" eval="False"/>
+    <field name="name">acc_number</field>
+    <field name="bank_type_id" ref="bvbank"/>
+    <field name="required" eval="True"/>
+    <field name="readonly" eval="False"/>
   </record>
 
 
   <!-- Define a payment type -->
   <record model="payment.type" id="payment_type_dta">
-	<field name="name">DTA</field>
-	<field name="code">dta</field>
-	<field name="suitable_bank_types" 
-		   eval="[(6,0,[ref('dta_iban'),ref('bvrbank'),ref('bvrpost'),ref('bvbank'),ref('bvpost')])]"/>
+    <field name="name">DTA</field>
+    <field name="code">dta</field>
+    <field name="suitable_bank_types" 
+           eval="[(6,0,[ref('dta_iban'),ref('bvrbank'),ref('bvrpost'),ref('bvbank'),ref('bvpost')])]"/>
+  </record>
+  <record model="payment.type" id="payment_type_opae">
+    <field name="name">OPAE</field>
+    <field name="code">opae</field>
+    <field name="suitable_bank_types" 
+     eval="[(6,0,[ref('dta_iban'),ref('bvrbank'),ref('bvrpost'),ref('bvbank'),ref('bvpost')])]"/>
   </record>
 
 

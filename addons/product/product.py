@@ -114,6 +114,7 @@ class product_uom(osv.osv):
 
     def _compute_qty_obj(self, cr, uid, from_unit, qty, to_unit, context={}):
         if from_unit.category_id.id <> to_unit.category_id.id:
+#            raise osv.except_osv(_('Warning !'),_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!')% (from_unit.name,to_unit.name))
             return qty
         if from_unit.factor_inv_data:
             amount = qty * from_unit.factor_inv_data
@@ -135,6 +136,7 @@ class product_uom(osv.osv):
         else:
             from_unit, to_unit = uoms[-1], uoms[0]
         if from_unit.category_id.id <> to_unit.category_id.id:
+#            raise osv.except_osv(_('Warning !'),_('Conversion from Product UoM %s to Default UoM %s is not possible as they both belong to different Category!')% (from_unit.name,to_unit.name))
             return price
         if from_unit.factor_inv_data:
             amount = price / from_unit.factor_inv_data
@@ -204,7 +206,7 @@ class product_category(osv.osv):
     def _check_recursion(self, cr, uid, ids):
         level = 100
         while len(ids):
-            cr.execute('select distinct parent_id from product_category where id in ('+','.join(map(str,ids))+')')
+            cr.execute('select distinct parent_id from product_category where id in %s', (tuple(ids),))
             ids = filter(None, map(lambda x:x[0], cr.fetchall()))
             if not level:
                 return False
@@ -265,7 +267,7 @@ class product_template(osv.osv):
             help='Used by companies that manages two unit of measure: invoicing and stock management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default UOM.'),
         'uos_coeff': fields.float('UOM -> UOS Coeff', digits=(16,4),
             help='Coefficient to convert UOM to UOS\n'
-            ' uom = uos * coeff'),
+            ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
         'seller_delay': fields.function(_calc_seller_delay, method=True, type='integer', string='Supplier Lead Time', help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
@@ -404,7 +406,7 @@ class product_product(osv.osv):
         for p in self.browse(cr, uid, ids, context):
             data = self._get_partner_code_name(cr, uid, [], p.id, context.get('partner_id', None), context)
             if not data['code']:
-                data['code'] = p.code
+                data['code'] = p.default_code
             if not data['name']:
                 data['name'] = p.name
             res[p.id] = (data['code'] and ('['+data['code']+'] ') or '') + \
@@ -550,6 +552,7 @@ class product_packaging(osv.osv):
     _name = "product.packaging"
     _description = "Packaging"
     _rec_name = 'ean'
+    _order = "sequence"
     _columns = {
         'sequence': fields.integer('Sequence'),
         'name' : fields.char('Description', size=64),
@@ -583,14 +586,6 @@ class product_packaging(osv.osv):
         'sequence' : lambda *a : 1,
         'ul' : _get_1st_ul,
     }
-
-    def checksum(ean):
-        salt = '31' * 6 + '3'
-        sum = 0
-        for ean_part, salt_part in zip(ean, salt):
-            sum += int(ean_part) * int(salt_part)
-        return (10 - (sum % 10)) % 10
-    checksum = staticmethod(checksum)
 
 product_packaging()
 

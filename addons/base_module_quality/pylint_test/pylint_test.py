@@ -33,7 +33,6 @@ class quality_test(base_module_quality.abstract_quality_check):
         self.note = _("""This test uses Pylint and checks if the module satisfies the coding standard of Python. See http://www.logilab.org/project/name/pylint for further info.\n """)
         self.bool_installed_only = False
         self.min_score = 30
-        return None
 
     def run_test(self, cr, uid, module_path):
         config_file_path = config['addons_path']+'/base_module_quality/pylint_test/pylint_test_config.txt'

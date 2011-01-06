@@ -56,7 +56,13 @@ class report_custom(report_int):
         minbenef = 999999999999999999999
         maxbenef = 0
 
-        cr.execute('select probability, planned_revenue, planned_cost, user_id, res_users.name as name from crm_case left join res_users on (crm_case.user_id=res_users.id) where crm_case.id in ('+','.join(map(str,ids))+') order by user_id')
+        cr.execute('SELECT probability, planned_revenue, planned_cost, '\
+                   'user_id, res_users.name AS name '\
+                   'FROM crm_case '\
+                   'LEFT JOIN res_users ON (crm_case.user_id=res_users.id) '\
+                   'WHERE crm_case.id IN %s '\
+                   'ORDER BY user_id',
+                   (tuple(ids),))
         res = cr.dictfetchall()
 
         for row in res:
@@ -71,12 +77,12 @@ class report_custom(report_int):
             if benefit < minbenef:
                 minbenef = benefit
 
-            tuple = (proba * 100,  benefit)
+            tuple_benefit = (proba * 100,  benefit)
             responsible_data.setdefault(userid, [])
-            responsible_data[userid].append(tuple)
+            responsible_data[userid].append(tuple_benefit)
 
-            tuple = (proba * 100, cost, benefit)
-            data.append(tuple)
+            tuple_benefit = (proba * 100, cost, benefit)
+            data.append(tuple_benefit)
 
             responsible_names[userid] = (row['name'] or '/').replace('/','//')
 
@@ -125,7 +131,6 @@ class report_custom(report_int):
             legend = legend.T()
         )
 
-        #import pydb; pydb.debugger()
         for k, d in responsible_data.iteritems():
             fill = fill_style.Plain(bgcolor=color.T(r=random.random(), g=random.random(), b=random.random()))
             tick = tick_mark.Square(size=6, fill_style=fill)

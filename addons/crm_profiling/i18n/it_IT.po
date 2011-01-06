@@ -4,25 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:56+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:50:25+0000\n"
+"PO-Revision-Date: 2010-09-02 13:50:25+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: crm_profiling
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-"speciali!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri speciali!"
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -39,17 +35,17 @@ msgstr "Questionario Aperto"
 #. module: crm_profiling
 #: field:crm.segmentation,child_ids:0
 msgid "Child Profiles"
-msgstr ""
+msgstr "Profili figli"
 
 #. module: crm_profiling
 #: model:ir.module.module,shortdesc:crm_profiling.module_meta_information
 msgid "crm_profiling management"
-msgstr ""
+msgstr "Gestione crm_profiling"
 
 #. module: crm_profiling
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Nome di modulo non valido nella definizione dell'azione."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,name:0
@@ -70,7 +66,7 @@ msgstr "Descrizione"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_no:0
 msgid "Excluded Answers"
-msgstr ""
+msgstr "Escludi risposte"
 
 #. module: crm_profiling
 #: view:crm_profiling.answer:0
@@ -102,11 +98,13 @@ msgid "Questionnaires"
 msgstr "Questionari"
 
 #. module: crm_profiling
+#: code:addons/crm_profiling/crm_profiling.py:0
 #: field:crm_profiling.questionnaire,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
 #: wizard_view:open_questionnaire,init:0
+#, python-format
 msgid "Questionnaire"
-msgstr "Questionario"
+msgstr "Questionnaire"
 
 #. module: crm_profiling
 #: constraint:crm.segmentation:0
@@ -127,14 +125,12 @@ msgstr "Risposte Disponibili"
 #. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
-msgstr ""
+msgstr "Includi Risposte"
 
 #. module: crm_profiling
 #: help:crm.segmentation,profiling_active:0
-msgid ""
-"Check this box if you want to use this tab as part of the segmentation rule. "
-"If not checked, the criteria beneath will be ignored"
-msgstr ""
+msgid "Check this box if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored"
+msgstr "Seleziona questa casella se si desidera utilizzare questa scheda come parte della regola di segmentazione. Se non è selezionata, i criteri di sotto verranno ignorati"
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -169,3 +165,4 @@ msgstr "Utilizzare un Questionario"
 #: wizard_button:open_questionnaire,open,compute:0
 msgid "Save Data"
 msgstr "Salva Dati"
+

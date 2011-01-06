@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 14:12+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:43:23+0000\n"
+"PO-Revision-Date: 2010-09-02 13:43:23+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -30,12 +29,14 @@ msgstr "Object"
 #. module: subscription
 #: code:addons/subscription/subscription.py:0
 #, python-format
-msgid ""
-"Please provide another source document.\n"
-"This one does not exist !"
-msgstr ""
-"Geef aub een ander brondocument aan. \n"
-"Deze bestaat niet."
+msgid "Please provide another source document.\nThis one does not exist !"
+msgstr "Please provide another source document.\nThis one does not exist !"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
+msgstr "You cannot modify the Object linked to the Document Type!\nCreate another Document instead !"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -65,14 +66,12 @@ msgstr "Huidige Datum"
 #. module: subscription
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr ""
+msgstr "Ongeldige modelnaam in de actie-definitie."
 
 #. module: subscription
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
 
 #. module: subscription
 #: selection:subscription.subscription,interval_type:0
@@ -83,6 +82,12 @@ msgstr "Weken"
 #: field:subscription.subscription,state:0
 msgid "Status"
 msgstr "Status"
+
+#. module: subscription
+#: code:addons/subscription/subscription.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error !"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document_fields
@@ -106,11 +111,8 @@ msgstr "Naar Concept"
 
 #. module: subscription
 #: model:ir.module.module,description:subscription.module_meta_information
-msgid ""
-"Module allows to create new documents and add subscription on that document."
-msgstr ""
-"Deze module maakt het mogelijk om nieuwe documenten aan te maken en "
-"abonnementen aan dat document te koppelen"
+msgid "Module allows to create new documents and add subscription on that document."
+msgstr "Deze module maakt het mogelijk om nieuwe documenten aan te maken en abonnementen aan dat document te koppelen"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -150,7 +152,7 @@ msgstr "Aantal Documenten"
 #. module: subscription
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "Ongeldige XML voor overzicht"
+msgstr "Ongeldige XML voor weergave!"
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
@@ -289,3 +291,4 @@ msgstr "Documenten gecreëerd"
 #: model:ir.ui.menu,name:subscription.menu_tools
 msgid "Tools"
 msgstr "Gereedschappen"
+

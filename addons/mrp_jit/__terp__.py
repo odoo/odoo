@@ -28,18 +28,20 @@
     'description': """
     This module allows Just In Time computation of all procurement.
 
-    If you install this module, you will not have to run the schedulers anymore.
-    Each document is computed in real time. Note that this module can slow down your
-    system a little bit.
+    If you install this module, you will not have to run the regular procurement 
+    scheduler anymore (but you still need to run the minimum order point rule 
+    scheduler, or for example let it run daily.)
+    All procurement orders will be processed immediately, which could in some
+    cases entail a small performance impact.
 
     It may also increase your stock size because products are reserved as soon
-    as possible. In that case, you can not use priorities any more on the different
-    picking.
+    as possible and the scheduler time range is not taken into account anymore. 
+    In that case, you can not use priorities any more on the different picking.
     """,
     'author': 'Tiny',
     'depends': ['mrp', 'sale'],
     'update_xml': ['mrp_jit.xml'],
-    'demo_xml': [],
+    'demo_xml': ['test/mrp_jit_test.xml'],
     'installable': True,
     'active': False,
     'certificate': '0086634760061',

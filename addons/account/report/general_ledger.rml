@@ -60,38 +60,15 @@
     <paraStyle name="P1" fontName="Helvetica" fontSize="20.0" leading="25" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P2" fontName="Helvetica" fontSize="8.3" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="date" fontName="Helvetica" fontSize="8.3" leading="10" spaceBefore="0.0" spaceAfter="6.0" alignment="CENTER"/>
-    <paraStyle name="P2_content" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P3" fontName="Helvetica" fontSize="8.3" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P3_centre" fontName="Helvetica" fontSize="8.3" leading="10" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P3_content" fontName="Helvetica" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P4" fontName="Helvetica" fontSize="8.3" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P4_content" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P5" fontName="Helvetica" fontSize="10.0" leading="13" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P6" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P7" fontName="Helvetica" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P8" fontName="Helvetica" fontSize="11.0" leading="14" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P9" fontName="Helvetica" fontSize="8.0" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="P9b" fontName="Helvetica-Bold" fontSize="8.5" leading="10" alignment="RIGHT" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P10" fontName="Helvetica" alignment="CENTER"/>
-    <paraStyle name="P11" fontName="Helvetica" fontSize="11.0" leading="14"/>
-    <paraStyle name="P12" fontName="Helvetica" fontSize="14.0" leading="17"/>
-    <paraStyle name="P13" fontName="Helvetica-Bold" fontSize="10.0" leading="8" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P14" fontName="Helvetica" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P15" fontName="Helvetica-Bold" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P16" rightIndent="17.0" leftIndent="-0.0" fontName="Times-Roman" fontSize="8.0" leading="10" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="P17" fontName="Helvetica" alignment="LEFT" fontSize="12.0"  spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica-Bold" fontSize="8.5"/>
-    <paraStyle name="Account" fontName="Helvetica"/>
-    <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="List" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Table Contents" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Table Heading" fontName="Helvetica" alignment="CENTER" spaceBefore="0.0" spaceAfter="6.0"/>
-    <paraStyle name="Caption" fontName="Helvetica" fontSize="10.0" leading="13" spaceBefore="6.0" spaceAfter="6.0"/>
-    <paraStyle name="Index" fontName="Helvetica"/>
   </stylesheet>
   <story>
    <para>[[ repeatIn(objects, 'a') ]]</para>
-  	 <blockTable colWidths="66.0,124.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+  	 <blockTable rowHeights="0.65cm" colWidths="66.0,124.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         <tr>
           <td><para style="date">Date</para></td>
           <td><para style="P3">Partner</para></td>
@@ -105,10 +82,10 @@
      </blockTable>
       <section>    
      <para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-     <blockTable colWidths="66.0,124.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_content">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
+     <blockTable rowHeights="0.65cm" colWidths="66.0,124.0,70.0,40.0,80.0,59.0,52.0,54.0" style="tbl_content">[[ data['form']['amount_currency'] == False or removeParentNode('blockTable') ]]
         <tr>
           <td>
-	        <blockTable colWidths="280.0,100.0,52.5,52.5,52.5" style="Table5">
+	        <blockTable rowHeights="0.65cm" colWidths="280.0,100.0,52.5,52.5,52.5" style="Table5">
 			<tr>
 			  <td><para style="Standard">[[ o.code or '']] [[ o.name or '']]</para></td>
 			  <td><para style="Standard"></para></td>
@@ -141,7 +118,7 @@
     
     
 
-     <blockTable colWidths="72.0,93.0,66.0,40.0,100.0,50.0,50.0,50.0,40.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+     <blockTable rowHeights="0.65cm" colWidths="72.0,93.0,66.0,40.0,100.0,50.0,50.0,50.0,40.0" style="tbl_header" repeatRows="1">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
         <tr>
           <td><para style="date">Date</para></td>
           <td><para style="P3">Partner</para></td>
@@ -156,7 +133,7 @@
      </blockTable>
      <section>
      <para>[[ repeatIn(get_children_accounts(a,data['form']), 'o') ]]</para>
-     <blockTable colWidths="72.0,93.0,66.0,40.0,100.0,50.0,50.0,50.0,40.0" style="tbl_content">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
+     <blockTable rowHeights="0.65cm" colWidths="72.0,93.0,66.0,40.0,100.0,50.0,50.0,50.0,40.0" style="tbl_content">[[ data['form']['amount_currency'] == True or removeParentNode('blockTable') ]]
        <tr>
           <td>
 	      	<blockTable colWidths="264.00,100.0,50.0,50.0,49.0,40.00" style="Table5">
@@ -166,7 +143,7 @@
 			  <td alignment="right"><para style="P9b"><u>[[ formatLang(sum_debit_account(o, data['form'])) ]]</u></para></td>
 			  <td alignment="right"><para style="P9b"><u>[[formatLang(sum_credit_account(o, data['form'])) ]]</u></para></td>
 			  <td><para style="P9b"><u>[[formatLang(sum_solde_account(o, data['form'])) ]]</u></para></td>
-			  <td><para style="P9b"><u> [[ formatLang(sum_currency_amount_account(a, data['form'])) ]]</u></para></td>
+			  <td><para style="P9b"><u> [[ formatLang(sum_currency_amount_account(a, data['form'])) ]] [[ get_currency() ]]</u></para></td>
 			</tr>
 			</blockTable>
 		  </td>

@@ -38,7 +38,6 @@ PEP-8 Test , copyright of py files check, method can not call from loops
         self.good_standard = 0
         self.result_py = {}
         self.min_score = 40
-        return None
 
     def run_test(self, cr, uid, module_path):
         list_files = os.listdir(module_path)

@@ -33,18 +33,29 @@ class stock_picking(osv.osv):
 
     def _cal_weight(self, cr, uid, ids, name, args, context=None):
         res = {}
-        data_picking = self.browse(cr, uid, ids, context)
-        for picking in data_picking:
+        uom_obj = self.pool.get('product.uom')
+        for picking in self.browse(cr, uid, ids, context):
             total_weight = 0.00
-            if picking.move_lines:
+            for move in picking.move_lines:
                 weight = 0.00
-                for move in picking.move_lines:
-                    if move.product_id.weight > 0.00:
-                        weight = (move.product_uos_qty * move.product_id.weight)
-                        total_weight += weight
+                if move.product_id.weight > 0.00:
+                    converted_qty = move.product_qty
+#                    from_uom = move.product_uom.id
+#                    pass_qty = move.product_qty
+#                    to_uom = move.product_id.uom_id.id
+#                    if picking.type == 'out':
+#                        if move.product_uos:
+#                            converted_qty = move.product_uos_qty
+#                            if move.product_uos.id <> move.product_uom.id:
+#                                converted_qty = (move.product_uos_qty/move.product_id.uos_coeff)
+#                            pass_qty = converted_qty
+                    if move.product_uom.id <> move.product_id.uom_id.id:
+                        converted_qty = uom_obj._compute_qty(cr, uid, move.product_uom.id, move.product_qty, move.product_id.uom_id.id)
+
+                    weight = (converted_qty * move.product_id.weight)
+                    total_weight += weight
             res[picking.id] = total_weight
         return res
-
 
     def _get_picking_line(self, cr, uid, ids, context=None):
         result = {}
@@ -55,10 +66,10 @@ class stock_picking(osv.osv):
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
-        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight',digits=(16, int(tools.config['price_accuracy'])),
+        'weight': fields.function(_cal_weight, method=True, type='float', string='Weight',digits=(16, 6),
                   store={
                  'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
-                 'stock.move': (_get_picking_line, ['product_id','product_uos_qty'], 20),
+                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
                  }),
         }
 

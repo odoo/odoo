@@ -125,14 +125,15 @@ Thanks,
 class followup_all_print(wizard.interface):
     def _update_partners(self, cr, uid, data, context):
         to_update = data['form']['to_update']
-        for id in to_update.keys():
-            if to_update[id]['partner_id'] in data['form']['partner_ids'][0][2]:
-                cr.execute(
-                    "UPDATE account_move_line "\
-                    "SET followup_line_id=%s, followup_date=%s "\
-                    "WHERE id=%s",
-                    (to_update[id]['level'],
-                    data['form']['date'], int(id),))
+        for partner_id in data['form']['partner_ids'][0][2]:
+            if to_update.has_key(partner_id):
+                for aml_id, aml_level in to_update[partner_id].items():
+                    cr.execute(
+                        "UPDATE account_move_line "\
+                        "SET followup_line_id=%s, followup_date=%s "\
+                        "WHERE id=%s",
+                        ( aml_level,
+                        data['form']['date'], int(aml_id),))
         return {}
 
     def _sendmail(self ,cr, uid, data, context):
@@ -265,11 +266,13 @@ class followup_all_print(wizard.interface):
                 if date_maturity <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                     if partner_id not in partner_list:
                         partner_list.append(partner_id)
-                    to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
+                        to_update[partner_id] = {}
+                    to_update[partner_id].update({id: fups[followup_line_id][1],})
             elif date and date <= fups[followup_line_id][0].strftime('%Y-%m-%d'):
                 if partner_id not in partner_list:
                     partner_list.append(partner_id)
-                to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': partner_id}
+                    to_update[partner_id] = {}
+                to_update[partner_id].update({id: fups[followup_line_id][1],})
         
         message = pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
         

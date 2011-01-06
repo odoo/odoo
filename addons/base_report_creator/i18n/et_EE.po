@@ -4,25 +4,23 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-06-25 19:04+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:09+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: base_report_creator
 #: help:base_report_creator.report.filter,expression:0
-msgid ""
-"Provide an expression for the field based on which you want to filter the "
-"records.\n"
+msgid "Provide an expression for the field based on which you want to filter the records.\n"
 " e.g. res_partner.id=3"
-msgstr ""
+msgstr "Provide an expression for the field based on which you want to filter the records.\n"
+" e.g. res_partner.id=3"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_graph_type:0
@@ -47,10 +45,13 @@ msgstr "Graafiku laad"
 #. module: base_report_creator
 #: code:addons/base_report_creator/base_report_creator.py:0
 #, python-format
-msgid ""
-"These is/are model(s) (%s) in selection which is/are not related to any "
-"other model"
-msgstr ""
+msgid "These is/are model(s) (%s) in selection which is/are not related to any other model"
+msgstr "These is/are model(s) (%s) in selection which is/are not related to any other model"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Legend"
+msgstr "Legend"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -66,6 +67,12 @@ msgstr "Väärtus"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_set_filter_fields
 msgid "Set Filter Fields"
 msgstr "Määra filtri väljad"
+
+#. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "UserError"
+msgstr "UserError"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
@@ -115,7 +122,7 @@ msgstr "Kohandatud aruanded"
 #: code:addons/base_report_creator/base_report_creator.py:0
 #, python-format
 msgid "No Related Models!!"
-msgstr ""
+msgstr "No Related Models!!"
 
 #. module: base_report_creator
 #: constraint:ir.actions.act_window:0
@@ -158,6 +165,11 @@ msgid "Valid"
 msgstr "Kehtiv"
 
 #. module: base_report_creator
+#: model:ir.actions.act_window,name:base_report_creator.base_report_creator_action
+msgid "Custom Report"
+msgstr "Kohandatud aruanne"
+
+#. module: base_report_creator
 #: view:base_report_creator.report:0
 msgid "Add filter"
 msgstr "Lisa filter"
@@ -166,6 +178,13 @@ msgstr "Lisa filter"
 #: model:ir.actions.wizard,name:base_report_creator.wizard_menu_create
 msgid "Create Menu for Report"
 msgstr "Loo menüü aruande jaoks"
+
+#. module: base_report_creator
+#: selection:base_report_creator.report,view_type1:0
+#: selection:base_report_creator.report,view_type2:0
+#: selection:base_report_creator.report,view_type3:0
+msgid "Form"
+msgstr "Form"
 
 #. module: base_report_creator
 #: selection:base_report_creator.report,view_type3:0
@@ -185,6 +204,12 @@ msgstr "Aruanne"
 #: selection:base_report_creator.report.fields,calendar_mode:0
 msgid "Starting Date"
 msgstr "Alguskuupäev"
+
+#. module: base_report_creator
+#: code:addons/base_report_creator/wizard/base_report_creator_open.py:0
+#, python-format
+msgid "No Wizards available for this object!"
+msgstr "No Wizards available for this object!"
 
 #. module: base_report_creator
 #: constraint:ir.ui.view:0
@@ -207,6 +232,11 @@ msgstr "Volitatud grupid"
 #: field:base_report_creator.report,view_graph_orientation:0
 msgid "Graph Orientation"
 msgstr "Graafiku orientatsioon"
+
+#. module: base_report_creator
+#: view:base_report_creator.report:0
+msgid "Use %(uid)s to filter by the connected user"
+msgstr "Use %(uid)s to filter by the connected user"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -369,10 +399,8 @@ msgstr "Loobu"
 
 #. module: base_report_creator
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,view_type1:0
@@ -388,6 +416,11 @@ msgstr "Viivitus"
 #: field:base_report_creator.report.fields,field_id:0
 msgid "Field"
 msgstr "Väli"
+
+#. module: base_report_creator
+#: selection:base_report_creator.report.fields,calendar_mode:0
+msgid "Unique Colors"
+msgstr "Unique Colors"
 
 #. module: base_report_creator
 #: view:base_report_creator.report:0
@@ -406,24 +439,24 @@ msgstr "Kolmas vaade"
 
 #. module: base_report_creator
 #: model:ir.module.module,description:base_report_creator.module_meta_information
-msgid ""
-"This modules allows you to create any statistic\n"
+msgid "This modules allows you to create any statistic\n"
 "report on several object. It's a SQL query builder and browser\n"
 "for and users.\n"
 "\n"
 "After installing the module, it adds a menu to define custom report in\n"
 "the \"Dashboard\" menu.\n"
-msgstr ""
-"See moodul võimaldab sul luua mistahes statistilist\n"
+""
+msgstr "See moodul võimaldab sul luua mistahes statistilist\n"
 "aruannet mitmel objektil. See on SQL päringu ehitaja ja sirvija.\n"
 "\n"
 "Pärast mooduli paigaldamist luuakse menüü, et määrata kohandatud\n"
 "aruanne \"Töölauad\" menüüs.\n"
+""
 
 #. module: base_report_creator
 #: selection:base_report_creator.report.fields,calendar_mode:0
-msgid "Uniq Colors"
-msgstr "Unikaalsed värvid"
+msgid "End Date"
+msgstr "End Date"
 
 #. module: base_report_creator
 #: field:base_report_creator.report,name:0
@@ -501,3 +534,4 @@ msgstr "Kuvatavad väljad"
 #: field:base_report_creator.report,filter_ids:0
 msgid "Filters"
 msgstr "Filtrid"
+

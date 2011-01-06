@@ -44,6 +44,15 @@ class stock_move(osv.osv):
     _columns = {
         'move_dest_id_lines': fields.one2many('stock.move','move_dest_id', 'Children Moves')
     }
+    
+    def copy(self, cr, uid, id, default=None, context={}):
+        if default is None:
+            default = {}
+        default.update({
+            'move_dest_id_lines': [],
+        })
+        return super(stock_move, self).copy(cr, uid, id, default, context)
+    
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
@@ -141,8 +150,8 @@ class mrp_production_workcenter_line(osv.osv):
         date_now = time.strftime('%Y-%m-%d %H:%M:%S')
         obj_line = self.browse(cr, uid, ids[0])
         
-        date_start = datetime.datetime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
-        date_finished = datetime.datetime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
+        date_start = DateTime.strptime(obj_line.date_start,'%Y-%m-%d %H:%M:%S')
+        date_finished = DateTime.strptime(date_now,'%Y-%m-%d %H:%M:%S')
         delay += (date_finished-date_start).days * 24
         delay += (date_finished-date_start).seconds / float(60*60)
         
@@ -179,15 +188,27 @@ class mrp_production(osv.osv):
         return result
 
     def action_production_end(self, cr, uid, ids):
-        obj=self.browse(cr,uid,ids)[0]
+        obj = self.browse(cr, uid, ids)[0]
         for workcenter_line in obj.workcenter_lines:
-            tmp=self.pool.get('mrp.production.workcenter.line').action_done(cr,uid,[workcenter_line.id])
-        return super(mrp_production,self).action_production_end(cr,uid,ids)
-
+            tmp = self.pool.get('mrp.production.workcenter.line').action_done(cr, uid, [workcenter_line.id])
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_done', cr)
+        return super(mrp_production,self).action_production_end(cr, uid, ids)
+    
+    def action_in_production(self, cr, uid, ids):
+        obj = self.browse(cr, uid, ids)[0]
+        for workcenter_line in obj.workcenter_lines:
+            tmp = self.pool.get('mrp.production.workcenter.line').action_start_working(cr, uid, [workcenter_line.id])
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_start_working', cr)
+        return super(mrp_production,self).action_in_production(cr, uid, ids)
+    
     def action_cancel(self, cr, uid, ids):
-        obj=self.browse(cr,uid,ids)[0]
+        obj = self.browse(cr,uid,ids)[0]
         for workcenter_line in obj.workcenter_lines:
             tmp=self.pool.get('mrp.production.workcenter.line').action_cancel(cr,uid,[workcenter_line.id])
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'mrp.production.workcenter.line', workcenter_line.id, 'button_cancel', cr)
         return super(mrp_production,self).action_cancel(cr,uid,ids)
 
     def _compute_planned_workcenter(self, cr, uid, ids, context={}, mini=False):
@@ -339,8 +360,8 @@ class mrp_operations_operation(osv.osv):
                 if not i: continue
                 if code_lst[i-1] not in ('resume','start'):
                    continue
-                a = datetime.datetime.strptime(time_lst[i-1],'%Y-%m-%d %H:%M:%S')
-                b = datetime.datetime.strptime(time_lst[i],'%Y-%m-%d %H:%M:%S')
+                a = DateTime.strptime(time_lst[i-1],'%Y-%m-%d %H:%M:%S')
+                b = DateTime.strptime(time_lst[i],'%Y-%m-%d %H:%M:%S')
                 diff += (b-a).days * 24
                 diff += (b-a).seconds / float(60*60)
         return diff

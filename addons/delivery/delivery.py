@@ -23,6 +23,7 @@ import time
 import netsvc
 from osv import fields,osv
 from tools.translate import _
+from tools.safe_eval import safe_eval
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
@@ -118,7 +119,7 @@ class delivery_grid(osv.osv):
 
         for line in grid.line_ids:
             price_dict = {'price': total, 'volume':volume, 'weight': weight, 'wv':volume*weight}
-            test = eval(line.type+line.operator+str(line.max_value), price_dict)
+            test = safe_eval(line.type+line.operator+str(line.max_value), price_dict)
             if test:
                 if line.price_type=='variable':
                     price = line.list_price * price_dict[line.variable_factor]

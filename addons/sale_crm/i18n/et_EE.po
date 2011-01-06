@@ -4,22 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-07-08 19:25+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: sale_crm
-#: model:ir.module.module,shortdesc:sale_crm.module_meta_information
-msgid "Sale CRM Stuff"
-msgstr "Müügi kliendisuhete halduse võimalused"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_crmopportunityquotation
@@ -37,14 +31,19 @@ msgid "Use this partner if there is no partner on the case"
 msgstr "Kasuta seda partnerit, kui juhtumil puudub partner"
 
 #. module: sale_crm
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Partial Delivery"
+msgstr "Partial Delivery"
+
+#. module: sale_crm
 #: wizard_button:sale_crm.make_case,init,create:0
 msgid "Create"
 msgstr "Loo"
 
 #. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "All at once"
-msgstr "Kõik korraga"
+#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
+msgid "Opporunity convert to the Pricelist"
+msgstr "Võimaluse muutmine hinnakirjaks"
 
 #. module: sale_crm
 #: constraint:ir.ui.view:0
@@ -104,14 +103,14 @@ msgid "CRM Opportunity"
 msgstr "KSH võimalus"
 
 #. module: sale_crm
+#: model:ir.module.module,shortdesc:sale_crm.module_meta_information
+msgid "Sale CRM Stuff"
+msgstr "Müügi kliendisuhete halduse võimalused"
+
+#. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_opportunityquotation0
 msgid "Opportunity convert into quotation"
 msgstr "Võimaluse muutmine noteeringuks"
-
-#. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "Direct Delivery"
-msgstr "Otsetarne"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_opportunityquotation0
@@ -135,9 +134,9 @@ msgid "Check this to close the case after having created the sale order."
 msgstr "Märgi see, et sulgeda juhtum pärast müügikorralduse loomist."
 
 #. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
-msgid "Opporunity convert to the Pricelist"
-msgstr "Võimaluse muutmine hinnakirjaks"
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Complete Delivery"
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,user:0
@@ -216,3 +215,4 @@ msgstr "Loobu"
 #: wizard_field:sale_crm.make_case,init,section:0
 msgid "Case Section"
 msgstr "Juhtumi Jaotis"
+

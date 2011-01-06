@@ -57,10 +57,10 @@ def _data_save(self, cr, uid, data, context):
 
     fy_id = data['form']['fy_id']
     period_ids = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', fy_id)])
-    fy_period_set = ','.join(map(str, period_ids))
-    periods_fy2 = pool.get('account.period').search(cr, uid, [('fiscalyear_id', '=', data['form']['fy2_id'])])
-    fy2_period_set = ','.join(map(str, periods_fy2))
-
+    cr.execute("SELECT id FROM account_period WHERE date_stop < (SELECT date_start FROM account_fiscalyear WHERE id = %s)" , (str(data['form']['fy2_id']),))
+    fy_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
+    cr.execute("SELECT id FROM account_period WHERE date_start > (SELECT date_stop FROM account_fiscalyear WHERE id = %s)" , (str(fy_id),))
+    fy2_period_set = ','.join(map(lambda id: str(id[0]), cr.fetchall()))
     period = pool.get('account.period').browse(cr, uid, data['form']['period_id'], context=context)
     new_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy2_id'], context=context)
     old_fyear = pool.get('account.fiscalyear').browse(cr, uid, data['form']['fy_id'], context=context)
@@ -71,17 +71,16 @@ def _data_save(self, cr, uid, data, context):
     if not new_journal.default_credit_account_id or not new_journal.default_debit_account_id:
         raise wizard.except_wizard(_('UserError'),
                 _('The journal must have default credit and debit account'))
-    if not new_journal.centralisation:
+    if (not new_journal.centralisation) or new_journal.entry_posted:
         raise wizard.except_wizard(_('UserError'),
-                _('The journal must have centralised counterpart'))
+                _('The journal must have centralised counterpart without the Skipping draft state option checked!'))
 
     move_ids = pool.get('account.move.line').search(cr, uid, [
         ('journal_id','=',new_journal.id),('period_id.fiscalyear_id','=',new_fyear.id)])
     if move_ids:
         raise wizard.except_wizard(_('UserError'),
                 _('The opening journal must not have any entry in the new fiscal year !'))
-    query = "SELECT id FROM account_fiscalyear WHERE date_stop < '" + str(new_fyear.date_start) + "'"
-    cr.execute(query)
+    cr.execute("SELECT id FROM account_fiscalyear WHERE date_stop < %s", (str(new_fyear.date_start),))
     result = cr.dictfetchall()
     fy_ids = ','.join([str(x['id']) for x in result])
     query_line = pool.get('account.move.line')._query_get(cr, uid,
@@ -141,9 +140,7 @@ def _data_save(self, cr, uid, data, context):
             offset = 0
             limit = 100
             while True:
-                #TODO: this query could be improved in order to work if there is more than 2 open FY
-                # a.period_id IN ('+fy2_period_set+') is the problematic clause
-                cr.execute('SELECT b.id, b.name, b.quantity, b.debit, b.credit, b.account_id, b.ref, ' \
+                cr.execute('SELECT DISTINCT b.id, b.name, b.quantity, b.debit, b.credit, b.account_id, b.ref, ' \
                             'b.amount_currency, b.currency_id, b.blocked, b.partner_id, ' \
                             'b.date_maturity, b.date_created ' \
                         'FROM account_move_line a, account_move_line b ' \

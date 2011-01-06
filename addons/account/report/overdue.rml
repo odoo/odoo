@@ -84,8 +84,8 @@
     <paraStyle name="terp_default_Bold_9" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Centre_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="CENTER" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="terp_default_Right_9" fontName="Helvetica" fontSize="9.0" leading="11" alignment="RIGHT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <images/>
   </stylesheet>
-  <images/>
   <story>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_default_8">[[ setLang(o.lang) ]]</para>
@@ -177,16 +177,16 @@
             <para style="terp_default_Centre_9">[[ line['ref'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ line['date_maturity'] ]]</para>
+            <para style="terp_default_Centre_9">[[ line['date_maturity'] and formatLang(line['date_maturity'],date=True) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['debit']) and formatLang(line['debit'] * (line['account_id']['type'] == 'payable' and -1 or 1)) ]]</para>
+            <para style="terp_default_Right_9">[[ (line['account_id']['type'] == 'receivable' and formatLang(line['debit']) or 0) or (line['account_id']['type'] == 'payable' and formatLang(line['credit'] * -1) or ' ') ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line['credit']) and formatLang(line['credit'] * (line['account_id']['type'] == 'payable' and -1 or 1)) ]]</para>
+            <para style="terp_default_Right_9">[[ (line['account_id']['type'] == 'receivable' and formatLang(line['credit']) or 0) or (line['account_id']['type'] == 'payable' and formatLang(line['debit'] * -1) or 0) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang((line['date_maturity'] &lt; time.strftime('%Y-%m-%d')) and ((line['debit'] - line['credit']) * (line['account_id']['type'] == 'payable' and -1 or 1))) ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang((line['date_maturity'] &lt; time.strftime('%Y-%m-%d'))) and (line['debit'] - line['credit']) ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ line['blocked'] and 'X' or '' ]]</para>
@@ -205,13 +205,13 @@
           <para style="terp_default_Bold_9">Sub-Total : </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + (y['debit'] * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0))) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + ((y['account_id']['type'] == 'receivable' and y['debit'] or 0) or (y['account_id']['type'] == 'payable' and y['credit'] * -1 or 0)), getLines(o), 0))) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x ,y: x + (y['credit'] * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0))) ]] </para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + ((y['account_id']['type'] == 'receivable' and y['credit'] or 0) or (y['account_id']['type'] == 'payable' and y['debit'] * -1 or 0)), getLines(o), 0))) ]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + ((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0))) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0))) ]]</para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -229,7 +229,7 @@
           <para style="terp_default_Bold_9">Balance : </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x +((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0))) ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0))) ]]</para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -248,7 +248,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_9">Total amount due: [[ formatLang((reduce(lambda x, y: x + ((y['debit'] - y['credit']) * (y['account_id']['type'] == 'payable' and -1 or 1)), getLines(o), 0))) ]] [[ company.currency_id.name ]].</para>
+    <para style="terp_default_9">Total amount due: [[ formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), getLines(o), 0))) ]] [[ company.currency_id.name ]].</para>
     <para style="terp_default_8">
       <font color="white"> </font>
     </para>

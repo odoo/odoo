@@ -4,119 +4,118 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 13:46+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_crmopportunityquotation
 msgid "Crm opportunity quotation"
-msgstr ""
+msgstr "CRM销售机会报价"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,partner_id:0
 msgid "Customer"
-msgstr ""
+msgstr "客户"
 
 #. module: sale_crm
 #: help:crm.case.make_order,init,partner_id:0
 msgid "Use this partner if there is no partner on the case"
-msgstr ""
+msgstr "如果没有业务伙伴用这业务伙伴"
+
+#. module: sale_crm
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Partial Delivery"
+msgstr "Partial Delivery"
 
 #. module: sale_crm
 #: wizard_button:sale_crm.make_case,init,create:0
 msgid "Create"
-msgstr "新建"
+msgstr "创建"
 
 #. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "All at once"
-msgstr ""
+#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
+msgid "Opporunity convert to the Pricelist"
+msgstr "销售机会转为价目表"
 
 #. module: sale_crm
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr ""
+msgstr "无效XML视图结构!"
 
 #. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_crmopportunityquotation
 msgid "Opportunity goes into the quotation"
-msgstr ""
+msgstr "销售机会转为报价"
 
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_contractanalytic0
 msgid "Analytic account"
-msgstr "分析帐号"
+msgstr "分析科目"
 
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_crmquotation0
 msgid "Convert opportunity to quotation"
-msgstr ""
+msgstr "销售机会转为报价"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/makesale.py:0
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Data Insufficient!"
 
 #. module: sale_crm
 #: code:addons/sale_crm/wizard/makesale.py:0
 #, python-format
 msgid "Customer has no addresses defined!"
-msgstr ""
+msgstr "Customer has no addresses defined!"
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,description:0
 msgid "Your action"
-msgstr ""
+msgstr "你的行动"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,picking_policy:0
 msgid "Packing Policy"
-msgstr ""
+msgstr "包装方式"
 
 #. module: sale_crm
 #: wizard_button:crm.case.make_order,init,order:0
 msgid "Create Quote"
-msgstr ""
+msgstr "创建报价"
 
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_contractpricelist0
 msgid "Contract Volume (pricelist)"
-msgstr ""
+msgstr "合同交易额(价目表)"
 
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_crmopportunity0
 msgid "CRM Opportunity"
-msgstr ""
+msgstr "CRM销售机会"
 
 #. module: sale_crm
 #: model:ir.module.module,shortdesc:sale_crm.module_meta_information
 msgid "Sale CRM Stuff"
-msgstr ""
+msgstr "销售CRM"
 
 #. module: sale_crm
 #: model:process.transition,note:sale_crm.process_transition_opportunityquotation0
 msgid "Opportunity convert into quotation"
-msgstr ""
-
-#. module: sale_crm
-#: selection:crm.case.make_order,init,picking_policy:0
-msgid "Direct Delivery"
-msgstr ""
+msgstr "销售机会转为报价"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_opportunityquotation0
 msgid "Opportunity Quotation"
-msgstr ""
+msgstr "销售机会报价"
 
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_crmquotation0
@@ -127,32 +126,32 @@ msgstr "报价"
 #: view:crm.case:0
 #: wizard_view:crm.case.make_order,init:0
 msgid "Convert to Quote"
-msgstr ""
+msgstr "转为报价"
 
 #. module: sale_crm
 #: help:crm.case.make_order,init,close:0
 msgid "Check this to close the case after having created the sale order."
-msgstr ""
+msgstr "选择这结束的业务个案后创建销售订单"
 
 #. module: sale_crm
-#: model:process.transition,note:sale_crm.process_transition_opportunitypricelist0
-msgid "Opporunity convert to the Pricelist"
-msgstr ""
+#: selection:crm.case.make_order,init,picking_policy:0
+msgid "Complete Delivery"
+msgstr "Complete Delivery"
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,user:0
 msgid "User Responsible"
-msgstr "当事人"
+msgstr "负责的用户"
 
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_contractanalytic0
 msgid "Reflect the contract made with customer"
-msgstr ""
+msgstr "带来客户合同"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_opportunityanalytic0
 msgid "Opportunity Analytic"
-msgstr ""
+msgstr "销售机会分析"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,products:0
@@ -162,13 +161,13 @@ msgstr "产品"
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,close:0
 msgid "Close Case"
-msgstr ""
+msgstr "结束业务个案"
 
 #. module: sale_crm
 #: model:ir.actions.wizard,name:sale_crm.sale_crm_make_case_wizard
 #: wizard_view:sale_crm.make_case,init:0
 msgid "Make Case"
-msgstr "建立案例"
+msgstr "建立业务个案"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,shop_id:0
@@ -178,33 +177,33 @@ msgstr "商店"
 #. module: sale_crm
 #: model:process.node,note:sale_crm.process_node_crmopportunity0
 msgid "The CRM Opportunity can lead to a quotation."
-msgstr ""
+msgstr "这CRM销售机会能带来报价"
 
 #. module: sale_crm
 #: model:process.transition,name:sale_crm.process_transition_opportunitypricelist0
 msgid "Opportunity Pricelist"
-msgstr ""
+msgstr "销售机会价格表"
 
 #. module: sale_crm
 #: model:process.node,name:sale_crm.process_node_contractpricelist0
 msgid "Contract Pricelist"
-msgstr ""
+msgstr "合同价格表"
 
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,name:0
 msgid "Case Description"
-msgstr "案例说明"
+msgstr "业务个案说明"
 
 #. module: sale_crm
 #: wizard_field:crm.case.make_order,init,analytic_account:0
 #: model:process.transition,note:sale_crm.process_transition_opportunityanalytic0
 msgid "Analytic Account"
-msgstr ""
+msgstr "辅助核算项目"
 
 #. module: sale_crm
 #: model:ir.actions.wizard,name:sale_crm.sale_crm_wizard
 msgid "Make Quotation"
-msgstr ""
+msgstr "建立报价"
 
 #. module: sale_crm
 #: wizard_button:crm.case.make_order,init,end:0
@@ -215,4 +214,5 @@ msgstr "取消"
 #. module: sale_crm
 #: wizard_field:sale_crm.make_case,init,section:0
 msgid "Case Section"
-msgstr ""
+msgstr "业务个案项"
+

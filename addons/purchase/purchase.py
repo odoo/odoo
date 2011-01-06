@@ -79,7 +79,7 @@ class purchase_order(osv.osv):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
-            res[purchase.id] = False
+            res[purchase.id] = time.strftime('%Y-%m-%d %H:%M:%S')
             if purchase.order_line:
                 min_date=purchase.order_line[0].date_planned
                 for line in purchase.order_line:
@@ -112,8 +112,9 @@ class purchase_order(osv.osv):
             LEFT JOIN
                 stock_picking p on (p.id=m.picking_id)
             WHERE
-                p.purchase_id in ('''+','.join(map(str,ids))+''')
-            GROUP BY m.state, p.purchase_id''')
+                p.purchase_id in %s
+            GROUP BY m.state, p.purchase_id''',
+                   (tuple(ids),))
         for oid,nbr,state in cr.fetchall():
             if state=='cancel':
                 continue
@@ -144,6 +145,14 @@ class purchase_order(osv.osv):
                 res[purchase.id] = False
         return res
 
+    STATE_SELECTION = [('draft', 'Request for Quotation'),
+                       ('wait', 'Waiting'),
+                       ('confirmed', 'Confirmed'),
+                       ('approved', 'Approved'),
+                       ('except_picking', 'Shipping Exception'),
+                       ('except_invoice', 'Invoice Exception'),
+                       ('done', 'Done'),
+                       ('cancel', 'Cancelled')]
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True),
         'origin': fields.char('Origin', size=64,
@@ -160,11 +169,11 @@ class purchase_order(osv.osv):
                 "In this case, it will remove the warehouse link and set the customer location."
         ),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', states={'posted':[('readonly',True)]}),
-        'location_id': fields.many2one('stock.location', 'Destination', required=True),
+        'location_id': fields.many2one('stock.location', 'Destination', required=True, domain=[('usage','<>','view')]),
 
         'pricelist_id':fields.many2one('product.pricelist', 'Pricelist', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, help="The pricelist sets the currency used for this purchase order. It also computes the supplier price for the selected products/quantities."),
 
-        'state': fields.selection([('draft', 'Request for Quotation'), ('wait', 'Waiting'), ('confirmed', 'Confirmed'), ('approved', 'Approved'),('except_picking', 'Shipping Exception'), ('except_invoice', 'Invoice Exception'), ('done', 'Done'), ('cancel', 'Cancelled')], 'Order Status', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
+        'state': fields.selection(STATE_SELECTION, 'Order Status', readonly=True, help="The state of the purchase order or the quotation request. A quotation is a purchase order in a 'Draft' state. Then the order has to be confirmed by the user, the state switch to 'Confirmed'. Then the supplier must confirm the order to change the state to 'Approved'. When the purchase order is paid and received, the state becomes 'Done'. If a cancel action occurs in the invoice or in the reception of goods, the state becomes in exception.", select=True),
         'order_line': fields.one2many('purchase.order.line', 'order_id', 'Order Lines', states={'approved':[('readonly',True)],'done':[('readonly',True)]}),
         'validator' : fields.many2one('res.users', 'Validated by', readonly=True),
         'notes': fields.text('Notes'),
@@ -216,7 +225,7 @@ class purchase_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!' % s['state']))
+                raise osv.except_osv(_('Invalid action !'), _('Cannot delete Purchase Order(s) which are in %s State!')  %_(dict(purchase_order.STATE_SELECTION).get(s['state'])))
 
         # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support 
         # automatically sending subflow.delete upon deletion
@@ -391,7 +400,9 @@ class purchase_order(osv.osv):
                 'address_id': order.dest_address_id.id or order.partner_address_id.id,
                 'invoice_state': istate,
                 'purchase_id': order.id,
+                'move_lines' : [],
             })
+            todo_moves = []
             for order_line in order.order_line:
                 if not order_line.product_id:
                     continue
@@ -414,8 +425,9 @@ class purchase_order(osv.osv):
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
-                    self.pool.get('stock.move').action_confirm(cr, uid, [move])
-                    self.pool.get('stock.move').force_assign(cr,uid, [move])
+                    todo_moves.append(move)    
+            self.pool.get('stock.move').action_confirm(cr, uid, todo_moves)
+            self.pool.get('stock.move').force_assign(cr, uid, todo_moves)
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return picking_id
@@ -506,7 +518,7 @@ class purchase_order_line(osv.osv):
                     'uom': uom,
                     'date': date_order,
                     })[pricelist]
-        dt = (DateTime.now() + DateTime.RelativeDateTime(days=seller_delay or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
+        dt = (DateTime.now() + DateTime.RelativeDateTime(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
         prod_name = prod.partner_ref
 
 
@@ -531,9 +543,9 @@ class purchase_order_line(osv.osv):
         return res
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False):
+            partner_id, date_order=False, fiscal_position=False):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-                partner_id, date_order=date_order)
+                partner_id, date_order=date_order, fiscal_position=fiscal_position)
         if 'product_uom' in res['value']:
             del res['value']['product_uom']
         if not uom:

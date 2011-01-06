@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- 
+            Tests for an order with invoice from the packings
+        -->
+
+        <!-- Resource: sale.order -->
+        <record id="test_order_2" model="sale.order">
+            <field name="name">test_order_2</field>
+            <field name="note">This Sale Order was used to test the following use case during the installation: Order - Picking - Invoice - Payment</field>
+            <field name="shop_id" ref="shop" />
+            <field model="product.pricelist" name="pricelist_id" search="[]" />
+            <field name="user_id" ref="base.user_root" />
+            <field name="partner_id" ref="base.res_partner_agrolait" />
+            <field name="partner_invoice_id" ref="base.res_partner_address_8invoice" /> <!-- you should patch your server to get res_partner_address_8invoice, or revert to res_partner_address_8 -->
+            <field name="partner_shipping_id" ref="base.res_partner_address_8delivery" /> <!-- you should patch your server to get res_partner_address_8delivery, or revert to res_partner_address_8 -->
+            <field name="partner_order_id" ref="base.res_partner_address_8" />
+            <field name="order_policy">picking</field>
+        </record>
+        <!-- Resource: sale.order.line -->
+        <record id="test_order_2_line_1" model="sale.order.line">
+            <field name="order_id" ref="test_order_2" />
+            <field name="name">[PC1] Basic PC</field>
+            <field name="product_id" ref="product.product_product_pc1" />
+            <field name="product_uom" ref="product.product_uom_unit" />
+            <field name="price_unit">450</field>
+            <field name="product_uom_qty">2</field>
+            <field name="product_uos_qty">2</field>
+            <field name="type">make_to_stock</field>
+        </record>
+        <record id="test_order_2_line_3" model="sale.order.line">
+            <field name="order_id" ref="test_order_2" />
+            <field name="name">[RAM512] DDR 512MB PC400</field>
+            <field name="product_id" ref="product.product_product_ram512" />
+            <field name="product_uom" ref="product.product_uom_unit" />
+            <field name="price_unit">90</field>
+            <field name="product_uom_qty">3</field>
+            <field name="product_uos_qty">3</field>
+            <field name="type">make_to_stock</field>
+        </record>
+        <assert id="test_order_2" model="sale.order" severity="error" string="The amount of the sale order is correctly computed">
+            <test expr="amount_untaxed == 450*2 + 90*3" />
+            <test expr="state">draft</test>
+        </assert>
+
+        <workflow action="order_confirm" model="sale.order" ref="test_order_2" />
+        <assert id="test_order_2" model="sale.order" string="the sale order is now in progress">
+            <test expr="state">progress</test>
+        </assert>
+
+        <!-- Treat generated picking -->
+        <assert id="test_order_2" model="sale.order" severity="error" string="the sale order has now a correspending packing">
+            <test expr="len(picking_ids) == 1" />
+            <test expr="picking_ids[0].invoice_state">2binvoiced</test>
+            <test expr="picking_ids[0].address_id == partner_shipping_id" />
+        </assert>
+
+        <!-- Here we need to use the function tag because action_assign is a method of stock_picking and not part of the workflow -->
+        <function model="stock.picking" name="action_assign">
+            <value eval="[obj(ref('test_order_2')).picking_ids[0].id]" model="sale.order" />
+        </function>
+        <assert id="test_order_2" model="sale.order" severity="error" string="the sale order's picking is now assigned">
+            <test expr="picking_ids[0].state">assigned</test>
+        </assert>
+
+        <!-- Do the same as in wizard_partial_picking lines 143-144 -->
+        <function model="stock.picking" name="action_move">
+            <value eval="[obj(ref('test_order_2')).picking_ids[0].id]" model="sale.order" />
+        </function>
+        <workflow action="button_done" model="stock.picking">
+            <value eval="obj(ref('test_order_2')).picking_ids[0].id" model="sale.order" />
+        </workflow>
+        <assert id="test_order_2" model="sale.order" string="the sale order's picking is now done">
+            <test expr="picking_ids[0].state">done</test>
+        </assert>
+
+        <!-- Run all schedulers -->
+        <function model="mrp.procurement" name="run_scheduler" />
+        <assert id="test_order_2" model="sale.order" string="the sale order is now done">
+            <test expr="state">done</test>
+            <test expr="shipped == True" />
+            <test expr="invoiced == False" />
+        </assert>
+
+        <!-- Invoice from the packing -->
+        <function model="stock.picking" name="action_invoice_create">
+            <value eval="[obj(ref('test_order_2')).picking_ids[0].id]" model="sale.order" />
+            <value eval="ref('account.sales_journal')" />
+            <value eval="" />
+            <value eval="'out_invoice'" />
+        </function>
+        <assert id="test_order_2" model="sale.order" severity="error" string="the sale order's picking is invoiced">
+            <test expr="picking_ids[0].invoice_state">invoiced</test>
+            <test expr="len(invoice_ids) == 1" />
+            <test expr="invoice_ids[0].amount_untaxed == amount_untaxed" />
+            <test expr="invoice_ids[0].amount_total == amount_total" />
+            <test expr="invoice_ids[0].reconciled == False" />
+            <test expr="invoice_ids[0].residual == 450*2 + 90*3" />
+            <test expr="invoice_ids[0].state">draft</test>
+            <test expr="invoice_ids[0].address_invoice_id == partner_invoice_id" />
+        </assert>
+
+        <!-- Confirm the invoice -->
+        <workflow action="invoice_open" model="account.invoice">
+            <value eval="obj(ref('test_order_2')).invoice_ids[0].id" model="sale.order" />
+        </workflow>
+        <assert id="test_order_2" model="sale.order" severity="error" string="the sale order's picking is invoiced">
+            <test expr="invoice_ids[0].reconciled == False" />
+            <test expr="invoice_ids[0].residual == amount_total" />
+            <test expr="invoice_ids[0].state">open</test>
+        </assert>
+
+        <!-- Pay the invoice -->
+        <function model="account.invoice" name="pay_and_reconcile">
+            <value eval="[obj(ref('test_order_2')).invoice_ids[0].id]" model="sale.order" />
+            <value eval="obj(ref('test_order_2')).amount_total" model="sale.order" />
+            <value eval="ref('account.cash')" />
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
+            <value eval="ref('account.bank_journal')" />
+            <value eval="ref('account.cash')" />
+            <value eval="ref('account.period_' + str(int(time.strftime('%m'))))" />
+            <value eval="ref('account.bank_journal')" />
+        </function>
+        <assert id="test_order_2" model="sale.order" severity="error" string="the sale order's invoice is now paid">
+            <test expr="invoice_ids[0].reconciled == True" />
+            <test expr="invoice_ids[0].residual == 0.0" />
+            <test expr="invoice_ids[0].state">paid</test>
+            <test expr="state">done</test>
+            <test expr="shipped == True" />
+            <test expr="invoiced == True" />
+        </assert>
+    </data>
+</openerp>

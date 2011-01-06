@@ -4,33 +4,31 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 12:05+0000\n"
+"POT-Creation-Date: 2010-09-02 13:38:22+0000\n"
+"PO-Revision-Date: 2010-09-02 13:38:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
 msgid "wizard.wiki.history.show_diff"
-msgstr ""
+msgstr "wizard.wiki.history.show_diff"
 
 #. module: wiki
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr "对象名称必须以“x_”起头且不能包含任何特殊字符！"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_groups_link
 msgid "Wiki Groups Links"
-msgstr "维基组链接"
+msgstr "Wiki组链接"
 
 #. module: wiki
 #: field:wiki.wiki,create_uid:0
@@ -38,9 +36,11 @@ msgid "Author"
 msgstr "作者"
 
 #. module: wiki
+#: code:addons/wiki/wizard/open_page.py:0
 #: model:ir.actions.wizard,name:wiki.wizard_open_page
+#, python-format
 msgid "Open Page"
-msgstr "打开维基页"
+msgstr "Open Page"
 
 #. module: wiki
 #: field:wiki.groups.link,action_id:0
@@ -50,30 +50,30 @@ msgstr "菜单"
 #. module: wiki
 #: field:wiki.groups,child_ids:0
 msgid "Child Groups"
-msgstr "下级维基组"
+msgstr "子组"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 #: model:ir.actions.act_window,name:wiki.action_wiki
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_wiki
 msgid "Wiki Pages"
-msgstr "维基页"
+msgstr "Wiki页"
 
 #. module: wiki
 #: field:wiki.groups,section:0
 msgid "Make Section ?"
-msgstr "生成章节？"
+msgstr "生成分段?"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history
 #: view:wiki.wiki.history:0
 msgid "Wiki History"
-msgstr "维基修改历史"
+msgstr "Wiki日志"
 
 #. module: wiki
 #: field:wiki.wiki,minor_edit:0
 msgid "Minor edit"
-msgstr "小改动"
+msgstr "小编辑"
 
 #. module: wiki
 #: field:wiki.wiki,text_area:0
@@ -83,18 +83,18 @@ msgstr "内容"
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document_configuration
 msgid "Wiki Configuration"
-msgstr "维基设置"
+msgstr "Wiki设置"
 
 #. module: wiki
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "操作定义中使用了无效的模式名称。"
+msgstr "在行动定义中的模式名称无效"
 
 #. module: wiki
 #: field:wiki.groups,name:0
 #: field:wiki.wiki,group_id:0
 msgid "Wiki Group"
-msgstr "维基组"
+msgstr "Wiki组"
 
 #. module: wiki
 #: field:wiki.wiki,name:0
@@ -104,22 +104,28 @@ msgstr "标题"
 #. module: wiki
 #: field:wiki.wiki,history_id:0
 msgid "History Lines"
-msgstr "历史线"
+msgstr "日志明细"
 
 #. module: wiki
 #: field:wiki.groups,template:0
 msgid "Wiki Template"
-msgstr "维基模板"
+msgstr "Wiki模板"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "There are no chnages in revisions"
+msgstr "There are no chnages in revisions"
 
 #. module: wiki
 #: model:ir.module.module,shortdesc:wiki.module_meta_information
 msgid "Document Management - Wiki"
-msgstr "文档管理——维基"
+msgstr "文档管理 - Wiki"
 
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Create a Menu"
-msgstr "创建菜单"
+msgstr "创建一菜单"
 
 #. module: wiki
 #: field:wiki.groups,notes:0
@@ -129,37 +135,43 @@ msgstr "描述"
 #. module: wiki
 #: field:wiki.wiki,section:0
 msgid "Section"
-msgstr "章节"
+msgstr "分段"
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "History Differance"
-msgstr "历史差异"
+msgstr "历史递延"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,page:0
 msgid "Group Home Page"
-msgstr "维基组首页"
+msgstr "组首页"
+
+#. module: wiki
+#: code:addons/wiki/wiki.py:0
+#, python-format
+msgid "Warning !"
+msgstr "Warning !"
 
 #. module: wiki
 #: field:wiki.wiki,write_uid:0
 msgid "Last Author"
-msgstr "最近的作者"
+msgstr "最后作者"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_view_diff
 msgid "Differences"
-msgstr "差异"
+msgstr "分歧"
 
 #. module: wiki
 #: help:wiki.wiki,section:0
 msgid "Use page section code like 1.2.1"
-msgstr "使用页章节代码如 1.2.1"
+msgstr "用户页段代码如1.2.1"
 
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Page Template"
-msgstr "页面模板"
+msgstr "页模板"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document2
@@ -169,23 +181,23 @@ msgstr "文档管理"
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
 msgid "Date"
-msgstr "时间"
+msgstr "日期"
 
 #. module: wiki
 #: wizard_view:wiki.make.index,init:0
 msgid "Want to create a Index on Selected Pages ? "
-msgstr "想要为选定的页面创建索引吗？ "
+msgstr "想在选择的页创建一索引? "
 
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Configuration"
-msgstr "配置"
+msgstr "设置"
 
 #. module: wiki
 #: field:wiki.groups,home:0
 #: field:wiki.groups,page_ids:0
 msgid "Pages"
-msgstr "页面"
+msgstr "页"
 
 #. module: wiki
 #: code:addons/wiki/wizard/show_diff.py:0
@@ -196,12 +208,12 @@ msgstr "您因该选定最少一个或最多两个历史差异！"
 #. module: wiki
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "无效的 XML 视图结构"
+msgstr "无效XML视图结构!"
 
 #. module: wiki
 #: field:wiki.wiki.history,text_area:0
 msgid "Text area"
-msgstr "文本框"
+msgstr "文本区"
 
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_parent_id:0
@@ -211,7 +223,7 @@ msgstr "上级菜单"
 #. module: wiki
 #: field:wiki.wiki,create_date:0
 msgid "Created on"
-msgstr "创建于"
+msgstr "创建在"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -228,7 +240,7 @@ msgstr "菜单信息"
 #: field:wiki.groups,parent_id:0
 #: field:wiki.groups.link,group_id:0
 msgid "Parent Group"
-msgstr "上级维基组"
+msgstr "父组"
 
 #. module: wiki
 #: field:wiki.wiki,summary:0
@@ -239,23 +251,23 @@ msgstr "摘要"
 #. module: wiki
 #: field:wiki.groups,create_date:0
 msgid "Created Date"
-msgstr "创建时间"
+msgstr "创建日期"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_history
 #: model:ir.ui.menu,name:wiki.menu_action_history
 msgid "All Page Histories"
-msgstr "全部页面历史记录"
+msgstr "所有页的历史"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki
 msgid "wiki.wiki"
-msgstr ""
+msgstr "wiki.wiki"
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "Wiki Differance"
-msgstr "维基页差异"
+msgstr "Wiki分歧"
 
 #. module: wiki
 #: field:wiki.wiki.history,wiki_id:0
@@ -271,7 +283,7 @@ msgstr "找不到动作"
 #. module: wiki
 #: wizard_field:wiki.create.menu,init,menu_name:0
 msgid "Menu Name"
-msgstr "菜单名称"
+msgstr "菜单名"
 
 #. module: wiki
 #: view:wiki.wiki:0
@@ -281,7 +293,7 @@ msgstr "修改"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
 msgid "History"
-msgstr "历史记录"
+msgstr "历史"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_document
@@ -292,7 +304,7 @@ msgstr "维基"
 #. module: wiki
 #: field:wiki.wiki,write_date:0
 msgid "Modification Date"
-msgstr "修改时间"
+msgstr "修改日期"
 
 #. module: wiki
 #: model:ir.actions.wizard,name:wiki.wizard_make_index
@@ -303,7 +315,7 @@ msgstr "创建索引"
 #. module: wiki
 #: field:wiki.wiki.history,minor_edit:0
 msgid "This is a major edit ?"
-msgstr "这是重要修改吗？"
+msgstr "这是一项重大修改?"
 
 #. module: wiki
 #: model:ir.actions.wizard,name:wiki.wizard_group_menu_create
@@ -316,7 +328,7 @@ msgstr "创建菜单"
 #. module: wiki
 #: field:wiki.wiki,tags:0
 msgid "Tags"
-msgstr "标记"
+msgstr "标签"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_groups
@@ -326,12 +338,12 @@ msgstr "标记"
 #: model:ir.ui.menu,name:wiki.menu_action_wiki_groups_browse
 #: view:wiki.groups:0
 msgid "Wiki Groups"
-msgstr "维基组"
+msgstr "Wiki组"
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
 msgid "Modify By"
-msgstr "修改由"
+msgstr "修改之"
 
 #. module: wiki
 #: field:wiki.wiki,toc:0
@@ -358,4 +370,5 @@ msgstr "差异"
 #. module: wiki
 #: field:wiki.wiki,review:0
 msgid "Need Review"
-msgstr "需要复审"
+msgstr "需要预览"
+

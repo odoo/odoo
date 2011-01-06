@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-04-10 12:04+0000\n"
+"POT-Creation-Date: 2010-09-02 13:56:45+0000\n"
+"PO-Revision-Date: 2010-09-02 13:56:45+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.act_account_acount_move_line_open1
@@ -41,7 +40,7 @@ msgstr "Stare:"
 #. module: account_voucher
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nume invalid de model în definirea acţiunii"
+msgstr "Invalid model name in the action definition."
 
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
@@ -50,7 +49,6 @@ msgid "Ref. :"
 msgstr "Ref."
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
 #: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_cont_voucher_form
@@ -64,17 +62,11 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_jour_voucher_form
 #: model:ir.ui.menu,name:account_voucher.menu_action_view_jour_voucher_form
 msgid "Journal Voucher"
 msgstr "Jurnal bonuri valorice"
-
-#. module: account_voucher
-#: rml:voucher.cash_receipt.drcr:0
-msgid ","
-msgstr ","
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -101,11 +93,6 @@ msgstr "Credit total"
 #: field:account.voucher.line,account_id:0
 msgid "Account"
 msgstr "Cont"
-
-#. module: account_voucher
-#: rml:voucher.cash_amount:0
-msgid "D"
-msgstr "D"
 
 #. module: account_voucher
 #: field:account.account,level:0
@@ -153,7 +140,6 @@ msgid "Analytic Account"
 msgstr "Cont analitic"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
 #: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_jour_sale_voucher_form
@@ -256,7 +242,7 @@ msgstr "Bonuri deschise"
 #. module: account_voucher
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML invalid pentru arhitectura machetei de afișare !"
+msgstr "Invalid XML for View Architecture!"
 
 #. module: account_voucher
 #: rml:voucher.cash_amount:0
@@ -376,7 +362,6 @@ msgid "Voucher Report (Cr/Dr)"
 msgstr "Raport bonuri (Cr/Db)"
 
 #. module: account_voucher
-#: field:account.move,voucher_type:0
 #: wizard_field:account.voucher.open,init,type:0
 msgid "Voucher Type"
 msgstr "Tip bon"
@@ -442,11 +427,8 @@ msgstr "Proformă"
 
 #. module: account_voucher
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Numele obiectului trebuie să înceapă cu x_ şi să nu conţină nici un caracter "
-"special !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "The Object name must start with x_ and not contain any special character !"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -481,7 +463,6 @@ msgid "Canceled"
 msgstr "Anulat"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
 #: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_cash_pay_voucher_form
@@ -502,7 +483,6 @@ msgid "-"
 msgstr "-"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
 #: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_jour_pur_voucher_form
@@ -564,7 +544,6 @@ msgid "Cash Payments"
 msgstr "Plăţi nunerar"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
 #: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_cash_rec_voucher_form
@@ -574,7 +553,6 @@ msgid "Cash Receipt Voucher"
 msgstr "Bon valoric primire numerar"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
 #: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_bank_pay_voucher_form
@@ -584,7 +562,6 @@ msgid "Bank Payment Voucher"
 msgstr "Bon valoric de plată la bancă"
 
 #. module: account_voucher
-#: selection:account.move,voucher_type:0
 #: selection:account.voucher,type:0
 #: selection:account.voucher.open,init,type:0
 #: model:ir.actions.act_window,name:account_voucher.action_view_bank_rec_voucher_form
@@ -598,3 +575,4 @@ msgstr "Bon valoric chitanţă bancară"
 #: field:account.voucher,journal_id:0
 msgid "Journal"
 msgstr "Jurnal"
+

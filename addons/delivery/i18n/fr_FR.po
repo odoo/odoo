@@ -4,57 +4,21 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-08-26 10:05+0000\n"
-"Last-Translator: Phuong <phu@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:45:58+0000\n"
+"PO-Revision-Date: 2010-09-02 13:45:58+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
-
-#. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
-msgid "Delivery by Poste"
-msgstr "Livraison par la poste"
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
-#, python-format
-msgid "The order state have to be draft to add delivery lines."
-msgstr ""
-"La commande doit être à l'état de brouillon pour ajouter les lignes de "
-"livraison."
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
-#, python-format
-msgid "No grid matching for this carrier !"
-msgstr "Aucun tarif ne correspond à ce mode de transport !"
-
-#. module: delivery
-#: view:res.partner:0
-msgid "Deliveries Properties"
-msgstr "Propriétés des livraisons"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:0
-#, python-format
-msgid "No line matched this order in the choosed delivery grids !"
-msgstr ""
-"Aucune ligne ne correspond à cette commande dans le tarif de livraison "
-"choisi !"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: delivery
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
-"caractères spéciaux !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'objet doit commencer avec x_ et ne pas contenir de charactères spéciaux !"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -72,15 +36,19 @@ msgid "Destination"
 msgstr "Destination"
 
 #. module: delivery
+#: model:product.template,name:delivery.delivery_product_product_template
+msgid "Delivery by Poste"
+msgstr "Livraison par la poste"
+
+#. module: delivery
 #: constraint:ir.ui.view:0
 msgid "Invalid XML for View Architecture!"
-msgstr "XML non valide pour l'architecture de la vue !"
+msgstr "XML non valide pour l'architecture de la vue"
 
 #. module: delivery
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
-"Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
+msgstr "Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
 
 #. module: delivery
 #: field:delivery.grid,state_ids:0
@@ -90,14 +58,12 @@ msgstr "États"
 #. module: delivery
 #: constraint:ir.actions.act_window:0
 msgid "Invalid model name in the action definition."
-msgstr "Nom de modèle non valide dans la définition de l'action."
+msgstr "Invalid model name in the action definition."
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
 msgid "This delivery method will be used when invoicing from packing."
-msgstr ""
-"Cette méthode de livraison sera utilisé lors de la facturation depuis les "
-"colisages"
+msgstr "Cette méthode de livraison sera utilisé lors de la facturation depuis les colisages"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -115,6 +81,12 @@ msgid "Fixed"
 msgstr "Fixe"
 
 #. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "The order state have to be draft to add delivery lines."
+msgstr "La commande doit être à l'état de brouillon pour ajouter les lignes de livraison."
+
+#. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
 msgstr "Ligne de tarif"
@@ -129,13 +101,19 @@ msgstr "Liste de prix de livraison"
 #: model:ir.actions.act_window,name:delivery.action_picking_tree5
 #: model:ir.ui.menu,name:delivery.menu_action_picking_tree5
 msgid "Generate Draft Invoices On Receptions"
-msgstr "Créer les factures brouillon à la réception"
+msgstr "Créer les factures brouillon sur les réceptions"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
 msgstr "Variable"
+
+#. module: delivery
+#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#, python-format
+msgid "No grid matching for this carrier !"
+msgstr "Aucun tarif ne correspond à ce mode de transport !"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -156,6 +134,11 @@ msgstr "Lignes de tarif"
 #: field:delivery.grid.line,grid_id:0
 msgid "Grid"
 msgstr "Tarifs"
+
+#. module: delivery
+#: view:res.partner:0
+msgid "Deliveries Properties"
+msgstr "Propriétés des livraisons"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -207,9 +190,7 @@ msgstr "Nom"
 #. module: delivery
 #: constraint:product.template:0
 msgid "Error: UOS must be in a different category than the UOM"
-msgstr ""
-"Erreur : l'Unité Secondaire doit appartenir à une autre catégorie que "
-"l'Unité de Mesure."
+msgstr "Erreur : l'Unité Secondaire doit appartenir à une autre catégorie que l'Unité de Mesure."
 
 #. module: delivery
 #: field:delivery.grid,country_ids:0
@@ -218,11 +199,8 @@ msgstr "Pays"
 
 #. module: delivery
 #: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
-"catégorie."
+msgid "Error: The default UOM and the purchase UOM must be in the same category."
+msgstr "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même catégorie."
 
 #. module: delivery
 #: view:sale.order:0
@@ -323,21 +301,19 @@ msgstr "Partenaire transporteur"
 
 #. module: delivery
 #: model:ir.module.module,description:delivery.module_meta_information
-msgid ""
-"Allows you to add delivery methods in sales orders and packing. You can "
-"define your own carrier and delivery grids for prices. When creating "
-"invoices from picking, Open ERP is able to add and compute the shipping line."
-msgstr ""
-"Permet d'ajouter une méthode de livraison aux commandes de ventes et aux "
-"colisages. Vous pouvez définir votre transporteur et les tarifs de "
-"livraisons pour les prix. Lorsqu'une facture est crée depuis le colisage, "
-"OpenERP est capable d'ajouter une ligne de livraison et d'en calculer le "
-"prix."
+msgid "Allows you to add delivery methods in sales orders and packing. You can define your own carrier and delivery grids for prices. When creating invoices from picking, Open ERP is able to add and compute the shipping line."
+msgstr "Permet d'ajouter une méthode de livraison aux commandes de ventes et aux colisages. Vous pouvez définir votre transporteur et les tarifs de livraisons pour les prix. Lorsqu'une facture est crée depuis le colisage, OpenERP est capable d'ajouter une ligne de livraison et d'en calculer le prix."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
 msgid "To Zip"
 msgstr "Code postal destination"
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:0
+#, python-format
+msgid "No line matched this order in the choosed delivery grids !"
+msgstr "Aucune ligne ne correspond à cette commande dans le tarif de livraison choisi !"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -353,11 +329,8 @@ msgstr "Aucun prix disponible !"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
-msgid ""
-"Complete this field if you plan to invoice the shipping based on packing."
-msgstr ""
-"Remplissez ce champ si vous prévoyez de facturer le port en vous basant sur "
-"les colisages."
+msgid "Complete this field if you plan to invoice the shipping based on packing."
+msgstr "Remplissez ce champ si vous prévoyez de facturer le port en vous basant sur les colisages."
 
 #. module: delivery
 #: model:ir.actions.wizard,name:delivery.wizard_deliver_line_add
@@ -417,3 +390,4 @@ msgstr "Le numéro de TVA ne semble pas correct."
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Type de prix"
+

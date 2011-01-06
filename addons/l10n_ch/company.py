@@ -5,7 +5,7 @@
 #
 #  Created by Nicolas Bessi based on Credric Krier contribution
 #
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+#  Copyright (c) 2010 CamptoCamp. All rights reserved.
 ##############################################################################
 #
 # WARNING: This program as such is intended to be used by professional
@@ -31,9 +31,8 @@
 #
 ##############################################################################
 
-import netsvc
 from osv import fields, osv
-class res_company(osv.osv):
+class ResCompany(osv.osv):
     """override company in order to add bvr vertical and 
     Horizontal print delta"""
     _inherit = "res.company"
@@ -45,6 +44,5 @@ class res_company(osv.osv):
         'bvr_delta_vert': fields.float('BVR Vert. Delta (mm)',
             help='vert. delta in mm 1.2 will print the bvz 1.2mm lefter'),
     }
-res_company()
+ResCompany()
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

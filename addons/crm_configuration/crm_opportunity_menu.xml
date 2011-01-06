@@ -79,7 +79,7 @@
           <field name="res_model">crm.case</field>
           <field name="view_mode">tree,calendar,form,graph</field>
           <field name="view_id" ref="crm_case_tree_view_oppor"/>
-          <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'state\',\'=\',\'pending\'),(\'user_id\',\'=\',False)]'"/>
+          <field name="domain" eval="'[(\'section_id\',\'=\','+str(section_support3)+'),(\'user_id\',\'=\',False)]'"/>
      </record>
      <record model="ir.actions.act_window.view" id="action_crm_tag_tree_view_oppor_all2">
           <field name="sequence" eval="1"/>

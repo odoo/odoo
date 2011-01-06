@@ -4,18 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-11-30 01:43+0000\n"
-"Last-Translator: Jordi Esteve - http://www.zikzakmedia.com "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-09-02 13:37:33+0000\n"
+"PO-Revision-Date: 2010-09-02 13:37:33+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: account_report
 #: field:account.report.history,name:0
@@ -73,8 +71,7 @@ msgstr "Resum tabular"
 #: code:addons/account_report/wizard/wizard_print_indicators.py:0
 #, python-format
 msgid "Please select maximum 8 records to fit the page-width."
-msgstr ""
-"Seleccioneu un màxim de 8 registres per a que s'ajusti a l'ample de pàgina."
+msgstr "Seleccioneu un màxim de 8 registres per a que s'ajusti a l'ample de pàgina."
 
 #. module: account_report
 #: view:account.report.report:0
@@ -224,8 +221,12 @@ msgstr "Haver del compte:"
 #. module: account_report
 #: wizard_view:print.indicators,init:0
 msgid "Select the criteria based on which Indicators will be printed."
-msgstr ""
-"﻿Seleccioneu els criteris en que els indicadors es basaran per imprimir-se."
+msgstr "﻿Seleccioneu els criteris en que els indicadors es basaran per imprimir-se."
+
+#. module: account_report
+#: view:account.report.report:0
+msgid "report('REPORT_CODE')"
+msgstr "report('REPORT_CODE')"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -256,12 +257,8 @@ msgstr "Posició"
 
 #. module: account_report
 #: help:account.report.report,disp_tree:0
-msgid ""
-"When the indicators are printed, if one indicator is set with this field to "
-"True, then it will display one more graphs with all its children in tree"
-msgstr ""
-"Quan s'imprimeixen els indicadors, si un indicador té aquesta opció marcada, "
-"es mostra un gràfic addicional amb tots els seus fills en arbre."
+msgid "When the indicators are printed, if one indicator is set with this field to True, then it will display one more graphs with all its children in tree"
+msgstr "Quan s'imprimeixen els indicadors, si un indicador té aquesta opció marcada, es mostra un gràfic addicional amb tots els seus fills en arbre."
 
 #. module: account_report
 #: selection:account.report.report,status:0
@@ -304,9 +301,14 @@ msgid "Expression :"
 msgstr "Expressió :"
 
 #. module: account_report
-#: view:account.report.report:0
-msgid "report('REPORT_CODE')"
-msgstr "report('REPORT_CODE')"
+#: rml:print.indicators:0
+msgid "COL 2"
+msgstr "COL 2"
+
+#. module: account_report
+#: rml:print.indicators:0
+msgid "COL 1"
+msgstr "COL 1"
 
 #. module: account_report
 #: field:account.report.report,expression:0
@@ -364,11 +366,8 @@ msgstr "Fills"
 
 #. module: account_report
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter "
-"especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "El nom de l'objecte ha de començar amb x_ i no contenir cap caràcter especial!"
 
 #. module: account_report
 #: help:account.report.report,goodness_limit:0
@@ -423,13 +422,8 @@ msgstr "Altres informes"
 
 #. module: account_report
 #: view:account.report.report:0
-msgid ""
-"Note: The second arguement 'fiscalyear' and 'period' are optional "
-"arguements.If the value is -1,previous fiscalyear or period is considered."
-msgstr ""
-"﻿Nota: El segon argument 'exercicifiscal' i 'període' son arguments "
-"opcionals. Si el valor es -1, es considera l'exercici fiscal o període "
-"anterior."
+msgid "Note: The second arguement 'fiscalyear' and 'period' are optional arguements.If the value is -1,previous fiscalyear or period is considered."
+msgstr "﻿Nota: El segon argument 'exercicifiscal' i 'període' son arguments opcionals. Si el valor es -1, es considera l'exercici fiscal o període anterior."
 
 #. module: account_report
 #: rml:print.indicators:0
@@ -479,12 +473,8 @@ msgstr "Selecciona criteris"
 #. module: account_report
 #: code:addons/account_report/account.py:0
 #, python-format
-msgid ""
-"You cannot delete an indicator history record. You may have to delete the "
-"concerned Indicator!"
-msgstr ""
-"No podeu eliminar un registre de l'historial de l'indicador. Heu d'eliminar "
-"l'indicador implicat!"
+msgid "You cannot delete an indicator history record. You may have to delete the concerned Indicator!"
+msgstr "No podeu eliminar un registre de l'historial de l'indicador. Heu d'eliminar l'indicador implicat!"
 
 #. module: account_report
 #: view:account.report.report:0
@@ -527,12 +517,8 @@ msgstr "Indicadors -"
 
 #. module: account_report
 #: help:account.report.report,disp_graph:0
-msgid ""
-"If the field is set to True, information will be printed as a Graph, "
-"otherwise as an array."
-msgstr ""
-"Si es marca aquesta opció, la informació serà impresa en forma de gràfic, en "
-"cas contrari com una taula."
+msgid "If the field is set to True, information will be printed as a Graph, otherwise as an array."
+msgstr "Si es marca aquesta opció, la informació serà impresa en forma de gràfic, en cas contrari com una taula."
 
 #. module: account_report
 #: view:account.report.report:0
@@ -556,13 +542,11 @@ msgstr "1cm 27.7cm 20cm 27.7cm"
 
 #. module: account_report
 #: model:ir.module.module,description:account_report.module_meta_information
-msgid ""
-"Financial and accounting reporting\n"
+msgid "Financial and accounting reporting\n"
 "    Fiscal statements\n"
 "    Indicators\n"
 "    "
-msgstr ""
-"Informes financers i comptables\n"
+msgstr "Informes financers i comptables\n"
 "    Declaracions fiscals\n"
 "    Indicadors\n"
 "    "
@@ -571,3 +555,4 @@ msgstr ""
 #: selection:account.report.report,type:0
 msgid "Fiscal Statement"
 msgstr "Declaració fiscal"
+

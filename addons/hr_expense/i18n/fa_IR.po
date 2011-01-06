@@ -1,0 +1,541 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* hr_expense
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.12\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2010-09-02 13:53:08+0000\n"
+"PO-Revision-Date: 2010-09-02 13:53:08+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_confirmedexpenses0
+msgid "Confirmed Expenses"
+msgstr "Confirmed Expenses"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_hr_expense_line
+msgid "Expense Line"
+msgstr "Expense Line"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_reimbursement0
+msgid "The accoutant reimburse the expenses"
+msgstr "The accoutant reimburse the expenses"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_all_confirm
+#: model:ir.ui.menu,name:hr_expense.menu_expense_all_confirm
+msgid "Expenses waiting validation"
+msgstr "Expenses waiting validation"
+
+#. module: hr_expense
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "نام مدل در تعریف کنش نامعتبر است."
+
+#. module: hr_expense
+#: field:hr.expense.expense,date_confirm:0
+msgid "Date Confirmed"
+msgstr "Date Confirmed"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Waiting confirmation"
+msgstr "Waiting confirmation"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Set to Draft"
+msgstr "Set to Draft"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_my_confirm
+#: model:ir.ui.menu,name:hr_expense.menu_expense_my_confirm
+msgid "My expenses waiting validation"
+msgstr "My expenses waiting validation"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_all
+#: model:ir.ui.menu,name:hr_expense.menu_expense_all
+msgid "All expenses"
+msgstr "All expenses"
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_approved0
+msgid "Approved"
+msgstr "Approved"
+
+#. module: hr_expense
+#: field:hr.expense.line,uom_id:0
+msgid "UoM"
+msgstr "UoM"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: model:process.transition.action,name:hr_expense.process_transition_action_refuse0
+msgid "Refuse"
+msgstr "Refuse"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Notes"
+msgstr "Notes"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Cancelled"
+msgstr "Cancelled"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Validation"
+msgstr "Validation"
+
+#. module: hr_expense
+#: help:product.product,hr_expense_ok:0
+msgid "Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."
+msgstr "Determine if the product can be visible in the list of product within a selection from an HR expense sheet line."
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Accepted"
+msgstr "Accepted"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+#: field:hr.expense.expense,ref:0
+#: field:hr.expense.line,ref:0
+msgid "Reference"
+msgstr "Reference"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "Certified honest and conform,"
+msgstr "Certified honest and conform,"
+
+#. module: hr_expense
+#: model:ir.actions.report.xml,name:hr_expense.hr_expenses
+msgid "Print HR expenses"
+msgstr "Print HR expenses"
+
+#. module: hr_expense
+#: model:process.transition,name:hr_expense.process_transition_refuseexpense0
+msgid "Refuse expense"
+msgstr "Refuse expense"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: model:process.transition.action,name:hr_expense.process_transition_action_confirm0
+msgid "Confirm"
+msgstr "Confirm"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_supplierinvoice0
+msgid "The accoutant validates the sheet"
+msgstr "The accoutant validates the sheet"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
+msgstr "Please configure Default Expanse account for Product purchase, `property_account_expense_categ`"
+
+#. module: hr_expense
+#: field:hr.expense.line,analytic_account:0
+msgid "Analytic account"
+msgstr "Analytic account"
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_supplierinvoice0
+#: model:process.transition,name:hr_expense.process_transition_approveinvoice0
+msgid "Supplier Invoice"
+msgstr "Supplier Invoice"
+
+#. module: hr_expense
+#: field:hr.expense.expense,state:0
+msgid "State"
+msgstr "State"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+#: field:hr.expense.expense,employee_id:0
+msgid "Employee"
+msgstr "Employee"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "Qty"
+msgstr "Qty"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "Total Price"
+msgstr "Total Price"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_reinvoicing0
+msgid "Some costs may be reinvoices to the customer"
+msgstr "Some costs may be reinvoices to the customer"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "Error !"
+msgstr "Error !"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_my
+#: model:ir.ui.menu,name:hr_expense.menu_expense_my
+msgid "My Expenses"
+msgstr "My Expenses"
+
+#. module: hr_expense
+#: field:hr.expense.expense,id:0
+msgid "Sheet ID"
+msgstr "Sheet ID"
+
+#. module: hr_expense
+#: model:process.transition,name:hr_expense.process_transition_reimburseexpense0
+msgid "Reimburse expense"
+msgstr "Reimburse expense"
+
+#. module: hr_expense
+#: field:hr.expense.expense,journal_id:0
+msgid "Force Journal"
+msgstr "Force Journal"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_my_new
+#: model:ir.ui.menu,name:hr_expense.menu_expense_my_new
+msgid "New Expenses Sheet"
+msgstr "New Expenses Sheet"
+
+#. module: hr_expense
+#: model:process.transition,note:hr_expense.process_transition_reimburseexpense0
+msgid "After creating invoice, reimburse expenses"
+msgstr "After creating invoice, reimburse expenses"
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_reimbursement0
+msgid "Reimbursement"
+msgstr "Reimbursement"
+
+#. module: hr_expense
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML برای ساختمان نما معتبر نیست!"
+
+#. module: hr_expense
+#: field:hr.expense.line,expense_id:0
+#: model:ir.model,name:hr_expense.model_hr_expense_expense
+msgid "Expense"
+msgstr "Expense"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,line_ids:0
+#: view:hr.expense.line:0
+msgid "Expense Lines"
+msgstr "Expense Lines"
+
+#. module: hr_expense
+#: field:hr.expense.expense,currency_id:0
+msgid "Currency"
+msgstr "Currency"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:0
+#, python-format
+msgid "The employee must have a working address"
+msgstr "The employee must have a working address"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_draftexpenses0
+msgid "Employee encode all his expenses"
+msgstr "Employee encode all his expenses"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Invoiced"
+msgstr "Invoiced"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Reimbursed"
+msgstr "Reimbursed"
+
+#. module: hr_expense
+#: field:hr.expense.expense,note:0
+msgid "Note"
+msgstr "Note"
+
+#. module: hr_expense
+#: model:process.transition,note:hr_expense.process_transition_reimbursereinvoice0
+msgid "Create Customer invoice"
+msgstr "Create Customer invoice"
+
+#. module: hr_expense
+#: selection:hr.expense.expense,state:0
+msgid "Draft"
+msgstr "Draft"
+
+#. module: hr_expense
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "نام شی باید با 'x_' آغاز شود و دارای هیچ نویسه ویژه‌ای نباشد!"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Accounting data"
+msgstr "Accounting data"
+
+#. module: hr_expense
+#: model:process.transition,note:hr_expense.process_transition_approveexpense0
+msgid "Expense is approved."
+msgstr "Expense is approved."
+
+#. module: hr_expense
+#: field:hr.expense.expense,amount:0
+msgid "Total Amount"
+msgstr "Total Amount"
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_draftexpenses0
+msgid "Draft Expenses"
+msgstr "Draft Expenses"
+
+#. module: hr_expense
+#: field:hr.expense.expense,user_id:0
+msgid "User"
+msgstr "User"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+#: field:hr.expense.expense,date:0
+#: field:hr.expense.line,date_value:0
+msgid "Date"
+msgstr "Date"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "Total:"
+msgstr "Total:"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "HR Expenses"
+msgstr "HR Expenses"
+
+#. module: hr_expense
+#: field:hr.expense.expense,date_valid:0
+msgid "Date Validated"
+msgstr "Date Validated"
+
+#. module: hr_expense
+#: field:hr.expense.expense,account_move_id:0
+msgid "Account Move"
+msgstr "Account Move"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_confirmedexpenses0
+msgid "The employee validates his expense sheet"
+msgstr "The employee validates his expense sheet"
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_refused0
+msgid "The direct manager refuses the sheet.Reset as draft."
+msgstr "The direct manager refuses the sheet.Reset as draft."
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Expenses Sheet"
+msgstr "Expenses Sheet"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_all_invoiced
+#: model:ir.ui.menu,name:hr_expense.menu_expense_all_invoiced
+msgid "Expenses waiting payment"
+msgstr "Expenses waiting payment"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_my_draft
+#: model:ir.ui.menu,name:hr_expense.menu_expense_my_draft
+msgid "My Draft expenses"
+msgstr "My Draft expenses"
+
+#. module: hr_expense
+#: model:ir.module.module,shortdesc:hr_expense.module_meta_information
+msgid "Human Resources Expenses Tracking"
+msgstr "Human Resources Expenses Tracking"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,invoice_id:0
+#: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
+msgid "Invoice"
+msgstr "Invoice"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Cancel"
+msgstr "Cancel"
+
+#. module: hr_expense
+#: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
+msgid "Reinvoice"
+msgstr "Reinvoice"
+
+#. module: hr_expense
+#: model:process.process,name:hr_expense.process_process_expenseprocess0
+msgid "Expense Process"
+msgstr "Expense Process"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Other Info"
+msgstr "Other Info"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_all_draft
+#: model:ir.ui.menu,name:hr_expense.menu_expense_all_draft
+msgid "Draft expenses"
+msgstr "Draft expenses"
+
+#. module: hr_expense
+#: model:process.transition,name:hr_expense.process_transition_confirmexpense0
+msgid "Confirm expense"
+msgstr "Confirm expense"
+
+#. module: hr_expense
+#: model:process.transition,name:hr_expense.process_transition_approveexpense0
+msgid "Approve expense"
+msgstr "Approve expense"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: model:process.transition.action,name:hr_expense.process_transition_action_accept0
+msgid "Accept"
+msgstr "Accept"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "This document must be dated and signed for reimbursement"
+msgstr "This document must be dated and signed for reimbursement"
+
+#. module: hr_expense
+#: model:process.transition,note:hr_expense.process_transition_refuseexpense0
+msgid "Expense is refused."
+msgstr "Expense is refused."
+
+#. module: hr_expense
+#: rml:hr.expense:0
+#: field:hr.expense.line,unit_amount:0
+msgid "Unit Price"
+msgstr "Unit Price"
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.expense_all_valid
+#: model:ir.ui.menu,name:hr_expense.menu_expense_all_valid
+msgid "Expenses waiting invoice"
+msgstr "Expenses waiting invoice"
+
+#. module: hr_expense
+#: field:hr.expense.line,product_id:0
+msgid "Product"
+msgstr "Product"
+
+#. module: hr_expense
+#: field:hr.expense.line,description:0
+msgid "Description"
+msgstr "Description"
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,name:0
+msgid "Expense Sheet"
+msgstr "Expense Sheet"
+
+#. module: hr_expense
+#: field:hr.expense.line,unit_quantity:0
+msgid "Quantities"
+msgstr "Quantities"
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_refused0
+msgid "Refused"
+msgstr "Refused"
+
+#. module: hr_expense
+#: field:product.product,hr_expense_ok:0
+msgid "Can be Expensed"
+msgstr "Can be Expensed"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "Ref."
+msgstr "Ref."
+
+#. module: hr_expense
+#: field:hr.expense.expense,user_valid:0
+msgid "Validation User"
+msgstr "Validation User"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "(Date and signature)"
+msgstr "(Date and signature)"
+
+#. module: hr_expense
+#: rml:hr.expense:0
+msgid "Name"
+msgstr "Name"
+
+#. module: hr_expense
+#: field:hr.expense.line,name:0
+msgid "Short Description"
+msgstr "Short Description"
+
+#. module: hr_expense
+#: model:process.transition,note:hr_expense.process_transition_approveinvoice0
+msgid "Creates supplier invoice."
+msgstr "Creates supplier invoice."
+
+#. module: hr_expense
+#: model:process.node,note:hr_expense.process_node_approved0
+msgid "The direct manager approves the sheet"
+msgstr "The direct manager approves the sheet"
+
+#. module: hr_expense
+#: field:hr.expense.line,sequence:0
+msgid "Sequence"
+msgstr "Sequence"
+
+#. module: hr_expense
+#: model:process.transition,note:hr_expense.process_transition_confirmexpense0
+msgid "Expense is confirmed."
+msgstr "Expense is confirmed."
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+#: model:ir.ui.menu,name:hr_expense.next_id_49
+msgid "Expenses"
+msgstr "Expenses"
+
+#. module: hr_expense
+#: field:hr.expense.line,total_amount:0
+msgid "Total"
+msgstr "Total"
+
+#. module: hr_expense
+#: model:process.node,name:hr_expense.process_node_reinvoicing0
+msgid "Reinvoicing"
+msgstr "Reinvoicing"
+

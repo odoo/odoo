@@ -23,6 +23,8 @@
 import netsvc
 import pooler, tools
 
+from tools.safe_eval import safe_eval as eval
+
 from osv import fields, osv
 
 class Env(dict):

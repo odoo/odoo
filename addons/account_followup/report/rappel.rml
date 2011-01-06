@@ -99,11 +99,11 @@
         </td>
         <td>
           <para style="terp_default_9">[[ o.name ]]</para>
-          <para style="terp_default_9">[[ a['name'] ]]</para>
-          <para style="terp_default_9">[[ a['street'] ]]</para>
-          <para style="terp_default_9">[[ a['zip'] ]] </para>
-          <para style="terp_default_9">[[ a['city'] ]]</para>
-          <para style="terp_default_9">[[( a['country_id'] and a['country_id'][1]) or '']]</para>
+          <para style="terp_default_9">[[ a.get('name','') ]]</para>
+          <para style="terp_default_9">[[ a.get('street','') ]]</para>
+          <para style="terp_default_9">[[ a.get('zip','') ]] </para>
+          <para style="terp_default_9">[[ a.get('city','') ]]</para>
+          <para style="terp_default_9">[[ a.get('country_id',False) and a['country_id'][1] or '']]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
@@ -169,7 +169,7 @@
             <para style="terp_default_Centre_9">[[ line['ref'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Centre_9">[[ line['date_maturity'] ]]</para>
+            <para style="terp_default_Centre_9">[[ line['date_maturity'] and formatLang(line['date_maturity'], date=True) ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line['amount_currency'] )]] [[ line['currency_id'] and line['currency_id'][1] or '' ]] </para>

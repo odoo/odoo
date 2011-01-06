@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 11:24+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2010-09-02 13:47:43+0000\n"
+"PO-Revision-Date: 2010-09-02 13:47:43+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -42,7 +41,7 @@ msgstr "Kundenzufriedenheit Berechnung"
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ0-act
 #: model:ir.ui.menu,name:crm.next_id_52
 msgid "All Cases"
-msgstr "Alle Fälle"
+msgstr "All Cases"
 
 #. module: crm
 #: wizard_view:crm.case.section.menu,init:0
@@ -83,12 +82,8 @@ msgstr "Alle offenen Verkaufschancen & Interessenten "
 
 #. module: crm
 #: help:crm.segmentation,som_interval_default:0
-msgid ""
-"Default state of mind for period preceeding the 'Max Interval' computation. "
-"This is the starting state of mind by default if the partner has no event."
-msgstr ""
-"Standard Kundenzufriedenheit verändert sich durch die Max Interval "
-"Berechnung. Dieses ist die Standard Eingruppierung der Kundenzufriedenheit."
+msgid "Default state of mind for period preceeding the 'Max Interval' computation. This is the starting state of mind by default if the partner has no event."
+msgstr "Standard Kundenzufriedenheit verändert sich durch die Max Interval Berechnung. Dieses ist die Standard Eingruppierung der Kundenzufriedenheit."
 
 #. module: crm
 #: selection:crm.segmentation,state:0
@@ -166,6 +161,7 @@ msgstr "Meine "
 #. module: crm
 #: view:crm.case:0
 #: view:crm.case.history:0
+#: model:ir.actions.act_window,name:crm.crm_case_section_open_act
 #: model:ir.ui.menu,name:crm.next_id_51
 msgid "Cases"
 msgstr "Fälle"
@@ -184,23 +180,15 @@ msgid "<"
 msgstr "<"
 
 #. module: crm
-#: help:crm.segmentation,categ_id:0
-msgid ""
-"The partner category that will be added to partners that match the "
-"segmentation criterions after computation."
-msgstr ""
-"Es wird die Partner Kategorie zugewiesen, die der Segmentierungs Regel nach "
-"dieser Berechnung entspricht."
+#: view:crm.case.rule:0
+msgid "%(case_description)s = Case description"
+msgstr "%(case_description)s = Fall Beschreibung"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"You can not escalate this case.\n"
-"You are already at the top level."
-msgstr ""
-"Sie können diesen Fall nicht eskalieren.\n"
-"Sie sind bereits auf der obersten Ebene"
+msgid "You can not escalate this case.\nYou are already at the top level."
+msgstr "You can not escalate this case.\nYou are already at the top level."
 
 #. module: crm
 #: field:crm.case,email_cc:0
@@ -288,16 +276,18 @@ msgstr "Regel Bezeichnung"
 
 #. module: crm
 #: help:crm.case.rule,act_remind_partner:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the partner."
-msgstr ""
-"Hake dieses Feld an wenn diese Regel eine EMail Erinnerung an die säumigen "
-"Schuldner senden soll."
+msgid "Check this if you want the rule to send a reminder by email to the partner."
+msgstr "Hake dieses Feld an wenn diese Regel eine EMail Erinnerung an die säumigen Schuldner senden soll."
 
 #. module: crm
 #: field:crm.case.rule,trg_priority_to:0
 msgid "Maximim Priority"
 msgstr "Max. Priorität"
+
+#. module: crm
+#: help:crm.segmentation,som_interval_decrease:0
+msgid "If the partner has not purchased (or bought) during a period, decrease the state of mind by this factor. It's a multiplication"
+msgstr "If the partner has not purchased (or bought) during a period, decrease the state of mind by this factor. It's a multiplication"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu17:0
@@ -337,10 +327,12 @@ msgid "Operator"
 msgstr "Operator"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Draft"
 msgstr "Entwurf"
 
@@ -371,57 +363,42 @@ msgstr "%(case_subject)s = Fallbezug (Vertrieb)"
 
 #. module: crm
 #: model:ir.module.module,description:crm.module_meta_information
-msgid ""
-"The generic Open ERP Customer Relationship Management\n"
+msgid "The generic Open ERP Customer Relationship Management\n"
 "system enables a group of people to intelligently and efficiently manage\n"
 "leads, opportunities, tasks, issues, requests, bugs, campaign, claims, etc.\n"
 "It manages key tasks such as communication, identification, prioritization,\n"
 "assignment, resolution and notification.\n"
 "\n"
-"Open ERP ensures that all cases are successfully tracked by users, customers "
-"and\n"
-"suppliers. It can automatically send reminders, escalate the request, "
-"trigger\n"
-"specific methods and lots of others actions based on your enterprise own "
-"rules.\n"
+"Open ERP ensures that all cases are successfully tracked by users, customers and\n"
+"suppliers. It can automatically send reminders, escalate the request, trigger\n"
+"specific methods and lots of others actions based on your enterprise own rules.\n"
 "\n"
-"The greatest thing about this system is that users don't need to do "
-"anything\n"
-"special. They can just send email to the request tracker. Open ERP will "
-"take\n"
+"The greatest thing about this system is that users don't need to do anything\n"
+"special. They can just send email to the request tracker. Open ERP will take\n"
 "care of thanking them for their message, automatically routing it to the\n"
-"appropriate staff, and making sure all future correspondence gets to the "
-"right\n"
+"appropriate staff, and making sure all future correspondence gets to the right\n"
 "place.\n"
 "\n"
 "The CRM module has a email gateway for the synchronisation interface\n"
 "between mails and Open ERP."
-msgstr ""
-"Das allgemeine OpenERP Kundenbeziehungsmanagement (CRM)\n"
+msgstr "Das allgemeine OpenERP Kundenbeziehungsmanagement (CRM)\n"
 "erlaubt einer Gruppe von Leuten auf intelligente und effiziiente Weise\n"
 "Hinweise, Gelegenheiten, Aufgaben, Angelegenheiten, Anfragen, Fehler, \n"
 "Kapmagnen, Ansprüche zu verwalten. Schlüsselfunktionen wie Kommunikation,\n"
-"Identifikation, Reihungen, Zuordnungen, Lösungen und Benachrichtigungen "
-"werden\n"
+"Identifikation, Reihungen, Zuordnungen, Lösungen und Benachrichtigungen werden\n"
 "abgedeckt.\n"
 "\n"
-"OpenERP stellt sicher, dass alle Fälle von Benutzern, Kunden und Lieferanten "
-"verfolgt\n"
+"OpenERP stellt sicher, dass alle Fälle von Benutzern, Kunden und Lieferanten verfolgt\n"
 "werden.Automatische Erinnerungen, Hinaufstufen von Anfragen, Auslösen von \n"
-"bestimmten Methoden und viele andere Aktionen aufgrund der "
-"unternehmenseigenen \n"
+"bestimmten Methoden und viele andere Aktionen aufgrund der unternehmenseigenen \n"
 "Regeln sind möglich.\n"
 "\n"
-"Benutzer müssen nichts spezielles tun. Sie senden ein EMail an die "
-"Anfragenverwaltung\n"
-"und OpenERP kümmert sich darum, dass ihnen für die Anfrage gedankt wird, "
-"diese \n"
-"automatisch an die zuständigen Stellen weitergeleitet wird und alle "
-"zukünftige Korrespondenz \n"
+"Benutzer müssen nichts spezielles tun. Sie senden ein EMail an die Anfragenverwaltung\n"
+"und OpenERP kümmert sich darum, dass ihnen für die Anfrage gedankt wird, diese \n"
+"automatisch an die zuständigen Stellen weitergeleitet wird und alle zukünftige Korrespondenz \n"
 "an die richtige Stelle kommt.\n"
 "\n"
-"Das CRM Modul beinhaltet ein EMail Gateway für die Synchronisierung von "
-"Mails und OpenERP"
+"Das CRM Modul beinhaltet ein EMail Gateway für die Synchronisierung von Mails und OpenERP"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu5:0
@@ -481,7 +458,7 @@ msgstr "Optional"
 #: model:ir.actions.act_window,name:crm.crm_case_history_my-act
 #: model:ir.ui.menu,name:crm.menu_crm_case_history_my-act
 msgid "My Histories"
-msgstr "Meine Historie"
+msgstr "My Histories"
 
 #. module: crm
 #: field:crm.segmentation,segmentation_line:0
@@ -568,12 +545,8 @@ msgstr "Alle Entwürfe "
 
 #. module: crm
 #: help:crm.segmentation,som_interval_max:0
-msgid ""
-"The computation is made on all events that occured during this interval, the "
-"past X periods."
-msgstr ""
-"Die Berechnung basiert auf allen Veranstaltungen während des festgelegten "
-"Intervals, also den letzten x Perioden."
+msgid "The computation is made on all events that occured during this interval, the past X periods."
+msgstr "Die Berechnung basiert auf allen Veranstaltungen während des festgelegten Intervals, also den letzten x Perioden."
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -637,6 +610,11 @@ msgstr "Offene Fälle"
 #: model:ir.ui.menu,name:crm.menu_crm_case_categ-act
 msgid "Categories"
 msgstr "Kategorien"
+
+#. module: crm
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "Invalid arguments"
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu2:0
@@ -718,13 +696,8 @@ msgstr "Setze Verantwortung"
 
 #. module: crm
 #: view:crm.case.rule:0
-msgid ""
-"The rule use a AND operator. The case must match all non empty fields so "
-"that the rule execute the action described in the 'Actions' tab."
-msgstr ""
-"Die Regel benutzt einen UND Operator. Dieser Fall sollte demnach alle nicht "
-"leeren Felder vergleichen, damit dieses Regel dann die auf dem gleichnamigen "
-"näher beschriebene Aktion auslöst."
+msgid "The rule use a AND operator. The case must match all non empty fields so that the rule execute the action described in the 'Actions' tab."
+msgstr "Die Regel benutzt einen UND Operator. Dieser Fall sollte demnach alle nicht leeren Felder vergleichen, damit dieses Regel dann die auf dem gleichnamigen näher beschriebene Aktion auslöst."
 
 #. module: crm
 #: field:crm.case,history_line:0
@@ -776,9 +749,7 @@ msgstr "Segmentierung"
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "You can not delete this case. You should better cancel it."
-msgstr ""
-"Sie können diesen Fall nicht löschen. Sie sollten in diesem Fall besser "
-"abbrechen."
+msgstr "Sie können diesen Fall nicht löschen. Sie sollten in diesem Fall besser abbrechen."
 
 #. module: crm
 #: code:addons/crm/crm.py:0
@@ -810,23 +781,19 @@ msgstr "Anzahl Tage pro Periode"
 #: selection:crm.case.section.menu,design_menu,menu8_option:0
 #: selection:crm.case.section.menu,design_menu,menu9_option:0
 msgid "Calendar"
-msgstr "Kalenderansicht"
+msgstr "Calendar"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"No E-Mail ID Found for the Responsible Partner or missing reply address in "
-"section!"
-msgstr ""
+msgid "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
+msgstr "No E-Mail ID Found for the Responsible Partner or missing reply address in section!"
 
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"No E-Mail ID Found for your Company address or missing reply address in "
-"section!"
-msgstr ""
+msgid "No E-Mail ID Found for your Company address or missing reply address in section!"
+msgstr "No E-Mail ID Found for your Company address or missing reply address in section!"
 
 #. module: crm
 #: field:crm.case,ref:0
@@ -856,15 +823,13 @@ msgstr "Aufgezeichnetes Protokoll"
 
 #. module: crm
 #: help:crm.case.rule,act_email_cc:0
-msgid ""
-"These people will receive a copy of the futur communication between partner "
-"and users by email"
-msgstr ""
-"Diese Leute werden eine Kopie aller zukünftigen Kommunikation zwischen "
-"Partner und Benutzer bekommen."
+msgid "These people will receive a copy of the futur communication between partner and users by email"
+msgstr "Diese Leute werden eine Kopie aller zukünftigen Kommunikation zwischen Partner und Benutzer bekommen."
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
+#, python-format
 msgid "Historize"
 msgstr "Historisiere"
 
@@ -955,13 +920,8 @@ msgstr "Verzögerung nach Trigger Datum"
 
 #. module: crm
 #: help:crm.segmentation,sales_purchase_active:0
-msgid ""
-"Check if you want to use this tab as part of the segmentation rule. If not "
-"checked, the criteria beneath will be ignored"
-msgstr ""
-"Setze Haken, falls dieser Tabulator als Bestandteil der Segmentierungs Regel "
-" genutzt werden soll. Falls der Haken nicht gesetzt wird, werden die "
-"Kriterien dieser Seite ignoriert."
+msgid "Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored"
+msgstr "Setze Haken, falls dieser Tabulator als Bestandteil der Segmentierungs Regel  genutzt werden soll. Falls der Haken nicht gesetzt wird, werden die Kriterien dieser Seite ignoriert."
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -975,18 +935,19 @@ msgid "Open Cases"
 msgstr "Fälle (in Bearbeitung)"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Pending"
 msgstr "Im Wartezustand"
 
 #. module: crm
 #: wizard_view:crm.case.section.menu,init:0
-msgid ""
-"You may want to create a new parent menu to put all the created menus in."
+msgid "You may want to create a new parent menu to put all the created menus in."
 msgstr "Sie können ein neues Obermenü für die neu erzeugten Menüs definieren"
 
 #. module: crm
@@ -998,7 +959,7 @@ msgstr "Status"
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr ""
+msgstr "No E-Mail ID Found for your Company address!"
 
 #. module: crm
 #: field:crm.case.rule,act_section_id:0
@@ -1012,18 +973,8 @@ msgstr "Status Durchführung"
 
 #. module: crm
 #: help:crm.segmentation,som_interval:0
-msgid ""
-"A period is the average number of days between two cycle of sale or purchase "
-"for this segmentation. It's mainly used to detect if a partner has not "
-"purchased or buy for a too long time, so we suppose that his state of mind "
-"has decreased because he probably bought goods to another supplier. Use this "
-"functionality for recurring businesses."
-msgstr ""
-"Eine Periode sind die durchschnittlichen Tage zwischen 2 Einkaufs/Verkaufs "
-"Zyklen. Diese wird hauptsächlich dafür verwendet um festzustellen, ob ein "
-"Partner für einen längeren Zeitraum nichts ge- oder verkauft hat. Wir nehmen "
-"dabei an, dass der Kunde mittlerweile bei einem anderen Lieferanten kauft. "
-"Verwende diese Funktionalität für regelmäßige Geschäftsbeziehungen."
+msgid "A period is the average number of days between two cycle of sale or purchase for this segmentation. It's mainly used to detect if a partner has not purchased or buy for a too long time, so we suppose that his state of mind has decreased because he probably bought goods to another supplier. Use this functionality for recurring businesses."
+msgstr "Eine Periode sind die durchschnittlichen Tage zwischen 2 Einkaufs/Verkaufs Zyklen. Diese wird hauptsächlich dafür verwendet um festzustellen, ob ein Partner für einen längeren Zeitraum nichts ge- oder verkauft hat. Wir nehmen dabei an, dass der Kunde mittlerweile bei einem anderen Lieferanten kauft. Verwende diese Funktionalität für regelmäßige Geschäftsbeziehungen."
 
 #. module: crm
 #: selection:crm.case,priority:0
@@ -1034,9 +985,11 @@ msgid "Normal"
 msgstr "Normal"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Escalate"
 msgstr "Eskalation"
 
@@ -1044,9 +997,7 @@ msgstr "Eskalation"
 #: code:addons/crm/crm.py:0
 #, python-format
 msgid "You must put a Partner eMail to use this action!"
-msgstr ""
-"Sie müssen eine E-Mail Adresse für den Partner haben um diese Aktion zu "
-"nutzen!"
+msgstr "Sie müssen eine E-Mail Adresse für den Partner haben um diese Aktion zu nutzen!"
 
 #. module: crm
 #: model:ir.module.module,shortdesc:crm.module_meta_information
@@ -1094,12 +1045,8 @@ msgstr "Alle Fälle (Nicht Zugewiesen) "
 
 #. module: crm
 #: help:crm.case.rule,act_remind_attach:0
-msgid ""
-"Check this if you want that all documents attached to the case be attached "
-"to the reminder email sent."
-msgstr ""
-"Hake diese Optionen an, falls alle Dokumente die zum Fall gehören auch an "
-"eine  Erinnerungsmail  angehängt werden sollen."
+msgid "Check this if you want that all documents attached to the case be attached to the reminder email sent."
+msgstr "Hake diese Optionen an, falls alle Dokumente die zum Fall gehören auch an eine  Erinnerungsmail  angehängt werden sollen."
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
@@ -1135,8 +1082,7 @@ msgstr "Exklusive Auswahl"
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"Can not send mail with empty body,you should have description in the body"
+msgid "Can not send mail with empty body,you should have description in the body"
 msgstr "Kann E-Mails ohne Körper nicht senden."
 
 #. module: crm
@@ -1200,7 +1146,7 @@ msgstr "Erzeugtes Menü"
 #. module: crm
 #: field:crm.case.log,name:0
 msgid "Action"
-msgstr "Aktion"
+msgstr "Action"
 
 #. module: crm
 #: view:crm.case.categ:0
@@ -1220,8 +1166,7 @@ msgstr "Partner Segmentierung Positionen"
 #. module: crm
 #: code:addons/crm/crm.py:0
 #, python-format
-msgid ""
-"You must define a responsible user for this case in order to use this action!"
+msgid "You must define a responsible user for this case in order to use this action!"
 msgstr "Für diese Funktionalität ist ein Verantwortlicher zu definieren."
 
 #. module: crm
@@ -1269,8 +1214,12 @@ msgstr "Sende Erinnerung"
 #. module: crm
 #: view:crm.case.section:0
 msgid "Complete this if you use the mail gateway."
-msgstr ""
-"Komplettiere diesen Eintrag falls Sie das E-Mail Gateway in Betrieb nehmen."
+msgstr "Komplettiere diesen Eintrag falls Sie das E-Mail Gateway in Betrieb nehmen."
+
+#. module: crm
+#: help:crm.segmentation,categ_id:0
+msgid "The partner category that will be added to partners that match the segmentation criterions after computation."
+msgstr "Es wird die Partner Kategorie zugewiesen, die der Segmentierungs Regel nach dieser Berechnung entspricht."
 
 #. module: crm
 #: view:crm.case:0
@@ -1278,6 +1227,7 @@ msgid "Communication history"
 msgstr "Historie Kommunikation"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
@@ -1285,15 +1235,18 @@ msgstr "Historie Kommunikation"
 #: selection:crm.case.rule,trg_state_to:0
 #: wizard_button:crm.case.section.menu,design_menu,end:0
 #: wizard_button:crm.case.section.menu,init,end:0
+#, python-format
 msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Close"
 msgstr "Fertig"
 
@@ -1303,11 +1256,13 @@ msgid "Business Opportunities"
 msgstr "Verkaufschancen"
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: view:crm.case:0
 #: selection:crm.case,state:0
 #: selection:crm.case.rule,act_state:0
 #: selection:crm.case.rule,trg_state_from:0
 #: selection:crm.case.rule,trg_state_to:0
+#, python-format
 msgid "Open"
 msgstr "Offen"
 
@@ -1333,11 +1288,8 @@ msgstr "Verantwortlicher Benutzer"
 
 #. module: crm
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen "
-"beinhalten"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Der Objekt Name muss mit einem x_ starten und darf keine Sonderzeichen beinhalten"
 
 #. module: crm
 #: view:res.partner.events:0
@@ -1426,11 +1378,8 @@ msgstr "Mailtext"
 
 #. module: crm
 #: help:crm.case.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Setze Haken, falls diese Regel eine Erinnerungsmail an den Benutzer senden "
-"soll."
+msgid "Check this if you want the rule to send a reminder by email to the user."
+msgstr "Setze Haken, falls diese Regel eine Erinnerungsmail an den Benutzer senden soll."
 
 #. module: crm
 #: field:crm.case,probability:0
@@ -1458,12 +1407,8 @@ msgstr "Betrag Verkauf"
 
 #. module: crm
 #: help:crm.case.section,reply_to:0
-msgid ""
-"The email address put in the 'Reply-To' of all emails sent by Open ERP about "
-"cases in this section"
-msgstr ""
-"Die EMail Adresse, die als \"Antworten an\" (Reply-To) in alle Emails "
-"eingetragen wird, die von OpenERP versendet werden."
+msgid "The email address put in the 'Reply-To' of all emails sent by Open ERP about cases in this section"
+msgstr "Die EMail Adresse, die als \"Antworten an\" (Reply-To) in alle Emails eingetragen wird, die von OpenERP versendet werden."
 
 #. module: crm
 #: view:crm.case.rule:0
@@ -1482,9 +1427,11 @@ msgid "="
 msgstr "="
 
 #. module: crm
+#: code:addons/crm/crm.py:0
 #: field:crm.case.log,case_id:0
 #: model:ir.model,name:crm.model_crm_case
 #: model:res.request.link,name:crm.req_link_case
+#, python-format
 msgid "Case"
 msgstr "Fall"
 
@@ -1502,16 +1449,6 @@ msgstr "Bedingung Priorisierung"
 #: field:crm.segmentation,name:0
 msgid "Name"
 msgstr "Bezeichnung"
-
-#. module: crm
-#: help:crm.segmentation,som_interval_decrease:0
-msgid ""
-"If the partner has not purchased (or buied) during a period, decrease the "
-"state of mind by this factor. It's a multiplication"
-msgstr ""
-"Falls der Partner keine Beschaffung während des Zeitraums vorgenomen hat, "
-"senke den Status der Zufriedenheit um diesen Faktor. Der neue Wert ergibt "
-"sich aus einer einfachen Multiplikation."
 
 #. module: crm
 #: wizard_field:crm.case.section.menu,design_menu,menu8:0
@@ -1594,14 +1531,8 @@ msgstr "Ticket-Nr."
 
 #. module: crm
 #: help:crm.segmentation,exclusif:0
-msgid ""
-"Check if the category is limited to partners that match the segmentation "
-"criterions. If checked, remove the category from partners that doesn't match "
-"segmentation criterions"
-msgstr ""
-"Prüfe, ob die Kategorie auf Partner mit bestimmten Segmentationskriterien "
-"beschränkt ist. Wenn ausgewählt, löschen Sie diejenig Kategorie beim "
-"Partner, die die Segmentationskriterien nicht erfüllt."
+msgid "Check if the category is limited to partners that match the segmentation criterions. If checked, remove the category from partners that doesn't match segmentation criterions"
+msgstr "Prüfe, ob die Kategorie auf Partner mit bestimmten Segmentationskriterien beschränkt ist. Wenn ausgewählt, löschen Sie diejenig Kategorie beim Partner, die die Segmentationskriterien nicht erfüllt."
 
 #. module: crm
 #: field:crm.case,log_ids:0
@@ -1637,11 +1568,6 @@ msgstr "Fall Beschreibung"
 #: field:crm.case.rule,act_mail_to_watchers:0
 msgid "Mail to watchers (Cc)"
 msgstr "Mail an Beobachter (cc)"
-
-#. module: crm
-#: model:ir.actions.act_window,name:crm.crm_case_section_open_act
-msgid "crm.case.section.open"
-msgstr "crm.case.section.open"
 
 #. module: crm
 #: view:crm.case:0
@@ -1693,3 +1619,4 @@ msgstr "Update des anzulegenden Menüvorschlags"
 #: field:crm.case.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Trigger Datum"
+

@@ -1,0 +1,552 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* sale_journal
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2009-05-19 14:36+0000\n"
+"PO-Revision-Date: 2009-05-20 12:24+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2010-02-22 11:54+0000\n"
+"X-Generator: Launchpad (build Unknown)\n"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_journal_sale_stats
+msgid "Monthly sales"
+msgstr "月销售"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_assigned
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_assigned
+msgid "Assigned packing"
+msgstr "已分配的分拣单"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "assigned"
+msgstr "已分配"
+
+#. module: sale_journal
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "在行动定义中的模式名称无效"
+
+#. module: sale_journal
+#: selection:sale_journal.sale.stats,state:0
+msgid "Waiting Schedule"
+msgstr "等待日程"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,invoice_state:0
+msgid "to be invoiced"
+msgstr "需开发票"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_journal_sale_journal
+#: view:sale_journal.sale.journal:0
+#: field:stock.picking,sale_journal_id:0
+msgid "Sale Journal"
+msgstr "销售日记账"
+
+#. module: sale_journal
+#: field:sale_journal.sale.journal,sale_stats_ids:0
+msgid "Sale Stats"
+msgstr "销售统计"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "waiting"
+msgstr "等待"
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+#: view:sale_journal.sale.journal:0
+msgid "Set to Draft"
+msgstr "设置为草稿"
+
+#. module: sale_journal
+#: field:sale_journal.picking.journal,date:0
+#: field:sale_journal.sale.journal,date:0
+msgid "Journal date"
+msgstr "日记账日期"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice_method
+#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_all
+#: model:ir.ui.menu,name:sale_journal.menu_invoice_type_picking_stats_open_menu
+msgid "Packing by Invoice Method"
+msgstr "按发票方式排列分拣单"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking
+msgid "Packing Journals"
+msgstr "分拣单日记账"
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+#: view:sale_journal.sale.journal:0
+msgid "Notes"
+msgstr "备注"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_my
+msgid "My open journals"
+msgstr "我的未结日记账"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type.stats,count:0
+#: field:sale_journal.picking.stats,count:0
+#: field:sale_journal.sale.stats,count:0
+msgid "# of Lines"
+msgstr "# 行"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal_all
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales_all_open
+msgid "All Open Journals"
+msgstr "所有未结日记账"
+
+#. module: sale_journal
+#: model:ir.module.module,shortdesc:sale_journal.module_meta_information
+msgid "Managing sales and deliveries by journal"
+msgstr "按日记账管理销售并送货"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "done"
+msgstr "完成"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type.stats,price_average:0
+#: field:sale_journal.picking.stats,price_average:0
+#: field:sale_journal.sale.stats,price_average:0
+msgid "Average Price"
+msgstr "均价"
+
+#. module: sale_journal
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "无效的 XML 视图架构！"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "已分组"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type.stats,state:0
+#: field:sale_journal.picking.stats,state:0
+#: field:sale_journal.sale.journal,state:0
+msgid "State"
+msgstr "状态"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting_all
+#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales_all_month
+msgid "All Months"
+msgstr "所有月份"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type.stats,price_total:0
+#: field:sale_journal.picking.stats,price_total:0
+#: field:sale_journal.sale.stats,price_total:0
+msgid "Total Price"
+msgstr "总价"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal
+msgid "Packing journals"
+msgstr "分拣单日记账"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales
+msgid "Reporting"
+msgstr "报表"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree_my
+msgid "My open packing journals"
+msgstr "我未结的分拣单日记账"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_journal_sale_stats
+msgid "Sales Orders by Journal"
+msgstr "按日记账排列销售订单"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_tree_all
+msgid "Open journals"
+msgstr "未结的日记账"
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+msgid "Packing"
+msgstr "分拣单"
+
+#. module: sale_journal
+#: help:res.partner,property_invoice_type:0
+msgid "The type of journal used for sales and packing."
+msgstr "该日记账类型用于销售和分拣"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,invoice_state:0
+msgid "None"
+msgstr "无"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_sale_sale_stats_open_menu_month
+msgid "Sales by journal (this month)"
+msgstr "按日记账排列销售（本月）"
+
+#. module: sale_journal
+#: selection:sale_journal.sale.stats,state:0
+msgid "Manual in progress"
+msgstr "手动进展"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree
+#: model:ir.actions.act_window,name:sale_journal.action_definition_picking_journal_tree_all
+#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_all
+#: model:ir.actions.act_window,name:sale_journal.action_picking_picking_stats_open_menu_month
+msgid "Packing by journal"
+msgstr "按日记账排列分拣单"
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+msgid "Cancel Packing"
+msgstr "取消分拣单"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_picking_journal_2_stock_picking_confirmed
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_stock_picking_confirmed
+msgid "Confirmed packing"
+msgstr "确认分拣单"
+
+#. module: sale_journal
+#: selection:sale_journal.sale.stats,state:0
+msgid "In progress"
+msgstr "进展"
+
+#. module: sale_journal
+#: view:sale_journal.picking.stats:0
+msgid "Packing by journals"
+msgstr "按日记账排列分拣单"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type.stats,name:0
+#: field:sale_journal.picking.stats,name:0
+#: field:sale_journal.sale.stats,name:0
+msgid "Month"
+msgstr "月"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type.stats,invoice_state:0
+msgid "Invoice state"
+msgstr "发票状态"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_all
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open_menu_month
+#: view:sale_journal.invoice.type.stats:0
+msgid "Packing by invoice method"
+msgstr "按发票方式排列分拣\""
+
+#. module: sale_journal
+#: field:sale_journal.sale.stats,state:0
+msgid "Order State"
+msgstr "销售订单状态"
+
+#. module: sale_journal
+#: selection:sale_journal.sale.stats,state:0
+msgid "Shipping Exception"
+msgstr "运输异常"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+#: field:sale_journal.picking.journal,note:0
+#: field:sale_journal.sale.journal,note:0
+msgid "Note"
+msgstr "备注"
+
+#. module: sale_journal
+#: selection:sale_journal.picking.journal,state:0
+#: selection:sale_journal.sale.journal,state:0
+msgid "Draft"
+msgstr "草稿"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "cancel"
+msgstr "取消"
+
+#. module: sale_journal
+#: selection:sale_journal.sale.stats,state:0
+msgid "Invoice Exception"
+msgstr "发票异常"
+
+#. module: sale_journal
+#: field:sale_journal.picking.journal,date_validation:0
+#: field:sale_journal.sale.journal,date_validation:0
+msgid "Validation date"
+msgstr "确认日期"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "draft"
+msgstr "草稿"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "在职"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_order_draft
+msgid "Draft sales"
+msgstr "销售草稿"
+
+#. module: sale_journal
+#: selection:sale_journal.sale.stats,state:0
+msgid "Quotation"
+msgstr "报价"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal
+msgid "Sales Journals"
+msgstr "销售日记账"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_tree
+msgid "sale_journal.invoice.type.tree"
+msgstr "sale_journal.invoice.type.tree"
+
+#. module: sale_journal
+#: view:sale_journal.sale.journal:0
+msgid "Confirm Sales"
+msgstr "销售确认"
+
+#. module: sale_journal
+#: field:sale_journal.picking.journal,date_created:0
+#: field:sale_journal.picking.journal,state:0
+#: field:sale_journal.sale.journal,date_created:0
+msgid "Creation date"
+msgstr "创建日期"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Method"
+msgstr "发票方式"
+
+#. module: sale_journal
+#: field:sale_journal.picking.journal,code:0
+#: field:sale_journal.sale.journal,code:0
+msgid "Code"
+msgstr "编码"
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+#: view:sale_journal.sale.journal:0
+msgid "Open Journal"
+msgstr "未结日记账"
+
+#. module: sale_journal
+#: view:sale_journal.sale.journal:0
+msgid "Sales"
+msgstr "销售"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_journal_picking_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting
+#: view:sale_journal.picking.journal:0
+msgid "Packing Journal"
+msgstr "分拣日记账"
+
+#. module: sale_journal
+#: selection:sale_journal.picking.journal,state:0
+#: selection:sale_journal.sale.journal,state:0
+#: selection:sale_journal.sale.stats,state:0
+msgid "Done"
+msgstr "完成"
+
+#. module: sale_journal
+#: selection:sale_journal.sale.stats,state:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: sale_journal
+#: field:sale_journal.picking.journal,picking_stats_ids:0
+msgid "Journal Stats"
+msgstr "销售统计"
+
+#. module: sale_journal
+#: selection:sale_journal.picking.journal,state:0
+#: selection:sale_journal.sale.journal,state:0
+msgid "Open"
+msgstr "未结"
+
+#. module: sale_journal
+#: constraint:ir.model:0
+msgid ""
+"The Object name must start with x_ and not contain any special character !"
+msgstr "对象名称必须以“x_”开头且不能包含任何特殊字符！"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "销售与采购"
+
+#. module: sale_journal
+#: field:sale_journal.picking.journal,user_id:0
+#: field:sale_journal.sale.journal,user_id:0
+msgid "Responsible"
+msgstr "负责人"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal_my
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales_my_open
+msgid "My Open Journals"
+msgstr "我的未结的日记账"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_stats_open
+msgid "Statistics on packing to invoice"
+msgstr "根据分拣单开发票统计"
+
+#. module: sale_journal
+#: view:sale_journal.sale.journal:0
+msgid "Cancel Sales"
+msgstr "取消销售"
+
+#. module: sale_journal
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: field:stock.picking,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "发票类型"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,invoice_state:0
+msgid "invoiced"
+msgstr "已开发票"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type.stats,state:0
+#: selection:sale_journal.picking.stats,state:0
+msgid "confirmed"
+msgstr "已确认"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_journal_picking_stats
+msgid "Packing lists by Journal"
+msgstr "按日记账排列分拣单"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type.stats,quantity:0
+#: field:sale_journal.picking.stats,quantity:0
+#: field:sale_journal.sale.stats,quantity:0
+msgid "Quantities"
+msgstr "数量"
+
+#. module: sale_journal
+#: field:sale.order,journal_id:0
+#: view:sale_journal.picking.journal:0
+#: field:sale_journal.picking.journal,name:0
+#: field:sale_journal.picking.stats,journal_id:0
+#: view:sale_journal.sale.journal:0
+#: field:sale_journal.sale.journal,name:0
+#: field:sale_journal.sale.stats,journal_id:0
+#: field:stock.picking,journal_id:0
+msgid "Journal"
+msgstr "日记帐"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+#: field:sale_journal.invoice.type.stats,invoice_type_id:0
+msgid "Invoicing method"
+msgstr "发票方式"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_reporting_this
+#: model:ir.ui.menu,name:sale_journal.menu_definition_report_sales_this_month
+msgid "This Month"
+msgstr "本月"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_sales
+#: model:ir.ui.menu,name:sale_journal.menu_sale_sale_stats_open_all
+#: model:ir.ui.menu,name:sale_journal.menu_sale_sale_stats_open_menu
+#: view:sale_journal.sale.stats:0
+msgid "Sales by Journal"
+msgstr "按日记账排列销售"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoicing Methods"
+msgstr "发票方式"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Non grouped"
+msgstr "未分组"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_invoice_type_picking_open
+msgid "Packing to invoice"
+msgstr "需开发票的分拣单"
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+#: view:sale_journal.sale.journal:0
+msgid "Journal Information"
+msgstr "日记账信息"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type_stats
+msgid "Stats on packing by invoice method"
+msgstr "按开票方式统计分拣单"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+msgid "Invoice Types"
+msgstr "按发票方式排列分拣统计"
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+#: view:sale_journal.sale.journal:0
+msgid "States"
+msgstr "状态"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_byjournal
+#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_all
+#: model:ir.ui.menu,name:sale_journal.menu_picking_picking_stats_open_menu
+msgid "Packing by Journal"
+msgstr "按日记账排列分拣单"
+
+#. module: sale_journal
+#: view:sale_journal.picking.journal:0
+#: view:sale_journal.sale.journal:0
+msgid "Close Journal"
+msgstr "关闭日记账"
+
+#. module: sale_journal
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_picking_invoice
+msgid "Packing to Invoice"
+msgstr "需开发票的分拣单"
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.act_sale_journal_sale_journal_2_sale_order_approved
+msgid "Approved sales"
+msgstr "已批准销售"

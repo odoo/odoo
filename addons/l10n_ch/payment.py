@@ -5,7 +5,7 @@
 #
 #  Created by Nicolas Bessi based on Credric Krier contribution
 #
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+#  Copyright (c) 2010 CamptoCamp. All rights reserved.
 ##############################################################################
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
@@ -29,16 +29,25 @@
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #
 ##############################################################################
+"""Override of pament order for adding a get wizard function"""
 
-from osv import fields
 from osv import osv
 
-class payment_order(osv.osv):
+class PaymentOrder(osv.osv):
+    """Override of pament order for adding a get wizard function"""
     _inherit = 'payment.order'
-
-    def get_wizard(self,mode):
-        if mode == 'dta':
+    def get_wizard(self, mode):
+        "Return the good wizard in function of the payment type"
+        if mode == 'opae':
+            #return 'l10n_ch','wizard_account_opae_create'
+            raise wizard.except_wizard(
+                                _('Warning'),
+                                _('Functionality is not yet stable'+
+                                'please look at lp:openerp-swiss-localization'+
+                                ' for latest version warning Beta version' )
+                            )
+        elif mode == 'dta':
             return 'l10n_ch','wizard_account_dta_create'
-        return super(payment_order,self).get_wizard(mode)
-payment_order()
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+        else:
+            return super(PaymentOrder, self).get_wizard(mode)
+PaymentOrder()

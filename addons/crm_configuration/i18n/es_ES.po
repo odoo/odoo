@@ -4,18 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-12-04 18:45+0000\n"
-"Last-Translator: Jordi Esteve - http://www.zikzakmedia.com "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2010-09-02 14:01:21+0000\n"
+"PO-Revision-Date: 2010-09-02 14:01:21+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: crm_configuration
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_all1
@@ -150,9 +148,7 @@ msgstr "Versión"
 #. module: crm_configuration
 #: help:crm.menu.config_wizard,opportunity:0
 msgid "Tracks identified business opportunities for your sales pipeline."
-msgstr ""
-"﻿Los seguimientos identifican oportunidades de negocio de su proceso de "
-"ventas."
+msgstr "﻿Los seguimientos identifican oportunidades de negocio de su proceso de ventas."
 
 #. module: crm_configuration
 #: view:crm.case:0
@@ -180,6 +176,14 @@ msgstr "Errores abiertos"
 #: view:crm.case:0
 msgid "Dates"
 msgstr "Fechas"
+
+#. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#, python-format
+msgid "You must assign a partner to this lead before converting to opportunity.\n' \\n"
+"                  'You can use the convert to partner button."
+msgstr "You must assign a partner to this lead before converting to opportunity.\n' \\n"
+"                  'You can use the convert to partner button."
 
 #. module: crm_configuration
 #: view:crm.case:0
@@ -379,12 +383,8 @@ msgstr "Nuevo negocio"
 
 #. module: crm_configuration
 #: help:crm.menu.config_wizard,phonecall:0
-msgid ""
-"Help you to encode the result of a phone call or to planify a list of phone "
-"calls to process."
-msgstr ""
-"﻿Le permite codificar el resultado de una llamada telefónica o planificar "
-"una lista de llamadas telefónicas a realizar."
+msgid "Help you to encode the result of a phone call or to planify a list of phone calls to process."
+msgstr "﻿Le permite codificar el resultado de una llamada telefónica o planificar una lista de llamadas telefónicas a realizar."
 
 #. module: crm_configuration
 #: model:crm.case.categ,name:crm_configuration.categ_claim3
@@ -482,9 +482,11 @@ msgid "Leads Form"
 msgstr "Formulario de iniciativas"
 
 #. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
 #: view:crm.case:0
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_oppor
 #: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor
+#, python-format
 msgid "Opportunity"
 msgstr "Oportunidad"
 
@@ -496,7 +498,7 @@ msgstr "Televisión"
 #. module: crm_configuration
 #: view:crm.case:0
 msgid "Send Partner & Historize"
-msgstr "Enviar empresa & Añadir historial"
+msgstr "Enviar a empresa y añadir al historial"
 
 #. module: crm_configuration
 #: model:ir.ui.menu,name:crm_configuration.menu_help_support_main
@@ -635,7 +637,7 @@ msgstr "Siguiente"
 #. module: crm_configuration
 #: model:ir.ui.menu,name:crm_configuration.menu_action_report_crm_case_oppor_categ_stage
 msgid "Cases by Opportunities, Category and Stage"
-msgstr "Casos por oportunidades, categoría y etapa"
+msgstr "Casos por oportunidades, categoría y fase"
 
 #. module: crm_configuration
 #: model:crm.case.category2,name:crm_configuration.category_lead4
@@ -716,7 +718,7 @@ msgstr "Aprendizaje y educación"
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_stage_act
 #: model:ir.ui.menu,name:crm_configuration.menu_crm_case_stage_act
 msgid "Stages"
-msgstr "Etapas"
+msgstr "Fases"
 
 #. module: crm_configuration
 #: wizard_field:crm.case.opportunity_set,init,planned_revenue:0
@@ -897,9 +899,7 @@ msgstr "Otros"
 #. module: crm_configuration
 #: help:crm.menu.config_wizard,bugs:0
 msgid "Used by companies to track bugs and support requests on softwares"
-msgstr ""
-"Utilizado por las compañías para seguir errores y peticiones de soporte "
-"sobre programas informáticos"
+msgstr "Utilizado por las compañías para seguir errores y peticiones de soporte sobre programas informáticos"
 
 #. module: crm_configuration
 #: model:crm.case.category2,name:crm_configuration.category_lead2
@@ -1024,12 +1024,8 @@ msgstr "Configurar secciones CRM"
 
 #. module: crm_configuration
 #: wizard_view:crm.case.meeting,init:0
-msgid ""
-"Note that you can also use the calendar view to graphically schedule your "
-"next meeting."
-msgstr ""
-"Observe que también puede utilizar la vista de calendario para programar "
-"gráficamente su siguiente reunión."
+msgid "Note that you can also use the calendar view to graphically schedule your next meeting."
+msgstr "Observe que también puede utilizar la vista de calendario para programar gráficamente su siguiente reunión."
 
 #. module: crm_configuration
 #: view:crm.case:0
@@ -1050,12 +1046,8 @@ msgstr "¡Error! No puede crear secciones recursivas."
 
 #. module: crm_configuration
 #: help:crm.menu.config_wizard,document_ics:0
-msgid ""
-" Will allow you to synchronise your Open ERP calendars with your phone, "
-"outlook, Sunbird, ical, ..."
-msgstr ""
-" Le permite sincronizar sus calendarios OpenERP con su teléfono, Outlook, "
-"Sunbird, iCal, ..."
+msgid " Will allow you to synchronise your Open ERP calendars with your phone, outlook, Sunbird, ical, ..."
+msgstr " Le permite sincronizar sus calendarios OpenERP con su teléfono, Outlook, Sunbird, iCal, ..."
 
 #. module: crm_configuration
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f7
@@ -1205,6 +1197,14 @@ msgid "My Pending Jobs Requests"
 msgstr "Mis peticiones de trabajo pendientes"
 
 #. module: crm_configuration
+#: code:addons/crm_configuration/wizard/wizard_opportunity_set.py:0
+#, python-format
+msgid "You did not install the opportunities tracking when you configured the crm_configuration module.' \\n"
+"                  '\nI can not convert the lead to an opportunity, you must create a section with the code \'oppor\'."
+msgstr "You did not install the opportunities tracking when you configured the crm_configuration module.' \\n"
+"                  '\nI can not convert the lead to an opportunity, you must create a section with the code \'oppor\'."
+
+#. module: crm_configuration
 #: model:crm.case.category2,name:crm_configuration.category_job3
 msgid " > Bac +5"
 msgstr " > Bac +5"
@@ -1249,14 +1249,8 @@ msgstr "Dirección"
 
 #. module: crm_configuration
 #: view:crm.menu.config_wizard:0
-msgid ""
-"The CRM module of OpenERP is able to manage any kind of relationship. But, "
-"as to help you to start quickly on the system, we configured a few of them "
-"for you."
-msgstr ""
-"El módulo de CRM de OpenERP puede gestionar cualquier tipo de relación. "
-"Pero, para ayudarle a empezar rápidamente en el sistema, le configuramos "
-"unos cuantos de ellos."
+msgid "The CRM module of OpenERP is able to manage any kind of relationship. But, as to help you to start quickly on the system, we configured a few of them for you."
+msgstr "El módulo de CRM de OpenERP puede gestionar cualquier tipo de relación. Pero, para ayudarle a empezar rápidamente en el sistema, le configuramos unos cuantos de ellos."
 
 #. module: crm_configuration
 #: view:crm.case:0
@@ -1330,11 +1324,8 @@ msgstr "Resolución: "
 
 #. module: crm_configuration
 #: help:crm.menu.config_wizard,fund:0
-msgid ""
-"This may help associations in their fund raising process and tracking."
-msgstr ""
-"Esto puede ayudar a las organizaciones en su proceso de obtención de "
-"fondos/inversiones y seguimiento."
+msgid "This may help associations in their fund raising process and tracking."
+msgstr "Esto puede ayudar a las organizaciones en su proceso de obtención de fondos/inversiones y seguimiento."
 
 #. module: crm_configuration
 #: model:ir.actions.act_window,name:crm_configuration.crm_case_category_act_f0
@@ -1381,13 +1372,8 @@ msgstr "Reunión interna"
 
 #. module: crm_configuration
 #: help:crm.menu.config_wizard,lead:0
-msgid ""
-"Allows you to track and manage leads which are pre-sales requests or "
-"contacts, the very first contact with a customer request."
-msgstr ""
-"Le permite realizar el seguimiento y gestionar iniciativas que son "
-"peticiones de pre-ventas o contactos, el primer contacto de una solicitud de "
-"un posible cliente."
+msgid "Allows you to track and manage leads which are pre-sales requests or contacts, the very first contact with a customer request."
+msgstr "Le permite realizar el seguimiento y gestionar iniciativas que son peticiones de pre-ventas o contactos, el primer contacto de una solicitud de un posible cliente."
 
 #. module: crm_configuration
 #: model:crm.case.categ,name:crm_configuration.categ_meet1
@@ -1524,11 +1510,8 @@ msgstr "Ya existe una empresa con el mismo nombre."
 
 #. module: crm_configuration
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-"especial!"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter especial!"
 
 #. module: crm_configuration
 #: field:crm.menu.config_wizard,helpdesk:0
@@ -1881,12 +1864,8 @@ msgstr "Asunto iniciativa"
 
 #. module: crm_configuration
 #: help:crm.menu.config_wizard,claims:0
-msgid ""
-"Manages the supplier and customers claims, including your corrective or "
-"preventive actions."
-msgstr ""
-"Gestiona las reclamaciones de proveedores y clientes, incluyendo sus "
-"acciones correctivas o preventivas."
+msgid "Manages the supplier and customers claims, including your corrective or preventive actions."
+msgstr "Gestiona las reclamaciones de proveedores y clientes, incluyendo sus acciones correctivas o preventivas."
 
 #. module: crm_configuration
 #: model:crm.case.stage,name:crm_configuration.stage_phone1
@@ -1978,7 +1957,7 @@ msgstr "Todas las peticiones de trabajo abiertas"
 #: view:crm.case:0
 #: model:ir.actions.wizard,name:crm_configuration.wizard_crm_meeting
 msgid "Schedule Meeting"
-msgstr "Reunión programada"
+msgstr "Programar reunión"
 
 #. module: crm_configuration
 #: model:crm.case.categ,name:crm_configuration.categ_fund4
@@ -1995,9 +1974,7 @@ msgstr "Saliente"
 #. module: crm_configuration
 #: model:ir.actions.todo,note:crm_configuration.config_wizard_step_case_section_menu
 msgid "This Configuration step use to create Menu for Case Sections"
-msgstr ""
-"Este paso de configuración se utiliza para crear menús para secciones de "
-"casos"
+msgstr "Este paso de configuración se utiliza para crear menús para secciones de casos"
 
 #. module: crm_configuration
 #: view:crm.case:0
@@ -2153,12 +2130,8 @@ msgstr "No corregido"
 
 #. module: crm_configuration
 #: help:crm.menu.config_wizard,jobs:0
-msgid ""
-"Help you to organise the jobs hiring process: evaluation, meetings, email "
-"integration..."
-msgstr ""
-"Le permite organizar el proceso de selección de personal: evaluación, "
-"reuniones, integración de correo electrónico, ..."
+msgid "Help you to organise the jobs hiring process: evaluation, meetings, email integration..."
+msgstr "Le permite organizar el proceso de selección de personal: evaluación, reuniones, integración de correo electrónico, ..."
 
 #. module: crm_configuration
 #: selection:report.crm.case.section.categ.categ2,state:0
@@ -2235,3 +2208,4 @@ msgstr "Secuencia"
 #: model:crm.case.category2,name:crm_configuration.category_lead8
 msgid "Newsletter"
 msgstr "﻿Boletín de noticias"
+

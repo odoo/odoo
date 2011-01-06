@@ -1,17 +1,19 @@
-#, fuzzy
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* document
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-05-20 10:36+0000\n"
+"POT-Creation-Date: 2010-09-02 14:06:04+0000\n"
+"PO-Revision-Date: 2010-09-02 14:06:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: document
 #: code:addons/document/document.py:0
@@ -21,9 +23,7 @@ msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
-msgid ""
-"Select an object here and Open ERP will create a mapping for each of these "
-"objects, using the given domain, when browsing through FTP."
+msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
 msgstr ""
 
 #. module: document
@@ -38,9 +38,7 @@ msgstr ""
 
 #. module: document
 #: view:document.configuration.wizard:0
-msgid ""
-"This wizard will automatically configure the document management system "
-"according to modules installed on your system."
+msgid "This wizard will automatically configure the document management system according to modules installed on your system."
 msgstr ""
 
 #. module: document
@@ -61,9 +59,7 @@ msgstr ""
 
 #. module: document
 #: help:document.configuration.wizard,host:0
-msgid ""
-"Put here the server address or IP. Keep localhost if you don't know what to "
-"write."
+msgid "Put here the server address or IP. Keep localhost if you don't know what to write."
 msgstr ""
 
 #. module: document
@@ -175,15 +171,12 @@ msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_tree:0
-msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
+msgid "Check this if you want to use the same tree structure as the object selected in the system."
 msgstr ""
 
 #. module: document
 #: help:document.directory,domain:0
-msgid ""
-"Use a domain if you want to apply an automatic filter on visible resources."
+msgid "Use a domain if you want to apply an automatic filter on visible resources."
 msgstr ""
 
 #. module: document
@@ -315,9 +308,7 @@ msgstr ""
 
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
-msgid ""
-"This wizard will configure the URL of the server of the document management "
-"system."
+msgid "This wizard will configure the URL of the server of the document management system."
 msgstr ""
 
 #. module: document
@@ -333,6 +324,21 @@ msgstr ""
 #. module: document
 #: view:ir.attachment:0
 msgid "Preview"
+msgstr ""
+
+#. module: document
+#: model:ir.module.module,description:document.module_meta_information
+msgid "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 msgstr ""
 
 #. module: document
@@ -399,9 +405,7 @@ msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
+msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
 msgstr ""
 
 #. module: document
@@ -426,15 +430,12 @@ msgstr ""
 
 #. module: document
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
+msgid "The Object name must start with x_ and not contain any special character !"
 msgstr ""
 
 #. module: document
 #: help:document.directory.content,include_name:0
-msgid ""
-"Check this field if you want that the name of the file start by the record "
-"name."
+msgid "Check this field if you want that the name of the file start by the record name."
 msgstr ""
 
 #. module: document
@@ -464,17 +465,9 @@ msgid "Name"
 msgstr ""
 
 #. module: document
+#: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr ""
-
-#. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * FTP Interface\n"
-"    * User Authentication\n"
-"    * Document Indexation\n"
 msgstr ""
 
 #. module: document
@@ -507,3 +500,4 @@ msgstr ""
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr ""
+

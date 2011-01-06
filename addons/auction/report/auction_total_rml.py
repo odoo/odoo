@@ -55,7 +55,10 @@ class auction_total_rml(report_sxw.rml_parse):
         for lot_id  in objects:
             auc_lot_ids.append(lot_id.id)
         self.total_obj=auc_lot_ids
-        self.cr.execute('select auction_id from auction_lots where id in ('+','.join(map(str,auc_lot_ids))+') group by auction_id')
+        self.cr.execute('SELECT auction_id FROM auction_lots '
+                        'WHERE id IN %s '
+                        'GROUP BY auction_id',
+                        (tuple(auc_lot_ids),))
         auc_date_ids = self.cr.fetchall()
         auct_dat=[]
         for ad_id in auc_date_ids:

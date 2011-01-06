@@ -90,7 +90,7 @@ class tax_report(rml_parse.rml_parse):
 
 	def _get_general(self, tax_code_id,period_list ,company_id, based_on):
 		res=[]
-		period_sql_list =  ','.join(map(str, period_list[0][2]))
+		periods_ids = tuple(period_list[0][2])
 		if based_on == 'payments':
 			self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
 						SUM(line.debit) AS debit, \
@@ -109,11 +109,11 @@ class tax_report(rml_parse.rml_parse):
 						AND line.account_id = account.id \
 						AND account.company_id = %s \
 						AND move.id = line.move_id \
-						AND line.period_id IN ('+ period_sql_list +') \
+						AND line.period_id IN %s \
 						AND ((invoice.state = %s) \
 							OR (invoice.id IS NULL))  \
-					GROUP BY account.id,account.name,account.code', ('draft',tax_code_id,
-						company_id, 'paid'))
+					GROUP BY account.id,account.name,account.code',
+						('draft',tax_code_id,company_id,periods_ids,'paid'))
 
 		else :
 			self.cr.execute('SELECT SUM(line.tax_amount) AS tax_amount, \
@@ -129,10 +129,10 @@ class tax_report(rml_parse.rml_parse):
 						AND line.tax_code_id = %s  \
 						AND line.account_id = account.id \
 						AND account.company_id = %s \
-						AND line.period_id IN ('+ period_sql_list +') \
+						AND line.period_id IN %s \
 						AND account.active \
-					GROUP BY account.id,account.name,account.code', ('draft',tax_code_id,
-						company_id))
+					GROUP BY account.id,account.name,account.code',
+						('draft',tax_code_id,company_id,periods_ids))
 		res = self.cr.dictfetchall()
 		
 						#AND line.period_id IN ('+ period_sql_list +') \

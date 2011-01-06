@@ -60,21 +60,23 @@ def _pay_and_reconcile(self, cr, uid, data, context):
     journal = pool.get('account.journal').browse(cr, uid, data['form']['journal_id'], context)
     # Compute the amount in company's currency, with the journal currency (which is equal to payment currency) 
     # when it is needed :  If payment currency (according to selected journal.currency) is <> from company currency
+    cur_diff = False
     if journal.currency and invoice.company_id.currency_id.id<>journal.currency.id:
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, journal.currency.id, invoice.company_id.currency_id.id, amount, context=ctx)
         currency_id = journal.currency.id
         # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
-        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
-    
-    if invoice.company_id.currency_id.id<>invoice.currency_id.id:
+        context.update({'amount_currency':form['amount'],'currency_id':currency_id,'company_currency_id':invoice.company_id.currency_id.id})
+        cur_diff = True
+        
+    if not journal.currency and invoice.company_id.currency_id.id<>invoice.currency_id.id and (not cur_diff):
         ctx = {'date':data['form']['date']}
         amount = cur_obj.compute(cr, uid, invoice.currency_id.id, invoice.company_id.currency_id.id, amount, context=ctx)
         currency_id = invoice.currency_id.id
         # Put the paid amount in currency, and the currency, in the context if currency is different from company's currency
-        context.update({'amount_currency':form['amount'],'currency_id':currency_id})
-        
-    # Take the choosen date
+        context.update({'amount_currency':form['amount'],'currency_id':currency_id,'company_currency_id':invoice.company_id.currency_id.id})
+
+    # Take the chosen date
     if form.has_key('comment'):
         context.update({'date_p':form['date'],'comment':form['comment']})
     else:
@@ -184,4 +186,3 @@ wizard_pay_invoice('account.invoice.pay')
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

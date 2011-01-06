@@ -35,7 +35,7 @@ stock_move()
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
     _columns = {
-        'sale_id': fields.many2one('sale.order', 'Sale Order', ondelete='set null', select=True, readonly=True),
+        'sale_id': fields.many2one('sale.order', 'Sale Order', ondelete='set null', select=True),
     }
     _defaults = {
         'sale_id': lambda *a: False
@@ -64,11 +64,8 @@ class stock_picking(osv.osv):
                 user, picking)
 
     def _get_comment_invoice(self, cursor, user, picking):
-        if picking.sale_id and picking.sale_id.note:
-            if picking.note:
-                return picking.note + '\n' + picking.sale_id.note
-            else:
-                return picking.sale_id.note
+        if picking.note or (picking.sale_id and picking.sale_id.note):
+            return picking.note or picking.sale_id.note
         return super(stock_picking, self)._get_comment_invoice(cursor, user,
                 picking)
 
@@ -139,6 +136,10 @@ class stock_picking(osv.osv):
                 continue
             sale_lines = picking.sale_id.order_line
             invoice_created = invoices[result[picking.id]]
+
+            for inv in invoice_obj.browse(cursor, user, [invoice_created.id], context=context):
+                if (not inv.fiscal_position) and picking.sale_id.fiscal_position:
+                    invoice_obj.write(cursor, user, [inv.id], {'fiscal_position': picking.sale_id.fiscal_position.id}, context=context)
             
             if picking.sale_id.client_order_ref:
                 inv_name = picking.sale_id.client_order_ref + " : " + invoice_created.name
@@ -190,7 +191,18 @@ class stock_picking(osv.osv):
 
         return result
 
-
+    def action_cancel(self, cr, uid, ids, context={}):
+        res = super(stock_picking, self).action_cancel(cr, uid, ids, context=context)
+        for pick in self.browse(cr, uid, ids, context):
+            call_ship_end = True
+            if pick.sale_id:
+                for picks in pick.sale_id.picking_ids:
+                    if picks.state not in ('done','cancel'):
+                        call_ship_end = False
+                        break
+                if call_ship_end:
+                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context)    
+        return res
 stock_picking()
 
 

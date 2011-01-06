@@ -4,17 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.0\n"
+"Project-Id-Version: OpenERP Server 5.0.12\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2009-05-19 14:36+0000\n"
-"PO-Revision-Date: 2009-06-26 19:24+0000\n"
-"Last-Translator: Ahti Hinnov <sipelgas@gmail.com>\n"
+"POT-Creation-Date: 2010-09-02 13:44:13+0000\n"
+"PO-Revision-Date: 2010-09-02 13:44:13+0000\n"
+"Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2009-12-07 15:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
 
 #. module: document
 #: code:addons/document/document.py:0
@@ -24,12 +23,8 @@ msgstr "Kaustanimi sisaldab erisümboleid!"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
-msgid ""
-"Select an object here and Open ERP will create a mapping for each of these "
-"objects, using the given domain, when browsing through FTP."
-msgstr ""
-"Vali siia objekt ja Open ERP loob kaardistuse neile objektidele kasutades "
-"antud domeeni sirvides läbi FTP."
+msgid "Select an object here and Open ERP will create a mapping for each of these objects, using the given domain, when browsing through FTP."
+msgstr "Vali siia objekt ja Open ERP loob kaardistuse neile objektidele kasutades antud domeeni sirvides läbi FTP."
 
 #. module: document
 #: constraint:ir.actions.act_window:0
@@ -43,12 +38,8 @@ msgstr "Kataloogi sisu tüüp"
 
 #. module: document
 #: view:document.configuration.wizard:0
-msgid ""
-"This wizard will automatically configure the document management system "
-"according to modules installed on your system."
-msgstr ""
-"See wizard seadistab automaatselt dokumendi haldussüsteemi vastavalt "
-"moodulitele mis on installeeritud süsteemi."
+msgid "This wizard will automatically configure the document management system according to modules installed on your system."
+msgstr "See wizard seadistab automaatselt dokumendi haldussüsteemi vastavalt moodulitele mis on installeeritud süsteemi."
 
 #. module: document
 #: field:document.directory,file_ids:0
@@ -68,11 +59,8 @@ msgstr "Dokumendihaldus"
 
 #. module: document
 #: help:document.configuration.wizard,host:0
-msgid ""
-"Put here the server address or IP. Keep localhost if you don't know what to "
-"write."
-msgstr ""
-"Pane siia serveri nimi või IP. Jäta localhost kui sa ei tea mida kirjutada."
+msgid "Put here the server address or IP. Keep localhost if you don't know what to write."
+msgstr "Pane siia serveri nimi või IP. Jäta localhost kui sa ei tea mida kirjutada."
 
 #. module: document
 #: view:ir.attachment:0
@@ -136,7 +124,7 @@ msgstr "Dokumendi kataloog"
 #: code:addons/document/document.py:0
 #, python-format
 msgid "ValidateError"
-msgstr ""
+msgstr "ValidateError"
 
 #. module: document
 #: field:document.directory.content,include_name:0
@@ -183,20 +171,13 @@ msgstr "Kataloogi nimi peab olema ainulaadne"
 
 #. module: document
 #: help:document.directory,ressource_tree:0
-msgid ""
-"Check this if you want to use the same tree structure as the object selected "
-"in the system."
-msgstr ""
-"Vali see kui sa soovid kasutada sama puustruktuuri kui objektil valitud "
-"süsteemis."
+msgid "Check this if you want to use the same tree structure as the object selected in the system."
+msgstr "Vali see kui sa soovid kasutada sama puustruktuuri kui objektil valitud süsteemis."
 
 #. module: document
 #: help:document.directory,domain:0
-msgid ""
-"Use a domain if you want to apply an automatic filter on visible resources."
-msgstr ""
-"Kasuta doomeninime kui soovid rakendada automaatset filtrit nähaolevatele "
-"resurssidele."
+msgid "Use a domain if you want to apply an automatic filter on visible resources."
+msgstr "Kasuta doomeninime kui soovid rakendada automaatset filtrit nähaolevatele resurssidele."
 
 #. module: document
 #: field:document.configuration.wizard,host:0
@@ -327,9 +308,7 @@ msgstr "Seadista automaatselt kataloog"
 
 #. module: document
 #: model:ir.actions.todo,note:document.config_auto_directory
-msgid ""
-"This wizard will configure the URL of the server of the document management "
-"system."
+msgid "This wizard will configure the URL of the server of the document management system."
 msgstr "See nõustaja seadistab serveri ja dokumendihaldussüsteemi URL-i."
 
 #. module: document
@@ -346,6 +325,31 @@ msgstr "Mudeli ID"
 #: view:ir.attachment:0
 msgid "Preview"
 msgstr "Eelvaade"
+
+#. module: document
+#: model:ir.module.module,description:document.module_meta_information
+msgid "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
+msgstr "This is a complete document management system:\n"
+"    * FTP Interface\n"
+"    * User Authentication\n"
+"    * Document Indexation\n"
+"\n"
+"    ATTENTION: \n"
+"    - When you install this module in a running company that have already PDF files stored into the database, \n"
+"      you will lose them all. \n"
+"    - After installing this module PDF's are not longer stored into the database, \n"
+"      but in the servers rootpad like /server/bin/filestore.\n"
+""
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -411,12 +415,8 @@ msgstr "Looja"
 
 #. module: document
 #: help:document.directory,ressource_parent_type_id:0
-msgid ""
-"If you put an object here, this directory template will appear bellow all of "
-"these objects. Don't put a parent directory if you select a parent model."
-msgstr ""
-"Kui sa paned objekti siia siis selle kataloogi mall ilmub allpool neid "
-"objekte. Ära pane ülemkataloogi, kui sa valid ülemmudeli."
+msgid "If you put an object here, this directory template will appear bellow all of these objects. Don't put a parent directory if you select a parent model."
+msgstr "Kui sa paned objekti siia siis selle kataloogi mall ilmub allpool neid objekte. Ära pane ülemkataloogi, kui sa valid ülemmudeli."
 
 #. module: document
 #: view:document.directory:0
@@ -440,16 +440,12 @@ msgstr "Vahend ID"
 
 #. module: document
 #: constraint:ir.model:0
-msgid ""
-"The Object name must start with x_ and not contain any special character !"
-msgstr ""
-"Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Objekti nimi peab algama x_'ga ja ei tohi sisaldada ühtegi erisümbolit !"
 
 #. module: document
 #: help:document.directory.content,include_name:0
-msgid ""
-"Check this field if you want that the name of the file start by the record "
-"name."
+msgid "Check this field if you want that the name of the file start by the record name."
 msgstr "Märgi see väli, kui sa tahad et faili nimi algaks kirje nimega."
 
 #. module: document
@@ -479,22 +475,10 @@ msgid "Name"
 msgstr "Nimi"
 
 #. module: document
+#: model:ir.actions.wizard,name:document.wizard_document_browse
 #: model:ir.ui.menu,name:document.menu_document_browse
 msgid "Browse Files Using FTP"
-msgstr "Sirvi faile kasutades FTP-d"
-
-#. module: document
-#: model:ir.module.module,description:document.module_meta_information
-msgid ""
-"This is a complete document management system:\n"
-"    * FTP Interface\n"
-"    * User Authentication\n"
-"    * Document Indexation\n"
-msgstr ""
-"See on täielik dokumendi haldussüsteem:\n"
-"    * FTP liides\n"
-"    * Kasutaja Audentimine\n"
-"    * Dokumendi Indekseerimine\n"
+msgstr "Browse Files Using FTP"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -526,3 +510,4 @@ msgstr "Automaatne seadistamine"
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Dokumendi tüüp"
+
