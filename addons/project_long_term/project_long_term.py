@@ -229,7 +229,7 @@ class project_phase(osv.osv):
             avg_days = uom_pool._compute_qty(cr, uid, phase.product_uom.id, phase.duration, day_uom_id)
             duration = str(avg_days) + 'd'
             # Create a new project for each phase
-            str_resource = ('%s | '*len(phase.resource_ids))[:-2]
+            str_resource = ('%s & '*len(phase.resource_ids))[:-2]
             str_vals = str_resource % tuple(map(lambda x: 'Resource_%s'%x.resource_id.id, phase.resource_ids))
 
             # Phases Defination for the Project
@@ -276,11 +276,12 @@ class project_phase(osv.osv):
             todo_task_ids = task_pool.search(cr, uid, [('id', 'in', map(lambda x : x.id, phase.task_ids)),
                                               ('state', 'in', ['draft', 'open', 'pending'])
                                               ], order='sequence')
-            for task in task_pool.browse(cr, uid, todo_task_ids, context=context):
-                s += task_pool.generate_task(cr, uid, task.id, parent=parent, flag=False, context=context)
-                if not parent:
-                    parent = task
-                task_ids.append(task.id)
+            if todo_task_ids :
+                for task in task_pool.browse(cr, uid, todo_task_ids, context=context):
+                    s += task_pool.generate_task(cr, uid, task.id, parent=parent, flag=False, context=context)
+                    if not parent:
+                        parent = task
+                    task_ids.append(task.id)
             
             f += s + '\n'
             # Recursive call till all the next phases scheduled
@@ -357,7 +358,7 @@ def Phase_%d():
     vacation = %s
     working_days =  %s
 '''%(phase.id, phase.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
-            func_str += cls_str
+            
             parent = False
             task_ids = []
             todo_task_ids = task_pool.search(cr, uid, [('id', 'in', map(lambda x : x.id, phase.task_ids)),
@@ -368,7 +369,7 @@ def Phase_%d():
                 if not parent:
                     parent = task
                 task_ids.append(task.id)
-
+            func_str += cls_str
             #Temp File to test the Code for the Allocation
 #            fn = '/home/tiny/Desktop/plt.py'
 #            fp = open(fn, 'w')
@@ -510,6 +511,7 @@ def Project_%d():
     vacation = %s
     working_days =  %s
 '''%(project.id, project.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
+
             func_str += cls_str
             phase_ids = []
             for root_phase in phase_pool.browse(cr, uid, root_phase_ids, context=context):
@@ -533,39 +535,34 @@ def Project_%d():
                 phase = eval("project.Phase_%d" % phase_id)
                 start_date = phase.start.to_datetime()
                 end_date = phase.end.to_datetime()
-                # Write the calculated dates back
-#                if act_phase.constraint_date_start and str(start_date) < act_phase.constraint_date_start:
-#                    start_date = datetime.strptime(act_phase.constraint_date_start, '%Y-%m-%d')
-#                else:
-#                    start_date = start_date
-#                if act_phase.constraint_date_end and str(end_date) > act_phase.constraint_date_end:
-#                    end_date= datetime.strptime(act_phase.constraint_date_end, '%Y-%m-%d')
-#                    date_start = act_phase.constraint_date_end
-#                else:
-#                    end_date = start_date
-#                    start_date = end_date
-                ctx = context.copy()
-                ctx.update({'scheduler': True})
+                
                 if resources:
                     for res in resources:
                         vals = {}
                         vals.update({'date_start' :  start_date })
                         vals.update({'date_end' :  end_date})
-                        resource_allocation_pool.write(cr, uid, res.id, vals, context=ctx)
+                        resource_allocation_pool.write(cr, uid, res.id, vals, context=context)
                 if act_phase.task_ids:
                     for task in act_phase.task_ids:
                         vals = {}
                         #Getting values of the Tasks
                         temp = eval("phase.Task_%s"%task.id)
+                        if temp.booked_resource:
+                            res_name = temp.booked_resource[0].title
+                            res_id = resource_pool.search(cr, uid,[('name','=',res_name)], context = context)
+                            if res_id:
+                                res = resource_pool.browse(cr, uid, res_id[0], context = context)
+                                vals.update({'user_id' : res.user_id.id})
+                                               
                         vals.update({'date_start' : temp.start.strftime('%Y-%m-%d %H:%M:%S')})
                         vals.update({'date_end' : temp.end.strftime('%Y-%m-%d %H:%M:%S')})
-                        task_pool.write(cr, uid, task.id, vals, context=ctx)
+                        task_pool.write(cr, uid, task.id, vals, context=context)
 
 
                 phase_pool.write(cr, uid, [phase_id], {
                                       'date_start': start_date.strftime('%Y-%m-%d'),
                                       'date_end': end_date.strftime('%Y-%m-%d')
-                                    }, context=ctx)
+                                    }, context=context)
         return True            
 
     #TODO: DO Resource allocation and compute availability
@@ -640,18 +637,19 @@ def Project_%d():
     vacation = %s
     working_days =  %s
 '''%(project.id, project.name, start, minimum_time_unit, working_hours_per_day,  working_days_per_week, working_days_per_month, working_days_per_year, vacation, working_days )
-            func_str += cls_str
+            
             parent = False
             task_ids = []
             todo_task_ids = task_pool.search(cr, uid, [('project_id', '=', project.id),
                                               ('state', 'in', ['draft', 'open', 'pending'])
                                               ], order='sequence')
-            for task in task_pool.browse(cr, uid, todo_task_ids, context=context):
-                func_str += task_pool.generate_task(cr, uid, task.id, parent=parent, flag=True,context=context)
-                if not parent:
-                    parent = task
-                task_ids.append(task.id)
-
+            if todo_task_ids:
+                for task in task_pool.browse(cr, uid, todo_task_ids, context=context):
+                    func_str += task_pool.generate_task(cr, uid, task.id, parent=parent, flag=True,context=context)
+                    if not parent:
+                        parent = task
+                    task_ids.append(task.id)
+            func_str += cls_str
             #Temp File to test the Code for the Allocation
 #            fn = '/home/tiny/Desktop/plt.py'
 #            fp = open(fn, 'w')
@@ -701,28 +699,23 @@ class project_task(osv.osv):
     def generate_task(self, cr, uid, task_id, parent=False, flag=False, context=None):
         if context is None:
             context = {}
+        phase_pool = self.pool.get('project.phase')
         resource_pool = self.pool.get('resource.resource')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         task = self.browse(cr, uid, task_id, context=context)
         duration = str(task.planned_hours )+ 'H'
-        resource = False
-        if task.user_id:
-            resource_ids = self.search(cr, uid, [('user_id', '=', task.user_id.id)], context=context)
-            if len(resource_ids):
-                resource = 'Resource_%s'%resource_ids[0]
-        # Phases Defination for the Project 
+        str_resource = False
+        if task.phase_id.resource_ids:
+            str_resource = ('%s | '*len(task.phase_id.resource_ids))[:-2]
+            str_resource = str_resource % tuple(map(lambda x: 'Resource_%s'%x.resource_id.id, task.phase_id.resource_ids))
+        # Task Defination for the Phase of the Project
         if not flag:
             s = '''
         def Task_%s():
             title = \"%s\"
             effort = \'%s\'
             resource = %s
-'''%(task.id, task.name, duration, resource)
-            if parent:
-                start = 'up.Task_%s.end' % (parent.id)
-                s += '''
-            start = %s
-'''%(start)
+'''%(task.id, task.name, duration, str_resource)
             #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
         else:
             s = '''
@@ -731,11 +724,6 @@ class project_task(osv.osv):
         effort = \'%s\'
         resource = %s
 '''%(task.id, task.name, duration, resource)
-            if parent:
-                start = 'up.Task_%s.end' % (parent.id)
-                s += '''
-        start = %s
-'''%(start)
         s += '\n'
         return s
 project_task()
