@@ -610,18 +610,14 @@ class MigrationManager(object):
 
 log = logging.getLogger('init')
 
-def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=False, **kwargs):
+def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=None, **kwargs):
     """Migrates+Updates or Installs all module nodes from ``graph``
        :param graph: graph of module nodes to load
        :param status: status dictionary for keeping track of progress
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
                               for same cases, and even raise osv_except if certificate is invalid)
-       :param skip_cleanup: whether the auto-cleanup of records should be executed (unlinks any object that
-                            appears to be from one of the updated modules, but have not been loaded during
-                            last loading (i.e. records that seem to have been removed from the module).
-                            This is best left disabled when loading stand-alone modules that could contain
-                            records from dependent modules (i.e. other modules have put records in their
-                            namespace)
+       :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
+       :return: list of modules that were installed or updated
     """
     def process_sql_file(cr, fp):
         queries = fp.read().split(';')
@@ -707,18 +703,16 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=
         status = {}
 
     status = status.copy()
-    package_todo = []
+    processed_modules = []
     statusi = 0
     pool = pooler.get_pool(cr.dbname)
-
     migrations = MigrationManager(cr, graph)
-
-    has_updates = False
     modobj = None
-
     logger.notifyChannel('init', netsvc.LOG_DEBUG, 'loading %d packages..' % len(graph))
 
     for package in graph:
+        if skip_modules and package.name in skip_modules:
+            continue
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
         migrations.migrate_module(package, 'pre')
         register_class(package.name)
@@ -731,6 +725,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=
         status['progress'] = (float(statusi)+0.1) / len(graph)
         m = package.name
         mid = package.id
+
+        if skip_modules and m in skip_modules:
+            continue
 
         if modobj is None:
             modobj = pool.get('ir.module.module')
@@ -746,7 +743,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=
             mode = 'init'
 
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
-            has_updates = True
             for kind in ('init', 'update'):
                 if package.state=='to upgrade':
                     # upgrading the module information
@@ -765,7 +761,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=
                 # as there is no rollback.
                 load_test(cr, m, idref, mode)
 
-            package_todo.append(package.name)
+            processed_modules.append(package.name)
 
             migrations.migrate_module(package, 'post')
 
@@ -785,16 +781,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_cleanup=
 
         statusi += 1
 
-    cr.execute('select model from ir_model where state=%s', ('manual',))
-    for model in cr.dictfetchall():
-        pool.get('ir.model').instanciate(cr, 1, model['model'], {})
-
-    if not skip_cleanup:
-        # Cleanup orphan records
-        pool.get('ir.model.data')._process_end(cr, 1, package_todo)
     cr.commit()
 
-    return has_updates
+    return processed_modules
 
 def _check_module_names(cr, module_names):
     mod_names = set(module_names)
@@ -826,23 +815,30 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
     force = []
     if force_demo:
         force.append('demo')
+
+    # This is a brand new pool, just created in pooler.get_db_and_pool()
     pool = pooler.get_pool(cr.dbname)
+
     try:
+        processed_modules = []
         report = tools.assertion_report()
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
         if 'base' in tools.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s", ('to upgrade', 'base'))
+
+        # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
         graph = create_graph(cr, ['base'], force)
         if not graph:
             logger.notifyChannel('init', netsvc.LOG_CRITICAL, 'module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
-        has_updates = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report, skip_cleanup=True)
+        processed_modules.extend(load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report))
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
                 tools.load_language(cr, lang)
 
+        # STEP 2: Mark other modules to be loaded/updated
         if update_module:
             modobj = pool.get('ir.module.module')
             logger.notifyChannel('init', netsvc.LOG_INFO, 'updating modules list')
@@ -867,6 +863,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             STATES_TO_LOAD += ['to install']
 
+
+        # STEP 3: Load marked modules (skipping base which was done in STEP 1)
         loop_guardrail = 0
         while True:
             loop_guardrail += 1
@@ -884,10 +882,15 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 break
 
             logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
-            r = load_module_graph(cr, graph, status, report=report)
-            has_updates = has_updates or r
+            processed_modules.extend(load_module_graph(cr, graph, status, report=report, skip_modules=processed_modules))
 
-        if has_updates:
+        # STEP 4: Finish and cleanup
+        if processed_modules:
+            # load custom models
+            cr.execute('select model from ir_model where state=%s', ('manual',))
+            for model in cr.dictfetchall():
+                pool.get('ir.model').instanciate(cr, 1, model['model'], {})
+
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
@@ -909,6 +912,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     obj._check_removed_columns(cr, log=True)
                 else:
                     logger.notifyChannel('init', netsvc.LOG_WARNING, "Model %s is referenced but not present in the orm pool!" % model)
+
+            # Cleanup orphan records
+            pool.get('ir.model.data')._process_end(cr, 1, processed_modules)
 
         if report.get_report():
             logger.notifyChannel('init', netsvc.LOG_INFO, report)
