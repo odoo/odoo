@@ -3,6 +3,15 @@ CalDAV How-To
 ==========================
 
 
+As from OpenERP v6.0, document_webdav v2.2, the iPhone has been thoroughly
+tested and supported as a Calendaring client for the OpenERP CalDAV module.
+
+However, keep in mind that OpenERP is not a straightforward calendaring
+server, but an ERP application (with more data + structure) which exposes
+that data to calendar clients. That said, the full features that would be
+accessible through the Gtk or Web OpenERP clients cannot be crammed into
+the Calendar clients (such as the iPhone). 
+
 OpenERP server Setup
 --------------------
 Some modules need to be installed at the OpenERP server. These are:

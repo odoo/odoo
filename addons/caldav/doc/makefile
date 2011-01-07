@@ -6,6 +6,8 @@ concat: all.rst
 compile: concat
 	rst2pdf compile.rst -o caldav_doc.pdf 
 	
+debug: compile
+
 clean:
 	rm compile.rst 
 
