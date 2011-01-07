@@ -965,7 +965,7 @@ class account_journal_period(osv.osv):
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
-        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company')
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
     def _check(self, cr, uid, ids, context=None):
@@ -1118,7 +1118,7 @@ class account_move(osv.osv):
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
         'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
         'narration':fields.text('Narration'),
-        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
     _defaults = {
         'name': '/',

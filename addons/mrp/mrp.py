@@ -117,7 +117,7 @@ class mrp_routing_workcenter(osv.osv):
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
         'note': fields.text('Description'),
-        'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company'),
+        'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
     _defaults = {
         'cycle_nbr': lambda *a: 1.0,

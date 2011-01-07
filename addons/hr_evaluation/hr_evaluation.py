@@ -51,7 +51,7 @@ class hr_evaluation_plan_phase(osv.osv):
     _columns = {
         'name': fields.char("Phase", size=64, required=True),
         'sequence': fields.integer("Sequence"),
-        'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
+        'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'plan_id': fields.many2one('hr_evaluation.plan','Evaluation Plan', ondelete='cascade'),
         'action': fields.selection([
             ('top-down','Top-Down Appraisal Requests'),
