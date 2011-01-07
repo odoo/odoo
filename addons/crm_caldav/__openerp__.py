@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -36,7 +37,7 @@
                 'crm_caldav_setup.xml',
                 ],
 
-    'update_xml': [],
+    'update_xml': ['crm_caldav_view.xml'],
     'demo_xml': [],
     'installable': True,
     'active': False,
