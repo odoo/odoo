@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
 "PO-Revision-Date: 2010-12-20 08:39+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:10+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -34,15 +34,11 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "计算公式为:最大数量 - 小时合计"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
 msgstr "访问错误"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "理论收入"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -72,14 +68,14 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "计算公式：理论收入 - 总费用"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theorical Margin"
-msgstr "理论利润"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "实际利润(%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -114,6 +110,11 @@ msgstr "在辅助核算项目你花费的小时数(根据时间表). 它在所�
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "剩余的小时数"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -165,7 +166,8 @@ msgid "Invoiced Amount"
 msgstr "已开票金额"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "您尝试跳过访问规则（文档类型：%s）。"
@@ -184,6 +186,13 @@ msgstr "已开票小时"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "实际利润"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -294,8 +303,14 @@ msgstr "这项的成本合计,它包括实际成本(发票)和间接成本,如�
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "无效XML视图结构!"
 
+#~ msgid "Theorical Revenue"
+#~ msgstr "理论收入"
+
 #~ msgid "New Analytic Account"
 #~ msgstr "新的辅助核算项目"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "理论利润"
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "当前辅助核算项目"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-12-23 14:55+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:54+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:09+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -112,7 +112,9 @@ msgid "Fixed"
 msgstr "Fiksno"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:186
+#: code:addons/product/pricelist.py:339
+#: code:addons/product/pricelist.py:357
 #, python-format
 msgid "Warning !"
 msgstr "Upozorenje !"
@@ -262,7 +264,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  npr: 1* (ovaj komad) = odnos * (referentni komad)"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:378
 #, python-format
 msgid "Products: "
 msgstr "Proizvodi: "
@@ -409,6 +411,15 @@ msgid "Medium PC"
 msgstr "Srednji PC"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains detailed "
+"information about your products related to procurement logistics, sales "
+"price, product category, suppliers and so on."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
 msgstr "Pretrazi Cene Proizvoda"
@@ -506,6 +517,16 @@ msgid "Working Time"
 msgstr "Vreme rada"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A price list contains rules to be evaluated in order to compute the purchase "
+"or sales price for all the partners assigned to a price list. Price lists "
+"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
+"each version has several rules. Example: the customer price of a product "
+"category will be based on the supplier price multiplied by 1.80."
+msgstr ""
+
+#. module: product
 #: help:product.product,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the product "
@@ -518,7 +539,7 @@ msgid "Metal Cleats"
 msgstr "Metalne Stege"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:340
 #, python-format
 msgid ""
 "No active version for the selected pricelist !\n"
@@ -691,11 +712,6 @@ msgid "To Purchase"
 msgstr "Za Nabavku"
 
 #. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Matična ploča ASUStek A7N8X"
-
-#. module: product
 #: help:product.supplierinfo,min_qty:0
 msgid ""
 "The minimal quantity to purchase to this supplier, expressed in the supplier "
@@ -805,6 +821,12 @@ msgstr ""
 "za sve proizvode"
 
 #. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Nabavka & Lokacija"
+
+#. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr "Projekat Dizajna Kuhinje"
@@ -874,10 +896,12 @@ msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
 msgstr "  npr: 1 * (referentni komad) = odnos * (Ovaj komad)"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Nabavka & Lokacija"
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate between several Units of Measure within the "
+"same category."
+msgstr ""
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -947,13 +971,11 @@ msgstr ""
 "planiranja nabavke."
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action
 msgid ""
-"A pricelist contains rules to be evaluated in order to compute the purchase "
-"or sale price for all the partners assigned to a pricelist. Pricelists have "
-"several versions (2010, 2011, Promotion of February 2010, etc.) and each "
-"version has several rules. Example: the customer price of this category of "
-"product will be based on the supplier price multiplied by 1.80."
+"There can be more than one version of a pricelist. Here you can create and "
+"manage new versions of a price list. Some examples of versions: 2010, 2011, "
+"Summer Promotion, etc."
 msgstr ""
 
 #. module: product
@@ -987,20 +1009,6 @@ msgid "Partner Information"
 msgstr "Informacije partnera"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-msgid ""
-"You must define a Product for everything you buy or sell. They can be raw "
-"materials, stockable products, consumables or services. The Product form "
-"contains a detailed information of your products related to procurement "
-"logistics, sales price, product category, suppliers and so on."
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_res_users
-msgid "res.users"
-msgstr "res.users"
-
-#. module: product
 #: selection:product.ul,type:0
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
@@ -1028,6 +1036,15 @@ msgid "Price List Items"
 msgstr "Artikli cenovnika"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measure are in the same category, they can "
+"be converted to each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr ""
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr "Vece nego referentna JM"
@@ -1053,12 +1070,9 @@ msgid "Price Surcharge"
 msgstr "Cena doplate"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"Create and manage the units of measure you want to be used in your system. "
-"You can define a conversion rate to be used between the several Unit of "
-"Measure within the same category."
-msgstr ""
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
+msgstr "Matična ploča ASUStek A7N8X"
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1071,6 +1085,7 @@ msgstr "Logističke jedinice"
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
 #: view:product.product:0
+#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom,name:0
@@ -1087,6 +1102,15 @@ msgstr "Moze se lagerovati"
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
 msgstr "Drveni Stok 4m"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+msgid ""
+"You must define a Product for everything you buy or sell. Products can be "
+"raw materials, stockable products, consumables or services. The Product form "
+"contains detailed information about your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1252,7 +1276,7 @@ msgid "Pallet Dimension"
 msgstr "Dimenzije palete"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:603
 #, python-format
 msgid " (copy)"
 msgstr " (kopiraj)"
@@ -1261,11 +1285,6 @@ msgstr " (kopiraj)"
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Partneri"
-
-#. module: product
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
 
 #. module: product
 #: help:product.template,sale_delay:0
@@ -1278,22 +1297,13 @@ msgstr ""
 "isporuke finalnog proizvoda. Ovo je zagarantovano vreme koje ste dali Kupcu."
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid ""
-"Create and manage the units of measure categories you want to be used in "
-"your system. If several units of measures are in the same category, they can "
-"be converted within each other. For example, in the unit of measure category "
-"\"Time\", you will have the following UoM: Hours, Days."
-msgstr ""
-
-#. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Second UoM"
 msgstr "Druga JM"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:142
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -1380,17 +1390,17 @@ msgid "Purchase Unit of Measure"
 msgstr "Nabavna Jedinica Mere"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_category_action
-msgid ""
-"Here is a list of all your products classified by category. You can click on "
-"a category to get the list of all products linked to this category or to a "
-"child of this category."
-msgstr ""
-
-#. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
 msgstr "Načini nabavke"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click a "
+"category to get the list of all products linked to this category or to a "
+"child of this category."
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1403,7 +1413,7 @@ msgid "Regular processor config"
 msgstr "Standardna konfiguracija procesora"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:142
 #, python-format
 msgid ""
 "Conversion from Product UoM m to Default UoM PCE is not possible as they "
@@ -1470,11 +1480,6 @@ msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 "Greška: Podrazumevana JM i kupljena JM moraju da budu u istoj kategoriji."
-
-#. module: product
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1547,6 +1552,7 @@ msgstr "Polje proizvoda"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
+#: model:ir.ui.menu,name:product.menu_product_pricelist_type_action2
 msgid "Pricelists Types"
 msgstr "Tipovi cenovnika"
 
@@ -1579,15 +1585,6 @@ msgstr "Prilagodljiv PC"
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
 msgstr "Jedinica cene"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_puchased
-msgid ""
-"Products can be purchased and/or sold. They can be raw materials, stockable "
-"products, consumables or services. The Product form contains a detailed "
-"information on your  products related to procurement logistics, sales price, "
-"product category, suppliers and so on."
-msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1629,6 +1626,13 @@ msgstr "Paket po sloju"
 #: field:product.template,warranty:0
 msgid "Warranty (months)"
 msgstr "Garancija (meseci)"
+
+#. module: product
+#: help:product.pricelist.item,categ_id:0
+msgid ""
+"Set a category of product if this rule only apply to products of a category "
+"and his children. Keep empty for all products"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1753,7 +1757,7 @@ msgstr ""
 "Osnovna cena za izračunavanje cene za kupca. Nekada se zove kataloška cena."
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:515
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Deo za partnera u formi proizvoda"
@@ -2191,7 +2195,7 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:358
 #, python-format
 msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
@@ -2238,7 +2242,7 @@ msgid "Shelves"
 msgstr "Police"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:514
 #, python-format
 msgid "Other Pricelist"
 msgstr "Ostali cenovnici"
@@ -2316,29 +2320,17 @@ msgstr ""
 " ju = jm * koeficijent"
 
 #. module: product
-#: field:product.pricelist.item,price_discount:0
-msgid "Price Discount"
-msgstr "Popust"
-
-#. module: product
 #: help:product.template,volume:0
 msgid "The volume in m3."
 msgstr "Obim u m3"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"There can be more than one version of a pricelist. If you need to create new "
-"versions of a pricelist, you can do it and manage them from here. Some "
-"examples of versions: 2010, 2011, Promotion of February 2010, etc."
-msgstr ""
+#: field:product.pricelist.item,price_discount:0
+msgid "Price Discount"
+msgstr "Popust"
 
-#. module: product
-#: help:product.pricelist.item,categ_id:0
-msgid ""
-"Set a category of product if this rule only apply to products of a category "
-"and his children. Keep empty for all products"
-msgstr ""
+#~ msgid "res.users"
+#~ msgstr "res.users"
 
 #~ msgid ""
 #~ "Set a category of product if this rule only apply to products of a category "

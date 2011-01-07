@@ -874,8 +874,7 @@ class stock_picking(osv.osv):
         @return {'contact': address, 'invoice': address} for invoice
         """
         partner_obj = self.pool.get('res.partner')
-        partner = (picking.purchase_id and picking.purchase_id.partner_id) or (picking.sale_id and picking.sale_id.partner_id) or picking.address_id.partner_id
-
+        partner = picking.address_id.partner_id
         return partner_obj.address_get(cr, uid, [partner.id],
                 ['contact', 'invoice'])
 
@@ -970,6 +969,7 @@ class stock_picking(osv.osv):
 
         invoice_obj = self.pool.get('account.invoice')
         invoice_line_obj = self.pool.get('account.invoice.line')
+        address_obj = self.pool.get('res.partner.address')
         invoices_group = {}
         res = {}
         inv_type = type
@@ -993,6 +993,7 @@ class stock_picking(osv.osv):
 
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cr, uid, picking).values()
+            address = address_obj.browse(cr, uid, address_contact_id, context=context)
 
             comment = self._get_comment_invoice(cr, uid, picking)
             if group and partner.id in invoices_group:
@@ -1012,7 +1013,7 @@ class stock_picking(osv.osv):
                     'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'type': inv_type,
                     'account_id': account_id,
-                    'partner_id': partner.id,
+                    'partner_id': address.partner_id.id,
                     'address_invoice_id': address_invoice_id,
                     'address_contact_id': address_contact_id,
                     'comment': comment,
@@ -2566,17 +2567,17 @@ class stock_inventory(osv.osv):
         move_obj = self.pool.get('stock.move')
         account_move_obj = self.pool.get('account.move')
         for inv in self.browse(cr, uid, ids, context=context):
-            move_obj.action_cancel(cr, uid, [x.id for x in inv.move_ids],context=context)
+            move_obj.action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
             for move in inv.move_ids:
-                 account_move_ids = account_move_obj.search(cr, uid, [('name','=',move.name)])
+                 account_move_ids = account_move_obj.search(cr, uid, [('name', '=', move.name)])
                  if account_move_ids:
-                     account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'],context=context)
+                     account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
                      for account_move in account_move_data_l:
                          if account_move['state'] == 'posted':
-                             raise osv.except_osv(_('UserError'),
+                             raise osv.except_osv(_('UserError'), 
                                                   _('You can not cancel inventory which has any account move with posted state.'))
-                         account_move_obj.unlink(cr, uid, [account_move['id']],context=context)
-            self.write(cr, uid, [inv.id], {'state': 'cancel'},context=context)
+                         account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
+            self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
         return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
@@ -2584,8 +2585,8 @@ class stock_inventory(osv.osv):
         @return: True
         """
         for inv in self.browse(cr, uid, ids, context=context):
-            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context)
-            self.write(cr, uid, [inv.id], {'state':'draft'})
+            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
+            self.write(cr, uid, [inv.id], {'state':'draft'}, context=context)
         return True
 
 stock_inventory()
