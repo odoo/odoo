@@ -7,25 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-10 17:15+0000\n"
-"PO-Revision-Date: 2010-12-21 14:20+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-04 16:03+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:50+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:29+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_account_tax_code
 msgid "Tax Code"
-msgstr ""
+msgstr "Code de taxe"
 
 #. module: l10n_ch
 #: view:bvr.invoices.report:0
 msgid "BVR Invoices Report"
-msgstr ""
+msgstr "Facture BVR"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_intangible_asset
@@ -41,21 +40,25 @@ msgid ""
 "on the partner: %s\n"
 "on line: %s"
 msgstr ""
+"Aucun nom de banque définit\n"
+"pour le compte bancaire: %s\n"
+"pour le partenaire: %s\n"
+"à la ligne: %s"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_other_payable
 msgid "Bilan : Autres creanciers à CT"
-msgstr ""
+msgstr "Bilan : Autres creanciers à CT"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_other_ope_exp
 msgid "PP : Autres charges d'exploitation"
-msgstr ""
+msgstr "PP : Autres charges d'exploitation"
 
 #. module: l10n_ch
 #: view:bvr.report:0
 msgid "Print BVR Report"
-msgstr ""
+msgstr "Imprimer BVR"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/create_dta.py:0
@@ -72,7 +75,7 @@ msgstr "Enregistrement trouvé après total enregistrement !"
 #. module: l10n_ch
 #: model:res.partner.bank.type,name:l10n_ch.bvrpost
 msgid "DTA-BVRPOST"
-msgstr ""
+msgstr "DTA-BVRPOST"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_prov_reserve
@@ -104,7 +107,7 @@ msgstr "Bilan : Liquidites et titres"
 #: code:addons/l10n_ch/wizard/create_dta.py:0
 #, python-format
 msgid "The Bank type %s of the bank account: %s is not supported"
-msgstr ""
+msgstr "Le type de banque %s pour le compte bancaire : %s n'est pas supporté"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/create_dta.py:0
@@ -134,7 +137,7 @@ msgstr "Actif de régularisation"
 #. module: l10n_ch
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Valeur erronée du credit ou du débit en écriture comptable !"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_bvr_report
@@ -154,7 +157,7 @@ msgstr "banque"
 #: code:addons/l10n_ch/wizard/bvr_report.py:0
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "Erreur utilisateur"
 
 #. module: l10n_ch
 #: model:ir.actions.act_window,name:l10n_ch.action_account_bvr_report
@@ -169,7 +172,7 @@ msgstr "Erreur ! Vous ne pouvez pas créer de comptes récursifs."
 #. module: l10n_ch
 #: constraint:account.invoice:0
 msgid "Error: BVR reference is required."
-msgstr ""
+msgstr "Erreur: La référence BVR est requise"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_lt_liability
@@ -255,7 +258,7 @@ msgstr "Vous devez fournir un numéro de clearing pour votre compte bancaire"
 #. module: l10n_ch
 #: view:create.dta.wizard:0
 msgid "Click on 'Save as' to save the DTA file :"
-msgstr ""
+msgstr "Cliquer sur 'Enregistrer sous' pour enregistrer le fichier DTA :"
 
 #. module: l10n_ch
 #: view:create.dta.wizard:0
@@ -276,6 +279,9 @@ msgid ""
 "for the partner bank: %s\n"
 "on line: %s"
 msgstr ""
+"Vous devez saisir un numéro postal \n"
+"pour la banque partenaire: %s\n"
+"à la ligne: %s"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_closed
@@ -321,7 +327,7 @@ msgstr "Rapport BVR"
 #. module: l10n_ch
 #: field:res.partner.bank,print_bank:0
 msgid "Print Bank on BVR"
-msgstr ""
+msgstr "Imprimer la banque sur le BVR"
 
 #. module: l10n_ch
 #: model:res.partner.bank.type.field,name:l10n_ch.iban_field
@@ -349,7 +355,7 @@ msgstr "Mme."
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_bvr_invoices_report
 msgid "bvr.invoices.report"
-msgstr ""
+msgstr "bvr.invoices.report"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_view
@@ -698,7 +704,7 @@ msgstr ""
 #. module: l10n_ch
 #: view:bvr.invoices.report:0
 msgid "Print BVR Invoice Report"
-msgstr ""
+msgstr "Imprimer facture BVR"
 
 #. module: l10n_ch
 #: model:res.partner.title,shortcut:l10n_ch.res_c_partner_title_societe
@@ -759,12 +765,12 @@ msgstr "horiz. delta de 1,2 mm imprime le bvz 1.2mm sur la gauche"
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_building_asset
 msgid "Bilan : Immo corporelles immobilieres"
-msgstr ""
+msgstr "Bilan : Immo corporelles immobilières"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_bvr_import_wizard
 msgid "bvr.import.wizard"
-msgstr ""
+msgstr "bvr.import.wizard"
 
 #. module: l10n_ch
 #: model:res.partner.bank.type.field,name:l10n_ch.bvr_num_field_bvrbank
@@ -776,7 +782,7 @@ msgstr "bvr_number"
 #: model:res.partner.title,shortcut:l10n_ch.res_c_partner_title_sir
 #: model:res.partner.title,shortcut:l10n_ch.res_partner_title_sir
 msgid "M. "
-msgstr ""
+msgstr "M. "
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_closing

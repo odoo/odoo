@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-27 09:13+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-28 04:42+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_contract
@@ -38,9 +38,9 @@ msgid "Trial Start Date"
 msgstr "Fecha inicial de prueba"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function Arguments"
-msgstr "Argumentos de la función"
+#: view:hr.contract:0
+msgid "Passport"
+msgstr "Pasaporte"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -68,9 +68,9 @@ msgid "Current"
 msgstr "Actual"
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "Departamento"
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "Factor para el coste de hora"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -83,9 +83,9 @@ msgid "Wage Types"
 msgstr "Tipos de salario"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Calculations"
-msgstr "Cálculos"
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Departamento"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -98,12 +98,6 @@ msgstr "Básico"
 #: model:ir.model,name:hr_contract.model_hr_employee
 msgid "Employee"
 msgstr "Empleado"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "Planificación de trabajo"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -121,29 +115,12 @@ msgid "Hours in the period"
 msgstr "Horas en el período"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function"
-msgstr "Cargo"
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
+msgstr "Distancia de casa al trabajo"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Agrupar por..."
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Description"
-msgstr "Descripción"
-
-#. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Lugar de nacimiento"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -152,20 +129,14 @@ msgid "Contracts"
 msgstr "Contratos"
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "Es un director"
+#: view:hr.employee:0
+msgid "Personal Info"
+msgstr "Información personal"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
 msgstr "Trabajo"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Passport"
-msgstr "Pasaporte"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -205,19 +176,16 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,advantages:0
-#: view:hr.employee:0
 msgid "Advantages"
 msgstr "Ventajas"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Valid for"
 msgstr "Válido para"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Work Permit"
 msgstr "Trabajo permitido"
 
@@ -233,9 +201,13 @@ msgid "Contract Types"
 msgstr "Tipos de contrato"
 
 #. module: hr_contract
+#: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr "Buscar tipo de salario"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Wage Type"
+msgstr "Tipo de salario"
 
 #. module: hr_contract
 #: constraint:hr.employee:0
@@ -265,7 +237,6 @@ msgstr "En kilómetros."
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,notes:0
-#: view:hr.employee:0
 msgid "Notes"
 msgstr "Notas"
 
@@ -276,15 +247,6 @@ msgid ""
 msgstr ""
 "¡Error! No puede seleccionar un departamento que tenga el empleado como "
 "responsable."
-
-#. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Tipo de salario"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -309,9 +271,10 @@ msgid "Search Wage Period"
 msgstr "Buscar perido de salarios"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Computation"
-msgstr "Cálculo del salario"
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Planificación de trabajo"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -331,15 +294,9 @@ msgid "Job Title"
 msgstr "Titulo del trabajo"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Períodos de salario"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "Distancia de casa al trabajo"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Es un director"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
@@ -347,9 +304,14 @@ msgid "Start Date"
 msgstr "Fecha inicial"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Company contribution"
-msgstr "Contribución compañía"
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
+msgstr "Buscar tipo de salario"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
@@ -362,9 +324,10 @@ msgid "Trial End Date"
 msgstr "Fecha final de pruebas"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Factor para el coste de hora"
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Agrupar por..."
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
@@ -377,24 +340,15 @@ msgid "Period"
 msgstr "Periodo"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
-msgstr "Línea de nómina"
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Lugar de nacimiento"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Employee specific allowances and deductions"
-msgstr "Subsidios y deducciones específicos del empleado"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Contract Details"
-msgstr "Detalles del contrato"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Structure"
-msgstr "Estructura salarial"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
+msgid "Wage period"
+msgstr "Períodos de salario"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -407,13 +361,7 @@ msgstr ""
 "una hora de trabajo basado en el contrato del empleado."
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "Información personal"
-
-#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Duration"
 msgstr "Duración"
 
@@ -491,11 +439,38 @@ msgstr "Buscar tipo contrato"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre de modelo no válido en la definición de acción."
 
+#~ msgid "Salary Structure"
+#~ msgstr "Estructura salarial"
+
+#~ msgid "Contract Details"
+#~ msgstr "Detalles del contrato"
+
+#~ msgid "Calculations"
+#~ msgstr "Cálculos"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "¡Error! No puede crear menús recursivos."
 
+#~ msgid "Description"
+#~ msgstr "Descripción"
+
+#~ msgid "Function"
+#~ msgstr "Cargo"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "¡XML no válido para la estructura de la vista!"
+
+#~ msgid "Payslip Line"
+#~ msgstr "Línea de nómina"
+
+#~ msgid "Company contribution"
+#~ msgstr "Contribución compañía"
+
+#~ msgid "Salary Computation"
+#~ msgstr "Cálculo del salario"
+
+#~ msgid "Employee specific allowances and deductions"
+#~ msgstr "Subsidios y deducciones específicos del empleado"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
@@ -505,3 +480,6 @@ msgstr "Buscar tipo contrato"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid "Function Arguments"
+#~ msgstr "Argumentos de la función"

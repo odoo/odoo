@@ -7,15 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-31 10:18+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-05 17:43+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:05+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: report_webkit
@@ -67,7 +66,7 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:84
 #, python-format
 msgid "path to Wkhtmltopdf is not absolute"
 msgstr "Pfad zu wkhtmltopdf ist nicht absolut"
@@ -83,7 +82,10 @@ msgid "B7  21  88 x 125 mm"
 msgstr "B7  21  88 x 125 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:290
+#: code:addons/report_webkit/webkit_report.py:304
+#: code:addons/report_webkit/webkit_report.py:322
+#: code:addons/report_webkit/webkit_report.py:338
 #, python-format
 msgid "Webkit render"
 msgstr ""
@@ -94,7 +96,7 @@ msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27  210 x 330 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:67
 #, python-format
 msgid ""
 "Please install executable on your system'+\n"
@@ -117,7 +119,7 @@ msgid "Name of Image"
 msgstr "Name des Bildes"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:78
 #, python-format
 msgid ""
 "Wrong Wkhtmltopdf path set in company'+\n"
@@ -129,7 +131,7 @@ msgstr ""
 "nicht"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:151
 #, python-format
 msgid "Webkit raise an error"
 msgstr "Webkit verursacht Fehler"
@@ -142,7 +144,7 @@ msgstr "Legal    3   8.5 x 14 inches, 215.9 x 355.6 mm"
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_header_webkit
 msgid "ir.header_webkit"
-msgstr ""
+msgstr "ir.header_webkit"
 
 #. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.action_header_webkit
@@ -168,7 +170,7 @@ msgstr "B2  17  500 x 707 mm"
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_header_img
 msgid "ir.header_img"
-msgstr ""
+msgstr "ir.header_img"
 
 #. module: report_webkit
 #: constraint:res.company:0
@@ -191,7 +193,7 @@ msgid "Type"
 msgstr "Typ"
 
 #. module: report_webkit
-#: code:addons/report_webkit/wizard/report_webkit_actions.py:0
+#: code:addons/report_webkit/wizard/report_webkit_actions.py:134
 #, python-format
 msgid "Client Actions Connections"
 msgstr "Client Aktionen"
@@ -222,7 +224,7 @@ msgid "The header linked to the report"
 msgstr "Der Kopftext für diesen Report"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:66
 #, python-format
 msgid "Wkhtmltopdf library path is not set in company"
 msgstr "WKhtmltopdf Bibliothek Pfad ist nicht für Unternehmen angegeben"
@@ -349,7 +351,7 @@ msgid "Top Margin (mm)"
 msgstr "Kopfrand (mm)"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:246
 #, python-format
 msgid "Please set a header in company settings"
 msgstr "Bitte definieren Sie den Kopftext Ihres Unternehmens"
@@ -503,7 +505,7 @@ msgid "A3  8   297 x 420 mm"
 msgstr "A3  8   297 x 420 mm"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:240
 #, python-format
 msgid ""
 "'))\n"
@@ -513,6 +515,12 @@ msgid ""
 "          raise except_osv(\n"
 "                _('No header defined for this Webkit report!"
 msgstr ""
+"'))\n"
+"        header = report_xml.webkit_header.html\n"
+"        footer = report_xml.webkit_header.footer_html\n"
+"        if not header and report_xml.header:\n"
+"          raise except_osv(\n"
+"                _('No header defined for this Webkit report!"
 
 #. module: report_webkit
 #: help:res.company,lib_path:0
@@ -577,7 +585,7 @@ msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 msgstr "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
 
 #. module: report_webkit
-#: code:addons/report_webkit/webkit_report.py:0
+#: code:addons/report_webkit/webkit_report.py:240
 #, python-format
 msgid "Webkit Report template not found !"
 msgstr "Webkit Report Engine nicht gefunden !"
@@ -605,7 +613,7 @@ msgstr "B9  23  33 x 62 mm"
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_actions_report_xml
 msgid "ir.actions.report.xml"
-msgstr ""
+msgstr "ir.actions.report.xml"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."

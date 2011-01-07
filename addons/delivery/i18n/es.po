@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-27 09:23+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-28 04:40+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -43,7 +43,7 @@ msgid "Delivery Order"
 msgstr "Orden de entrega"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No price available !"
 msgstr "¡No existe precio disponible!"
@@ -64,6 +64,11 @@ msgstr "Cuadrículas de envío"
 #: field:stock.picking,volume:0
 msgid "Volume"
 msgstr "Volumen"
+
+#. module: delivery
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr ""
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -109,6 +114,15 @@ msgid "Variable Factor"
 msgstr "Factor variable"
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery price list allows you to compute the cost and sales price of "
+"the delivery according to the weight of the products and other criteria. You "
+"can define several price lists for one delivery method, per country or a "
+"zone in a specific country defined by a postal code range."
+msgstr ""
+
+#. module: delivery
 #: selection:delivery.grid.line,price_type:0
 msgid "Fixed"
 msgstr "Fijo"
@@ -129,7 +143,7 @@ msgid "Stock Move"
 msgstr "Movimiento stock"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
@@ -147,7 +161,15 @@ msgid "Net Weight"
 msgstr "Peso neto"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery methods you need for your sales activities. "
+"Each delivery method can be assigned to a price list which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/stock.py:98
 #, python-format
 msgid "Warning"
 msgstr "Aviso"
@@ -278,7 +300,7 @@ msgstr ""
 "eliminarlo."
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid available !"
 msgstr "¡No hay una cuadrícula disponible!"
@@ -289,7 +311,8 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:66
+#: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "Order not in draft state !"
 msgstr "¡La orden no está en estado borrador!"
@@ -331,21 +354,9 @@ msgid "Condition"
 msgstr "Condición"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"Create and manage the delivery method(s) you want your sales to be processed "
-"with. Each delivery method can be assigned to a pricelist which computes the "
-"price of the delivery according to the products sold or delivered."
-msgstr ""
-"Crear y administrar los métodos de entrega con que quiere procesar sus "
-"ventas. Cada método de entrega puede ser asignado a una lista de precios que "
-"calcula el precio de la entrega de acuerdo a los productos vendidos o "
-"entregados."
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Debe asignar un lote de producción para este producto"
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "Precio coste"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -392,28 +403,14 @@ msgid "Sales & Purchases"
 msgstr "Ventas & Compras"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
-msgid ""
-"The delivery pricelist allows you to compute the cost and sales price of the "
-"delivery based on the weight of the products and other criteria. You can "
-"define several pricelists for one delivery method, for each region such as "
-"countries or a zone in a specific country defined by a zip code range."
-msgstr ""
-"La lista de precios de entrega le permite calcular el costo y el precio de "
-"venta de la entrega con base en el peso de los productos y otros criterios. "
-"Usted puede definir varias listas de precios para un método de entrega, para "
-"cada región, como países, o una zona de un país específico definida por un "
-"rango de códigos postales."
-
-#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
 msgstr "<="
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr "Precio coste"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "Debe asignar un lote de producción para este producto"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -445,7 +442,7 @@ msgid "Price"
 msgstr "Precio"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "¡No concuerda cuadrícula para este transportista!"
@@ -467,7 +464,7 @@ msgid "="
 msgstr "="
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
+#: code:addons/delivery/stock.py:99
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr "¡El transportista %s (id: %d) no dispone de cuadrícula de envío!"
@@ -498,7 +495,8 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:66
+#: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "La orden debe estar en estado borrador para añadir líneas de envío."
@@ -634,3 +632,25 @@ msgstr "Tipo de precio"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "¡El nombre del módulo debe ser único!"
+
+#~ msgid ""
+#~ "The delivery pricelist allows you to compute the cost and sales price of the "
+#~ "delivery based on the weight of the products and other criteria. You can "
+#~ "define several pricelists for one delivery method, for each region such as "
+#~ "countries or a zone in a specific country defined by a zip code range."
+#~ msgstr ""
+#~ "La lista de precios de entrega le permite calcular el costo y el precio de "
+#~ "venta de la entrega con base en el peso de los productos y otros criterios. "
+#~ "Usted puede definir varias listas de precios para un método de entrega, para "
+#~ "cada región, como países, o una zona de un país específico definida por un "
+#~ "rango de códigos postales."
+
+#~ msgid ""
+#~ "Create and manage the delivery method(s) you want your sales to be processed "
+#~ "with. Each delivery method can be assigned to a pricelist which computes the "
+#~ "price of the delivery according to the products sold or delivered."
+#~ msgstr ""
+#~ "Crear y administrar los métodos de entrega con que quiere procesar sus "
+#~ "ventas. Cada método de entrega puede ser asignado a una lista de precios que "
+#~ "calcula el precio de la entrega de acuerdo a los productos vendidos o "
+#~ "entregados."
