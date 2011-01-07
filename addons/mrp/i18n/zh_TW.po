@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-11-27 13:27+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:04+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -23,13 +23,13 @@ msgid "Moves Created"
 msgstr "調撥已創建"
 
 #. module: mrp
-#: report:mrp.production.order:0
-msgid "No. Of Cycles"
-msgstr "週期數"
-
-#. module: mrp
-#: help:mrp.routing.workcenter,cycle_nbr:0
-msgid "Number of iterations this work center has to do in the specified operation of the routing."
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+msgid ""
+"Manufacturing Orders are usually proposed automatically by OpenERP based on "
+"the bill of materials and the procurement rules, but you can also create "
+"manufacturing orders manually. OpenERP will handle the consumption of the "
+"raw materials (stock decrease) and the production of the finished products "
+"(stock increase) when the order is processed."
 msgstr ""
 
 #. module: mrp
@@ -43,11 +43,6 @@ msgid "Work Centers Utilisation"
 msgstr ""
 
 #. module: mrp
-#: view:report.workcenter.load:0
-msgid "Work Center Loads"
-msgstr ""
-
-#. module: mrp
 #: view:mrp.routing.workcenter:0
 msgid "Routing Work Centers"
 msgstr ""
@@ -56,6 +51,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
 msgstr "生產資源計劃"
+
+#. module: mrp
+#: report:mrp.production.order:0
+msgid "No. Of Cycles"
+msgstr "週期數"
 
 #. module: mrp
 #: field:mrp.routing.workcenter,cycle_nbr:0
@@ -76,13 +76,13 @@ msgid "Picking list"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Hourly Cost"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Cost Price per Uom"
 msgstr ""
@@ -145,11 +145,6 @@ msgid "Finished Products"
 msgstr "成品"
 
 #. module: mrp
-#: selection:mrp.production.order,month:0
-msgid "May"
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "To Buy"
@@ -170,15 +165,6 @@ msgstr ""
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "The system launches automatically a RFQ to the preferred supplier."
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_routing_action
-msgid ""
-"Routings allows you to create and manage the manufacturing operations that "
-"should be followed within your work centers in order to produce a product. "
-"They are attached to bills of materials that will define the required raw "
-"materials."
 msgstr ""
 
 #. module: mrp
@@ -222,11 +208,14 @@ msgid "UOM"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"Define specific property groups that can be assigned to the properties of "
-"your bills of materials."
-msgstr ""
+#: field:change.production.qty,product_qty:0
+#: field:mrp.bom,product_qty:0
+#: field:mrp.production,product_qty:0
+#: view:mrp.production.order:0
+#: field:mrp.production.order,product_qty:0
+#: field:mrp.production.product.line,product_qty:0
+msgid "Product Qty"
+msgstr "貨品數量"
 
 #. module: mrp
 #: help:mrp.workcenter,product_id:0
@@ -256,7 +245,7 @@ msgid "Cycle Account"
 msgstr "循環戶口"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Work Cost"
 msgstr ""
@@ -289,6 +278,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
 msgid "Master Data"
+msgstr ""
+
+#. module: mrp
+#: model:process.transition,note:mrp.process_transition_stockmts0
+msgid ""
+"The system waits for the products to be available in the stock. These "
+"products are typically procured manually or through a minimum stock rule."
 msgstr ""
 
 #. module: mrp
@@ -347,6 +343,12 @@ msgid "October"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:177
+#, python-format
+msgid "Components Cost of "
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
 msgid "Procurement of stockable Product"
 msgstr ""
@@ -357,7 +359,7 @@ msgid "Default UOM"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:130
 #: report:bom.structure:0
 #: field:mrp.product_price,number:0
 #: report:mrp.production.order:0
@@ -452,6 +454,13 @@ msgid "Product type is service"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"Define specific property groups that can be assigned to the properties of "
+"your bill of materials."
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
 msgid "Manufacturing decomposition"
 msgstr ""
@@ -486,12 +495,6 @@ msgid "Request for Quotation."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Component suppliers"
-msgstr ""
-
-#. module: mrp
 #: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
 msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
@@ -501,11 +504,6 @@ msgstr ""
 #. module: mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.workcenter,costs_hour:0
-msgid "Specify Cost of Work center per hour."
 msgstr ""
 
 #. module: mrp
@@ -545,7 +543,7 @@ msgid "Search Production"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Supplier Price per Uom"
 msgstr ""
@@ -553,11 +551,6 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "March"
-msgstr ""
-
-#. module: mrp
-#: help:mrp.workcenter,costs_cycle:0
-msgid "Specify Cost of Work center per cycle."
 msgstr ""
 
 #. module: mrp
@@ -570,6 +563,11 @@ msgstr ""
 #: view:mrp.product.produce:0
 #: view:mrp.production:0
 msgid "Produce"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.workcenter,costs_cycle:0
+msgid "Specify Cost of Work center per cycle."
 msgstr ""
 
 #. module: mrp
@@ -622,7 +620,7 @@ msgid "Work Center Load"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:0
+#: code:addons/mrp/procurement.py:45
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr ""
@@ -649,8 +647,17 @@ msgid "Ready"
 msgstr ""
 
 #. module: mrp
+#: help:mrp.production,routing_id:0
+msgid ""
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
+"plannification."
+msgstr ""
+
+#. module: mrp
 #: help:mrp.workcenter,time_cycle:0
-msgid "Time in hours for this work center to achieve the operation of the specified routing."
+msgid "Time in hours for doing one cycle."
 msgstr "一個循環所須的小時數"
 
 #. module: mrp
@@ -659,6 +666,7 @@ msgid "BOM Ref"
 msgstr ""
 
 #. module: mrp
+#: view:mrp.production:0
 #: selection:mrp.production,state:0
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
@@ -690,7 +698,8 @@ msgid "Type"
 msgstr "類型"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:150
+#: code:addons/mrp/report/price.py:201
 #, python-format
 msgid "Total Cost of "
 msgstr ""
@@ -706,21 +715,11 @@ msgid "Per month"
 msgstr "每月"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
-#: code:addons/mrp/wizard/change_production_qty.py:0
+#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/wizard/change_production_qty.py:77
+#: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
 msgid "Couldn't find bill of material for product"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"The Properties in OpenERP are used to select the right bill of material in "
-"order to manufacture a product, when you have different ways of building the "
-"same product. You can assign several properties to each Bill of Materials. "
-"When a sales person creates a sales order, he can relate it to several "
-"properties and OpenERP will select automatically the BoM to use according "
-"the the needs."
 msgstr ""
 
 #. module: mrp
@@ -729,7 +728,7 @@ msgid "Product Name"
 msgstr "貨品名稱"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/mrp.py:491
 #, python-format
 msgid "Invalid action !"
 msgstr ""
@@ -760,6 +759,11 @@ msgstr "要求報價單"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
 msgid "Procurement rule"
+msgstr ""
+
+#. module: mrp
+#: help:mrp.workcenter,costs_hour:0
+msgid "Specify Cost of Work center per hour."
 msgstr ""
 
 #. module: mrp
@@ -799,14 +803,6 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
-msgid ""
-"Bills of materials Components are components and sub-products used to create "
-"master bills of materials. Use this menu to search in which BoM is used a "
-"specific component."
 msgstr ""
 
 #. module: mrp
@@ -857,7 +853,7 @@ msgid "Extended Filters..."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:0
+#: code:addons/mrp/procurement.py:47
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -903,7 +899,7 @@ msgid "Stockable Product"
 msgstr "可庫存貨品"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Work Center name"
 msgstr ""
@@ -967,6 +963,13 @@ msgid "Split in production lots"
 msgstr ""
 
 #. module: mrp
+#: help:mrp.workcenter,capacity_per_cycle:0
+msgid ""
+"Number of operations this work center can do in parallel. If this work "
+"center represents a team of 5 workers, the capacity per cycle is 5."
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicerfq0
 msgid ""
 "If the service has a 'Buy' supply method, this creates a RFQ, a "
@@ -989,6 +992,12 @@ msgid "Make to stock"
 msgstr "備貨型生產"
 
 #. module: mrp
+#: help:mrp.routing.workcenter,sequence:0
+msgid ""
+"Gives the sequence order when displaying a list of routing work centers."
+msgstr ""
+
+#. module: mrp
 #: report:bom.structure:0
 msgid "BOM Name"
 msgstr ""
@@ -1002,12 +1011,6 @@ msgstr "開始生產"
 #: model:ir.actions.act_window,name:mrp.open_board_manufacturing
 #: model:ir.ui.menu,name:mrp.menu_board_manufacturing
 msgid "Production Dashboard"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Component"
 msgstr ""
 
 #. module: mrp
@@ -1067,14 +1070,29 @@ msgid "]"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.routing.workcenter,sequence:0
+#: field:mrp.workcenter.load,measure_unit:0
+msgid "Amount measuring unit"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
 msgid ""
-"Gives the sequence order when displaying a list of routing work centers."
+"Manufacturing Orders describe the operations that need to be carried out and "
+"the raw materials usage for each production stage. You use specifications "
+"(bills of materials or BoM) to work out the raw material requirements and "
+"the manufacturing orders needed for the finished products. Once the bills of "
+"materials have been defined, OpenERP is capable of automatically deciding on "
+"the manufacturing route depending on the needs of the company."
 msgstr ""
 
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action3
+msgid "Manufacturing Orders in Progress"
 msgstr ""
 
 #. module: mrp
@@ -1087,7 +1105,7 @@ msgid ""
 "    * Make to Stock / Make to Order (by line)\n"
 "    * Multi-level BoMs, no limit\n"
 "    * Multi-level routing, no limit\n"
-"    * Routing and workcenter integrated with analytic accounting\n"
+"    * Routing and work center integrated with analytic accounting\n"
 "    * Scheduler computation periodically / Just In Time module\n"
 "    * Multi-pos, multi-warehouse\n"
 "    * Different reordering policies\n"
@@ -1117,22 +1135,6 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action3
-msgid "Manufacturing Orders in Progress"
-msgstr ""
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
-msgid ""
-"Manufacturing Orders describe the operations that need to be carried out and "
-"the raw materials usage for each stage of production. You use specifications "
-"(bills of materials or BoM) to work out the raw material requirements and "
-"the manufacturing orders needed for the finished products. Once the bills of "
-"materials have been defined, OpenERP becomes capable of automatically "
-"deciding on the manufacturing route depending on the needs of the company."
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
 msgid "Manufacturing Orders Waiting Products"
 msgstr ""
@@ -1148,7 +1150,7 @@ msgid "Group By..."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Cycles Cost"
 msgstr ""
@@ -1188,21 +1190,13 @@ msgid "Per week"
 msgstr ""
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockmts0
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
 msgid ""
-"The system waits for the products to be available in the stock. These "
-"products are typically procured manually or through a minimum stock rule."
+"Routings allow you to create and manage the manufacturing operations that "
+"should be followed within your work centers in order to produce a product. "
+"They are attached to bills of materials that will define the required raw "
+"materials."
 msgstr ""
-
-#. module: mrp
-#: field:change.production.qty,product_qty:0
-#: field:mrp.bom,product_qty:0
-#: field:mrp.production,product_qty:0
-#: view:mrp.production.order:0
-#: field:mrp.production.order,product_qty:0
-#: field:mrp.production.product.line,product_qty:0
-msgid "Product Qty"
-msgstr "貨品數量"
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
@@ -1284,16 +1278,6 @@ msgid "Configure Your Manufacturing Resource Planning Application"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action
-msgid ""
-"Manufacturing Orders are usually proposed automatically by OpenERP based on "
-"the bill of materials and the procurement rules, but you can also create "
-"manufacturing orders manually. OpenERP will handle the consumation of the "
-"raw materials (stock decrease) and the production of the finished products "
-"(stock increase) when the order is processed."
-msgstr ""
-
-#. module: mrp
 #: field:mrp.production,priority:0
 #: field:mrp.production.order,priority:0
 msgid "Priority"
@@ -1310,7 +1294,7 @@ msgid "Month -1"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/mrp.py:914
 #, python-format
 msgid "Manufacturing order '%s' is scheduled for the %s."
 msgstr ""
@@ -1321,7 +1305,7 @@ msgid "Production Order N° :"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
 msgstr ""
@@ -1349,6 +1333,16 @@ msgid "July"
 msgstr ""
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"Master Bills of Materials allow you to create and manage the list of "
+"necessary raw materials used to make a finished product. OpenERP will use "
+"these BoMs to automatically propose manufacturing orders according to "
+"product needs. You can either create a bill of materials to define specific "
+"production steps or define a single multi-level bill of materials."
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
 msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
@@ -1364,6 +1358,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
 #: view:mrp.product_price:0
 msgid "Product Cost Structure"
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/report/price.py:130
+#, python-format
+msgid "Components suppliers"
 msgstr ""
 
 #. module: mrp
@@ -1383,15 +1383,7 @@ msgid "Month"
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
-msgid ""
-"Work Centers allows you to create and manage manufacturing units consisting "
-"of one or several people and/or machines that can be considered as a unit "
-"for capacity and planning forecasting."
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:0
+#: code:addons/mrp/wizard/change_production_qty.py:62
 #, python-format
 msgid "Active Id is not found"
 msgstr ""
@@ -1428,6 +1420,11 @@ msgid "Product Consumed"
 msgstr ""
 
 #. module: mrp
+#: view:mrp.production:0
+msgid "Pending"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,active:0
 #: field:mrp.routing,active:0
 msgid "Active"
@@ -1440,6 +1437,7 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
+#: view:report.workcenter.load:0
 msgid "Work Center Loads"
 msgstr ""
 
@@ -1455,8 +1453,9 @@ msgid "Properties"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.production,date_planned:0
-msgid "Scheduled date"
+#: help:mrp.production,origin:0
+msgid ""
+"Reference of the document that generated this production order request."
 msgstr ""
 
 #. module: mrp
@@ -1483,7 +1482,6 @@ msgid "Drives the procurement orders for raw material."
 msgstr ""
 
 #. module: mrp
-#: view:mrp.production:0
 #: view:mrp.production.order:0
 msgid "Current"
 msgstr ""
@@ -1496,12 +1494,6 @@ msgstr ""
 #. module: mrp
 #: report:mrp.production.order:0
 msgid "SO Number"
-msgstr ""
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:0
-#, python-format
-msgid "Component Cost of "
 msgstr ""
 
 #. module: mrp
@@ -1542,7 +1534,7 @@ msgid "Manufacturing Orders To Start"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/mrp.py:491
 #, python-format
 msgid "Cannot delete Production Order(s) which are in %s State!"
 msgstr ""
@@ -1598,12 +1590,11 @@ msgid "Product UOS"
 msgstr "貨品銷售計量單位"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action
-#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-#: view:mrp.production:0
-msgid "Manufacturing Orders"
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid ""
+"Work Centers allow you to create and manage manufacturing units consisting "
+"of one or more persons and/or machines that can be considered as a unit for "
+"capacity and planning forecasting."
 msgstr ""
 
 #. module: mrp
@@ -1633,7 +1624,7 @@ msgid "Production Analysis"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
+#: code:addons/mrp/mrp.py:345
 #, python-format
 msgid "Copy"
 msgstr ""
@@ -1677,6 +1668,15 @@ msgid "Very Urgent"
 msgstr ""
 
 #. module: mrp
+#: help:mrp.bom,routing_id:0
+msgid ""
+"The list of operations (list of work centers) to produce the finished "
+"product. The routing is mainly used to compute work center costs during "
+"operations and to plan future loads on work centers based on production "
+"planning."
+msgstr ""
+
+#. module: mrp
 #: view:change.production.qty:0
 msgid "Approve"
 msgstr ""
@@ -1708,11 +1708,13 @@ msgid "Production Products Consommation"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.workcenter,note:0
-msgid ""
-"Description of the work center. Explain here what's a cycle according to this "
-"work center."
-msgstr "工作中心之描述。在此說明此工作中心是依據那個週期。"
+#: model:ir.actions.act_window,name:mrp.mrp_production_action
+#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+#: view:mrp.production:0
+msgid "Manufacturing Orders"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -1792,15 +1794,6 @@ msgid "Production Order"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.production,routing_id:0
-msgid ""
-"The list of operations (list of work centers) to produce the finished "
-"product. The routing is mainly used to compute work center costs during "
-"operations and to plan future loads on work centers based on production "
-"plannification."
-msgstr ""
-
-#. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Automatic procurement rule"
 msgstr ""
@@ -1816,7 +1809,9 @@ msgid "Product UoS Qty"
 msgstr ""
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:130
 #: view:mrp.bom:0
+#, python-format
 msgid "Components"
 msgstr ""
 
@@ -1827,10 +1822,8 @@ msgid "BOM Structure"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.workcenter,capacity_per_cycle:0
-msgid ""
-"Number of operations this work center can do in parallel. If this work center "
-"represents a team of 5 workers, the capacity per cycle is 5."
+#: field:mrp.bom,date_stop:0
+msgid "Valid Until"
 msgstr ""
 
 #. module: mrp
@@ -1852,11 +1845,6 @@ msgstr ""
 #: field:mrp.bom,product_uos_qty:0
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,date_stop:0
-msgid "Valid Until"
 msgstr ""
 
 #. module: mrp
@@ -2085,7 +2073,7 @@ msgid "Manufacturing Steps."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:136
 #: model:ir.actions.report.xml,name:mrp.report_cost_structure
 #, python-format
 msgid "Cost Structure"
@@ -2107,8 +2095,11 @@ msgid "Parent BoM"
 msgstr "父系物料清單"
 
 #. module: mrp
-#: field:mrp.workcenter.load,measure_unit:0
-msgid "Amount measuring unit"
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
+msgid ""
+"Bills of materials components are components and sub-products used to create "
+"master bills of materials. Use this menu to search in which BoM a specific "
+"component is used."
 msgstr ""
 
 #. module: mrp
@@ -2122,8 +2113,9 @@ msgid "Product type is Stockable or Consumable."
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:0
-#: code:addons/mrp/wizard/change_production_qty.py:0
+#: code:addons/mrp/mrp.py:591
+#: code:addons/mrp/wizard/change_production_qty.py:77
+#: code:addons/mrp/wizard/change_production_qty.py:82
 #, python-format
 msgid "Error"
 msgstr ""
@@ -2166,19 +2158,16 @@ msgid "Productions"
 msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:0
+#: code:addons/mrp/report/price.py:194
 #, python-format
 msgid "Work Cost of "
 msgstr ""
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+#: help:mrp.workcenter,note:0
 msgid ""
-"Master Bill of Materials allows you to create and manage the list of "
-"necessary raw materials used to make a finished product. OpenERP will use "
-"these BoM in order to propose automatically manufacturing orders according "
-"to products' needs. You can either create a bill of materials to define "
-"specific production steps or define a single multi-level bill of materials."
+"Description of the work center. Explain here what's a cycle according to "
+"this work center."
 msgstr ""
 
 #. module: mrp
@@ -2199,14 +2188,23 @@ msgid "Manufacturing Operations"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.production,origin:0
-msgid ""
-"Reference of the document that generated this production order request."
+#: field:mrp.production,date_planned:0
+msgid "Scheduled date"
 msgstr ""
 
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"The Properties in OpenERP are used to select the right bill of materials for "
+"manufacturing a product when you have different ways of building the same "
+"product. You can assign several properties to each Bill of Materials. When a "
+"sales person creates a sales order, he can relate it to several properties "
+"and OpenERP will automatically select the BoM to use according the the needs."
 msgstr ""
 
 #. module: mrp
@@ -2265,12 +2263,8 @@ msgid "Description"
 msgstr ""
 
 #. module: mrp
-#: help:mrp.bom,routing_id:0
-msgid ""
-"The list of operations (list of work centers) to produce the finished "
-"product. The routing is mainly used to compute work center costs during "
-"operations and to plan future loads on work centers based on production "
-"planning."
+#: selection:mrp.production.order,month:0
+msgid "May"
 msgstr ""
 
 #. module: mrp
@@ -2638,6 +2632,11 @@ msgstr ""
 
 #~ msgid "Workcenter Name"
 #~ msgstr "工作中心名稱"
+
+#~ msgid ""
+#~ "Description of the workcenter. Explain here what's a cycle according to this "
+#~ "workcenter."
+#~ msgstr "工作中心之描述。在此說明此工作中心是依據那個週期。"
 
 #~ msgid "Machine"
 #~ msgstr "機器"

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2011-01-01 23:13+0000\n"
-"Last-Translator: Roberto Onnis <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-05 19:10+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: Italian <it@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-02 05:02+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase_requisition
@@ -24,7 +24,7 @@ msgid "In Progress"
 msgstr "In progresso"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
 #, python-format
 msgid "No Product in Tender"
 msgstr "Nessun prodotto in offerta"
@@ -39,22 +39,6 @@ msgstr "Conferma"
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Responsabile"
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
-msgid ""
-"A purchase requisition is a step before the request for quotation. In a "
-"purchase requisition (or purchase tender), you can record the products you "
-"need to buy and trigger the creation of RfQs to supplier. After the "
-"negotiation, once you have reviewed all the supplier's offers, you can "
-"validate some and cancel others."
-msgstr ""
-"Una richiesta di vendita rappresenta un passo antecedente al preventivo. In "
-"un richiesta di vendita (o offerta di vendita), è possibile registrare i "
-"prodotti che si desidera comprare ed innescare la creazione di una richiesta "
-"preventivo per il fornitore. Dopo che la negoziazione è terminata, non "
-"appena quindi tutte le offerte dei fornitori sono state valutate, è "
-"possibile confermarne alcune e cancellarne altre."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -118,9 +102,9 @@ msgid "Product"
 msgstr "Prodotto"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Quotations"
-msgstr "Quotazioni"
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique !"
+msgstr "Il riferimento ordine deve essere unico!"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -201,6 +185,16 @@ msgid "Start Date"
 msgstr "Data inizio"
 
 #. module: purchase_requisition
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid ""
+"A purchase requisition is the step before a request for quotation. In a "
+"purchase requisition (or purchase tender), you can record the products you "
+"need to buy and trigger the creation of RfQs to suppliers. After the "
+"negotiation, once you have reviewed all the supplier's offers, you can "
+"validate some and cancel others."
+msgstr ""
+
+#. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
 msgid "Quantity"
 msgstr "Quantità"
@@ -274,7 +268,7 @@ msgid "Purchase Order"
 msgstr "Ordine di Acquisto"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
 #, python-format
 msgid "Error!"
 msgstr "Errore!"
@@ -358,6 +352,11 @@ msgid "Latest Requisition"
 msgstr "Ultima richiesta"
 
 #. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Quotations"
+msgstr "Quotazioni"
+
+#. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Qty"
 msgstr "Q.tà"
@@ -422,3 +421,17 @@ msgstr "Richiesta"
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
 msgstr "Ordini di acquisto"
+
+#~ msgid ""
+#~ "A purchase requisition is a step before the request for quotation. In a "
+#~ "purchase requisition (or purchase tender), you can record the products you "
+#~ "need to buy and trigger the creation of RfQs to supplier. After the "
+#~ "negotiation, once you have reviewed all the supplier's offers, you can "
+#~ "validate some and cancel others."
+#~ msgstr ""
+#~ "Una richiesta di vendita rappresenta un passo antecedente al preventivo. In "
+#~ "un richiesta di vendita (o offerta di vendita), è possibile registrare i "
+#~ "prodotti che si desidera comprare ed innescare la creazione di una richiesta "
+#~ "preventivo per il fornitore. Dopo che la negoziazione è terminata, non "
+#~ "appena quindi tutte le offerte dei fornitori sono state valutate, è "
+#~ "possibile confermarne alcune e cancellarne altre."

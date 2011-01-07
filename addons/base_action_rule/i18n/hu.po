@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-02 09:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Hungarian <hu@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -76,7 +76,12 @@ msgid "Days"
 msgstr "Napok"
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr ""
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:313
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
@@ -114,20 +119,6 @@ msgstr ""
 "partnernek."
 
 #. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
-msgid ""
-"Create actions automatically triggered based on a user activity in the "
-"system.E.g.: an opportunity created by a specific user can be automatically "
-"maintained with a specific sales team, or an opportunity which still has "
-"status pending after 14 days triggers an automatic reminder email."
-msgstr ""
-"Automatikusan elinduló műveletek létrehozása egy felhasználó aktivitása "
-"alapján a rendszerben. Pl.: egy alkalom létrehozása egy speciális "
-"felhasználó által, amit automatikusan fenntarthatnak egy speciális "
-"értékesítési csoporttal, vagy egy alkalom, amely még folyamatos státuszban "
-"van, 14 nap után egy automatikus emlékeztető emailt küld."
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr "Feltételek a Modell Partnernél"
@@ -161,6 +152,15 @@ msgstr "Speciális kulcsszavak használata a törzsben"
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Állam"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Use automated actions to automatically trigger actions for various screens. "
+"Example: a lead created by a specific user may be automatically set to a "
+"specific sales team, or an opportunity which still has status pending after "
+"14 days might trigger an automatic reminder email."
+msgstr ""
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
@@ -330,7 +330,7 @@ msgid "Active"
 msgstr "Aktív"
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: code:addons/base_action_rule/base_action_rule.py:314
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
 msgstr "Nem található email ID az Ön Vállalatának címéhez!"
@@ -536,6 +536,18 @@ msgstr "Indítás dátuma"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Érvénytelen modell név a művelet meghatározásában."
+
+#~ msgid ""
+#~ "Create actions automatically triggered based on a user activity in the "
+#~ "system.E.g.: an opportunity created by a specific user can be automatically "
+#~ "maintained with a specific sales team, or an opportunity which still has "
+#~ "status pending after 14 days triggers an automatic reminder email."
+#~ msgstr ""
+#~ "Automatikusan elinduló műveletek létrehozása egy felhasználó aktivitása "
+#~ "alapján a rendszerben. Pl.: egy alkalom létrehozása egy speciális "
+#~ "felhasználó által, amit automatikusan fenntarthatnak egy speciális "
+#~ "értékesítési csoporttal, vagy egy alkalom, amely még folyamatos státuszban "
+#~ "van, 14 nap után egy automatikus emlékeztető emailt küld."
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "A modul nevének egyedinek kell lennie!"

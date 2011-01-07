@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-16 06:40+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-02 15:43+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:41+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -52,16 +52,20 @@ msgid "Human Resources"
 msgstr "人力资源"
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
 msgstr "分组于"
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "工作电邮"
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements. You can keep "
+"track of the number of employees you have per job position and how many you "
+"expect in the future. You can also attach a survey to a job position that "
+"will be used in the recruitment process to evaluate the applicants for this "
+"job position."
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -75,7 +79,7 @@ msgstr "部门"
 #. module: hr
 #: help:hr.installer,hr_attendance:0
 msgid "Simplifies the management of employee's attendances."
-msgstr ""
+msgstr "简化雇员考勤管理"
 
 #. module: hr
 #: view:hr.job:0
@@ -140,12 +144,12 @@ msgstr ""
 #. module: hr
 #: field:hr.installer,hr_contract:0
 msgid "Employee's Contracts"
-msgstr ""
+msgstr "雇员合同"
 
 #. module: hr
 #: help:hr.installer,hr_payroll:0
 msgid "Generic Payroll system."
-msgstr ""
+msgstr "通用工资表系统"
 
 #. module: hr
 #: view:hr.employee:0
@@ -155,18 +159,26 @@ msgstr "我的部门雇员"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "已婚"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
+msgstr "错误！您不能选择该雇员担任经理的部门。"
 
 #. module: hr
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
 msgstr "雇员护照信息"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Department Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -199,7 +211,7 @@ msgstr ""
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "No of Employee"
-msgstr ""
+msgstr "无雇员信息"
 
 #. module: hr
 #: selection:hr.employee,gender:0
@@ -215,7 +227,7 @@ msgstr ""
 #. module: hr
 #: field:hr.installer,hr_evaluation:0
 msgid "Periodic Evaluations"
-msgstr ""
+msgstr "试用期"
 
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
@@ -235,7 +247,7 @@ msgstr "社保ID"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employee with that job."
-msgstr ""
+msgstr "该职位相关的员工数"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
@@ -271,6 +283,11 @@ msgstr "员工"
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
 msgstr "其他信息"
+
+#. module: hr
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr "工作电邮"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -331,7 +348,7 @@ msgstr "分类"
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "预期的雇员"
 
 #. module: hr
 #: help:hr.employee,sinid:0
@@ -414,7 +431,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr ""
+msgstr "hr.department"
 
 #. module: hr
 #: help:hr.employee,parent_id:0
@@ -460,7 +477,7 @@ msgstr "备注"
 #. module: hr
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "选择的公司不属于此用户允许访问的公司。"
 
 #. module: hr
 #: view:hr.employee:0
@@ -483,17 +500,9 @@ msgid "Status"
 msgstr "状态"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"Your Company's Departments Structure is used to manage all documents related "
-"to employees by departments: expenses and timesheet validation, leaves "
-"management, recruitements, etc."
-msgstr ""
-
-#. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "配置"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -553,7 +562,7 @@ msgstr ""
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of Employees in total for that job."
-msgstr ""
+msgstr "该职位需要的总雇员数量。"
 
 #. module: hr
 #: selection:hr.job,state:0
@@ -588,12 +597,12 @@ msgstr "婚姻状况"
 #. module: hr
 #: help:hr.installer,hr_recruitment:0
 msgid "Helps you manage and streamline your recruitment process."
-msgstr ""
+msgstr "帮助您管理并流水化您的招聘流程。"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "员工表单与组成结构"
 
 #. module: hr
 #: field:hr.employee,photo:0
@@ -603,12 +612,12 @@ msgstr "相片"
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: hr
 #: field:hr.installer,hr_payroll_account:0
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "工资表记账"
 
 #. module: hr
 #: view:hr.employee:0
@@ -618,7 +627,7 @@ msgstr "个人信息"
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "护照号"
 
 #. module: hr
 #: view:res.users:0
@@ -654,6 +663,7 @@ msgstr "家庭地址"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "考勤列表"
 
@@ -661,7 +671,7 @@ msgstr "考勤列表"
 #: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "说明"
 
 #. module: hr
 #: help:hr.installer,hr_contract:0
@@ -671,22 +681,27 @@ msgstr ""
 #. module: hr
 #: field:hr.installer,hr_payroll:0
 msgid "Payroll"
-msgstr ""
+msgstr "工资表"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "单身"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "职位名称"
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
+msgstr ""
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Mobile"
 msgstr ""
 
 #. module: hr
@@ -709,7 +724,7 @@ msgstr "备注"
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "hr.installer"
 
 #. module: hr
 #: view:board.board:0
@@ -791,7 +806,6 @@ msgid "Expenses"
 msgstr "支出"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
@@ -801,19 +815,11 @@ msgstr "主管"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
 msgid "Widower"
-msgstr ""
+msgstr "鳏夫"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"JJob Positions is used to define jobs and their requirements. You can attach "
-"a survey to a job position. This survey will be used in the recruitment "
-"process to evaluate the applicants for this job position."
 msgstr ""
 
 #. module: hr

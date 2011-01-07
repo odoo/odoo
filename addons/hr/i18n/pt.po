@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-09 10:58+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:41+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -52,16 +52,20 @@ msgid "Human Resources"
 msgstr "Recursos Humanos"
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
 msgstr "Agrupar Por..."
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "E-mail Trabalho"
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements. You can keep "
+"track of the number of employees you have per job position and how many you "
+"expect in the future. You can also attach a survey to a job position that "
+"will be used in the recruitment process to evaluate the applicants for this "
+"job position."
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -173,6 +177,14 @@ msgid "Employee Passport Information"
 msgstr "Informação do Passaporte do Empregado"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Department Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Position"
 msgstr "Posto"
@@ -275,6 +287,11 @@ msgstr "Empregado"
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
 msgstr "Outra Informação"
+
+#. module: hr
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr "E-mail Trabalho"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -505,17 +522,6 @@ msgid "Status"
 msgstr "Estado"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"Your Company's Departments Structure is used to manage all documents related "
-"to employees by departments: expenses and timesheet validation, leaves "
-"management, recruitements, etc."
-msgstr ""
-"A Estrutura de Departamentos da sua empresa é usada para gerir os documentos "
-"relacionados com os empregados (por departamento): despesas e validação de "
-"folhas de horas, gestão de licenças e baixas, recrutamento, etc."
-
-#. module: hr
 #: view:hr.installer:0
 msgid "Configure"
 msgstr ""
@@ -683,6 +689,7 @@ msgstr "Endereço de Casa"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "Pontualidade"
 
@@ -717,6 +724,11 @@ msgstr "Nome do Cargo"
 #: selection:hr.job,state:0
 msgid "In Position"
 msgstr "Em Posição"
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Mobile"
+msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -820,7 +832,6 @@ msgid "Expenses"
 msgstr "Despesas"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
@@ -836,14 +847,6 @@ msgstr ""
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
 msgstr "Sistema de Processamento de Salários Integrado com a Contabilidade"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"JJob Positions is used to define jobs and their requirements. You can attach "
-"a survey to a job position. This survey will be used in the recruitment "
-"process to evaluate the applicants for this job position."
-msgstr ""
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -978,6 +981,15 @@ msgstr "Subordinados"
 
 #~ msgid "New Employee"
 #~ msgstr "Novo Funcionário"
+
+#~ msgid ""
+#~ "Your Company's Departments Structure is used to manage all documents related "
+#~ "to employees by departments: expenses and timesheet validation, leaves "
+#~ "management, recruitements, etc."
+#~ msgstr ""
+#~ "A Estrutura de Departamentos da sua empresa é usada para gerir os documentos "
+#~ "relacionados com os empregados (por departamento): despesas e validação de "
+#~ "folhas de horas, gestão de licenças e baixas, recrutamento, etc."
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "O tamanho do campo não pode ser inferior a 1 !"
