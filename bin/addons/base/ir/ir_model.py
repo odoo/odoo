@@ -73,7 +73,7 @@ class ir_model(osv.osv):
         models=self.browse(cr,uid,ids)
         res={}
         for model in models:
-            res[model.id]=self.pool.get("ir.ui.view").search(cr, uid, [('model', '=', model.name)])
+            res[model.id]=self.pool.get("ir.ui.view").search(cr, uid, [('model', '=', model.model)])
         return res
 
     _columns = {
