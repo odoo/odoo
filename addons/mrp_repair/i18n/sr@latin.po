@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-12-23 16:21+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:49+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:28+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_repair
@@ -53,6 +53,16 @@ msgstr ""
 #: field:mrp.repair.line,move_id:0
 msgid "Inventory Move"
 msgstr "Premesti Inventar"
+
+#. module: mrp_repair
+#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
+msgid ""
+"Repair orders allow you to organize your product repairs. In a repair order, "
+"you can detail the components you remove, add or replace and record the time "
+"you spent on the different operations. The repair order uses the warranty "
+"date on the production lot in order to know if whether the repair should be "
+"invoiced to the customer or not."
+msgstr ""
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -100,7 +110,7 @@ msgid "Group by partner invoice address"
 msgstr "Grupisano po adresama faktura partnera"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
+#: code:addons/mrp_repair/mrp_repair.py:427
 #, python-format
 msgid "No product defined on Fees!"
 msgstr "Nema proizvoda definisanih za Naknadne intervencije"
@@ -175,7 +185,7 @@ msgid "Net Total :"
 msgstr "Ukupno neto"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
+#: code:addons/mrp_repair/mrp_repair.py:427
 #, python-format
 msgid "Warning !"
 msgstr "Upozorenje!"
@@ -196,7 +206,7 @@ msgid "Move"
 msgstr "Pomeri"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
+#: code:addons/mrp_repair/mrp_repair.py:362
 #, python-format
 msgid "You have to select a Partner Invoice Address in the repair form !"
 msgstr "TRebas izabrati Partnerovu adresu fakture u formi za popravku!"
@@ -229,7 +239,7 @@ msgid "Draft"
 msgstr "Priprema"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
+#: code:addons/mrp_repair/mrp_repair.py:376
 #, python-format
 msgid "No account defined for partner \"%s\"."
 msgstr "NIjedan nalog nije definisan kao partner \"%s\" ."
@@ -245,16 +255,6 @@ msgstr "Potvrđeno"
 #: view:mrp.repair:0
 msgid "Repairs order"
 msgstr "Nalozi Popravke"
-
-#. module: mrp_repair
-#: model:ir.actions.act_window,help:mrp_repair.action_repair_order_tree
-msgid ""
-"Repair orders allows you to organize your reparations on the products. On a "
-"repair order, you can detail the components you remove, add or replace and "
-"record the time you spent on the different operations. The repair order uses "
-"the warranty date on the production lot in order to know if you have to "
-"invoice the reparation to the customer or not."
-msgstr ""
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -293,7 +293,9 @@ msgid "Shipping address :"
 msgstr "Adresa isporuke:"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
+#: code:addons/mrp_repair/mrp_repair.py:376
+#: code:addons/mrp_repair/mrp_repair.py:405
+#: code:addons/mrp_repair/mrp_repair.py:434
 #, python-format
 msgid "Error !"
 msgstr "Greska !"
@@ -350,7 +352,7 @@ msgid "Quotation Notes"
 msgstr "Kotacija napomene"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:0
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
 msgstr "Upozorenje !"
@@ -537,7 +539,8 @@ msgid "End Repair"
 msgstr "Kraj Popravke"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
+#: code:addons/mrp_repair/mrp_repair.py:405
+#: code:addons/mrp_repair/mrp_repair.py:434
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Ni jedan nalog nije kreiran za proizvod \"%s\" ."
@@ -710,13 +713,13 @@ msgid "Untaxed amount"
 msgstr "Iznos bez Poreza"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:0
+#: code:addons/mrp_repair/wizard/cancel_repair.py:41
 #, python-format
 msgid "Active ID is not Found"
 msgstr "Aktivni ID nije pronadjen"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/wizard/cancel_repair.py:0
+#: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Repair order is not invoiced."
 msgstr "Nalog za popravku nije fakturisan"
@@ -797,7 +800,7 @@ msgid "Ready to Repair"
 msgstr "Spremno za Popravku"
 
 #. module: mrp_repair
-#: code:addons/mrp_repair/mrp_repair.py:0
+#: code:addons/mrp_repair/mrp_repair.py:362
 #, python-format
 msgid "No partner !"
 msgstr "Nema partnera !"

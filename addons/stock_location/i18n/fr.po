@@ -6,36 +6,36 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-11-27 13:41+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-02 10:30+0000\n"
+"Last-Translator: Christophe Chauvet - http://www.syleam.fr/ <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:47+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:26+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "Bon de livraison"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr ""
+msgstr "Chemins tirés"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr ""
+msgstr "Mouvement"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "Flux poussés"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -45,7 +45,7 @@ msgstr "Automatique aucune étape ajoutée"
 #. module: stock_location
 #: view:product.product:0
 msgid "Parameters"
-msgstr ""
+msgstr "Paramètres"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
@@ -56,53 +56,56 @@ msgstr "Emplacement source"
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr ""
+msgstr "Autorise l'annulation d'un mouvement lié au produit en flux tiré"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr ""
+msgstr "Flux tirés"
 
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Vous devez affecter un lot de fabrication pour ce produit."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr ""
+"Emplacement utilisé pour l'emplacement de destination à approvisionner"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr ""
+msgstr "Interne"
 
 #. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:0
+#: code:addons/stock_location/procurement_pull.py:98
 #, python-format
 msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
+"Gestion des besoins en flux tiré provenant de l'emplacement d'origine %s, "
+"règle de flux tiré %s, via le besoin %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr ""
+msgstr "Emplacement"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "État de la facture"
 
 #. module: stock_location
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
-msgstr ""
+msgstr "Ce champ remplira l'origine du colisage et le nom de ses mouvements"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -126,94 +129,96 @@ msgstr ""
 #. module: stock_location
 #: model:ir.module.module,shortdesc:stock_location.module_meta_information
 msgid "Warehouse Locations Paths"
-msgstr ""
+msgstr "Chemins des emplacements de l'entrepôt"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
-msgstr ""
+msgstr "Conditions"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr ""
+msgstr "Zone d'emballage"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "Porte B"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "Porte A"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr ""
+msgstr "Acheter"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr ""
+msgstr "Flux poussés"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
+msgstr "Zone d'expédition"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Mouvement de stock"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr ""
+msgstr "Flux tirés"
 
 #. module: stock_location
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Logistics Flows"
-msgstr ""
+msgstr "Flux logistiques"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Si cette case est cochée, lorsque ce mouvement est annulé, le mouvement lié "
+"l'est aussi"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr ""
+msgstr "Produire"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Sur commande"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Sur stock"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "Adresse du partenaire"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "À facturer"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
@@ -311,17 +316,19 @@ msgstr ""
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr ""
+msgstr "Type de besoin"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company belong packings and moves"
 msgstr ""
+"Est utilisé pour savoir à quelle société appartiennent les colisages et les "
+"mouvements"
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -340,7 +347,7 @@ msgstr "Opération manuelle"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produit"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
@@ -351,7 +358,7 @@ msgstr "Méthode de gestion des besoins"
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "Type d'expédition"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -360,11 +367,16 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"'Sur stock': Quand c'est possible prendre du stock ou attendre le "
+"réapprovisionnement.\n"
+"'Sur commande': Quand c'est possible, acheter ou produire pour la demande de "
+"réappro."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
 msgstr ""
+"Indique l'emplacement de destination qui a besoin d'être approvisionné"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -372,21 +384,21 @@ msgid "Products"
 msgstr "Produits"
 
 #. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:0
+#: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr ""
+msgstr "Tiré depuis un autre emplacement pour satisfaire le besoin %d"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "Contrôle qualité"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Non applicable"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -394,35 +406,40 @@ msgid "Delay (days)"
 msgstr "Délai (jours)"
 
 #. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:0
+#: code:addons/stock_location/procurement_pull.py:67
 #, python-format
 msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
+"Opération de manutention pour un besoin tiré, en provenance de l'emplacement "
+"d'origine %s, règle de flux tiré %s, pour satisfaire le besoin original %s "
+"(#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr ""
+msgstr "Flux poussé"
 
 #. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:0
+#: code:addons/stock_location/procurement_pull.py:89
 #, python-format
 msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
+"Mouvement pour un besoin tiré, en provenance de l'emplacement d'origine %s, "
+"règle de flux tiré %s, pour satisfaire le besoin original %s (#%d)"
 
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Vous essayez d'affecter un lot qui n'est pas pour ce produit."
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Besoin"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_id:0
@@ -440,17 +457,17 @@ msgstr "Mouvement automatique"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Bon de réception"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "Type d'action"
 
 #. module: stock_location
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Erreur : Code EAN invalide"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -459,11 +476,13 @@ msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
 msgstr ""
+"En fonction de la société, choisissez si vous voulez envoyer ou recevoir les "
+"produits"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "Traitement de la commande"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -479,19 +498,19 @@ msgstr "Chemin des emplacements"
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Journal"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr ""
+msgstr "Annuler en cascade"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Facturé"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue"
