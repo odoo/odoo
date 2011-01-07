@@ -484,7 +484,7 @@ class OpenERPDispatcher:
             logger = logging.getLogger('result')
             self.log('service', service_name)
             self.log('method', method)
-            self.log('params', replace_request_password(params), depth=(logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) and None or 1))
+            self.log('params', replace_request_password(params), depth=(None if logger.isEnabledFor(logging.DEBUG_RPC_ANSWER) else 1))
             auth = getattr(self, 'auth_provider', None)
             result = ExportService.getService(service_name).dispatch(method, auth, params)
             self.log('result', result, channel=logging.DEBUG_RPC_ANSWER)
