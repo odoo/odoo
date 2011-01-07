@@ -330,8 +330,7 @@ msgid ""
 msgstr ""
 "'Fabrication sur stock' : quand il y a une demande, on prend du stock ou on "
 "attend jusqu'au prochain réapprovisionnement. 'Fabrication à la commande' : "
-"quand il y a une demande, on achète ou on fabrique en lien avec cette "
-"demande."
+"quand il y a une demande, on achète ou on fabrique en fonction du besoin."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -944,6 +943,12 @@ msgid ""
 "You can define a conversion rate between several Units of Measure within the "
 "same category."
 msgstr ""
+
+#. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Besoins & emplacements"
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -2214,7 +2219,7 @@ msgid ""
 "products with infinite stock, or for use when you have no inventory "
 "management in the system."
 msgstr ""
-"Permet de changer la façon dont les besoins sont gérés. Les consommables "
+"Permet de changer la façon dont les besoins sont traités. Les consommables "
 "sont des produits physiques avec un stock infini, pour lesquels vous n'avez "
 "pas de gestion de stock dans le système."
 
