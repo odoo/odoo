@@ -79,7 +79,7 @@
   !record {model: hr.attendance, id: hr_attendance_0}:
     action: sign_in
     employee_id: 'hr_employee_fracline1'
-    name: '2010-05-26 10:08:08'
+    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(datetime.now().hour-2,datetime.now().minute,datetime.now().second)
 
 -
   I create attendance and perform "Sign Out" action.
@@ -87,7 +87,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr_employee_fracline1'
-    name: '2010-05-26 15:10:55'
+    name: !eval time.strftime('%Y-%m-%d')+' '+'%s:%s:%s' %(datetime.now().hour-1,datetime.now().minute,datetime.now().second)
 
 -
   On "Sign In/Sign Out by Project" wizard i click on "Sign In/Sign Out" button of this wizard.
@@ -99,8 +99,10 @@
   I select start date and Perform start work on project.
 -
   !python {model: hr.sign.in.project}: |
+      import time
+      from datetime import datetime, date, timedelta
       uid = ref('test_timesheet_user1')
-      new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': '2010-06-08 19:50:54', 'state': 'absent'})
+      new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
       self.sign_in_result(cr, uid, [new_id], context)
 
 -
@@ -130,7 +132,7 @@
        import time
        from datetime import datetime, date, timedelta
        uid = ref('test_timesheet_user1')
-       new_id = self.create(cr, uid, {'account_id': ref('account_analytic_account_project0'), 'analytic_amount': 7.0, 'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S'), 'date_start': '2010-06-05 16:37:00', 'info': 'Create Yaml for hr module', 'name': 'Francline', 'server_date': '2010-06-09 16:40:15', 'state': 'absent'})
+       new_id = self.create(cr, uid, {'account_id': ref('account_analytic_account_project0'), 'analytic_amount': 7.0, 'date': (datetime.now()+timedelta(1)).strftime('%Y-%m-%d %H:%M:%S'), 'date_start': time.strftime('%Y-%m-%d %H:%M:%S'), 'info': 'Create Yaml for hr module', 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
        self.sign_out_result_end(cr, uid, [new_id], context)
 
 - |
