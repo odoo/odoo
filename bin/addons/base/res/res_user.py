@@ -466,7 +466,7 @@ class users(osv.osv):
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
             if not bool(res):
-                raise security.ExceptionNoTb('Accessenied')
+                raise security.ExceptionNoTb('AccessDenied')
             if res:
                 if self._uid_cache.has_key(db):
                     ulist = self._uid_cache[db]
