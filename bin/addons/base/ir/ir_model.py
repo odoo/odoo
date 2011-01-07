@@ -40,6 +40,18 @@ def _get_fields_type(self, cr, uid, context=None):
             field_types.remove(types)
     return field_types
 
+def _in_modules(self, cr, uid, ids):
+    #return list of installed modules where self is defined
+    res = osv.osv.get_xml_ids(self, cr, uid, ids)
+    for k,v in res.iteritems():
+        res[k]=set(map(lambda x: x.split('.')[0],v))
+    module_pool=self.pool.get("ir.module.module")
+    installed_modules=[module for module in reduce(lambda x, y: x|y, res.values())
+                       if module_pool.search(cr,uid,[('name','=',module),('state','=','installed')])]
+    for k,v in res.iteritems():
+        res[k]=', '.join([m for m in v if m in installed_modules])
+    return res
+
 class ir_model(osv.osv):
     _name = 'ir.model'
     _description = "Objects"
@@ -64,10 +76,7 @@ class ir_model(osv.osv):
         return [('id', 'in', [id for id in is_osv_mem if bool(is_osv_mem[id]) == value])]
 
     def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
-        res = osv.osv.get_xml_ids(self, cr, uid, ids)
-        for k,v in res.iteritems():
-            res[k]=', '.join(map(lambda x: x.split('.')[0],v))
-        return res
+        return _in_modules(self, cr, uid, ids)
 
     def _view_ids(self, cr, uid, ids, field_name, arg, context=None):
         models=self.browse(cr,uid,ids)
@@ -166,10 +175,7 @@ class ir_model_fields(osv.osv):
     _description = "Fields"
 
     def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
-        res = osv.osv.get_xml_ids(self, cr, uid, ids)
-        for k,v in res.iteritems():
-            res[k]=', '.join(map(lambda x: x.split('.')[0],v))
-        return res
+        return _in_modules(self, cr, uid, ids)
 
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
