@@ -231,6 +231,7 @@ class project_phase(osv.osv):
             # Create a new project for each phase
             str_resource = ('%s | '*len(phase.resource_ids))[:-2]
             str_vals = str_resource % tuple(map(lambda x: 'Resource_%s'%x.resource_id.id, phase.resource_ids))
+
             # Phases Defination for the Project
             s = '''
     def Phase_%s():
@@ -238,16 +239,35 @@ class project_phase(osv.osv):
         effort = \'%s\'
         resource = %s
 '''%(phase.id, phase.name, duration, str_vals or False)
-            if parent:
-                start = 'up.Phase_%s.end' % (parent.id)
-                s += '''
-        start = %s
-'''%(start)
-            else:
-                start = phase.project_id.date_start or phase.date_start
+
+            # Recalculate date_start and date_end
+            # according to constraints on date start and date end on phase
+            start_date = ''
+            end_date = ''
+            if phase.constraint_date_start:
+                start_date = datetime.strptime(phase.constraint_date_start, '%Y-%m-%d')
                 s += '''
         start = \"%s\"
+'''%(datetime.strftime(start_date, "%Y-%m-%d"))
+            else:
+                if parent:
+                    start = 'up.Phase_%s.end' % (parent.id)
+                    s += '''
+        start = %s
 '''%(start)
+                else:
+                    start = phase.project_id.date_start or phase.date_start
+                    s += '''
+        start = \"%s\"
+'''%(start)                
+                
+            if phase.constraint_date_end :
+                end_date= datetime.strptime(phase.constraint_date_end, '%Y-%m-%d')
+                s += '''
+        end = \"%s\"
+'''%(datetime.strftime(end_date, "%Y-%m-%d"))               
+
+
                 #start = datetime.strftime((datetime.strptime(start, "%Y-%m-%d")), "%Y-%m-%d")
 
             phase_ids.append(phase.id)
@@ -513,12 +533,25 @@ def Project_%d():
                 phase = eval("project.Phase_%d" % phase_id)
                 start_date = phase.start.to_datetime()
                 end_date = phase.end.to_datetime()
+                # Write the calculated dates back
+#                if act_phase.constraint_date_start and str(start_date) < act_phase.constraint_date_start:
+#                    start_date = datetime.strptime(act_phase.constraint_date_start, '%Y-%m-%d')
+#                else:
+#                    start_date = start_date
+#                if act_phase.constraint_date_end and str(end_date) > act_phase.constraint_date_end:
+#                    end_date= datetime.strptime(act_phase.constraint_date_end, '%Y-%m-%d')
+#                    date_start = act_phase.constraint_date_end
+#                else:
+#                    end_date = start_date
+#                    start_date = end_date
+                ctx = context.copy()
+                ctx.update({'scheduler': True})
                 if resources:
                     for res in resources:
                         vals = {}
                         vals.update({'date_start' :  start_date })
                         vals.update({'date_end' :  end_date})
-                        resource_allocation_pool.write(cr, uid, res.id, vals)
+                        resource_allocation_pool.write(cr, uid, res.id, vals, context=ctx)
                 if act_phase.task_ids:
                     for task in act_phase.task_ids:
                         vals = {}
@@ -526,28 +559,13 @@ def Project_%d():
                         temp = eval("phase.Task_%s"%task.id)
                         vals.update({'date_start' : temp.start.strftime('%Y-%m-%d %H:%M:%S')})
                         vals.update({'date_end' : temp.end.strftime('%Y-%m-%d %H:%M:%S')})
-                        task_pool.write(cr, uid, task.id, vals, context=context)
-                # Recalculate date_start and date_end
-                # according to constraints on date start and date end on phase
+                        task_pool.write(cr, uid, task.id, vals, context=ctx)
 
-                #if phase.constraint_date_start and str(s_date) < phase.constraint_date_start:
-                #    start_date = datetime.strptime(phase.constraint_date_start, '%Y-%m-%d')
-                #else:
-                #    start_date = s_date
-                #if phase.constraint_date_end and str(e_date) > phase.constraint_date_end:
-                #    end_date= datetime.strptime(phase.constraint_date_end, '%Y-%m-%d')
-                #    date_start = phase.constraint_date_end
-                #else:
-                #    end_date = e_date
-                #    date_start = end_date
 
-                # Write the calculated dates back
-                #ctx = context.copy()
-                #ctx.update({'scheduler': True})
                 phase_pool.write(cr, uid, [phase_id], {
                                       'date_start': start_date.strftime('%Y-%m-%d'),
                                       'date_end': end_date.strftime('%Y-%m-%d')
-                                    }, context=context)
+                                    }, context=ctx)
         return True            
 
     #TODO: DO Resource allocation and compute availability

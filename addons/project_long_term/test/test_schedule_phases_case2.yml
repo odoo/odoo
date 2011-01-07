@@ -23,6 +23,7 @@
         hour_to: 16.0
         name: Thursday
     name: Working Time A
+
 - 
   Creating a resource.calendar.attendance record
 - 
@@ -129,11 +130,19 @@
         state: draft
         total_hours: 10.0
     total_hours: 10.0
+    members:
+      - project.res_users_analyst
+      - project.res_users_project_manager
+      - project.res_users_technical_leader
+      - project.res_users_developer
+      - project.res_users_designer
+      - project.res_users_tester
     type_ids:
       - project.project_tt_specification
       - project.project_tt_development
       - project.project_tt_testing
       - project.project_tt_merge
+     
 - 
   I create a phase 'Initial Phase' for project 'Development and Testing'.
 - 
@@ -143,11 +152,6 @@
     name: Initial Phase
     product_uom: product.uom_day
     project_id: project_project_project0
-    resource_ids:
-      - project_id: project_project_project0
-        resource_id: resource_resource_resourcex0
-      - project_id: project_project_project0
-        resource_id: resource_resource_resourcey0
     state: draft
 - 
   I create first task 'Developing module' and assign 10h.

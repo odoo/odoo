@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-08-03 09:18+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 04:58+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 04:36+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project
@@ -28,10 +28,21 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:657
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr ""
+
+#. module: project
+#: help:res.company,project_time_mode_id:0
+msgid ""
+"This will set the unit of measure used in projects and tasks.\n"
+"If you use the timesheet linked to projects (project_timesheet module), "
+"don't forget to setup the right unit of measure in your employees."
+msgstr ""
+"프로젝트와 과제에서 사용되는 UoM을 설정합니다. \n"
+"프로젝트에 연결된 타임시트를 이용한다면 (project_timesheet module), 직원들을 위한 적절한 UoM 설정을 잊지 "
+"마십시오."
 
 #. module: project
 #: constraint:res.users:0
@@ -49,13 +60,17 @@ msgid "Deadlines"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:121
 #, python-format
 msgid "Operation Not Permitted !"
 msgstr "오퍼레이션이 허용되지 않음!"
 
 #. module: project
-#: code:addons/project/wizard/project_task_delegate.py:0
+#: code:addons/project/wizard/project_task_delegate.py:55
+#: code:addons/project/wizard/project_task_delegate.py:56
+#: code:addons/project/wizard/project_task_delegate.py:63
+#: code:addons/project/wizard/project_task_delegate.py:64
+#: code:addons/project/wizard/project_task_delegate.py:67
 #, python-format
 msgid "CHECK: "
 msgstr "체크: "
@@ -95,7 +110,7 @@ msgid ""
 msgstr "총 남은 시간은 과제를 담당한 이에 의해 주기적으로 재 측정될 수 있습니다."
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:86
 #, python-format
 msgid "Task '%s' Closed"
 msgstr ""
@@ -231,7 +246,7 @@ msgid "Day"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:570
 #, python-format
 msgid "The task '%s' is done"
 msgstr ""
@@ -423,7 +438,7 @@ msgid "Reactivate Project"
 msgstr "프로젝트를 다시 활성화"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:552
 #, python-format
 msgid "Task '%s' closed"
 msgstr "과제 '%s' 완료됨"
@@ -440,12 +455,9 @@ msgid "Done by"
 msgstr "수행자"
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_task_type_form
-msgid ""
-"Define here the steps that will be used on the project from the creation of "
-"the task, up to the closing of the task or issue. You will use these stages "
-"in order to track the progress of the resolution of a task or an issue."
-msgstr ""
+#: view:project.task:0
+msgid "Planning"
+msgstr "계획"
 
 #. module: project
 #: view:project.task:0
@@ -476,14 +488,10 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:224
+#: code:addons/project/project.py:245
 #, python-format
 msgid " (copy)"
-msgstr ""
-
-#. module: project
-#: field:project.task,user_id:0
-msgid "Responsible"
 msgstr ""
 
 #. module: project
@@ -506,6 +514,11 @@ msgstr ""
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
+msgstr ""
+
+#. module: project
+#: field:report.project.task.user,user_id:0
+msgid "Assigned To"
 msgstr ""
 
 #. module: project
@@ -573,17 +586,10 @@ msgid "Percent of tasks closed according to the total of tasks todo."
 msgstr "처리해야 할 과제 전체 대비 완료된 과제의 비중 (%)"
 
 #. module: project
-#: model:ir.actions.act_window,help:project.action_view_task
-msgid ""
-"A task represents a work that has to be done. Each user works in his own "
-"list of tasks where he can record his task work in hours. He can work and "
-"close the task itself or delegate it to antoher user. If you delegate a task "
-"to another user, you get a new task in pending state, which will be re-"
-"opened when you have to review the work achieved. If you install the "
-"project_timesheet module, tasks works can be invoiced based on the project "
-"configuration. With the project_mrp module, sales orders can create tasks "
-"automatically when they are confirmed."
-msgstr ""
+#: view:project.task.delegate:0
+#: field:project.task.delegate,new_task_description:0
+msgid "New Task Description"
+msgstr "새 과제 설명"
 
 #. module: project
 #: model:res.request.link,name:project.req_link_task
@@ -622,7 +628,7 @@ msgid "Reevaluate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:530
 #, python-format
 msgid "Send Email after close task"
 msgstr ""
@@ -714,7 +720,7 @@ msgid "Starting Date"
 msgstr "시작 날짜"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:266
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -731,12 +737,15 @@ msgid "Stage"
 msgstr ""
 
 #. module: project
-#: field:report.project.task.user,user_id:0
-msgid "Assigned To"
+#: model:ir.actions.act_window,help:project.open_task_type_form
+msgid ""
+"Define the steps that will be used in the project from the creation of the "
+"task, up to the closing of the task or issue. You will use these stages in "
+"order to track the progress in solving a task or an issue."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:621
 #, python-format
 msgid "The task '%s' is opened."
 msgstr ""
@@ -832,7 +841,7 @@ msgid "My Board"
 msgstr "내 보드"
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:79
 #, python-format
 msgid "Please specify the email address of Project Manager."
 msgstr ""
@@ -874,6 +883,19 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
+msgstr ""
+
+#. module: project
+#: model:ir.actions.act_window,help:project.action_view_task
+msgid ""
+"A task represents a work that has to be done. Each user works in his own "
+"list of tasks where he can record his task work in hours. He can work and "
+"close the task itself or delegate it to another user. If you delegate a task "
+"to another user, you get a new task in pending state, which will be reopened "
+"when you have to review the work achieved. If you install the "
+"project_timesheet module, task work can be invoiced based on the project "
+"configuration. With the project_mrp module, sales orders can create tasks "
+"automatically when they are confirmed."
 msgstr ""
 
 #. module: project
@@ -964,17 +986,9 @@ msgid "Gives the sequence order when displaying a list of task"
 msgstr ""
 
 #. module: project
-#: model:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"A project contains a set of tasks or issues that will be performed by your "
-"assigned personnel. A project can be put into a hierarchy, as a child of a "
-"Parent Project. This allows you to design large project structure with "
-"different phases spread over the project's duration cycle. Each user can set "
-"his default project in his own preferences, in order to filter automatically "
-"the tasks or issues he usually works on. If you have personalized your "
-"Project application in order to invoice the time spent on a task, you can "
-"choose to invoice or not one project in the billing section."
-msgstr ""
+#: field:project.project,warn_customer:0
+msgid "Warn Partner"
+msgstr "파트너에게 알림"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1107,11 +1121,6 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: field:project.project,warn_customer:0
-msgid "Warn Partner"
-msgstr "파트너에게 알림"
-
-#. module: project
 #: selection:report.project.task.user,month:0
 msgid "June"
 msgstr ""
@@ -1136,7 +1145,7 @@ msgid "Project Dashboard"
 msgstr "프로젝트 대시보드"
 
 #. module: project
-#: view:project.project:0
+#: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "파트너 프로젝트"
 
@@ -1166,7 +1175,7 @@ msgid "Customer Email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:189
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr ""
@@ -1209,7 +1218,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "과제가 완료되면, '완료' 상태가 됩니다."
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:211
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr ""
@@ -1225,18 +1234,17 @@ msgid "Dashboard"
 msgstr ""
 
 #. module: project
-#: help:res.company,project_time_mode_id:0
+#: constraint:account.analytic.account:0
 msgid ""
-"This will set the unit of measure used in projects and tasks.\n"
-"If you use the timesheet linked to projects (project_timesheet module), "
-"don't forget to setup the right unit of measure in your employees."
+"Error! The currency has to be the same as the currency of the selected "
+"company"
 msgstr ""
-"프로젝트와 과제에서 사용되는 UoM을 설정합니다. \n"
-"프로젝트에 연결된 타임시트를 이용한다면 (project_timesheet module), 직원들을 위한 적절한 UoM 설정을 잊지 "
-"마십시오."
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:79
+#: code:addons/project/wizard/project_task_close.py:82
+#: code:addons/project/wizard/project_task_close.py:91
+#: code:addons/project/wizard/project_task_close.py:111
 #, python-format
 msgid "Error"
 msgstr "에러"
@@ -1257,7 +1265,7 @@ msgid "_Delegate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:91
 #, python-format
 msgid "Couldn't send mail because your email address is not configured!"
 msgstr "이메일 주소가 구성되어 있지 않으므로, 메일을 보낼 수 없습니다."
@@ -1340,7 +1348,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:581
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "진행 중인 과제 '%s'"
@@ -1391,7 +1399,7 @@ msgid "Open"
 msgstr "열기"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:121
 #, python-format
 msgid ""
 "You can not delete a project with tasks. I suggest you to deactivate it."
@@ -1411,7 +1419,7 @@ msgid "In Progress"
 msgstr "진행 중"
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:82
 #, python-format
 msgid "Please specify the email address of Customer."
 msgstr ""
@@ -1433,10 +1441,9 @@ msgid "Current Activity"
 msgstr ""
 
 #. module: project
-#: view:project.task.delegate:0
-#: field:project.task.delegate,new_task_description:0
-msgid "New Task Description"
-msgstr "새 과제 설명"
+#: field:project.task,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: project
 #: view:project.project:0
@@ -1467,11 +1474,6 @@ msgstr ""
 #: selection:report.project.task.user,priority:0
 msgid "Very Low"
 msgstr "매우 낮음"
-
-#. module: project
-#: view:project.task:0
-msgid "Planning"
-msgstr "계획"
 
 #. module: project
 #: field:project.project,warn_manager:0
@@ -1647,7 +1649,7 @@ msgid "Task By Days"
 msgstr ""
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:0
+#: code:addons/project/wizard/project_task_close.py:111
 #, python-format
 msgid ""
 "Couldn't send mail! Check the email ids and smtp configuration settings"
@@ -1721,7 +1723,7 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:664
 #, python-format
 msgid "The task '%s' is pending."
 msgstr ""
@@ -1773,6 +1775,19 @@ msgid ""
 msgstr "과제가 완료될 때 고객에게 전송될 이메일에 포함될 Footer"
 
 #. module: project
+#: model:ir.actions.act_window,help:project.open_view_project_all
+msgid ""
+"A project contains a set of tasks or issues that will be performed by your "
+"resources assigned to it. A project can be hierarchically structured, as a "
+"child of a Parent Project. This allows you to design large project "
+"structures with different phases spread over the project duration cycle. "
+"Each user can set his default project in his own preferences to "
+"automatically filter the tasks or issues he usually works on. If you choose "
+"to invoice the time spent on a project task, you can find project tasks to "
+"be invoiced in the billing section."
+msgstr ""
+
+#. module: project
 #: field:project.project,total_hours:0
 msgid "Total Time"
 msgstr "총 시간"
@@ -1783,7 +1798,7 @@ msgid "Validation State"
 msgstr "검증 상태"
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:601
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "과제 '%s' 취소됨"
@@ -1811,7 +1826,7 @@ msgid "Create Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:0
+#: code:addons/project/project.py:609
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr ""

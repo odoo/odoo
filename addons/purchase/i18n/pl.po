@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-11-28 19:32+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:05+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 04:44+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -26,7 +26,7 @@ msgstr ""
 "dostawcy. Zapytanie ofertowe stanie się potwierdzonym zamówieniem zakupu."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:282
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr "Nie możesz potwierdzić zamówienia zakupu bez pozycji."
@@ -44,7 +44,7 @@ msgid "Destination"
 msgstr "Przeznaczenie"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
@@ -58,9 +58,27 @@ msgid "Date on which this document has been created"
 msgstr "Data utworzenia dokumentu"
 
 #. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_rfq
+msgid ""
+"You can create a request for quotation when you want to buy products to a "
+"supplier but the purchase is not confirmed yet. Use also this menu to review "
+"requests for quotation created automatically based on your logistic rules "
+"(minimum stock, MTO, etc). You can convert the request for quotation into a "
+"purchase order once the order is confirmed. If you use the extended "
+"interface (from user's preferences), you can select the way to control your "
+"supplier invoices: based on the order, based on the receptions or manual "
+"encoding."
+msgstr ""
+
+#. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
 msgstr "Z pobrania"
+
+#. module: purchase
+#: view:purchase.order:0
+msgid "Not Invoiced"
+msgstr ""
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -88,21 +106,29 @@ msgid "Do you want to generate the supplier invoices ?"
 msgstr "Chcesz generować fakturę od dostawcy ?"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: model:ir.actions.act_window,help:purchase.purchase_form_action
+msgid ""
+"Use this menu to search within your purchase orders by references, supplier, "
+"products, etc. For each purchase order, you can track the products received, "
+"and control the supplier invoices."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/wizard/purchase_line_invoice.py:0
+#: code:addons/purchase/wizard/purchase_line_invoice.py:156
 #, python-format
 msgid "Supplier Invoices"
 msgstr "Faktury od dostawców"
 
 #. module: purchase
-#: view:purchase.report:0
-msgid "Purchase Orders Statistics"
-msgstr "Statystyka zamówień zakupu"
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique !"
+msgstr ""
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -111,7 +137,7 @@ msgid "From a Pick list"
 msgstr "Z pobrania"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:649
 #, python-format
 msgid "No Pricelist !"
 msgstr "Brak cennika !"
@@ -135,11 +161,6 @@ msgstr "Wybierz otwarte zamówienie sprzedaży"
 #: field:purchase.report,company_id:0
 msgid "Company"
 msgstr "Firma"
-
-#. module: purchase
-#: help:res.company,po_lead:0
-msgid "This is the leads/security time for each purchase order."
-msgstr "To jest czas na wszelki wypadek dla każdego zamówienia zakupu."
 
 #. module: purchase
 #: view:board.board:0
@@ -207,7 +228,7 @@ msgid "Partial Picking"
 msgstr "Pobranie częściowe"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:286
 #, python-format
 msgid "Purchase order '%s' is confirmed."
 msgstr "Zamówienie zakupu '%s' zostało potwierdzone"
@@ -226,20 +247,24 @@ msgid "Approved"
 msgstr "Zaaprobowane"
 
 #. module: purchase
-#: model:process.process,name:purchase.process_process_purchaseprocess0
-msgid "Purchase"
-msgstr "Zakup"
+#: view:purchase.report:0
+msgid "Reference UOM"
+msgstr ""
 
 #. module: purchase
-#: view:purchase.order.line:0
-msgid "Stock Moves"
-msgstr "Przesunięcia zapasów"
+#: view:purchase.order:0
+msgid "Origin"
+msgstr "Pochodzenie"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
-#: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
-msgid "Receptions Analysis"
-msgstr "Analiza przyjęć"
+#: field:purchase.report,product_uom:0
+msgid "Reference UoM"
+msgstr ""
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
+msgid "Purchases"
+msgstr "Zakupy"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -250,7 +275,7 @@ msgid "Notes"
 msgstr "Uwagi"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:649
 #, python-format
 msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
@@ -329,7 +354,7 @@ msgid "Cancelled"
 msgstr "Anulowano"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:305
 #, python-format
 msgid "Purchase amount over the limit"
 msgstr "Wartość zakupu powyżej limitu"
@@ -352,9 +377,9 @@ msgid "Shipping Exception"
 msgstr "Wyjątek wysyłki"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Origin"
-msgstr "Pochodzenie"
+#: field:purchase.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Pozycje faktury"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
@@ -383,7 +408,7 @@ msgid "Reference"
 msgstr "Odnośnik"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
 msgstr "Nie można usuwać zamówień zakupu, które są w stanie %s !"
@@ -394,17 +419,9 @@ msgid "Dest. Address Contact Name"
 msgstr "Nazwa kontaktu"
 
 #. module: purchase
-#: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
-msgid ""
-"If you set the invoicing control on a purchase order as \"Manual\", you can "
-"track here all the purchase order lines for which you did not received the "
-"supplier invoice yet. Once you are ready to receive a supplier invoice, you "
-"can generate a draft supplier invoice based on the lines from this menu."
-msgstr ""
-"Jeśli ustawisz fakturowanie w zamówieniu zakupu jako \"Ręcznie\", to "
-"będziesz mógł wyszukiwać pozycje zamówień zakupu, dla których dostawca nie "
-"wystawił faktury. Jeśli się spodziewasz faktury od dostawcy, to możesz "
-"wygenerować projekt faktury od dostawcy na podstawie pozycji z tego menu."
+#: model:ir.model,name:purchase.model_stock_move
+msgid "Stock Move"
+msgstr "Przesunięcie zapasu"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -413,7 +430,7 @@ msgid "Day"
 msgstr "Dzień"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:334
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
 msgstr "Zamówienie zakupu '%s' zostało ustawione w stan Projekt"
@@ -430,8 +447,9 @@ msgid "# of Lines"
 msgstr "# pozycji"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#: code:addons/purchase/wizard/purchase_order_group.py:0
+#: code:addons/purchase/purchase.py:685
+#: code:addons/purchase/purchase.py:722
+#: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
 msgstr "Ostrzeżenie"
@@ -467,7 +485,7 @@ msgid "It indicates that a picking has been done"
 msgstr "To oznacza, że pobranie zostało wykonane"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:710
 #, python-format
 msgid "Wrong Product UOM !"
 msgstr "Niepoprawna JM produktu !"
@@ -510,6 +528,11 @@ msgstr ""
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
 msgstr "Odnośnik dostawcy"
+
+#. module: purchase
+#: help:purchase.order,amount_tax:0
+msgid "The tax amount"
+msgstr "Kwota podatku"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -566,7 +589,7 @@ msgid "Order Lines"
 msgstr "Pozycje zamówienia"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:651
 #, python-format
 msgid "No Partner!"
 msgstr "Brak partnera!"
@@ -584,11 +607,12 @@ msgstr "Suma"
 
 #. module: purchase
 #: view:purchase.order:0
-msgid "To be Invoiced"
-msgstr "Do zafakturowania"
+msgid "Untaxed amount"
+msgstr "Kwota bez podatku"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
 msgstr ""
 
@@ -620,8 +644,10 @@ msgid "Invoices generated for a purchase order"
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#: code:addons/purchase/wizard/purchase_line_invoice.py:0
+#: code:addons/purchase/purchase.py:282
+#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/purchase.py:362
+#: code:addons/purchase/wizard/purchase_line_invoice.py:122
 #, python-format
 msgid "Error !"
 msgstr "Błąd !"
@@ -683,7 +709,7 @@ msgid "Reservation Destination"
 msgstr "Miejsce docelowe rezerwacji"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:237
 #, python-format
 msgid "Invalid action !"
 msgstr "Niedozwolona akcja !"
@@ -729,6 +755,15 @@ msgid "Validated by"
 msgstr "Zatwierdzone przez"
 
 #. module: purchase
+#: model:ir.actions.act_window,help:purchase.action_invoice_pending
+msgid ""
+"Use this menu to control the invoices to be received from your supplier. "
+"OpenERP pregenerates draft invoices from your purchase orders or receptions, "
+"according to your settings. Once you receive a supplier invoice, you can "
+"match it with the draft invoice and validate it."
+msgstr ""
+
+#. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
@@ -752,7 +787,7 @@ msgid "    Month-1    "
 msgstr "    Miesiąc-1    "
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:363
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
 msgstr "Brak dziennika zakupów dla tej firmy: \"%s\" (id:%d)"
@@ -763,7 +798,7 @@ msgid "Manual"
 msgstr "Ręczne"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:400
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
@@ -788,9 +823,17 @@ msgid "Approbation"
 msgstr "Aprobata"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_res_partner
-#: field:purchase.order.line,partner_id:0
-msgid "Partner"
+#: view:purchase.report:0
+msgid "Purchase Orders Statistics"
+msgstr "Statystyka zamówień zakupu"
+
+#. module: purchase
+#: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
+msgid ""
+"If you set the invoicing control on a purchase order as \"Manual\", you can "
+"track here all the purchase order lines for which you have not received the "
+"supplier invoice yet. Once you are ready to receive a supplier invoice, you "
+"can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
 
 #. module: purchase
@@ -822,6 +865,11 @@ msgstr "Sierpień"
 #: field:purchase.installer,purchase_requisition:0
 msgid "Purchase Requisition"
 msgstr "Zlecenie zakupu"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
+msgid "Units of Measure Categories"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1022,13 +1070,9 @@ msgid "It indicates that an invoice has been paid"
 msgstr "To oznacza, że faktura została zapłacona"
 
 #. module: purchase
-#: model:ir.actions.act_window,help:purchase.purchase_form_action
-msgid ""
-"From the Purchase Orders menu, you can track the status of your orders: "
-"products received, invoice received and controlled.\n"
-msgstr ""
-"W menu Zamówienia zakupu możesz sprawdzać stany zamówień: przyjęcia "
-"produktów i zafakturowanie pozycji.\n"
+#: model:process.node,note:purchase.process_node_packinginvoice0
+msgid "Outgoing products to invoice"
+msgstr "Wydawane produkty do zafakturowania"
 
 #. module: purchase
 #: view:purchase.installer:0
@@ -1072,7 +1116,7 @@ msgid "Manual Invoices"
 msgstr "Ręczne faktury"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:308
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
@@ -1089,35 +1133,22 @@ msgid "Extended Filters..."
 msgstr "Rozszerzone filtry..."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
-#: code:addons/purchase/wizard/purchase_line_invoice.py:0
+#: code:addons/purchase/purchase.py:352
+#: code:addons/purchase/wizard/purchase_line_invoice.py:123
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr ""
 "Nie zdefiniowano konta rozchodowego dla tego produktu: \"%s\" (id:%d)"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:408
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
 "Musisz najpierw anulować wszystkie faktury związane z tym zamówieniem zakupu."
 
 #. module: purchase
-#: model:ir.actions.act_window,help:purchase.action_invoice_pending
-msgid ""
-"Use this menu to control the invoices to be received by your supplier. "
-"OpenERP pre-generates draft of invoices based on your purchase orders or "
-"your receptions. Once you receive a supplier invoice, you can control it "
-"according to the draft of invoice and validate it."
-msgstr ""
-"Stosuj to menu do sprawdzania faktur otrzymywanych od dostawców. OpenERP "
-"generuje projekty faktur na podstawie twoich zamówień zakupu lub przyjęć. "
-"Kiedy otrzymasz fakturę od dostawcy, to możesz ją skonfrontować z projektami "
-"faktur i zatwierdzić."
-
-#. module: purchase
-#: code:addons/purchase/wizard/purchase_order_group.py:0
+#: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
 msgstr "Wybierz w widoku listowym zamówienia do połączenia"
@@ -1158,7 +1189,7 @@ msgid ""
 msgstr ""
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:685
 #, python-format
 msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
@@ -1202,9 +1233,9 @@ msgid "Products Value"
 msgstr "Wartość produktów"
 
 #. module: purchase
-#: help:purchase.order,amount_tax:0
-msgid "The tax amount"
-msgstr "Kwota podatku"
+#: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
+msgid "Pricelists Types"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1224,9 +1255,9 @@ msgid "History"
 msgstr "Historia"
 
 #. module: purchase
-#: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
-msgid "Purchases"
-msgstr "Zakupy"
+#: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
+msgid "Products by Category"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1426,7 +1457,7 @@ msgid "Date Approved"
 msgstr "Data aprobowania"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:407
 #, python-format
 msgid "Could not cancel this purchase order !"
 msgstr "Nie można anulować tego zamówienia zakupu !"
@@ -1443,25 +1474,12 @@ msgid "Delivery & Invoicing"
 msgstr "Dostawa i fakturowanie"
 
 #. module: purchase
-#: model:ir.actions.act_window,help:purchase.purchase_rfq
-msgid ""
-"With the Requests for quotation menu you can create new request for "
-"quotations, review existing one and confirm them to order once the supplier "
-"offer is approved. When you confirm a RfQ, OpenERP will convert it to a "
-"Purchase Order and generate the next steps: draft reception of the products, "
-"invoice to control."
-msgstr ""
-"W menu Zapytania ofertowe możesz tworzyć nowe zapytania ofertowe, przeglądać "
-"je i potwierdzać kiedy dostawca aprobuje zamówienie. Po potwierdzeniu "
-"zapytania OpenERP skonwertuje je do zamówienia zakupu i wygeneruje następne "
-"dokumenty: przyjęcie zewnętrzne i projekt faktury."
-
-#. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
 msgstr "Zaplanowana data"
 
 #. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 #: field:purchase.order,product_id:0
 #: view:purchase.order.line:0
 #: field:purchase.order.line,product_id:0
@@ -1484,14 +1502,20 @@ msgid "Description"
 msgstr "Opis"
 
 #. module: purchase
-#: model:process.node,note:purchase.process_node_packinginvoice0
-msgid "Outgoing products to invoice"
-msgstr "Wydawane produkty do zafakturowania"
+#: help:res.company,po_lead:0
+msgid "This is the leads/security time for each purchase order."
+msgstr "To jest czas na wszelki wypadek dla każdego zamówienia zakupu."
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Expected Delivery address:"
 msgstr "Oczekiwany adres dostawy:"
+
+#. module: purchase
+#: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
+#: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
+msgid "Receptions Analysis"
+msgstr "Analiza przyjęć"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
@@ -1501,17 +1525,10 @@ msgstr "Kwota bez podatku"
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
 msgid ""
-"Access your supplier records and maintain your relationship with them. You "
-"can track all your interactions with them through the history tab: emails, "
-"orders, meeting, etc."
+"Access your supplier records and maintain a good relationship with your "
+"suppliers. You can track all your interactions with them through the History "
+"tab: emails, orders, meetings, etc."
 msgstr ""
-"Dostęp do historii relacji z dostawcą. Możesz przeglądać: wiadomości, "
-"zamówienia, spotkania itp."
-
-#. module: purchase
-#: field:purchase.order.line,invoice_lines:0
-msgid "Invoice Lines"
-msgstr "Pozycje faktury"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1526,7 +1543,6 @@ msgstr "Zapytania ofertowe"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
-#: view:purchase.report:0
 msgid "Product UOM"
 msgstr "JM produktu"
 
@@ -1553,7 +1569,7 @@ msgid "Total Qty and Amount by month"
 msgstr "Suma ilości i kwot wg miesięcu"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:399
 #, python-format
 msgid "Could not cancel purchase order !"
 msgstr "Nie można anulować zamówienia zakupu !"
@@ -1572,6 +1588,11 @@ msgstr ""
 #: selection:purchase.report,month:0
 msgid "February"
 msgstr "Luty"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
+msgid "Products Categories"
+msgstr ""
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1656,9 +1677,10 @@ msgstr ""
 " "
 
 #. module: purchase
-#: field:purchase.report,product_uom:0
-msgid "Product UoM"
-msgstr "JM produktu"
+#: view:purchase.report:0
+#: field:purchase.report,name:0
+msgid "Year"
+msgstr "Rok"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
@@ -1711,7 +1733,7 @@ msgstr ""
 "* Stan 'Anulowano' jest ustawiany po anulowaniu zamówienia."
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: code:addons/purchase/purchase.py:414
 #, python-format
 msgid "Purchase order '%s' is cancelled."
 msgstr "Zamówienia zakupu '%s' zostało anulowane."
@@ -1780,13 +1802,18 @@ msgstr ""
 "kiedy fakturowanie jest ustawione na 'Ręczne'."
 
 #. module: purchase
-#: view:purchase.report:0
-#: field:purchase.report,name:0
-msgid "Year"
-msgstr "Rok"
+#: model:process.process,name:purchase.process_process_purchaseprocess0
+msgid "Purchase"
+msgstr "Zakup"
 
 #. module: purchase
-#: code:addons/purchase/purchase.py:0
+#: model:ir.model,name:purchase.model_res_partner
+#: field:purchase.order.line,partner_id:0
+msgid "Partner"
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/purchase.py:651
 #, python-format
 msgid ""
 "You have to select a partner in the purchase form !\n"
@@ -1806,14 +1833,15 @@ msgid "Partial Move"
 msgstr "Przesunięcie częściowe"
 
 #. module: purchase
-#: model:ir.model,name:purchase.model_stock_move
-msgid "Stock Move"
-msgstr "Przesunięcie zapasu"
+#: view:purchase.order.line:0
+msgid "Stock Moves"
+msgstr "Przesunięcia zapasów"
 
 #. module: purchase
-#: view:purchase.order:0
-msgid "Untaxed amount"
-msgstr "Kwota bez podatku"
+#: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
+#: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
+msgid "Units of Measure"
+msgstr ""
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2072,8 +2100,22 @@ msgstr "Konsola zakupów"
 #~ msgid "When purchase order is approved , it creates its packing list."
 #~ msgstr "Kiedy zamówienie zakupu jest zaaprobowane, to jest tworzone pobranie"
 
+#~ msgid "To be Invoiced"
+#~ msgstr "Do zafakturowania"
+
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "ID certyfikatu modułu musi być unikalne !"
+
+#~ msgid ""
+#~ "If you set the invoicing control on a purchase order as \"Manual\", you can "
+#~ "track here all the purchase order lines for which you did not received the "
+#~ "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
+#~ "can generate a draft supplier invoice based on the lines from this menu."
+#~ msgstr ""
+#~ "Jeśli ustawisz fakturowanie w zamówieniu zakupu jako \"Ręcznie\", to "
+#~ "będziesz mógł wyszukiwać pozycje zamówień zakupu, dla których dostawca nie "
+#~ "wystawił faktury. Jeśli się spodziewasz faktury od dostawcy, to możesz "
+#~ "wygenerować projekt faktury od dostawcy na podstawie pozycji z tego menu."
 
 #~ msgid "Rule must have at least one checked access right !"
 #~ msgstr "Reguła musi mieć zaznaczone co najmniej jedno prawo dostępu !"
@@ -2084,6 +2126,13 @@ msgstr "Konsola zakupów"
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych menu."
 
+#~ msgid ""
+#~ "From the Purchase Orders menu, you can track the status of your orders: "
+#~ "products received, invoice received and controlled.\n"
+#~ msgstr ""
+#~ "W menu Zamówienia zakupu możesz sprawdzać stany zamówień: przyjęcia "
+#~ "produktów i zafakturowanie pozycji.\n"
+
 #~ msgid "The name of the group must be unique !"
 #~ msgstr "Nazwa grupy musi być unikalna !"
 
@@ -2093,5 +2142,39 @@ msgstr "Konsola zakupów"
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Rozmiar pola nie może być mniejszy od 1 !"
 
+#~ msgid "Product UoM"
+#~ msgstr "JM produktu"
+
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Reguły nie są obsługiwane dla obiektów osv_memory !"
+
+#~ msgid ""
+#~ "With the Requests for quotation menu you can create new request for "
+#~ "quotations, review existing one and confirm them to order once the supplier "
+#~ "offer is approved. When you confirm a RfQ, OpenERP will convert it to a "
+#~ "Purchase Order and generate the next steps: draft reception of the products, "
+#~ "invoice to control."
+#~ msgstr ""
+#~ "W menu Zapytania ofertowe możesz tworzyć nowe zapytania ofertowe, przeglądać "
+#~ "je i potwierdzać kiedy dostawca aprobuje zamówienie. Po potwierdzeniu "
+#~ "zapytania OpenERP skonwertuje je do zamówienia zakupu i wygeneruje następne "
+#~ "dokumenty: przyjęcie zewnętrzne i projekt faktury."
+
+#~ msgid ""
+#~ "Access your supplier records and maintain your relationship with them. You "
+#~ "can track all your interactions with them through the history tab: emails, "
+#~ "orders, meeting, etc."
+#~ msgstr ""
+#~ "Dostęp do historii relacji z dostawcą. Możesz przeglądać: wiadomości, "
+#~ "zamówienia, spotkania itp."
+
+#~ msgid ""
+#~ "Use this menu to control the invoices to be received by your supplier. "
+#~ "OpenERP pre-generates draft of invoices based on your purchase orders or "
+#~ "your receptions. Once you receive a supplier invoice, you can control it "
+#~ "according to the draft of invoice and validate it."
+#~ msgstr ""
+#~ "Stosuj to menu do sprawdzania faktur otrzymywanych od dostawców. OpenERP "
+#~ "generuje projekty faktur na podstawie twoich zamówień zakupu lub przyjęć. "
+#~ "Kiedy otrzymasz fakturę od dostawcy, to możesz ją skonfrontować z projektami "
+#~ "faktur i zatwierdzić."
