@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-21 06:43+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:37+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_contract
@@ -38,9 +38,9 @@ msgid "Trial Start Date"
 msgstr "Ngày bắt đầu thử việc"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function Arguments"
-msgstr ""
+#: view:hr.contract:0
+msgid "Passport"
+msgstr "Hộ chiếu"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -68,8 +68,8 @@ msgid "Current"
 msgstr "Hiện tại"
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
 msgstr ""
 
 #. module: hr_contract
@@ -83,8 +83,8 @@ msgid "Wage Types"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Calculations"
+#: field:hr.contract,department_id:0
+msgid "Department"
 msgstr ""
 
 #. module: hr_contract
@@ -98,12 +98,6 @@ msgstr "Cơ bản"
 #: model:ir.model,name:hr_contract.model_hr_employee
 msgid "Employee"
 msgstr "Người LĐ"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "Thời gian làm việc"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -121,29 +115,12 @@ msgid "Hours in the period"
 msgstr "Số giờ trong giai đoạn"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function"
-msgstr "Chức năng"
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Nhóm theo..."
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Description"
-msgstr "Mô tả"
-
-#. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Nơi sinh"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -152,20 +129,14 @@ msgid "Contracts"
 msgstr "Các hợp đồng"
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "Có phải CBQL"
+#: view:hr.employee:0
+msgid "Personal Info"
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
 msgstr "Việc làm"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Passport"
-msgstr "Hộ chiếu"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -197,19 +168,16 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,advantages:0
-#: view:hr.employee:0
 msgid "Advantages"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Valid for"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Work Permit"
 msgstr "Giấy phép LĐ"
 
@@ -225,8 +193,12 @@ msgid "Contract Types"
 msgstr "Các loại HĐ"
 
 #. module: hr_contract
+#: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Wage Type"
 msgstr ""
 
 #. module: hr_contract
@@ -257,7 +229,6 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,notes:0
-#: view:hr.employee:0
 msgid "Notes"
 msgstr ""
 
@@ -265,15 +236,6 @@ msgstr ""
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
 msgstr ""
 
 #. module: hr_contract
@@ -299,9 +261,10 @@ msgid "Search Wage Period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Computation"
-msgstr ""
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Thời gian làm việc"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -321,15 +284,9 @@ msgid "Job Title"
 msgstr ""
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr ""
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Có phải CBQL"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
@@ -337,8 +294,13 @@ msgid "Start Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Company contribution"
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
 msgstr ""
 
 #. module: hr_contract
@@ -352,9 +314,10 @@ msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr ""
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Nhóm theo..."
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
@@ -367,23 +330,14 @@ msgid "Period"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
-msgstr ""
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Nơi sinh"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Employee specific allowances and deductions"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Contract Details"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Structure"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
+msgid "Wage period"
 msgstr ""
 
 #. module: hr_contract
@@ -395,13 +349,7 @@ msgid ""
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr ""
-
-#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Duration"
 msgstr ""
 
@@ -424,3 +372,9 @@ msgstr ""
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr ""
+
+#~ msgid "Function"
+#~ msgstr "Chức năng"
+
+#~ msgid "Description"
+#~ msgstr "Mô tả"
