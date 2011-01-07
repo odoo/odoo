@@ -100,7 +100,6 @@
 -
   !python {model: hr.sign.in.project}: |
       import time
-      from datetime import datetime, date, timedelta
       uid = ref('test_timesheet_user1')
       new_id = self.create(cr, uid, {'emp_id': ref('hr_employee_fracline1'), 'name': 'Francline', 'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'absent'})
       self.sign_in_result(cr, uid, [new_id], context)
