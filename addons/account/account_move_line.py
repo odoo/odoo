@@ -57,7 +57,7 @@ class account_move_line(osv.osv):
 
         if context.get('date_from', False) and context.get('date_to', False):
             if initial_bal:
-                where_move_lines_by_date = " OR " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
+                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
             else:
                 where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
 
