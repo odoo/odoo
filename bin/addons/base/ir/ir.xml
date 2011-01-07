@@ -848,6 +848,52 @@
         </record>
         <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2"/>
 
+
+        <!-- View customizations -->
+        <record id="view_view_custom_search" model="ir.ui.view">
+            <field name="name">ir.ui.view.custom.search</field>
+            <field name="model">ir.ui.view.custom</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_view_custom_form" model="ir.ui.view">
+            <field name="name">ir.ui.view.custom.form</field>
+            <field name="model">ir.ui.view.custom</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                    <separator colspan="4" string="Customized Architecture"/>
+                    <field name="arch" colspan="4" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+        <record id="view_view_custom_tree" model="ir.ui.view">
+            <field name="name">ir.ui.view.custom.tree</field>
+            <field name="model">ir.ui.view.custom</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_ui_view_custom" model="ir.actions.act_window">
+            <field name="name">Customized Views</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.ui.view.custom</field>
+            <field name="help">Customized views are used when users reorganize the content of their dashboard views (via web client)</field>
+        </record>
+        <menuitem action="action_ui_view_custom" id="menu_action_ui_view_custom" parent="base.next_id_4"/>
+
+
         <!-- Attachment -->
         <record id="view_attachment_form" model="ir.ui.view">
             <field name="name">ir.attachment.view</field>
