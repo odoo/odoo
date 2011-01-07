@@ -817,4 +817,20 @@ class procurement_order(osv.osv):
 
 procurement_order()
 
+class stock_invoice_onshipping(osv.osv_memory):
+    _inherit = "stock.invoice.onshipping"
+
+    def create_invoice(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        purchase_obj = self.pool.get('purchase.order')
+        picking_obj = self.pool.get('stock.picking')
+        res = super(stock_invoice_onshipping,self).create_invoice(cr, uid, ids, context=context)
+        purchase_id =  picking_obj.browse(cr, uid, res.keys()[0]).purchase_id.id
+        purchase_obj.write(cr, uid, [purchase_id], {
+            'invoice_ids': [(4, res.values()[0])]}, context=context)
+        return res
+
+stock_invoice_onshipping()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
