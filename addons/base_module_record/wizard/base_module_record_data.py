@@ -96,11 +96,13 @@ def _record_objects(self, cr, uid, data, context):
               if '_auto' in dir(obj_pool):
                   if not obj_pool._auto:
                       continue
+        elif '_log_access' not in dir(obj_pool):
+             search_condition = []
         search_ids=obj_pool.search(cr,uid,search_condition)
         for s_id in search_ids:
              args=(cr.dbname,uid,obj_name,'copy',s_id,{},context)
              mod.recording_data.append(('query',args, {}, s_id))
-    return {}
+    return {'type': 'ir.actions.act_window_close'}
 
 def _check(self, cr, uid, data, context):
      pool = pooler.get_pool(cr.dbname)

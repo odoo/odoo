@@ -215,7 +215,7 @@ class account_fiscalyear_close(osv.osv_memory):
         cr.execute('UPDATE account_fiscalyear ' \
                     'SET end_journal_period_id = %s ' \
                     'WHERE id = %s', (ids[0], old_fyear.id))
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 account_fiscalyear_close()
 

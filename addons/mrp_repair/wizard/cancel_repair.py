@@ -48,7 +48,7 @@ class repair_cancel(osv.osv_memory):
         else:
             raise osv.except_osv(_('Warning!'),_('Repair order is not invoiced.'))
         
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """ Changes the view dynamically

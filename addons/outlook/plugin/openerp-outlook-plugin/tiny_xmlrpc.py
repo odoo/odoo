@@ -104,19 +104,19 @@ class XMLRpcConn(object):
         return db_list
 
     def login(self,dbname, user, pwd):
-    	self._dbname = dbname
-    	self._uname = user
-    	self._pwd = pwd
-    	conn = xmlrpclib.ServerProxy(str(self._uri) + '/xmlrpc/common')
-    	uid = execute(conn,'login',dbname, ustr(user), ustr(pwd))
-    	return uid
+        self._dbname = dbname
+        self._uname = user
+        self._pwd = pwd
+        conn = xmlrpclib.ServerProxy(str(self._uri) + '/xmlrpc/common')
+        uid = execute(conn,'login',dbname, ustr(user), ustr(pwd))
+        return uid
 
     def GetAllObjects(self):
-    	conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
-    	ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[])
-    	objects = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',ids,['model'])
-    	obj_list = [item['model'] for item in objects]
-    	return obj_list
+        conn = xmlrpclib.ServerProxy(self._uri+ '/xmlrpc/object')
+        ids = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','search',[])
+        objects = execute(conn,'execute',self._dbname,int(self._uid),self._pwd,'ir.model','read',ids,['model'])
+        obj_list = [item['model'] for item in objects]
+        return obj_list
 
     def GetObjList(self):
     	self._obj_list=list(self._obj_list)
@@ -284,8 +284,8 @@ class XMLRpcConn(object):
             headers = {}
             strheader = strheader.replace("\n ", " ").splitlines()
             for line in strheader:
-            	split_here = line.find(":")
-            	headers[line[:split_here]] = line[split_here:]
+                split_here = line.find(":")
+                headers[line[:split_here]] = line[split_here:]
             temp1 = headers.get('Message-ID')
             temp2 = headers.get('Message-Id')
             if temp1 == None:    message_id = temp2

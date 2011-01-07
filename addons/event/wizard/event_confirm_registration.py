@@ -63,7 +63,7 @@ class event_confirm_registration(osv.osv_memory):
         registration_pool = self.pool.get('event.registration')
         registration_ids = context.get('registration_ids', [])
         registration_pool.do_open(cr, uid, registration_ids, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 event_confirm_registration()
 

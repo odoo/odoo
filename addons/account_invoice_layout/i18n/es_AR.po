@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
 "PO-Revision-Date: 2009-09-14 18:19+0000\n"
 "Last-Translator: Silvana Herrera <sherrera@thymbra.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:33+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:12+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -104,8 +104,8 @@ msgstr ""
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Document"
-msgstr "Documento"
+msgid "Tel. :"
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -134,9 +134,10 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Escribir mensajes"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Description"
+msgstr "Descripción"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
@@ -157,7 +158,6 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Taxes:"
 msgstr "Impuestos:"
 
@@ -167,9 +167,9 @@ msgid "Source Account"
 msgstr "Cuenta de origen"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Cancelar"
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Escribir mensajes"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -202,19 +202,17 @@ msgstr "Cantidad"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Partner Ref."
+msgid "Refund"
+msgstr "Reembolso"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: model:ir.model,name:account_invoice_layout.model_account_invoice
-#: report:notify_account.invoice:0
-msgid "Invoice"
-msgstr "Factura"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Total:"
 msgstr ""
 
@@ -246,9 +244,18 @@ msgid "Amount"
 msgstr "Importe"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "ERP & CRM Solutions..."
+msgstr ""
+
+#. module: account_invoice_layout
 #: report:notify_account.invoice:0
-msgid "Tel. :"
+msgid "Net Total :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Total :"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -270,8 +277,8 @@ msgstr ""
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Refund"
-msgstr "Reembolso"
+msgid "Origin"
+msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -282,6 +289,12 @@ msgstr "Tipo"
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
 msgstr "Línea de separación"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Your Reference"
+msgstr ""
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
@@ -312,7 +325,6 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Net Total:"
 msgstr ""
 
@@ -323,14 +335,15 @@ msgstr "Escriba una notificación o un mensaje de felicitación"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
+#: model:ir.model,name:account_invoice_layout.model_account_invoice
 #: report:notify_account.invoice:0
-msgid "Fax :"
-msgstr ""
+msgid "Invoice"
+msgstr "Factura"
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
-msgstr ""
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -342,6 +355,11 @@ msgstr "Devolución al proveedor"
 #: field:account.invoice.special.msg,message:0
 msgid "Message"
 msgstr "Mensaje"
+
+#. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Taxes :"
+msgstr ""
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
@@ -360,8 +378,8 @@ msgstr "Todos los mensajes de notificación"
 #~ msgid "Customer Ref:"
 #~ msgstr "Ref. cliente:"
 
-#~ msgid "Description"
-#~ msgstr "Descripción"
+#~ msgid "Document"
+#~ msgstr "Documento"
 
 #~ msgid "account_invoice_layout"
 #~ msgstr "contabilidad_factura_plantilla"

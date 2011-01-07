@@ -52,7 +52,7 @@ class auction_lots_auction_move(osv.osv_memory):
         rec_ids =  auction_lots_obj.browse(cr, uid, context.get('active_ids', []))
         for current in self.browse(cr, uid, ids, context=context):
             if not (current.auction_id and len(context.get('active_ids', []))):
-                return {}
+                return {'type': 'ir.actions.act_window_close'}
 
             for rec in rec_ids:
                 new_id = auction_lot_history_obj.create(cr, uid, {
@@ -70,7 +70,7 @@ class auction_lots_auction_move(osv.osv_memory):
                     'sel_inv_id': None,
                     'obj_num': None,
                     'state': 'draft'})
-            return {}
+            return {'type': 'ir.actions.act_window_close'}
 
 auction_lots_auction_move()
 

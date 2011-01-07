@@ -128,7 +128,7 @@ class report_webkit_actions(osv.osv_memory):
                                 )
             if res[0]:
                 if not current.open_action:
-                    return {}
+                    return {'type': 'ir.actions.act_window_close'}
                 
                 return {
                     'name': _('Client Actions Connections'),

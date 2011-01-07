@@ -62,7 +62,7 @@ class backlog_sprint_assign(osv.osv_memory):
             message = _('Product Backlog') + " '" + backlog.name + "' "+ _("is assigned sprint:%s"%(sprint.name))
             self.log(cr, uid, backlog.id, message)
         backlog_obj.write(cr, uid, backlog_ids, {'sprint_id': data['sprint_id']}, context=context)
-        return {}
+        return {'type': 'ir.actions.act_window_close'}
 
 backlog_sprint_assign()
 

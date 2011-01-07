@@ -344,7 +344,6 @@ if __name__ == "__main__":
         parser.error("incorrect number of arguments")
 
     import sys
-    import StringIO
 
     fname = sys.argv[1]
     f = fname
