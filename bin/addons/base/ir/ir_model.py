@@ -183,36 +183,41 @@ class ir_model_fields(osv.osv):
     }
     _rec_name='field_description'
     _defaults = {
-        'view_load': lambda *a: 0,
-        'selection': lambda *a: "[('key','label')]",
-        'domain': lambda *a: "[]",
-        'name': lambda *a: 'x_',
+        'view_load': 0,
+        'selection': "",
+        'domain': "[]",
+        'name': 'x_',
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
-        'on_delete': lambda *a: 'set null',
-        'select_level': lambda *a: '0',
-        'size': lambda *a: 64,
-        'field_description': lambda *a: '',
-        'selectable': lambda *a: 1,
+        'on_delete': 'set null',
+        'select_level': '0',
+        'size': 64,
+        'field_description': '',
+        'selectable': 1,
     }
     _order = "name"
 
-    def _check_selection(self, cr, uid, ids, context=None):
-        selection_field = self.browse(cr, uid, ids[0], context=context)
+    def _check_selection(self, cr, uid, selection, context=None):
         try:
-            selection_list = eval(selection_field.selection)
+            selection_list = eval(selection)
         except Exception:
-            logging.getLogger('ir.model').error('Invalid selection list definition for fields.selection %s', selection_field.name , exc_info=True)
-            return False
-        if not (isinstance(selection_list, list) and selection_list):
-            return False
-        for selection_item in selection_list:
-             if not (isinstance(selection_item, (tuple,list)) and len(selection_item) == 2):
-                return False
-        return True
+            logging.getLogger('ir.model').warning('Invalid selection list definition for fields.selection', exc_info=True)
+            raise except_orm(_('Error'), 
+                    _("The Selection Options expression is not a valid Pythonic expression." \
+                      "Please provide an expression in the [('key','Label'), ...] format."))
 
-    _constraints = [
-        (_check_selection, "Wrong list of values specified for a field of type selection, it should be written as [('key','value')]", ['selection'])
-    ]
+        check = True
+        if not (isinstance(selection_list, list) and selection_list):
+            check = False
+        else:
+            for item in selection_list:
+                if not (isinstance(item, (tuple,list)) and len(item) == 2):
+                    check = False
+                    break
+
+        if not check:
+                raise except_orm(_('Error'), 
+                    _("The Selection Options expression is must be in the [('key','Label'), ...] format!"))
+        return True
 
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
         return _('Size of the field can never be less than 1 !')
@@ -220,6 +225,7 @@ class ir_model_fields(osv.osv):
     _sql_constraints = [
         ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
     ]
+
     def unlink(self, cr, user, ids, context=None):
         for field in self.browse(cr, user, ids, context):
             if field.state <> 'manual':
@@ -239,6 +245,10 @@ class ir_model_fields(osv.osv):
             context = {}
         if context and context.get('manual',False):
             vals['state'] = 'manual'
+        if vals.get('ttype', False) == 'selection':
+            if not vals.get('selection',False):
+                raise except_orm(_('Error'), _('For selection fields, the Selection Options must be given!'))
+            self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
         if vals.get('state','base') == 'manual':
             if not vals['name'].startswith('x_'):
@@ -254,6 +264,22 @@ class ir_model_fields(osv.osv):
                 ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0'),'update_custom_fields':True})
                 self.pool.get(vals['model'])._auto_init(cr, ctx)
 
+        return res
+
+    def write(self, cr, user, ids, vals, context=None):
+        # TODO: we have to check/restrict many more conditions here, like
+        # changing the type, name or model_id of fields eg.
+
+        if 'selection' in vals:
+            have_selection = False
+            for item in self.browse(cr, user, ids, context=context):
+                if item.ttype == 'selection':
+                    have_selection = True
+                    break
+            if have_selection:
+                self._check_selection(cr, user, vals['selection'], context=context)
+        res = super(ir_model_fields,self).write(cr, user, ids, vals, context=context)
+        # TODO do we need to perform _auto_init here, too?
         return res
 
 ir_model_fields()
