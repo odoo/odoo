@@ -3,8 +3,8 @@
     <data>
     
         <!--
-		Requests Links
-		-->
+        Requests Links
+        -->
         <record id="req_link_project" model="res.request.link">
             <field name="name">Project</field>
             <field name="object">project.project</field>
@@ -24,6 +24,5 @@
         </record>
 	
 		<function eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)" id="parent_project_default_set" model="ir.values" name="set"/>
-        
     </data>
 </openerp>

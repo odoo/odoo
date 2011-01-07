@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-29 10:38+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-31 05:26+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:20+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr
@@ -53,16 +53,20 @@ msgid "Human Resources"
 msgstr "Personal"
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "E-Mail Arbeit"
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements. You can keep "
+"track of the number of employees you have per job position and how many you "
+"expect in the future. You can also attach a survey to a job position that "
+"will be used in the recruitment process to evaluate the applicants for this "
+"job position."
+msgstr ""
 
 #. module: hr
 #: view:hr.employee:0
@@ -176,6 +180,14 @@ msgid "Employee Passport Information"
 msgstr "Mitarbeiter Personalausweis"
 
 #. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Department Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
+
+#. module: hr
 #: view:hr.employee:0
 msgid "Position"
 msgstr "Position"
@@ -280,6 +292,11 @@ msgstr "Mitarbeiter"
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
 msgstr "Weitere Informationen"
+
+#. module: hr
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr "E-Mail Arbeit"
 
 #. module: hr
 #: field:hr.department,complete_name:0
@@ -509,18 +526,6 @@ msgid "Status"
 msgstr "Status"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"Your Company's Departments Structure is used to manage all documents related "
-"to employees by departments: expenses and timesheet validation, leaves "
-"management, recruitements, etc."
-msgstr ""
-"Die Abteilungsstruktur wird verwendet zum Management aller Belege mit Bezug "
-"zu einer Abteilung, z.B. dem Beleg zur Beantragung  auf Erstattung von "
-"Personalausgaben oder den Belegen der Arbeitszeiterfassung, Urlaubsanträge "
-"oder auch Personaleinstellungen u.a."
-
-#. module: hr
 #: view:hr.installer:0
 msgid "Configure"
 msgstr "Konfigurieren"
@@ -697,6 +702,7 @@ msgstr "Privatanschrift"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "Anwesenheitszeiten"
 
@@ -732,6 +738,11 @@ msgstr "Stellenbezeichnung"
 #: selection:hr.job,state:0
 msgid "In Position"
 msgstr "Stelle ist besetzt"
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Mobile"
+msgstr ""
 
 #. module: hr
 #: view:hr.department:0
@@ -835,7 +846,6 @@ msgid "Expenses"
 msgstr "Personalspesen"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
@@ -851,19 +861,6 @@ msgstr "Verwitwet"
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
 msgstr "Basis Personalabrechnung mit Personalbuchhaltung"
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"JJob Positions is used to define jobs and their requirements. You can attach "
-"a survey to a job position. This survey will be used in the recruitment "
-"process to evaluate the applicants for this job position."
-msgstr ""
-"Arbeitstellen werden zur Definition von Arbeitsstellen in Ihrem Unternehmen "
-"sowie zur Erfassung für den Stellenbedarf eingesetzt. Sie können ein "
-"Formular zur Personalbefragung einer Arbeitsstelle hinzufügen. Diese "
-"Befragung kann im Rahmen einer Einstellung dann für das  Bewerbungsgespräch "
-"eingesetzt werden."
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -1002,8 +999,29 @@ msgstr "Unterstellte Mitarbeiter"
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
+#~ msgid ""
+#~ "Your Company's Departments Structure is used to manage all documents related "
+#~ "to employees by departments: expenses and timesheet validation, leaves "
+#~ "management, recruitements, etc."
+#~ msgstr ""
+#~ "Die Abteilungsstruktur wird verwendet zum Management aller Belege mit Bezug "
+#~ "zu einer Abteilung, z.B. dem Beleg zur Beantragung  auf Erstattung von "
+#~ "Personalausgaben oder den Belegen der Arbeitszeiterfassung, Urlaubsanträge "
+#~ "oder auch Personaleinstellungen u.a."
+
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid ""
+#~ "JJob Positions is used to define jobs and their requirements. You can attach "
+#~ "a survey to a job position. This survey will be used in the recruitment "
+#~ "process to evaluate the applicants for this job position."
+#~ msgstr ""
+#~ "Arbeitstellen werden zur Definition von Arbeitsstellen in Ihrem Unternehmen "
+#~ "sowie zur Erfassung für den Stellenbedarf eingesetzt. Sie können ein "
+#~ "Formular zur Personalbefragung einer Arbeitsstelle hinzufügen. Diese "
+#~ "Befragung kann im Rahmen einer Einstellung dann für das  Bewerbungsgespräch "
+#~ "eingesetzt werden."

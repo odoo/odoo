@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
 "PO-Revision-Date: 2010-12-04 08:49+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:55+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: auction
@@ -299,13 +299,13 @@ msgid "Object Image"
 msgstr "Imagem do objeto"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
 #, python-format
 msgid "No buyer is set for this lot."
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/auction.py:0
+#: code:addons/auction/auction.py:578
 #, python-format
 msgid "The Buyer \"%s\" has no Invoice Address."
 msgstr "O comprador \"%s\" não tem um endereço de faturação"
@@ -380,7 +380,7 @@ msgid "June"
 msgstr "Junho"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
 #, python-format
 msgid "No Lots belong to this Auction Date"
 msgstr ""
@@ -508,7 +508,8 @@ msgid "Payment"
 msgstr "Pagamento"
 
 #. module: auction
-#: code:addons/auction/auction.py:0
+#: code:addons/auction/auction.py:571
+#: code:addons/auction/auction.py:686
 #, python-format
 msgid "The object \"%s\" has no buyer assigned."
 msgstr "O objeto \"%s\" não tem comprador atribuído"
@@ -651,8 +652,9 @@ msgid "Account tax for seller"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:0
-#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#: code:addons/auction/wizard/auction_lots_invoice.py:68
+#: code:addons/auction/wizard/auction_lots_numerotate.py:103
+#: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "UserError"
 msgstr ""
@@ -700,6 +702,11 @@ msgstr "Imprimir"
 #: view:report.auction:0
 msgid "Type"
 msgstr "Tipo"
+
+#. module: auction
+#: help:aie.category,child_ids:0
+msgid "children aie category"
+msgstr ""
 
 #. module: auction
 #: help:auction.lots,ach_emp:0
@@ -798,7 +805,7 @@ msgid "(Keep empty for automatic number)"
 msgstr "(Manter vazio para numerar automaticamente)"
 
 #. module: auction
-#: code:addons/auction/auction.py:0
+#: code:addons/auction/auction.py:578
 #, python-format
 msgid "No Invoice Address"
 msgstr "Sem endereço de faturação"
@@ -809,7 +816,8 @@ msgid "Bailiffs Listing"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:103
+#: code:addons/auction/wizard/auction_lots_numerotate.py:129
 #, python-format
 msgid "This record does not exist !"
 msgstr ""
@@ -1061,15 +1069,19 @@ msgid "Invoice Number"
 msgstr "Número de fatura"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
-#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:87
+#: code:addons/auction/wizard/auction_lots_numerotate.py:77
+#: code:addons/auction/wizard/auction_lots_numerotate.py:95
+#: code:addons/auction/wizard/auction_lots_numerotate.py:122
+#: code:addons/auction/wizard/auction_lots_numerotate.py:137
+#: code:addons/auction/wizard/auction_lots_numerotate.py:173
 #, python-format
 msgid "Active IDs not Found"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:0
-#: code:addons/auction/wizard/auction_aie_send_result.py:0
+#: code:addons/auction/wizard/auction_aie_send.py:167
+#: code:addons/auction/wizard/auction_aie_send_result.py:117
 #, python-format
 msgid "Connection to WWW.Auction-in-Europe.com failed !"
 msgstr "A ligação a www.action-in-europe.com falhou!"
@@ -1098,7 +1110,7 @@ msgid "Depositer Inventory"
 msgstr "Inventório do Depósito"
 
 #. module: auction
-#: code:addons/auction/auction.py:0
+#: code:addons/auction/auction.py:692
 #, python-format
 msgid "The Buyer has no Invoice Address."
 msgstr "O comprador não tem endereço de facturação."
@@ -1312,7 +1324,7 @@ msgid "Deposit Date"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#: code:addons/auction/wizard/auction_lots_numerotate.py:145
 #, python-format
 msgid "This lot does not exist !"
 msgstr "Este lote não existe !"
@@ -1372,7 +1384,7 @@ msgid "Auction Analysis"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_pay_buy.py:0
+#: code:addons/auction/wizard/auction_pay_buy.py:80
 #, python-format
 msgid "Payment aborted !"
 msgstr ""
@@ -1449,11 +1461,6 @@ msgstr "Primeiro Dia de Exposição"
 #: report:buyer.list:0
 msgid "Lot"
 msgstr "Lote"
-
-#. module: auction
-#: help:aie.category,child_ids:0
-msgid "children aie category"
-msgstr ""
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
@@ -1540,7 +1547,8 @@ msgid "Last exposition date for auction"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/auction.py:0
+#: code:addons/auction/auction.py:571
+#: code:addons/auction/auction.py:686
 #, python-format
 msgid "Missed buyer !"
 msgstr "Perdeu Comprador !"
@@ -1556,7 +1564,7 @@ msgid "Auction manager "
 msgstr "Gestor de leilão "
 
 #. module: auction
-#: code:addons/auction/wizard/auction_lots_invoice.py:0
+#: code:addons/auction/wizard/auction_lots_invoice.py:68
 #, python-format
 msgid ""
 "Two different buyers for the same invoice !\n"
@@ -1788,8 +1796,8 @@ msgid "Net revenue"
 msgstr "Receitas líquidas"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_catalog_flagey_report.py:0
-#: code:addons/auction/wizard/auction_pay_buy.py:0
+#: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
+#: code:addons/auction/wizard/auction_pay_buy.py:87
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -1926,7 +1934,7 @@ msgid "Configuration"
 msgstr "Configuração"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_pay_buy.py:0
+#: code:addons/auction/wizard/auction_pay_buy.py:80
 #, python-format
 msgid ""
 "You should pay all the total: \"%.2f\" are missing to accomplish the payment."
@@ -2060,7 +2068,7 @@ msgid "Payment Lines"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/auction.py:0
+#: code:addons/auction/auction.py:692
 #, python-format
 msgid "Missed Address !"
 msgstr "Endereço Errado !"
@@ -2097,10 +2105,10 @@ msgid "Auction Date:"
 msgstr "Data de Leilão"
 
 #. module: auction
-#: code:addons/auction/wizard/auction_aie_send.py:0
-#: code:addons/auction/wizard/auction_aie_send_result.py:0
-#: code:addons/auction/wizard/auction_lots_buyer_map.py:0
-#: code:addons/auction/wizard/auction_lots_numerotate.py:0
+#: code:addons/auction/wizard/auction_aie_send.py:167
+#: code:addons/auction/wizard/auction_aie_send_result.py:116
+#: code:addons/auction/wizard/auction_lots_buyer_map.py:70
+#: code:addons/auction/wizard/auction_lots_numerotate.py:145
 #, python-format
 msgid "Error"
 msgstr "Erro"
@@ -2183,7 +2191,7 @@ msgid "Objects Description"
 msgstr ""
 
 #. module: auction
-#: code:addons/auction/wizard/auction_pay_buy.py:0
+#: code:addons/auction/wizard/auction_pay_buy.py:87
 #, python-format
 msgid "No auction date for \"%s\": Please set one."
 msgstr ""
