@@ -195,8 +195,10 @@ class users(osv.osv):
         return True
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
-        if not value:
-            raise osv.except_osv(_('Empty new password'), _('Please provide a new password value'))
+        if value is False:
+            # Do not update the password if no value is provided, ignore silently.
+            # For example web client submits False values for all empty fields.
+            return
         if uid == id:
             # To change their own password users must use the client-specific change password wizard,
             # so that the new password is immediately used for further RPC requests, otherwise the user
@@ -497,8 +499,10 @@ class users(osv.osv):
 
         :return: True
         :raise: security.ExceptionNoTb when old password is wrong
+        :raise: except_osv when new password is not set or empty
         """
-        if new_passwd and self.check(cr.dbname, uid, old_passwd):
+        self.check(cr.dbname, uid, old_passwd)
+        if new_passwd:
             return self.write(cr, uid, uid, {'password': new_passwd})
         raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
