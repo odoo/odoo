@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-10-12 07:44+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:32+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: resource
@@ -51,8 +51,6 @@ msgstr "Afwezigheid resource"
 #: view:resource.calendar:0
 #: field:resource.calendar,attendance_ids:0
 #: view:resource.calendar.attendance:0
-#: view:resource.calendar.leaves:0
-#: view:resource.resource:0
 msgid "Working Time"
 msgstr "Gewerkte tijd"
 
@@ -128,6 +126,11 @@ msgid "Day of week"
 msgstr "Dag v/d week"
 
 #. module: resource
+#: help:resource.calendar.attendance,hour_to:0
+msgid "Working time will end at"
+msgstr ""
+
+#. module: resource
 #: field:resource.calendar.attendance,date_from:0
 msgid "Starting date"
 msgstr "Startdatum"
@@ -157,14 +160,6 @@ msgstr "Datum"
 #: view:resource.calendar.leaves:0
 msgid "Search Working Period Leaves"
 msgstr "Zoek afwezigheid werkperiode"
-
-#. module: resource
-#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
-msgid ""
-"Resources allows you to create and manage resources that should be involved "
-"in a specific project phase. It also allows you to set their efficiency "
-"level and workload based on their weekly working hours"
-msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
@@ -223,6 +218,9 @@ msgstr "Woensdag"
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar.leaves:0
+#: view:resource.resource:0
+#: field:resource.resource,calendar_id:0
 msgid "Working Period"
 msgstr "Werkperiode"
 
@@ -299,7 +297,6 @@ msgstr "Dinsdag"
 
 #. module: resource
 #: field:resource.calendar.leaves,calendar_id:0
-#: field:resource.resource,calendar_id:0
 msgid "Working time"
 msgstr "Werktijd"
 
@@ -315,8 +312,11 @@ msgid "General Information"
 msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
+#: model:ir.actions.act_window,help:resource.action_resource_resource_tree
+msgid ""
+"Resources allow you to create and manage resources that should be involved "
+"in a specific project phase. You can also set their efficiency level and "
+"workload based on their weekly working hours."
 msgstr ""
 
 #. module: resource
@@ -325,7 +325,7 @@ msgid "Inactive"
 msgstr ""
 
 #. module: resource
-#: code:addons/resource/faces/resource.py:0
+#: code:addons/resource/faces/resource.py:340
 #, python-format
 msgid "(vacation)"
 msgstr "(vakantie)"
@@ -351,7 +351,7 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: resource
-#: code:addons/resource/resource.py:0
+#: code:addons/resource/resource.py:246
 #, python-format
 msgid " (copy)"
 msgstr ""

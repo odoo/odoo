@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-10-30 12:19+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-02 15:56+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:38+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_gtd
@@ -29,7 +29,7 @@ msgstr "project.gtd.timebox"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "重新激活"
 
 #. module: project_gtd
 #: help:project.gtd.timebox,sequence:0
@@ -39,7 +39,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
 msgid "Travel"
-msgstr ""
+msgstr "旅行"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -47,29 +47,21 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "No timebox child of this one !"
 msgstr ""
 
 #. module: project_gtd
-#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
-msgid ""
-"Timeboxes are defined in the \"Getting Things Done\" methodology. It defines "
-"a period of time in order to categorize your tasks: today, this week, this "
-"month, long term."
-msgstr ""
-
-#. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:112
 #, python-format
 msgid "GTD"
-msgstr ""
+msgstr "GTD"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
-msgstr ""
+msgstr "长期"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_empty
@@ -79,7 +71,7 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
-msgstr ""
+msgstr "今日"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -100,7 +92,7 @@ msgid "Set to Timebox"
 msgstr "设为时间箱"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -113,7 +105,7 @@ msgstr ""
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "_Cancel"
-msgstr ""
+msgstr "取消(_C)"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -122,19 +114,27 @@ msgid "Empty Timebox"
 msgstr "空时间箱"
 
 #. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
+msgid ""
+"Timeboxes are defined in the \"Getting Things Done\" methodology. A timebox "
+"defines a period of time in order to categorize your tasks: today, this "
+"week, this month, long term."
+msgstr ""
+
+#. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
-msgstr ""
+msgstr "本周"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_monthly
 msgid "This Month"
-msgstr ""
+msgstr "本月"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "图标"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
@@ -144,7 +144,7 @@ msgstr ""
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "任务"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -154,7 +154,7 @@ msgstr "加到时间箱"
 #. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
-msgstr ""
+msgstr "名称"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
@@ -165,7 +165,7 @@ msgstr "上下文"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_car
 msgid "Car"
-msgstr ""
+msgstr "汽车"
 
 #. module: project_gtd
 #: model:ir.module.module,description:project_gtd.module_meta_information
@@ -211,15 +211,15 @@ msgstr "上下文"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "下一项"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
 msgid "_Ok"
-msgstr ""
+msgstr "确定(_O)"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:110
 #, python-format
 msgid "Getting Things Done"
 msgstr "GTD"
@@ -227,21 +227,13 @@ msgstr "GTD"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
 msgid "Office"
-msgstr ""
+msgstr "办公"
 
 #. module: project_gtd
 #: field:project.gtd.context,sequence:0
 #: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "序列"
-
-#. module: project_gtd
-#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
-msgid ""
-"Contexts are defined in the \"Getting Things Done\" methodology. It allows "
-"you to categorize your tasks according to the context in which they have to "
-"be done: at office, at home, when I take my car, etc."
-msgstr ""
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
@@ -259,7 +251,7 @@ msgid "Tasks selection"
 msgstr "任务选择"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:111
 #, python-format
 msgid "Inbox"
 msgstr ""
@@ -277,6 +269,14 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
+msgstr ""
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
+msgid ""
+"Contexts are defined in the \"Getting Things Done\" methodology. It allows "
+"you to categorize your tasks according to the context in which they have to "
+"be done: at the office, at home, when I take my car, etc."
 msgstr ""
 
 #. module: project_gtd

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2009-02-03 06:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:44+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:24+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
@@ -59,7 +59,7 @@ msgid "Print Attendance Report Error"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
 #, python-format
 msgid "The sign-out date must be in the past"
 msgstr ""
@@ -67,6 +67,14 @@ msgstr ""
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Signed"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using OpenERP's web service features."
 msgstr ""
 
 #. module: hr_attendance
@@ -130,7 +138,10 @@ msgid "Attendance Reasons"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "UserError"
 msgstr ""
@@ -147,19 +158,19 @@ msgid "Employee attendance"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
+#: code:addons/hr_attendance/hr_attendance.py:136
 #, python-format
 msgid "Warning"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
 #, python-format
 msgid "The Sign-in date must be in the past"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
 msgstr ""
@@ -235,7 +246,7 @@ msgid "Operation"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No Data Available"
 msgstr ""
@@ -278,20 +289,14 @@ msgid "Sign In Sign Out"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:103
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:125
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:141
 #: view:hr.sign.in.out:0
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
 #, python-format
 msgid "Sign in / Sign out"
-msgstr ""
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"Time Tracking functionality aims to manage employee's attendances on the "
-"basis of the actions (Sign in/Sign out) performed by them. You can also link "
-"this to an attendance machine using OpenERP's webservices features."
 msgstr ""
 
 #. module: hr_attendance
@@ -305,7 +310,7 @@ msgid "August"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
 msgstr ""
@@ -393,12 +398,16 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
+#: field:hr.sign.in.out,emp_id:0
+msgid "Employee ID"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
 msgstr ""
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,emp_id:0
 #: field:hr.sign.in.out.ask,emp_id:0
 msgid "Empoyee ID"
 msgstr ""
@@ -446,7 +455,7 @@ msgid "Employee"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
+#: code:addons/hr_attendance/hr_attendance.py:136
 #, python-format
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
@@ -468,7 +477,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr ""
 
@@ -538,7 +546,7 @@ msgid "Bellow this delay, the error is considered to be voluntary"
 msgstr ""
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records found for your selection!"
 msgstr ""

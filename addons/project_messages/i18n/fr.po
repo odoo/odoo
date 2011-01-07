@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-25 05:39+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-04 09:34+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-26 04:51+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:34+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_messages
@@ -35,12 +35,12 @@ msgstr "De"
 #: model:ir.actions.act_window,name:project_messages.messages_form
 #: model:ir.ui.menu,name:project_messages.menu_messages_form
 msgid "Communication Messages"
-msgstr ""
+msgstr "Messages de communication"
 
 #. module: project_messages
-#: help:project.messages,to_id:0
-msgid "Keep this empty to broadcast the message."
-msgstr "Laisser vide pour diffuser le message"
+#: view:project.messages:0
+msgid "Group By..."
+msgstr ""
 
 #. module: project_messages
 #: field:project.messages,create_date:0
@@ -53,12 +53,9 @@ msgid "Today"
 msgstr "Aujourd'hui"
 
 #. module: project_messages
-#: model:ir.actions.act_window,help:project_messages.messages_form
-msgid ""
-"An in-project messagery system permits an efficient and trackable "
-"communication between project members. The messages are kept in the system "
-"and can then be used for post-analysis."
-msgstr ""
+#: help:project.messages,to_id:0
+msgid "Keep this empty to broadcast the message."
+msgstr "Laisser vide pour diffuser le message"
 
 #. module: project_messages
 #: model:ir.actions.act_window,name:project_messages.act_project_messages
@@ -77,8 +74,11 @@ msgid "Project"
 msgstr "Projet"
 
 #. module: project_messages
-#: view:project.messages:0
-msgid "Group By..."
+#: model:ir.actions.act_window,help:project_messages.messages_form
+msgid ""
+"An in-project messaging system allows for an efficient and trackable "
+"communication between project members. The messages are stored in the system "
+"and can be used for post analysis."
 msgstr ""
 
 #. module: project_messages
@@ -92,6 +92,12 @@ msgid ""
 "    it to all the users.\n"
 "    "
 msgstr ""
+"\n"
+"    Ce module permet d'envoyer des messages au sein d'un projet.\n"
+"    Un utilisateur peut envoyer des messages individuellement à un autre "
+"utilisateur. Il peut\n"
+"    aussi les diffuser à tous les utilisateurs.\n"
+"    "
 
 #. module: project_messages
 #: view:project.messages:0
