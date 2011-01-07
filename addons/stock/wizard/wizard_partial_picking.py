@@ -110,6 +110,7 @@ def _do_split(self, cr, uid, data, context):
 
     complete, too_many, too_few = [], [], []
     pool = pooler.get_pool(cr.dbname)
+    product_qty_avail = {}
     for move in move_obj.browse(cr, uid, data['form'].get('moves',[])):
         if move.product_qty == data['form']['move%s' % move.id]:
             complete.append(move)
@@ -134,17 +135,23 @@ def _do_split(self, cr, uid, data, context):
             currency = data['form']['currency%s' % move.id]
 
             qty = uom_obj._compute_qty(cr, uid, uom, qty, product.uom_id.id)
-
+            
+            #Updating the available quantities of product
+            if product.id in product_qty_avail.keys():
+                product_qty_avail[product.id] += qty
+            else:
+                product_qty_avail[product.id] = product.qty_available
+                
             if (qty > 0):
                 new_price = currency_obj.compute(cr, uid, currency,
                         user.company_id.currency_id.id, price)
                 new_price = uom_obj._compute_price(cr, uid, uom, new_price,
                         product.uom_id.id)
-                if product.qty_available<=0:
+                if product.qty_available <= 0:
                     new_std_price = new_price
                 else:
-                    new_std_price = ((product.standard_price * product.qty_available)\
-                        + (new_price * qty))/(product.qty_available + qty)
+                    new_std_price = ((product.standard_price * product_qty_avail[product.id])\
+                        + (new_price * qty))/(product_qty_avail[product.id] + qty)
 
                 product_obj.write(cr, uid, [product.id],
                         {'standard_price': new_std_price})
