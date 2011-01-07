@@ -11,6 +11,34 @@ that data to calendar clients. That said, the full features that would be
 accessible through the Gtk or Web OpenERP clients cannot be crammed into
 the Calendar clients (such as the iPhone).
 
+OpenERP server Setup
+--------------------
+Some modules need to be installed at the OpenERP server. These are:
+    - caldav: Required, has the reference setup and the necessary
+            underlying code. Will also cause document, document_webdav
+            to be installed.
+    - crm_caldav: Optional, will export the CRM Meetings as a calendar.
+    - project_caldav: Optional, will export project tasks as calendar.
+    - http_well_known: Optional, experimental. Will ease bootstrapping,
+            but only when a DNS srv record is also used.
+
+These will also install a reference setup of the folders, ready to go.
+The administrator of OpenERP can add more calendars and structure, if
+needed.
+
+DNS server setup
+------------------
+To be documented.
+
+SSL setup
+----------
+It is highly advisable that you also setup SSL to work for the OpenERP
+server. HTTPS is a server-wide feature in OpenERP, which means a 
+certificate will be set at the openerp-server.conf and will be the same
+for XML-RPC, HTTP, WebDAV and CalDAV.
+The iPhone also supports secure connections with SSL, although it does
+not expect a self-signed certificate (or one that is not verified by
+one of the "big" certificate authorities [1] ).
 
 Phone setup
 -------------
@@ -18,51 +46,63 @@ The iPhone is fairly easy to setup.
 IF you need SSL (and your certificate is not a verified one, as usual),
 then you first will need to let the iPhone trust that. Follow these
 steps:
-  s1. Open Safari and enter the https location of the OpenERP server:
+
+    s1. Open Safari and enter the https location of the OpenERP server:
       https://my.server.ip:8071/
       (assuming you have the server at "my.server.ip" and the HTTPS port
       is the default 8071)
-  s2. Safari will try to connect and issue a warning about the certificate
+    s2. Safari will try to connect and issue a warning about the certificate
       used. Inspect the certificate and click "Accept" so that iPhone
       now trusts it.
 
 Now, to setup the calendars, you need to:
+
 1. Click on the "Settings" and go to the "Mail, Contacts, Calendars" page.
 2. Go to "Add account..."
 3. Click on "Other"
 4. From the "Calendars" group, select "Add CalDAV Account"
+
 5. Enter the server's name or IP address at the "Server" entry, the
-      OpenERP username and password at the next ones.
-      As a description, you can either leave the server's name or
-      something like "OpenERP calendars".
+   OpenERP username and password at the next ones.
+   As a description, you can either leave the server's name or
+   something like "OpenERP calendars".
+
 6. You _will_ get the "Unable to verify account" error message. That is
-      because our server is not at the port iPhone expects[2]. But no
-      need to worry, click OK.
+   because our server is not at the port iPhone expects[2]. But no
+   need to worry, click OK.
+
 7. At the next page, enter the "Advanced Settings" to specify the right
-      ports and paths 
+   ports and paths
+    
 8. If you have SSL, turn the switch on. Note that port will be changed
-      to 8443.
+   to 8443.
+
 9. Specify the port for the OpenERP server: 8071 for SSL, 8069 without.
+
 10. Set the "Account URL" to the right path of the OpenERP webdav:
-      https://my.server.ip:8071/webdav/dbname/calendars
-      Where "https://my.server.ip:8071" is the protocol, server name 
-      and port as discussed above, "dbname" is the name of the database.
-      [Note that the default 
-      "https://my.server.ip:8071/principals/users/username" might also
-      be edited to 
-      "https://my.server.ip:8071/webdav/dbname/principals/users/username" ]
+    https://my.server.ip:8071/webdav/dbname/calendars
+    Where "https://my.server.ip:8071" is the protocol, server name 
+    and port as discussed above, "dbname" is the name of the database.
+    [Note that the default "https://my.server.ip:8071/principals/users/username" might also
+    be edited to "https://my.server.ip:8071/webdav/dbname/principals/users/username" ]
+
 11. Click on Done. The phone will hopefully connect to the OpenERP server
-      and verify it can use the account.
+    and verify it can use the account.
+
 12. Go to the main menu of the iPhone and enter the Calendar application.
-      Your OpenERP calendars will be visible inside the selection of the
-      "Calendars" button.
+    Your OpenERP calendars will be visible inside the selection of the
+    "Calendars" button.
     Note that when creating a new calendar entry, you will have to specify
     which calendar it should be saved at.
 
 
 
 
-
+[1] I remember one guy that made *lots* of money selling his CA business
+off, and since then uses this money to create a software monopoly.
 [2] This may not happen if the SRV records at DNS and the well-known URIs
 are setup right. But we appreciate that a default OpenERP installation will
 not have the DNS server of the company's domain configured.
+
+
+

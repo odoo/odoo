@@ -45,7 +45,29 @@ class caldav_browse(osv.osv_memory):
         DATABASE_NAME: Name of database on which OpenERP Calendar is created
         CALENDAR_NAME: Name of calendar to access
      """),
-     'iphone' : _("""It's complicated""")}
+     'iphone' : _("""It's complicated"""),
+     'evolution' : _("""
+    =========================================
+    Synchronization with Evolution's calendar
+    =========================================
+
+    1. Go to Calendar View
+
+    2. File -> New -> Calendar
+
+    3. Fill the form 
+        - type : CalDav
+        - name : Whaterver you want (ie : Meeting)
+        - url : http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings (ie : http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings) the one given on the top of this window
+        - uncheck "User SSL"
+        - Username : Your username (ie : Demo)
+        - Refresh : everytime you want that evolution synchronize the data with the server
+
+    4. Click ok and give your openerp password
+
+    5. A new calendar named with the name you gave should appear on the left side.
+     
+     """)}
     
     
     _name = 'caldav.browse'
@@ -88,7 +110,7 @@ class caldav_browse(osv.osv_memory):
            pref_ids = pref_ids[0] 
            url = host + ':' + str(port) + '/'+ pref_ids.service + '/' + cr.dbname + '/'+'calendars/'+ 'users/'+ current_user.login + '/'+ pref_ids.collection.name+ '/'+ pref_ids.calendar.name
            res['description'] = self.__doc.get(pref_ids.device , self.__doc['other'])
-        file = open(addons.get_module_resource('caldav','doc', 'Caldav_doc.pdf'),'rb')
+        file = open(addons.get_module_resource('caldav','doc', 'caldav_doc.pdf'),'rb')
         res['caldav_doc_file'] = base64.encodestring(file.read())
         
         
