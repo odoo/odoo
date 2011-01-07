@@ -490,7 +490,7 @@ class users(osv.osv):
         finally:
             cr.close()
 
-    def change_password(self, cr, uid, old_passwd, new_passwd):
+    def change_password(self, cr, uid, old_passwd, new_passwd, context=None):
         """Change current user password. Old password must be provided explicitly
         to prevent hijacking an existing user session, or for cases where the cleartext
         password is not used to authenticate requests.
@@ -498,9 +498,9 @@ class users(osv.osv):
         :return: True
         :raise: security.ExceptionNoTb when old password is wrong
         """
-        if self.check(cr.dbname, uid, old_passwd):
-            self.write(cr, uid, uid, {'password': new_passwd})
-        return True
+        if new_passwd and self.check(cr.dbname, uid, old_passwd):
+            return self.write(cr, uid, uid, {'password': new_passwd})
+        raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
 users()
 
