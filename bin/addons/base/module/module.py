@@ -501,7 +501,7 @@ class module(osv.osv):
                     f2 = addons.get_module_resource(mod.name, 'i18n', iso_lang2 + '.po')
                     if f2:
                         logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
-                        tools.trans_load(cr.dbname, f2, lang, verbose=False, context=context)
+                        tools.trans_load(cr, f2, lang, verbose=False, context=context)
                         context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
@@ -511,9 +511,10 @@ class module(osv.osv):
                     f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
                 if f:
                     logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
-                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context2)
+                    tools.trans_load(cr, f, lang, verbose=False, context=context2)
                 elif iso_lang != 'en':
                     logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
+        tools.trans_update_res_ids(cr)
 
     def check(self, cr, uid, ids, context=None):
         logger = logging.getLogger('init')

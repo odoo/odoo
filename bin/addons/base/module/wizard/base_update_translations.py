@@ -45,8 +45,9 @@ class base_update_translations(osv.osv_memory):
         this = self.browse(cr, uid, ids)[0]
         lang_name = self._get_lang_name(cr, uid, this.lang)
         buf=cStringIO.StringIO()
-        tools.trans_export(this.lang, ['all'], buf, 'csv', dbname=cr.dbname)
-        tools.trans_load_data(cr.dbname, buf, 'csv', this.lang, lang_name=lang_name)
+        tools.trans_export(this.lang, ['all'], buf, 'csv', cr)
+        tools.trans_load_data(cr, buf, 'csv', this.lang, lang_name=lang_name)
+        tools.trans_update_res_ids(cr)
         buf.close()
         return {'type': 'ir.actions.act_window_close'}
 
