@@ -57,7 +57,7 @@ class account_move_line(osv.osv):
 
         if context.get('date_from', False) and context.get('date_to', False):
             if initial_bal:
-                where_move_lines_by_date = " OR " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
+                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
             else:
                 where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
 
@@ -87,7 +87,7 @@ class account_move_line(osv.osv):
                 ids = ','.join([str(x) for x in context['periods']])
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
-            query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) %s %s)" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+            query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
 
         if context.get('journal_ids', False):
             query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
@@ -102,9 +102,9 @@ class account_move_line(osv.osv):
 
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
         """
-           This function returns the residual amount on a receivable or payable account.move.line. 
-           By default, it returns an amount in the currency of this journal entry (maybe different 
-           of the company currency), but if you pass 'residual_in_company_currency' = True in the 
+           This function returns the residual amount on a receivable or payable account.move.line.
+           By default, it returns an amount in the currency of this journal entry (maybe different
+           of the company currency), but if you pass 'residual_in_company_currency' = True in the
            context then the returned amount will be in company currency.
         """
         res = {}
@@ -116,13 +116,13 @@ class account_move_line(osv.osv):
                 'amount_residual': 0.0,
                 'amount_residual_currency': 0.0,
             }
- 
+
             if move_line.reconcile_id:
                 continue
             if not move_line.account_id.type in ('payable', 'receivable'):
                 #this function does not suport to be used on move lines not related to payable or receivable accounts
                 continue
-            
+
             if move_line.currency_id:
                 move_line_total = move_line.amount_currency
                 sign = move_line.amount_currency < 0 and -1 or 1
@@ -950,6 +950,13 @@ class account_move_line(osv.osv):
             #Restrict the list of journal view in search view
             if view_type == 'search' and result['fields'].get('journal_id', False):
                 result['fields']['journal_id']['selection'] = journal_pool.name_search(cr, uid, '', [], context=context)
+                ctx = context.copy()
+                if context.get('journal_type', False) == 'sale':
+                    ctx.update({'journal_type': 'sale_refund'})
+                    result['fields']['journal_id']['selection'] += journal_pool.name_search(cr, uid, '', [], context=ctx)
+                elif context.get('journal_type', False) == 'purchase':
+                    ctx.update({'journal_type': 'purchase_refund'})
+                    result['fields']['journal_id']['selection'] += journal_pool.name_search(cr, uid, '', [], context=ctx)
             return result
         if context.get('view_mode', False):
             return result
