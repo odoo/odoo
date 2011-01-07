@@ -35,6 +35,9 @@
 	   'purchase_double_validation_installer.xml'
 	    ],
     'demo_xml': [],
+    'test': [
+        'test/purchase_double_validation_test.yml',
+         ],
     'installable': True,
     'active': False,
 

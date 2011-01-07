@@ -1,0 +1,117 @@
+-
+  I Create new limit amount from  Configure Limit Amount for Purchase wizard.
+- 
+  !record {model: purchase.double.validation.installer, id: purchase_double_validation_installer_1}:
+    limit_amount: 3000
+- 
+  Then I set the Limit Amount
+- 
+  !python {model: purchase.double.validation.installer}: |
+    self.execute(cr, uid, [ref("purchase_double_validation_installer_1")])
+-
+  In order to test the purchase double validation flow,I start by creating a new product 'MOB1'
+-
+ !record {model: product.product, id: product_product_mob1}:
+    categ_id: 'product.product_category_3'
+    cost_method: standard
+    mes_type: fixed
+    name: MOB1
+    price_margin: 2.0
+    procure_method: make_to_stock
+    property_stock_inventory: stock.location_inventory
+    property_stock_procurement: stock.location_procurement
+    property_stock_production: stock.location_production
+    seller_delay: '1'
+    standard_price: 2000.0
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_unit
+    uom_po_id: product.product_uom_unit
+    volume: 0.0
+    warranty: 0.0
+    weight: 0.0
+    weight_net: 0.0
+-
+  In order to test the purchase double validation flow,I create a new record where "invoice_method" is From Order.
+-
+  Test for purchase double validation in which Total > = Limit Amount.
+- 
+  I create purchase order for MOB1 for 3 quantity.
+- 
+  !record {model: purchase.order, id: purchase_order_po11}:
+    company_id: base.main_company
+    date_order: '2011-01-1'
+    invoice_method: order
+    location_id: stock.stock_location_stock
+    order_line:
+      - date_planned: '2011-01-11'
+        name: MOB1
+        price_unit: 2000.0
+        product_id: 'product_product_mob1'
+        product_qty: 3.0
+        product_uom: product.product_uom_unit
+        state: draft
+    partner_address_id: base.res_partner_address_7
+    partner_id: base.res_partner_4
+    pricelist_id: purchase.list0
+- 
+  Initially purchase order is in the draft state.
+-
+  !assert {model: purchase.order, id: purchase_order_po11}:
+    - state == 'draft'  
+-
+  I confirm the purchase order for MOB1.
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_po11}
+-  
+  I check that the order which was initially in the draft state has transmit to confirm state for double validation.
+-
+  !assert {model: purchase.order, id: purchase_order_po11}:
+    - state == 'confirmed'
+-
+  I Approved purchase order by Supplier for MOB1.
+-
+  !workflow {model: purchase.order, action: purchase_approve, ref: purchase_order_po11}
+-  
+  I check that the order which was initially in the confirmed state has transmit to approved state.
+-
+  !assert {model: purchase.order, id: purchase_order_po11}:
+    - state == 'approved' 
+-
+  Test for purchase double validation in which Total < Limit Amount.
+- 
+  I create purchase order for MOB1 for 1 quantity.
+- 
+  !record {model: purchase.order, id: purchase_order_po12}:
+    company_id: base.main_company
+    date_order: '2011-01-02'
+    invoice_method: order
+    location_id: stock.stock_location_stock
+    order_line:
+      - date_planned: '2011-01-12'
+        name: MOB1
+        price_unit: 2000.0
+        product_id: 'product_product_mob1'
+        product_qty: 1.0
+        product_uom: product.product_uom_unit
+        state: draft
+    partner_address_id: base.res_partner_address_7
+    partner_id: base.res_partner_4
+    pricelist_id: purchase.list0
+- 
+  Initially purchase order is in the draft state.
+-
+  !assert {model: purchase.order, id: purchase_order_po12}:
+    - state == 'draft'  
+-
+  I confirm the purchase order for MOB1.
+-
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_po12}
+-  
+  I check that the order which was initially in the draft state has transmit to approved state.
+-
+  !assert {model: purchase.order, id: purchase_order_po12}:
+    - state == 'approved'
+
+
+   
