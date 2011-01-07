@@ -1170,6 +1170,7 @@ class stock_picking(osv.osv):
             complete, too_many, too_few = [], [], []
             move_product_qty = {}
             prodlot_ids = {}
+            product_avail = {}
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
                     continue
@@ -1195,6 +1196,12 @@ class stock_picking(osv.osv):
                     move_currency_id = move.company_id.currency_id.id
                     context['currency_id'] = move_currency_id
                     qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+
+                    if product.id in product_avail:
+                        product_avail[product.id] += qty
+                    else:
+                        product_avail[product.id] = product.qty_available
+
                     if qty > 0:
                         new_price = currency_obj.compute(cr, uid, product_currency,
                                 move_currency_id, product_price)
@@ -1205,9 +1212,8 @@ class stock_picking(osv.osv):
                         else:
                             # Get the standard price
                             amount_unit = product.price_get('standard_price', context)[product.id]
-                            new_std_price = ((amount_unit * product.qty_available)\
-                                + (new_price * qty))/(product.qty_available + qty)
-
+                            new_std_price = ((amount_unit * product_avail[product.id])\
+                                + (new_price * qty))/(product_avail[product.id] + qty)
                         # Write the field according to price type field
                         product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
 
