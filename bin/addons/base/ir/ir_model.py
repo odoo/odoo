@@ -267,19 +267,123 @@ class ir_model_fields(osv.osv):
         return res
 
     def write(self, cr, user, ids, vals, context=None):
-        # TODO: we have to check/restrict many more conditions here, like
-        # changing the type, name or model_id of fields eg.
+        if context is None:
+            context = {}
+        if context and context.get('manual',False):
+            vals['state'] = 'manual'
 
-        if 'selection' in vals:
-            have_selection = False
+        have_custom_fields = False
+        column_rename = None # if set, *one* column can be renamed here
+        obj = None
+        models = {}    # structs of (obj, [(field, prop, change_to),..])
+                       # data to be updated on the orm model
+
+        # static table of properties
+        model_props = [ # (our-name, fields.prop, set_fn)
+            ('field_description', 'string', lambda a: a),
+            ('required', 'required', bool),
+            ('readonly', 'readonly', bool),
+            ('domain', '_domain', lambda a: a),
+            ('size', 'size', int),
+            ('on_delete', 'ondelete', str),
+            ('translate', 'translate', bool),
+            ('view_load', 'view_load', bool),
+            ('selectable', 'selectable', bool),
+            ('select_level', 'select', int),
+            ('selection', 'selection', eval),
+            ]
+
+        if vals and ids:
+            checked_selection = False # need only check it once, so defer
+            
             for item in self.browse(cr, user, ids, context=context):
-                if item.ttype == 'selection':
-                    have_selection = True
-                    break
-            if have_selection:
-                self._check_selection(cr, user, vals['selection'], context=context)
+                if not (obj and obj._name == item.model):
+                    obj = self.pool.get(item.model)
+                
+                if item.state == 'manual':
+                    have_custom_fields = True
+                else:
+                    for prop in ['name', 'model_id', 'ttype', 'relation', 'relation_field',
+                        'size', 'selection', 'required', 'readonly', 'translate', 
+                        'domain', 'groups']:
+                            if prop in vals and getattr(item, prop) != vals[prop]:
+                                raise except_orm(_('Error!'),
+                                    _('Properties of base fields cannot be set here! '
+                                      'Please modify them through Python code, '
+                                      'preferably through a custom addon!'))
+
+                if item.ttype == 'selection' and 'selection' in vals \
+                        and not checked_selection:
+                    self._check_selection(cr, user, vals['selection'], context=context)
+                    checked_selection = True
+
+                final_name = item.name
+                if 'name' in vals and vals['name'] != item.name:
+                    # We need to rename the column
+                    if column_rename:
+                        raise except_orm(_('Error!'), _('Can only rename one column at a time!'))
+                    if vals['name'] in obj._columns:
+                        raise except_orm(_('Error!'), _('Cannot rename column to %s, because that column already exists!') % vals['name'])
+                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
+                        raise except_orm(_('Error!'), _('New column name must still start with x_ , because it is a custom field!'))
+                    if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
+                        raise ValueError('Invalid character in column name')
+                    column_rename = (obj, (obj._table, item.name, vals['name']))
+                    final_name = vals['name']
+                
+                if 'model_id' in vals and vals['model_id'] != item.model_id:
+                    raise except_orm(_("Error!"), _("Changing the model of a field is forbidden!"))
+                
+                if 'ttype' in vals and vals['ttype'] != item.ttype:
+                    raise except_orm(_("Error!"), _("Changing the type of a column is not yet supported. "
+                                "Please drop it and create it again!"))
+                
+                # We don't check the 'state', because it might come from the context
+                # (thus be set for multiple fields) and will be ignored anyway.
+                
+                if obj:
+                    models.setdefault(obj._name, (obj,[]))
+                    # find out which values (per model) we need to update there
+                    for vname, fprop, set_fn in model_props:
+                        if vname in vals:
+                            prop_val = set_fn(vals[vname])
+                            if getattr(obj._columns[item.name], fprop) != prop_val:
+                                models[obj._name][1].append((final_name, fprop, prop_val))
+                        # our dict is ready here, but no properties are changed so far
+
+        # These shall never be written (modified)
+        if 'model_id' in vals:
+            del vals['model_id']
+        if 'model' in vals:
+            del vals['model']
+        if 'state' in vals:
+            del vals['state']
+        
         res = super(ir_model_fields,self).write(cr, user, ids, vals, context=context)
-        # TODO do we need to perform _auto_init here, too?
+
+        if column_rename:
+            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % column_rename[1])
+            # This is VERY risky, but let us have this feature:
+            # we want to change the key of column in obj._columns dict
+            col = column_rename[0]._columns.pop(column_rename[1][1]) # take object out, w/o copy
+            column_rename[0]._columns[column_rename[1][2]] = col
+            
+        if models:
+            # We have to update _columns of the model(s) and then call their 
+            # _auto_init to sync the db with the model. Hopefully, since write()
+            # was called earlier, they will be in-sync before the _auto_init.
+            # Anything we don't update in _columns now will be reset from
+            # the model into ir.model.fields (db).
+            ctx = context.copy()
+            if have_custom_fields:
+                ctx.update({'select': vals.get('select_level','0'),'update_custom_fields':True})
+            
+            for mkey, mstruct in models.items():
+                obj = mstruct[0]
+                
+                for col_name, col_prop, val in mstruct[1]:
+                    setattr(obj._columns[col_name], col_prop, val)
+                obj._auto_init(cr, ctx)
         return res
 
 ir_model_fields()
