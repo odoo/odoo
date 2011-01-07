@@ -19,3 +19,5 @@ Synchronization with Evolution's calendar
 4. Click ok and give your openerp password
 
 5. A new calendar named with the name you gave should appear on the left side.
+
+

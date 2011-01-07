@@ -1,7 +1,7 @@
 all: compile clean
 
 concat: all.rst
-	cat all.rst iPhone.rst evolution.rst > compile.rst
+	cat all.rst iPhone.rst android.rst evolution.rst sunbird.rst  > compile.rst
     
 compile: concat
 	rst2pdf compile.rst -o caldav_doc.pdf 

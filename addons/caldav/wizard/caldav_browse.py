@@ -27,7 +27,9 @@ from tools.translate import _
 
 class caldav_browse(osv.osv_memory):
     
-    __doc = {'other' : _("""
+    __doc = {
+    
+    'other' : _("""
   * Webdav server that provides remote access to calendar
   * Synchronisation of calendar using WebDAV
   * Customize calendar event and todo attribute with any of OpenERP model
@@ -45,6 +47,9 @@ class caldav_browse(osv.osv_memory):
         DATABASE_NAME: Name of database on which OpenERP Calendar is created
         CALENDAR_NAME: Name of calendar to access
      """),
+     
+     
+     
      'iphone' : _("""
     For SSL specific configuration see the documentation below
 
@@ -94,10 +99,32 @@ steps:
       is the default 8071)
     s2. Safari will try to connect and issue a warning about the certificate
       used. Inspect the certificate and click "Accept" so that iPhone
-      now trusts it. 
-    
+      now trusts it.   
+    """),
+    'android' : _("""
+Prerequire
+----------
+There is no buit-in way to synchronize calendar with caldav.
+So you need to install a third part software : Calendar (CalDav) 
+for now it's the only one
+
+configuration
+-------------
+
+1. Open Calendar Sync
+   I'll get an interface with 2 tabs
+   Stay on the first one
+   
+2. CaDAV Calendar URL : put the URL given above (ie : http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)
+
+3. Put your openerp username and password
+
+4. If your server don't use SSL, you'll get a warnign, say "Yes"
+
+5. Then you can synchronize manually or custom the settings to synchronize every x minutes.
     
     """),
+    
      'evolution' : _("""
     1. Go to Calendar View
 
@@ -113,9 +140,35 @@ steps:
 
     4. Click ok and give your openerp password
 
-    5. A new calendar named with the name you gave should appear on the left side.
+    5. A new calendar named with the name you gave should appear on the left side.     
+     """),
      
-     """)}
+     
+     'thunderbird' : _("""
+Prerequire
+----------
+If you are using thunderbird, first you need to install the lightning module
+http://www.mozilla.org/projects/calendar/lightning/
+
+configuration
+-------------
+
+1. Go to Calendar View
+
+2. File -> New Calendar
+
+3. Chosse "On the Network"
+
+4. for format choose CalDav
+   and as location the url given above (ie : http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)
+   
+5. Choose a name and a color for the Calendar, and we advice you to uncheck "alarm"
+
+6. Then put your openerp login and password (to give the password only check the box "Use password Manager to remember this password"
+
+7. Then Finish, your meetings should appear now in your calendar view
+"""),
+    }
     
     
     _name = 'caldav.browse'
