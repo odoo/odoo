@@ -716,11 +716,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: loading objects' % package.name)
         migrations.migrate_module(package, 'pre')
         register_class(package.name)
-        l = {}
-        if pool.get('ir.model.data'):
-            l = pool.get('ir.model.data').loads
         modules = pool.instanciate(package.name, cr)
-        pool.get('ir.model.data').loads.update(l)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_objects(cr, package.name, modules)
         cr.commit()
@@ -785,13 +781,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         statusi += 1
 
-    cr.execute('select model from ir_model where state=%s', ('manual',))
-    for model in cr.dictfetchall():
-        pool.get('ir.model').instanciate(cr, 1, model['model'], {})
-
-    if not skip_cleanup:
-        # Cleanup orphan records
-        pool.get('ir.model.data')._process_end(cr, 1, package_todo+['base'])
     cr.commit()
 
     return processed_modules
