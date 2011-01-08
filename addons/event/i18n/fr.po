@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-04 15:57+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
+"PO-Revision-Date: 2011-01-06 21:57+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:46+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -51,7 +51,7 @@ msgstr "Inscriptions Minimum"
 #. module: event
 #: model:ir.model,name:event.model_event_confirm_registration
 msgid "Confirmation for Event Registration"
-msgstr ""
+msgstr "Confirmation de l'inscription à l'évènement"
 
 #. module: event
 #: field:event.registration.badge,title:0
@@ -177,7 +177,7 @@ msgstr "Ajouter une note interne"
 #: model:ir.ui.menu,name:event.menu_report_event_registration
 #: view:report.event.registration:0
 msgid "Events Analysis"
-msgstr ""
+msgstr "Analyse des évènements"
 
 #. module: event
 #: field:event.registration,message_ids:0
@@ -216,7 +216,7 @@ msgstr "Répondre à"
 #. module: event
 #: model:ir.actions.act_window,name:event.open_board_associations_manager
 msgid "Event Dashboard"
-msgstr ""
+msgstr "Tableau de bord des évènements"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -236,7 +236,7 @@ msgstr "Contact du partenaire"
 #. module: event
 #: model:ir.model,name:event.model_event_registration_badge
 msgid "event.registration.badge"
-msgstr ""
+msgstr "event.registration.badge"
 
 #. module: event
 #: field:event.registration,ref:0
@@ -341,7 +341,7 @@ msgstr "Autres orateurs"
 #. module: event
 #: model:ir.model,name:event.model_event_make_invoice
 msgid "Event Make Invoice"
-msgstr ""
+msgstr "Créer la facture de l'évènement"
 
 #. module: event
 #: help:event.registration,nb_register:0
@@ -449,7 +449,7 @@ msgstr ""
 #. module: event
 #: help:event.event,register_prospect:0
 msgid "Total of Prospect Registrati./event/event.py:41:ons"
-msgstr ""
+msgstr "Total of Prospect Registrati./event/event.py:41:ons"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -459,7 +459,7 @@ msgstr "Juillet"
 #. module: event
 #: view:event.event:0
 msgid "Event Organization"
-msgstr ""
+msgstr "Organisation de l'évènement"
 
 #. module: event
 #: view:event.registration:0
@@ -513,7 +513,7 @@ msgstr "Annuler l'évènement"
 #: view:event.event:0
 #: view:event.registration:0
 msgid "Contact"
-msgstr ""
+msgstr "Contact"
 
 #. module: event
 #: view:report.event.registration:0
@@ -533,7 +533,7 @@ msgstr "Partenaire"
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
-msgstr ""
+msgstr "Évènements remplissant le statut"
 
 #. module: event
 #: field:event.make.invoice,grouped:0
@@ -564,7 +564,7 @@ msgstr "Partenaire facturé"
 #. module: event
 #: field:event.registration,log_ids:0
 msgid "Logs"
-msgstr ""
+msgstr "Historique"
 
 #. module: event
 #: view:event.event:0
@@ -589,12 +589,12 @@ msgstr "Décembre"
 #. module: event
 #: field:event.registration,event_product:0
 msgid "Invoice Name"
-msgstr ""
+msgstr "Nom sur la facture"
 
 #. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
-msgstr ""
+msgstr " Nombre d'inscrption en brouillon"
 
 #. module: event
 #: view:report.event.registration:0
@@ -672,11 +672,15 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Ces adresses courriels seront ajoutées par défaut au champ \"Copie à\" de "
+"tous les courriels entrants et sortants de cet enregistrement. Séparez les "
+"adresses multiples avec une virgule."
 
 #. module: event
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
 msgstr ""
+"Erreur ! Vous ne pouvez pas créer des membres associés de manière récursive."
 
 #. module: event
 #: view:event.make.invoice:0
@@ -784,18 +788,18 @@ msgstr "Octobre"
 #. module: event
 #: help:event.event,register_current:0
 msgid "Total of Open and Done Registrations"
-msgstr ""
+msgstr "Total des inscriptions ouvertes et fermées"
 
 #. module: event
 #: field:event.event,language:0
 msgid "Language"
-msgstr ""
+msgstr "Langue"
 
 #. module: event
 #: view:event.registration:0
 #: field:event.registration,email_cc:0
 msgid "CC"
-msgstr ""
+msgstr "Cc"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -836,7 +840,7 @@ msgstr "Tableau de bord"
 #. module: event
 #: view:event.event:0
 msgid "Confirmation Email Body"
-msgstr ""
+msgstr "Corps de l'email de confirmation"
 
 #. module: event
 #: view:event.registration:0
@@ -907,7 +911,7 @@ msgstr "Facture"
 #: view:report.event.registration:0
 #: field:report.event.registration,year:0
 msgid "Year"
-msgstr ""
+msgstr "Année"
 
 #. module: event
 #: code:addons/event/event.py:517
@@ -920,12 +924,12 @@ msgstr "Annuler"
 #: view:event.confirm.registration:0
 #: view:event.make.invoice:0
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #. module: event
 #: view:event.event:0
 msgid "Event by Registration"
-msgstr ""
+msgstr "Évènement par inscription"
 
 #. module: event
 #: code:addons/event/event.py:432
@@ -943,7 +947,7 @@ msgstr "Responsable"
 #: code:addons/event/event.py:545
 #, python-format
 msgid "Auto Confirmation: [%s] %s"
-msgstr ""
+msgstr "Confirmation automatique : [%s] %s"
 
 #. module: event
 #: view:event.event:0
@@ -1026,7 +1030,7 @@ msgstr "Description"
 #. module: event
 #: field:report.event.registration,confirm_state:0
 msgid " # No of Confirmed Registrations"
-msgstr ""
+msgstr " Nb. d'inscriptions confirmées"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_register_event_partner
@@ -1041,7 +1045,7 @@ msgstr "Mai"
 #. module: event
 #: view:res.partner:0
 msgid "Events Registration"
-msgstr ""
+msgstr "Inscription aux évènements"
 
 #. module: event
 #: help:event.event,mail_registr:0
@@ -1067,18 +1071,18 @@ msgstr "Prochains événements"
 #. module: event
 #: view:partner.event.registration:0
 msgid "_Subcribe"
-msgstr ""
+msgstr "_S'abonner"
 
 #. module: event
 #: model:ir.model,name:event.model_partner_event_registration
 msgid "  event Registration "
-msgstr ""
+msgstr "  Inscription à un évènement "
 
 #. module: event
 #: help:event.event,date_begin:0
 #: help:partner.event.registration,start_date:0
 msgid "Beginning Date of Event"
-msgstr ""
+msgstr "Date de début de l'évènement"
 
 #. module: event
 #: selection:event.registration,state:0
@@ -1089,7 +1093,7 @@ msgstr "Non confirmé"
 #: code:addons/event/event.py:542
 #, python-format
 msgid "Auto Registration: [%s] %s"
-msgstr ""
+msgstr "Inscription automatique : [%s] %s"
 
 #. module: event
 #: field:event.registration,date_deadline:0
@@ -1130,7 +1134,7 @@ msgstr "Pays"
 #: code:addons/event/wizard/event_make_invoice.py:55
 #, python-format
 msgid "Registration is set as Cannot be invoiced"
-msgstr ""
+msgstr "L'inscription est à \"Ne peut être facturée\""
 
 #. module: event
 #: code:addons/event/event.py:500
@@ -1139,7 +1143,7 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Close Registration"
-msgstr ""
+msgstr "Clôturer les inscriptions"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -1206,7 +1210,7 @@ msgstr "La facture ne peut pas être créée si l'inscription a pour état %s"
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
 msgid "Event Confirmation"
-msgstr ""
+msgstr "Confirmation de l'évènement"
 
 #. module: event
 #: view:event.event:0
@@ -1223,7 +1227,7 @@ msgstr "Total"
 #. module: event
 #: help:event.event,register_min:0
 msgid "Providee Minimum Number of Registrations"
-msgstr ""
+msgstr "Fournissez le nombre minimal d'inscriptions"
 
 #. module: event
 #: field:event.event,speaker_confirmed:0
@@ -1238,6 +1242,11 @@ msgid ""
 "caldav. Most of the users should work in the Calendar menu, and not in the "
 "list of events."
 msgstr ""
+"L'évènement est l'objet de bas niveau utilisé par les rendez-vous et "
+"d'autres documents qui doivent être synchronisés avec les appareils mobiles "
+"et les applications de calendrier via caldav. La plupart des des "
+"utilisateurs devraient travailler dans le menu Calendrier, et non dans la "
+"liste des évènements."
 
 #~ msgid "Reporting"
 #~ msgstr "Reporting"

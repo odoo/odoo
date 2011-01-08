@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-12-31 09:55+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-07 23:28+0000\n"
+"Last-Translator: Mikael Larsson <mikael.larsson@dermanord.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:02+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -181,7 +181,7 @@ msgstr ""
 #: code:addons/account/invoice.py:1439
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varning!"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -208,7 +208,7 @@ msgstr "Negativ"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr ""
+msgstr "Journal: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -356,7 +356,7 @@ msgstr "Inköp av tillgångar"
 #: view:account.installer:0
 #: view:account.installer.modules:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurera"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -399,7 +399,7 @@ msgstr "Återbetala inköp"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Opening/Closing Situation"
-msgstr ""
+msgstr "Öppning/Stängning Situation"
 
 #. module: account
 #: help:account.journal,currency:0
@@ -417,6 +417,8 @@ msgid ""
 "This field contains the informatin related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
+"Detta fält innehåller information i samband med numreringen av journalposter "
+"av denna journal."
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -469,6 +471,11 @@ msgid ""
 "amount of each area of the tax declaration for your country. It’s presented "
 "in a hierarchical structure, which can be modified to fit your needs."
 msgstr ""
+"Diagram på Skatter är en trädvy som återspeglar strukturen i Skatter (eller "
+"skatt koder) och visar den aktuella skattesituationen. Skattediagrammet "
+"representerar den mängd varje område i deklarationen för ditt land. Det "
+"presenteras i en hierarkisk struktur, som kan modifieras för att passa dina "
+"behov."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -635,7 +642,7 @@ msgstr "Centraliserad journal"
 #. module: account
 #: sql_constraint:account.sequence.fiscalyear:0
 msgid "Main Sequence must be different from current !"
-msgstr ""
+msgstr "Huvudsekvensen skall skilja sig från nuvarande!"
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -681,6 +688,7 @@ msgstr "Journalperiod"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
+"För att slå samman posterna på företaget bör de vara samma för alla poster"
 
 #. module: account
 #: view:account.account:0
@@ -717,7 +725,7 @@ msgstr "Markera"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr ""
+msgstr "Partners Sammanslagna Idag"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:306
@@ -1102,6 +1110,10 @@ msgid ""
 "purchase orders or receipts. This way, you can control the invoice from your "
 "supplier according to what you purchased or received."
 msgstr ""
+"Med Leverantörs Fakturor kan du ange och hantera fakturor som utfärdats av "
+"dina leverantörer. OpenERP kan även generera utkast på fakturor automatiskt "
+"från inköpsorder eller kvitton. På så sätt kan du styra fakturan från din "
+"leverantör beroende på vad du köpt eller fått."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1240,7 +1252,7 @@ msgstr "Sök momsmallar"
 #. module: account
 #: report:account.invoice:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Er referens"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -1409,6 +1421,8 @@ msgstr "Återbetalningar till leverantör"
 msgid ""
 "Example: at 14 net days 2 percents, remaining amount at 30 days end of month."
 msgstr ""
+"Exempel: på 14 nettodagar 2 procent, resterande belopp 30 dagar i slutet av "
+"månaden."
 
 #. module: account
 #: code:addons/account/invoice.py:833
@@ -1418,6 +1432,9 @@ msgid ""
 "The payment term defined gives a computed amount greater than the total "
 "invoiced amount."
 msgstr ""
+"Kan inte skapa en faktura!\n"
+"De angivna betalningsvillkoren ger ett beräknat belopp som överstiger det "
+"totala fakturerade beloppet."
 
 #. module: account
 #: field:account.installer.modules,account_anglo_saxon:0
@@ -1496,6 +1513,8 @@ msgstr "Sök kontoutdrag"
 msgid ""
 "Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
 msgstr ""
+"Fel kredit eller debet värde i modellen (Kredit + Debet Måste Vara större "
+"\"0\")!"
 
 #. module: account
 #: view:account.chart.template:0
@@ -2116,7 +2135,7 @@ msgstr "Ändra till"
 #. module: account
 #: view:account.entries.report:0
 msgid "# of Products Qty "
-msgstr ""
+msgstr "# Produkter Antal "
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
