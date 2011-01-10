@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-12-28 08:17+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -15,13 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:58+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:37+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
-
-#. module: outlook
-#: field:outlook.installer,plugin_file:0
-msgid "Outlook Plug-in"
-msgstr "Conector Outlook"
 
 #. module: outlook
 #: field:outlook.installer,doc_file:0
@@ -29,9 +24,9 @@ msgid "Installation Manual"
 msgstr "Manual instalación"
 
 #. module: outlook
-#: view:outlook.installer:0
-msgid "Configure"
-msgstr "Configurar"
+#: field:outlook.installer,plugin_file:0
+msgid "Outlook Plug-in"
+msgstr "Conector Outlook"
 
 #. module: outlook
 #: field:outlook.installer,description:0
@@ -46,8 +41,8 @@ msgstr "Conector Outlook"
 
 #. module: outlook
 #: view:outlook.installer:0
-msgid "title"
-msgstr "título"
+msgid "Skip"
+msgstr "Saltar"
 
 #. module: outlook
 #: model:ir.module.module,shortdesc:outlook.module_meta_information
@@ -99,6 +94,11 @@ msgid "The documentation file :- how to install Outlook Plug-in."
 msgstr "El fichero de documentación: Como instalar el conector Outlook."
 
 #. module: outlook
+#: model:ir.model,name:outlook.model_outlook_installer
+msgid "outlook.installer"
+msgstr "outlook.instalador"
+
+#. module: outlook
 #: model:ir.actions.act_window,name:outlook.action_outlook_installer
 #: model:ir.actions.act_window,name:outlook.action_outlook_wizard
 #: view:outlook.installer:0
@@ -106,18 +106,9 @@ msgid "Outlook Plug-In Configuration"
 msgstr "Configuración conector Outlook"
 
 #. module: outlook
-#: help:outlook.installer,outlook:0
-msgid ""
-"Allows you to select an object that you’d like to add to your email and its "
-"attachments."
-msgstr ""
-"Le permite seleccionar un objeto al que quiera añadir su correo y sus "
-"adjuntos."
-
-#. module: outlook
-#: model:ir.model,name:outlook.model_outlook_installer
-msgid "outlook.installer"
-msgstr "outlook.instalador"
+#: field:outlook.installer,progress:0
+msgid "Configuration Progress"
+msgstr "Progreso configuración"
 
 #. module: outlook
 #: view:outlook.installer:0
@@ -129,9 +120,16 @@ msgstr ""
 "Puede adjuntar con cualquier elemento en OpenERP o crear uno de nuevo."
 
 #. module: outlook
+#: help:outlook.installer,outlook:0
+msgid ""
+"Allows you to select an object that you would like to add to your email and "
+"its attachments."
+msgstr ""
+
+#. module: outlook
 #: view:outlook.installer:0
-msgid "Skip"
-msgstr "Saltar"
+msgid "title"
+msgstr "título"
 
 #. module: outlook
 #: view:outlook.installer:0
@@ -157,9 +155,16 @@ msgstr ""
 "la aplicación Outlook."
 
 #. module: outlook
-#: field:outlook.installer,progress:0
-msgid "Configuration Progress"
-msgstr "Progreso configuración"
+#: view:outlook.installer:0
+msgid "Configure"
+msgstr "Configurar"
+
+#~ msgid ""
+#~ "Allows you to select an object that you’d like to add to your email and its "
+#~ "attachments."
+#~ msgstr ""
+#~ "Le permite seleccionar un objeto al que quiera añadir su correo y sus "
+#~ "adjuntos."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

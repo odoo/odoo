@@ -57,7 +57,7 @@ class account_move_line(osv.osv):
 
         if context.get('date_from', False) and context.get('date_to', False):
             if initial_bal:
-                where_move_lines_by_date = " OR " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
+                where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date < '" +context['date_from']+"')"
             else:
                 where_move_lines_by_date = " AND " +obj+".move_id IN (SELECT id FROM account_move WHERE date >= '" +context['date_from']+"' AND date <= '"+context['date_to']+"')"
 
@@ -87,7 +87,7 @@ class account_move_line(osv.osv):
                 ids = ','.join([str(x) for x in context['periods']])
                 query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) AND id IN (%s)) %s %s" % (fiscalyear_clause, ids, where_move_state, where_move_lines_by_date)
         else:
-            query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s) %s %s)" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
+            query = obj+".state <> 'draft' AND "+obj+".period_id IN (SELECT id FROM account_period WHERE fiscalyear_id IN (%s)) %s %s" % (fiscalyear_clause, where_move_state, where_move_lines_by_date)
 
         if context.get('journal_ids', False):
             query += ' AND '+obj+'.journal_id IN (%s)' % ','.join(map(str, context['journal_ids']))
@@ -99,6 +99,57 @@ class account_move_line(osv.osv):
         query += company_clause
 
         return query
+
+    def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
+        """
+           This function returns the residual amount on a receivable or payable account.move.line. 
+           By default, it returns an amount in the currency of this journal entry (maybe different 
+           of the company currency), but if you pass 'residual_in_company_currency' = True in the 
+           context then the returned amount will be in company currency.
+        """
+        res = {}
+        if context is None:
+            context = {}
+        cur_obj = self.pool.get('res.currency')
+        for move_line in self.browse(cr, uid, ids, context=context):
+            res[move_line.id] = {
+                'amount_residual': 0.0,
+                'amount_residual_currency': 0.0,
+            }
+ 
+            if move_line.reconcile_id:
+                continue
+            if not move_line.account_id.type in ('payable', 'receivable'):
+                #this function does not suport to be used on move lines not related to payable or receivable accounts
+                continue
+            
+            if move_line.currency_id:
+                move_line_total = move_line.amount_currency
+                sign = move_line.amount_currency < 0 and -1 or 1
+            else:
+                move_line_total = move_line.debit - move_line.credit
+                sign = (move_line.debit - move_line.credit) < 0 and -1 or 1
+            line_total_in_company_currency =  move_line.debit - move_line.credit
+            context_unreconciled = context.copy()
+            if move_line.reconcile_partial_id:
+                for payment_line in move_line.reconcile_partial_id.line_partial_ids:
+                    if payment_line.id == move_line.id:
+                        continue
+                    if payment_line.currency_id and move_line.currency_id and payment_line.currency_id.id == move_line.currency_id.id:
+                            move_line_total += payment_line.amount_currency
+                    else:
+                        if move_line.currency_id:
+                            context_unreconciled.update({'date': payment_line.date})
+                            amount_in_foreign_currency = cur_obj.compute(cr, uid, move_line.company_id.currency_id.id, move_line.currency_id.id, (payment_line.debit - payment_line.credit), round=False, context=context_unreconciled)
+                            move_line_total += amount_in_foreign_currency
+                        else:
+                            move_line_total += (payment_line.debit - payment_line.credit)
+                    line_total_in_company_currency += (payment_line.debit - payment_line.credit)
+
+            result = move_line_total
+            res[move_line.id]['amount_residual_currency'] =  sign * (move_line.currency_id and self.pool.get('res.currency').round(cr, uid, move_line.currency_id, result) or result)
+            res[move_line.id]['amount_residual'] = sign * line_total_in_company_currency
+        return res
 
     def default_get(self, cr, uid, fields, context=None):
         data = self._default_get(cr, uid, fields, context=context)
@@ -433,6 +484,8 @@ class account_move_line(osv.osv):
         'reconcile_id': fields.many2one('account.move.reconcile', 'Reconcile', readonly=True, ondelete='set null', select=2),
         'reconcile_partial_id': fields.many2one('account.move.reconcile', 'Partial Reconcile', readonly=True, ondelete='set null', select=2),
         'amount_currency': fields.float('Amount Currency', help="The amount expressed in an optional other currency if it is a multi-currency entry.", digits_compute=dp.get_precision('Account')),
+        'amount_residual_currency': fields.function(_amount_residual, method=True, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in its currency (maybe different of the company currency)."),
+        'amount_residual': fields.function(_amount_residual, method=True, string='Residual Amount', multi="residual", help="The residual amount on a receivable or payable of a journal entry expressed in the company currency."),
         'currency_id': fields.many2one('res.currency', 'Currency', help="The optional other currency if it is a multi-currency entry."),
         'period_id': fields.many2one('account.period', 'Period', required=True, select=2),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
@@ -676,6 +729,7 @@ class account_move_line(osv.osv):
             company_list.append(line.company_id.id)
 
         for line in self.browse(cr, uid, ids, context=context):
+            company_currency_id = line.company_id.currency_id
             if line.reconcile_id:
                 raise osv.except_osv(_('Warning'), _('Already Reconciled!'))
             if line.reconcile_partial_id:
@@ -688,8 +742,7 @@ class account_move_line(osv.osv):
             else:
                 unmerge.append(line.id)
                 total += (line.debit or 0.0) - (line.credit or 0.0)
-
-        if not total:
+        if self.pool.get('res.currency').is_zero(cr, uid, company_currency_id, total):
             res = self.reconcile(cr, uid, merges+unmerge, context=context)
             return res
         r_id = move_rec_obj.create(cr, uid, {
@@ -771,6 +824,19 @@ class account_move_line(osv.osv):
                 libelle = context['comment']
             else:
                 libelle = _('Write-Off')
+
+            cur_obj = self.pool.get('res.currency')
+            cur_id = False
+            amount_currency_writeoff = 0.0
+            if context.get('company_currency_id',False) != context.get('currency_id',False):
+                cur_id = context.get('currency_id',False)
+                for line in unrec_lines:
+                    if line.currency_id and line.currency_id.id == context.get('currency_id',False):
+                        amount_currency_writeoff += line.amount_currency
+                    else:
+                        tmp_amount = cur_obj.compute(cr, uid, line.account_id.company_id.currency_id.id, context.get('currency_id',False), abs(line.debit-line.credit), context={'date': line.date})
+                        amount_currency_writeoff += (line.debit > 0) and tmp_amount or -tmp_amount
+
             writeoff_lines = [
                 (0, 0, {
                     'name': libelle,
@@ -779,8 +845,8 @@ class account_move_line(osv.osv):
                     'account_id': account_id,
                     'date': date,
                     'partner_id': partner_id,
-                    'currency_id': account.currency_id.id or False,
-                    'amount_currency': account.currency_id.id and -currency or 0.0
+                    'currency_id': cur_id or (account.currency_id.id or False),
+                    'amount_currency': amount_currency_writeoff and -1 * amount_currency_writeoff or (account.currency_id.id and -1 * currency or 0.0)
                 }),
                 (0, 0, {
                     'name': libelle,
@@ -789,7 +855,9 @@ class account_move_line(osv.osv):
                     'account_id': writeoff_acc_id,
                     'analytic_account_id': context.get('analytic_id', False),
                     'date': date,
-                    'partner_id': partner_id
+                    'partner_id': partner_id,
+                    'currency_id': cur_id or (account.currency_id.id or False),
+                    'amount_currency': amount_currency_writeoff and amount_currency_writeoff or (account.currency_id.id and currency or 0.0)
                 })
             ]
 
@@ -802,6 +870,8 @@ class account_move_line(osv.osv):
             })
 
             writeoff_line_ids = self.search(cr, uid, [('move_id', '=', writeoff_move_id), ('account_id', '=', account_id)])
+            if account_id == writeoff_acc_id:
+                writeoff_line_ids = [writeoff_line_ids[1]]
             ids += writeoff_line_ids
 
         r_id = move_rec_obj.create(cr, uid, {

@@ -6,14 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-22 16:12+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-08 21:49+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:41+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_operations
@@ -36,7 +37,7 @@ msgid "mrp_operations.operation.code"
 msgstr "mrp_operations.operation.code"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:133
 #, python-format
 msgid "Production Order Cannot start in [%s] state"
 msgstr "Un ordre de Production ne peux pas commencer dans l'état [%s]"
@@ -117,7 +118,7 @@ msgid "Creation of the work order"
 msgstr "Création de l'ordre de travail"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:461
 #, python-format
 msgid "You cannot Pause the Operation other then Start/Resume state !"
 msgstr ""
@@ -137,7 +138,11 @@ msgid "The work orders are created on the basis of the production order."
 msgstr "Les ordres de travail sont créés à partir de l'ordre de fabrication"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:133
+#: code:addons/mrp_operations/mrp_operations.py:461
+#: code:addons/mrp_operations/mrp_operations.py:465
+#: code:addons/mrp_operations/mrp_operations.py:477
+#: code:addons/mrp_operations/mrp_operations.py:480
 #, python-format
 msgid "Error!"
 msgstr "Erreur !"
@@ -231,7 +236,7 @@ msgstr ""
 "* Quand l'ordre est complétement terminé, l'état passe à \"Terminé\"."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:470
 #, python-format
 msgid "You cannot finish the operation without Starting/Resuming it !"
 msgstr ""
@@ -243,7 +248,7 @@ msgid "Planned Date"
 msgstr "Date planifiée"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "There is no Operation to be cancelled !"
 msgstr "Il n'y a aucune opération à annuler !"
@@ -270,6 +275,22 @@ msgid "Status"
 msgstr "État"
 
 #. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"To manufacture or assemble products, and use raw materials and finished "
+"products you must also handle manufacturing operations. Manufacturing "
+"operations are often called Work Orders. The various operations will have "
+"different impacts on the costs of manufacturing and planning depending on "
+"the available workload."
+msgstr ""
+"Pour fabriquer ou assembler des produits, et pour utiliser des matières "
+"premières et des produits finis vous devez aussi vous occupez des opérations "
+"de fabrications. Les opérations de fabrication sont également appelées des "
+"ordres de travail. Les nombreuses opérations peuvent avoir des impacts "
+"différents sur les coûts de fabrication et la planification peut dépendre de "
+"la charge de travail disponible."
+
+#. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
 msgid "Order Date"
 msgstr "Date de la Commande"
@@ -280,12 +301,14 @@ msgid "Future Work Orders"
 msgstr "Ordres de travail à venir"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:457
 #, python-format
 msgid ""
 "Operation has already started !You  can either Pause /Finish/Cancel the "
 "operation"
 msgstr ""
+"L'opération est déjà commencée ! Vous pouvez soit la mettre en pause, la "
+"terminer ou l'annuler"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
@@ -400,7 +423,7 @@ msgid "Production Operation Code"
 msgstr "Code d'Opération de Production"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:465
 #, python-format
 msgid " You cannot Resume the operation other then Pause state !"
 msgstr ""
@@ -456,7 +479,7 @@ msgid "June"
 msgstr "Juin"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:480
 #, python-format
 msgid "Operation is already finished !"
 msgstr "Opération déjà terminée !"
@@ -515,7 +538,7 @@ msgid "Finish the operation."
 msgstr "Terminer l'opération."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:450
 #, python-format
 msgid "Operation is not started yet !"
 msgstr "L'Opération n'est pas encore commencée !"
@@ -526,7 +549,10 @@ msgid "Information from the production order."
 msgstr "Information concernant l'ordre de fabrication."
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:450
+#: code:addons/mrp_operations/mrp_operations.py:457
+#: code:addons/mrp_operations/mrp_operations.py:470
+#: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid "Sorry!"
 msgstr "Désolé !"
@@ -543,25 +569,15 @@ msgid "Code"
 msgstr "Code"
 
 #. module: mrp_operations
-#: code:addons/mrp_operations/mrp_operations.py:0
+#: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid "Operation is Already Cancelled  !"
 msgstr "L'Opération est déjà annulée !"
 
 #. module: mrp_operations
-#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
-msgid ""
-"To manufacture or assemble products, as well as using raw materials and "
-"finished product you must also handle manufacturing operations. "
-"Manufacturing operations are often called work orders. The different "
-"operations will have different impacts on the costs of manufacture and "
-"planning depending on the available workload."
-msgstr ""
-
-#. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
 msgid "Work Center Production start end workflow"
-msgstr ""
+msgstr "Workflow de départ fin du poste de travail de production"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
@@ -605,6 +621,12 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
+"Les ordres de travail sont des listes d'opérations à faire pour chaque ordre "
+"de fabrication. Une fois que vous avez démarré le premier ordre de travail "
+"de l'ordre de fabrication, l'ordre de fabrication est automatiquement marqué "
+"comme démarré. Une fois que vous avez terminé la dernière opération de "
+"l'ordre de fabrication, ce dernier est automatiquement marqué comme terminé "
+"et les produits associés sont fabriqués."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -624,7 +646,7 @@ msgstr "Code-barre des postes de charge"
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Vous devez affecter un lot de fabrication pour ce produit."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -800,7 +822,7 @@ msgstr "La quantité commandée ne peut être ni négative ni nulle !"
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Vous essayez d'affecter un lot qui n'est pas pour ce produit."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

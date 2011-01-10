@@ -6,31 +6,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-21 08:13+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-08 08:56+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:44+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
 #, python-format
 msgid "The Sign-in date must be in the past"
 msgstr "La date du pointage en entrée doit être passée"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
 msgstr "Un pointage en entrée doit être précédé d'un pointage en sortie !"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
 msgstr "Un pointage en sortie doit être précédé d'un pointage en entrée !"
@@ -80,7 +79,7 @@ msgid "Print Attendance Report Error"
 msgstr "Imprimer le rapport des erreurs de pointage"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
 #, python-format
 msgid "The sign-out date must be in the past"
 msgstr "La date du pointage de la sortie doit être située dans le passé"
@@ -89,6 +88,18 @@ msgstr "La date du pointage de la sortie doit être située dans le passé"
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Signed"
 msgstr "Date de pointage"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using OpenERP's web service features."
+msgstr ""
+"La fonctionnalité de suivi du temps vise à gérer les présences des employés "
+"à partir des actions d'entrées/sorties. Vous pouvez aussi associer cette "
+"fonctionnalité avec un appareil de présence utilisant les fonctionnalités de "
+"services web d'OpenERP."
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -153,7 +164,10 @@ msgid "Attendance Reasons"
 msgstr "Motifs de Pointage"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:156
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "UserError"
 msgstr "Erreur Utilisateur"
@@ -170,7 +184,7 @@ msgid "Employee attendance"
 msgstr "Pointage employé"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
+#: code:addons/hr_attendance/hr_attendance.py:136
 #, python-format
 msgid "Warning"
 msgstr "Avertissement"
@@ -206,6 +220,11 @@ msgid ""
 "    actions(Sign in/Sign out) performed by them.\n"
 "       "
 msgstr ""
+"\n"
+"    Ce module vise à gérer les présences des employés.\n"
+"    Prend en compte les présences des employés en fonction des actions \n"
+"    (entrée/sortie) qu'ils effectuent.\n"
+"       "
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
@@ -248,7 +267,7 @@ msgid "Operation"
 msgstr "Opération"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No Data Available"
 msgstr "Pas de données disponibles"
@@ -294,25 +313,15 @@ msgid "Sign In Sign Out"
 msgstr "Pointer l'entrée/sortie"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:103
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:125
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:141
 #: view:hr.sign.in.out:0
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
 #, python-format
 msgid "Sign in / Sign out"
 msgstr "Pointer l'entrée / Pointer la sortie"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"Time Tracking functionality aims to manage employee's attendances on the "
-"basis of the actions (Sign in/Sign out) performed by them. You can also link "
-"this to an attendance machine using OpenERP's webservices features."
-msgstr ""
-"La fonctionnalité de gestion du temps a pour but de gérer les présences des "
-"employés sur la base de leurs propres actions (pointage en entrée/sortie). "
-"Vous pouvez aussi lier cette fonctionnalité à une pointeuse en utilisant les "
-"webservices."
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -413,12 +422,16 @@ msgstr ""
 "alors ils pourront saisir leurs temps de travail avec ce bouton."
 
 #. module: hr_attendance
+#: field:hr.sign.in.out,emp_id:0
+msgid "Employee ID"
+msgstr "N° de l'employé"
+
+#. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
 msgstr "Imprimer le rapport des présences par semaine"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,emp_id:0
 #: field:hr.sign.in.out.ask,emp_id:0
 msgid "Empoyee ID"
 msgstr "Identifiant de l'employé"
@@ -468,7 +481,7 @@ msgid "Employee"
 msgstr "Employé"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:0
+#: code:addons/hr_attendance/hr_attendance.py:136
 #, python-format
 msgid ""
 "You tried to %s with a date anterior to another event !\n"
@@ -492,7 +505,6 @@ msgstr "Date enregistrée"
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "Présences"
 
@@ -566,7 +578,7 @@ msgid "Bellow this delay, the error is considered to be voluntary"
 msgstr "En dessous de ce retard, l'erreur est considérée comme volontaire"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:0
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records found for your selection!"
 msgstr "Aucun enregistrement trouvé pour votre sélection !"
@@ -685,3 +697,13 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "Les règles ne sont pas compatibles avec les objets osv_memory !"
+
+#~ msgid ""
+#~ "Time Tracking functionality aims to manage employee's attendances on the "
+#~ "basis of the actions (Sign in/Sign out) performed by them. You can also link "
+#~ "this to an attendance machine using OpenERP's webservices features."
+#~ msgstr ""
+#~ "La fonctionnalité de gestion du temps a pour but de gérer les présences des "
+#~ "employés sur la base de leurs propres actions (pointage en entrée/sortie). "
+#~ "Vous pouvez aussi lier cette fonctionnalité à une pointeuse en utilisant les "
+#~ "webservices."

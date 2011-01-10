@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-25 02:29+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"PO-Revision-Date: 2011-01-09 13:45+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-26 04:51+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -36,15 +36,11 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Berechnet durch die folgende Formel: Max Menge - Gesamtstunden"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
 msgstr "Verbindungsfehler"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "Geplante Einnahmen"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -81,14 +77,14 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Berechnung benutzt diese Formel: Geplante Einnahme- Gesamte Kosten"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theorical Margin"
-msgstr "Plan Marge"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Marge (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr "Theoretische Einnahmen"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -130,6 +126,11 @@ msgid "Remaining Hours"
 msgstr "Verbleibende Stunden"
 
 #. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr "Theoretische Marge"
+
+#. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
 msgid ""
 "Based on the costs you had on the project, what would have been the revenue "
@@ -169,7 +170,7 @@ msgstr "Datum der letzten Erfassung auf diesem Konto."
 #. module: account_analytic_analysis
 #: model:ir.module.module,shortdesc:account_analytic_analysis.module_meta_information
 msgid "report_account_analytic"
-msgstr "report_account_analytic"
+msgstr "Weitere Auswertungen Projektanalyse"
 
 #. module: account_analytic_analysis
 #: model:ir.model,name:account_analytic_analysis.model_account_analytic_analysis_summary_user
@@ -182,7 +183,8 @@ msgid "Invoiced Amount"
 msgstr "Rechnungsbetrag"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "Sie versuchen eine Zugriffsregel zu umgehen (Dokumententyp: %s)."
@@ -201,6 +203,13 @@ msgstr "Abgerechnete Stunden"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Realisierte Marge"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -320,6 +329,9 @@ msgstr ""
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter xml Code für diese Ansicht!"
 
+#~ msgid "Theorical Revenue"
+#~ msgstr "Geplante Einnahmen"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -328,6 +340,9 @@ msgstr ""
 
 #~ msgid "New Analytic Account"
 #~ msgstr "Neues Analytisches Konto"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Plan Marge"
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "Alle Analytische Konten"
