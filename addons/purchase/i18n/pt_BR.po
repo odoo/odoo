@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-07 14:34+0000\n"
+"PO-Revision-Date: 2011-01-08 17:22+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-08 04:58+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -72,6 +72,15 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Você pode criar uma Solicitação para Cotação (SC) quando quiser comprar "
+"produtos de um fornecedor mas esta compra ainda não estiver confirmada. "
+"Também use este menu para revisar as solicitações de compra criadas "
+"automaticamente com base nas suas regras de logística (estoque mínimo, fazer "
+"sob demanda, etc). Você pode converter as SCs em Pedido de Compra quando a "
+"compra for confirmada. Se estiver usando a interface extendida (das "
+"preferências de usuário), você pode selecionar a forma de controlar as "
+"faturas dos fornecedores: com base no pedido, no recebimento ou digitação "
+"manual."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -115,6 +124,9 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Use este menu para procurar pedidos de compra por referência, fornecedor, "
+"produto, etc. Para cada pedido, você pode acompanhar os produtos recebidos e "
+"controlar as faturas do fornecedor."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
@@ -565,6 +577,9 @@ msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
 msgstr ""
+"A Análise de Recepção permite facilmente checar e analisar os recebimentos "
+"de pedidos da sua empresa, além da pontualidade das entregas dos seus "
+"fornecedores."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -635,6 +650,12 @@ msgid ""
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
 msgstr ""
+"Do Pedido: uma fatura provisória será gerada previamente com base no pedido "
+"de compra. O setor de contas deve validar esta fatura para controle.\n"
+"Da Entrega: uma fatura provisória será gerada previamente na validação do "
+"recebimento.\n"
+"Manual: permite lançar a fatura do fornecedor escolhendo as linhas sem "
+"fatura de todas os pedidos de compra manuais."
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -762,6 +783,10 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"Use este menu para controlar as faturas a receber dos seus fornecedores. O "
+"OpenERP gera previamente faturas provisórias a partir dos pedidos de compra "
+"ou dos recebimentos, de acordo com suas configurações. Uma vez recebida a "
+"fatura do fornecedor, você pode ligá-la à fatura provisória e validar."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -837,6 +862,10 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
+"Se você definir o controle de faturamento do pedido de compra como "
+"\"Manual\", poderá acompanhar por aqui todas a linhas do pedido que ainda "
+"não foram faturadas. Quando puder lançar a fatura, você pode gerar uma "
+"fatura provisória com base nos itens deste menu."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-06 21:57+0000\n"
+"PO-Revision-Date: 2011-01-08 11:53+0000\n"
 "Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-08 04:58+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: event
@@ -96,6 +96,9 @@ msgid ""
 "event. Note that you can specify for each registration a specific amount if "
 "you want to"
 msgstr ""
+"Ce sera le prix par défaut utilisé comme coût d'inscription lors de la "
+"facturation de l'évènement. Remarquez que vous pouvez spécifier un montant "
+"spécifique pour chaque inscription si vous le voulez."
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -317,7 +320,7 @@ msgstr "Confirmation d'inscription"
 #. module: event
 #: help:event.event,pricelist_id:0
 msgid "Pricelist version for current event."
-msgstr ""
+msgstr "Version de la liste de prix pour l'évènement actuel."
 
 #. module: event
 #: help:event.event,product_id:0
@@ -326,6 +329,9 @@ msgid ""
 "Thus it allows you to set the default label and the accounting info you want "
 "by default on these invoices."
 msgstr ""
+"Les factures d'inscription à cet évènement seront créées avec ce produit. "
+"Ainsi cela vous permet d'indiquer l'étiquette par défaut et les informations "
+"comptables que vous souhaitez par défaut sur ces factures."
 
 #. module: event
 #: view:event.registration:0
@@ -533,7 +539,7 @@ msgstr "Partenaire"
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
-msgstr "Évènements remplissant le statut"
+msgstr "État de réservation des événements"
 
 #. module: event
 #: field:event.make.invoice,grouped:0
@@ -626,6 +632,21 @@ msgid ""
 "event or per event category in:\n"
 "                Events / Reporting\n"
 msgstr ""
+"Organisation et gestion d'évènements.\n"
+"\n"
+"    Ce module vous permet\n"
+"        * de gérer vos évènements et leurs inscriptions\n"
+"        * d'utiliser les emails pour confirmer automatiquement et envoyer "
+"les accusés de réception pour toute inscription à un évènement\n"
+"        * ...\n"
+"    Un tableau de bord pour les associations qui inclut :\n"
+"    * Inscription par évènements (graphs)\n"
+"    Remarquez que :\n"
+"    - Vous pouvez définir de nouveau type d'évènements dans\n"
+"                Évènements / Configuration / Types d'évènement\n"
+"    - Vous pouvez accéder à des rapports prédéfinis à propos du nombre "
+"d'inscription par évènement ou catégorie d'évènement dans :\n"
+"                Évènements / Reporting\n"
 
 #. module: event
 #: field:event.confirm.registration,msg:0
@@ -715,7 +736,7 @@ msgstr "Nombre d'inscription"
 #. module: event
 #: field:event.event,child_ids:0
 msgid "Child Events"
-msgstr ""
+msgstr "Évènements enfants"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -779,6 +800,8 @@ msgstr "Filtres étendus..."
 #: help:event.event,reply_to:0
 msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
 msgstr ""
+"L'adresse email mise dans le champ \"Répondre à\" de tous les emails envoyés "
+"par OpenERP"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -1197,7 +1220,7 @@ msgstr ""
 #. module: event
 #: view:partner.event.registration:0
 msgid "Event For Registration"
-msgstr ""
+msgstr "Évènement ouvert aux réservations"
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:51

@@ -8,14 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-07 00:08+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-08 18:57+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-08 05:01+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: document_webdav
@@ -102,6 +101,25 @@ msgid ""
 "          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
 "          ; these options on\n"
 msgstr ""
+" Avec ce module, le serveur WebDAV pour les documents est activé.\n"
+"        Vous pouvez ensuite utiliser n'importe quel navigateur compatible "
+"pour voir les pièces jointes d'OpenObject.\n"
+"\n"
+"        Après l'installation, le serveur webDAV peut être contrôlé par une "
+"section [webdav] dans la configuration du serveur.\n"
+"        Paramètre de configuration du serveur :\n"
+"        [webdav]\n"
+"        ; enable = True ; Servir webdav via les serveurs http(s)\n"
+"        ; vdir = webdav ; le répertoire que webdav va utiliser\n"
+"          ; les valeurs par défaut signifient que webdav sera\n"
+"          ; sur \"http://localhost:8069/webdav/\n"
+"        ; verbose = True ; Active les messages verbeux de webdav\n"
+"        ; debug = True ; Active les message de déboguage de webdav\n"
+"          ; comme les messages sont dirigés vers la journalisation python, "
+"avec\n"
+"          ; les niveaux \"debug\" et \"debug_rpc\" respectivement, vous "
+"pouvez laisser\n"
+"          ; ces options actives\n"
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
@@ -196,7 +214,7 @@ msgstr "Créateur"
 #. module: document_webdav
 #: model:ir.module.module,shortdesc:document_webdav.module_meta_information
 msgid "WebDAV server for Document Management"
-msgstr "Serveur WebDAV pour le module de gestion documentaire"
+msgstr "Serveur WebDAV pour le module de Gestion Documentaire"
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
