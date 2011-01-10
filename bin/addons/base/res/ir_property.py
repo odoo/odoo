@@ -136,7 +136,6 @@ class ir_property(osv.osv):
         return super(ir_property, self).create(cr, uid, self._update_values(cr, uid, None, values), context=context)
 
     def get_by_record(self, cr, uid, record, context=None):
-        print 'record type', record.type
         if record.type in ('char', 'text'):
             return record.value_text
         elif record.type == 'float':
@@ -158,18 +157,13 @@ class ir_property(osv.osv):
         return False
 
     def get(self, cr, uid, name, model, res_id=False, context={}):
-        print 'Property Get', name, model
         domain = self._get_domain(cr, uid, name, model, context=context)
         if domain is not None:
             domain = [('res_id', '=', res_id)] + domain
             nid = self.search(cr, uid, domain, context=context)
-            print 'DOMAIN', domain, nid
             if not nid: return False
             record = self.browse(cr, uid, nid[0], context=context)
-            print 'RECORD', record
-            res = self.get_by_record(cr, uid, record, context=context)
-            print 'Result', res
-            return res
+            return self.get_by_record(cr, uid, record, context=context)
         return False
 
     def _get_domain_default(self, cr, uid, prop_name, model, context=None):
