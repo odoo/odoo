@@ -216,13 +216,13 @@
         </record>
 
         <!--
-	Resource: project.project
-	-->
+    Resource: project.project
+    -->
         <record id="base.main_company" model="res.company">
             <field name="project_time_mode_id" ref="product.uom_hour"></field>
         </record>
 
-		<!-- Task Types -->
+        <!-- Task Types -->
         <record id="project_tt_specification" model="project.task.type">
             <field name="sequence">1</field>
             <field name="name">Specification</field>
@@ -232,7 +232,7 @@
             <field name="name">Development</field>
         </record>
         <record id="project_tt_testing" model="project.task.type">
-        	<field name="sequence">3</field>
+            <field name="sequence">3</field>
             <field name="name">Testing</field>
         </record>
         <record id="project_tt_merge" model="project.task.type">
@@ -241,6 +241,13 @@
         </record>
 
         <!-- Projects -->
+        <!-- Projects -->
+        <!-- <record id="all_projects_account" model="project.project">
+            <field name="name">Projects</field>
+            <field name="code">3</field>
+        </record> -->
+        
+
         <record id="project_project_9" model="project.project">
             <field name="warn_manager">1</field>
             <field name="name">OpenERP Integration</field>
@@ -270,7 +277,7 @@
             <field eval="[(6, 0, [ref('project_tt_development')])]" name="type_ids"/>
         </record>
 
-		<!-- Tasks -->
+        <!-- Tasks -->
         <record id="project_task_116" model="project.task">
             <field name="planned_hours">38.0</field>
             <field name="remaining_hours">38.0</field>
