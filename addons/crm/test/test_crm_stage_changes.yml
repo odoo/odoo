@@ -1,0 +1,90 @@
+-
+  In order to test the changes on stage of a lead or an opportunity with OpenERP,
+  I create some leads and test the stage changes.
+- 
+  I want to change the probability to 0.0 when the opportunity is marked as lost.
+  So I set its Change probability automatically true.
+- 
+  !record {model: crm.case.stage, id: crm_case_stage_lost1}:
+    name: Lost
+    on_change: true
+    probability: 0.0
+    section_ids:
+      - crm.section_sales_department
+    sequence: 0.0
+    type: opportunity
+- 
+  I create a lead 'OpenERP Presentation'.
+- 
+  !record {model: crm.lead, id: crm_lead_openerppresentation0}:
+    categ_id: crm.categ_oppor4
+    day_close: 0.0
+    day_open: 0.0
+    name: OpenERP Presentation
+    planned_revenue: 0.0
+    probability: 0.0
+    section_id: crm.section_sales_department
+-
+  I open the lead.
+-
+  !python {model: crm.lead}: |
+    self.case_open(cr, uid, [ref('crm_lead_openerppresentation0')])
+-
+  I find that this lead can be converted to opportunity. 
+-
+  !record {model: crm.lead2opportunity, id: crm_lead2opportunity0}:
+    name: OpenERP Presentation
+    probability: 60.0
+    planned_revenue: 45000.0
+-
+  So I convert the lead to opportunity.
+-
+  !python {model: crm.lead2opportunity}: |
+    self.action_apply(cr, uid, [ref('crm_lead2opportunity0')], context={'active_id': ref('crm_lead_openerppresentation0')})
+-
+  I check that lead is now converted to opportunity.
+-
+  !python {model: crm.lead}: |
+    lead = self.browse(cr, uid, ref('crm_lead_openerppresentation0'))
+    assert lead.type == 'opportunity', 'Lead is not converted to opportunity!'
+-
+  I mark this opportunity as lost.
+-
+  !python {model: crm.lead}: |
+    self.case_mark_lost(cr, uid, [ref('crm_lead_openerppresentation0')])
+-
+  Now I check whether the probability is set according to stage change or not.
+-
+  !python {model: crm.lead}: |
+    opportunity = self.browse(cr, uid, ref('crm_lead_openerppresentation0'))
+    assert opportunity.stage_id.id == ref('crm.stage_opportunity6'), 'Stage is not changed!'
+    assert opportunity.probability == 0.0, 'Probability is wrong!'
+-
+  I create one more opportunity.
+-
+  !record {model: crm.lead, id: crm_lead_partnerdemo0}:
+    categ_id: crm.categ_oppor3
+    day_close: 0.0
+    day_open: 0.0
+    name: Partner Demo
+    planned_revenue: 50000.0
+    probability: 70.0
+    section_id: crm.section_sales_department
+    type: opportunity
+-
+  I open this opportunity.
+-
+  !python {model: crm.lead}: |
+    self.case_open(cr, uid, [ref('crm_lead_partnerdemo0')])
+-
+  I mark this opportunity as won.
+-
+  !python {model: crm.lead}: |
+    self.case_close(cr, uid, [ref('crm_lead_partnerdemo0')])
+-
+  I check whether the stage is changed to 'Won' and probability is 100.0 or not.
+-
+  !python {model: crm.lead}: |
+    opportunity = self.browse(cr, uid, ref('crm_lead_partnerdemo0'))
+    assert opportunity.stage_id.id == ref('crm.stage_opportunity5'), 'Stage is not changed!'
+    assert opportunity.probability == 100.0, 'Probability is wrong!'
