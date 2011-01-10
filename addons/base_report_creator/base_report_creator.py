@@ -23,33 +23,16 @@ from osv import fields, osv
 from tools.translate import _
 from tools import ustr
 
-class report_creator(osv.osv):
+class report_result(osv.osv):
     """
     Report Creator
     """
-    _name = "base_report_creator.report"
+    _name = "base_report_creator_report.result"
     _description = "Report"
     model_set_id = False
     #
     # Should request only used fields
     #
-    def export_data(self, cr, uid, ids, fields_to_export, context=None):
-        if context is None:
-            context = {}
-        data_l = self.read(cr, uid, ids, ['sql_query'], context=context)
-        final_datas = []
-        #start Loop
-        for record in data_l:
-            datas = []
-            for key in fields_to_export:
-                value = record.get(key,'')
-                if isinstance(value, tuple):
-                    datas.append(ustr(value[1]))
-                else:
-                    datas.append(ustr(value))
-            final_datas += [datas]
-            #End Loop
-        return {'datas': final_datas}
 
     def fields_get(self, cr, user, fields=None, context=None):
         """
@@ -64,9 +47,9 @@ class report_creator(osv.osv):
 
         data = context and context.get('report_id', False) or False
         if (not context) or 'report_id' not in context:
-            return super(report_creator, self).fields_get(cr, user, fields, context)
+            return super(report_result, self).fields_get(cr, user, fields, context)
         if data:
-            report = self.browse(cr, user, data)
+            report = self.pool.get('base_report_creator.report').browse(cr, user, data,context=context)
             models = {}
         #Start Loop
             for model in report.model_ids:
@@ -80,12 +63,8 @@ class report_creator(osv.osv):
                     i += 1
                 else:
                     fields['column_count'] = {'readonly': True, 'type': 'integer', 'string': 'Count', 'size': 64, 'name': 'column_count'}
-
             return fields
 
-    #
-    # Should Call self.fields_get !
-    #
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         """
         Overrides orm field_view_get.
@@ -98,8 +77,8 @@ class report_creator(osv.osv):
 
         data = context and context.get('report_id', False) or False
         if (not context) or 'report_id' not in context:
-            return super(report_creator, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        report = self.browse(cr, user, data)
+            return super(report_result, self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        report = self.pool.get('base_report_creator.report').browse(cr, user, context.get('report_id'), context=context)
         models = {}
         for model in report.model_ids:
             models[model.model] = self.pool.get(model.model).fields_get(cr, user, context=context)
@@ -192,31 +171,24 @@ class report_creator(osv.osv):
         """
         if context is None:
             context = {}
-        data = context.get('report_id', False)
-        res = super(report_creator, self).read(cr, user, ids, fields, context, load)
-        if (not context) or 'report_id' not in context:
-            return res
-        wp = ''
-        for data in res:
-            if not data.get('sql_query'):
-                return res
-            if self.model_set_id:
-                wp = [self._id_get(cr, user, data, context) + (' in (%s)' % (','.join(map(lambda x: "'" + str(x) + "'", ids))))]
-            cr.execute(data['sql_query'])
-            res = cr.dictfetchall()
-            fields_get = self.fields_get(cr, user, None, context)
-            for r in res:
-                for k in r:
-                    r[k] = r[k] or False
-                    field_dict = fields_get.get(k)
-                    field_type = field_dict and field_dict.get('type', False) or False
-                    if field_type and field_type == 'many2one':
-                        if r[k] == False:
-                            continue
-                        related_name = self.pool.get(field_dict.get('relation')).name_get(cr, user, [r[k]], context)[0]
+        report_id = context.get('active_id', False)
+        report = self.pool.get('base_report_creator.report').browse(cr, user, context.get('report_id'), context=context)
+        sql_qry = report.sql_query
+        cr.execute(sql_qry)
+        result = cr.dictfetchall()
+        fields_get = self.fields_get(cr, user, None, context)
+        for r in result:
+            for k in r:
+                r[k] = r[k] or False
+                field_dict = fields_get.get(k)
+                field_type = field_dict and field_dict.get('type', False) or False
+                if field_type and field_type == 'many2one':
+                    if r[k] == False:
+                        continue
+                    if r[k]:
+                        related_name = self.pool.get(field_dict.get('relation')).name_get(cr, user, [r[k]], context)
                         r[k] = related_name
-
-        return res
+        return result
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         """
@@ -231,9 +203,9 @@ class report_creator(osv.osv):
         context_id = context.get('report_id', False)
 
         if (not context) or 'report_id' not in context:
-            return super(report_creator, self).search(cr, user, args, offset, limit, order, context, count)
+            return {}
         if context_id:
-            report = self.browse(cr, user, context_id)
+            report = self.pool.get('base_report_creator.report').browse(cr, user, context_id, context=context)
             i = 0
             fields = {}
             for f in report.field_ids:
@@ -254,9 +226,41 @@ class report_creator(osv.osv):
             ctx = context or {}
             ctx['getid'] = True
             sql_query = report.sql_query
-            cr.execute(sql_query, newargs2)
+            cr.execute(sql_query) # TODO: FILTER
             result = cr.fetchall()
             return map(lambda x: x[0], result)
+
+report_result()
+
+
+class report_creator(osv.osv):
+    """
+    Report Creator
+    """
+    _name = "base_report_creator.report"
+    _description = "Report"
+    model_set_id = False
+    #
+    # Should request only used fields
+    #
+    def export_data(self, cr, uid, ids, fields_to_export, context=None):
+        if context is None:
+            context = {}
+        data_l = self.read(cr, uid, ids, ['sql_query'], context=context)
+        final_datas = []
+        #start Loop
+        for record in data_l:
+            datas = []
+            for key in fields_to_export:
+                value = record.get(key,'')
+                if isinstance(value, tuple):
+                    datas.append(ustr(value[1]))
+                else:
+                    datas.append(ustr(value))
+            final_datas += [datas]
+            #End Loop
+        return {'datas': final_datas}
+
 
     def _path_get(self, cr, uid, models, filter_ids=[]):
         """
@@ -465,7 +469,7 @@ class report_creator(osv.osv):
             'name': rep.name,
             'view_type': 'form',
             'view_mode': view_mode,
-            'res_model': 'base_report_creator.report',
+            'res_model': 'base_report_creator_report.result',
             'type': 'ir.actions.act_window',
             'context': "{'report_id':%d}" % (rep.id,),
             'nodestroy': True,
@@ -596,3 +600,4 @@ class report_creator_filter(osv.osv):
     }
 report_creator_filter()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
