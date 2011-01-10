@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-16 17:43+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"PO-Revision-Date: 2011-01-07 13:54+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:46+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_budget
@@ -34,31 +33,15 @@ msgid "Budgetary Positions"
 msgstr "Positions Budgétaires"
 
 #. module: account_budget
-#: view:account.budget.crossvered.summary.report:0
-msgid "This wizard is used to print summary of budgets"
-msgstr "Cet assistant est utilisé pour imprimer un résumé des budgets"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "The General Budget '%s' has no Accounts!"
+msgstr "Le Budget Général '%s' n'a pas de COmptes !"
 
 #. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
-msgid ""
-"A budget is a forecast of your company's income and expenses expected for a "
-"period in the future. With a budget, a company is able to carefully look at "
-"how much money they are taking in during a given period, and figure out the "
-"best way to divide it among various categories. By keeping  track of where "
-"your money goes, you may be less likely to overspend, and more likely to "
-"meet your financial goals. Forecast a budget by detailing the expected "
-"revenue per analytic account and monitor its evolution based on the actuals "
-"realised during that period."
-msgstr ""
-"Un budget est une prévision des revenus et des dépenses de l'entreprise sur "
-"une période dans le futur. Avec un budget, une société est capable de voir "
-"attentivement sur combien d'argent elle peut compter pendant une période "
-"donnée, et trouver la meilleure façon de le partager sur plusieurs "
-"catégories. En gardant une trace d'où l'argent va, vous serez probablement "
-"en mesure de réduire les dépassements et également d'atteindre vos objectifs "
-"financiers. Prévoyez un budget en détaillant les revenus espérés par comptes "
-"analytiques et surveillez leur évolution en se basant sur les dépenses "
-"réelles au cours de cette période."
+#: report:account.budget:0
+msgid "Printed at:"
+msgstr "Imprimé à :"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -137,6 +120,33 @@ msgid "Status"
 msgstr "État"
 
 #. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"A budget is a forecast of your company's income and expenses expected for a "
+"period in the future. With a budget, a company is able to carefully look at "
+"how much money they are taking in during a given period, and figure out the "
+"best way to divide it among various categories. By keeping track of where "
+"your money goes, you may be less likely to overspend, and more likely to "
+"meet your financial goals. Forecast a budget by detailing the expected "
+"revenue per analytic account and monitor its evolution based on the actuals "
+"realised during that period."
+msgstr ""
+"Un budget est une prévision de recettes et de dépenses à venir pour votre "
+"entreprise. Avec ce budget, l'entreprise est en mesure d'examiner "
+"attentivement les entrées d'argent sur une période donnée et déterminer la "
+"meilleure manière de le répartir entre différentes catégories. En suivant "
+"vos flux financiers, vous serez plus à même de brider vos dépenses et "
+"d'atteindre vos objectifs financiers. Etablissez un budget prévisionnel en "
+"répartissant les recettes espérées par comptes analytiques et surveillez "
+"l'évolution de ce budget en fonction des recettes réalisées au cours de la "
+"période."
+
+#. module: account_budget
+#: view:account.budget.crossvered.summary.report:0
+msgid "This wizard is used to print summary of budgets"
+msgstr "Cet assistant est utilisé pour imprimer un résumé des budgets"
+
+#. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "%"
@@ -201,6 +211,7 @@ msgid "Practical Amt"
 msgstr "Total réel"
 
 #. module: account_budget
+#: view:account.analytic.account:0
 #: view:account.budget.post:0
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,practical_amount:0
@@ -220,6 +231,7 @@ msgid "Account Budget report for analytic account"
 msgstr "Rapport de compte budgétaire pour le compte analytique"
 
 #. module: account_budget
+#: view:account.analytic.account:0
 #: view:account.budget.post:0
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,theoritical_amount:0
@@ -254,12 +266,7 @@ msgid "Budget"
 msgstr "Budget"
 
 #. module: account_budget
-#: report:account.budget:0
-msgid "Printed at:"
-msgstr "Imprimé à :"
-
-#. module: account_budget
-#: code:addons/account_budget/account_budget.py:0
+#: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "Error!"
 msgstr "Erreur !"
@@ -289,10 +296,13 @@ msgid "Budgets"
 msgstr "Budgets"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:0
-#, python-format
-msgid "The General Budget '%s' has no Accounts!"
-msgstr "Le Budget Général '%s' n'a pas de COmptes !"
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
+"Erreur! La monnaie doit être la même que la monnaie de la société "
+"sélectionnée"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -546,3 +556,23 @@ msgstr "Analyse de"
 
 #~ msgid "Print Budget"
 #~ msgstr "Impression du Budget"
+
+#~ msgid ""
+#~ "A budget is a forecast of your company's income and expenses expected for a "
+#~ "period in the future. With a budget, a company is able to carefully look at "
+#~ "how much money they are taking in during a given period, and figure out the "
+#~ "best way to divide it among various categories. By keeping  track of where "
+#~ "your money goes, you may be less likely to overspend, and more likely to "
+#~ "meet your financial goals. Forecast a budget by detailing the expected "
+#~ "revenue per analytic account and monitor its evolution based on the actuals "
+#~ "realised during that period."
+#~ msgstr ""
+#~ "Un budget est une prévision des revenus et des dépenses de l'entreprise sur "
+#~ "une période dans le futur. Avec un budget, une société est capable de voir "
+#~ "attentivement sur combien d'argent elle peut compter pendant une période "
+#~ "donnée, et trouver la meilleure façon de le partager sur plusieurs "
+#~ "catégories. En gardant une trace d'où l'argent va, vous serez probablement "
+#~ "en mesure de réduire les dépassements et également d'atteindre vos objectifs "
+#~ "financiers. Prévoyez un budget en détaillant les revenus espérés par comptes "
+#~ "analytiques et surveillez leur évolution en se basant sur les dépenses "
+#~ "réelles au cours de cette période."

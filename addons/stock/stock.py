@@ -993,7 +993,7 @@ class stock_picking(osv.osv):
 
             address_contact_id, address_invoice_id = \
                     self._get_address_invoice(cr, uid, picking).values()
-            partner_id = address_obj.browse(cr, uid, address_contact_id)
+            address = address_obj.browse(cr, uid, address_contact_id, context=context)
 
             comment = self._get_comment_invoice(cr, uid, picking)
             if group and partner.id in invoices_group:
@@ -1013,7 +1013,7 @@ class stock_picking(osv.osv):
                     'origin': (picking.name or '') + (picking.origin and (':' + picking.origin) or ''),
                     'type': inv_type,
                     'account_id': account_id,
-                    'partner_id': partner_id.partner_id.id,
+                    'partner_id': address.partner_id.id,
                     'address_invoice_id': address_invoice_id,
                     'address_contact_id': address_contact_id,
                     'comment': comment,
@@ -1170,6 +1170,7 @@ class stock_picking(osv.osv):
             complete, too_many, too_few = [], [], []
             move_product_qty = {}
             prodlot_ids = {}
+            product_avail = {}
             for move in pick.move_lines:
                 if move.state in ('done', 'cancel'):
                     continue
@@ -1195,6 +1196,12 @@ class stock_picking(osv.osv):
                     move_currency_id = move.company_id.currency_id.id
                     context['currency_id'] = move_currency_id
                     qty = uom_obj._compute_qty(cr, uid, product_uom, product_qty, product.uom_id.id)
+
+                    if product.id in product_avail:
+                        product_avail[product.id] += qty
+                    else:
+                        product_avail[product.id] = product.qty_available
+
                     if qty > 0:
                         new_price = currency_obj.compute(cr, uid, product_currency,
                                 move_currency_id, product_price)
@@ -1205,9 +1212,8 @@ class stock_picking(osv.osv):
                         else:
                             # Get the standard price
                             amount_unit = product.price_get('standard_price', context)[product.id]
-                            new_std_price = ((amount_unit * product.qty_available)\
-                                + (new_price * qty))/(product.qty_available + qty)
-
+                            new_std_price = ((amount_unit * product_avail[product.id])\
+                                + (new_price * qty))/(product_avail[product.id] + qty)
                         # Write the field according to price type field
                         product_obj.write(cr, uid, [product.id], {'standard_price': new_std_price})
 
@@ -2560,22 +2566,33 @@ class stock_inventory(osv.osv):
             self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
         return True
 
-    def action_cancel(self, cr, uid, ids, context=None):
-        """ Cancels the stock move and change inventory state to draft.
-        @return: True
-        """
-        for inv in self.browse(cr, uid, ids, context=context):
-            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context)
-            self.write(cr, uid, [inv.id], {'state': 'draft'})
-        return True
-
     def action_cancel_inventary(self, cr, uid, ids, context=None):
         """ Cancels both stock move and inventory
         @return: True
         """
+        move_obj = self.pool.get('stock.move')
+        account_move_obj = self.pool.get('account.move')
         for inv in self.browse(cr, uid, ids, context=context):
-            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context)
-            self.write(cr, uid, [inv.id], {'state':'cancel'})
+            move_obj.action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
+            for move in inv.move_ids:
+                 account_move_ids = account_move_obj.search(cr, uid, [('name', '=', move.name)])
+                 if account_move_ids:
+                     account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
+                     for account_move in account_move_data_l:
+                         if account_move['state'] == 'posted':
+                             raise osv.except_osv(_('UserError'), 
+                                                  _('You can not cancel inventory which has any account move with posted state.'))
+                         account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
+            self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
+        return True
+
+    def action_cancel_draft(self, cr, uid, ids, context=None):
+        """ Cancels the stock move and change inventory state to draft.
+        @return: True
+        """
+        for inv in self.browse(cr, uid, ids, context=context):
+            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
+            self.write(cr, uid, [inv.id], {'state':'draft'}, context=context)
         return True
 
 stock_inventory()

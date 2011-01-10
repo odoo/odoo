@@ -327,7 +327,10 @@ class mrp_repair(osv.osv):
                 self.write(cr, uid, [o.id], {'state': '2binvoiced'})
             else:
                 self.write(cr, uid, [o.id], {'state': 'confirmed'})
-                mrp_line_obj.write(cr, uid, [l.id for l in o.operations], {'state': 'confirmed'})
+                for line in o.operations:
+                    if line.product_id.track_production and not line.prodlot_id:
+                        raise osv.except_osv(_('Warning'), _("Production lot is required for opration line with product '%s'") % (line.product_id.name))
+                    mrp_line_obj.write(cr, uid, [line.id], {'state': 'confirmed'})
         return True
 
     def action_cancel(self, cr, uid, ids, context=None):

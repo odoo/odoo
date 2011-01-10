@@ -101,9 +101,12 @@ class account_move_journal(osv.osv_memory):
             period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
             period_string = _("Period: %s") % tools.ustr(period)
 
+        separator_string = _("Open Journal Items !")
+        cancel_string = _("Cancel")
+        open_string = _("Open")
         view = """<?xml version="1.0" encoding="utf-8"?>
         <form string="Standard entries">
-            <separator string="Open Journal Items !" colspan="4"/>
+            <separator string="%s" colspan="4"/>
             <field name="target_move" />
             <newline/>
             <group colspan="4" >
@@ -113,10 +116,10 @@ class account_move_journal(osv.osv_memory):
             </group>
             <group colspan="4" col="4">
                 <label string ="" colspan="2"/>
-                <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                <button icon="terp-gtk-go-back-rtl" string="Open" name="action_open_window" default_focus="1" type="object"/>
+                <button icon="gtk-cancel" special="cancel" string="%s"/>
+                <button icon="terp-gtk-go-back-rtl" string="%s" name="action_open_window" default_focus="1" type="object"/>
             </group>
-        </form>""" % (journal_string, period_string)
+        </form>""" % (separator_string, journal_string, period_string, cancel_string, open_string)
 
         view = etree.fromstring(view.encode('utf8'))
         xarch, xfields = self._view_look_dom_arch(cr, uid, view, view_id, context=context)

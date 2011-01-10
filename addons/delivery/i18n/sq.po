@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-08-02 14:37+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Albanian <sq@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:04+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 04:43+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -43,7 +43,7 @@ msgid "Delivery Order"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No price available !"
 msgstr ""
@@ -63,6 +63,11 @@ msgstr ""
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
 msgid "Volume"
+msgstr ""
+
+#. module: delivery
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
 msgstr ""
 
 #. module: delivery
@@ -107,6 +112,15 @@ msgid "Variable Factor"
 msgstr ""
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery price list allows you to compute the cost and sales price of "
+"the delivery according to the weight of the products and other criteria. You "
+"can define several price lists for one delivery method, per country or a "
+"zone in a specific country defined by a postal code range."
+msgstr ""
+
+#. module: delivery
 #: selection:delivery.grid.line,price_type:0
 msgid "Fixed"
 msgstr ""
@@ -127,7 +141,7 @@ msgid "Stock Move"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
@@ -143,7 +157,15 @@ msgid "Net Weight"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery methods you need for your sales activities. "
+"Each delivery method can be assigned to a price list which computes the "
+"price of the delivery according to the products sold or delivered."
+msgstr ""
+
+#. module: delivery
+#: code:addons/delivery/stock.py:98
 #, python-format
 msgid "Warning"
 msgstr ""
@@ -263,7 +285,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid available !"
 msgstr ""
@@ -274,7 +296,8 @@ msgid ">="
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:66
+#: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "Order not in draft state !"
 msgstr ""
@@ -316,16 +339,8 @@ msgid "Condition"
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"Create and manage the delivery method(s) you want your sales to be processed "
-"with. Each delivery method can be assigned to a pricelist which computes the "
-"price of the delivery according to the products sold or delivered."
-msgstr ""
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
 msgstr ""
 
 #. module: delivery
@@ -371,22 +386,13 @@ msgid "Sales & Purchases"
 msgstr ""
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
-msgid ""
-"The delivery pricelist allows you to compute the cost and sales price of the "
-"delivery based on the weight of the products and other criteria. You can "
-"define several pricelists for one delivery method, for each region such as "
-"countries or a zone in a specific country defined by a zip code range."
-msgstr ""
-
-#. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
 msgstr ""
 
 #. module: delivery
@@ -419,7 +425,7 @@ msgid "Price"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr ""
@@ -441,7 +447,7 @@ msgid "="
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
+#: code:addons/delivery/stock.py:99
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr ""
@@ -472,7 +478,8 @@ msgid "ID"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:66
+#: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""

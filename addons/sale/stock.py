@@ -43,19 +43,6 @@ class stock_picking(osv.osv):
         'sale_id': False
     }
 
-    def _get_address_invoice(self, cr, uid, picking):
-        """ Gets invoice address of a partner
-        @return {'contact': address, 'invoice': address} for invoice
-        """
-        res = super(stock_picking, self)._get_address_invoice(cr, uid, picking)
-        if picking.sale_id:
-            partner_obj = self.pool.get('res.partner')
-            partner = (picking.sale_id and picking.sale_id.partner_id) or picking.address_id.partner_id
-            data = partner_obj.address_get(cr, uid, [partner.id],
-                ['contact', 'invoice'])
-            res.update(data)
-        return res
-
     def get_currency_id(self, cursor, user, picking):
         if picking.sale_id:
             return picking.sale_id.pricelist_id.currency_id.id

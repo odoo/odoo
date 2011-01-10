@@ -124,6 +124,7 @@
                                         name="%(act_my_oppor)d"
                                         colspan="4"
                                         height="150"
+                                        groups="base.group_sale_salesman,base.group_sale_manager"
                                         width="510"/>
                                    <action
                                         string="My Meetings"
@@ -135,10 +136,12 @@
                                    <action
                                 string="My Planned Revenues by Stage"
                                 name="%(act_my_oppor_stage)d"
+                                groups="base.group_sale_salesman,base.group_sale_manager"
                                 colspan="4"/>
                             <action
                                 string="My Win/Lost Ratio for the Last Year"
                                 name="%(act_sales_pipeline)d"
+                                groups="base.group_sale_salesman,base.group_sale_manager"
                                 colspan="4"/>
                         </child2>
                     </hpaned>

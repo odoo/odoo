@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-15 09:50+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-08 15:46+0000\n"
 "Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_layout
@@ -35,6 +35,16 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Ce module permet d'améliorer la disposition des bons de commandes.\n"
+"\n"
+"    Il donne la possibilité\n"
+"        * de commander toutes les lignes d'un bon de commande\n"
+"        * d'ajouter des titres des lignes de commentaires, des lignes de "
+"sous-total\n"
+"        * d'ajouter des lignes horizontales et des sauts de page\n"
+"\n"
+"    "
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -44,7 +54,7 @@ msgstr "Titre"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Disc. (%)"
-msgstr ""
+msgstr "Remise (%)"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -59,7 +69,7 @@ msgstr "Prix unitaire"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Order N°"
-msgstr ""
+msgstr "Commande N°"
 
 #. module: sale_layout
 #: field:sale.order,abstract_line_ids:0
@@ -69,7 +79,7 @@ msgstr "Lignes de commande"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Disc.(%)"
-msgstr ""
+msgstr "Rem.(%)"
 
 #. module: sale_layout
 #: field:sale.order.line,layout_type:0
@@ -92,9 +102,14 @@ msgid "Product"
 msgstr "Produit"
 
 #. module: sale_layout
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "La référence de la commande doit être unique !"
+
+#. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -104,7 +119,7 @@ msgstr "Description manuelle"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Our Salesman"
-msgstr ""
+msgstr "Notre vendeur"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -119,17 +134,17 @@ msgstr "Lignes de facture"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Quantity"
-msgstr ""
+msgstr "Quantité"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Quotation N°"
-msgstr ""
+msgstr "Devis N°"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "VAT"
-msgstr ""
+msgstr "TVA"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -144,12 +159,12 @@ msgstr "Propriétés"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Invoice address :"
-msgstr ""
+msgstr "Adresse de facturation :"
 
 #. module: sale_layout
 #: model:ir.module.module,shortdesc:sale_layout.module_meta_information
 msgid "Sale Order Layout"
-msgstr ""
+msgstr "Présentation du bon bon de commandes"
 
 #. module: sale_layout
 #: selection:sale.order.line,layout_type:0
@@ -164,37 +179,37 @@ msgstr "Notes"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "Date de commande"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Shipping address :"
-msgstr ""
+msgstr "Adresse de livraison :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Taxes"
-msgstr ""
+msgstr "Taxes"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Total net :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tél. :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Payment Terms"
-msgstr ""
+msgstr "Conditions de paiement"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -214,17 +229,17 @@ msgstr "Ligne de séparation"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Votre référence"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Quotation Date"
-msgstr ""
+msgstr "Date du devis"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "TVA :"
-msgstr ""
+msgstr "TVA :"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -254,17 +269,17 @@ msgstr "Info supplémentaires"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Taxes :"
 
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Bon de commande"
 
 #. module: sale_layout
 #: view:sale.order:0
@@ -274,12 +289,12 @@ msgstr "Commande client"
 #. module: sale_layout
 #: report:sale.order.layout:0
 msgid "Price"
-msgstr ""
+msgstr "Prix"
 
 #. module: sale_layout
 #: model:ir.model,name:sale_layout.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Ligne de bon de commande"
 
 #. module: sale_layout
 #: view:sale.order:0

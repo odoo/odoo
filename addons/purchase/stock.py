@@ -65,7 +65,7 @@ class stock_picking(osv.osv):
         res = super(stock_picking, self)._get_address_invoice(cr, uid, picking)
         if picking.purchase_id:
             partner_obj = self.pool.get('res.partner')
-            partner = (picking.purchase_id and picking.purchase_id.partner_id) or picking.address_id.partner_id
+            partner = picking.purchase_id.partner_id or picking.address_id.partner_id
             data = partner_obj.address_get(cr, uid, [partner.id],
                 ['contact', 'invoice'])
             res.update(data)
