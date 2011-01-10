@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -679,8 +679,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     cr.rollback()
 
     def _load_data(cr, module_name, id_map, mode, kind):
-        noupdate = (kind == 'demo')
         for filename in package.data.get(kind, []):
+            noupdate = (kind == 'demo')
             _, ext = os.path.splitext(filename)
             log.info("module %s: loading %s", module_name, filename)
             pathname = os.path.join(module_name, filename)
