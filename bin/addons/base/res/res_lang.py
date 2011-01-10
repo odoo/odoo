@@ -66,9 +66,21 @@ class lang(osv.osv):
 
 
         def fix_xa0(s):
+            """Fix badly-encoded non-breaking space Unicode character from locale.localeconv(),
+               coercing to utf-8, as some platform seem to output localeconv() in their system
+               encoding, e.g. Windows-1252"""
             if s == '\xa0':
                 return '\xc2\xa0'
             return s
+
+        def fix_time_format(format):
+            """Python's strftime does not support all the compound formats
+               from C's strftime, as returned by locale.nl_langinfo().
+               Under Ubuntu at least, we encounter %T or %r for some locales."""
+            format = format.replace('%T', '%H:%M:%S')\
+                           .replace('%r', '%I:%M:%S %p')\
+                           .replace('%R', '%H:%M')
+            return str(format)
 
         lang_info = {
             'code': lang,
@@ -76,7 +88,7 @@ class lang(osv.osv):
             'name': lang_name,
             'translatable': 1,
             'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
-            'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
+            'time_format' : fix_time_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
             'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
         }
