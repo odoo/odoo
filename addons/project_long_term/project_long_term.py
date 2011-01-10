@@ -345,7 +345,10 @@ def Project_%d():
             phase = eval("project.Phase_%d" % phase_id)
             start_date = phase.start.to_datetime()
             end_date = phase.end.to_datetime()
-#            print phase_id,"\n\n****Phases *********", phase.resource
+            for res in phase.resource.all_members():
+                print "\n\n888888888888888",res.book_task()
+#                for i in dir(res):
+#                    print "$$$$$$$$",i,eval('res.%s'%i)
             # Recalculate date_start and date_end
             # according to constraints on date start and date end on phase
 #            if phase.constraint_date_start and str(s_date) < phase.constraint_date_start:
