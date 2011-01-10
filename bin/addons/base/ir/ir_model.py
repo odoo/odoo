@@ -183,36 +183,41 @@ class ir_model_fields(osv.osv):
     }
     _rec_name='field_description'
     _defaults = {
-        'view_load': lambda *a: 0,
-        'selection': lambda *a: "[('key','label')]",
-        'domain': lambda *a: "[]",
-        'name': lambda *a: 'x_',
+        'view_load': 0,
+        'selection': "",
+        'domain': "[]",
+        'name': 'x_',
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
-        'on_delete': lambda *a: 'set null',
-        'select_level': lambda *a: '0',
-        'size': lambda *a: 64,
-        'field_description': lambda *a: '',
-        'selectable': lambda *a: 1,
+        'on_delete': 'set null',
+        'select_level': '0',
+        'size': 64,
+        'field_description': '',
+        'selectable': 1,
     }
     _order = "name"
 
-    def _check_selection(self, cr, uid, ids, context=None):
-        selection_field = self.browse(cr, uid, ids[0], context=context)
+    def _check_selection(self, cr, uid, selection, context=None):
         try:
-            selection_list = eval(selection_field.selection)
+            selection_list = eval(selection)
         except Exception:
-            logging.getLogger('ir.model').error('Invalid selection list definition for fields.selection %s', selection_field.name , exc_info=True)
-            return False
-        if not (isinstance(selection_list, list) and selection_list):
-            return False
-        for selection_item in selection_list:
-             if not (isinstance(selection_item, (tuple,list)) and len(selection_item) == 2):
-                return False
-        return True
+            logging.getLogger('ir.model').warning('Invalid selection list definition for fields.selection', exc_info=True)
+            raise except_orm(_('Error'),
+                    _("The Selection Options expression is not a valid Pythonic expression." \
+                      "Please provide an expression in the [('key','Label'), ...] format."))
 
-    _constraints = [
-        (_check_selection, "Wrong list of values specified for a field of type selection, it should be written as [('key','value')]", ['selection'])
-    ]
+        check = True
+        if not (isinstance(selection_list, list) and selection_list):
+            check = False
+        else:
+            for item in selection_list:
+                if not (isinstance(item, (tuple,list)) and len(item) == 2):
+                    check = False
+                    break
+
+        if not check:
+                raise except_orm(_('Error'),
+                    _("The Selection Options expression is must be in the [('key','Label'), ...] format!"))
+        return True
 
     def _size_gt_zero_msg(self, cr, user, ids, context=None):
         return _('Size of the field can never be less than 1 !')
@@ -220,6 +225,7 @@ class ir_model_fields(osv.osv):
     _sql_constraints = [
         ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
     ]
+
     def unlink(self, cr, user, ids, context=None):
         for field in self.browse(cr, user, ids, context):
             if field.state <> 'manual':
@@ -239,6 +245,10 @@ class ir_model_fields(osv.osv):
             context = {}
         if context and context.get('manual',False):
             vals['state'] = 'manual'
+        if vals.get('ttype', False) == 'selection':
+            if not vals.get('selection',False):
+                raise except_orm(_('Error'), _('For selection fields, the Selection Options must be given!'))
+            self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
         if vals.get('state','base') == 'manual':
             if not vals['name'].startswith('x_'):
@@ -254,6 +264,113 @@ class ir_model_fields(osv.osv):
                 ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0'),'update_custom_fields':True})
                 self.pool.get(vals['model'])._auto_init(cr, ctx)
 
+        return res
+
+    def write(self, cr, user, ids, vals, context=None):
+        if context is None:
+            context = {}
+        if context and context.get('manual',False):
+            vals['state'] = 'manual'
+
+        column_rename = None # if set, *one* column can be renamed here
+        obj = None
+        models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
+                             # data to be updated on the orm model
+
+        # static table of properties
+        model_props = [ # (our-name, fields.prop, set_fn)
+            ('field_description', 'string', lambda a: a),
+            ('required', 'required', bool),
+            ('readonly', 'readonly', bool),
+            ('domain', '_domain', lambda a: a),
+            ('size', 'size', int),
+            ('on_delete', 'ondelete', str),
+            ('translate', 'translate', bool),
+            ('view_load', 'view_load', bool),
+            ('selectable', 'selectable', bool),
+            ('select_level', 'select', int),
+            ('selection', 'selection', eval),
+            ]
+
+        if vals and ids:
+            checked_selection = False # need only check it once, so defer
+
+            for item in self.browse(cr, user, ids, context=context):
+                if not (obj and obj._name == item.model):
+                    obj = self.pool.get(item.model)
+
+                if item.state != 'manual':
+                    raise except_orm(_('Error!'),
+                        _('Properties of base fields cannot be altered in this manner! '
+                          'Please modify them through Python code, '
+                          'preferably through a custom addon!'))
+
+                if item.ttype == 'selection' and 'selection' in vals \
+                        and not checked_selection:
+                    self._check_selection(cr, user, vals['selection'], context=context)
+                    checked_selection = True
+
+                final_name = item.name
+                if 'name' in vals and vals['name'] != item.name:
+                    # We need to rename the column
+                    if column_rename:
+                        raise except_orm(_('Error!'), _('Can only rename one column at a time!'))
+                    if vals['name'] in obj._columns:
+                        raise except_orm(_('Error!'), _('Cannot rename column to %s, because that column already exists!') % vals['name'])
+                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
+                        raise except_orm(_('Error!'), _('New column name must still start with x_ , because it is a custom field!'))
+                    if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
+                        raise ValueError('Invalid character in column name')
+                    column_rename = (obj, (obj._table, item.name, vals['name']))
+                    final_name = vals['name']
+
+                if 'model_id' in vals and vals['model_id'] != item.model_id:
+                    raise except_orm(_("Error!"), _("Changing the model of a field is forbidden!"))
+
+                if 'ttype' in vals and vals['ttype'] != item.ttype:
+                    raise except_orm(_("Error!"), _("Changing the type of a column is not yet supported. "
+                                "Please drop it and create it again!"))
+
+                # We don't check the 'state', because it might come from the context
+                # (thus be set for multiple fields) and will be ignored anyway.
+                if obj:
+                    models_patch.setdefault(obj._name, (obj,[]))
+                    # find out which properties (per model) we need to update
+                    for field_name, field_property, set_fn in model_props:
+                        if field_name in vals:
+                            property_value = set_fn(vals[field_name])
+                            if getattr(obj._columns[item.name], field_property) != property_value:
+                                models_patch[obj._name][1].append((final_name, field_property, property_value))
+                        # our dict is ready here, but no properties are changed so far
+
+        # These shall never be written (modified)
+        for column_name in ('model_id', 'model', 'state'):
+            if column_name in vals:
+                del vals[column_name]
+
+        res = super(ir_model_fields,self).write(cr, user, ids, vals, context=context)
+
+        if column_rename:
+            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % column_rename[1])
+            # This is VERY risky, but let us have this feature:
+            # we want to change the key of column in obj._columns dict
+            col = column_rename[0]._columns.pop(column_rename[1][1]) # take object out, w/o copy
+            column_rename[0]._columns[column_rename[1][2]] = col
+
+        if models_patch:
+            # We have to update _columns of the model(s) and then call their
+            # _auto_init to sync the db with the model. Hopefully, since write()
+            # was called earlier, they will be in-sync before the _auto_init.
+            # Anything we don't update in _columns now will be reset from
+            # the model into ir.model.fields (db).
+            ctx = context.copy()
+            ctx.update({'select': vals.get('select_level','0'),'update_custom_fields':True})
+
+            for model_key, patch_struct in models_patch.items():
+                obj = patch_struct[0]
+                for col_name, col_prop, val in patch_struct[1]:
+                    setattr(obj._columns[col_name], col_prop, val)
+                obj._auto_init(cr, ctx)
         return res
 
 ir_model_fields()
