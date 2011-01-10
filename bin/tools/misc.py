@@ -44,11 +44,16 @@ from email.Header import Header
 from email.Utils import formatdate, COMMASPACE
 from email import Encoders
 from itertools import islice, izip
+from lxml import etree
 from which import which
 if sys.version_info[:2] < (2, 4):
     from threadinglocal import local
 else:
     from threading import local
+try:
+    from html2text import html2text
+except ImportError:
+    html2text = None
 
 import netsvc
 from config import config
@@ -56,12 +61,20 @@ from lru import LRU
 
 _logger = logging.getLogger('tools')
 
+# List of etree._Element subclasses that we choose to ignore when parsing XML.
+# We include the *Base ones just in case, currently they seem to be subclasses of the _* ones.
+SKIPPED_ELEMENT_TYPES = (etree._Comment, etree._ProcessingInstruction, etree.CommentBase, etree.PIBase)
+
 # initialize a database with base/base.sql
 def init_db(cr):
     import addons
     f = addons.get_module_resource('base', 'base.sql')
-    cr.execute(file_open(f).read())
-    cr.commit()
+    base_sql_file = file_open(f)
+    try:
+        cr.execute(base_sql_file.read())
+        cr.commit()
+    finally:
+        base_sql_file.close()
 
     for i in addons.get_modules():
         mod_path = addons.get_module_path(i)
@@ -253,7 +266,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
             return fo
     if os.path.splitext(name)[1] == '.rml':
         raise IOError, 'Report %s doesn\'t exist or deleted : ' %str(name)
-    raise IOError, 'File not found : '+str(name)
+    raise IOError, 'File not found : %s' % name
 
 
 #----------------------------------------------------------
@@ -499,8 +512,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     email_body = ustr(body).encode('utf-8')
     email_text = MIMEText(email_body or '',_subtype=subtype,_charset='utf-8')
 
-    if attach: msg = MIMEMultipart()
-    else: msg = email_text
+    msg = MIMEMultipart()
 
     msg['Subject'] = Header(ustr(subject), 'utf-8')
     msg['From'] = email_from
@@ -522,8 +534,16 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
     for key, value in x_headers.iteritems():
         msg['%s' % key] = str(value)
 
-    if attach:
+    if html2text and subtype == 'html':
+        text = html2text(email_body.decode('utf-8')).encode('utf-8')
+        alternative_part = MIMEMultipart(_subtype="alternative")
+        alternative_part.attach(MIMEText(text, _charset='utf-8', _subtype='plain'))
+        alternative_part.attach(email_text)
+        msg.attach(alternative_part)
+    else:
         msg.attach(email_text)
+
+    if attach:
         for (fname,fcontent) in attach:
             part = MIMEBase('application', "octet-stream")
             part.set_payload( fcontent )

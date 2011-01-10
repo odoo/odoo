@@ -88,16 +88,9 @@ class res_currency(osv.osv):
     def is_zero(self, cr, uid, currency, amount):
         return abs(self.round(cr, uid, currency, amount)) < currency.rounding
 
-    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=None, account=None, account_invert=False):
+    def _get_conversion_rate(self, cr, uid, from_currency, to_currency, context=None):
         if context is None:
             context = {}
-        if not from_currency_id:
-            from_currency_id = to_currency_id
-        if not to_currency_id:
-            to_currency_id = from_currency_id
-        xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
-        from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
-        to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
         if from_currency['rate'] == 0 or to_currency['rate'] == 0:
             date = context.get('date', time.strftime('%Y-%m-%d'))
             if from_currency['rate'] == 0:
@@ -107,22 +100,23 @@ class res_currency(osv.osv):
             raise osv.except_osv(_('Error'), _('No rate found \n' \
                     'for the currency: %s \n' \
                     'at the date: %s') % (currency_symbol, date))
-        rate = to_currency.rate/from_currency.rate
-        if account and (account.currency_mode=='average') and account.currency_id:
-            q = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-            cr.execute('select sum(debit-credit),sum(amount_currency) from account_move_line l ' \
-              'where l.currency_id=%s and l.account_id=%s and '+q, (account.currency_id.id,account.id,))
-            tot1,tot2 = cr.fetchone()
-            if tot2 and not account_invert:
-                rate = float(tot1)/float(tot2)
-            elif tot1 and account_invert:
-                rate = float(tot2)/float(tot1)
-        if to_currency_id==from_currency_id:
+        return to_currency.rate/from_currency.rate
+
+    def compute(self, cr, uid, from_currency_id, to_currency_id, from_amount, round=True, context=None):
+        if not from_currency_id:
+            from_currency_id = to_currency_id
+        if not to_currency_id:
+            to_currency_id = from_currency_id
+        xc = self.browse(cr, uid, [from_currency_id,to_currency_id], context=context)
+        from_currency = (xc[0].id == from_currency_id and xc[0]) or xc[1]
+        to_currency = (xc[0].id == to_currency_id and xc[0]) or xc[1]
+        if to_currency_id == from_currency_id:
             if round:
                 return self.round(cr, uid, to_currency, from_amount)
             else:
                 return from_amount
         else:
+            rate = self._get_conversion_rate(cr, uid, from_currency, to_currency, context=context)
             if round:
                 return self.round(cr, uid, to_currency, from_amount * rate)
             else:

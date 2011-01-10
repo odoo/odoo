@@ -65,7 +65,7 @@ def _open_image(filename, path=None):
         except IOError:
             pass
     raise IOError("File %s cannot be found in image path" % filename)
-    
+
 class NumberedCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
         canvas.Canvas.__init__(self, *args, **kwargs)
@@ -243,7 +243,8 @@ class _rml_doc(object):
             for font in node.findall('registerFont'):
                 name = font.get('fontName').encode('ascii')
                 fname = font.get('fontFile').encode('ascii')
-                pdfmetrics.registerFont(TTFont(name, fname ))
+                if name not in pdfmetrics._fonts:
+                    pdfmetrics.registerFont(TTFont(name, fname))
                 addMapping(name, 0, 0, name)    #normal
                 addMapping(name, 0, 1, name)    #italic
                 addMapping(name, 1, 0, name)    #bold
@@ -254,7 +255,8 @@ class _rml_doc(object):
         from reportlab.pdfbase import pdfmetrics
         from reportlab.pdfbase.ttfonts import TTFont
 
-        pdfmetrics.registerFont(TTFont(fontname, filename ))
+        if fontname not in pdfmetrics._fonts:
+            pdfmetrics.registerFont(TTFont(fontname, filename))
         if (mode == 'all'):
             addMapping(face, 0, 0, fontname)    #normal
             addMapping(face, 0, 1, fontname)    #italic
@@ -475,24 +477,26 @@ class _rml_canvas(object):
                 else:
                     self._logger.debug("Open image file %s ", nfile)
                     s = _open_image(nfile, path=self.path)
-        img = ImageReader(s)
-        (sx,sy) = img.getSize()
-        self._logger.debug("Image is %dx%d", sx, sy)
-
-        args = { 'x': 0.0, 'y': 0.0 }
-        for tag in ('width','height','x','y'):
-            if node.get(tag):
-                args[tag] = utils.unit_get(node.get(tag))
-        if ('width' in args) and (not 'height' in args):
-            args['height'] = sy * args['width'] / sx
-        elif ('height' in args) and (not 'width' in args):
-            args['width'] = sx * args['height'] / sy
-        elif ('width' in args) and ('height' in args):
-            if (float(args['width'])/args['height'])>(float(sx)>sy):
-                args['width'] = sx * args['height'] / sy
-            else:
+        try:
+            img = ImageReader(s)
+            (sx,sy) = img.getSize()
+            self._logger.debug("Image is %dx%d", sx, sy)
+            args = { 'x': 0.0, 'y': 0.0 }
+            for tag in ('width','height','x','y'):
+                if node.get(tag):
+                    args[tag] = utils.unit_get(node.get(tag))
+            if ('width' in args) and (not 'height' in args):
                 args['height'] = sy * args['width'] / sx
-        self.canvas.drawImage(img, **args)
+            elif ('height' in args) and (not 'width' in args):
+                args['width'] = sx * args['height'] / sy
+            elif ('width' in args) and ('height' in args):
+                if (float(args['width'])/args['height'])>(float(sx)>sy):
+                    args['width'] = sx * args['height'] / sy
+                else:
+                    args['height'] = sy * args['width'] / sx
+            self.canvas.drawImage(img, **args)
+        finally:
+            s.close()
 #        self.canvas._doc.SaveToFile(self.canvas._filename, self.canvas)
 
     def _path(self, node):
@@ -733,22 +737,26 @@ class _rml_flowable(object):
                 from reportlab.graphics.barcode import common
                 from reportlab.graphics.barcode import fourstate
                 from reportlab.graphics.barcode import usps
-            except Exception, e:
+                from reportlab.graphics.barcode import createBarcodeDrawing
+
+            except ImportError:
                 self._logger.warning("Cannot use barcode renderers:", exc_info=True)
                 return None
             args = utils.attr_get(node, [], {'ratio':'float','xdim':'unit','height':'unit','checksum':'int','quiet':'int','width':'unit','stop':'bool','bearers':'int','barWidth':'float','barHeight':'float'})
             codes = {
                 'codabar': lambda x: common.Codabar(x, **args),
                 'code11': lambda x: common.Code11(x, **args),
-                'code128': lambda x: code128.Code128(x, **args),
-                'standard39': lambda x: code39.Standard39(x, **args),
-                'standard93': lambda x: code93.Standard93(x, **args),
+                'code128': lambda x: code128.Code128(str(x), **args),
+                'standard39': lambda x: code39.Standard39(str(x), **args),
+                'standard93': lambda x: code93.Standard93(str(x), **args),
                 'i2of5': lambda x: common.I2of5(x, **args),
-                'extended39': lambda x: code39.Extended39(x, **args),
-                'extended93': lambda x: code93.Extended93(x, **args),
+                'extended39': lambda x: code39.Extended39(str(x), **args),
+                'extended93': lambda x: code93.Extended93(str(x), **args),
                 'msi': lambda x: common.MSI(x, **args),
                 'fim': lambda x: usps.FIM(x, **args),
                 'postnet': lambda x: usps.POSTNET(x, **args),
+                'ean13': lambda x: createBarcodeDrawing('EAN13', value=str(x), **args),
+                'qrcode': lambda x: createBarcodeDrawing('QR', value=x, **args),
             }
             code = 'code128'
             if node.get('code'):
@@ -895,7 +903,7 @@ class _rml_template(object):
             ps = map(lambda x:x.strip(), node.get('pageSize').replace(')', '').replace('(', '').split(','))
             pageSize = ( utils.unit_get(ps[0]),utils.unit_get(ps[1]) )
 
-        self.doc_tmpl = TinyDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','title':'str','author':'str'}))
+        self.doc_tmpl = TinyDocTemplate(out, pagesize=pageSize, **utils.attr_get(node, ['leftMargin','rightMargin','topMargin','bottomMargin'], {'allowSplitting':'int','showBoundary':'bool','rotation':'int','title':'str','author':'str'}))
         self.page_templates = []
         self.styles = doc.styles
         self.doc = doc

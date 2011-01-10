@@ -45,7 +45,11 @@ import netsvc
 import osv
 import pooler
 from config import config
+from tools.translate import _
 from yaml_import import convert_yaml_import
+
+# List of etree._Element subclasses that we choose to ignore when parsing XML.
+from tools import SKIPPED_ELEMENT_TYPES
 
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
@@ -91,8 +95,8 @@ def _fix_multiple_roots(node):
     As a convention we'll surround multiple root with a container "data" element, to be
     ignored later when parsing.
     """
-
-    if len(node) > 1:
+    real_nodes = [x for x in node if not isinstance(x, SKIPPED_ELEMENT_TYPES)]
+    if len(real_nodes) > 1:
         data_node = etree.Element("data")
         for child in node:
             data_node.append(child)
@@ -427,7 +431,7 @@ form: module.record_id""" % (xml_id,)
         view_id = False
         if rec.get('view_id'):
             view_id = self.id_get(cr, rec.get('view_id','').encode('utf-8'))
-        domain = rec.get('domain','').encode('utf-8') or '{}'
+        domain = rec.get('domain','').encode('utf-8') or '[]'
         res_model = rec.get('res_model','').encode('utf-8')
         src_model = rec.get('src_model','').encode('utf-8')
         view_type = rec.get('view_type','').encode('utf-8') or 'form'
@@ -705,8 +709,8 @@ form: module.record_id""" % (xml_id,)
                           ' expected count: %d\n'       \
                           ' obtained count: %d\n'       \
                           % (rec_string, count, len(ids))
-                    self.logger.log(severity, msg)
                     sevval = getattr(logging, severity.upper())
+                    self.logger.log(sevval, msg)
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
@@ -737,8 +741,8 @@ form: module.record_id""" % (xml_id,)
                           ' expected value: %r\n'       \
                           ' obtained value: %r\n'       \
                           % (rec_string, etree.tostring(test), expected_value, expression_value)
-                    self.logger.log(severity, msg)
                     sevval = getattr(logging, severity.upper())
+                    self.logger.log(sevval, msg)
                     if sevval >= config['assert_exit_level']:
                         # TODO: define a dedicated exception
                         raise Exception('Severe assertion failure')
@@ -863,7 +867,7 @@ form: module.record_id""" % (xml_id,)
                             self.__logger.error('Parse error in %s:%d: \n%s',
                                                 rec.getroottree().docinfo.URL,
                                                 rec.sourceline,
-                                                etree.tostring(rec).strip())
+                                                etree.tostring(rec).strip(), exc_info=True)
                             self.cr.rollback()
                             raise
         return True
@@ -940,7 +944,10 @@ def convert_csv_import(cr, module, fname, csvcontent, idref=None, mode='init',
             datas.append(map(lambda x: misc.ustr(x), line))
         except:
             logger.error("Cannot import the line: %s", line)
-    pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
+    result, rows, warning_msg, dummy = pool.get(model).import_data(cr, uid, fields, datas,mode, module, noupdate, filename=fname_partial)
+    if result < 0:
+        # Report failed import and abort module install
+        raise Exception(_('Module loading failed: file %s/%s could not be processed:\n %s') % (module, fname, warning_msg))
     if config.get('import_partial'):
         data = pickle.load(file(config.get('import_partial')))
         data[fname_partial] = 0

@@ -48,6 +48,20 @@ class res_partner_category(osv.osv):
             res.append((record['id'], name))
         return res
 
+    def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args=[]
+        if not context:
+            context={}
+        if name:
+            # Be sure name_search is symetric to name_get
+            name = name.split(' / ')[-1]
+            ids = self.search(cr, uid, [('name', operator, name)] + args, limit=limit, context=context)
+        else:
+            ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, ids, context)
+
+
     def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
@@ -124,7 +138,7 @@ class res_partner(osv.osv):
         'email': fields.related('address', 'email', type='char', size=240, string='E-mail'),
         'company_id': fields.many2one('res.company', 'Company', select=1),
     }
-    
+
     def _default_category(self, cr, uid, context={}):
         if 'category_id' in context and context['category_id']:
             return [context['category_id']]

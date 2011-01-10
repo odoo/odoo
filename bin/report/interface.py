@@ -149,13 +149,18 @@ class report_rml(report_int):
         if not self.xsl:
             return xml
 
-        stylesheet = etree.parse(tools.file_open(self.xsl))
-        xsl_path, _ = os.path.split(self.xsl)
-        for import_child in stylesheet.findall('./import'):
-            if 'href' in import_child.attrib:
-                imp_file = import_child.get('href')
-                _, imp_file = tools.file_open(imp_file, subdir=xsl_path, pathinfo=True)
-                import_child.set('href', urllib.quote(str(imp_file)))
+        stylesheet_file = tools.file_open(self.xsl)
+        try:
+            stylesheet = etree.parse(stylesheet_file)
+            xsl_path, _ = os.path.split(self.xsl)
+            for import_child in stylesheet.findall('./import'):
+                if 'href' in import_child.attrib:
+                    imp_file = import_child.get('href')
+                    _, imp_file = tools.file_open(imp_file, subdir=xsl_path, pathinfo=True)
+                    import_child.set('href', urllib.quote(str(imp_file)))
+                    imp_file.close()
+        finally:
+            stylesheet_file.close()
 
         #TODO: get all the translation in one query. That means we have to:
         # * build a list of items to translate,

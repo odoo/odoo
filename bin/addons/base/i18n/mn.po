@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
 "PO-Revision-Date: 2010-12-16 08:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:50+0000\n"
+"X-Launchpad-Export-Date: 2011-01-04 14:06+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -41,6 +41,14 @@ msgid "DateTime"
 msgstr "Огноо Цаг"
 
 #. module: base
+#: code:addons/fields.py:534
+#, python-format
+msgid ""
+"The second argument of the many2many field %s must be a SQL table !You used "
+"%s, which is not a valid SQL table name."
+msgstr ""
+
+#. module: base
 #: view:ir.values:0
 #: field:ir.values,meta_unpickle:0
 msgid "Metadata"
@@ -51,12 +59,6 @@ msgstr "Толгой өгөгдөл"
 #: field:ir.ui.view.custom,arch:0
 msgid "View Architecture"
 msgstr "Дэлгэцийн архитектур"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not create this kind of document! (%s)"
-msgstr "Та (%s) төрлийн баримтыг үүсгэж чадахгүй!"
 
 #. module: base
 #: field:base.language.import,code:0
@@ -109,6 +111,14 @@ msgid "Created Views"
 msgstr "Үүссэн"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:339
+#, python-format
+msgid ""
+"You can not write in this document (%s) ! Be sure your user belongs to one "
+"of these groups: %s."
+msgstr ""
+
+#. module: base
 #: field:res.partner,ref:0
 msgid "Reference"
 msgstr "Дугаар"
@@ -124,11 +134,10 @@ msgid "South Korea"
 msgstr "Өмнөд Солонгос"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_workflow_transition_form
-#: model:ir.ui.menu,name:base.menu_workflow_transition
-#: view:workflow.activity:0
-msgid "Transitions"
-msgstr "Шилжилтүүд"
+#: code:addons/osv.py:133
+#, python-format
+msgid "Constraint Error"
+msgstr "Хориг, хязгаарлалтын Алдаа"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -141,12 +150,19 @@ msgid "Swaziland"
 msgstr "Швецарь"
 
 #. module: base
+#: code:addons/orm.py:1993
+#: code:addons/orm.py:3653
+#, python-format
+msgid "created."
+msgstr ""
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
 msgid "Wood Suppliers"
 msgstr "Мод нийлүүлэгч"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:303
 #, python-format
 msgid ""
 "Some installed modules depend on the module you plan to Uninstall :\n"
@@ -178,13 +194,13 @@ msgid "Search Partner"
 msgstr "Харилцагч хайх"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:132
 #, python-format
 msgid "\"smtp_server\" needs to be set to send mails to users"
 msgstr "\"smtp_server\" needs to be set to send mails to users"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:60
 #, python-format
 msgid "new"
 msgstr "шинэ"
@@ -215,7 +231,7 @@ msgid "Contact Name"
 msgstr "Харьцах хүн"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:56
 #, python-format
 msgid ""
 "Save this document to a %s file and edit it with a specific software or a "
@@ -238,6 +254,12 @@ msgstr "идэвхитэй"
 #: field:ir.actions.wizard,wiz_name:0
 msgid "Wizard Name"
 msgstr "Визардын нэр"
+
+#. module: base
+#: code:addons/orm.py:2160
+#, python-format
+msgid "Invalid group_by"
+msgstr ""
 
 #. module: base
 #: field:res.partner,credit_limit:0
@@ -271,7 +293,7 @@ msgstr "ir.ui.view_sc"
 
 #. module: base
 #: field:res.widget.user,widget_id:0
-#: field:res.widget.wizard,widget_id:0
+#: field:res.widget.wizard,widgets_list:0
 msgid "Widget"
 msgstr "Виджет"
 
@@ -322,7 +344,7 @@ msgid "Netherlands Antilles"
 msgstr "Нидерландын Антилын арлууд"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -347,11 +369,6 @@ msgid "Bosnian / bosanski jezik"
 msgstr "Босни хэл / bosanski jezik"
 
 #. module: base
-#: field:ir.ui.menu,web_icon_data:0
-msgid "Web Icons"
-msgstr "Веб icon"
-
-#. module: base
 #: help:ir.actions.report.xml,attachment_use:0
 msgid ""
 "If you check this, then the second time the user prints with same attachment "
@@ -359,6 +376,12 @@ msgid ""
 msgstr ""
 "Хэрэв та үүнийг сонговол дараагийн удаа ижил нэртэй баримт хэвлэхэд өмнө нь "
 "хэвлэж байсан баримт хэвлэгдэнэ."
+
+#. module: base
+#: code:addons/orm.py:904
+#, python-format
+msgid "The read method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -387,14 +410,10 @@ msgid "Schedule Upgrade"
 msgstr "Шинэчлэл төлөвлөлт"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
+#: code:addons/orm.py:838
+#, python-format
+msgid "Key/value '%s' not found in selection field '%s'"
 msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr "Ноён"
 
 #. module: base
 #: help:res.country,code:0
@@ -414,11 +433,6 @@ msgstr "Палау"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Борлуулалт & Худалдан авалт"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr "Корпораци"
 
 #. module: base
 #: view:ir.translation:0
@@ -445,7 +459,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "Бусад нийлүүлэгчид"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:216
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Нэмэлт талбарын нэр нь 'x_' -аар эхэлсэн байх ёстой !"
@@ -701,6 +715,12 @@ msgstr ""
 "орчуулга идэвхижсэн үед"
 
 #. module: base
+#: code:addons/orm.py:1043
+#, python-format
+msgid "The unlink method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: view:wizard.ir.model.menu.create:0
 msgid "Create Menu"
@@ -710,11 +730,6 @@ msgstr "Цэс үүсгэх"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "Энэтхэг"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "Засвар үйлчилгээний гэрээтэй модулиуд"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -770,6 +785,14 @@ msgid "Type"
 msgstr "Төрөл"
 
 #. module: base
+#: code:addons/orm.py:210
+#, python-format
+msgid ""
+"Language with code \"%s\" is not defined in your system !\n"
+"Define it through the Administration menu."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gu
 msgid "Guam (USA)"
 msgstr "Гуам (USA)"
@@ -794,6 +817,19 @@ msgstr "Дэлгэцийн XML алдаатай!"
 #: model:res.country,name:base.ky
 msgid "Cayman Islands"
 msgstr "Кайманы арлууд"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_workflow_transition_form
+#: model:ir.ui.menu,name:base.menu_workflow_transition
+#: view:workflow.activity:0
+msgid "Transitions"
+msgstr "Шилжилтүүд"
+
+#. module: base
+#: code:addons/orm.py:4020
+#, python-format
+msgid "Record #%d of %s not found, cannot copy!"
+msgstr ""
 
 #. module: base
 #: field:ir.module.module,contributors:0
@@ -907,6 +943,20 @@ msgid "Search"
 msgstr "Хайх"
 
 #. module: base
+#: code:addons/osv.py:136
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+"Үйлдлийг гүйцэтгэх боломжгүй, дараах шалтгаантай байж болзошгүй:\n"
+"- устгах: ондоо бичлгэгүүдэд заагдаж хэрэглэгдэж байгаа бичлэгийг устгах гэж "
+"байгаа\n"
+"- үүсгэх/засах: заавал утгатай байх талбарт утга байхгүй"
+
+#. module: base
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical AND operator"
@@ -962,13 +1012,13 @@ msgid "ir.exports"
 msgstr "ir.exports"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "Кодгүй хэл \"%s\" байна"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr ""
@@ -1000,6 +1050,12 @@ msgid ""
 "This wizard helps you register a publisher warranty contract in your OpenERP "
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:1744
+#, python-format
+msgid "The search method is not implemented on this object !"
 msgstr ""
 
 #. module: base
@@ -1051,7 +1107,7 @@ msgid "On Create"
 msgstr "Үүсгэх үед"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:461
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1171,12 +1227,6 @@ msgid "Day: %(day)s"
 msgstr "Өдөр: %(day)s"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not read this document! (%s)"
-msgstr "Та энэ баримтыг унших эрхгүй! (%s)"
-
-#. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
 msgid ""
 "List all certified modules available to configure your OpenERP. Modules that "
@@ -1221,8 +1271,8 @@ msgstr ""
 "Үйлдэл хийхийн өмнө шалгах нөхцөл, ө.х object.list_price > object.cost_price"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
-#: code:addons/base/res/res_company.py:0
+#: code:addons/base/res/partner/partner.py:155
+#: code:addons/base/res/res_company.py:66
 #, python-format
 msgid " (copy)"
 msgstr " (Хуулах)"
@@ -1302,7 +1352,7 @@ msgid "Formula"
 msgstr "Томьёолол"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Супер хэрэглэгчийг устгах боломжгүй!"
@@ -1313,7 +1363,8 @@ msgid "Malawi"
 msgstr "Малави"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:51
+#: code:addons/base/res/res_user.py:397
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (copy)"
@@ -1365,7 +1416,6 @@ msgstr "Мод"
 
 #. module: base
 #: help:res.config.users,password:0
-#: help:res.users,password:0
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
 msgstr "Уг хэрэглэгчийг системд нэвтрүүлэхгүй байх бол хоосон орхионо уу."
@@ -1393,8 +1443,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_log_act_window
-#: model:ir.ui.menu,name:base.menu_res_log_act_window
+#: code:addons/fields.py:114
+#, python-format
+msgid "Not implemented search_memory method !"
+msgstr ""
+
+#. module: base
 #: view:res.log:0
 msgid "Logs"
 msgstr "Түүх"
@@ -1443,7 +1497,7 @@ msgid "Bahamas"
 msgstr "Багамийн арлууд"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
@@ -1467,6 +1521,12 @@ msgid "Number of modules updated"
 msgstr "Шинэчлэгдсэн модулийн тоо"
 
 #. module: base
+#: code:addons/fields.py:100
+#, python-format
+msgid "Not implemented set_memory method !"
+msgstr ""
+
+#. module: base
 #: view:workflow.activity:0
 msgid "Workflow Activity"
 msgstr "Ажлын урсгалын хөдөлгөөн"
@@ -1479,6 +1539,11 @@ msgid ""
 msgstr ""
 "Жишээ: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
+
+#. module: base
+#: field:change.user.password,new_password:0
+msgid "New Password"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
@@ -1544,6 +1609,12 @@ msgid ""
 msgstr ""
 "Зөвшөөрөгдсөн харагдах хэлбэрүүдийг таслалаар тусгаарлан тодорхойлно. "
 "(Жишээлбэл: tree,form)"
+
+#. module: base
+#: code:addons/orm.py:3147
+#, python-format
+msgid "A document was modified since you last viewed it (%s:%d)"
+msgstr ""
 
 #. module: base
 #: view:workflow:0
@@ -1617,7 +1688,7 @@ msgid "Madagascar"
 msgstr "Мадагаскар"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:94
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -1707,12 +1778,6 @@ msgid "French (BE) / Français (BE)"
 msgstr "Франц хэл (BE) / Français (BE)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not write in this document! (%s)"
-msgstr "Та энэ баримтыг засварлах эрхгүй! (%s)"
-
-#. module: base
 #: view:ir.actions.server:0
 #: field:workflow.activity,action_id:0
 msgid "Server Action"
@@ -1783,6 +1848,12 @@ msgid ""
 msgstr "Энэ үйлдэл ажиллахад дуудагдах функцын обьект нэр. Жш: 'res.partner'"
 
 #. module: base
+#: code:addons/orm.py:1040
+#, python-format
+msgid "The perm_read method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "%y - Year without century [00,99]."
 msgstr ""
@@ -1793,12 +1864,23 @@ msgid "Slovenia"
 msgstr "Словени"
 
 #. module: base
+#: model:res.country,name:base.pk
+msgid "Pakistan"
+msgstr "Пакистан"
+
+#. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Invalid Object Architecture!"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_email_gateway_form
 msgid "Messages"
 msgstr "Зурвас"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "Error!"
 msgstr "Алдаа!"
@@ -1829,6 +1911,14 @@ msgid "New Zealand"
 msgstr "Шинэ зеланд"
 
 #. module: base
+#: code:addons/orm.py:3366
+#, python-format
+msgid ""
+"One of the records you are trying to modify has already been deleted "
+"(Document type: %s)."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,help:base.action_country
 msgid ""
 "Display and manage the list of all countries that can be assigned to your "
@@ -1852,11 +1942,6 @@ msgid "Korean (KR) / 한국어 (KR)"
 msgstr "Солонгос (KR) / 한국어 (KR)"
 
 #. module: base
-#: model:res.widget,title:base.matrixise_twitter_widget
-msgid "Stéphane Wirtel's tweets"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.server,action_id:0
 #: selection:ir.actions.server,state:0
 msgid "Client Action"
@@ -1878,18 +1963,12 @@ msgid "Valid"
 msgstr "Хүчинтэй"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not delete this document! (%s)"
-msgstr "Та энэ баримтыг устгах эрхгүй! (%s)"
-
-#. module: base
 #: selection:ir.translation,type:0
 msgid "XSL"
 msgstr "XSL"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:322
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr ""
@@ -1899,6 +1978,11 @@ msgstr ""
 #: model:res.country,name:base.cu
 msgid "Cuba"
 msgstr "Куб"
+
+#. module: base
+#: model:res.widget,title:base.facebook_widget
+msgid "Facebook"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.am
@@ -1915,11 +1999,6 @@ msgstr "Тохиргооны өгөгдлүүд"
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
 msgstr "Алдаатай аргумент"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr "Хттай"
 
 #. module: base
 #: model:res.country,name:base.se
@@ -2007,6 +2086,15 @@ msgid "HR sector"
 msgstr "ХН хэлтэс"
 
 #. module: base
+#: code:addons/orm.py:3817
+#, python-format
+msgid ""
+"Invalid \"order\" specified. A valid \"order\" specification is a comma-"
+"separated list of valid field names (optionally followed by asc/desc for the "
+"direction)"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
 msgstr "Модулийн уялдаа"
@@ -2058,6 +2146,11 @@ msgstr "Уялдаа холбоо"
 #: field:multi_company.default,company_id:0
 msgid "Main Company"
 msgstr "Үндсэн Компани"
+
+#. module: base
+#: field:ir.ui.menu,web_icon_hover:0
+msgid "Web Icon File (hover)"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2142,9 +2235,15 @@ msgid "Portugese / Português"
 msgstr "Португаль / Português"
 
 #. module: base
-#: view:base.module.import:0
-msgid "Select module package to import (.zip file):"
-msgstr "Импортлох модулиа сонго (.zip file):"
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Ноён"
+
+#. module: base
+#: code:addons/orm.py:1622
+#, python-format
+msgid "There is no view of type '%s' defined for the structure!"
+msgstr ""
 
 #. module: base
 #: field:ir.default,ref_id:0
@@ -2242,7 +2341,7 @@ msgid "Mayotte"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:593
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr "Эхлүүлэх үйлдлийг заана уу!"
@@ -2267,6 +2366,12 @@ msgid "Filters"
 msgstr "Шүүлтүүр"
 
 #. module: base
+#: code:addons/orm.py:758
+#, python-format
+msgid "Please check that all your lines have %d columns."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
 #: view:ir.cron:0
 #: model:ir.ui.menu,name:base.menu_ir_cron_act
@@ -2286,7 +2391,13 @@ msgid "If not set, acts as a default value for new resources"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:3448
+#, python-format
+msgid "Recursivity Detected."
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:262
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "Модулиудын хамааралд рекурсын алдаа байна !"
@@ -2310,6 +2421,11 @@ msgid ""
 "Value Added Tax number. Check the box if the partner is subjected to the "
 "VAT. Used by the VAT legal statement."
 msgstr "НӨАТ дугаар. Хэрэв харилцагч НӨАТ төлөгч бол чагтлана."
+
+#. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -2364,11 +2480,6 @@ msgid "VAT"
 msgstr "НӨАТ"
 
 #. module: base
-#: field:ir.ui.menu,web_icon_hover_data:0
-msgid "Web Icons Hover"
-msgstr "Вэб лого"
-
-#. module: base
 #: view:res.lang:0
 msgid "12. %w              ==> 5 ( Friday is the 6th day)"
 msgstr "%w ==> 5 ( Баасан гараг бол 6-дахь өдөр)"
@@ -2382,6 +2493,11 @@ msgstr "Алдаа! Рекурсив ангилал үүсгэж болохгү�
 #: view:res.lang:0
 msgid "%x - Appropriate date representation."
 msgstr "%x - Тохиромжтой огнооны дүрслэл."
+
+#. module: base
+#: model:ir.model,name:base.model_change_user_password
+msgid "change.user.password"
+msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -2399,7 +2515,12 @@ msgid "GPL-2 or later version"
 msgstr "GPL-2 болон дараагийн хувилбар"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr "M."
+
+#. module: base
+#: code:addons/base/module/module.py:429
 #, python-format
 msgid ""
 "Can not create the module file:\n"
@@ -2409,12 +2530,20 @@ msgstr ""
 " %s"
 
 #. module: base
+#: code:addons/orm.py:2973
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: read, Document type: %s)."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
 msgstr "Науру"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:200
 #, python-format
 msgid "The certificate ID of the module must be unique !"
 msgstr "Модулийн сертификат ID давхцах ёсгүй !"
@@ -2491,6 +2620,12 @@ msgid "EAN13"
 msgstr "Зур.код"
 
 #. module: base
+#: code:addons/orm.py:1622
+#, python-format
+msgid "Invalid Architecture!"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.pt
 msgid "Portugal"
 msgstr "Португаль"
@@ -2547,7 +2682,7 @@ msgid "Ecuador"
 msgstr "Эквадор"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:52
 #, python-format
 msgid ""
 "Save this document to a .CSV file and open it with your favourite "
@@ -2618,7 +2753,7 @@ msgid "Action to Trigger"
 msgstr "Гол үйлдэл"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:136
 #, python-format
 msgid "\"email_from\" needs to be set to send welcome mails to users"
 msgstr ""
@@ -2701,6 +2836,11 @@ msgstr "Телеком хэлтэс"
 #: field:workflow.transition,trigger_model:0
 msgid "Trigger Object"
 msgstr "Гол объект"
+
+#. module: base
+#: help:change.user.password,confirm_password:0
+msgid "Enter the new password again for confirmation."
+msgstr ""
 
 #. module: base
 #: view:res.users:0
@@ -2816,17 +2956,12 @@ msgid "FYROM"
 msgstr "FYROM"
 
 #. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Advanced Search"
-msgstr "Дэлгэрэнгүй хайлт"
-
-#. module: base
 #: view:res.lang:0
 msgid "%c - Appropriate date and time representation."
 msgstr "%c - Тохиромжтой огнооны дүрслэл."
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:422
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -2872,7 +3007,7 @@ msgid "Rules"
 msgstr "Дүрэм"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:216
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr "Суулгасан эсвэл суулгах модулиудыг хасаад үзэх хэрэгтэй."
@@ -2942,7 +3077,7 @@ msgid "Lesotho"
 msgstr "Лесото"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:112
 #, python-format
 msgid "You can not remove the model '%s' !"
 msgstr "Та '%s' моделийг устгах боломжгүй !"
@@ -2971,6 +3106,12 @@ msgstr "Abkhazian / аҧсуа"
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
 msgstr "Системийн тохиргоо хийгдсэн"
+
+#. module: base
+#: code:addons/orm.py:929
+#, python-format
+msgid "Error occurred while validating the field(s) %s: %s"
+msgstr ""
 
 #. module: base
 #: view:ir.property:0
@@ -3003,7 +3144,7 @@ msgid "Benin"
 msgstr "Бенин"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
 #, python-format
 msgid "That contract is already registered in the system."
 msgstr ""
@@ -3032,6 +3173,14 @@ msgstr "RML толгой"
 #: field:partner.sms.send,app_id:0
 msgid "API ID"
 msgstr "API ID"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:340
+#, python-format
+msgid ""
+"You can not create this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -3090,6 +3239,11 @@ msgstr "Сенегал"
 #: model:res.country,name:base.hu
 msgid "Hungary"
 msgstr "Унгар"
+
+#. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -3201,11 +3355,6 @@ msgstr ""
 "Хэрэв чагт тавибал уг үйлдэл дэлгэцийн баруун талын самбар дээр харагдахгүй."
 
 #. module: base
-#: model:res.country,name:base.al
-msgid "Albania"
-msgstr "Албани"
-
-#. module: base
 #: view:ir.attachment:0
 msgid "Attached To"
 msgstr "Хавсаргах"
@@ -3239,6 +3388,17 @@ msgid "Creator"
 msgstr "Үүсгэгч"
 
 #. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mx
 msgid "Mexico"
 msgstr "Мексик"
@@ -3262,6 +3422,12 @@ msgstr "res.users"
 #: model:res.country,name:base.ni
 msgid "Nicaragua"
 msgstr "Никрагуа"
+
+#. module: base
+#: code:addons/orm.py:1046
+#, python-format
+msgid "The write method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: view:res.partner.event:0
@@ -3329,6 +3495,18 @@ msgstr "Казакстан"
 #. module: base
 #: view:res.lang:0
 msgid "%w - Weekday number [0(Sunday),6]."
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_partner_form
+msgid ""
+"A customer is an entity you do business with, like a company or an "
+"organization. A customer can have several contacts or addresses which are "
+"the people working for this company. You can use the history tab, to follow "
+"all transactions related to a customer: sales order, emails, opportunities, "
+"claims, etc. If you use the email gateway, the Outlook or the Thunderbird "
+"plugin, don't forget to register emails to each contact so that the gateway "
+"will automatically attach incoming emails to the right partner."
 msgstr ""
 
 #. module: base
@@ -3543,7 +3721,8 @@ msgid "Bank Type"
 msgstr "Банкны төрөл"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:58
+#: code:addons/base/res/res_user.py:67
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "Группын нэр \"-\" тэмдэгтээр эхэлж болохгүй"
@@ -3565,7 +3744,7 @@ msgid "Gujarati / ગુજરાતી"
 msgstr "Gujarati / ગુજરાતી"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:257
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
@@ -3583,7 +3762,7 @@ msgid "Flow Start"
 msgstr "Урсгалын эхлэл"
 
 #. module: base
-#: code:addons/__init__.py:0
+#: code:addons/__init__.py:827
 #, python-format
 msgid "module base cannot be loaded! (hint: verify addons-path)"
 msgstr ""
@@ -3615,7 +3794,9 @@ msgid "Guadeloupe (French)"
 msgstr "Гуаделоп (Франц)"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
+#: code:addons/base/res/res_lang.py:88
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid "User Error"
 msgstr "Хэрэглэгчийн алдаа"
@@ -3691,9 +3872,15 @@ msgid "Cape Verde"
 msgstr "Кэйп Вэрде"
 
 #. module: base
+#: view:base.module.import:0
+msgid "Select module package to import (.zip file):"
+msgstr "Импортлох модулиа сонго (.zip file):"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
+#: model:res.widget,title:base.events_widget
 msgid "Events"
 msgstr "Үйл явдал"
 
@@ -3702,6 +3889,17 @@ msgstr "Үйл явдал"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.url"
 msgstr "ir.actions.url"
+
+#. module: base
+#: model:res.widget,title:base.currency_converter_widget
+msgid "Currency Converter"
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:156
+#, python-format
+msgid "Wrong ID for the browse record, got %r, expected an integer."
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_addess_tree
@@ -3736,14 +3934,20 @@ msgid "French / Français"
 msgstr "Франц хэл / Français"
 
 #. module: base
-#: view:ir.module.module:0
-msgid "Created Menus"
-msgstr "Үүссэн цэсүүд"
+#: code:addons/orm.py:1049
+#, python-format
+msgid "The create method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
 msgid "Workitem"
 msgstr "Ажлын элемент"
+
+#. module: base
+#: view:ir.actions.todo:0
+msgid "Set as Todo"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window.view,act_window_id:0
@@ -3967,11 +4171,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr "Хэрэв харилцагч нь ажилтан бол үүнийг чеклнэ үү."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr "Хязгаарлагдмал компани"
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -3992,6 +4191,14 @@ msgstr "Заавар"
 #: model:ir.model,name:base.model_ir_attachment
 msgid "ir.attachment"
 msgstr "ir.attachment"
+
+#. module: base
+#: code:addons/orm.py:3533
+#, python-format
+msgid ""
+"You cannot perform this operation. New Record Creation is not allowed for "
+"this object as this object is for reporting purpose."
+msgstr ""
 
 #. module: base
 #: view:base.language.import:0
@@ -4033,6 +4240,11 @@ msgid "Project"
 msgstr "Төсөл"
 
 #. module: base
+#: field:ir.ui.menu,web_icon_hover_data:0
+msgid "Web Icon Image (hover)"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Модел амжилттай импортлогдлоо !"
@@ -4059,12 +4271,9 @@ msgid "Serial Key"
 msgstr ""
 
 #. module: base
-#: field:res.partner,customer:0
-#: view:res.partner.address:0
-#: field:res.partner.address,is_customer_add:0
-#: model:res.partner.category,name:base.res_partner_category_0
-msgid "Customer"
-msgstr "Үйлчлүүлэгч"
+#: model:ir.ui.menu,name:base.menu_audit
+msgid "Audit"
+msgstr "Аудит"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -4072,7 +4281,6 @@ msgid "Saint Lucia"
 msgstr "Санта лучиа"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Үйлчилгээний гэрээ"
@@ -4091,6 +4299,11 @@ msgstr "Ажилтан"
 #: field:ir.model.access,perm_create:0
 msgid "Create Access"
 msgstr "Хандалт үүсгэх"
+
+#. module: base
+#: field:change.user.password,current_password:0
+msgid "Current Password"
+msgstr ""
 
 #. module: base
 #: field:res.partner.address,state_id:0
@@ -4174,6 +4387,18 @@ msgid "Signature"
 msgstr "Гарын үсэг"
 
 #. module: base
+#: code:addons/fields.py:456
+#: code:addons/fields.py:654
+#: code:addons/fields.py:656
+#: code:addons/fields.py:658
+#: code:addons/fields.py:660
+#: code:addons/fields.py:662
+#: code:addons/fields.py:664
+#, python-format
+msgid "Not Implemented"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_widget_user
 msgid "res.widget.user"
 msgstr "res.widget.user"
@@ -4194,7 +4419,7 @@ msgid "False means for every user"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:198
 #, python-format
 msgid "The name of the module must be unique !"
 msgstr "Модулийн нэр давхцах ёсгүй !"
@@ -4235,9 +4460,11 @@ msgid "Contacts"
 msgstr "Харьцах хүмүүс"
 
 #. module: base
-#: model:res.country,name:base.fo
-msgid "Faroe Islands"
-msgstr "Фарерын арлууд"
+#: code:addons/orm.py:3199
+#, python-format
+msgid ""
+"Unable to delete this document because it is used as a default property"
+msgstr ""
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -4264,6 +4491,20 @@ msgstr "Чех"
 #. module: base
 #: view:res.widget.wizard:0
 msgid "Widget Wizard"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
+msgid ""
+"The configuration wizards are used to help you configure a new instance of "
+"OpenERP. They are launched during the installation of new modules, but you "
+"can choose to restart some wizards manually from this menu."
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Insufficient fields for Calendar View!"
 msgstr ""
 
 #. module: base
@@ -4310,15 +4551,9 @@ msgid "Mongolia"
 msgstr "Монгол"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
-#: code:addons/base/ir/ir_model.py:0
-#: code:addons/base/module/module.py:0
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
-#: code:addons/base/res/res_currency.py:0
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "Error"
-msgstr "Алдаа"
+#: view:ir.module.module:0
+msgid "Created Menus"
+msgstr "Үүссэн цэсүүд"
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -4433,11 +4668,6 @@ msgid "Password"
 msgstr "Нууц үг"
 
 #. module: base
-#: field:ir.ui.menu,web_icon:0
-msgid "Icon File"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: view:ir.model:0
 #: field:ir.model,field_id:0
@@ -4536,7 +4766,7 @@ msgid "Change My Preferences"
 msgstr "Өөрийн тохиргоог өөрчлөх"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:160
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
@@ -4599,9 +4829,16 @@ msgid "Dutch / Nederlands"
 msgstr "Голланд хэл / Nederlands"
 
 #. module: base
-#: model:res.widget,title:base.rvalyi_twitter_widget
-msgid "Raphaël Valyi's tweets"
+#: code:addons/base/res/res_config.py:384
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
 msgstr ""
+"\n"
+"\n"
+"Энэ нь таны системд аль хэдийн суулгагдсан байна"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -4673,7 +4910,13 @@ msgid "Client Actions"
 msgstr "Клиеитийн үйлдэл"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:1806
+#, python-format
+msgid "The exists method is not implemented on this object !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:336
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -4748,7 +4991,7 @@ msgid "ir.server.object.lines"
 msgstr "ir.server.object.lines"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:530
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
 msgstr "%s модуль: Буруу чанарын сертификат"
@@ -4799,9 +5042,20 @@ msgid "Accepted Users"
 msgstr "Зөвшөөрөгдсөн хэрэглэгчид"
 
 #. module: base
+#: field:ir.ui.menu,web_icon_data:0
+msgid "Web Icon Image"
+msgstr ""
+
+#. module: base
 #: view:ir.values:0
 msgid "Values for Event Type"
 msgstr "Үзэгдлийн төрлийн утгууд"
+
+#. module: base
+#: code:addons/base/res/res_user.py:605
+#, python-format
+msgid "The current password does not match, please double-check it."
+msgstr ""
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -4903,14 +5157,17 @@ msgid "Choose between the simplified interface and the extended one"
 msgstr "Энгийн интерфэйс болон өргөтгөсөн интерфэйсээс сонгоно"
 
 #. module: base
-#: model:res.widget,title:base.odony_twitter_widget
-msgid "Olivier Dony's tweets"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.np
 msgid "Nepal"
 msgstr "Непал"
+
+#. module: base
+#: code:addons/orm.py:2307
+#, python-format
+msgid ""
+"Invalid value for reference field \"%s\" (last part must be a non-zero "
+"integer): \"%s\""
+msgstr ""
 
 #. module: base
 #: help:ir.cron,args:0
@@ -4944,14 +5201,14 @@ msgid "Update Modules List"
 msgstr "Модулийн жагсаалтыг шинэчлэх"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:255
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:241
 #, python-format
 msgid ""
 "Please keep in mind that documents currently displayed may not be relevant "
@@ -4969,6 +5226,12 @@ msgstr "Үргэлжлүүлэх"
 #: selection:base.language.install,lang:0
 msgid "Thai / ภาษาไทย"
 msgstr "Тай хэл / ภาษาไทย"
+
+#. module: base
+#: code:addons/orm.py:158
+#, python-format
+msgid "Object %s does not exists"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5101,6 +5364,13 @@ msgid "Iteration"
 msgstr "Давталт"
 
 #. module: base
+#: code:addons/orm.py:3448
+#: code:addons/orm.py:3532
+#, python-format
+msgid "UserError"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ae
 msgid "United Arab Emirates"
 msgstr "Арабын Нэгдсэн Эмират"
@@ -5123,7 +5393,7 @@ msgid "Global"
 msgstr "Глобал"
 
 #. module: base
-#: view:res.users:0
+#: view:change.user.password:0
 msgid "You must logout and login again after changing your password."
 msgstr ""
 
@@ -5138,7 +5408,12 @@ msgid "Solomon Islands"
 msgstr "Соломоны арлууд"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:344
+#: code:addons/orm.py:1897
+#: code:addons/orm.py:2972
+#: code:addons/orm.py:3165
+#: code:addons/orm.py:3365
+#: code:addons/orm.py:3817
 #, python-format
 msgid "AccessError"
 msgstr "ХандалтынАлдаа"
@@ -5149,7 +5424,7 @@ msgid "Waiting"
 msgstr "Хүлээх"
 
 #. module: base
-#: code:addons/__init__.py:0
+#: code:addons/__init__.py:827
 #, python-format
 msgid "Could not load base module"
 msgstr ""
@@ -5158,6 +5433,12 @@ msgstr ""
 #: view:res.lang:0
 msgid "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 msgstr "8.  %I:%M:%S %p  ==> 06:25:20 PM"
+
+#. module: base
+#: code:addons/orm.py:1803
+#, python-format
+msgid "The copy method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: field:res.log,create_date:0
@@ -5276,7 +5557,7 @@ msgid "ir.actions.todo"
 msgstr "ir.actions.todo"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:94
 #, python-format
 msgid "Couldn't find previous ir.actions.todo"
 msgstr ""
@@ -5350,16 +5631,22 @@ msgid "res.widget"
 msgstr "res.widget"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:219
 #, python-format
 msgid "Model %s does not exist!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:88
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
 msgstr "Хэрэглэгчийн Эрхэм хэлийг устгаж болохгүй !"
+
+#. module: base
+#: code:addons/fields.py:103
+#, python-format
+msgid "Not implemented get_memory method !"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.server:0
@@ -5369,7 +5656,7 @@ msgid "Python Code"
 msgstr "Python код"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Can not create the module file: %s !"
 msgstr "Модулийн файлыг үүсгэж чадахгүй: %s !"
@@ -5385,6 +5672,7 @@ msgstr "Бүх суулгалтад хэрэгтэй OpenERP цөм."
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
+#: view:change.user.password:0
 #: view:partner.clear.ids:0
 #: view:partner.sms.send:0
 #: view:partner.wizard.spam:0
@@ -5412,6 +5700,11 @@ msgstr "Үйлчлүүлэгч"
 #: view:res.request:0
 msgid "Current"
 msgstr "Одоо"
+
+#. module: base
+#: help:change.user.password,new_password:0
+msgid "Enter the new password."
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
@@ -5488,7 +5781,7 @@ msgid ""
 msgstr "Дэлгэцийн төрөл: 'мод', 'форм' болон бусад харагдац."
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:421
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr ""
@@ -5529,7 +5822,7 @@ msgid ""
 msgstr "Үйлдэл (унших, бичих, үүсгэх) хийгдэх объектыг сонгох"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:625
 #, python-format
 msgid "Please specify server option --email-from !"
 msgstr ""
@@ -5616,6 +5909,7 @@ msgstr "Либери"
 #: view:res.groups:0
 #: view:res.partner:0
 #: field:res.partner,comment:0
+#: model:res.widget,title:base.note_widget
 msgid "Notes"
 msgstr "Тэмдэглэл"
 
@@ -5688,6 +5982,11 @@ msgid "Sequence Codes"
 msgstr "Дарааллын төрөл"
 
 #. module: base
+#: field:change.user.password,confirm_password:0
+msgid "Confirm Password"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (CO) / Español (CO)"
 msgstr ""
@@ -5741,7 +6040,9 @@ msgid "Afghanistan, Islamic State of"
 msgstr "Афганистан, Исламын муж"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
+#: code:addons/base/res/res_user.py:594
+#: code:addons/base/res/res_user.py:605
 #, python-format
 msgid "Error !"
 msgstr "Алдаа !"
@@ -5761,6 +6062,12 @@ msgstr "Интервал нэгж"
 #: field:workflow.activity,kind:0
 msgid "Kind"
 msgstr "Төрөл"
+
+#. module: base
+#: code:addons/orm.py:3775
+#, python-format
+msgid "This method does not exist anymore"
+msgstr ""
 
 #. module: base
 #: field:res.bank,fax:0
@@ -5816,6 +6123,11 @@ msgid "Panama"
 msgstr "Панама"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "ХК"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5841,6 +6153,13 @@ msgstr "Сервисийн нэр"
 #: model:res.country,name:base.pn
 msgid "Pitcairn Island"
 msgstr "Питкэйрн арал"
+
+#. module: base
+#: code:addons/base/res/res_user.py:594
+#, python-format
+msgid ""
+"The new and confirmation passwords do not match, please double-check them."
+msgstr ""
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -5912,11 +6231,6 @@ msgid "Attachments"
 msgstr "Хавсралтууд"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
-
-#. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
 #: model:ir.ui.menu,name:base.menu_sale_config_sales
 #: model:ir.ui.menu,name:base.menu_sales
@@ -5933,6 +6247,11 @@ msgstr "Бусад үйлдлүүд"
 #: view:res.config.users:0
 msgid "Done"
 msgstr "Дууссан"
+
+#. module: base
+#: view:change.user.password:0
+msgid "Change"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -6022,6 +6341,14 @@ msgid "To browse official translations, you can start with these links:"
 msgstr "Энэ линк нь албан ёсны орчуулга ачааллахыг эхлүүлнэ:"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:338
+#, python-format
+msgid ""
+"You can not read this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
+
+#. module: base
 #: view:res.bank:0
 #: field:res.config.users,address_id:0
 #: view:res.partner.address:0
@@ -6029,11 +6356,6 @@ msgstr "Энэ линк нь албан ёсны орчуулга ачаалла
 #: field:res.users,address_id:0
 msgid "Address"
 msgstr "Хаяг"
-
-#. module: base
-#: field:ir.ui.menu,web_icon_hover:0
-msgid "Icon hover File"
-msgstr ""
 
 #. module: base
 #: field:ir.module.module,latest_version:0
@@ -6113,7 +6435,7 @@ msgid "Saint Kitts & Nevis Anguilla"
 msgstr "Saint Kitts & Nevis Anguilla"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:0
+#: code:addons/base/res/res_currency.py:100
 #, python-format
 msgid ""
 "No rate found \n"
@@ -6182,14 +6504,15 @@ msgid "Or"
 msgstr "Эсвэл"
 
 #. module: base
-#: model:res.country,name:base.pk
-msgid "Pakistan"
-msgstr "Пакистан"
+#: model:ir.actions.act_window,name:base.res_log_act_window
+#: model:ir.ui.menu,name:base.menu_res_log_act_window
+msgid "Client Logs"
+msgstr ""
 
 #. module: base
-#: view:ir.actions.todo:0
-msgid "Set as Todo"
-msgstr ""
+#: model:res.country,name:base.al
+msgid "Albania"
+msgstr "Албани"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -6197,7 +6520,7 @@ msgid "Samoa"
 msgstr "Самоа"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid ""
 "You cannot delete the language which is Active !\n"
@@ -6220,10 +6543,18 @@ msgid "Child IDs"
 msgstr "Дэд IDs"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "Серверийн үйлдэлд `Record Id` тохиргооны асуудал байна!"
+
+#. module: base
+#: code:addons/orm.py:2306
+#: code:addons/orm.py:2316
+#, python-format
+msgid "ValidateError"
+msgstr ""
 
 #. module: base
 #: view:base.module.import:0
@@ -6272,6 +6603,14 @@ msgid "Home Action"
 msgstr "Үндсэн Үйлдэл"
 
 #. module: base
+#: code:addons/custom.py:558
+#, python-format
+msgid ""
+"The sum of the data (2nd field) is null.\n"
+"We can't draw a pie chart !"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_lunch_reporting
 #: model:ir.ui.menu,name:base.menu_project_report
 #: model:ir.ui.menu,name:base.menu_report_association
@@ -6299,10 +6638,9 @@ msgid "Stop All"
 msgstr "Бүгдийг зогсоох"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
-#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
-#: view:publisher_warranty.contract.wizard:0
-msgid "Register a Contract"
+#: code:addons/orm.py:412
+#, python-format
+msgid "The read_group method is not implemented on this object !"
 msgstr ""
 
 #. module: base
@@ -6354,7 +6692,7 @@ msgid "Start update"
 msgstr "Шинэчлэлт эхлүүлэх"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:144
 #, python-format
 msgid "Contract validation error"
 msgstr ""
@@ -6380,6 +6718,11 @@ msgstr "Цагийн бүс"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr "Хатагтай"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view
@@ -6408,7 +6751,7 @@ msgid "HR Manager Dashboard"
 msgstr "Хүний нөөцийн менежерийн хянах самбар"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:253
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
@@ -6460,7 +6803,7 @@ msgid "Module Update"
 msgstr "Модул шинэчлэлт"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
 msgstr ""
@@ -6505,11 +6848,6 @@ msgid "Ms."
 msgstr "Хатагтай."
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.ch
 msgid "Switzerland"
 msgstr "Швейцарь"
@@ -6546,7 +6884,19 @@ msgid "The new user's real name, used for searching and most listings"
 msgstr "Шинэ хэрэглэгчийн жинхэнэ нэр, хайлт болон бусад зүйлд хэрэглэгдэнэ"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/osv.py:154
+#: code:addons/osv.py:156
+#, python-format
+msgid "Integrity Error"
+msgstr "Нэгдмэл уялдааны Алдаа"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_wizard_screen
+msgid "ir.wizard.screen"
+msgstr "ir.wizard.screen"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:189
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr "Талбарын хэмжээ 1-с бага байж болохгүй !"
@@ -6585,6 +6935,12 @@ msgid "Arguments"
 msgstr "Аргумент"
 
 #. module: base
+#: code:addons/orm.py:716
+#, python-format
+msgid "Database ID doesn't exist: %s : %s"
+msgstr ""
+
+#. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 2"
 msgstr "GPL Хувилбар 2"
@@ -6595,14 +6951,29 @@ msgid "GPL Version 3"
 msgstr "GPL Хувилбар 3"
 
 #. module: base
+#: code:addons/orm.py:836
+#, python-format
+msgid "key '%s' not found in selection field '%s'"
+msgstr ""
+
+#. module: base
 #: view:partner.wizard.ean.check:0
 msgid "Correct EAN13"
 msgstr "Зөв зур.код"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_audit
-msgid "Audit"
-msgstr "Аудит"
+#: code:addons/orm.py:2317
+#, python-format
+msgid "The value \"%s\" for the field \"%s\" is not in the selection"
+msgstr ""
+
+#. module: base
+#: field:res.partner,customer:0
+#: view:res.partner.address:0
+#: field:res.partner.address,is_customer_add:0
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Customer"
+msgstr "Үйлчлүүлэгч"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6707,7 +7078,7 @@ msgid "Copy Object"
 msgstr "Хувилах Обьект"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:551
 #, python-format
 msgid ""
 "Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
@@ -6759,6 +7130,18 @@ msgid "Object"
 msgstr "Объект"
 
 #. module: base
+#: code:addons/osv.py:151
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+"\n"
+"\n"
+"[обьектийн сурвалж: %s - %s]"
+
+#. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "ir.default"
 msgstr "ir.default"
@@ -6793,10 +7176,15 @@ msgid "User Ref."
 msgstr "Хэрэглэгч дугаар."
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:550
 #, python-format
 msgid "Warning !"
 msgstr "Сануулга !"
+
+#. module: base
+#: model:res.widget,title:base.google_maps_widget
+msgid "Google Maps"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -6934,7 +7322,7 @@ msgid "workflow.triggers"
 msgstr "workflow.triggers"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:60
 #, python-format
 msgid "Invalid search criterions"
 msgstr ""
@@ -6972,6 +7360,13 @@ msgid "Selection"
 msgstr "Сонголт"
 
 #. module: base
+#: view:change.user.password:0
+#: model:ir.actions.act_window,name:base.action_view_change_password_form
+#: view:res.users:0
+msgid "Change Password"
+msgstr ""
+
+#. module: base
 #: field:res.company,rml_header1:0
 msgid "Report Header"
 msgstr "Тайлангийн толгой"
@@ -6990,7 +7385,7 @@ msgid "Action Type"
 msgstr "Үйлдлийн төрөл"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:268
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -7032,14 +7427,6 @@ msgstr "SMS"
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
 msgstr "Коста Рика"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_partner_supplier_form
-msgid ""
-"With the Suppliers menu, you have access to all informations regarding your "
-"suppliers, including an history to track event (crm) and his accounting "
-"properties."
-msgstr ""
 
 #. module: base
 #: view:workflow.activity:0
@@ -7094,9 +7481,21 @@ msgid "workflow.instance"
 msgstr "workflow.instance"
 
 #. module: base
+#: code:addons/orm.py:278
+#, python-format
+msgid "Unknown attribute %s in %s "
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "10. %S              ==> 20"
 msgstr "10. %S ==> 20"
+
+#. module: base
+#: code:addons/fields.py:106
+#, python-format
+msgid "undefined get method !"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7215,6 +7614,11 @@ msgid "Croatian / hrvatski jezik"
 msgstr "Хорват хэл / hrvatski jezik"
 
 #. module: base
+#: help:change.user.password,current_password:0
+msgid "Enter your current password."
+msgstr ""
+
+#. module: base
 #: field:base.language.install,overwrite:0
 msgid "Overwrite Existing Terms"
 msgstr "Өмнөх орчуулгыг дарж бичих"
@@ -7271,6 +7675,11 @@ msgstr "Э-мэйл илгээх"
 #: field:res.users,menu_id:0
 msgid "Menu Action"
 msgstr "Цэсний үйлдэл"
+
+#. module: base
+#: model:res.country,name:base.fo
+msgid "Faroe Islands"
+msgstr "Фарерын арлууд"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -7399,17 +7808,6 @@ msgid ""
 msgstr "Тухайн обьектын дуудагдаж ажиллах функцын нэр."
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr "Олон төрлийн"
@@ -7420,7 +7818,7 @@ msgid "China"
 msgstr "Хятад"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:486
 #, python-format
 msgid ""
 "--\n"
@@ -7505,6 +7903,11 @@ msgstr "Сувгийн нэр"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5. %y, %Y ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr "ххк"
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7615,7 +8018,7 @@ msgid "Account No."
 msgstr "Дансны дугаар."
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
 msgstr "Үндсэн хэл  'en_US'-ийг устгаж болохгүй !"
@@ -7636,15 +8039,6 @@ msgid "Field Label"
 msgstr "Талбарын гарчиг"
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_partner_form
-msgid ""
-"The Address book manages your customers list. The form for customer allows "
-"you to record detailed on your customers (address, contacts, pricelist, "
-"account, etc.). With the history tab, you can follow all moves transactions "
-"related to a customer, like sales order, claims."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "Джибут"
@@ -7658,6 +8052,14 @@ msgstr "Орчуулгын утга"
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
 msgstr "Antigua and Barbuda"
+
+#. module: base
+#: code:addons/orm.py:3166
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: %s, Document type: %s)."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.zr
@@ -7717,7 +8119,7 @@ msgid "Auto-Refresh"
 msgstr "Автомат-Шинэчлэл"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:60
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
@@ -7726,6 +8128,11 @@ msgstr ""
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
 msgstr "Диаграм"
+
+#. module: base
+#: model:res.country,name:base.wf
+msgid "Wallis and Futuna Islands"
+msgstr "Wallis and Futuna Islands"
 
 #. module: base
 #: help:multi_company.default,name:0
@@ -7782,6 +8189,35 @@ msgstr ""
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "Туркменстан"
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:593
+#: code:addons/base/ir/ir_actions.py:625
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
+#: code:addons/base/ir/ir_model.py:112
+#: code:addons/base/ir/ir_model.py:197
+#: code:addons/base/ir/ir_model.py:216
+#: code:addons/base/ir/ir_model.py:219
+#: code:addons/base/module/module.py:215
+#: code:addons/base/module/module.py:258
+#: code:addons/base/module/module.py:262
+#: code:addons/base/module/module.py:268
+#: code:addons/base/module/module.py:303
+#: code:addons/base/module/module.py:321
+#: code:addons/base/module/module.py:336
+#: code:addons/base/module/module.py:429
+#: code:addons/base/module/module.py:530
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
+#: code:addons/base/res/res_currency.py:100
+#: code:addons/base/res/res_user.py:57
+#: code:addons/base/res/res_user.py:66
+#: code:addons/custom.py:558
+#: code:addons/orm.py:3199
+#, python-format
+msgid "Error"
+msgstr "Алдаа"
 
 #. module: base
 #: model:res.country,name:base.pm
@@ -7880,11 +8316,6 @@ msgid "Default multi company"
 msgstr "Үндсэн компаниуд"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
-msgstr ""
-
-#. module: base
 #: view:res.request:0
 msgid "Send"
 msgstr "Илгээх"
@@ -7916,7 +8347,7 @@ msgid "Internal Header/Footer"
 msgstr "Дотоод Толгой/Хөл"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:59
 #, python-format
 msgid ""
 "Save this document to a .tgz file. This archive containt UTF-8 %s files and "
@@ -7958,6 +8389,14 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:2161
+#, python-format
+msgid ""
+"Invalid group_by specification: \"%s\".\n"
+"A group_by specification must be a list of valid fields."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
 msgstr "Саудын Араб"
@@ -7982,7 +8421,7 @@ msgid "Event Logs"
 msgstr "Үйл явдлын түүх"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_configuration.py:0
+#: code:addons/base/module/wizard/base_module_configuration.py:37
 #, python-format
 msgid "System Configuration done"
 msgstr "Системийн тохиргоо дууссан"
@@ -8029,10 +8468,17 @@ msgid "Low"
 msgstr "Бага"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:0
+#: code:addons/base/ir/ir_ui_menu.py:305
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr "Алдаа! Та рекурсив цэс үүсгэж болохгүй."
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
+#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
+#: view:publisher_warranty.contract.wizard:0
+msgid "Register a Contract"
+msgstr ""
 
 #. module: base
 #: view:ir.rule:0
@@ -8042,7 +8488,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:145
 #, python-format
 msgid "Please check your publisher warranty contract name and validity."
 msgstr ""
@@ -8058,11 +8504,6 @@ msgstr "Эл салвадор"
 #: field:res.partner.address,phone:0
 msgid "Phone"
 msgstr "Утас"
-
-#. module: base
-#: model:res.widget,title:base.albertnan_twitter_widget
-msgid "Albert Cervera Areny's tweets"
-msgstr ""
 
 #. module: base
 #: field:ir.cron,active:0
@@ -8196,7 +8637,7 @@ msgid "View Auto-Load"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:197
 #, python-format
 msgid "You cannot remove the field '%s' !"
 msgstr "Энэ талбрыг та устгаж болохгүй '%s' !"
@@ -8209,6 +8650,11 @@ msgid "Resource"
 msgstr "Нөөц"
 
 #. module: base
+#: field:ir.ui.menu,web_icon:0
+msgid "Web Icon File"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Persian / فارس"
 msgstr "Перс хэл / فارس"
@@ -8219,7 +8665,7 @@ msgid "View Ordering"
 msgstr "Дэлгэц эрэмблэлт"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Unmet dependency !"
 msgstr ""
@@ -8229,6 +8675,14 @@ msgstr ""
 msgid ""
 "Supported file formats: *.csv (Comma-separated values) or *.po (GetText "
 "Portable Objects)"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:341
+#, python-format
+msgid ""
+"You can not delete this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
 msgstr ""
 
 #. module: base
@@ -8355,7 +8809,7 @@ msgid "Azerbaijan"
 msgstr "Азербайжан"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid "Warning"
 msgstr "Сануулга"
@@ -8382,14 +8836,18 @@ msgid "Czech / Čeština"
 msgstr "Чех / Čeština"
 
 #. module: base
-#: model:res.country,name:base.wf
-msgid "Wallis and Futuna Islands"
-msgstr "Wallis and Futuna Islands"
+#: selection:ir.model.fields,select_level:0
+msgid "Advanced Search"
+msgstr "Дэлгэрэнгүй хайлт"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_wizard_screen
-msgid "ir.wizard.screen"
-msgstr "ir.wizard.screen"
+#: model:ir.actions.act_window,help:base.action_partner_supplier_form
+msgid ""
+"You can access all information regarding your suppliers from the supplier "
+"form: accounting data, history of emails, meetings, purchases, etc. You can "
+"uncheck the 'Suppliers' filter button in order to search in all your "
+"partners, including customers and prospects."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -8594,11 +9052,6 @@ msgid "View Name"
 msgstr "Дэлгэцийн нэр"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Итал хэл / Italiano"
@@ -8655,11 +9108,6 @@ msgid "Seychelles"
 msgstr "Сицилийн арлууд"
 
 #. module: base
-#: model:res.widget,title:base.nhomar_twitter_widget
-msgid "Nhomar Hernandez's tweets"
-msgstr ""
-
-#. module: base
 #: model:ir.model,name:base.model_res_partner_bank
 #: view:res.partner.bank:0
 msgid "Bank Accounts"
@@ -8687,7 +9135,7 @@ msgid "Account Owner"
 msgstr "Данс эзэмшигч"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:240
 #, python-format
 msgid "Company Switch Warning"
 msgstr ""
@@ -8731,6 +9179,7 @@ msgid "Delivery"
 msgstr "Хүргэлт"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Корп."
@@ -8746,7 +9195,7 @@ msgid "Workflow Instances"
 msgstr "Ажлын урсгалын тохиолдол"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:261
 #, python-format
 msgid "Partners: "
 msgstr "Харилцагчид: "
@@ -8809,6 +9258,10 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Outgoing transitions"
 #~ msgstr "Гарах шилжилтүүд"
 
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "Барааны тоо"
+
 #~ msgid "Operand"
 #~ msgstr "Операнд"
 
@@ -8817,6 +9270,10 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "%j - Day of the year as a decimal number [001,366]."
 #~ msgstr "%j - Жилийн өдрийн тоон дугаар [001,366]"
+
+#, python-format
+#~ msgid "You can not create this kind of document! (%s)"
+#~ msgstr "Та (%s) төрлийн баримтыг үүсгэж чадахгүй!"
 
 #~ msgid "To browse official translations, you can visit this link: "
 #~ msgstr "Албан ёсны орчуулгыг ачаалах бол уг линк-д зочилно уу: "
@@ -8850,6 +9307,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "%y - Year without century as a decimal number [00,99]."
 #~ msgstr "%y - Мянгатын оронгүй жилийн тоон дугаар [00,99]"
 
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Дор хаяж нэг тест давбал дүрэмд нийцнэ"
+
 #~ msgid "Configure"
 #~ msgstr "Тохируулах"
 
@@ -8871,6 +9331,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Factor"
 #~ msgstr "Коэффицент"
 
+#~ msgid "maintenance contract modules"
+#~ msgstr "Засвар үйлчилгээний гэрээтэй модулиуд"
+
 #~ msgid "Objects Security Grid"
 #~ msgstr "Обьект хандалтын хүснэгт"
 
@@ -8882,6 +9345,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "Alignment"
 #~ msgstr "Зэрэгцүүлэлт"
+
+#~ msgid "Tests"
+#~ msgstr "Тестүүд"
 
 #~ msgid "Planned Cost"
 #~ msgstr "Төлөвлөсөн өртөг"
@@ -8930,6 +9396,10 @@ msgstr "Орос хэл / русский язык"
 #~ "'%s'.\n"
 #~ "Гэвч тэр модуль нь таны системээс олдохгүй байна."
 
+#, python-format
+#~ msgid "You can not read this document! (%s)"
+#~ msgstr "Та энэ баримтыг унших эрхгүй! (%s)"
+
 #~ msgid "Fixed Width"
 #~ msgstr "Тогтмол өргөн"
 
@@ -8968,6 +9438,10 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Configure User"
 #~ msgstr "Хэрэглэгч тохируулах"
 
+#, python-format
+#~ msgid "You can not write in this document! (%s)"
+#~ msgstr "Та энэ баримтыг засварлах эрхгүй! (%s)"
+
 #~ msgid "My Closed Requests"
 #~ msgstr "Миний хаагдсан хүсэлтүүд"
 
@@ -8983,6 +9457,10 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "right"
 #~ msgstr "баруун"
 
+#, python-format
+#~ msgid "You can not delete this document! (%s)"
+#~ msgstr "Та энэ баримтыг устгах эрхгүй! (%s)"
+
 #~ msgid "Daily"
 #~ msgstr "Өдөр тутмын"
 
@@ -8997,9 +9475,6 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "Document Link"
 #~ msgstr "Баримтын холбоос"
-
-#~ msgid "Sir"
-#~ msgstr "Ноён"
 
 #~ msgid "Start Upgrade"
 #~ msgstr "Шинэчлэлтийг эхлэх"
@@ -9216,6 +9691,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "Skip Step"
 #~ msgstr "Алхамыг алгасах"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
 
 #~ msgid "Validated"
 #~ msgstr "Батлагдсан"
@@ -9518,9 +9996,6 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-purchase"
 #~ msgstr "terp-purchase"
 
-#~ msgid "Ltd"
-#~ msgstr "ХК"
-
 #~ msgid "Language name"
 #~ msgstr "Хэлний нэр"
 
@@ -9552,9 +10027,6 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
 
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
-
 #~ msgid "Sale Opportunity"
 #~ msgstr "Худалдах боломж"
 
@@ -9564,6 +10036,14 @@ msgstr "Орос хэл / русский язык"
 #~ msgstr ""
 #~ "UTF-8-аар кодлогдсон .CSV файл оруулах хэрэгтэй. Файлынхаа эхний мөрийг "
 #~ "шалгана уу:"
+
+#, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" нь хэт олон цэг агуулж байна. XML id цэг агуулах ёсгүй ! Бусад "
+#~ "модульд байгаа өгөгдлийг module.reference_id байдлаар заахад цэгийг хэрэглэнэ"
 
 #~ msgid "STOCK_DIALOG_WARNING"
 #~ msgstr "STOCK_DIALOG_WARNING"
@@ -9606,6 +10086,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "STOCK_ADD"
 #~ msgstr "STOCK_ADD"
+
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
 
 #~ msgid "Installed modules"
 #~ msgstr "Суусан модулиуд"
@@ -9784,6 +10267,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Choose a language to install:"
 #~ msgstr "Суулгах хэлээ сонгоно уу:"
 
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr "Дүрмийг глобаль болгох эсвэл группэд байрлуулах хэрэгтэй"
+
 #~ msgid "Repository"
 #~ msgstr "Агуулах"
 
@@ -9825,6 +10311,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "%I - Hour (12-hour clock) as a decimal number [01,12]."
 #~ msgstr "%I - Цагийн тоон дугаар [01,12]."
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr "Нэг объект дээр олон дүрмүүд OR үйлдлээр холбогдсон байна"
 
 #~ msgid "Note that this operation my take a few minutes."
 #~ msgstr "Энэ үйлдэл бага зэрэг хугацаа авна."
@@ -9922,6 +10411,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "Groups are used to defined access rights on each screen and menu."
 #~ msgstr "Групп нь дэлгэц, цэснүүдэд хандах эрхийг тохируулахад хэрэглэгдэнэ."
 
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "Бүх шалгалтыг давбал дүрэм хангагдана"
+
 #~ msgid "Connect Actions To Client Events"
 #~ msgstr "Үйлдлүүдийг клиент үзэгдлүүдтэй холбох"
 
@@ -10005,14 +10497,84 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "All Properties"
 #~ msgstr "Бүх шинжүүд"
 
+#~ msgid "Configure simple view"
+#~ msgstr "Энгийн харагдацыг тохируулах"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department at (+32).81.81.37.00."
+#~ msgstr ""
+#~ "Таны төлбөр энэ имэйл илгээгдсэн дараа төлөгдөх үү, одоогийн төлбөрийг "
+#~ "хоосон болгох талаар бодолцоно уу. Манай санхүүгийн албатай санаа зоволтгүй "
+#~ "холбогдоно уу. Утас: (+32).81.81.37.00."
+
+#~ msgid "Get Max"
+#~ msgstr "Максимум утга авах"
+
+#~ msgid "Children"
+#~ msgstr "Дэд дүр"
+
+#, python-format
+#~ msgid "Using a relation field which uses an unknown object"
+#~ msgstr "Мэдэгдэхгүй обьектийг хэрэглэдэг харьцааны талбарыг хэрэглэж"
+
+#~ msgid "The name of the Partner must be unique !"
+#~ msgstr "Түншийн нэр үл давхцах байх ёстой !"
+
+#~ msgid "The Code of the Partner Function must be unique !"
+#~ msgstr "Түншлэлийн Функцийн Код үл давхцах байх ёстой !"
+
+#~ msgid "Sequence Code"
+#~ msgstr "Дарааллын Код"
+
+#~ msgid "Unsubscribe Report"
+#~ msgstr "Тайланг Бүртгэлээс хасах"
+
 #~ msgid "terp-emblem-important"
 #~ msgstr "terp-emblem-important"
+
+#~ msgid "Serbian / Serbia"
+#~ msgstr "Серби хэл / Серби"
+
+#~ msgid "Mongolian / Mongolia"
+#~ msgstr "Монгол хэл / Монгол"
 
 #~ msgid "terp-gtk-jump-to-ltr"
 #~ msgstr "terp-gtk-jump-to-ltr"
 
+#~ msgid "Korean / Korea, Democratic Peoples Republic of"
+#~ msgstr "Солонгос хэл / Бүгд найрамдах ардчилсан Солонгос улс"
+
+#~ msgid "Bulgarian / български"
+#~ msgstr "Болгар хэл / български"
+
 #~ msgid "terp-folder-yellow"
 #~ msgstr "terp-folder-yellow"
+
+#, python-format
+#~ msgid ""
+#~ "Model %s Does not Exist !\" % vals['relation']))\n"
+#~ "\n"
+#~ "            if self.pool.get(vals['model']):\n"
+#~ "                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+#~ "                #Added context to _auto_init for special treatment to custom "
+#~ "field for select_level\n"
+#~ "                ctx = context.copy()\n"
+#~ "                "
+#~ "ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.ge"
+#~ "t('select_level','0"
+#~ msgstr ""
+#~ "Модел %s тодорхойлогдоогүй байна !\" % vals['relation']))\n"
+#~ "\n"
+#~ "            if self.pool.get(vals['model']):\n"
+#~ "                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
+#~ "                #Added context to _auto_init for special treatment to custom "
+#~ "field for select_level\n"
+#~ "                ctx = context.copy()\n"
+#~ "                "
+#~ "ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.ge"
+#~ "t('select_level','0"
 
 #~ msgid "terp-stock_align_left_24"
 #~ msgstr "terp-stock_align_left_24"
@@ -10035,6 +10597,9 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-personal-"
 #~ msgstr "terp-personal-"
 
+#~ msgid "Ukrainian / украї́нська мо́ва"
+#~ msgstr "Украйн хэл / украї́нська мо́ва"
+
 #~ msgid "terp-mail-forward"
 #~ msgstr "terp-mail-forward"
 
@@ -10043,6 +10608,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "terp-dolar_ok!"
 #~ msgstr "terp-dolar_ok!"
+
+#~ msgid "Hindi / India"
+#~ msgstr "Хинди хэл / India"
 
 #~ msgid "terp-mail-replied"
 #~ msgstr "terp-mail-replied"
@@ -10053,14 +10621,29 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-gdu-smart-failing"
 #~ msgstr "terp-gdu-smart-failing"
 
+#~ msgid "Finland / Suomi"
+#~ msgstr "Финлянд хэл / Suomi"
+
 #~ msgid "terp-folder-orange"
 #~ msgstr "terp-folder-orange"
+
+#~ msgid "Latvian / Latvia"
+#~ msgstr "Латви хэл / Latvia"
+
+#~ msgid "Urdu / Pakistan"
+#~ msgstr "Urdu / Pakistan"
 
 #~ msgid "terp-gtk-media-pause"
 #~ msgstr "terp-gtk-media-pause"
 
+#~ msgid "Albanian / Shqipëri"
+#~ msgstr "Албани хэл / Shqipëri"
+
 #~ msgid "terp-gtk-go-back-rtl"
 #~ msgstr "terp-gtk-go-back-rtl"
+
+#~ msgid "Malayalam / India"
+#~ msgstr "Malayalam / India"
 
 #~ msgid "terp-accessories-archiver-minus"
 #~ msgstr "terp-accessories-archiver-minus"
@@ -10076,6 +10659,9 @@ msgstr "Орос хэл / русский язык"
 
 #~ msgid "Maintenance Contracts"
 #~ msgstr "Үйлдвэрлэлийн гэрээ"
+
+#~ msgid "Romanian / limba română"
+#~ msgstr "Рум хэл / limba română"
 
 #~ msgid "terp-mail-"
 #~ msgstr "terp-mail-"
@@ -10098,11 +10684,23 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-accessories-archiver"
 #~ msgstr "terp-accessories-archiver"
 
+#~ msgid "Occitan (post 1500) / France"
+#~ msgstr "Occitan (post 1500) / France"
+
 #~ msgid "terp-face-plain"
 #~ msgstr "terp-face-plain"
 
+#~ msgid "Japanese / Japan"
+#~ msgstr "Япон хэл / Japan"
+
 #~ msgid "terp-stock_format-scientific"
 #~ msgstr "terp-stock_format-scientific"
+
+#~ msgid "Inuktitut / Canada"
+#~ msgstr "Inuktitut / Canada"
+
+#~ msgid "Norwegian Bokmål / Norway"
+#~ msgstr "Norwegian Bokmål / Norway"
 
 #~ msgid "terp-dialog-close"
 #~ msgstr "terp-dialog-close"
@@ -10110,8 +10708,14 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-folder-blue"
 #~ msgstr "terp-folder-blue"
 
+#~ msgid "Sinhalese / Sri Lanka"
+#~ msgstr "Sinhalese / Sri Lanka"
+
 #~ msgid "terp-gnome-cpu-frequency-applet+"
 #~ msgstr "terp-gnome-cpu-frequency-applet+"
+
+#~ msgid "Abkhazian (RU)"
+#~ msgstr "Abkhazian (RU)"
 
 #~ msgid "terp-accessories-archiver+"
 #~ msgstr "terp-accessories-archiver+"
@@ -10119,8 +10723,23 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-check"
 #~ msgstr "terp-check"
 
+#~ msgid "Portugese / português"
+#~ msgstr "Португал хэл / português"
+
 #~ msgid "terp-gtk-go-back-ltr"
 #~ msgstr "terp-gtk-go-back-ltr"
+
+#~ msgid "Dutch (Belgium) / Nederlands (Belgïe)"
+#~ msgstr "Dutch (Belgium) / Nederlands (Belgïe)"
+
+#~ msgid ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
+#~ msgstr ""
+#~ "Would your payment have been carried out after this mail was sent, please "
+#~ "consider the present one as void. Do not hesitate to contact our accounting "
+#~ "department"
 
 #~ msgid "terp-folder-green"
 #~ msgstr "terp-folder-green"
@@ -10143,8 +10762,17 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-gtk-jump-to-rtl"
 #~ msgstr "terp-gtk-jump-to-rtl"
 
+#~ msgid "Gujarati / India"
+#~ msgstr "Gujarati / India"
+
 #~ msgid "States"
 #~ msgstr "Муж"
+
+#~ msgid "Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam"
+#~ msgstr "Вьетнам / Cộng hòa xã hội chủ nghĩa Việt Nam"
+
+#~ msgid "Telugu / India"
+#~ msgstr "Telugu / India"
 
 #~ msgid "terp-mail_delete"
 #~ msgstr "terp-mail_delete"
@@ -10155,8 +10783,68 @@ msgstr "Орос хэл / русский язык"
 #~ msgid "terp-mail-message-new"
 #~ msgstr "terp-mail-message-new"
 
+#~ msgid "Korean / Korea, Republic of"
+#~ msgstr "Солонгоч хэл / Бүгд найрамдах Солонгос улс"
+
+#~ msgid "Report Custom"
+#~ msgstr "Хэвшсэн тайлан"
+
+#~ msgid "in"
+#~ msgstr "Дотор"
+
+#~ msgid "module,type,name,res_id,src,value"
+#~ msgstr "модуль,төрөл,нэр,нөөцийн дугаар,срс,утга"
+
+#~ msgid "type,name,res_id,src,value"
+#~ msgstr "төрөл,нэр,нөөцийн дугаар,срс,утга"
+
+#~ msgid "Ok"
+#~ msgstr "Тийм"
+
+#~ msgid "Returning"
+#~ msgstr "Буцах"
+
+#~ msgid "Tabular"
+#~ msgstr "Хүснэгтэн"
+
+#~ msgid "Start On"
+#~ msgstr "Эхлэх"
+
+#~ msgid "Status"
+#~ msgstr "Төлөв"
+
+#~ msgid "Purchase Offer"
+#~ msgstr "Худалдан авалтын санал"
+
+#~ msgid "At Once"
+#~ msgstr "Нэг удаа"
+
+#~ msgid "Next Configuration Wizard"
+#~ msgstr "Дараагийн тохиргооны визард"
+
+#~ msgid "Report custom"
+#~ msgstr "Уламжлалт тайлан"
+
 #~ msgid "Your maintenance contract is already subscribed in the system !"
 #~ msgstr "Таны арчилгаа, үйлчилгээний гэрээ системд бүртгэгдсэн байна !"
 
+#~ msgid "Mister"
+#~ msgstr "Ноён"
+
+#~ msgid "Corporation"
+#~ msgstr "Корпораци"
+
 #~ msgid "Serbian / српски језик"
 #~ msgstr "Серби хэл / српски језик"
+
+#~ msgid "Mss."
+#~ msgstr "Хттай"
+
+#~ msgid "Web Icons Hover"
+#~ msgstr "Вэб лого"
+
+#~ msgid "Limited Company"
+#~ msgstr "Хязгаарлагдмал компани"
+
+#~ msgid "Web Icons"
+#~ msgstr "Веб icon"

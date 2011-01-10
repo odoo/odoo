@@ -173,15 +173,15 @@ class wkf_instance(osv.osv):
     _log_access = False
     _columns = {
         'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
-        'res_id': fields.integer('Resource ID', select=True),
-        'res_type': fields.char('Resource Object', size=64, select=True),
-        'state': fields.char('State', size=32, select=True),
+        'res_id': fields.integer('Resource ID'),
+        'res_type': fields.char('Resource Object', size=64),
+        'state': fields.char('State', size=32),
     }
     def _auto_init(self, cr, context=None):
         super(wkf_instance, self)._auto_init(cr, context)
-        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_res_type_state_index\'')
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_type_res_id_state_index\'')
         if not cr.fetchone():
-            cr.execute('CREATE INDEX wkf_instance_res_id_res_type_state_index ON wkf_instance (res_id, res_type, state)')
+            cr.execute('CREATE INDEX wkf_instance_res_type_res_id_state_index ON wkf_instance (res_type, res_id, state)')
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'wkf_instance_res_id_wkf_id_index\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX wkf_instance_res_id_wkf_id_index ON wkf_instance (res_id, wkf_id)')

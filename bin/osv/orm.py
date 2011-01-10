@@ -59,8 +59,10 @@ from query import Query
 import tools
 from tools.safe_eval import safe_eval as eval
 
-regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
+# List of etree._Element subclasses that we choose to ignore when parsing XML.
+from tools import SKIPPED_ELEMENT_TYPES
 
+regex_order = re.compile('^(([a-z0-9_]+|"[a-z0-9_]+")( *desc| *asc)?( *, *|))+$', re.I)
 
 POSTGRES_CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -256,8 +258,11 @@ class browse_record(object):
                             else:
                                 ref_obj, ref_id = result_line[field_name].split(',')
                                 ref_id = long(ref_id)
-                                obj = self._table.pool.get(ref_obj)
-                                new_data[field_name] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                if ref_id:
+                                    obj = self._table.pool.get(ref_obj)
+                                    new_data[field_name] = browse_record(self._cr, self._uid, ref_id, obj, self._cache, context=self._context, list_class=self._list_class, fields_process=self._fields_process)
+                                else:
+                                    new_data[field_name] = browse_null()
                         else:
                             new_data[field_name] = browse_null()
                     else:
@@ -511,8 +516,7 @@ class orm_template(object):
             self._table = self._name.replace('.', '_')
 
     def browse(self, cr, uid, select, context=None, list_class=None, fields_process=None):
-        """
-        Fetch records as objects allowing to use dot notation to browse fields and relations
+        """Fetch records as objects allowing to use dot notation to browse fields and relations
 
         :param cr: database cursor
         :param user: current user id
@@ -563,7 +567,7 @@ class orm_template(object):
                 r = row
                 i = 0
                 while i < len(f):
-                    if f[i] == 'db_id':
+                    if f[i] == '.id':
                         r = r['id']
                     elif f[i] == 'id':
                         model_data = self.pool.get('ir.model.data')
@@ -579,23 +583,22 @@ class orm_template(object):
                     else:
                         r = r[f[i]]
                         # To display external name of selection field when its exported
-                        if not context.get('import_comp', False):# Allow external name only if its not import compatible
-                            cols = False
-                            if f[i] in self._columns.keys():
-                                cols = self._columns[f[i]]
-                            elif f[i] in self._inherit_fields.keys():
-                                cols = selection_field(self._inherits)
-                            if cols and cols._type == 'selection':
-                                sel_list = cols.selection
-                                if r and type(sel_list) == type([]):
-                                    r = [x[1] for x in sel_list if r==x[0]]
-                                    r = r and r[0] or False
+                        cols = False
+                        if f[i] in self._columns.keys():
+                            cols = self._columns[f[i]]
+                        elif f[i] in self._inherit_fields.keys():
+                            cols = selection_field(self._inherits)
+                        if cols and cols._type == 'selection':
+                            sel_list = cols.selection
+                            if r and type(sel_list) == type([]):
+                                r = [x[1] for x in sel_list if r==x[0]]
+                                r = r and r[0] or False
                     if not r:
                         if f[i] in self._columns:
                             r = check_type(self._columns[f[i]]._type)
                         elif f[i] in self._inherit_fields:
                             r = check_type(self._inherit_fields[f[i]][2]._type)
-                        data[fpos] = r
+                        data[fpos] = r or False
                         break
                     if isinstance(r, (browse_record_list, list)):
                         first = True
@@ -643,7 +646,7 @@ class orm_template(object):
         :param uid: current user id
         :param ids: list of ids
         :param fields_to_export: list of fields
-        :param context: context arguments, like lang, time zone, may contain import_comp(default: False) to make exported data compatible with import_data()
+        :param context: context arguments, like lang, time zone
         :rtype: dictionary with a *datas* matrix
 
         This method is used when exporting data via client menu
@@ -651,28 +654,17 @@ class orm_template(object):
         """
         if context is None:
             context = {}
-        imp_comp = context.get('import_comp', False)
         cols = self._columns.copy()
         for f in self._inherit_fields:
             cols.update({f: self._inherit_fields[f][2]})
-        fields_to_export = map(lambda x: x.split('/'), fields_to_export)
+        def fsplit(x):
+            if x=='.id': return [x]
+            return x.replace(':id','/id').replace('.id','/.id').split('/')
+        fields_to_export = map(fsplit, fields_to_export)
         fields_export = fields_to_export + []
         warning = ''
         warning_fields = []
-        for field in fields_export:
-            if imp_comp and len(field) > 1:
-                warning_fields.append('/'.join(map(lambda x: x in cols and cols[x].string or x,field)))
-            elif len (field) <= 1:
-                if imp_comp and cols.get(field and field[0], False):
-                    if ((isinstance(cols[field[0]], fields.function) and not cols[field[0]].store) \
-                                     or isinstance(cols[field[0]], fields.related)\
-                                     or isinstance(cols[field[0]], fields.one2many)):
-                        warning_fields.append('/'.join(map(lambda x: x in cols and cols[x].string or x,field)))
         datas = []
-        if imp_comp and len(warning_fields):
-            warning = 'Following columns cannot be exported since you select to be import compatible.\n%s' % ('\n'.join(warning_fields))
-            cr.rollback()
-            return {'warning': warning}
         for row in self.browse(cr, uid, ids, context):
             datas += self.__export_row(cr, uid, row, fields_to_export, context)
         return {'datas': datas}
@@ -683,7 +675,6 @@ class orm_template(object):
 
         :param cr: database cursor
         :param uid: current user id
-        :param ids: list of ids
         :param fields: list of fields
         :param data: data to import
         :param mode: 'init' or 'update' for record creation
@@ -693,330 +684,200 @@ class orm_template(object):
         :param filename: optional file to store partial import state for recovery
         :rtype: tuple
 
-        This method is used when importing data via client menu
+        This method is used when importing data via client menu.
 
+        Example of fields to import for a sale.order::
+
+            .id,                         (=database_id)
+            partner_id,                  (=name_search)
+            order_line/.id,              (=database_id)
+            order_line/name,
+            order_line/product_id/id,    (=xml id)
+            order_line/price_unit,
+            order_line/product_uom_qty,
+            order_line/product_uom/id    (=xml_id)
         """
         if not context:
             context = {}
-        fields = map(lambda x: x.split('/'), fields)
+        def _replace_field(x):
+            x = re.sub('([a-z0-9A-Z_])\\.id$', '\\1/.id', x)
+            return x.replace(':id','/id').split('/')
+        fields = map(_replace_field, fields)
         logger = netsvc.Logger()
         ir_model_data_obj = self.pool.get('ir.model.data')
 
-        def _check_db_id(self, model_name, db_id):
-            obj_model = self.pool.get(model_name)
-            ids = obj_model.search(cr, uid, [('id', '=', int(db_id))])
-            if not len(ids):
-                raise Exception(_("Database ID doesn't exist: %s : %s") %(model_name, db_id))
-            return True
+        # mode: id (XML id) or .id (database id) or False for name_get
+        def _get_id(model_name, id, current_module=False, mode='id'):
+            if mode=='.id':
+                id = int(id)
+                obj_model = self.pool.get(model_name)
+                ids = obj_model.search(cr, uid, [('id', '=', int(id))])
+                if not len(ids):
+                    raise Exception(_("Database ID doesn't exist: %s : %s") %(model_name, id))
+            elif mode=='id':
+                if '.' in id:
+                    module, xml_id = id.rsplit('.', 1)
+                else:
+                    module, xml_id = current_module, id
+                record_id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
+                ir_model_data = ir_model_data_obj.read(cr, uid, [record_id], ['res_id'])
+                if not ir_model_data:
+                    raise ValueError('No references to %s.%s' % (module, xml_id))
+                id = ir_model_data[0]['res_id']
+            else:
+                obj_model = self.pool.get(model_name)
+                ids = obj_model.name_search(cr, uid, id)
+                if not ids:
+                    raise ValueError('No record found for %s' % (id,))
+                id = ids[0][0]
+            return id
 
-        def process_liness(self, datas, prefix, current_module, model_name, fields_def, position=0):
+        # IN:
+        #   datas: a list of records, each record is defined by a list of values
+        #   prefix: a list of prefix fields ['line_ids']
+        #   position: the line to process, skip is False if it's the first line of the current record
+        # OUT:
+        #   (res, position, warning, res_id) with
+        #     res: the record for the next line to process (including it's one2many)
+        #     position: the new position for the next line
+        #     res_id: the ID of the record if it's a modification
+        def process_liness(self, datas, prefix, current_module, model_name, fields_def, position=0, skip=0):
             line = datas[position]
             row = {}
-            translate = {}
-            todo = []
             warning = []
-            data_id = False
             data_res_id = False
-            is_xml_id = False
-            is_db_id = False
-            ir_model_data_obj = self.pool.get('ir.model.data')
-            #
-            # Import normal fields
-            #
+            xml_id = False
+            nbrmax = position+1
+
+            done = {}
             for i in range(len(fields)):
-                if i >= len(line):
-                    raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
+                res = False
                 if not line[i]:
                     continue
+                if i >= len(line):
+                    raise Exception(_('Please check that all your lines have %d columns.') % (len(fields),))
 
                 field = fields[i]
-                if prefix and not prefix[0] in field:
+                if field[:len(prefix)] <> prefix:
+                    if line[i] and skip:
+                        return False
                     continue
 
-                if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':db_id'):
-                        # Database ID
-                    res = False
-                    if line[i]:
-                        field_name = field[0].split(':')[0]
-                        model_rel = fields_def[field_name]['relation']
-
-                        if fields_def[field[len(prefix)][:-6]]['type'] == 'many2many':
-                            res_id = []
-                            for db_id in line[i].split(config.get('csv_internal_sep')):
-                                try:
-                                    _check_db_id(self, model_rel, db_id)
-                                    res_id.append(db_id)
-                                except Exception, e:
-                                    warning += [tools.exception_to_unicode(e)]
-                                    logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                              tools.exception_to_unicode(e))
-                            if len(res_id):
-                                res = [(6, 0, res_id)]
-                            else:
-                                try:
-                                    _check_db_id(self, model_rel, line[i])
-                                    res = line[i]
-                                except Exception, e:
-                                    warning += [tools.exception_to_unicode(e)]
-                                    logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                              tools.exception_to_unicode(e))
-                        row[field_name] = res or False
-                        continue
-
-                if (len(field)==len(prefix)+1) and field[len(prefix)].endswith(':id'):
-                    res_id = False
-                    if line[i]:
-                        if fields_def[field[len(prefix)][:-3]]['type'] == 'many2many':
-                            res_id = []
-                            for word in line[i].split(config.get('csv_internal_sep')):
-                                if '.' in word:
-                                    module, xml_id = word.rsplit('.', 1)
-                                else:
-                                    module, xml_id = current_module, word
-                                id = ir_model_data_obj._get_id(cr, uid, module,
-                                        xml_id)
-                                res_id2 = ir_model_data_obj.read(cr, uid, [id],
-                                        ['res_id'])[0]['res_id']
-                                if res_id2:
-                                    res_id.append(res_id2)
-                            if len(res_id):
-                                res_id = [(6, 0, res_id)]
-                        else:
-                            if '.' in line[i]:
-                                module, xml_id = line[i].rsplit('.', 1)
-                            else:
-                                module, xml_id = current_module, line[i]
-                            record_id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
-                            ir_model_data = ir_model_data_obj.read(cr, uid, [record_id], ['res_id'])
-                            if ir_model_data:
-                                res_id = ir_model_data[0]['res_id']
-                            else:
-                                raise ValueError('No references to %s.%s' % (module, xml_id))
-                    row[field[-1][:-3]] = res_id or False
+                # ID of the record using a XML ID
+                if field[len(prefix)]=='id':
+                    try:
+                        data_res_id = _get_id(model_name, line[i], current_module, 'id')
+                    except ValueError, e:
+                        pass
+                    xml_id = line[i]
                     continue
-                if (len(field) == len(prefix)+1) and \
-                        len(field[len(prefix)].split(':lang=')) == 2:
-                    f, lang = field[len(prefix)].split(':lang=')
-                    translate.setdefault(lang, {})[f] = line[i] or False
+
+                # ID of the record using a database ID
+                elif field[len(prefix)]=='.id':
+                    data_res_id = _get_id(model_name, line[i], current_module, '.id')
                     continue
-                if (len(field) == len(prefix)+1) and \
-                        (prefix == field[0:len(prefix)]):
-                    if field[len(prefix)] == "id":
-                        # XML ID
-                        db_id = False
-                        is_xml_id = data_id = line[i]
-                        d = data_id.split('.')
-                        module = len(d) > 1 and d[0] or ''
-                        name = len(d) > 1 and d[1] or d[0]
-                        data_ids = ir_model_data_obj.search(cr, uid, [('module', '=', module), ('model', '=', model_name), ('name', '=', name)])
-                        if len(data_ids):
-                            d = ir_model_data_obj.read(cr, uid, data_ids, ['res_id'])[0]
-                            db_id = d['res_id']
-                        if is_db_id and not db_id:
-                            data_ids = ir_model_data_obj.search(cr, uid, [('module', '=', module), ('model', '=', model_name), ('res_id', '=', is_db_id)])
-                            if not len(data_ids):
-                                ir_model_data_obj.create(cr, uid, {'module': module, 'model': model_name, 'name': name, 'res_id': is_db_id})
-                                db_id = is_db_id
-                        if is_db_id and int(db_id) != int(is_db_id):
-                            warning += [_("Id is not the same than existing one: %s") % (is_db_id)]
-                            logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                    _("Id is not the same than existing one: %s") % (is_db_id))
+
+                # recursive call for getting children and returning [(0,0,{})] or [(1,ID,{})]
+                if fields_def[field[len(prefix)]]['type']=='one2many':
+                    if field[len(prefix)] in done:
                         continue
+                    done[field[len(prefix)]] = True
+                    relation_obj = self.pool.get(fields_def[field[len(prefix)]]['relation'])
+                    newfd = relation_obj.fields_get( cr, uid, context=context )
+                    pos = position
+                    res = []
+                    first = 0
+                    while pos < len(datas):
+                        res2 = process_liness(self, datas, prefix + [field[len(prefix)]], current_module, relation_obj._name, newfd, pos, first)
+                        if not res2:
+                            break
+                        (newrow, pos, w2, data_res_id2, xml_id2) = res2
+                        nbrmax = max(nbrmax, pos)
+                        warning += w2
+                        first += 1
+                        if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
+                            break
+                        res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
 
-                    if field[len(prefix)] == "db_id":
-                        # Database ID
-                        try:
-                            _check_db_id(self, model_name, line[i])
-                            data_res_id = is_db_id = int(line[i])
-                        except Exception, e:
-                            warning += [tools.exception_to_unicode(e)]
-                            logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                      tools.exception_to_unicode(e))
-                            continue
-                        data_ids = ir_model_data_obj.search(cr, uid, [('model', '=', model_name), ('res_id', '=', line[i])])
-                        if len(data_ids):
-                            d = ir_model_data_obj.read(cr, uid, data_ids, ['name', 'module'])[0]
-                            data_id = d['name']
-                            if d['module']:
-                                data_id = '%s.%s' % (d['module'], d['name'])
-                            else:
-                                data_id = d['name']
-                        if is_xml_id and not data_id:
-                            data_id = is_xml_id
-                        if is_xml_id and is_xml_id != data_id:
-                            warning += [_("Id is not the same than existing one: %s") % (line[i])]
-                            logger.notifyChannel("import", netsvc.LOG_ERROR,
-                                    _("Id is not the same than existing one: %s") % (line[i]))
-
-                        continue
-                    if fields_def[field[len(prefix)]]['type'] == 'integer':
-                        res = line[i] and int(line[i])
-                    elif fields_def[field[len(prefix)]]['type'] == 'boolean':
-                        res = line[i].lower() not in ('0', 'false', 'off')
-                    elif fields_def[field[len(prefix)]]['type'] == 'float':
-                        res = line[i] and float(line[i])
-                    elif fields_def[field[len(prefix)]]['type'] == 'selection':
-                        res = False
-                        if isinstance(fields_def[field[len(prefix)]]['selection'],
-                                (tuple, list)):
-                            sel = fields_def[field[len(prefix)]]['selection']
-                        else:
-                            sel = fields_def[field[len(prefix)]]['selection'](self,
-                                    cr, uid, context)
-                        for key, val in sel:
-                            if line[i] in [tools.ustr(key), tools.ustr(val)]: #Acepting key or value for selection field
-                                res = key
-                                break
-                        if line[i] and not res:
-                            logger.notifyChannel("import", netsvc.LOG_WARNING,
-                                    _("key '%s' not found in selection field '%s'") % \
-                                            (line[i], field[len(prefix)]))
-
-                            warning += [_("Key/value '%s' not found in selection field '%s'") % (line[i], field[len(prefix)])]
-
-                    elif fields_def[field[len(prefix)]]['type'] == 'many2one':
-                        res = False
-                        if line[i]:
-                            relation = fields_def[field[len(prefix)]]['relation']
-                            res2 = self.pool.get(relation).name_search(cr, uid,
-                                    line[i], [], operator='=', context=context)
-                            res = (res2 and res2[0][0]) or False
-                            if not res:
-                                warning += [_("Relation not found: %s on '%s'") % (line[i], relation)]
-                                logger.notifyChannel("import", netsvc.LOG_WARNING,
-                                        _("Relation not found: %s on '%s'") % (line[i], relation))
-                    elif fields_def[field[len(prefix)]]['type'] == 'many2many':
-                        res = []
-                        if line[i]:
-                            relation = fields_def[field[len(prefix)]]['relation']
-                            for word in line[i].split(config.get('csv_internal_sep')):
-                                res2 = self.pool.get(relation).name_search(cr,
-                                        uid, word, [], operator='=', context=context)
-                                res3 = (res2 and res2[0][0]) or False
-                                if not res3:
-                                    warning += [_("Relation not found: %s on '%s'") % (line[i], relation)]
-                                    logger.notifyChannel("import",
-                                            netsvc.LOG_WARNING,
-                                            _("Relation not found: %s on '%s'") % (line[i], relation))
-                                else:
-                                    res.append(res3)
-                            if len(res):
-                                res = [(6, 0, res)]
+                elif fields_def[field[len(prefix)]]['type']=='many2one':
+                    relation = fields_def[field[len(prefix)]]['relation']
+                    if len(field) == len(prefix)+1:
+                        mode = False
                     else:
-                        res = line[i] or False
-                    row[field[len(prefix)]] = res
-                elif (prefix==field[0:len(prefix)]):
-                    if field[0] not in todo:
-                        todo.append(field[len(prefix)])
-            #
-            # Import one2many, many2many fields
-            #
-            nbrmax = 1
-            for field in todo:
-                relation_obj = self.pool.get(fields_def[field]['relation'])
-                newfd = relation_obj.fields_get(
-                        cr, uid, context=context)
-                res = process_liness(self, datas, prefix + [field], current_module, relation_obj._name, newfd, position)
-                (newrow, max2, w2, translate2, data_id2, data_res_id2) = res
-                nbrmax = max(nbrmax, max2)
-                warning = warning + w2
-                reduce(lambda x, y: x and y, newrow)
-                row[field] = newrow and (reduce(lambda x, y: x or y, newrow.values()) and \
-                        [(0, 0, newrow)]) or []
-                i = max2
-                while (position+i) < len(datas):
-                    ok = True
-                    for j in range(len(fields)):
-                        field2 = fields[j]
-                        if (len(field2) <= (len(prefix)+1)) and datas[position+i][j]:
-                            ok = False
-                    if not ok:
-                        break
+                        mode = field[len(prefix)+1]
+                    res = _get_id(relation, line[i], current_module, mode)
 
-                    (newrow, max2, w2, translate2, data_id2, data_res_id2) = process_liness(
-                            self, datas, prefix+[field], current_module, relation_obj._name, newfd, position+i)
-                    warning = warning + w2
-                    if newrow and reduce(lambda x, y: x or y, newrow.values()):
-                        row[field].append((0, 0, newrow))
-                    i += max2
-                    nbrmax = max(nbrmax, i)
+                elif fields_def[field[len(prefix)]]['type']=='many2many':
+                    relation = fields_def[field[len(prefix)]]['relation']
+                    if len(field) == len(prefix)+1:
+                        mode = False
+                    else:
+                        mode = field[len(prefix)+1]
 
-            if len(prefix) == 0:
-                for i in range(max(nbrmax, 1)):
-                    #if datas:
-                    datas.pop(0)
-            result = (row, nbrmax, warning, translate, data_id, data_res_id)
+                    # TODO: improve this by using csv.csv_reader
+                    res = []
+                    for db_id in line[i].split(config.get('csv_internal_sep')):
+                        res.append( _get_id(relation, db_id, current_module, mode) )
+                    res = [(6,0,res)]
+
+                elif fields_def[field[len(prefix)]]['type'] == 'integer':
+                    res = line[i] and int(line[i]) or 0
+                elif fields_def[field[len(prefix)]]['type'] == 'boolean':
+                    res = line[i].lower() not in ('0', 'false', 'off')
+                elif fields_def[field[len(prefix)]]['type'] == 'float':
+                    res = line[i] and float(line[i]) or 0.0
+                elif fields_def[field[len(prefix)]]['type'] == 'selection':
+                    for key, val in fields_def[field[len(prefix)]]['selection']:
+                        if line[i] in [tools.ustr(key), tools.ustr(val)]:
+                            res = key
+                            break
+                    if line[i] and not res:
+                        logger.notifyChannel("import", netsvc.LOG_WARNING,
+                                _("key '%s' not found in selection field '%s'") % \
+                                        (line[i], field[len(prefix)]))
+                        warning += [_("Key/value '%s' not found in selection field '%s'") % (line[i], field[len(prefix)])]
+                else:
+                    res = line[i]
+
+                row[field[len(prefix)]] = res or False
+
+            result = (row, nbrmax, warning, data_res_id, xml_id)
             return result
 
         fields_def = self.fields_get(cr, uid, context=context)
-        done = 0
 
-        initial_size = len(datas)
         if config.get('import_partial', False) and filename:
             data = pickle.load(file(config.get('import_partial')))
             original_value = data.get(filename, 0)
-        counter = 0
-        while len(datas):
-            counter += 1
+
+        position = 0
+        while position<len(datas):
             res = {}
-            #try:
-            (res, other, warning, translate, data_id, res_id) = \
-                    process_liness(self, datas, [], current_module, self._name, fields_def)
+
+            (res, position, warning, res_id, xml_id) = \
+                    process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
             if len(warning):
                 cr.rollback()
-                return (-1, res, 'Line ' + str(counter) +' : ' + '!\n'.join(warning), '')
+                return (-1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), '')
 
             try:
                 id = ir_model_data_obj._update(cr, uid, self._name,
-                     current_module, res, xml_id=data_id, mode=mode,
+                     current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
             except Exception, e:
-                import psycopg2
-                import osv
-                cr.rollback()
-                if isinstance(e, psycopg2.IntegrityError):
-                    msg = _('Insertion Failed! ')
-                    for key in self.pool._sql_error.keys():
-                        if key in e[0]:
-                            msg = self.pool._sql_error[key]
-                            if hasattr(msg, '__call__'):
-                                msg = msg(cr, uid, [res_id,], context=context)
-                            else:
-                                msg = _(msg)
-                            break
-                    return (-1, res, 'Line ' + str(counter) +' : ' + msg, '')
-                if isinstance(e, osv.orm.except_orm):
-                    msg = _('Insertion Failed! ' + e[1])
-                    return (-1, res, 'Line ' + str(counter) +' : ' + msg, '')
-                #Raising Uncaught exception
-                return (-1, res, 'Line ' + str(counter) +' : ' + str(e), '')
+                return (-1, res, 'Line ' + str(position) +' : ' + str(e), '')
 
-            for lang in translate:
-                context2 = context.copy()
-                context2['lang'] = lang
-                self.write(cr, uid, [id], translate[lang], context2)
-            if config.get('import_partial', False) and filename and (not (counter%100)):
+            if config.get('import_partial', False) and filename and (not (position%100)):
                 data = pickle.load(file(config.get('import_partial')))
-                data[filename] = initial_size - len(datas) + original_value
+                data[filename] = position
                 pickle.dump(data, file(config.get('import_partial'), 'wb'))
                 if context.get('defer_parent_store_computation'):
                     self._parent_store_compute(cr)
                 cr.commit()
 
-            #except Exception, e:
-            #    logger.notifyChannel("import", netsvc.LOG_ERROR, e)
-            #    cr.rollback()
-            #    try:
-            #        return (-1, res, e[0], warning)
-            #    except:
-            #        return (-1, res, e[0], '')
-            done += 1
-        #
-        # TODO: Send a request with the result and multi-thread !
-        #
         if context.get('defer_parent_store_computation'):
             self._parent_store_compute(cr)
-        return (done, 0, 0, 0)
+        return (position, 0, 0, 0)
 
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         """
@@ -1237,7 +1098,7 @@ class orm_template(object):
                         res[f][arg] = getattr(field_col, arg)
 
                 if field_col.string:
-                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US', field_col.string)
+                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
                     if res_trans:
                         res[f]['string'] = res_trans
                 if field_col.help:
@@ -1614,6 +1475,8 @@ class orm_template(object):
 
             while len(toparse):
                 node2 = toparse.pop(0)
+                if isinstance(node2, SKIPPED_ELEMENT_TYPES):
+                    continue
                 if node2.tag == 'data':
                     toparse += [ c for c in doc_dest ]
                     continue
@@ -2316,7 +2179,7 @@ class orm(orm_template):
         offset_str = offset and ' offset %d' % offset or ''
         if len(groupby_list) < 2 and context.get('group_by_no_leaf'):
             group_count = '_'
-        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS  %s_count, ' % (self._table, self._table, group_count) + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
+        cr.execute('SELECT min(%s.id) AS id, count(%s.id) AS %s_count' % (self._table, self._table, group_count) + (flist and ',') + flist + ' FROM ' + from_clause + where_clause + gb + limit_str + offset_str, where_clause_params)
         alldata = {}
         groupby = group_by
         for r in cr.dictfetchall():
@@ -2429,6 +2292,29 @@ class orm(orm_template):
                     val = val[0]
                 if (val<>False) or (type(val)<>bool):
                     cr.execute(update_query, (ss[1](val), key))
+
+    def _check_selection_field_value(self, cr, uid, field, value, context=None):
+        """Raise except_orm if value is not among the valid values for the selection field"""
+        if self._columns[field]._type == 'reference':
+            val_model, val_id_str = value.split(',', 1)
+            val_id = False
+            try:
+                val_id = long(val_id_str)
+            except ValueError:
+                pass
+            if not val_id:
+                raise except_orm(_('ValidateError'),
+                                 _('Invalid value for reference field "%s" (last part must be a non-zero integer): "%s"') % (field, value))
+            val = val_model
+        else:
+            val = value
+        if isinstance(self._columns[field].selection, (tuple, list)):
+            if val in dict(self._columns[field].selection):
+                return
+        elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
+            return
+        raise except_orm(_('ValidateError'),
+                         _('The value "%s" for the field "%s" is not in the selection') % (value, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
@@ -3104,7 +2990,7 @@ class orm(orm_template):
 
         for table in self._inherits:
             col = self._inherits[table]
-            cols = intersect(self._inherit_fields.keys(), set(fields_to_read) - set(self._columns.keys()))
+            cols = [x for x in intersect(self._inherit_fields.keys(), fields_to_read) if x not in self._columns.keys()]
             if not cols:
                 continue
             res2 = self.pool.get(table).read(cr, user, [x[col] for x in res], cols, context, load)
@@ -3463,21 +3349,7 @@ class orm(orm_template):
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
-                if self._columns[field]._type == 'reference':
-                    val = vals[field].split(',')[0]
-                else:
-                    val = vals[field]
-                if isinstance(self._columns[field].selection, (tuple, list)):
-                    if val not in dict(self._columns[field].selection):
-                        raise except_orm(_('ValidateError'),
-                        _('The value "%s" for the field "%s" is not in the selection') \
-                                % (vals[field], field))
-                else:
-                    if val not in dict(self._columns[field].selection(
-                        self, cr, user, context=context)):
-                        raise except_orm(_('ValidateError'),
-                        _('The value "%s" for the field "%s" is not in the selection') \
-                                % (vals[field], field))
+                self._check_selection_field_value(cr, user, field, vals[field], context=context)
 
         if self._log_access:
             upd0.append('write_uid=%s')
@@ -3721,21 +3593,7 @@ class orm(orm_template):
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
-                if self._columns[field]._type == 'reference':
-                    val = vals[field].split(',')[0]
-                else:
-                    val = vals[field]
-                if isinstance(self._columns[field].selection, (tuple, list)):
-                    if val not in dict(self._columns[field].selection):
-                        raise except_orm(_('ValidateError'),
-                        _('The value "%s" for the field "%s" is not in the selection') \
-                                % (vals[field], field))
-                else:
-                    if val not in dict(self._columns[field].selection(
-                        self, cr, user, context=context)):
-                        raise except_orm(_('ValidateError'),
-                        _('The value "%s" for the field "%s" is not in the selection') \
-                                % (vals[field], field))
+                self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
             upd0 += ',create_uid,create_date'
             upd1 += ',%s,now()'
@@ -4018,14 +3876,18 @@ class orm(orm_template):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
         else:
-            # extract the first field name, to be able to qualify it and add desc/asc
-            m2o_order = m2o_order.split(",",1)[0].strip().split(" ",1)[0]
+            # extract the field names, to be able to qualify them and add desc/asc
+            m2o_order_list = []
+            for order_part in m2o_order.split(",",1):
+                m2o_order_list.append(order_part.strip().split(" ",1)[0].strip())
+            m2o_order = m2o_order_list
 
         # Join the dest m2o table if it's not joined yet. We use [LEFT] OUTER join here
         # as we don't want to exclude results that have NULL values for the m2o
         src_table, src_field = qualified_field.replace('"','').split('.', 1)
         query.join((src_table, dest_model._table, src_field, 'id'), outer=True)
-        return '"%s"."%s"' % (dest_model._table, m2o_order)
+        qualify = lambda field: '"%s"."%s"' % (dest_model._table, field)
+        return map(qualify, m2o_order) if isinstance(m2o_order, list) else qualify(m2o_order)
 
 
     def _generate_order_by(self, order_spec, query):
@@ -4044,14 +3906,16 @@ class orm(orm_template):
                 order_field = order_split[0].strip()
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
-                if order_field in self._columns:
+                if order_field == 'id':
+                    order_by_clause = '"%s"."%s"' % (self._table, order_field)
+                elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
                         inner_clause = '"%s"."%s"' % (self._table, order_field)
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
-                        continue # ignore non-readable or "non-joignable" fields
+                        continue # ignore non-readable or "non-joinable" fields
                 elif order_field in self._inherit_fields:
                     parent_obj = self.pool.get(self._inherit_fields[order_field][0])
                     order_column = parent_obj._columns[order_field]
@@ -4060,9 +3924,13 @@ class orm(orm_template):
                     elif order_column._type == 'many2one':
                         inner_clause = self._generate_m2o_order_by(order_field, query)
                     else:
-                        continue # ignore non-readable or "non-joignable" fields
+                        continue # ignore non-readable or "non-joinable" fields
                 if inner_clause:
-                    order_by_elements.append("%s %s" % (inner_clause, order_direction))
+                    if isinstance(inner_clause, list):
+                        for clause in inner_clause:
+                            order_by_elements.append("%s %s" % (clause, order_direction))
+                    else:
+                        order_by_elements.append("%s %s" % (inner_clause, order_direction))
             if order_by_elements:
                 order_by_clause = ",".join(order_by_elements)
 
@@ -4307,27 +4175,47 @@ class orm(orm_template):
                     return False
         return True
 
+    def get_xml_ids(self, cr, uid, ids, *args, **kwargs):
+        """Find out the XML ID(s) of any database record.
+
+        **Synopsis**: ``_get_xml_ids(cr, uid, ids) -> { 'id': ['module.xml_id'] }``
+
+        :return: map of ids to the list of their fully qualified XML IDs
+                 (empty list when there's none).
+        """
+        model_data_obj = self.pool.get('ir.model.data')
+        data_ids = model_data_obj.search(cr, uid, [('model', '=', self._name), ('res_id', 'in', ids)])
+        data_results = model_data_obj.read(cr, uid, data_ids, ['module', 'name', 'res_id'])
+        result = {}
+        for id in ids:
+            # can't use dict.fromkeys() as the list would be shared!
+            result[id] = []
+        for record in data_results:
+            result[record['res_id']].append('%(module)s.%(name)s' % record)
+        return result
+
     def get_xml_id(self, cr, uid, ids, *args, **kwargs):
         """Find out the XML ID of any database record, if there
         is one. This method works as a possible implementation
         for a function field, to be able to add it to any
         model object easily, referencing it as ``osv.osv.get_xml_id``.
 
+        When multiple XML IDs exist for a record, only one
+        of them is returned (randomly).
+
         **Synopsis**: ``get_xml_id(cr, uid, ids) -> { 'id': 'module.xml_id' }``
 
-        :return: the fully qualified XML ID of the given object,
+        :return: map of ids to their fully qualified XML ID,
                  defaulting to an empty string when there's none
                  (to be usable as a function field).
         """
-        result = dict.fromkeys(ids, '')
-        model_data_obj = self.pool.get('ir.model.data')
-        data_ids = model_data_obj.search(cr, uid,
-                [('model', '=', self._name), ('res_id', 'in', ids)])
-        data_results = model_data_obj.read(cr, uid, data_ids,
-                ['name', 'module', 'res_id'])
-        for record in data_results:
-            result[record['res_id']] = '%(module)s.%(name)s' % record
-        return result
+        results = self.get_xml_ids(cr, uid, ids)
+        for k, v in results.items():
+            if results[k]:
+                results[k] = v[0]
+            else:
+                results[k] = ''
+        return results
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

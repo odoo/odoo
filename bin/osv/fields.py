@@ -443,7 +443,7 @@ class one2many(_column):
             elif act[0] == 3:
                 obj.datas[act[1]][self._fields_id] = False
             elif act[0] == 4:
-                obj.datas[act[1]] = id
+                obj.datas[act[1]][self._fields_id] = id
             elif act[0] == 5:
                 for o in obj.datas.values():
                     if o[self._fields_id] == id:
@@ -553,7 +553,7 @@ class many2many(_column):
                       DeprecationWarning, stacklevel=2)
         obj = obj.pool.get(self._obj)
 
-        # static domains are lists, and are evaluated both here and on client-side, while string 
+        # static domains are lists, and are evaluated both here and on client-side, while string
         # domains supposed by dynamic and evaluated on client-side only (thus ignored here)
         # FIXME: make this distinction explicit in API!
         domain = isinstance(self._domain, list) and self._domain or []
@@ -679,7 +679,7 @@ def get_nice_size(a):
 def sanitize_binary_value(dict_item):
     # binary fields should be 7-bit ASCII base64-encoded data,
     # but we do additional sanity checks to make sure the values
-    # will are not something else that won't pass via xmlrpc
+    # are not something else that won't pass via xmlrpc
     index, value = dict_item
     if isinstance(value, (xmlrpclib.Binary, tuple, list, dict)):
         # these builtin types are meant to pass untouched
@@ -703,7 +703,7 @@ def sanitize_binary_value(dict_item):
     # Note: when this happens, decoding on the other endpoint
     # is not likely to produce the expected output, but this is
     # just a safety mechanism (in these cases base64 data or
-    # xmlrpc.Binary values should be used instead
+    # xmlrpc.Binary values should be used instead)
     return index, tools.ustr(value)
 
 
@@ -1049,13 +1049,15 @@ class property(function):
         brs = properties.browse(cr, uid, nids, context=context)
         for prop in brs:
             value = properties.get_by_record(cr, uid, prop, context=context)
-            res[prop.res_id.id][prop.fields_id.name] = value or False
+            record_exists = obj.pool.get(value._name).exists(cr, uid, value.id)
+            res[prop.res_id.id][prop.fields_id.name] = (record_exists and value) and value or False
             if value and (prop.type == 'many2one'):
                 replaces.setdefault(value._name, {})
                 replaces[value._name][value.id] = True
 
         for rep in replaces:
-            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, replaces[rep].keys(), context=context))
+            nids = obj.pool.get(rep).search(cr, uid, [('id','in',replaces[rep].keys())], context=context)
+            replaces[rep] = dict(obj.pool.get(rep).name_get(cr, uid, nids, context=context))
 
         for prop in prop_name:
             for id in ids:

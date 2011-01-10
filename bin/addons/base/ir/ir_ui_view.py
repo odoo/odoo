@@ -33,12 +33,15 @@ def _check_xml(self, cr, uid, ids, context=None):
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch.encode('utf8'))
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
-        relaxng_doc = etree.parse(frng)
-        relaxng = etree.RelaxNG(relaxng_doc)
-        if not relaxng.validate(eview):
-            for error in relaxng.error_log:
-                logger.error(tools.ustr(error))
-            return False
+        try:
+            relaxng_doc = etree.parse(frng)
+            relaxng = etree.RelaxNG(relaxng_doc)
+            if not relaxng.validate(eview):
+                for error in relaxng.error_log:
+                    logger.error(tools.ustr(error))
+                return False
+        finally:
+            frng.close()
     return True
 
 class view_custom(osv.osv):
@@ -92,44 +95,18 @@ class view(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, type, inherit_id)')
 
-    def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
-
+    def write(self, cr, uid, ids, vals, context={}):
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
+        result = super(view, self).write(cr, uid, ids, vals, context)
 
-        result = super(view, self).read(cr, uid, ids, fields, context, load)
-
-        for rs in result:
-            if rs.get('model') == 'board.board':
-                cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%s and ref_id=%s", (uid, rs['id']))
-                oview = cr.dictfetchall()
-                if oview:
-                    rs['arch'] = oview[0]['arch']
-
+        # drop the corresponding view customizations (used for dashboards for example), otherwise
+        # not all users would see the updated views
+        custom_view_ids = self.pool.get('ir.ui.view.custom').search(cr, uid, [('ref_id','in',ids)])
+        if custom_view_ids:
+            self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
         return result
-
-    def write(self, cr, uid, ids, vals, context={}):
-
-        if not isinstance(ids, (list, tuple)):
-            ids = [ids]
-
-        exist = self.pool.get('ir.ui.view').browse(cr, uid, ids[0])
-        if exist.model == 'board.board' and 'arch' in vals:
-            vids = self.pool.get('ir.ui.view.custom').search(cr, uid, [('user_id','=',uid), ('ref_id','=',ids[0])])
-            vals2 = {'user_id': uid, 'ref_id': ids[0], 'arch': vals.pop('arch')}
-
-            # write fields except arch to the `ir.ui.view`
-            result = super(view, self).write(cr, uid, ids, vals, context)
-
-            if not vids:
-                self.pool.get('ir.ui.view.custom').create(cr, uid, vals2)
-            else:
-                self.pool.get('ir.ui.view.custom').write(cr, uid, vids, vals2)
-
-            return result
-
-        return super(view, self).write(cr, uid, ids, vals, context)
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,label,scale,context={}):
         if not label:

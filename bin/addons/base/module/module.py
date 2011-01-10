@@ -475,7 +475,7 @@ class module(osv.osv):
                 categs = categs[1:]
             self.write(cr, uid, [mod_browse.id], {'category_id': p_id})
 
-    def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
+    def update_translations(self, cr, uid, ids, filter_lang=None, context={}):
         logger = logging.getLogger('i18n')
         if not filter_lang:
             pool = pooler.get_pool(cr.dbname)
@@ -495,17 +495,26 @@ class module(osv.osv):
             for lang in filter_lang:
                 iso_lang = tools.get_iso_codes(lang)
                 f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
+                context2 = context and context.copy() or {}
+                if f and '_' in iso_lang:
+                    iso_lang2 = iso_lang.split('_')[0]
+                    f2 = addons.get_module_resource(mod.name, 'i18n', iso_lang2 + '.po')
+                    if f2:
+                        logger.info('module %s: loading base translation file %s for language %s', mod.name, iso_lang2, lang)
+                        tools.trans_load(cr, f2, lang, verbose=False, context=context)
+                        context2['overwrite'] = True
                 # Implementation notice: we must first search for the full name of
                 # the language derivative, like "en_UK", and then the generic,
                 # like "en".
                 if (not f) and '_' in iso_lang:
-                    f = addons.get_module_resource(mod.name, 'i18n', iso_lang.split('_')[0] + '.po')
                     iso_lang = iso_lang.split('_')[0]
+                    f = addons.get_module_resource(mod.name, 'i18n', iso_lang + '.po')
                 if f:
-                    logger.info('module %s: loading translation file for language %s', mod.name, iso_lang)
-                    tools.trans_load(cr.dbname, f, lang, verbose=False, context=context)
+                    logger.info('module %s: loading translation file (%s) for language %s', mod.name, iso_lang, lang)
+                    tools.trans_load(cr, f, lang, verbose=False, context=context2)
                 elif iso_lang != 'en':
                     logger.warning('module %s: no translation for language %s', mod.name, iso_lang)
+        tools.trans_update_res_ids(cr)
 
     def check(self, cr, uid, ids, context=None):
         logger = logging.getLogger('init')
@@ -522,13 +531,13 @@ class module(osv.osv):
                     raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
     def list_web(self, cr, uid, context=None):
-        """ list_web(cr, uid, context) -> [module_name]
+        """ list_web(cr, uid, context) -> [(module_name, module_version)]
         Lists all the currently installed modules with a web component.
 
-        Returns a list of addon names.
+        Returns a list of a tuple of addon names and addon versions.
         """
         return [
-            module['name']
+            (module['name'], module['installed_version'])
             for module in self.browse(cr, uid,
                 self.search(cr, uid,
                     [('web', '=', True),
@@ -561,6 +570,7 @@ class module(osv.osv):
                            'to web client', names)
         return [
             {'name': module.name,
+             'version': module.installed_version,
              'depends': list(self._web_dependencies(
                  cr, uid, module, context=context)),
              'content': addons.zip_directory(

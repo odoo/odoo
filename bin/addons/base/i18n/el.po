@@ -5,14 +5,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-16 15:02+0000\n"
-"PO-Revision-Date: 2010-12-16 23:18+0000\n"
-"Last-Translator: Dimitrios Ntoulas <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2010-12-18 08:23+0000\n"
+"Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: nls@hellug.gr <nls@hellug.gr>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-17 04:49+0000\n"
+"X-Launchpad-Export-Date: 2011-01-04 14:04+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 "X-Poedit-Country: GREECE\n"
 "X-Poedit-Language: Greek\n"
@@ -43,6 +43,14 @@ msgid "DateTime"
 msgstr "ΗμερομηνίαΏρα"
 
 #. module: base
+#: code:addons/fields.py:534
+#, python-format
+msgid ""
+"The second argument of the many2many field %s must be a SQL table !You used "
+"%s, which is not a valid SQL table name."
+msgstr ""
+
+#. module: base
 #: view:ir.values:0
 #: field:ir.values,meta_unpickle:0
 msgid "Metadata"
@@ -53,12 +61,6 @@ msgstr "Μεταδεδομένα"
 #: field:ir.ui.view.custom,arch:0
 msgid "View Architecture"
 msgstr "Προβολή Δομής"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not create this kind of document! (%s)"
-msgstr "Δεν μπορείτε να δημιουργήσετε τέτοιο έγγραφο! (%s)"
 
 #. module: base
 #: field:base.language.import,code:0
@@ -111,6 +113,14 @@ msgid "Created Views"
 msgstr "Δημιουργημένες Προβολές"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:339
+#, python-format
+msgid ""
+"You can not write in this document (%s) ! Be sure your user belongs to one "
+"of these groups: %s."
+msgstr ""
+
+#. module: base
 #: field:res.partner,ref:0
 msgid "Reference"
 msgstr "Αναφορά"
@@ -126,11 +136,10 @@ msgid "South Korea"
 msgstr "Νότια Κορέα"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_workflow_transition_form
-#: model:ir.ui.menu,name:base.menu_workflow_transition
-#: view:workflow.activity:0
-msgid "Transitions"
-msgstr "Ροές"
+#: code:addons/osv.py:133
+#, python-format
+msgid "Constraint Error"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -143,12 +152,19 @@ msgid "Swaziland"
 msgstr "Swaziland"
 
 #. module: base
+#: code:addons/orm.py:1993
+#: code:addons/orm.py:3653
+#, python-format
+msgid "created."
+msgstr ""
+
+#. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
 msgid "Wood Suppliers"
 msgstr "Προμηθευτές Ξύλου"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:303
 #, python-format
 msgid ""
 "Some installed modules depend on the module you plan to Uninstall :\n"
@@ -179,7 +195,7 @@ msgid "Search Partner"
 msgstr "Αναζήτηση συνεργάτη"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:132
 #, python-format
 msgid "\"smtp_server\" needs to be set to send mails to users"
 msgstr ""
@@ -187,7 +203,7 @@ msgstr ""
 "χρήστες"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:60
 #, python-format
 msgid "new"
 msgstr "νέο"
@@ -218,7 +234,7 @@ msgid "Contact Name"
 msgstr "Όνομα Επαφής"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:56
 #, python-format
 msgid ""
 "Save this document to a %s file and edit it with a specific software or a "
@@ -241,6 +257,12 @@ msgstr "ενεργό"
 #: field:ir.actions.wizard,wiz_name:0
 msgid "Wizard Name"
 msgstr "Όνομα Αυτόματου Οδηγού"
+
+#. module: base
+#: code:addons/orm.py:2160
+#, python-format
+msgid "Invalid group_by"
+msgstr ""
 
 #. module: base
 #: field:res.partner,credit_limit:0
@@ -274,7 +296,7 @@ msgstr "ir.ui.view_sc"
 
 #. module: base
 #: field:res.widget.user,widget_id:0
-#: field:res.widget.wizard,widget_id:0
+#: field:res.widget.wizard,widgets_list:0
 msgid "Widget"
 msgstr "Μικροεφαρμογή"
 
@@ -325,7 +347,7 @@ msgid "Netherlands Antilles"
 msgstr "Netherlands Antilles (Ολλανδικές Αντίλλες)"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -348,11 +370,6 @@ msgid "Bosnian / bosanski jezik"
 msgstr "Bosnian / bosanski jezik"
 
 #. module: base
-#: field:ir.ui.menu,web_icon_data:0
-msgid "Web Icons"
-msgstr "Εικονίδια ιστού"
-
-#. module: base
 #: help:ir.actions.report.xml,attachment_use:0
 msgid ""
 "If you check this, then the second time the user prints with same attachment "
@@ -360,6 +377,12 @@ msgid ""
 msgstr ""
 "Αν επιλέξετε αυτό, τη δεύτερη φορά που ο χρήστης θα εκτυπώσει το ίδιο όνομα "
 "συνημμένου, θα εκτυπωθεί η προηγούμενη αναφορά."
+
+#. module: base
+#: code:addons/orm.py:904
+#, python-format
+msgid "The read method is not implemented on this object !"
+msgstr "Η μέθοδος ανάγνωσης δεν έχει αναπτυχθεί για αυτό το αντικείμενο!"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -390,14 +413,10 @@ msgid "Schedule Upgrade"
 msgstr "Προγραμματισμός Αναβάθμισης"
 
 #. module: base
-#: sql_constraint:res.partner.bank:0
-msgid "The BVR adherent number must be unique !"
+#: code:addons/orm.py:838
+#, python-format
+msgid "Key/value '%s' not found in selection field '%s'"
 msgstr ""
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_sir
-msgid "Mister"
-msgstr "Κύριος"
 
 #. module: base
 #: help:res.country,code:0
@@ -417,11 +436,6 @@ msgstr "Palau"
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Πωλήσεις & Αγορές"
-
-#. module: base
-#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
-msgid "Corporation"
-msgstr "Εταιρεία"
 
 #. module: base
 #: view:ir.translation:0
@@ -449,7 +463,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "Λοιποί προμηθευτές"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:216
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Τα ειδικά πεδία πρέπει να έχουν όνομα που ξεκινάει από 'x_' !"
@@ -591,7 +605,7 @@ msgstr "Αλβανικά / Shqip"
 #. module: base
 #: model:ir.ui.menu,name:base.menu_crm_config_opportunity
 msgid "Opportunities"
-msgstr ""
+msgstr "Ευκαιρίες"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_export
@@ -709,6 +723,12 @@ msgstr ""
 "μεταφράσεις του UI"
 
 #. module: base
+#: code:addons/orm.py:1043
+#, python-format
+msgid "The unlink method is not implemented on this object !"
+msgstr "Η μέθοδος αποσύνδεσης δεν έχει αναπτυχθεί σε αυτό το αντικείμενο!"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: view:wizard.ir.model.menu.create:0
 msgid "Create Menu"
@@ -718,11 +738,6 @@ msgstr "Δημιουργήστε μενού"
 #: model:res.country,name:base.in
 msgid "India"
 msgstr "India"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "maintenance contract modules"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
@@ -778,6 +793,14 @@ msgid "Type"
 msgstr "Τύπος"
 
 #. module: base
+#: code:addons/orm.py:210
+#, python-format
+msgid ""
+"Language with code \"%s\" is not defined in your system !\n"
+"Define it through the Administration menu."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.gu
 msgid "Guam (USA)"
 msgstr "Guam (USA)"
@@ -804,6 +827,19 @@ msgid "Cayman Islands"
 msgstr "Cayman Islands"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_workflow_transition_form
+#: model:ir.ui.menu,name:base.menu_workflow_transition
+#: view:workflow.activity:0
+msgid "Transitions"
+msgstr "Ροές"
+
+#. module: base
+#: code:addons/orm.py:4020
+#, python-format
+msgid "Record #%d of %s not found, cannot copy!"
+msgstr ""
+
+#. module: base
 #: field:ir.module.module,contributors:0
 msgid "Contributors"
 msgstr "Συντελεστές"
@@ -817,7 +853,7 @@ msgstr "Χαρακτήρας"
 #: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_form
 #: model:ir.ui.menu,name:base.menu_publisher_warranty_contract
 msgid "Contracts"
-msgstr ""
+msgstr "Συμβάσεις"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -915,6 +951,16 @@ msgid "Search"
 msgstr "Αναζήτηση"
 
 #. module: base
+#: code:addons/osv.py:136
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
+
+#. module: base
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical AND operator"
@@ -970,13 +1016,13 @@ msgid "ir.exports"
 msgstr "ir.exports"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "Δεν υπάρχει γλώσσα με κωδικό \"%s\""
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
 #, python-format
 msgid "Error during communication with the publisher warranty server."
 msgstr ""
@@ -1009,6 +1055,12 @@ msgid ""
 "system. After the contract has been registered, you will be able to send "
 "issues directly to OpenERP."
 msgstr ""
+
+#. module: base
+#: code:addons/orm.py:1744
+#, python-format
+msgid "The search method is not implemented on this object !"
+msgstr "Η μέθοδος αναζήτησης δεν έχει αναπτυχθεί σε αυτό το αντικείμενο!"
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1059,7 +1111,7 @@ msgid "On Create"
 msgstr "Κατά τη Δημιουργία"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:461
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1181,12 +1233,6 @@ msgid "Day: %(day)s"
 msgstr "Ημέρα: %(day)s"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not read this document! (%s)"
-msgstr "Δεν μπορείτε να διαβάσετε αυτό το έγγραφο! (%s)"
-
-#. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
 msgid ""
 "List all certified modules available to configure your OpenERP. Modules that "
@@ -1235,8 +1281,8 @@ msgstr ""
 "object.list_price > object.cost_price"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
-#: code:addons/base/res/res_company.py:0
+#: code:addons/base/res/partner/partner.py:155
+#: code:addons/base/res/res_company.py:66
 #, python-format
 msgid " (copy)"
 msgstr " (αντίγραφο)"
@@ -1316,7 +1362,7 @@ msgid "Formula"
 msgstr "Τύπος"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Can not remove root user!"
@@ -1327,7 +1373,8 @@ msgid "Malawi"
 msgstr "Malawi"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:51
+#: code:addons/base/res/res_user.py:397
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (αντίγραφο)"
@@ -1379,7 +1426,6 @@ msgstr "Δέντρο"
 
 #. module: base
 #: help:res.config.users,password:0
-#: help:res.users,password:0
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
 msgstr "Αφήστε το κενό αν δεν επιθυμείτε ο χρήστης να συνδέεται στο σύστημα."
@@ -1409,8 +1455,12 @@ msgstr ""
 "γραμμή του αρχείου σας είναι ένα από τα ακόλουθα:"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_log_act_window
-#: model:ir.ui.menu,name:base.menu_res_log_act_window
+#: code:addons/fields.py:114
+#, python-format
+msgid "Not implemented search_memory method !"
+msgstr "Not implemented search_memory method !"
+
+#. module: base
 #: view:res.log:0
 msgid "Logs"
 msgstr "Αρχεία καταγραφής"
@@ -1462,7 +1512,7 @@ msgid "Bahamas"
 msgstr "Bahamas"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
@@ -1486,6 +1536,12 @@ msgid "Number of modules updated"
 msgstr "Αριθμός Αρθρωμάτων που ενημερώθηκαν"
 
 #. module: base
+#: code:addons/fields.py:100
+#, python-format
+msgid "Not implemented set_memory method !"
+msgstr "Not implemented set_memory method !"
+
+#. module: base
 #: view:workflow.activity:0
 msgid "Workflow Activity"
 msgstr "Δραστηριότητα Ροής"
@@ -1498,6 +1554,11 @@ msgid ""
 msgstr ""
 "Παράδειγμα:GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 AND "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 AND GROUP_B_RULE_2) )"
+
+#. module: base
+#: field:change.user.password,new_password:0
+msgid "New Password"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
@@ -1566,6 +1627,12 @@ msgid ""
 msgstr ""
 "λίστα χωρισμένη με κόματα  των επιτρεπόμενων προβολών,όπως "
 "'φόρμα','δέντρο','ημερολόγιο', κ.λπ. (Προεπιλογή: δέντρο, φόρμα)"
+
+#. module: base
+#: code:addons/orm.py:3147
+#, python-format
+msgid "A document was modified since you last viewed it (%s:%d)"
+msgstr ""
 
 #. module: base
 #: view:workflow:0
@@ -1639,7 +1706,7 @@ msgid "Madagascar"
 msgstr "Madagascar"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:94
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -1732,12 +1799,6 @@ msgid "French (BE) / Français (BE)"
 msgstr "Γαλλικά (BE) / Français (BE)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not write in this document! (%s)"
-msgstr "Δεν μπορείτε να επέμβετε στο έγγραφο! (%s)"
-
-#. module: base
 #: view:ir.actions.server:0
 #: field:workflow.activity,action_id:0
 msgid "Server Action"
@@ -1810,6 +1871,12 @@ msgstr ""
 "αυτός το πρόγραμμα. π.χ. 'res.partener'"
 
 #. module: base
+#: code:addons/orm.py:1040
+#, python-format
+msgid "The perm_read method is not implemented on this object !"
+msgstr "The perm_read method is not implemented on this object !"
+
+#. module: base
 #: view:res.lang:0
 msgid "%y - Year without century [00,99]."
 msgstr ""
@@ -1820,12 +1887,23 @@ msgid "Slovenia"
 msgstr "Slovenia"
 
 #. module: base
+#: model:res.country,name:base.pk
+msgid "Pakistan"
+msgstr "Pakistan"
+
+#. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Invalid Object Architecture!"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_email_gateway_form
 msgid "Messages"
 msgstr "Μηνύματα"
 
 #. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "Error!"
 msgstr "Σφάλμα!"
@@ -1856,6 +1934,14 @@ msgid "New Zealand"
 msgstr "New Zealand"
 
 #. module: base
+#: code:addons/orm.py:3366
+#, python-format
+msgid ""
+"One of the records you are trying to modify has already been deleted "
+"(Document type: %s)."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,help:base.action_country
 msgid ""
 "Display and manage the list of all countries that can be assigned to your "
@@ -1883,11 +1969,6 @@ msgid "Korean (KR) / 한국어 (KR)"
 msgstr "Κορεάτικη (KR) / 한국어 (KR)"
 
 #. module: base
-#: model:res.widget,title:base.matrixise_twitter_widget
-msgid "Stéphane Wirtel's tweets"
-msgstr ""
-
-#. module: base
 #: field:ir.actions.server,action_id:0
 #: selection:ir.actions.server,state:0
 msgid "Client Action"
@@ -1909,18 +1990,12 @@ msgid "Valid"
 msgstr "Έγκυρο"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not delete this document! (%s)"
-msgstr "Δεν μπορείτε να διαγράψετε αυτό το έγγραφο! (%s)"
-
-#. module: base
 #: selection:ir.translation,type:0
 msgid "XSL"
 msgstr "XSL"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:322
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr ""
@@ -1931,6 +2006,11 @@ msgstr ""
 #: model:res.country,name:base.cu
 msgid "Cuba"
 msgstr "Cuba"
+
+#. module: base
+#: model:res.widget,title:base.facebook_widget
+msgid "Facebook"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.am
@@ -1947,11 +2027,6 @@ msgstr "Παράμετροι διαμόρφωσης"
 #: constraint:ir.cron:0
 msgid "Invalid arguments"
 msgstr "Μη έγκυρες παράμετροι"
-
-#. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_miss
-msgid "Mss."
-msgstr "Κυρίες"
 
 #. module: base
 #: model:res.country,name:base.se
@@ -2039,6 +2114,15 @@ msgid "HR sector"
 msgstr "Τμήμα Ανθρωπίνων Πόρων"
 
 #. module: base
+#: code:addons/orm.py:3817
+#, python-format
+msgid ""
+"Invalid \"order\" specified. A valid \"order\" specification is a comma-"
+"separated list of valid field names (optionally followed by asc/desc for the "
+"direction)"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
 msgstr "Εξάρτηση Αρθρωμάτων"
@@ -2093,6 +2177,11 @@ msgstr "Dependencies"
 #: field:multi_company.default,company_id:0
 msgid "Main Company"
 msgstr "Κύρια Εταρεία"
+
+#. module: base
+#: field:ir.ui.menu,web_icon_hover:0
+msgid "Web Icon File (hover)"
+msgstr ""
 
 #. module: base
 #: view:ir.actions.server:0
@@ -2179,9 +2268,15 @@ msgid "Portugese / Português"
 msgstr "Πορτογαλικά / Português"
 
 #. module: base
-#: view:base.module.import:0
-msgid "Select module package to import (.zip file):"
-msgstr "Επιλέξτε πακέτο αρθρώματος για εισαγωγή (αρχείο .zip):"
+#: model:res.partner.title,name:base.res_partner_title_sir
+msgid "Sir"
+msgstr "Κύριος"
+
+#. module: base
+#: code:addons/orm.py:1622
+#, python-format
+msgid "There is no view of type '%s' defined for the structure!"
+msgstr ""
 
 #. module: base
 #: field:ir.default,ref_id:0
@@ -2279,7 +2374,7 @@ msgid "Mayotte"
 msgstr "Mayotte"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:593
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr "Παρακαλώ επιλέξτε ενέργειας προς εκτέλεση!"
@@ -2304,6 +2399,12 @@ msgid "Filters"
 msgstr "Φίλτρα"
 
 #. module: base
+#: code:addons/orm.py:758
+#, python-format
+msgid "Please check that all your lines have %d columns."
+msgstr "Παρακαλώ ελέγξτε ότι όλες οι γραμμές σας έχουν %d στήλες."
+
+#. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
 #: view:ir.cron:0
 #: model:ir.ui.menu,name:base.menu_ir_cron_act
@@ -2323,7 +2424,13 @@ msgid "If not set, acts as a default value for new resources"
 msgstr "Αν δεν έχει ορισθεί, δρα ως η προεπιλεγμένη τιμή για νέους πόρους."
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:3448
+#, python-format
+msgid "Recursivity Detected."
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:262
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "Σφάλμα στις εξαρτήσεις Αρθρωμάτων!"
@@ -2352,6 +2459,11 @@ msgid ""
 msgstr ""
 "Αριθμός ΦΠΑ. Επιλέξτε αυτό αν ο συνεργάτης πληρώνει ΦΠΑ. Χρησιμοποιείται "
 "στην περιοδική δήλωση ΦΠΑ."
+
+#. module: base
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ru
@@ -2406,11 +2518,6 @@ msgid "VAT"
 msgstr "ΦΠΑ"
 
 #. module: base
-#: field:ir.ui.menu,web_icon_hover_data:0
-msgid "Web Icons Hover"
-msgstr "Αιώρηση εικονιδίων ιστού"
-
-#. module: base
 #: view:res.lang:0
 msgid "12. %w              ==> 5 ( Friday is the 6th day)"
 msgstr "12. %w              ==> 5 (Η Παρασκευή είναι η 6η ημέρα)"
@@ -2424,6 +2531,11 @@ msgstr "Σφάλμα! Υπάρχει κατηγορία με την ίδια π�
 #: view:res.lang:0
 msgid "%x - Appropriate date representation."
 msgstr "%x - Ορθή αναπαράσταση ημερ/νίας"
+
+#. module: base
+#: model:ir.model,name:base.model_change_user_password
+msgid "change.user.password"
+msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -2441,7 +2553,12 @@ msgid "GPL-2 or later version"
 msgstr "GPL-2 ή μεταγενέστερη έκδοση"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: model:res.partner.title,shortcut:base.res_partner_title_sir
+msgid "M."
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:429
 #, python-format
 msgid ""
 "Can not create the module file:\n"
@@ -2451,12 +2568,20 @@ msgstr ""
 " %s"
 
 #. module: base
+#: code:addons/orm.py:2973
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: read, Document type: %s)."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
 msgstr "Nauru"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:200
 #, python-format
 msgid "The certificate ID of the module must be unique !"
 msgstr "Το πιστοποιητικό ταυτότητας του στοιχείου πρέπει να είναι μοναδικό !"
@@ -2536,6 +2661,12 @@ msgid "EAN13"
 msgstr "EAN13"
 
 #. module: base
+#: code:addons/orm.py:1622
+#, python-format
+msgid "Invalid Architecture!"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.pt
 msgid "Portugal"
 msgstr "Portugal"
@@ -2594,7 +2725,7 @@ msgid "Ecuador"
 msgstr "Ecuador"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:52
 #, python-format
 msgid ""
 "Save this document to a .CSV file and open it with your favourite "
@@ -2666,7 +2797,7 @@ msgid "Action to Trigger"
 msgstr "Ενέργεια προς Εκκίνηση"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:136
 #, python-format
 msgid "\"email_from\" needs to be set to send welcome mails to users"
 msgstr ""
@@ -2753,6 +2884,11 @@ msgstr "Τηλεπικοινωνίες"
 #: field:workflow.transition,trigger_model:0
 msgid "Trigger Object"
 msgstr "Αντικείμενο Εναύσματος"
+
+#. module: base
+#: help:change.user.password,confirm_password:0
+msgid "Enter the new password again for confirmation."
+msgstr ""
 
 #. module: base
 #: view:res.users:0
@@ -2870,17 +3006,12 @@ msgid "FYROM"
 msgstr "FYROM"
 
 #. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Advanced Search"
-msgstr "Προχωρημένη Αναζήτηση"
-
-#. module: base
 #: view:res.lang:0
 msgid "%c - Appropriate date and time representation."
 msgstr "%c - Ορθή εμφάνιση ημερ/νίας και ώρας"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:422
 #, python-format
 msgid ""
 "Your database is now fully configured.\n"
@@ -2929,7 +3060,7 @@ msgid "Rules"
 msgstr "Κανόνες"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:216
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr ""
@@ -3003,7 +3134,7 @@ msgid "Lesotho"
 msgstr "Lesotho"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:112
 #, python-format
 msgid "You can not remove the model '%s' !"
 msgstr "Δεν μπορείτε να διαγράψετε το μοντέλο '%s' !"
@@ -3032,6 +3163,12 @@ msgstr "Αμπχαζιανά / аҧсуа"
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
 msgstr "Διαμόρφωση συστήματος ολοκληρώθηκε"
+
+#. module: base
+#: code:addons/orm.py:929
+#, python-format
+msgid "Error occurred while validating the field(s) %s: %s"
+msgstr "Σφάλμα κατά την επικύρωση των πεδίων %s: %s"
 
 #. module: base
 #: view:ir.property:0
@@ -3064,7 +3201,7 @@ msgid "Benin"
 msgstr "Benin"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
 #, python-format
 msgid "That contract is already registered in the system."
 msgstr ""
@@ -3093,6 +3230,14 @@ msgstr "RML Κεφαλίδα"
 #: field:partner.sms.send,app_id:0
 msgid "API ID"
 msgstr "API ID"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:340
+#, python-format
+msgid ""
+"You can not create this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -3151,6 +3296,11 @@ msgstr "Senegal"
 #: model:res.country,name:base.hu
 msgid "Hungary"
 msgstr "Hungary"
+
+#. module: base
+#: model:ir.model,name:base.model_res_groups
+msgid "res.groups"
+msgstr "res.groups"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -3268,11 +3418,6 @@ msgstr ""
 "της φόρμας."
 
 #. module: base
-#: model:res.country,name:base.al
-msgid "Albania"
-msgstr "Albania"
-
-#. module: base
 #: view:ir.attachment:0
 msgid "Attached To"
 msgstr "Συνημμένο με"
@@ -3313,6 +3458,17 @@ msgid "Creator"
 msgstr "Δημιουργός"
 
 #. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mx
 msgid "Mexico"
 msgstr "Mexico"
@@ -3336,6 +3492,12 @@ msgstr "res.users"
 #: model:res.country,name:base.ni
 msgid "Nicaragua"
 msgstr "Nicaragua"
+
+#. module: base
+#: code:addons/orm.py:1046
+#, python-format
+msgid "The write method is not implemented on this object !"
+msgstr "Η μέθοδος εγγραφής δεν έχει αναπτυχθεί σε αυτό το αντικείμενο!"
 
 #. module: base
 #: view:res.partner.event:0
@@ -3404,6 +3566,18 @@ msgstr "Kazakhstan"
 #. module: base
 #: view:res.lang:0
 msgid "%w - Weekday number [0(Sunday),6]."
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_partner_form
+msgid ""
+"A customer is an entity you do business with, like a company or an "
+"organization. A customer can have several contacts or addresses which are "
+"the people working for this company. You can use the history tab, to follow "
+"all transactions related to a customer: sales order, emails, opportunities, "
+"claims, etc. If you use the email gateway, the Outlook or the Thunderbird "
+"plugin, don't forget to register emails to each contact so that the gateway "
+"will automatically attach incoming emails to the right partner."
 msgstr ""
 
 #. module: base
@@ -3620,7 +3794,8 @@ msgid "Bank Type"
 msgstr "Τύπος Τράπεζας"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:58
+#: code:addons/base/res/res_user.py:67
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "Το όνομα της ομάδας δεν μπορεί να ξεκινάει με \"-\""
@@ -3642,7 +3817,7 @@ msgid "Gujarati / ગુજરાતી"
 msgstr "Gujarati / ગુજરાતી"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:257
 #, python-format
 msgid ""
 "Unable to process module \"%s\" because an external dependency is not met: %s"
@@ -3662,7 +3837,7 @@ msgid "Flow Start"
 msgstr "Εκκίνηση Ροής"
 
 #. module: base
-#: code:addons/__init__.py:0
+#: code:addons/__init__.py:827
 #, python-format
 msgid "module base cannot be loaded! (hint: verify addons-path)"
 msgstr ""
@@ -3696,7 +3871,9 @@ msgid "Guadeloupe (French)"
 msgstr "Guadeloupe (French)"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
+#: code:addons/base/res/res_lang.py:88
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid "User Error"
 msgstr "Σφάλμα Χρήστη"
@@ -3772,9 +3949,15 @@ msgid "Cape Verde"
 msgstr "Cape Verde (Πράσινο Ακρωτήριο)"
 
 #. module: base
+#: view:base.module.import:0
+msgid "Select module package to import (.zip file):"
+msgstr "Επιλέξτε πακέτο αρθρώματος για εισαγωγή (αρχείο .zip):"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
+#: model:res.widget,title:base.events_widget
 msgid "Events"
 msgstr "Συμβάντα"
 
@@ -3783,6 +3966,17 @@ msgstr "Συμβάντα"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.url"
 msgstr "ir.actions.url"
+
+#. module: base
+#: model:res.widget,title:base.currency_converter_widget
+msgid "Currency Converter"
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:156
+#, python-format
+msgid "Wrong ID for the browse record, got %r, expected an integer."
+msgstr "Wrong ID for the browse record, got %r, expected an integer."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_addess_tree
@@ -3817,14 +4011,20 @@ msgid "French / Français"
 msgstr "French / Français"
 
 #. module: base
-#: view:ir.module.module:0
-msgid "Created Menus"
-msgstr "Δημιουργημένα Μενού"
+#: code:addons/orm.py:1049
+#, python-format
+msgid "The create method is not implemented on this object !"
+msgstr "The create method is not implemented on this object !"
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
 msgid "Workitem"
 msgstr "Workitem"
+
+#. module: base
+#: view:ir.actions.todo:0
+msgid "Set as Todo"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window.view,act_window_id:0
@@ -4051,11 +4251,6 @@ msgid "Check this box if the partner is an Employee."
 msgstr "Επιλέξτε αυτό το πεδίο αν ο συνεργάτης είναι Εργαζόμενος."
 
 #. module: base
-#: model:res.partner.title,name:base.res_partner_title_ltd
-msgid "Limited Company"
-msgstr "Εταιρία Περιορισμένης Ευθύνης"
-
-#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4076,6 +4271,14 @@ msgstr "Συμβουλή"
 #: model:ir.model,name:base.model_ir_attachment
 msgid "ir.attachment"
 msgstr "ir.attachment"
+
+#. module: base
+#: code:addons/orm.py:3533
+#, python-format
+msgid ""
+"You cannot perform this operation. New Record Creation is not allowed for "
+"this object as this object is for reporting purpose."
+msgstr ""
 
 #. module: base
 #: view:base.language.import:0
@@ -4117,6 +4320,11 @@ msgid "Project"
 msgstr "Έργο"
 
 #. module: base
+#: field:ir.ui.menu,web_icon_hover_data:0
+msgid "Web Icon Image (hover)"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Το αρχείο αρθρώματος εισήχθη επιτυχώς!"
@@ -4143,12 +4351,9 @@ msgid "Serial Key"
 msgstr ""
 
 #. module: base
-#: field:res.partner,customer:0
-#: view:res.partner.address:0
-#: field:res.partner.address,is_customer_add:0
-#: model:res.partner.category,name:base.res_partner_category_0
-msgid "Customer"
-msgstr "Πελάτης"
+#: model:ir.ui.menu,name:base.menu_audit
+msgid "Audit"
+msgstr "Λογιστικός έλεγχος"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -4156,7 +4361,6 @@ msgid "Saint Lucia"
 msgstr "Saint Lucia"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
 #: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Συμβόλαιο Συντήρησης"
@@ -4177,6 +4381,11 @@ msgstr "Υπάλληλος"
 #: field:ir.model.access,perm_create:0
 msgid "Create Access"
 msgstr "Δημιουργία Πρόσβασης"
+
+#. module: base
+#: field:change.user.password,current_password:0
+msgid "Current Password"
+msgstr ""
 
 #. module: base
 #: field:res.partner.address,state_id:0
@@ -4260,6 +4469,18 @@ msgid "Signature"
 msgstr "Υπογραφή"
 
 #. module: base
+#: code:addons/fields.py:456
+#: code:addons/fields.py:654
+#: code:addons/fields.py:656
+#: code:addons/fields.py:658
+#: code:addons/fields.py:660
+#: code:addons/fields.py:662
+#: code:addons/fields.py:664
+#, python-format
+msgid "Not Implemented"
+msgstr "Μη ενεργοποιημένο"
+
+#. module: base
 #: model:ir.model,name:base.model_res_widget_user
 msgid "res.widget.user"
 msgstr "res.widget.user"
@@ -4280,7 +4501,7 @@ msgid "False means for every user"
 msgstr "Τιμή False σημαίνει για κάθε χρήστη"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:198
 #, python-format
 msgid "The name of the module must be unique !"
 msgstr "Το όνομα του αρθρώματος πρέπει να είναι μοναδικό !"
@@ -4321,9 +4542,11 @@ msgid "Contacts"
 msgstr "Στοιχεία"
 
 #. module: base
-#: model:res.country,name:base.fo
-msgid "Faroe Islands"
-msgstr "Faroe Islands"
+#: code:addons/orm.py:3199
+#, python-format
+msgid ""
+"Unable to delete this document because it is used as a default property"
+msgstr ""
 
 #. module: base
 #: view:res.widget.wizard:0
@@ -4350,6 +4573,20 @@ msgstr "Czech Republic"
 #. module: base
 #: view:res.widget.wizard:0
 msgid "Widget Wizard"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
+msgid ""
+"The configuration wizards are used to help you configure a new instance of "
+"OpenERP. They are launched during the installation of new modules, but you "
+"can choose to restart some wizards manually from this menu."
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Insufficient fields for Calendar View!"
 msgstr ""
 
 #. module: base
@@ -4396,15 +4633,9 @@ msgid "Mongolia"
 msgstr "Mongolia"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
-#: code:addons/base/ir/ir_model.py:0
-#: code:addons/base/module/module.py:0
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
-#: code:addons/base/res/res_currency.py:0
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "Error"
-msgstr "Σφάλμα"
+#: view:ir.module.module:0
+msgid "Created Menus"
+msgstr "Δημιουργημένα Μενού"
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -4522,11 +4753,6 @@ msgid "Password"
 msgstr "Συνθηματικό"
 
 #. module: base
-#: field:ir.ui.menu,web_icon:0
-msgid "Icon File"
-msgstr "Αρχείο εικονιδίου"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
 #: view:ir.model:0
 #: field:ir.model,field_id:0
@@ -4627,7 +4853,7 @@ msgid "Change My Preferences"
 msgstr "Αλλαγή Προτιμήσεων"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:160
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr "Λανθασμένο όνομα μοντέλου στην δήλωση ενέργειας"
@@ -4690,9 +4916,16 @@ msgid "Dutch / Nederlands"
 msgstr "Dutch / Nederlands"
 
 #. module: base
-#: model:res.widget,title:base.rvalyi_twitter_widget
-msgid "Raphaël Valyi's tweets"
+#: code:addons/base/res/res_config.py:384
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
 msgstr ""
+"\n"
+"\n"
+"Αυτό το πρόσθετο είναι ήδη εγκατεστημένο στο σύστημά σας"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -4764,7 +4997,13 @@ msgid "Client Actions"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:1806
+#, python-format
+msgid "The exists method is not implemented on this object !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:336
 #, python-format
 msgid ""
 "You try to upgrade a module that depends on the module: %s.\n"
@@ -4840,7 +5079,7 @@ msgid "ir.server.object.lines"
 msgstr "ir.server.object.lines"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:530
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
 msgstr "Άρθρωμα %s: Άκυρο Πιστοποιητικό Ποιότητας"
@@ -4892,9 +5131,20 @@ msgid "Accepted Users"
 msgstr ""
 
 #. module: base
+#: field:ir.ui.menu,web_icon_data:0
+msgid "Web Icon Image"
+msgstr ""
+
+#. module: base
 #: view:ir.values:0
 msgid "Values for Event Type"
 msgstr "Τιμές για τον Τύπο Συμβάντος"
+
+#. module: base
+#: code:addons/base/res/res_user.py:605
+#, python-format
+msgid "The current password does not match, please double-check it."
+msgstr ""
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -4996,14 +5246,17 @@ msgid "Choose between the simplified interface and the extended one"
 msgstr "Επιλέξτε μεταξύ του απλοποιημένου ή του επεκταμένου μενού"
 
 #. module: base
-#: model:res.widget,title:base.odony_twitter_widget
-msgid "Olivier Dony's tweets"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.np
 msgid "Nepal"
 msgstr "Nepal"
+
+#. module: base
+#: code:addons/orm.py:2307
+#, python-format
+msgid ""
+"Invalid value for reference field \"%s\" (last part must be a non-zero "
+"integer): \"%s\""
+msgstr ""
 
 #. module: base
 #: help:ir.cron,args:0
@@ -5034,14 +5287,14 @@ msgid "Update Modules List"
 msgstr "Ενημέρωση Λίστας Αρθρωμάτων"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:255
 #, python-format
 msgid ""
 "Unable to upgrade module \"%s\" because an external dependency is not met: %s"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:241
 #, python-format
 msgid ""
 "Please keep in mind that documents currently displayed may not be relevant "
@@ -5059,6 +5312,12 @@ msgstr "Συνέχεια"
 #: selection:base.language.install,lang:0
 msgid "Thai / ภาษาไทย"
 msgstr "Ταϋλανδικά / ภาษาไทย"
+
+#. module: base
+#: code:addons/orm.py:158
+#, python-format
+msgid "Object %s does not exists"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5191,6 +5450,13 @@ msgid "Iteration"
 msgstr "Επανάληψη"
 
 #. module: base
+#: code:addons/orm.py:3448
+#: code:addons/orm.py:3532
+#, python-format
+msgid "UserError"
+msgstr "UserError"
+
+#. module: base
 #: model:res.country,name:base.ae
 msgid "United Arab Emirates"
 msgstr "United Arab Emirates"
@@ -5213,7 +5479,7 @@ msgid "Global"
 msgstr "Παγκόσμια"
 
 #. module: base
-#: view:res.users:0
+#: view:change.user.password:0
 msgid "You must logout and login again after changing your password."
 msgstr ""
 "Θα πρέπει να αποσυνδεθείτε και να συνδεθείτε ξανά μετά την αλλαγή κωδικού "
@@ -5230,7 +5496,12 @@ msgid "Solomon Islands"
 msgstr "Solomon Islands"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:344
+#: code:addons/orm.py:1897
+#: code:addons/orm.py:2972
+#: code:addons/orm.py:3165
+#: code:addons/orm.py:3365
+#: code:addons/orm.py:3817
 #, python-format
 msgid "AccessError"
 msgstr "AccessError"
@@ -5241,7 +5512,7 @@ msgid "Waiting"
 msgstr ""
 
 #. module: base
-#: code:addons/__init__.py:0
+#: code:addons/__init__.py:827
 #, python-format
 msgid "Could not load base module"
 msgstr "Δεν μπορεί να φορτωθεί το βασικό άρθρωμα"
@@ -5250,6 +5521,12 @@ msgstr "Δεν μπορεί να φορτωθεί το βασικό άρθρωμ
 #: view:res.lang:0
 msgid "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 msgstr "8.  %I:%M:%S %p  ==> 06:25:20 μ.μ."
+
+#. module: base
+#: code:addons/orm.py:1803
+#, python-format
+msgid "The copy method is not implemented on this object !"
+msgstr "The copy method is not implemented on this object !"
 
 #. module: base
 #: field:res.log,create_date:0
@@ -5368,7 +5645,7 @@ msgid "ir.actions.todo"
 msgstr "ir.actions.todo"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:94
 #, python-format
 msgid "Couldn't find previous ir.actions.todo"
 msgstr ""
@@ -5442,17 +5719,23 @@ msgid "res.widget"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:219
 #, python-format
 msgid "Model %s does not exist!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:88
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
 msgstr ""
 "Δεν μπορείτε να διαγράψετε τη γλώσσα που είναι προτιμώμενη από τον χρήστη!"
+
+#. module: base
+#: code:addons/fields.py:103
+#, python-format
+msgid "Not implemented get_memory method !"
+msgstr "Not implemented get_memory method !"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -5462,7 +5745,7 @@ msgid "Python Code"
 msgstr "Python Code"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Can not create the module file: %s !"
 msgstr "Αδύνατη η δημιουργία του αρχείου Αρθρώματος: %s!"
@@ -5478,6 +5761,7 @@ msgstr "Ο πυρήνας του OpenERP, αναγκαίος για κάθε ε�
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
+#: view:change.user.password:0
 #: view:partner.clear.ids:0
 #: view:partner.sms.send:0
 #: view:partner.wizard.spam:0
@@ -5504,6 +5788,11 @@ msgstr ""
 #. module: base
 #: view:res.request:0
 msgid "Current"
+msgstr ""
+
+#. module: base
+#: help:change.user.password,new_password:0
+msgid "Enter the new password."
 msgstr ""
 
 #. module: base
@@ -5581,7 +5870,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:421
 #, python-format
 msgid "Click 'Continue' to configure the next addon..."
 msgstr ""
@@ -5623,7 +5912,7 @@ msgstr ""
 "Select the object on which the action will work (read, write, create)."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:625
 #, python-format
 msgid "Please specify server option --email-from !"
 msgstr ""
@@ -5710,6 +5999,7 @@ msgstr "Liberia"
 #: view:res.groups:0
 #: view:res.partner:0
 #: field:res.partner,comment:0
+#: model:res.widget,title:base.note_widget
 msgid "Notes"
 msgstr "Σημειώσεις"
 
@@ -5782,6 +6072,11 @@ msgid "Sequence Codes"
 msgstr ""
 
 #. module: base
+#: field:change.user.password,confirm_password:0
+msgid "Confirm Password"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (CO) / Español (CO)"
 msgstr ""
@@ -5835,7 +6130,9 @@ msgid "Afghanistan, Islamic State of"
 msgstr "Afghanistan, Islamic State of"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
+#: code:addons/base/res/res_user.py:594
+#: code:addons/base/res/res_user.py:605
 #, python-format
 msgid "Error !"
 msgstr "Σφάλμα!"
@@ -5855,6 +6152,12 @@ msgstr "Μονάδα Διαστήματος"
 #: field:workflow.activity,kind:0
 msgid "Kind"
 msgstr "Είδος"
+
+#. module: base
+#: code:addons/orm.py:3775
+#, python-format
+msgid "This method does not exist anymore"
+msgstr "Αυτή η μέθοδος δε χρησιμοποιείται πια"
 
 #. module: base
 #: field:res.bank,fax:0
@@ -5912,6 +6215,11 @@ msgid "Panama"
 msgstr "Panama"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_ltd
+msgid "Ltd"
+msgstr "ΕΠΕ"
+
+#. module: base
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
@@ -5937,6 +6245,13 @@ msgstr "Όνομα Υπηρεσίας"
 #: model:res.country,name:base.pn
 msgid "Pitcairn Island"
 msgstr "Pitcairn Island"
+
+#. module: base
+#: code:addons/base/res/res_user.py:594
+#, python-format
+msgid ""
+"The new and confirmation passwords do not match, please double-check them."
+msgstr ""
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -6004,11 +6319,6 @@ msgid "Attachments"
 msgstr "Συνημμένα"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "maintenance.contract.wizard"
-
-#. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
 #: model:ir.ui.menu,name:base.menu_sale_config_sales
 #: model:ir.ui.menu,name:base.menu_sales
@@ -6025,6 +6335,11 @@ msgstr "Άλλες Ενέργειες"
 #: view:res.config.users:0
 msgid "Done"
 msgstr "Ολοκληρωμένο"
+
+#. module: base
+#: view:change.user.password:0
+msgid "Change"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -6114,6 +6429,14 @@ msgid "To browse official translations, you can start with these links:"
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:338
+#, python-format
+msgid ""
+"You can not read this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
+
+#. module: base
 #: view:res.bank:0
 #: field:res.config.users,address_id:0
 #: view:res.partner.address:0
@@ -6121,11 +6444,6 @@ msgstr ""
 #: field:res.users,address_id:0
 msgid "Address"
 msgstr "Διεύθυνση"
-
-#. module: base
-#: field:ir.ui.menu,web_icon_hover:0
-msgid "Icon hover File"
-msgstr ""
 
 #. module: base
 #: field:ir.module.module,latest_version:0
@@ -6205,7 +6523,7 @@ msgid "Saint Kitts & Nevis Anguilla"
 msgstr "Saint Kitts & Nevis Anguilla"
 
 #. module: base
-#: code:addons/base/res/res_currency.py:0
+#: code:addons/base/res/res_currency.py:100
 #, python-format
 msgid ""
 "No rate found \n"
@@ -6276,14 +6594,15 @@ msgid "Or"
 msgstr "Or"
 
 #. module: base
-#: model:res.country,name:base.pk
-msgid "Pakistan"
-msgstr "Pakistan"
+#: model:ir.actions.act_window,name:base.res_log_act_window
+#: model:ir.ui.menu,name:base.menu_res_log_act_window
+msgid "Client Logs"
+msgstr ""
 
 #. module: base
-#: view:ir.actions.todo:0
-msgid "Set as Todo"
-msgstr ""
+#: model:res.country,name:base.al
+msgid "Albania"
+msgstr "Albania"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -6291,7 +6610,7 @@ msgid "Samoa"
 msgstr "Samoa"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid ""
 "You cannot delete the language which is Active !\n"
@@ -6316,10 +6635,18 @@ msgid "Child IDs"
 msgstr "Child IDs"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "Problem in configuration `Record Id` in Server Action!"
+
+#. module: base
+#: code:addons/orm.py:2306
+#: code:addons/orm.py:2316
+#, python-format
+msgid "ValidateError"
+msgstr "ValidateError"
 
 #. module: base
 #: view:base.module.import:0
@@ -6370,6 +6697,16 @@ msgid "Home Action"
 msgstr "Home Action"
 
 #. module: base
+#: code:addons/custom.py:558
+#, python-format
+msgid ""
+"The sum of the data (2nd field) is null.\n"
+"We can't draw a pie chart !"
+msgstr ""
+"Το άθροισμα των δεδομένων στο 2ο πεδίο είναι μηδενικό.\n"
+"Αδύνατη η δημιουργία κυκλικού διαγράμματος !"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_lunch_reporting
 #: model:ir.ui.menu,name:base.menu_project_report
 #: model:ir.ui.menu,name:base.menu_report_association
@@ -6397,10 +6734,9 @@ msgid "Stop All"
 msgstr "Όλα Stop"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
-#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
-#: view:publisher_warranty.contract.wizard:0
-msgid "Register a Contract"
+#: code:addons/orm.py:412
+#, python-format
+msgid "The read_group method is not implemented on this object !"
 msgstr ""
 
 #. module: base
@@ -6451,7 +6787,7 @@ msgid "Start update"
 msgstr "Έναρξη ενημέρωσης"
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:144
 #, python-format
 msgid "Contract validation error"
 msgstr ""
@@ -6477,6 +6813,11 @@ msgstr "Ζώνη Ώρας"
 #: selection:ir.ui.menu,action:0
 msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_miss
+msgid "Mss"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view
@@ -6506,7 +6847,7 @@ msgid "HR Manager Dashboard"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:253
 #, python-format
 msgid ""
 "Unable to install module \"%s\" because an external dependency is not met: %s"
@@ -6558,7 +6899,7 @@ msgid "Module Update"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Following modules are not installed or unknown: %s"
 msgstr "Τα παρακάτω αθρώματα δεν είναι εγκατεστημένα ή είναι άγνωστα:%s"
@@ -6603,11 +6944,6 @@ msgid "Ms."
 msgstr "Κα/Δς"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_ltd
-msgid "Ltd."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.ch
 msgid "Switzerland"
 msgstr "Switzerland / Ελβετία"
@@ -6644,7 +6980,19 @@ msgid "The new user's real name, used for searching and most listings"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/osv.py:154
+#: code:addons/osv.py:156
+#, python-format
+msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_wizard_screen
+msgid "ir.wizard.screen"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:189
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr "ο μέγεθος του πεδίου δεν μπορεί ποτέ να είναι μικρότερο του 1!"
@@ -6683,6 +7031,12 @@ msgid "Arguments"
 msgstr "Arguments"
 
 #. module: base
+#: code:addons/orm.py:716
+#, python-format
+msgid "Database ID doesn't exist: %s : %s"
+msgstr ""
+
+#. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 2"
 msgstr "GPL Έκδοση 2"
@@ -6693,14 +7047,29 @@ msgid "GPL Version 3"
 msgstr "GPL Έκδοση 3"
 
 #. module: base
+#: code:addons/orm.py:836
+#, python-format
+msgid "key '%s' not found in selection field '%s'"
+msgstr ""
+
+#. module: base
 #: view:partner.wizard.ean.check:0
 msgid "Correct EAN13"
 msgstr "Σωστός EAN13"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_audit
-msgid "Audit"
-msgstr "Λογιστικός έλεγχος"
+#: code:addons/orm.py:2317
+#, python-format
+msgid "The value \"%s\" for the field \"%s\" is not in the selection"
+msgstr "Η τιμή  \"%s\" για οτ πεδίο \"%s\" δεν είναι επιλεγμένη!"
+
+#. module: base
+#: field:res.partner,customer:0
+#: view:res.partner.address:0
+#: field:res.partner.address,is_customer_add:0
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Customer"
+msgstr "Πελάτης"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6805,7 +7174,7 @@ msgid "Copy Object"
 msgstr "Αντιγραφή Αντικειμένου"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:551
 #, python-format
 msgid ""
 "Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
@@ -6857,6 +7226,15 @@ msgid "Object"
 msgstr "Αντικείμενο"
 
 #. module: base
+#: code:addons/osv.py:151
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "ir.default"
 msgstr "ir.default"
@@ -6891,10 +7269,15 @@ msgid "User Ref."
 msgstr "User Ref."
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:550
 #, python-format
 msgid "Warning !"
 msgstr "Προσοχή!"
+
+#. module: base
+#: model:res.widget,title:base.google_maps_widget
+msgid "Google Maps"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -7032,7 +7415,7 @@ msgid "workflow.triggers"
 msgstr "workflow.triggers"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:60
 #, python-format
 msgid "Invalid search criterions"
 msgstr "Λάθος κριτήρια αναζήτησης"
@@ -7072,6 +7455,13 @@ msgid "Selection"
 msgstr "Επιλογή"
 
 #. module: base
+#: view:change.user.password:0
+#: model:ir.actions.act_window,name:base.action_view_change_password_form
+#: view:res.users:0
+msgid "Change Password"
+msgstr ""
+
+#. module: base
 #: field:res.company,rml_header1:0
 msgid "Report Header"
 msgstr "Κεφαλίδα Αναφοράς"
@@ -7090,7 +7480,7 @@ msgid "Action Type"
 msgstr "Τύπος Ενέργειας"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:268
 #, python-format
 msgid ""
 "You try to install module '%s' that depends on module '%s'.\n"
@@ -7132,14 +7522,6 @@ msgstr "SMS"
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
 msgstr "Costa Rica"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.action_partner_supplier_form
-msgid ""
-"With the Suppliers menu, you have access to all informations regarding your "
-"suppliers, including an history to track event (crm) and his accounting "
-"properties."
-msgstr ""
 
 #. module: base
 #: view:workflow.activity:0
@@ -7194,9 +7576,21 @@ msgid "workflow.instance"
 msgstr "workflow.instance"
 
 #. module: base
+#: code:addons/orm.py:278
+#, python-format
+msgid "Unknown attribute %s in %s "
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "10. %S              ==> 20"
 msgstr "10. %S              ==> 20"
+
+#. module: base
+#: code:addons/fields.py:106
+#, python-format
+msgid "undefined get method !"
+msgstr "undefined get method !"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7317,6 +7711,11 @@ msgid "Croatian / hrvatski jezik"
 msgstr "Croatian / hrvatski jezik"
 
 #. module: base
+#: help:change.user.password,current_password:0
+msgid "Enter your current password."
+msgstr ""
+
+#. module: base
 #: field:base.language.install,overwrite:0
 msgid "Overwrite Existing Terms"
 msgstr ""
@@ -7373,6 +7772,11 @@ msgstr "Αποστολή Email"
 #: field:res.users,menu_id:0
 msgid "Menu Action"
 msgstr "Λειτουργία Μενού"
+
+#. module: base
+#: model:res.country,name:base.fo
+msgid "Faroe Islands"
+msgstr "Faroe Islands"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -7504,14 +7908,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
-msgstr ""
-
-#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr "Διάφορα"
@@ -7522,7 +7918,7 @@ msgid "China"
 msgstr "China"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:486
 #, python-format
 msgid ""
 "--\n"
@@ -7611,6 +8007,11 @@ msgstr "Όνομα Διαύλου"
 #: view:res.lang:0
 msgid "5.  %y, %Y         ==> 08, 2008"
 msgstr "5.  %y, %Y         ==> 08, 2008"
+
+#. module: base
+#: model:res.partner.title,shortcut:base.res_partner_title_ltd
+msgid "ltd"
+msgstr "Ε.Π.Ε."
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7721,7 +8122,7 @@ msgid "Account No."
 msgstr "Αρ. Λογαριασμού"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
 msgstr "Η βασική γλώσσα 'en_US' δεν μπορεί να διαγραφεί!"
@@ -7742,15 +8143,6 @@ msgid "Field Label"
 msgstr "Όνομα Πεδίου"
 
 #. module: base
-#: model:ir.actions.act_window,help:base.action_partner_form
-msgid ""
-"The Address book manages your customers list. The form for customer allows "
-"you to record detailed on your customers (address, contacts, pricelist, "
-"account, etc.). With the history tab, you can follow all moves transactions "
-"related to a customer, like sales order, claims."
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.dj
 msgid "Djibouti"
 msgstr "Djibouti"
@@ -7764,6 +8156,14 @@ msgstr "Μετάφραση"
 #: model:res.country,name:base.ag
 msgid "Antigua and Barbuda"
 msgstr "Antigua and Barbuda"
+
+#. module: base
+#: code:addons/orm.py:3166
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: %s, Document type: %s)."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.zr
@@ -7823,7 +8223,7 @@ msgid "Auto-Refresh"
 msgstr "Auto-Refresh"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:60
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
@@ -7832,6 +8232,11 @@ msgstr ""
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
 msgstr "Διάγραμμα"
+
+#. module: base
+#: model:res.country,name:base.wf
+msgid "Wallis and Futuna Islands"
+msgstr "Wallis and Futuna Islands"
 
 #. module: base
 #: help:multi_company.default,name:0
@@ -7888,6 +8293,35 @@ msgstr "Τραπεζικός Κωδικός Αναγνώρισης"
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "Turkmenistan"
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:593
+#: code:addons/base/ir/ir_actions.py:625
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
+#: code:addons/base/ir/ir_model.py:112
+#: code:addons/base/ir/ir_model.py:197
+#: code:addons/base/ir/ir_model.py:216
+#: code:addons/base/ir/ir_model.py:219
+#: code:addons/base/module/module.py:215
+#: code:addons/base/module/module.py:258
+#: code:addons/base/module/module.py:262
+#: code:addons/base/module/module.py:268
+#: code:addons/base/module/module.py:303
+#: code:addons/base/module/module.py:321
+#: code:addons/base/module/module.py:336
+#: code:addons/base/module/module.py:429
+#: code:addons/base/module/module.py:530
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
+#: code:addons/base/res/res_currency.py:100
+#: code:addons/base/res/res_user.py:57
+#: code:addons/base/res/res_user.py:66
+#: code:addons/custom.py:558
+#: code:addons/orm.py:3199
+#, python-format
+msgid "Error"
+msgstr "Σφάλμα"
 
 #. module: base
 #: model:res.country,name:base.pm
@@ -7986,11 +8420,6 @@ msgid "Default multi company"
 msgstr "Προκαθορισμένη πολλαπλή εταιρεία"
 
 #. module: base
-#: model:res.partner.title,shortcut:base.res_partner_title_sir
-msgid "Sr."
-msgstr ""
-
-#. module: base
 #: view:res.request:0
 msgid "Send"
 msgstr "Αποστολή"
@@ -8022,7 +8451,7 @@ msgid "Internal Header/Footer"
 msgstr "Εσωτερική Κεφαλίδα/Υποσέλιδο"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:59
 #, python-format
 msgid ""
 "Save this document to a .tgz file. This archive containt UTF-8 %s files and "
@@ -8064,6 +8493,14 @@ msgid "Serbian (Cyrillic) / српски"
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:2161
+#, python-format
+msgid ""
+"Invalid group_by specification: \"%s\".\n"
+"A group_by specification must be a list of valid fields."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.sa
 msgid "Saudi Arabia"
 msgstr "Saudi Arabia"
@@ -8089,7 +8526,7 @@ msgid "Event Logs"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_configuration.py:0
+#: code:addons/base/module/wizard/base_module_configuration.py:37
 #, python-format
 msgid "System Configuration done"
 msgstr ""
@@ -8136,9 +8573,16 @@ msgid "Low"
 msgstr "Χαμηλή"
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:0
+#: code:addons/base/ir/ir_ui_menu.py:305
 #, python-format
 msgid "Error ! You can not create recursive Menu."
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
+#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
+#: view:publisher_warranty.contract.wizard:0
+msgid "Register a Contract"
 msgstr ""
 
 #. module: base
@@ -8149,7 +8593,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/publisher_warranty/publisher_warranty.py:0
+#: code:addons/base/publisher_warranty/publisher_warranty.py:145
 #, python-format
 msgid "Please check your publisher warranty contract name and validity."
 msgstr ""
@@ -8165,11 +8609,6 @@ msgstr "El Salvador"
 #: field:res.partner.address,phone:0
 msgid "Phone"
 msgstr "Τηλέφωνο"
-
-#. module: base
-#: model:res.widget,title:base.albertnan_twitter_widget
-msgid "Albert Cervera Areny's tweets"
-msgstr ""
 
 #. module: base
 #: field:ir.cron,active:0
@@ -8303,7 +8742,7 @@ msgid "View Auto-Load"
 msgstr "Αυτόματη Φόρτωση Προβολής"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:197
 #, python-format
 msgid "You cannot remove the field '%s' !"
 msgstr "Δεν μπορείτε να καταργήσετε το πεδίο '%s' !"
@@ -8316,6 +8755,11 @@ msgid "Resource"
 msgstr "Πηγή"
 
 #. module: base
+#: field:ir.ui.menu,web_icon:0
+msgid "Web Icon File"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Persian / فارس"
 msgstr ""
@@ -8326,7 +8770,7 @@ msgid "View Ordering"
 msgstr ""
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_upgrade.py:0
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
 #, python-format
 msgid "Unmet dependency !"
 msgstr "Ανεκπλήρωτες εξαρτήσεις!"
@@ -8339,6 +8783,14 @@ msgid ""
 msgstr ""
 "Υποστηριζόμενες μορφές αρχείων *.csv (Comma-separated values) ή *.po "
 "(GetText Portable Objects)"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:341
+#, python-format
+msgid ""
+"You can not delete this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
@@ -8464,7 +8916,7 @@ msgid "Azerbaijan"
 msgstr "Azerbaijan"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid "Warning"
 msgstr "Προσοχή"
@@ -8491,13 +8943,17 @@ msgid "Czech / Čeština"
 msgstr "Czech / Čeština"
 
 #. module: base
-#: model:res.country,name:base.wf
-msgid "Wallis and Futuna Islands"
-msgstr "Wallis and Futuna Islands"
+#: selection:ir.model.fields,select_level:0
+msgid "Advanced Search"
+msgstr "Προχωρημένη Αναζήτηση"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_wizard_screen
-msgid "ir.wizard.screen"
+#: model:ir.actions.act_window,help:base.action_partner_supplier_form
+msgid ""
+"You can access all information regarding your suppliers from the supplier "
+"form: accounting data, history of emails, meetings, purchases, etc. You can "
+"uncheck the 'Suppliers' filter button in order to search in all your "
+"partners, including customers and prospects."
 msgstr ""
 
 #. module: base
@@ -8708,11 +9164,6 @@ msgid "View Name"
 msgstr "Όνομα Προβολής"
 
 #. module: base
-#: model:ir.model,name:base.model_res_groups
-msgid "Access Groups"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Italian / Italiano"
 msgstr "Italian / Italiano"
@@ -8769,11 +9220,6 @@ msgid "Seychelles"
 msgstr "Seychelles"
 
 #. module: base
-#: model:res.widget,title:base.nhomar_twitter_widget
-msgid "Nhomar Hernandez's tweets"
-msgstr ""
-
-#. module: base
 #: model:ir.model,name:base.model_res_partner_bank
 #: view:res.partner.bank:0
 msgid "Bank Accounts"
@@ -8801,7 +9247,7 @@ msgid "Account Owner"
 msgstr "Ιδιοκτήτης Λογαρισμού"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:240
 #, python-format
 msgid "Company Switch Warning"
 msgstr "Προειδοποίηση αλλαγής εταιρίας"
@@ -8845,6 +9291,7 @@ msgid "Delivery"
 msgstr "Παράδοση"
 
 #. module: base
+#: model:res.partner.title,name:base.res_partner_title_pvt_ltd
 #: model:res.partner.title,shortcut:base.res_partner_title_pvt_ltd
 msgid "Corp."
 msgstr "Α.Ε."
@@ -8860,7 +9307,7 @@ msgid "Workflow Instances"
 msgstr "Workflow Instances"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:261
 #, python-format
 msgid "Partners: "
 msgstr "Συνεργάτες "
@@ -8920,18 +9367,35 @@ msgstr "Σρι Λάνκα / Κευλάνη"
 msgid "Russian / русский язык"
 msgstr "Ρώσσικα / русский язык"
 
+#, python-format
+#~ msgid "No journal for ending writing has been defined for the fiscal year"
+#~ msgstr ""
+#~ "Δεν έχει καθοριστεί ημερομηνία τέλους εγγραφών για την διαχειριστική χρήση"
+
 #~ msgid "%j - Day of the year as a decimal number [001,366]."
 #~ msgstr "%j - Ημέρα του χρόνου σε δεκαδική μορφή  [001,366]."
+
+#, python-format
+#~ msgid "Product quantity"
+#~ msgstr "Ποσ. προϊόντος"
+
+#, python-format
+#~ msgid "You can not create this kind of document! (%s)"
+#~ msgstr "Δεν μπορείτε να δημιουργήσετε τέτοιο έγγραφο! (%s)"
+
+#, python-format
+#~ msgid "Account move line \"%s\" is not valid"
+#~ msgstr "Η κίνηση λογαριασμού στην γραμμή \"%s\" δεν είναι έγκυρη"
+
+#, python-format
+#~ msgid "You can not delete posted movement: \"%s\"!"
+#~ msgstr "Δεν μπορείτε να διαγράψετε κινήσεις που έχουν αποθηκευθεί: \"%s\"!"
 
 #~ msgid "Outgoing transitions"
 #~ msgstr "Εκροές"
 
 #~ msgid "Yearly"
 #~ msgstr "Ετησίως"
-
-#, python-format
-#~ msgid "The unlink method is not implemented on this object !"
-#~ msgstr "Η μέθοδος αποσύνδεσης δεν έχει αναπτυχθεί σε αυτό το αντικείμενο!"
 
 #~ msgid ""
 #~ "Choose between the \"Simplified Interface\" or the extended one.\n"
@@ -8968,6 +9432,12 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_GOTO_TOP"
 #~ msgstr "STOCK_GOTO_TOP"
 
+#, python-format
+#~ msgid "You can not use this general account in this journal !"
+#~ msgstr ""
+#~ "Δεν μπορείτε να χρησιμοποιήσετε αυτόν τον γενικό λογαριασμό σε αυτό το "
+#~ "ημερολόγιο!"
+
 #~ msgid "STOCK_DELETE"
 #~ msgstr "ΑΠΟΘΕΜΑ_ΔΙΑΓΡΑΦΗ"
 
@@ -8984,8 +9454,16 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "%y - Year without century as a decimal number [00,99]."
 #~ msgstr "%y - Χρονολογία χωρίς τον αιώνα, σε δεκαδική μορφή [00, 99]."
 
+#, python-format
+#~ msgid "You can not add/modify entries in a closed journal."
+#~ msgstr ""
+#~ "Δεν μπορείτε να προσθέσετε/τροποποιήσετε εγγραφές σε ένα κλειστό ημερολόγιο."
+
 #~ msgid "Validated"
 #~ msgstr "Επικυρωμένο"
+
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Ο κανόνας πληροίται αν τουλάχιστον ένα τεστ είναι Ορθό"
 
 #~ msgid "Get Max"
 #~ msgstr "Get Max"
@@ -9000,11 +9478,19 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Ρυθμίσεις"
 
 #, python-format
-#~ msgid "The read method is not implemented on this object !"
-#~ msgstr "Η μέθοδος ανάγνωσης δεν έχει αναπτυχθεί για αυτό το αντικείμενο!"
+#~ msgid "June"
+#~ msgstr "Ιουνίου"
+
+#, python-format
+#~ msgid "Workcenter name"
+#~ msgstr "Όνομα κέντρου εργασίας"
 
 #~ msgid "STOCK_MEDIA_REWIND"
 #~ msgstr "STOCK_MEDIA_REWIND"
+
+#, python-format
+#~ msgid "Product Quantity"
+#~ msgstr "Ποσότητα Προϊόντος"
 
 #~ msgid "STOCK_CUT"
 #~ msgstr "STOCK_CUT"
@@ -9018,14 +9504,31 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Bulgarian / български"
 #~ msgstr "Bulgarian / български"
 
+#, python-format
+#~ msgid "You can not sign in from an other date than today"
+#~ msgstr ""
+#~ "Δεν μπορέιτε να προσέλθετε για εργασία σε άλλη ημερ/νία από τη σημερινή"
+
+#, python-format
+#~ msgid "from stock: products assigned."
+#~ msgstr "απο απόθεμα: ανατεθημένα προϊόντα."
+
 #~ msgid "Bar Chart"
 #~ msgstr "Ιστόγραμμα"
 
 #~ msgid "STOCK_DIALOG_ERROR"
 #~ msgstr "STOCK_DIALOG_ERROR"
 
+#, python-format
+#~ msgid "Invoice is not created"
+#~ msgstr "Το τιμολόγιο δεν δημιουργήθηκε"
+
 #~ msgid "STOCK_INDEX"
 #~ msgstr "STOCK_INDEX"
+
+#, python-format
+#~ msgid "File Name"
+#~ msgstr "Όνομα αρχείου"
 
 #~ msgid "STOCK_DIALOG_QUESTION"
 #~ msgstr "STOCK_DIALOG_QUESTION"
@@ -9033,8 +9536,23 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "You may have to reinstall some language pack."
 #~ msgstr "Πιθανόν να χρειαστεί να επανεγκαταστήσετε κάποιο πακέτο γλώσσας."
 
+#, python-format
+#~ msgid "Futur Deliveries"
+#~ msgstr "Μελλοντικές Παραδόσεις"
+
+#~ msgid "maintenance contract modules"
+#~ msgstr "maintenance contract modules"
+
+#, python-format
+#~ msgid "TOTAL"
+#~ msgstr "ΣΥΝΟΛΟ"
+
 #~ msgid "Factor"
 #~ msgstr "Παράγοντας"
+
+#, python-format
+#~ msgid "A model having this name and code already exists !"
+#~ msgstr "Ένα μοντέλο που έχει αυτό το όνομα και κωδικό υπάρχει ήδη!"
 
 #~ msgid "STOCK_FILE"
 #~ msgstr "STOCK_FILE"
@@ -9052,15 +9570,27 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "STOCK_OK"
 
 #, python-format
-#~ msgid ""
-#~ "The sum of the data (2nd field) is null.\n"
-#~ "We can't draw a pie chart !"
-#~ msgstr ""
-#~ "Το άθροισμα των δεδομένων στο 2ο πεδίο είναι μηδενικό.\n"
-#~ "Αδύνατη η δημιουργία κυκλικού διαγράμματος !"
+#~ msgid "You try to bypass an access rule (Document type: %s)."
+#~ msgstr "Υπάρχουν κανόνες πρόσβασης για έγγραφα %s."
+
+#, python-format
+#~ msgid "invalid mode for test_state"
+#~ msgstr "άκυρη κατάσταση για test_state"
 
 #~ msgid "Sequence Name"
 #~ msgstr "Όνομα Ιεράρχησης"
+
+#, python-format
+#~ msgid "September"
+#~ msgstr "Σεπτεμβρίου"
+
+#, python-format
+#~ msgid ""
+#~ "You can not do this modification on a confirmed entry ! Please note that you "
+#~ "can just change some non important fields !"
+#~ msgstr ""
+#~ "Δεν μπορείτε να τροποποίησετε σε μιά επιβεβαιωμένη εγγραφή! Παρακαλώ "
+#~ "σημειώστε ότι μπορείτε απλά να αλλάξετε κάποια μή σημαντικά πεδία!"
 
 #~ msgid "Alignment"
 #~ msgstr "Διάταξη"
@@ -9068,17 +9598,42 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid ">="
 #~ msgstr ">="
 
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "Mail sent to following Partners successfully, !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "Το Mail στάλθηκε στους παρακάτω Συνεργάτες με επιτυχία, !\n"
+#~ "\n"
+
 #~ msgid "Planned Cost"
 #~ msgstr "Προϋπολογισμένο Κόστος"
 
 #~ msgid "ir.model.config"
 #~ msgstr "ir.model.config"
 
+#~ msgid "Tests"
+#~ msgstr "Tests"
+
 #~ msgid "Repository"
 #~ msgstr "Αποθήκευση αρχείων"
 
+#, python-format
+#~ msgid "Your journal must have a default credit and debit account."
+#~ msgstr ""
+#~ "Το ημερολόγιο σας πρέπει να έχει έναν προκαθορισμένο λογαριασμό χρέωσης και "
+#~ "πίστωσης."
+
 #~ msgid "STOCK_JUSTIFY_FILL"
 #~ msgstr "STOCK_JUSTIFY_FILL"
+
+#, python-format
+#~ msgid "Bad account!"
+#~ msgstr "Λάθος λογαριασμός!"
 
 #~ msgid "RML"
 #~ msgstr "RML"
@@ -9087,8 +9642,25 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Συνεργάτες ανά Κατηγορίες"
 
 #, python-format
+#~ msgid "Received Qty"
+#~ msgstr "Παραληφθήσα Ποσ."
+
+#, python-format
 #~ msgid "Pie charts need exactly two fields"
 #~ msgstr "Το κυκλικό διάγραμμα χρειάζεται ακριβώς δύο πεδία"
+
+#, python-format
+#~ msgid "Couldn't send mail because your email address is not configured!"
+#~ msgstr ""
+#~ "Δεν έχετε ρυθμίσει τη διεύθυνση email  σας! Αδύνατη η αποστολή μηνύματος."
+
+#, python-format
+#~ msgid "No Analytic Journal !"
+#~ msgstr "Δεν ορίστηκε Αναλυτικό Ημερολόγιο!"
+
+#, python-format
+#~ msgid "Unit Product Price"
+#~ msgstr "Τιμή Μονάδας Προϊόντος"
 
 #~ msgid "Frequency"
 #~ msgstr "Συχνότητα"
@@ -9114,6 +9686,14 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Dedicated Salesman"
 #~ msgstr "Αφοσιωμένος Πωλητής"
 
+#, python-format
+#~ msgid ""
+#~ "The production is in \"%s\" state. You can not change the production "
+#~ "quantity anymore"
+#~ msgstr ""
+#~ "Η παραγωγή είναι σε κατάσταση \"%s\". Δεν μπορείτε να αλλάξετε την ποσότητα "
+#~ "παραγωγής άλλο"
+
 #~ msgid "Please give your module .ZIP file to import."
 #~ msgstr "Παρακαλώ επιλέξτε το αρχείο .ZIP για εισαγωγή του Αρθρώματος"
 
@@ -9123,11 +9703,33 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_COPY"
 #~ msgstr "STOCK_COPY"
 
+#, python-format
+#~ msgid "You can't modify this order. It has already been paid"
+#~ msgstr ""
+#~ "Δεν μπορείτε να τροποποιήσετε αυτήν την εντολή. Έχει ήδη γίνει η πληρωμή"
+
 #~ msgid "Check new modules"
 #~ msgstr "Έλγχος νέων Αρθρωμάτων"
 
 #~ msgid "Simple domain setup"
 #~ msgstr "Απλή μορφή τομέα"
+
+#, python-format
+#~ msgid "Date to must be set between %s and %s"
+#~ msgstr "Η \"ημερομηνία σε\" πρέπει να οριστεί ανάμεσα στην %s και την %s"
+
+#, python-format
+#~ msgid "Products: "
+#~ msgstr "Προϊόντα: "
+
+#, python-format
+#~ msgid "You can not modify/delete a journal with entries for this period !"
+#~ msgstr ""
+#~ "Αδύνατη η τροποποίηση/διαγραφή ημερολογίου με εγγραφές σε αυτή την περίοδο!"
+
+#, python-format
+#~ msgid "You can not read this document! (%s)"
+#~ msgstr "Δεν μπορείτε να διαβάσετε αυτό το έγγραφο! (%s)"
 
 #~ msgid "STOCK_FIND_AND_REPLACE"
 #~ msgstr "STOCK_FIND_AND_REPLACE"
@@ -9156,6 +9758,10 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "End of Request"
 #~ msgstr "Τέλος Αίτησης"
 
+#, python-format
+#~ msgid "No production sequence defined"
+#~ msgstr "Δεν έχει οριστεί αρίθμηση παραγωγής"
+
 #~ msgid "Note that this operation may take a few minutes."
 #~ msgstr "Αυτή η διαδικασία μπορεί να πάρει λίγα λεπτά."
 
@@ -9166,11 +9772,15 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "STOCK_CLEAR"
 
 #, python-format
-#~ msgid "Not implemented search_memory method !"
-#~ msgstr "Not implemented search_memory method !"
+#~ msgid "Product Cost Structure"
+#~ msgstr "Δομή Κόστους Προϊόντος"
 
 #~ msgid "STOCK_PROPERTIES"
 #~ msgstr "STOCK_PROPERTIES"
+
+#, python-format
+#~ msgid "The journal must have centralised counterpart"
+#~ msgstr "Αυτό το ημερολόγιο πρέπει να έχει Συγκεντρωτικό αντιλογισμό"
 
 #~ msgid "Commercial Prospect"
 #~ msgstr "Εμπορική Προοπτική"
@@ -9179,8 +9789,12 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Χρονολογία χωρίς τον αιώνα: %(y)s"
 
 #, python-format
-#~ msgid "Not implemented set_memory method !"
-#~ msgstr "Not implemented set_memory method !"
+#~ msgid "A sign-out must be right after a sign-in !"
+#~ msgstr "Η έξοδος πρέπει να είναι μετά από την είσοδο!"
+
+#, python-format
+#~ msgid "Error, no partner !"
+#~ msgstr "Σφάλμα! Δεν έχει οριστεί Συνεργάτης"
 
 #~ msgid "Maintenance contract added !"
 #~ msgstr "Το Συβόλαιο Συντήρησης προστέθηκε!"
@@ -9198,6 +9812,11 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_NO"
 #~ msgstr "STOCK_NO"
 
+#, python-format
+#~ msgid "Cannot delete a point of sale which is already confirmed !"
+#~ msgstr ""
+#~ "Δεν μπορείτε να διαγράψετε ένα σημείο πώλησης που έχει ήδη επιβεβαιωθεί!"
+
 #~ msgid "STOCK_REDO"
 #~ msgstr "STOCK_REDO"
 
@@ -9211,15 +9830,54 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Configure User"
 #~ msgstr "Ρυθμίσεις Χρήστη"
 
+#, python-format
+#~ msgid "You can not write in this document! (%s)"
+#~ msgstr "Δεν μπορείτε να επέμβετε στο έγγραφο! (%s)"
+
+#, python-format
+#~ msgid "Product Margins"
+#~ msgstr "Περιθώρια Προϊόντων"
+
+#, python-format
+#~ msgid "You have to provide an account for the write off entry !"
+#~ msgstr "Πρέπει να ορίσετε λογαριασμό για την καταχώρηση της παραγραφής"
+
 #~ msgid "left"
 #~ msgstr "αριστερά"
+
+#, python-format
+#~ msgid "A partner is already defined on this lead."
+#~ msgstr "Έχει ήδη οριστεί συνεργάτης για το Σύνδεσμο."
 
 #~ msgid "STOCK_PRINT_PREVIEW"
 #~ msgstr "STOCK_PRINT_PREVIEW"
 
 #, python-format
-#~ msgid "The perm_read method is not implemented on this object !"
-#~ msgstr "The perm_read method is not implemented on this object !"
+#~ msgid ""
+#~ "No journal defined on the related employee.\n"
+#~ "Fill in the timesheet tab of the employee form."
+#~ msgstr ""
+#~ "Δεν έχει οριστεί ημερολόγιο για το σχετικό υπάλληλο.\n"
+#~ "Παρακαλώ συμπληρώστε τη σελίδα φύλλου χρόνου εργασίας στη φόρμα του "
+#~ "υπαλλήλου."
+
+#, python-format
+#~ msgid ""
+#~ "You can not escalate this case.\n"
+#~ "You are already at the top level."
+#~ msgstr ""
+#~ "Δεν μπορείτε να αναβαθμίσετε αυτό το θέμα.\n"
+#~ "Βρίσκεται ήδη στο ανώτατο επίπεδο."
+
+#, python-format
+#~ msgid "Date not in a defined fiscal year"
+#~ msgstr "Η ημερομηνία δεν ανήκει σε Λογιστική Χρήση"
+
+#, python-format
+#~ msgid "No line matched this order in the choosed delivery grids !"
+#~ msgstr ""
+#~ "Καμία γραμμή δεν ταιριάζει με αυτήν την εντολή για τον επιλεγμένο πίνακα "
+#~ "παραδόσεων!"
 
 #~ msgid "STOCK_MEDIA_PLAY"
 #~ msgstr "STOCK_MEDIA_PLAY"
@@ -9233,8 +9891,28 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_OPEN"
 #~ msgstr "STOCK_OPEN"
 
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
+#~ "Invoice after delivery'."
+#~ msgstr ""
+#~ "You cannot make an advance on a sale order that is defined as 'Automatic "
+#~ "Invoice after delivery'."
+
 #~ msgid "right"
 #~ msgstr "δεξιά"
+
+#, python-format
+#~ msgid "Please verify that an account is defined in the journal."
+#~ msgstr "Παρακαλώ ελέγξτε αν έχει οριστεί λογαριασμός στο ημερολόγιο."
+
+#, python-format
+#~ msgid "You can not delete this document! (%s)"
+#~ msgstr "Δεν μπορείτε να διαγράψετε αυτό το έγγραφο! (%s)"
+
+#, python-format
+#~ msgid "No Partner!"
+#~ msgstr "Δεν υπάρχει Συνεργάτης!"
 
 #~ msgid "Others Partners"
 #~ msgstr "Άλλοι Συνεργάτες"
@@ -9251,6 +9929,25 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "terp-project"
 #~ msgstr "terp-project"
 
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Δεν υπάρχει διαθέσιμη πληροφορία"
+
+#, python-format
+#~ msgid ""
+#~ "No fiscal year defined for this date !\n"
+#~ "Please create one."
+#~ msgstr ""
+#~ "Η ημερομηνία δεν ανήκει σε Λογιστική Χρήση.\n"
+#~ "Παρακαλώ δημιουργήστε μία."
+
+#, python-format
+#~ msgid ""
+#~ "Selected Move lines does not have any account move enties in draft state"
+#~ msgstr ""
+#~ "Οι επιλεγμένες γραμμές κίνησης δεν περιέχουν προσωρινές εγγραφές κίνησης "
+#~ "λογαριασμού"
+
 #~ msgid "STOCK_JUSTIFY_CENTER"
 #~ msgstr "STOCK_JUSTIFY_CENTER"
 
@@ -9260,14 +9957,30 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Background Color"
 #~ msgstr "Χρώμα Φόντου"
 
+#, python-format
+#~ msgid "January"
+#~ msgstr "Ιανουαρίου"
+
 #~ msgid "res.partner.som"
 #~ msgstr "res.partner.som"
+
+#, python-format
+#~ msgid "Please create an invoice for this sale."
+#~ msgstr "Παρακαλώ δημιουργήστε ένα τιμολόγιο για αυτήν την πώληση."
 
 #~ msgid "Document Link"
 #~ msgstr "Document Link"
 
+#, python-format
+#~ msgid "Balance product needed"
+#~ msgstr "Χρειάζεται προϊόν υπολοίπου"
+
 #~ msgid "Start Upgrade"
 #~ msgstr "Έναρξη Αναβάθμισης"
+
+#, python-format
+#~ msgid "The carrier %s (id: %d) has no delivery grid!"
+#~ msgstr "Ο μεταφορέας %s (κωδ: %d) δεν έχει πίνακα παραδόσεων!"
 
 #~ msgid "Export language"
 #~ msgstr "Εξαγωγή Γλώσσας"
@@ -9287,10 +10000,6 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Report Footer"
 #~ msgstr "Report Footer"
 
-#, python-format
-#~ msgid "Please check that all your lines have %d columns."
-#~ msgstr "Παρακαλώ ελέγξτε ότι όλες οι γραμμές σας έχουν %d στήλες."
-
 #~ msgid "Import language"
 #~ msgstr "Εισαγωγή γλώσσας"
 
@@ -9308,6 +10017,20 @@ msgstr "Ρώσσικα / русский язык"
 
 #~ msgid "Roles"
 #~ msgstr "Ρόλοι"
+
+#, python-format
+#~ msgid ""
+#~ "You tried to sign with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Η ημερομηνία που χρησιμοποιείτε είναι προγενέστερη!\n"
+#~ "Παρακαλώ επικοινωνήστε με τον υπεύθυνο για διόρθωση των παρουσιών."
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this purchase order."
+#~ msgstr ""
+#~ "Πρέπει πρώτα να ακυρώσετε όλα τα τιμολόγια που συνδέονται με την Παραγγελία "
+#~ "Αγοράς."
 
 #~ msgid ""
 #~ "Regexp to search module on the repository webpage:\n"
@@ -9330,11 +10053,24 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Επαφή Πιθανού Συνεργάτη"
 
 #, python-format
+#~ msgid ""
+#~ "No analytic journal available for this employee.\n"
+#~ "Define an employee for the selected user and assign an analytic journal."
+#~ msgstr ""
+#~ "Δεν υπάρχει αναλυτικό ημερολόγιο για τον υπάλληλο\n"
+#~ "Ορίστε υπάλληλο για το συγκεκριμένο χρήστη και συνδέστε ένα αναλυτικό "
+#~ "ημερολόγιο"
+
+#, python-format
 #~ msgid "Can not define a column %s. Reserved keyword !"
 #~ msgstr "Η στήλη %s δεν μπορεί να οριστει. Η λέξη κλειδί χρησιμοποιείται ήδη!"
 
 #~ msgid "STOCK_QUIT"
 #~ msgstr "STOCK_QUIT"
+
+#, python-format
+#~ msgid "No product in this location."
+#~ msgstr "Κανένα προϊόν σε αυτήν την τοποθεσία"
 
 #~ msgid "terp-purchase"
 #~ msgstr "terp-purchase"
@@ -9342,17 +10078,46 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Repositories"
 #~ msgstr "Αποθήκες Αρχείων"
 
-#~ msgid "Ltd"
-#~ msgstr "ΕΠΕ"
-
 #~ msgid "Report Ref."
 #~ msgstr "Report Ref."
 
 #~ msgid "Unvalid"
 #~ msgstr "Άκυρο"
 
+#, python-format
+#~ msgid "You have to define an analytic journal on the '%s' journal!"
+#~ msgstr "Πρέπει να ορίσετε ένα ανλυτικό ημερολόγιο στο '%s' ημερολόγιο!"
+
+#, python-format
+#~ msgid "August"
+#~ msgstr "Αυγούστου"
+
+#, python-format
+#~ msgid "October"
+#~ msgstr "Οκτωβρίου"
+
+#, python-format
+#~ msgid "The date of your account move is not in the defined period !"
+#~ msgstr "Η ημερομηνία κίνησης λογαριασμού δεν είναι στην καθορισμένη περίοδο!"
+
+#, python-format
+#~ msgid "No action found"
+#~ msgstr "Δεν βρέθηκε ενέργεια"
+
+#, python-format
+#~ msgid ""
+#~ "You can not cancel this holiday request. first You have to make its case in "
+#~ "draft state."
+#~ msgstr ""
+#~ "Δεν μπορείτε να ακυρώσετε αυτή την αίτηση. Πρέπει πρώτα να να μετατρέψετε το "
+#~ "case σε πρόχειρο."
+
 #~ msgid "Language name"
 #~ msgstr "Όνομα Γλώσσας"
+
+#, python-format
+#~ msgid "Analytic Entries"
+#~ msgstr "Εγγραφές Αναλυτικής"
 
 #~ msgid "Subscribed"
 #~ msgstr "Καταχωρημένο"
@@ -9361,8 +10126,8 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Αναβάθμιση Συστήματος"
 
 #, python-format
-#~ msgid "The create method is not implemented on this object !"
-#~ msgstr "The create method is not implemented on this object !"
+#~ msgid "1"
+#~ msgstr "1"
 
 #~ msgid "Partner Address"
 #~ msgstr "Διεύθυνση Συνεργάτη"
@@ -9383,6 +10148,14 @@ msgstr "Ρώσσικα / русский язык"
 #~ "%s.\n"
 #~ "που όμως δεν είναι εγκατεστημένο."
 
+#, python-format
+#~ msgid ""
+#~ "Couldn't send mail because the contact for this task (%s) has no email "
+#~ "address!"
+#~ msgstr ""
+#~ "Το mail δεν μπόρεσε να σταλλεί διότι η επαφή για την εργασία (%s) δεν έχει "
+#~ "διεύθυνση email!"
+
 #~ msgid "STOCK_UNDELETE"
 #~ msgstr "STOCK_UNDELETE"
 
@@ -9392,11 +10165,31 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_PASTE"
 #~ msgstr "STOCK_PASTE"
 
+#, python-format
+#~ msgid "The sign-out date must be in the past"
+#~ msgstr "Η Ημερ/νία Εξόδου πρέπει να είναι στο παρελθόν"
+
 #~ msgid "Configuration Wizard"
 #~ msgstr "Αυτόματος Οδηγός Ρυθμίσεων"
 
+#, python-format
+#~ msgid ""
+#~ "You cannot delete an indicator history record. You may have to delete the "
+#~ "concerned Indicator!"
+#~ msgstr ""
+#~ "Δεν μπορείτε να διαγράψετε μιά εγγραφή απο το ιστορικό του δείκτη. Ίσως "
+#~ "χρειαστεί να διαγράψετε τον εν λόγω δείκτη!"
+
+#, python-format
+#~ msgid "No Partner Defined !"
+#~ msgstr "Δεν ορίστηκε Συνεργάτης!"
+
 #~ msgid "res.roles"
 #~ msgstr "res.roles"
+
+#, python-format
+#~ msgid "You can not modify an invoiced analytic line!"
+#~ msgstr "Δεν μπορείτε να τροποποιήσετε μια τιμολογημένη αναλυτική γραμμή!"
 
 #~ msgid "Accepted Links in Requests"
 #~ msgstr "Αποδεκτοί Σύνδεσμοι στις Αιτήσεις"
@@ -9414,17 +10207,38 @@ msgstr "Ρώσσικα / русский язык"
 #~ "Μπορείτε να το αλλάξετε αυτό αργότερα από το μενού της Διαχείρισης."
 
 #, python-format
-#~ msgid "Error occurred while validating the field(s) %s: %s"
-#~ msgstr "Σφάλμα κατά την επικύρωση των πεδίων %s: %s"
+#~ msgid "You can not change the tax, you should remove and recreate lines !"
+#~ msgstr ""
+#~ "Δεν μπορείτε να αλλάξετε το φόρο, πρέπει να διαγράψετε και να "
+#~ "επαναδημιουργήσετε τις γραμμές!"
+
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "Ο κανόνας πληροίται αν τουλάχιστον ένα τεστ είναι Ορθό (AND)"
 
 #~ msgid "STOCK_CONNECT"
 #~ msgstr "STOCK_CONNECT"
 
+#, python-format
+#~ msgid "Cannot delete invoice(s) that are already opened or paid !"
+#~ msgstr ""
+#~ "Δεν μπορείτε να διαγράψετε τιμολόγιο(α) που έχουν ήδη ανοιχτεί ή πληρωθεί!"
+
+#, python-format
+#~ msgid "Create line failed !"
+#~ msgstr "Ανεπιτυχής δημιουργία γραμμής!"
+
 #~ msgid "Next Call Date"
 #~ msgstr "Επόμενη Ημερ/νία Κλήσης"
 
+#, python-format
+#~ msgid "No sequence defined in the journal !"
+#~ msgstr "Καμία αλληλουχία δεν έχει καθοριστεί σε αυτό το ημερολόγιο!"
+
 #~ msgid "Scan for new modules"
 #~ msgstr "Αναζήτηση νέων Αρθρωμάτων"
+
+#~ msgid "Module Repository"
+#~ msgstr "Τοποθεσία Αρθρωμάτων"
 
 #, python-format
 #~ msgid "Using a relation field which uses an unknown object"
@@ -9433,8 +10247,18 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
 
-#~ msgid "res.groups"
-#~ msgstr "res.groups"
+#, python-format
+#~ msgid "Invoice state"
+#~ msgstr "Κατάσταση τιμολογίου"
+
+#, python-format
+#~ msgid "You can not delete this case. You should better cancel it."
+#~ msgstr ""
+#~ "Δεν μπορείτε να διαγράψετε αυτό το θέμα. Προσπαθείστε να την ακυρώσετε."
+
+#, python-format
+#~ msgid "SUBTOTAL"
+#~ msgstr "ΥΠΟΣΥΝΟΛΟ"
 
 #~ msgid "Field child3"
 #~ msgstr "Field child3"
@@ -9445,26 +10269,86 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Field child1"
 #~ msgstr "Field child1"
 
+#, python-format
+#~ msgid "Delivered Qty"
+#~ msgstr "Παραληφθήσα Ποσ."
+
+#, python-format
+#~ msgid ""
+#~ "No period defined for this date !\n"
+#~ "Please create a fiscal year."
+#~ msgstr ""
+#~ "Δεν έχει οριστεί περίοδος για τη συγκεκριμένη ημερομηνία\n"
+#~ "Παρακαλώ δημιουργήστε μια Λογιστική Χρήση"
+
 #~ msgid "Groups are used to defined access rights on each screen and menu."
 #~ msgstr ""
 #~ "Οι Ομάδες χρησιμοποιούνται για τον ορισμό δικαιωμάτων πρόσβασης στις οθόνες "
 #~ "και τα μενού."
 
 #, python-format
-#~ msgid "The write method is not implemented on this object !"
-#~ msgstr "Η μέθοδος εγγραφής δεν έχει αναπτυχθεί σε αυτό το αντικείμενο!"
+#~ msgid "Some entries are already reconciled !"
+#~ msgstr "Κάποιες εγγραφές είναι ήδη συμφωνημένες"
+
+#, python-format
+#~ msgid "Merging is only allowed on draft inventories."
+#~ msgstr "Η συγχώνευση επιτρέπεται μόνο σε πρόχειρες απογραφές."
+
+#, python-format
+#~ msgid "Unable to reconcile entry \"%s\": %.2f"
+#~ msgstr "Αδύνατη η συμφωνία της εγγραφής \"%s\": %.2f"
+
+#, python-format
+#~ msgid "You can not remove a lot line !"
+#~ msgstr "Οι γραμμές παρτίδων δε διαγράφονται!"
+
+#, python-format
+#~ msgid ""
+#~ "All emails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Όλα τα email έχουν αποσταλλεί με επιτυχία στους Συνεργάτες:\n"
+#~ "\n"
 
 #~ msgid "Sale Opportunity"
 #~ msgstr "Ευκαιρία Πώλησης"
 
+#, python-format
+#~ msgid "Unable to change tax !"
+#~ msgstr "Αδύνατη η αλλαγή φόρου"
+
 #~ msgid "Report Xml"
 #~ msgstr "Αναφορά Xml"
+
+#, python-format
+#~ msgid "No grid matching for this carrier !"
+#~ msgstr "Κανένας πίνακας δεν ταιριάζει με αυτόν τον μεταφορέα!"
+
+#, python-format
+#~ msgid "Product uom"
+#~ msgstr "ΜοΜ Προϊόντος"
+
+#, python-format
+#~ msgid "Standard Encoding"
+#~ msgstr "Τυπική Κωδικοποίηση"
 
 #~ msgid "Calculate Average"
 #~ msgstr "Υπολογισμός Μέσου Όρου"
 
+#, python-format
+#~ msgid "Please fill a Balance product in the wizard"
+#~ msgstr "Παρακαλώ συμπληρώστε ένα Εξισορροποιητικό Προϊόν"
+
+#, python-format
+#~ msgid "Wed"
+#~ msgstr "Τετ"
+
 #~ msgid "Planned Revenue"
 #~ msgstr "Προγραμματισμένα Έσοδα"
+
+#, python-format
+#~ msgid "Insufficient Data!"
+#~ msgstr "Ανεπαρκή Δεδομένα!"
 
 #~ msgid ""
 #~ "You have to import a .CSV file wich is encoded in UTF-8.  Please check that "
@@ -9479,6 +10363,14 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Role"
 #~ msgstr "Ρόλος"
 
+#, python-format
+#~ msgid "You must enter a period length that cannot be 0 or below !"
+#~ msgstr "Το μήκος περιόδου δεν μπορεί να είναι 0 ή μικρότερο!"
+
+#, python-format
+#~ msgid "Product name"
+#~ msgstr "Όνομα προϊόντος"
+
 #~ msgid "Test"
 #~ msgstr "Test"
 
@@ -9491,11 +10383,21 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_ITALIC"
 #~ msgstr "STOCK_ITALIC"
 
+#, python-format
+#~ msgid "No cost unit defined for this employee !"
+#~ msgstr "Δεν έχει οριστεί μονάδα κόστους για τον υπάλληλο"
+
 #~ msgid "We suggest you to reload the menu tab (Ctrl+t Ctrl+r)."
 #~ msgstr "Παρακαλώ επαναφορτώστε τη σελίδα του μενού (Ctrl+t Ctrl+r)."
 
 #~ msgid "Security on Groups"
 #~ msgstr "Ασφάλεια σε Ομάδες"
+
+#, python-format
+#~ msgid ""
+#~ "The Payment Term of Supplier does not have Payment Term Lines(Computation) "
+#~ "defined !"
+#~ msgstr "Δεν έωουν οριστεί Γραμμές Υπολογισμού Όρων Πληρωμής στο Συνεργάτη!"
 
 #~ msgid "Accumulate"
 #~ msgstr "Συσσώρευση"
@@ -9510,6 +10412,15 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Font color"
 #~ msgstr "Χρώμα γραμματοσειράς"
 
+#, python-format
+#~ msgid "not implemented"
+#~ msgstr "δεν εφαρμόστηκε"
+
+#, python-format
+#~ msgid "Global taxes defined, but are not in invoice lines !"
+#~ msgstr ""
+#~ "Οι φόροι έχουν οριστεί γενικά αλλά δε βρίσκονται στις γραμμές τιμολογίου!"
+
 #~ msgid "STOCK_SORT_DESCENDING"
 #~ msgstr "STOCK_SORT_DESCENDING"
 
@@ -9519,21 +10430,34 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_MEDIA_STOP"
 #~ msgstr "STOCK_MEDIA_STOP"
 
-#, python-format
-#~ msgid "Wrong ID for the browse record, got %r, expected an integer."
-#~ msgstr "Wrong ID for the browse record, got %r, expected an integer."
-
 #~ msgid "STOCK_DND_MULTIPLE"
 #~ msgstr "STOCK_DND_MULTIPLE"
 
 #~ msgid "Role Required"
 #~ msgstr "Απαιτούμενος Ρόλος"
 
+#, python-format
+#~ msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
+#~ msgstr "Δεν έχει δηλωθεί λογαριασμός εξόδων για το προϊόν: \"%s\" (id:%d)"
+
 #~ msgid "STOCK_INDENT"
 #~ msgstr "STOCK_INDENT"
 
 #~ msgid "STOCK_ZOOM_OUT"
 #~ msgstr "STOCK_ZOOM_OUT"
+
+#, python-format
+#~ msgid "End of Fiscal Year Entry"
+#~ msgstr "Εγγραφές Κλεισίματος Λογιστικής Χρήσης"
+
+#, python-format
+#~ msgid "Operation Done"
+#~ msgstr "Λειτουργία Ολοκληρώθηκε"
+
+#, python-format
+#~ msgid ""
+#~ "Please put a partner on the picking list if you want to generate invoice."
+#~ msgstr "Για δημιουργία τιμολογίου, παρακαλώ επιλέξτε συνεργάτη!"
 
 #~ msgid "STOCK_CLOSE"
 #~ msgstr "STOCK_CLOSE"
@@ -9547,11 +10471,21 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Your system will be upgraded."
 #~ msgstr "Το σύστημα θα αναβαθμιστεί"
 
+#, python-format
+#~ msgid "You must first cancel all packing attached to this purchase order."
+#~ msgstr ""
+#~ "Πρέπει πρώτα να ακυρώσετε όλες τις συσκευασίες που σχετίζονται με την "
+#~ "παραγγελία αγοράς."
+
 #~ msgid "terp-tools"
 #~ msgstr "terp-tools"
 
 #~ msgid "STOCK_UNDO"
 #~ msgstr "STOCK_UNDO"
+
+#, python-format
+#~ msgid "Unable to find a valid period !"
+#~ msgstr "Αδύνατη η εύρεση ορθής περιόδου!"
 
 #~ msgid "terp-sale"
 #~ msgstr "terp-sale"
@@ -9574,6 +10508,10 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Create / Write"
 #~ msgstr "Δημιουργία / Εγγραφή"
 
+#, python-format
+#~ msgid "Directory name contains special characters!"
+#~ msgstr "Το όνομα του φακέλλου περιέχει ειδικούς χαρακτήρες!"
+
 #~ msgid "Service"
 #~ msgstr "Υπηρεσία"
 
@@ -9581,15 +10519,30 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Αρθρώματα για λήψη"
 
 #, python-format
+#~ msgid "Return lines"
+#~ msgstr "Γραμμές Επιστροφών"
+
+#, python-format
 #~ msgid "Couldn't find tag '%s' in parent view !"
 #~ msgstr "Αδύνατη η εύρεση της ετικέτας '%s' στη μητρική προβολή!"
+
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
 
 #~ msgid "Installed modules"
 #~ msgstr "Εγκατεστημένα Αρθρώματα"
 
 #, python-format
+#~ msgid "Case"
+#~ msgstr "Θέμα"
+
+#, python-format
 #~ msgid "The name_get method is not implemented on this object !"
 #~ msgstr "The name_get method is not implemented on this object !"
+
+#, python-format
+#~ msgid "cancel"
+#~ msgstr "ακύρωση"
 
 #~ msgid "Manually Created"
 #~ msgstr "Δημιουργημένα από Χρήστη"
@@ -9598,17 +10551,68 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Calculate Count"
 
 #, python-format
-#~ msgid "Not Implemented"
-#~ msgstr "Μη ενεργοποιημένο"
+#~ msgid ""
+#~ "Please verify that the total difference of the sheet is lower than %.2f !"
+#~ msgstr ""
+#~ "Παρακαλώ επιβεβαιώστε ότι η συνολική διαφορά του φύλλου είναι μικρότερη από "
+#~ "%.2f !"
+
+#, python-format
+#~ msgid ""
+#~ "Please verify the price of the invoice !\n"
+#~ "The real total does not match the computed total."
+#~ msgstr ""
+#~ "Παρακαλώ ελέγξετε την αξία του τιμολογίου!\n"
+#~ "Το πραγματικό σύνολο δεν συμπίπτει με την υπολογιζόμενη τιμή."
 
 #~ msgid "Maintenance"
 #~ msgstr "Συντήρηση"
 
+#, python-format
+#~ msgid "You can not sign out from an other date than today"
+#~ msgstr "Δεν μπορείτε να αποχωρήσετε άλλη ημέρα παρά μόνο σήμερα!"
+
+#, python-format
+#~ msgid "Please provide a partner for the sale."
+#~ msgstr "Παρακαλώ καθορίστε έναν συνεργάτη για πώληση."
+
+#, python-format
+#~ msgid "Futur P&L"
+#~ msgstr "Μελλοντικό  P&L"
+
+#, python-format
+#~ msgid "The opening journal must not have any entry in the new fiscal year !"
+#~ msgstr ""
+#~ "Το ανοιγόμενο ημερολόγιο δεν θα πρέπει να έχει καμία εγγραφή στο νέο "
+#~ "λογιστικό έτος!"
+
+#, python-format
+#~ msgid "Taxes missing !"
+#~ msgstr "Λείπουν φόροι!"
+
 #~ msgid "Partner State of Mind"
 #~ msgstr "Προδιάθεση Συνεργάτη"
 
+#, python-format
+#~ msgid "Closing of states cancelled, please check the box !"
+#~ msgstr "Το κλείσιμο καταστάσεων ακυρώθηκε. Παρακαλώ κάντε τικ στο κουτί!"
+
+#, python-format
+#~ msgid "The order state have to be draft to add delivery lines."
+#~ msgstr ""
+#~ "Η κατάσταση εντολής θα πρέπει να είναι πρόχειρη για να προστεθούν επιπλέον "
+#~ "γραμμές παράδοσης"
+
 #~ msgid "STOCK_DIALOG_AUTHENTICATION"
 #~ msgstr "STOCK_DIALOG_AUTHENTICATION"
+
+#, python-format
+#~ msgid "Field name"
+#~ msgstr "Όνομα πεδίου"
+
+#, python-format
+#~ msgid "Other Pricelist"
+#~ msgstr "Άλλος Τιμοκατάλογος"
 
 #~ msgid "Macedonia"
 #~ msgstr "F.Y.R.O.M."
@@ -9616,11 +10620,35 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "a4"
 #~ msgstr "Α4"
 
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr ""
+#~ "Πολλαπλοί κανόνες στα ίδια αντικείμενα συνδέονται μέσω της λογικής "
+#~ "συνάρτησης 'Ή'"
+
 #~ msgid "STOCK_MEDIA_NEXT"
 #~ msgstr "STOCK_MEDIA_NEXT"
 
+#, python-format
+#~ msgid ""
+#~ "Can not create an automatic sequence for this piece !\n"
+#~ "\n"
+#~ "Put a sequence in the journal definition for automatic numbering or create a "
+#~ "sequence manually for this piece."
+#~ msgstr ""
+#~ "Αδύνατη η δημιουργία αυτόματης ιεράρχησης στο κομμάτι αυτό!\n"
+#~ "Ορίστε μια Ιεράρχηση στον ορισμό του ημερολογίου για αυτόματη αρίθμηση, ή "
+#~ "τηρείστε χειροκίνητη αρίθμηση για το κομμάτι αυτό."
+
 #~ msgid "Note that this operation my take a few minutes."
 #~ msgstr "Η διαδικασία αυτή μπορεί να πάρει μερικά λεπτά."
+
+#, python-format
+#~ msgid "Futur Stock"
+#~ msgstr "Μελλοντικό Απόθεμα"
+
+#, python-format
+#~ msgid "No analytic plan defined !"
+#~ msgstr "Κανένα πλάνο αναλυτικής δεν προσδιορίστηκε!"
 
 #~ msgid "Internal Name"
 #~ msgstr "Εσωτερικό όνομα"
@@ -9644,6 +10672,14 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "type,name,res_id,src,value"
 #~ msgstr "type,name,res_id,src,value"
 
+#, python-format
+#~ msgid "No Period found on Invoice!"
+#~ msgstr "Καμία Περίοδος δεν βρέθηκε στο τιμολόγιο!"
+
+#, python-format
+#~ msgid "Can not export module that is not installed!"
+#~ msgstr "Αδύνατη η εξαγωγή μη εγκατεστημένης Ενότητας Προγράμματος!"
+
 #~ msgid "condition"
 #~ msgstr "συνθήκη"
 
@@ -9651,11 +10687,19 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "STOCK_SAVE"
 
 #, python-format
+#~ msgid "No period found !"
+#~ msgstr "Δεν βρέθηκε περίοδος!"
+
+#, python-format
 #~ msgid "Records were modified in the meanwhile"
 #~ msgstr "Οι εγγραφές έχουν τροποποιηθεί στο μεταξύ"
 
 #~ msgid "STOCK_NEW"
 #~ msgstr "STOCK_NEW"
+
+#, python-format
+#~ msgid "Please select at least two inventories."
+#~ msgstr "Παρακαλώ επιλέξτε τουλάχιστον δύο απογραφές."
 
 #~ msgid "Report Fields"
 #~ msgstr "Report Fields"
@@ -9670,6 +10714,14 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_ABOUT"
 #~ msgstr "STOCK_ABOUT"
 
+#, python-format
+#~ msgid "Bank Journal "
+#~ msgstr "Ημερολόγιο Τράπεζας "
+
+#, python-format
+#~ msgid "Invoice cannot be created from Packing."
+#~ msgstr "Δεν μπορεί να δημιουργηθεί τιμολόγιο απο αυτήν την συλλογή."
+
 #~ msgid "STOCK_UNDERLINE"
 #~ msgstr "STOCK_UNDERLINE"
 
@@ -9682,6 +10734,14 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "terp-graph"
 #~ msgstr "terp-graph"
 
+#, python-format
+#~ msgid ""
+#~ "Specified Journal does not have any account move entries in draft state for "
+#~ "this period"
+#~ msgstr ""
+#~ "Το επιλεγμένο ημερολόγιο δεν περιέχει πρόχειρες εγγραφές για την "
+#~ "συγκεκριμένη περίοδο"
+
 #~ msgid ""
 #~ "The selected language has been successfully installed. You must change the "
 #~ "preferences of the user and open a new menu to view changes."
@@ -9689,6 +10749,11 @@ msgstr "Ρώσσικα / русский язык"
 #~ "Η επιλεγμένη γλώσσα εγκαταστάθηκε επιτυχώς. Πρέπει να αλλάξετε τις "
 #~ "Προτιμήσεις του χρήστη και να ανοίξετε ένα νέο μενού για να δείτε τις "
 #~ "αλλαγές."
+
+#, python-format
+#~ msgid "Please put a name and a code before saving the model !"
+#~ msgstr ""
+#~ "Παρακαλώ εισάγετε ένα όνομα και έναν κωδικό πριν αποθηκεύσετε το μοντέλο!"
 
 #~ msgid "Partner Events"
 #~ msgstr "Συμβάντα Συνεργάτη"
@@ -9699,6 +10764,18 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Pie Chart"
 #~ msgstr "Κυκλικό Διάγραμμα"
 
+#, python-format
+#~ msgid "Could not cancel this sale order !"
+#~ msgstr "Αδύνατη η ακύρωση αυτής της εντολής πώλησης!"
+
+#, python-format
+#~ msgid "Could not cancel purchase order !"
+#~ msgstr "Η Παραγγελία δεν μπορεί να ακυρωθεί!"
+
+#, python-format
+#~ msgid "This version of the module is already exist on the server"
+#~ msgstr "Αυτή η έκδοση της Ενότητας Προγράμματος υπάρχει ήδη"
+
 #~ msgid "Default Properties"
 #~ msgstr "Προεπιλεγμένες Ιδιότητες"
 
@@ -9708,11 +10785,35 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Export a Translation File"
 #~ msgstr "Εξαγωγή Αρχείου Μετάφρασης"
 
+#, python-format
+#~ msgid "No grid avaible !"
+#~ msgstr "Κανένα διαθέσιμο πλέγμα!"
+
+#, python-format
+#~ msgid ""
+#~ "You have to define the bank account\n"
+#~ "in the journal definition for reconciliation."
+#~ msgstr ""
+#~ "Πρέπει να ορίσετε στον ορισμό του ημερολογίου\n"
+#~ "τον τραπεζικό λογαριασμό για συμφωνία."
+
 #~ msgid "Full"
 #~ msgstr "Πλήρες"
 
+#, python-format
+#~ msgid "March"
+#~ msgstr "Μαρτίου"
+
 #~ msgid "html"
 #~ msgstr "html"
+
+#, python-format
+#~ msgid "Free Reference"
+#~ msgstr "Ελεύθερη Παραπομπή"
+
+#, python-format
+#~ msgid "Directory name must be unique!"
+#~ msgstr "Το όνομα του φακέλου θα πρέπει να είναι μοναδικό!"
 
 #~ msgid "terp-stock"
 #~ msgstr "terp-stock"
@@ -9722,15 +10823,33 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Παρακαλώ καταχωρείστε το Email του Συνεργάτη!"
 
 #, python-format
-#~ msgid "UserError"
-#~ msgstr "UserError"
+#~ msgid "You could not publish a module that is not installed!"
+#~ msgstr ""
+#~ "Δεν μπορείτε να δημοσιεύσετε μια Ενότητα Προγράμματος που δεν έχει "
+#~ "εγκατασταθεί!"
 
 #~ msgid "STOCK_MEDIA_RECORD"
 #~ msgstr "STOCK_MEDIA_RECORD"
 
 #, python-format
-#~ msgid "The copy method is not implemented on this object !"
-#~ msgstr "The copy method is not implemented on this object !"
+#~ msgid "You must define an analytic journal of type '%s' !"
+#~ msgstr "Πρέπει να ορίσετε αναλυτικό ημερολόγιο τύπου '%s' !"
+
+#, python-format
+#~ msgid "You can not use an inactive account!"
+#~ msgstr "Αδύνατη η χρήση ανενεργού λογαριασμού"
+
+#, python-format
+#~ msgid "Entries are not of the same account or already reconciled ! "
+#~ msgstr "Οι εγγραφές δεν είναι του ίδιου λογαριασμού ή έχουν ήδη συμφωνηθεί! "
+
+#, python-format
+#~ msgid "Integrity Error !"
+#~ msgstr "Σφάλμα ακεραιότητας!"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Άκυρη ενέργεια!"
 
 #~ msgid "None"
 #~ msgstr "Κανένα"
@@ -9750,6 +10869,18 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_DIALOG_INFO"
 #~ msgstr "STOCK_DIALOG_INFO"
 
+#, python-format
+#~ msgid ""
+#~ "You have to select a product UOM in the same category than the purchase UOM "
+#~ "of the product"
+#~ msgstr ""
+#~ "Πρέπει να επιλέξετε ΜΟΜ προϊόντος από την ίδια κατηγορία με την ΜΟΜ αγοράς "
+#~ "του προϊόντος"
+
+#, python-format
+#~ msgid "Fri"
+#~ msgstr "Παρ"
+
 #~ msgid "Get file"
 #~ msgstr "Get file"
 
@@ -9767,16 +10898,16 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "You cannot perform this operation."
 #~ msgstr "Δεν μπορείτε να εκτελέσετε αυτή τη λειτουργία."
 
-#, python-format
-#~ msgid "Not implemented get_memory method !"
-#~ msgstr "Not implemented get_memory method !"
-
 #~ msgid "Customers Partners"
 #~ msgstr "Πελάτες"
 
 #, python-format
 #~ msgid "Please specify server option --smtp-from !"
 #~ msgstr "Παρακαλώ καθορίστε την επιλογή διακομιστή --smtp-from !"
+
+#, python-format
+#~ msgid "Provide the quantities of the returned products."
+#~ msgstr "Πληκτρολογήστε τις ποσότητες των επιστρεφόμενων προϊόντων"
 
 #~ msgid "Roles are used to defined available actions, provided by workflows."
 #~ msgstr ""
@@ -9788,6 +10919,10 @@ msgstr "Ρώσσικα / русский язык"
 
 #~ msgid "STOCK_APPLY"
 #~ msgstr "STOCK_APPLY"
+
+#, python-format
+#~ msgid "Thu"
+#~ msgstr "Πεμ"
 
 #~ msgid "Your Maintenance Contracts"
 #~ msgstr "Συμβόλαια Συντήρησης"
@@ -9809,17 +10944,47 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Portugese (BR) / português (BR)"
 
 #, python-format
+#~ msgid "Please set an analytic journal on this financial journal !"
+#~ msgstr ""
+#~ "Παρακαλώ ορίστε ένα αναλυτικό ημερολόγιο για αυτό το οικονομικό ημερολόγιο!"
+
+#, python-format
 #~ msgid "Bad file format"
 #~ msgstr "Μορφή αρχείου εσφαλμένη"
 
 #~ msgid "STOCK_CDROM"
 #~ msgstr "STOCK_CDROM"
 
+#, python-format
+#~ msgid "No employee defined for your user !"
+#~ msgstr "Δεν έχει οριστεί υπάλληλος για το χρήστη σας!"
+
+#, python-format
+#~ msgid "Operation Not Permitted !"
+#~ msgstr "Μη Επιτρεπτή Λειτουργία!"
+
+#, python-format
+#~ msgid "Cycles Cost"
+#~ msgstr "Κόστος Κύκλων"
+
 #~ msgid "Type of Event"
 #~ msgstr "Τύπος Συμβάντος"
 
 #~ msgid "Sequence Types"
 #~ msgstr "Τύποι Ιεράρχησης"
+
+#, python-format
+#~ msgid "The employee must have a contact address"
+#~ msgstr "Ο υπάλληλος πρέπει να έχει Διεύθυνση κατοικίας"
+
+#, python-format
+#~ msgid "Please select maximum 8 records to fit the page-width."
+#~ msgstr ""
+#~ "Παρακαλώ επιλέξτε το μέγιστο 8 εγγραφές για να χωρέσουν στο πλάτος σελίδας."
+
+#, python-format
+#~ msgid "Invoice is already reconciled"
+#~ msgstr "Το τιμολόγιο είναι ήδη συμφωνημένο"
 
 #~ msgid "Update Translations"
 #~ msgstr "Ανανέωση Μεταφράσεων"
@@ -9828,15 +10993,19 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Επιτυχής εγκατάσταση / αναβάθμιση!"
 
 #, python-format
+#~ msgid "Couldn't create move between different companies"
+#~ msgstr "Αδύνατη η δημιουργία κίνησης μεταξύ διαφορετικών εταιρειών"
+
+#, python-format
+#~ msgid "Entry \"%s\" is not valid !"
+#~ msgstr "Η εγγραφή \"%s\" δεν είναι έγκυρη!"
+
+#, python-format
 #~ msgid "Number too large '%d', can not translate it"
 #~ msgstr "ΠΟλύ μεγάλος αριθμός '%d', δε μεταφράζεται"
 
 #~ msgid "terp-hr"
 #~ msgstr "terp-hr"
-
-#, python-format
-#~ msgid "This method does not exist anymore"
-#~ msgstr "Αυτή η μέθοδος δε χρησιμοποιείται πια"
 
 #~ msgid "Manual"
 #~ msgstr "Manual"
@@ -9850,6 +11019,14 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "pdf"
 #~ msgstr "pdf"
 
+#, python-format
+#~ msgid ""
+#~ "You have to select a partner in the purchase form !\n"
+#~ "Please set one partner before choosing a product."
+#~ msgstr ""
+#~ "Πρέπει να επιλέξετε συνεργάτη!\n"
+#~ "Παρακαλώ επιλέξτε συνεργάτη πριν επιλέξετε προϊόν."
+
 #~ msgid "Preview"
 #~ msgstr "Προεπισκόπηση"
 
@@ -9859,14 +11036,37 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Active Partner Events"
 #~ msgstr "Ενεργά Συμβάντα Συνεργάτη"
 
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "Κανένας συνεργάτης δεν καθορίστηκε για αυτήν την γραμμή εγγραφής"
+
 #~ msgid "STOCK_SPELL_CHECK"
 #~ msgstr "STOCK_SPELL_CHECK"
+
+#, python-format
+#~ msgid "Sorry!"
+#~ msgstr "Συγνώμη!"
+
+#, python-format
+#~ msgid "meeting"
+#~ msgstr "συνάντηση"
 
 #~ msgid "Force Domain"
 #~ msgstr "Επιβολή Τομέα"
 
+#, python-format
+#~ msgid "Data Insufficient !"
+#~ msgstr "Έλλειψη Δεδομένων"
+
 #~ msgid "_Validate"
 #~ msgstr "_Validate"
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "maintenance.contract.wizard"
+
+#, python-format
+#~ msgid "error"
+#~ msgstr "σφάλμα"
 
 #~ msgid "STOCK_GOTO_FIRST"
 #~ msgstr "STOCK_GOTO_FIRST"
@@ -9899,11 +11099,33 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "All Properties"
 #~ msgstr "Όλες οι ιδιότητες"
 
+#, python-format
+#~ msgid "No price available !"
+#~ msgstr "Καμία διαθέσιμη τιμή!"
+
+#, python-format
+#~ msgid "No address defined for the supplier"
+#~ msgstr "Δεν έχει οριστεί διεύθυνση συνεργάτη"
+
 #~ msgid "STOCK_HOME"
 #~ msgstr "STOCK_HOME"
 
+#, python-format
+#~ msgid "Cannot create invoice without a partner."
+#~ msgstr "Αδύνατη η δημιουργία τιμολογίου χωρίς προσθήκη συνεργάτη"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sale order."
+#~ msgstr ""
+#~ "Θα πρέπει πρώτα να ακυρώσετε τα επισυναπτόμενα τιμολόγια αυτής της εντολής "
+#~ "πώλησης."
+
 #~ msgid "Ok"
 #~ msgstr "ΟΚ"
+
+#, python-format
+#~ msgid "Modify line failed !"
+#~ msgstr "Ανεπιτυχής τροποποίηση γραμμής!"
 
 #~ msgid "STOCK_DISCONNECT"
 #~ msgstr "STOCK_DISCONNECT"
@@ -9915,8 +11137,24 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Field %d should be a figure"
 #~ msgstr "Το πεδίο %d πρέπει να έιναι αριθμός"
 
+#, python-format
+#~ msgid ""
+#~ "No product defined on the related employee.\n"
+#~ "Fill in the timesheet tab of the employee form."
+#~ msgstr ""
+#~ "Δεν έχει οριστεί προϊόν για το σχετικό υπάλληλο.\n"
+#~ "Παρακαλώ συμπληρώστε τη σελίδα φύλλου χρόνου εργασίας στη φόρμα του "
+#~ "υπαλλήλου."
+
 #~ msgid "STOCK_PREFERENCES"
 #~ msgstr "STOCK_PREFERENCES"
+
+#, python-format
+#~ msgid ""
+#~ "The expected balance (%.2f) is different than the computed one. (%.2f)"
+#~ msgstr ""
+#~ "Το αναμενόμενο ισοζύγιο (%.2f) είναι διαφορετικό απο αυτό που έχει "
+#~ "υπολογιστεί. (%.2f)"
 
 #~ msgid "STOCK_GOTO_LAST"
 #~ msgstr "STOCK_GOTO_LAST"
@@ -9931,8 +11169,55 @@ msgstr "Ρώσσικα / русский язык"
 #~ "πρέπει να τους τροποποιείτε απ' ευθείας στο launchpad interface. Αν κάνατε "
 #~ "πολλές μεταφράσεις στο άρθρωμά σας μπορείτε να τις δημοσιεύσετε μονομιάς."
 
+#, python-format
+#~ msgid "Historize"
+#~ msgstr "Καταχώρηση στο Ιστορικό"
+
+#, python-format
+#~ msgid "User Error!"
+#~ msgstr "Σφάλμα Χρήστη!"
+
 #~ msgid "Start installation"
 #~ msgstr "Εκκίνηση Εγκατάστασης"
+
+#, python-format
+#~ msgid "The journal must have default credit and debit account"
+#~ msgstr ""
+#~ "Το ημερολόγιο πρέπει να έχει προεπιλεγμένους λογαρισμούς χρέωσης - πίστωσης"
+
+#, python-format
+#~ msgid ""
+#~ "No analytic account defined on the project.\n"
+#~ "Please set one or we can not automatically fill the timesheet."
+#~ msgstr ""
+#~ "Δεν έχει οριστεί Αναλυτικός Λογαριασμός για το έργο.\n"
+#~ "Παρακαλώ ορίστε έναν για να συμπληρωθεί το Φύλλο Xρόνου Eργασίας αυτόματα."
+
+#, python-format
+#~ msgid ""
+#~ "Can not send mail with empty body,you should have description in the body"
+#~ msgstr "Το κυρίως κείμενο είναι κενό, παρακαλώ συμπληρώστε την περιγραφή"
+
+#, python-format
+#~ msgid "Closing of fiscal year cancelled, please check the box !"
+#~ msgstr ""
+#~ "Το κλείσιμο της Λογιστικής Χρήσης ακυρώθηκε, παρακαλώ κάντε τικ στο κουτί!"
+
+#, python-format
+#~ msgid "Bad account !"
+#~ msgstr "Λάθος λογαριασμός!"
+
+#, python-format
+#~ msgid "Sales Journal"
+#~ msgstr "Ημερολόγιο Πωλήσεων"
+
+#, python-format
+#~ msgid "No records found for your selection!"
+#~ msgstr "Δε βρέθηκαν δεδομένα για την επιλογή σας!"
+
+#, python-format
+#~ msgid "to be invoiced"
+#~ msgstr "προς τιμολόγηση"
 
 #~ msgid "New modules"
 #~ msgstr "Νέα Αρθρώματα"
@@ -9946,6 +11231,15 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Configure Simple View"
 #~ msgstr "Ρυθμίσεις Απλής Προβολής"
 
+#, python-format
+#~ msgid ""
+#~ "Mail not sent to following Partners, Email not available !\n"
+#~ "\n"
+#~ msgstr ""
+#~ "Το Mail δεν αποστάλθηκε στους παρακάτω Συνεργάτες, Το Email δεν είναι "
+#~ "διαθέσιμο !\n"
+#~ "\n"
+
 #~ msgid "Custom Report"
 #~ msgstr "Ειδική Αναφορά"
 
@@ -9953,8 +11247,8 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "sxw"
 
 #, python-format
-#~ msgid "The value \"%s\" for the field \"%s\" is not in the selection"
-#~ msgstr "Η τιμή  \"%s\" για οτ πεδίο \"%s\" δεν είναι επιλεγμένη!"
+#~ msgid "Could not cancel this purchase order !"
+#~ msgstr "Η Παραγγελία δεν μπορεί να ακυρωθεί!"
 
 #~ msgid "Automatic XSL:RML"
 #~ msgstr "Automatic XSL:RML"
@@ -9978,6 +11272,10 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Monthly"
 #~ msgstr "Μηνιαία"
 
+#, python-format
+#~ msgid "Analytic account incomplete"
+#~ msgstr "Ο Αναλυτικός Λογαριασμός είναι ημιτελής"
+
 #~ msgid "States of mind"
 #~ msgstr "Προδιαθέσεις"
 
@@ -9992,8 +11290,27 @@ msgstr "Ρώσσικα / русский язык"
 #~ "%w - Η ημέρα της εβδομάδας σε δεκαδική μορφή [0 Κυριακή, 1 Δευτέρα... 6 "
 #~ "Σάββατο]."
 
+#, python-format
+#~ msgid ""
+#~ "You can not modify a posted entry of this journal !\n"
+#~ "You should set the journal to allow cancelling entries if you want to do "
+#~ "that."
+#~ msgstr ""
+#~ "Δεν μπορείτε να μεταβάλλεται μια δημοσιευμένη εγγραφή αυτού του ημερολογίου "
+#~ "!\n"
+#~ "Πρέπει να ορίσετε το ημερολόγιο έτσι ώστε να επιτρέπει ακύρωση εγγραφών αν "
+#~ "θελετε κάτι τέτοιο."
+
 #~ msgid "Export translation file"
 #~ msgstr "Εξαγωγή Αρχείου Ματάφρασης"
+
+#, python-format
+#~ msgid "You cannot delete any record!"
+#~ msgstr "Δεν μπορείτε να διαγράψετε καμία εγγραφή!"
+
+#, python-format
+#~ msgid "Futur Productions"
+#~ msgstr "Μελλοντικές Παραγωγές"
 
 #~ msgid "Retailer"
 #~ msgstr "Πωλητής Λιανικής"
@@ -10003,6 +11320,14 @@ msgstr "Ρώσσικα / русский язык"
 
 #~ msgid "Start On"
 #~ msgstr "Start On"
+
+#, python-format
+#~ msgid "A sign-in must be right after a sign-out !"
+#~ msgstr "Είσοδος αμέσως μετά την Έξοδο!"
+
+#, python-format
+#~ msgid "Can not %s draft/proforma/cancel invoice."
+#~ msgstr "Αδύνατη η %s προσωρινού/προφόρμα/ακυρωμένου τιμολογίου"
 
 #~ msgid "odt"
 #~ msgstr "odt"
@@ -10016,20 +11341,46 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "All terms"
 #~ msgstr "Όλοι οι όροι"
 
+#, python-format
+#~ msgid "The account entries lines are not in valid state."
+#~ msgstr ""
+#~ "Οι γραμμές εγγραφών του λογαριασμού δεν βρίσκονται σε έγκυρη κατάσταση"
+
 #~ msgid "Link"
 #~ msgstr "Σύνδεσμος"
 
 #~ msgid "Report Ref"
 #~ msgstr "Report Ref"
 
+#, python-format
+#~ msgid "No data"
+#~ msgstr "Χωρίς δεδομένα"
+
 #~ msgid "STOCK_DND"
 #~ msgstr "STOCK_DND"
+
+#, python-format
+#~ msgid "No employee defined for this user. You must create one."
+#~ msgstr ""
+#~ "Δεν έχει οριστεί υπάλληλος για το χρήστη αυτό. Παρακαλώ δημιουργήστε έναν."
+
+#, python-format
+#~ msgid "No valid pricelist line found !"
+#~ msgstr "Κανένας έγκυρος τιμοκατάλογος γραμμής δεν βρέθηκε!"
 
 #~ msgid "Repository list"
 #~ msgstr "Λίστα Τοποθεσιών Αρθρωμάτων"
 
 #~ msgid "Children"
 #~ msgstr "Υπό Κατηγορίες"
+
+#, python-format
+#~ msgid "products"
+#~ msgstr "προϊόντα"
+
+#, python-format
+#~ msgid "You must first select a partner !"
+#~ msgstr "Θα πρέπει πρώτα να επιλέξετε συνεργάτη!"
 
 #~ msgid "STOCK_FLOPPY"
 #~ msgstr "STOCK_FLOPPY"
@@ -10038,8 +11389,23 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Κατάσταση"
 
 #, python-format
-#~ msgid "undefined get method !"
-#~ msgstr "undefined get method !"
+#~ msgid "Escalate"
+#~ msgstr "Αναβάθμιση Θέματος"
+
+#, python-format
+#~ msgid "Bad Configuration !"
+#~ msgstr "Λάθος ρυθμίσεις!"
+
+#, python-format
+#~ msgid "You can not validate a non-balanced entry !"
+#~ msgstr "Δεν μπορείτε να επικυρώσετε μιά μή αντιλογισμένη εγγραφή!"
+
+#, python-format
+#~ msgid ""
+#~ "You can not delete a project with tasks. I suggest you to deactivate it."
+#~ msgstr ""
+#~ "Έργα που περιέχουν Εργασίες δεν μπορούν να διαγραφούν. Μπορούν, όμως, να "
+#~ "απενεργοποιηθούν."
 
 #~ msgid "ir.report.custom"
 #~ msgstr "ir.report.custom"
@@ -10047,8 +11413,26 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Purchase Offer"
 #~ msgstr "Προσφορά Αγοράς"
 
+#, python-format
+#~ msgid "Product Standard Price"
+#~ msgstr "Κανονική Τιμή Προϊόντος"
+
+#, python-format
+#~ msgid "You can not duplicate a timesheet !"
+#~ msgstr "Το Φύλλο υπάρχει ήδη!"
+
 #~ msgid "STOCK_ZOOM_FIT"
 #~ msgstr "STOCK_ZOOM_FIT"
+
+#, python-format
+#~ msgid "Opportunity"
+#~ msgstr "Ευκαιρία"
+
+#, python-format
+#~ msgid "Partner '+ line.partner_id.name+ ' has no bank account defined"
+#~ msgstr ""
+#~ "Ο συνεργάτης '+ line.partner_id.name+ ' δεν έχει καθορισμένο λογαριασμό "
+#~ "τραπέζης"
 
 #~ msgid "Language file loaded."
 #~ msgstr "Το αρχείο γλώσσας φορτώθηκε"
@@ -10059,8 +11443,21 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_GOTO_BOTTOM"
 #~ msgstr "STOCK_GOTO_BOTTOM"
 
+#, python-format
+#~ msgid "Cannot create invoice move on centralised journal"
+#~ msgstr ""
+#~ "Αδύνατη η δημιουργία κινήσεων τιμολογίου σε συγκεντροποιημένο ημερολόγιο"
+
+#, python-format
+#~ msgid "Reconciliation"
+#~ msgstr "Συμφωνία"
+
 #~ msgid "STOCK_GO_FORWARD"
 #~ msgstr "STOCK_GO_FORWARD"
+
+#, python-format
+#~ msgid "Entries: "
+#~ msgstr "Εγγραφές: "
 
 #~ msgid ""
 #~ "Access all the fields related to the current object using expression in "
@@ -10072,8 +11469,24 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_SELECT_FONT"
 #~ msgstr "STOCK_SELECT_FONT"
 
+#, python-format
+#~ msgid "Purchase Journal"
+#~ msgstr "Ημερολόγιο Αγορών"
+
+#, python-format
+#~ msgid "from stock and no minimum orderpoint rule defined"
+#~ msgstr "απο απόθεμα και χωρίς ελάχιστο κανόνα παραγγελίας καθορισμένο"
+
+#, python-format
+#~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
+#~ msgstr "Αδύνατη η διαγραφή Εντολής(λών) Πώλησης που έχουν ήδη επιβεβαιωθεί!"
+
 #~ msgid "Workflow Items"
 #~ msgstr "Workflow Items"
+
+#, python-format
+#~ msgid "Can not pay draft/proforma/cancel invoice."
+#~ msgstr "Αδύνατη η πληρωμή πρόχειρου/προφόρμας/τιμολογίου"
 
 #~ msgid ""
 #~ "The .rml path of the file or NULL if the content is in report_rml_content"
@@ -10089,11 +11502,19 @@ msgstr "Ρώσσικα / русский язык"
 #~ "το σύστημα θα κανονίζει την εμφάνιση του μενού με βάση την πρόσβαση "
 #~ "Ανάγνωσης του κάθε αντικειμένου."
 
+#, python-format
+#~ msgid "You can only delete draft moves."
+#~ msgstr "Μπορείτε να διαγράψετε μόνο πρόχειρες κινήσεις."
+
 #~ msgid "Function Name"
 #~ msgstr "Όνομα Λειτουργίας"
 
 #~ msgid "_Cancel"
 #~ msgstr "_Cancel"
+
+#, python-format
+#~ msgid "Sat"
+#~ msgstr "Σαβ"
 
 #~ msgid "terp-report"
 #~ msgstr "terp-report"
@@ -10108,8 +11529,16 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Set"
 #~ msgstr "Set"
 
+#, python-format
+#~ msgid "Tue"
+#~ msgstr "Τρι"
+
 #~ msgid "At Once"
 #~ msgstr "Αμέσως"
+
+#, python-format
+#~ msgid "Hours Cost"
+#~ msgstr "Κόστος Ωρών"
 
 #~ msgid ""
 #~ "Only one client action will be execute, last                                 "
@@ -10124,8 +11553,24 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "module,type,name,res_id,src,value"
 #~ msgstr "module,type,name,res_id,src,value"
 
+#, python-format
+#~ msgid "Wrong Product UOM !"
+#~ msgstr "Λάθος ΜΟΜ Προϊόντος"
+
+#, python-format
+#~ msgid "Order not in draft state !"
+#~ msgstr "Η εντολή δεν βρίσκεται σε πρόχειρη κατάσταση!"
+
 #~ msgid "child_of"
 #~ msgstr "child_of"
+
+#, python-format
+#~ msgid "Configration Error !"
+#~ msgstr "Σφάλμα Παραμετροποίησης!"
+
+#, python-format
+#~ msgid "Exception"
+#~ msgstr "Εξαίρεση"
 
 #~ msgid "Module import"
 #~ msgstr "Εισαγωγή Αρθρωμάτων"
@@ -10149,6 +11594,10 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Modules Management"
 #~ msgstr "Διαχείριση Αρθρωμάτων"
 
+#, python-format
+#~ msgid "Open Page"
+#~ msgstr "Ανοικτή Σελίδα"
+
 #~ msgid ""
 #~ "The official translations pack of all OpenERP/OpenObjects module are managed "
 #~ "through launchpad. We use their online interface to synchronize all "
@@ -10163,6 +11612,10 @@ msgstr "Ρώσσικα / русский язык"
 
 #~ msgid "Next Configuration Wizard"
 #~ msgstr "Επόμενος Αυτόματος Οδηγός Ρυθμίσεων"
+
+#, python-format
+#~ msgid "Already Reconciled"
+#~ msgstr "Ήδη Συμφωνημένα"
 
 #~ msgid "Untranslated terms"
 #~ msgstr "Μη μεταφρασμένοι όροι"
@@ -10181,8 +11634,20 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Διάγραμμα Ελέγχου Πρόσβασης"
 
 #, python-format
+#~ msgid "Futur Qty"
+#~ msgstr "Μελλοντική Ποσ."
+
+#, python-format
+#~ msgid "Suggestion"
+#~ msgstr "Πρόταση"
+
+#, python-format
 #~ msgid "You can not remove the field '%s' !"
 #~ msgstr "Δεν μπορείτε να διαγράψετε το πεδίο '%s' !"
+
+#, python-format
+#~ msgid "No supplier defined for this product !"
+#~ msgstr "Δεν ορίστηκε προμηθευτής για το προϊόν!"
 
 #~ msgid "Document"
 #~ msgstr "Έγγραφο"
@@ -10193,11 +11658,39 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_STOP"
 #~ msgstr "STOCK_STOP"
 
+#, python-format
+#~ msgid "No Pricelist !"
+#~ msgstr "Δεν υπάρχει Τιμοκατάλογος!"
+
+#, python-format
+#~ msgid "Mon"
+#~ msgstr "Δευ"
+
 #~ msgid "STOCK_CONVERT"
 #~ msgstr "STOCK_CONVERT"
 
+#, python-format
+#~ msgid "You must select accounts to reconcile"
+#~ msgstr "Πρέπει να επιλέξετε λογαριασμούς για συμφωνία"
+
 #~ msgid "STOCK_EXECUTE"
 #~ msgstr "STOCK_EXECUTE"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a pricelist in the purchase form !\n"
+#~ "Please set one before choosing a product."
+#~ msgstr ""
+#~ "Πρέπει να επιλέξετε εναν τιμοκατάλογο στη φόρμα αγορών!\n"
+#~ "Παρακαλώ επιλέξτε έναν πριν την επιλογη του προϊόντος."
+
+#, python-format
+#~ msgid "Partner incomplete"
+#~ msgstr "Συνεργάτης ημιτελής"
+
+#, python-format
+#~ msgid "July"
+#~ msgstr "Ιουλίου"
 
 #~ msgid "STOCK_COLOR_PICKER"
 #~ msgstr "STOCK_COLOR_PICKER"
@@ -10209,8 +11702,20 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Titles"
 #~ msgstr "Τίτλοι"
 
+#, python-format
+#~ msgid "Result"
+#~ msgstr "Αποτέλεσμα"
+
 #~ msgid "Start Date"
 #~ msgstr "Ημερ/νία Εκκίνησης"
+
+#, python-format
+#~ msgid "No order lines defined for this sale."
+#~ msgstr "Καμία γραμμή εντολής δεν καθορίστηκε για αυτήν την πώληση"
+
+#, python-format
+#~ msgid "Bad total !"
+#~ msgstr "Λάθος Σύνολο!"
 
 #~ msgid ""
 #~ "Create your users.\n"
@@ -10221,6 +11726,10 @@ msgstr "Ρώσσικα / русский язык"
 #~ "Δημιουργία Χρηστών.\n"
 #~ "Μπορείτε να χωρίσετε τους χρήστες σε ομάδες δικαιωμάτων.\n"
 #~ "            "
+
+#, python-format
+#~ msgid "Pending"
+#~ msgstr "Εκκρεμεί"
 
 #~ msgid ">"
 #~ msgstr ">"
@@ -10233,6 +11742,10 @@ msgstr "Ρώσσικα / русский язык"
 
 #~ msgid "<"
 #~ msgstr "<"
+
+#, python-format
+#~ msgid "Questionnaire"
+#~ msgstr "Ερωτηματολόγιο"
 
 #~ msgid "If you don't force the domain, it will use the simple domain setup"
 #~ msgstr "Αν δεν επιβάλλετε τομέα θα χρησιμοποιηθεί η απλή εγκατάσταση τομέα"
@@ -10258,18 +11771,30 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "STOCK_FIND"
 #~ msgstr "STOCK_FIND"
 
+#, python-format
+#~ msgid "Partner section of the product form"
+#~ msgstr "Τομέας συνεργάτη στην φόρμα προϊόντος"
+
 #~ msgid "Add Maintenance Contract"
 #~ msgstr "Προσθήκη Συμβολαίου Συντήρησης"
 
 #, python-format
-#~ msgid "The search method is not implemented on this object !"
-#~ msgstr "Η μέθοδος αναζήτησης δεν έχει αναπτυχθεί σε αυτό το αντικείμενο!"
+#~ msgid "No BoM defined for this product !"
+#~ msgstr "Δεν έχει οριστεί Κ.Υ. για το Προϊόν!"
+
+#, python-format
+#~ msgid "The Sign-in date must be in the past"
+#~ msgstr "Η ημερ/νία Εισόδου πρέπει να είναι παρελθοντική"
 
 #~ msgid "Unsubscribed"
 #~ msgstr "Μη καταχωρημένο"
 
 #~ msgid "STOCK_MEDIA_PREVIOUS"
 #~ msgstr "STOCK_MEDIA_PREVIOUS"
+
+#, python-format
+#~ msgid "Sun"
+#~ msgstr "Κυρ"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "Ο ΦΠΑ δε φαίνεται σωστός"
@@ -10283,11 +11808,23 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Module successfully imported !"
 #~ msgstr "Εισαγωγή επιτυχής !"
 
+#, python-format
+#~ msgid "Entry is already reconciled"
+#~ msgstr "Η εγγραφή έχει ήδη συμφωνηθεί"
+
 #~ msgid "Subscribe Report"
 #~ msgstr "Καταχώρηση Αναφοράς"
 
 #~ msgid "Unsubscribe Report"
 #~ msgstr "Διαγραφή Αναφοράς"
+
+#, python-format
+#~ msgid "December"
+#~ msgstr "Δεκεμβρίου"
+
+#, python-format
+#~ msgid "This period is already closed !"
+#~ msgstr "Αυτή η περίοδος είναι ήδη κλειστή!"
 
 #~ msgid "STOCK_DIRECTORY"
 #~ msgstr "STOCK_DIRECTORY"
@@ -10295,14 +11832,36 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "New Partner"
 #~ msgstr "Νέος Συνεργάτης"
 
+#, python-format
+#~ msgid ""
+#~ "You tried to sign in with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Η ημερομηνία που χρησιμοποιείτε είναι προγενέστερη!\n"
+#~ "Παρακαλώ επικοινωνήστε με τον υπεύθυνο για διόρθωση των παρουσιών."
+
 #~ msgid "Report custom"
 #~ msgstr "Ειδική αναφορά"
+
+#, python-format
+#~ msgid "You must put a Partner eMail to use this action!"
+#~ msgstr ""
+#~ "Πρέπει να συμπληρώσετε ένα email συνεργάτη για να χρησιμοποιήσετε αυτή τη "
+#~ "λειτουργία!"
 
 #~ msgid "Simplified Interface"
 #~ msgstr "Απλοποιημένη Εγκατάσταση"
 
 #~ msgid "STOCK_REVERT_TO_SAVED"
 #~ msgstr "STOCK_REVERT_TO_SAVED"
+
+#, python-format
+#~ msgid "November"
+#~ msgstr "Νοεμβρίου"
+
+#, python-format
+#~ msgid "Unplanned Qty"
+#~ msgstr "Ποσ. Εκτός Προγραμματισμού"
 
 #~ msgid "Import a Translation File"
 #~ msgstr "Εισαγωγή Αρχείου Μετάφρασης"
@@ -10313,8 +11872,20 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "a5"
 #~ msgstr "Α5"
 
+#, python-format
+#~ msgid ""
+#~ "You tried to sign out with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Η ημερομηνία που χρησιμοποιείτε είναι προγενέστερη!\n"
+#~ "Παρακαλώ επικοινωνήστε με τον υπεύθυνο για διόρθωση των παρουσιών."
+
 #~ msgid "terp-product"
 #~ msgstr "terp-product"
+
+#, python-format
+#~ msgid "Cannot delete Sheet(s) which are already confirmed !"
+#~ msgstr "Τα επιβεβαιωμένα φύλλα δεν μπορούν να διαγραφούν!"
 
 #~ msgid "State of Mind"
 #~ msgstr "Προδιάθεση"
@@ -10324,6 +11895,18 @@ msgstr "Ρώσσικα / русский язык"
 
 #~ msgid "Choose a language to install:"
 #~ msgstr "Επιλέξτε γλώσσα για εγκατάσταση:"
+
+#, python-format
+#~ msgid "February"
+#~ msgstr "Φεβρουαρίου"
+
+#, python-format
+#~ msgid "April"
+#~ msgstr "Απριλίου"
+
+#, python-format
+#~ msgid "No analytic journal !"
+#~ msgstr "Κανένα αναλυτικό ημερολόγιο!"
 
 #~ msgid "tlh_TLH"
 #~ msgstr "tlh_TLH"
@@ -10357,6 +11940,9 @@ msgstr "Ρώσσικα / русский язык"
 #~ "πρόσθετο: '%s',\n"
 #~ "αλλά αυτό δεν είναι διαθέσιμο στο σύστημα σας."
 
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr "Κάντε τον κανόνα γενικό, αλλιώς πρέπει να μπει σε ένα μια ομάδα"
+
 #~ msgid "Expression, must be True to match"
 #~ msgstr "Έκφραση, πρέπει να είναι Αληθές για ισότητα"
 
@@ -10369,6 +11955,15 @@ msgstr "Ρώσσικα / русский язык"
 
 #~ msgid "Multi company"
 #~ msgstr "Πολλαπλές εταιρείες"
+
+#, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" περιέχει πολλές τελείες. Οι XML ταυτότητες (ids) δεν πρέπει να "
+#~ "περιέχουν τελείες! Οι τελείες χρησιμοποιούνται σε αναφορές σε άλλες ενότητες "
+#~ "όπως στο module.reference_id"
 
 #~ msgid "Albanian / Shqipëri"
 #~ msgstr "Αλαβνικά / Shqipëri"
@@ -10449,18 +12044,23 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgid "Korean / Korea, Democratic Peoples Republic of"
 #~ msgstr "Κορεάτικα / Λαική Δημοκρατία της Κορέας"
 
-#, python-format
-#~ msgid ""
-#~ "\n"
-#~ "\n"
-#~ "This addon is already installed on your system"
-#~ msgstr ""
-#~ "\n"
-#~ "\n"
-#~ "Αυτό το πρόσθετο είναι ήδη εγκατεστημένο στο σύστημά σας"
-
 #~ msgid "Mongolian / Mongolia"
 #~ msgstr "Μογκόλος/Μογκολία"
+
+#~ msgid "terp-gtk-jump-to-ltr"
+#~ msgstr "terp-gtk-jump-to-ltr"
+
+#~ msgid "terp-emblem-important"
+#~ msgstr "terp-emblem-important"
+
+#~ msgid "Mister"
+#~ msgstr "Κύριος"
+
+#~ msgid "Corporation"
+#~ msgstr "Εταιρεία"
+
+#~ msgid "terp-folder-yellow"
+#~ msgstr "terp-folder-yellow"
 
 #, python-format
 #~ msgid "Invalid type"
@@ -10475,6 +12075,11 @@ msgstr "Ρώσσικα / русский язык"
 #~ msgstr "Σερβικά / српски језик"
 
 #, python-format
+#~ msgid "Make sure you have no users linked with the group(s)!"
+#~ msgstr ""
+#~ "Βεβαιωθείτε ότι δεν έχετε χρήστες συνδεδεμένους με αυτή την ομάδα(ες)!"
+
+#, python-format
 #~ msgid ""
 #~ "You Can Not Load Translation For language Due To Invalid Language/Country "
 #~ "Code"
@@ -10482,11 +12087,44 @@ msgstr "Ρώσσικα / русский язык"
 #~ "Δεν μπορείτε να φορτώσετε μετάφραση για τη γλώσσα εξαιτίας μη έγκυρου "
 #~ "κωδικού γλώσσας/χώρας."
 
+#~ msgid "terp-stock_align_left_24"
+#~ msgstr "terp-stock_align_left_24"
+
+#~ msgid "terp-camera_test"
+#~ msgstr "terp-camera_test"
+
+#~ msgid "terp-stock_format-default"
+#~ msgstr "terp-stock_format-default"
+
+#~ msgid "terp-personal-"
+#~ msgstr "terp-personal-"
+
+#~ msgid "terp-document-new"
+#~ msgstr "terp-document-new"
+
+#~ msgid "terp-personal+"
+#~ msgstr "terp-personal+"
+
+#~ msgid "terp-go-home"
+#~ msgstr "terp-go-home"
+
+#~ msgid "Mss."
+#~ msgstr "Κυρίες"
+
+#~ msgid "terp-mail-forward"
+#~ msgstr "terp-mail-forward"
+
+#~ msgid "Web Icons Hover"
+#~ msgstr "Αιώρηση εικονιδίων ιστού"
+
+#~ msgid "Web Icons"
+#~ msgstr "Εικονίδια ιστού"
+
 #~ msgid "Maintenance Contracts"
 #~ msgstr "Συμβόλαια συντήρησης"
 
-#~ msgid "Sir"
-#~ msgstr "Κύριος"
+#~ msgid "Icon File"
+#~ msgstr "Αρχείο εικονιδίου"
 
-#~ msgid "ltd"
-#~ msgstr "Ε.Π.Ε."
+#~ msgid "Limited Company"
+#~ msgstr "Εταιρία Περιορισμένης Ευθύνης"

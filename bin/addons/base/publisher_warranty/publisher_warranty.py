@@ -317,14 +317,16 @@ def get_sys_logs(cr, uid):
     }
 
     add_arg = {"timeout":30} if sys.version_info >= (2,6) else {}
-    uo = urllib2.urlopen(config.get("publisher_warranty_url"),
-                        urllib.urlencode({'arg0': msg, "action": "update",}), **add_arg)
+    arguments = {'arg0': msg, "action": "update",}
+    arguments_raw = urllib.urlencode(arguments)
+    url = config.get("publisher_warranty_url")
+    uo = urllib2.urlopen(url, arguments_raw, **add_arg)
     try:
         submit_result = uo.read()
     finally:
         uo.close()
 
-    result = safe_eval(submit_result)
+    result = safe_eval(submit_result) if submit_result else {}
 
     return result
 

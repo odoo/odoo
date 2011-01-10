@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -28,7 +29,6 @@ import pooler
 from tools.translate import _
 from service import security
 import netsvc
-import time
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -194,6 +194,18 @@ class users(osv.osv):
                 self.write(cr, uid, ids, {'address_id': address_id}, context)
         return True
 
+    def _set_new_password(self, cr, uid, id, name, value, args, context=None):
+        if value is False:
+            # Do not update the password if no value is provided, ignore silently.
+            # For example web client submits False values for all empty fields.
+            return
+        if uid == id:
+            # To change their own password users must use the client-specific change password wizard,
+            # so that the new password is immediately used for further RPC requests, otherwise the user
+            # will face unexpected 'Access Denied' exceptions.
+            raise osv.except_osv(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
+        self.write(cr, uid, id, {'password': value})
+
     _columns = {
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
@@ -201,6 +213,10 @@ class users(osv.osv):
         'login': fields.char('Login', size=64, required=True,
                              help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
+        'new_password': fields.function(lambda *a:'', method=True, type='char', size=64,
+                                fnct_inv=_set_new_password,
+                                string='Change password', help="Only specify a value if you want to change the user password. "
+                                "This user will have to logout and login again!"),
         'email': fields.char('E-mail', size=64,
             help='If an email is provided, the user will be sent a message '
                  'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
@@ -395,11 +411,12 @@ class users(osv.osv):
         if default is None:
             default = {}
         copy_pattern = _("%s (copy)")
-        default.update(login=(copy_pattern % user2copy['login']),
+        copydef = dict(login=(copy_pattern % user2copy['login']),
                        name=(copy_pattern % user2copy['name']),
                        address_id=False, # avoid sharing the address of the copied user!
                        )
-        return super(users, self).copy(cr, uid, id, default, context)
+        copydef.update(default)
+        return super(users, self).copy(cr, uid, id, copydef, context)
 
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, uid, uid, context)
@@ -448,7 +465,7 @@ class users(osv.osv):
             return True
         cr = pooler.get_db(db).cursor()
         try:
-            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s', 
+            cr.execute('SELECT COUNT(1) FROM res_users WHERE id=%s AND password=%s AND active=%s',
                         (int(uid), passwd, True))
             res = cr.fetchone()[0]
             if not bool(res):
@@ -475,6 +492,20 @@ class users(osv.osv):
             return res[0]
         finally:
             cr.close()
+
+    def change_password(self, cr, uid, old_passwd, new_passwd, context=None):
+        """Change current user password. Old password must be provided explicitly
+        to prevent hijacking an existing user session, or for cases where the cleartext
+        password is not used to authenticate requests.
+
+        :return: True
+        :raise: security.ExceptionNoTb when old password is wrong
+        :raise: except_osv when new password is not set or empty
+        """
+        self.check(cr.dbname, uid, old_passwd)
+        if new_passwd:
+            return self.write(cr, uid, uid, {'password': new_passwd})
+        raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
 
 users()
 
@@ -547,7 +578,7 @@ class groups2(osv.osv): ##FIXME: Is there a reason to inherit this object ?
             if len(user_names) >= 5:
                 user_names = user_names[:5]
                 user_names += '...'
-            raise osv.except_osv(_('Warning !'), 
+            raise osv.except_osv(_('Warning !'),
                         _('Group(s) cannot be deleted, because some user(s) still belong to them: %s !') % \
                             ', '.join(user_names))
         return super(groups2, self).unlink(cr, uid, ids, context=context)
@@ -575,4 +606,3 @@ class res_config_view(osv.osv_memory):
 res_config_view()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
