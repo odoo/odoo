@@ -194,6 +194,18 @@ class users(osv.osv):
                 self.write(cr, uid, ids, {'address_id': address_id}, context)
         return True
 
+    def _set_new_password(self, cr, uid, id, name, value, args, context=None):
+        if value is False:
+            # Do not update the password if no value is provided, ignore silently.
+            # For example web client submits False values for all empty fields.
+            return
+        if uid == id:
+            # To change their own password users must use the client-specific change password wizard,
+            # so that the new password is immediately used for further RPC requests, otherwise the user
+            # will face unexpected 'Access Denied' exceptions.
+            raise osv.except_osv(_('Operation Canceled'), _('Please use the change password wizard (in User Preferences or User menu) to change your own password.'))
+        self.write(cr, uid, id, {'password': value})
+
     _columns = {
         'name': fields.char('User Name', size=64, required=True, select=True,
                             help="The new user's real name, used for searching"
@@ -201,6 +213,10 @@ class users(osv.osv):
         'login': fields.char('Login', size=64, required=True,
                              help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True, help="Keep empty if you don't want the user to be able to connect on the system."),
+        'new_password': fields.function(lambda *a:'', method=True, type='char', size=64,
+                                fnct_inv=_set_new_password,
+                                string='Change password', help="Only specify a value if you want to change the user password. "
+                                "This user will have to logout and login again!"),
         'email': fields.char('E-mail', size=64,
             help='If an email is provided, the user will be sent a message '
                  'welcoming him.\n\nWarning: if "email_from" and "smtp_server"'
@@ -476,6 +492,20 @@ class users(osv.osv):
         finally:
             cr.close()
 
+    def change_password(self, cr, uid, old_passwd, new_passwd, context=None):
+        """Change current user password. Old password must be provided explicitly
+        to prevent hijacking an existing user session, or for cases where the cleartext
+        password is not used to authenticate requests.
+
+        :return: True
+        :raise: security.ExceptionNoTb when old password is wrong
+        :raise: except_osv when new password is not set or empty
+        """
+        self.check(cr.dbname, uid, old_passwd)
+        if new_passwd:
+            return self.write(cr, uid, uid, {'password': new_passwd})
+        raise osv.except_osv(_('Warning!'), _("Setting empty passwords is not allowed for security reasons!"))
+
 users()
 
 class config_users(osv.osv_memory):
@@ -574,39 +604,4 @@ class res_config_view(osv.osv_memory):
 
 res_config_view()
 
-class change_user_password(osv.osv_memory):
-    _name = 'change.user.password'
-    _columns = {
-        'current_password':fields.char('Current Password', size=64, required=True, help="Enter your current password."),
-        'new_password': fields.char('New Password', size=64, required=True, help="Enter the new password."),
-        'confirm_password': fields.char('Confirm Password', size=64, required=True, help="Enter the new password again for confirmation."),
-    }
-    _defaults={
-        'current_password' : '',
-        'new_password' : '',
-        'confirm_password' : '',
-    }
-
-    def change_password(self, cr, uid, ids, context=None):
-        for form_id in ids:
-            password_rec = self.browse(cr, uid, form_id, context)
-            if password_rec.new_password != password_rec.confirm_password:
-                raise osv.except_osv(_('Error !'), _('The new and confirmation passwords do not match, please double-check them.'))
-
-            # Validate current password without reading it from database,
-            # as it could be stored differently (LDAP, encrypted/hashed, etc.)
-            is_correct_password = False
-            try:
-                user_obj = self.pool.get('res.users')
-                is_correct_password = user_obj.check(cr.dbname, uid, password_rec.current_password)
-            except Exception:
-                pass
-            if not is_correct_password:
-                raise osv.except_osv(_('Error !'), _('The current password does not match, please double-check it.'))
-            user_obj.write(cr, uid, [uid], {'password': password_rec.new_password}, context=context)
-        return {}
-
-change_user_password()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

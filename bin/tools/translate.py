@@ -347,7 +347,7 @@ class TinyPoFile(object):
 
         if name is None:
             if not fuzzy:
-                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s', 
+                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s',
                         self.cur_line(), source[:30])
             return self.next()
         return type, name, res_id, source, trad
@@ -409,7 +409,7 @@ class TinyPoFile(object):
 
 # Methods to export the translation file
 
-def trans_export(lang, modules, buffer, format, dbname=None):
+def trans_export(lang, modules, buffer, format, cr):
 
     def _process(format, modules, rows, buffer, lang, newlang):
         if format == 'csv':
@@ -461,7 +461,7 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     newlang = not bool(lang)
     if newlang:
         lang = 'en_US'
-    trans = trans_generate(lang, modules, dbname)
+    trans = trans_generate(lang, modules, cr)
     if newlang and format!='csv':
         for trx in trans:
             trx[-1] = ''
@@ -524,26 +524,22 @@ def in_modules(object_name, modules):
     module = module_dict.get(module, module)
     return module in modules
 
-def trans_generate(lang, modules, dbname=None):
+def trans_generate(lang, modules, cr):
     logger = logging.getLogger('i18n')
-    if not dbname:
-        dbname=tools.config['db_name']
-        if not modules:
-            modules = ['all']
+    dbname = cr.dbname
 
     pool = pooler.get_pool(dbname)
     trans_obj = pool.get('ir.translation')
     model_data_obj = pool.get('ir.model.data')
-    cr = pooler.get_db(dbname).cursor()
     uid = 1
     l = pool.obj_pool.items()
     l.sort()
 
     query = 'SELECT name, model, res_id, module'    \
             '  FROM ir_model_data'
-            
-    query_models = """SELECT m.id, m.model, imd.module 
-            FROM ir_model AS m, ir_model_data AS imd 
+
+    query_models = """SELECT m.id, m.model, imd.module
+            FROM ir_model AS m, ir_model_data AS imd
             WHERE m.id = imd.res_id AND imd.model = 'ir.model' """
 
     if 'all_installed' in modules:
@@ -834,16 +830,15 @@ def trans_generate(lang, modules, dbname=None):
         trans = trans_obj._get_source(cr, uid, name, type, lang, source)
         out.append([module, type, name, id, source, encode(trans) or ''])
 
-    cr.close()
     return out
 
-def trans_load(db_name, filename, lang, verbose=True, context=None):
+def trans_load(cr, filename, lang, verbose=True, context=None):
     logger = logging.getLogger('i18n')
     try:
         fileobj = open(filename,'r')
         logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(db_name, fileobj, fileformat, lang, verbose=verbose, context=context)
+        r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
@@ -851,12 +846,16 @@ def trans_load(db_name, filename, lang, verbose=True, context=None):
             logger.error("couldn't read translation file %s", filename)
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
+def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
+    """Populates the ir_translation table. Fixing the res_ids so that they point
+    correctly to ir_model_data is done in a separate step, using the
+    'trans_update_res_ids' function below."""
     logger = logging.getLogger('i18n')
     if verbose:
         logger.info('loading translation file for language %s', lang)
     if context is None:
         context = {}
+    db_name = cr.dbname
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -864,47 +863,11 @@ def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=
     iso_lang = tools.get_iso_codes(lang)
     try:
         uid = 1
-        cr = pooler.get_db(db_name).cursor()
         ids = lang_obj.search(cr, uid, [('code','=', lang)])
 
         if not ids:
             # lets create the language with locale information
-            fail = True
-            for ln in get_locales(lang):
-                try:
-                    locale.setlocale(locale.LC_ALL, str(ln))
-                    fail = False
-                    break
-                except locale.Error:
-                    continue
-            if fail:
-                lc = locale.getdefaultlocale()[0]
-                msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
-                logger.warning(msg, lang, lc)
-
-            if not lang_name:
-                lang_name = tools.get_languages().get(lang, lang)
-
-            def fix_xa0(s):
-                if s == '\xa0':
-                    return '\xc2\xa0'
-                return s
-
-            lang_info = {
-                'code': lang,
-                'iso_code': iso_lang,
-                'name': lang_name,
-                'translatable': 1,
-                'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
-                'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
-                'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
-            }
-
-            try:
-                lang_obj.create(cr, uid, lang_info)
-            finally:
-                resetlocale()
+            lang_obj.load_lang(cr, 1, lang=lang, lang_name=lang_name)
 
 
         # now, the serious things: we read the language file
@@ -941,17 +904,13 @@ def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=
 
             try:
                 dic['res_id'] = dic['res_id'] and int(dic['res_id']) or 0
+                dic['module'] = False
+                dic['xml_id'] = False
             except:
-                model_data_ids = model_data_obj.search(cr, uid, [
-                    ('model', '=', dic['name'].split(',')[0]),
-                    ('module', '=', dic['res_id'].split('.', 1)[0]),
-                    ('name', '=', dic['res_id'].split('.', 1)[1]),
-                    ])
-                if model_data_ids:
-                    dic['res_id'] = model_data_obj.browse(cr, uid,
-                            model_data_ids[0]).res_id
-                else:
-                    dic['res_id'] = False
+                split_id = dic['res_id'].split('.', 1)
+                dic['module'] = split_id[0]
+                dic['xml_id'] = split_id[1]
+                dic['res_id'] = False
 
             args = [
                 ('lang', '=', lang),
@@ -967,13 +926,23 @@ def trans_load_data(db_name, fileobj, fileformat, lang, lang_name=None, verbose=
                     trans_obj.write(cr, uid, ids, {'value': dic['value']})
             else:
                 trans_obj.create(cr, uid, dic)
-            cr.commit()
-        cr.close()
         if verbose:
             logger.info("translation file loaded succesfully")
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
         logger.exception("couldn't read translation file %s", filename)
+
+def trans_update_res_ids(cr):
+    cr.execute("""
+            UPDATE ir_translation
+            SET res_id = (SELECT ir_model_data.res_id
+                          FROM ir_model_data
+                          WHERE ir_translation.module = ir_model_data.module
+                              AND ir_translation.xml_id = ir_model_data.name)
+            WHERE ir_translation.module is not null
+                AND ir_translation.xml_id is not null
+                AND ir_translation.res_id = 0;
+    """)
 
 def get_locales(lang=None):
     if lang is None:
