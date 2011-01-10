@@ -370,11 +370,6 @@ def Phase_%d():
                     parent = task
                 task_ids.append(task.id)
             func_str += cls_str
-            #Temp File to test the Code for the Allocation
-#            fn = '/home/tiny/Desktop/plt.py'
-#            fp = open(fn, 'w')
-#            fp.writelines(func_str)
-#            fp.close()
     
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
@@ -518,11 +513,6 @@ def Project_%d():
                 phases, child_phase_ids = phase_pool.generate_phase(cr, uid, [root_phase.id], '', context=context)
                 func_str += phases
                 phase_ids += child_phase_ids
-            #Temp File to test the Code for the Allocation
-            fn = '/home/tiny/Desktop/plt.py'
-            fp = open(fn, 'w')
-            fp.writelines(func_str)
-            fp.close()
         
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
@@ -650,11 +640,6 @@ def Project_%d():
                         parent = task
                     task_ids.append(task.id)
             func_str += cls_str
-            #Temp File to test the Code for the Allocation
-#            fn = '/home/tiny/Desktop/plt.py'
-#            fp = open(fn, 'w')
-#            fp.writelines(func_str)
-#            fp.close()
 
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
