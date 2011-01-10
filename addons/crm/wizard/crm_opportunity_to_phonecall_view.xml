@@ -19,11 +19,11 @@
 						<field name="section_id" widget="selection" />
 						<field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.phonecall')]"/>
 						<separator string="" colspan="4"/>
-						<label string ="" colspan="2"/>
-						<button name="action_cancel" string="_Cancel"
-							icon="gtk-cancel" special="cancel" />
-						<button name="action_apply" type="object"
-							string="_Schedule Call" icon="gtk-ok" />
+                        <group colspan="4">
+                            <label string ="" colspan="2"/>
+                            <button name="action_cancel" string="_Cancel" icon="gtk-cancel" special="cancel" />
+                            <button name="action_apply" type="object" string="_Schedule Call" icon="gtk-ok" />
+                        </group>
 					</group>
                 </form>
             </field>
