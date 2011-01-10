@@ -8,26 +8,26 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-15 11:37+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-07 23:25+0000\n"
+"Last-Translator: Phong Nguyen <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:51+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
 msgid "# Leads"
-msgstr "Số Nguồn dẫn"
+msgstr "Số đầu mối"
 
 #. module: crm
 #: view:crm.lead:0
 #: selection:crm.lead,type:0
 #: selection:crm.lead.report,type:0
 msgid "Lead"
-msgstr "Nguồn dẫn"
+msgstr "Đầu mối"
 
 #. module: crm
 #: model:crm.case.categ,name:crm.categ_oppor3
@@ -42,7 +42,7 @@ msgstr "Hàng tháng"
 #. module: crm
 #: view:crm.opportunity2phonecall:0
 msgid "Schedule a PhoneCall"
-msgstr "Lên lịch cho cuộc gọi điện thoại"
+msgstr "Lên lịch gọi điện"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
@@ -52,7 +52,7 @@ msgstr ""
 #. module: crm
 #: view:crm.meeting:0
 msgid "Visibility"
-msgstr ""
+msgstr "Khả kiến"
 
 #. module: crm
 #: field:crm.lead,title:0
@@ -134,7 +134,7 @@ msgstr ""
 #: code:addons/crm/crm_lead.py:228
 #, python-format
 msgid "The lead '%s' has been closed."
-msgstr ""
+msgstr "Đầu mối '%s' đã đóng"
 
 #. module: crm
 #: selection:crm.meeting,freq:0
@@ -186,6 +186,7 @@ msgstr "Tìm kiếm các Cơ hội"
 msgid ""
 "Opportunity must have Partner assigned before merging with other Opportunity."
 msgstr ""
+"Cơ hội buộc phải được gán cho Đối tác trước khi nhập lại với Cơ hội khác"
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:46
@@ -227,7 +228,7 @@ msgstr "Đối tác"
 #: field:crm.meeting,organizer:0
 #: field:crm.meeting,organizer_id:0
 msgid "Organizer"
-msgstr ""
+msgstr "Nhà tổ chức"
 
 #. module: crm
 #: view:crm.phonecall:0
@@ -251,7 +252,7 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Phone Call"
-msgstr "Cuộc gọi điện thoại"
+msgstr "Cuộc gọi"
 
 #. module: crm
 #: field:crm.lead,optout:0
@@ -262,7 +263,7 @@ msgstr ""
 #: code:addons/crm/crm_opportunity.py:108
 #, python-format
 msgid "The opportunity '%s' has been marked as lost."
-msgstr ""
+msgstr "Cơ hội '%s' đã được đánh dấu là mất cơ hội"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_lead
@@ -272,6 +273,10 @@ msgid ""
 "sort out your leads analysis by different groups to get accurate grained "
 "analysis."
 msgstr ""
+"Phân Tích Đầu Mỗi cho phép bạn kiểm tra các thông tin quan hệ khách hàng "
+"khác nhau. Kiểm tra việc xử lý chậm trễ, số lượng phản hồi và các email được "
+"gửi đi. Bạn có thể phân loại việc phân tích đầu mối của bạn bằng các nhóm "
+"khác nhau để cho ra các phân tích khuynh hướng chính xác."
 
 #. module: crm
 #: view:crm.lead:0
@@ -281,12 +286,12 @@ msgstr "Gửi thư điện tử mới"
 #. module: crm
 #: field:crm.segmentation,segmentation_line:0
 msgid "Criteria"
-msgstr ""
+msgstr "Tiêu chí"
 
 #. module: crm
 #: view:crm.segmentation:0
 msgid "Excluded Answers :"
-msgstr ""
+msgstr "Các trả lời bị loại trừ"
 
 #. module: crm
 #: field:crm.case.stage,section_ids:0
@@ -303,7 +308,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead
 #: model:ir.ui.menu,name:crm.menu_report_crm_leads_tree
 msgid "Leads Analysis"
-msgstr "Phân tích Nguồn dẫn"
+msgstr "Phân tích Đầu Mối"
 
 #. module: crm
 #: view:crm.lead2opportunity.action:0
@@ -312,6 +317,9 @@ msgid ""
 "communication history) will be merged with existing Opportunity of Selected "
 "partner."
 msgstr ""
+"Nếu bạn Gộp các Cơ hội hiện có, thông tin chi tiết về đầu mối (bao gồm lịch "
+"sử trao đổi thông tin) cũng sẽ được gộp với Cơ Hội đã có sẵn của đối tác "
+"được chọn"
 
 #. module: crm
 #: selection:crm.meeting,class:0

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-05 09:46+0000\n"
-"Last-Translator: Aline (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2011-01-09 14:14+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:36+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:19+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_long_term
@@ -52,6 +52,8 @@ msgstr "Regrouper par..."
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
+"Erreur ! La date de début du projet doit être antérieure à la date de fin du "
+"projet."
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
@@ -61,7 +63,7 @@ msgstr "Allocation des ressources"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Displaying settings"
-msgstr ""
+msgstr "Options d'affichage"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
@@ -89,6 +91,27 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"        Module de gestion de projet à long terme, qui fait le suivi de la "
+"planification, de l'ordonnancement, de l'allocation des ressources.\n"
+"        Principalement utilisé pour la gestion de gros projet.\n"
+"            - Les phases du projet seront maintenues par le chef de projet\n"
+"            - Calcule l'ordonnancement des phases : calcule les dates de "
+"début et de fin des phases dans l'état brouillon, ouverte ou en attente pour "
+"un projet donné.\n"
+"                                        Si aucun projet n'est spécifié, "
+"alors toutes les phases dans l'état brouillon, ouverte et en attente seront "
+"considérées\n"
+"            - Calcule l'ordonnancement des tâches : Fonctionne de la même "
+"façon que le bouton d'ordonnancement sur les projets. Il prend le projet "
+"comme argument et calcule toutes les tâches ouvertes, en brouillon et en "
+"attente\n"
+"            - Ordonnance les tâches : Toutes les tâches dans l'état "
+"brouillon, ouverte et en attente sont planifiés avec la date de début de la "
+"phase.\n"
+"\n"
+"    "
 
 #. module: project_long_term
 #: constraint:project.task:0
@@ -105,6 +128,7 @@ msgstr "Allocations des ressources"
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
+"Erreur ! Vous ne pouvez pas attribuer une escalade sur le même projet !"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:130
@@ -140,12 +164,15 @@ msgid ""
 "Resources should be allocated to your phases and Members should be assigned "
 "to your Project!"
 msgstr ""
+"Des ressources devraient être allouées à vos phases et des membres devraient "
+"être affectés à votre projet !"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
 msgstr ""
+" C'est calculé par l'ordonnanceur selon la date de début et la durée."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -568,7 +595,7 @@ msgstr "Nom"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Tasks Details"
-msgstr ""
+msgstr "Détails des tâches"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
