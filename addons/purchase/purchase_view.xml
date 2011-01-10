@@ -15,7 +15,7 @@
         <menuitem 
             id="menu_purchase_config_pricelist" name="Pricelists"
             parent="menu_purchase_config_purchase" sequence="50"/>
-            
+
         <menuitem
             action="product.product_pricelist_action" id="menu_product_pricelist_action_purhase"
             parent="menu_purchase_config_pricelist" sequence="20"/>
@@ -32,7 +32,7 @@
         <menuitem 
             id="menu_product_in_config_purchase" name="Product"
             parent="menu_purchase_config_purchase" sequence="30"/>
-          
+
         <menuitem
             action="product.product_category_action_form" id="menu_product_category_config_purchase"
             parent="purchase.menu_product_in_config_purchase" sequence="10"/>
@@ -40,7 +40,7 @@
         <menuitem 
             id="menu_purchase_unit_measure_purchase" name="Units of Measure"
             parent="purchase.menu_product_in_config_purchase"  sequence="20"/>
-            
+
         <menuitem
              action="product.product_uom_categ_form_action" id="menu_purchase_uom_categ_form_action"
              parent="menu_purchase_unit_measure_purchase" sequence="30"/>
@@ -113,10 +113,10 @@
       <!--product menu-->
       <menuitem id="menu_procurement_management_product" name="Products"
           parent="base.menu_purchase_root" sequence="8"/>
-          
+
       <menuitem name="Products by Category" id="menu_product_by_category_purchase_form" action="product.product_category_action"
            parent="menu_procurement_management_product" sequence="10"/>
-          
+
       <menuitem name="Products" id="menu_procurement_partner_contact_form" action="product.product_normal_action_puchased"
           parent="menu_procurement_management_product"/>
 
@@ -292,7 +292,7 @@
             <field name="search_view_id" ref="view_purchase_order_filter"/>
             <field name="help">You can create a request for quotation when you want to buy products to a supplier but the purchase is not confirmed yet. Use also this menu to review requests for quotation created automatically based on your logistic rules (minimum stock, MTO, etc). You can convert the request for quotation into a purchase order once the order is confirmed. If you use the extended interface (from user's preferences), you can select the way to control your supplier invoices: based on the order, based on the receptions or manual encoding.</field>
         </record>
-        <menuitem action="purchase_rfq" id="menu_purchase_rfq" 
+        <menuitem action="purchase_rfq" id="menu_purchase_rfq"
             parent="menu_procurement_management"
             sequence="6"/>
 
@@ -458,7 +458,7 @@
             <field name="name">Purchase Lines Not Invoiced</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
-            <field name="domain">[('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
+            <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="purchase_order_line_search"/>

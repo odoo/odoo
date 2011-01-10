@@ -455,6 +455,7 @@ class purchase_order(osv.osv):
                         'state': 'draft',
                         'purchase_line_id': order_line.id,
                         'company_id': order.company_id.id,
+                        'price_unit': order_line.price_unit
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
@@ -815,5 +816,21 @@ class procurement_order(osv.osv):
         return res
 
 procurement_order()
+
+class stock_invoice_onshipping(osv.osv_memory):
+    _inherit = "stock.invoice.onshipping"
+
+    def create_invoice(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        purchase_obj = self.pool.get('purchase.order')
+        picking_obj = self.pool.get('stock.picking')
+        res = super(stock_invoice_onshipping,self).create_invoice(cr, uid, ids, context=context)
+        purchase_id =  picking_obj.browse(cr, uid, res.keys()[0]).purchase_id.id
+        purchase_obj.write(cr, uid, [purchase_id], {
+            'invoice_ids': [(4, res.values()[0])]}, context=context)
+        return res
+
+stock_invoice_onshipping()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

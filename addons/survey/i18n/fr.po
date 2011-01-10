@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-05 13:31+0000\n"
-"Last-Translator: Aline (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2011-01-08 15:40+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:30+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: survey
@@ -530,7 +530,7 @@ msgstr "Envoyer"
 #. module: survey
 #: field:survey.question.wiz,name:0
 msgid "Number"
-msgstr ""
+msgstr "Numéro"
 
 #. module: survey
 #: code:addons/survey/survey.py:444
@@ -648,6 +648,15 @@ msgid ""
 "invitation of the survey\n"
 "    "
 msgstr ""
+"\n"
+"    Ce module est utilisé pour sonder.\n"
+"    Un sondage peut avoir plusieurs pages. Chaque page peut contenir "
+"plusieurs questions et chaque question peut avoir plusieurs réponses.\n"
+"    Des utilisateurs différents peuvent donner des réponses aux questions "
+"différentes, selon le sondage.\n"
+"    Des courriels avec le nom d'utilisateur et le mot de passe sont aussi "
+"envoyés aux partenaires pour les inviter à répondre au sondage.\n"
+"    "
 
 #. module: survey
 #: code:addons/survey/wizard/survey_answer.py:124
@@ -921,7 +930,7 @@ msgstr "Numéro de page"
 #: code:addons/survey/wizard/survey_answer.py:92
 #, python-format
 msgid "Cannot locate survey for the question wizard!"
-msgstr ""
+msgstr "Impossible de trouver le sondage pour l'assistant de questions !"
 
 #. module: survey
 #: view:survey:0
@@ -947,6 +956,8 @@ msgstr "Historique"
 #: view:survey.question:0
 msgid "When the choices do not add up correctly, display this error message"
 msgstr ""
+"Lorsque les choix effectués ne s'additionnent pas correctement, afficher le "
+"message d'erreur ci-dessous :"
 
 #. module: survey
 #: field:survey,date_close:0
@@ -1040,7 +1051,7 @@ msgstr "Envoyer les invitations"
 #. module: survey
 #: field:survey.name.wiz,store_ans:0
 msgid "Store Answer"
-msgstr ""
+msgstr "Enregistrer les réponses"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1106,7 +1117,7 @@ msgstr "Détails du sondage"
 #. module: survey
 #: selection:survey.question,type:0
 msgid "Multiple Textboxes With Different Type"
-msgstr ""
+msgstr "Zones de textes multiples de type différent"
 
 #. module: survey
 #: view:survey.question.column.heading:0
@@ -1155,7 +1166,7 @@ msgstr "Entier"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_send_invitation
 msgid "survey.send.invitation"
-msgstr ""
+msgstr "survey.send.invitation"
 
 #. module: survey
 #: field:survey.history,user_id:0
@@ -1168,7 +1179,7 @@ msgstr "Utilisateur"
 #. module: survey
 #: field:survey.name.wiz,transfer:0
 msgid "Page Transfer"
-msgstr ""
+msgstr "Transfert de page"
 
 #. module: survey
 #: selection:survey.response.line,state:0
@@ -1190,7 +1201,7 @@ msgstr "Colonne"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_tbl_column_heading
 msgid "survey.tbl.column.heading"
-msgstr ""
+msgstr "survey.tbl.column.heading"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response_line
@@ -1227,7 +1238,7 @@ msgstr "Sondage"
 #. module: survey
 #: field:survey.question,in_visible_rating_weight:0
 msgid "Is Rating Scale Invisible?"
-msgstr ""
+msgstr "L'échelle d'évaluation est-elle invisible ?"
 
 #. module: survey
 #: selection:survey.question,type:0
@@ -1237,7 +1248,7 @@ msgstr "Zones de textes numériques"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_question_wiz
 msgid "survey.question.wiz"
-msgstr ""
+msgstr "survey.question.wiz"
 
 #. module: survey
 #: view:survey:0
@@ -1400,7 +1411,7 @@ msgstr "Répondre au sondage"
 #. module: survey
 #: model:ir.model,name:survey.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: survey
 #: view:survey:0
@@ -1483,7 +1494,7 @@ msgstr "Au moins"
 #: model:ir.actions.act_window,name:survey.action_view_survey_send_invitation_log
 #: model:ir.model,name:survey.model_survey_send_invitation_log
 msgid "survey.send.invitation.log"
-msgstr ""
+msgstr "survey.send.invitation.log"
 
 #. module: survey
 #: selection:survey.print,orientation:0
@@ -1584,7 +1595,7 @@ msgstr "Nb de questions"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_response
 msgid "survey.response"
-msgstr ""
+msgstr "survey.response"
 
 #. module: survey
 #: field:survey.question,comment_valid_err_msg:0
@@ -1668,7 +1679,7 @@ msgstr "Choix multiples (une seule réponse possible)"
 #. module: survey
 #: field:survey.answer,in_visible_answer_type:0
 msgid "Is Answer Type Invisible??"
-msgstr ""
+msgstr "Le type de réponse est-il \"Invisible\" ?"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_print_answer
@@ -1678,7 +1689,7 @@ msgstr "survey.print.answer"
 #. module: survey
 #: view:survey.answer:0
 msgid "Menu Choices (each choice on separate by lines)"
-msgstr ""
+msgstr "Choix des menus (chaque choix sur des lignes séparées)"
 
 #. module: survey
 #: selection:survey.answer,type:0
