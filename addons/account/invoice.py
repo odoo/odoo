@@ -541,7 +541,11 @@ class account_invoice(osv.osv):
             journal_ids = obj_journal.search(cr, uid, [('company_id','=',company_id), ('type', '=', journal_type)])
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
-            else:
+            res_journal_default = self.pool.get('ir.values').get(cr, uid, 'default', False, ['account.invoice'])
+            for r in res_journal_default:
+                if r[1] == 'journal_id' and r[2] in journal_ids:
+                    val['journal_id'] = r[2]
+            if not val.get('journal_id', False):
                 raise osv.except_osv(_('Configuration Error !'), (_('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.') % (journal_type)))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
@@ -559,7 +563,6 @@ class account_invoice(osv.osv):
                 val['currency_id'] = False
             else:
                 val['currency_id'] = company.currency_id.id
-
         return {'value': val, 'domain': dom}
 
     # go from canceled state to draft state
