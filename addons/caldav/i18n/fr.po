@@ -8,14 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-05 20:12+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-07 14:26+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:37+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: caldav
@@ -57,7 +56,7 @@ msgstr "Participant"
 #. module: caldav
 #: sql_constraint:basic.calendar.fields:0
 msgid "Can not map a field more than once"
-msgstr ""
+msgstr "Un champ ne peut avoir plus d'une correspondance"
 
 #. module: caldav
 #: selection:basic.calendar,type:0
@@ -221,6 +220,31 @@ msgid ""
 "created\n"
 "        CALENDAR_NAME: Name of calendar to access\n"
 msgstr ""
+"\n"
+"    Ce module contient les fonctionnalités de base d'un système caldav :  \n"
+"  - Serveur WebDAV fournissant un accès distant aux calendriers\n"
+"  - Synchronisation de calendrier avec WebDAV\n"
+"  - Personnalisation des attributs d'évènements et de tâches de calendrier "
+"avec n'importe quel modèle OpenERP\n"
+"  - Fournit les fonctionnalités d'import/export iCal\n"
+"\n"
+"    Pour accéder aux calendriers avec un client CalDAV, voici le lien :\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c\n"
+"\n"
+"    Pour accéder au calendrier OpenERP en utilisant WebCal, utilisez l'URL "
+":\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"      Où,\n"
+"        HOSTNAME : Hôte sur lequel le serveur OpenERP (avec webdav) est "
+"exécuté\n"
+"        PORT : Port sur lequel le serveur OpenERP est exécuté (par défaut : "
+"8069)\n"
+"        DATABASE_NAME : Nom de la base de données dans laquelle le "
+"calendrier OpenERP est créé\n"
+"        CALENDAR_NAME : Nom du calendrier à accéder\n"
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
@@ -411,7 +435,7 @@ msgstr "Description"
 #. module: caldav
 #: help:basic.calendar.alias,cal_line_id:0
 msgid "The calendar/line this mapping applies to"
-msgstr ""
+msgstr "Le calendrier/la ligne auquel(le) s'applique la correspondance"
 
 #. module: caldav
 #: field:basic.calendar.fields,mapping:0
@@ -422,7 +446,7 @@ msgstr "Correspondance"
 #: code:addons/caldav/wizard/calendar_event_import.py:86
 #, python-format
 msgid "Import Sucessful"
-msgstr ""
+msgstr "Import réussi"
 
 #. module: caldav
 #: view:calendar.event.import:0
@@ -448,6 +472,7 @@ msgstr "S'abonner à un calendrier distant"
 #: help:basic.calendar,calendar_color:0
 msgid "For supporting clients, the color of the calendar entries"
 msgstr ""
+"Pour les clients qui le supportent, la couleur des entrées de calendrier"
 
 #. module: caldav
 #: field:basic.calendar,name:0
@@ -471,7 +496,7 @@ msgstr "basic.calendar.alarm"
 #: code:addons/caldav/calendar.py:1275
 #, python-format
 msgid "Attendee must have an Email Id"
-msgstr ""
+msgstr "Le participant doit avoir un identifiant de courriel"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
@@ -547,6 +572,8 @@ msgstr "basic.calendar.todo"
 #: help:basic.calendar,calendar_order:0
 msgid "For supporting clients, the order of this folder among the calendars"
 msgstr ""
+"Pour les clients qui le supportent, l'ordre de ce répertoire parmi les "
+"calendriers"
 
 #~ msgid "description"
 #~ msgstr "description"

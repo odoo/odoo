@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-02 09:41+0000\n"
-"Last-Translator: Christophe Chauvet - http://www.syleam.fr/ <Unknown>\n"
+"PO-Revision-Date: 2011-01-09 11:16+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:38+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -122,7 +122,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Picking list"
-msgstr "Opération de manutention"
+msgstr "Bon de transfert"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -154,6 +154,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
+"Ceci est la liste de tous les ordres de livraison à préparer, en fonction de "
+"vos différents bons de commande et de vos règles logistiques."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -210,6 +212,7 @@ msgstr ""
 #, python-format
 msgid "Missing partial picking data for move #%s"
 msgstr ""
+"Données manquantes sur la préparation partielle pour le mouvement #%s"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_move
@@ -351,7 +354,7 @@ msgstr "Lot de production"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Catégories des unités de mesure"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -636,6 +639,10 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"Le Journal des Stocks permet d'attribuer chaque opération sur le stock à un "
+"journal particulier selon le type d'opération à effectuer ou selon "
+"l'employé/l'équipe qui doit effectuer l'opération. Exemples de journaux de "
+"stock : contrôle qualité, bons de transfert, listes de colisage, etc"
 
 #. module: stock
 #: field:stock.location,complete_name:0
@@ -646,7 +653,7 @@ msgstr "Nom de l'emplacement"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Posted Inventory"
-msgstr "Inventaire Posté"
+msgstr "Inventaire comptabilisé"
 
 #. module: stock
 #: view:stock.move:0
@@ -800,7 +807,7 @@ msgstr "Périodique (manuel)"
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
 msgid "Procurements"
-msgstr "Besoins"
+msgstr "Approvisionnements"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_3
@@ -1081,7 +1088,7 @@ msgstr ""
 "* \"Inventaire\": emplacement virtuel servant de contrepartie aux mouvements "
 "servant à corriger les niveaux des stocks lors des inventaires physiques\n"
 "                       \n"
-"* \"Approvisionnement\" : emplacement virtuel servant de contrepartie temporaire pour "
+"* \"Besoin\" : emplacement virtuel servant de contrepartie temporaire pour "
 "les besoins de stock lorsque l'emplacement d'origine (fournisseur ou "
 "production interne) n'est pas connu à l'avance. Cet emplacement est "
 "normalement vide lorsque le planificateur termine son exécution\n"
@@ -1105,7 +1112,7 @@ msgstr "Ordre de livraison"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_in
 msgid "stock.move.memory.in"
-msgstr ""
+msgstr "stock.move.memory.in"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1401,7 +1408,7 @@ msgstr "Date de création"
 #. module: stock
 #: field:report.stock.lines.date,id:0
 msgid "Inventory Line Id"
-msgstr "Id ligne d'inventaire"
+msgstr "Id. ligne d'inventaire"
 
 #. module: stock
 #: help:stock.location,address_id:0
@@ -2008,7 +2015,7 @@ msgstr ""
 "* Traçabilité (amont/aval, numéro de lot, numéro de série,...)\n"
 "* Tableau de bord pour l'entrepôt, incluant:\n"
 "    * Produits à réceptionner à date (date <= aujourd'hui)\n"
-"    * Besoins avec incident\n"
+"    * Approvisionnements en exception\n"
 "    * Graphique : nombre de produits réceptionnés par rapport aux prévisions "
 "(barres par jour par semaine) \n"
 "    * Graphique : nombre de produits livrés par rapport aux prévisions "
@@ -2058,7 +2065,7 @@ msgstr "]"
 #. module: stock
 #: field:product.template,property_stock_inventory:0
 msgid "Inventory Location"
-msgstr "Emplacement de l'Inventaire"
+msgstr "Emplacement d'inventaire"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2159,7 +2166,7 @@ msgstr "Emplacements Liés"
 #. module: stock
 #: model:stock.location,name:stock.location_inventory
 msgid "Inventory loss"
-msgstr "Casse"
+msgstr "Pertes d'inventaire"
 
 #. module: stock
 #: code:addons/stock/stock.py:1314
@@ -2466,6 +2473,8 @@ msgstr "Opération de manutention"
 msgid ""
 "The combination of serial number and internal reference must be unique !"
 msgstr ""
+"La combinaison du numéro de série et de la référence interne doit être "
+"unique !"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups
@@ -2648,7 +2657,7 @@ msgstr "À faire"
 #: field:stock.production.lot.revision,company_id:0
 #: field:stock.warehouse,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: stock
 #: view:stock.move:0
@@ -2750,7 +2759,7 @@ msgstr "Actif"
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
 msgid "Inventory Management"
-msgstr "Gestion des inventaires"
+msgstr "Gestion des stocks"
 
 #. module: stock
 #: view:product.template:0
@@ -3192,7 +3201,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_out
 msgid "stock.move.memory.out"
-msgstr ""
+msgstr "stock.move.memory.out"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:115
@@ -3209,7 +3218,7 @@ msgstr ""
 #. module: stock
 #: view:stock.inventory:0
 msgid "Lot Inventory"
-msgstr "Inventaire du Lot"
+msgstr "Inventaire de lot"
 
 #. module: stock
 #: view:stock.move:0
@@ -3533,7 +3542,7 @@ msgstr "est annulé"
 #. module: stock
 #: view:stock.inventory.line:0
 msgid "Stock Inventory Lines"
-msgstr "Lignes d'Inventaire de Stock"
+msgstr "Lignes d'inventaire de stock"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:74

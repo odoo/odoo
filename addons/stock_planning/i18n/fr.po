@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-05 08:03+0000\n"
-"Last-Translator: Aline (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2011-01-09 21:14+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:34+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:19+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock_planning
@@ -74,6 +74,9 @@ msgid ""
 "Planned Out in periods before calculated. Between start date of current "
 "period and one day before start of calculated period."
 msgstr ""
+"Sorties planifiées sur les périodes avant recalcul. Entre la date de départ "
+"de la période actuelle et jusqu'à un jour avant le début de la période "
+"calculée."
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
@@ -87,6 +90,9 @@ msgid ""
 "Warehouse which forecasts will concern. If during stock planning you will "
 "need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"L'entrepôt sur lequel portent les prévisions. Si au cours de la "
+"planification du stock vous allez utiliser des prévisions pour tous les "
+"entrepôts, vous pouvez choisir n'importe quel entrepôt ici."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_left:0
@@ -672,7 +678,7 @@ msgstr "Brouilon"
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed"
-msgstr ""
+msgstr "Fermée"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -703,6 +709,10 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
+"Saisir la quantité planifiée en sortie pour l'entrepôt sélectionné pour la "
+"période sélectionnée pour le produit sélectionné. Pour planifier cette "
+"valeur, regardez les sorties confirmées ou les prévisions de vente. Cette "
+"valeur devrait être plus grande ou égale aux sorties confirmées."
 
 #. module: stock_planning
 #: model:ir.module.module,description:stock_planning.module_meta_information
@@ -978,7 +988,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:655
 #, python-format
 msgid "Requisition ("
-msgstr ""
+msgstr "Réquisition ("
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_left:0
@@ -1140,7 +1150,7 @@ msgstr "Passé/futur"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
 msgid "Product UoS Category"
-msgstr ""
+msgstr "Catégorie d'UdV du produit"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
@@ -1177,7 +1187,7 @@ msgstr " d'après l'état:"
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Cancel"
-msgstr ""
+msgstr "Annuler"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -1185,7 +1195,7 @@ msgstr ""
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1247,7 +1257,7 @@ msgstr "Sorties confirmées"
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1272,7 +1282,7 @@ msgstr "Actuel"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
 msgid "stock.planning"
-msgstr ""
+msgstr "stock.planning"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,warehouse_id:0
@@ -1345,7 +1355,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,history:0
 msgid "Procurement History"
-msgstr "Historique du besoin"
+msgstr "Historique de l'approvisionnement"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
@@ -1357,7 +1367,7 @@ msgstr "Date de début de la période de planification"
 #: code:addons/stock_planning/stock_planning.py:683
 #, python-format
 msgid "    Planned In: "
-msgstr ""
+msgstr "    Entrants planifiés : "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
@@ -1371,6 +1381,11 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"Quantité restante dans les quantités entrantes planifiées. Ceci est calculé "
+"comme la différence entre les entrées planifiées et les entrées confirmées. "
+"Pour la période actuelle, les entrées déjà réalisées sont aussi calculées. "
+"Cette valeur est utilisée pour créer un approvisionnement pour la quantité "
+"manquante."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
@@ -1392,6 +1407,11 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warhouse' with Supply Warehouse."
 msgstr ""
+"Cochez pour approvisionner à partir de l'emplacement de stock de l'entrepôt "
+"d'origine. Si non coché, l'approvisionnement sera fait à partir de "
+"l'emplacement de sortie de l'entrepôt d'origine. Utilisé dans "
+"\"Approvisionner depuis un autre entrepôt\" avec l'approvisionnement "
+"d'entrepôt."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1449,13 +1469,13 @@ msgstr "UdM produit"
 #: code:addons/stock_planning/stock_planning.py:693
 #, python-format
 msgid "MPS("
-msgstr ""
+msgstr "PDA ("
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "Pick created from MPS by user: "
-msgstr ""
+msgstr "Mouvement créé à partir du PDA par l'utilisateur : "
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
@@ -1473,6 +1493,8 @@ msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
 msgstr ""
+"Période pour cette planification. La réquisition sera créée pour le début de "
+"cette période."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1490,6 +1512,8 @@ msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
 msgstr ""
+"Cochez pour n'utilisez que des prévisions validées. Si non coché, le système "
+"utilisera les prévisions validées et en brouillon."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0

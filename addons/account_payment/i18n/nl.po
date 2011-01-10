@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-12-03 07:35+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-06 08:15+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:11+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_payment
@@ -51,6 +51,12 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module biedt :\n"
+"* een efficiëntere manier om factuur betalingen te beheren.\n"
+"* een basis mechanisme voor het eenvoudig aankoppelen van diverse "
+"automatische betalingen.\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -118,7 +124,7 @@ msgstr "Vervaldatum"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -145,7 +151,7 @@ msgstr "Bedrag"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Verkeerde debet of credit waarde in boekingsregel!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -171,7 +177,7 @@ msgstr "Referentie"
 #. module: account_payment
 #: sql_constraint:payment.line:0
 msgid "The payment line name must be unique!"
-msgstr ""
+msgstr "De betaalregelnaam moet uniek zijn!"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
@@ -307,6 +313,8 @@ msgstr "Betalingsopdrachten zoeken"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"U kunt geen boeking maken op een debiteuren/crediteuren rekening zonder een "
+"relatie aan te geven."
 
 #. module: account_payment
 #: field:payment.line,create_date:0
@@ -459,7 +467,7 @@ msgstr "Boekingen"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "Bedrijf moet hetzelfde zijn voor de betreffende rekening en periode."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -588,6 +596,11 @@ msgid ""
 "that should be done, keep track of all payment orders and mention the "
 "invoice reference and the partner the payment should be done for."
 msgstr ""
+"Een betalingsopdracht is een betalingsverzoek van uw bedrijf om een "
+"leverencier factuur of klant creditnota te betalen. U kunt hier alle "
+"betalingsopdrachten vastelggen die moeten worden gedaan, de opdrachten "
+"volgen en de factuur referentie en de relatie opgeven waarvoor de betaling "
+"plaats moet vinden."
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -724,7 +737,7 @@ msgstr "Bankrekening voor de betaalmodus"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
 
 #~ msgid "Execution date:"
 #~ msgstr "Uitvoerdatum"
