@@ -418,9 +418,17 @@ class account_account(osv.osv):
                 c_ids = s_ids
             ids = child_ids
         return True
+    
+    def _check_type(self, cr, uid, ids, context=None):
+        type = self.browse(cr, uid, ids, context=context)    
+        for t in type:
+            if t.parent_id.type != 'view' and t.parent_id:                
+                return False
+        return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
+        (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id']),
+        (_check_type, 'Internal type of parent account must be view.', ['parent_id']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -2295,9 +2303,18 @@ class account_account_template(osv.osv):
         'nocreate': False,
     }
 
+    def _check_type(self, cr, uid, ids, context=None):
+        type = self.browse(cr, uid, ids, context=context)    
+        for t in type:
+            if t.parent_id.type != 'view' and t.parent_id:                
+                return False
+        return True
+
     _check_recursion = check_cycle
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id'])
+        (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id']),
+        (_check_type, 'Internal type of parent account template must be view.', ['parent_id']),
+        
     ]
 
 
