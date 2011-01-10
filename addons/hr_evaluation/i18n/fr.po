@@ -8,14 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-16 17:26+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-08 12:46+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:30+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_evaluation
@@ -114,7 +113,7 @@ msgstr "Jour"
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,evaluation_id:0
 msgid "Evaluation Form"
-msgstr ""
+msgstr "Formulaire d'évaluation"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -127,6 +126,8 @@ msgid ""
 "This number of months will be used to schedule the first evaluation date of "
 "the employee when selecting an evaluation plan. "
 msgstr ""
+"Le nombre de mois sera utilisé pour planifier la date de la première "
+"évaluation de l'employé, lors du choix de plan d'évaluation. "
 
 #. module: hr_evaluation
 #: view:hr.employee:0
@@ -188,7 +189,7 @@ msgstr "Juillet"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
 msgid "Periodicity of Evaluations (months)"
-msgstr ""
+msgstr "Périodicité des évaluations (mois)"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:242
@@ -208,7 +209,7 @@ msgstr "Date de fin"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_first:0
 msgid "First Evaluation in (months)"
-msgstr ""
+msgstr "Première évaluation dans (mois)"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:81
@@ -267,6 +268,7 @@ msgid ""
 "The number of month that depicts the delay between each evaluation of this "
 "plan (after the first one)."
 msgstr ""
+"Le nombre de mois séparant chaque évaluation de ce plan (après la première)."
 
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
@@ -295,6 +297,21 @@ msgid ""
 "          in the form of.Implements a dashboard for My Current Evaluations\n"
 "         "
 msgstr ""
+"\n"
+"          Capacité à créer une évaluation des employés.\n"
+"          Une évaluation peut être créée, par employé, pour des "
+"subordonnés,\n"
+"          pour des débutants aussi  bien que pour leur "
+"gestionnaire.L'évaluation est réalisée selon un plan dans\n"
+"          lequel plusieurs questionnaires peuvent être créés et on peut "
+"définir\n"
+"          quel niveau hiérarchique remplit quoi. La revue et l'évaluation "
+"finale sont\n"
+"          réalisés par le gestionnaire. Chaque évaluation remplie par les "
+"employés peut être\n"
+"          visualisée dans son formulaire. Implémente un tableau de bord pour "
+"\"Mes évaluations en cours\"\n"
+"         "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -413,6 +430,11 @@ msgid ""
 "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
 "final evaluation by the manager."
 msgstr ""
+"Chaque employé peut relever d'un plan d'évaluation. Ce plan définit la "
+"fréquence et la manière de gérer l'évaluation périodique du personnel. Vous "
+"serez capable de définir des étapes et d'y rattacher des entrevues. OpenERP "
+"gère toutes sortes d'évaluations : ascendantes (bottom-up), descendantes "
+"(top-down), auto-évaluations et l'évaluation finale par le manager."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -732,7 +754,7 @@ msgstr "Envoyer toutes les réponses à l'employé"
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
 msgid "Next Evaluation Date"
-msgstr ""
+msgstr "Date de la prochaine évaluation"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -921,6 +943,8 @@ msgid ""
 "The date of the next evaluation is computed by the evaluation plan's dates "
 "(first evaluation + periodicity)."
 msgstr ""
+"La date de la prochaine évaluation est calculée d'après les dates du plan "
+"d'évaluation (première évaluation + périodicité)."
 
 #~ msgid "Evaluation Type"
 #~ msgstr "Type d'évaluation"

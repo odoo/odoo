@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-12 07:22+0000\n"
-"Last-Translator: Lorenzo Battistini - agilebg.com "
-"<lorenzo.battistini@agilebg.com>\n"
+"PO-Revision-Date: 2011-01-06 13:38+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:08+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -158,6 +157,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"Il quantitavo minimo per far scattare questa regola, espressa nell'unità di "
+"misura del fornitore, se esiste, altrimenti in quella default del prodotto."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -421,6 +422,11 @@ msgid ""
 "information about your products related to procurement logistics, sales "
 "price, product category, suppliers and so on."
 msgstr ""
+"I prodotti possono essere acquistati e/o venduti. Possono essere materie "
+"prime, prodotti stoccabili, consumabili o servizi. Le schede prodotto "
+"contengono informazioni dettagliate circa il prodotto, relative a: logistica "
+"approvvigiornamenti, prezzo di vendita, categoria prodotto, fornitore e via "
+"dicendo"
 
 #. module: product
 #: view:product.pricelist:0
@@ -502,6 +508,8 @@ msgid ""
 "Choose here the Unit of Measure in which the prices and quantities are "
 "expressed below."
 msgstr ""
+"Scegliere qui l'unità di misura in cui il prezzo e le quantità saranno "
+"espresse di seguito."
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -527,6 +535,11 @@ msgid ""
 "each version has several rules. Example: the customer price of a product "
 "category will be based on the supplier price multiplied by 1.80."
 msgstr ""
+"Un listino contiene le regole che possono essere calcolate per generare il "
+"prezzo di acquisto o vendita per tutti i partner assegnati al listino. I "
+"listini hanno varie versioni (2010, 2011, promozione febbraio 2011, ecc.) e "
+"ogni versione ha parecchie regole. Es.: Il prezzo cliente di una categoria "
+"di prodotto verrà basato sul prezzo fornitore moltiplicato per 1.80."
 
 #. module: product
 #: help:product.product,active:0
@@ -724,6 +737,8 @@ msgid ""
 "Product UoM if not empty, in the default unit of measure of the product "
 "otherwise."
 msgstr ""
+"Il quantitativo minimo di acquisto da questo fornitore, espresso nella sua "
+"unità di misura, se esiste, altrimenti in quella di default del prodotto."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -736,6 +751,8 @@ msgid ""
 "This price will be considered as a price for the supplier UoM if any or the "
 "default Unit of Measure of the product otherwise"
 msgstr ""
+"Il prezzo sarà considerato come il prezzo per l'unità di misura del "
+"fornitore, se esiste, o altrimenti in quella di default del prodotto"
 
 #. module: product
 #: model:product.category,name:product.product_category_accessories
@@ -908,6 +925,9 @@ msgid ""
 "You can define a conversion rate between several Units of Measure within the "
 "same category."
 msgstr ""
+"Crea e gestisce le unità di misura che volete utilizzare nel vostro sistema. "
+"E' possibile definire un tasso di conversione tra parecchie unità di misura "
+"all'interno della stessa categoria."
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -983,6 +1003,9 @@ msgid ""
 "manage new versions of a price list. Some examples of versions: 2010, 2011, "
 "Summer Promotion, etc."
 msgstr ""
+"Ci può essere più di una versione di listino. Qui è possible creare e "
+"gestire nuove versioni di listino. Alcuni esempi di versione: 2010, 2011, "
+"Promozione estiva, ecc."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1049,6 +1072,11 @@ msgid ""
 "be converted to each other. For example, in the unit of measure category "
 "\"Time\", you will have the following UoM: Hours, Days."
 msgstr ""
+"Crea e gestisce le categorie di unità di misura che volete utilizzare "
+"all'interno del sistema. Se alcune unità di misura sono nella stessa "
+"categoria, esse potranno essere convertite tra di loro. Per esempio, nella "
+"categoria dell'unità di misura: \"Tempo\", è possibile avere le seguenti "
+"Unità di misura: Ore, Giorni."
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1117,6 +1145,11 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Dovete definire un prodotto per ogni cosa che vendete o acquistate. I "
+"prodotti possono essere materie prime, prodotti stoccabili, consumabili o "
+"servizi. La scheda prodotto contiene informazioni dettagliate circa i vostri "
+"prodotti relativi alla: logistica di approvvigionamento, prezzo di vendita, "
+"categoria prodotto, fornitore e via dicendo."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1229,6 +1262,26 @@ msgid ""
 "    Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"    Questo è il modulo base per la gestione prodotti e listini in OpenERP.\n"
+"\n"
+"    I prodotti supportano le varianti, differenti metodi di listino, "
+"informazioni fornitori,\n"
+"    produzione per ordine/stoccaggio, differenti unità di misura,\n"
+"    packaging e proprietà.\n"
+"\n"
+"    I listini supportano:\n"
+"    * Scontistiche multi-livecco (per prodotto, per categoria, per "
+"quantità)\n"
+"    * Calcoli prezzi base con differenti criteri:\n"
+"        * Altri listini,\n"
+"        * Prezzo di costo,\n"
+"        * Prezzo di listino,\n"
+"        * Prezzo fornitore, ...\n"
+"    Preferenze di listini per prodotto e/o partner.\n"
+"\n"
+"    Stampa etichetta prodotto con codice a barre.\n"
+"    "
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1361,6 +1414,9 @@ msgid ""
 "gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
 msgstr ""
+"Fornisce l'ordinamento in cui gli elementi del listino verranno verificati. "
+"La valutazione fornisce la priorità più alta alla sequenza minore e si ferma "
+"quando viene trovato un elemento che soddisfa il criterio."
 
 #. module: product
 #: selection:product.template,type:0
@@ -1410,6 +1466,9 @@ msgid ""
 "category to get the list of all products linked to this category or to a "
 "child of this category."
 msgstr ""
+"Questa è una lista di tutti i prodotti classificati per categoria. E' "
+"possibile cliccare su di una categoria per avere la lista dei prodotti "
+"collegati alla stessa o ad una delle categorie figlie."
 
 #. module: product
 #: view:product.product:0
@@ -1647,6 +1706,9 @@ msgid ""
 "Set a category of product if this rule only apply to products of a category "
 "and his children. Keep empty for all products"
 msgstr ""
+"Imposta una categoria di prodotto se questa regola si applica solamente ai "
+"prodotti di questa categoria o ai sui figli. Lasciare vuoto per tutti i "
+"prodotti."
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1786,7 +1848,7 @@ msgstr "Nome di questo tipo di prezzo."
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr ""
+msgstr "Unità di misura fornitore"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
