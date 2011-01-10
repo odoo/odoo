@@ -10,7 +10,7 @@
             <field name="model">board.board</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Dashboard">
+                <form string="Sales Manager Dashboard">
                     <hpaned position="100">
                         <child1>
                             <action  name="%(sale.action_quotation_for_sale)d" string="Quotations"/>
@@ -27,7 +27,7 @@
         </record>
 
         <record id="open_board_sales_manager" model="ir.actions.act_window">
-            <field name="name">Sales Dashboard</field>
+            <field name="name">Sales Manager Dashboard</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -36,6 +36,5 @@
 
         <menuitem id="board.menu_dasboard" name="Dashboard" sequence="0" parent="base.next_id_64"/>
         <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_dasboard" sequence="0" groups="base.group_sale_manager"/>
-        <menuitem icon="terp-partner" id="base.menu_base_partner" name="Sales" sequence="0" action="open_board_sales_manager"/>
     </data>
 </openerp>
