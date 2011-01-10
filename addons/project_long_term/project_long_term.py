@@ -723,7 +723,7 @@ class project_task(osv.osv):
         title = \"%s\"
         effort = \'%s\'
         resource = %s
-'''%(task.id, task.name, duration, resource)
+'''%(task.id, task.name, duration, str_resource)
         s += '\n'
         return s
 project_task()
