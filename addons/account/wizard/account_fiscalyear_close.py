@@ -95,7 +95,6 @@ class account_fiscalyear_close(osv.osv_memory):
                 obj='account_move_line', context={'fiscalyear': fy_ids})
         cr.execute('select id from account_account WHERE active AND company_id = %s', (old_fyear.company_id.id,))
         ids = map(lambda x: x[0], cr.fetchall())
-        account_balanced = []
         for account in obj_acc_account.browse(cr, uid, ids,
             context={'fiscalyear': fy_id}):
             accnt_type_data = account.user_type
@@ -104,7 +103,16 @@ class account_fiscalyear_close(osv.osv_memory):
             if accnt_type_data.close_method=='none' or account.type == 'view':
                 continue
             if accnt_type_data.close_method=='balance':
-                account_balanced.append(account.id)
+                if abs(account.balance)>0.0001:
+                    obj_acc_move_line.create(cr, uid, {
+                        'debit': account.balance>0 and account.balance,
+                        'credit': account.balance<0 and -account.balance,
+                        'name': data[0]['report_name'],
+                        'date': period.date_start,
+                        'journal_id': new_journal.id,
+                        'period_id': period.id,
+                        'account_id': account.id
+                    }, {'journal_id': new_journal.id, 'period_id':period.id})
             if accnt_type_data.close_method == 'unreconciled':
                 offset = 0
                 limit = 100
@@ -190,27 +198,6 @@ class account_fiscalyear_close(osv.osv_memory):
                         })
                         obj_acc_move_line.create(cr, uid, move)
                     offset += limit
-
-        acc_set = ",".join(map(str, account_balanced))
-        cr.execute(("SELECT l.account_id as id, " \
-                        "COALESCE(SUM(l.debit),0) - COALESCE(SUM(l.credit), 0) as balance " \
-                        "FROM " \
-                            "account_move_line l " \
-                        "WHERE " \
-                            "l.account_id IN (%s) " \
-                        " GROUP BY l.account_id") % (acc_set, ))
-        for res in cr.dictfetchall():
-            if abs(res['balance']) > 0.0001:
-                    obj_acc_move_line.create(cr, uid, {
-                        'debit': res['balance'] > 0 and res['balance'],
-                        'credit': res['balance'] < 0 and -res['balance'],
-                        'name': data[0]['report_name'],
-                        'date': period.date_start,
-                        'journal_id': new_journal.id,
-                        'period_id': period.id,
-                        'account_id': res['id'],
-                        'fy_opening': True
-                    }, {'journal_id': new_journal.id, 'period_id': period.id})
         ids = obj_acc_move_line.search(cr, uid, [('journal_id','=',new_journal.id),
             ('period_id.fiscalyear_id','=',new_fyear.id)])
         context['fy_closing'] = True
