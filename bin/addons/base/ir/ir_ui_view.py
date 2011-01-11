@@ -28,33 +28,42 @@ import netsvc
 import os
 import logging
 
-def _check_xml(self, cr, uid, ids, context={}):
+def _check_xml(self, cr, uid, ids, context=None):
     logger = logging.getLogger('init')
     for view in self.browse(cr, uid, ids, context):
         eview = etree.fromstring(view.arch.encode('utf8'))
         frng = tools.file_open(os.path.join('base','rng','view.rng'))
-        relaxng_doc = etree.parse(frng)
-        relaxng = etree.RelaxNG(relaxng_doc)
-        if not relaxng.validate(eview):
-            for error in relaxng.error_log:
-                logger.error(tools.ustr(error))
-            return False
+        try:
+            relaxng_doc = etree.parse(frng)
+            relaxng = etree.RelaxNG(relaxng_doc)
+            if not relaxng.validate(eview):
+                for error in relaxng.error_log:
+                    logger.error(tools.ustr(error))
+                return False
+        finally:
+            frng.close()
     return True
 
 class view_custom(osv.osv):
     _name = 'ir.ui.view.custom'
     _columns = {
-        'ref_id': fields.many2one('ir.ui.view', 'Original View'),
-        'user_id': fields.many2one('res.users', 'User'),
+        'ref_id': fields.many2one('ir.ui.view', 'Original View', select=True),
+        'user_id': fields.many2one('res.users', 'User', select=True),
         'arch': fields.text('View Architecture', required=True),
     }
+
+    def _auto_init(self, cr, context=None):
+        super(view_custom, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_custom_user_id_ref_id\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_ui_view_custom_user_id_ref_id ON ir_ui_view_custom (user_id, ref_id)')
 view_custom()
 
 class view(osv.osv):
     _name = 'ir.ui.view'
     _columns = {
         'name': fields.char('View Name',size=64,  required=True),
-        'model': fields.char('Object', size=64, required=True),
+        'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.selection((
             ('tree','Tree'),
@@ -64,9 +73,9 @@ class view(osv.osv):
             ('calendar', 'Calendar'),
             ('diagram','Diagram'),
             ('gantt', 'Gantt'),
-            ('search','Search')), 'View Type', required=True),
+            ('search','Search')), 'View Type', required=True, select=True),
         'arch': fields.text('View Architecture', required=True),
-        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade'),
+        'inherit_id': fields.many2one('ir.ui.view', 'Inherited View', ondelete='cascade', select=True),
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="XML ID",
                                   method=True, help="ID of the view defined in xml file"),
@@ -75,49 +84,29 @@ class view(osv.osv):
         'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
         'priority': 16
     }
-    _order = "priority"
+    _order = "priority,name"
     _constraints = [
         (_check_xml, 'Invalid XML for View Architecture!', ['arch'])
     ]
 
-    def read(self, cr, uid, ids, fields=None, context={}, load='_classic_read'):
-
-        if not isinstance(ids, (list, tuple)):
-            ids = [ids]
-
-        result = super(view, self).read(cr, uid, ids, fields, context, load)
-
-        for rs in result:
-            if rs.get('model') == 'board.board':
-                cr.execute("select id,arch,ref_id from ir_ui_view_custom where user_id=%s and ref_id=%s", (uid, rs['id']))
-                oview = cr.dictfetchall()
-                if oview:
-                    rs['arch'] = oview[0]['arch']
-
-
-        return result
+    def _auto_init(self, cr, context=None):
+        super(view, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_model_type_inherit_id\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_ui_view_model_type_inherit_id ON ir_ui_view (model, type, inherit_id)')
 
     def write(self, cr, uid, ids, vals, context={}):
-
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
+        result = super(view, self).write(cr, uid, ids, vals, context)
 
-        exist = self.pool.get('ir.ui.view').browse(cr, uid, ids[0])
-        if exist.model == 'board.board' and 'arch' in vals:
-            vids = self.pool.get('ir.ui.view.custom').search(cr, uid, [('user_id','=',uid), ('ref_id','=',ids[0])])
-            vals2 = {'user_id': uid, 'ref_id': ids[0], 'arch': vals.pop('arch')}
+        # drop the corresponding view customizations (used for dashboards for example), otherwise
+        # not all users would see the updated views
+        custom_view_ids = self.pool.get('ir.ui.view.custom').search(cr, uid, [('ref_id','in',ids)])
+        if custom_view_ids:
+            self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-            # write fields except arch to the `ir.ui.view`
-            result = super(view, self).write(cr, uid, ids, vals, context)
-
-            if not vids:
-                self.pool.get('ir.ui.view.custom').create(cr, uid, vals2)
-            else:
-                self.pool.get('ir.ui.view.custom').write(cr, uid, vids, vals2)
-
-            return result
-
-        return super(view, self).write(cr, uid, ids, vals, context)
+        return result
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node,label,scale,context={}):
         if not label:
@@ -193,17 +182,23 @@ class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
     _columns = {
         'name': fields.char('Shortcut Name', size=64, required=True),
-        'res_id': fields.many2one('ir.ui.menu','Resource Ref.', ondelete='cascade'),
+        'res_id': fields.integer('Resource Ref.', help="Reference of the target resource, whose model/table depends on the 'Resource Name' field."),
         'sequence': fields.integer('Sequence'),
-        'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade'),
-        'resource': fields.char('Resource Name', size=64, required=True)
+        'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade', select=True),
+        'resource': fields.char('Resource Name', size=64, required=True, select=True)
     }
+
+    def _auto_init(self, cr, context=None):
+        super(view_sc, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_sc_user_id_resource\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_ui_view_sc_user_id_resource ON ir_ui_view_sc (user_id, resource)')
 
     def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context={}):
         ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
         return self.read(cr, uid, ids, ['res_id','name'], context=context)
 
-    _order = 'sequence'
+    _order = 'sequence,name'
     _defaults = {
         'resource': lambda *a: 'ir.ui.menu',
         'user_id': lambda obj, cr, uid, context: uid,

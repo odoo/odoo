@@ -38,12 +38,14 @@
 
 import copy
 import locale
+
 import logging
 import re
 import reportlab
 
 import tools
 from tools.safe_eval import safe_eval as eval
+from tools import ustr
 
 _regex = re.compile('\[\[(.+?)\]\]')
 
@@ -66,7 +68,7 @@ def _child_get(node, self=None, tagname=None):
                         except GeneratorExit:
                             continue
                         except Exception, e:
-                            logging.getLogger('report').exception(e)
+                            logging.getLogger('report').warning('rml_except: "%s"',n.get('rml_except',''), exc_info=True)
                             continue
                     if n.get('rml_tag'):
                         try:
@@ -78,7 +80,7 @@ def _child_get(node, self=None, tagname=None):
                         except GeneratorExit:
                             yield n
                         except Exception, e:
-                            logging.getLogger('report').exception(e)
+                            logging.getLogger('report').warning('rml_tag: "%s"',n.get('rml_tag',''), exc_info=True)
                             yield n
                     else:
                         yield n
@@ -89,7 +91,7 @@ def _child_get(node, self=None, tagname=None):
             except GeneratorExit:
                 continue
             except Exception, e:
-                logging.getLogger('report').exception(e)
+                logging.getLogger('report').warning('rml_except: "%s"',n.get('rml_except',''), exc_info=True)
                 continue
         if self and self.localcontext and n.get('rml_tag'):
             try:
@@ -102,7 +104,7 @@ def _child_get(node, self=None, tagname=None):
             except GeneratorExit:
                 pass
             except Exception, e:
-                logging.getLogger('report').exception(e)
+                logging.getLogger('report').warning('rml_tag: "%s"',n.get('rml_tag',''), exc_info=True)
                 pass
         if (tagname is None) or (n.tag==tagname):
             yield n
@@ -129,12 +131,12 @@ def _process_text(self, txt):
                     pass
                 if isinstance(txt, basestring):
                     result += str2xml(txt)
-                elif (txt is not None) and (txt is not False):
-                    result += unicode(txt)
+                elif txt and (txt is not None) and (txt is not False):
+                    result += ustr(txt)
         return result
 
 def text_get(node):
-    return ''.join([unicode(n.text) for n in node])
+    return ''.join([ustr(n.text) for n in node])
 
 units = [
     (re.compile('^(-?[0-9\.]+)\s*in$'), reportlab.lib.units.inch),

@@ -72,6 +72,7 @@ multi_company_default()
 class res_company(osv.osv):
     _name = "res.company"
     _description = 'Companies'
+    _order = 'name'
     _columns = {
         'name': fields.char('Company Name', size=64, required=True),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -97,13 +98,7 @@ class res_company(osv.osv):
             context = {}
         user_preference = context.get('user_preference', False)
         if user_preference:
-            # TODO: improve this as soon as the client sends the proper
-            # combination of active_id and active_model we'll be able to
-            # use active_id here to restrict to the user being modified instead
-            # of current user.
-            user_id = context.get('user_id', uid)
-
-            user = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
         return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
@@ -184,16 +179,6 @@ class res_company(osv.osv):
         except:
             return False
 
-    def _check_recursion(self, cr, uid, ids):
-        level = 100
-        while len(ids):
-            cr.execute('select distinct parent_id from res_company where id IN %s',(tuple(ids),))
-            ids = filter(None, map(lambda x:x[0], cr.fetchall()))
-            if not level:
-                return False
-            level -= 1
-        return True
-
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join(
             tools.config['root_path'], '..', 'pixmaps', 'openerp-header.png'),
@@ -203,16 +188,16 @@ class res_company(osv.osv):
         return """
 <header>
 <pageTemplate>
-    <frame id="first" x1="22.0" y1="22.0" width="1080" height="700"/>
+    <frame id="first" x1="28.0" y1="28.0" width="786" height="525"/>
     <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="25" y="725"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <drawString x="25" y="555"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="490" y="725">[[ company.partner_id.name ]]</drawString>
+        <drawString x="382" y="555">[[ company.partner_id.name ]]</drawString>
         <stroke color="#000000"/>
-        <lines>25 720 1085 720</lines>
+        <lines>25 550 818 550</lines>
     </pageGraphics>
     </pageTemplate>
 </header>"""
@@ -220,22 +205,26 @@ class res_company(osv.osv):
         return """
         <header>
         <pageTemplate>
-        <frame id="first" x1="1.3cm" y1="1.5cm" width="18.4cm" height="26.5cm"/>
+        <frame id="first" x1="28.0" y1="28.0" width="539" height="772"/>
         <pageGraphics>
         <fill color="black"/>
         <stroke color="black"/>
         <setFont name="DejaVu Sans" size="8"/>
-        <drawString x="1.3cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
+        <drawString x="1.0cm" y="28.3cm"> [[ formatLang(time.strftime("%Y-%m-%d"), date=True) ]]  [[ time.strftime("%H:%M") ]]</drawString>
         <setFont name="DejaVu Sans Bold" size="10"/>
-        <drawString x="9.8cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
+        <drawString x="9.3cm" y="28.3cm">[[ company.partner_id.name ]]</drawString>
         <stroke color="#000000"/>
-        <lines>1.3cm 28.1cm 20cm 28.1cm</lines>
+        <lines>1.0cm 28.1cm 20.1cm 28.1cm</lines>
         </pageGraphics>
         </pageTemplate>
 </header>"""
     def _get_header(self,cr,uid,ids):
         try :
-            return tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml')).read()
+            header_file = tools.file_open(os.path.join('base', 'report', 'corporate_rml_header.rml'))
+            try:
+                return header_file.read()
+            finally:
+                header_file.close()
         except:
             return """
     <header>
@@ -280,7 +269,7 @@ class res_company(osv.osv):
     }
 
     _constraints = [
-        (_check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error! You can not create recursive companies.', ['parent_id'])
     ]
 
 res_company()

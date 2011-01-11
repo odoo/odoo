@@ -283,9 +283,13 @@ class document(object):
         if not context:
             context={}
         # parses the xml template to memory
-        self.dom = etree.XML(tools.file_open(filename).read())
-        self.doc = etree.Element(self.dom.tag)
-        self.parse_tree(ids, model, context)
+        src_file = tools.file_open(filename)
+        try:
+            self.dom = etree.XML(src_file.read())
+            self.doc = etree.Element(self.dom.tag)
+            self.parse_tree(ids, model, context)
+        finally:
+            src_file.close()
 
     def close(self):
         self.doc = None

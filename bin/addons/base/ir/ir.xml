@@ -819,20 +819,17 @@
                     <filter icon="terp-stock_zoom"
                         string="Search"
                         domain="[('type', '=', 'search')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="gtk-indent"
                         string="Tree"
                         domain="[('type', '=', 'tree')]"/>
-                    <separator orientation="vertical"/>
                     <filter icon="gtk-new"
                         string="Form"
                         domain="[('type', '=','form')]"/>
-                    <newline/>
+                    <separator orientation="vertical"/>
                     <field name="name"/>
                     <field name="type"/>
                     <field name="model"/>
                     <field name="inherit_id"/>
-                    <field name="xml_id"/>
                     <newline/>
                     <group expand="0" string="Group By...">
                         <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
@@ -850,6 +847,52 @@
             <field name="help">Views allows you to personalize each view of OpenERP. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
         </record>
         <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2"/>
+
+
+        <!-- View customizations -->
+        <record id="view_view_custom_search" model="ir.ui.view">
+            <field name="name">ir.ui.view.custom.search</field>
+            <field name="model">ir.ui.view.custom</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_view_custom_form" model="ir.ui.view">
+            <field name="name">ir.ui.view.custom.form</field>
+            <field name="model">ir.ui.view.custom</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                    <separator colspan="4" string="Customized Architecture"/>
+                    <field name="arch" colspan="4" nolabel="1"/>
+                </form>
+            </field>
+        </record>
+        <record id="view_view_custom_tree" model="ir.ui.view">
+            <field name="name">ir.ui.view.custom.tree</field>
+            <field name="model">ir.ui.view.custom</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="action_ui_view_custom" model="ir.actions.act_window">
+            <field name="name">Customized Views</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.ui.view.custom</field>
+            <field name="help">Customized views are used when users reorganize the content of their dashboard views (via web client)</field>
+        </record>
+        <menuitem action="action_ui_view_custom" id="menu_action_ui_view_custom" parent="base.next_id_4"/>
+
 
         <!-- Attachment -->
         <record id="view_attachment_form" model="ir.ui.view">
@@ -940,7 +983,7 @@
                     <group expand="0" string="Group By...">
                         <filter string="Owner" icon="terp-personal" domain="[]" context="{'group_by':'create_uid'}"/>
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"  groups="base.group_extended"/>
-                        <filter string="Company" icon="terp-personal" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Company" icon="terp-gtk-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <separator orientation="vertical"/>
                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}"/>
                     </group>
@@ -1047,8 +1090,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Model Description">
-                    <field name="name"/>
                     <field name="model"/>
+                    <field name="name"/>
                     <field name="state"/>
                     <field name="osv_memory"/>
                 </tree>
@@ -1147,11 +1190,11 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Fields">
-                    <filter icon="terp-camera_test"
+                    <filter icon="terp-gnome-cpu-frequency-applet+"
                         string="Required"
                         domain="[('required', '=', True)]"/>
                     <separator orientation="vertical"/>
-                    <filter icon="terp-stock_align_left_24"
+                    <filter icon="terp-dialog-close"
                         string="Readonly"
                         domain="[('readonly', '=', True)]"/>
                     <separator orientation="vertical"/>
@@ -1267,7 +1310,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Translations">
-                    <filter icon="terp-document-new"
+                    <filter icon="terp-gdu-smart-failing"
                         string="Untranslated"
                         domain="['|',('value', '=', False),('value','=','')]"/>
                     <separator orientation="vertical"/>
@@ -1379,8 +1422,8 @@
                         <field name="action" colspan="4" />
                         <field name="icon" on_change="onchange_icon(icon)" colspan="2"/>
                         <field name="icon_pict" widget="picture" nolabel="1" colspan="2"/>
-                        <group col="4" colspan="8">
-                            <field name="web_icon" groups="base.group_extended"  />
+                        <group col="4" colspan="8" groups="base.group_extended">
+                            <field name="web_icon" groups="base.group_extended" />
                             <field name="web_icon_hover" groups="base.group_extended" />
                             <field name="web_icon_data" widget="image" groups="base.group_extended"/>
                             <field name="web_icon_hover_data" widget="image" groups="base.group_extended"/>
@@ -1412,6 +1455,7 @@
             <field name="res_model">ir.ui.menu</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_menu"/>
+            <field name="context">{'ir.ui.menu.full_list':True}</field>
             <field name="search_view_id" ref="edit_menu_access_search"/>
             <field name="help">Manage and customize the items available and displayed in your OpenERP system menu. You can delete an item by clicking on the box at the beginning of each line and then delete it through the button that appeared. Items can be assigned to specific groups in order to make them accessible to some users within the system.</field>
         </record>
@@ -1684,7 +1728,7 @@
             <field name="name">Property multi-company</field>
             <field model="ir.model" name="model_id" ref="model_ir_property"/>
             <field eval="True" name="global"/>
-            <field name="domain_force">['|',('company_id','child_of',user.company_id.id),('company_id','=',False)]</field>
+            <field name="domain_force">['|',('company_id','=',user.company_id.id),('company_id','=',False)]</field>
         </record>
 
         <!--server action view-->
@@ -1874,6 +1918,7 @@
             <field name="res_model">ir.actions.todo</field>
             <field name="view_id" ref="ir_actions_todo_tree"/>
             <field name="view_type">form</field>
+            <field name="help">The configuration wizards are used to help you configure a new instance of OpenERP. They are launched during the installation of new modules, but you can choose to restart some wizards manually from this menu.</field>
         </record>
         <menuitem id="next_id_11" name="Configuration Wizards" parent="base.menu_config" sequence="1"/>
 

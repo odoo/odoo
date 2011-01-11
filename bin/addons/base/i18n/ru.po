@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-10-18 17:46+0000\n"
-"PO-Revision-Date: 2010-11-14 07:36+0000\n"
-"Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-10 19:19+0000\n"
+"Last-Translator: serg_alban <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-11-15 04:59+0000\n"
+"X-Launchpad-Export-Date: 2011-01-11 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -36,14 +36,17 @@ msgid "Other Configuration"
 msgstr "Другие настройки"
 
 #. module: base
-#: view:res.lang:0
-msgid "%j - Day of the year as a decimal number [001,366]."
-msgstr "%j - Порядковый номер дня в году в виде десятичного числа [001,366]."
-
-#. module: base
 #: selection:ir.property,type:0
 msgid "DateTime"
 msgstr "Дата и время"
+
+#. module: base
+#: code:addons/fields.py:534
+#, python-format
+msgid ""
+"The second argument of the many2many field %s must be a SQL table !You used "
+"%s, which is not a valid SQL table name."
+msgstr ""
 
 #. module: base
 #: view:ir.values:0
@@ -56,12 +59,6 @@ msgstr "Метаданные"
 #: field:ir.ui.view.custom,arch:0
 msgid "View Architecture"
 msgstr "Просмотреть архитектуру"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not create this kind of document! (%s)"
-msgstr "Вы не можете создать документ данного типа! (%s)"
 
 #. module: base
 #: field:base.language.import,code:0
@@ -89,6 +86,16 @@ msgid "Hungarian / Magyar"
 msgstr "Венгерский / Magyar"
 
 #. module: base
+#: selection:ir.model.fields,select_level:0
+msgid "Not Searchable"
+msgstr "Поиск не производится"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (VE) / Español (VE)"
+msgstr "Испанский (VE) / Español (VE)"
+
+#. module: base
 #: field:ir.actions.server,wkf_model_id:0
 msgid "Workflow On"
 msgstr "Рабочий процесс включен"
@@ -104,9 +111,12 @@ msgid "Created Views"
 msgstr "Созданные виды"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-emblem-important"
-msgstr "terp-emblem-important"
+#: code:addons/base/ir/ir_model.py:339
+#, python-format
+msgid ""
+"You can not write in this document (%s) ! Be sure your user belongs to one "
+"of these groups: %s."
+msgstr ""
 
 #. module: base
 #: field:res.partner,ref:0
@@ -124,11 +134,10 @@ msgid "South Korea"
 msgstr "Южная Корея"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_workflow_transition_form
-#: model:ir.ui.menu,name:base.menu_workflow_transition
-#: view:workflow.activity:0
-msgid "Transitions"
-msgstr "Переходы состояний"
+#: code:addons/osv.py:133
+#, python-format
+msgid "Constraint Error"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_ir_ui_view_custom
@@ -141,14 +150,27 @@ msgid "Swaziland"
 msgstr "Свазиленд"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_CANCEL"
-msgstr "STOCK_CANCEL"
+#: code:addons/orm.py:1993
+#: code:addons/orm.py:3653
+#, python-format
+msgid "created."
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_woodsuppliers0
 msgid "Wood Suppliers"
 msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:303
+#, python-format
+msgid ""
+"Some installed modules depend on the module you plan to Uninstall :\n"
+" %s"
+msgstr ""
+"Некоторые из установленных модулей зависят от модуля, который будет удалён "
+":\n"
+"%s"
 
 #. module: base
 #: field:ir.sequence,number_increment:0
@@ -162,26 +184,26 @@ msgid "Company's Structure"
 msgstr "Структура компании"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Inuktitut / ᐃᓄᒃᑎᑐᑦ"
+msgstr "Инуктитут / ᐃᓄᒃᑎᑐᑦ"
+
+#. module: base
 #: view:res.partner:0
 msgid "Search Partner"
 msgstr "Искать партнера"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:132
 #, python-format
 msgid "\"smtp_server\" needs to be set to send mails to users"
-msgstr ""
+msgstr "Настройте \"smtp_server\" для отправки эл. почты пользователям"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:60
 #, python-format
 msgid "new"
 msgstr "новый"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GOTO_TOP"
-msgstr "STOCK_GOTO_TOP"
 
 #. module: base
 #: field:ir.actions.report.xml,multi:0
@@ -209,7 +231,7 @@ msgid "Contact Name"
 msgstr "Имя контакта"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:56
 #, python-format
 msgid ""
 "Save this document to a %s file and edit it with a specific software or a "
@@ -219,9 +241,9 @@ msgstr ""
 "ПО или текстового редактора. Кодовая таблица UTF-8."
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DELETE"
-msgstr "STOCK_DELETE"
+#: sql_constraint:res.lang:0
+msgid "The name of the language must be unique !"
+msgstr "Название языка должно быть уникальным !"
 
 #. module: base
 #: selection:res.request,state:0
@@ -234,14 +256,10 @@ msgid "Wizard Name"
 msgstr "Название мастера"
 
 #. module: base
-#: view:res.lang:0
-msgid "%y - Year without century as a decimal number [00,99]."
-msgstr "%y - Год без указания века как десятичное число [00, 99]."
-
-#. module: base
-#: selection:maintenance.contract.wizard,state:0
-msgid "Validated"
-msgstr "Проверено"
+#: code:addons/orm.py:2160
+#, python-format
+msgid "Invalid group_by"
+msgstr ""
 
 #. module: base
 #: field:res.partner,credit_limit:0
@@ -275,6 +293,7 @@ msgstr "ir.ui.view_sc"
 
 #. module: base
 #: field:res.widget.user,widget_id:0
+#: field:res.widget.wizard,widgets_list:0
 msgid "Widget"
 msgstr "Виджет"
 
@@ -325,7 +344,7 @@ msgid "Netherlands Antilles"
 msgstr "Нидерландские Антиллы"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -350,19 +369,24 @@ msgid "Bosnian / bosanski jezik"
 msgstr "Боснийский / bosanski jezik"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Serbian / Serbia"
+#: help:ir.actions.report.xml,attachment_use:0
+msgid ""
+"If you check this, then the second time the user prints with same attachment "
+"name, it returns the previous report."
+msgstr ""
+"Если Вы поставите здесь отметку, в следующий раз, когда пользователь введёт "
+"точно такое же название вложения, появится предыдущий отчёт."
+
+#. module: base
+#: code:addons/orm.py:904
+#, python-format
+msgid "The read method is not implemented on this object !"
 msgstr ""
 
 #. module: base
 #: help:res.lang,iso_code:0
 msgid "This ISO code is the name of po files to use for translations"
 msgstr "Этот код ISO является именем файлов перевода в формате po"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_REWIND"
-msgstr "STOCK_MEDIA_REWIND"
 
 #. module: base
 #: field:ir.actions.todo,note:0
@@ -386,8 +410,9 @@ msgid "Schedule Upgrade"
 msgstr "Запланировать обновление"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Mongolian / Mongolia"
+#: code:addons/orm.py:838
+#, python-format
+msgid "Key/value '%s' not found in selection field '%s'"
 msgstr ""
 
 #. module: base
@@ -403,11 +428,6 @@ msgstr ""
 #: model:res.country,name:base.pw
 msgid "Palau"
 msgstr "Палау"
-
-#. module: base
-#: view:ir.values:0
-msgid "Action To Launch"
-msgstr "Действие для запуска"
 
 #. module: base
 #: view:res.partner:0
@@ -426,11 +446,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_CUT"
-msgstr "STOCK_CUT"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.ir_action_wizard
 #: view:ir.actions.wizard:0
 #: model:ir.ui.menu,name:base.menu_ir_action_wizard
@@ -443,7 +458,7 @@ msgid "Miscellaneous Suppliers"
 msgstr "Прочие поставщики"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:216
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Названия пользовательских полей должны начинаться с 'x_'  !"
@@ -454,9 +469,9 @@ msgid "Select the Action Window, Report, Wizard to be executed."
 msgstr "Выберите Действие, Отчёт или Мастер для выполнения."
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gtk-jump-to-ltr"
-msgstr "terp-gtk-jump-to-ltr"
+#: view:res.config.users:0
+msgid "New User"
+msgstr "Новый пользователь"
 
 #. module: base
 #: view:base.language.export:0
@@ -480,11 +495,6 @@ msgid "Trigger Expression"
 msgstr "Выражение триггера"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Korean / Korea, Democratic Peoples Republic of"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.jo
 msgid "Jordan"
 msgstr "Иордания"
@@ -500,9 +510,10 @@ msgid "Eritrea"
 msgstr "Эритрия"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Bulgarian / български"
-msgstr "Болгарский / български"
+#: view:res.config:0
+#: view:res.config.installer:0
+msgid "description"
+msgstr "описание"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_action_rule
@@ -525,11 +536,6 @@ msgid "Event Type"
 msgstr "Тип события"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DIALOG_ERROR"
-msgstr "STOCK_DIALOG_ERROR"
-
-#. module: base
 #: view:base.language.export:0
 msgid ""
 "OpenERP translations (core, modules, clients) are managed through "
@@ -543,9 +549,9 @@ msgid "Partner Form"
 msgstr "Форма собственности"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_INDEX"
-msgstr "STOCK_INDEX"
+#: selection:base.language.install,lang:0
+msgid "Swedish / svenska"
+msgstr "Шведский / svenska"
 
 #. module: base
 #: model:res.country,name:base.rs
@@ -581,14 +587,19 @@ msgid "res.config.users"
 msgstr "res.config.users"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Albanian / Shqip"
+msgstr "Албанский / Shqip"
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_crm_config_opportunity
+msgid "Opportunities"
+msgstr "Сделки"
+
+#. module: base
 #: model:ir.model,name:base.model_base_language_export
 msgid "base.language.export"
 msgstr "base.language.export"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DIALOG_QUESTION"
-msgstr "STOCK_DIALOG_QUESTION"
 
 #. module: base
 #: model:res.country,name:base.pg
@@ -599,11 +610,6 @@ msgstr "Папуа Новая Гвинея"
 #: help:ir.actions.report.xml,report_type:0
 msgid "Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."
 msgstr "Тип отчета: pdf, html, raw, sxw, odt, html2html, mako2html, ..."
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-folder-yellow"
-msgstr "terp-folder-yellow"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_4
@@ -657,6 +663,11 @@ msgstr ""
 "экранов и меню"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (UY) / Español (UY)"
+msgstr ""
+
+#. module: base
 #: field:res.partner,mobile:0
 #: field:res.partner.address,mobile:0
 msgid "Mobile"
@@ -672,18 +683,6 @@ msgstr "Оман"
 #: model:ir.model,name:base.model_res_payterm
 msgid "Payment term"
 msgstr "Условия платежа"
-
-#. module: base
-#: code:addons/base/res/res_config.py:0
-#, python-format
-msgid ""
-"\n"
-"\n"
-"This addon is already installed on your system"
-msgstr ""
-"\n"
-"\n"
-"Это дополнение/модуль уже установлено в вашей системе"
 
 #. module: base
 #: model:res.country,name:base.nu
@@ -709,6 +708,12 @@ msgid ""
 msgstr "Установит язык интерфейса пользователя, если есть переводы"
 
 #. module: base
+#: code:addons/orm.py:1043
+#, python-format
+msgid "The unlink method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
 #: view:wizard.ir.model.menu.create:0
 msgid "Create Menu"
@@ -720,15 +725,10 @@ msgid "India"
 msgstr "Индия"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract_module
-msgid "maintenance contract modules"
-msgstr "модули обслуживания договоров"
-
-#. module: base
 #: model:ir.actions.act_window,name:base.res_request_link-act
 #: model:ir.ui.menu,name:base.menu_res_request_link_act
 msgid "Request Reference Types"
-msgstr ""
+msgstr "Типы ссылок в запросе"
 
 #. module: base
 #: view:ir.values:0
@@ -745,6 +745,11 @@ msgstr "Княжество Андорра"
 #: field:res.partner.category,child_ids:0
 msgid "Child Categories"
 msgstr "Подчиненные категории"
+
+#. module: base
+#: model:ir.model,name:base.model_ir_config_parameter
+msgid "ir.config_parameter"
+msgstr "ir.config_parameter"
 
 #. module: base
 #: selection:base.language.export,format:0
@@ -773,9 +778,12 @@ msgid "Type"
 msgstr "Тип"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_FILE"
-msgstr "STOCK_FILE"
+#: code:addons/orm.py:210
+#, python-format
+msgid ""
+"Language with code \"%s\" is not defined in your system !\n"
+"Define it through the Administration menu."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gu
@@ -783,24 +791,9 @@ msgid "Guam (USA)"
 msgstr "Территория Гуам (США)"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_EDIT"
-msgstr "STOCK_EDIT"
-
-#. module: base
 #: model:ir.ui.menu,name:base.menu_hr_project
 msgid "Human Resources Dashboard"
 msgstr "Инф. панель отдела кадров"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GO_DOWN"
-msgstr "STOCK_GO_DOWN"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_OK"
-msgstr "STOCK_OK"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -819,6 +812,19 @@ msgid "Cayman Islands"
 msgstr "Каймановы острова"
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_workflow_transition_form
+#: model:ir.ui.menu,name:base.menu_workflow_transition
+#: view:workflow.activity:0
+msgid "Transitions"
+msgstr "Переходы состояний"
+
+#. module: base
+#: code:addons/orm.py:4020
+#, python-format
+msgid "Record #%d of %s not found, cannot copy!"
+msgstr ""
+
+#. module: base
 #: field:ir.module.module,contributors:0
 msgid "Contributors"
 msgstr "Участники"
@@ -827,6 +833,12 @@ msgstr "Участники"
 #: selection:ir.property,type:0
 msgid "Char"
 msgstr "Символ"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_form
+#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract
+msgid "Contracts"
+msgstr "Договоры"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -841,7 +853,7 @@ msgstr "Уганда"
 #. module: base
 #: field:ir.model.access,perm_unlink:0
 msgid "Delete Access"
-msgstr "Удалить доступ"
+msgstr "Доступ на удаление"
 
 #. module: base
 #: model:res.country,name:base.ne
@@ -864,6 +876,11 @@ msgid ""
 "To improve or expand the official translations, you should use directly "
 "Lauchpad's web interface (Rosetta). If you need to perform mass translation, "
 "Launchpad also allows uploading full .po files at once"
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (GT) / Español (GT)"
 msgstr ""
 
 #. module: base
@@ -899,11 +916,6 @@ msgid "Module Name"
 msgstr "Название модуля"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_JUSTIFY_FILL"
-msgstr "STOCK_JUSTIFY_FILL"
-
-#. module: base
 #: model:res.country,name:base.mh
 msgid "Marshall Islands"
 msgstr "Маршалловы Острова"
@@ -918,6 +930,16 @@ msgstr "Гаити"
 #: selection:ir.ui.view,type:0
 msgid "Search"
 msgstr "Найти"
+
+#. module: base
+#: code:addons/osv.py:136
+#, python-format
+msgid ""
+"The operation cannot be completed, probably due to the following:\n"
+"- deletion: you may be trying to delete a record while other records still "
+"reference it\n"
+"- creation/update: a mandatory field is not correctly set"
+msgstr ""
 
 #. module: base
 #: view:ir.rule:0
@@ -958,7 +980,6 @@ msgstr "Особенности"
 #. module: base
 #: view:ir.module.module:0
 #: report:ir.module.reference.graph:0
-#: field:maintenance.contract.module,version:0
 msgid "Version"
 msgstr "Версия"
 
@@ -975,20 +996,16 @@ msgid "ir.exports"
 msgstr "ir.exports"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MISSING_IMAGE"
-msgstr "STOCK_MISSING_IMAGE"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_REMOVE"
-msgstr "STOCK_REMOVE"
-
-#. module: base
-#: code:addons/base/module/wizard/base_update_translations.py:0
+#: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "No language with code \"%s\" exists"
 msgstr "Нет языка с кодом \"%s\""
+
+#. module: base
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
+#, python-format
+msgid "Error during communication with the publisher warranty server."
+msgstr ""
 
 #. module: base
 #: help:ir.actions.server,email:0
@@ -1001,9 +1018,28 @@ msgstr ""
 "поле `object.invoice_address_id.email` будет содержать соответствующий адрес."
 
 #. module: base
+#: view:res.lang:0
+msgid "%Y - Year with century."
+msgstr "%Y - год полностью"
+
+#. module: base
 #: report:ir.module.reference.graph:0
 msgid "-"
 msgstr "-"
+
+#. module: base
+#: view:publisher_warranty.contract.wizard:0
+msgid ""
+"This wizard helps you register a publisher warranty contract in your OpenERP "
+"system. After the contract has been registered, you will be able to send "
+"issues directly to OpenERP."
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:1744
+#, python-format
+msgid "The search method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: view:wizard.ir.model.menu.create:0
@@ -1032,7 +1068,7 @@ msgstr "Строки экспорта"
 msgid ""
 "If you check this box, your customized translations will be overwritten and "
 "replaced by the official ones."
-msgstr ""
+msgstr "Если отмечено, ваши переводы будут заменены на официальные."
 
 #. module: base
 #: field:ir.actions.report.xml,report_rml:0
@@ -1052,7 +1088,7 @@ msgid "On Create"
 msgstr "При создании"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:461
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1061,11 +1097,6 @@ msgstr ""
 "\"%s\" содержит слишком много точек. XML идентификаторы не должны содержать "
 "точки! Они используются для ссылки на данные в других модулях, например, "
 "module.reference_id"
-
-#. module: base
-#: field:ir.default,value:0
-msgid "Default Value"
-msgstr "Значение по умолчанию"
 
 #. module: base
 #: field:partner.sms.send,user:0
@@ -1082,12 +1113,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: view:maintenance.contract:0
-#: field:maintenance.contract,module_ids:0
-msgid "Covered Modules"
-msgstr "Затронутые модули"
-
-#. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
 msgstr "Область"
@@ -1096,21 +1121,6 @@ msgstr "Область"
 #: selection:ir.property,type:0
 msgid "Float"
 msgstr "Число с плавающей точкой"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_COPY"
-msgstr "STOCK_COPY"
-
-#. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"You try to install the module '%s' that depends on the module:'%s'.\n"
-"But this module is not available in your system."
-msgstr ""
-"Вы пытаетесь установить модуль '%s', зависящий от модуля '%s',\n"
-"но последний отсутствует в вашей системе."
 
 #. module: base
 #: model:ir.model,name:base.model_res_request_link
@@ -1156,6 +1166,18 @@ msgid ""
 "%(user_signature)s\n"
 "%(company_name)s"
 msgstr ""
+"Дата : %(date)s\n"
+"\n"
+"Уважаемый(ая) %(partner_name)s,\n"
+"\n"
+"Пожалуйста, просмотрите напоминание о неоплаченных счетах в приложении к "
+"письму.\n"
+"Всего на сумму: %(followup_amount).2f %(company_currency)s\n"
+"\n"
+"Спасибо,\n"
+"--\n"
+"%(user_signature)s\n"
+"%(company_name)s"
 
 #. module: base
 #: field:res.currency,accuracy:0
@@ -1163,9 +1185,9 @@ msgid "Computational Accuracy"
 msgstr "Валюта расчетов"
 
 #. module: base
-#: model:res.country,name:base.kg
-msgid "Kyrgyz Republic (Kyrgyzstan)"
-msgstr "Киргизия (Кыргызстан)"
+#: selection:base.language.install,lang:0
+msgid "Sinhalese / සිංහල"
+msgstr "Сингальский / සිංහල"
 
 #. module: base
 #: model:ir.model,name:base.model_wizard_ir_model_menu_create_line
@@ -1183,15 +1205,15 @@ msgid "Day: %(day)s"
 msgstr "Дней: %(day)"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not read this document! (%s)"
-msgstr "Вы не можете читать данный документ!  (%s)"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_FIND_AND_REPLACE"
-msgstr "STOCK_FIND_AND_REPLACE"
+#: model:ir.actions.act_window,help:base.open_module_tree
+msgid ""
+"List all certified modules available to configure your OpenERP. Modules that "
+"are installed are flagged as such. You can search for a specific module "
+"using the name or the description of the module. You do not need to install "
+"modules one by one, you can install many at the same time by clicking on the "
+"schedule button in this list. Then, apply the schedule upgrade from Action "
+"menu once for all the ones you have scheduled for installation."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mv
@@ -1214,16 +1236,6 @@ msgid "Days"
 msgstr "Дней"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-calendar"
-msgstr "terp-calendar"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_YES"
-msgstr "STOCK_YES"
-
-#. module: base
 #: help:ir.actions.server,condition:0
 msgid ""
 "Condition that is to be tested before action is executed, e.g. "
@@ -1233,7 +1245,8 @@ msgstr ""
 "object.list_price> object.cost_price"
 
 #. module: base
-#: code:addons/base/res/res_company.py:0
+#: code:addons/base/res/partner/partner.py:155
+#: code:addons/base/res/res_company.py:66
 #, python-format
 msgid " (copy)"
 msgstr " (копия)"
@@ -1251,10 +1264,15 @@ msgid "Partners"
 msgstr "Партнеры"
 
 #. module: base
+#: field:res.partner.category,parent_left:0
+msgid "Left parent"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.res_widget_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_act_window
 msgid "Homepage Widgets"
-msgstr ""
+msgstr "Виджеты домашней страницы"
 
 #. module: base
 #: help:ir.actions.server,message:0
@@ -1308,15 +1326,10 @@ msgid "Formula"
 msgstr "Формула"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:373
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Невозможно удалить суперпользователя!"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_JUSTIFY_LEFT"
-msgstr "STOCK_JUSTIFY_LEFT"
 
 #. module: base
 #: model:res.country,name:base.mw
@@ -1324,7 +1337,8 @@ msgid "Malawi"
 msgstr "Малави"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:51
+#: code:addons/base/res/res_user.py:397
 #, python-format
 msgid "%s (copy)"
 msgstr "%s (копия)"
@@ -1356,22 +1370,6 @@ msgstr ""
 "воскресенью, входят в неделю номер 0."
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid ""
-"Model %s Does not Exist !\" % vals['relation']))\n"
-"\n"
-"            if self.pool.get(vals['model']):\n"
-"                self.pool.get(vals['model']).__init__(self.pool, cr)\n"
-"                #Added context to _auto_init for special treatment to custom "
-"field for select_level\n"
-"                ctx = context.copy()\n"
-"                "
-"ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.ge"
-"t('select_level','0"
-msgstr ""
-
-#. module: base
 #: view:ir.ui.view:0
 msgid "Advanced"
 msgstr "Расширенный"
@@ -1391,18 +1389,7 @@ msgid "Tree"
 msgstr "В виде дерева"
 
 #. module: base
-#: view:maintenance.contract.wizard:0
-msgid "Could you check your contract information ?"
-msgstr "Вы не могли бы проверить информацию о вашем договоре?"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_CLEAR"
-msgstr "STOCK_CLEAR"
-
-#. module: base
 #: help:res.config.users,password:0
-#: help:res.users,password:0
 msgid ""
 "Keep empty if you don't want the user to be able to connect on the system."
 msgstr ""
@@ -1430,10 +1417,16 @@ msgid ""
 "When using CSV format, please also check that the first line of your file is "
 "one of the following:"
 msgstr ""
+"При использовании формата CSV, пожалуйста, убедитесь, что первая строка "
+"вашего файла одна из следующих:"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.res_log_act_window
-#: model:ir.ui.menu,name:base.menu_res_log_act_window
+#: code:addons/fields.py:114
+#, python-format
+msgid "Not implemented search_memory method !"
+msgstr ""
+
+#. module: base
 #: view:res.log:0
 msgid "Logs"
 msgstr "Логи"
@@ -1444,21 +1437,23 @@ msgid "Spanish / Español"
 msgstr "Испанский / Español"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Korean (KP) / 한국어 (KP)"
+msgstr ""
+
+#. module: base
 #: view:base.module.update:0
 msgid ""
 "This wizard will scan all module repositories on the server side to detect "
 "newly added modules as well as any change to existing modules."
 msgstr ""
+"Этот помощник сканирует все хранилища модулей  на сервере для определения "
+"новых модулей и изменений в существующих модулях."
 
 #. module: base
 #: field:res.company,logo:0
 msgid "Logo"
 msgstr "Логотип"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_PROPERTIES"
-msgstr "STOCK_PROPERTIES"
 
 #. module: base
 #: view:res.partner.address:0
@@ -1482,7 +1477,7 @@ msgid "Bahamas"
 msgstr "Багамские острова"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid ""
 "Couldn't generate the next id because some partners have an alphabetic id !"
@@ -1506,6 +1501,12 @@ msgid "Number of modules updated"
 msgstr "Количество обновленных модулей"
 
 #. module: base
+#: code:addons/fields.py:100
+#, python-format
+msgid "Not implemented set_memory method !"
+msgstr ""
+
+#. module: base
 #: view:workflow.activity:0
 msgid "Workflow Activity"
 msgstr "Активность рабочего процесса"
@@ -1518,9 +1519,16 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-stock_align_left_24"
-msgstr "terp-stock_align_left_24"
+#: field:change.user.password,new_password:0
+msgid "New Password"
+msgstr "Новый пароль"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_ui_view
+msgid ""
+"Views allows you to personalize each view of OpenERP. You can add new "
+"fields, move fields, rename them or delete the ones that you do not need."
+msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window,groups_id:0
@@ -1542,6 +1550,19 @@ msgstr "terp-stock_align_left_24"
 #: field:res.users,groups_id:0
 msgid "Groups"
 msgstr "Группы"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (CL) / Español (CL)"
+msgstr ""
+
+#. module: base
+#: view:res.config.users:0
+msgid ""
+"Create additional users and assign them groups that will allow them to have "
+"access to selected functionalities within the system. Click on 'Done' if you "
+"do not wish to add more users at this stage, you can always do this later."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -1566,6 +1587,12 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/orm.py:3147
+#, python-format
+msgid "A document was modified since you last viewed it (%s:%d)"
+msgstr ""
+
+#. module: base
 #: view:workflow:0
 msgid "Workflow Editor"
 msgstr "Редактор рабочего процесса"
@@ -1575,11 +1602,6 @@ msgstr "Редактор рабочего процесса"
 #: selection:ir.module.module.dependency,state:0
 msgid "To be removed"
 msgstr "Для удаления"
-
-#. module: base
-#: view:maintenance.contract.wizard:0
-msgid "Maintenance contract added !"
-msgstr "Добавлен договор на обслуживание !"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_sequence
@@ -1598,24 +1620,16 @@ msgstr ""
 "`object.order_line`."
 
 #. module: base
+#: field:ir.property,fields_id:0
 #: selection:ir.translation,type:0
-msgid "Wizard Field"
-msgstr "Поле мастера"
+#: field:multi_company.default,field_id:0
+msgid "Field"
+msgstr "Поле"
 
 #. module: base
 #: view:ir.rule:0
 msgid "Groups (no group = global)"
 msgstr "Группы (нет групп = глобально)"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SELECT_COLOR"
-msgstr "STOCK_SELECT_COLOR"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_NO"
-msgstr "STOCK_NO"
 
 #. module: base
 #: selection:res.config.users,view:0
@@ -1635,6 +1649,11 @@ msgid "Invoice"
 msgstr "Счет"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Portugese (BR) / Português (BR)"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bb
 msgid "Barbados"
 msgstr "Барбадос"
@@ -1645,7 +1664,8 @@ msgid "Madagascar"
 msgstr "Мадагаскар"
 
 #. module: base
-#: constraint:ir.model:0
+#: code:addons/base/ir/ir_model.py:94
+#, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
 msgstr ""
@@ -1675,15 +1695,9 @@ msgid "Original View"
 msgstr "Исходный вид"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-camera_test"
-msgstr "terp-camera_test"
-
-#. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "Make sure you have no users linked with the group(s)!"
-msgstr "Убедитесь, что нет пользователей связанных с группой !"
+#: view:ir.values:0
+msgid "Action To Launch"
+msgstr "Действие для запуска"
 
 #. module: base
 #: field:ir.actions.url,target:0
@@ -1740,12 +1754,6 @@ msgstr "Адрес эл. почты"
 #: selection:base.language.install,lang:0
 msgid "French (BE) / Français (BE)"
 msgstr "Французский (Бельгия) / Français (BE)"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not write in this document! (%s)"
-msgstr "Вы не можете записывать в данный документ! (%s)"
 
 #. module: base
 #: view:ir.actions.server:0
@@ -1808,7 +1816,7 @@ msgstr "Литва"
 #: model:ir.model,name:base.model_partner_clear_ids
 #: view:partner.clear.ids:0
 msgid "Clear IDs"
-msgstr ""
+msgstr "Очистить ID"
 
 #. module: base
 #: help:ir.cron,model:0
@@ -1816,19 +1824,19 @@ msgid ""
 "Name of object whose function will be called when this scheduler will run. "
 "e.g. 'res.partener'"
 msgstr ""
+"Название объекта, функция которого будет вызвана, когда этот планировщик "
+"будет запущен. Прим. 'res.partener'"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/orm.py:1040
 #, python-format
-msgid ""
-"You Can Not Load Translation For language Due To Invalid Language/Country "
-"Code"
+msgid "The perm_read method is not implemented on this object !"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_PRINT_PREVIEW"
-msgstr "STOCK_PRINT_PREVIEW"
+#: view:res.lang:0
+msgid "%y - Year without century [00,99]."
+msgstr "%y - год кратко [00,99]."
 
 #. module: base
 #: model:res.country,name:base.si
@@ -1836,9 +1844,26 @@ msgid "Slovenia"
 msgstr "Словения"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-stock_format-default"
-msgstr "terp-stock_format-default"
+#: model:res.country,name:base.pk
+msgid "Pakistan"
+msgstr "Пакистан"
+
+#. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Invalid Object Architecture!"
+msgstr ""
+
+#. module: base
+#: model:ir.ui.menu,name:base.menu_email_gateway_form
+msgid "Messages"
+msgstr "Сообщения"
+
+#. module: base
+#: code:addons/base/module/wizard/base_update_translations.py:38
+#, python-format
+msgid "Error!"
+msgstr "Ошибка !"
 
 #. module: base
 #: view:res.lang:0
@@ -1856,7 +1881,7 @@ msgid "Company where the user is connected"
 msgstr "Компания куда пользователь подключен"
 
 #. module: base
-#: field:maintenance.contract,date_stop:0
+#: field:publisher_warranty.contract,date_stop:0
 msgid "Ending Date"
 msgstr "Дата окончания"
 
@@ -1864,6 +1889,22 @@ msgstr "Дата окончания"
 #: model:res.country,name:base.nz
 msgid "New Zealand"
 msgstr "Новая Зеландия"
+
+#. module: base
+#: code:addons/orm.py:3366
+#, python-format
+msgid ""
+"One of the records you are trying to modify has already been deleted "
+"(Document type: %s)."
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_country
+msgid ""
+"Display and manage the list of all countries that can be assigned to your "
+"partner records. You can create or delete countries to make sure the ones "
+"you are working on will be maintained."
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
@@ -1876,14 +1917,9 @@ msgid "Norfolk Island"
 msgstr "Остров Норфолк"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_PLAY"
-msgstr "STOCK_MEDIA_PLAY"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_OPEN"
-msgstr "STOCK_OPEN"
+#: selection:base.language.install,lang:0
+msgid "Korean (KR) / 한국어 (KR)"
+msgstr ""
 
 #. module: base
 #: field:ir.actions.server,action_id:0
@@ -1902,20 +1938,9 @@ msgid "Error! You can not create recursive companies."
 msgstr "Ошибка! Невозможно создать рекурсивную компанию."
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-go-home"
-msgstr "terp-go-home"
-
-#. module: base
-#: selection:maintenance.contract,state:0
+#: selection:publisher_warranty.contract,state:0
 msgid "Valid"
 msgstr "Действительный"
-
-#. module: base
-#: code:addons/base/ir/ir_model.py:0
-#, python-format
-msgid "You can not delete this document! (%s)"
-msgstr "Вы не можете удалить данный документ! (%s)"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -1923,7 +1948,7 @@ msgid "XSL"
 msgstr "XSL"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:322
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
 msgstr "Невозможно обновить модуль '%s'. Он не установлен."
@@ -1934,9 +1959,9 @@ msgid "Cuba"
 msgstr "Куба"
 
 #. module: base
-#: view:res.lang:0
-msgid "%S - Second as a decimal number [00,61]."
-msgstr "%S - Секунды как десятичное число [00, 59]."
+#: model:res.widget,title:base.facebook_widget
+msgid "Facebook"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.am
@@ -1950,14 +1975,14 @@ msgid "Configuration Parameters"
 msgstr "Конфигурационные параметры:"
 
 #. module: base
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "Неправильные параметры"
+
+#. module: base
 #: model:res.country,name:base.se
 msgid "Sweden"
 msgstr "Швеция"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-document-new"
-msgstr "terp-document-new"
 
 #. module: base
 #: selection:ir.actions.act_window.view,view_mode:0
@@ -1978,21 +2003,6 @@ msgid "Bank Account Type"
 msgstr "Тип банковского счета"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-project"
-msgstr "terp-project"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-personal+"
-msgstr "terp-personal+"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-personal-"
-msgstr "terp-personal-"
-
-#. module: base
 #: field:base.language.export,config_logo:0
 #: field:base.language.import,config_logo:0
 #: field:base.language.install,config_logo:0
@@ -2001,6 +2011,7 @@ msgstr "terp-personal-"
 #: field:base.update.translations,config_logo:0
 #: field:ir.actions.configuration.wizard,config_logo:0
 #: field:ir.wizard.screen,config_logo:0
+#: field:publisher_warranty.contract.wizard,config_logo:0
 #: field:res.config,config_logo:0
 #: field:res.config.installer,config_logo:0
 #: field:res.config.users,config_logo:0
@@ -2012,6 +2023,11 @@ msgstr "Изображение"
 #: view:ir.actions.server:0
 msgid "Iteration Action Configuration"
 msgstr "Настройка повторяющегося действия"
+
+#. module: base
+#: selection:publisher_warranty.contract,state:0
+msgid "Canceled"
+msgstr "Отменен"
 
 #. module: base
 #: model:res.country,name:base.at
@@ -2049,19 +2065,23 @@ msgid "HR sector"
 msgstr "Отдел кадров"
 
 #. module: base
+#: code:addons/orm.py:3817
+#, python-format
+msgid ""
+"Invalid \"order\" specified. A valid \"order\" specification is a comma-"
+"separated list of valid field names (optionally followed by asc/desc for the "
+"direction)"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
 msgid "Module dependency"
 msgstr "Зависимость модуля"
 
 #. module: base
-#: selection:maintenance.contract.wizard,state:0
+#: selection:publisher_warranty.contract.wizard,state:0
 msgid "Draft"
 msgstr "Черновик"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_JUSTIFY_CENTER"
-msgstr "STOCK_JUSTIFY_CENTER"
 
 #. module: base
 #: selection:res.config.users,view:0
@@ -2069,6 +2089,14 @@ msgstr "STOCK_JUSTIFY_CENTER"
 #: selection:res.users,view:0
 msgid "Extended"
 msgstr "Расширенный"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_partner_title_contact
+msgid ""
+"Manage the contact titles you want to have available in your system and the "
+"way you want to print them in letters and other documents. Some example: "
+"Mr., Mrs. "
+msgstr ""
 
 #. module: base
 #: field:res.company,rml_footer1:0
@@ -2099,6 +2127,11 @@ msgid "Main Company"
 msgstr "Головная компания"
 
 #. module: base
+#: field:ir.ui.menu,web_icon_hover:0
+msgid "Web Icon File (hover)"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.server:0
 msgid ""
 "If you use a formula type, use a python expression using the variable "
@@ -2126,6 +2159,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (DO) / Español (DO)"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_workflow_activity
 msgid "workflow.activity"
 msgstr "workflow.activity"
@@ -2141,19 +2179,19 @@ msgid "Uruguay"
 msgstr "Уругвай"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Finnish / Suomi"
+msgstr ""
+
+#. module: base
 #: field:ir.rule,perm_write:0
 msgid "Apply For Write"
-msgstr ""
+msgstr "Применить для записи"
 
 #. module: base
 #: field:ir.sequence,prefix:0
 msgid "Prefix"
 msgstr "Префикс"
-
-#. module: base
-#: field:ir.actions.server,loop_action:0
-msgid "Loop Action"
-msgstr "Повторное действие"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -2171,14 +2209,20 @@ msgid "Fields Mapping"
 msgstr "Соответствие полей"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Portugese / Português"
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,name:base.res_partner_title_sir
 msgid "Sir"
 msgstr "Г-н"
 
 #. module: base
-#: view:base.module.import:0
-msgid "Select module package to import (.zip file):"
-msgstr "Выберите пакет модуля для импорта (.zip файл)"
+#: code:addons/orm.py:1622
+#, python-format
+msgid "There is no view of type '%s' defined for the structure!"
+msgstr ""
 
 #. module: base
 #: field:ir.default,ref_id:0
@@ -2186,9 +2230,10 @@ msgid "ID Ref."
 msgstr "Ссылка на ID"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "French / Français"
-msgstr "Французский / Français"
+#: model:ir.actions.server,name:base.action_start_configurator
+#: model:ir.ui.menu,name:base.menu_view_base_module_configuration
+msgid "Start Configuration"
+msgstr "Начать настройку"
 
 #. module: base
 #: model:res.country,name:base.mt
@@ -2228,9 +2273,9 @@ msgid "Instances"
 msgstr "Копии"
 
 #. module: base
-#: help:res.partner,employee:0
-msgid "Check this box if the partner is an Employee."
-msgstr "Отметьте, если партнер является сотрудником"
+#: model:res.country,name:base.aq
+msgid "Antarctica"
+msgstr "Антарктида"
 
 #. module: base
 #: field:ir.actions.report.xml,auto:0
@@ -2253,7 +2298,7 @@ msgid "Separator Format"
 msgstr "Формат разделителя"
 
 #. module: base
-#: selection:maintenance.contract.wizard,state:0
+#: selection:publisher_warranty.contract,state:0
 msgid "Unvalidated"
 msgstr "Непроверено"
 
@@ -2275,21 +2320,10 @@ msgid "Mayotte"
 msgstr "Майотта"
 
 #. module: base
-#: code:addons/base/maintenance/maintenance.py:0
-#, python-format
-msgid "Unable to find a valid contract"
-msgstr "Невозможно найти действующий договор"
-
-#. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:593
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr "Пожалуйста, укажите действие для запуска!"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_JUSTIFY_RIGHT"
-msgstr "STOCK_JUSTIFY_RIGHT"
 
 #. module: base
 #: view:res.payterm:0
@@ -2311,6 +2345,12 @@ msgid "Filters"
 msgstr "Фильтры"
 
 #. module: base
+#: code:addons/orm.py:758
+#, python-format
+msgid "Please check that all your lines have %d columns."
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.ir_cron_act
 #: view:ir.cron:0
 #: model:ir.ui.menu,name:base.menu_ir_cron_act
@@ -2330,17 +2370,13 @@ msgid "If not set, acts as a default value for new resources"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SAVE"
-msgstr "STOCK_SAVE"
+#: code:addons/orm.py:3448
+#, python-format
+msgid "Recursivity Detected."
+msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-account"
-msgstr "terp-account"
-
-#. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:262
 #, python-format
 msgid "Recursion error in modules dependencies !"
 msgstr "Ошибка рекурсии в зависимостях модулей!"
@@ -2368,14 +2404,19 @@ msgstr ""
 "является плательщиком НДС. Используется для расчета НДС."
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Ukrainian / украї́нська мо́ва"
-msgstr "Украинский / украї́нська мо́ва"
+#: model:ir.model,name:base.model_maintenance_contract
+msgid "maintenance.contract"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ru
 msgid "Russian Federation"
 msgstr "Российская Федерация"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Urdu / اردو"
+msgstr ""
 
 #. module: base
 #: field:res.company,name:0
@@ -2391,7 +2432,7 @@ msgstr "Страны"
 #. module: base
 #: selection:ir.translation,type:0
 msgid "RML  (deprecated - use Report)"
-msgstr ""
+msgstr "RML (устаревший - используйте Отчет)"
 
 #. module: base
 #: view:ir.rule:0
@@ -2435,6 +2476,16 @@ msgid "%x - Appropriate date representation."
 msgstr "%x - Подходящий формат даты."
 
 #. module: base
+#: model:ir.model,name:base.model_change_user_password
+msgid "change.user.password"
+msgstr ""
+
+#. module: base
+#: view:res.lang:0
+msgid "%d - Day of the month [01,31]."
+msgstr "%d - день месяца [01,31]."
+
+#. module: base
 #: model:res.country,name:base.tj
 msgid "Tajikistan"
 msgstr "Таджикистан"
@@ -2450,20 +2501,33 @@ msgid "M."
 msgstr ""
 
 #. module: base
-#: model:ir.model,name:base.model_ir_actions_wizard
-#: selection:ir.ui.menu,action:0
-msgid "ir.actions.wizard"
-msgstr "ir.actions.wizard"
+#: code:addons/base/module/module.py:429
+#, python-format
+msgid ""
+"Can not create the module file:\n"
+" %s"
+msgstr ""
+"Невозможно создать файл модуля:\n"
+" %s"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-mail-forward"
-msgstr "terp-mail-forward"
+#: code:addons/orm.py:2973
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: read, Document type: %s)."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.nr
 msgid "Nauru"
 msgstr "Науру"
+
+#. module: base
+#: code:addons/base/module/module.py:200
+#, python-format
+msgid "The certificate ID of the module must be unique !"
+msgstr "Идентификатор сертификата модуля должен быть уникальным !"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_property
@@ -2485,11 +2549,6 @@ msgid "Montenegro"
 msgstr "Черногория"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_QUIT"
-msgstr "STOCK_QUIT"
-
-#. module: base
 #: view:ir.cron:0
 msgid "Technical Data"
 msgstr "Технические данные"
@@ -2499,6 +2558,14 @@ msgstr "Технические данные"
 #: field:res.partner,category_id:0
 msgid "Categories"
 msgstr "Категории"
+
+#. module: base
+#: view:base.language.import:0
+msgid ""
+"If you need another language than the official ones available, you can "
+"import a language pack from here. Other OpenERP languages than the official "
+"ones can be found on launchpad."
+msgstr ""
 
 #. module: base
 #: view:ir.module.module:0
@@ -2513,16 +2580,6 @@ msgid "Libya"
 msgstr "Ливия"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-purchase"
-msgstr "terp-purchase"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-stock_effects-object-colorize"
-msgstr "terp-stock_effects-object-colorize"
-
-#. module: base
 #: model:res.country,name:base.cf
 msgid "Central African Republic"
 msgstr "Центрально-Африканская Республика"
@@ -2533,20 +2590,10 @@ msgid "Liechtenstein"
 msgstr "Лихтенштейн"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-dolar_ok!"
-msgstr "terp-dolar_ok!"
-
-#. module: base
 #: model:ir.model,name:base.model_partner_sms_send
 #: view:partner.sms.send:0
 msgid "Send SMS"
 msgstr "Отправить SMS"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Hindi / India"
-msgstr ""
 
 #. module: base
 #: field:res.partner,ean13:0
@@ -2554,14 +2601,21 @@ msgid "EAN13"
 msgstr "Штрих-код 13"
 
 #. module: base
+#: code:addons/orm.py:1622
+#, python-format
+msgid "Invalid Architecture!"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.pt
 msgid "Portugal"
 msgstr "Португалия"
 
 #. module: base
-#: selection:maintenance.contract,state:0
-msgid "Unvalid"
-msgstr "Недействителен"
+#: sql_constraint:ir.model.data:0
+msgid ""
+"You cannot have multiple records with the same id for the same module !"
+msgstr ""
 
 #. module: base
 #: field:ir.module.module,certificate:0
@@ -2609,7 +2663,7 @@ msgid "Ecuador"
 msgstr "Эквадор"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:52
 #, python-format
 msgid ""
 "Save this document to a .CSV file and open it with your favourite "
@@ -2654,6 +2708,11 @@ msgid "Base Field"
 msgstr "Базовое поле"
 
 #. module: base
+#: view:publisher_warranty.contract:0
+msgid "Validate"
+msgstr "Утвердить"
+
+#. module: base
 #: field:ir.actions.todo,restart:0
 msgid "Restart"
 msgstr "Перезапустить"
@@ -2674,6 +2733,12 @@ msgstr "Мастер"
 #: view:ir.cron:0
 msgid "Action to Trigger"
 msgstr "Действие триггера"
+
+#. module: base
+#: code:addons/base/res/res_user.py:136
+#, python-format
+msgid "\"email_from\" needs to be set to send welcome mails to users"
+msgstr ""
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -2702,11 +2767,6 @@ msgstr "Фильтры по умолчанию"
 #: field:res.request.history,name:0
 msgid "Summary"
 msgstr "Обзор"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-mail-replied"
-msgstr "erp-mail-replied"
 
 #. module: base
 #: field:multi_company.default,expression:0
@@ -2747,7 +2807,7 @@ msgstr ".ZIP-файл модуля"
 #. module: base
 #: field:ir.ui.view,xml_id:0
 msgid "XML ID"
-msgstr ""
+msgstr "XML ID"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_16
@@ -2758,6 +2818,11 @@ msgstr "Телекоммуникации"
 #: field:workflow.transition,trigger_model:0
 msgid "Trigger Object"
 msgstr "Объект триггер"
+
+#. module: base
+#: help:change.user.password,confirm_password:0
+msgid "Enter the new password again for confirmation."
+msgstr ""
 
 #. module: base
 #: view:res.users:0
@@ -2787,19 +2852,19 @@ msgid "Bank account"
 msgstr "Банковский счёт"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (HN) / Español (HN)"
+msgstr ""
+
+#. module: base
 #: view:ir.sequence.type:0
 msgid "Sequence Type"
 msgstr "Тип последовательности"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"You try to upgrade a module that depends on the module: %s.\n"
-"But this module is not available in your system."
+#: selection:base.language.install,lang:0
+msgid "Hindi / हिंदी"
 msgstr ""
-"Вы пробуете обновить модуль, зависящий от модуля: %s.\n"
-"Но этот модуль недоступен в вашей системе."
 
 #. module: base
 #: field:ir.module.module,license:0
@@ -2807,9 +2872,9 @@ msgid "License"
 msgstr "Лицензия"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SAVE_AS"
-msgstr "STOCK_SAVE_AS"
+#: field:ir.attachment,url:0
+msgid "Url"
+msgstr "Адрес URL"
 
 #. module: base
 #: selection:ir.actions.todo,restart:0
@@ -2834,12 +2899,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: field:ir.actions.act_window.view,view_id:0
-#: field:ir.default,page:0
-#: selection:ir.translation,type:0
-#: field:wizard.ir.model.menu.create.line,view_id:0
-msgid "View"
-msgstr "Вид"
+#: sql_constraint:ir.config_parameter:0
+msgid "Key must be unique."
+msgstr "Ключ должен быть уникальным."
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -2850,16 +2912,6 @@ msgstr "Открыть окно"
 #: model:res.country,name:base.gq
 msgid "Equatorial Guinea"
 msgstr "Экваториальная Гвинея"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-stage"
-msgstr "terp-stage"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gdu-smart-failing"
-msgstr "terp-gdu-smart-failing"
 
 #. module: base
 #: view:base.module.import:0
@@ -2886,29 +2938,31 @@ msgid "FYROM"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_UNDELETE"
-msgstr "STOCK_UNDELETE"
+#: view:res.lang:0
+msgid "%c - Appropriate date and time representation."
+msgstr "%c - Подходящий формат даты и времени."
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_EXECUTE"
-msgstr "STOCK_EXECUTE"
+#: code:addons/base/res/res_config.py:422
+#, python-format
+msgid ""
+"Your database is now fully configured.\n"
+"\n"
+"Click 'Continue' and enjoy your OpenERP experience..."
+msgstr ""
+"Ваша база полностью настроена.\n"
+"\n"
+"Нажмите 'Продолжить' и начните использовать OpenERP..."
 
 #. module: base
 #: selection:base.language.install,lang:0
-msgid "Finland / Suomi"
-msgstr "Финляндия / Суоми"
+msgid "Hebrew / עִבְרִי"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.bo
 msgid "Bolivia"
 msgstr "Боливия"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-folder-orange"
-msgstr "terp-folder-orange"
 
 #. module: base
 #: model:res.country,name:base.gh
@@ -2919,11 +2973,6 @@ msgstr "Гана"
 #: field:res.lang,direction:0
 msgid "Direction"
 msgstr "Направление"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Latvian / Latvia"
-msgstr ""
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -2943,12 +2992,7 @@ msgid "Rules"
 msgstr "Правила"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Urdu / Pakistan"
-msgstr ""
-
-#. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:216
 #, python-format
 msgid "You try to remove a module that is installed or will be installed"
 msgstr "Вы пытаетесь удалить модуль, который установлен или будет установлен"
@@ -2962,9 +3006,9 @@ msgstr ""
 "действие."
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_PASTE"
-msgstr "STOCK_PASTE"
+#: selection:base.language.install,lang:0
+msgid "Spanish (PR) / Español (PR)"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.gt
@@ -2983,6 +3027,11 @@ msgstr "Рабочие процессы"
 #: model:ir.actions.act_window,name:base.action_config_user_form
 msgid "Create Users"
 msgstr "Создать пользователей"
+
+#. module: base
+#: model:ir.model,name:base.model_res_partner_title
+msgid "res.partner.title"
+msgstr "res.partner.title"
 
 #. module: base
 #: view:ir.values:0
@@ -3015,7 +3064,7 @@ msgid "Lesotho"
 msgstr "Лесото"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:112
 #, python-format
 msgid "You can not remove the model '%s' !"
 msgstr "Вы не можете удалить модель'%s' !"
@@ -3036,9 +3085,20 @@ msgid "Custom Reports"
 msgstr "Пользовательские отчеты"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Abkhazian / аҧсуа"
+msgstr ""
+
+#. module: base
 #: view:base.module.configuration:0
 msgid "System Configuration Done"
 msgstr "Настройка системы выполнена"
+
+#. module: base
+#: code:addons/orm.py:929
+#, python-format
+msgid "Error occurred while validating the field(s) %s: %s"
+msgstr ""
 
 #. module: base
 #: view:ir.property:0
@@ -3071,19 +3131,25 @@ msgid "Benin"
 msgstr "Бенин"
 
 #. module: base
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
+#, python-format
+msgid "That contract is already registered in the system."
+msgstr "Договор уже зарегистрирован в системе."
+
+#. module: base
 #: help:ir.sequence,suffix:0
 msgid "Suffix value of the record for the sequence"
 msgstr "Суффикс записи для последовательности"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_CONNECT"
-msgstr "STOCK_CONNECT"
+#: selection:base.language.install,lang:0
+msgid "Spanish (PY) / Español (PY)"
+msgstr ""
 
 #. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Not Searchable"
-msgstr "Поиск не производится"
+#: field:ir.config_parameter,key:0
+msgid "Key"
+msgstr "Ключ"
 
 #. module: base
 #: field:res.company,rml_header:0
@@ -3091,43 +3157,17 @@ msgid "RML Header"
 msgstr "Заголовок RML"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"Unable %s the module \"%s\" because an external dependencie is not met: %s' "
-"% (newstate, module.name, e.args[0])))\n"
-"            if not module.dependencies_id:\n"
-"                mdemo = module.demo\n"
-"            if module.state in states_to_update:\n"
-"                self.write(cr, uid, [module.id], {'state': newstate, "
-"'demo':mdemo})\n"
-"            demo = demo or mdemo\n"
-"        return demo\n"
-"\n"
-"    def button_install(self, cr, uid, ids, context={}):\n"
-"        return self.state_update(cr, uid, ids, 'to install', "
-"['uninstalled'], context)\n"
-"\n"
-"    def button_install_cancel(self, cr, uid, ids, context={}):\n"
-"        self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})\n"
-"        return True\n"
-"\n"
-"    def button_uninstall(self, cr, uid, ids, context={}):\n"
-"        for module in self.browse(cr, uid, ids):\n"
-"            cr.execute('''select m.state,m.name\n"
-"                from\n"
-"                    ir_module_module_dependency d\n"
-"                join\n"
-"                    ir_module_module m on (d.module_id=m.id)\n"
-"                where\n"
-"                    d.name=%s and\n"
-"                    m.state not in ('uninstalled','uninstallable','to remove"
-msgstr ""
-
-#. module: base
 #: field:partner.sms.send,app_id:0
 msgid "API ID"
 msgstr "API ID"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:340
+#, python-format
+msgid ""
+"You can not create this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mu
@@ -3150,7 +3190,7 @@ msgid "Security"
 msgstr "Права доступа"
 
 #. module: base
-#: model:res.widget,title:base.openerp_twitter_favorites
+#: model:res.widget,title:base.openerp_favorites_twitter_widget
 msgid "OpenERP Favorites"
 msgstr "OpenERP избранное"
 
@@ -3165,6 +3205,11 @@ msgstr "Южная Африка"
 #: selection:ir.module.module.dependency,state:0
 msgid "Installed"
 msgstr "Установлен"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Ukrainian / українська"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_translation
@@ -3193,9 +3238,14 @@ msgid "Brazil"
 msgstr "Бразилия"
 
 #. module: base
+#: view:res.lang:0
+msgid "%M - Minute [00,59]."
+msgstr "%M - минуты [00,59]."
+
+#. module: base
 #: selection:ir.module.module,license:0
 msgid "Affero GPL-3"
-msgstr ""
+msgstr "Affero GPL-3"
 
 #. module: base
 #: field:ir.sequence,number_next:0
@@ -3208,20 +3258,15 @@ msgid "Expression to be satisfied if we want the transition done."
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gtk-media-pause"
-msgstr "terp-gtk-media-pause"
+#: selection:base.language.install,lang:0
+msgid "Spanish (PA) / Español (PA)"
+msgstr ""
 
 #. module: base
 #: view:res.currency:0
 #: field:res.currency,rate_ids:0
 msgid "Rates"
 msgstr "Курсы"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Albanian / Shqipëri"
-msgstr "Албанский / Shqipëri"
 
 #. module: base
 #: model:res.country,name:base.sy
@@ -3301,16 +3346,6 @@ msgstr ""
 "формы."
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gtk-go-back-rtl"
-msgstr "terp-gtk-go-back-rtl"
-
-#. module: base
-#: model:res.country,name:base.al
-msgid "Albania"
-msgstr "Албания"
-
-#. module: base
 #: view:ir.attachment:0
 msgid "Attached To"
 msgstr "Приложено к"
@@ -3319,6 +3354,17 @@ msgstr "Приложено к"
 #: field:res.lang,decimal_point:0
 msgid "Decimal Separator"
 msgstr "Десятичный разделитель"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_res_groups
+msgid ""
+"A group is a set of functional areas that will be assigned to the user in "
+"order to give them access and rights to specific applications and tasks in "
+"the system. You can create custom groups or edit the ones existing by "
+"default in order to customize the view of the menu that users will be able "
+"to see. Whether they can have a read, write, create and delete access right "
+"can be managed from here."
+msgstr ""
 
 #. module: base
 #: view:res.partner:0
@@ -3333,14 +3379,20 @@ msgid "Creator"
 msgstr "Автор"
 
 #. module: base
+#: model:res.company,overdue_msg:base.main_company
+msgid ""
+"Please note that the following payments are now due. If your payment         "
+"                has been sent, kindly forward your payment details. If "
+"payment will be                         delayed further, please contact us "
+"to discuss.                         \n"
+"Would your payment have been carried out after this mail was sent, please "
+"consider the present one as void."
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.mx
 msgid "Mexico"
 msgstr "Мексика"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Swedish / svenska"
-msgstr "Шведский / svenska"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config_plugins
@@ -3363,12 +3415,19 @@ msgid "Nicaragua"
 msgstr "Никарагуа"
 
 #. module: base
+#: code:addons/orm.py:1046
+#, python-format
+msgid "The write method is not implemented on this object !"
+msgstr ""
+
+#. module: base
 #: view:res.partner.event:0
 msgid "General Description"
 msgstr "Общее описание"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_simple_view_form
+#: view:res.config.view:0
 msgid "Configure Your Interface"
 msgstr "Настройка вашего интерфейса"
 
@@ -3378,21 +3437,14 @@ msgid "Meta Datas"
 msgstr "Метаданные"
 
 #. module: base
-#: field:ir.property,fields_id:0
-#: selection:ir.translation,type:0
-#: field:multi_company.default,field_id:0
-msgid "Field"
-msgstr "Поле"
+#: sql_constraint:ir.ui.view_sc:0
+msgid "Shortcut for this menu already exists!"
+msgstr "Закладка для этого пункта меню уже есть !"
 
 #. module: base
 #: model:res.country,name:base.ve
 msgid "Venezuela"
 msgstr "Венесуэла"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Malayalam / India"
-msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -3434,6 +3486,23 @@ msgid "Kazakhstan"
 msgstr "Казахстан"
 
 #. module: base
+#: view:res.lang:0
+msgid "%w - Weekday number [0(Sunday),6]."
+msgstr "%w - номер дня недели [0(воскресенье),6]."
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_partner_form
+msgid ""
+"A customer is an entity you do business with, like a company or an "
+"organization. A customer can have several contacts or addresses which are "
+"the people working for this company. You can use the history tab, to follow "
+"all transactions related to a customer: sales order, emails, opportunities, "
+"claims, etc. If you use the email gateway, the Outlook or the Thunderbird "
+"plugin, don't forget to register emails to each contact so that the gateway "
+"will automatically attach incoming emails to the right partner."
+msgstr ""
+
+#. module: base
 #: field:ir.actions.report.xml,name:0
 #: field:ir.actions.todo,name:0
 #: field:ir.cron,name:0
@@ -3448,7 +3517,6 @@ msgstr "Казахстан"
 #: field:ir.sequence,name:0
 #: field:ir.sequence.type,name:0
 #: field:ir.values,name:0
-#: field:maintenance.contract.module,name:0
 #: field:multi_company.default,name:0
 #: field:res.bank,name:0
 #: field:res.config.view,name:0
@@ -3498,9 +3566,9 @@ msgid "English (UK)"
 msgstr "Английский (Великобритания)"
 
 #. module: base
-#: model:res.country,name:base.aq
-msgid "Antarctica"
-msgstr "Антарктида"
+#: selection:base.language.install,lang:0
+msgid "Japanese / 日本語"
+msgstr ""
 
 #. module: base
 #: help:workflow.transition,act_from:0
@@ -3535,19 +3603,14 @@ msgid "English (CA)"
 msgstr "Английский (Канада)"
 
 #. module: base
+#: model:ir.model,name:base.model_publisher_warranty_contract
+msgid "publisher_warranty.contract"
+msgstr "publisher_warranty.contract"
+
+#. module: base
 #: model:res.country,name:base.et
 msgid "Ethiopia"
 msgstr "Эфиопия"
-
-#. module: base
-#: view:res.lang:0
-msgid "%H - Hour (24-hour clock) as a decimal number [00,23]."
-msgstr "%H - Час (в формате 24 часа) в виде десятичного числа [00,23]."
-
-#. module: base
-#: view:res.lang:0
-msgid "%M - Minute as a decimal number [00,59]."
-msgstr "%M - Минуты в виде десятичного числа [00, 59]."
 
 #. module: base
 #: help:res.country.state,code:0
@@ -3560,9 +3623,10 @@ msgid "Svalbard and Jan Mayen Islands"
 msgstr "Острова Шпицберген и Ян-Майен"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_view_base_module_update
-msgid " Update Modules List"
-msgstr " Список обновляемых модулей"
+#: model:ir.model,name:base.model_ir_actions_wizard
+#: selection:ir.ui.menu,action:0
+msgid "ir.actions.wizard"
+msgstr "ir.actions.wizard"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -3577,7 +3641,7 @@ msgstr "Группировать по"
 #: view:res.config:0
 #: view:res.config.installer:0
 msgid "title"
-msgstr ""
+msgstr "Обращение"
 
 #. module: base
 #: model:ir.model,name:base.model_base_language_install
@@ -3588,16 +3652,6 @@ msgstr "Установить язык"
 #: view:ir.translation:0
 msgid "Translation"
 msgstr "Перевод"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DIALOG_WARNING"
-msgstr "STOCK_DIALOG_WARNING"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_ZOOM_IN"
-msgstr "STOCK_ZOOM_IN"
 
 #. module: base
 #: selection:res.request,state:0
@@ -3625,25 +3679,20 @@ msgid "Products"
 msgstr "Продукция"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-accessories-archiver-minus"
-msgstr "terp-accessories-archiver-minus"
-
-#. module: base
 #: field:ir.actions.act_window,domain:0
 #: field:ir.filters,domain:0
 msgid "Domain Value"
 msgstr "Значение домена"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_REDO"
-msgstr "STOCK_REDO"
-
-#. module: base
 #: view:ir.actions.server:0
 msgid "SMS Configuration"
 msgstr "Настройки SMS"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (BO) / Español (BO)"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_access_act
@@ -3663,7 +3712,8 @@ msgid "Bank Type"
 msgstr "Тип банка"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:58
+#: code:addons/base/res/res_user.py:67
 #, python-format
 msgid "The name of the group can not start with \"-\""
 msgstr "Название группы не может начинаться с \"-\""
@@ -3680,15 +3730,35 @@ msgid "Init Date"
 msgstr "Дата инициализации"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Gujarati / ગુજરાતી"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:257
+#, python-format
+msgid ""
+"Unable to process module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Не удалось обработать модуль \"%s\" так, как внешняя зависимость не "
+"удовлетворена: %s"
+
+#. module: base
+#: view:publisher_warranty.contract.wizard:0
+msgid "Please enter the serial key provided in your contract document:"
+msgstr ""
+
+#. module: base
 #: view:workflow.activity:0
 #: field:workflow.activity,flow_start:0
 msgid "Flow Start"
 msgstr "Начало процесса"
 
 #. module: base
-#: model:ir.model,name:base.model_res_partner_title
-msgid "res.partner.title"
-msgstr "res.partner.title"
+#: code:addons/__init__.py:827
+#, python-format
+msgid "module base cannot be loaded! (hint: verify addons-path)"
+msgstr ""
 
 #. module: base
 #: view:res.partner.bank:0
@@ -3717,7 +3787,9 @@ msgid "Guadeloupe (French)"
 msgstr "Гваделупа (Франция)"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
+#: code:addons/base/res/res_lang.py:88
+#: code:addons/base/res/res_lang.py:90
 #, python-format
 msgid "User Error"
 msgstr "Oшибка пользователя"
@@ -3767,6 +3839,11 @@ msgid "Load Official Translation"
 msgstr "Загрузка официального перевода"
 
 #. module: base
+#: model:ir.model,name:base.model_res_request_history
+msgid "res.request.history"
+msgstr "res.request.history"
+
+#. module: base
 #: view:ir.actions.server:0
 msgid "Client Action Configuration"
 msgstr "Настройка действий клиента"
@@ -3778,14 +3855,9 @@ msgid "Partner Addresses"
 msgstr "Адреса партнеров"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gtk-stop"
-msgstr "terp-gtk-stop"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Indonesian / Bahasa Indonesia"
-msgstr "Индонезийский / Bahasa Indonesia"
+#: view:res.lang:0
+msgid "%S - Seconds [00,61]."
+msgstr "%S - секунды [00,61]."
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -3793,20 +3865,15 @@ msgid "Cape Verde"
 msgstr "Кабо-Верде"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"Some installed modules depend on the module you plan to Uninstall :\n"
-" %s"
-msgstr ""
-"Некоторые из установленных модулей зависят от модуля, который будет удалён "
-":\n"
-"%s"
+#: view:base.module.import:0
+msgid "Select module package to import (.zip file):"
+msgstr "Выберите пакет модуля для импорта (.zip файл)"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
 #: field:res.partner,events:0
 #: field:res.partner.event,name:0
+#: model:res.widget,title:base.events_widget
 msgid "Events"
 msgstr "События"
 
@@ -3817,14 +3884,15 @@ msgid "ir.actions.url"
 msgstr "ir.actions.url"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_STOP"
-msgstr "STOCK_MEDIA_STOP"
+#: model:res.widget,title:base.currency_converter_widget
+msgid "Currency Converter"
+msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DND_MULTIPLE"
-msgstr "STOCK_DND_MULTIPLE"
+#: code:addons/orm.py:156
+#, python-format
+msgid "Wrong ID for the browse record, got %r, expected an integer."
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_addess_tree
@@ -3843,26 +3911,26 @@ msgid "Price Accuracy"
 msgstr "Точность цен"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Latvian / latviešu valoda"
+msgstr ""
+
+#. module: base
 #: view:res.config:0
 #: view:res.config.installer:0
 msgid "vsep"
 msgstr ""
 
 #. module: base
-#: model:ir.actions.server,name:base.action_start_configurator
-#: model:ir.ui.menu,name:base.menu_view_base_module_configuration
-msgid "Start Configuration"
-msgstr "Начать настройку"
+#: selection:base.language.install,lang:0
+msgid "French / Français"
+msgstr "Французский / Français"
 
 #. module: base
-#: view:ir.module.module:0
-msgid "Created Menus"
-msgstr "Созданные меню"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-idea"
-msgstr "terp-idea"
+#: code:addons/orm.py:1049
+#, python-format
+msgid "The create method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
@@ -3870,14 +3938,9 @@ msgid "Workitem"
 msgstr "Рабочий участок"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DIALOG_AUTHENTICATION"
-msgstr "STOCK_DIALOG_AUTHENTICATION"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_ZOOM_OUT"
-msgstr "STOCK_ZOOM_OUT"
+#: view:ir.actions.todo:0
+msgid "Set as Todo"
+msgstr "Установить как дело"
 
 #. module: base
 #: field:ir.actions.act_window.view,act_window_id:0
@@ -3911,14 +3974,14 @@ msgid "Current Year without Century: %(y)s"
 msgstr "Текущий год без века: %(y)s"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-mrp"
-msgstr "terp-mrp"
-
-#. module: base
 #: field:ir.actions.server,trigger_obj_id:0
 msgid "Trigger On"
 msgstr "Триггер включен"
+
+#. module: base
+#: sql_constraint:ir.rule:0
+msgid "Rule must have at least one checked access right !"
+msgstr "Правило должно иметь хотя бы одно проверенное право доступа !"
 
 #. module: base
 #: model:res.country,name:base.fj
@@ -3934,11 +3997,6 @@ msgstr "Размер"
 #: model:res.country,name:base.sd
 msgid "Sudan"
 msgstr "Судан"
-
-#. module: base
-#: view:res.lang:0
-msgid "%m - Month as a decimal number [01,12]."
-msgstr "%m - Месяц в виде десятичного числа [01,12]."
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -3958,30 +4016,19 @@ msgid "Menus"
 msgstr "Меню"
 
 #. module: base
-#: selection:ir.module.module.dependency,state:0
-msgid "Uninstallable"
-msgstr "Не устанавливаемый"
+#: view:base.module.upgrade:0
+msgid "The selected modules have been updated / installed !"
+msgstr "Выбранные модули будут обновлены / установлены !"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SORT_DESCENDING"
-msgstr "STOCK_SORT_DESCENDING"
+#: selection:base.language.install,lang:0
+msgid "Serbian (Latin) / srpski"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.il
 msgid "Israel"
 msgstr "Израиль"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-stock_symbol-selection"
-msgstr "terp-stock_symbol-selection"
-
-#. module: base
-#: model:ir.actions.act_window,name:base.action_maintenance_contract_form
-#: model:ir.ui.menu,name:base.menu_maintenance_contract
-msgid "Maintenance Contracts"
-msgstr "Обслуживание договоров"
 
 #. module: base
 #: model:ir.actions.wizard,name:base.wizard_server_action_create
@@ -4004,11 +4051,6 @@ msgstr "Формат времени"
 #: view:ir.module.module:0
 msgid "Defined Reports"
 msgstr "Заданные отчеты"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-tools"
-msgstr "terp-tools"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -4034,9 +4076,9 @@ msgid "Subflow"
 msgstr "Подпроцесс"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_UNDO"
-msgstr "STOCK_UNDO"
+#: model:ir.model,name:base.model_res_config
+msgid "res.config"
+msgstr "res.config"
 
 #. module: base
 #: field:workflow.transition,signal:0
@@ -4055,31 +4097,6 @@ msgstr "Банки"
 #: view:res.log:0
 msgid "Unread"
 msgstr "Не прочитано"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-sale"
-msgstr "terp-sale"
-
-#. module: base
-#: view:res.lang:0
-msgid "%d - Day of the month as a decimal number [01,31]."
-msgstr "%d - Порядковый номер дня в месяце в виде десятичного числа [01,31]."
-
-#. module: base
-#: view:res.lang:0
-msgid "%I - Hour (12-hour clock) as a decimal number [01,12]."
-msgstr "%I - Час (в формате 12 часов) в виде десятичного числа [01,12]."
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Romanian / limba română"
-msgstr "Румынский / limba română"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_ADD"
-msgstr "STOCK_ADD"
 
 #. module: base
 #: field:ir.cron,doall:0
@@ -4142,6 +4159,11 @@ msgid "Add an auto-refresh on the view"
 msgstr "Добавить к виду автообновление"
 
 #. module: base
+#: help:res.partner,employee:0
+msgid "Check this box if the partner is an Employee."
+msgstr "Отметьте, если партнер является сотрудником"
+
+#. module: base
 #: field:ir.actions.report.xml,report_rml_content:0
 #: field:ir.actions.report.xml,report_rml_content_data:0
 msgid "RML content"
@@ -4164,6 +4186,14 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: base
+#: code:addons/orm.py:3533
+#, python-format
+msgid ""
+"You cannot perform this operation. New Record Creation is not allowed for "
+"this object as this object is for reporting purpose."
+msgstr ""
+
+#. module: base
 #: view:base.language.import:0
 msgid "- module,type,name,res_id,src,value"
 msgstr ""
@@ -4183,6 +4213,11 @@ msgstr ""
 "Если он пуст, вы не можете отслеживать новые записи."
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Indonesian / Bahasa Indonesia"
+msgstr "Индонезийский / Bahasa Indonesia"
+
+#. module: base
 #: field:ir.ui.view,inherit_id:0
 msgid "Inherited View"
 msgstr "Унаследованный вид"
@@ -4198,6 +4233,11 @@ msgid "Project"
 msgstr "Проект"
 
 #. module: base
+#: field:ir.ui.menu,web_icon_hover_data:0
+msgid "Web Icon Image (hover)"
+msgstr ""
+
+#. module: base
 #: view:base.module.import:0
 msgid "Module file successfully imported!"
 msgstr "Файл модуля успешно импортирован !"
@@ -4208,22 +4248,25 @@ msgid "Cancelled"
 msgstr "Отменен"
 
 #. module: base
+#: view:res.config.users:0
+msgid "Create User"
+msgstr "Создать пользователя"
+
+#. module: base
 #: view:partner.clear.ids:0
 msgid "Want to Clear Ids ? "
+msgstr "Хотите стереть Id`ы ? "
+
+#. module: base
+#: field:publisher_warranty.contract,name:0
+#: field:publisher_warranty.contract.wizard,name:0
+msgid "Serial Key"
 msgstr ""
 
 #. module: base
-#: selection:res.request,priority:0
-msgid "Low"
-msgstr "Низкий"
-
-#. module: base
-#: field:res.partner,customer:0
-#: view:res.partner.address:0
-#: field:res.partner.address,is_customer_add:0
-#: model:res.partner.category,name:base.res_partner_category_0
-msgid "Customer"
-msgstr "Клиент"
+#: model:ir.ui.menu,name:base.menu_audit
+msgid "Audit"
+msgstr "Аудит"
 
 #. module: base
 #: model:res.country,name:base.lc
@@ -4231,8 +4274,7 @@ msgid "Saint Lucia"
 msgstr "Сент-Люсия"
 
 #. module: base
-#: model:ir.model,name:base.model_maintenance_contract
-#: view:maintenance.contract:0
+#: view:publisher_warranty.contract:0
 msgid "Maintenance Contract"
 msgstr "Договор на обслуживание"
 
@@ -4249,7 +4291,12 @@ msgstr "Сотрудник"
 #. module: base
 #: field:ir.model.access,perm_create:0
 msgid "Create Access"
-msgstr "Право создания"
+msgstr "Доступ на создание"
+
+#. module: base
+#: field:change.user.password,current_password:0
+msgid "Current Password"
+msgstr ""
 
 #. module: base
 #: field:res.partner.address,state_id:0
@@ -4269,7 +4316,7 @@ msgstr ""
 #. module: base
 #: view:partner.clear.ids:0
 msgid "Clear Ids"
-msgstr ""
+msgstr "Очистить Id`ы"
 
 #. module: base
 #: model:res.country,name:base.io
@@ -4289,9 +4336,9 @@ msgid "Field Mapping"
 msgstr "Соответствие полей"
 
 #. module: base
-#: field:maintenance.contract,date_start:0
-msgid "Starting Date"
-msgstr "Дата начала"
+#: view:publisher_warranty.contract:0
+msgid "Refresh Validation Dates"
+msgstr "Обновить даты проверок"
 
 #. module: base
 #: view:ir.model:0
@@ -4333,6 +4380,18 @@ msgid "Signature"
 msgstr "Подпись"
 
 #. module: base
+#: code:addons/fields.py:456
+#: code:addons/fields.py:654
+#: code:addons/fields.py:656
+#: code:addons/fields.py:658
+#: code:addons/fields.py:660
+#: code:addons/fields.py:662
+#: code:addons/fields.py:664
+#, python-format
+msgid "Not Implemented"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_widget_user
 msgid "res.widget.user"
 msgstr "res.widget.user"
@@ -4351,6 +4410,12 @@ msgstr "_Ok"
 #: help:ir.filters,user_id:0
 msgid "False means for every user"
 msgstr "Ложь - для любого пользователя"
+
+#. module: base
+#: code:addons/base/module/module.py:198
+#, python-format
+msgid "The name of the module must be unique !"
+msgstr "Название модуля должно быть уникальным !"
 
 #. module: base
 #: model:res.country,name:base.mz
@@ -4388,17 +4453,16 @@ msgid "Contacts"
 msgstr "Контакты"
 
 #. module: base
-#: model:res.country,name:base.fo
-msgid "Faroe Islands"
-msgstr "Фарерские острова"
-
-#. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/orm.py:3199
 #, python-format
 msgid ""
-"\"email_from\" needs to be set to send welcome mails '\n"
-"                  'to users"
+"Unable to delete this document because it is used as a default property"
 msgstr ""
+
+#. module: base
+#: view:res.widget.wizard:0
+msgid "Add"
+msgstr "Добавить"
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -4408,29 +4472,38 @@ msgid "Apply Scheduled Upgrades"
 msgstr "Выполнить запланированные обновления"
 
 #. module: base
-#: model:ir.ui.menu,name:base.maintenance
-msgid "Maintenance"
-msgstr "Обслуживание"
-
-#. module: base
 #: view:res.widget:0
 msgid "Widgets"
 msgstr "Виджеты"
 
 #. module: base
-#: model:res.country,name:base.mp
-msgid "Northern Mariana Islands"
-msgstr "Северные Марианские острова"
+#: model:res.country,name:base.cz
+msgid "Czech Republic"
+msgstr "Чешская республика"
+
+#. module: base
+#: view:res.widget.wizard:0
+msgid "Widget Wizard"
+msgstr "Помощник для виджетов"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.act_ir_actions_todo_form
+msgid ""
+"The configuration wizards are used to help you configure a new instance of "
+"OpenERP. They are launched during the installation of new modules, but you "
+"can choose to restart some wizards manually from this menu."
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:1350
+#, python-format
+msgid "Insufficient fields for Calendar View!"
+msgstr ""
 
 #. module: base
 #: selection:ir.property,type:0
 msgid "Integer"
 msgstr "Целое"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-mail-"
-msgstr "terp-mail-"
 
 #. module: base
 #: help:ir.actions.report.xml,report_rml:0
@@ -4456,27 +4529,9 @@ msgid "Transition"
 msgstr "Переход"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gtk-select-all"
-msgstr "terp-gtk-select-all"
-
-#. module: base
-#: field:ir.cron,active:0
-#: field:ir.sequence,active:0
-#: field:res.bank,active:0
-#: field:res.config.users,active:0
-#: field:res.currency,active:0
-#: field:res.lang,active:0
-#: field:res.partner,active:0
-#: field:res.partner.address,active:0
-#: field:res.partner.canal,active:0
-#: field:res.partner.category,active:0
-#: field:res.request,active:0
-#: field:res.users,active:0
-#: view:workflow.instance:0
-#: view:workflow.workitem:0
-msgid "Active"
-msgstr "Активен"
+#: field:res.groups,menu_access:0
+msgid "Access Menu"
+msgstr "Меню доступа"
 
 #. module: base
 #: model:res.country,name:base.na
@@ -4489,16 +4544,9 @@ msgid "Mongolia"
 msgstr "Монголия"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
-#: code:addons/base/ir/ir_model.py:0
-#: code:addons/base/maintenance/maintenance.py:0
-#: code:addons/base/module/module.py:0
-#: code:addons/base/res/res_config.py:0
-#: code:addons/base/res/res_currency.py:0
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid "Error"
-msgstr "Ошибка"
+#: view:ir.module.module:0
+msgid "Created Menus"
+msgstr "Созданные меню"
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -4514,11 +4562,17 @@ msgstr "Бурунди"
 #: view:base.language.install:0
 #: view:base.module.import:0
 #: view:base.module.update:0
+#: view:publisher_warranty.contract.wizard:0
 #: view:res.request:0
 #: wizard_button:server.action.create,init,end:0
 #: wizard_button:server.action.create,step_1,end:0
 msgid "Close"
 msgstr "Закрыть"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (MX) / Español (MX)"
+msgstr ""
 
 #. module: base
 #: view:res.log:0
@@ -4544,6 +4598,11 @@ msgstr "Поставщики текстиля"
 #: selection:ir.actions.url,target:0
 msgid "This Window"
 msgstr "Данное окно"
+
+#. module: base
+#: view:publisher_warranty.contract:0
+msgid "Publisher Warranty Contracts"
+msgstr ""
 
 #. module: base
 #: help:res.log,name:0
@@ -4572,9 +4631,17 @@ msgid "Read"
 msgstr "Читать"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_INDENT"
-msgstr "STOCK_INDENT"
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "Название страны должно быть уникальным !"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_country_state
+msgid ""
+"If you are working on the American market, you can manage the different "
+"federal states you are working on from here. Each state is attached to one "
+"country."
+msgstr ""
 
 #. module: base
 #: view:workflow.workitem:0
@@ -4587,8 +4654,6 @@ msgid "Saint Vincent & Grenadines"
 msgstr "Сент-Винсент и Гренадины"
 
 #. module: base
-#: field:maintenance.contract,password:0
-#: field:maintenance.contract.wizard,password:0
 #: field:partner.sms.send,password:0
 #: field:res.config.users,password:0
 #: field:res.users,password:0
@@ -4633,6 +4698,14 @@ msgid "Latest version"
 msgstr "Последняя версия"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.res_partner_canal-act
+msgid ""
+"Track from where is coming your leads and opportunities by creating specific "
+"channels that will be maintained at the creation of a document in the "
+"system. Some examples of channels can be: Website, Phone Call, Reseller, etc."
+msgstr ""
+
+#. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
 msgid "acc_number"
 msgstr "acc_number"
@@ -4652,11 +4725,6 @@ msgstr "Мьянма"
 #: selection:base.language.install,lang:0
 msgid "Chinese (CN) / 简体中文"
 msgstr "Китайский (упрощённый) / 简体中文"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_NEXT"
-msgstr "STOCK_MEDIA_NEXT"
 
 #. module: base
 #: field:res.bank,street:0
@@ -4681,11 +4749,6 @@ msgid "Canada"
 msgstr "Канада"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-rating-rated"
-msgstr "terp-rating-rated"
-
-#. module: base
 #: selection:ir.module.module.dependency,state:0
 msgid "Unknown"
 msgstr "Неизвестно"
@@ -4696,7 +4759,8 @@ msgid "Change My Preferences"
 msgstr "Изменить мои предпочтения"
 
 #. module: base
-#: constraint:ir.actions.act_window:0
+#: code:addons/base/ir/ir_actions.py:160
+#, python-format
 msgid "Invalid model name in the action definition."
 msgstr "Недопустимое имя модели в определении действия"
 
@@ -4714,11 +4778,6 @@ msgstr "Камерун"
 #: model:res.country,name:base.bf
 msgid "Burkina Faso"
 msgstr "Буркина-Фасо"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_FORWARD"
-msgstr "STOCK_MEDIA_FORWARD"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
@@ -4763,9 +4822,16 @@ msgid "Dutch / Nederlands"
 msgstr "Голландский / Nederlands"
 
 #. module: base
-#: model:ir.model,name:base.model_res_widget_wizard
-msgid "Add a widget"
-msgstr "Добавить виджет"
+#: code:addons/base/res/res_config.py:384
+#, python-format
+msgid ""
+"\n"
+"\n"
+"This addon is already installed on your system"
+msgstr ""
+"\n"
+"\n"
+"Это дополнение/модуль уже установлено в вашей системе"
 
 #. module: base
 #: help:ir.cron,interval_number:0
@@ -4815,13 +4881,13 @@ msgstr "Поле объекта"
 
 #. module: base
 #: selection:base.language.install,lang:0
-msgid "French (CH) / Français (CH)"
-msgstr "Франция"
+msgid "Spanish (PE) / Español (PE)"
+msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_NEW"
-msgstr "STOCK_NEW"
+#: selection:base.language.install,lang:0
+msgid "French (CH) / Français (CH)"
+msgstr "Франция"
 
 #. module: base
 #: help:res.config.users,action_id:0
@@ -4839,17 +4905,25 @@ msgid "Client Actions"
 msgstr "Действия клиента"
 
 #. module: base
+#: code:addons/orm.py:1806
+#, python-format
+msgid "The exists method is not implemented on this object !"
+msgstr ""
+
+#. module: base
+#: code:addons/base/module/module.py:336
+#, python-format
+msgid ""
+"You try to upgrade a module that depends on the module: %s.\n"
+"But this module is not available in your system."
+msgstr ""
+"Вы пробуете обновить модуль, зависящий от модуля: %s.\n"
+"Но этот модуль недоступен в вашей системе."
+
+#. module: base
 #: field:workflow.transition,act_to:0
 msgid "Destination Activity"
 msgstr "Получатель действия"
-
-#. module: base
-#: code:addons/base/res/res_config.py:0
-#, python-format
-msgid ""
-"Can't set an ir.actions.todo's state to \"\n"
-"                               \"nothingness"
-msgstr ""
 
 #. module: base
 #: view:ir.values:0
@@ -4857,24 +4931,9 @@ msgid "Connect Events to Actions"
 msgstr "Соединить событие с действием"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SORT_ASCENDING"
-msgstr "STOCK_SORT_ASCENDING"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_ABOUT"
-msgstr "STOCK_ABOUT"
-
-#. module: base
 #: model:ir.model,name:base.model_base_update_translations
 msgid "base.update.translations"
 msgstr "base.update.translations"
-
-#. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Advanced Search"
-msgstr "Расширенный поиск"
 
 #. module: base
 #: field:ir.module.category,parent_id:0
@@ -4900,9 +4959,9 @@ msgid "ir.ui.menu"
 msgstr "Меню"
 
 #. module: base
-#: model:res.country,name:base.us
-msgid "United States"
-msgstr "Соединённые Штаты Америки"
+#: view:partner.wizard.ean.check:0
+msgid "Ignore"
+msgstr "Игнорировать"
 
 #. module: base
 #: view:ir.module.module:0
@@ -4927,7 +4986,7 @@ msgid "ir.server.object.lines"
 msgstr "События сервера"
 
 #. module: base
-#: code:addons/base/module/module.py:0
+#: code:addons/base/module/module.py:530
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
 msgstr "Модуль %s: Недействительный сертификат качества"
@@ -4936,11 +4995,6 @@ msgstr "Модуль %s: Недействительный сертификат �
 #: model:res.country,name:base.kw
 msgid "Kuwait"
 msgstr "Кувейт"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-go-week"
-msgstr "terp-go-week"
 
 #. module: base
 #: field:workflow.workitem,inst_id:0
@@ -4984,9 +5038,9 @@ msgid "Accepted Users"
 msgstr "Акцептованные пользователи"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_UNDERLINE"
-msgstr "STOCK_UNDERLINE"
+#: field:ir.ui.menu,web_icon_data:0
+msgid "Web Icon Image"
+msgstr ""
 
 #. module: base
 #: view:ir.values:0
@@ -4994,27 +5048,15 @@ msgid "Values for Event Type"
 msgstr "Значения для Типа события"
 
 #. module: base
-#: model:res.country,name:base.zr
-msgid "Zaire"
-msgstr "Заир"
+#: code:addons/base/res/res_user.py:605
+#, python-format
+msgid "The current password does not match, please double-check it."
+msgstr ""
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Always Searchable"
 msgstr "Всегда доступно для поиска"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_CLOSE"
-msgstr "STOCK_CLOSE"
-
-#. module: base
-#: code:addons/base/res/res_lang.py:0
-#, python-format
-msgid ""
-"You cannot delete the language which is Active !\n"
-"Please de-activate the language first."
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.hk
@@ -5028,14 +5070,16 @@ msgstr ""
 "Ссылка действия по имени например: Один заказ клиента -> Много счетов"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_ZOOM_100"
-msgstr "STOCK_ZOOM_100"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_BOLD"
-msgstr "STOCK_BOLD"
+#: model:ir.actions.act_window,help:base.action_partner_address_form
+msgid ""
+"Customers (also called Partners in other areas of the system) helps you "
+"manage your address book of companies whether they are prospects, customers "
+"and/or suppliers. The partner form allows you to track and record all the "
+"necessary information to interact with your partners from the company "
+"address to their contacts as well as pricelists, and much more. If you "
+"installed the CRM, with the history tab, you can track all the interactions "
+"with a partner such as opportunities, emails, or sales orders issued."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -5046,11 +5090,6 @@ msgstr "Филиппины"
 #: model:res.country,name:base.ma
 msgid "Morocco"
 msgstr "Марокко"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-graph"
-msgstr "terp-graph"
 
 #. module: base
 #: view:res.lang:0
@@ -5098,6 +5137,12 @@ msgid "Dominica"
 msgstr "Доминика"
 
 #. module: base
+#: sql_constraint:publisher_warranty.contract:0
+msgid ""
+"Your publisher warranty contract is already subscribed in the system !"
+msgstr ""
+
+#. module: base
 #: help:ir.cron,nextcall:0
 msgid "Next planned execution date for this scheduler"
 msgstr "Следующая дата исполнения для этого планировщика"
@@ -5114,14 +5159,17 @@ msgid "Nepal"
 msgstr "Непал"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-dolar"
+#: code:addons/orm.py:2307
+#, python-format
+msgid ""
+"Invalid value for reference field \"%s\" (last part must be a non-zero "
+"integer): \"%s\""
 msgstr ""
 
 #. module: base
 #: help:ir.cron,args:0
 msgid "Arguments to be passed to the method. e.g. (uid,)"
-msgstr ""
+msgstr "Аргументы передаваемые методу. Прим. (uid,)"
 
 #. module: base
 #: help:ir.ui.menu,groups_id:0
@@ -5137,28 +5185,32 @@ msgid "Bulk SMS send"
 msgstr "Массовая отправка SMS"
 
 #. module: base
-#: view:res.lang:0
-msgid "%Y - Year with century as a decimal number."
-msgstr "%Y - Год с указанием века в виде десятичного числа."
-
-#. module: base
 #: view:ir.sequence:0
 msgid "Seconde: %(sec)s"
 msgstr "Секунды: %(sec)s"
 
 #. module: base
-#: code:addons/base/module/module.py:0
-#, python-format
-msgid ""
-"Can not create the module file:\n"
-" %s"
-msgstr ""
-"Невозможно создать файл модуля:\n"
-" %s"
+#: model:ir.ui.menu,name:base.menu_view_base_module_update
+msgid "Update Modules List"
+msgstr "Обновить список модулей"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-accessories-archiver"
+#: code:addons/base/module/module.py:255
+#, python-format
+msgid ""
+"Unable to upgrade module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Невозможно обновить модуль \"%s\" так, как внешняя зависимость не "
+"удовлетворена: %s"
+
+#. module: base
+#: code:addons/base/res/res_user.py:241
+#, python-format
+msgid ""
+"Please keep in mind that documents currently displayed may not be relevant "
+"after switching to another company. If you have unsaved changes, please make "
+"sure to save and close all forms before switching to a different company. "
+"(You can click on Cancel in the User Preferences now)"
 msgstr ""
 
 #. module: base
@@ -5170,6 +5222,12 @@ msgstr "Далее"
 #: selection:base.language.install,lang:0
 msgid "Thai / ภาษาไทย"
 msgstr "Тайский"
+
+#. module: base
+#: code:addons/orm.py:158
+#, python-format
+msgid "Object %s does not exists"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -5196,6 +5254,11 @@ msgstr "Название вложения"
 #: field:base.language.import,data:0
 msgid "File"
 msgstr "Файл"
+
+#. module: base
+#: view:res.config.users:0
+msgid "Add User"
+msgstr "Добавить пользователя"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_module_upgrade_install
@@ -5229,20 +5292,19 @@ msgstr "Множественные действия"
 #. module: base
 #: view:base.language.export:0
 #: view:base.language.import:0
-#: view:maintenance.contract.wizard:0
 #: view:wizard.ir.model.menu.create:0
 msgid "_Close"
 msgstr "_Закрыть"
 
 #. module: base
-#: selection:maintenance.contract,kind:0
-msgid "Full"
-msgstr "Полный"
-
-#. module: base
 #: field:multi_company.default,company_dest_id:0
 msgid "Default Company"
 msgstr "Компания по умолчанию"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (EC) / Español (EC)"
+msgstr ""
 
 #. module: base
 #: help:ir.ui.view,xml_id:0
@@ -5259,14 +5321,6 @@ msgstr "Импорт модуля"
 #: model:res.country,name:base.as
 msgid "American Samoa"
 msgstr "Американское Самоа"
-
-#. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid ""
-"--\n"
-"%(name)s %(email)s\n"
-msgstr ""
 
 #. module: base
 #: help:ir.actions.act_window,res_model:0
@@ -5306,9 +5360,11 @@ msgid "Iteration"
 msgstr "Повтор"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-stock"
-msgstr "terp-stock"
+#: code:addons/orm.py:3448
+#: code:addons/orm.py:3532
+#, python-format
+msgid "UserError"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -5316,19 +5372,9 @@ msgid "United Arab Emirates"
 msgstr "Объединённые Арабские Эмираты"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_RECORD"
-msgstr "STOCK_MEDIA_RECORD"
-
-#. module: base
 #: model:ir.ui.menu,name:base.menu_crm_case_job_req_main
 msgid "Recruitment"
 msgstr "Наем"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Occitan (post 1500) / France"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.re
@@ -5343,14 +5389,14 @@ msgid "Global"
 msgstr "Глобальный"
 
 #. module: base
-#: view:res.users:0
+#: view:change.user.password:0
 msgid "You must logout and login again after changing your password."
 msgstr "После смены пароля вы должны выйти и зайти снова."
 
 #. module: base
-#: model:res.country,name:base.cz
-msgid "Czech Republic"
-msgstr "Чешская республика"
+#: model:res.country,name:base.mp
+msgid "Northern Mariana Islands"
+msgstr "Северные Марианские острова"
 
 #. module: base
 #: model:res.country,name:base.sb
@@ -5358,7 +5404,12 @@ msgid "Solomon Islands"
 msgstr "Соломоновы Острова"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:344
+#: code:addons/orm.py:1897
+#: code:addons/orm.py:2972
+#: code:addons/orm.py:3165
+#: code:addons/orm.py:3365
+#: code:addons/orm.py:3817
 #, python-format
 msgid "AccessError"
 msgstr "Ошибка доступа"
@@ -5369,9 +5420,26 @@ msgid "Waiting"
 msgstr "Ожидание"
 
 #. module: base
+#: code:addons/__init__.py:827
+#, python-format
+msgid "Could not load base module"
+msgstr "Не удалось загрузить базовый модуль"
+
+#. module: base
 #: view:res.lang:0
 msgid "8.  %I:%M:%S %p  ==> 06:25:20 PM"
 msgstr "8.  %I:%M:%S %p  ==> 06:25:20 PM"
+
+#. module: base
+#: code:addons/orm.py:1803
+#, python-format
+msgid "The copy method is not implemented on this object !"
+msgstr ""
+
+#. module: base
+#: field:res.log,create_date:0
+msgid "Creation Date"
+msgstr "Дата создания"
 
 #. module: base
 #: view:ir.translation:0
@@ -5406,9 +5474,9 @@ msgid "Module Category"
 msgstr "Категория модуля"
 
 #. module: base
-#: view:partner.wizard.ean.check:0
-msgid "Ignore"
-msgstr "Игнорировать"
+#: model:res.country,name:base.us
+msgid "United States"
+msgstr "Соединённые Штаты Америки"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -5426,11 +5494,6 @@ msgid "Mali"
 msgstr "Мали"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_UNINDENT"
-msgstr "STOCK_UNINDENT"
-
-#. module: base
 #: help:res.config.users,email:0
 #: help:res.users,email:0
 msgid ""
@@ -5441,24 +5504,14 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-face-plain"
-msgstr "terp-face-plain"
-
-#. module: base
 #: selection:base.language.install,lang:0
-msgid "Japanese / Japan"
+msgid "Flemish (BE) / Vlaams (BE)"
 msgstr ""
 
 #. module: base
 #: field:ir.cron,interval_number:0
 msgid "Interval Number"
 msgstr "Число интервалов"
-
-#. module: base
-#: selection:maintenance.contract,kind:0
-msgid "Partial"
-msgstr "Частично"
 
 #. module: base
 #: model:res.country,name:base.tk
@@ -5490,11 +5543,6 @@ msgid "User Interface"
 msgstr "Интерфейс пользователя"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DIALOG_INFO"
-msgstr "STOCK_DIALOG_INFO"
-
-#. module: base
 #: field:ir.attachment,create_date:0
 msgid "Date Created"
 msgstr "Дата создания"
@@ -5505,15 +5553,10 @@ msgid "ir.actions.todo"
 msgstr "ТОДО"
 
 #. module: base
-#: code:addons/base/res/res_config.py:0
+#: code:addons/base/res/res_config.py:94
 #, python-format
 msgid "Couldn't find previous ir.actions.todo"
 msgstr ""
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GO_BACK"
-msgstr "STOCK_GO_BACK"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -5526,14 +5569,14 @@ msgid "Custom Shortcuts"
 msgstr "Пользовательские комбинации клавиш"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Vietnamese / Tiếng Việt"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.dz
 msgid "Algeria"
 msgstr "Алжир"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-stock_format-scientific"
-msgstr "terp-stock_format-scientific"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -5541,9 +5584,9 @@ msgid "Belgium"
 msgstr "Бельгия"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Inuktitut / Canada"
-msgstr ""
+#: model:ir.model,name:base.model_osv_memory_autovacuum
+msgid "osv_memory.autovacuum"
+msgstr "osv_memory.autovacuum"
 
 #. module: base
 #: field:base.language.export,lang:0
@@ -5574,19 +5617,31 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: base
+#: view:res.lang:0
+msgid "%H - Hour (24-hour clock) [00,23]."
+msgstr "%H - часы [00,23]."
+
+#. module: base
 #: model:ir.model,name:base.model_res_widget
 msgid "res.widget"
 msgstr "res.widget"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/ir/ir_model.py:219
+#, python-format
+msgid "Model %s does not exist!"
+msgstr "Модель %s не существует !"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:88
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
 msgstr ""
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Norwegian Bokmål / Norway"
+#: code:addons/fields.py:103
+#, python-format
+msgid "Not implemented get_memory method !"
 msgstr ""
 
 #. module: base
@@ -5597,7 +5652,7 @@ msgid "Python Code"
 msgstr "Код на Python"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
 #, python-format
 msgid "Can not create the module file: %s !"
 msgstr "Невозможно создать файл модуля: %s !"
@@ -5613,9 +5668,12 @@ msgstr "Ядро OpenERP, необходимо для всех профилей.
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
+#: view:change.user.password:0
 #: view:partner.clear.ids:0
 #: view:partner.sms.send:0
 #: view:partner.wizard.spam:0
+#: view:publisher_warranty.contract.wizard:0
+#: view:res.widget.wizard:0
 msgid "Cancel"
 msgstr "Отмена"
 
@@ -5625,9 +5683,9 @@ msgid "PO File"
 msgstr "Файл '.po'"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SPELL_CHECK"
-msgstr "STOCK_SPELL_CHECK"
+#: model:res.country,name:base.nt
+msgid "Neutral Zone"
+msgstr "Нейтральная зона"
 
 #. module: base
 #: view:ir.model:0
@@ -5638,6 +5696,11 @@ msgstr ""
 #: view:res.request:0
 msgid "Current"
 msgstr "Текущий"
+
+#. module: base
+#: help:change.user.password,new_password:0
+msgid "Enter the new password."
+msgstr ""
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_9
@@ -5672,6 +5735,16 @@ msgid "Window Actions"
 msgstr "Действия окна"
 
 #. module: base
+#: view:res.lang:0
+msgid "%I - Hour (12-hour clock) [01,12]."
+msgstr "%I - часы [01,12]."
+
+#. module: base
+#: selection:publisher_warranty.contract.wizard,state:0
+msgid "Finished"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.de
 msgid "Germany"
 msgstr "Германия"
@@ -5684,12 +5757,7 @@ msgstr "Неделя года: %(woy)s"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_14
 msgid "Bad customers"
-msgstr "Плохие покупатели"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_HARDDISK"
-msgstr "STOCK_HARDDISK"
+msgstr "Плохие заказчики"
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -5697,19 +5765,9 @@ msgid "Reports :"
 msgstr "Отчёты :"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_APPLY"
-msgstr "STOCK_APPLY"
-
-#. module: base
 #: model:res.country,name:base.gy
 msgid "Guyana"
 msgstr "Гуана"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Portugese (BR) / português (BR)"
-msgstr "Португальский (Бразилия) / português (BR)"
 
 #. module: base
 #: help:ir.actions.act_window,view_type:0
@@ -5717,6 +5775,12 @@ msgid ""
 "View type: set to 'tree' for a hierarchical tree view, or 'form' for other "
 "views"
 msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_config.py:421
+#, python-format
+msgid "Click 'Continue' to configure the next addon..."
+msgstr "Нажмите 'Продолжить' для настройки следующего модуля..."
 
 #. module: base
 #: field:ir.actions.server,record_id:0
@@ -5743,7 +5807,7 @@ msgstr "Египет"
 #. module: base
 #: field:ir.rule,perm_read:0
 msgid "Apply For Read"
-msgstr ""
+msgstr "Применить для чтения"
 
 #. module: base
 #: help:ir.actions.server,model_id:0
@@ -5754,10 +5818,10 @@ msgstr ""
 "создавать)."
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:625
 #, python-format
 msgid "Please specify server option --email-from !"
-msgstr ""
+msgstr "Пожалуйста, задайте серверу опцию --email-from !"
 
 #. module: base
 #: field:base.language.import,name:0
@@ -5773,11 +5837,6 @@ msgstr "Логическое"
 #: view:ir.model:0
 msgid "Fields Description"
 msgstr "Описание полей"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_CDROM"
-msgstr "STOCK_CDROM"
 
 #. module: base
 #: view:ir.attachment:0
@@ -5803,9 +5862,12 @@ msgid "Readonly"
 msgstr "Только чтение"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_ITALIC"
-msgstr "STOCK_ITALIC"
+#: field:ir.actions.act_window.view,view_id:0
+#: field:ir.default,page:0
+#: selection:ir.translation,type:0
+#: field:wizard.ir.model.menu.create.line,view_id:0
+msgid "View"
+msgstr "Вид"
 
 #. module: base
 #: selection:ir.module.module,state:0
@@ -5828,9 +5890,9 @@ msgid "Base"
 msgstr "Базовый"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-dialog-close"
-msgstr "terp-dialog-close"
+#: selection:base.language.install,lang:0
+msgid "Telugu / తెలుగు"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.lr
@@ -5843,15 +5905,12 @@ msgstr "Либерия"
 #: view:res.groups:0
 #: view:res.partner:0
 #: field:res.partner,comment:0
+#: model:res.widget,title:base.note_widget
 msgid "Notes"
 msgstr "Примечания"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-folder-blue"
-msgstr "terp-folder-blue"
-
-#. module: base
+#: field:ir.config_parameter,value:0
 #: field:ir.property,value_binary:0
 #: field:ir.property,value_datetime:0
 #: field:ir.property,value_float:0
@@ -5871,7 +5930,6 @@ msgstr "Значение"
 #: field:ir.sequence.type,code:0
 #: selection:ir.translation,type:0
 #: field:res.bank,code:0
-#: field:res.currency,code:0
 #: field:res.partner.bank.type,code:0
 msgid "Code"
 msgstr "Код"
@@ -5880,11 +5938,6 @@ msgstr "Код"
 #: model:ir.model,name:base.model_res_config_installer
 msgid "res.config.installer"
 msgstr "res.config.installer"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Sinhalese / Sri Lanka"
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mc
@@ -5897,11 +5950,6 @@ msgid "Minutes"
 msgstr "Минут"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gnome-cpu-frequency-applet+"
-msgstr "terp-gnome-cpu-frequency-applet+"
-
-#. module: base
 #: selection:ir.translation,type:0
 msgid "Help"
 msgstr "Справка"
@@ -5912,6 +5960,8 @@ msgstr "Справка"
 msgid ""
 "If specified, the action will replace the standard menu for this user."
 msgstr ""
+"Если определено, действие переопределит стандартное меню для этого "
+"пользователя."
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -5930,8 +5980,13 @@ msgid "Sequence Codes"
 msgstr "Последовательность кодов"
 
 #. module: base
+#: field:change.user.password,confirm_password:0
+msgid "Confirm Password"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
-msgid "Abkhazian (RU)"
+msgid "Spanish (CO) / Español (CO)"
 msgstr ""
 
 #. module: base
@@ -5983,7 +6038,9 @@ msgid "Afghanistan, Islamic State of"
 msgstr "Афганистан"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_import.py:0
+#: code:addons/base/module/wizard/base_module_import.py:67
+#: code:addons/base/res/res_user.py:594
+#: code:addons/base/res/res_user.py:605
 #, python-format
 msgid "Error !"
 msgstr "Ошибка !"
@@ -5994,20 +6051,21 @@ msgid "country_id"
 msgstr "Интендификатор страны"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-accessories-archiver+"
-msgstr "terp-accessories-archiver+"
-
-#. module: base
 #: field:ir.cron,interval_type:0
 msgid "Interval Unit"
 msgstr "Ед. изм. интервала"
 
 #. module: base
-#: field:maintenance.contract,kind:0
+#: field:publisher_warranty.contract,kind:0
 #: field:workflow.activity,kind:0
 msgid "Kind"
 msgstr "Тип"
+
+#. module: base
+#: code:addons/orm.py:3775
+#, python-format
+msgid "This method does not exist anymore"
+msgstr ""
 
 #. module: base
 #: field:res.bank,fax:0
@@ -6021,7 +6079,6 @@ msgid "Thousands Separator"
 msgstr "Разделитель тысяч"
 
 #. module: base
-#: field:res.log,create_date:0
 #: field:res.request,create_date:0
 msgid "Created Date"
 msgstr "Дата создания"
@@ -6041,11 +6098,6 @@ msgid "Chinese (TW) / 正體字"
 msgstr "Китайский (тайваньский) / 正體字"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GO_UP"
-msgstr "STOCK_GO_UP"
-
-#. module: base
 #: model:ir.model,name:base.model_res_request
 msgid "res.request"
 msgstr "Запрос"
@@ -6059,23 +6111,6 @@ msgstr "В памяти"
 #: view:ir.actions.todo:0
 msgid "Todo"
 msgstr "Список задач"
-
-#. module: base
-#: view:ir.attachment:0
-#: field:ir.attachment,company_id:0
-#: field:ir.default,company_id:0
-#: field:ir.property,company_id:0
-#: field:ir.sequence,company_id:0
-#: field:ir.values,company_id:0
-#: view:res.company:0
-#: field:res.config.users,company_id:0
-#: field:res.currency,company_id:0
-#: field:res.partner,company_id:0
-#: field:res.partner.address,company_id:0
-#: view:res.users:0
-#: field:res.users,company_id:0
-msgid "Company"
-msgstr "Компания"
 
 #. module: base
 #: field:ir.attachment,datas:0
@@ -6099,6 +6134,7 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: constraint:res.config.users:0
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
@@ -6118,6 +6154,13 @@ msgstr "Название службы"
 #: model:res.country,name:base.pn
 msgid "Pitcairn Island"
 msgstr "Острова Питкэрн"
+
+#. module: base
+#: code:addons/base/res/res_user.py:594
+#, python-format
+msgid ""
+"The new and confirmation passwords do not match, please double-check them."
+msgstr ""
 
 #. module: base
 #: view:base.module.upgrade:0
@@ -6143,11 +6186,6 @@ msgstr "Имя пользователя"
 #: view:ir.sequence:0
 msgid "Day of the year: %(doy)s"
 msgstr "День года: %(doy)"
-
-#. module: base
-#: model:res.country,name:base.nt
-msgid "Neutral Zone"
-msgstr "Нейтральная зона"
 
 #. module: base
 #: view:ir.model:0
@@ -6179,22 +6217,17 @@ msgid "Search View"
 msgstr "Обзор поиска"
 
 #. module: base
+#: sql_constraint:res.lang:0
+msgid "The code of the language must be unique !"
+msgstr "Код языка должен быть уникальным !"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_attachment
 #: view:ir.actions.report.xml:0
 #: view:ir.attachment:0
 #: model:ir.ui.menu,name:base.menu_action_attachment
 msgid "Attachments"
 msgstr "Вложения"
-
-#. module: base
-#: view:maintenance.contract.wizard:0
-msgid "_Validate"
-msgstr "_Проверить"
-
-#. module: base
-#: model:ir.model,name:base.model_maintenance_contract_wizard
-msgid "maintenance.contract.wizard"
-msgstr "Диалог контракта обслуживания"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_partner
@@ -6210,13 +6243,14 @@ msgstr "Прочие действия"
 
 #. module: base
 #: selection:ir.actions.todo,state:0
+#: view:res.config.users:0
 msgid "Done"
 msgstr "Выполнено"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GOTO_FIRST"
-msgstr "STOCK_GOTO_FIRST"
+#: view:change.user.password:0
+msgid "Change"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -6229,6 +6263,11 @@ msgstr "Г-жа"
 #: view:ir.rule:0
 msgid "Write Access"
 msgstr "Доступ на запись"
+
+#. module: base
+#: view:res.lang:0
+msgid "%m - Month number [01,12]."
+msgstr "%m - номер месяца [01,12]."
 
 #. module: base
 #: field:res.bank,city:0
@@ -6252,12 +6291,7 @@ msgstr "Италия"
 #: view:ir.actions.todo:0
 #: selection:ir.actions.todo,state:0
 msgid "To Do"
-msgstr ""
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-check"
-msgstr "terp-check"
+msgstr "Сделать"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6270,11 +6304,6 @@ msgstr "Эстонский / Eesti keel"
 #: field:res.users,email:0
 msgid "E-mail"
 msgstr "Эл. почта"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Portugese / português"
-msgstr "Португальский / português"
 
 #. module: base
 #: selection:ir.module.module,license:0
@@ -6299,9 +6328,24 @@ msgid "Object Identifiers"
 msgstr "Идентификаторы объекта"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_partner_title_partner
+msgid ""
+"Manage the partner titles you want to have available in your system. The "
+"partner titles is the legal status of the company: Private Limited, SA, etc."
+msgstr ""
+
+#. module: base
 #: view:base.language.export:0
 msgid "To browse official translations, you can start with these links:"
 msgstr "Для просмотра официальных переводов начните с этой ссылки:"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:338
+#, python-format
+msgid ""
+"You can not read this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: view:res.bank:0
@@ -6316,6 +6360,11 @@ msgstr "Адрес"
 #: field:ir.module.module,latest_version:0
 msgid "Installed version"
 msgstr "Установленная версия"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Mongolian / монгол"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -6350,6 +6399,11 @@ msgid "Parent Company"
 msgstr "Родительская компания"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (CR) / Español (CR)"
+msgstr ""
+
+#. module: base
 #: field:res.currency.rate,rate:0
 msgid "Rate"
 msgstr "Курс"
@@ -6365,9 +6419,9 @@ msgid "Examples"
 msgstr "Примеры"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_PAUSE"
-msgstr "STOCK_MEDIA_PAUSE"
+#: field:ir.default,value:0
+msgid "Default Value"
+msgstr "Значение по умолчанию"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_tools
@@ -6375,19 +6429,21 @@ msgid "Tools"
 msgstr "Инструменты"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gtk-go-back-ltr"
-msgstr "terp-gtk-go-back-ltr"
-
-#. module: base
 #: model:res.country,name:base.kn
 msgid "Saint Kitts & Nevis Anguilla"
 msgstr "Сент-Киттс и Невис Ангилья"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_HOME"
-msgstr "STOCK_HOME"
+#: code:addons/base/res/res_currency.py:100
+#, python-format
+msgid ""
+"No rate found \n"
+"for the currency: %s \n"
+"at the date: %s"
+msgstr ""
+"Нет курса \n"
+"для валюты: %s \n"
+"на дату: %s"
 
 #. module: base
 #: field:ir.model,name:0
@@ -6452,19 +6508,30 @@ msgid "Or"
 msgstr "Или"
 
 #. module: base
-#: model:res.country,name:base.pk
-msgid "Pakistan"
-msgstr "Пакистан"
+#: model:ir.actions.act_window,name:base.res_log_act_window
+#: model:ir.ui.menu,name:base.menu_res_log_act_window
+msgid "Client Logs"
+msgstr ""
 
 #. module: base
-#: view:ir.actions.todo:0
-msgid "Set as Todo"
-msgstr "Установить как дело"
+#: model:res.country,name:base.al
+msgid "Albania"
+msgstr "Албания"
 
 #. module: base
 #: model:res.country,name:base.ws
 msgid "Samoa"
 msgstr "Самоа"
+
+#. module: base
+#: code:addons/base/res/res_lang.py:90
+#, python-format
+msgid ""
+"You cannot delete the language which is Active !\n"
+"Please de-activate the language first."
+msgstr ""
+"Вы не можете удалить активный язык !\n"
+"Сначала сделайте его не активным."
 
 #. module: base
 #: view:base.language.install:0
@@ -6482,10 +6549,18 @@ msgid "Child IDs"
 msgstr "Подчиненные идентификаторы"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:0
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr "Проблемы в конфигурации `Record Id` в серверном действии!"
+
+#. module: base
+#: code:addons/orm.py:2306
+#: code:addons/orm.py:2316
+#, python-format
+msgid "ValidateError"
+msgstr ""
 
 #. module: base
 #: view:base.module.import:0
@@ -6494,10 +6569,9 @@ msgid "Open Modules"
 msgstr "Открыть модули"
 
 #. module: base
-#: code:addons/base/maintenance/maintenance.py:0
-#, python-format
-msgid "This error occurs on database %s"
-msgstr "Эта ошибка в базе данных %s"
+#: model:ir.actions.act_window,help:base.action_res_bank_form
+msgid "Manage bank records you want to be used in the system."
+msgstr ""
 
 #. module: base
 #: view:base.module.import:0
@@ -6505,9 +6579,9 @@ msgid "Import module"
 msgstr "Модуль импорта"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DISCONNECT"
-msgstr "STOCK_DISCONNECT"
+#: field:ir.actions.server,loop_action:0
+msgid "Loop Action"
+msgstr "Повторное действие"
 
 #. module: base
 #: help:ir.actions.report.xml,report_file:0
@@ -6523,7 +6597,6 @@ msgstr "Лаос"
 
 #. module: base
 #: selection:ir.actions.server,state:0
-#: model:ir.ui.menu,name:base.menu_mail_gateway
 #: field:res.config.users,user_email:0
 #: field:res.users,user_email:0
 msgid "Email"
@@ -6534,6 +6607,14 @@ msgstr "Эл. почта"
 #: field:res.users,action_id:0
 msgid "Home Action"
 msgstr "Действие со стороны пользователя"
+
+#. module: base
+#: code:addons/custom.py:558
+#, python-format
+msgid ""
+"The sum of the data (2nd field) is null.\n"
+"We can't draw a pie chart !"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_lunch_reporting
@@ -6561,6 +6642,12 @@ msgstr ""
 #: selection:workflow.activity,kind:0
 msgid "Stop All"
 msgstr "Остановить все"
+
+#. module: base
+#: code:addons/orm.py:412
+#, python-format
+msgid "The read_group method is not implemented on this object !"
+msgstr ""
 
 #. module: base
 #: view:ir.model.data:0
@@ -6598,11 +6685,6 @@ msgid "Romania"
 msgstr "Румыния"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_PREFERENCES"
-msgstr "STOCK_PREFERENCES"
-
-#. module: base
 #: help:ir.cron,doall:0
 msgid ""
 "Enable this if you want to execute missed occurences as soon as the server "
@@ -6613,6 +6695,12 @@ msgstr ""
 #: view:base.module.upgrade:0
 msgid "Start update"
 msgstr "Начать обновление"
+
+#. module: base
+#: code:addons/base/publisher_warranty/publisher_warranty.py:144
+#, python-format
+msgid "Contract validation error"
+msgstr ""
 
 #. module: base
 #: field:res.country.state,name:0
@@ -6629,11 +6717,6 @@ msgstr "Режим слияния"
 #: field:res.users,context_tz:0
 msgid "Timezone"
 msgstr "Часовой пояс"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GOTO_LAST"
-msgstr "STOCK_GOTO_LAST"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_report_xml
@@ -6654,7 +6737,7 @@ msgstr "Обзор"
 #. module: base
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Ошибка! Вы не можете создать рекурсивно связанных участников."
 
 #. module: base
 #: help:res.lang,code:0
@@ -6670,6 +6753,15 @@ msgstr "Партнеры OpenERP"
 #: model:ir.ui.menu,name:base.menu_hr_manager
 msgid "HR Manager Dashboard"
 msgstr "Инф. панель менеджера отдела кадров"
+
+#. module: base
+#: code:addons/base/module/module.py:253
+#, python-format
+msgid ""
+"Unable to install module \"%s\" because an external dependency is not met: %s"
+msgstr ""
+"Нельзя установить модуль \"%s\" так, как не удовлетворена внешняя "
+"зависимость: %s"
 
 #. module: base
 #: view:ir.module.module:0
@@ -6692,6 +6784,15 @@ msgid "Action Name"
 msgstr "Название действия"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_res_users
+msgid ""
+"Create and manage users that will connect to the system. Users can be "
+"deactivated should there be a period of time during which they will/should "
+"not connect to the system. You can assign them groups in order to give them "
+"specific access to the applications they need to use in the system."
+msgstr ""
+
+#. module: base
 #: selection:res.request,priority:0
 msgid "Normal"
 msgstr "Нормальный"
@@ -6706,6 +6807,12 @@ msgstr "Улица (2-я строка)"
 #: model:ir.actions.act_window,name:base.action_view_base_module_update
 msgid "Module Update"
 msgstr "Обновление модуля"
+
+#. module: base
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
+#, python-format
+msgid "Following modules are not installed or unknown: %s"
+msgstr "Следующие модули не установлены или не известны: %s"
 
 #. module: base
 #: view:ir.cron:0
@@ -6725,15 +6832,6 @@ msgstr "Пользователь"
 #: model:res.country,name:base.pr
 msgid "Puerto Rico"
 msgstr "Пуэрто-Рико"
-
-#. module: base
-#: code:addons/base/res/res_currency.py:0
-#, python-format
-msgid ""
-"No rate found \n"
-"' \\n                    'for the currency: %s \n"
-"' \\n                    'at the date: %s"
-msgstr "Курс не найден\\n для валюты %s на дату %s"
 
 #. module: base
 #: view:ir.actions.act_window:0
@@ -6792,9 +6890,22 @@ msgid "The new user's real name, used for searching and most listings"
 msgstr "Настоящее имя пользователя, используется для поиска и в списках"
 
 #. module: base
-#: model:ir.model,name:base.model_res_request_history
-msgid "res.request.history"
-msgstr "res.request.history"
+#: code:addons/osv.py:154
+#: code:addons/osv.py:156
+#, python-format
+msgid "Integrity Error"
+msgstr ""
+
+#. module: base
+#: model:ir.model,name:base.model_ir_wizard_screen
+msgid "ir.wizard.screen"
+msgstr "ir.wizard.screen"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:189
+#, python-format
+msgid "Size of the field can never be less than 1 !"
+msgstr "Размер поля никогда не может быть меньше 1 !"
 
 #. module: base
 #: model:res.country,name:base.so
@@ -6802,14 +6913,14 @@ msgid "Somalia"
 msgstr "Сомали"
 
 #. module: base
-#: model:ir.model,name:base.model_res_config
-msgid "res.config"
-msgstr "res.config"
+#: selection:publisher_warranty.contract,state:0
+msgid "Terminated"
+msgstr "Прекращен"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_13
 msgid "Important customers"
-msgstr "Важные клиенты"
+msgstr "Важные заказчики"
 
 #. module: base
 #: view:res.lang:0
@@ -6830,6 +6941,12 @@ msgid "Arguments"
 msgstr "Аргументы"
 
 #. module: base
+#: code:addons/orm.py:716
+#, python-format
+msgid "Database ID doesn't exist: %s : %s"
+msgstr ""
+
+#. module: base
 #: selection:ir.module.module,license:0
 msgid "GPL Version 2"
 msgstr "GPL версия 2"
@@ -6840,14 +6957,34 @@ msgid "GPL Version 3"
 msgstr "GPL версия 3"
 
 #. module: base
-#: view:partner.wizard.ean.check:0
-msgid "Correct EAN13"
+#: code:addons/orm.py:836
+#, python-format
+msgid "key '%s' not found in selection field '%s'"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_audit
-msgid "Audit"
-msgstr "Аудит"
+#: view:partner.wizard.ean.check:0
+msgid "Correct EAN13"
+msgstr "Правильный штрих-код"
+
+#. module: base
+#: code:addons/orm.py:2317
+#, python-format
+msgid "The value \"%s\" for the field \"%s\" is not in the selection"
+msgstr ""
+
+#. module: base
+#: field:res.partner,customer:0
+#: view:res.partner.address:0
+#: field:res.partner.address,is_customer_add:0
+#: model:res.partner.category,name:base.res_partner_category_0
+msgid "Customer"
+msgstr "Заказчик"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Spanish (NI) / Español (NI)"
+msgstr ""
 
 #. module: base
 #: field:ir.module.module,shortdesc:0
@@ -6908,6 +7045,11 @@ msgid "Tunisia"
 msgstr "Тунис"
 
 #. module: base
+#: model:ir.ui.menu,name:base.menu_mrp_root
+msgid "Manufacturing"
+msgstr "Производство"
+
+#. module: base
 #: view:base.language.export:0
 #: model:ir.actions.act_window,name:base.action_wizard_lang_export
 #: model:ir.ui.menu,name:base.menu_wizard_lang_export
@@ -6927,6 +7069,11 @@ msgid "Cancel Install"
 msgstr "Отмена установки"
 
 #. module: base
+#: field:res.partner.category,parent_right:0
+msgid "Right parent"
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "Legends for Date and Time Formats"
 msgstr "Форматы даты и времени"
@@ -6935,6 +7082,15 @@ msgstr "Форматы даты и времени"
 #: selection:ir.actions.server,state:0
 msgid "Copy Object"
 msgstr "Копировать объект"
+
+#. module: base
+#: code:addons/base/res/res_user.py:551
+#, python-format
+msgid ""
+"Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
+msgstr ""
+"Группа(ы) не может быть удалена так, как есть пользователи принадлежащие к "
+"ним:  %s !"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_country_state
@@ -6952,12 +7108,6 @@ msgstr "Правила доступа"
 #: field:ir.default,ref_table:0
 msgid "Table Ref."
 msgstr "Ссылка на таблицу"
-
-#. module: base
-#: view:res.config:0
-#: view:res.config.installer:0
-msgid "description"
-msgstr "описание"
 
 #. module: base
 #: field:ir.actions.act_window,res_model:0
@@ -6988,6 +7138,15 @@ msgid "Object"
 msgstr "Объект"
 
 #. module: base
+#: code:addons/osv.py:151
+#, python-format
+msgid ""
+"\n"
+"\n"
+"[object with reference: %s - %s]"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_ir_default
 msgid "ir.default"
 msgstr "Значения по умолчанию"
@@ -7010,16 +7169,13 @@ msgid "Scheduler"
 msgstr "Планировщик"
 
 #. module: base
-#: view:res.lang:0
-msgid "%w - Weekday as a decimal number [0(Sunday),6]."
-msgstr "%w - День недели как десятичное число [от 0(Воскресенье) до 6]."
-
-#. module: base
 #: help:ir.cron,numbercall:0
 msgid ""
 "Number of time the function is called,\n"
 "a negative number indicates no limit"
 msgstr ""
+"Количество раз вызова функции,\n"
+"отрицательное значение - не ограничено"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -7027,10 +7183,15 @@ msgid "User Ref."
 msgstr "Ссылка на пользователя"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
+#: code:addons/base/res/res_user.py:550
 #, python-format
 msgid "Warning !"
 msgstr "Внимание !"
+
+#. module: base
+#: model:res.widget,title:base.google_maps_widget
+msgid "Google Maps"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_base_config
@@ -7044,9 +7205,19 @@ msgid "Configuration"
 msgstr "Настройки"
 
 #. module: base
+#: model:ir.model,name:base.model_publisher_warranty_contract_wizard
+msgid "publisher_warranty.contract.wizard"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.server,expression:0
 msgid "Loop Expression"
 msgstr "Выражение цикла"
+
+#. module: base
+#: field:publisher_warranty.contract,date_start:0
+msgid "Starting Date"
+msgstr "Дата начала"
 
 #. module: base
 #: help:res.partner,website:0
@@ -7095,7 +7266,7 @@ msgstr "Тип отчета"
 #: view:ir.module.module:0
 #: field:ir.module.module,state:0
 #: field:ir.module.module.dependency,state:0
-#: field:maintenance.contract,state:0
+#: field:publisher_warranty.contract,state:0
 #: field:res.bank,state:0
 #: view:res.country.state:0
 #: field:res.partner.bank,state_id:0
@@ -7105,11 +7276,6 @@ msgstr "Тип отчета"
 #: field:workflow.workitem,state:0
 msgid "State"
 msgstr "Состояние"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-administration"
-msgstr "terp-administration"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7143,6 +7309,11 @@ msgid "Open Source Service Company"
 msgstr "Откройте Исходную Компанию сферы обслуживания"
 
 #. module: base
+#: model:res.country,name:base.kg
+msgid "Kyrgyz Republic (Kyrgyzstan)"
+msgstr "Киргизия (Кыргызстан)"
+
+#. module: base
 #: selection:res.request,state:0
 msgid "waiting"
 msgstr "ожидание"
@@ -7158,9 +7329,10 @@ msgid "workflow.triggers"
 msgstr "События процесса"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-hr"
-msgstr "terp-hr"
+#: code:addons/base/ir/ir_model.py:60
+#, python-format
+msgid "Invalid search criterions"
+msgstr "Неверные критерии поиска"
 
 #. module: base
 #: view:ir.attachment:0
@@ -7182,11 +7354,6 @@ msgid "- type,name,res_id,src,value"
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DND"
-msgstr "STOCK_DND"
-
-#. module: base
 #: model:res.country,name:base.hm
 msgid "Heard and McDonald Islands"
 msgstr "Остров Херд и Острова Макдоналд"
@@ -7197,14 +7364,16 @@ msgid "View Ref."
 msgstr "Ссылка на вид"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Dutch (Belgium) / Nederlands (Belgïe)"
-msgstr "Голландский (бельгийский) / Nederlands (Belgïe)"
-
-#. module: base
 #: selection:ir.translation,type:0
 msgid "Selection"
 msgstr "Выбор"
+
+#. module: base
+#: view:change.user.password:0
+#: model:ir.actions.act_window,name:base.action_view_change_password_form
+#: view:res.users:0
+msgid "Change Password"
+msgstr "Изменить пароль"
 
 #. module: base
 #: field:res.company,rml_header1:0
@@ -7223,6 +7392,16 @@ msgstr "Заголовок отчета"
 #: field:ir.actions.wizard,type:0
 msgid "Action Type"
 msgstr "Тип действия"
+
+#. module: base
+#: code:addons/base/module/module.py:268
+#, python-format
+msgid ""
+"You try to install module '%s' that depends on module '%s'.\n"
+"But the latter module is not available in your system."
+msgstr ""
+"Вы пытаетесь установить модуль '%s'  который зависит от модуля '%s',\n"
+"но он не доступен в вашей системе."
 
 #. module: base
 #: view:base.language.import:0
@@ -7250,11 +7429,6 @@ msgid "Binary"
 msgstr "Двоичный"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_FLOPPY"
-msgstr "STOCK_FLOPPY"
-
-#. module: base
 #: field:ir.actions.server,sms:0
 #: selection:ir.actions.server,state:0
 msgid "SMS"
@@ -7264,13 +7438,6 @@ msgstr "SMS"
 #: model:res.country,name:base.cr
 msgid "Costa Rica"
 msgstr "Коста-Рика"
-
-#. module: base
-#: code:addons/base/maintenance/maintenance.py:0
-#, python-format
-msgid "Your can't submit bug reports due to uncovered modules: %s"
-msgstr ""
-"Вы не можете отправить сообщение об ошибке из-за открытых модулей: %s"
 
 #. module: base
 #: view:workflow.activity:0
@@ -7290,6 +7457,11 @@ msgid "Currencies"
 msgstr "Валюты"
 
 #. module: base
+#: sql_constraint:res.groups:0
+msgid "The name of the group must be unique !"
+msgstr "Название группы должно быть уникальным !"
+
+#. module: base
 #: view:ir.sequence:0
 msgid "Hour 00->12: %(h12)s"
 msgstr "Час 00->12: %(h12)s"
@@ -7298,6 +7470,11 @@ msgstr "Час 00->12: %(h12)s"
 #: help:res.partner.address,active:0
 msgid "Uncheck the active field to hide the contact."
 msgstr "Снимите флажок, чтобы скрыть контакт."
+
+#. module: base
+#: model:ir.model,name:base.model_res_widget_wizard
+msgid "Add a widget for User"
+msgstr "Добавить виджет для пользователя"
 
 #. module: base
 #: model:res.country,name:base.dk
@@ -7315,9 +7492,26 @@ msgid "workflow.instance"
 msgstr "workflow.instance"
 
 #. module: base
+#: code:addons/orm.py:278
+#, python-format
+msgid "Unknown attribute %s in %s "
+msgstr ""
+
+#. module: base
 #: view:res.lang:0
 msgid "10. %S              ==> 20"
 msgstr "10. %S              ==> 20"
+
+#. module: base
+#: code:addons/fields.py:106
+#, python-format
+msgid "undefined get method !"
+msgstr ""
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Norwegian Bokmål / Norsk bokmål"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -7350,17 +7544,23 @@ msgid "Low Level Objects"
 msgstr "Объекты нижнего уровня"
 
 #. module: base
+#: view:res.company:0
+msgid "Your Logo - Use a size of about 450x150 pixels."
+msgstr "Ваш логотип - используйте размер примерно 450x150 пикселей"
+
+#. module: base
 #: model:ir.model,name:base.model_ir_values
 msgid "ir.values"
 msgstr "Значения"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_ZOOM_FIT"
-msgstr "STOCK_ZOOM_FIT"
+#: selection:base.language.install,lang:0
+msgid "Occitan (FR, post 1500) / Occitan"
+msgstr ""
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_emails
+#: model:ir.ui.menu,name:base.menu_mail_gateway
 msgid "Emails"
 msgstr ""
 
@@ -7368,6 +7568,11 @@ msgstr ""
 #: model:res.country,name:base.cd
 msgid "Congo, The Democratic Republic of the"
 msgstr "Демократическая республика Конго"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Malayalam / മലയാളം"
+msgstr ""
 
 #. module: base
 #: view:res.request:0
@@ -7391,11 +7596,6 @@ msgstr "Количество звонков"
 #: field:base.module.upgrade,module_info:0
 msgid "Modules to update"
 msgstr "Модули, которые надо обновить"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GOTO_BOTTOM"
-msgstr "STOCK_GOTO_BOTTOM"
 
 #. module: base
 #: help:ir.actions.server,sequence:0
@@ -7427,9 +7627,9 @@ msgid "Croatian / hrvatski jezik"
 msgstr "Хорватский / hrvatski jezik"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_GO_FORWARD"
-msgstr "STOCK_GO_FORWARD"
+#: help:change.user.password,current_password:0
+msgid "Enter your current password."
+msgstr ""
 
 #. module: base
 #: field:base.language.install,overwrite:0
@@ -7440,6 +7640,11 @@ msgstr "Заменить существующие выражения"
 #: help:ir.actions.server,code:0
 msgid "Python code to be executed"
 msgstr "Код на Python для выполнения"
+
+#. module: base
+#: sql_constraint:res.country:0
+msgid "The code of the country must be unique !"
+msgstr "Код страны должен быть уникальным !"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_project_management_time_tracking
@@ -7479,27 +7684,20 @@ msgid "Send Email"
 msgstr "Отправить e-mail"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_SELECT_FONT"
-msgstr "STOCK_SELECT_FONT"
-
-#. module: base
 #: field:res.config.users,menu_id:0
 #: field:res.users,menu_id:0
 msgid "Menu Action"
 msgstr "Меню действий"
 
 #. module: base
+#: model:res.country,name:base.fo
+msgid "Faroe Islands"
+msgstr "Фарерские острова"
+
+#. module: base
 #: selection:base.language.export,state:0
 msgid "choose"
 msgstr "выбрать"
-
-#. module: base
-#: selection:ir.actions.act_window.view,view_mode:0
-#: selection:ir.ui.view,type:0
-#: selection:wizard.ir.model.menu.create.line,view_type:0
-msgid "Graph"
-msgstr "График"
 
 #. module: base
 #: help:ir.model,osv_memory:0
@@ -7520,6 +7718,11 @@ msgstr "Ссылка на партнера"
 #: view:res.partner:0
 msgid "Suppliers"
 msgstr "Поставщики"
+
+#. module: base
+#: view:publisher_warranty.contract.wizard:0
+msgid "Register"
+msgstr ""
 
 #. module: base
 #: field:res.request,ref_doc2:0
@@ -7569,11 +7772,6 @@ msgid "New Caledonia (French)"
 msgstr "Новая Каледония (заморская территория Франции)"
 
 #. module: base
-#: view:maintenance.contract.wizard:0
-msgid "_Cancel"
-msgstr "_Отмена"
-
-#. module: base
 #: model:res.country,name:base.cy
 msgid "Cyprus"
 msgstr "Кипр"
@@ -7616,23 +7814,10 @@ msgid "Next"
 msgstr "Далее"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-report"
-msgstr "terp-report"
-
-#. module: base
 #: help:ir.cron,function:0
 msgid ""
 "Name of the method to be called on the object when this scheduler is "
 "executed."
-msgstr ""
-
-#. module: base
-#: model:res.company,overdue_msg:base.main_company
-msgid ""
-"Would your payment have been carried out after this mail was sent, please "
-"consider the present one as void. Do not hesitate to contact our accounting "
-"department"
 msgstr ""
 
 #. module: base
@@ -7641,14 +7826,19 @@ msgid "Miscellaneous"
 msgstr "Прочее"
 
 #. module: base
-#: field:ir.attachment,url:0
-msgid "Url"
-msgstr ""
-
-#. module: base
 #: model:res.country,name:base.cn
 msgid "China"
 msgstr "Китай"
+
+#. module: base
+#: code:addons/base/res/res_user.py:486
+#, python-format
+msgid ""
+"--\n"
+"%(name)s %(email)s\n"
+msgstr ""
+"--\n"
+"%(name)s %(email)s\n"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -7659,6 +7849,13 @@ msgstr "Западная Сахара"
 #: model:ir.model,name:base.model_workflow
 msgid "workflow"
 msgstr "рабочий процесс"
+
+#. module: base
+#: model:ir.actions.act_window,help:base.action_res_company_form
+msgid ""
+"Create and manage the companies that will be managed by OpenERP from here. "
+"Shops or subsidiaries can be created and maintained from here."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.id
@@ -7686,9 +7883,9 @@ msgid "Bulgaria"
 msgstr "Болгария"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-folder-green"
-msgstr "terp-folder-green"
+#: view:publisher_warranty.contract.wizard:0
+msgid "Publisher warranty contract successfully registered!"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ao
@@ -7699,11 +7896,6 @@ msgstr "Ангола"
 #: model:res.country,name:base.tf
 msgid "French Southern Territories"
 msgstr "Францизкие Южные Территории"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_HELP"
-msgstr "STOCK_HELP"
 
 #. module: base
 #: model:ir.model,name:base.model_res_currency
@@ -7728,7 +7920,7 @@ msgstr "5.  %y, %Y         ==> 08, 2008"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_ltd
 msgid "ltd"
-msgstr ""
+msgstr "ООО"
 
 #. module: base
 #: field:ir.model.fields,model_id:0
@@ -7750,12 +7942,7 @@ msgstr "Администрирование"
 #. module: base
 #: view:base.module.update:0
 msgid "Click on Update below to start the process..."
-msgstr ""
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-go-today"
-msgstr "terp-go-today"
+msgstr "Нажмите 'Обновить' для запуска процесса..."
 
 #. module: base
 #: model:res.country,name:base.ir
@@ -7766,7 +7953,7 @@ msgstr "Иран"
 #: model:ir.actions.act_window,name:base.res_widget_user_act_window
 #: model:ir.ui.menu,name:base.menu_res_widget_user_act_window
 msgid "Widgets per User"
-msgstr ""
+msgstr "Виджеты пользователей"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7776,7 +7963,7 @@ msgstr ""
 #. module: base
 #: field:base.language.export,state:0
 #: field:ir.ui.menu,icon_pict:0
-#: field:res.widget.wizard,widget_id:0
+#: field:publisher_warranty.contract.wizard,state:0
 msgid "unknown"
 msgstr "неизвестен"
 
@@ -7817,9 +8004,9 @@ msgid "Association"
 msgstr "Связь"
 
 #. module: base
-#: view:ir.actions.server:0
-msgid "Action to Launch"
-msgstr "Запустить действие"
+#: model:res.country,name:base.cl
+msgid "Chile"
+msgstr "Чили"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_address_book
@@ -7844,7 +8031,7 @@ msgid "Account No."
 msgstr "Счет номер"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:0
+#: code:addons/base/res/res_lang.py:86
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
 msgstr "Базовый язык 'en_US'  нельзя удалить !"
@@ -7855,24 +8042,9 @@ msgid "Base Object"
 msgstr "Основной объект"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-crm"
-msgstr "terp-crm"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_STRIKETHROUGH"
-msgstr "STOCK_STRIKETHROUGH"
-
-#. module: base
 #: report:ir.module.reference.graph:0
 msgid "Dependencies :"
 msgstr "Зависимости :"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-partner"
-msgstr "terp-partner"
 
 #. module: base
 #: field:ir.model.fields,field_description:0
@@ -7895,9 +8067,17 @@ msgid "Antigua and Barbuda"
 msgstr "Антигуа и Барбуда"
 
 #. module: base
-#: model:res.country,name:base.gw
-msgid "Guinea Bissau"
-msgstr "Гвинея-Бисау"
+#: code:addons/orm.py:3166
+#, python-format
+msgid ""
+"Operation prohibited by access rules, or performed on an already deleted "
+"document (Operation: %s, Document type: %s)."
+msgstr ""
+
+#. module: base
+#: model:res.country,name:base.zr
+msgid "Zaire"
+msgstr "Заир"
 
 #. module: base
 #: field:ir.model.data,res_id:0
@@ -7914,14 +8094,9 @@ msgid "Information"
 msgstr "Информация"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-call-start"
-msgstr "terp-call-start module: stock"
-
-#. module: base
 #: view:res.widget.user:0
 msgid "User Widgets"
-msgstr ""
+msgstr "Виджеты пользователя"
 
 #. module: base
 #: view:base.module.update:0
@@ -7957,30 +8132,31 @@ msgid "Auto-Refresh"
 msgstr "Автообновление"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:60
+#, python-format
+msgid "The osv_memory field can only be compared with = and != operator."
+msgstr ""
+
+#. module: base
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
 msgstr "Диаграмма"
 
 #. module: base
-#: help:multi_company.default,name:0
-msgid "Name it to easily find a record"
-msgstr ""
+#: model:res.country,name:base.wf
+msgid "Wallis and Futuna Islands"
+msgstr "Острова Уоллис и Футуна"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-locked"
-msgstr "terp-locked"
+#: help:multi_company.default,name:0
+msgid "Name it to easily find a record"
+msgstr "Задайте название для облегчения поиска записи"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.grant_menu_access
 #: model:ir.ui.menu,name:base.menu_grant_menu_access
 msgid "Menu Items"
 msgstr "Пункты меню"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-personal"
-msgstr "terp-personal"
 
 #. module: base
 #: constraint:ir.rule:0
@@ -7991,7 +8167,7 @@ msgstr "Правила не поддерживаются для объектов
 #: model:ir.ui.menu,name:base.menu_event_association
 #: model:ir.ui.menu,name:base.menu_event_main
 msgid "Events Organisation"
-msgstr ""
+msgstr "Организация событий"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.ir_sequence_actions
@@ -8013,6 +8189,11 @@ msgid "Export"
 msgstr "Экспорт"
 
 #. module: base
+#: model:res.country,name:base.hr
+msgid "Croatia"
+msgstr "Хорватия"
+
+#. module: base
 #: help:res.bank,bic:0
 msgid "Bank Identifier Code"
 msgstr "БИК"
@@ -8021,6 +8202,35 @@ msgstr "БИК"
 #: model:res.country,name:base.tm
 msgid "Turkmenistan"
 msgstr "Туркменистан"
+
+#. module: base
+#: code:addons/base/ir/ir_actions.py:593
+#: code:addons/base/ir/ir_actions.py:625
+#: code:addons/base/ir/ir_actions.py:709
+#: code:addons/base/ir/ir_actions.py:712
+#: code:addons/base/ir/ir_model.py:112
+#: code:addons/base/ir/ir_model.py:197
+#: code:addons/base/ir/ir_model.py:216
+#: code:addons/base/ir/ir_model.py:219
+#: code:addons/base/module/module.py:215
+#: code:addons/base/module/module.py:258
+#: code:addons/base/module/module.py:262
+#: code:addons/base/module/module.py:268
+#: code:addons/base/module/module.py:303
+#: code:addons/base/module/module.py:321
+#: code:addons/base/module/module.py:336
+#: code:addons/base/module/module.py:429
+#: code:addons/base/module/module.py:530
+#: code:addons/base/publisher_warranty/publisher_warranty.py:163
+#: code:addons/base/publisher_warranty/publisher_warranty.py:281
+#: code:addons/base/res/res_currency.py:100
+#: code:addons/base/res/res_user.py:57
+#: code:addons/base/res/res_user.py:66
+#: code:addons/custom.py:558
+#: code:addons/orm.py:3199
+#, python-format
+msgid "Error"
+msgstr "Ошибка"
 
 #. module: base
 #: model:res.country,name:base.pm
@@ -8038,16 +8248,6 @@ msgid "The destination activity."
 msgstr ""
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_REFRESH"
-msgstr "STOCK_REFRESH"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_STOP"
-msgstr "STOCK_STOP"
-
-#. module: base
 #: view:base.module.update:0
 #: view:base.update.translations:0
 msgid "Update"
@@ -8057,11 +8257,6 @@ msgstr "Обновить"
 #: model:ir.actions.report.xml,name:base.ir_module_reference_print
 msgid "Technical guide"
 msgstr "Техническое руководство"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_CONVERT"
-msgstr "STOCK_CONVERT"
 
 #. module: base
 #: model:res.country,name:base.tz
@@ -8084,9 +8279,9 @@ msgid "Other Actions Configuration"
 msgstr "Настройка прочих действий"
 
 #. module: base
-#: view:res.lang:0
-msgid "%c - Appropriate date and time representation."
-msgstr "%c - Подходящий формат даты и времени."
+#: selection:ir.module.module.dependency,state:0
+msgid "Uninstallable"
+msgstr "Не устанавливаемый"
 
 #. module: base
 #: view:res.config.installer:0
@@ -8120,23 +8315,13 @@ msgstr "Расписание установки"
 #. module: base
 #: model:ir.model,name:base.model_partner_wizard_ean_check
 msgid "Ean Check"
-msgstr ""
+msgstr "Проверка штрих-кода"
 
 #. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
+#: sql_constraint:res.config.users:0
+#: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
 msgstr "Вы не можете иметь двух одинаковых пользователей !"
-
-#. module: base
-#: code:addons/base/res/res_user.py:0
-#, python-format
-msgid ""
-"Please keep in mind that data currently displayed may not be relevant after "
-"switching to another company. If you have unsaved changes, please make sure "
-"to save and close the forms before switching to a different company (you can "
-"click on Cancel now)"
-msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_multi_company_default
@@ -8152,7 +8337,7 @@ msgstr "Отправить"
 #: field:res.config.users,menu_tips:0
 #: field:res.users,menu_tips:0
 msgid "Menu Tips"
-msgstr ""
+msgstr "Советы"
 
 #. module: base
 #: field:ir.translation,src:0
@@ -8175,7 +8360,7 @@ msgid "Internal Header/Footer"
 msgstr "Внутренние верхний / нижний колонтитулы"
 
 #. module: base
-#: code:addons/base/module/wizard/base_export_language.py:0
+#: code:addons/base/module/wizard/base_export_language.py:59
 #, python-format
 msgid ""
 "Save this document to a .tgz file. This archive containt UTF-8 %s files and "
@@ -8212,9 +8397,17 @@ msgid "Dominican Republic"
 msgstr "Доминиканская республика"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_COLOR_PICKER"
-msgstr "STOCK_COLOR_PICKER"
+#: selection:base.language.install,lang:0
+msgid "Serbian (Cyrillic) / српски"
+msgstr ""
+
+#. module: base
+#: code:addons/orm.py:2161
+#, python-format
+msgid ""
+"Invalid group_by specification: \"%s\".\n"
+"A group_by specification must be a list of valid fields."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sa
@@ -8241,7 +8434,7 @@ msgid "Event Logs"
 msgstr "Логи событий"
 
 #. module: base
-#: code:addons/base/module/wizard/base_module_configuration.py:0
+#: code:addons/base/module/wizard/base_module_configuration.py:37
 #, python-format
 msgid "System Configuration done"
 msgstr "Конфигурация системы завершена"
@@ -8268,11 +8461,6 @@ msgid "XML path"
 msgstr "Директория XML"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-go-year"
-msgstr "terp-go-year"
-
-#. module: base
 #: selection:ir.actions.todo,restart:0
 msgid "On Skip"
 msgstr ""
@@ -8288,25 +8476,34 @@ msgid "Luxembourg"
 msgstr "Люксембург"
 
 #. module: base
-#: view:base.module.upgrade:0
-msgid "The selected modules have been updated / installed !"
-msgstr "Выбранные модули будут обновлены / установлены !"
+#: selection:res.request,priority:0
+msgid "Low"
+msgstr "Низкий"
 
 #. module: base
-#: constraint:ir.ui.menu:0
+#: code:addons/base/ir/ir_ui_menu.py:305
+#, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr "Ошибка ! Нельзя создать зацикленные меню."
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-gtk-jump-to-rtl"
-msgstr "terp-gtk-jump-to-rtl"
+#: model:ir.actions.act_window,name:base.action_publisher_warranty_contract_add_wizard
+#: model:ir.ui.menu,name:base.menu_publisher_warranty_contract_add
+#: view:publisher_warranty.contract.wizard:0
+msgid "Register a Contract"
+msgstr ""
 
 #. module: base
 #: view:ir.rule:0
 msgid ""
 "3. If user belongs to several groups, the results from step 2 are combined "
 "with logical OR operator"
+msgstr ""
+
+#. module: base
+#: code:addons/base/publisher_warranty/publisher_warranty.py:145
+#, python-format
+msgid "Please check your publisher warranty contract name and validity."
 msgstr ""
 
 #. module: base
@@ -8322,18 +8519,22 @@ msgid "Phone"
 msgstr "Телефон"
 
 #. module: base
-#: help:ir.actions.report.xml,attachment_use:0
-msgid ""
-"If you check this, then the second time the user prints with same attachment "
-"name, it returns the previous report."
-msgstr ""
-"Если Вы поставите здесь отметку, в следующий раз, когда пользователь введёт "
-"точно такое же название вложения, появится предыдущий отчёт."
-
-#. module: base
-#: field:res.groups,menu_access:0
-msgid "Access Menu"
-msgstr "Меню доступа"
+#: field:ir.cron,active:0
+#: field:ir.sequence,active:0
+#: field:res.bank,active:0
+#: field:res.config.users,active:0
+#: field:res.currency,active:0
+#: field:res.lang,active:0
+#: field:res.partner,active:0
+#: field:res.partner.address,active:0
+#: field:res.partner.canal,active:0
+#: field:res.partner.category,active:0
+#: field:res.request,active:0
+#: field:res.users,active:0
+#: view:workflow.instance:0
+#: view:workflow.workitem:0
+msgid "Active"
+msgstr "Активен"
 
 #. module: base
 #: model:res.country,name:base.th
@@ -8346,6 +8547,16 @@ msgid "Leads & Opportunities"
 msgstr "Кандидаты & Сделки"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Romanian / română"
+msgstr ""
+
+#. module: base
+#: view:res.log:0
+msgid "System Logs"
+msgstr "Системные журналы"
+
+#. module: base
 #: selection:workflow.activity,join_mode:0
 #: selection:workflow.activity,split_mode:0
 msgid "And"
@@ -8355,11 +8566,6 @@ msgstr "И"
 #: field:ir.model.fields,relation:0
 msgid "Object Relation"
 msgstr "Отношение объекта"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_PRINT"
-msgstr "STOCK_PRINT"
 
 #. module: base
 #: view:ir.rule:0
@@ -8399,6 +8605,16 @@ msgid "Currency Rate"
 msgstr "Курс валюты"
 
 #. module: base
+#: model:ir.actions.act_window,help:base.grant_menu_access
+msgid ""
+"Manage and customize the items available and displayed in your OpenERP "
+"system menu. You can delete an item by clicking on the box at the beginning "
+"of each line and then delete it through the button that appeared. Items can "
+"be assigned to specific groups in order to make them accessible to some "
+"users within the system."
+msgstr ""
+
+#. module: base
 #: field:ir.ui.view,field_parent:0
 msgid "Child Field"
 msgstr "Подчиненной поле"
@@ -8434,20 +8650,10 @@ msgid "View Auto-Load"
 msgstr "Автозагрузка вида"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:0
+#: code:addons/base/ir/ir_model.py:197
 #, python-format
 msgid "You cannot remove the field '%s' !"
 msgstr "Вы не можете удалить поле '%s' !"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_JUMP_TO"
-msgstr "STOCK_JUMP_TO"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Gujarati / India"
-msgstr ""
 
 #. module: base
 #: field:ir.exports,resource:0
@@ -8457,10 +8663,9 @@ msgid "Resource"
 msgstr "Объект"
 
 #. module: base
-#: field:maintenance.contract,name:0
-#: field:maintenance.contract.wizard,name:0
-msgid "Contract ID"
-msgstr "Ид контракта"
+#: field:ir.ui.menu,web_icon:0
+msgid "Web Icon File"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -8473,6 +8678,12 @@ msgid "View Ordering"
 msgstr "Просмотр заказа"
 
 #. module: base
+#: code:addons/base/module/wizard/base_module_upgrade.py:95
+#, python-format
+msgid "Unmet dependency !"
+msgstr "Не удовлетворенная зависимость !"
+
+#. module: base
 #: view:base.language.import:0
 msgid ""
 "Supported file formats: *.csv (Comma-separated values) or *.po (GetText "
@@ -8480,9 +8691,12 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: field:maintenance.contract.wizard,state:0
-msgid "States"
-msgstr "Cостояния"
+#: code:addons/base/ir/ir_model.py:341
+#, python-format
+msgid ""
+"You can not delete this document (%s) ! Be sure your user belongs to one of "
+"these groups: %s."
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_base_module_configuration
@@ -8505,6 +8719,11 @@ msgstr "Доступ"
 #: model:res.country,name:base.sk
 msgid "Slovak Republic"
 msgstr "Словацкая Республика"
+
+#. module: base
+#: model:ir.ui.menu,name:base.publisher_warranty
+msgid "Publisher Warranty"
+msgstr "Гарантия"
 
 #. module: base
 #: model:res.country,name:base.aw
@@ -8532,9 +8751,21 @@ msgid "Segmentation"
 msgstr "Сегментация"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_FIND"
-msgstr "STOCK_FIND"
+#: view:ir.attachment:0
+#: field:ir.attachment,company_id:0
+#: field:ir.default,company_id:0
+#: field:ir.property,company_id:0
+#: field:ir.sequence,company_id:0
+#: field:ir.values,company_id:0
+#: view:res.company:0
+#: field:res.config.users,company_id:0
+#: field:res.currency,company_id:0
+#: field:res.partner,company_id:0
+#: field:res.partner.address,company_id:0
+#: view:res.users:0
+#: field:res.users,company_id:0
+msgid "Company"
+msgstr "Компания"
 
 #. module: base
 #: view:res.users:0
@@ -8542,26 +8773,24 @@ msgid "Email & Signature"
 msgstr "Эл. почта & подпись"
 
 #. module: base
+#: view:publisher_warranty.contract:0
+msgid "Publisher Warranty Contract"
+msgstr "Договор гарантии"
+
+#. module: base
+#: selection:base.language.install,lang:0
+msgid "Bulgarian / български език"
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_aftersale
 msgid "After-Sale Services"
 msgstr "Послепродажное обслуживание"
 
 #. module: base
-#: model:ir.actions.act_window,name:base.action_maintenance_contract_add_wizard
-#: model:ir.ui.menu,name:base.menu_maintenance_contract_add
-#: view:maintenance.contract.wizard:0
-msgid "Add Maintenance Contract"
-msgstr "Добавить договор на обслуживание"
-
-#. module: base
 #: view:ir.actions.todo:0
 msgid "Launch"
 msgstr "Запустить"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Vietnam / Cộng hòa xã hội chủ nghĩa Việt Nam"
-msgstr ""
 
 #. module: base
 #: field:ir.actions.act_window,limit:0
@@ -8579,9 +8808,13 @@ msgid "Jamaica"
 msgstr "Ямайка"
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_mrp_root
-msgid "Manufacturing"
-msgstr "Производство"
+#: model:ir.actions.act_window,help:base.action_partner_category_form
+msgid ""
+"Manage the partner categories in order to better classify them for tracking "
+"and analysis purposes. A partner may belong to several categories and "
+"categories have a hierarchy structure: a partner belonging to a category "
+"also belong to his parent category."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.az
@@ -8589,7 +8822,7 @@ msgid "Azerbaijan"
 msgstr "Азербайджан"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:250
 #, python-format
 msgid "Warning"
 msgstr "Внимание"
@@ -8605,11 +8838,6 @@ msgid "Virgin Islands (British)"
 msgstr "Виргинские острова (Великобритания)"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_MEDIA_PREVIOUS"
-msgstr "STOCK_MEDIA_PREVIOUS"
-
-#. module: base
 #: view:ir.property:0
 #: model:ir.ui.menu,name:base.next_id_15
 msgid "Parameters"
@@ -8621,14 +8849,18 @@ msgid "Czech / Čeština"
 msgstr "Чешский / Čeština"
 
 #. module: base
-#: model:res.country,name:base.wf
-msgid "Wallis and Futuna Islands"
-msgstr "Острова Уоллис и Футуна"
+#: selection:ir.model.fields,select_level:0
+msgid "Advanced Search"
+msgstr "Расширенный поиск"
 
 #. module: base
-#: model:ir.model,name:base.model_ir_wizard_screen
-msgid "ir.wizard.screen"
-msgstr "ir.wizard.screen"
+#: model:ir.actions.act_window,help:base.action_partner_supplier_form
+msgid ""
+"You can access all information regarding your suppliers from the supplier "
+"form: accounting data, history of emails, meetings, purchases, etc. You can "
+"uncheck the 'Suppliers' filter button in order to search in all your "
+"partners, including customers and prospects."
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -8671,9 +8903,12 @@ msgid "Action Source"
 msgstr "Источник Действия"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_NETWORK"
-msgstr "STOCK_NETWORK"
+#: view:res.config.view:0
+msgid ""
+"If you use OpenERP for the first time we strongly advise you to select the "
+"simplified interface, which has less features but is easier. You can always "
+"switch later from the user preferences."
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country
@@ -8686,11 +8921,6 @@ msgstr "STOCK_NETWORK"
 #: field:res.partner.bank,country_id:0
 msgid "Country"
 msgstr "Страна"
-
-#. module: base
-#: selection:base.language.install,lang:0
-msgid "Telugu / India"
-msgstr ""
 
 #. module: base
 #: field:ir.model.fields,complete_name:0
@@ -8731,14 +8961,9 @@ msgid "%X - Appropriate time representation."
 msgstr "%X - Комбинированный формат времени."
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-mail_delete"
-msgstr "terp-mail_delete"
-
-#. module: base
-#: view:res.company:0
-msgid "Your Logo - Use a size of about 450x150 pixels."
-msgstr "Ваш логотип - используйте размер примерно 450x150 пикселей"
+#: selection:base.language.install,lang:0
+msgid "Spanish (SV) / Español (SV)"
+msgstr ""
 
 #. module: base
 #: help:res.lang,grouping:0
@@ -8748,11 +8973,6 @@ msgid ""
 "1,06,500;[1,2,-1] will represent it to be 106,50,0;[3] will represent it as "
 "106,500. Provided ',' as the thousand separator in each case."
 msgstr ""
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-go-month"
-msgstr "terp-go-month"
 
 #. module: base
 #: view:res.company:0
@@ -8770,9 +8990,11 @@ msgid "Report/Template"
 msgstr "Отчет/Шаблон"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_DIRECTORY"
-msgstr "STOCK_DIRECTORY"
+#: selection:ir.actions.act_window.view,view_mode:0
+#: selection:ir.ui.view,type:0
+#: selection:wizard.ir.model.menu.create.line,view_type:0
+msgid "Graph"
+msgstr "График"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_server
@@ -8799,7 +9021,7 @@ msgstr "Мастера настройки"
 #. module: base
 #: field:res.lang,code:0
 msgid "Locale Code"
-msgstr ""
+msgstr "Код локализации"
 
 #. module: base
 #: field:workflow.activity,split_mode:0
@@ -8817,14 +9039,9 @@ msgid "Localisation"
 msgstr "Локализация"
 
 #. module: base
-#: model:res.country,name:base.cl
-msgid "Chile"
-msgstr "Чили"
-
-#. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "STOCK_REVERT_TO_SAVED"
-msgstr "STOCK_REVERT_TO_SAVED"
+#: view:ir.actions.server:0
+msgid "Action to Launch"
+msgstr "Запустить действие"
 
 #. module: base
 #: view:ir.cron:0
@@ -8866,9 +9083,9 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: model:res.country,name:base.hr
-msgid "Croatia"
-msgstr "Хорватия"
+#: view:res.lang:0
+msgid "%j - Day of the year [001,366]."
+msgstr "%j - день года [001,366]."
 
 #. module: base
 #: field:ir.actions.server,mobile:0
@@ -8888,6 +9105,11 @@ msgstr "Категории партнеров"
 #: view:base.module.upgrade:0
 msgid "System Update"
 msgstr "Обновление системы"
+
+#. module: base
+#: selection:ir.translation,type:0
+msgid "Wizard Field"
+msgstr "Поле мастера"
 
 #. module: base
 #: help:ir.sequence,prefix:0
@@ -8917,11 +9139,6 @@ msgid "General Information"
 msgstr "Общая информация"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-product"
-msgstr "terp-product"
-
-#. module: base
 #: model:res.country,name:base.tc
 msgid "Turks and Caicos Islands"
 msgstr "Острова Тёркс и Кайкос"
@@ -8932,15 +9149,21 @@ msgid "Account Owner"
 msgstr "Владелец счёта"
 
 #. module: base
-#: selection:ir.ui.menu,icon:0
-msgid "terp-mail-message-new"
+#: code:addons/base/res/res_user.py:240
+#, python-format
+msgid "Company Switch Warning"
 msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_res_widget_wizard
+msgid "Homepage Widgets Management"
+msgstr "Управление виджетами домашней страницы"
 
 #. module: base
 #: field:workflow,osv:0
 #: field:workflow.instance,res_type:0
 msgid "Resource Object"
-msgstr ""
+msgstr "Объект ресурса"
 
 #. module: base
 #: help:ir.sequence,number_increment:0
@@ -8957,7 +9180,7 @@ msgstr "Функция"
 #. module: base
 #: view:res.widget:0
 msgid "Search Widget"
-msgstr ""
+msgstr "Искать виджет"
 
 #. module: base
 #: selection:ir.actions.todo,restart:0
@@ -8976,17 +9199,17 @@ msgid "Corp."
 msgstr "Корпорация"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Korean / Korea, Republic of"
-msgstr ""
+#: model:res.country,name:base.gw
+msgid "Guinea Bissau"
+msgstr "Гвинея-Бисау"
 
 #. module: base
 #: view:workflow.instance:0
 msgid "Workflow Instances"
-msgstr ""
+msgstr "Последовательности действий"
 
 #. module: base
-#: code:addons/base/res/partner/partner.py:0
+#: code:addons/base/res/partner/partner.py:261
 #, python-format
 msgid "Partners: "
 msgstr "Партнеры: "
@@ -9015,7 +9238,7 @@ msgstr "Код БИК / SWIFT"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_1
 msgid "Prospect"
-msgstr ""
+msgstr "Перспективный"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -9052,14 +9275,32 @@ msgstr "Русский / русский язык"
 #~ msgid "Operand"
 #~ msgstr "Операнд"
 
+#~ msgid "STOCK_CANCEL"
+#~ msgstr "STOCK_CANCEL"
+
 #~ msgid "Sorted By"
 #~ msgstr "Сортировка по"
+
+#~ msgid "STOCK_GOTO_TOP"
+#~ msgstr "STOCK_GOTO_TOP"
+
+#~ msgid "STOCK_DELETE"
+#~ msgstr "STOCK_DELETE"
+
+#~ msgid "The rule is satisfied if at least one test is True"
+#~ msgstr "Удовлетворяет правилу, если результат хотя бы одной из проверок True"
 
 #~ msgid "Get Max"
 #~ msgstr "Выбрать Max"
 
 #~ msgid "Uninstalled modules"
 #~ msgstr "Не установленные модули"
+
+#~ msgid "STOCK_MEDIA_REWIND"
+#~ msgstr "STOCK_MEDIA_REWIND"
+
+#~ msgid "STOCK_CUT"
+#~ msgstr "STOCK_CUT"
 
 #~ msgid "Extended Interface"
 #~ msgstr "Расширенный интерфейс"
@@ -9070,14 +9311,32 @@ msgstr "Русский / русский язык"
 #~ msgid "Bar Chart"
 #~ msgstr "Столбцовая диаграмма"
 
+#~ msgid "STOCK_DIALOG_ERROR"
+#~ msgstr "STOCK_DIALOG_ERROR"
+
+#~ msgid "STOCK_INDEX"
+#~ msgstr "STOCK_INDEX"
+
+#~ msgid "STOCK_DIALOG_QUESTION"
+#~ msgstr "STOCK_DIALOG_QUESTION"
+
 #~ msgid "You may have to reinstall some language pack."
 #~ msgstr "ВозможноЮ требуется переустановить некоторые языковые пакеты"
 
 #~ msgid "Factor"
 #~ msgstr "Множитель"
 
+#~ msgid "STOCK_FILE"
+#~ msgstr "STOCK_FILE"
+
 #~ msgid "Objects Security Grid"
 #~ msgstr "Матрица безопасности объектов"
+
+#~ msgid "STOCK_GO_DOWN"
+#~ msgstr "STOCK_GO_DOWN"
+
+#~ msgid "STOCK_OK"
+#~ msgstr "STOCK_OK"
 
 #~ msgid "Sequence Name"
 #~ msgstr "Название последовательности"
@@ -9091,8 +9350,14 @@ msgstr "Русский / русский язык"
 #~ msgid "Planned Cost"
 #~ msgstr "Планируемые затраты"
 
+#~ msgid "Tests"
+#~ msgstr "Тесты"
+
 #~ msgid "Repository"
 #~ msgstr "Хранилище"
+
+#~ msgid "STOCK_JUSTIFY_FILL"
+#~ msgstr "STOCK_JUSTIFY_FILL"
 
 #~ msgid "RML"
 #~ msgstr "RML"
@@ -9106,6 +9371,12 @@ msgstr "Русский / русский язык"
 #~ msgid "Relation"
 #~ msgstr "Отношение"
 
+#~ msgid "STOCK_MISSING_IMAGE"
+#~ msgstr "STOCK_MISSING_IMAGE"
+
+#~ msgid "STOCK_REMOVE"
+#~ msgstr "STOCK_REMOVE"
+
 #~ msgid "raw"
 #~ msgstr "сырой"
 
@@ -9118,17 +9389,35 @@ msgstr "Русский / русский язык"
 #~ msgid "Please give your module .ZIP file to import."
 #~ msgstr "Укажите ваш .ZIP файл модуля для импорта."
 
+#~ msgid "STOCK_COPY"
+#~ msgstr "STOCK_COPY"
+
 #~ msgid "Check new modules"
 #~ msgstr "Проверить новые модули"
 
 #~ msgid "Simple domain setup"
 #~ msgstr "Простая настройка домена"
 
+#~ msgid "STOCK_FIND_AND_REPLACE"
+#~ msgstr "STOCK_FIND_AND_REPLACE"
+
+#~ msgid "terp-crm"
+#~ msgstr "terp-crm"
+
 #~ msgid "Fixed Width"
 #~ msgstr "Фиксированная ширина"
 
+#~ msgid "terp-calendar"
+#~ msgstr "terp-calendar"
+
+#~ msgid "STOCK_YES"
+#~ msgstr "STOCK_YES"
+
 #~ msgid "Report Custom"
 #~ msgstr "Пользовательский отчет"
+
+#~ msgid "STOCK_JUSTIFY_LEFT"
+#~ msgstr "STOCK_JUSTIFY_LEFT"
 
 #~ msgid "End of Request"
 #~ msgstr "Окончание запроса"
@@ -9136,8 +9425,23 @@ msgstr "Русский / русский язык"
 #~ msgid "Note that this operation may take a few minutes."
 #~ msgstr "Учтите, что данное действие может занять несколько минут."
 
+#~ msgid "STOCK_CLEAR"
+#~ msgstr "STOCK_CLEAR"
+
+#~ msgid "STOCK_PROPERTIES"
+#~ msgstr "STOCK_PROPERTIES"
+
 #~ msgid "Commercial Prospect"
 #~ msgstr "Потенциальный клиент"
+
+#~ msgid "STOCK_SELECT_COLOR"
+#~ msgstr "STOCK_SELECT_COLOR"
+
+#~ msgid "STOCK_NO"
+#~ msgstr "STOCK_NO"
+
+#~ msgid "STOCK_REDO"
+#~ msgstr "STOCK_REDO"
 
 #~ msgid "Configure User"
 #~ msgstr "Настроить учетную запись"
@@ -9145,8 +9449,17 @@ msgstr "Русский / русский язык"
 #~ msgid "left"
 #~ msgstr "влево"
 
+#~ msgid "STOCK_PRINT_PREVIEW"
+#~ msgstr "STOCK_PRINT_PREVIEW"
+
+#~ msgid "STOCK_MEDIA_PLAY"
+#~ msgstr "STOCK_MEDIA_PLAY"
+
 #~ msgid "Operator"
 #~ msgstr "Оператор"
+
+#~ msgid "STOCK_OPEN"
+#~ msgstr "STOCK_OPEN"
 
 #~ msgid "right"
 #~ msgstr "вправо"
@@ -9156,6 +9469,12 @@ msgstr "Русский / русский язык"
 
 #~ msgid "Daily"
 #~ msgstr "Ежедневно"
+
+#~ msgid "terp-project"
+#~ msgstr "terp-project"
+
+#~ msgid "STOCK_JUSTIFY_CENTER"
+#~ msgstr "STOCK_JUSTIFY_CENTER"
 
 #~ msgid "Choose Your Mode"
 #~ msgstr "Выберите режим"
@@ -9172,6 +9491,9 @@ msgstr "Русский / русский язык"
 #~ msgid "Export language"
 #~ msgstr "Экпорт языка"
 
+#~ msgid "STOCK_JUSTIFY_RIGHT"
+#~ msgstr "STOCK_JUSTIFY_RIGHT"
+
 #~ msgid "Function of the contact"
 #~ msgstr "Функция контакта"
 
@@ -9184,6 +9506,9 @@ msgstr "Русский / русский язык"
 #~ msgid "Import language"
 #~ msgstr "Импорт языка"
 
+#~ msgid "terp-account"
+#~ msgstr "terp-account"
+
 #~ msgid "Categories of Modules"
 #~ msgstr "Категории модулей"
 
@@ -9195,6 +9520,12 @@ msgstr "Русский / русский язык"
 
 #~ msgid "Prospect Contact"
 #~ msgstr "Потенциальный контакт"
+
+#~ msgid "STOCK_QUIT"
+#~ msgstr "STOCK_QUIT"
+
+#~ msgid "terp-purchase"
+#~ msgstr "terp-purchase"
 
 #~ msgid "Repositories"
 #~ msgstr "Репозитории"
@@ -9214,6 +9545,15 @@ msgstr "Русский / русский язык"
 #~ msgid "Partner Address"
 #~ msgstr "Адрес партнера"
 
+#~ msgid "STOCK_SAVE_AS"
+#~ msgstr "STOCK_SAVE_AS"
+
+#~ msgid "STOCK_UNDELETE"
+#~ msgstr "STOCK_UNDELETE"
+
+#~ msgid "STOCK_PASTE"
+#~ msgstr "STOCK_PASTE"
+
 #~ msgid "Configuration Wizard"
 #~ msgstr "Мастер настройки"
 
@@ -9226,11 +9566,17 @@ msgstr "Русский / русский язык"
 #~ "Редко используемые опции и поля будут автоматически скрыты. Позже вы сможете "
 #~ "это изменить через меню Администрирование."
 
-#~ msgid "Key"
-#~ msgstr "Ключ"
+#~ msgid "The rule is satisfied if all test are True (AND)"
+#~ msgstr "Удовлетворяет правилу, если все условия 'True' (Логическое И)"
+
+#~ msgid "STOCK_CONNECT"
+#~ msgstr "STOCK_CONNECT"
 
 #~ msgid "Scan for new modules"
 #~ msgstr "Поиск новых модулей"
+
+#~ msgid "Module Repository"
+#~ msgstr "Хранилище модулей"
 
 #~ msgid "Sale Opportunity"
 #~ msgstr "возможная продажа"
@@ -9250,6 +9596,15 @@ msgstr "Русский / русский язык"
 #~ msgid "Test"
 #~ msgstr "Тест"
 
+#~ msgid "STOCK_DIALOG_WARNING"
+#~ msgstr "STOCK_DIALOG_WARNING"
+
+#~ msgid "STOCK_ZOOM_IN"
+#~ msgstr "STOCK_ZOOM_IN"
+
+#~ msgid "STOCK_ITALIC"
+#~ msgstr "STOCK_ITALIC"
+
 #~ msgid "We suggest you to reload the menu tab (Ctrl+t Ctrl+r)."
 #~ msgstr "Рекомендуем вам перезагрузить вкладки меню (Ctrl+t Ctrl+r)."
 
@@ -9259,14 +9614,44 @@ msgstr "Русский / русский язык"
 #~ msgid "Font color"
 #~ msgstr "Цвет шрифта"
 
+#~ msgid "STOCK_SORT_DESCENDING"
+#~ msgstr "STOCK_SORT_DESCENDING"
+
 #~ msgid "Roles Structure"
 #~ msgstr "Структура ролей"
+
+#~ msgid "STOCK_MEDIA_STOP"
+#~ msgstr "STOCK_MEDIA_STOP"
+
+#~ msgid "STOCK_DND_MULTIPLE"
+#~ msgstr "STOCK_DND_MULTIPLE"
 
 #~ msgid "Role Required"
 #~ msgstr "Необходима роль"
 
+#~ msgid "STOCK_INDENT"
+#~ msgstr "STOCK_INDENT"
+
+#~ msgid "STOCK_ZOOM_OUT"
+#~ msgstr "STOCK_ZOOM_OUT"
+
+#~ msgid "STOCK_CLOSE"
+#~ msgstr "STOCK_CLOSE"
+
 #~ msgid "Your system will be upgraded."
 #~ msgstr "Ваша система бедут обновлена."
+
+#~ msgid "terp-tools"
+#~ msgstr "terp-tools"
+
+#~ msgid "STOCK_UNDO"
+#~ msgstr "STOCK_UNDO"
+
+#~ msgid "terp-sale"
+#~ msgstr "terp-sale"
+
+#~ msgid "STOCK_ADD"
+#~ msgstr "STOCK_ADD"
 
 #~ msgid "in"
 #~ msgstr "в"
@@ -9283,8 +9668,19 @@ msgstr "Русский / русский язык"
 #~ msgid "Partner State of Mind"
 #~ msgstr "Мнение о партнере"
 
+#~ msgid "STOCK_DIALOG_AUTHENTICATION"
+#~ msgstr "STOCK_DIALOG_AUTHENTICATION"
+
 #~ msgid "a4"
 #~ msgstr "A4"
+
+#~ msgid "Multiple rules on same objects are joined using operator OR"
+#~ msgstr ""
+#~ "Монжественные правила для того же объекта объединены с использованием "
+#~ "оператора ИЛИ"
+
+#~ msgid "STOCK_MEDIA_NEXT"
+#~ msgstr "STOCK_MEDIA_NEXT"
 
 #~ msgid "Note that this operation my take a few minutes."
 #~ msgstr "Учтите, что действие может занять несколько минут."
@@ -9292,14 +9688,44 @@ msgstr "Русский / русский язык"
 #~ msgid "Internal Name"
 #~ msgstr "Внутреннее название"
 
+#~ msgid "STOCK_EDIT"
+#~ msgstr "STOCK_EDIT"
+
+#~ msgid "STOCK_MEDIA_FORWARD"
+#~ msgstr "STOCK_MEDIA_FORWARD"
+
 #~ msgid "User ID"
 #~ msgstr "ID пользователя"
 
 #~ msgid "condition"
 #~ msgstr "условие"
 
+#~ msgid "STOCK_SAVE"
+#~ msgstr "STOCK_SAVE"
+
+#~ msgid "STOCK_NEW"
+#~ msgstr "STOCK_NEW"
+
 #~ msgid "Report Fields"
 #~ msgstr "Поля отчета"
+
+#~ msgid "terp-mrp"
+#~ msgstr "terp-mrp"
+
+#~ msgid "STOCK_ABOUT"
+#~ msgstr "STOCK_ABOUT"
+
+#~ msgid "STOCK_UNDERLINE"
+#~ msgstr "STOCK_UNDERLINE"
+
+#~ msgid "STOCK_ZOOM_100"
+#~ msgstr "STOCK_ZOOM_100"
+
+#~ msgid "STOCK_BOLD"
+#~ msgstr "STOCK_BOLD"
+
+#~ msgid "terp-graph"
+#~ msgstr "terp-graph"
 
 #~ msgid ""
 #~ "The selected language has been successfully installed. You must change the "
@@ -9317,9 +9743,6 @@ msgstr "Русский / русский язык"
 #~ msgid "Pie Chart"
 #~ msgstr "Круговая диаграмма"
 
-#~ msgid "Update Modules List"
-#~ msgstr "Обновить список модулей"
-
 #~ msgid "Print orientation"
 #~ msgstr "Ориентация при печати"
 
@@ -9329,11 +9752,23 @@ msgstr "Русский / русский язык"
 #~ msgid "html"
 #~ msgstr "html"
 
+#~ msgid "terp-stock"
+#~ msgstr "terp-stock"
+
+#~ msgid "STOCK_MEDIA_RECORD"
+#~ msgstr "STOCK_MEDIA_RECORD"
+
 #~ msgid "None"
 #~ msgstr "Ничего"
 
+#~ msgid "STOCK_UNINDENT"
+#~ msgstr "STOCK_UNINDENT"
+
 #~ msgid "Partner Functions"
 #~ msgstr "Функции партнера"
+
+#~ msgid "STOCK_DIALOG_INFO"
+#~ msgstr "STOCK_DIALOG_INFO"
 
 #~ msgid "Get file"
 #~ msgstr "Получить файл"
@@ -9345,11 +9780,23 @@ msgstr "Русский / русский язык"
 #~ "Данная функция проверит наличие новых модулей в директории 'addons' и "
 #~ "хранилищах модулей:"
 
+#~ msgid "STOCK_GO_BACK"
+#~ msgstr "STOCK_GO_BACK"
+
 #~ msgid "Customers Partners"
 #~ msgstr "Партнеры-клиенты"
 
+#~ msgid "STOCK_HARDDISK"
+#~ msgstr "STOCK_HARDDISK"
+
+#~ msgid "STOCK_APPLY"
+#~ msgstr "STOCK_APPLY"
+
 #~ msgid "GPL-2"
 #~ msgstr "GPL-2"
+
+#~ msgid "STOCK_CDROM"
+#~ msgstr "STOCK_CDROM"
 
 #~ msgid "Type of Event"
 #~ msgstr "Тип события"
@@ -9363,8 +9810,14 @@ msgstr "Русский / русский язык"
 #~ msgid "The modules have been upgraded / installed !"
 #~ msgstr "Модули обновлены / установлены !"
 
+#~ msgid "terp-hr"
+#~ msgstr "terp-hr"
+
 #~ msgid "Line Plot"
 #~ msgstr "Линейная диаграмма"
+
+#~ msgid "STOCK_GO_UP"
+#~ msgstr "STOCK_GO_UP"
 
 #~ msgid "pdf"
 #~ msgstr "pdf"
@@ -9375,8 +9828,14 @@ msgstr "Русский / русский язык"
 #~ msgid "Active Partner Events"
 #~ msgstr "События активного партнера"
 
+#~ msgid "STOCK_SPELL_CHECK"
+#~ msgstr "STOCK_SPELL_CHECK"
+
 #~ msgid "Force Domain"
 #~ msgstr "Установить домен"
+
+#~ msgid "STOCK_GOTO_FIRST"
+#~ msgstr "STOCK_GOTO_FIRST"
 
 #~ msgid "<>"
 #~ msgstr "<>"
@@ -9390,11 +9849,26 @@ msgstr "Русский / русский язык"
 #~ msgid "Repeat Header"
 #~ msgstr "Повторять заголовок"
 
+#~ msgid "STOCK_MEDIA_PAUSE"
+#~ msgstr "STOCK_MEDIA_PAUSE"
+
 #~ msgid "All Properties"
 #~ msgstr "Все свойства"
 
+#~ msgid "STOCK_HOME"
+#~ msgstr "STOCK_HOME"
+
 #~ msgid "Ok"
 #~ msgstr "ОК"
+
+#~ msgid "STOCK_DISCONNECT"
+#~ msgstr "STOCK_DISCONNECT"
+
+#~ msgid "STOCK_PREFERENCES"
+#~ msgstr "STOCK_PREFERENCES"
+
+#~ msgid "STOCK_GOTO_LAST"
+#~ msgstr "STOCK_GOTO_LAST"
 
 #~ msgid "Start installation"
 #~ msgstr "Начать установку"
@@ -9432,6 +9906,9 @@ msgstr "Русский / русский язык"
 #~ msgid "States of mind"
 #~ msgstr "Мнение"
 
+#~ msgid "STOCK_SORT_ASCENDING"
+#~ msgstr "STOCK_SORT_ASCENDING"
+
 #~ msgid "Parent"
 #~ msgstr "Предок"
 
@@ -9447,14 +9924,23 @@ msgstr "Русский / русский язык"
 #~ msgid "Other proprietary"
 #~ msgstr "Прочая собственность"
 
+#~ msgid "terp-administration"
+#~ msgstr "terp-administration"
+
 #~ msgid "Link"
 #~ msgstr "Ссылка"
 
 #~ msgid "Report Ref"
 #~ msgstr "Ссылка на отчет"
 
+#~ msgid "STOCK_DND"
+#~ msgstr "STOCK_DND"
+
 #~ msgid "Repository list"
 #~ msgstr "Список хранилищ"
+
+#~ msgid "STOCK_FLOPPY"
+#~ msgstr "STOCK_FLOPPY"
 
 #~ msgid "Status"
 #~ msgstr "Статус"
@@ -9462,19 +9948,37 @@ msgstr "Русский / русский язык"
 #~ msgid "Purchase Offer"
 #~ msgstr "Предложение закупки"
 
+#~ msgid "STOCK_ZOOM_FIT"
+#~ msgstr "STOCK_ZOOM_FIT"
+
 #~ msgid "Language file loaded."
 #~ msgstr "Файл языка загружен"
 
 #~ msgid "Company Architecture"
 #~ msgstr "Архитектура компании"
 
+#~ msgid "STOCK_GOTO_BOTTOM"
+#~ msgstr "STOCK_GOTO_BOTTOM"
+
+#~ msgid "STOCK_GO_FORWARD"
+#~ msgstr "STOCK_GO_FORWARD"
+
+#~ msgid "STOCK_SELECT_FONT"
+#~ msgstr "STOCK_SELECT_FONT"
+
 #~ msgid ""
 #~ "The .rml path of the file or NULL if the content is in report_rml_content"
 #~ msgstr ""
 #~ "Директоря файла .RML или NULL, если содержимое находится в report_rml_content"
 
+#~ msgid "terp-report"
+#~ msgstr "terp-report"
+
 #~ msgid "Set"
 #~ msgstr "Установить"
+
+#~ msgid "STOCK_HELP"
+#~ msgstr "STOCK_HELP"
 
 #~ msgid "Module import"
 #~ msgstr "Модуль импорта"
@@ -9482,8 +9986,14 @@ msgstr "Русский / русский язык"
 #~ msgid "Suppliers Partners"
 #~ msgstr "Партнеры-поставщики"
 
+#~ msgid "STOCK_STRIKETHROUGH"
+#~ msgstr "STOCK_STRIKETHROUGH"
+
 #~ msgid "(year)="
 #~ msgstr "(год)="
+
+#~ msgid "terp-partner"
+#~ msgstr "terp-partner"
 
 #~ msgid "Modules Management"
 #~ msgstr "Управление модулями"
@@ -9503,11 +10013,29 @@ msgstr "Русский / русский язык"
 #~ msgid "Document"
 #~ msgstr "Документ"
 
+#~ msgid "STOCK_REFRESH"
+#~ msgstr "STOCK_REFRESH"
+
+#~ msgid "STOCK_STOP"
+#~ msgstr "STOCK_STOP"
+
+#~ msgid "STOCK_CONVERT"
+#~ msgstr "STOCK_CONVERT"
+
+#~ msgid "STOCK_EXECUTE"
+#~ msgstr "STOCK_EXECUTE"
+
+#~ msgid "STOCK_COLOR_PICKER"
+#~ msgstr "STOCK_COLOR_PICKER"
+
 #~ msgid ">"
 #~ msgstr ">"
 
 #~ msgid "Delete Permission"
 #~ msgstr "Право удаления"
+
+#~ msgid "STOCK_PRINT"
+#~ msgstr "STOCK_PRINT"
 
 #~ msgid "<"
 #~ msgstr "<"
@@ -9519,11 +10047,23 @@ msgstr "Русский / русский язык"
 #~ msgid "Print format"
 #~ msgstr "Формат печати"
 
+#~ msgid "STOCK_JUMP_TO"
+#~ msgstr "STOCK_JUMP_TO"
+
 #~ msgid "center"
 #~ msgstr "по центру"
 
+#~ msgid "States"
+#~ msgstr "Cостояния"
+
+#~ msgid "STOCK_FIND"
+#~ msgstr "STOCK_FIND"
+
 #~ msgid "Unsubscribed"
 #~ msgstr "Отказ от подписки"
+
+#~ msgid "STOCK_MEDIA_PREVIOUS"
+#~ msgstr "STOCK_MEDIA_PREVIOUS"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "НДС выглядит неправильно"
@@ -9531,14 +10071,23 @@ msgstr "Русский / русский язык"
 #~ msgid "Calculate Sum"
 #~ msgstr "Вычислить сумму"
 
+#~ msgid "STOCK_NETWORK"
+#~ msgstr "STOCK_NETWORK"
+
 #~ msgid "Module successfully imported !"
 #~ msgstr "Модуль успешно импортирован !"
+
+#~ msgid "STOCK_DIRECTORY"
+#~ msgstr "STOCK_DIRECTORY"
 
 #~ msgid "Report custom"
 #~ msgstr "Пользовательский отчет"
 
 #~ msgid "Simplified Interface"
 #~ msgstr "Упрощенный интерфейс"
+
+#~ msgid "STOCK_REVERT_TO_SAVED"
+#~ msgstr "STOCK_REVERT_TO_SAVED"
 
 #~ msgid "Import a Translation File"
 #~ msgstr "Импорт файла перевода"
@@ -9549,11 +10098,18 @@ msgstr "Русский / русский язык"
 #~ msgid "a5"
 #~ msgstr "A5"
 
+#~ msgid "terp-product"
+#~ msgstr "terp-product"
+
 #~ msgid "State of Mind"
 #~ msgstr "Мнение"
 
 #~ msgid "Choose a language to install:"
 #~ msgstr "Выберите устанавливаемый язык"
+
+#, python-format
+#~ msgid "You can not create this kind of document! (%s)"
+#~ msgstr "Вы не можете создать документ данного типа! (%s)"
 
 #~ msgid ""
 #~ "Choose between the \"Simplified Interface\" or the extended one.\n"
@@ -9607,11 +10163,20 @@ msgstr "Русский / русский язык"
 #~ msgid "Outgoing transitions"
 #~ msgstr "Исходящие переходы"
 
+#~ msgid "%j - Day of the year as a decimal number [001,366]."
+#~ msgstr "%j - Порядковый номер дня в году в виде десятичного числа [001,366]."
+
 #~ msgid "To browse official translations, you can visit this link: "
 #~ msgstr "Для просмотра официальных переводов пройдите по этой ссылке: "
 
 #~ msgid "Configure"
 #~ msgstr "Настроить"
+
+#~ msgid "%y - Year without century as a decimal number [00,99]."
+#~ msgstr "%y - Год без указания века как десятичное число [00, 99]."
+
+#~ msgid "Bulgarian / български"
+#~ msgstr "Болгарский / български"
 
 #~ msgid "My Requests"
 #~ msgstr "Мои запросы"
@@ -9620,12 +10185,27 @@ msgstr "Русский / русский язык"
 #~ msgid "Pie charts need exactly two fields"
 #~ msgstr "Для радиальной диаграммы требуется ровно два поля"
 
+#, python-format
+#~ msgid ""
+#~ "You try to install the module '%s' that depends on the module:'%s'.\n"
+#~ "But this module is not available in your system."
+#~ msgstr ""
+#~ "Вы пытаетесь установить модуль '%s', зависящий от модуля '%s',\n"
+#~ "но последний отсутствует в вашей системе."
+
+#~ msgid "Covered Modules"
+#~ msgstr "Затронутые модули"
+
 #~ msgid "Define New Users"
 #~ msgstr "Добавить пользователей"
 
 #, python-format
 #~ msgid "Model %s Does not Exist !"
 #~ msgstr "Модель %s не существует !"
+
+#, python-format
+#~ msgid "You can not read this document! (%s)"
+#~ msgstr "Вы не можете читать данный документ!  (%s)"
 
 #~ msgid ""
 #~ "Would your payment have been carried out after this mail was sent, please "
@@ -9655,12 +10235,22 @@ msgstr "Русский / русский язык"
 #~ msgid "This user can not connect using this company !"
 #~ msgstr "Данный пользователь не может подключиться от имени этой организации!"
 
+#~ msgid "Could you check your contract information ?"
+#~ msgstr "Вы не могли бы проверить информацию о вашем договоре?"
+
+#~ msgid "Make the rule global, otherwise it needs to be put on a group"
+#~ msgstr "Задайте правило глобально или для определенной группы"
+
 #~ msgid ""
 #~ "This wizard will detect new terms in the application so that you can update "
 #~ "them manually."
 #~ msgstr ""
 #~ "Этот мастер определит новые термины в приложении, так что их можно будет "
 #~ "обновить вручную."
+
+#, python-format
+#~ msgid "You can not write in this document! (%s)"
+#~ msgstr "Вы не можете записывать в данный документ! (%s)"
 
 #~ msgid "Confirmation"
 #~ msgstr "Подтверждение"
@@ -9672,17 +10262,28 @@ msgstr "Русский / русский язык"
 #~ msgid "My Closed Requests"
 #~ msgstr "Мои закрытые запросы"
 
+#, python-format
+#~ msgid "You can not delete this document! (%s)"
+#~ msgstr "Вы не можете удалить данный документ! (%s)"
+
 #~ msgid "Year with century: %(year)s"
 #~ msgstr "Год с указанием века: %(year)"
 
 #~ msgid "Installation Done"
 #~ msgstr "Установка завершена"
 
+#~ msgid "%S - Second as a decimal number [00,61]."
+#~ msgstr "%S - Секунды как десятичное число [00, 59]."
+
 #~ msgid "Bank List"
 #~ msgstr "Список банков"
 
 #~ msgid "You can also import .po files."
 #~ msgstr "Вы можете также импортировать файлы .po."
+
+#, python-format
+#~ msgid "Unable to find a valid contract"
+#~ msgstr "Невозможно найти действующий договор"
 
 #~ msgid ""
 #~ "Regexp to search module on the repository webpage:\n"
@@ -9695,8 +10296,17 @@ msgstr "Русский / русский язык"
 #~ "- Во вторых скобках указывается номер версии.\n"
 #~ "- В последних скобках указывается расширение модуля."
 
+#~ msgid "%M - Minute as a decimal number [00,59]."
+#~ msgstr "%M - Минуты в виде десятичного числа [00, 59]."
+
 #~ msgid "Connect Actions To Client Events"
 #~ msgstr "Ассоциировать действие с событиями клиента"
+
+#~ msgid "Ukrainian / украї́нська мо́ва"
+#~ msgstr "Украинский / украї́нська мо́ва"
+
+#~ msgid "Unvalid"
+#~ msgstr "Недействителен"
 
 #~ msgid "Children"
 #~ msgstr "Потомки"
@@ -9713,6 +10323,9 @@ msgstr "Русский / русский язык"
 #, python-format
 #~ msgid "Invalid operation"
 #~ msgstr "Неверная операция"
+
+#~ msgid "Finland / Suomi"
+#~ msgstr "Финляндия / Суоми"
 
 #, python-format
 #~ msgid "You can not remove the field '%s' !"
@@ -9738,6 +10351,9 @@ msgstr "Русский / русский язык"
 #~ msgid "Field child3"
 #~ msgstr "Поле child3"
 
+#~ msgid "Albanian / Shqipëri"
+#~ msgstr "Албанский / Shqipëri"
+
 #~ msgid "Field child2"
 #~ msgstr "Поле child2"
 
@@ -9756,6 +10372,21 @@ msgstr "Русский / русский язык"
 #~ msgid "Field child1"
 #~ msgstr "Поле child1"
 
+#~ msgid "Maintenance contract added !"
+#~ msgstr "Добавлен договор на обслуживание !"
+
+#~ msgid "%H - Hour (24-hour clock) as a decimal number [00,23]."
+#~ msgstr "%H - Час (в формате 24 часа) в виде десятичного числа [00,23]."
+
+#, python-format
+#~ msgid ""
+#~ "\"%s\" contains too many dots. XML ids should not contain dots ! These are "
+#~ "used to refer to other modules data, as in module.reference_id"
+#~ msgstr ""
+#~ "\"%s\" содержит слишком много точек. XML идентификаторы не должны содержать "
+#~ "точки! Они используются для ссылки на данные в других модулях, например, "
+#~ "module.reference_id"
+
 #, python-format
 #~ msgid "Tree can only be used in tabular reports"
 #~ msgstr "Вид дерева может быть использован только в табличных отчетах"
@@ -9766,8 +10397,14 @@ msgstr "Русский / русский язык"
 #~ msgid "Accumulate"
 #~ msgstr "Накапливать"
 
+#~ msgid "%d - Day of the month as a decimal number [01,31]."
+#~ msgstr "%d - Порядковый номер дня в месяце в виде десятичного числа [01,31]."
+
 #~ msgid "HTML from HTML"
 #~ msgstr "HTML из HTML"
+
+#~ msgid "%m - Month as a decimal number [01,12]."
+#~ msgstr "%m - Месяц в виде десятичного числа [01,12]."
 
 #~ msgid "Export Data"
 #~ msgstr "Экспорт данных"
@@ -9775,8 +10412,17 @@ msgstr "Русский / русский язык"
 #~ msgid "Service"
 #~ msgstr "Служба"
 
+#~ msgid "%I - Hour (12-hour clock) as a decimal number [01,12]."
+#~ msgstr "%I - Час (в формате 12 часов) в виде десятичного числа [01,12]."
+
+#~ msgid "Romanian / limba română"
+#~ msgstr "Румынский / limba română"
+
 #~ msgid "Calculate Count"
 #~ msgstr "Рассчитать количество"
+
+#~ msgid "ir.rule.group"
+#~ msgstr "ir.rule.group"
 
 #~ msgid "Manually Created"
 #~ msgstr "Создан вручную"
@@ -9794,11 +10440,17 @@ msgstr "Русский / русский язык"
 #~ "Доступ к полям, связанным с текущим объектом, используйте выражение в "
 #~ "двойные скобки, например [[object.partner_id.name]]"
 
-#~ msgid "Add User"
-#~ msgstr "Добавить пользователя"
-
 #~ msgid "Default Properties"
 #~ msgstr "Свойства по умолчанию"
+
+#~ msgid "%Y - Year with century as a decimal number."
+#~ msgstr "%Y - Год с указанием века в виде десятичного числа."
+
+#~ msgid "Full"
+#~ msgstr "Полный"
+
+#~ msgid "Partial"
+#~ msgstr "Частично"
 
 #~ msgid "Your Maintenance Contracts"
 #~ msgstr "Ваши контракты"
@@ -9814,6 +10466,9 @@ msgstr "Русский / русский язык"
 #~ msgid "GPL-3"
 #~ msgstr "GPL-3"
 
+#~ msgid "Portugese (BR) / português (BR)"
+#~ msgstr "Португальский (Бразилия) / português (BR)"
+
 #~ msgid "Manual"
 #~ msgstr "Руководство"
 
@@ -9826,8 +10481,17 @@ msgstr "Русский / русский язык"
 #~ msgid "Contact Functions"
 #~ msgstr "Функции контакта"
 
+#~ msgid "_Validate"
+#~ msgstr "_Проверить"
+
+#~ msgid "Validated"
+#~ msgstr "Проверено"
+
 #~ msgid "HTML from HTML(Mako)"
 #~ msgstr "HTML из HTML(Mako)"
+
+#~ msgid "Portugese / português"
+#~ msgstr "Португальский / português"
 
 #~ msgid "Workflow Definitions"
 #~ msgstr "Описания рабочего процесса"
@@ -9836,8 +10500,19 @@ msgstr "Русский / русский язык"
 #~ msgstr "Компании по умолчанию для объекта"
 
 #, python-format
+#~ msgid "This error occurs on database %s"
+#~ msgstr "Эта ошибка в базе данных %s"
+
+#, python-format
 #~ msgid "Field %d should be a figure"
 #~ msgstr "Поле %d должно быть изображение"
+
+#, python-format
+#~ msgid ""
+#~ "No rate found \n"
+#~ "' \\n                    'for the currency: %s \n"
+#~ "' \\n                    'at the date: %s"
+#~ msgstr "Курс не найден\\n для валюты %s на дату %s"
 
 #~ msgid ""
 #~ "Number of time the function is called,\n"
@@ -9852,6 +10527,17 @@ msgstr "Русский / русский язык"
 #~ msgid "Returning"
 #~ msgstr "Возвращаемое"
 
+#~ msgid "%w - Weekday as a decimal number [0(Sunday),6]."
+#~ msgstr "%w - День недели как десятичное число [от 0(Воскресенье) до 6]."
+
+#~ msgid "Dutch (Belgium) / Nederlands (Belgïe)"
+#~ msgstr "Голландский (бельгийский) / Nederlands (Belgïe)"
+
+#, python-format
+#~ msgid "Your can't submit bug reports due to uncovered modules: %s"
+#~ msgstr ""
+#~ "Вы не можете отправить сообщение об ошибке из-за открытых модулей: %s"
+
 #~ msgid ""
 #~ "Access all the fields related to the current object using expression in "
 #~ "double brackets, i.e. [[ object.partner_id.name ]]"
@@ -9861,6 +10547,9 @@ msgstr "Русский / русский язык"
 
 #~ msgid "Function Name"
 #~ msgstr "Имя функции"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Отмена"
 
 #, python-format
 #~ msgid "Password empty !"
@@ -9919,6 +10608,9 @@ msgstr "Русский / русский язык"
 #~ msgid "Matching"
 #~ msgstr "Сопоставление"
 
+#~ msgid "Contract ID"
+#~ msgstr "Ид контракта"
+
 #~ msgid ""
 #~ "Create your users.\n"
 #~ "You will be able to assign groups to users. Groups define the access rights "
@@ -9932,6 +10624,9 @@ msgstr "Русский / русский язык"
 
 #~ msgid "If two sequences match, the highest weight will be used."
 #~ msgstr "Если две последовательности совпадают, старшия будет использоваться."
+
+#~ msgid "maintenance.contract.wizard"
+#~ msgstr "Диалог контракта обслуживания"
 
 #~ msgid "res.company"
 #~ msgstr "Компания"
@@ -9979,3 +10674,166 @@ msgstr "Русский / русский язык"
 
 #~ msgid "All terms"
 #~ msgstr "Все выражения"
+
+#~ msgid "terp-emblem-important"
+#~ msgstr "terp-emblem-important"
+
+#~ msgid "terp-gtk-jump-to-ltr"
+#~ msgstr "terp-gtk-jump-to-ltr"
+
+#~ msgid "terp-folder-yellow"
+#~ msgstr "terp-folder-yellow"
+
+#~ msgid "terp-stock_align_left_24"
+#~ msgstr "terp-stock_align_left_24"
+
+#~ msgid "terp-camera_test"
+#~ msgstr "terp-camera_test"
+
+#~ msgid "terp-stock_format-default"
+#~ msgstr "terp-stock_format-default"
+
+#~ msgid "terp-personal-"
+#~ msgstr "terp-personal-"
+
+#~ msgid "terp-document-new"
+#~ msgstr "terp-document-new"
+
+#~ msgid "terp-personal+"
+#~ msgstr "terp-personal+"
+
+#~ msgid "terp-go-home"
+#~ msgstr "terp-go-home"
+
+#~ msgid "terp-stock_effects-object-colorize"
+#~ msgstr "terp-stock_effects-object-colorize"
+
+#~ msgid "terp-mail-forward"
+#~ msgstr "terp-mail-forward"
+
+#~ msgid "terp-dolar_ok!"
+#~ msgstr "terp-dolar_ok!"
+
+#~ msgid "terp-mail-replied"
+#~ msgstr "erp-mail-replied"
+
+#~ msgid "terp-folder-orange"
+#~ msgstr "terp-folder-orange"
+
+#~ msgid "terp-stage"
+#~ msgstr "terp-stage"
+
+#~ msgid "terp-gdu-smart-failing"
+#~ msgstr "terp-gdu-smart-failing"
+
+#~ msgid "terp-gtk-go-back-rtl"
+#~ msgstr "terp-gtk-go-back-rtl"
+
+#~ msgid "terp-gtk-media-pause"
+#~ msgstr "terp-gtk-media-pause"
+
+#~ msgid " Update Modules List"
+#~ msgstr " Список обновляемых модулей"
+
+#~ msgid "terp-accessories-archiver-minus"
+#~ msgstr "terp-accessories-archiver-minus"
+
+#~ msgid "terp-gtk-stop"
+#~ msgstr "terp-gtk-stop"
+
+#~ msgid "terp-stock_symbol-selection"
+#~ msgstr "terp-stock_symbol-selection"
+
+#~ msgid "terp-idea"
+#~ msgstr "terp-idea"
+
+#~ msgid "terp-mail-"
+#~ msgstr "terp-mail-"
+
+#~ msgid "terp-gtk-select-all"
+#~ msgstr "terp-gtk-select-all"
+
+#~ msgid "Add a widget"
+#~ msgstr "Добавить виджет"
+
+#~ msgid "terp-rating-rated"
+#~ msgstr "terp-rating-rated"
+
+#~ msgid "terp-go-week"
+#~ msgstr "terp-go-week"
+
+#~ msgid "terp-face-plain"
+#~ msgstr "terp-face-plain"
+
+#~ msgid "terp-stock_format-scientific"
+#~ msgstr "terp-stock_format-scientific"
+
+#~ msgid "terp-gnome-cpu-frequency-applet+"
+#~ msgstr "terp-gnome-cpu-frequency-applet+"
+
+#~ msgid "terp-dialog-close"
+#~ msgstr "terp-dialog-close"
+
+#~ msgid "terp-folder-blue"
+#~ msgstr "terp-folder-blue"
+
+#~ msgid "terp-accessories-archiver+"
+#~ msgstr "terp-accessories-archiver+"
+
+#~ msgid "terp-check"
+#~ msgstr "terp-check"
+
+#~ msgid "terp-gtk-go-back-ltr"
+#~ msgstr "terp-gtk-go-back-ltr"
+
+#~ msgid "terp-folder-green"
+#~ msgstr "terp-folder-green"
+
+#~ msgid "terp-go-today"
+#~ msgstr "terp-go-today"
+
+#~ msgid "terp-locked"
+#~ msgstr "terp-locked"
+
+#~ msgid "terp-call-start"
+#~ msgstr "terp-call-start module: stock"
+
+#~ msgid "terp-personal"
+#~ msgstr "terp-personal"
+
+#~ msgid "terp-go-year"
+#~ msgstr "terp-go-year"
+
+#~ msgid "terp-gtk-jump-to-rtl"
+#~ msgstr "terp-gtk-jump-to-rtl"
+
+#~ msgid "terp-mail_delete"
+#~ msgstr "terp-mail_delete"
+
+#~ msgid "terp-go-month"
+#~ msgstr "terp-go-month"
+
+#, python-format
+#~ msgid "Make sure you have no users linked with the group(s)!"
+#~ msgstr "Убедитесь, что нет пользователей связанных с группой !"
+
+#~ msgid "Add Maintenance Contract"
+#~ msgstr "Добавить договор на обслуживание"
+
+#~ msgid "maintenance contract modules"
+#~ msgstr "модули обслуживания договоров"
+
+#~ msgid "Maintenance"
+#~ msgstr "Обслуживание"
+
+#~ msgid "Maintenance Contracts"
+#~ msgstr "Обслуживание договоров"
+
+#~ msgid "Corporation"
+#~ msgstr "Компания"
+
+#~ msgid "Ltd."
+#~ msgstr "ООО"
+
+#~ msgid "Access Groups"
+#~ msgstr "Группы доступа"

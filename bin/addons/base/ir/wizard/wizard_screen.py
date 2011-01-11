@@ -31,8 +31,12 @@ class wizard_screen(osv.osv_memory):
 
     def _get_image(self, cr, uid, context=None):
         path = os.path.join('base','res','config_pixmaps','%d.png'%random.randrange(1,4))
-        file_data = tools.file_open(path,'rb').read()
-        return base64.encodestring(file_data)
+        image_file = file_data = tools.file_open(path,'rb')
+        try:
+            file_data = image_file.read()
+            return base64.encodestring(file_data)
+        finally:
+            image_file.close()
 
     def _get_image_fn(self, cr, uid, ids, name, args, context=None):
         image = self._get_image(cr, uid, context)

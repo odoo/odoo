@@ -143,18 +143,24 @@ class expression(object):
             if len(fargs) > 1:
                 if field._type == 'many2one':
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
-                    self.__exp[i] = (fargs[0], 'in', right)
+                    if right == []:
+                        self.__exp[i] = ( 'id', '=', 0 )
+                    else:
+                        self.__exp[i] = (fargs[0], 'in', right)
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many','one2many']:
                     right = field_obj.search(cr, uid, [(fargs[1], operator, right)], context=context)
                     right1 = table.search(cr, uid, [(fargs[0],'in', right)], context=context)
-                    self.__exp[i] = ('id', 'in', right1)
-                
+                    if right1 == []:
+                        self.__exp[i] = ( 'id', '=', 0 )
+                    else:
+                        self.__exp[i] = ('id', 'in', right1)
+
                 if not isinstance(field,fields.property):
                     continue
 
-            if field._properties and ((not field.store) or field._fnct_search):
-                # this is a function field
+            if field._properties and not field.store:
+                # this is a function field that is not stored
                 if not field._fnct_search:
                     # the function field doesn't provide a search function and doesn't store
                     # values in the database, so we must ignore it : we generate a dummy leaf
@@ -185,7 +191,7 @@ class expression(object):
                 else:
                     call_null = True
 
-                    if right:
+                    if right is not False:
                         if isinstance(right, basestring):
                             ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                             if ids2:
@@ -234,7 +240,7 @@ class expression(object):
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
                 else:
                     call_null_m2m = True
-                    if right:
+                    if right is not False:
                         if isinstance(right, basestring):
                             res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
                             if res_ids:
@@ -313,6 +319,13 @@ class expression(object):
                                 if not isinstance(ele, basestring): 
                                     m2o_str = False
                                     break
+                    elif right == []:
+                        m2o_str = False
+                        if operator in ('not in', '!=', '<>'):
+                            # (many2one not in []) should return all records
+                            self.__exp[i] = self.__DUMMY_LEAF
+                        else:
+                            self.__exp[i] = ('id','=',0)
                     else:
                         new_op = '='
                         if operator in  ['not like','not ilike','not in','<>','!=']:

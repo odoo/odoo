@@ -9,7 +9,7 @@
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Multi Company">
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id"/>
                     <field name="object_id"/>
                     <field name="field_id"/>
                     <field name="expression" />
@@ -29,7 +29,7 @@
                     <group col="6" colspan="4">
                         <field name="name" colspan="6"/>
                         <separator string="Matching" colspan="6"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="company_id"/>
                         <field name="object_id"/>
                         <field name="field_id" domain="[('model_id','=',object_id)]"/>
                         <separator string="Condition" colspan="6"/>

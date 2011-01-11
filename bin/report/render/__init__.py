@@ -25,8 +25,9 @@ from render import render
 
 try:
     import Image
-except:
-    print 'WARNING; Python Imaging not installed, you can use only .JPG pictures !'
+except ImportError:
+    import logging
+    logging.getLogger('init').warning('Python Imaging not installed, you can use only .JPG pictures !')
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

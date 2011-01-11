@@ -38,7 +38,9 @@ class base_language_install(osv.osv_memory):
         'state': 'init',
         'overwrite': False
     }
-    def lang_install(self, cr, uid, ids, context):
+    def lang_install(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         language_obj = self.browse(cr, uid, ids)[0]
         lang = language_obj.lang
         if lang:
