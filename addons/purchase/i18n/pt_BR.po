@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: pt_BR\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-05 15:01+0000\n"
-"Last-Translator: Guilherme Santos <Unknown>\n"
+"PO-Revision-Date: 2011-01-08 17:22+0000\n"
+"Last-Translator: Emerson <Unknown>\n"
 "Language-Team: <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:44+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -31,6 +31,7 @@ msgstr ""
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
 msgstr ""
+"Você não pode confirmar um pedido de compra sem as linhas (produtos)."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
@@ -71,6 +72,15 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Você pode criar uma Solicitação para Cotação (SC) quando quiser comprar "
+"produtos de um fornecedor mas esta compra ainda não estiver confirmada. "
+"Também use este menu para revisar as solicitações de compra criadas "
+"automaticamente com base nas suas regras de logística (estoque mínimo, fazer "
+"sob demanda, etc). Você pode converter as SCs em Pedido de Compra quando a "
+"compra for confirmada. Se estiver usando a interface extendida (das "
+"preferências de usuário), você pode selecionar a forma de controlar as "
+"faturas dos fornecedores: com base no pedido, no recebimento ou digitação "
+"manual."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -114,12 +124,15 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Use este menu para procurar pedidos de compra por referência, fornecedor, "
+"produto, etc. Para cada pedido, você pode acompanhar os produtos recebidos e "
+"controlar as faturas do fornecedor."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "O fornecedor selecionado somente vende este produto por %s"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
@@ -564,6 +577,9 @@ msgid ""
 "Reception Analysis allows you to easily check and analyse your company order "
 "receptions and the performance of your supplier's deliveries."
 msgstr ""
+"A Análise de Recepção permite facilmente checar e analisar os recebimentos "
+"de pedidos da sua empresa, além da pontualidade das entregas dos seus "
+"fornecedores."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -634,6 +650,12 @@ msgid ""
 "Manual: allows you to generate suppliers invoices by chosing in the "
 "uninvoiced lines of all manual purchase orders."
 msgstr ""
+"Do Pedido: uma fatura provisória será gerada previamente com base no pedido "
+"de compra. O setor de contas deve validar esta fatura para controle.\n"
+"Da Entrega: uma fatura provisória será gerada previamente na validação do "
+"recebimento.\n"
+"Manual: permite lançar a fatura do fornecedor escolhendo as linhas sem "
+"fatura de todas os pedidos de compra manuais."
 
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
@@ -745,7 +767,7 @@ msgstr "Total Geral"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Receptions"
-msgstr ""
+msgstr "Recebimentos"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -761,6 +783,10 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"Use este menu para controlar as faturas a receber dos seus fornecedores. O "
+"OpenERP gera previamente faturas provisórias a partir dos pedidos de compra "
+"ou dos recebimentos, de acordo com suas configurações. Uma vez recebida a "
+"fatura do fornecedor, você pode ligá-la à fatura provisória e validar."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -779,6 +805,8 @@ msgid ""
 "Manages your Purchase Requisition and allows you to easily keep track and "
 "manage all your purchase orders."
 msgstr ""
+"Gerencia suas Requisições de Compra e permite a você rastrear e gerenciar "
+"todos seus pedidos de compra."
 
 #. module: purchase
 #: view:purchase.report:0
@@ -789,7 +817,7 @@ msgstr "    Mês-1    "
 #: code:addons/purchase/purchase.py:363
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Não há diário de compras definido para esta empresa: \"%s\" (id:%d)"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -801,6 +829,8 @@ msgstr "Manual"
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
+"Primeiro você deve cancelar todas as entregas relacionadas a este pedido de "
+"compra."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -832,6 +862,10 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
+"Se você definir o controle de faturamento do pedido de compra como "
+"\"Manual\", poderá acompanhar por aqui todas a linhas do pedido que ainda "
+"não foram faturadas. Quando puder lançar a fatura, você pode gerar uma "
+"fatura provisória com base nos itens deste menu."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -866,7 +900,7 @@ msgstr "Requisição do Compras"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Categorias das Unidades de Medida"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -878,7 +912,7 @@ msgstr "Dias para Entrega"
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Receive Products"
-msgstr ""
+msgstr "Receber Produtos"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -968,7 +1002,7 @@ msgstr "To be reviewed by the accountant."
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "Purchase Lines Not Invoiced"
-msgstr ""
+msgstr "Linhas de pedido de compra não faturadas"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1039,7 +1073,7 @@ msgstr "Atenciosamente,"
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
-msgstr ""
+msgstr "Negociações por Fornecedor"
 
 #. module: purchase
 #: view:res.partner:0
@@ -1118,7 +1152,7 @@ msgstr "Faturamento Manual"
 #, python-format
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
-msgstr ""
+msgstr "Alguém acabou de confirmar um pedido com valor acima do limite."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1150,7 +1184,7 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr ""
+msgstr "Por favor, selecione multiplos pedidos para juntar na lista."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
@@ -1204,6 +1238,8 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
 msgstr ""
+"O fornecedor selecionado possui quantidade mínima de %s, você não pode "
+"comprar menos."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1223,7 +1259,7 @@ msgstr "Cancelar Ordem de Compra"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Você deve atribuir um lote de produção para este produto."
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1244,7 +1280,7 @@ msgstr "Products Value"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Tipos de listas de preços"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1266,7 +1302,7 @@ msgstr "Histórico"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produtos por categoria"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1481,7 +1517,7 @@ msgstr "Preço Unitário"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery & Invoicing"
-msgstr ""
+msgstr "Entregas e Faturas"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
@@ -1539,6 +1575,9 @@ msgid ""
 "suppliers. You can track all your interactions with them through the History "
 "tab: emails, orders, meetings, etc."
 msgstr ""
+"Acesse os registros dos seus fornecedores e mantenha um bom relacionamento "
+"com eles. Você pode fazer um acompanhamento pela aba Histórico: email, "
+"pedidos, reuniões, etc."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1549,7 +1588,7 @@ msgstr "Eentrega"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr ""
+msgstr "Solicitação de Cotação"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1601,7 +1640,7 @@ msgstr "Fevereiro"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "Categorias de produtos"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1674,6 +1713,17 @@ msgid ""
 "\n"
 " "
 msgstr ""
+" Por favor, repare que: \n"
+" \n"
+" Pedidos somente serão juntados se: \n"
+" *Os pedidos forem provisórios \n"
+" *Os pedidos pertencerem ao mesmo fornecedor \n"
+" *Os pedidos forem para o mesmo local de estoque e mesma lista de preços \n"
+" \n"
+" As linhas somente serão juntadas se: \n"
+" * As linhas forem exatamente iguais com excessão do produto, quantidade e "
+"unidade \n"
+" "
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1735,7 +1785,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:414
 #, python-format
 msgid "Purchase order '%s' is cancelled."
-msgstr ""
+msgstr "Pedido de compra '%s' está cancelado."
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
@@ -1745,7 +1795,7 @@ msgstr "Total"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Versões da lista"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
@@ -1829,7 +1879,7 @@ msgstr "título"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
 msgid "Partial Move"
-msgstr ""
+msgstr "Movimento Parcial"
 
 #. module: purchase
 #: view:purchase.order.line:0

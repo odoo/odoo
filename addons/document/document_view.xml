@@ -108,7 +108,7 @@
                             <field name="extension"/>
                             <field name="include_name"/>
                             <separator string="PDF Report" colspan="4"/>
-                            <field name="report_id" domain="[ ('type','=','ressource'),('model_id','=',parent.ressource_type_id)]"/>
+                            <field name="report_id" domain="[('model_id','=',parent.ressource_type_id)]"/>
                         </form>
                         <tree string="Contents">
                             <field name="sequence" string="Seq."/>

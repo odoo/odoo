@@ -823,12 +823,14 @@ class stock_invoice_onshipping(osv.osv_memory):
     def create_invoice(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        res = super(stock_invoice_onshipping,self).create_invoice(cr, uid, ids, context=context)
         purchase_obj = self.pool.get('purchase.order')
         picking_obj = self.pool.get('stock.picking')
-        res = super(stock_invoice_onshipping,self).create_invoice(cr, uid, ids, context=context)
-        purchase_id =  picking_obj.browse(cr, uid, res.keys()[0]).purchase_id.id
-        purchase_obj.write(cr, uid, [purchase_id], {
-            'invoice_ids': [(4, res.values()[0])]}, context=context)
+        for pick_id in res:
+            pick = picking_obj.browse(cr, uid, pick_id, context=context)
+            if pick.purchase_id:
+                purchase_obj.write(cr, uid, [pick.purchase_id.id], {
+                    'invoice_ids': [(4, res[pick_id])]}, context=context)
         return res
 
 stock_invoice_onshipping()
