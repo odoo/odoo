@@ -444,7 +444,7 @@ class mrp_production(osv.osv):
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
 
-        'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True,
+        'picking_id': fields.many2one('stock.picking', 'Picking list', readonly=True, ondelete="restrict",
             help="This is the internal picking list that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Move product', readonly=True),
         'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
@@ -602,12 +602,18 @@ class mrp_production(osv.osv):
                 workcenter_line_obj.create(cr, uid, line)
         return len(results)
 
-    def action_cancel(self, cr, uid, ids):
+    def action_cancel(self, cr, uid, ids, context=None):
         """ Cancels the production order and related stock moves.
         @return: True
         """
+        if context is None:
+            context = {}
         move_obj = self.pool.get('stock.move')
-        for production in self.browse(cr, uid, ids):
+        for production in self.browse(cr, uid, ids, context=context):
+            if production.state == 'confirmed' and production.picking_id.state not in ('draft', 'cancel'):
+                raise osv.except_osv(
+                    _('Could not cancel manufacturing order !'),
+                    _('You must first cancel related internal picking attached to this manufacturing order.'))
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
@@ -664,7 +670,7 @@ class mrp_production(osv.osv):
         """
         stock_mov_obj = self.pool.get('stock.move')
         production = self.browse(cr, uid, production_id, context=context)
-        
+
         final_product_todo = []
 
         produced_qty = 0
