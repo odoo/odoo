@@ -22,10 +22,7 @@
 from lxml import etree
 import time
 from datetime import datetime, date
-from operator import itemgetter
-from itertools import groupby
 
-from tools.misc import flatten
 from tools.translate import _
 from osv import fields, osv
 
@@ -322,7 +319,6 @@ class task(osv.osv):
 
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        project_obj = self.pool.get('project.project')
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
@@ -632,7 +628,7 @@ class task(osv.osv):
         Delegate Task to another users.
         """
         task = self.browse(cr, uid, task_id, context=context)
-        new_task_id = self.copy(cr, uid, task.id, {
+        self.copy(cr, uid, task.id, {
             'name': delegate_data['name'],
             'user_id': delegate_data['user_id'],
             'planned_hours': delegate_data['planned_hours'],
