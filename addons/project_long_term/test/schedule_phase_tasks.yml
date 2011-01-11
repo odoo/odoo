@@ -25,6 +25,8 @@
       - resource_id: project_long_term.resource_analyst
       - resource_id: project_long_term.resource_developer
       - resource_id: project_long_term.resource_designer
+      - resource_id: project_long_term.resource_tester
+      - resource_id: project_long_term.resource_project_manager
     
 - 
   Create the phase task 'Develop GUI for Server Configuration'
@@ -36,7 +38,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    user_id: project.res_users_developer
+
     
 - 
   Create the phase task 'Develop GUI for Modules Configuration'
@@ -48,7 +50,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    user_id: project.res_users_developer
+
 - 
   Create the phase task 'Develop GUI for OpenERP Synchronisation'
 - 
@@ -59,7 +61,7 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    user_id: project.res_users_developer
+
 - 
   Create the phase task 'Design required GUI/Menus'
 - 
@@ -70,7 +72,6 @@
     state: draft
     phase_id: project_phase_phase0
     project_id: project_project_project0
-    user_id: project.res_users_designer
     
 - 
   Schedule phase tasks
@@ -84,6 +85,6 @@
   !python {model: project.phase}: |
      phase = self.browse(cr, uid, [ref("project_phase_phase0")])[0]
      for task in phase.task_ids:
-        if (not task.user_id) or (not task.date_start) or (not task.date_end):
+        if (not task.date_start) or (not task.date_end):
            raise AssertionError("Phase Tasks not scheduled: %d uid=%r start=%r end=%r" % \
                     (task.id, task.user_id, task.date_start, task.date_end))

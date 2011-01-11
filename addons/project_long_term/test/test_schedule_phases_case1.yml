@@ -60,6 +60,6 @@
 -
   !python {model: project.phase}: |
     first_phase = self.browse(cr, uid, ref('project_phase_firstphase0'))
-    assert (first_phase.date_start == '2010-12-30' and first_phase.date_end == '2010-12-31'),'Dates are wrong!'
+    assert (first_phase.date_start == '2010-12-30' and first_phase.date_end == '2011-01-03'),'Dates are wrong!'
     second_phase = self.browse(cr, uid, ref('project_phase_secondphase0'))
-    assert (second_phase.date_start == '2011-01-01' and second_phase.date_end == '2011-01-03'),'Dates are wrong!'
+    assert (second_phase.date_start == '2011-01-03' and second_phase.date_end == '2011-01-05'),'Dates are wrong!'
