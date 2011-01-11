@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-12-25 19:07+0000\n"
+"PO-Revision-Date: 2011-01-09 14:37+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:23+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_voucher
@@ -41,7 +41,7 @@ msgstr "Offene Posten Kunden"
 #. module: account_voucher
 #: view:sale.receipt.report:0
 msgid "Voucher Date"
-msgstr ""
+msgstr "Zahlungsbeleg Datum"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -58,7 +58,9 @@ msgstr "Gruppierung..."
 #: code:addons/account_voucher/account_voucher.py:607
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
-msgstr "Kann keine offenen oder ausgeglichen Zahlungsbelege löschen."
+msgstr ""
+"Offene oder bereits ausgeglichene Zahlungsbelege können nicht gelöscht "
+"werden."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -120,7 +122,7 @@ msgstr "Storno Zahlungsbeleg"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "March"
-msgstr ""
+msgstr "März"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt
@@ -178,7 +180,7 @@ msgstr "Genehmigen & Buchen"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Tag"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -215,6 +217,10 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
+"Durch diese Auswertung haben Sie einen Überblick aller Rechnungen für "
+"Kunden, sowie der durchschnittlichen Dauer bis zur Bezahlung. Andere Module "
+"ermöglichen Ihnen eine Individualisierung Ihrer Reports und Auswertungen, um "
+"exakt Ihr Bedürfnis für Auswertungen zu erfüllen."
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -248,7 +254,7 @@ msgstr ""
 "einen Kunden. Um eine Einzahlung zu erfassen, sollten Sie den Kunden "
 "eingeben, das Journal zur Zahlungsmethode sowie den gezahlten Betrag. "
 "OpenERP schlägt dann automatisch einen Ausgleich mit vorhandenen Rechnungen "
-"oder Belegen einer Zahlungsaufforderungen vor."
+"oder Belegen einer Zahlungsaufforderung vor."
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
@@ -329,7 +335,7 @@ msgstr "Betrag (in Worten)"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,nbr:0
 msgid "# of Voucher Lines"
-msgstr ""
+msgstr "# Zahlungsposten"
 
 #. module: account_voucher
 #: field:account.voucher.line,account_analytic_id:0
@@ -488,7 +494,7 @@ msgstr "Information Rechnung"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Juli"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -504,7 +510,7 @@ msgstr "Steuerbetrag"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
-msgstr ""
+msgstr "Durch. Zahlungsverzug"
 
 #. module: account_voucher
 #: view:account.invoice:0
@@ -571,7 +577,7 @@ msgstr "Rechnungen"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Dezember"
 
 #. module: account_voucher
 #: field:account.voucher,line_ids:0
@@ -583,7 +589,7 @@ msgstr "Zahlungspositionen"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Monat"
 
 #. module: account_voucher
 #: field:account.voucher,currency_id:0
@@ -606,13 +612,13 @@ msgstr "Buche Einzahlung später"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,user_id:0
 msgid "Salesman"
-msgstr ""
+msgstr "Verkäufer"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr ""
+msgstr "Durch. Zahlungsdauer"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -637,7 +643,7 @@ msgstr "Währung:"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total_tax:0
 msgid "Total With Tax"
-msgstr ""
+msgstr "Bruttobetrag"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -647,7 +653,7 @@ msgstr "PRO-FORMA"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "August"
-msgstr ""
+msgstr "August"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_payment
@@ -671,7 +677,7 @@ msgstr "Gesamtbetrag"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Juni"
 
 #. module: account_voucher
 #: field:account.voucher.line,type:0
@@ -703,7 +709,7 @@ msgstr "Datum"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -735,7 +741,7 @@ msgstr "Buche Einzahlung sofort"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktober"
 
 #. module: account_voucher
 #: field:account.voucher,pre_line:0
@@ -745,7 +751,7 @@ msgstr "Vorherige Zahlungen?"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Januar"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_voucher_list
@@ -799,7 +805,7 @@ msgstr "Rechnungen und andere offene Posten"
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,price_total:0
 msgid "Total Without Tax"
-msgstr ""
+msgstr "Nettobetrag"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -831,7 +837,7 @@ msgstr "Bank Auszug"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "September"
-msgstr ""
+msgstr "September"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -843,7 +849,7 @@ msgstr "Information Umsatz"
 #: model:ir.ui.menu,name:account_voucher.menu_action_sale_receipt_report_all
 #: view:sale.receipt.report:0
 msgid "Sales Receipt Analysis"
-msgstr ""
+msgstr "Statistik Einnahmen"
 
 #. module: account_voucher
 #: field:account.voucher.line,voucher_id:0
@@ -940,7 +946,7 @@ msgstr "Abgebrochen"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #. module: account_voucher
 #: field:account.statement.from.invoice,journal_ids:0
@@ -965,7 +971,7 @@ msgstr "Gutschriftspositionen"
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
 msgid "Original Amount"
-msgstr ""
+msgstr "Ursprünglicher Betrag"
 
 #. module: account_voucher
 #: report:voucher.print:0
@@ -1000,7 +1006,7 @@ msgstr "Kunde"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Februar"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -1015,7 +1021,7 @@ msgstr "Abschreibungsgrund"
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
 msgid "April"
-msgstr ""
+msgstr "April"
 
 #. module: account_voucher
 #: field:account.voucher,type:0
@@ -1036,7 +1042,7 @@ msgstr "Buchungssatz"
 #. module: account_voucher
 #: field:sale.receipt.report,state:0
 msgid "Voucher State"
-msgstr ""
+msgstr "Status Zahlungsbeleg"
 
 #. module: account_voucher
 #: help:account.voucher,date:0
@@ -1065,13 +1071,13 @@ msgstr "Nettobetrag"
 #. module: account_voucher
 #: model:ir.model,name:account_voucher.model_sale_receipt_report
 msgid "Sales Receipt Statistics"
-msgstr ""
+msgstr "Statistik Einnahmen"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,year:0
 msgid "Year"
-msgstr ""
+msgstr "Jahr"
 
 #. module: account_voucher
 #: view:account.voucher:0

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-08 16:22+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
+"PO-Revision-Date: 2011-01-09 11:16+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-09 04:51+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -154,6 +154,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
+"Ceci est la liste de tous les ordres de livraison à préparer, en fonction de "
+"vos différents bons de commande et de vos règles logistiques."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -210,6 +212,7 @@ msgstr ""
 #, python-format
 msgid "Missing partial picking data for move #%s"
 msgstr ""
+"Données manquantes sur la préparation partielle pour le mouvement #%s"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_move
@@ -636,6 +639,10 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"Le Journal des Stocks permet d'attribuer chaque opération sur le stock à un "
+"journal particulier selon le type d'opération à effectuer ou selon "
+"l'employé/l'équipe qui doit effectuer l'opération. Exemples de journaux de "
+"stock : contrôle qualité, bons de transfert, listes de colisage, etc"
 
 #. module: stock
 #: field:stock.location,complete_name:0
@@ -1105,7 +1112,7 @@ msgstr "Ordre de livraison"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_in
 msgid "stock.move.memory.in"
-msgstr ""
+msgstr "stock.move.memory.in"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2466,6 +2473,8 @@ msgstr "Opération de manutention"
 msgid ""
 "The combination of serial number and internal reference must be unique !"
 msgstr ""
+"La combinaison du numéro de série et de la référence interne doit être "
+"unique !"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups
@@ -2648,7 +2657,7 @@ msgstr "À faire"
 #: field:stock.production.lot.revision,company_id:0
 #: field:stock.warehouse,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Société"
 
 #. module: stock
 #: view:stock.move:0
@@ -3192,7 +3201,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_out
 msgid "stock.move.memory.out"
-msgstr ""
+msgstr "stock.move.memory.out"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:115
