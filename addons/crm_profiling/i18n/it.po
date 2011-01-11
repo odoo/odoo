@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-09 09:06+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-09 17:38+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:42+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: crm_profiling
@@ -41,6 +41,37 @@ msgid ""
 "since it's the same which has been renamed.\n"
 "    "
 msgstr ""
+"\n"
+"    Questo modulo permette agli utenti di effettuare una segmentazione con i "
+"partner.\n"
+"    Esso utilizza il criterio del profilo dalla precedente modulo di "
+"segmentazione per ampliarlo. Grazie al nuovo concetto di questionario. E' "
+"possibile ora raggruppare le domande in un questionario e direttamente "
+"utilizzarlo su un partner.\n"
+"\n"
+"    Esso è stato inoltre integrato col precedente strumento di "
+"segnmentazione CRM & SRM perchè essi erano sovrapposti.\n"
+"\n"
+"    Gli elementi del menù relativi sono in \"CRM & SRM / Configurazione / "
+"Segmentazioni\"\n"
+"\n"
+"\n"
+"    *Nota: questo modulo non è compatibile con il modulo segmentazione, dato "
+"che è lo stesso che è stato rinominato.\n"
+"    "
+
+#. module: crm_profiling
+#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
+msgid ""
+"You can create specific topic-related questionnaires to guide your team(s) "
+"in the sales cycle by helping them to ask the right questions. The "
+"segmentation tool allows you to automatically assign a partner to a category "
+"according to his answers to the different questionnaires."
+msgstr ""
+"E' possibile creare uno specifico questionario relativo al tema per guidare "
+"i team nel ciclo di vendita aiutandoli a porre le giuste domande. Lo "
+"strumento di segmentazione permette di assegnare automaticamente un partner "
+"ad una categoria in funzione alle sue risposte ai differenti questionari."
 
 #. module: crm_profiling
 #: field:crm_profiling.answer,question_id:0
@@ -53,21 +84,6 @@ msgstr "Domanda"
 #: wizard_button:open_questionnaire,init,open:0
 msgid "Open Questionnaire"
 msgstr "Questionario Aperto"
-
-#. module: crm_profiling
-#: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
-msgid ""
-"You can create specific topic related questionnaires that will be used to "
-"guide your team(s) in the sales cycle by helping them to ask the right "
-"questions. Using the segmentation tool, you will be able to automatically "
-"assign a partner to a category based on his answers to the different "
-"questionnaires."
-msgstr ""
-"E' possibile creare uno specifico questionario correlato che verrà usato per "
-"guidare il (o i) team, nel ciclo di vendita, aiutandoli a porre le giuste "
-"domande. Usando il tool di segmentazione, è così possible assegnare "
-"automaticamente i partner alla loro corretta categoria, basandosi sulle "
-"risposte ai differenti questionari."
 
 #. module: crm_profiling
 #: constraint:res.partner:0
@@ -196,7 +212,7 @@ msgid "Partner"
 msgstr "Partner"
 
 #. module: crm_profiling
-#: code:addons/crm_profiling/crm_profiling.py:0
+#: code:addons/crm_profiling/crm_profiling.py:178
 #: field:crm_profiling.questionnaire,name:0
 #: model:ir.model,name:crm_profiling.model_crm_profiling_questionnaire
 #: wizard_view:open_questionnaire,init:0
@@ -248,3 +264,16 @@ msgstr "Salva Dati"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "La dimensione del campo non può mai essere minore di 1!"
+
+#~ msgid ""
+#~ "You can create specific topic related questionnaires that will be used to "
+#~ "guide your team(s) in the sales cycle by helping them to ask the right "
+#~ "questions. Using the segmentation tool, you will be able to automatically "
+#~ "assign a partner to a category based on his answers to the different "
+#~ "questionnaires."
+#~ msgstr ""
+#~ "E' possibile creare uno specifico questionario correlato che verrà usato per "
+#~ "guidare il (o i) team, nel ciclo di vendita, aiutandoli a porre le giuste "
+#~ "domande. Usando il tool di segmentazione, è così possible assegnare "
+#~ "automaticamente i partner alla loro corretta categoria, basandosi sulle "
+#~ "risposte ai differenti questionari."

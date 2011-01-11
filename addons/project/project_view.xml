@@ -21,7 +21,7 @@
                 <form string="Project">
                     <group colspan="6" col="6">
                         <field name="name" string="Project Name" select="1"/>
-                        <field name="parent_id" domain="[('id','!=',active_id)]"/>
+                        <field name="parent_id" string="Parent Project" domain="[('id','!=',active_id)]" context="{'current_model': 'project.project'}"/>
                         <field name="user_id" string="Project Manager" select="1" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date_start" string="Start Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                         <field name="date" string="End Date" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
@@ -29,20 +29,17 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Administration">
-                            <group col="2" colspan="2" groups="base.group_extended">
-                                <separator colspan="2" string="Scheduling"/>
-                                <field name="priority"/>
-                                <field name="active"/>
-                            </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Performance"/>
                                 <field name="planned_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time" />
                             </group>
                             <group col="2" colspan="2" name="misc">
-                                <separator colspan="2" string="Miscelleanous"/>
+                                <separator colspan="4" string="Miscelleanous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="warn_manager"/>
+                                <field name="priority"/>
+                                <field name="active"/>
                             </group>
                             <newline/>
                             <separator colspan="4"/>
@@ -143,7 +140,7 @@
                     <field name="name" string="Project Name"/>
                     <field name="user_id" string="Project Manager"/>
                     <field name="partner_id" string="Partner"/>
-                    <field name="parent_id" invisible="1"/>
+                    <field name="parent_id" string="Parent Project" invisible="1"/>
                     <field name="planned_hours" widget="float_time"/>
                     <field name="total_hours" widget="float_time"/>
                     <field name="effective_hours" widget="float_time"/>
@@ -226,7 +223,7 @@
                 <form string="Task edition">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1"  on_change="onchange_project(project_id)" domain="[('user_id','=',uid)]"/>
+                        <field name="project_id" select="1"  on_change="onchange_project(project_id)" domain="['|',('user_id','=',uid),('members','=',uid)]" />
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
@@ -548,9 +545,9 @@
           <field name="inherit_id" ref="base.view_users_form"/>
           <field eval="18" name="priority"/>
           <field name="arch" type="xml">
-              <field name="password" position="after">
+              <xpath expr="/form/notebook" position="before">
                    <field name="context_project_id"/>
-              </field>
+              </xpath>
           </field>
      </record>
 

@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-19 23:41+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"PO-Revision-Date: 2011-01-06 08:37+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:57+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_action_rule
@@ -76,7 +76,12 @@ msgid "Days"
 msgstr "Dagen"
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr "Laatst uitgevoerd"
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:313
 #, python-format
 msgid "Error!"
 msgstr "Fout!"
@@ -114,20 +119,6 @@ msgstr ""
 "stuurt."
 
 #. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
-msgid ""
-"Create actions automatically triggered based on a user activity in the "
-"system.E.g.: an opportunity created by a specific user can be automatically "
-"maintained with a specific sales team, or an opportunity which still has "
-"status pending after 14 days triggers an automatic reminder email."
-msgstr ""
-"Maakt automatisch acties die worden geactiveerd op basis van "
-"gebruikersactiviteit in het systeem. Bijv.: een verkoopkans door een "
-"specifieke gebruiker gemaakt kan automatisch worden onderhouden door een "
-"specifiek verkooptea, of een verkoopkans die na 14 dagen nog steeds status "
-"wachtend heeft activeert automatisch een herinnering email."
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr "Voorwaarden op relatiemodel"
@@ -161,6 +152,20 @@ msgstr "Speciale sleutelwoorden die in het bericht kunnen worden gebruikt"
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Status"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Use automated actions to automatically trigger actions for various screens. "
+"Example: a lead created by a specific user may be automatically set to a "
+"specific sales team, or an opportunity which still has status pending after "
+"14 days might trigger an automatic reminder email."
+msgstr ""
+"Gebruik automatische acties om automatisch acties te activeren voor "
+"verschillende schermen. Voorbeeld: een lead gemaakt door een specifieke "
+"gebruiker zou automatisch ingesteld worden op een specifiek verkoopteam, of "
+"een verkoopkans die na 14 dagen nog een wachtend status heeft zou een "
+"automatische herinnering mail kunnen activeren."
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
@@ -330,7 +335,7 @@ msgid "Active"
 msgstr "Actief"
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: code:addons/base_action_rule/base_action_rule.py:314
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
 msgstr "Geen email-ID gevonden bij uw bedrijfsadres!"
@@ -553,3 +558,15 @@ msgstr "Activeerdatum"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid ""
+#~ "Create actions automatically triggered based on a user activity in the "
+#~ "system.E.g.: an opportunity created by a specific user can be automatically "
+#~ "maintained with a specific sales team, or an opportunity which still has "
+#~ "status pending after 14 days triggers an automatic reminder email."
+#~ msgstr ""
+#~ "Maakt automatisch acties die worden geactiveerd op basis van "
+#~ "gebruikersactiviteit in het systeem. Bijv.: een verkoopkans door een "
+#~ "specifieke gebruiker gemaakt kan automatisch worden onderhouden door een "
+#~ "specifiek verkooptea, of een verkoopkans die na 14 dagen nog steeds status "
+#~ "wachtend heeft activeert automatisch een herinnering email."

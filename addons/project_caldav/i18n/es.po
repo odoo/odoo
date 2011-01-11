@@ -7,14 +7,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
 "PO-Revision-Date: 2010-12-31 08:51+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:05+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:38+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_caldav
@@ -35,6 +35,11 @@ msgstr "Mier"
 #: selection:project.task,rrule_type:0
 msgid "Monthly"
 msgstr "Mensual"
+
+#. module: project_caldav
+#: help:project.task,recurrency:0
+msgid "Recurrent Meeting"
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,week_list:0
@@ -93,11 +98,6 @@ msgid "All Day"
 msgstr "Todo el día"
 
 #. module: project_caldav
-#: field:project.task,vtimezone:0
-msgid "Timezone"
-msgstr "Zona horaria"
-
-#. module: project_caldav
 #: selection:project.task,show_as:0
 msgid "Free"
 msgstr "Libre"
@@ -128,19 +128,14 @@ msgid "No Repeat"
 msgstr "No repetir"
 
 #. module: project_caldav
-#: view:project.task:0
-msgid "Exclude range"
-msgstr "Excluir rango"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Minutes"
-msgstr "Minutos"
-
-#. module: project_caldav
 #: selection:project.task,rrule_type:0
 msgid "Yearly"
 msgstr "Anual"
+
+#. module: project_caldav
+#: view:project.task:0
+msgid "Recurrency Option"
+msgstr ""
 
 #. module: project_caldav
 #: field:project.task,tu:0
@@ -153,15 +148,15 @@ msgid "Repeat Until"
 msgstr "Repetir hasta"
 
 #. module: project_caldav
-#: help:project.task,interval:0
-msgid "Repeat every x"
-msgstr "Repetir cada x"
-
-#. module: project_caldav
 #: field:project.task,organizer:0
 #: field:project.task,organizer_id:0
 msgid "Organizer"
 msgstr "Organizador"
+
+#. module: project_caldav
+#: help:project.task,edit_all:0
+msgid "Edit all Occurrences  of recurrent Meeting."
+msgstr ""
 
 #. module: project_caldav
 #: field:project.task,sa:0
@@ -210,11 +205,6 @@ msgstr "Confidencial"
 
 #. module: project_caldav
 #: selection:project.task,freq:0
-msgid "Seconds"
-msgstr "Segundos"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
 msgid "Hours"
 msgstr "Horas"
 
@@ -234,6 +224,11 @@ msgid "Thu"
 msgstr "Jue"
 
 #. module: project_caldav
+#: help:project.task,count:0
+msgid "Repeat x times"
+msgstr ""
+
+#. module: project_caldav
 #: selection:project.task,rrule_type:0
 msgid "Daily"
 msgstr "Cada día"
@@ -242,6 +237,11 @@ msgstr "Cada día"
 #: field:project.task,class:0
 msgid "Mark as"
 msgstr "Marcar como"
+
+#. module: project_caldav
+#: field:project.task,count:0
+msgid "Repeat"
+msgstr ""
 
 #. module: project_caldav
 #: help:project.task,rrule_type:0
@@ -254,7 +254,7 @@ msgid "First"
 msgstr "Primero"
 
 #. module: project_caldav
-#: code:addons/project_caldav/project_caldav.py:0
+#: code:addons/project_caldav/project_caldav.py:67
 #, python-format
 msgid "Tasks"
 msgstr "Tareas"
@@ -285,14 +285,9 @@ msgid "CalDAV for task management"
 msgstr "CalDAV para la gestión de tareas"
 
 #. module: project_caldav
-#: view:project.task:0
-msgid "Custom Recurrency Rule"
-msgstr "Regla de recurrencia personalizada"
-
-#. module: project_caldav
-#: help:project.task,count:0
-msgid "Repeat max that times"
-msgstr "Repetir max. estas veces"
+#: field:project.task,vtimezone:0
+msgid "Timezone"
+msgstr "Zona horaria"
 
 #. module: project_caldav
 #: selection:project.task,rrule_type:0
@@ -300,7 +295,7 @@ msgid "Weekly"
 msgstr "Cada semana"
 
 #. module: project_caldav
-#: view:project.task:0
+#: field:project.task,edit_all:0
 msgid "Edit All"
 msgstr "Editar todo"
 
@@ -370,11 +365,6 @@ msgid "November"
 msgstr "Noviembre"
 
 #. module: project_caldav
-#: field:project.task,count:0
-msgid "Count"
-msgstr "Contador"
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "October"
 msgstr "Octubre"
@@ -396,6 +386,11 @@ msgstr "Miércoles"
 
 #. module: project_caldav
 #: view:project.task:0
+msgid "Repeat Times"
+msgstr ""
+
+#. module: project_caldav
+#: view:project.task:0
 msgid "To"
 msgstr "Hasta el"
 
@@ -410,6 +405,11 @@ msgid "Frequency"
 msgstr "Frecuencia"
 
 #. module: project_caldav
+#: help:project.task,interval:0
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr ""
+
+#. module: project_caldav
 #: view:project.task:0
 msgid "of"
 msgstr "de"
@@ -418,6 +418,11 @@ msgstr "de"
 #: selection:project.task,show_as:0
 msgid "Busy"
 msgstr "Ocupado"
+
+#. module: project_caldav
+#: field:project.task,recurrency:0
+msgid "Recurrent"
+msgstr ""
 
 #. module: project_caldav
 #: view:project.task:0
@@ -429,11 +434,6 @@ msgstr "Recurrencia"
 #: selection:project.task,week_list:0
 msgid "Thursday"
 msgstr "Jueves"
-
-#. module: project_caldav
-#: selection:project.task,rrule_type:0
-msgid "Custom"
-msgstr "Personalizado"
 
 #. module: project_caldav
 #: field:project.task,exrule:0
@@ -484,6 +484,11 @@ msgstr "Mayo"
 #: view:project.task:0
 msgid "Assign Task"
 msgstr "Asignar Tarea"
+
+#. module: project_caldav
+#: view:project.task:0
+msgid "Recurrency Rule"
+msgstr ""
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
@@ -560,6 +565,18 @@ msgstr "Quinto"
 #~ msgid "Can not map a field more than once"
 #~ msgstr "No puede mapear un campo más de una vez"
 
+#~ msgid "Exclude range"
+#~ msgstr "Excluir rango"
+
+#~ msgid "Minutes"
+#~ msgstr "Minutos"
+
+#~ msgid "Repeat every x"
+#~ msgstr "Repetir cada x"
+
+#~ msgid "Seconds"
+#~ msgstr "Segundos"
+
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "¡El nombre del módulo debe ser único!"
 
@@ -569,6 +586,12 @@ msgstr "Quinto"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "¡XML no válido para la definición de la vista!"
 
+#~ msgid "Repeat max that times"
+#~ msgstr "Repetir max. estas veces"
+
+#~ msgid "Custom Recurrency Rule"
+#~ msgstr "Regla de recurrencia personalizada"
+
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"
 
@@ -577,3 +600,9 @@ msgstr "Quinto"
 #~ msgstr ""
 #~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
 #~ "especial!"
+
+#~ msgid "Custom"
+#~ msgstr "Personalizado"
+
+#~ msgid "Count"
+#~ msgstr "Contador"
