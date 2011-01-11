@@ -2,9 +2,10 @@
   In order to test scheduling of project phases, I create two different phases and
   test it with two different dates for scheduling.
 -
-  I create a project 'Development and Testing'.
+  I create a project Development and Testing.
 - 
-  !record {model: project.project, id: project_project_project0}:
+  !record {model: project.project, id: project_project_project_case1}:
+    name: "Development and Testing"
     date_start: !eval time.strftime('%Y-%m-%d')
     balance: 0.0
     credit: 0.0
@@ -13,7 +14,7 @@
     effective_hours: 0.0
     members:
       - base.user_admin
-    name: Development and Testing
+
     planned_hours: 0.0
     progress_rate: 0.0
     quantity: 0.0
@@ -27,29 +28,29 @@
 - 
   I create first phase of the project.
 - 
-  !record {model: project.phase, id: project_phase_firstphase0}:
+  !record {model: project.phase, id: project_phase_firstphase0_case1}:
     duration: 2.0
     name: First Phase
     product_uom: product.uom_day
-    project_id: project_project_project0
+    project_id: project_project_project_case1
     state: draft
 - 
   I create second phase of the project.
 - 
-  !record {model: project.phase, id: project_phase_secondphase0}:
+  !record {model: project.phase, id: project_phase_secondphase0_case2}:
     duration: 3.0
     name: Second Phase
     previous_phase_ids:
-      - project_phase_firstphase0
+      - project_phase_firstphase0_case1
     product_uom: product.uom_day
-    project_id: project_project_project0
+    project_id: project_project_project_case1
     state: draft
 -
   Now I create a record to compute the phase of project.
 -
   !record {model: project.compute.phases, id: project_compute_phases0}:
     target_project: 'one'
-    project_id: project_project_project0
+    project_id: project_project_project_case1
 -
   I schedule the phases.
 -
@@ -62,9 +63,10 @@
     import datetime
     from dateutil.relativedelta import *
     start = (datetime.date.today()).strftime('%Y-%m-%d')
-    end = (datetime.date.today() + relativedelta(days=3)).strftime('%Y-%m-%d')
-    first_phase = self.browse(cr, uid, ref('project_phase_firstphase0'))
-    assert (first_phase.date_start >= start and first_phase.date_end <= end),'Dates are wrong!'
-    second_phase = self.browse(cr, uid, ref('project_phase_secondphase0'))
-    end = (datetime.date.today() + relativedelta(days=10)).strftime('%Y-%m-%d')
-    assert (second_phase.date_start >= first_phase.date_end and second_phase.date_end <= end),'Dates are wrong!'
+    end = (datetime.date.today() + relativedelta(days=2)).strftime('%Y-%m-%d')
+    first_phase = self.browse(cr, uid, ref('project_phase_firstphase0_case1'))
+    assert (first_phase.date_start == start and first_phase.date_end == end),'Dates are wrong!'
+    second_phase = self.browse(cr, uid, ref('project_phase_secondphase0_case2'))
+    start = first_phase.date_end
+    end = (datetime.date.today() + relativedelta(days=5)).strftime('%Y-%m-%d')
+    assert (second_phase.date_start == start and second_phase.date_end == end),'Dates are wrong!'
