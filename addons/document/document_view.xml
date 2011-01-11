@@ -78,7 +78,7 @@
                 <notebook colspan="4">
                 <page string="Definition">
                     <separator string="Directory Type" colspan="4"/>
-                    <field name="type"/>
+                    <field name="type" on_change="onchange_type_id(type)"/>
                     <group colspan="4" col="4" attrs="{'invisible': [('type','!=','ressource')]}">
                         <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"
                             attrs="{'required': [('type','=','ressource')] }"/>
@@ -93,9 +93,8 @@
                         <field name="ressource_id" select="2" readonly="1"/>
                     </group>
                     <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('resource_parent_type_id','=',False)]}">
-                        <field name="resource_find_all" groups="base.group_extended" />
+                        <field name="resource_find_all" groups="base.group_extended"/>
                     </group>
-
                 </page>
                 <page string="Generated Files" groups="base.group_extended">
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />
