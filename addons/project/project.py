@@ -127,7 +127,6 @@ class project(osv.osv):
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
 
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose, but a user has to be member of a project to add a the to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'parent_id': fields.many2one('project.project', 'Parent Project'),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
