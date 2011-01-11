@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-02 07:59+0000\n"
-"Last-Translator: Raimon Esteve (Zikzakmedia) <resteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2011-01-10 12:37+0000\n"
+"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:35+0000\n"
+"X-Launchpad-Export-Date: 2011-01-11 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base_calendar
@@ -76,7 +76,7 @@ msgstr "Invitación"
 #: help:calendar.event,recurrency:0
 #: help:calendar.todo,recurrency:0
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "Reunión periódica"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -181,7 +181,7 @@ msgstr "Libre"
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
 msgid "Indicats whether the favor of a reply is requested"
-msgstr ""
+msgstr "Indica si es requerida la confirmación de una respuesta."
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_attachment
@@ -342,6 +342,11 @@ msgid ""
 "    - Recurring events\n"
 "    - Invitations to people"
 msgstr ""
+"Sistema de calendario lleno de funcionalidades que soporta:\n"
+"    - Calendario de eventos\n"
+"    - Alertas (crea peticiones)\n"
+"    - Eventos recursivos\n"
+"    - Invitación de personas"
 
 #. module: base_calendar
 #: help:calendar.attendee,cutype:0
@@ -386,6 +391,8 @@ msgid ""
 "If the active field is set to          true, it will allow you to hide the "
 "event alarm information without removing it."
 msgstr ""
+"Si el campo activo se establece a verdadero, se omitirá la alarma del "
+"evento, sin embargo no se eliminará."
 
 #. module: base_calendar
 #: model:ir.module.module,shortdesc:base_calendar.module_meta_information
@@ -418,7 +425,7 @@ msgstr "Evento"
 #: help:calendar.event,edit_all:0
 #: help:calendar.todo,edit_all:0
 msgid "Edit all Occurrences  of recurrent Meeting."
-msgstr ""
+msgstr "Editar todas las ocurrencias de la reunión recurrente."
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_occurs:0
@@ -740,7 +747,7 @@ msgstr "Individual"
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 msgid "Repeat x times"
-msgstr ""
+msgstr "Repetir x veces"
 
 #. module: base_calendar
 #: field:calendar.alarm,user_id:0
@@ -868,7 +875,7 @@ msgstr "Invitación desde"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "End of recurrency"
-msgstr ""
+msgstr "Fin de recurrencia"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -915,6 +922,8 @@ msgid ""
 "Reference to the URIthat points to the directory information corresponding "
 "to the attendee."
 msgstr ""
+"La referencia a la URI que apunta a la información del directorio "
+"correspondiente al participante."
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -1084,7 +1093,7 @@ msgstr "Activo"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr ""
+msgstr "Elija el día del mes en que se repetirá la reunión"
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1114,7 +1123,7 @@ msgstr "Editar todos los eventos del calendario"
 #. module: base_calendar
 #: help:calendar.attendee,role:0
 msgid "Participation role for the calendar user"
-msgstr ""
+msgstr "Rol de participación para el usuario del calendario."
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1302,6 +1311,8 @@ msgstr "Regla de excepción"
 msgid ""
 "To specify the language for text values in aproperty or property parameter."
 msgstr ""
+"Para indicar el idioma de los valores de texto en una propiedad o parámetro "
+"de propiedad."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1346,7 +1357,7 @@ msgstr ""
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
 msgid "URI Reference"
-msgstr ""
+msgstr "Referencia URI"
 
 #. module: base_calendar
 #: field:calendar.alarm,description:0
@@ -1424,6 +1435,7 @@ msgstr "Cada minuto"
 #: help:calendar.attendee,sent_by:0
 msgid "Specify the user that is acting on behalf of the calendar user"
 msgstr ""
+"Indique el usuario que está actuando en nombre del usuario del calendario."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1644,6 +1656,12 @@ msgid ""
 "                    * Points to a procedure resource, which is invoked when  "
 "                    the alarm is triggered for procedure."
 msgstr ""
+"* Apunta a un recurso de sonido, que se escucha cuando la alarma se activa "
+"por audio.\n"
+"* El archivo que está intentando ser enviado como archivos adjuntos para el "
+"correo electrónico.\n"
+"* Apunta a un recurso de procedimiento, que se invoca cuando la alarma se "
+"activa por procedimiento."
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0

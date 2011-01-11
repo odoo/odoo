@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-31 08:47+0000\n"
+"PO-Revision-Date: 2011-01-10 12:12+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:39+0000\n"
+"X-Launchpad-Export-Date: 2011-01-11 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #~ msgid "Stock Management"
@@ -104,6 +104,10 @@ msgid ""
 "per location. You can use it once a year when you do the general inventory "
 "or whenever you need it, to correct the current stock level of a product."
 msgstr ""
+"Los inventarios periódicos se utilizan para contar el número de productos "
+"disponibles por ubicación. Lo puede utilizar una vez al año cuando realice "
+"el inventario general, o cuando lo necesite, para corregir el nivel actual "
+"de stock de un producto."
 
 #. module: stock
 #: view:stock.picking:0
@@ -140,6 +144,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
+"Esta es la lista de órdenes de envíos que deben de ser preparadas, en "
+"función de sus pedidos de venta y sus reglas logísticas."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -337,7 +343,7 @@ msgstr "Lote de producción"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Categorías de unidades de medida"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -572,6 +578,11 @@ msgid ""
 "buttons on the right of each line. You can filter the products to deliver by "
 "customer, products or sale order (using the Origin field)."
 msgstr ""
+"En esta lista encontrará todos los productos que ha de entregar a sus "
+"clientes. Puede procesar las entregas directamente desde esta lista usando "
+"los botones a la derecha de cada línea. Puede filtrar los productos a "
+"entregar por cliente, producto o pedido de venta (utilizando el campo "
+"origen)."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -1118,7 +1129,7 @@ msgstr "Fecha de envío prevista"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Not Available"
-msgstr ""
+msgstr "No disponible"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -1257,6 +1268,9 @@ msgid ""
 "This is the list of all your packs. When you select a Pack, you can get the "
 "upstream or downstream traceability of the products contained in the pack."
 msgstr ""
+"Esta es la lista de todos sus albaranes. Cuando selecciona un albarán, puede "
+"obtener la trazabilidad hacia arriba o hacia abajo de los productos que "
+"forman este paquete."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_final
@@ -2312,6 +2326,12 @@ msgid ""
 "the supplier or the purchase order reference. Then you can confirm all "
 "products received using the buttons on the right of each line."
 msgstr ""
+"Aquí podrá recibir los productos individuales, sin importar de que orden "
+"orden de compra o preparación de pedido vienen. Encontrará la lista de todos "
+"los productos que está esperando. Una vez recibida la orden, puede filtrar "
+"basándose en el nombre del proveedor o en la referencia de la orden de "
+"compra. Entonces, puede confirmar  todos los productos recibidos usando los "
+"botones a la derecha de cada línea."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2401,6 +2421,15 @@ msgid ""
 "location to the Stock location. Each report can be performed on physical, "
 "partner or virtual locations."
 msgstr ""
+"Defina sus posiciones para reflejar su estructura de almacén y organización. "
+"OpenERP es capaz de manejar ubicaciones físicas (almacén, estante, caja, "
+"etc.), ubicaciones de entidades (clientes, proveedores) y ubicaciones "
+"virtuales que son el equivalente de las operaciones de stock como los "
+"consumos por órdenes de la fabricación, inventarios, etc. Cada operación de "
+"stock en OpenERP mueve los productos de una ubicación a otra. Por ejemplo, "
+"si recibe productos de un proveedor, OpenERP moverá productos desde la "
+"ubicación del proveedor a la ubicación del stock. Cada informe puede ser "
+"realizado sobre ubicaciones físicas, de entidades o virtuales."
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2479,7 +2508,7 @@ msgstr "Resultado reemplazo stock"
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Unidades de medida"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -2923,7 +2952,7 @@ msgstr "Responsable"
 #. module: stock
 #: field:stock.move,returned_price:0
 msgid "Returned product price"
-msgstr ""
+msgstr "Precio producto devuelto"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_report
@@ -3045,12 +3074,12 @@ msgstr "Valor total"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Productos por categoría"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 msgid "Products Categories"
-msgstr ""
+msgstr "Categorías de productos"
 
 #. module: stock
 #: field:stock.move.memory.in,wizard_id:0
@@ -3084,6 +3113,13 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
+"Los movimientos internos muestran todas las operaciones de inventario que se "
+"deben realizar en su almacén. Todas las operaciones pueden ser clasificadas "
+"en stocks diarios, para que cada trabajador tenga su propia lista de "
+"operaciones a realizar en su propio diario. La mayor parte de operaciones "
+"son preparadas automáticamente por OpenERP según sus reglas de logística "
+"preconfiguradas, pero también puede registrar operaciones de stock de forma "
+"manual."
 
 #. module: stock
 #: view:stock.move:0
@@ -3241,6 +3277,12 @@ msgid ""
 "'Available' button to get all the lots you produced, received or delivered "
 "to customers."
 msgstr ""
+"Esta es la lista de todos los lotes de producción (números de serie) que "
+"registró. Cuando selecciona un lote, puede obtener la trazabilidad hacia "
+"arriba o hacia abajo de los productos que componen el lote. Por defecto, la "
+"lista es filtrada según los números de serie disponibles en su almacén, pero "
+"puede desmarcar el botón 'Disponible' para obtener todos los lotes que "
+"produjo, recibió o entregó a sus clientes."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3615,6 +3657,9 @@ msgid ""
 "specific product. You can filter on the product to see all the past or "
 "future movements for the product."
 msgstr ""
+"Este menú le da la trazabilidad completa de las operaciones de inventario "
+"sobre un producto específico. Puede filtrar sobre el producto para ver todos "
+"los movimientos pasados o futuros para el producto."
 
 #. module: stock
 #: view:stock.picking:0
@@ -3845,6 +3890,9 @@ msgid ""
 "click on a location to get the list of the products and their stock level in "
 "this particular location and all its children."
 msgstr ""
+"Esto es la estructura de los almacenes y ubicaciones de su empresa. Puede "
+"pulsar sobre una ubicación para obtener la lista de los productos y su nivel "
+"de stock en esta ubicación específica y todos sus hijos."
 
 #. module: stock
 #: model:res.request.link,name:stock.req_link_tracking

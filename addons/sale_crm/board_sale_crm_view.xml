@@ -57,6 +57,7 @@
 		                name="%(action_quotation_for_sale_crm)d"
 		                colspan="4"
 		                height="150"
+                                groups="base.group_sale_salesman,base.group_sale_manager,account.group_account_user,stock.group_stock_user"
 		                width="510"/>
 	            </xpath>
             </field>
@@ -72,6 +73,7 @@
 	                <action
 		                string="Monthly Turnover"
 		                name="%(action_turnover_by_month)d"
+                                groups="base.group_sale_salesman,account.group_account_manager"
 		                colspan="4"/>
 	            </xpath>
             </field>
