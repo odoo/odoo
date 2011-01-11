@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-19 19:58+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-09 16:55+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:08+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -193,6 +192,9 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"La quantité minimale pour déclencher cette règle, exprimée dans l'unité de "
+"mesure du fournisseur si elle existe, sinon, et par défaut, dans  l''unité "
+"de mesure du produit."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -330,7 +332,8 @@ msgid ""
 msgstr ""
 "'Fabrication sur stock' : quand il y a une demande, on prend du stock ou on "
 "attend jusqu'au prochain réapprovisionnement. 'Fabrication à la commande' : "
-"quand il y a une demande, on achète ou on fabrique en fonction du besoin."
+"quand il y a une demande, on achète ou on fabrique en lien avec cette "
+"demande."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -906,7 +909,7 @@ msgstr "Kits de composants IT"
 #: selection:product.category,type:0
 #: selection:product.template,state:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -943,12 +946,6 @@ msgid ""
 "You can define a conversion rate between several Units of Measure within the "
 "same category."
 msgstr ""
-
-#. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Besoins & emplacements"
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -1353,7 +1350,7 @@ msgstr ""
 #: code:addons/product/product.py:142
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Erreur !"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1803,7 +1800,7 @@ msgstr "Nom de ce type de prix"
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr ""
+msgstr "Unité de mesure du fournisseur"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -2077,7 +2074,7 @@ msgstr "Poids"
 #. module: product
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de membres associés récursifs."
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
@@ -2179,7 +2176,7 @@ msgstr ""
 #. module: product
 #: view:product.price_list:0
 msgid "Close"
-msgstr ""
+msgstr "Fermer"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2219,7 +2216,7 @@ msgid ""
 "products with infinite stock, or for use when you have no inventory "
 "management in the system."
 msgstr ""
-"Permet de changer la façon dont les besoins sont traités. Les consommables "
+"Permet de changer la façon dont les besoins sont gérés. Les consommables "
 "sont des produits physiques avec un stock infini, pour lesquels vous n'avez "
 "pas de gestion de stock dans le système."
 
