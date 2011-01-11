@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <record id="caldav_browse_form" model="ir.ui.view">
+            <field name="name">caldav_Browse</field>
+            <field name="model">caldav.browse</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Browse caldav" >
+                    <group colspan="4" width="700" height="500">
+                        <separator string="Browse caldav" colspan="4"/>
+                        <field name="url" colspan="4" />
+                        
+                        <separator string="Description" colspan="4"/>
+                        <field name="description"  colspan="4"  nolabel="1"/>
+                        <separator colspan="4"/>
+                        <field name="caldav_doc_file"  colspan="4" />
+                        <group col="4" colspan="4">
+                            <label string="" colspan="2"/>
+                            <button name="browse_caldav" string="_Ok" type="object" icon="gtk-ok"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+     <record id="user_prefernce_form" model="ir.ui.view">
+            <field name="name">user_preference</field>
+            <field name="model">user.preference</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="User Preference">
+                    <separator string="" colspan="4"/>
+                    <field name="service"  colspan="4" width="250" readonly="1"/>
+                    <field name="collection"  colspan="4" width="250" invisible="1" />
+                    <field name="calendar"  colspan="4" width="250" domain="[('collection_id','=', collection)]" readonly="1"/>
+                    <field name="device"  colspan="4" width="250" />
+                    <separator colspan="4"/>
+                    <group col="4" colspan="4">
+                        <label string="" colspan="2"/>
+                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
+                        <button name="open_window" string="_Open" type="object" icon="gtk-ok"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        
+    </data>
+</openerp>

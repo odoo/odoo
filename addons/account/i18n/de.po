@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-12-31 08:58+0000\n"
+"PO-Revision-Date: 2011-01-09 13:25+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:57+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:16+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -215,7 +215,7 @@ msgstr "Negativ"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr ""
+msgstr "Journal: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -1152,6 +1152,11 @@ msgid ""
 "purchase orders or receipts. This way, you can control the invoice from your "
 "supplier according to what you purchased or received."
 msgstr ""
+"Über das Menü Eingangsrechnungen können Sie Rechnungen Ihrer Lieferanten "
+"eingeben und verwalten. OpenERP kann ausserdem automatisch Rechnungsentwürfe "
+"aus Beschaffungsaufträgen erzeugen. Über diesen Weg können Sie nicht nur den "
+"Zeitpunkt der Rechnungserstellung steuern, sondern auch ob bestellte oder "
+"gelieferte Mengen beim Rechnungsentwurf berücksichtigt werden sollen."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1292,7 +1297,7 @@ msgstr "Suche Kontenplan Umsatzsteuer"
 #. module: account
 #: report:account.invoice:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Ihre Referenz"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -1439,6 +1444,10 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
+"Eine Buchung in ein Journal besteht aus diversen Buchungszeilen, entweder "
+"als Buchung im Soll oder Haben. OpenERP erzeugt automatisch eine Buchung je "
+"Geschäftsvorfall für Rechnungen, Gutschriften, Zahlungseingänge durch "
+"Lieferanten, Bankauszüge, etc."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1582,6 +1591,13 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Ein Bankauszug beinhaltet alle Zahlungsvorgänge einer bestimmten Periode auf "
+"einem Bankkonto, einer Kreditkarte oder anderen Konten für finanzielle "
+"Transaktionen. Der Eröffnungssaldo sowie der Endsaldo wird für jeden Auszug "
+"automatisch errechnet aus dem Kontosaldo zu Beginn der Buchung eines Auszugs "
+"und den gebuchten finanziellen Transaktionen. Wenn Sie sich in der Spalte "
+"Zahlungsausgleich einer Position in einem Bankauszugs befinden, können Sie "
+"über F1 in das Fenster für den Ausgleich von offenen Posten kommen."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -3920,6 +3936,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using sale price"
 msgstr ""
+"Dieses Konto wird für die Bewertung eines Warenabgangs eines Produktes "
+"dieser Kategorie unter Verwendung des Verkaufspreises gebucht."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3973,7 +3991,7 @@ msgstr "Monat"
 #. module: account
 #: field:account.invoice.report,uom_name:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referenz ME"
 
 #. module: account
 #: field:account.account,note:0
@@ -4084,7 +4102,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Compute Code"
-msgstr ""
+msgstr "Berechnungslogik"
 
 #. module: account
 #: view:account.account.template:0
@@ -4212,7 +4230,7 @@ msgstr "Gutschein Nummer"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "res_config_contents"
-msgstr ""
+msgstr "res_config_contents"
 
 #. module: account
 #: view:account.unreconcile:0
@@ -4571,6 +4589,12 @@ msgid ""
 "partially. You can easily generate refunds and reconcile them directly from "
 "the invoice form."
 msgstr ""
+"Durch das Menü Lieferantengutschriften buchen Sie Gutschriften, die Sie von "
+"Ihren Lieferanten erhalten. Eine Gutschrift ist eine Beleg von Ihrem "
+"Lieferanten, der einen Teil oder sogar den gesamten Rechnungsbetrag als "
+"Guthaben auf Ihrem Konto beim Lieferanten ausweist. Sie können solche "
+"Gutschriften sehr einfach buchen und direkt in der Ansicht einer Rechnung "
+"auch den offenen Posten ausgleichen."
 
 #. module: account
 #: field:account.analytic.Journal.report,date2:0
@@ -4729,7 +4753,7 @@ msgstr "Anzeige Zahlungen"
 #. module: account
 #: view:account.tax:0
 msgid "Reverse Compute Code"
-msgstr ""
+msgstr "Berechnungslogik Gutschriften"
 
 #. module: account
 #: field:account.subscription.line,move_id:0
@@ -4990,7 +5014,7 @@ msgstr "Steuerausweis Vorlagen"
 #. module: account
 #: model:ir.model,name:account.model_account_installer
 msgid "account.installer"
-msgstr ""
+msgstr "account.installer"
 
 #. module: account
 #: field:account.tax.template,include_base_amount:0
@@ -5495,6 +5519,11 @@ msgid ""
 "OpenERP allows you to define the tax structure and manage it from this menu. "
 "You can define both numeric and alphanumeric tax codes."
 msgstr ""
+"Die Definition der Umsatzsteuern richtet sich nach der im jeweiligen Land "
+"gültigen Regelung für die Abgabe von Steuererklärungen OpenERP ermöglicht "
+"Ihnen dabei die Struktur der Steuern zu definieren und über dieses Menü zu "
+"verwalten. Sie können sowohl numerische als auch alphanumerische "
+"Zeichenfolgen für die Definition verwenden."
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
@@ -5605,7 +5634,7 @@ msgstr "Fehlerhafte Aktion"
 #: code:addons/account/wizard/account_move_journal.py:102
 #, python-format
 msgid "Period: %s"
-msgstr ""
+msgstr "Periode: %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -5718,6 +5747,11 @@ msgid ""
 "line of the expense account. OpenERP will propose to you automatically the "
 "Tax related to this account and the counterpart \"Account Payable\"."
 msgstr ""
+"Diese Ansicht wird von Buchhaltern für die Schnelleingabe von "
+"Buchungsbelegen verwendet. Wenn Sie eine Eingangsrechnung erfassen wollen, "
+"beginnen Sie mit der Eingabe der Buchung für den Aufwand. OpenERP wird dann "
+"automatisch über die dem Aufwandskonto zugeordnete Steuer den Buchungssatz "
+"für die Steuern sowie den Buchungssatz für den Kreditor vorschlagen."
 
 #. module: account
 #: field:account.entries.report,date_created:0
@@ -6280,6 +6314,14 @@ msgid ""
 "account. From this view, you can create and manage the account types you "
 "need for your company."
 msgstr ""
+"Über Kontoarten wird gesteuert mit welcher Logik in den verschiedenen "
+"Journalen gebucht wird. Die Methode für die Abgrenzung beim Jahreswechsel "
+"steuert dabei den Prozess der Buchung beim Jahresabschluss. Die GuV & Bilanz "
+"Positionen steuern den Ausweis für die Auswertungen Bilanz sowie Gewinn und "
+"Verlust. Zum Beispiel könnte eine Kontoart entweder mit einem Konto aus dem "
+"Anlagevermögen, einem Aufwands- oder einem Kreditorenkonto verbunden sein. "
+"Über diese Ansicht können Sie die in Ihrem Unternehmen benötigten Kontoarten "
+"exakt definieren."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_reconcile_tree
@@ -6736,6 +6778,12 @@ msgid ""
 "an agreement with a customer or a supplier. With Define Recurring Entries, "
 "you can create such entries to automate the postings in the system."
 msgstr ""
+"Eine wiederkehrende Buchung ist ein Geschäftsvorfall, der in regelmässigen "
+"wiederkehrenden Zeitabständen zu buchen ist, z.B. die Buchungen aus "
+"bestimmten Verträgen mit Kunden oder Lieferanten, Mietaufwendungen oder "
+"Erträge aus Abonnements. Durch die Definition wiederkehrender Buchungen "
+"können Sie dafür sorgen, dass diese Geschäftsvorfälle automatisch gebucht "
+"werden."
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
@@ -6752,6 +6800,13 @@ msgid ""
 "basis. You can enter the coins that are in your cash box, and then post "
 "entries when money comes in or goes out of the cash box."
 msgstr ""
+"Eine Barkasse ermöglicht die Eingabe und Buchung von Bargeschäften, sowie "
+"die Verwaltung von Bargeldbeständen. Diese Funktion ermöglicht die einfache "
+"Rückverfolgung von Bargeldbeständen im Tagesgeschäft. Sie können den Bestand "
+"an Münzen und Geldscheinen für das Wechselgeld bei der täglichen "
+"Kasseneröffnung oder zwischenzeitlichen Kassenübergabe erfassen, die "
+"Einnahmen und Ausgaben erfassen sowie beim Tagesabschluss den Bargeldbestand "
+"prüfen, abstimmen und buchen."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -6908,6 +6963,8 @@ msgid ""
 "You can search for individual account entries through useful information. To "
 "search for account entries, open a journal, then select a record line."
 msgstr ""
+"Sie können nach detaillierten Informationen zu einzelnen Buchungssätzen "
+"suchen. Hierzu öffnen Sie ein Journal und konfigurieren Ihre Suche."
 
 #. module: account
 #: report:account.invoice:0
@@ -6926,7 +6983,7 @@ msgstr "Gesamtschulden eines Kunden"
 #. module: account
 #: model:ir.model,name:account.model_ir_sequence
 msgid "ir.sequence"
-msgstr ""
+msgstr "ir.sequence"
 
 #. module: account
 #: field:account.journal.period,icon:0
@@ -7397,6 +7454,10 @@ msgid ""
 "in which they will appear. Then you can create a new journal and link your "
 "view to it."
 msgstr ""
+"Sie können hier die Ansicht eines existierenden Journal modifizieren oder "
+"eine neue Journalansicht erstellen. Über Journalansichten können Sie die "
+"Felder und deren Reihenfolge für die Buchungserfassung festlegen. Die "
+"definierte Ansicht können Sie dann einem neu angelegten Journal zuordnen."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -7705,6 +7766,9 @@ msgid ""
 "will see the taxes with codes related to your legal statement according to "
 "your country."
 msgstr ""
+"Der Steuerkontenplan wird für die periodische Erstellung von "
+"Umstazsteuererklärungen eingesetzt. Sie sehen hier die Steuern mit den "
+"zugeordneten Steuerschlüsseln für die Umsatzsteuererklärung in Ihrem Land."
 
 #. module: account
 #: view:account.installer.modules:0
@@ -7847,6 +7911,11 @@ msgid ""
 "can easily generate refunds and reconcile them directly from the invoice "
 "form."
 msgstr ""
+"Durch Kundengutschriften können Sie die Gutschriften an Kunden erstellen und "
+"verwalten. Eine Gutschrift ist ein Geschäftsvorfall der einen Teilbetrag "
+"oder den gesamten Rechnungsbetrag gutschreibt. In der Ansicht der Rechnung "
+"können Sie sehr einfach Gutschrift und die zugrundeliegende offene Rechnung "
+"ausgleichen."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -7897,6 +7966,10 @@ msgid ""
 "added, Loss: Amount will be duducted), which is calculated from Profilt & "
 "Loss Report"
 msgstr ""
+"Dieses Konto wird verwendet, um den vorläufigen Gewinn und Verlust eines "
+"Geschäftsjahres auszuweisen (Gewinn: Betrag wird addiert, Verlust: Betrag "
+"wird subtrahiert). Der Betrag wird über die Auswertung für den Gewinn & "
+"Verlust ermittelt."
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -8008,6 +8081,11 @@ msgid ""
 "sales orders or deliveries. You should only confirm them before sending them "
 "to your customers."
 msgstr ""
+"Durch die Ausgangsrechnungen können Sie Rechnungen an Kunden erstellen und "
+"verwalten. OpenERP ist auch in der Lage Rechnungen aus Kundenaufträgen oder "
+"aus Lieferaufträgen an Kunden abzuleiten. Hierzu müssen Sie lediglich den "
+"automatisch generierten Rechnungsbeleg vor dem Versand an Ihre Kunden "
+"bestätigen."
 
 #. module: account
 #: view:account.entries.report:0
@@ -8276,6 +8354,18 @@ msgid ""
 "would be referred to as FY 2011. You are not obliged to follow the actual "
 "calendar year."
 msgstr ""
+"Definieren Sie das Geschäftsjahr in Abhängigkeit der von Ihnen zu "
+"erstellenden Periodenabschlüsse. Ein Geschäftsjahr ist ein 1-Jahres-"
+"Zeitraum, den ein Unternehmen selbst definieren kann. Das Geschäftsjahr "
+"erstreckt sich generell über einen Zeitraum von 12 Monaten. Ein "
+"Geschäftsjahr wird außerdem gekennzeichnet durch den Zeitpunkt, in dem es "
+"endet. Wenn z.B. in einem Unternehmen das Geschäftsjahr am 30. November 2011 "
+"endet, dann entspricht alles zwischen dem 1. Dezember 2010 und 30. November "
+"2011 dem Geschäftsjahr für 2011. Eine Abweichung vom tatsächlichen "
+"Kalenderjahr könnte für viele Unternehmen insofern einen Vorteil bieten, "
+"wenn Sie hierdurch ihre Bücher zu einem Zeitpunkt abschliessen können, der "
+"aus unterschiedlichen internen Gründen für das Unternehmen der günstigste "
+"sein kann."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
@@ -8808,6 +8898,12 @@ msgid ""
 "closed or left open depending on your company's activities over a specific "
 "period."
 msgstr ""
+"An dieser Stelle können Sie die Perioden als Zeitintervall innerhalb eines "
+"Geschäftsjahres definieren. Üblicherweise entspricht das zu definierende "
+"Zeitintervall dabei den Perioden für die Sie eine Umsatzsteuererklärung "
+"abgeben müssen, z.B. monatlich oder vierteljährlich. Entscheiden Sie "
+"ausserdem, entsprechend Ihrer Anforderungen, wann und ob eine Periode "
+"beendet werden soll."
 
 #. module: account
 #: report:account.move.voucher:0
@@ -9528,6 +9624,13 @@ msgstr "Bruttobetrag"
 #, python-format
 msgid "Journal: All"
 msgstr ""
+"Journal: AlleErstelle und manage die Finanzjournale des Unternehmens über "
+"dieses Menü. Ein Journal ist eine lückenlose und chronologische Aufzeichnung "
+"aller Geschäftsvorfälle in einem Unternehmen in Form der doppelten "
+"Buchhaltung. In Abhängigkeit des Anwendungsumfangs der Buchhaltung sowie der "
+"Anzahl an täglichen Buchungsvorgängen, kann ein Unternehmen diverse "
+"verschiedene Journale für unterschiedliche Zwecke anlegen, z.B. Journale für "
+"diverse Kassen, Bankkonten, Verkaufslager etc."
 
 #. module: account
 #: field:account.account,company_id:0
@@ -9658,6 +9761,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using cost price"
 msgstr ""
+"Dieses Konto wird verwendet, um den Wert von Warenausgängen für die aktuelle "
+"Produktkategorie zu erfassen."
 
 #. module: account
 #: report:account.move.voucher:0
@@ -9861,6 +9966,13 @@ msgid ""
 "may keep several types of specialized journals such as a cash journal, "
 "purchase journal, sales journal..."
 msgstr ""
+"Erstelle und manage die Finanzjournale des Unternehmens über dieses Menü. "
+"Ein Journal ist eine lückenlose und chronologische Aufzeichnung aller "
+"Geschäftsvorfälle in einem Unternehmen in Form der doppelten Buchhaltung. In "
+"Abhängigkeit des Anwendungsumfangs der Buchhaltung sowie der Anzahl an "
+"täglichen Buchungsvorgängen, kann ein Unternehmen diverse verschiedene "
+"Journale für unterschiedliche Zwecke anlegen, z.B. Journale für diverse "
+"Kassen, Bankkonten, Verkaufslager etc."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
@@ -9907,7 +10019,7 @@ msgstr "November"
 #. module: account
 #: model:ir.model,name:account.model_account_installer_modules
 msgid "account.installer.modules"
-msgstr ""
+msgstr "account.installer.modules"
 
 #. module: account
 #: help:account.invoice.line,account_id:0
@@ -10022,7 +10134,7 @@ msgstr "Oberkonto Rechts"
 #. module: account
 #: model:ir.model,name:account.model_account_addtmpl_wizard
 msgid "account.addtmpl.wizard"
-msgstr ""
+msgstr "account.addtmpl.wizard"
 
 #. module: account
 #: field:account.aged.trial.balance,result_selection:0
@@ -10153,6 +10265,14 @@ msgid ""
 "certain amount of information. They have to be certified by an external "
 "auditor annually."
 msgstr ""
+"Erstelle und verwalte Konten für die Finanzbuchhaltung. Finanzkonten sind "
+"vorgesehen für die Aufzeichnung aller Geschäftsvorfälle mit Auswirkungen auf "
+"die Vermögens-, Finanz- und Ertragslage eines Unternehmens. Unternehmen sind "
+"i.d.R. verpflichtet diese finanzielle Situation in Form einer Bilanz und "
+"Gewinn- und Verlustrechnung gegenüber Dritten, wie z.B. den Finanzbehörden "
+"oder Anteilseignern und Kapitalgebern darzustellen. Diese Finanzkonten "
+"bilden die Grundlage für den Jahresabschluss und die Prüfung eines "
+"Unternehmens."
 
 #~ msgid "Keep empty to use the period of the validation date."
 #~ msgstr "Frei lassen für Periode des Validierungsdatums."

@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-31 10:36+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"PO-Revision-Date: 2011-01-08 21:28+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:44+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: purchase
@@ -82,7 +81,7 @@ msgstr "Rechnung durch Lieferung"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Nicht in Rechnung gestellt"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -133,7 +132,7 @@ msgstr "Eingangsrechnungen"
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Die Referenz muss eindeutig sein!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -257,7 +256,7 @@ msgstr "Auftrag angenommen"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Referenz ME"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -267,7 +266,7 @@ msgstr "Referenz"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referenz ME"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -472,7 +471,7 @@ msgstr "Einkaufsplanung"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
 msgid "purchase.installer"
-msgstr ""
+msgstr "purchase.installer"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -889,7 +888,7 @@ msgstr "Bedarfsanforderung"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "ME Kategorien"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1220,6 +1219,8 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
 msgstr ""
+"Der Lieferant hat eine Minimum Bestellmenge von %s definiert. Sie können "
+"nicht weniger bestellen"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1239,7 +1240,7 @@ msgstr "Storniere Beschaffungsauftrag"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Sie müssen zwingend eine Losnummer für dieses Produkt angeben"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1262,7 +1263,7 @@ msgstr "Produktpreis"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Preislisten Typen"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1284,7 +1285,7 @@ msgstr "Verlauf"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produkte nach Kategorien"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1348,6 +1349,7 @@ msgstr "Standard Preislisten Version"
 msgid ""
 "Extend your Purchases Management Application with additional functionalities."
 msgstr ""
+"Erweitern Sie Ihre Einkaufs-Management-Anwendung mit zusätzlichen Funktionen."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
@@ -1622,7 +1624,7 @@ msgstr "Februar"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "Produkte Kategorien"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1779,7 +1781,7 @@ msgstr "Gesamt Betrag"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Preislisten Versionen"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
@@ -1860,7 +1862,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.installer:0
 msgid "title"
-msgstr ""
+msgstr "Bezeichnung"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
@@ -1876,7 +1878,7 @@ msgstr "Lagerbuchungen"
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Mengeneinheiten"
 
 #. module: purchase
 #: view:purchase.report:0

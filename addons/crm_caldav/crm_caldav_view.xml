@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="action_caldav_browse" model="ir.actions.act_window">
+            <field name="name">Caldav Browse</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">user.preference</field>
+            <field name="view_id" ref="caldav.user_prefernce_form"/>
+            <field name="context">{'cal_name' : 'Meetings'}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    
+        <menuitem
+            name="Synchronyze this calendar"
+            action="action_caldav_browse"
+            id="menu_caldav_browse"
+            icon="STOCK_EXECUTE"
+            parent="crm.menu_meeting_sale" sequence="1"/>
+            
+        
+    </data>
+</openerp> 
