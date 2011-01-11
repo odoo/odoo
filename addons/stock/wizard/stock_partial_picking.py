@@ -94,7 +94,7 @@ class stock_partial_picking(osv.osv_memory):
         _moves_fields.update({
                             'product_moves_' + picking_type: {'relation': 'stock.move.memory.'+picking_type, 'type' : 'one2many', 'string' : 'Product Moves'}, 
                             })
-            
+
         _moves_arch_lst += """
                 <separator string="" colspan="4" />
                 <label string="" colspan="2"/>

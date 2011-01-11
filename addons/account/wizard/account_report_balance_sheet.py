@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
-
 from osv import osv, fields
 from tools.translate import _
 

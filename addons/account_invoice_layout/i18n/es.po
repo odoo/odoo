@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-26 07:50+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"PO-Revision-Date: 2011-01-07 10:33+0000\n"
+"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-27 04:40+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_invoice_layout
@@ -120,8 +119,8 @@ msgstr "CIF/NIF:"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Document"
-msgstr "Documento"
+msgid "Tel. :"
+msgstr "Tel. :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -150,9 +149,10 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Escribir mensajes"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Description"
+msgstr "Descripción"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
@@ -175,7 +175,6 @@ msgstr "Fecha factura"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Taxes:"
 msgstr "Impuestos:"
 
@@ -185,9 +184,9 @@ msgid "Source Account"
 msgstr "Cuenta origen"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Cancelar"
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Escribir mensajes"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -220,19 +219,17 @@ msgstr "Cantidad"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Partner Ref."
-msgstr "Ref. empresa"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: model:ir.model,name:account_invoice_layout.model_account_invoice
-#: report:notify_account.invoice:0
-msgid "Invoice"
-msgstr "Factura"
+msgid "Refund"
+msgstr "Factura de abono"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
+msgid "Fax :"
+msgstr "Fax:"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
 msgid "Total:"
 msgstr "Total:"
 
@@ -264,10 +261,19 @@ msgid "Amount"
 msgstr "Importe"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "ERP & CRM Solutions..."
+msgstr ""
+
+#. module: account_invoice_layout
 #: report:notify_account.invoice:0
-msgid "Tel. :"
-msgstr "Tel. :"
+msgid "Net Total :"
+msgstr "Total neto :"
+
+#. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Total :"
+msgstr "Total :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -288,8 +294,8 @@ msgstr "Mensaje especial factura contable"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Refund"
-msgstr "Factura de abono"
+msgid "Origin"
+msgstr "Origen"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -300,6 +306,12 @@ msgstr "Tipo"
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
 msgstr "Línea de separación"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Your Reference"
+msgstr "Su referencia"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
@@ -330,7 +342,6 @@ msgstr "Línea de factura"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Net Total:"
 msgstr "Base:"
 
@@ -341,14 +352,15 @@ msgstr "Escriba una notificación o un mensaje de felicitación"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
+#: model:ir.model,name:account_invoice_layout.model_account_invoice
 #: report:notify_account.invoice:0
-msgid "Fax :"
-msgstr "Fax:"
+msgid "Invoice"
+msgstr "Factura"
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
-msgstr "Sea experto con los expertos..."
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -362,9 +374,17 @@ msgid "Message"
 msgstr "Mensaje"
 
 #. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Taxes :"
+msgstr "Impuestos :"
+
+#. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Todos los mensajes de notificación"
+
+#~ msgid "Document"
+#~ msgstr "Documento"
 
 #~ msgid ":"
 #~ msgstr ":"
@@ -380,9 +400,6 @@ msgstr "Todos los mensajes de notificación"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "Ref. cliente:"
-
-#~ msgid "Description"
-#~ msgstr "Descripción"
 
 #~ msgid "account_invoice_layout"
 #~ msgstr "contabilidad_factura_plantilla"
@@ -437,6 +454,12 @@ msgstr "Todos los mensajes de notificación"
 
 #~ msgid "Description/Taxes"
 #~ msgstr "Descripción/Imp."
+
+#~ msgid "Partner Ref."
+#~ msgstr "Ref. empresa"
+
+#~ msgid "Be Expert with the Experts..."
+#~ msgstr "Sea experto con los expertos..."
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "¡Error! No puede crear menús recursivos."

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2011-01-01 13:31+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"PO-Revision-Date: 2011-01-09 21:27+0000\n"
+"Last-Translator: lollo_Ge <Unknown>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-02 05:01+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:17+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account_analytic_analysis
@@ -37,15 +37,11 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Calcolato usando la formula: Quantità massima - Ore Totali."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
 msgstr "Errore di Accesso"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "Reddito teorico"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -83,14 +79,14 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Calcolato utilizzando la formula: Reddito teorico - costi totali"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theorical Margin"
-msgstr "Margine teorico"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Tasso di margine reale (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr "Ricavo teorico"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -129,6 +125,11 @@ msgstr ""
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Ore Rimanenti"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr "Margine teorico"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -183,7 +184,8 @@ msgid "Invoiced Amount"
 msgstr "Importo Fatturato"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr ""
@@ -203,6 +205,15 @@ msgstr "Ore fatturate"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Margine reale"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
+"Errore! La valuta deve essere la stessa di quella impostata nella compagnia "
+"selezionata"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -308,6 +319,9 @@ msgstr ""
 "Totale dei costi per questo conto. Include i costi reali (dalle fatture) e i "
 "costi indiretti, come il tempo speso sul Foglio Orario."
 
+#~ msgid "Theorical Margin"
+#~ msgstr "Margine teorico"
+
 #~ msgid "Invoicing"
 #~ msgstr "Fatturazione"
 
@@ -343,6 +357,9 @@ msgstr ""
 
 #~ msgid "My Current Accounts"
 #~ msgstr "I miei attuali Conti"
+
+#~ msgid "Theorical Revenue"
+#~ msgstr "Reddito teorico"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome del modello non valido nella definizione dell'azione."

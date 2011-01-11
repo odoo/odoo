@@ -116,10 +116,10 @@
                             <field name="responsible_id"/>
                         </group>
                         <group colspan="6" col="6">
-                            <field name="date_start"/>
+                            <field name="date_start" readonly="1"/>
                             <field name="duration"/>
                             <field name="product_uom" nolabel="1" domain="[('category_id.name', '=', 'Working Time')]"/>
-                            <field name="date_end"/>
+                            <field name="date_end" readonly="1"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -127,14 +127,14 @@
                             <field colspan="4" name="resource_ids" nolabel="1">
                                  <tree editable="bottom" string="Project Resource Allocation">
                                     <field name="resource_id" context="{'project_id':parent.project_id}"/>
-                                    <field name="date_start" readonly="1"/>
-                                    <field name="date_end" readonly="1"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
                                     <field name="useability" string="Availability"/>
                                   </tree>
                                   <form string="Project Resource Allocation">
                                     <field name="resource_id" context="{'project_id':parent.project_id}"/>
-                                    <field name="date_start" readonly="1"/> 
-                                    <field name="date_end" readonly="1"/>
+                                    <field name="date_start" /> 
+                                    <field name="date_end"/>
                                     <field name="useability" string="Availability"/>
                                   </form>
                              </field>
@@ -154,6 +154,8 @@
                                     <field name="sequence"/>
                                     <field name="name"/>
                                     <field name="user_id"/>
+                                    <field name="date_start"/>
+                                    <field name="date_end" />
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="project_id" invisible="1"/>
                                     <field name="total_hours" sum='Total Hours'/>
@@ -172,6 +174,7 @@
                                             <group colspan="2" col="2">
                                                   <separator string="Dates" colspan="2"/>
                                                   <field name="date_start"/>
+                                                  <field name="date_end" />
                                                   <field name="date_deadline"/>
                                             </group>
                                             <group colspan="2" col="2">
@@ -225,6 +228,7 @@
                     <field name="date_end"/>
                     <field name="duration"/>
                     <field name="state"/>
+                     <button name="%(action_project_schedule_tasks)d" string="Schedule Tasks" type="action" icon="gtk-jump-to"/>
                 </tree>
             </field>
         </record>
@@ -263,7 +267,7 @@
             <field name="arch" type="xml">
                 <search string="Project Phases">
                     <group colspan="4" col="20">
-	                    <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress Phases" icon="terp-check"/>
+                        <filter string="Current" domain="[('state','in',('open','draft'))]"  name="current" help="Draft and In Progress Phases" icon="terp-check"/>
                         <filter string="In Progress" name="Progress" domain="[('state','=','open')]" help="In Progress Phases" icon="terp-camera_test"/>
                         <filter string="Pending" domain="[('state','=','pending')]" help="Pending Phases" icon="terp-gtk-media-pause"/>
                         <separator orientation="vertical"/>
@@ -319,7 +323,7 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <field name="priority" position="before">
+                <field name="effective_hours" position="after">
                     <field name="resource_calendar_id"/>
                 </field>
 
@@ -393,21 +397,21 @@
         name="Phases"
         res_model="project.phase"
         src_model="project.project"
-		domain="[('project_id', '=', active_id)]"
+        domain="[('project_id', '=', active_id)]"
         view_mode="tree,form"
         view_type="form" 
-		/>
+        />
 
-	<act_window
-		context="{'search_default_user_id': [user_id]}"
+    <act_window
+        context="{'search_default_user_id': [user_id]}"
         id="act_project_resource"
         name="Resources"
         res_model="resource.resource"
         src_model="project.project"
-		domain="[('user_id', '=',user_id)]"
+        domain="[('user_id', '=',user_id)]"
         view_mode="tree,form"
         view_type="form" 
-		/>
+        />
 
     # ------------------------------------------------------
     # Menu Items

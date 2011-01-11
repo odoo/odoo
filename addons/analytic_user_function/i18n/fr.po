@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-16 18:04+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"PO-Revision-Date: 2011-01-06 12:46+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:45+0000\n"
+"X-Launchpad-Export-Date: 2011-01-08 05:00+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: analytic_user_function
@@ -23,7 +22,8 @@ msgid "Product"
 msgstr "Produit"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
+#: code:addons/analytic_user_function/analytic_user_function.py:96
+#: code:addons/analytic_user_function/analytic_user_function.py:131
 #, python-format
 msgid "Error !"
 msgstr "Erreur !"
@@ -51,7 +51,17 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
+"Erreur ! La monnaie doit être la même que la monnaie de la société "
+"sélectionnée"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:97
+#: code:addons/analytic_user_function/analytic_user_function.py:132
 #, python-format
 msgid "There is no expense account define for this product: \"%s\" (id:%d)"
 msgstr ""
@@ -80,6 +90,20 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"    Ce module vous permet de définir quelle est la fonction par défaut d'un "
+"utilisateur spécifique sur un compte donné. Ceci est surtout utilisé quand "
+"l'utilisateur encode sa feuille de temps : les valeurs sont récupérées et "
+"les champs sont auto-complétés... mais il est toujours possible de changer "
+"ces valeurs.\n"
+"\n"
+"    Évidemment, si aucune donnée n'a été enregistré pour le compte actuel, "
+"la valeur par défaut est donnée comme d'habitude par les données de "
+"l'utilisateur, ainsi le module est parfaitement compatible avec les "
+"anciennes configurations.\n"
+"\n"
+"    "
 
 #. module: analytic_user_function
 #: model:ir.module.module,shortdesc:analytic_user_function.module_meta_information

@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-27 09:18+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-05 08:48+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-28 04:42+0000\n"
+"X-Launchpad-Export-Date: 2011-01-06 05:27+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: warning
@@ -57,6 +57,12 @@ msgstr "Avertissement lors d'un Achat de ce Produit"
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr "Produit"
+
+#. module: warning
+#: sql_constraint:purchase.order:0
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "La référence de la commande doit être unique !"
 
 #. module: warning
 #: view:product.product:0
@@ -144,7 +150,7 @@ msgid "Message for Purchase Order"
 msgstr "Message pour Commande Fournisseur"
 
 #. module: warning
-#: code:addons/warning/warning.py:0
+#: code:addons/warning/warning.py:32
 #: help:product.product,purchase_line_warn:0
 #: help:product.product,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
@@ -163,7 +169,12 @@ msgstr ""
 "suivant."
 
 #. module: warning
-#: code:addons/warning/warning.py:0
+#: code:addons/warning/warning.py:67
+#: code:addons/warning/warning.py:96
+#: code:addons/warning/warning.py:132
+#: code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:213
+#: code:addons/warning/warning.py:246
 #, python-format
 msgid "Alert for %s !"
 msgstr "Aleret pour %s !"
@@ -191,7 +202,12 @@ msgid "Warning on the Purchase Order"
 msgstr "Avertissement sur les Commandes d'Achat"
 
 #. module: warning
-#: code:addons/warning/warning.py:0
+#: code:addons/warning/warning.py:68
+#: code:addons/warning/warning.py:97
+#: code:addons/warning/warning.py:134
+#: code:addons/warning/warning.py:164
+#: code:addons/warning/warning.py:214
+#: code:addons/warning/warning.py:247
 #, python-format
 msgid "Warning for %s"
 msgstr "Avertissement pour %s"

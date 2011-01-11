@@ -6,15 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-16 17:51+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-08 15:46+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale_journal
@@ -29,26 +28,14 @@ msgstr ""
 "Le type de journaux utilisé pour les ventes et les opérations de manutention."
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
-msgstr ""
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "La référence de la commande doit être unique !"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
 msgstr "Facturation"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
-msgid ""
-"Invoice types are used on partners, sales order and delivery orders. You can "
-"create journal to group your invoicing according to customer's needs: daily, "
-"each wednesday, monthly, etc."
-msgstr ""
-"Les types de factures sont utilisés sur les partenaires, les commandes de "
-"vente et les ordres de livraison. Vous pouvez créer un journal pour grouper "
-"vos facturations en fonction des besoins des clients: journalier, chaque "
-"mercredi, mensuel, etc."
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -101,6 +88,33 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    Le module de journal de ventes vous permet de catégoriser\n"
+"    vos ventes et vos livraisons entre différents journaux.\n"
+"    Ce module est très utile pour les grandes sociétés qui\n"
+"    travaillent par départements.\n"
+"\n"
+"    Vous pouvez utiliser des journaux pour différents objectifs, par exemple "
+":\n"
+"    * isoler les ventes entre différents départements\n"
+"    * isoler les livraisons par camion ou transporteur\n"
+"\n"
+"    Les journaux évoluent parmi différents statuts :\n"
+"    * brouillon, ouvert, annulé, fermé.\n"
+"\n"
+"    Des lots d'opérations peuvent être traités sur les différents journaux "
+"pour\n"
+"    confirmer toutes les ventes d'un coup, pour valider ou facturer le "
+"colisage, ...\n"
+"\n"
+"    Il supporte aussi les méthodes de facturation par lot, qui peuvent être "
+"configurées\n"
+"    par partenaire et bon de commande, exemples :\n"
+"    * facturation quotidienne,\n"
+"    * facturation mensuelle, ...\n"
+"\n"
+"    Quelques statistiques par journal sont fournis.\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -118,9 +132,26 @@ msgid "Error ! You can not create recursive associated members."
 msgstr "Erreur ! Vous ne pouvez pas créer de membres associés récursifs."
 
 #. module: sale_journal
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used for partners, sales orders and delivery orders. You "
+"can create a specific invoicing journal to group your invoicing according to "
+"your customer's needs: daily, each Wednesday, monthly, etc."
+msgstr ""
+"Les types de facture sont utilisés pour les partenaires, les bons de "
+"commande et les ordres de livraison. Vous pouvez créer un journal de "
+"facturation spécifique pour regrouper la facturation selon les besoins de "
+"vos clients : quotidiennement, chaque mercredi, mensuellement, etc."
+
+#. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
 msgstr "Méthode de facturation"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Bon de commande"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -348,6 +379,16 @@ msgstr "Gestion des ventes et des livraisons par journal"
 
 #~ msgid "Approved sales"
 #~ msgstr "Ventes Approuvées"
+
+#~ msgid ""
+#~ "Invoice types are used on partners, sales order and delivery orders. You can "
+#~ "create journal to group your invoicing according to customer's needs: daily, "
+#~ "each wednesday, monthly, etc."
+#~ msgstr ""
+#~ "Les types de factures sont utilisés sur les partenaires, les commandes de "
+#~ "vente et les ordres de livraison. Vous pouvez créer un journal pour grouper "
+#~ "vos facturations en fonction des besoins des clients: journalier, chaque "
+#~ "mercredi, mensuel, etc."
 
 #~ msgid "Sale Order"
 #~ msgstr "Commande de vente"
