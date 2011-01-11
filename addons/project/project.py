@@ -454,7 +454,7 @@ class task(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
-    _order = "sequence, priority, date_start, id"
+    _order = "sequence,priority, date_start, name, id"
 
     def _check_recursion(self, cr, uid, ids, context=None):
         obj_task = self.browse(cr, uid, ids[0], context=context)
