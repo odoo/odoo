@@ -78,7 +78,7 @@
                 <notebook colspan="4">
                 <page string="Definition">
                     <separator string="Directory Type" colspan="4"/>
-                    <field name="type" on_change="onchange_type_id(type)"/>
+                    <field name="type"/>
                     <group colspan="4" col="4" attrs="{'invisible': [('type','!=','ressource')]}">
                         <field name="ressource_type_id"  on_change="onchange_content_id(ressource_type_id)"
                             attrs="{'required': [('type','=','ressource')] }"/>
