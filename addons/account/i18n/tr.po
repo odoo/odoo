@@ -4214,6 +4214,12 @@ msgid "Error ! You can not create recursive accounts."
 msgstr ""
 
 #. module: account
+#: constraint:account.account:0
+msgid "You cannot create an account! \n"
+"Make sure if the account has children then it should be type \"View\"!"
+msgstr ""
+
+#. module: account
 #: view:account.subscription.generate:0
 #: model:ir.actions.act_window,name:account.action_account_subscription_generate
 #: model:ir.ui.menu,name:account.menu_generate_subscription
@@ -9469,6 +9475,12 @@ msgstr "Fatura Kalemleri"
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
 msgstr "Error ! You can not create recursive account templates."
+
+#. module: account
+#: constraint:account.account.template:0
+msgid "You cannot create an account template! \n"
+"Make sure if the account template has parent then it should be type \"View\"! "
+msgstr ""
 
 #. module: account
 #: view:account.subscription:0
