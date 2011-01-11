@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-09 22:44+0000\n"
-"Last-Translator: lollo_Ge <Unknown>\n"
+"PO-Revision-Date: 2011-01-10 16:25+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:17+0000\n"
+"X-Launchpad-Export-Date: 2011-01-11 04:59+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -105,8 +105,8 @@ msgid ""
 "The Profit and Loss report gives you an overview of your company profit and "
 "loss in a single document"
 msgstr ""
-"Il report su perdite e profitti fornisce una visuale dell'andamento della "
-"ditta in un unico documento"
+"Il report su perdite e profitti fornisce una visuale dell'andamento "
+"dell'azienda in un unico documento"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -333,7 +333,7 @@ msgstr "Via"
 #, python-format
 msgid "Invoice line account company does not match with invoice company."
 msgstr ""
-"La ditta relativa alla voce della fattura non corrisponde alla ditta della "
+"L'azienda relativa alla voce della fattura non corrisponde all'azienda della "
 "fattura"
 
 #. module: account
@@ -714,7 +714,7 @@ msgstr "Periodo del registro"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
-"Per la riconciliazione si deve avere la stessa ditta per tutte le "
+"Per la riconciliazione si deve avere la stessa azienda per tutte le "
 "registrazioni."
 
 #. module: account
@@ -1688,7 +1688,7 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
-"Mstra il piano dei conti della ditta per anno fiscale, scegliendo il "
+"Mostra il piano dei conti della azienda per anno fiscale, scegliendo il "
 "periodo. Cliccare su un conto per avere una vista ad albero di tutte le voci "
 "del registro organizzate per codice di conto."
 
@@ -1950,8 +1950,8 @@ msgid ""
 "It adds the currency column if the currency is different then the company "
 "currency"
 msgstr ""
-"Aggiunge la colonna della valuta se la valuta differisce da quella della "
-"ditta."
+"Aggiunge la colonna della valuta se la valuta differisce da quella "
+"dell'azienda."
 
 #. module: account
 #: help:account.journal,allow_date:0
@@ -2316,7 +2316,7 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Financial Accounting\\Accounts\\Journals."
 msgstr ""
-"Per questa ditta manca un registro di tipo %s \n"
+"Per questa azienda manca un registro di tipo %s \n"
 "\n"
 "Se ne può creare uno dal menu: \n"
 "Configurazione\\contabilità generale\\conti\\registri"
@@ -2504,7 +2504,7 @@ msgid ""
 "You cannot modify company of this journal as its related record exist in "
 "Entry Lines"
 msgstr ""
-"Non si può modificre la ditta di questo registro poichè esistono voci "
+"Non si può modificare l'azienda di questo registro poiché esistono voci "
 "correlate alla ditta fra le registrazioni."
 
 #. module: account
@@ -3165,7 +3165,7 @@ msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
 msgstr ""
-"L'ammontare espresso nella valuta correlata è diverso da quello della ditta."
+"L'ammontare espresso nella valuta correlata è diverso da quello dell'azienda."
 
 #. module: account
 #: report:account.move.voucher:0
@@ -3690,7 +3690,7 @@ msgid ""
 "company currency"
 msgstr ""
 "Inserisce la colonna della valuta nel report, in caso la valuta sia diversa "
-"da quella della ditta."
+"da quella dell'azienda."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -5585,7 +5585,7 @@ msgstr "non implementato"
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr "Ditta cui si riferisce questo registro."
+msgstr "Azienda cui si riferisce questo registro."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:44
@@ -5711,7 +5711,7 @@ msgstr "Configurazione dei report"
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
 msgstr ""
-"La ditta deve esere la stessa per il periodo ed il conto ad essa correlato."
+"L'azienda deve essere la stessa per il periodo ed il conto ad essa correlato."
 
 #. module: account
 #: field:account.tax,type:0
@@ -5733,7 +5733,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr "Company"
+msgstr "Aziende"
 
 #. module: account
 #: code:addons/account/account.py:532
@@ -5742,8 +5742,8 @@ msgid ""
 "You cannot modify Company of account as its related record exist in Entry "
 "Lines"
 msgstr ""
-"Non si puo' modificare la ditta relativa al conto, poiche' esistono "
-"registrazioni relative alla ditta."
+"Non si puo' modificare l'azienda relativa al conto, poiché esistono "
+"registrazioni relative all'azienda."
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
@@ -5866,7 +5866,7 @@ msgstr "  numero di giorni: 30"
 #. module: account
 #: help:account.analytic.line,currency_id:0
 msgid "The related account currency if not equal to the company one."
-msgstr "La valuta del conto non e' eguale a quella della ditta."
+msgstr "La valuta del conto non e' eguale a quella dell'azienda."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -6004,7 +6004,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "Il nome del registro deve essere unico per ogni ditta."
+msgstr "Il nome del registro deve essere unico per ogni azienda!"
 
 #. module: account
 #: field:account.account.template,nocreate:0
@@ -6018,7 +6018,8 @@ msgstr ""
 #, python-format
 msgid "Can not find account chart for this company, Please Create account."
 msgstr ""
-"Impossibile trovare un piano dei conti per questa ditta. Occorre crearne uno."
+"Impossibile trovare un piano dei conti per questa azienda. Occorre crearne "
+"uno."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:59
@@ -6181,7 +6182,7 @@ msgstr ""
 #: code:addons/account/account.py:1393
 #, python-format
 msgid "Couldn't create move between different companies"
-msgstr "Non si puo' creaare un movimento fra ditte diverse"
+msgstr "Non si puo' creaare un movimento fra aziende diverse"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_type_form
@@ -6260,7 +6261,7 @@ msgstr "Codice Python"
 msgid ""
 "Please define the Reserve and Profit/Loss account for current user company !"
 msgstr ""
-"Va definito il conto per riserve, e profitti/perdite per la ditta "
+"Va definito il conto per riserve, e profitti/perdite per l'azienda "
 "dell'attuale utente"
 
 #. module: account
@@ -6857,7 +6858,7 @@ msgstr ""
 #: code:addons/account/account.py:938
 #, python-format
 msgid "You should have chosen periods that belongs to the same company"
-msgstr "Bisognerebbe aver scelto periodi relativi alla stessa ditta"
+msgstr "Bisognerebbe aver scelto periodi relativi alla stessa azienda"
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
@@ -6877,7 +6878,7 @@ msgstr "Reportistica"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "Il codice del registro deve essere unico per una stessa ditta !"
+msgstr "Il codice del registro deve essere unico per una stessa azienda!"
 
 #. module: account
 #: field:account.bank.statement,ending_details_ids:0
@@ -7679,7 +7680,7 @@ msgstr "Tel. :"
 #. module: account
 #: field:account.account,company_currency_id:0
 msgid "Company Currency"
-msgstr "Valuta società"
+msgstr "Valuta azienda"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -7923,7 +7924,7 @@ msgstr "Chiusura anno fiscale"
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr "Il codice del conto deve essere unico per ogni ditta!"
+msgstr "Il codice del conto deve essere unico per ogni azienda!"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_journal_2_account_invoice_opened
