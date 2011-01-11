@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-11-25 19:25+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-10 05:37+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:30+0000\n"
+"X-Launchpad-Export-Date: 2011-01-11 05:01+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: multi_company
@@ -40,6 +40,20 @@ msgid ""
 "%(company_name)s\n"
 "        "
 msgstr ""
+"\n"
+"尊敬的 %(partner_name)s：\n"
+"\n"
+"附件中是贵单位所有的未付款发票，总金额：\n"
+"\n"
+"%(followup_amount).2f %(company_currency)s\n"
+"\n"
+"感谢！\n"
+"\n"
+"\n"
+"%(user_signature)s\n"
+"%(company_name)s\n"
+"%(date)s\n"
+"        "
 
 #. module: multi_company
 #: model:product.category,name:multi_company.Odoo1
@@ -49,24 +63,24 @@ msgstr "ODOO 服务提供者"
 #. module: multi_company
 #: view:multi_company.default:0
 msgid "Returning"
-msgstr ""
+msgstr "返回"
 
 #. module: multi_company
 #: model:ir.ui.menu,name:multi_company.menu_custom_multicompany
 msgid "Multi-Companies"
-msgstr ""
+msgstr "多公司处理"
 
 #. module: multi_company
 #: model:ir.module.module,shortdesc:multi_company.module_meta_information
 #: view:multi_company.default:0
 msgid "Multi Company"
-msgstr "多公司"
+msgstr "多公司处理"
 
 #. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
 #: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
-msgstr "每个对象的默认公司"
+msgstr "单个对象的默认公司"
 
 #. module: multi_company
 #: model:product.template,name:multi_company.product_product_odoo1_product_template
@@ -81,7 +95,7 @@ msgstr "匹配"
 #. module: multi_company
 #: view:multi_company.default:0
 msgid "Condition"
-msgstr "状态"
+msgstr "条件"
 
 #. module: multi_company
 #: model:ir.module.module,description:multi_company.module_meta_information
@@ -91,6 +105,10 @@ msgid ""
 "    This module is the base module for other multicompany modules.\n"
 "    "
 msgstr ""
+"\n"
+"    多公司模块用于多个公司（机构）环境的管理。\n"
+"此模块是其它多公司模块的基础模块。\n"
+"    "
 
 #~ msgid "Default Company"
 #~ msgstr "默认公司"
