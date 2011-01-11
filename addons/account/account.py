@@ -428,7 +428,7 @@ class account_account(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id']),
-        (_check_type, 'Internal type of parent account must be view.', ['parent_id']),
+        (_check_type, 'You cannot create a account! \nMake sure if the account has children it should be type "View"! ', ['parent_id']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -2313,7 +2313,7 @@ class account_account_template(osv.osv):
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id']),
-        (_check_type, 'Internal type of parent account template must be view.', ['parent_id']),
+        (_check_type, 'You cannot create a account template! \nMake sure if the account template has children it should be type "View"! ', ['parent_id']),
         
     ]
 
