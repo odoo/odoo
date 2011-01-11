@@ -28,16 +28,7 @@ from tools.translate import _
 
 class project_project(osv.osv):
     _inherit = 'project.project'
-    def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
-        result = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context=context)
-        if result.get('value', False):
-            try:
-                d = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')
-                if d:
-                    result['value']['to_invoice'] = d[1]
-            except ValueError, e:
-                pass
-        return result
+    
 project_project()
 
 class project_work(osv.osv):
@@ -231,4 +222,16 @@ class res_partner(osv.osv):
                 context=context)
 res_partner()
 
+class account_analytic_line(osv.osv):
+   _inherit = "account.analytic.line"
+   def on_change_account_id(self, cr, uid, ids, account_id):
+       res = {}
+       if not account_id:
+           return res
+       res.setdefault('value',{})
+       acc = self.pool.get('account.analytic.account').browse(cr, uid, account_id)
+       st = acc.to_invoice.id
+       res['value']['to_invoice'] = st or False
+       return res  
+account_analytic_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

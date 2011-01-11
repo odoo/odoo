@@ -541,7 +541,11 @@ class account_invoice(osv.osv):
             journal_ids = obj_journal.search(cr, uid, [('company_id','=',company_id), ('type', '=', journal_type)])
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
-            else:
+            res_journal_default = self.pool.get('ir.values').get(cr, uid, 'default', False, ['account.invoice'])
+            for r in res_journal_default:
+                if r[1] == 'journal_id' and r[2] in journal_ids:
+                    val['journal_id'] = r[2]
+            if not val.get('journal_id', False):
                 raise osv.except_osv(_('Configuration Error !'), (_('Can\'t find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration\Financial Accounting\Accounts\Journals.') % (journal_type)))
             dom = {'journal_id':  [('id', 'in', journal_ids)]}
         else:
@@ -559,7 +563,6 @@ class account_invoice(osv.osv):
                 val['currency_id'] = False
             else:
                 val['currency_id'] = company.currency_id.id
-
         return {'value': val, 'domain': dom}
 
     # go from canceled state to draft state
@@ -1273,7 +1276,7 @@ class account_invoice_line(osv.osv):
         'invoice_line_tax_id': fields.many2many('account.tax', 'account_invoice_line_tax', 'invoice_line_id', 'tax_id', 'Taxes', domain=[('parent_id','=',False)]),
         'note': fields.text('Notes'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
-        'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
     }
     _defaults = {
@@ -1530,7 +1533,7 @@ class account_invoice_tax(osv.osv):
         'base_amount': fields.float('Base Code Amount', digits_compute=dp.get_precision('Account')),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', help="The tax basis of the tax declaration."),
         'tax_amount': fields.float('Tax Code Amount', digits_compute=dp.get_precision('Account')),
-        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
+        'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'factor_base': fields.function(_count_factor, method=True, string='Multipication factor for Base code', type='float', multi="all"),
         'factor_tax': fields.function(_count_factor, method=True, string='Multipication factor Tax code', type='float', multi="all")
     }

@@ -1438,7 +1438,7 @@ class stock_production_lot_revision(osv.osv):
         'indice': fields.char('Revision Number', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
-        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
     _defaults = {

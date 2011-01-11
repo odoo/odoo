@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-22 16:12+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-08 21:49+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:21+0000\n"
+"X-Launchpad-Export-Date: 2011-01-09 04:53+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp_operations
@@ -282,6 +283,12 @@ msgid ""
 "different impacts on the costs of manufacturing and planning depending on "
 "the available workload."
 msgstr ""
+"Pour fabriquer ou assembler des produits, et pour utiliser des matières "
+"premières et des produits finis vous devez aussi vous occupez des opérations "
+"de fabrications. Les opérations de fabrication sont également appelées des "
+"ordres de travail. Les nombreuses opérations peuvent avoir des impacts "
+"différents sur les coûts de fabrication et la planification peut dépendre de "
+"la charge de travail disponible."
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
@@ -300,6 +307,8 @@ msgid ""
 "Operation has already started !You  can either Pause /Finish/Cancel the "
 "operation"
 msgstr ""
+"L'opération est déjà commencée ! Vous pouvez soit la mettre en pause, la "
+"terminer ou l'annuler"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
@@ -505,7 +514,8 @@ msgstr "Novembre"
 #: help:mrp.production.workcenter.line,delay:0
 msgid "This is lead time between operation start and stop in this workcenter"
 msgstr ""
-"C'est le temps nécessaire entre le début et la fin de l'opération dans ce poste de charge"
+"C'est le temps nécessaire entre le début et la fin de l'opération dans ce "
+"poste de charge"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -567,7 +577,7 @@ msgstr "L'Opération est déjà annulée !"
 #. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
 msgid "Work Center Production start end workflow"
-msgstr ""
+msgstr "Workflow de départ fin du poste de travail de production"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
@@ -611,6 +621,12 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
+"Les ordres de travail sont des listes d'opérations à faire pour chaque ordre "
+"de fabrication. Une fois que vous avez démarré le premier ordre de travail "
+"de l'ordre de fabrication, l'ordre de fabrication est automatiquement marqué "
+"comme démarré. Une fois que vous avez terminé la dernière opération de "
+"l'ordre de fabrication, ce dernier est automatiquement marqué comme terminé "
+"et les produits associés sont fabriqués."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -630,7 +646,7 @@ msgstr "Code-barre des postes de charge"
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Vous devez affecter un lot de fabrication pour ce produit."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -806,7 +822,7 @@ msgstr "La quantité commandée ne peut être ni négative ni nulle !"
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Vous essayez d'affecter un lot qui n'est pas pour ce produit."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

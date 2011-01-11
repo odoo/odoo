@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-10-30 15:16+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-09 15:17+0000\n"
+"Last-Translator: Raphaël Valyi - http://www.akretion.com <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:40+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:15+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
 msgid "Track Outgoing Lots"
-msgstr ""
+msgstr "Rastrear lotes na saída"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_upload
@@ -58,17 +58,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr ""
+msgstr "últimos inventários"
 
 #. module: stock
 #: view:stock.move:0
 msgid "Today"
-msgstr ""
+msgstr "Hoje"
 
 #. module: stock
 #: field:stock.production.lot.revision,indice:0
 msgid "Revision Number"
-msgstr ""
+msgstr "Número da Revisão"
 
 #. module: stock
 #: view:stock.move.memory.in:0
@@ -81,14 +81,14 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_stock_move_report
 #: view:report.stock.move:0
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Analisa de movimentos"
 
 #. module: stock
 #: help:stock.production.lot,ref:0
 msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
-msgstr ""
+msgstr "Referencia interna se for diferente da referencia do fabricante"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -97,6 +97,9 @@ msgid ""
 "per location. You can use it once a year when you do the general inventory "
 "or whenever you need it, to correct the current stock level of a product."
 msgstr ""
+"Os inventários servem para cadastrar a quantidade de produtos em cada "
+"locação. Você pode usar ele uma vez por ano ao refazer seu inventario ou "
+"cada vez que precisar corrigir os nível de estoque de um produto."
 
 #. module: stock
 #: view:stock.picking:0
@@ -138,7 +141,7 @@ msgstr ""
 #: view:report.stock.move:0
 #: field:report.stock.move,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dia"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -156,7 +159,7 @@ msgstr "Unidade de Medida"
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
 msgid "Physical Inventories"
-msgstr ""
+msgstr "Inventários físicos"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
@@ -189,7 +192,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_move
 msgid "Deliver/Receive Products"
-msgstr ""
+msgstr "Entregar/receber produtos"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -210,7 +213,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Não aplicável"
 
 #. module: stock
 #: help:stock.tracking,serial:0
@@ -222,7 +225,7 @@ msgstr ""
 #: view:stock.picking:0
 #: field:stock.picking,origin:0
 msgid "Origin"
-msgstr ""
+msgstr "Origem"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -246,12 +249,12 @@ msgstr "Referência"
 #: code:addons/stock/stock.py:661
 #, python-format
 msgid "Products to Process"
-msgstr ""
+msgstr "Produtos a processar"
 
 #. module: stock
 #: constraint:product.category:0
 msgid "Error ! You can not create recursive categories."
-msgstr ""
+msgstr "Erro!  Você não pode criar categorias recursivas."
 
 #. module: stock
 #: help:stock.fill.inventory,set_stock_zero:0
@@ -263,7 +266,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
 msgid "Split lines"
-msgstr ""
+msgstr "Dividir linhas"
 
 #. module: stock
 #: code:addons/stock/stock.py:1127
@@ -277,12 +280,12 @@ msgstr ""
 #: code:addons/stock/stock.py:2297
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Atenção!"
 
 #. module: stock
 #: field:stock.invoice.onshipping,group:0
 msgid "Group by partner"
-msgstr "Grupo por Parceiro"
+msgstr "Agrupar por Parceiro"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_partner
@@ -301,7 +304,7 @@ msgstr "Parceiro"
 #: help:stock.move.memory.in,currency:0
 #: help:stock.move.memory.out,currency:0
 msgid "Currency in which Unit cost is expressed"
-msgstr ""
+msgstr "Moeda do preço unitário de custo"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:135
@@ -399,7 +402,7 @@ msgstr "Disponível"
 #: view:stock.picking:0
 #: field:stock.picking,min_date:0
 msgid "Expected Date"
-msgstr ""
+msgstr "Data Prevista"
 
 #. module: stock
 #: view:board.board:0
@@ -438,7 +441,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,price_currency_id:0
 msgid "Currency for average price"
-msgstr ""
+msgstr "Moeda par preço medio"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -468,7 +471,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
 msgid "Moves Statistics"
-msgstr ""
+msgstr "Estatísticas de movimentos"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -489,6 +492,8 @@ msgid ""
 "Current quantity of products with this Production Lot Number available in "
 "company warehouses"
 msgstr ""
+"Quantidade atual de produtos com este lote de produção nos armazéns da "
+"empresa"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -513,7 +518,7 @@ msgstr "Movimentação Interna"
 #. module: stock
 #: field:stock.move,location_dest_id:0
 msgid "Destination Location"
-msgstr ""
+msgstr "Local de destino"
 
 #. module: stock
 #: code:addons/stock/stock.py:751
@@ -550,7 +555,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Inventory Control"
-msgstr ""
+msgstr "Controlo de inventário"
 
 #. module: stock
 #: view:stock.location:0
@@ -562,7 +567,7 @@ msgstr "Informação Adicional"
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
 msgid "Location / Product"
-msgstr ""
+msgstr "Locação / Produto"
 
 #. module: stock
 #: code:addons/stock/stock.py:1306

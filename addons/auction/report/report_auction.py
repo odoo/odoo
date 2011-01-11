@@ -124,6 +124,7 @@ class report_auction_object_date(osv.osv):
     }
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_auction_object_date')
         cr.execute("""create or replace view report_auction_object_date as
             (select
                min(l.id) as id,
@@ -155,6 +156,7 @@ class report_auction_adjudication(osv.osv):
     }
 
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_auction_adjudication')
         cr.execute("""
             create or replace view report_auction_adjudication as (
                 select
@@ -192,6 +194,7 @@ class report_object_encoded(osv.osv):
         'state': fields.selection((('draft','Draft'),('unsold','Unsold'),('paid','Paid'),('invoiced','Invoiced')),'Status', required=True,select=1),
     }
     def init(self, cr):
+        tools.drop_view_if_exists(cr, 'report_object_encoded')
         cr.execute('''create or replace view report_object_encoded  as
             (select
                 min(al.id) as id,
