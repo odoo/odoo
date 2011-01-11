@@ -26,7 +26,7 @@
     "website": "",
     "category" : "Localisation/Account Charts",
     "description": "This is the base module to manage the accounting chart for Greece.",
-    "depends" : ["base", "account", "base_iban", "base_vat", "account_chart"],
+    "depends" : ["base_iban", "base_vat", "account_chart"],
     "init_xml" : [],
     "demo_xml" : [],
     "update_xml" : ["account_types.xml","account_chart.xml", "account_full_chart.xml",
@@ -35,4 +35,3 @@
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
