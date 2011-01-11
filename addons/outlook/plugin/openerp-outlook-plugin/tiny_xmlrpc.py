@@ -288,6 +288,7 @@ class XMLRpcConn(object):
                 headers[line[:split_here]] = line[split_here:]
             temp1 = headers.get('Message-ID')
             temp2 = headers.get('Message-Id')
+            referances = headers.get('References')
             if temp1 == None:    message_id = temp2
             if temp2 == None:    message_id = temp1
             startCut = message_id.find("<")
