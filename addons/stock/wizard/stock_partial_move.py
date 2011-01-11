@@ -99,7 +99,7 @@ class stock_partial_move(osv.osv_memory):
         if move.picking_id.type == 'in':
             move_memory.update({
                 'cost' : move.product_id.standard_price,
-                'currency' : move.product_id.company_id.currency_id.id,
+                'currency' : move.product_id.company_id and move.product_id.company_id.currency_id and move.product_id.company_id.currency_id.id or False,
             })
         return move_memory
 

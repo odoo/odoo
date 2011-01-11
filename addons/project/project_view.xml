@@ -29,20 +29,17 @@
                     </group>
                     <notebook colspan="4">
                         <page string="Administration">
-                            <group col="2" colspan="2" groups="base.group_extended">
-                                <separator colspan="2" string="Scheduling"/>
-                                <field name="priority"/>
-                                <field name="active"/>
-                            </group>
                             <group col="2" colspan="2">
                                 <separator colspan="2" string="Performance"/>
                                 <field name="planned_hours" widget="float_time"/>
                                 <field name="effective_hours" widget="float_time" />
                             </group>
                             <group col="2" colspan="2" name="misc">
-                                <separator colspan="2" string="Miscelleanous"/>
+                                <separator colspan="4" string="Miscelleanous"/>
                                 <field name="company_id" select="1" groups="base.group_multi_company" widget="selection" required="1"/>
                                 <field name="warn_manager"/>
+                                <field name="priority"/>
+                                <field name="active"/>
                             </group>
                             <newline/>
                             <separator colspan="4"/>
@@ -226,7 +223,7 @@
                 <form string="Task edition">
                     <group colspan="6" col="6">
                         <field name="name" select="1"/>
-                        <field name="project_id" select="1"  on_change="onchange_project(project_id)" domain="[('user_id','=',uid)]"/>
+                        <field name="project_id" select="1"  on_change="onchange_project(project_id)" domain="['|',('user_id','=',uid),('members','=',uid)]" />
                         <field name="total_hours" widget="float_time"/>
                         <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                         <field name="user_id" select="1" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>

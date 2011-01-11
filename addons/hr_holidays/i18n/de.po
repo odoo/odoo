@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-29 11:04+0000\n"
+"PO-Revision-Date: 2011-01-09 21:20+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:18+0000\n"
+"X-Launchpad-Export-Date: 2011-01-10 05:18+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -67,7 +67,7 @@ msgstr "Abgelehnt"
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
-msgstr ""
+msgstr "Mitarbeiterkategorie"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -123,6 +123,12 @@ msgid ""
 "the employee. You can define several allowance types (paid holidays, "
 "sickness, etc.) and manage allowances per type."
 msgstr ""
+"Abwesenheitsanfragen zum Beispiel aufgrund Urlaub können durch Mitarbeiter "
+"erstellt und durch Vorgesetzte genehmigt werden. Sobald ein Antrag genehmigt "
+"wird, erscheint die Abwesenheitszeit auch in der Abwesenheits- und "
+"Terminliste für den Mitarbeiter. Sie können unterschiedliche "
+"Abwesenheitstypen generieren (bezahlter Urlaub, Krankheit etc.) und die "
+"Abwesenheit gemäss dieser unterschiedlichen Typen verwalten."
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -146,6 +152,8 @@ msgstr "Abgelehnt"
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
 msgstr ""
+"Der Urlaubsantrag für den Mitarbeiter %s kann nicht genehmigt werden. Die "
+"noch verfügbaren Urlaubstage reichen nicht aus (%s)."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -264,7 +272,7 @@ msgstr "Bestätigt"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The start date must be before the end date !"
-msgstr ""
+msgstr "Das Startdatum muss vor dem Enddatum sein!"
 
 #. module: hr_holidays
 #: model:ir.module.module,description:hr_holidays.module_meta_information
@@ -403,7 +411,7 @@ msgstr "Suche Abwesenheitstyp"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "You have to select an employee or a category"
-msgstr ""
+msgstr "Sie müssen einen Mitarbeiter oder eine Kategorie auswählen"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -430,6 +438,8 @@ msgid ""
 "If you set a meeting type, OpenERP will create a meeting in the calendar "
 "once a leave is validated."
 msgstr ""
+"Wenn Sie eine hier eine Meeting Kategorie auswählen, kann OpenERP nach "
+"Genehmigung die Abwesenheitszeit im Terminkalender ausweisen."
 
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
@@ -507,7 +517,7 @@ msgstr "Urlaub"
 #: field:hr.holidays,case_id:0
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting"
-msgstr ""
+msgstr "Meeting"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -539,7 +549,7 @@ msgstr "Aktiv"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
 msgid "Leaves To Validate"
-msgstr ""
+msgstr "Zu genehmigende Urlaubsanträge"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -549,7 +559,7 @@ msgstr "Erweiterter Filter..."
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0 !"
-msgstr ""
+msgstr "Die Anzahl der Tage muss größer als 0 sein!"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -595,7 +605,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Misc"
-msgstr ""
+msgstr "Sonstiges"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -697,7 +707,7 @@ msgstr ""
 #: code:addons/hr_holidays/hr_holidays.py:186
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
-msgstr ""
+msgstr "Sie können keine Abweseneitszeiten im Draft State erlauben !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -760,7 +770,7 @@ msgstr "Violett"
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
-msgstr ""
+msgstr "Maximal zulässige"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0
