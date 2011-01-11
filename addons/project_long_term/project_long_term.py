@@ -517,8 +517,11 @@ def Project_%d():
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
-            project = Task.BalancedProject(Project)
-
+            project = None
+            try:
+                project = Task.BalancedProject(Project)
+            except :
+                raise osv.except_osv(_('Error !'),_('Invalid resource allocation, Phase Scheduling is not possible.\nPlease check project member resource.'))
             for phase_id in phase_ids:
                 act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
                 resources = act_phase.resource_ids
