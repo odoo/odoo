@@ -714,9 +714,9 @@ class mrp_production(osv.osv):
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
             vals = {'state':'confirmed'}
-            final_product_todo = [x.id for x in production.move_created_ids]
+            #final_product_todo = [x.id for x in production.move_created_ids]
             #stock_mov_obj.write(cr, uid, final_product_todo, vals)
-            stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)
+            #stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)
             produced_products = {}
             for produced_product in production.move_created_ids2:
                 if produced_product.scrapped:
