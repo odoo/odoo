@@ -89,14 +89,13 @@ class email_template_mailbox(osv.osv):
                     values['subject'] or u'', 
                     body or u'',
                     reply_to=values.get('reply_to') or u'',
-                    email_bcc=values.get('email_bcc') or u'',
-                    email_cc=values.get('email_cc') or u'',
+                    email_bcc=[values.get('email_bcc') or u''],
+                    email_cc=[values.get('email_cc') or u''],
                     subtype=subtype,
                     attach=attach_to_send,
                     openobject_id=values['message_id']
                 )
                 
-
                 if result == True:
                     account = account_obj.browse(cr, uid, values['account_id'][0], context=context)
                     if account.auto_delete:
