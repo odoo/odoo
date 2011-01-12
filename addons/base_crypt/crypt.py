@@ -240,7 +240,7 @@ class users(osv.osv):
             res = cr.fetchall()
             for i, p in res:
                 encrypted = p
-                if not p.startswith(magic_md5):
+                if p and not p.startswith(magic_md5):
                     encrypted = encrypt_md5(p, gen_salt())
                     cr.execute('update res_users set password=%s where id=%s',
                         (encrypted.encode('utf-8'), int(i)))
