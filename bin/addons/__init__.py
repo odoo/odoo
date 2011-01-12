@@ -286,8 +286,6 @@ def get_module_resource(module, *args):
         return resource_path
     return False
 
-
-
 def get_modules():
     """Returns the list of module names
     """
