@@ -64,11 +64,15 @@ def gen_salt( length=8, symbols=letters + digits ):
 # *
 # * Poul-Henning Kamp
 
-import md5
+from sys import version_info
+if version_info < (2,5):
+    from md5 import md5
+else:
+    from hashlib import md5
 
 def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
-    hash = md5.new( raw_pw + magic + salt )
-    stretch = md5.new( raw_pw + salt + raw_pw).digest()
+    hash = md5( raw_pw + magic + salt )
+    stretch = md5( raw_pw + salt + raw_pw).digest()
 
     for i in range( 0, len( raw_pw ) ):
         hash.update( stretch[i % 16] )
@@ -85,7 +89,7 @@ def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
     saltedmd5 = hash.digest()
 
     for i in range( 1000 ):
-        hash = md5.new()
+        hash = md5()
 
         if i & 1:
             hash.update( raw_pw )
