@@ -7,21 +7,21 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 00:31+0000\n"
+"PO-Revision-Date: 2011-01-10 23:15+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:15+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
 #: field:mrp.production,move_created_ids2:0
 msgid "Moves Created"
-msgstr "Buchung erzeugt"
+msgstr "Buchungen erzeugt"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -74,8 +74,8 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
-"Die 'Meldebestandregel' ermöglicht eine automatische Erstellung neuer "
-"Beschaffungsaufträge, wenn der Minimalbestand unterschritten wird."
+"Die Meldebestandregel ermöglicht eine automatische Erstellung neuer "
+"Beschaffungsaufträge, wenn der Minimalbestand erreicht wird."
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
@@ -98,7 +98,7 @@ msgstr "Produktkosten pro ME"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Scrap Products"
-msgstr "Produkte ausrangieren"
+msgstr "Ausschuss buchen"
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -356,7 +356,7 @@ msgstr "Juni"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
-msgstr "Produkt zu Fertigen"
+msgstr "Produkt zu fertigen"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -391,12 +391,12 @@ msgstr "Anzahl"
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
 msgid "Nbr of hours"
-msgstr "Stunden"
+msgstr "Anzahl Stunden"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Confirm Production"
-msgstr "Start Fertigungsauftrag"
+msgstr "Bestätige Fertigungsauftrag"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduct0
@@ -443,7 +443,7 @@ msgid ""
 "Enables warranty and repair management (and their impact on stocks and "
 "invoicing)."
 msgstr ""
-"Ermöglicht das Management von Garantiefällen und Reparaturen, insbesondere "
+"Ermöglicht das Management von Garantiefällen und Reparaturen (insbesondere "
 "die damit verbundenen Auswirkungen auf Bestände und Abrechnung)."
 
 #. module: mrp
@@ -484,7 +484,7 @@ msgstr "Stückliste Struktur"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
-msgstr "Eine Aufgabe wurde erzeugt, um die Dienstleistung zu erbringen."
+msgstr "Produkttyp ist Service (Dienstleistung)"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -644,7 +644,7 @@ msgstr "Abfolge Lieferungen"
 #: report:mrp.production.order:0
 #: field:mrp.production.order,consumed_products:0
 msgid "Consumed Products"
-msgstr "Verbrauchsprodukte"
+msgstr "verbrauchte Produkte"
 
 #. module: mrp
 #: constraint:mrp.bom:0
@@ -781,8 +781,8 @@ msgstr "Fehlerhafte Aktion !"
 #: help:mrp.bom,product_efficiency:0
 msgid "A factor of 0.9 means a loss of 10% within the production process."
 msgstr ""
-"Ein Faktor 0.9 bedeutet, dass ein Verlust von  10% bei der Produktion "
-"entsteht."
+"Ein Faktor 0.9 bedeutet, dass ein Ausschuss von 10% bei der Produktion "
+"anfallen wird."
 
 #. module: mrp
 #: view:mrp.installer:0
@@ -801,7 +801,7 @@ msgstr "Datum Druck"
 #: model:process.node,name:mrp.process_node_orderrfq0
 #: model:process.node,name:mrp.process_node_rfq0
 msgid "RFQ"
-msgstr "Angebotsanfrage"
+msgstr "Anfrage Angebot"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
@@ -1124,9 +1124,9 @@ msgid ""
 "avoids having to wait for the procurement scheduler to run or having to run "
 "the procurement scheduler manually."
 msgstr ""
-"Aktiviert Just In Time Termierung und automatische Erstellung von "
-"Beschaffungsaufträgen.\n"
-"Trotzdessen JIT rechenintensiver als das Standardverfahren ist,  verhindert "
+"Aktiviert Just In Time Berechnung von Beschaffungsaufträgen.\n"
+"\n"
+"Trotzdessen JIT rechenintensiver als das Standardverfahren ist, verhindert "
 "es die Wartezeit bis zur nächsten manuellen oder täglich automatischen "
 "Ausführung des Assistenten zur automatischen Erstellung von "
 "Beschaffungsaufträgen."
@@ -1144,7 +1144,7 @@ msgstr "]"
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
 msgid "Amount measuring unit"
-msgstr "Menge (ME)"
+msgstr "Summe Mengeneinheit"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
@@ -1287,7 +1287,7 @@ msgstr "Summe in Auftragsdurchläufen"
 #: view:mrp.production.order:0
 #: field:mrp.production.order,location_dest_id:0
 msgid "Finished Products Location"
-msgstr "Fertigprodukte Lagerort"
+msgstr "Fertigprodukte Lager"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_pm_resources_config
@@ -1361,7 +1361,7 @@ msgstr "Fertigungsstelle Auslastung"
 #. module: mrp
 #: help:mrp.production,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "Ort, an dem das System die Fertigprodukte lagert."
+msgstr "Ort, an dem das System die Fertigprodukte einlagern wird."
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -1498,7 +1498,7 @@ msgstr "Beschaffung"
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
 #: view:mrp.product_price:0
 msgid "Product Cost Structure"
-msgstr "Produktkosten"
+msgstr "Produktkostenstruktur"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130

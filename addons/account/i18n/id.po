@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-09 08:22+0000\n"
-"Last-Translator: Zulfahmi Andri <Unknown>\n"
+"PO-Revision-Date: 2011-01-11 21:40+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:16+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: account
@@ -4095,6 +4095,12 @@ msgstr ""
 #: constraint:account.account:0
 #: constraint:account.tax.code:0
 msgid "Error ! You can not create recursive accounts."
+msgstr ""
+
+#. module: account
+#: constraint:account.account:0
+msgid "You cannot create an account! \n"
+"Make sure if the account has children then it should be type \"View\"!"
 msgstr ""
 
 #. module: account
@@ -9174,6 +9180,12 @@ msgstr "Detail Invoice"
 #. module: account
 #: constraint:account.account.template:0
 msgid "Error ! You can not create recursive account templates."
+msgstr ""
+
+#. module: account
+#: constraint:account.account.template:0
+msgid "You cannot create an account template! \n"
+"Make sure if the account template has parent then it should be type \"View\"! "
 msgstr ""
 
 #. module: account

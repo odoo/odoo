@@ -7,20 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-04 09:51+0000\n"
+"PO-Revision-Date: 2011-01-11 21:52+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:17+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
 msgid "Time-laps during which task has to be treated"
-msgstr ""
+msgstr "Délai dans lequel la tâche doit être traitée"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -30,17 +30,17 @@ msgstr "project.gtd.timebox"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "Réactiver"
 
 #. module: project_gtd
 #: help:project.gtd.timebox,sequence:0
 msgid "Gives the sequence order when displaying a list of timebox."
-msgstr ""
+msgstr "Donnes l'ordre d'affichage de la liste des boîtes de temps."
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
 msgid "Travel"
-msgstr ""
+msgstr "Voyage"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -57,22 +57,22 @@ msgstr "Pas de TimeBox enfant pour celle ci !"
 #: code:addons/project_gtd/project_gtd.py:112
 #, python-format
 msgid "GTD"
-msgstr ""
+msgstr "GTD"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
-msgstr ""
+msgstr "Long terme"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_empty
 msgid "Project Timebox Empty"
-msgstr ""
+msgstr "Zone de temps du projet vide"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
-msgstr ""
+msgstr "Aujourd'hui"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -101,12 +101,12 @@ msgstr "Erreur !"
 #. module: project_gtd
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de tâches récursives."
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Annuler"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -121,31 +121,35 @@ msgid ""
 "defines a period of time in order to categorize your tasks: today, this "
 "week, this month, long term."
 msgstr ""
+"Les zones de temps sont définies dans la méthodologie \"Getting Things "
+"Done\". Une zone de temps définit une période de temps dans le but de "
+"classer vos tâches dans des catégories : aujourd'hui, cette semaine, ce "
+"mois, long terme."
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
-msgstr ""
+msgstr "Cette semaine"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_monthly
 msgid "This Month"
-msgstr ""
+msgstr "Ce mois"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "Icône"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
 msgid "Project Timebox Fill"
-msgstr ""
+msgstr "Remplir les zones de temps du projet"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Tâche"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -155,7 +159,7 @@ msgstr "Ajouter une Timebox"
 #. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
@@ -166,7 +170,7 @@ msgstr "Contextes"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_car
 msgid "Car"
-msgstr ""
+msgstr "Voiture"
 
 #. module: project_gtd
 #: model:ir.module.module,description:project_gtd.module_meta_information
@@ -212,12 +216,12 @@ msgstr "Contexte"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "Suivant"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
 msgid "_Ok"
-msgstr ""
+msgstr "_Ok"
 
 #. module: project_gtd
 #: code:addons/project_gtd/project_gtd.py:110
@@ -228,7 +232,7 @@ msgstr "Obtenir les choses terminés"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
 msgid "Office"
-msgstr ""
+msgstr "Bureau"
 
 #. module: project_gtd
 #: field:project.gtd.context,sequence:0
@@ -239,7 +243,7 @@ msgstr "Séquence"
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
-msgstr ""
+msgstr "Donne l'ordre d'affichage de la liste des contextes."
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -255,7 +259,7 @@ msgstr "Sélection des tâches"
 #: code:addons/project_gtd/project_gtd.py:111
 #, python-format
 msgid "Inbox"
-msgstr ""
+msgstr "Boîte de réception"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_id:0
@@ -265,12 +269,12 @@ msgstr "Obtenir de la timebox"
 #. module: project_gtd
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
-msgstr ""
+msgstr "Le contexte dans lequel l'utilisateur doit traiter la tâche"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
-msgstr ""
+msgstr "Domicile"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
@@ -279,11 +283,15 @@ msgid ""
 "you to categorize your tasks according to the context in which they have to "
 "be done: at the office, at home, when I take my car, etc."
 msgstr ""
+"Les contextes sont définis dans la méthodologie \"Getting Things Done\". Ils "
+"vous permettent catégoriser les tâches en fonction du contexte dans lequel "
+"vous devez les faire : au bureau, à la maison, quand je prend ma voiture, "
+"etc."
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "Précédent"
 
 #~ msgid "Visible Columns"
 #~ msgstr "Colonnes visibles"

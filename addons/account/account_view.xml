@@ -603,7 +603,7 @@
         </record>
 
         <record id="view_bank_statement_periodic_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
+            <field name="name">account.bank.statement.reconcile.form</field>
             <field name="model">account.bank.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -745,7 +745,6 @@
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
                         <field name="report_type" select="2"/>
-                        <field name="sign"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Closing Method" colspan="4"/>
@@ -1518,70 +1517,6 @@
             <field eval="11" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_move_line_search"/>
-        </record>
-
-        <record id="view_bank_statement_reconcile_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
-            <field name="model">account.bank.statement</field>
-            <field eval="30" name="priority"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Statement">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="date" select="1"/>
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1"/>
-                        <field name="currency"/>
-                        <field name="balance_start"/>
-                        <field name="balance_end_real"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Select entries">
-                            <field colspan="4" domain="[('statement_id', '=', False), ('journal_id', '=', journal_id)]" name="move_line_ids" nolabel="1" widget="many2many"/>
-                        </page>
-                        <page string="Entry encoding">
-                            <separator colspan="4" string="Entry Lines"/>
-                            <field name="period_id"/>
-                            <field colspan="4" name="line_ids" nolabel="1">
-                                <tree editable="bottom" string="Statement lines">
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id', '=', parent.journal_id)]" name="account_id"/>
-                                    <field name="amount"/>
-                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'date':date}" name="reconcile_id"/>
-                                </tree>
-                                <form string="Statement lines">
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id', '=', parent.journal_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
-                                    <field name="amount"/>
-                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'date':date}" name="reconcile_id"/>
-                                </form>
-                            </field>
-                        </page>
-                    </notebook>
-                    <group col="7" colspan="4">
-                        <field name="state"/>
-                        <field name="balance_end"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="action_bank_statement_reconciliation_form" model="ir.actions.act_window">
-            <field name="name">Statements reconciliation</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="search_view_id" ref="view_bank_statement_search"/>
-            <field name="view_id" ref="view_bank_statement_reconcile_form"/>
         </record>
 
         <act_window

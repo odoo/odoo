@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-09 16:56+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"PO-Revision-Date: 2011-01-11 19:49+0000\n"
+"Last-Translator: scigghia <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:16+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: point_of_sale
@@ -29,7 +29,7 @@ msgstr "Vendite per giorno"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Point of Sale Confirm"
-msgstr ""
+msgstr "Conferma Punto Vendita"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_discount
@@ -45,7 +45,7 @@ msgstr "Imposta a Bozza"
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
 msgid "Product Nb."
-msgstr ""
+msgstr "Nr. Prodotto"
 
 #. module: point_of_sale
 #: model:ir.module.module,shortdesc:point_of_sale.module_meta_information
@@ -60,12 +60,12 @@ msgstr "Oggi"
 #. module: point_of_sale
 #: view:pos.add.product:0
 msgid "Add product :"
-msgstr "Aggiungi Prodotto"
+msgstr "Aggiungi Prodotto:"
 
 #. module: point_of_sale
 #: view:all.closed.cashbox.of.the.day:0
 msgid "All Cashboxes Of the day :"
-msgstr ""
+msgstr "Tutti gli incassi del giorno:"
 
 #. module: point_of_sale
 #: view:pos.box.entries:0
@@ -150,7 +150,7 @@ msgstr "Origine"
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Tax"
-msgstr "Tassa"
+msgstr "Imposta"
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
@@ -161,6 +161,7 @@ msgstr "Totale Transazione"
 #: help:account.journal,special_journal:0
 msgid "Will put all the orders in waiting status till being accepted"
 msgstr ""
+"Metterà tutti gli ordini in stato di attesa, finché non saranno accettati"
 
 #. module: point_of_sale
 #: report:account.statement:0
@@ -206,7 +207,7 @@ msgstr "Stato"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 msgid "Add payment"
-msgstr ""
+msgstr "Aggiungere pagamento"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
@@ -230,7 +231,7 @@ msgstr "Sconto (%)"
 #: field:pos.box.entries,ref:0
 #: field:pos.box.out,ref:0
 msgid "Ref"
-msgstr "Rif."
+msgstr "Rif"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -269,7 +270,7 @@ msgstr "Tipo Prodotto"
 #: view:pos.order:0
 #: view:pos.payment.report.date:0
 msgid "Dates"
-msgstr ""
+msgstr "Date"
 
 #. module: point_of_sale
 #: field:res.company,company_discount:0
@@ -286,7 +287,7 @@ msgstr "Gestione registro di cassa"
 #: code:addons/point_of_sale/point_of_sale.py:1075
 #, python-format
 msgid "No valid pricelist line found !"
-msgstr ""
+msgstr "Non è stata trovata nessuna riga valida nel listino!"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -296,13 +297,13 @@ msgstr ""
 #: report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "["
-msgstr ""
+msgstr "["
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,total:0
 #: field:report.sales.by.margin.pos.month,total:0
 msgid "Margin"
-msgstr ""
+msgstr "Margine"
 
 #. module: point_of_sale
 #: field:pos.order.line,discount:0
@@ -317,7 +318,7 @@ msgstr "Quantità Totale"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
-msgstr ""
+msgstr "Vendite mensili per utente"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:54
@@ -326,6 +327,8 @@ msgid ""
 "You can not open a Cashbox for \"%s\".\n"
 "Please close its related cash register."
 msgstr ""
+"Non si può aprire il Registratore per \"%s\".\n"
+"Chiudere il relativo registro di cassa."
 
 #. module: point_of_sale
 #: help:pos.order,user_salesman_id:0
@@ -335,18 +338,18 @@ msgstr ""
 #. module: point_of_sale
 #: field:product.product,income_pdt:0
 msgid "Product for Input"
-msgstr ""
+msgstr "Prodotto per entrate"
 
 #. module: point_of_sale
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Mode of Payment"
-msgstr ""
+msgstr "Modalità di pagamento"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
 msgid "Daily Operations"
-msgstr ""
+msgstr "Operazioni giornaliere"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -356,24 +359,24 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Are you sure you want to close your sales ?"
-msgstr ""
+msgstr "Si è sicuri di voler chiudere le proprie vendite?"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "August"
-msgstr ""
+msgstr "Agosto"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "June"
-msgstr ""
+msgstr "Giugno"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
-msgstr ""
+msgstr "Vendite mensili per utente"
 
 #. module: point_of_sale
 #: field:pos.order,date_payment:0
@@ -385,13 +388,13 @@ msgstr "Data di pagamento"
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 msgid "Closing Date"
-msgstr ""
+msgstr "Data chiusura"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "October"
-msgstr ""
+msgstr "Ottobre"
 
 #. module: point_of_sale
 #: field:account.bank.statement.line,am_out:0
@@ -407,7 +410,7 @@ msgstr "Riepilogo"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Quotations"
-msgstr ""
+msgstr "Quotazioni"
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_payment:0
@@ -428,11 +431,12 @@ msgstr "Quantità"
 #: help:account.journal,auto_cash:0
 msgid "This field authorize the automatic creation of the cashbox"
 msgstr ""
+"Questo campo autorizza la creazione automatica del Registratore di Cassa"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Period"
-msgstr ""
+msgstr "Periodo"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -448,7 +452,7 @@ msgstr "Descrizione Riga"
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Codes"
-msgstr ""
+msgstr "Codici"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
@@ -465,7 +469,7 @@ msgstr ""
 #: view:pos.sales.user.today:0
 #: view:pos.sales.user.today.current_user:0
 msgid "Print Report"
-msgstr ""
+msgstr "Stampa"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -491,12 +495,12 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_pos_add_product
 #, python-format
 msgid "Add Product"
-msgstr ""
+msgstr "Aggiungi prodotto"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
 msgid "Invoice Amount"
-msgstr ""
+msgstr "Importo Fattura"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -528,7 +532,7 @@ msgstr "Pagamento"
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 msgid "Ending Balance"
-msgstr ""
+msgstr "Bilancio finale"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
@@ -538,7 +542,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.payment.report.date:0
 msgid "Sale by Date and User"
-msgstr ""
+msgstr "Vendite per data ed utente"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:69
@@ -558,12 +562,12 @@ msgstr "Modalità Tasse"
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:48
 #, python-format
 msgid "Cash registers are already closed."
-msgstr ""
+msgstr "I registri di cassa sono già chiusi."
 
 #. module: point_of_sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Errore: Codice EAN non valido"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
@@ -575,12 +579,12 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.add.product:0
 msgid "Save & New"
-msgstr ""
+msgstr "Salva & Nuovo"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Sales total(Revenue)"
-msgstr ""
+msgstr "Vendite totali (Entrate)"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -591,7 +595,7 @@ msgstr "Totale pagato"
 #. module: point_of_sale
 #: field:account.journal,check_dtls:0
 msgid "Check Details"
-msgstr ""
+msgstr "Controllare i dettagli"
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -602,13 +606,13 @@ msgstr "Quantità Prodotto"
 #. module: point_of_sale
 #: field:pos.order,contract_number:0
 msgid "Contract Number"
-msgstr ""
+msgstr "Numero contratto"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "March"
-msgstr ""
+msgstr "Marzo"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
@@ -624,6 +628,8 @@ msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Si deve selezionare un listino nella maschera di vendita!\n"
+"Selezionarne uno prima di scegliere un prodotto."
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -641,29 +647,29 @@ msgstr ""
 #. module: point_of_sale
 #: view:account.journal:0
 msgid "Extended Configureation"
-msgstr ""
+msgstr "Configurazione estesa"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 msgid "Starting Balance"
-msgstr ""
+msgstr "Bilancio di apertura"
 
 #. module: point_of_sale
 #: report:pos.payment.report.user:0
 msgid "Payment By User"
-msgstr ""
+msgstr "Pagamenti per utente"
 
 #. module: point_of_sale
 #: field:pos.order,type_rec:0
 msgid "Type of Receipt"
-msgstr ""
+msgstr "Tipo di ricevuta"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 #: field:report.pos.order,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# di Righe"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_accepted
@@ -709,7 +715,7 @@ msgstr "Data della creazione"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
 msgid "Today's Sales"
-msgstr ""
+msgstr "Vendite di oggi"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0
@@ -737,7 +743,7 @@ msgstr "Fallita la creazione della linea !"
 #: field:report.sales.by.margin.pos,product_name:0
 #: field:report.sales.by.margin.pos.month,product_name:0
 msgid "Product Name"
-msgstr ""
+msgstr "Descrizione Prodotto"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:69
@@ -761,7 +767,7 @@ msgstr "Totale Fatturato"
 #: view:report.pos.order:0
 #: field:report.pos.order,product_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "Qtà"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_return
@@ -771,7 +777,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos_month
 msgid "Sales by margin monthly"
-msgstr ""
+msgstr "Vendite per margine mensile"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -780,7 +786,7 @@ msgstr ""
 #: field:report.sales.by.user.pos,date_order:0
 #: field:report.sales.by.user.pos.month,date_order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Data ordine"
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
@@ -802,13 +808,13 @@ msgstr ""
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Product for expenses"
-msgstr ""
+msgstr "Prodotto per spese"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sales_user_today_current_user
 #: view:pos.sales.user.today.current_user:0
 msgid "Sales for Current User"
-msgstr ""
+msgstr "Vendite dell'utente attuale"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -819,18 +825,18 @@ msgstr "Commento Posizione Fiscale:"
 #: selection:report.cash.register,month:0
 #: selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
+msgstr "Settembre"
 
 #. module: point_of_sale
 #: report:account.statement:0
 #: report:all.closed.cashbox.of.the.day:0
 msgid "Opening Date"
-msgstr ""
+msgstr "Data apertura"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Imposte:"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
@@ -850,7 +856,7 @@ msgstr "Righe Ordine Punto Vendita"
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Receipt :"
-msgstr ""
+msgstr "Ricevuta:"
 
 #. module: point_of_sale
 #: field:account.bank.statement.line,pos_statement_id:0
@@ -867,17 +873,17 @@ msgstr "Data"
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Filtri estesi..."
 
 #. module: point_of_sale
 #: field:pos.order,num_sale:0
 msgid "Internal Note"
-msgstr ""
+msgstr "Nota interna"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Aziende"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
@@ -899,18 +905,18 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_get_sale.py:54
 #, python-format
 msgid "You can't modify this order. It has already been paid"
-msgstr ""
+msgstr "Non si può modificare quest'ordine. È già stato pagato"
 
 #. module: point_of_sale
 #: field:pos.details,date_end:0
 #: field:pos.sale.user,date_end:0
 msgid "Date End"
-msgstr ""
+msgstr "Data Fine"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Vostro riferimento"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
@@ -942,7 +948,7 @@ msgstr "Vendite (Cronologia)"
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Information"
-msgstr ""
+msgstr "Informazione"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl
@@ -1061,7 +1067,7 @@ msgstr ""
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "Il nome del registro deve essere unico per ogni azienda!"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1682,7 +1688,7 @@ msgstr ""
 #: report:pos.user.product:0
 #: field:report.pos.order,company_id:0
 msgid "Company"
-msgstr "Impresa"
+msgstr "Azienda"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1842,7 +1848,7 @@ msgstr ""
 #. module: point_of_sale
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Errore! Non è possibile creare aziende ricorsive."
 
 #. module: point_of_sale
 #: field:pos.discount,discount:0
@@ -1888,7 +1894,7 @@ msgstr ""
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "Il codice del registro deve essere unico per una stessa azienda!"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -2323,7 +2329,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Cerca ordini di vendita"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
@@ -2337,7 +2343,7 @@ msgstr "Registrazione Contabile"
 #: view:pos.order:0
 #, python-format
 msgid "Make Payment"
-msgstr ""
+msgstr "Pagamento"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
@@ -2351,7 +2357,7 @@ msgstr ""
 #: view:report.pos.order:0
 #: field:report.pos.order,year:0
 msgid "Year"
-msgstr ""
+msgstr "Anno"
 
 #~ msgid ","
 #~ msgstr ","
