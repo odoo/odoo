@@ -19,17 +19,21 @@
 #
 ##############################################################################
 
+import locale
+import logging
+
 from osv import fields, osv
 from locale import localeconv
 import tools
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
-import locale
-import logging
 
 class lang(osv.osv):
     _name = "res.lang"
     _description = "Languages"
+
+    _disallowed_datetime_patterns = tools.DATETIME_FORMATS_MAP.keys()
+    _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
     def install_lang(self, cr, uid, **args):
         lang = tools.config.get('lang')
@@ -73,13 +77,14 @@ class lang(osv.osv):
                 return '\xc2\xa0'
             return s
 
-        def fix_time_format(format):
-            """Python's strftime does not support all the compound formats
-               from C's strftime, as returned by locale.nl_langinfo().
-               Under Ubuntu at least, we encounter %T or %r for some locales."""
-            format = format.replace('%T', '%H:%M:%S')\
-                           .replace('%r', '%I:%M:%S %p')\
-                           .replace('%R', '%H:%M')
+        def fix_datetime_format(format):
+            """Python's strftime supports only the format directives
+               that are available on the platform's libc, so in order to
+               be 100% cross-platform we map to the directives required by
+               the C standard (1989 version), always available on platforms
+               with a C standard implementation."""
+            for pattern, replacement in tools.DATETIME_FORMATS_MAP.iteritems():
+                format = format.replace(pattern, replacement)
             return str(format)
 
         lang_info = {
@@ -87,8 +92,8 @@ class lang(osv.osv):
             'iso_code': iso_lang,
             'name': lang_name,
             'translatable': 1,
-            'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
-            'time_format' : fix_time_format(locale.nl_langinfo(locale.T_FMT)),
+            'date_format' : fix_datetime_format(locale.nl_langinfo(locale.D_FMT)),
+            'time_format' : fix_datetime_format(locale.nl_langinfo(locale.T_FMT)),
             'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
             'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
         }
@@ -98,6 +103,14 @@ class lang(osv.osv):
         finally:
             tools.resetlocale()
         return lang_id
+
+    def _check_format(self, cr, uid, ids, context=None):
+        for lang in self.browse(cr, uid, ids, context=context):
+            for pattern in self._disallowed_datetime_patterns:
+                if (lang.time_format and pattern in lang.time_format)\
+                    or (lang.date_format and pattern in lang.date_format):
+                    return False
+        return True
 
     def _get_default_date_format(self,cursor,user,context={}):
         return '%m/%d/%Y'
@@ -131,6 +144,10 @@ class lang(osv.osv):
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique (code)', 'The code of the language must be unique !'),
+    ]
+
+    _constraints = [
+        (_check_format, 'Invalid date/time format directive specified. Please refer to the list of allowed directives, displayed when you edit a language.', ['time_format', 'date_format'])
     ]
 
     @tools.cache(skiparg=3)
