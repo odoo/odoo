@@ -132,10 +132,12 @@ class integer(_column):
 
 class integer_big(_column):
     _type = 'integer_big'
-    _symbol_c = integer._symbol_c
-    _symbol_f = integer._symbol_f
-    _symbol_set = integer._symbol_set
-    _symbol_get = integer._symbol_get
+    # do not reference the _symbol_* of integer class, as that would possibly
+    # unbind the lambda functions
+    _symbol_c = '%s'
+    _symbol_f = lambda x: int(x or 0)
+    _symbol_set = (_symbol_c, _symbol_f)
+    _symbol_get = lambda self,x: x or 0
 
 class reference(_column):
     _type = 'reference'
