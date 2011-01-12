@@ -123,13 +123,6 @@ class boolean(_column):
     _symbol_f = lambda x: x and 'True' or 'False'
     _symbol_set = (_symbol_c, _symbol_f)
 
-class integer_big(_column):
-    _type = 'integer_big'
-    _symbol_c = '%s'
-    _symbol_f = lambda x: int(x or 0)
-    _symbol_set = (_symbol_c, _symbol_f)
-    _symbol_get = lambda self,x: x or 0
-
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%s'
@@ -137,6 +130,12 @@ class integer(_column):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
 
+class integer_big(_column):
+    _type = 'integer_big'
+    _symbol_c = integer._symbol_c
+    _symbol_f = integer._symbol_f
+    _symbol_set = integer._symbol_set
+    _symbol_get = integer._symbol_get
 
 class reference(_column):
     _type = 'reference'
@@ -761,6 +760,11 @@ class function(_column):
             self._symbol_c = boolean._symbol_c
             self._symbol_f = boolean._symbol_f
             self._symbol_set = boolean._symbol_set
+
+        if type in ['integer','integer_big']:
+            self._symbol_c = integer._symbol_c
+            self._symbol_f = integer._symbol_f
+            self._symbol_set = integer._symbol_set
 
     def digits_change(self, cr):
         if self.digits_compute:
