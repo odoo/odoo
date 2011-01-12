@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57:14+0000\n"
-"PO-Revision-Date: 2011-01-03 16:57:14+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14:53+0000\n"
+"PO-Revision-Date: 2011-01-11 11:14:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -254,7 +254,7 @@ msgid "Invitation Detail"
 msgstr ""
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1354
+#: code:addons/base_calendar/base_calendar.py:1356
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
@@ -585,6 +585,12 @@ msgstr ""
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required Reply"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "Forever"
 msgstr ""
 
 #. module: base_calendar
@@ -1031,8 +1037,6 @@ msgstr ""
 #. module: base_calendar
 #: field:base.calendar.set.exrule,interval:0
 #: field:calendar.alarm,trigger_interval:0
-#: field:calendar.event,interval:0
-#: field:calendar.todo,interval:0
 #: field:res.alarm,trigger_interval:0
 msgid "Interval"
 msgstr ""
@@ -1104,6 +1108,12 @@ msgstr ""
 #. module: base_calendar
 #: help:calendar.alarm,action:0
 msgid "Defines the action to be invoked when an alarm is triggered"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "End date"
 msgstr ""
 
 #. module: base_calendar
@@ -1236,6 +1246,18 @@ msgstr ""
 #: selection:calendar.event,state:0
 #: selection:calendar.todo,state:0
 msgid "Tentative"
+msgstr ""
+
+#. module: base_calendar
+#: field:calendar.event,interval:0
+#: field:calendar.todo,interval:0
+msgid "Repeat every"
+msgstr ""
+
+#. module: base_calendar
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "Fix amout of times"
 msgstr ""
 
 #. module: base_calendar
@@ -1446,11 +1468,6 @@ msgid "Sent By User"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "Repeat interval"
-msgstr ""
-
-#. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
@@ -1568,6 +1585,12 @@ msgstr ""
 #: field:calendar.attendee,availability:0
 #: field:res.users,availability:0
 msgid "Free/Busy"
+msgstr ""
+
+#. module: base_calendar
+#: field:calendar.event,end_type:0
+#: field:calendar.todo,end_type:0
+msgid "Way to end reccurency"
 msgstr ""
 
 #. module: base_calendar
