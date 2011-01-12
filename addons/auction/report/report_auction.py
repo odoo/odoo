@@ -18,13 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields, osv, orm
-from tools import config
-from tools.translate import _
-import ir
+from osv import fields, osv
 import netsvc
-import os
-import time
 import tools
 
 def _type_get(self, cr, uid, context=None):

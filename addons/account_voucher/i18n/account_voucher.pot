@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56:53+0000\n"
-"PO-Revision-Date: 2011-01-03 16:56:53+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14:34+0000\n"
+"PO-Revision-Date: 2011-01-11 11:14:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgid "Unreconciliation transactions"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:259
+#: code:addons/account_voucher/account_voucher.py:242
 #, python-format
 msgid "Write-Off"
 msgstr ""
@@ -53,7 +53,7 @@ msgid "Group By..."
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
@@ -85,7 +85,7 @@ msgid "Bill Payment"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid "You have to configure account base code and account tax code on the '%s' tax!"
 msgstr ""
@@ -199,11 +199,6 @@ msgid "Due Date"
 msgstr ""
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
 msgstr ""
@@ -238,11 +233,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Options"
-msgstr ""
-
-#. module: account_voucher
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
 
 #. module: account_voucher
@@ -300,16 +290,8 @@ msgid "Analytic Account"
 msgstr ""
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on receivable/payable account without partner"
-msgstr ""
-
-#. module: account_voucher
-#: help:account.voucher,state:0
-msgid " * The 'Draft' state is used when a user is encoding a new and unconfirmed Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have an voucher number.                         \n"
-"* The 'Posted' state is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
-"* The 'Cancelled' state is used when user cancel voucher."
+#: view:account.voucher:0
+msgid "Payment Information"
 msgstr ""
 
 #. module: account_voucher
@@ -394,7 +376,7 @@ msgid "Voucher Entries"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -422,7 +404,7 @@ msgid "Sales Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Invalid action !"
 msgstr ""
@@ -443,11 +425,6 @@ msgid "Unreconciliation"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,tax_amount:0
-msgid "Tax Amount"
-msgstr ""
-
-#. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
@@ -461,14 +438,14 @@ msgid "Pay Invoice"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Payment Information"
+#: field:account.voucher,tax_amount:0
+msgid "Tax Amount"
 msgstr ""
 
 #. module: account_voucher
@@ -698,7 +675,7 @@ msgid "Credit"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr ""
@@ -741,8 +718,11 @@ msgid "Bill Date"
 msgstr ""
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+#: help:account.voucher,state:0
+msgid " * The 'Draft' state is used when a user is encoding a new and unconfirmed Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have an voucher number.                         \n"
+"* The 'Posted' state is used when user create voucher,a voucher number is generated and voucher entries are created in account                         \n"
+"* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
 
 #. module: account_voucher
@@ -812,7 +792,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
-#: model:ir.model,name:account_voucher.model_account_move_line
 msgid "Journal Items"
 msgstr ""
 
@@ -822,11 +801,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
-msgstr ""
-
-#. module: account_voucher
-#: field:account.move.line,amount_unreconciled:0
-msgid "Unreconciled Amount"
 msgstr ""
 
 #. module: account_voucher
@@ -1012,10 +986,5 @@ msgstr ""
 #: view:account.voucher:0
 #: field:account.voucher,amount:0
 msgid "Total"
-msgstr ""
-
-#. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
 msgstr ""
 
