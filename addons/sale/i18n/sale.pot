@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58:27+0000\n"
-"PO-Revision-Date: 2011-01-03 16:58:27+0000\n"
+"POT-Creation-Date: 2011-01-11 11:16:02+0000\n"
+"PO-Revision-Date: 2011-01-11 11:16:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -220,8 +220,10 @@ msgid "This is the days added to what you promise to customers for security purp
 msgstr ""
 
 #. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Shipping Default Policy"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sales Manager Dashboard"
 msgstr ""
 
 #. module: sale
@@ -1381,13 +1383,6 @@ msgid "Depending on the configuration of the location Output, the move between t
 msgstr ""
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Dashboard"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:1165
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
@@ -1811,6 +1806,11 @@ msgstr ""
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
 msgstr ""
 
 #. module: sale
