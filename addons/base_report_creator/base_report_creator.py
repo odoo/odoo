@@ -29,7 +29,6 @@ class report_result(osv.osv):
     """
     _name = "base_report_creator_report.result"
     _description = "Report"
-    model_set_id = False
     #
     # Should request only used fields
     #
@@ -173,21 +172,8 @@ class report_result(osv.osv):
             context = {}
         report_id = context.get('active_id', False)
         report = self.pool.get('base_report_creator.report').browse(cr, user, context.get('report_id'), context=context)
-        sql_qry = report.sql_query
-        cr.execute(sql_qry)
+        cr.execute(report.sql_query)
         result = cr.dictfetchall()
-        fields_get = self.fields_get(cr, user, None, context)
-        for r in result:
-            for k in r:
-                r[k] = r[k] or False
-                field_dict = fields_get.get(k)
-                field_type = field_dict and field_dict.get('type', False) or False
-                if field_type and field_type == 'many2one':
-                    if r[k] == False:
-                        continue
-                    if r[k]:
-                        related_name = self.pool.get(field_dict.get('relation')).name_get(cr, user, [r[k]], context)
-                        r[k] = related_name
         return result
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
