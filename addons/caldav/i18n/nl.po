@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-11-30 16:35+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-10 10:39+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:37+0000\n"
+"X-Launchpad-Export-Date: 2011-01-11 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: caldav
@@ -56,7 +56,7 @@ msgstr "Deelnemer"
 #. module: caldav
 #: sql_constraint:basic.calendar.fields:0
 msgid "Can not map a field more than once"
-msgstr ""
+msgstr "Kan een veld niet meer dan één keer indelen"
 
 #. module: caldav
 #: selection:basic.calendar,type:0
@@ -218,6 +218,28 @@ msgid ""
 "created\n"
 "        CALENDAR_NAME: Name of calendar to access\n"
 msgstr ""
+"\n"
+"    Deze module bevat basis functionaliteit voor een caldav systeem zoals:  "
+"\n"
+"  - Webdav server die voorziet in remote access voor de agenda\n"
+"  - Synchronisatie van agenda gebruikmakend van WebDAV\n"
+"  - Aanpassen agenda gebeurtenis en todo attribuut met elk OpenERP model\n"
+"  - Voorzet in iCal Import/Export functionaliteit\n"
+"\n"
+"    Voor toegang tot agenda's met CalDAV clienten, stuur ze naar:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c\n"
+"\n"
+"    Voor toegang tot aganda's met WebCal naar remote site gebruik een URL "
+"zoals:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"      Waarbij,\n"
+"        HOSTNAME: Host waarop OpenERP server(met webdav) draait\n"
+"        PORT : Poort waarop OpenERP server draait (standaard : 8069)\n"
+"        DATABASE_NAME: Databasenaam waarin OpenERP agenda is gemaakt\n"
+"        CALENDAR_NAME: te benaderen Agenda naam\n"
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
@@ -266,7 +288,7 @@ msgstr "Te doen"
 #: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Invalid format of the ics, file can not be imported"
-msgstr ""
+msgstr "Ongeldig formaat van ics, bestand kan niet worden geïmporteerd"
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
@@ -324,7 +346,7 @@ msgstr "Agendamap"
 #. module: caldav
 #: field:basic.calendar,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "Schrijfdatum"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
@@ -416,7 +438,7 @@ msgstr "Verdeling"
 #: code:addons/caldav/wizard/calendar_event_import.py:86
 #, python-format
 msgid "Import Sucessful"
-msgstr ""
+msgstr "Importeren succesvol"
 
 #. module: caldav
 #: view:calendar.event.import:0
@@ -476,7 +498,7 @@ msgstr "Exporteren .ics bestand"
 #: code:addons/caldav/calendar.py:41
 #, python-format
 msgid "vobject Import Error!"
-msgstr ""
+msgstr "vobject import fout!"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -509,6 +531,7 @@ msgstr "Kleur"
 msgid ""
 "Please install python-vobject from http://vobject.skyhouseconsulting.com/"
 msgstr ""
+"Installeer aub python-vobject via http://vobject.skyhouseconsulting.com/"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
