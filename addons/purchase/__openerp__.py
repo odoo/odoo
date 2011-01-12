@@ -54,7 +54,7 @@
         'report/purchase_report_view.xml',
         'board_purchase_view.xml',
     ],
-    'test': ['test/purchase_on_average_price.yml',
+    'test': [
              'test/purchase_from_order.yml',
              'test/purchase_from_manual.yml',
              'test/purchase_from_picking.yml',

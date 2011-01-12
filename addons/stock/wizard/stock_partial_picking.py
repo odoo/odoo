@@ -38,6 +38,9 @@ class stock_partial_picking(osv.osv_memory):
         for move in picking.move_lines:
             if picking.type == 'in' and move.product_id.cost_method == 'average':
                 picking_type = 'in'
+                break
+            else:
+                picking_type = 'out'
         return picking_type
     
     def default_get(self, cr, uid, fields, context=None):
@@ -156,7 +159,7 @@ class stock_partial_picking(osv.osv_memory):
                     'prodlot_id': move.prodlot_id.id, 
                 }
                 if (picking_type == 'in') and (move.product_id.cost_method == 'average'):
-                    partial_datas['move%s' % (move.id)].update({
+                    partial_datas['move%s' % (move.move_id.id)].update({
                                                     'product_price' : move.cost, 
                                                     'product_currency': move.currency.id, 
                                                     })
