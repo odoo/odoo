@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 01:18+0000\n"
+"PO-Revision-Date: 2011-01-11 21:35+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-11 04:57+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: mrp
@@ -49,6 +49,12 @@ msgid ""
 "raw materials (stock decrease) and the production of the finished products "
 "(stock increase) when the order is processed."
 msgstr ""
+"Les ordres de production sont généralement proposé automatiquement par "
+"OpenERP en fonction des nomenclatures et des règles d'approvisionnement, "
+"mais vous pouvez également créer manuellement des ordres de production. "
+"OpenERP s'occupe de la consommation des matières premières (diminution du "
+"stock) et de la production des produits finis (augmentation du stock) "
+"lorsque l'ordre est terminé."
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -501,6 +507,8 @@ msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bill of materials."
 msgstr ""
+"Définir des groupes de propriété spécifiques qui peuvent être affectés aux "
+"propriétés de votre nomenclature."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
@@ -702,6 +710,10 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "plannification."
 msgstr ""
+"La liste d'opérations (liste des postes de charge) pour produire le produit "
+"fini. La gamme est principalement utilisée pour calculer les coûts des "
+"postes de charge pendant les opérations et pour planifier leur charge future "
+"à partir du planning de production."
 
 #. module: mrp
 #: help:mrp.workcenter,time_cycle:0
@@ -1065,6 +1077,8 @@ msgstr "Sur stock"
 msgid ""
 "Gives the sequence order when displaying a list of routing work centers."
 msgstr ""
+"Indique l'ordre de séquence quand on affiche la liste des postes de charge "
+"de la gamme."
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1160,6 +1174,12 @@ msgid ""
 "materials have been defined, OpenERP is capable of automatically deciding on "
 "the manufacturing route depending on the needs of the company."
 msgstr ""
+"Les ordres de fabrication décrivent les opérations à effectuer et les "
+"matières premières à utiliser pour chaque étape de la production. On utilise "
+"des spécifications (nomenclature) pour déterminer les besoins en matières "
+"premières et les ordres de fabrication nécessaires pour les produits finis. "
+"Une fois que les nomenclatures ont été définies, OpenERP peut décider "
+"automatiquement de la gamme de fabrication selon les besoins de la société."
 
 #. module: mrp
 #: constraint:mrp.production:0
@@ -1209,6 +1229,43 @@ msgid ""
 "    * List of procurement in exception\n"
 "    "
 msgstr ""
+"\n"
+"    Ceci est le module de base d'OpenERP pour gérer le processus de "
+"fabrication.\n"
+"\n"
+"    Fonctionnalités:\n"
+"    * Fabrication pour stock/ Fabrication à la commande (par ligne)\n"
+"    * Nomenclatures multi-niveaux, sans limitation\n"
+"    * Gammes multi-niveaux, sans limitation\n"
+"    * Gammes et postes de charge intégrés dans la comptabilité analytique\n"
+"    * Calcul de planification périodique / module \"Juste à temps\"\n"
+"    * Multi-point de vente, multi-entrepôt\n"
+"    * Différentes stratégies d'ordonnancement\n"
+"    * Méthode de calcul du coût par produit : prix standard, prix moyen\n"
+"    * Analyse facile des incidents ou des besoins\n"
+"    * Très flexible\n"
+"    * Permet de consulter les nomenclatures en intégralité,\n"
+"         y compris les nomenclatures filles et les nomenclatures fantômes\n"
+"    Il prend en charge l'intégration complète et la planification des biens "
+"stockables,\n"
+"    et consommables, des services. Les services sont complètement intégrés "
+"avec le reste\n"
+"    du logiciel. On peut, par exemple, mettre en place un service de sous-"
+"traitance\n"
+"    dans une nomenclature pour commander automatiquement l'assemblage d'une "
+"produit à réception de la commande client.\n"
+"\n"
+"    Rapports fournis par ce module:\n"
+"    * Structure des nomenclatures et composants\n"
+"    * Prévision de la charge des postes\n"
+"    * Impression d'un ordre de fabrication\n"
+"    * Prévision des stock\n"
+"    Tableaux de bord fournis par ce module:\n"
+"    * Liste des prochains ordres de fabrication\n"
+"    * Liste des livraisons (expéditions à préparer)\n"
+"    * Graphique de la charge des postes\n"
+"    * Liste des approvisionnements ayant subit un incident\n"
+"    "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -1273,6 +1330,10 @@ msgid ""
 "They are attached to bills of materials that will define the required raw "
 "materials."
 msgstr ""
+"Les gammes permettent de créer et de gérer les opérations de fabrication à "
+"suivre au sein de vos postes de charge afin de produire les produit. Elles "
+"sont rattachées aux nomenclatures qui définissent les matières premières "
+"nécessaires."
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
@@ -1422,6 +1483,12 @@ msgid ""
 "product needs. You can either create a bill of materials to define specific "
 "production steps or define a single multi-level bill of materials."
 msgstr ""
+"Les nomenclatures maîtresses permettent de créer et de gérer la liste des "
+"matières premières nécessaires à fabriquer un produit fini. OpenERP utilise "
+"ces nomenclatures pour proposer automatiquement des ordres de fabrication "
+"selon les besoins en produit. On peut soit créer une nomenclature pour "
+"définir des étapes de production spécifiques, soit définir une nomenclature "
+"multi-niveaux unique."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
@@ -1679,6 +1746,9 @@ msgid ""
 "of one or more persons and/or machines that can be considered as a unit for "
 "capacity and planning forecasting."
 msgstr ""
+"Les postes de charge permettent de créer et gérer des unités de fabrication "
+"composés d'une ou plusieurs personnes et/ou machines, à considérer comme un "
+"tout dans les prévisions de capacité et la planification."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1751,6 +1821,10 @@ msgid ""
 "operations and to plan future loads on work centers based on production "
 "planning."
 msgstr ""
+"La liste des opérations (liste des postes de charge) pour produire le "
+"produit fini. La gamme est principalement utilisée pour calculer les coûts "
+"des postes de charge pendant les opérations et pour planifier leur charge "
+"future en fonction du planning de production."
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -1963,6 +2037,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the bills of "
 "material without removing it."
 msgstr ""
+"Si le champ \"Actif\" est renseigné comme Faux, cela vous permettra de "
+"cacher la nomenclature sans la supprimer."
 
 #. module: mrp
 #: field:mrp.bom,product_rounding:0
@@ -1981,6 +2057,8 @@ msgid ""
 "This reporting allows you to analyse your manufacturing activities and "
 "performance."
 msgstr ""
+"Ce rapport permet d'analyser vos activités de fabrication et leur "
+"performance."
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -2001,6 +2079,12 @@ msgid ""
 "product, it will be sold and shipped as a set of components, instead of "
 "being produced."
 msgstr ""
+"Si un sous-produit est utilisé par plusieurs produits, il peut être utile de "
+"créer sa propre nomenclature. Néanmoins si vous ne voulez pas d'ordres de "
+"production séparés pour ce sous-produit, sélectionnez \"Ensemble/Fantôme\" "
+"comme type de nomenclature. Si une nomenclature fantôme est utilisée pour un "
+"produit racine, il sera vendu et expédié comme un ensemble de composants, au "
+"lieu d'être produit."
 
 #. module: mrp
 #: field:mrp.bom,method:0
@@ -2198,6 +2282,9 @@ msgid ""
 "master bills of materials. Use this menu to search in which BoM a specific "
 "component is used."
 msgstr ""
+"Les composants des nomenclatures sont les composants et les sous-produits "
+"utilisés pour générer les nomenclatures maîtresses. Utilisez ce menu pour "
+"chercher dans quelle nomenclature un composant particulier est utilisé."
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -2237,6 +2324,9 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (workcenters) "
 "will be automatically pre-completed."
 msgstr ""
+"La gamme indique tous les postes de charge utilisés, la durée et/ou le "
+"nombre de cycles. Quand \"Gamme\" est indiqué, le troisième onglet des "
+"ordres de fabrication (postes de charge) est automatiquement pré-rempli."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
@@ -2305,6 +2395,12 @@ msgid ""
 "sales person creates a sales order, he can relate it to several properties "
 "and OpenERP will automatically select the BoM to use according the the needs."
 msgstr ""
+"Dans OpenERP, les Propriétés sont utilisées pour sélectionner la bonne liste "
+"de composants pour fabriquer un produit lorsque différentes façons de le "
+"fabriquer ont été décrites. On peut attribuer plusieurs propriétés à chaque "
+"liste de composants. Quand un membre du service commercial génère un bon de "
+"commande, il peut le rarattacher à plusieurs propriétés et OpenERP "
+"sélectionnera automatiquement la nomenclature à utiliser selon les besoins."
 
 #. module: mrp
 #: view:mrp.production.order:0
@@ -2435,7 +2531,7 @@ msgstr "Temps en heures pour le nettoyage."
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
 msgid "Automatic RFQ"
-msgstr ""
+msgstr "Demande de prix automatique"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemto0
@@ -2482,7 +2578,7 @@ msgstr "Séquence"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_leaves_search_mrp
 msgid "Resource Leaves"
-msgstr ""
+msgstr "Congés de la ressource"
 
 #. module: mrp
 #: help:mrp.bom,sequence:0

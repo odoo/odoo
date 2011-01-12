@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-09 00:14+0000\n"
+"PO-Revision-Date: 2011-01-11 21:13+0000\n"
 "Last-Translator: Carlos @ smile.fr <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:18+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_holidays
@@ -122,6 +122,11 @@ msgid ""
 "the employee. You can define several allowance types (paid holidays, "
 "sickness, etc.) and manage allowances per type."
 msgstr ""
+"Las solicitudes de ausencias pueden ser creadas por los empleados y "
+"validadas por los responsables. Una vez la solicitud de ausencia es "
+"validada, aparecerá automáticamente en la agenda del empleado. Puede definir "
+"varios tipos de permisos (vacaciones pagadas, enfermedad, etc.) y gestionar "
+"los permisos por tipo."
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -145,6 +150,8 @@ msgstr "Rechazar"
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
 msgstr ""
+"No puede validar las ausencias para el empleado %s: muy pocos días restantes "
+"(%s)"
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -432,6 +439,8 @@ msgid ""
 "If you set a meeting type, OpenERP will create a meeting in the calendar "
 "once a leave is validated."
 msgstr ""
+"Si define un tipo de reunión, OpenERP creará una reunión en el calendario "
+"una vez la ausencia sea validada."
 
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
@@ -541,7 +550,7 @@ msgstr "Activo"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
 msgid "Leaves To Validate"
-msgstr ""
+msgstr "Ausencias por validar"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -597,7 +606,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Misc"
-msgstr ""
+msgstr "Misc."
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -698,7 +707,7 @@ msgstr ""
 #: code:addons/hr_holidays/hr_holidays.py:186
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
-msgstr ""
+msgstr "¡No puede eliminar una ausencia que no esté en el estado borrador!"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
