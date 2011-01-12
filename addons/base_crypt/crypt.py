@@ -235,12 +235,12 @@ class users(osv.osv):
         # If the password 'pw' is not encrypted, then encrypt all passwords
         # in the db. Returns the (possibly newly) encrypted password for 'id'.
 
-        if pw[0:len(magic_md5)] != magic_md5:
+        if not pw.startswith(magic_md5):
             cr.execute('select id, password from res_users')
             res = cr.fetchall()
             for i, p in res:
                 encrypted = p
-                if p[0:len(magic_md5)] != magic_md5:
+                if not p.startswith(magic_md5):
                     encrypted = encrypt_md5(p, gen_salt())
                     cr.execute('update res_users set password=%s where id=%s',
                         (encrypted.encode('utf-8'), int(i)))
