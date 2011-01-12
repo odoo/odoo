@@ -165,14 +165,26 @@ class publisher_warranty_contract(osv.osv):
             contracts = result["contracts"]
             for contract in contracts:
                 c_id = self.search(cr, uid, [("name","=",contract)])[0]
-                date_from = contracts[contract][0]
-                date_to = contracts[contract][1]
-                state = contracts[contract][2]
-                self.write(cr, uid, c_id, {
-                    "date_start": date_from,
-                    "date_stop": date_to,
-                    "state": state,
-                })
+                # for backward compatibility
+                if type(contracts[contract]) == tuple:
+                    self.write(cr, uid, c_id, {
+                        "date_start": contracts[contract][0],
+                        "date_stop": contracts[contract][1],
+                        "state": contracts[contract][2],
+                        "check_support": False,
+                        "check_opw": False,
+                        "kind": "",
+                    })
+                else:
+                    self.write(cr, uid, c_id, {
+                        "date_start": contracts[contract]["date_from"],
+                        "date_stop": contracts[contract]["date_to"],
+                        "state": contracts[contract]["state"],
+                        "check_support": contracts[contract]["check_support"],
+                        "check_opw": contracts[contract]["check_opw"],
+                        "kind": contracts[contract]["kind"],
+                    })
+
 
             limit_date = (datetime.datetime.now() - _PREVIOUS_LOG_CHECK).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
             for message in result["messages"]:
@@ -226,6 +238,8 @@ class publisher_warranty_contract(osv.osv):
         'state' : fields.selection([('unvalidated', 'Unvalidated'), ('valid', 'Valid')
                             , ('terminated', 'Terminated'), ('canceled', 'Canceled')], string="State", readonly=True),
         'kind' : fields.char('Kind', size=64, readonly=True),
+        "check_support": fields.boolean("Support Level 1"),
+        "check_opw": fields.boolean("OPW"),
     }
 
     _defaults = {

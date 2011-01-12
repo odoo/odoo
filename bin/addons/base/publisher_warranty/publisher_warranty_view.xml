@@ -22,19 +22,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Publisher Warranty Contract">
-                    <group col="2" colspan="4">
+                    <group col="3" colspan="4">
                         <group col="2">
                             <field name="name"/>
                         </group>
                         <group col="2">
                             <field name="date_start"/>
                             <field name="date_stop"/>
+                            <field name="check_support"/>
                         </group>
                         <group col="2">
                             <field name="state"/>
                             <field name="kind"/>
+                            <field name="check_opw"/>
                         </group>
-                        <group col="2">
+                        <group col="2" colspan="3">
                             <button name="check_validity" string="Validate" type="object"
                             attrs="{'invisible':[('state','in',['valid', 'terminated', 'canceled'])]}"/>
                             <button name="check_validity" string="Refresh Validation Dates" type="object"
