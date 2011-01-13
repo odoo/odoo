@@ -10,7 +10,7 @@
       - project.res_users_technical_leader
       - project.res_users_developer
       - project.res_users_designer
-
+      - project.res_users_tester
 
 - 
   Create a project phase 'Defining Client's Basic Idea of Project'
@@ -35,7 +35,7 @@
 -
  Resource1
 -
-  !record {model: project.resource.allocation, id: res_phase0}:
+  !record {model: project.resource.allocation, id: res_phase1}:
     resource_id: project_long_term.resource_project_manager
     phase_id: project_phase_definingclientsbasicideaofproject0
 
@@ -46,6 +46,34 @@
     resource_id: project_long_term.resource_analyst
     phase_id: project_phase_definingclientsbasicideaofproject0
     
+-
+ Resource3
+-
+  !record {model: project.resource.allocation, id: res_phase3}:
+    resource_id: project_long_term.resource_technical_leader
+    phase_id: project_phase_definingclientsbasicideaofproject0
+
+- 
+  Create the phase task 'Develop GUI for Server Configuration'
+- 
+  !record {model: project.task, id: project_task_t0}:
+    name: Develop GUI for Server Configuration
+    planned_hours: 20.0
+    state: draft
+    phase_id:  project_phase_definingclientsbasicideaofproject0
+    project_id: project_project_worldbanksproject0
+
+- 
+  Create the phase task 'Develop GUI for Modules Configuration'
+- 
+  !record {model: project.task, id: project_task_t1}:
+    name: Develop GUI for Modules Configuration
+    planned_hours: 25.0
+    remaining_hours: 25.0
+    state: draft
+    phase_id:  project_phase_definingclientsbasicideaofproject0
+    project_id: project_project_worldbanksproject0
+      
 - 
   Create project phase 'Preparation of Engineering Designs'
 - 
@@ -56,7 +84,43 @@
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
     
-    
+-
+ Resource4
+-
+  !record {model: project.resource.allocation, id: res_phase4}:
+    resource_id: project_long_term.resource_developer
+    phase_id: project_phase_preparationofengineeringdesigns0
+
+-
+ Resource5
+-
+  !record {model: project.resource.allocation, id: res_phase5}:
+    resource_id: project_long_term.resource_designer
+    phase_id: project_phase_preparationofengineeringdesigns0
+
+- 
+  Create the phase task 'Develop GUI for Client Configuration'
+- 
+  !record {model: project.task, id: project_task_t2}:
+    name: Develop GUI for Server Configuration
+    planned_hours: 20.0
+    remaining_hours: 20.0
+    state: draft
+    phase_id:  project_phase_preparationofengineeringdesigns0
+    project_id: project_project_worldbanksproject0
+
+- 
+  Create the phase task 'Develop GUI for Client Module Configuration'
+- 
+  !record {model: project.task, id: project_task_t3}:
+    name: Develop GUI for Modules Configuration
+    planned_hours: 25.0
+    remaining_hours: 25.0
+    state: draft
+    phase_id:  project_phase_preparationofengineeringdesigns0
+    project_id: project_project_worldbanksproject0
+
+
 - 
   Create project phase 'Procurement of Works and Goods'
 - 
@@ -66,14 +130,13 @@
     name: Procurement of Works and Goods
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0
-    
-    
+ 
 - 
   Create project phase 'Project Construction'
 - 
   !record {model: project.phase, id: project_phase_projectconstruction0}:
     date_start: '2010-06-02'
-    duration: 4320.0
+    duration: 20.0
     name: Project Construction
     product_uom: product.uom_hour
     project_id: project_project_worldbanksproject0

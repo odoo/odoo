@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-09 14:14+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2011-01-10 11:00+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:19+0000\n"
+"X-Launchpad-Export-Date: 2011-01-11 05:02+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: project_long_term
@@ -354,7 +354,7 @@ msgstr "_Ok"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Schedule and Display info"
-msgstr ""
+msgstr "Ordonnancer et afficher les informations"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -383,6 +383,12 @@ msgid ""
 "human resources, convert your phases into a series of tasks when you start "
 "working on the project."
 msgstr ""
+"Un projet peut être divisé en différentes phases. Pour chaque phase, on peut "
+"allouer de ressources, décrire différentes tâches et chaîner la phase aux "
+"précédentes et suivantes, ajouter des contraintes de date pour "
+"l'ordonnancement automatique. Utiliser la planification à long terme pour "
+"planifier la disponibilité des ressources humaines, convertir les phases en "
+"une série de tâches quand on commence à travailler sur le projet."
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
@@ -425,10 +431,9 @@ msgstr "Utilisateur"
 #. module: project_long_term
 #: help:project.phase,date_start:0
 msgid ""
-"It's computed according to the phases order : the start date of the 1st "
-"phase is set by you while the other start dates depend on the end date of "
-"their previous phases"
-msgstr "Date de début de la phase"
+"It's computed by the scheduler according the project date or the end date of "
+"the previous phase."
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -689,3 +694,9 @@ msgstr "Durée"
 #~ msgid ""
 #~ "It's computed by the scheduler according to the start date and the duration."
 #~ msgstr "Date de fin de la phase"
+
+#~ msgid ""
+#~ "It's computed according to the phases order : the start date of the 1st "
+#~ "phase is set by you while the other start dates depend on the end date of "
+#~ "their previous phases"
+#~ msgstr "Date de début de la phase"
