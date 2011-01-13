@@ -39,8 +39,8 @@
         "l10n_chart_cn_wizard.xml",
     ],
     "license": "GPL-3",
-    "active": False, 
-    "installable": True
+    "active": False,
+    "installable": True,
     "certificate": '00925445983542952285',
 }
 
