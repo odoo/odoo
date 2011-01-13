@@ -2387,6 +2387,7 @@
                 <group string="res_config_contents" position="replace">
                     <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     <field name ="code_digits" groups="base.group_extended"/>
+                    <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
                     <field name ="seq_journal" groups="base.group_extended"/>
                     <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
