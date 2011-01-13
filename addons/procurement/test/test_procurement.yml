@@ -1,0 +1,54 @@
+-
+  In order to test the Procurement flow,I start by creating a new product 'Orange'
+-
+  !record {model: product.product, id: product_product_orange0}:
+    categ_id: product.cat1
+    name: Orange
+    procure_method: make_to_stock
+    seller_ids:
+      - delay: 1
+        name: base.res_partner_asus
+        min_qty: 1.0
+        product_uom: product.product_uom_kgm
+    supply_method: buy
+    type: product
+    uom_id: product.product_uom_kgm
+    uom_po_id: product.product_uom_kgm
+    property_stock_inventory: stock.location_inventory
+    property_stock_procurement: stock.location_procurement
+    property_stock_production: stock.location_production
+-
+  I define Minimum stock rules for my stockable product "Orange".
+-
+  !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
+    company_id: base.main_company
+    location_id: stock.stock_location_stock
+    logic: max
+    name: OP/00002
+    product_id: product_product_orange0
+    product_max_qty: 10.0
+    product_min_qty: 5.0
+    product_uom: product.product_uom_kgm
+    qty_multiple: 1
+    warehouse_id: stock.warehouse0
+-
+  The scheduler runs.
+-
+  !function {model: procurement.order, name: run_scheduler}:
+    - model: procurement.order
+      search: "[]"
+-
+   Apply Request for Procurement clicking on "Procurement Request".
+-
+  !record {model: make.procurement, id: procurement_order_orange0}:
+    product_id: product_product_orange0
+    qty: 10.0
+    date_planned: '2010-04-20'
+    uom_id: product.product_uom_kgm
+    warehouse_id: stock.warehouse0
+-
+  Create procurement order for selected product.
+-
+  !python {model: make.procurement}: |
+    ids = self.search(cr, uid, [('product_id','in',[ref('product_product_orange0')])])
+    self.make_procurement(cr, uid, ids, context)
