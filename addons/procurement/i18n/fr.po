@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 01:42+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-11 22:14+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:19+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:58+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: procurement
@@ -239,7 +238,7 @@ msgstr "Ordres d'approvisionnement à traiter"
 #. module: procurement
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives"
+msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives."
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -307,6 +306,13 @@ msgid ""
 "operations to fullfil the need: purchase order proposition, manufacturing "
 "order, etc."
 msgstr ""
+"Un ordre d'approvisionnement est utilisé pour enregistrer le besoin d'un "
+"produit spécifique à un endroit spécifique. Un ordre d'approvisionnement est "
+"habituellement créé automatiquement à partir des bons de commande, des "
+"règles de logistique ou des règles de stock minimum. Quand l'ordre "
+"d'approvisionnement est confirmé, il crée automatiquement les opérations "
+"nécessaires pour combler le besoin : proposition de bon de commande, ordre "
+"de fabrication, etc."
 
 #. module: procurement
 #: field:make.procurement,date_planned:0
@@ -431,6 +437,9 @@ msgid ""
 "    This is the module for computing Procurements.\n"
 "    "
 msgstr ""
+"\n"
+"    C'est le module pour traiter les approvisionnements.\n"
+"    "
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -601,7 +610,7 @@ msgstr "Nom de l'approvisionnement."
 #. module: procurement
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Vous devez affecter un lot de fabrication à ce produit."
 
 #. module: procurement
 #: view:procurement.order:0
@@ -825,6 +834,13 @@ msgid ""
 "will generate a procurement request to increase the stock up to the maximum "
 "quantity."
 msgstr ""
+"Vous pouvez définir vos règles de stock minimal, pour qu'OpenERP puisse "
+"créer automatiquement les brouillons d'ordres de fabrication ou les demandes "
+"de devis, selon le niveau de stock. Une fois que le niveau de stock virtuel "
+"d'un produit (= stock disponible moins toutes les commandes confirmées et "
+"les allocations) est en-dessous de la quantité minimale, OpenERP va générer "
+"une demande d'approvisionnement pour augmenter le stock jusqu'à la quantité "
+"maximale."
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -912,6 +928,9 @@ msgid ""
 "procurements. All procurements that are not between today and today+range "
 "are skipped for future computation."
 msgstr ""
+"C'est l'intervalle de temps analysé par l'ordonnanceur lors du calcul des "
+"approvisionnements. Tous les approvisionnements qui ne sont pas entre "
+"maintenant et maintenant + l'intervalle sont écartés pour un futur calcul."
 
 #. module: procurement
 #: selection:procurement.order,priority:0

@@ -342,7 +342,7 @@ class mrp_bom(osv.osv):
         if context is None:
             context = {}
         bom_data = self.read(cr, uid, id, [], context=context)
-        default.update({'name': bom_data['name'] + ' ' + _('Copy')})
+        default.update({'name': bom_data['name'] + ' ' + _('Copy'), 'bom_id':False})
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
 mrp_bom()
@@ -610,10 +610,10 @@ class mrp_production(osv.osv):
             context = {}
         move_obj = self.pool.get('stock.move')
         for production in self.browse(cr, uid, ids, context=context):
-            if production.picking_id.state not in ('draft', 'cancel'):
+            if production.state == 'confirmed' and production.picking_id.state not in ('draft', 'cancel'):
                 raise osv.except_osv(
                     _('Could not cancel manufacturing order !'),
-                    _('You must first cancel related picking attached to this manufacturing order.'))
+                    _('You must first cancel related internal picking attached to this manufacturing order.'))
             if production.move_created_ids:
                 move_obj.action_cancel(cr, uid, [x.id for x in production.move_created_ids])
             move_obj.action_cancel(cr, uid, [x.id for x in production.move_lines])
@@ -714,9 +714,9 @@ class mrp_production(osv.osv):
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
             vals = {'state':'confirmed'}
-            final_product_todo = [x.id for x in production.move_created_ids]
+            #final_product_todo = [x.id for x in production.move_created_ids]
             #stock_mov_obj.write(cr, uid, final_product_todo, vals)
-            stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)
+            #stock_mov_obj.action_confirm(cr, uid, final_product_todo, context)
             produced_products = {}
             for produced_product in production.move_created_ids2:
                 if produced_product.scrapped:

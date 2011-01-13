@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-31 08:46+0000\n"
+"PO-Revision-Date: 2011-01-11 13:57+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:14+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: hr_timesheet_sheet
@@ -525,11 +525,15 @@ msgid ""
 "The timesheet line represents the time spent by the employee on a specific "
 "service provided."
 msgstr ""
+"La línea de hoja de asistencia representa el tiempo invertido por el "
+"trabajador en un servicio específico dado."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid "You must select a Current date which is in the timesheet dates !"
 msgstr ""
+"¡Debe seleccionar una fecha actual que se encuentre dentro de las fechas de "
+"la hoja de asistencia!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
@@ -539,6 +543,10 @@ msgid ""
 "your employees. You can group them by specific selection criteria thanks to "
 "the search tool."
 msgstr ""
+"Este informe realiza un análisis de las hojas de asistencia creadas por sus "
+"recursos humanos en el sistema. Le permite tener una visión completa de las "
+"entradas realizadas por sus empleados. Puede agruparlas por criterios "
+"específicos de selección gracias a la herramienta de búsqueda."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -663,6 +671,9 @@ msgid ""
 "on a project (i.e. an analytic account) thus generating costs in the "
 "analytic account concerned."
 msgstr ""
+"Consulte su hoja de asistencia durante un período determinado. También puede "
+"imputar el tiempo dedicado a un proyecto (p. ej. una cuenta analítica), "
+"generando por tanto costes en la cuenta analítica correspondiente."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -699,6 +710,8 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
+"Diferencia permitida, en horas, entre el fichaje/salida y el cómputo de hoja "
+"de asistencia para una hoja. Póngalo a 0 si no desea ningún tipo de control."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -801,6 +814,8 @@ msgid ""
 "The timesheet cannot be validated as it does not contain equal no. of sign "
 "ins and sign outs!"
 msgstr ""
+"¡La hoja de asistencia no se puede validar, ya que no contienen mismo número "
+"de entradas y salidas!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
@@ -855,11 +870,12 @@ msgstr "Registrar salida"
 #, python-format
 msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
 msgstr ""
+"¡No se pueden eliminar hojas con registros de asistencia codificados!"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Moves task entry into the timesheet line"
-msgstr ""
+msgstr "Mueve entradas de tarea a la línea de hoja de asistencia"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -870,7 +886,7 @@ msgstr "Por día"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr ""
+msgstr "Análisis de las hojas de asistencia"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_difference:0
@@ -898,7 +914,7 @@ msgstr "Empleados"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Information of time spent on a service"
-msgstr ""
+msgstr "Información del tiempo dedicado a un servicio"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0

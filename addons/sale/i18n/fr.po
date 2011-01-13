@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-06 22:09+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-11 19:22+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-08 05:00+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:56+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: sale
@@ -61,7 +60,7 @@ msgstr "UdM du produit"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 msgid "Sales by Salesman in last 90 days"
-msgstr ""
+msgstr "Ventes par vendeur ces 90 derniers jours"
 
 #. module: sale
 #: help:sale.installer,delivery:0
@@ -80,7 +79,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,partner_shipping_id:0
 msgid "Shipping address for current sales order."
-msgstr ""
+msgstr "Adresse d'expédition pour le bon de commande actuel."
 
 #. module: sale
 #: field:sale.advance.payment.inv,qtty:0
@@ -103,7 +102,7 @@ msgstr "Annuler la commande"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Configure Sales Order Logistics"
-msgstr ""
+msgstr "Paramétrez la logistique des ventes"
 
 #. module: sale
 #: code:addons/sale/sale.py:603
@@ -130,7 +129,7 @@ msgstr "TVA"
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
 msgid "Drives procurement orders for every sales order line."
-msgstr ""
+msgstr "Génère des ordres d'approvisionnements pour chaque ligne de commande"
 
 #. module: sale
 #: selection:sale.config.picking_policy,picking_policy:0
@@ -274,7 +273,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr ""
+msgstr "Vente : Facturer"
 
 #. module: sale
 #: view:sale.order:0
@@ -307,7 +306,7 @@ msgstr "Colis"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "À partir d'un bon de commandes"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -363,12 +362,12 @@ msgstr ""
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configurer"
 
 #. module: sale
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Vous essayez d'affecter un lot qui n'est pas pour ce produit."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -379,7 +378,7 @@ msgstr "Juin"
 #: code:addons/sale/sale.py:584
 #, python-format
 msgid "Could not cancel this sales order !"
-msgstr ""
+msgstr "Impossible d'annuler ce bon de commandes"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_report
@@ -389,7 +388,7 @@ msgstr "Statistiques sur les commandes de ventes"
 #. module: sale
 #: help:sale.order,project_id:0
 msgid "The analytic account related to a sales order."
-msgstr ""
+msgstr "Le compte analytique lié au bon de commandes"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -407,7 +406,7 @@ msgstr "Devis"
 #. module: sale
 #: help:sale.order,pricelist_id:0
 msgid "Pricelist for current sales order."
-msgstr ""
+msgstr "liste de prix du bon de commandes actuel"
 
 #. module: sale
 #: selection:sale.config.picking_policy,step:0
@@ -461,18 +460,22 @@ msgid ""
 "The salesman confirms the quotation. The state of the sales order becomes "
 "'In progress' or 'Manual in progress'."
 msgstr ""
+"Le vendeur confirme le devis. L'état du bon de commande devient \"En cours\" "
+"ou \"Manuel, en cours\""
 
 #. module: sale
 #: code:addons/sale/sale.py:971
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
+"Annuler d'abord les mouvements de stock attachés à cette ligne de bon de "
+"commandes."
 
 #. module: sale
 #: code:addons/sale/sale.py:1042
 #, python-format
 msgid "(n/a)"
-msgstr ""
+msgstr "(n/a)"
 
 #. module: sale
 #: help:sale.advance.payment.inv,product_id:0
@@ -508,12 +511,13 @@ msgstr "Notes"
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
 msgid "Invoice address for current sales order."
-msgstr ""
+msgstr "Adresse de facturation pour le bon de commandes actuel"
 
 #. module: sale
 #: view:sale.installer:0
 msgid "Enhance your core Sales Application with additional functionalities."
 msgstr ""
+"Complétez l'application \"Ventes\" avec de nouvelles fonctionnalités."
 
 #. module: sale
 #: field:sale.order,invoiced_rate:0
@@ -539,7 +543,7 @@ msgstr "Partenaire alloti"
 #. module: sale
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "La référence de la commande doit être unique !"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -549,7 +553,7 @@ msgstr "Mars"
 #. module: sale
 #: help:sale.order,amount_total:0
 msgid "The total amount."
-msgstr ""
+msgstr "Montant total"
 
 #. module: sale
 #: field:sale.order.line,price_subtotal:0
@@ -605,7 +609,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_sale_order_line
 #: field:stock.move,sale_line_id:0
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Ligne de bon de commandes"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1226,7 +1230,7 @@ msgstr "À vérifier par le comptable."
 #: view:sale.report:0
 #: field:sale.report,uom_name:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "UdM référence"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
@@ -1344,7 +1348,7 @@ msgstr "Bon de préparation et de livraison"
 #. module: sale
 #: field:sale.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Document d'origine"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1520,7 +1524,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.open_board_sales_manager
 #: model:ir.ui.menu,name:sale.menu_board_sales_manager
 msgid "Sales Dashboard"
-msgstr ""
+msgstr "Tableaux de bord des ventes"
 
 #. module: sale
 #: code:addons/sale/sale.py:1165
@@ -1544,7 +1548,7 @@ msgstr "À facturer"
 #. module: sale
 #: help:sale.order,date_confirm:0
 msgid "Date on which sales order is confirmed."
-msgstr ""
+msgstr "Date à laquelle le bon de commande est confirmé."
 
 #. module: sale
 #: field:sale.order,company_id:0
@@ -1683,7 +1687,7 @@ msgstr "Confirmer"
 #. module: sale
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de sociétés récursives."
 
 #. module: sale
 #: view:board.board:0
@@ -1706,7 +1710,7 @@ msgstr "Lignes de ventes"
 #. module: sale
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Délai de livraison"
 
 #. module: sale
 #: view:res.company:0
@@ -1820,7 +1824,7 @@ msgstr "Facture Anticipée"
 #: code:addons/sale/sale.py:591
 #, python-format
 msgid "The sales order '%s' has been cancelled."
-msgstr ""
+msgstr "Le bon de commande \"%sé a été annulé."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1905,6 +1909,8 @@ msgstr "Votre facture a été créée avec succès !"
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr ""
+"Vous devez d'abord annuler toutes les factures en rapport avec ce bon de "
+"commande."
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -1996,7 +2002,7 @@ msgstr "Pas assez de stock !"
 #. module: sale
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Vous devez affecter un lot de fabrication à ce produit."
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -2016,7 +2022,7 @@ msgstr ""
 #. module: sale
 #: help:sale.order,invoiced:0
 msgid "It indicates that an invoice has been paid."
-msgstr ""
+msgstr "Cela indique que la facture a été payée."
 
 #. module: sale
 #: report:sale.order:0

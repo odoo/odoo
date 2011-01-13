@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-01 07:20+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-11 08:50+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:43+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:55+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: delivery
@@ -39,7 +39,7 @@ msgstr "Netto gewicht"
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr ""
+msgstr "Leveringsopdracht"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:141
@@ -67,7 +67,7 @@ msgstr "Volume"
 #. module: delivery
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Order referentie moet uniek zijn!"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -119,6 +119,10 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"De verzend prijslijst laat u de kosten en verkoopprijs berekenen van de "
+"levering op basis van het gewicht van de producten en andere criteria. U "
+"kunt verschillende prijslijsten definiëren voor een verzendwijze, per land "
+"of een zone in een land op basis van een postcode gebied."
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -165,6 +169,9 @@ msgid ""
 "Each delivery method can be assigned to a price list which computes the "
 "price of the delivery according to the products sold or delivered."
 msgstr ""
+"Verzendwijzes maken en beheren die u nodig heeft voor uw verkoop "
+"activiteiten. Elke verzendwijze kan een prijslijst toegewezen krijgen die de "
+"prijs van de levering berekent volgens de verkochte en te leveren producten."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:98
@@ -195,7 +202,7 @@ msgstr "Relatie"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Verkoop orders"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -251,6 +258,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "grid without removing it."
 msgstr ""
+"Als het actief veld uit staat, kunt u het afleverrooster verbergen zonder te "
+"verwijderen."
 
 #. module: delivery
 #: field:delivery.grid,zip_to:0
@@ -292,6 +301,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
 msgstr ""
+"Als het actief veld uit staat, kunt u de expediteur verbergen zonder te "
+"verwijderen."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
@@ -325,6 +336,7 @@ msgstr "Partij"
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
 msgstr ""
+"U probeert een partij toe te wijzen die niet van hetzelfde product is."
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -400,12 +412,12 @@ msgstr "Verkopen & Inkopen"
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
 msgid "<="
-msgstr ""
+msgstr "<="
 
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "U moet een productie partij toewijzen voor dit product"
 
 #. module: delivery
 #: view:delivery.sale.order:0

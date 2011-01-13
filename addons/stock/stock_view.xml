@@ -773,7 +773,7 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Process"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
-                                <button states="done" name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" />
+                                <button states="done" name="%(action_stock_invoice_onshipping)d"  string="Create Invoice"  attrs="{'invisible': ['|',('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -967,7 +967,7 @@
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                                 <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
-                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" states="done" type="action" icon="terp-gtk-go-back-rtl"/>
+                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" states="done"  attrs="{'invisible': ['|',('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -1189,7 +1189,7 @@
                                 <group colspan="1" states="done">
                                     <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                                 </group>
-                                    <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl"/>
+                                    <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice"  attrs="{'invisible': ['|',('invoice_state','=','invoiced'),('invoice_state','=','none')]}" type="action" icon="terp-gtk-go-back-rtl" />
                             </group>
                         </page>
                         <page string="Additional Info" groups="base.group_extended,base.group_multi_company">

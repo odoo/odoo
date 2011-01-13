@@ -30,6 +30,11 @@ class StockMove(osv.osv):
     _columns = {
         'production_id': fields.many2one('mrp.production', 'Production', select=True),
     }
+
+    def create_chained_picking(self, cr, uid, moves, context=None):
+        new_moves = super(StockMove, self).create_chained_picking(cr, uid, moves, context=context)
+        self.write(cr, uid, [x.id for x in new_moves], {'production_id': False}, context=context)
+        return new_moves
     
     def _action_explode(self, cr, uid, move, context=None):
         """ Explodes pickings.
