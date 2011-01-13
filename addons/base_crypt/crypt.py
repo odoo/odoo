@@ -64,11 +64,15 @@ def gen_salt( length=8, symbols=letters + digits ):
 # *
 # * Poul-Henning Kamp
 
-import md5
+from sys import version_info
+if version_info < (2,5):
+    from md5 import md5
+else:
+    from hashlib import md5
 
 def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
-    hash = md5.new( raw_pw + magic + salt )
-    stretch = md5.new( raw_pw + salt + raw_pw).digest()
+    hash = md5( raw_pw + magic + salt )
+    stretch = md5( raw_pw + salt + raw_pw).digest()
 
     for i in range( 0, len( raw_pw ) ):
         hash.update( stretch[i % 16] )
@@ -85,7 +89,7 @@ def encrypt_md5( raw_pw, salt, magic=magic_md5 ):
     saltedmd5 = hash.digest()
 
     for i in range( 1000 ):
-        hash = md5.new()
+        hash = md5()
 
         if i & 1:
             hash.update( raw_pw )
@@ -235,12 +239,12 @@ class users(osv.osv):
         # If the password 'pw' is not encrypted, then encrypt all passwords
         # in the db. Returns the (possibly newly) encrypted password for 'id'.
 
-        if pw[0:len(magic_md5)] != magic_md5:
+        if not pw.startswith(magic_md5):
             cr.execute('select id, password from res_users')
             res = cr.fetchall()
             for i, p in res:
                 encrypted = p
-                if p[0:len(magic_md5)] != magic_md5:
+                if p and not p.startswith(magic_md5):
                     encrypted = encrypt_md5(p, gen_salt())
                     cr.execute('update res_users set password=%s where id=%s',
                         (encrypted.encode('utf-8'), int(i)))
