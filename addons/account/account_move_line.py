@@ -101,7 +101,6 @@ class account_move_line(osv.osv):
             query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
 
         query += company_clause
-
         return query
 
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
@@ -911,7 +910,7 @@ class account_move_line(osv.osv):
         cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
         p = cr.fetchone()[0] or ''
         if j or p:
-            return j+(p and (':'+p) or '')
+            return j + (p and (':' + p) or '')
         return False
 
     def onchange_date(self, cr, user, ids, date, context=None):
