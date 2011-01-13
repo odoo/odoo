@@ -629,9 +629,8 @@ class module(osv.osv):
         for module in modules:
             web_data = addons.zip_directory(
                 addons.get_module_resource(module.name, 'web'), False)
-            #Temporarily disabled until web client is fixed
-            #if self._translations_subdir(module):
-            #    web_data = self._add_translations(module, web_data)
+            if self._translations_subdir(module):
+                web_data = self._add_translations(module, web_data)
             modules_data.append({
                 'name': module.name,
                 'version': module.installed_version,
