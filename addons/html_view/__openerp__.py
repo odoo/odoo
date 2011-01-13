@@ -12,6 +12,6 @@
     'update_xml': ['security/ir.model.access.csv','html_view.xml',],
     'installable': True,
     'active': False,
-    'certificate': '',
+    'certificate': '001302129363003126557',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
