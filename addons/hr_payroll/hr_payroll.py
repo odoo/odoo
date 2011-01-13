@@ -661,8 +661,8 @@ class payment_category(osv.osv):
     _name = 'hr.allounce.deduction.categoty'
     _description = 'Allowance Deduction Heads'
     _columns = {
-        'name':fields.char('Categoty Name', size=64, required=True, readonly=False),
-        'code':fields.char('Categoty Code', size=64, required=True, readonly=False),
+        'name':fields.char('Category Name', size=64, required=True, readonly=False),
+        'code':fields.char('Category Code', size=64, required=True, readonly=False),
         'type':fields.selection([
             ('allowance','Allowance'),
             ('deduction','Deduction'),
@@ -769,7 +769,7 @@ class company_contribution_line(osv.osv):
     """
 
     _name = 'company.contribution.line'
-    _description = 'Allowance Deduction Categoty'
+    _description = 'Allowance Deduction Category'
     _order = 'sequence'
     _columns = {
         'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),
