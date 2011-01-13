@@ -39,9 +39,9 @@
         "l10n_chart_cn_wizard.xml",
     ],
     "license": "GPL-3",
-    "certificate":"",
-    "active": False, 
-    "installable": True
+    "active": False,
+    "installable": True,
+    "certificate": '00925445983542952285',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
