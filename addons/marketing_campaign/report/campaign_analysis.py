@@ -40,7 +40,7 @@ class campaign_analysis(osv.osv):
             wi_ids = self.pool.get('marketing.campaign.workitem').search(cr, uid,
                         [('segment_id.campaign_id', '=', ca_obj.campaign_id.id)])
             total_cost = ca_obj.activity_id.variable_cost + \
-                                ((ca_obj.campaign_id.fixed_cost or 0.00) / len(wi_ids))
+                                ((ca_obj.campaign_id.fixed_cost or 1.00) / len(wi_ids))
             result[ca_obj.id] = total_cost
         return result
     _columns = {
