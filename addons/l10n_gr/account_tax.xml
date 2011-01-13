@@ -8,6 +8,10 @@
         of taxes, as well as the chart of accounts sum-up.
     -->
 
+    <record id="vat_code_chart_root" model="account.tax.code.template">
+        <field name="name">Πίνακες φόρου</field>
+    </record>
+
     <record id="l10n_gr_chart_template" model="account.chart.template">
         <field name="name">Πρότυπο Ελληνικού Λογιστικού Σχεδίου</field>
         <field name="account_root_id" ref="chartgr_0"/>
@@ -19,9 +23,6 @@
         <field name="property_account_income_categ" ref="chartgr_71_00"/>
     </record>
 
-    <record id="vat_code_chart_root" model="account.tax.code.template">
-        <field name="name">Πίνακες φόρου</field>
-    </record>
 
     <record id="vat_code_balance_net" model="account.tax.code.template">
         <field name="name">Υπόλοιπο ΦΠΑ </field>
