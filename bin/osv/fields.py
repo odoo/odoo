@@ -357,7 +357,9 @@ class many2one(_column):
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
         # we use uid=1 because the visibility of a many2one field value (just id and name)
         # must be the access right of the parent form and not the linked object itself.
-        records = dict(obj.name_get(cr, 1, list(set(filter(None, res.values()))), context=context))
+        records = dict(obj.name_get(cr, 1,
+                                    list(set([x for x in res.values() if isinstance(x, (int,long))])),
+                                    context=context))
         for id in res:
             if res[id] in records:
                 res[id] = (res[id], records[res[id]])
