@@ -2512,7 +2512,7 @@ class account_fiscal_position_template(osv.osv):
     _description = 'Template for Fiscal Position'
 
     _columns = {
-        'name': fields.char('Fiscal Position Template', size=64, translate=True, required=True),
+        'name': fields.char('Fiscal Position Template', size=64, required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping')
