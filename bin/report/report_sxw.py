@@ -412,7 +412,8 @@ class report_sxw(report_rml, preprocess.report):
                 report_xml = a(title=title, report_type=report_type, report_rml_content=rml, name=title, attachment=False, header=self.header)
             finally:
                 report_file.close()
-        report_xml.header = self.header
+        if report_xml.header:
+            report_xml.header = self.header
         report_type = report_xml.report_type
         if report_type in ['sxw','odt']:
             fnct = self.create_source_odt
