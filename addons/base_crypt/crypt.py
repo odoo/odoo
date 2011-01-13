@@ -276,7 +276,7 @@ class users(osv.osv):
             # more than md5 magic prefixes.
             res = cr.fetchall()
             for i, p in res:
-   encrypted = encrypt_md5(p, gen_salt())
+                encrypted = encrypt_md5(p, gen_salt())
                 cr.execute('UPDATE res_users SET password=%s where id=%s',
                         (encrypted, i))
                 if i == id:
