@@ -129,20 +129,6 @@
             # That's what should happen
             pass
 -
-    I try to create a folder directly under the Partners Testing folder
--
-    !python {model: ir.attachment}: |
-        from document_ftp import test_easyftp as te
-        import ftplib
-        from cStringIO import StringIO
-        ftp = te.get_ftp_folder(cr, uid, self, 'Documents/Partners Testing')
-        try:
-            ftp.mkd('Weird folder')
-            assert False, "We should't be able to create folders here"
-        except ftplib.error_perm:
-            # That's what should happen
-            pass
--
     I check that all/Partner1 also has the file
 - |
     Bonus Piste:
