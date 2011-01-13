@@ -1352,6 +1352,51 @@ DEFAULT_SERVER_DATETIME_FORMAT = "%s %s" % (
     DEFAULT_SERVER_DATE_FORMAT,
     DEFAULT_SERVER_TIME_FORMAT)
 
+# Python's strftime supports only the format directives
+# that are available on the platform's libc, so in order to
+# be cross-platform we map to the directives required by
+# the C standard (1989 version), always available on platforms
+# with a C standard implementation.
+DATETIME_FORMATS_MAP = {
+        '%C': '', # century
+        '%D': '%m/%d/%Y', # modified %y->%Y
+        '%e': '%d',
+        '%E': '', # special modifier
+        '%F': '%Y-%m-%d',
+        '%g': '%Y', # modified %y->%Y
+        '%G': '%Y',
+        '%h': '%b',
+        '%k': '%H',
+        '%l': '%I',
+        '%n': '\n',
+        '%O': '', # special modifier
+        '%P': '%p',
+        '%R': '%H:%M',
+        '%r': '%I:%M:%S %p',
+        '%s': '', #num of seconds since epoch
+        '%T': '%H:%M:%S',
+        '%t': ' ', # tab
+        '%u': ' %w',
+        '%V': '%W',
+        '%y': '%Y', # Even if %y works, it's ambiguous, so we should use %Y
+        '%+': '%Y-%m-%d %H:%M:%S',
+
+        # %Z is a special case that causes 2 problems at least:
+        #  - the timezone names we use (in res_user.context_tz) come
+        #    from pytz, but not all these names are recognized by
+        #    strptime(), so we cannot convert in both directions
+        #    when such a timezone is selected and %Z is in the format
+        #  - %Z is replaced by an empty string in strftime() when
+        #    there is not tzinfo in a datetime value (e.g when the user
+        #    did not pick a context_tz). The resulting string does not
+        #    parse back if the format requires %Z.
+        # As a consequence, we strip it completely from format strings.
+        # The user can always have a look at the context_tz in
+        # preferences to check the timezone.
+        '%z': '',
+        '%Z': '',
+}
+
 def server_to_local_timestamp(src_tstamp_str, src_format, dst_format, dst_tz_name,
         tz_offset=True, ignore_unparsable_time=True):
     """

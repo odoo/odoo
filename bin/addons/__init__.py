@@ -286,8 +286,6 @@ def get_module_resource(module, *args):
         return resource_path
     return False
 
-
-
 def get_modules():
     """Returns the list of module names
     """
@@ -824,8 +822,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = tools.assertion_report()
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
-        if 'base' in tools.config['update']:
-            cr.execute("update ir_module_module set state=%s where name=%s", ('to upgrade', 'base'))
+        if 'base' in tools.config['update'] or 'all' in tools.config['update']:
+            cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
         graph = create_graph(cr, ['base'], force)

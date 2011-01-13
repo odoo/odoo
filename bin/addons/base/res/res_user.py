@@ -460,8 +460,7 @@ class users(osv.osv):
     def check(self, db, uid, passwd):
         if not passwd:
             return False
-        cached_pass = self._uid_cache.get(db, {}).get(uid)
-        if (cached_pass is not None) and cached_pass == passwd:
+        if self._uid_cache.get(db, {}).get(uid) == passwd:
             return True
         cr = pooler.get_db(db).cursor()
         try:

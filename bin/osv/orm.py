@@ -2908,7 +2908,7 @@ class orm(orm_template):
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields:
-            fields = self._columns.keys() + self._inherit_fields.keys()
+            fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
             select = [ids]
         else:

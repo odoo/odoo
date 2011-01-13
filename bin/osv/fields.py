@@ -123,13 +123,6 @@ class boolean(_column):
     _symbol_f = lambda x: x and 'True' or 'False'
     _symbol_set = (_symbol_c, _symbol_f)
 
-class integer_big(_column):
-    _type = 'integer_big'
-    _symbol_c = '%s'
-    _symbol_f = lambda x: int(x or 0)
-    _symbol_set = (_symbol_c, _symbol_f)
-    _symbol_get = lambda self,x: x or 0
-
 class integer(_column):
     _type = 'integer'
     _symbol_c = '%s'
@@ -137,6 +130,14 @@ class integer(_column):
     _symbol_set = (_symbol_c, _symbol_f)
     _symbol_get = lambda self,x: x or 0
 
+class integer_big(_column):
+    _type = 'integer_big'
+    # do not reference the _symbol_* of integer class, as that would possibly
+    # unbind the lambda functions
+    _symbol_c = '%s'
+    _symbol_f = lambda x: int(x or 0)
+    _symbol_set = (_symbol_c, _symbol_f)
+    _symbol_get = lambda self,x: x or 0
 
 class reference(_column):
     _type = 'reference'
@@ -356,7 +357,9 @@ class many2one(_column):
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
         # we use uid=1 because the visibility of a many2one field value (just id and name)
         # must be the access right of the parent form and not the linked object itself.
-        records = dict(obj.name_get(cr, 1, list(set(filter(None, res.values()))), context=context))
+        records = dict(obj.name_get(cr, 1,
+                                    list(set([x for x in res.values() if isinstance(x, (int,long))])),
+                                    context=context))
         for id in res:
             if res[id] in records:
                 res[id] = (res[id], records[res[id]])
@@ -761,6 +764,11 @@ class function(_column):
             self._symbol_c = boolean._symbol_c
             self._symbol_f = boolean._symbol_f
             self._symbol_set = boolean._symbol_set
+
+        if type in ['integer','integer_big']:
+            self._symbol_c = integer._symbol_c
+            self._symbol_f = integer._symbol_f
+            self._symbol_set = integer._symbol_set
 
     def digits_change(self, cr):
         if self.digits_compute:

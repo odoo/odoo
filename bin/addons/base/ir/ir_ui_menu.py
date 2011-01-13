@@ -52,32 +52,6 @@ class ir_ui_menu(osv.osv):
         # radical but this doesn't frequently happen
         self._cache = {}
 
-    def create_shortcut(self, cr, uid, values, context=None):
-        dataobj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        new_context = context.copy()
-        for key in context:
-            if key.startswith('default_'):
-                del new_context[key]
-
-        menu_id = dataobj._get_id(cr, uid, 'base', 'menu_administration_shortcut', new_context)
-        shortcut_menu_id  = int(dataobj.read(cr, uid, menu_id, ['res_id'], new_context)['res_id'])
-        action_id = self.pool.get('ir.actions.act_window').create(cr, uid, values, new_context)
-        menu_data = {'name':values['name'],
-                    'sequence':10,
-                    'action':'ir.actions.act_window,'+str(action_id),
-                    'parent_id':shortcut_menu_id,
-                    'icon':'STOCK_JUSTIFY_FILL'}
-        menu_id =  self.pool.get('ir.ui.menu').create(cr, 1, menu_data)
-        sc_data= {'name':values['name'], 'sequence': 1,'res_id': menu_id }
-        sc_menu_id = self.pool.get('ir.ui.view_sc').create(cr, uid, sc_data, new_context)
-
-        user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
-        key = (cr.dbname, shortcut_menu_id, tuple(user_groups))
-        self._cache[key] = True
-        return action_id
-
     def _filter_visible_menus(self, cr, uid, ids, context=None):
         """Filters the give menu ids to only keep the menu items that should be
            visible in the menu hierarchy of the current user.

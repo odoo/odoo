@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # vim: sw=4:expandtab:foldmethod=marker
 #
 # Copyright (c) 2006, Mathieu Fenniak
@@ -207,15 +206,18 @@ class FloatObject(decimal.Decimal, PdfObject):
     def __new__(cls, value="0", context=None):
         return decimal.Decimal.__new__(cls, str(value), context)
     def __repr__(self):
-        return str(self)
+        if self == self.to_integral():
+            return str(self.quantize(decimal.Decimal(1)))
+        else:
+            # XXX: this adds useless extraneous zeros.
+            return "%.5f" % self
     def writeToStream(self, stream, encryption_key):
-        stream.write(str(self))
+        stream.write(repr(self))
 
 
 class NumberObject(int, PdfObject):
     def __init__(self, value):
-        int.__init__(self)
-        self = value
+        int.__init__(value)
 
     def writeToStream(self, stream, encryption_key):
         stream.write(repr(self))
@@ -301,7 +303,7 @@ def readStringFromStream(stream):
             elif tok == "t":
                 tok = "\t"
             elif tok == "b":
-                tok == "\b"
+                tok = "\b"
             elif tok == "f":
                 tok = "\f"
             elif tok == "(":
@@ -311,7 +313,17 @@ def readStringFromStream(stream):
             elif tok == "\\":
                 tok = "\\"
             elif tok.isdigit():
-                tok += stream.read(2)
+                # "The number ddd may consist of one, two, or three
+                # octal digits; high-order overflow shall be ignored.
+                # Three octal digits shall be used, with leading zeros
+                # as needed, if the next character of the string is also
+                # a digit." (PDF reference 7.3.4.2, p 16)
+                for i in range(2):
+                    ntok = stream.read(1)
+                    if ntok.isdigit():
+                        tok += ntok
+                    else:
+                        break
                 tok = chr(int(tok, base=8))
             elif tok in "\n\r":
                 # This case is  hit when a backslash followed by a line
@@ -405,8 +417,7 @@ class NameObject(str, PdfObject):
     delimiterCharacters = "(", ")", "<", ">", "[", "]", "{", "}", "/", "%"
 
     def __init__(self, data):
-        str.__init__(self)
-        self = data
+        str.__init__(data)
 
     def writeToStream(self, stream, encryption_key):
         stream.write(self)
@@ -709,6 +720,12 @@ class RectangleObject(ArrayObject):
 
     def setUpperRight(self, value):
         self[2], self[3] = [self.ensureIsNumber(x) for x in value]
+
+    def getWidth(self):
+        return self.getUpperRight_x() - self.getLowerLeft_x()
+
+    def getHeight(self):
+        return self.getUpperRight_y() - self.getLowerLeft_x()
 
     lowerLeft = property(getLowerLeft, setLowerLeft, None, None)
     lowerRight = property(getLowerRight, setLowerRight, None, None)
