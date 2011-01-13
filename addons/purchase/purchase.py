@@ -672,7 +672,7 @@ class purchase_order_line(osv.osv):
         seller_delay = 0
 
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
-        res = {} 
+        res = {}
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay
