@@ -148,7 +148,7 @@ class purchase_order(osv.osv):
     STATE_SELECTION = [
         ('draft', 'Request for Quotation'),
         ('wait', 'Waiting'),
-        ('confirmed', 'Waiting Supplier Ack'),
+        ('confirmed', 'Waiting Approval'),
         ('approved', 'Approved'),
         ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
