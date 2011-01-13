@@ -68,7 +68,7 @@
 		                <filter icon="terp-go-week"
 	                            string="    Month-1    "
 	                            separator="1"
-	                            domain="[('date_start','&lt;=', (datetime.date (int(time.strftime('%%Y')), datetime.date.today().month, 1) - datetime.timedelta (days = 1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;',(datetime.date (int(time.strftime('%%Y')), datetime.date.today().month-1, 1)).strftime('%%Y-%%m-%%d'))]"
+                                domain="[('date_start','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('date_start','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
 	                            help="Previous Month"/>
 	                    <separator orientation="vertical"/>
 	                    <filter string="Draft"
