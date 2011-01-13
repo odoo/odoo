@@ -148,7 +148,7 @@ class purchase_order(osv.osv):
     STATE_SELECTION = [
         ('draft', 'Request for Quotation'),
         ('wait', 'Waiting'),
-        ('confirmed', 'Waiting Supplier Ack'),
+        ('confirmed', 'Waiting Approval'),
         ('approved', 'Approved'),
         ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
@@ -616,7 +616,7 @@ class purchase_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company'),
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',store=True,string='Company'),
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', required=True, readonly=True,
                                   help=' * The \'Draft\' state is set automatically when purchase order in draft state. \
                                        \n* The \'Confirmed\' state is set automatically as confirm when purchase order in confirm state. \
