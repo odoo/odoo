@@ -1456,6 +1456,25 @@ class stock_move(osv.osv):
     _description = "Stock Move"
     _order = 'date_expected desc, id'
     _log_create = False
+    
+    def action_partial_move(self, cr, uid, ids, context=None):
+        if context is None: context = {}
+        partial_id = self.pool.get("stock.partial.move").create(
+            cr, uid, {}, context=context)
+        return {
+            'name':_("Products to Process"),
+            'view_mode': 'form',
+            'view_id': False,
+            'view_type': 'form',
+            'res_model': 'stock.partial.move',
+            'res_id': partial_id,
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': context
+        }
+        
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
