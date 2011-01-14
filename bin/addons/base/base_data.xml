@@ -1179,7 +1179,7 @@
         </record>
 
         <record id="DKK" model="res.currency">
-            <field name="name">kr</field>
+            <field name="name">DKK</field>
             <field name="symbol">kr</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
@@ -1238,7 +1238,7 @@
 
 
         <record id="NOK" model="res.currency">
-            <field name="name">kr</field>
+            <field name="name">NOK</field>
             <field name="symbol">kr</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
@@ -1290,7 +1290,7 @@
         </record>
 
         <record id="SEK" model="res.currency">
-            <field name="name">kr</field>
+            <field name="name">SEK</field>
             <field name="symbol">kr</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
@@ -1419,19 +1419,6 @@
             <field eval="time.strftime('%Y-01-01')" name="name"/>
         </record>
 
-        <record id="EEK" model="res.currency">
-            <field name="name">EEK</field>
-            <field name="symbol">kr</field>
-            <field name="rounding">0.01</field>
-            <field name="accuracy">4</field>
-            <field name="company_id" ref="main_company"/>
-        </record>
-        <record id="rateEEK" model="res.currency.rate">
-            <field name="rate">15.6466</field>
-            <field name="currency_id" ref="EEK"/>
-            <field eval="time.strftime('%Y-01-01')" name="name"/>
-        </record>
-
         <record id="LTL" model="res.currency">
             <field name="name">LTL</field>
             <field name="symbol">Lt</field>
@@ -1447,7 +1434,7 @@
 
         <record id="RON" model="res.currency">
             <field name="name">RON</field>
-            <field name="symbol">kr</field>
+            <field name="symbol">lei</field>
             <field name="rounding">0.01</field>
             <field name="accuracy">4</field>
             <field name="company_id" ref="main_company"/>
