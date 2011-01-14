@@ -1,7 +1,8 @@
 # -*- encoding: utf-8 -*-
-
+############################################################################9
 #
 # Copyright P. Christeas <p_christ@hol.gr> 2008-2010
+# Copyright OpenERP SA, 2010 (http://www.openerp.com )
 #
 # Disclaimer: Many of the functions below borrow code from the
 #   python-webdav library (http://code.google.com/p/pywebdav/ ),
@@ -19,7 +20,7 @@
 #
 # This program is Free Software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
+# as published by the Free Software Foundation; either version 3
 # of the License, or (at your option) any later version.
 #
 # This program is distributed in the hope that it will be useful,
@@ -33,20 +34,26 @@
 ###############################################################################
 
 
+import logging
 import netsvc
 from dav_fs import openerp_dav_handler
 from tools.config import config
 from DAV.WebDAVServer import DAVRequestHandler
+from service import http_server
 from service.websrv_lib import HTTPDir, FixSendError, HttpOptions
 from BaseHTTPServer import BaseHTTPRequestHandler
 import urlparse
 import urllib
 import re
+import time
 from string import atoi
-from DAV.errors import *
+import addons
 from DAV.utils import IfParser, TagList
+from DAV.errors import DAV_Error, DAV_Forbidden, DAV_NotFound
+from DAV.propfind import PROPFIND
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 from xml.dom import minidom
+from redirect import RedirectHTTPHandler
 
 khtml_re = re.compile(r' KHTML/([0-9\.]+) ')
 
@@ -66,6 +73,7 @@ def OpenDAVConfig(**kw):
 
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
+    _logger = logging.getLogger('webdav')
     protocol_version = 'HTTP/1.1'
     _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
@@ -75,8 +83,9 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
 
     def get_userinfo(self,user,pw):
         return False
+
     def _log(self, message):
-        netsvc.Logger().notifyChannel("webdav",netsvc.LOG_DEBUG,message)
+        self._logger.debug(message)
 
     def handle(self):
         self._init_buffer()
@@ -118,10 +127,10 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         return self.davpath
 
     def log_message(self, format, *args):
-        netsvc.Logger().notifyChannel('webdav', netsvc.LOG_DEBUG_RPC, format % args)
+        self._logger.log(netsvc.logging.DEBUG_RPC,format % args)
 
     def log_error(self, format, *args):
-        netsvc.Logger().notifyChannel('xmlrpc', netsvc.LOG_WARNING, format % args)
+        self._logger.warning(format % args)
 
     def _prep_OPTIONS(self, opts):
         ret = opts
@@ -415,6 +424,140 @@ class DAVAuthProvider(OpenERPAuthProvider):
             return True
         return OpenERPAuthProvider.authenticate(self, db, user, passwd, client_address)
 
+
+class dummy_dav_interface(object):
+    """ Dummy dav interface """
+    verbose = True
+
+    PROPS={"DAV:" : ('creationdate',
+                     'displayname',
+                     'getlastmodified',
+                     'resourcetype',
+                     ),
+           }
+
+    M_NS={"DAV:" : "_get_dav", }
+
+    def __init__(self, parent):
+        self.parent = parent
+
+    def get_propnames(self,uri):
+        return self.PROPS
+
+    def get_prop(self,uri,ns,propname):
+        if self.M_NS.has_key(ns):
+            prefix=self.M_NS[ns]
+        else:
+            raise DAV_NotFound
+        mname=prefix+"_"+propname.replace('-', '_')
+        try:
+            m=getattr(self,mname)
+            r=m(uri)
+            return r
+        except AttributeError:
+            raise DAV_NotFound
+
+    def get_data(self, uri, range=None):
+        raise DAV_NotFound
+
+    def _get_dav_creationdate(self,uri):
+        return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+    def _get_dav_getlastmodified(self,uri):
+        return time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())
+
+    def _get_dav_displayname(self, uri):
+        return uri
+
+    def _get_dav_resourcetype(self, uri):
+        return ('collection', 'DAV:')
+
+    def exists(self, uri):
+        """ return 1 or None depending on if a resource exists """
+        uri2 = uri.split('/')
+        if len(uri2) < 3:
+            return True
+        logging.getLogger('webdav').debug("Requested uri: %s", uri)
+        return None # no
+
+    def is_collection(self, uri):
+        """ return 1 or None depending on if a resource is a collection """
+        return None # no
+
+class DAVStaticHandler(http_server.StaticHTTPHandler):
+    """ A variant of the Static handler, which will serve dummy DAV requests
+    """
+    verbose = False
+    protocol_version = 'HTTP/1.1'
+    _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
+                    'Allow' : [ 'GET', 'HEAD',
+                            'PROPFIND', 'OPTIONS', 'REPORT', ]
+                    }
+
+    def send_body(self, content, code, message='OK', content_type='text/xml'):
+        self.send_response(int(code), message)
+        self.send_header("Content-Type", content_type)
+        # self.send_header('Connection', 'close')
+        self.send_header('Content-Length', len(content) or 0)
+        self.end_headers()
+        if hasattr(self, '_flush'):
+            self._flush()
+        
+        if self.command != 'HEAD':
+            self.wfile.write(content)
+
+    def do_PROPFIND(self):
+        """Answer to PROPFIND with generic data.
+        
+        A rough copy of python-webdav's do_PROPFIND, but hacked to work
+        statically.
+        """
+
+        dc = dummy_dav_interface(self)
+
+        # read the body containing the xml request
+        # iff there is no body then this is an ALLPROP request
+        body = None
+        if self.headers.has_key('Content-Length'):
+            l = self.headers['Content-Length']
+            body = self.rfile.read(atoi(l))
+
+        path = self.path.rstrip('/')
+        uri = urllib.unquote(path)
+
+        pf = PROPFIND(uri, dc, self.headers.get('Depth', 'infinity'), body)
+
+        try:
+            DATA = '%s\n' % pf.createResponse()
+        except DAV_Error, (ec,dd):
+            return self.send_error(ec,dd)
+        except Exception:
+            self.log_exception("Cannot PROPFIND")
+            raise
+
+        # work around MSIE DAV bug for creation and modified date
+        # taken from Resource.py @ Zope webdav
+        if (self.headers.get('User-Agent') ==
+            'Microsoft Data Access Internet Publishing Provider DAV 1.1'):
+            DATA = DATA.replace('<ns0:getlastmodified xmlns:ns0="DAV:">',
+                                    '<ns0:getlastmodified xmlns:n="DAV:" xmlns:b="urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/" b:dt="dateTime.rfc1123">')
+            DATA = DATA.replace('<ns0:creationdate xmlns:ns0="DAV:">',
+                                    '<ns0:creationdate xmlns:n="DAV:" xmlns:b="urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/" b:dt="dateTime.tz">')
+
+        self.send_body(DATA, '207','Multi-Status','Multiple responses')
+
+    def not_get_baseuri(self):
+        baseuri = '/'
+        if self.headers.has_key('Host'):
+            uparts = list(urlparse.urlparse('/'))
+            uparts[1] = self.headers['Host']
+            baseuri = urlparse.urlunparse(uparts)
+        return baseuri
+
+    def get_davpath(self):
+        return ''
+
+
 try:
 
     if (config.get_misc('webdav','enable',True)):
@@ -430,10 +573,80 @@ try:
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
         reg_http_service(HTTPDir(directory,DAVHandler,DAVAuthProvider()))
-        netsvc.Logger().notifyChannel('webdav', netsvc.LOG_INFO, "WebDAV service registered at path: %s/ "% directory)
+        logging.getLogger('webdav').info("WebDAV service registered at path: %s/ "% directory)
+        
+        if not (config.get_misc('webdav', 'no_root_hack', False)):
+            # Now, replace the static http handler with the dav-enabled one.
+            # If a static-http service has been specified for our server, then
+            # read its configuration and use that dir_path.
+            # NOTE: this will _break_ any other service that would be registered
+            # at the root path in future.
+            base_path = False
+            if config.get_misc('static-http','enable', False):
+                base_path = config.get_misc('static-http', 'base_path', '/')
+            if base_path and base_path == '/':
+                dir_path = config.get_misc('static-http', 'dir_path', False)
+            else:
+                dir_path = addons.get_module_resource('document_webdav','public_html')
+                # an _ugly_ hack: we put that dir back in tools.config.misc, so that
+                # the StaticHttpHandler can find its dir_path.
+                config.misc.setdefault('static-http',{})['dir_path'] = dir_path
+    
+            if reg_http_service(HTTPDir('/', DAVStaticHandler)):
+                logging.getLogger("web-services").info("WebDAV registered HTTP dir %s for /" % \
+                                (dir_path))
+
 except Exception, e:
-    logger = netsvc.Logger()
-    logger.notifyChannel('webdav', netsvc.LOG_ERROR, 'Cannot launch webdav: %s' % e)
+    logging.getLogger('webdav').error('Cannot launch webdav: %s' % e)
+
+
+def init_well_known():
+    reps = RedirectHTTPHandler.redirect_paths
+
+    num_svcs = config.get_misc('http-well-known', 'num_services', '0')
+
+    for nsv in range(1, int(num_svcs)+1):
+        uri = config.get_misc('http-well-known', 'service_%d' % nsv, False)
+        path = config.get_misc('http-well-known', 'path_%d' % nsv, False)
+        if not (uri and path):
+            continue
+        reps['/'+uri] = path
+
+    if int(num_svcs):
+        if http_server.reg_http_service(HTTPDir('/.well-known', RedirectHTTPHandler)):
+            logging.getLogger("web-services").info("Registered HTTP redirect handler at /.well-known" )
+
+init_well_known()
+
+class PrincipalsRedirect(RedirectHTTPHandler):
+    redirect_paths = {}
+    
+    def _find_redirect(self):
+        for b, r in self.redirect_paths.items():
+            if self.path.startswith(b):
+                return r + self.path[len(b):]
+        return False
+
+def init_principals_redirect():
+    """ Some devices like the iPhone will look under /principals/users/xxx for 
+    the user's properties. In OpenERP we _cannot_ have a stray /principals/...
+    working path, since we have a database path and the /webdav/ component. So,
+    the best solution is to redirect the url with 301. Luckily, it does work in
+    the device. The trick is that we need to hard-code the database to use, either
+    the one centrally defined in the config, or a "forced" one in the webdav
+    section.
+    """
+    dbname = config.get_misc('webdav', 'principal_dbname', False)
+    if (not dbname) and not config.get_misc('webdav', 'no_principals_redirect', False):
+        dbname = config.get('db_name', False)
+    if dbname:
+        PrincipalsRedirect.redirect_paths[''] = '/webdav/%s/principals' % dbname
+        reg_http_service(HTTPDir('/principals', PrincipalsRedirect))
+        logging.getLogger("web-services").info(
+                "Registered HTTP redirect handler for /principals to the %s db.",
+                dbname)
+
+init_principals_redirect()
 
 #eof
 

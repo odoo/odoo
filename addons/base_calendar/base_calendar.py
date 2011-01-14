@@ -410,6 +410,8 @@ property or property parameter."),
             return res
         cal = vobject.iCalendar()
         event = cal.add('vevent')
+        if not event_obj.date_deadline or not event_obj.date:
+              raise osv.except_osv(_('Warning !'),_("Couldn't Invite because date is not specified!"))     
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
@@ -461,7 +463,6 @@ property or property parameter."),
             attendee_add.params['ROLE'] = [str(attendee.role)]
             attendee_add.params['RSVP'] = [str(attendee.rsvp)]
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
-            
         res = cal.serialize()
         return res
 
