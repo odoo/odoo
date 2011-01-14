@@ -3460,16 +3460,16 @@ class orm(orm_template):
         result.sort()
 
         done = {}
-        for order, object, ids, fields in result:
-            key = (object, tuple(fields))
+        for order, object, ids_to_update, fields_to_recompute in result:
+            key = (object, tuple(fields_to_recompute))
             done.setdefault(key, {})
             # avoid to do several times the same computation
             todo = []
-            for id in ids:
+            for id in ids_to_update:
                 if id not in done[key]:
                     done[key][id] = True
                     todo.append(id)
-            self.pool.get(object)._store_set_values(cr, user, todo, fields, context)
+            self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -3657,6 +3657,15 @@ class orm(orm_template):
         return id_new
 
     def _store_get_values(self, cr, uid, ids, fields, context):
+        """Returns an ordered list of fields.functions to call due to
+           an update operation on ``fields`` of records with ``ids``,
+           obtained by calling the 'store' functions of these fields,
+           as setup by their 'store' attribute.
+
+           :return: [(priority, model_name, [record_ids,], [function_fields,])]
+        """
+        # FIXME: rewrite, cleanup, use real variable names
+        # e.g.: http://pastie.org/1222060
         result = {}
         fncts = self.pool._store_function.get(self._name, [])
         for fnct in range(len(fncts)):
@@ -3695,6 +3704,8 @@ class orm(orm_template):
         return result2
 
     def _store_set_values(self, cr, uid, ids, fields, context):
+        """Calls the fields.function's "implementation function" for all ``fields``, on records with ``ids`` (taking care of
+           respecting ``multi`` attributes), and stores the resulting values in the database directly."""
         if not ids:
             return True
         field_flag = False
