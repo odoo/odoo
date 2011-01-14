@@ -2592,7 +2592,7 @@ class orm(orm_template):
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
                                 cr.commit()
                                 msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore"
-                                self.__schema.warn(msg, self._table, k, f._type)
+                                self.__schema.debug(msg, self._table, k, f._type)
 
                             if isinstance(f, fields.many2one):
                                 ref = self.pool.get(f._obj)._table
