@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="True">
+        <!-- journal configuration of account -->
+        
+        <record id="expenses_journal" model="account.journal">
+            <field name="default_debit_account_id" model="account.account" search="[('code','=', '4200')]" />
+            <field name="default_credit_account_id" model="account.account" search="[('code','=', '4200')]" />
+        </record>
+
+        <record id="bank_journal" model="account.journal">
+            <field name="default_debit_account_id" model="account.account" search="[('code','=', '1020')]"/>
+            <field name="default_credit_account_id" model="account.account" search="[('code','=', '1020')]"/>
+        </record>
+        
+        <record id="bank_euro_journal" model="account.journal">
+            <field name="default_debit_account_id" model="account.account" search="[('code','=', '1024')]"/>
+            <field name="default_credit_account_id" model="account.account" search="[('code','=', '1024')]"/>
+        </record>
+        
+        <record id="petty_cash_journal" model="account.journal">
+            <field name="default_debit_account_id" model="account.account" search="[('code','=', '1000')]"/>
+            <field name="default_credit_account_id" model="account.account" search="[('code','=', '1000')]"/>
+        </record>
+        
+        <record id="misc_transaction_journal" model="account.journal">
+            <field name="default_debit_account_id" eval="False"/>
+            <field name="default_credit_account_id" eval="False"/>
+        </record>
+        
+        <record model="account.journal" id="bilan_journal">
+            <field name="default_debit_account_id" model="account.account" search="[('code','=', '2991')]"/>
+            <field name="default_credit_account_id" model="account.account" search="[('code','=', '2991')]"/>
+        </record>
+    </data>
+</openerp>
