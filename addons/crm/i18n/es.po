@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-11 21:02+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 08:59+0000\n"
+"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:55+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:06+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -196,12 +196,11 @@ msgid "Warning!"
 msgstr "¡Aviso!"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_send_email.py:72
-#: code:addons/crm/wizard/crm_send_email.py:169
-#: code:addons/crm/wizard/crm_send_email.py:270
-#, python-format
-msgid "Can not send mail!"
-msgstr "¡No se pudo enviar el correo!"
+#: view:crm.lead.report:0
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
+#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
+msgid "Opportunities Analysis"
+msgstr "Análisis de oportunidades"
 
 #. module: crm
 #: field:crm.lead,partner_id:0
@@ -340,9 +339,9 @@ msgid "Categories"
 msgstr "Categorías"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Dates"
-msgstr "Fechas"
+#: selection:crm.meeting,end_type:0
+msgid "Forever"
+msgstr ""
 
 #. module: crm
 #: help:crm.lead,optout:0
@@ -525,6 +524,16 @@ msgid "Recurrent Rule"
 msgstr "Regla recurrente"
 
 #. module: crm
+#: model:crm.case.resource.type,name:crm.type_lead1
+msgid "Version 4.2"
+msgstr ""
+
+#. module: crm
+#: model:crm.case.resource.type,name:crm.type_lead2
+msgid "Version 4.4"
+msgstr ""
+
+#. module: crm
 #: help:crm.installer,fetchmail:0
 msgid "Allows you to receive E-Mails from POP/IMAP server."
 msgstr "Le permite recibir e-mails desde un servidor POP/IMAP"
@@ -668,6 +677,11 @@ msgstr ""
 "Grado de satisfacción por defecto para el período que precede el cálculo de "
 "'Intervalo máx.'. Este es el grado de satisfacción inicial por defecto si la "
 "empresa no tiene ningún evento."
+
+#. module: crm
+#: selection:crm.meeting,end_type:0
+msgid "End date"
+msgstr ""
 
 #. module: crm
 #: constraint:base.action.rule:0
@@ -1104,6 +1118,11 @@ msgstr "<"
 #: field:crm.phonecall,partner_mobile:0
 msgid "Mobile"
 msgstr "Móvil"
+
+#. module: crm
+#: field:crm.meeting,end_type:0
+msgid "Way to end reccurency"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:53
@@ -1571,11 +1590,6 @@ msgid "Opportunities by Categories"
 msgstr "Oportunidades por categorías"
 
 #. module: crm
-#: field:crm.meeting,interval:0
-msgid "Interval"
-msgstr "Intervalo"
-
-#. module: crm
 #: view:crm.meeting:0
 msgid "Choose day in the month where repeat the meeting"
 msgstr "Elija el día del mes en que se repetirá la cita."
@@ -1626,11 +1640,6 @@ msgid "State"
 msgstr "Estado/Provincia"
 
 #. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead1
-msgid "Telesales"
-msgstr "Ventas a distancia"
-
-#. module: crm
 #: field:crm.meeting,freq:0
 msgid "Frequency"
 msgstr "Frecuencia"
@@ -1663,6 +1672,11 @@ msgstr "res.usuarios"
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge two Opportunities"
 msgstr "Fusionar dos oportunidades"
+
+#. module: crm
+#: selection:crm.meeting,end_type:0
+msgid "Fix amout of times"
+msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
@@ -1722,11 +1736,6 @@ msgid "="
 msgstr "="
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Search Leads"
-msgstr "Buscar iniciativas"
-
-#. module: crm
 #: selection:crm.meeting,state:0
 msgid "Unconfirmed"
 msgstr "No confirmado"
@@ -1768,6 +1777,9 @@ msgid ""
 "organise their sales pipeline. Stages will allow them to easily track how a "
 "specific lead or opportunity is positioned in the sales cycle."
 msgstr ""
+"Agregar etapas específicas de iniciativas y oportunidades para organizar "
+"mejor su flujo de ventas. Estas etapas permitirán un fácil seguimiento de "
+"iniciativas u oportunidades en relación al ciclo de ventas."
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1950,6 +1962,11 @@ msgid "Phone calls"
 msgstr "Llamadas telefónicas"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Communication  History"
+msgstr ""
+
+#. module: crm
 #: selection:crm.meeting,show_as:0
 msgid "Free"
 msgstr "Libre"
@@ -1985,6 +2002,11 @@ msgid ""
 "with a partner. From the phone call form, you can trigger a request for "
 "another call, a meeting or an opportunity."
 msgstr ""
+"La herramienta de llamadas entrantes le permite seguir el rastro de sus "
+"llamadas entrantes en tiempo real. Cada llamada que reciba, aparecerá en el "
+"formulario de la empresa para dejar el rastro de cada contacto que tiene en "
+"una empresa. Desde el formulario de llamada telefónica, puede lanzar una "
+"solicitud para otra llamada, una reunión o una oportunidad"
 
 #. module: crm
 #: help:crm.meeting,recurrency:0
@@ -2112,14 +2134,14 @@ msgid "Mail Campaign 2"
 msgstr "Campaña mail 2"
 
 #. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead2
-msgid "Mail Campaign 1"
-msgstr "Campaña mail 1"
-
-#. module: crm
 #: view:crm.lead:0
 msgid "Create"
 msgstr "Crear"
+
+#. module: crm
+#: view:crm.lead:0
+msgid "Dates"
+msgstr "Fechas"
 
 #. module: crm
 #: code:addons/crm/crm.py:492
@@ -2237,6 +2259,12 @@ msgid ""
 "The opportunities and sales order displayed, will automatically be filtered "
 "according to his team."
 msgstr ""
+"Defina un equipo de ventas para organizar a sus diferentes vendedores o "
+"departamentos de ventas en equipos separados. Cada equipo trabajará en su "
+"propia lista de oportunidades, pedidos de venta, etc. Cada usuario puede "
+"configurar un equipo predeterminado en sus preferencias de usuario. Las "
+"oportunidades y pedidos de venta mostrados se filtrarán automáticamente de "
+"acuerdo a su equipo."
 
 #. module: crm
 #: help:crm.meeting,count:0
@@ -2314,6 +2342,18 @@ msgid ""
 "email gateway: new emails may create leads, each of them automatically gets "
 "the history of the conversation with the prospect."
 msgstr ""
+"Las iniciativas le permiten gestionar y realizar un seguimiento de todos los "
+"contactos iniciales con un cliente potencial o socio que muestre interés en "
+"sus productos o servicios. Una iniciativa es generalmente el primer paso en "
+"su ciclo de ventas. Una vez identificada, una iniciativa se puede convertir "
+"en una oportunidad de negocio, creándose el socio correspondiente para el "
+"seguimiento detallado de cualquier actividad relacionada. Usted puede "
+"importar una base de datos de posibles clientes, realizar el seguimiento de "
+"sus tarjetas de visita o integrar el formulario de contacto de su sitio web "
+"con las iniciativas de OpenERP. Las iniciativas pueden ser conectadas a una "
+"pasarela de correo electrónico: los nuevos correos crearán nuevas "
+"iniciativas y cada una de ellas obtendrá automáticamente el historial de la "
+"conversación con el cliente potencial."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,action:0
@@ -2540,11 +2580,12 @@ msgid "Weekly"
 msgstr "Semanal"
 
 #. module: crm
-#: view:crm.lead.report:0
-#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
-#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
-msgid "Opportunities Analysis"
-msgstr "Análisis de oportunidades"
+#: code:addons/crm/wizard/crm_send_email.py:72
+#: code:addons/crm/wizard/crm_send_email.py:169
+#: code:addons/crm/wizard/crm_send_email.py:270
+#, python-format
+msgid "Can not send mail!"
+msgstr "¡No se pudo enviar el correo!"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2608,6 +2649,11 @@ msgstr "Ciudad"
 #: selection:crm.meeting,show_as:0
 msgid "Busy"
 msgstr "Ocupado"
+
+#. module: crm
+#: field:crm.meeting,interval:0
+msgid "Repeat every"
+msgstr ""
 
 #. module: crm
 #: field:crm.installer,crm_helpdesk:0
@@ -2742,9 +2788,9 @@ msgid "# of Emails"
 msgstr "Nº de e-mails"
 
 #. module: crm
-#: view:crm.meeting:0
-msgid "Repeat interval"
-msgstr "intervalo de repetición"
+#: view:crm.lead:0
+msgid "Search Leads"
+msgstr "Buscar iniciativas"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -2797,6 +2843,13 @@ msgstr "Configure su aplicación CRM"
 #: model:ir.model,name:crm.model_crm_phonecall2partner
 msgid "Phonecall to Partner"
 msgstr "Llamada telefónica a empresa"
+
+#. module: crm
+#: help:crm.lead,partner_name:0
+msgid ""
+"The name of the future partner that will be created while converting the "
+"into opportunity"
+msgstr ""
 
 #. module: crm
 #: field:crm.opportunity2phonecall,user_id:0
@@ -2897,6 +2950,14 @@ msgid ""
 "opportunities, convert them into quotations, manage related documents, track "
 "all customer related activities, and much more."
 msgstr ""
+"Con las oportunidades puede gestionar y guardar el registro de su canal de "
+"ventas creando documentos específicos de venta por cliente - o potencial "
+"cliente - para el seguimiento de sus ventas potenciales. La información "
+"sobre ingresos esperados, etapa de la oportunidad, fecha estimada de cierre, "
+"histórico de las comunicaciones y muchos otros datos puede ser registrada. "
+"Las oportunidades pueden ser conectadas a la pasarela de correo electrónico: "
+"nuevos emails pueden crear oportunidades, y cada uno de ellos obtiene "
+"automáticamente el historial de la conversación con el cliente."
 
 #. module: crm
 #: view:crm.meeting:0
@@ -2924,9 +2985,9 @@ msgid "All Day"
 msgstr "Todo el día"
 
 #. module: crm
-#: field:crm.lead.report,email:0
-msgid "# Emails"
-msgstr "Nº de emails"
+#: field:crm.segmentation.line,operator:0
+msgid "Mandatory / Optional"
+msgstr "Obligatorio / Opcional"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_view_attendee_form
@@ -3040,6 +3101,10 @@ msgid ""
 "instance reflect your product structure or the different types of sales you "
 "do."
 msgstr ""
+"Crear categorías específicas que se adapten a las actividades de su compañía "
+"para clasificar y analizar mejor sus iniciativas y oportunidades. Estas "
+"categorías podrían, por ejemplo, reflejar la estructura de sus productos o "
+"de los distintos tipos de ventas que realice."
 
 #. module: crm
 #: help:crm.segmentation,som_interval_decrease:0
@@ -3543,6 +3608,11 @@ msgid "Planned Revenue by Stage and User"
 msgstr "Ingresos previsto por etapa y usuario"
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Communication & History"
+msgstr ""
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
 msgid "CRM Lead Report"
 msgstr "Informe de iniciativas CRM"
@@ -3806,9 +3876,9 @@ msgid "The opportunity '%s' has been opened."
 msgstr "La oportunidad '%s' ha sido abierta"
 
 #. module: crm
-#: field:crm.segmentation.line,operator:0
-msgid "Mandatory / Optional"
-msgstr "Obligatorio / Opcional"
+#: field:crm.lead.report,email:0
+msgid "# Emails"
+msgstr "Nº de emails"
 
 #. module: crm
 #: field:crm.lead,street:0
@@ -5041,6 +5111,9 @@ msgstr "Boletín de noticias"
 #~ msgid "Helpdesk Supports"
 #~ msgstr "Asistencia técnica"
 
+#~ msgid "Telesales"
+#~ msgstr "Ventas a distancia"
+
 #~ msgid "Payment Mode"
 #~ msgstr "Forma de pago"
 
@@ -5609,11 +5682,17 @@ msgstr "Boletín de noticias"
 #~ msgid "Repeat every x"
 #~ msgstr "Repetir cada x"
 
+#~ msgid "Interval"
+#~ msgstr "Intervalo"
+
 #~ msgid "Opportunities By Categories"
 #~ msgstr "Oportunidades por categoría"
 
 #~ msgid "Custom"
 #~ msgstr "Personalización"
+
+#~ msgid "Mail Campaign 1"
+#~ msgstr "Campaña mail 1"
 
 #~ msgid "Seconds"
 #~ msgstr "Segundos"
@@ -5807,3 +5886,6 @@ msgstr "Boletín de noticias"
 
 #~ msgid "Claim"
 #~ msgstr "Reclamación"
+
+#~ msgid "Repeat interval"
+#~ msgstr "intervalo de repetición"

@@ -1,25 +1,25 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* account_analytic_default
+#    * account_analytic_default
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2009-02-03 06:23+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 23:28+0000\n"
+"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:14+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:28+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_default
 #: model:ir.module.module,shortdesc:account_analytic_default.module_meta_information
 msgid "Account Analytic Default"
-msgstr ""
+msgstr "Gyűjtőkód alapértelmezések"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -28,6 +28,8 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"Válassza ki a partnert, amely az alapértelmezések között meghatározott "
+"gyűjtőkódot fogja használni"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -39,32 +41,32 @@ msgstr ""
 #. module: account_analytic_default
 #: help:account.analytic.default,analytic_id:0
 msgid "Analytical Account"
-msgstr ""
+msgstr "Gyűjtőkód"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Current"
-msgstr ""
+msgstr "Jelenleg"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
-msgstr ""
+msgstr "Csoportosítás..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytical Account"
-msgstr ""
+msgstr "A gyűjtőkód alapértelmezett záró dátuma"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Kiszedési lista"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Conditions"
-msgstr ""
+msgstr "Feltételek"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,company_id:0
@@ -73,57 +75,61 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"Válassza ki a vállalatot, amely az alapértelmezések között meghatározott "
+"gyűjtőkódot fogja használni"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
-msgstr ""
+msgstr "A gyűjtőkód alapértelmezett kezdő dátuma"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Termék"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Költségfelosztás"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Vállalat"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Felhasználó"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.act_account_acount_move_line_open
 msgid "Entries"
-msgstr ""
+msgstr "Tételek"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
-msgstr ""
+msgstr "Záró dátum"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"Válassza ki a felhasználót, aki az alapértelmezések között meghatározott "
+"gyűjtőkódot fogja használni"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 msgid "Analytic Defaults"
-msgstr ""
+msgstr "Gyűjtőkód alapértelmezések"
 
 #. module: account_analytic_default
 #: model:ir.module.module,description:account_analytic_default.module_meta_information
@@ -137,6 +143,15 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul a gyűjtőkódok automatikus kiválasztást teszi lehetővé az alábbi "
+"feltételek alapján:\n"
+"* Termék\n"
+"* Partner\n"
+"* Felhasználó\n"
+"* Vállalat\n"
+"* Dátum\"\n"
+"    "
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -145,46 +160,79 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"Válassza ki a terméket, amely az alapértelmezések között meghatározott "
+"gyűjtőkódot fogja használni"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sorszám"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Számlasor"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Gyűjtőkód"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Accounts"
-msgstr ""
+msgstr "Számlák"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Kezdő dátum"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr ""
+msgstr "Megadja a költségfelosztások listázási sorrendjét."
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "\"\n"
+#~ "\"Allows to automatically select analytic accounts based on criterions:\n"
+#~ "\"\n"
+#~ "\"* Product\n"
+#~ "\"\n"
+#~ "\"* Partner\n"
+#~ "\"\n"
+#~ "\"* User\n"
+#~ "\"\n"
+#~ "\"* Company\n"
+#~ "\"\n"
+#~ "\"* Date\n"
+#~ "\"\n"
+#~ "\"    "
+#~ msgstr ""
+#~ "\n"
+#~ "Ez a modul a gyűjtőkódok automatikus kiválasztást teszi lehetővé az alábbi "
+#~ "feltételek alapján:\n"
+#~ "\"\n"
+#~ "\"* Termék\n"
+#~ "\"\n"
+#~ "\"* Partner\n"
+#~ "\"\n"
+#~ "\"* Felhasználó\n"
+#~ "\"\n"
+#~ "\"* Vállalat\n"
+#~ "\"\n"
+#~ "\"* Dátum    "

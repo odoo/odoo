@@ -6,26 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-10 16:14+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 22:36+0000\n"
+"Last-Translator: Davide Corio - Domsense <davide.corio@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-11 05:00+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:35+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
-msgstr "Transazioni non riconcigliate"
+msgstr "Transazioni non riconciliate"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:259
+#: code:addons/account_voucher/account_voucher.py:242
 #, python-format
 msgid "Write-Off"
-msgstr ""
+msgstr "Storno"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
@@ -85,10 +85,10 @@ msgstr ""
 #: view:account.voucher:0
 #: model:ir.actions.act_window,name:account_voucher.act_pay_bills
 msgid "Bill Payment"
-msgstr "Pagamento importo"
+msgstr "Pagamento Importo"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -152,29 +152,29 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Statistics"
-msgstr ""
+msgstr "Statistiche Voucher"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Validate"
-msgstr ""
+msgstr "Valida"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Giorno"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Search Vouchers"
-msgstr ""
+msgstr "Cerca Voucher"
 
 #. module: account_voucher
 #: selection:account.voucher,type:0
 #: selection:sale.receipt.report,type:0
 msgid "Purchase"
-msgstr ""
+msgstr "Acquisto"
 
 #. module: account_voucher
 #: field:account.voucher,account_id:0
@@ -191,7 +191,7 @@ msgstr "Debiti"
 #. module: account_voucher
 #: view:account.statement.from.invoice.lines:0
 msgid "Ok"
-msgstr ""
+msgstr "Ok"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_sale_receipt_report_all
@@ -200,6 +200,9 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
+"Da questo report si puo' avere una visione dell'importo fatturato ai clienti "
+"e dei ritardi sui pagamenti. Si puo' usare la funzione di ricerca per "
+"personalizzare i report sulle fatture ed adattarli ai propri bisogni."
 
 #. module: account_voucher
 #: field:account.voucher,date_due:0
@@ -210,14 +213,9 @@ msgid "Due Date"
 msgstr "Data scadenza"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
-msgstr ""
+msgstr "Note"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,help:account_voucher.action_vendor_receipt
@@ -255,11 +253,6 @@ msgstr "Importo"
 #: view:account.voucher:0
 msgid "Payment Options"
 msgstr "Opzioni pagamento"
-
-#. module: account_voucher
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -316,23 +309,9 @@ msgid "Analytic Account"
 msgstr "Conto analitico"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-
-#. module: account_voucher
-#: help:account.voucher,state:0
-msgid ""
-" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' state is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
-"* The 'Cancelled' state is used when user cancel voucher."
-msgstr ""
+#: view:account.voucher:0
+msgid "Payment Information"
+msgstr "Informazioni pagamento"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -416,7 +395,7 @@ msgid "Voucher Entries"
 msgstr "Movimenti contabili"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Error !"
 msgstr ""
@@ -444,7 +423,7 @@ msgid "Sales Receipt"
 msgstr "Ricevute di vendita"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Invalid action !"
 msgstr ""
@@ -465,11 +444,6 @@ msgid "Unreconciliation"
 msgstr ""
 
 #. module: account_voucher
-#: field:account.voucher,tax_amount:0
-msgid "Tax Amount"
-msgstr "Importo tasse"
-
-#. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
@@ -483,15 +457,15 @@ msgid "Pay Invoice"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr ""
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Payment Information"
-msgstr "Informazioni pagamento"
+#: field:account.voucher,tax_amount:0
+msgid "Tax Amount"
+msgstr "Importo tasse"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -726,7 +700,7 @@ msgid "Credit"
 msgstr "Credito"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr ""
@@ -769,10 +743,17 @@ msgid "Bill Date"
 msgstr "Data importo"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+#: help:account.voucher,state:0
+msgid ""
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
+"an voucher number.                         \n"
+"* The 'Posted' state is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account                         "
+"\n"
+"* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
-"L'azienda deve essere la stessa per il periodo ed il conto ad essa correlato."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -841,7 +822,6 @@ msgstr "Proforma"
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
-#: model:ir.model,name:account_voucher.model_account_move_line
 msgid "Journal Items"
 msgstr "Voci registro"
 
@@ -852,11 +832,6 @@ msgstr "Voci registro"
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
 msgstr "Pagamenti clienti"
-
-#. module: account_voucher
-#: field:account.move.line,amount_unreconciled:0
-msgid "Unreconciled Amount"
-msgstr "Importo non riconcigliato"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -1044,11 +1019,6 @@ msgstr ""
 #: field:account.voucher,amount:0
 msgid "Total"
 msgstr "Totale"
-
-#. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valido per Visualizzazione Architettura!"
@@ -1251,8 +1221,18 @@ msgstr ""
 #~ msgid "Vendor Payment"
 #~ msgstr "Pagamenti fornitori"
 
+#~ msgid "Unreconciled Amount"
+#~ msgstr "Importo non riconcigliato"
+
 #~ msgid "Originial Amount"
 #~ msgstr "Importo originale"
 
 #~ msgid "Journal:"
 #~ msgstr "Registro:"
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr ""
+#~ "L'azienda deve essere la stessa per il periodo ed il conto ad essa correlato."
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Non è possibile registrare movimenti su conti chiusi."

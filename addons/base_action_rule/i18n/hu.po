@@ -1,21 +1,20 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * base_action_rule
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-02 09:03+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 23:42+0000\n"
+"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:48+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_user:0
@@ -38,7 +37,7 @@ msgstr "Partner kategória"
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_watchers:0
 msgid "Mail to Watchers (CC)"
-msgstr "Levél másolatok (Cc)"
+msgstr "Levél másolatok (CC)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -48,7 +47,7 @@ msgstr "Gomb megnyomva"
 #. module: base_action_rule
 #: field:base.action.rule,model_id:0
 msgid "Object"
-msgstr "Objektum"
+msgstr "Tárgy"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_email:0
@@ -63,12 +62,12 @@ msgstr "Állapot beállítása"
 #. module: base_action_rule
 #: field:base.action.rule,act_email_from:0
 msgid "Email From"
-msgstr "Email innen"
+msgstr "E-mail innen"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Body"
-msgstr "Levél törzs"
+msgstr "E-mail szövege"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_range_type:0
@@ -78,7 +77,7 @@ msgstr "Napok"
 #. module: base_action_rule
 #: field:base.action.rule,last_run:0
 msgid "Last Run"
-msgstr ""
+msgstr "Utolsó futás"
 
 #. module: base_action_rule
 #: code:addons/base_action_rule/base_action_rule.py:313
@@ -115,7 +114,7 @@ msgstr "Előírás neve"
 msgid ""
 "Check this if you want the rule to send a reminder by email to the partner."
 msgstr ""
-"Pipálja ki, ha szeretné azt az előírást, hogy emlékeztető emailt küldjön a "
+"Pipálja ki, ha szeretné azt az előírást, hogy emlékeztető e-mailt küldjön a "
 "partnernek."
 
 #. module: base_action_rule
@@ -141,12 +140,12 @@ msgstr "%(object_subject)s = Objektum tárgy"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Reminders"
-msgstr "Email emlékeztetők"
+msgstr "E-mail emlékeztetők"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Special Keywords to Be Used in The Body"
-msgstr "Speciális kulcsszavak használata a törzsben"
+msgstr "Speciális kulcsszavak használata a levéltözsben"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
@@ -165,13 +164,13 @@ msgstr ""
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
-msgstr "A személyek email id-je, akiknek a levelet küldik"
+msgstr "A személyek e-mail ID-je, akiknek a levelet küldik"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 #: model:ir.module.module,shortdesc:base_action_rule.module_meta_information
 msgid "Action Rule"
-msgstr "Műveleti előírás"
+msgstr "Műveleti előírások"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -206,7 +205,7 @@ msgstr "Késedelem az indítás dátuma után"
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_attach:0
 msgid "Remind with Attachment"
-msgstr "Emlékeztetés csatolmánnyal"
+msgstr "Emlékeztessen melléklettel"
 
 #. module: base_action_rule
 #: constraint:ir.cron:0
@@ -273,7 +272,7 @@ msgstr "Objektum behívási mód"
 #. module: base_action_rule
 #: field:base.action.rule,act_email_to:0
 msgid "Email To"
-msgstr "Email neki"
+msgstr "E-mail neki"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_watchers:0
@@ -281,8 +280,8 @@ msgid ""
 "Check this if you want the rule to mark CC(mail to any other person defined "
 "in actions)."
 msgstr ""
-"Jelölje ezt be, ha szeretné a CC (levél a műveletekben meghatározott "
-"személyeken kívül) megjelölés előírását."
+"Jelölje ki ezt, ha azt szeretné, hogy a szabály használja a CC mezőt "
+"(levélküldés a műveletben definiált más személyeknek)"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -301,7 +300,7 @@ msgid ""
 "use for the 'From' field of the header"
 msgstr ""
 "Használjon python kifejezést, hogy meghatározza a megfelelő mezőt, amelyet a "
-"fejléc 'Kitől' mezejének fogunk használni"
+"fejléc 'Kitől' mezőjének fogunk használni"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range:0
@@ -320,20 +319,20 @@ msgid ""
 "need a delay before the trigger date, like sending a reminder 15 minutes "
 "before a meeting."
 msgstr ""
-"Késedelem az indítás dátuma után, előírja, hogy megadhat egy negatív számot. "
-"Ha Önnek szüksége van késedelemre az indítás dátuma előtt, kérheti "
-"emlékeztető küldését a találkozás előtt 15 perccel."
+"Késedelem az indítás dátuma után, előírja, hogy megadhat negatív számot. Ha "
+"Önnek szüksége van késedelemre az indítás dátuma előtt, kérheti emlékeztető "
+"küldését a találkozás előtt 15 perccel."
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
 msgid "Active"
-msgstr "Aktív"
+msgstr "aktív"
 
 #. module: base_action_rule
 #: code:addons/base_action_rule/base_action_rule.py:314
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
-msgstr "Nem található email ID az Ön Vállalatának címéhez!"
+msgstr "Nem található e-mail ID az Ön válallatának címéhez!"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
@@ -344,7 +343,7 @@ msgstr "Felelős emlékeztetése"
 #: model:ir.module.module,description:base_action_rule.module_meta_information
 msgid "This module allows to implement action rules for any object."
 msgstr ""
-"Ez a modul lehetővé teszi bármely objektumhoz tartozó műveleti szályok "
+"Ez a modul lehetővé teszi bármely objektumhoz tartozó műveleti szabály "
 "végrehajtását."
 
 #. module: base_action_rule
@@ -390,17 +389,17 @@ msgstr "%(object_description)s = Objektum leírása"
 #. module: base_action_rule
 #: constraint:base.action.rule:0
 msgid "Error: The mail is not well formated"
-msgstr ""
+msgstr "Hiba: A levél nincs jól megformázva"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Actions"
-msgstr "Email műveletek"
+msgstr "E-mail műveletek"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Email Information"
-msgstr "Email információ"
+msgstr "E-mail információ"
 
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_base_action_rule
@@ -420,7 +419,7 @@ msgstr "Felelős"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(partner_email)s = Partner Email"
-msgstr "%(partner_email)s = Partner email"
+msgstr "%(partner_email)s = Partner e-mail"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -430,25 +429,25 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user_email)s = Responsible Email"
-msgstr "%(case_user_email)s = Felelős email"
+msgstr "%(case_user_email)s = Felelős e-mail"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_body:0
 msgid "Mail body"
-msgstr "Levél törzs"
+msgstr "Levéltörzs"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_remind_user:0
 msgid ""
 "Check this if you want the rule to send a reminder by email to the user."
 msgstr ""
-"Jelölje be, ha szeretné azt az előírást, hogy egy emlékeztető emailt küldjön "
-"a felhasználónak."
+"Jelölje be, ha szeretné azt az előírást, hogy egy emlékeztető e-mailt "
+"küldjön a felhasználónak."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Server Action to be Triggered"
-msgstr "Szerver művelet elindítva"
+msgstr "Szerverművelet elindítva"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_user:0
@@ -474,7 +473,7 @@ msgstr "Automatizált műveletek"
 #. module: base_action_rule
 #: field:base.action.rule,server_action_id:0
 msgid "Server Action"
-msgstr "Szerver művelet"
+msgstr "Szerverművelet"
 
 #. module: base_action_rule
 #: field:base.action.rule,regex_name:0
@@ -569,3 +568,27 @@ msgstr "Indítás dátuma"
 #~ msgstr ""
 #~ "Az objektum nevének x_ -sal kell kezdődnie és nem tartalmazhat speciális "
 #~ "karaktereket"
+
+#~ msgid ""
+#~ "Regular expression for matching name of the resource\n"
+#~ "\"\n"
+#~ "\"e.g.: 'urgent.*' will search for records having name starting with the "
+#~ "string 'urgent'\n"
+#~ "\"\n"
+#~ "\"Note: This is case sensitive search."
+#~ msgstr ""
+#~ "Szabályos kifejezések az erőforrás nevének összehasonlításához\n"
+#~ "\"\n"
+#~ "\"pl.: 'sürgős.*' megkeresi azokat a rekordokat, amelyeknek a neve a "
+#~ "'sürgős' sztringgel kezdődik\n"
+#~ "\"\n"
+#~ "\"Megjegyzés: Ez kis- és nagybetűket megkülönböztető keresés."
+
+#~ msgid ""
+#~ "Describes the action name.\n"
+#~ "\"\n"
+#~ "\"eg:on which object which action to be taken on basis of which condition"
+#~ msgstr ""
+#~ "Leírja a művelet nevét.\n"
+#~ "\"\n"
+#~ "\"pl: melyik objektumon melyik alkalmazás melyik feltétel alapján történik"

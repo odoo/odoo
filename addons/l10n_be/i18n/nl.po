@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-10-31 08:17+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:14+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:28+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: l10n_be
 #: field:partner.vat,test_xml:0
@@ -43,12 +43,6 @@ msgstr "Geen partner heeft een BTW nummer aan hem geassocieerd"
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr ""
-
-#. module: l10n_be
-#: help:partner.vat,test_xml:0
-#: help:partner.vat.intra,test_xml:0
-msgid "Sets the XML output as test file"
-msgstr "Dit zet de XML output als test file"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10_be_partner_vat_listing.py:155
@@ -96,9 +90,9 @@ msgid "Save"
 msgstr "Opslaan"
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_3
-msgid "Régime Intra-Communautaire"
-msgstr "Intracommunautair"
+#: model:ir.model,name:l10n_be.model_vat_listing_clients
+msgid "vat.listing.clients"
+msgstr "BTW listing (klanten)"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
@@ -140,12 +134,6 @@ msgstr "Relatie zonder BTW"
 #: view:partner.vat.intra:0
 msgid "Company"
 msgstr "Bedrijf"
-
-#. module: l10n_be
-#: field:l1on_be.vat.declaration,tax_code_id:0
-#: field:partner.vat.intra,tax_code_id:0
-msgid "Tax Code"
-msgstr "Belastingcode"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_list
@@ -190,9 +178,10 @@ msgid "Note: "
 msgstr ""
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_1
-msgid "Régime National"
-msgstr "Nationaal Regime"
+#: field:l1on_be.vat.declaration,tax_code_id:0
+#: field:partner.vat.intra,tax_code_id:0
+msgid "Tax Code"
+msgstr "Belastingcode"
 
 #. module: l10n_be
 #: view:vat.listing.clients:0
@@ -205,9 +194,10 @@ msgid "Periods"
 msgstr "Periodes"
 
 #. module: l10n_be
-#: model:account.fiscal.position.template,name:l10n_be.fiscal_position_template_2
-msgid "Régime Extra-Communautaire"
-msgstr "Extracommunautair"
+#: help:partner.vat,test_xml:0
+#: help:partner.vat.intra,test_xml:0
+msgid "Sets the XML output as test file"
+msgstr "Dit zet de XML output als test file"
 
 #. module: l10n_be
 #: field:partner.vat,limit_amount:0
@@ -273,11 +263,6 @@ msgstr ""
 #: field:vat.listing.clients,amount:0
 msgid "Amount"
 msgstr "Bedrag"
-
-#. module: l10n_be
-#: model:ir.model,name:l10n_be.model_vat_listing_clients
-msgid "vat.listing.clients"
-msgstr "BTW listing (klanten)"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
@@ -562,11 +547,17 @@ msgstr "Periode(s)"
 #~ msgid "Tax"
 #~ msgstr "Belasting"
 
+#~ msgid "Régime Intra-Communautaire"
+#~ msgstr "Intracommunautair"
+
 #~ msgid "Tiers - Recevable"
 #~ msgstr "Vorderingen"
 
 #~ msgid "Charge"
 #~ msgstr "Kosten"
+
+#~ msgid "Régime Extra-Communautaire"
+#~ msgstr "Extracommunautair"
 
 #~ msgid "Tiers - Payable"
 #~ msgstr "Schulden"
@@ -576,6 +567,9 @@ msgstr "Periode(s)"
 
 #~ msgid "Error ! You can not create recursive account templates."
 #~ msgstr "Fout ! U kunt geen herhalende sjablonen voor rekeningen maken"
+
+#~ msgid "Régime National"
+#~ msgstr "Nationaal Regime"
 
 #~ msgid "Error ! You can not create recursive Tax Codes."
 #~ msgstr "Fout! U kunt geen herhalende belastingcodes maken"

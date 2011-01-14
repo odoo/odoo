@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-09-17 17:37+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 03:36+0000\n"
+"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:26+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:38+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -37,7 +36,7 @@ msgstr "Posiciones presupuestarias"
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "The General Budget '%s' has no Accounts!"
-msgstr ""
+msgstr "¡El presupuesto general '%s' no tiene cuentas!"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -57,7 +56,7 @@ msgstr "Validar usuario"
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_crossvered_summary_report
 msgid "Print Summary"
-msgstr ""
+msgstr "Imprimir resumen"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,paid_date:0
@@ -98,7 +97,7 @@ msgstr "Moneda:"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_report
 msgid "Account Budget crossvered report"
-msgstr ""
+msgstr "Informe cruzado presupuesto contable"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -132,11 +131,21 @@ msgid ""
 "revenue per analytic account and monitor its evolution based on the actuals "
 "realised during that period."
 msgstr ""
+"Un presupuesto es una previsión de ingresos de su empresa y gastos esperados "
+"durante un período en el futuro. Con un presupuesto, una empresa es capaz de "
+"mirar con atención la cantidad de dinero que están tomando en durante un "
+"período determinado, y averiguar la mejor manera de dividirlo entre las "
+"diferentes categorías. Al mantener un seguimiento de dónde va su dinero, "
+"puede ser menos propensos a gastar en exceso, y más probabilidades de "
+"alcanzar sus metas financieras. El pronóstico de un presupuesto, detallando "
+"los ingresos previstos por cuenta de análisis y seguimiento de su evolución "
+"sobre la base de los datos reales realizadas durante ese período."
 
 #. module: account_budget
 #: view:account.budget.crossvered.summary.report:0
 msgid "This wizard is used to print summary of budgets"
 msgstr ""
+"Este asistente es utilizado para imprimir el resúmen de los presupuestos"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -153,7 +162,7 @@ msgstr "Descripción"
 #. module: account_budget
 #: report:crossovered.budget.report:0
 msgid "Currency"
-msgstr ""
+msgstr "Moneda"
 
 #. module: account_budget
 #: report:crossovered.budget.report:0
@@ -165,17 +174,17 @@ msgstr "Total :"
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Compañía"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "To Approve"
-msgstr ""
+msgstr "Para aprobar"
 
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Reset to Draft"
-msgstr ""
+msgstr "Cambiar a Borrador"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -200,7 +209,7 @@ msgstr "Hecho"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Practical Amt"
-msgstr ""
+msgstr "Importe práctico"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -220,7 +229,7 @@ msgstr "Fecha final"
 #: model:ir.model,name:account_budget.model_account_budget_analytic
 #: model:ir.model,name:account_budget.model_account_budget_report
 msgid "Account Budget report for analytic account"
-msgstr ""
+msgstr "Informe presupuesto contable para contabilidad analítica"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -239,7 +248,7 @@ msgstr "Nombre"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_crossovered_budget_lines
 msgid "Budget Line"
-msgstr ""
+msgstr "Línea de presupuesto"
 
 #. module: account_budget
 #: view:account.analytic.account:0
@@ -261,7 +270,7 @@ msgstr "Presupuesto"
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Error!"
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -273,7 +282,7 @@ msgstr "Código"
 #: view:account.budget.analytic:0
 #: view:account.budget.crossvered.report:0
 msgid "This wizard is used to print budget"
-msgstr ""
+msgstr "Este asistente es utilizado para imprimir el presupuesto"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
@@ -293,6 +302,8 @@ msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
+"¡Error! La divisa tiene que ser la misma que la establecida en la compañía "
+"seleccionada"
 
 #. module: account_budget
 #: selection:crossovered.budget,state:0
@@ -302,7 +313,7 @@ msgstr "Cancelado"
 #. module: account_budget
 #: view:crossovered.budget:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprobar"
 
 #. module: account_budget
 #: field:crossovered.budget,date_from:0
@@ -328,13 +339,13 @@ msgstr "Inicio del período"
 #. module: account_budget
 #: model:ir.model,name:account_budget.model_account_budget_crossvered_summary_report
 msgid "Account Budget  crossvered summary report"
-msgstr ""
+msgstr "Informe cruzado resumido presupuesto contable"
 
 #. module: account_budget
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Theoretical Amt"
-msgstr ""
+msgstr "Importe teórico"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -380,6 +391,35 @@ msgid ""
 "Budgets per Budgets.\n"
 "\n"
 msgstr ""
+"Este módulo permite a los contables gestionar presupuestos analíticos "
+"(costes) y cruzados.\n"
+"\n"
+"Una vez que se han definido los presupuestos principales y los presupuestos "
+"(en Contabilidad/Presupuestos/),\n"
+"los gestores de proyectos pueden establecer el importe previsto en cada "
+"cuenta analítica.\n"
+"\n"
+"El contable tiene la posibilidad de ver el total del importe previsto para "
+"cada\n"
+"presupuesto y presupuesto principal a fin de garantizar el total previsto no "
+"es\n"
+"mayor/menor que lo que había previsto para este presupuesto / presupuesto "
+"principal.\n"
+"Cada lista de datos también puede cambiarse a una vista gráfica de la "
+"misma.\n"
+"\n"
+"Están disponibles tres informes:\n"
+"    1. El primero está disponible desde una lista de presupuestos. "
+"Proporciona la difusión, para estos presupuestos, de las cuentas analíticas "
+"por presupuestos principales.\n"
+"\n"
+"    2. El segundo es un resumen del anterior. Sólo indica la difusión, para "
+"los presupuestos seleccionados, de las cuentas analíticas.\n"
+"\n"
+"    3. El último está disponible desde el plan de cuentas analítico. Indica "
+"la difusión, para las cuentas analíticas seleccionadas, de los presupuestos "
+"principales por presupuestos.\n"
+"\n"
 
 #. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
@@ -396,7 +436,7 @@ msgstr "Presupuesto :"
 #: report:account.budget:0
 #: report:crossovered.budget.report:0
 msgid "Planned Amt"
-msgstr ""
+msgstr "Importe previsto"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -435,7 +475,7 @@ msgstr "Gestión presupuestaria"
 #. module: account_budget
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "¡Error! No puede crear cuentas analíticas recursivas."
 
 #. module: account_budget
 #: report:account.budget:0

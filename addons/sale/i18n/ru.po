@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
 "PO-Revision-Date: 2010-12-31 10:33+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:20+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -250,9 +250,11 @@ msgid ""
 msgstr "Это количество дней, добавляемых к обещанному сроку для надежности"
 
 #. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Shipping Default Policy"
-msgstr "Политика доставки по умолчанию"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sales Manager Dashboard"
+msgstr "Инф. панель менеджера продаж"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -1476,13 +1478,6 @@ msgstr ""
 "или автоматически."
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Dashboard"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:1165
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
@@ -1934,6 +1929,11 @@ msgstr "Заказ на продажу '%s' был установлен а со�
 #: selection:sale.order.line,type:0
 msgid "from stock"
 msgstr "из запасов"
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Политика доставки по умолчанию"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -2425,9 +2425,6 @@ msgstr "Счет основанный на доставках"
 
 #~ msgid "Date on which sale order is created"
 #~ msgstr "Дата на которую создан заказ на продажу"
-
-#~ msgid "Sales Manager Dashboard"
-#~ msgstr "Инф. панель менеджера продаж"
 
 #~ msgid "From a sale order"
 #~ msgstr "Из заказа на продажу"

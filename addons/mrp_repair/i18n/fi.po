@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-08-03 08:03+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 11:13+0000\n"
+"Last-Translator: Pekka Pylvänäinen <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:28+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:40+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -51,11 +51,15 @@ msgid ""
 "date on the production lot in order to know if whether the repair should be "
 "invoiced to the customer or not."
 msgstr ""
+"Korjaustilaus ohjaa tuotteeen korjaamista. Korjaustilauksella voidaan "
+"eritellä komponentit, jotka poistetaan, lisätään tai korvataan sekä kirjata "
+"eri vaiheissa käytetyt työtunnit. Korjaustilaus käyttää tuotentoerälle "
+"annettua takuuaikaa määrittämään onko korjaus laskutettavaa."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Group By..."
-msgstr ""
+msgstr "Ryhmittele"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -75,7 +79,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:mrp_repair.action_cancel_repair
 #: view:mrp.repair.cancel:0
 msgid "Cancel Repair Order"
-msgstr ""
+msgstr "Peru korjaustilaus"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,to_invoice:0
@@ -172,7 +176,7 @@ msgstr "Yhteensä veroton"
 #: code:addons/mrp_repair/mrp_repair.py:427
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Varoitus !"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -215,7 +219,7 @@ msgstr "Lisätiedot"
 #: field:mrp.repair.fee,repair_id:0
 #: field:mrp.repair.line,repair_id:0
 msgid "Repair Order Reference"
-msgstr ""
+msgstr "Korjaustilauksen viiite"
 
 #. module: mrp_repair
 #: selection:mrp.repair.line,state:0
@@ -226,7 +230,7 @@ msgstr "Vedos"
 #: code:addons/mrp_repair/mrp_repair.py:376
 #, python-format
 msgid "No account defined for partner \"%s\"."
-msgstr ""
+msgstr "Kumppanille ei ole määritetty tiliä \"%s\"."
 
 #. module: mrp_repair
 #: view:mrp.repair:0
@@ -282,7 +286,7 @@ msgstr "Toimitusosoite:"
 #: code:addons/mrp_repair/mrp_repair.py:434
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Virhe !"
 
 #. module: mrp_repair
 #: field:mrp.repair.line,product_uom_qty:0
@@ -312,6 +316,8 @@ msgid ""
 "This operation will cancel the Repair process, but will not cancel it's "
 "Invoice. Do you want to continue?"
 msgstr ""
+"Tämä toiminto peruu korjausporsessin, mutta ei peru sen laskutusta. Haluatko "
+"jatkaa?"
 
 #. module: mrp_repair
 #: field:mrp.repair,pricelist_id:0
@@ -328,12 +334,12 @@ msgstr "Korjausarvion huomiot"
 #: code:addons/mrp_repair/wizard/cancel_repair.py:49
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Varoitus!"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Search Reair Orders"
-msgstr ""
+msgstr "Etsi korjaustilaus"
 
 #. module: mrp_repair
 #: report:repair.order:0
@@ -423,17 +429,17 @@ msgstr "Lisää"
 #. module: mrp_repair
 #: view:mrp.repair.make_invoice:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Oletko varma, että haluat luoda laskun?"
 
 #. module: mrp_repair
 #: field:mrp.repair,name:0
 msgid "Repair Reference"
-msgstr ""
+msgstr "Korjauksen viite"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair
 msgid "Repair Order"
-msgstr ""
+msgstr "Korjaustilaus"
 
 #. module: mrp_repair
 #: selection:mrp.repair,state:0
@@ -443,7 +449,7 @@ msgstr "Korjauksessa"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Ready To Repair"
-msgstr ""
+msgstr "Valmis korjattavaksi"
 
 #. module: mrp_repair
 #: field:mrp.repair,amount_untaxed:0
@@ -458,7 +464,7 @@ msgstr "Takuuraja"
 #. module: mrp_repair
 #: field:mrp.repair,default_address_id:0
 msgid "unknown"
-msgstr ""
+msgstr "tuntematon"
 
 #. module: mrp_repair
 #: field:mrp.repair,product_id:0
@@ -479,7 +485,7 @@ msgstr "Hintalista kumppanin mukaan (oletus)"
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Date"
-msgstr ""
+msgstr "Päivämäärä"
 
 #. module: mrp_repair
 #: model:ir.model,name:mrp_repair.model_mrp_repair_fee
@@ -516,12 +522,12 @@ msgstr "Päätä korjaus"
 #: code:addons/mrp_repair/mrp_repair.py:434
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr ""
+msgstr "Tuotteelle \"%s\" ei ole määritetty tiliä"
 
 #. module: mrp_repair
 #: view:mrp.repair:0
 msgid "Quotations"
-msgstr ""
+msgstr "Tarjoukset"
 
 #. module: mrp_repair
 #: field:mrp.repair.fee,product_uom_qty:0

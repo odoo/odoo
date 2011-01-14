@@ -1,20 +1,20 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* membership
+#    * membership
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 5.0.4\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2009-02-03 10:32+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 23:55+0000\n"
+"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:46+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:03+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -35,8 +35,9 @@ msgstr ""
 
 #. module: membership
 #: view:report.membership:0
+#: view:res.partner:0
 msgid "Group By..."
-msgstr ""
+msgstr "Csoportosítás..."
 
 #. module: membership
 #: field:report.membership,num_paid:0
@@ -56,7 +57,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "March"
-msgstr ""
+msgstr "Március"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_setassociation0
@@ -73,12 +74,12 @@ msgstr ""
 #: view:report.membership:0
 #: field:report.membership,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Vállalat"
 
 #. module: membership
 #: field:product.product,membership_date_to:0
 msgid "Date to"
-msgstr ""
+msgstr "Dátumig"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_waitingtoinvoice0
@@ -93,7 +94,7 @@ msgstr ""
 #. module: membership
 #: view:res.partner:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Szállítók"
 
 #. module: membership
 #: view:res.partner:0
@@ -139,7 +140,7 @@ msgstr ""
 #. module: membership
 #: field:report.membership,num_invoiced:0
 msgid "# Invoiced"
-msgstr ""
+msgstr "E-mailek száma"
 
 #. module: membership
 #: model:ir.ui.menu,name:membership.menu_report_membership
@@ -154,7 +155,7 @@ msgstr ""
 #. module: membership
 #: field:product.product,membership_date_from:0
 msgid "Date from"
-msgstr ""
+msgstr "Dátumtól"
 
 #. module: membership
 #: code:addons/membership/membership.py:414
@@ -209,7 +210,7 @@ msgstr ""
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
 msgid "Create"
-msgstr ""
+msgstr "Létrehozás"
 
 #. module: membership
 #: model:ir.model,name:membership.model_membership_membership_line
@@ -227,16 +228,11 @@ msgstr ""
 #: code:addons/membership/membership.py:413
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Hiba !"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
-msgstr ""
-
-#. module: membership
-#: view:res.partner:0
-msgid "Group By"
 msgstr ""
 
 #. module: membership
@@ -249,24 +245,24 @@ msgstr ""
 #: model:ir.ui.menu,name:membership.menu_members
 #: view:res.partner:0
 msgid "Members"
-msgstr ""
+msgstr "Tagok"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Non Member"
-msgstr ""
+msgstr "Nem tag"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
 msgid "Open invoice."
-msgstr ""
+msgstr "Számla megnyitása"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "July"
-msgstr ""
+msgstr "Július"
 
 #. module: membership
 #: model:product.template,name:membership.membership_0_product_template
@@ -300,7 +296,7 @@ msgstr ""
 #. module: membership
 #: view:membership.invoice:0
 msgid "Join"
-msgstr ""
+msgstr "Csatlakozás"
 
 #. module: membership
 #: help:product.product,membership_date_to:0
@@ -316,7 +312,7 @@ msgstr ""
 #. module: membership
 #: field:membership.membership_line,date:0
 msgid "Join Date"
-msgstr ""
+msgstr "Csatlakozás időpontja"
 
 #. module: membership
 #: help:res.partner,free_member:0
@@ -346,12 +342,12 @@ msgstr ""
 #. module: membership
 #: model:ir.model,name:membership.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Terméksablon"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "September"
-msgstr ""
+msgstr "Szeptember"
 
 #. module: membership
 #: model:ir.module.module,description:membership.module_meta_information
@@ -373,7 +369,7 @@ msgstr ""
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Számlasor"
 
 #. module: membership
 #: help:membership.membership_line,state:0
@@ -397,12 +393,12 @@ msgstr ""
 #: view:report.membership:0
 #: field:report.membership,month:0
 msgid "Month"
-msgstr ""
+msgstr "Hónap"
 
 #. module: membership
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Csoportosítás..."
 
 #. module: membership
 #: code:addons/membership/membership.py:411
@@ -443,7 +439,7 @@ msgstr ""
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesman"
-msgstr ""
+msgstr "Értékesítő"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
@@ -453,13 +449,13 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Category"
-msgstr ""
+msgstr "Kategória"
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice
 #: field:membership.membership_line,account_invoice_id:0
 msgid "Invoice"
-msgstr ""
+msgstr "Számla"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -478,6 +474,8 @@ msgstr ""
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Hiba: Az alapértelmezett mértékegységnek és a beszerzési mértékegységnek "
+"ugyanabba a kategóriába kell tartoznia."
 
 #. module: membership
 #: view:report.membership:0
@@ -492,12 +490,12 @@ msgstr ""
 #. module: membership
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
 
 #. module: membership
 #: view:product.product:0
 msgid "Date From"
-msgstr ""
+msgstr "Dátumtól"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
@@ -507,7 +505,7 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Accounting Info"
-msgstr ""
+msgstr "Könyvelési információ"
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -517,12 +515,12 @@ msgstr ""
 #. module: membership
 #: view:res.partner:0
 msgid "Customers"
-msgstr ""
+msgstr "Vevők"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "August"
-msgstr ""
+msgstr "Augusztus"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_products
@@ -534,7 +532,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "June"
-msgstr ""
+msgstr "Június"
 
 #. module: membership
 #: model:ir.module.module,shortdesc:membership.module_meta_information
@@ -546,7 +544,7 @@ msgstr ""
 #: view:res.partner:0
 #: field:res.partner,member_lines:0
 msgid "Membership"
-msgstr ""
+msgstr "Tagság"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
@@ -565,7 +563,7 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
-msgstr ""
+msgstr "Várakozás a tagságra"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_associationpartner0
@@ -580,7 +578,7 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Kiterjesztett szűrők…"
 
 #. module: membership
 #: field:membership.membership_line,state:0
@@ -590,17 +588,17 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "October"
-msgstr ""
+msgstr "Október"
 
 #. module: membership
 #: view:product.product:0
 msgid "Sale Description"
-msgstr ""
+msgstr "Értékesítési leírás"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "January"
-msgstr ""
+msgstr "Január"
 
 #. module: membership
 #: view:product.product:0
@@ -632,7 +630,7 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr ""
+msgstr "Régi tag"
 
 #. module: membership
 #: field:membership.membership_line,date_to:0
@@ -649,27 +647,27 @@ msgstr ""
 #. module: membership
 #: view:report.membership:0
 msgid "Last 365 Days"
-msgstr ""
+msgstr "Utolsó 365 nap"
 
 #. module: membership
 #: view:product.product:0
 msgid "General"
-msgstr ""
+msgstr "Általános"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_waitingtoinvoice0
 msgid "Draft invoice is now open."
-msgstr ""
+msgstr "A számlatervezet most nyitott."
 
 #. module: membership
 #: view:product.product:0
 msgid "Inactive"
-msgstr ""
+msgstr "Inaktív"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Last 30 Days"
-msgstr ""
+msgstr "Utolsó 30 nap"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -679,7 +677,7 @@ msgstr ""
 #. module: membership
 #: view:membership.invoice:0
 msgid "Close"
-msgstr ""
+msgstr "Zárás"
 
 #. module: membership
 #: view:res.partner:0
@@ -689,17 +687,17 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Information"
-msgstr ""
+msgstr "Információ"
 
 #. module: membership
 #: field:membership.membership_line,account_invoice_line:0
 msgid "Account Invoice line"
-msgstr ""
+msgstr "Számlasor"
 
 #. module: membership
 #: view:product.product:0
 msgid "Categorization"
-msgstr ""
+msgstr "Kategorizálás"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
@@ -717,17 +715,17 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Purchase Description"
-msgstr ""
+msgstr "Beszerzési leírás"
 
 #. module: membership
 #: model:ir.model,name:membership.model_product_product
 msgid "Product"
-msgstr ""
+msgstr "Termék"
 
 #. module: membership
 #: view:product.product:0
 msgid "Description"
-msgstr ""
+msgstr "Leírás"
 
 #. module: membership
 #: field:res.partner,free_member:0
@@ -737,7 +735,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "May"
-msgstr ""
+msgstr "Május"
 
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
@@ -753,12 +751,12 @@ msgstr ""
 #: field:report.membership,date_to:0
 #: view:res.partner:0
 msgid "End Date"
-msgstr ""
+msgstr "Befejezés dátuma"
 
 #. module: membership
 #: selection:report.membership,month:0
 msgid "February"
-msgstr ""
+msgstr "Február"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
@@ -768,7 +766,7 @@ msgstr ""
 #. module: membership
 #: selection:report.membership,month:0
 msgid "April"
-msgstr ""
+msgstr "Április"
 
 #. module: membership
 #: help:res.partner,membership_cancel:0
@@ -778,18 +776,18 @@ msgstr ""
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
 msgid "Cancel date"
-msgstr ""
+msgstr "Törlés dátuma"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_waitingmember0
 msgid "Waiting member"
-msgstr ""
+msgstr "Várakozás a tagságra"
 
 #. module: membership
 #: field:report.membership,date_from:0
 #: view:res.partner:0
 msgid "Start Date"
-msgstr ""
+msgstr "Kezdő dátum"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
@@ -811,15 +809,18 @@ msgstr ""
 #. module: membership
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Hiba: Helytelen vonalkód"
 
 #. module: membership
 #: view:report.membership:0
 #: field:report.membership,year:0
 msgid "Year"
-msgstr ""
+msgstr "Év"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Revenue Done"
-msgstr ""
+msgstr "Bevétel kész"
+
+#~ msgid "Group By"
+#~ msgstr "Csoportosít"

@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-10 12:14+0000\n"
+"PO-Revision-Date: 2011-01-13 22:04+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:47+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 04:51+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: base
 #: view:ir.filters:0
@@ -131,6 +131,9 @@ msgid ""
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
 msgstr ""
+"Die optionale Domäne schränkt durch die Eingabe einer Tripleliste die "
+"anzuzeigenden Werte für eine Feldverknüpfung ein. Ein Beispiel wäre: "
+"[('color','=','red')]"
 
 #. module: base
 #: field:res.partner,ref:0
@@ -146,7 +149,7 @@ msgstr "Target Window"
 #: code:addons/base/res/res_user.py:507
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Warnung!"
 
 #. module: base
 #: code:addons/base/ir/ir_model.py:304
@@ -155,6 +158,9 @@ msgid ""
 "Properties of base fields cannot be altered in this manner! Please modify "
 "them through Python code, preferably through a custom addon!"
 msgstr ""
+"Eigenschaften eines elementaren Basisfeldes können nicht auf diese Weise "
+"verändert werden. Bitte nehmen Sie die Änderung durch die Anpassung von "
+"Python Code vor, idealerweise durch ein eigenes Modul."
 
 #. module: base
 #: code:addons/osv.py:133
@@ -838,6 +844,8 @@ msgstr "Pinnwand Personalwesen"
 #, python-format
 msgid "Setting empty passwords is not allowed for security reasons!"
 msgstr ""
+"Die Vergabe eines nicht ausgefüllten Passwortes ist aus Sucherheitsgründen "
+"nicht erlaubt!"
 
 #. module: base
 #: selection:ir.actions.server,state:0
@@ -977,7 +985,7 @@ msgstr "Marschall-Inseln"
 #: code:addons/base/ir/ir_model.py:328
 #, python-format
 msgid "Changing the model of a field is forbidden!"
-msgstr ""
+msgstr "Die Änderung des Moduls für ein Feld ist nicht zulässig."
 
 #. module: base
 #: model:res.country,name:base.ht
@@ -1016,7 +1024,7 @@ msgstr "2. Gruppenspezifische Regeln werden mit einem UND Operator verbunden"
 #: code:addons/base/res/res_user.py:206
 #, python-format
 msgid "Operation Canceled"
-msgstr ""
+msgstr "Vorgang abgebrochen"
 
 #. module: base
 #: help:base.language.export,lang:0
@@ -2029,7 +2037,7 @@ msgstr "Korean (KR) / 한국어 (KR)"
 #. module: base
 #: help:ir.model.fields,model:0
 msgid "The technical name of the model this field belongs to"
-msgstr ""
+msgstr "Die technische Bezeichnung des Moduls für das entsprechende Feld."
 
 #. module: base
 #: field:ir.actions.server,action_id:0
@@ -2997,7 +3005,7 @@ msgstr "Sequenz Typ"
 #. module: base
 #: view:ir.ui.view.custom:0
 msgid "Customized Architecture"
-msgstr ""
+msgstr "Individualanpassung"
 
 #. module: base
 #: field:ir.module.module,license:0
@@ -3161,7 +3169,7 @@ msgstr "Workflowdesign"
 #. module: base
 #: field:ir.translation,xml_id:0
 msgid "XML Id"
-msgstr ""
+msgstr "XML Id"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_user_form
@@ -3477,6 +3485,8 @@ msgstr "Setze Löschberechtigung"
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
+"Kann das Feld nicht zu %s umbenennen, da dieser Feldbezeichner bereits "
+"existiert!"
 
 #. module: base
 #: view:ir.attachment:0
@@ -3700,6 +3710,8 @@ msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
 msgstr ""
+"Die Anweisung für die Auswahl ist kein gültiger Python Ausruck. Bitte "
+"hinterlegen Sie einen gültigen Ausdruck im Format [('key','Label'),...]."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -3751,6 +3763,8 @@ msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
 msgstr ""
+"Das one2many Feld im Zielmodul, das auf der Gegenseite die many2one Relation "
+"ermöglicht."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
@@ -4029,6 +4043,8 @@ msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
 msgstr ""
+"Sollen die Inhalte des Feldes übersetzt werden können (ermöglicht die "
+"Übersetzung für das Feld)"
 
 #. module: base
 #: view:res.lang:0
@@ -4396,6 +4412,8 @@ msgstr ""
 #: help:ir.model.fields,relation:0
 msgid "For relationship fields, the technical name of the target model"
 msgstr ""
+"Der technische Name für das Feld, welches die Relation im Zielmodul der "
+"Verbindung herstellt."
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -4691,6 +4709,8 @@ msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
 msgstr ""
+"Bitte benutzen Sie den Passwort Assistenten (in den Benutzereinstellungen "
+"oder dem Menü Benutzer) für eine Änderung des Passworts."
 
 #. module: base
 #: code:addons/orm.py:1350
@@ -5235,6 +5255,7 @@ msgstr "Nigeria"
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
 msgstr ""
+"Für Auswahlfelder müssen die Auswahlmöglichkeiten eingetragen werden!"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_sms_send
@@ -5400,7 +5421,7 @@ msgstr ""
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: view:ir.ui.view.custom:0
 msgid "Customized Views"
-msgstr ""
+msgstr "Individualisierte Ansicht"
 
 #. module: base
 #: view:partner.sms.send:0
@@ -5614,6 +5635,8 @@ msgstr "Reunion (franz.)"
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
 msgstr ""
+"Neue Feldbezeichnung sollte nach wie vor mit x_ beginnen, da es sich um ein "
+"neues Feld durch den Benutzer handelt."
 
 #. module: base
 #: view:ir.model.access:0
@@ -6257,6 +6280,8 @@ msgstr "res.log"
 #: help:ir.translation,xml_id:0
 msgid "Maps to the ir_model_data for which this translation is provided."
 msgstr ""
+"Verbindet das ir_model_data Datenmodell,  da für das diese Übersetzung "
+"verbunden wurde."
 
 #. module: base
 #: view:workflow.activity:0
@@ -6685,6 +6710,8 @@ msgid ""
 "Customized views are used when users reorganize the content of their "
 "dashboard views (via web client)"
 msgstr ""
+"Individuelle Ansichten werden aktuell z.B für die persönliche Pinnwand "
+"Ansichte eingesetzt."
 
 #. module: base
 #: field:ir.model,name:0
@@ -6723,7 +6750,7 @@ msgstr "Icon"
 #. module: base
 #: help:ir.model.fields,model_id:0
 msgid "The model this field belongs to"
-msgstr ""
+msgstr "Das Datenmodell zu dem dieses Feld angehört."
 
 #. module: base
 #: model:res.country,name:base.mq
@@ -7324,7 +7351,7 @@ msgstr "Installation Abbrechen"
 #. module: base
 #: field:ir.model.fields,selection:0
 msgid "Selection Options"
-msgstr ""
+msgstr "Datenauswahl"
 
 #. module: base
 #: field:res.partner.category,parent_right:0
@@ -7445,6 +7472,8 @@ msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
 "create it again!"
 msgstr ""
+"Wechsel der Datentyps eines Feldes wird nicht unterstützt. Bite brechen Sie "
+"den Vorgang ab oder erstellen einen neuen Schüssel von Anfang an"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -7783,6 +7812,8 @@ msgid ""
 "Only specify a value if you want to change the user password. This user will "
 "have to logout and login again!"
 msgstr ""
+"Spezifizieren Sie den Eintrag hier nur, wenn Sie die Zugangsdaten ändern "
+"sollen.Der Benutzer muss sich nochmal meu anmelden."
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -7808,7 +7839,7 @@ msgstr "Binäres Feld oder externe URL"
 #: field:res.config.users,new_password:0
 #: field:res.users,new_password:0
 msgid "Change password"
-msgstr ""
+msgstr "Ändere Passwort"
 
 #. module: base
 #: model:res.country,name:base.nl
@@ -7843,6 +7874,11 @@ msgid ""
 "button \"Schedule for Installation\" from the form view, then click on "
 "\"Apply Scheduled Upgrades\" to migrate your system."
 msgstr ""
+"Durch die Installation neuer Module können Sie neue Funktionen, Menüs, "
+"Reports oder einfach Daten in Ihre OpenERP Datenbank integrieren. Für die "
+"Installation klicken Sie einfach auf den Button \"Beauftrage Installation\" "
+"aus der Formularansicht des zu installierenden Moduls und anschließend auf "
+"\"Starte Installation\" zur Aktualisierung des Systems."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_emails
@@ -9321,7 +9357,7 @@ msgstr "Porträt"
 #: code:addons/base/ir/ir_model.py:317
 #, python-format
 msgid "Can only rename one column at a time!"
-msgstr ""
+msgstr "Es kann lediglich eine Spalte gleichzeitig umbenannt werden!"
 
 #. module: base
 #: selection:ir.translation,type:0

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
 "PO-Revision-Date: 2010-12-29 14:33+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: Vinteh <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:20+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 "Language: hr\n"
 
 #. module: sale
@@ -250,9 +250,11 @@ msgid ""
 msgstr "Sigurnosni dani dodani na broj dana dogovorenih sa kupcima"
 
 #. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Shipping Default Policy"
-msgstr "Uobičajena pravila otpreme"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sales Manager Dashboard"
+msgstr "Upravljačka ploča upravitelja prodaje"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -1527,13 +1529,6 @@ msgstr ""
 "područja i kupca se izvršava preko otpremnice ručno ili automatski."
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Dashboard"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:1165
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
@@ -2011,6 +2006,11 @@ msgstr "Narudžba '%s' je postavljena u stanje nacrta."
 #: selection:sale.order.line,type:0
 msgid "from stock"
 msgstr "Iz zalihe"
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Uobičajena pravila otpreme"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -2660,9 +2660,6 @@ msgstr "Faktura na temelju dostava"
 #~ "omogućava da se narudžba djelomično fakturira prema stavkama narudžbe. Ova "
 #~ "lista nije potrebna ako se fakturira prema dostavnicama ili ako se fakturira "
 #~ "ukupna prodaja."
-
-#~ msgid "Sales Manager Dashboard"
-#~ msgstr "Upravljačka ploča upravitelja prodaje"
 
 #~ msgid "Sales by Customer"
 #~ msgstr "Prodaje po kupcu"

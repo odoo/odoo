@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-08 21:28+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 15:48+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-09 04:52+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:00+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -72,6 +73,15 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Sie können zum Einkauf von Produkten vor endültiger Bestätigung einer  "
+"Bestellung zuerst eine Angebotsanfrage an Lieferanten erstellen. Ausserdem "
+"wird dieses Menü zur weiteren Bearbeitung von automatischen "
+"Beschaffungsvorschlägen, z.B. durch Meldebestandsregeln, eingesetzt werden. "
+"Durch die Bestätigung einer generierten Angebotsanfrage erstellen Sie dann "
+"die endgültige Bestellung. Wenn Sie das erweiterte Benutzerinterface in "
+"Ihren Benutzereigenschaften einstellen, können Sie ausserdem die Erstellung "
+"der Eingangsrechnung steuern: Rechnung durch Auftrag oder Lieferung oder "
+"manuelle Eingabe der Rechnung."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -115,6 +125,11 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Verwenden Sie dieses Menü zur Suche in Beschaffungsaufträgen nach "
+"Referenznummer, Lieferant, Produkt oder anderen Suchfiltern. Für jeden "
+"Beschaffungsauftrag können Sie exakt nachvollziehen, welche Produkte Sie "
+"tatsächlich bekommen haben und dadurch auch einen Abgleich mit der "
+"Eingangsrechnung vornehmen."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
@@ -777,6 +792,11 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"Verwenden Sie dieses Menü für die Kontrolle der vom Lieferanten versendeten "
+"Eingangsrechnung. OpenERP erzeugt in Abhängigkeit von Ihrer "
+"Auftragskonfiguration automatisch eine vorgenerierte Eingangsrechnung im "
+"Zustand Entwurf entweder\r\n"
+"unmittelbar bei der Bestellung oder später beim Wareneingang."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -854,6 +874,12 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
+"Wenn Sie die Einstellung für die Rechnungserstellung auf manuelle "
+"Rechnungserstellung konfiguriert haben, können Sie an dieser Stelle alle "
+"Beschaffungsauftragspositionen finden, für die Sie bislang noch keine "
+"Eingangsrechnung erhalten haben. Sobald Sie die Eingangsrechnung dann "
+"erhalten, können Sie eine Eingangsrechnung im Entwurfzustand auf Basis der "
+"hier angezeigten Positionen erstellen."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -1211,6 +1237,17 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Die Einkaufsanwendung wird für die Erstellung von Beschaffungsaufträgen "
+"an Lieferanten zum Einkauf von Waren eingesetzt.\n"
+"    Eine Lieferantenrechnung wird separat für jeden einzelnen Auftrag "
+"erstellt.\n"
+"    Die Pinnwand für den Einkauf beinhaltet folgendes:\n"
+"    * Aktuelle Beschaffungsaufträge\n"
+"    * Beschaffungsaufträge im Entwurf\n"
+"    * Grafik zu Einkaufsmenge und -umsatz.    \n"
+"\n"
+"    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:685
@@ -1560,6 +1597,10 @@ msgid ""
 "suppliers. You can track all your interactions with them through the History "
 "tab: emails, orders, meetings, etc."
 msgstr ""
+"Verwenden Sie die vorhandenen Lieferantendaten als Datenbasis für Ihre "
+"Lieferantenpflege. Sie können alle Geschäftsvorgänge mit Lieferanten über "
+"den Aktenreiter Historie lückenlos nachvollziehen: Versendete und empfangene "
+"Emails, Aufträge der Historie, Termine etc."
 
 #. module: purchase
 #: view:purchase.order:0

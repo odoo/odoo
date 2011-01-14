@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-09-04 08:57+0000\n"
 "Last-Translator: Goran Kliska (Aplikacija d.o.o.) <gkliska@gmail.com>\n"
 "Language-Team: Vinteh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:50+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:06+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 "Language: hr\n"
 
 #. module: crm
@@ -195,11 +195,10 @@ msgid "Warning!"
 msgstr "Upozorenje!"
 
 #. module: crm
-#: code:addons/crm/wizard/crm_send_email.py:72
-#: code:addons/crm/wizard/crm_send_email.py:169
-#: code:addons/crm/wizard/crm_send_email.py:270
-#, python-format
-msgid "Can not send mail!"
+#: view:crm.lead.report:0
+#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
+#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
+msgid "Opportunities Analysis"
 msgstr ""
 
 #. module: crm
@@ -332,9 +331,9 @@ msgid "Categories"
 msgstr "Kategorije"
 
 #. module: crm
-#: view:crm.lead:0
-msgid "Dates"
-msgstr "Datumi"
+#: selection:crm.meeting,end_type:0
+msgid "Forever"
+msgstr ""
 
 #. module: crm
 #: help:crm.lead,optout:0
@@ -510,6 +509,16 @@ msgid "Recurrent Rule"
 msgstr "Uloga prilike"
 
 #. module: crm
+#: model:crm.case.resource.type,name:crm.type_lead1
+msgid "Version 4.2"
+msgstr ""
+
+#. module: crm
+#: model:crm.case.resource.type,name:crm.type_lead2
+msgid "Version 4.4"
+msgstr ""
+
+#. module: crm
 #: help:crm.installer,fetchmail:0
 msgid "Allows you to receive E-Mails from POP/IMAP server."
 msgstr ""
@@ -646,6 +655,11 @@ msgid ""
 msgstr ""
 "Zadano zadovoljstvo za razdoblje koje prethodi izračunu 'Max. interval'. Ovo "
 "je početno zadovoljstvo partnera dok još nema događaja."
+
+#. module: crm
+#: selection:crm.meeting,end_type:0
+msgid "End date"
+msgstr ""
 
 #. module: crm
 #: constraint:base.action.rule:0
@@ -1036,6 +1050,11 @@ msgstr "<"
 #: field:crm.phonecall,partner_mobile:0
 msgid "Mobile"
 msgstr "Mobitel"
+
+#. module: crm
+#: field:crm.meeting,end_type:0
+msgid "Way to end reccurency"
+msgstr ""
 
 #. module: crm
 #: code:addons/crm/wizard/crm_merge_opportunities.py:53
@@ -1494,11 +1513,6 @@ msgid "Opportunities by Categories"
 msgstr ""
 
 #. module: crm
-#: field:crm.meeting,interval:0
-msgid "Interval"
-msgstr ""
-
-#. module: crm
 #: view:crm.meeting:0
 msgid "Choose day in the month where repeat the meeting"
 msgstr ""
@@ -1546,11 +1560,6 @@ msgid "State"
 msgstr "Država"
 
 #. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead1
-msgid "Telesales"
-msgstr "Teleprodaja"
-
-#. module: crm
 #: field:crm.meeting,freq:0
 msgid "Frequency"
 msgstr ""
@@ -1582,6 +1591,11 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_merge_opportunity
 msgid "Merge two Opportunities"
+msgstr ""
+
+#. module: crm
+#: selection:crm.meeting,end_type:0
+msgid "Fix amout of times"
 msgstr ""
 
 #. module: crm
@@ -1636,11 +1650,6 @@ msgstr ""
 #: selection:crm.segmentation.line,expr_operator:0
 msgid "="
 msgstr "="
-
-#. module: crm
-#: view:crm.lead:0
-msgid "Search Leads"
-msgstr "Pretraži Kontaktove"
 
 #. module: crm
 #: selection:crm.meeting,state:0
@@ -1851,6 +1860,11 @@ msgid "Phone calls"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Communication  History"
+msgstr ""
+
+#. module: crm
 #: selection:crm.meeting,show_as:0
 msgid "Free"
 msgstr ""
@@ -2009,14 +2023,14 @@ msgid "Mail Campaign 2"
 msgstr ""
 
 #. module: crm
-#: model:crm.case.resource.type,name:crm.type_lead2
-msgid "Mail Campaign 1"
+#: view:crm.lead:0
+msgid "Create"
 msgstr ""
 
 #. module: crm
 #: view:crm.lead:0
-msgid "Create"
-msgstr ""
+msgid "Dates"
+msgstr "Datumi"
 
 #. module: crm
 #: code:addons/crm/crm.py:492
@@ -2426,10 +2440,11 @@ msgid "Weekly"
 msgstr ""
 
 #. module: crm
-#: view:crm.lead.report:0
-#: model:ir.actions.act_window,name:crm.action_report_crm_opportunity
-#: model:ir.ui.menu,name:crm.menu_report_crm_opportunities_tree
-msgid "Opportunities Analysis"
+#: code:addons/crm/wizard/crm_send_email.py:72
+#: code:addons/crm/wizard/crm_send_email.py:169
+#: code:addons/crm/wizard/crm_send_email.py:270
+#, python-format
+msgid "Can not send mail!"
 msgstr ""
 
 #. module: crm
@@ -2493,6 +2508,11 @@ msgstr ""
 #. module: crm
 #: selection:crm.meeting,show_as:0
 msgid "Busy"
+msgstr ""
+
+#. module: crm
+#: field:crm.meeting,interval:0
+msgid "Repeat every"
 msgstr ""
 
 #. module: crm
@@ -2622,9 +2642,9 @@ msgid "# of Emails"
 msgstr ""
 
 #. module: crm
-#: view:crm.meeting:0
-msgid "Repeat interval"
-msgstr ""
+#: view:crm.lead:0
+msgid "Search Leads"
+msgstr "Pretraži Kontaktove"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -2676,6 +2696,13 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_phonecall2partner
 msgid "Phonecall to Partner"
+msgstr ""
+
+#. module: crm
+#: help:crm.lead,partner_name:0
+msgid ""
+"The name of the future partner that will be created while converting the "
+"into opportunity"
 msgstr ""
 
 #. module: crm
@@ -2804,9 +2831,9 @@ msgid "All Day"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead.report,email:0
-msgid "# Emails"
-msgstr ""
+#: field:crm.segmentation.line,operator:0
+msgid "Mandatory / Optional"
+msgstr "Obavezan / Opcijski"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_view_attendee_form
@@ -3394,6 +3421,11 @@ msgid "Planned Revenue by Stage and User"
 msgstr ""
 
 #. module: crm
+#: view:crm.lead:0
+msgid "Communication & History"
+msgstr ""
+
+#. module: crm
 #: model:ir.model,name:crm.model_crm_lead_report
 msgid "CRM Lead Report"
 msgstr ""
@@ -3653,9 +3685,9 @@ msgid "The opportunity '%s' has been opened."
 msgstr ""
 
 #. module: crm
-#: field:crm.segmentation.line,operator:0
-msgid "Mandatory / Optional"
-msgstr "Obavezan / Opcijski"
+#: field:crm.lead.report,email:0
+msgid "# Emails"
+msgstr ""
 
 #. module: crm
 #: field:crm.lead,street:0
@@ -4668,6 +4700,9 @@ msgstr "Newsletter"
 
 #~ msgid "Fields to Change"
 #~ msgstr "Polja za promijeniti"
+
+#~ msgid "Telesales"
+#~ msgstr "Teleprodaja"
 
 #~ msgid "Created"
 #~ msgstr "Kreiran"

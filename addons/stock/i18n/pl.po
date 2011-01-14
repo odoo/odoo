@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-12 01:30+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-13 22:11+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:54+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 04:56+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -97,6 +97,9 @@ msgid ""
 "per location. You can use it once a year when you do the general inventory "
 "or whenever you need it, to correct the current stock level of a product."
 msgstr ""
+"Inwentaryzacje do okresowego sprawdzania i ustalenia stanu zapasów w strefie "
+"magazynowej. Możesz ją wykorzystywać raz na rok lub częściej w razie "
+"potrzeby."
 
 #. module: stock
 #: view:stock.picking:0
@@ -133,6 +136,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
+"To jest lista zamówień dostawy, które mają być przygotowane według zamówień "
+"sprzedaży i twoich logistycznych reguł."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -151,7 +156,7 @@ msgid "UoM"
 msgstr "JM"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:93
+#: code:addons/stock/wizard/stock_change_product_qty.py:90
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
@@ -234,7 +239,7 @@ msgstr "Pochodzenie"
 #. module: stock
 #: view:report.stock.lines.date:0
 msgid "Non Inv"
-msgstr ""
+msgstr "Nie fakt."
 
 #. module: stock
 #: view:stock.tracking:0
@@ -327,7 +332,7 @@ msgstr "Partia produkcyjna"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Kategorie jednostek miary"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -374,7 +379,7 @@ msgstr "Wartość rzeczywista zapasów"
 #. module: stock
 #: field:report.stock.move,day_diff2:0
 msgid "Lag (Days)"
-msgstr ""
+msgstr "Lag (Dni)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_action_traceability
@@ -560,6 +565,10 @@ msgid ""
 "buttons on the right of each line. You can filter the products to deliver by "
 "customer, products or sale order (using the Origin field)."
 msgstr ""
+"Na tej liście znajdziesz wszystkie produkty, które masz dostarczyć klientom. "
+"Możesz przetwarzać dostawy bezpośrednio z listy stosując przyciski z prawej "
+"strony pozycji. Możesz też filtrować produkty według klienta, produktów lub "
+"zamówień (stosując pole Pochodzenie)."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -611,6 +620,10 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"System dzienników magazynowych pozwala przypisać każdą operację magazynową "
+"do określonego dziennika według typu operacji lub według zespołu "
+"wykonującego operacje. Przykłady dzienników to: Kontrola jakości, Przyjęcia, "
+"Pakowanie itp."
 
 #. module: stock
 #: field:stock.location,complete_name:0
@@ -1101,7 +1114,7 @@ msgstr "Spodziewana data wysyłki"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Not Available"
-msgstr ""
+msgstr "Niedostępne"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -1237,6 +1250,8 @@ msgid ""
 "This is the list of all your packs. When you select a Pack, you can get the "
 "upstream or downstream traceability of the products contained in the pack."
 msgstr ""
+"To jest lista twoich paczek. Po wybraniu paczki możesz śledzić wprzód i "
+"wstecz drogę paczki z produktami."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_final
@@ -1527,6 +1542,14 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Kiedy przesunięcie jest tworzone to jest w stanie 'Projekt'.\n"
+" Następnei przechodzi w stan 'Nie dostępne', jeśli planista nie znajdzie "
+"produktów.\n"
+" Kiedy produkty zostaną zarezerwowane stan zmienia się na 'Dostępne'.\n"
+" Kiedy pobranie zostanie wykonane stan zmienia się na 'Wykonano'.            "
+"  \n"
+"Pojawia się jeszcze stan 'Oczekiwanie' kiedy przesunięcie czeka na inne "
+"przesunięcie."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -2301,6 +2324,10 @@ msgid ""
 "the supplier or the purchase order reference. Then you can confirm all "
 "products received using the buttons on the right of each line."
 msgstr ""
+"Tutaj możesz przyjąć pojedyncze produktu niezależnie od zamówień lub pobrań. "
+"Zobaczysz wszystkie produkty oczekujące. Jeśli masz jakiś dokument, to "
+"możesz filtrować według dostawcy lub zamówienia. Możesz potwierdzać "
+"przyjęcie przyciskiem z prawej strony."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2388,6 +2415,15 @@ msgid ""
 "location to the Stock location. Each report can be performed on physical, "
 "partner or virtual locations."
 msgstr ""
+"Definiuj strefy magazynowe zgodnie z organizacją swojego magazynu. OpenERP "
+"obsługuje strefy fizyczne (magazyny, półki, zasobniki itp.), strefy "
+"partnerów (Klienci, Dostawcy) i strefy wirtualne, które są strefami "
+"przeciwstawnymi w operacjach magazynowych takich jak: zużycie materiałów w "
+"produkcji, inwentaryzacja itp. Każda operacja magazynowa w OpenERP przesuwa "
+"produkty z jednej strefy do innej. Np. jeśli otrzymałeś produkty od "
+"dostawcy, to OpenERP przesuwa produkty ze strefy Dostawcy do strefy Strefa "
+"składowania.Każdy raport magazynowy może dotyczyć stref fizycznych, "
+"partnerów lub stref wirtualnych."
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2466,7 +2502,7 @@ msgstr "Rezultat wymiany"
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Jednostki miary"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -2491,6 +2527,9 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
+"Wyświetla ostatnio wykonane inwentaryzacje i pozwala je sortować i "
+"filtrować. Jeśli często stosujesz inwentaryzacje, to ten raport pomoże ci "
+"sprawdzać, kiedy produkty były kontrolowane."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
@@ -2518,7 +2557,7 @@ msgid "Maxtor Suppliers"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:69
+#: code:addons/stock/wizard/stock_change_product_qty.py:66
 #: code:addons/stock/wizard/stock_change_standard_price.py:106
 #, python-format
 msgid "Active ID is not set in Context"
@@ -2577,6 +2616,7 @@ msgstr "Data wykonania"
 #: help:stock.production.lot,name:0
 msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
 msgstr ""
+"Unikalna partia produkcji będzie wyświetlana jako: PREFIX/SERIAL [INT_REF]"
 
 #. module: stock
 #: help:stock.tracking,active:0
@@ -2756,6 +2796,8 @@ msgid ""
 "costs and responsibilities between buyer and seller and reflect state-of-the-"
 "art transportation practices."
 msgstr ""
+"Incoterm są warunkami sprzedaży. Są stosowane do określania kosztów "
+"ponoszonych przez dostawców i odbiorców oraz określają rodzaj transportu."
 
 #. module: stock
 #: help:stock.fill.inventory,recursive:0
@@ -2895,7 +2937,7 @@ msgstr "Odpowiedzialny"
 #. module: stock
 #: field:stock.move,returned_price:0
 msgid "Returned product price"
-msgstr ""
+msgstr "Cena zwrotna produktu"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_report
@@ -3017,12 +3059,12 @@ msgstr "Wartość Razem"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produkty wg kategorii"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 msgid "Products Categories"
-msgstr ""
+msgstr "Kategorie produktów"
 
 #. module: stock
 #: field:stock.move.memory.in,wizard_id:0
@@ -3056,6 +3098,11 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
+"Przesunięcia wewnętrzne (międzymagazynowe) są operacjami do wykonania w "
+"twoim magazynie. Operacje mogą być kategoryzowane wg dzienników "
+"magazynowych, co pozwala dzielić operacje np. według pracowników. Wiele "
+"operacji jest generowana automatycznie według ustalonych reguł "
+"logistycznych. Ale możesz te operację również wprowadzać ręcznie."
 
 #. module: stock
 #: view:stock.move:0
@@ -3212,6 +3259,10 @@ msgid ""
 "'Available' button to get all the lots you produced, received or delivered "
 "to customers."
 msgstr ""
+"To jest lista wszystkich wprowadzonych partii produkcyjnych (numerów "
+"seryjnych). Po wybraniu partii możesz oglądać przesunięcia partii wprzód i "
+"wstecz. Domyślnie lista jest filtrowana jako dostępne w twoim magazynie, ale "
+"możesz tę ikonę odznaczyć i oglądać wszystkie partie."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3320,6 +3371,13 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"Określa, czy ta strefa jest powiązana z następną. Czyli, czy wszystkie "
+"produkty, które przychodzą do tej strefy \n"
+"mają być automatycznie przesuwane do innej. Strefa związana może mieć typ:\n"
+"* Brak: brak powiązania\n"
+"* Klient: Strefa związana zostanie pobrana jako strefa Klienta z Partnera na "
+"Pobraniu.\n"
+"* Strefa stała: Strefa będzie pobrana z następnego pola."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -3425,7 +3483,7 @@ msgid "Product Category"
 msgstr "Kategoria Produktu"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:77
+#: code:addons/stock/wizard/stock_change_product_qty.py:74
 #, python-format
 msgid "INV: "
 msgstr "FAK: "
@@ -3548,6 +3606,9 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"Przyjęcia zewnętrzne jest listą pobrań od dostawcy. Przyjęcie zewnętrzne "
+"zawiera produkty do przyjęcia według zamówienia zakupu. Możesz zatwierdzać "
+"przyjęcia częściowo lub całkowicie."
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -3581,6 +3642,8 @@ msgid ""
 "specific product. You can filter on the product to see all the past or "
 "future movements for the product."
 msgstr ""
+"To menu pokazuje ci przesunięcia określonego produktu. Możesz filtrować, aby "
+"zobaczyć dokonane lub przyszłe przesunięcia."
 
 #. module: stock
 #: view:stock.picking:0
@@ -3816,6 +3879,9 @@ msgid ""
 "click on a location to get the list of the products and their stock level in "
 "this particular location and all its children."
 msgstr ""
+"To jest struktura magazynów i stref w twojej firmie. Możesz nacisnąć myszą "
+"strefę, aby zobaczyć listę produktów z ilościami w danej strefie i strefach "
+"podrzędnych."
 
 #. module: stock
 #: model:res.request.link,name:stock.req_link_tracking
@@ -3903,7 +3969,7 @@ msgstr "ilość."
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Musisz podać nr partii dla tego produktu"
 
 #. module: stock
 #: view:stock.move:0
@@ -3929,6 +3995,8 @@ msgid ""
 "There are no products to return (only lines in Done state and not fully "
 "returned yet can be returned)!"
 msgstr ""
+"Brak produktów do zwrotu ( tylko pozycje w stanie Wykonano i nie zwrócone "
+"mogą być zwrócone)!"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
@@ -3978,7 +4046,7 @@ msgstr "Śledzenie wprzód"
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
 #: report:lot.stock.overview_all:0
 msgid "Location Content"
-msgstr ""
+msgstr "Zawartość strefy"
 
 #. module: stock
 #: code:addons/stock/product.py:385
@@ -4018,7 +4086,7 @@ msgstr "Luty"
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Production Lot Identification"
-msgstr ""
+msgstr "Identyfikacja partii produkcyjnej"
 
 #. module: stock
 #: field:stock.location,scrap_location:0
