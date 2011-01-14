@@ -1057,11 +1057,14 @@ class property(function):
         brs = properties.browse(cr, uid, nids, context=context)
         for prop in brs:
             value = properties.get_by_record(cr, uid, prop, context=context)
-            record_exists = obj.pool.get(value._name).exists(cr, uid, value.id)
-            res[prop.res_id.id][prop.fields_id.name] = (record_exists and value) and value or False
+            res[prop.res_id.id][prop.fields_id.name] = value or False
             if value and (prop.type == 'many2one'):
-                replaces.setdefault(value._name, {})
-                replaces[value._name][value.id] = True
+                record_exists = obj.pool.get(value._name).exists(cr, uid, value.id)
+                if record_exists:
+                    replaces.setdefault(value._name, {})
+                    replaces[value._name][value.id] = True
+                else:
+                    res[prop.res_id.id][prop.fields_id.name] = False
 
         for rep in replaces:
             nids = obj.pool.get(rep).search(cr, uid, [('id','in',replaces[rep].keys())], context=context)
