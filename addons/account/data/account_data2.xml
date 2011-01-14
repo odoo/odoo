@@ -72,13 +72,13 @@
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="name">Debit</field>
             <field name="field">debit</field>
-            <field eval="10" name="sequence"/>
+            <field eval="11" name="sequence"/>
         </record>
         <record id="bank_col10" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="name">Credit</field>
             <field name="field">credit</field>
-            <field eval="11" name="sequence"/>
+            <field eval="12" name="sequence"/>
         </record>
         <record id="bank_col3" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view"/>
@@ -90,7 +90,7 @@
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="name">State</field>
             <field name="field">state</field>
-            <field eval="14" name="sequence"/>
+            <field eval="19" name="sequence"/>
         </record>
         <record id="bank_col20" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view"/>
@@ -147,25 +147,25 @@
             <field name="view_id" ref="account_journal_bank_view_multi"/>
             <field name="name">Currency Amt.</field>
             <field name="field">amount_currency</field>
-            <field eval="8" name="sequence"/>
+            <field eval="9" name="sequence"/>
         </record>
         <record id="bank_col18_multi" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view_multi"/>
             <field name="name">Currency</field>
             <field name="field">currency_id</field>
-            <field eval="9" name="sequence"/>
+            <field eval="10" name="sequence"/>
         </record>
         <record id="bank_col9_multi" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view_multi"/>
             <field name="name">Debit</field>
             <field name="field">debit</field>
-            <field eval="10" name="sequence"/>
+            <field eval="11" name="sequence"/>
         </record>
         <record id="bank_col10_multi" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view_multi"/>
             <field name="name">Credit</field>
             <field name="field">credit</field>
-            <field eval="11" name="sequence"/>
+            <field eval="12" name="sequence"/>
         </record>
         <record id="bank_col3_multi" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view_multi"/>
@@ -177,7 +177,7 @@
             <field name="view_id" ref="account_journal_bank_view_multi"/>
             <field name="name">State</field>
             <field name="field">state</field>
-            <field eval="16" name="sequence"/>
+            <field eval="19" name="sequence"/>
         </record>
         <record id="bank_col20_multi" model="account.journal.column">
             <field name="view_id" ref="account_journal_bank_view_multi"/>
@@ -234,25 +234,25 @@
             <field name="view_id" ref="account_journal_view"/>
             <field name="name">Debit</field>
             <field name="field">debit</field>
-            <field eval="8" name="sequence"/>
+            <field eval="11" name="sequence"/>
         </record>
         <record id="journal_col9" model="account.journal.column">
             <field name="view_id" ref="account_journal_view"/>
             <field name="name">Credit</field>
             <field name="field">credit</field>
-            <field eval="9" name="sequence"/>
+            <field eval="12" name="sequence"/>
         </record>
         <record id="journal_col11" model="account.journal.column">
             <field name="view_id" ref="account_journal_view"/>
             <field name="name">Analytic Account</field>
             <field name="field">analytic_account_id</field>
-            <field eval="11" name="sequence"/>
+            <field eval="14" name="sequence"/>
         </record>
         <record id="journal_col24" model="account.journal.column">
             <field name="view_id" ref="account_journal_view"/>
             <field name="name">State</field>
             <field name="field">state</field>
-            <field eval="14" name="sequence"/>
+            <field eval="19" name="sequence"/>
         </record>
 
 
@@ -284,68 +284,68 @@
             <field name="name">Account</field>
             <field name="field">account_id</field>
             <field eval="True" name="required"/>
-            <field eval="5" name="sequence"/>
+            <field eval="6" name="sequence"/>
         </record>
         <record id="sp_journal_col5" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Partner</field>
             <field name="field">partner_id</field>
-            <field eval="4" name="sequence"/>
+            <field eval="5" name="sequence"/>
         </record>
         <record id="sp_journal_col6" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Name</field>
             <field name="field">name</field>
-            <field eval="6" name="sequence"/>
+            <field eval="7" name="sequence"/>
             <field eval="True" name="required"/>
         </record>
         <record id="sp_journal_col7" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Due Date</field>
             <field name="field">date_maturity</field>
-            <field eval="7" name="sequence"/>
+            <field eval="8" name="sequence"/>
         </record>
         <record id="sp_journal_col8" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Debit</field>
             <field name="field">debit</field>
-            <field eval="8" name="sequence"/>
+            <field eval="11" name="sequence"/>
         </record>
         <record id="sp_journal_col9" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Credit</field>
             <field name="field">credit</field>
-            <field eval="9" name="sequence"/>
+            <field eval="12" name="sequence"/>
         </record>
         <record id="sp_journal_col10" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Tax</field>
             <field name="field">account_tax_id</field>
-            <field eval="10" name="sequence"/>
+            <field eval="13" name="sequence"/>
         </record>
         <record id="sp_journal_col11" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Analytic Account</field>
             <field name="field">analytic_account_id</field>
-            <field eval="11" name="sequence"/>
+            <field eval="14" name="sequence"/>
         </record>
         <record id="sp_journal_col25" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Tax Acc.</field>
             <field name="field">tax_code_id</field>
-            <field eval="12" name="sequence"/>
+            <field eval="15" name="sequence"/>
         </record>
         <record id="sp_journal_col26" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Tax</field>
             <field name="field">tax_amount</field>
-            <field eval="13" name="sequence"/>
+            <field eval="16" name="sequence"/>
         </record>
         <record id="sp_journal_col24" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">State</field>
             <field name="field">state</field>
-            <field eval="14" name="sequence"/>
+            <field eval="19" name="sequence"/>
         </record>
         <record id="sp_journal_col20" model="account.journal.column">
             <field name="view_id" ref="account_sp_journal_view"/>
@@ -382,68 +382,68 @@
             <field name="name">Account</field>
             <field name="field">account_id</field>
             <field eval="True" name="required"/>
-            <field eval="5" name="sequence"/>
+            <field eval="6" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col5" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Partner</field>
             <field name="field">partner_id</field>
-            <field eval="4" name="sequence"/>
+            <field eval="5" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col6" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Name</field>
             <field name="field">name</field>
-            <field eval="6" name="sequence"/>
+            <field eval="7" name="sequence"/>
             <field eval="True" name="required"/>
         </record>
         <record id="sp_refund_journal_col7" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Due Date</field>
             <field name="field">date_maturity</field>
-            <field eval="7" name="sequence"/>
+            <field eval="8" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col8" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Debit</field>
             <field name="field">debit</field>
-            <field eval="8" name="sequence"/>
+            <field eval="11" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col9" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Credit</field>
             <field name="field">credit</field>
-            <field eval="9" name="sequence"/>
+            <field eval="12" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col10" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Tax</field>
             <field name="field">account_tax_id</field>
-            <field eval="10" name="sequence"/>
+            <field eval="13" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col11" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Analytic Account</field>
             <field name="field">analytic_account_id</field>
-            <field eval="11" name="sequence"/>
+            <field eval="14" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col25" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Tax Acc.</field>
             <field name="field">tax_code_id</field>
-            <field eval="12" name="sequence"/>
+            <field eval="15" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col26" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Tax</field>
             <field name="field">tax_amount</field>
-            <field eval="13" name="sequence"/>
+            <field eval="16" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col24" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">State</field>
             <field name="field">state</field>
-            <field eval="14" name="sequence"/>
+            <field eval="19" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col20" model="account.journal.column">
             <field name="view_id" ref="account_sp_refund_journal_view"/>
