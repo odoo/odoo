@@ -15,7 +15,7 @@
   Create phase 'Develop GUI' in Outlook
 - 
   !record {model: project.phase, id: project_phase_phase0}:
-    date_start: '2010-06-02'
+    date_start: !eval time.strftime("%Y-%m-%d")
     duration: 200.0
     name: Develop GUI in Outlook
     product_uom: product.uom_day

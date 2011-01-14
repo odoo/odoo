@@ -699,7 +699,7 @@ class project_work(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
         'hours': fields.float('Time Spent'),
         'user_id': fields.many2one('res.users', 'Done by', required=True),
-        'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
+        'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
     _defaults = {

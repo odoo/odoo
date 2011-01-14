@@ -94,25 +94,21 @@ class account_entries_report(osv.osv):
         return super(account_entries_report, self).search(cr, uid, args=args, offset=offset, limit=limit, order=order,
             context=context, count=count)
 
-    def read_group(self, cr, uid, domain, *args, **kwargs):
-        todel=[]
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        if context is None:
+            context = {}
         fiscalyear_obj = self.pool.get('account.fiscalyear')
         period_obj = self.pool.get('account.period')
-        for arg in domain:
-            if arg[0] == 'period_id' and arg[2] == 'current_period':
-                current_period = period_obj.find(cr, uid)[0]
-                domain.append(['period_id','in',[current_period]])
-                todel.append(arg)
-                break
-            elif arg[0] == 'period_id' and arg[2] == 'current_year':
-                current_year = fiscalyear_obj.find(cr, uid)
-                ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
-                domain.append(['period_id','in',ids])
-                todel.append(arg)
-        for a in [['period_id','in','current_year'], ['period_id','in','current_period']]:
-            if a in domain:
-                domain.remove(a)
-        return super(account_entries_report, self).read_group(cr, uid, domain, *args, **kwargs)
+        if context.get('period', False) == 'current_period':
+            current_period = period_obj.find(cr, uid)[0]
+            domain.append(['period_id','in',[current_period]])
+        elif context.get('year', False) == 'current_year':
+            current_year = fiscalyear_obj.find(cr, uid)
+            ids = fiscalyear_obj.read(cr, uid, [current_year], ['period_ids'])[0]['period_ids']
+            domain.append(['period_id','in',ids])
+        else:
+            domain = domain
+        return super(account_entries_report, self).read_group(cr, uid, domain, fields, groupby, offset, limit, context, orderby)
 
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'account_entries_report')

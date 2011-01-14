@@ -2,8 +2,9 @@
   I start by creating a new phonecall.
 -
   !record {model: crm.phonecall, id: crm_phonecall_interviewcall0}:
-    date: '2010-04-21 18:59:00'
+    date: !eval time.strftime('%Y-%m-%d 08:00:00')
     name: Interview call
+    duration: 2.0
     section_id: crm.section_sales_department
 -
   Now , I select partner by click on "Create a Partner" button.
@@ -63,8 +64,8 @@
 -
   !record {model: crm.meeting, id: crm_meeting_interviewcall0}:
     alarm_id: base_calendar.alarm3
-    date: '2010-04-20 00:00:00'
-    date_deadline: '2010-04-20 08:00:00'
+    date: !eval "'%s-%s-%s 09:00:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
+    date_deadline: !eval "'%s-%s-%s 17:00:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
     duration: 8.0
     email_from: info@balmerinc.be
     name: Interview call
@@ -80,7 +81,7 @@
   phonecall.
 -
   !record {model: crm.phonecall2phonecall, id: crm_phonecall2phonecall_interviewcall0}:
-    date: '2010-04-21 19:49:00'
+    date: !eval "'%s-%s-%s 19:49:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
     name: Interview call
     section_id: crm.section_sales_department
     user_id: base.user_root

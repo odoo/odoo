@@ -28,11 +28,11 @@
 -
   !record {model: purchase.order, id: purchase_order_po1}:
     company_id: base.main_company
-    date_order: '2010-05-11'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_method: manual
     location_id: stock.stock_location_stock
     order_line:
-      - date_planned: '2010-05-13'
+      - date_planned: !eval time.strftime('%Y-%m-%d')
         name: iPod
         price_unit: 100.0
         product_id: 'product_product_ipod0'

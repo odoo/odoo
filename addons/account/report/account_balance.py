@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+
 from report import report_sxw
 from common_report_header import common_report_header
 
