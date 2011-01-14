@@ -2311,7 +2311,6 @@ class account_account_template(osv.osv):
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             if account.parent_id and account.parent_id.type != 'view':
-                print 'BOUM account', account.name, account.code
                 return False
         return True
 
