@@ -2134,10 +2134,11 @@ class orm(orm_template):
 
         # Take care of adding join(s) if groupby is an '_inherits'ed field
         groupby_list = groupby
+        qualified_groupby_field = groupby
         if groupby:
             if isinstance(groupby, list):
                 groupby = groupby[0]
-            self._inherits_join_calc(groupby, query)
+            qualified_groupby_field = self._inherits_join_calc(groupby, query)
 
         if groupby:
             assert not groupby or groupby in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
@@ -2151,10 +2152,10 @@ class orm(orm_template):
         if groupby:
             if fget.get(groupby):
                 if fget[groupby]['type'] in ('date', 'datetime'):
-                    flist = "to_char(%s,'yyyy-mm') as %s " % (groupby, groupby)
-                    groupby = "to_char(%s,'yyyy-mm')" % (groupby)
+                    flist = "to_char(%s,'yyyy-mm') as %s " % (qualified_groupby_field, groupby)
+                    groupby = "to_char(%s,'yyyy-mm')" % (qualified_groupby_field)
                 else:
-                    flist = groupby
+                    flist = qualified_groupby_field
             else:
                 # Don't allow arbitrary values, as this would be a SQL injection vector!
                 raise except_orm(_('Invalid group_by'),
@@ -2168,10 +2169,11 @@ class orm(orm_template):
             if f not in ['id', 'sequence']:
                 group_operator = fget[f].get('group_operator', 'sum')
                 if flist:
-                    flist += ','
-                flist += group_operator+'('+f+') as '+f
+                    flist += ', '
+                qualified_field = '"%s"."%s"' % (self._table, f)
+                flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
-        gb = groupby and (' GROUP BY '+groupby) or ''
+        gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
         where_clause = where_clause and ' WHERE ' + where_clause
