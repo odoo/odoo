@@ -763,7 +763,7 @@ class ir_model_data(osv.osv):
                         cr.commit()
                     except Exception:
                         cr.rollback()
-                        self.__logger.exception(
+                        self.__logger.warn(
                             'Could not delete id: %d of model %s\nThere '
                             'should be some relation that points to this '
                             'resource\nYou should manually fix this and '
