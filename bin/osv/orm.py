@@ -423,7 +423,7 @@ class orm_template(object):
             model_id = cr.fetchone()[0]
         if 'module' in context:
             name_id = 'model_'+self._name.replace('.', '_')
-            cr.execute('select * from ir_model_data where name=%s and res_id=%s and module=%s', (name_id, model_id, context['module']))
+            cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
             if not cr.rowcount:
                 cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
                     (name_id, context['module'], 'ir.model', model_id)
@@ -2561,7 +2561,7 @@ class orm(orm_template):
                                 # add the NOT NULL constraint
                                 cr.commit()
                                 try:
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     cr.commit()
                                     self.__schema.debug("Table '%s': column '%s': added NOT NULL constraint",
                                                         self._table, k)
@@ -2667,7 +2667,7 @@ class orm(orm_template):
                             if f.required:
                                 try:
                                     cr.commit()
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     self.__schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
                                         self._table, k)
                                 except Exception:

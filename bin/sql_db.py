@@ -128,11 +128,11 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            if log_exceptions or self.sql_log:
+            if log_exceptions:
                 self.__logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            if log_exceptions or self.sql_log:
+            if log_exceptions:
                 self.__logger.exception("bad query: %s", self._obj.query or query)
             raise
 
