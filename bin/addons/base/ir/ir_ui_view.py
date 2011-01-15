@@ -181,7 +181,7 @@ view()
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
     _columns = {
-        'name': fields.char('Shortcut Name', size=64, required=True),
+        'name': fields.char('Shortcut Name', size=64), # Kept for backwards compatibility only - resource name used instead (translatable)
         'res_id': fields.integer('Resource Ref.', help="Reference of the target resource, whose model/table depends on the 'Resource Name' field."),
         'sequence': fields.integer('Sequence'),
         'user_id': fields.many2one('res.users', 'User Ref.', required=True, ondelete='cascade', select=True),
@@ -194,9 +194,13 @@ class view_sc(osv.osv):
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_sc_user_id_resource ON ir_ui_view_sc (user_id, resource)')
 
-    def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context={}):
+    def get_sc(self, cr, uid, user_id, model='ir.ui.menu', context=None):
         ids = self.search(cr, uid, [('user_id','=',user_id),('resource','=',model)], context=context)
-        return self.read(cr, uid, ids, ['res_id','name'], context=context)
+        results = self.read(cr, uid, ids, ['res_id'], context=context)
+        name_map = dict(self.pool.get(model).name_get(cr, uid, [x['res_id'] for x in results], context=context))
+        for result in results:
+            result.update(name=name_map[result['res_id']])
+        return results
 
     _order = 'sequence,name'
     _defaults = {
