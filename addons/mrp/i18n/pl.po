@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-12-31 08:43+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-14 20:32+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 04:59+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:06+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp
@@ -358,7 +358,7 @@ msgstr "Październik"
 #: code:addons/mrp/report/price.py:177
 #, python-format
 msgid "Components Cost of "
-msgstr ""
+msgstr "Koszt komponentów "
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
@@ -404,6 +404,8 @@ msgid ""
 "This is used in case of a service without any impact in the system, a "
 "training session for instance."
 msgstr ""
+"To jest stosowane w przypadku usługi bez wpływu na system. Na przykład w "
+"trakcie szkolenia."
 
 #. module: mrp
 #: field:mrp.installer,mrp_repair:0
@@ -478,6 +480,8 @@ msgid ""
 "Define specific property groups that can be assigned to the properties of "
 "your bill of materials."
 msgstr ""
+"Definiuj grupy właściwości, które mogą być związane w właściwościami twojego "
+"zestawienia materiałowego."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_bom0
@@ -591,7 +595,7 @@ msgstr "Produkcja"
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
 msgid "Specify Cost of Work center per cycle."
-msgstr ""
+msgstr "Podaj koszt centrum roboczego na cykl."
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -616,6 +620,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
 msgstr ""
+"Jeśli opcja jest niezaznaczona, to marszruta będzie ukryta (i nie będziesz "
+"jej musiał usuwać)."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -727,7 +733,7 @@ msgstr "Typ"
 #: code:addons/mrp/report/price.py:201
 #, python-format
 msgid "Total Cost of "
-msgstr ""
+msgstr "Suma kosztów "
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
@@ -768,7 +774,7 @@ msgstr "Współczynnik 0.9 oznacza stratę 10% w trakcie produkcji."
 msgid ""
 "Add more functionalities to the core Manufacturing Application with the "
 "following addons."
-msgstr ""
+msgstr "Dodaj więcej funkcjonalności do podstawowej aplikacji Produkowania."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -789,7 +795,7 @@ msgstr "Reguła zaopatrzenia"
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work center per hour."
-msgstr ""
+msgstr "Podaj koszt centrum roboczego na godzinę."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -828,7 +834,7 @@ msgstr "Użycie centrum roboczego"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
 msgid "Manufacturing Order"
-msgstr "Zmaówienie produkcji"
+msgstr "Zamówienie produkcji"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
@@ -841,6 +847,7 @@ msgid ""
 "Time in hours for this work center to achieve the operation of the specified "
 "routing."
 msgstr ""
+"Czas (w godzinach) wykonania operacji z marszruty przez to centrum robocze."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -916,7 +923,7 @@ msgstr "Konsola"
 #. module: mrp
 #: view:board.board:0
 msgid "Work Center Future Load"
-msgstr ""
+msgstr "Przyszłe obłożenie centrum roboczego"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stockproduct0
@@ -995,6 +1002,8 @@ msgid ""
 "Number of operations this work center can do in parallel. If this work "
 "center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
+"Liczba operacji, którą centrum robocze może wykonywać równoległe. Jeśli "
+"centrum stanowi pięciu robotników, to wydajność na cykl wynosi 5."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicerfq0
@@ -1002,6 +1011,8 @@ msgid ""
 "If the service has a 'Buy' supply method, this creates a RFQ, a "
 "subcontracting demand for instance."
 msgstr ""
+"Jeśli usługa ma metodę zapatrzenia 'Kupno', to tworzone jest zapytanie "
+"ofertowe do podwykonawcy usługi."
 
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
@@ -1011,7 +1022,7 @@ msgstr "Przesuń produkt"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Late"
-msgstr ""
+msgstr "Późno"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
@@ -1022,7 +1033,7 @@ msgstr "Na zapas"
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing work centers."
-msgstr ""
+msgstr "Określa kolejność centrum roboczego w listach."
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1074,7 +1085,7 @@ msgstr "Nazwa"
 #. module: mrp
 #: view:mrp.installer:0
 msgid "MRP Application Configuration"
-msgstr ""
+msgstr "Konfiguracja aplikacji MRP"
 
 #. module: mrp
 #: help:mrp.installer,mrp_jit:0
@@ -1344,7 +1355,7 @@ msgstr "Nr zamówienia produkcji"
 #: code:addons/mrp/mrp.py:630
 #, python-format
 msgid "Manufacturing order '%s' is ready to produce."
-msgstr "Zmaówienie produkcji '%s' jest gotowe do produkcji."
+msgstr "Zamówienie produkcji '%s' jest gotowe do produkcji."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1402,7 +1413,7 @@ msgstr "Struktura kosztów produktu"
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Components suppliers"
-msgstr ""
+msgstr "Dostawcy kompnentów"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_installer
@@ -1460,7 +1471,7 @@ msgstr "Zużyty produkt"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Pending"
-msgstr ""
+msgstr "Oczekiwanie"
 
 #. module: mrp
 #: field:mrp.bom,active:0
@@ -1640,7 +1651,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Consume Products"
-msgstr ""
+msgstr "Zużyj surowce"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -2186,7 +2197,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_revision
 msgid "Bill of Material Revision"
-msgstr ""
+msgstr "Wersja zestawienia materiałowego"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -2203,7 +2214,7 @@ msgstr "Produkcje"
 #: code:addons/mrp/report/price.py:194
 #, python-format
 msgid "Work Cost of "
-msgstr ""
+msgstr "Koszt pracy "
 
 #. module: mrp
 #: help:mrp.workcenter,note:0
@@ -2273,7 +2284,7 @@ msgstr "Cena produktu"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_installer
 msgid "MRP Applications Configuration"
-msgstr ""
+msgstr "Konfiguracja aplikacji MRP"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move_split
@@ -2340,7 +2351,7 @@ msgstr "Produkowanie"
 #. module: mrp
 #: view:board.board:0
 msgid "Next Production Orders"
-msgstr ""
+msgstr "Następne zamówienia produkcji"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -2351,7 +2362,7 @@ msgstr "Luty"
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
-msgstr ""
+msgstr "Grupy właściwości"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0

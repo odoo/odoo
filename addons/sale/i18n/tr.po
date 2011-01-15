@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-13 08:56+0000\n"
-"Last-Translator: Arif Aydogmus <arifaydogmus@gmail.com>\n"
+"PO-Revision-Date: 2011-01-14 23:11+0000\n"
+"Last-Translator: Oktay Altunergil <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:21+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:29+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale
@@ -111,6 +111,10 @@ msgid ""
 "sales orders partially, by lines of sales order. You do not need this list "
 "if you invoice from the delivery orders or if you invoice sales totally."
 msgstr ""
+"Bu listede faturalacak satış sipariş kalemleri bulunuyor. Sipariş "
+"kalemlerini gruplayarak faturalayabilirsiniz. Teslimata bağlı faturalama ya "
+"da satış toplamına göre faturalama yöntemlerini kullanıyorsanız bu listeye "
+"gereksiniminiz bulunmuyor."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -158,7 +162,7 @@ msgstr "Öntanımlı Ödeme Şartları"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_config_picking_policy
 msgid "Configure Picking Policy for Sales Order"
-msgstr ""
+msgstr "Satış Siparişleri için Paketleme Politikasını Yapılandır"
 
 #. module: sale
 #: view:sale.order:0
@@ -166,7 +170,7 @@ msgstr ""
 #: field:sale.order.line,state:0
 #: view:sale.report:0
 msgid "State"
-msgstr ""
+msgstr "Durum"
 
 #. module: sale
 #: report:sale.order:0
@@ -181,7 +185,7 @@ msgstr ""
 #. module: sale
 #: help:sale.make.invoice,grouped:0
 msgid "Check the box to group the invoices for the same customers"
-msgstr ""
+msgstr "Gruplamak üzere aynı müşteri faturalarını işaretleyin"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -191,7 +195,7 @@ msgstr "Sipariş Alınan Miktara göre"
 #. module: sale
 #: view:sale.report:0
 msgid "Sales by Salesman"
-msgstr ""
+msgstr "Satış elemanına göre satışlar"
 
 #. module: sale
 #: field:sale.order.line,move_ids:0
@@ -207,12 +211,12 @@ msgstr "Sipariş Referansı"
 #. module: sale
 #: view:sale.order:0
 msgid "Other Information"
-msgstr ""
+msgstr "Diğer Bilgiler"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Dates"
-msgstr ""
+msgstr "Tarihler"
 
 #. module: sale
 #: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
@@ -220,16 +224,18 @@ msgid ""
 "The invoice is created automatically if the shipping policy is 'Invoice from "
 "pick' or 'Invoice on order after delivery'."
 msgstr ""
+"Teslimat politikası 'Paketlemeye göre faturalama' ya da 'Teslimat sonrası "
+"siparişten faturalama' ise faturalar otomatikman yaratılacak."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
-msgstr ""
+msgstr "Satış faturalarını oluştur"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Recreate Packing"
-msgstr ""
+msgstr "Paketlemeyi yeniden yarat"
 
 #. module: sale
 #: field:sale.order.line,discount:0
@@ -257,7 +263,7 @@ msgstr "Sevkiyat Paketlemesi"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_saleinvoice0
 msgid "From a sales order"
-msgstr ""
+msgstr "Satış siparişinden"
 
 #. module: sale
 #: field:sale.shop,name:0
@@ -268,7 +274,7 @@ msgstr "İş Yeri Adı"
 #: code:addons/sale/sale.py:1014
 #, python-format
 msgid "No Customer Defined !"
-msgstr ""
+msgstr "Herhangi bir müşteri tanımlanmadı !"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
@@ -283,7 +289,7 @@ msgstr "Taslak olarak Ayarla"
 #. module: sale
 #: view:sale.order:0
 msgid "Conditions"
-msgstr ""
+msgstr "Koşullar"
 
 #. module: sale
 #: help:sale.order,order_policy:0
@@ -307,11 +313,13 @@ msgid ""
 "There is no income category account defined in default Properties for "
 "Product Category or Fiscal Position is not defined !"
 msgstr ""
+"Varsayılan Ürün Kategori Özelliklerinde kategori gelir hesabı yok ya da Mali "
+"Konum  tanımlanmamış !"
 
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Yapılandır"
 
 #. module: sale
 #: constraint:stock.move:0

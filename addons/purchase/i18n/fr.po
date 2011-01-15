@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:00+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:08+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: purchase
@@ -76,11 +76,11 @@ msgstr ""
 "produits à un fournisseur mais que l'achat n'est pas encore confirmé. "
 "Utilisez aussi ce menu pour passer en revues les demandes de devis créées "
 "automatiquement et basées sur vos règles logistiques (stock minimum, "
-"production à la demande, etc). Vous pouvez convertir une demande de devis en "
-"bon de commande une fois que la commande est confirmée. Si vous utilisez "
-"l'interface étendue (depuis les préférences utilisateurs), vous pouvez "
-"sélectionner comment contrôler vos factures fournisseur : basées sur les "
-"commandes, basées sur les réceptions ou saisie manuelle."
+"approvisionnement à la commande, etc). Vous pouvez convertir une demande de "
+"devis en bon de commande une fois que la commande est confirmée. Si vous "
+"utilisez l'interface étendue (dans les préférences utilisateurs), vous "
+"pouvez sélectionner comment contrôler vos factures fournisseur : basées sur "
+"les commandes, basées sur les réceptions ou création manuelle."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -167,7 +167,7 @@ msgstr "Quantité"
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr "Sélectionnez une commande de vente ouverte"
+msgstr "Sélectionnez un bon de commande ouvert"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -236,9 +236,9 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr ""
-"La liste de prix fixe la devise utilisée pour la commande d'achat. Elle "
-"calcule également le prix fournisseur pour les quantités de produits "
-"sélectionnées."
+"La liste de prix fixe la devise utilisée pour le bon de commande. Elle "
+"calcule également le prix fournisseur pour les quantités et/ou produits "
+"sélectionnés."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
@@ -325,7 +325,7 @@ msgstr "Taxes"
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
-msgstr "Commande d'achat"
+msgstr "Bon de commande"
 
 #. module: purchase
 #: field:purchase.order,name:0
@@ -353,7 +353,7 @@ msgstr "Produits"
 #. module: purchase
 #: field:purchase.installer,progress:0
 msgid "Configuration Progress"
-msgstr "Avancement de la configuration"
+msgstr "Progression de la Configuration"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -381,7 +381,7 @@ msgstr "Montant d'achat supérieur à la limite"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Convert to Purchase Order"
-msgstr "Convertir en ordre d'achat"
+msgstr "Convertir en bon de commande"
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0
@@ -786,9 +786,9 @@ msgid ""
 "match it with the draft invoice and validate it."
 msgstr ""
 "Utilisez ce menu pour contrôler les factures à recevoir des fournisseurs. "
-"OpenERP génère par avance des factures à l'état \"Brouillon\" depuis les "
-"bons de commande ou les réceptions, en fonction de vos paramètres. Une fois "
-"que vous avez reçu la facture du fournisseur, vous pouvez faire la "
+"OpenERP génère par avance des factures à l'état 'Brouillon' depuis les bons "
+"de commande ou les réceptions, en fonction de vos paramètres. Une fois que "
+"vous avez reçu la facture du fournisseur, vous pouvez faire la "
 "correspondance avec la facture à l'état 'Brouillon' et la valider."
 
 #. module: purchase
@@ -834,8 +834,7 @@ msgstr "Manuel"
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
 msgstr ""
-"Vous devez d'abord annuler toutes les opérations de manutention associées à "
-"cette commande d'achat."
+"Vous devez d'abord annuler tous les transfers associés à ce bon de commande."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -961,13 +960,13 @@ msgstr "En attente de confirmation du fournisseur"
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr "Demande de devis"
+msgstr "Demande de prix :"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
-msgstr "Commande d'achat en attente d'approbation"
+msgstr "Bon de commandes en attente d'approbation"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1188,8 +1187,7 @@ msgstr ""
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
 msgstr ""
-"Vous devez avant tout annuler les factures attachées à cette commande "
-"d'achat."
+"Vous devez avant tout annuler les factures attachées à ce bon de commande."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:48
@@ -1385,7 +1383,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
 #: view:purchase.installer:0
 msgid "Purchases Application Configuration"
-msgstr "Configuration de l'application des achats"
+msgstr "Configuration de l'application achats"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
@@ -1395,7 +1393,7 @@ msgstr "Position Fiscale"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr "Demande de devis N°"
+msgstr "Demande de prix N°"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
@@ -1434,7 +1432,7 @@ msgstr "Le fournisseur valide l'ordre d'achat."
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
 msgid "Purchase Orders"
-msgstr "Commandes d'achats"
+msgstr "Bon de commande"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -1466,7 +1464,7 @@ msgstr "Total des commandes par utilisateur par mois"
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Request for Quotation"
-msgstr "Demande de devis"
+msgstr "Demande de prix"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1502,7 +1500,7 @@ msgstr "Entrepôt"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr "Demande de devis"
+msgstr "Demande de prix."
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1563,7 +1561,7 @@ msgstr "Description"
 #. module: purchase
 #: help:res.company,po_lead:0
 msgid "This is the leads/security time for each purchase order."
-msgstr "C'est le délai / temps de sécurité pour chaque commande d'achat."
+msgstr "C'est le délais / temps de sécurité pour chaque bon de commande."
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1601,7 +1599,7 @@ msgstr "Livraison"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr "Demande de devis"
+msgstr "Demande de prix"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1634,7 +1632,7 @@ msgstr "Quantité totale et montant total par mois"
 #: code:addons/purchase/purchase.py:399
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr "Impossible d'annuler la commande d'achat !"
+msgstr "Impossible d'annuler le bon de commande !"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1

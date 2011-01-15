@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 23:33+0000\n"
+"PO-Revision-Date: 2011-01-14 14:17+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:09+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:17+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_followup
@@ -51,6 +51,29 @@ msgid ""
 "Sent\n"
 "\n"
 msgstr ""
+"\n"
+"    Kifizetetlen számlák miatti levelek automatizálására szolgáló modul, "
+"több szintű emlékeztetéssel.\n"
+"\n"
+"\n"
+"     Az alábbi menüpontban határozhatja meg az emlékeztetők többszörös "
+"szintjét:\n"
+"        Könyvelés/Konfiguráció/Egyéb/Fizetési emlékeztetők\n"
+"\n"
+"    Miután definiálásra került, a következő menüpontból automatikusan \n"
+"    nyomtathat emlékeztetőket akár minden nap:\n"
+"        Könyvelés/Időszaki feldolgozás/Számlázás/Fizetési emlékeztetők "
+"küldése\n"
+"\n"
+"    Egy PDF-et állít elő, amely az összes levelet tartalmazza. \n"
+"    Különböző partnerekre különböző politikákat határozhat meg.  \n"
+"    Levelet is küldhet a vevőknek.\n"
+"\n"
+"    Ha az adott partnerre/számlára meg akarja változtatni az emlékeztető "
+"szintjét, az alábbi menüpontnál teheti meg:\n"
+"        Könyvelés/Kimutatások/Általános kimutatások/Partnerek/Elküldött "
+"fizetési emlékeztetők\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -66,6 +89,10 @@ msgid ""
 "E-Mail sent to following Partners successfully. !\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Az e-mail sikeresen kiküldésre került a következő partnereknek!\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -177,7 +204,7 @@ msgstr "ÁFA:"
 #: field:account_followup.stat,partner_id:0
 #: field:account_followup.stat.by.partner,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -464,6 +491,8 @@ msgid ""
 "All E-mails have been successfully sent to Partners:.\n"
 "\n"
 msgstr ""
+"Minden e-mail sikeresen kiküldésre került a partnereknek.\n"
+"\n"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -653,6 +682,9 @@ msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
 msgstr ""
+"E-mail a következő partnereknek nem került kiküldésre, mert az e-mail cím "
+"nem érhető el!\n"
+"\n"
 
 #. module: account_followup
 #: view:account.followup.print:0

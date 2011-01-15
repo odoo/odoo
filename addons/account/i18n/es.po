@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 23:08+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2011-01-14 08:36+0000\n"
+"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:16+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:24+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -31,7 +30,7 @@ msgstr "Otra configuración"
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:40
 #, python-format
 msgid "No End of year journal defined for the fiscal year"
-msgstr ""
+msgstr "No hay ningún diario de cierre definido para el ejercicio fiscal"
 
 #. module: account
 #: code:addons/account/account.py:506
@@ -1430,6 +1429,10 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
+"Un asiento de diario se compone de varias anotaciones, cada una de las "
+"cuales es una operación bien al debe o bien al haber. OpenERP crea "
+"automáticamente un asiento por cada documento contable: factura, reembolso, "
+"pago a proveedor, extractos de cuenta bancaria, etc"
 
 #. module: account
 #: view:account.entries.report:0
@@ -1575,6 +1578,12 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Un extracto de cuenta bancaria es un resumen de todas las transacciones "
+"financieras ocurridas en un periodo de tiempo en una cuenta de depósito, una "
+"tarjeta de crédito o cualquier otro tipo de cuenta financiera. El balance "
+"inicial será propuesto automáticamente y el balance de cierre se basará en "
+"su extracto. Situándose sobre la columna Pagos de una línea, puede pulsar F1 "
+"para abrir el formulario de conciliación."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -3613,7 +3622,7 @@ msgstr "Precio unidad"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
 msgid "Analytic Items"
-msgstr ""
+msgstr "Apuntes analíticos"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1128
@@ -4327,6 +4336,8 @@ msgid ""
 "You cannot create an account! \n"
 "Make sure if the account has children then it should be type \"View\"!"
 msgstr ""
+"¡No se puede crear la cuenta! \n"
+"¡Asegúrese de que si la cuenta tiene hijos su tipo sea \"Vista\"!"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -6290,6 +6301,13 @@ msgid ""
 "account. From this view, you can create and manage the account types you "
 "need for your company."
 msgstr ""
+"Un tipo de cuenta es usado para determinar cómo se utiliza una cuenta en "
+"cada diario. El método por defecto de un tipo de cuenta determina el proceso "
+"para el cierre anual. Informes como el informe de balance y el de pérdidas y "
+"ganancias usan la categoría (perdidas/ganancias o balance). Por ejemplo, el "
+"tipo de cuenta puede ser asociado a una cuenta de activos, gastos o pagos. "
+"Desde esta vista, puede crear y gestionar los tipos de cuenta necesarios "
+"para su compañía."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_reconcile_tree
@@ -8660,6 +8678,10 @@ msgid ""
 "partially. You can easily generate refunds and reconcile them directly from "
 "the invoice form."
 msgstr ""
+"Con reembolsos de proveedor puede gestionar las notas de crédito que recibe "
+"de sus proveedores. Un reembolso es un documento que abona una factura total "
+"o parcialmente. Puede fácilmente generar reembolsos y conciliarlos "
+"directamente desde el formulario de factura."
 
 #. module: account
 #: view:account.account.template:0
@@ -12045,6 +12067,15 @@ msgstr ""
 #~ "Puede buscar asientos contables individuales mediante la búsqueda de "
 #~ "información útil. Para buscar asientos contables, abra un diario y "
 #~ "seleccione una línea de registro."
+
+#~ msgid ""
+#~ "This Account is used for trasfering Profit/Loss(If It is Profit: Amount will "
+#~ "be added, Loss : Amount will be duducted.), Which is calculated from Profilt "
+#~ "& Loss Report"
+#~ msgstr ""
+#~ "Esta cuenta se utiliza para transferir las Pérdidas/Ganancias (si es una "
+#~ "Ganancia: Importe será añadido, Pérdida: Importe será deducido), que se "
+#~ "calcula en el informe de Pérdidas y Ganancias."
 
 #~ msgid ""
 #~ "Create and manage accounts you will need to record financial entries in. "

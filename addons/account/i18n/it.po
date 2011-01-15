@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 22:29+0000\n"
-"Last-Translator: Vincenzo Marino <Unknown>\n"
+"PO-Revision-Date: 2011-01-14 12:09+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:13+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:21+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -70,7 +70,7 @@ msgstr "Riserva"
 #: code:addons/account/invoice.py:785
 #, python-format
 msgid "Please define sequence on invoice journal"
-msgstr "Definire una sequenza per in registro delle fatture"
+msgstr "Definire una sequenza per il giornale fatture"
 
 #. module: account
 #: constraint:account.period:0
@@ -222,9 +222,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Fornisce il tipo di registro analitico. OpenERP cerca un registro dello "
-"stesso tipo quando ne ha bisogno per un documento, come una fattura, che "
-"crea voci nel bilancio analitico."
+"Fornisce il tipo di giornale analitico. Quando cerca un documento (es: una "
+"fattura) per creare una registrazione analitica, OpenERP controllerà la "
+"presenza di un giornale dello stesso tipo."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -357,10 +357,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Financial Accounting/Accounts/Journals."
 msgstr ""
-"Non trovo il registro contabile %s per questa azienda:\n"
+"Non trovo nessun giornale di tipo %s per questa azienda:\n"
 "\n"
-"Puoi crearne uno nel menu: \n"
-"Configurazione/Finanziaria/Conti/Registri."
+"Puoi crearne uno tramite il menu:\n"
+"Configurazione/Contabilità Generale/Conti/Giornali."
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
@@ -395,9 +395,9 @@ msgid ""
 "OpenERP. Journal items are created by OpenERP if you use Bank Statements, "
 "Cash Registers, or Customer/Supplier payments."
 msgstr ""
-"Questa vista viene usata dal contabile per inserire molte registrazioni in "
-"OpenERP. Se si usano i movimenti bancari, registri di cassa o pagamenti per "
-"clienti o fornitori, vengono create scritture nel registro."
+"Questa vista viene usata dai contabili per inserire molte registrazioni in "
+"OpenERP. Le registrazioni sui giornali vengono create da OpenERP se si usano "
+"movimenti bancari, registratori di cassa o pagamenti clienti/fornitori."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -7629,7 +7629,7 @@ msgstr "Seleziona l'Anno Fiscale"
 #: code:addons/account/installer.py:495
 #, python-format
 msgid "Purchase Refund Journal"
-msgstr ""
+msgstr "Giornale Note di Credito Fornitori"
 
 #. module: account
 #: help:account.tax.template,amount:0
@@ -8495,6 +8495,10 @@ msgid ""
 "partially. You can easily generate refunds and reconcile them directly from "
 "the invoice form."
 msgstr ""
+"Con le Note di Credito Fornitore , è possibile  gestire le note di credito  "
+"ricevute dai vostri forintori. Un Nota di Credito è un documento che storna "
+"una fattua completamente o parzialmente. SI possono creare facilmente delle "
+"note di credite e riconciliarle direttamente dalla schermata della fattura."
 
 #. module: account
 #: view:account.account.template:0

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 23:30+0000\n"
+"PO-Revision-Date: 2011-01-14 14:25+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:24+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_payment
@@ -71,6 +71,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
+"Az átutalási megbízás berögzítéskor 'Tervezet' állapotba kerül. \n"
+" Miután a bank jóváhagyja, állapota 'Jóváhagyott'-ra változik. \n"
+" Ha az átutalás megtörténik, az állapota 'Kész' lesz."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -681,7 +684,7 @@ msgstr "Tétel információ"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_order_create
 msgid "payment.order.create"
-msgstr ""
+msgstr "payment.order.create"
 
 #. module: account_payment
 #: field:payment.line,order_id:0
@@ -703,7 +706,7 @@ msgstr "Átutalás végrehajtása"
 #: field:payment.line,partner_id:0
 #: report:payment.order:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order

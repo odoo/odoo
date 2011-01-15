@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:31+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:39+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_holidays
@@ -66,7 +66,7 @@ msgstr "Geweigerd"
 #. module: hr_holidays
 #: help:hr.holidays,category_id:0
 msgid "Category of Employee"
-msgstr ""
+msgstr "Medewerker categorie"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -122,6 +122,11 @@ msgid ""
 "the employee. You can define several allowance types (paid holidays, "
 "sickness, etc.) and manage allowances per type."
 msgstr ""
+"Verlofaanvragen kunnen worden ingediend door medewerkers en goedgekeurd door "
+"hun managers. Als een verlofaanvraag is goedgekeurd, verschijnt het "
+"automatisch in de agenda van de medewerker. U kunt verschillende "
+"verlofvormen definiëren (betaald verlof, ziek, etc.) en verlof per vorm "
+"beheren."
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -145,6 +150,8 @@ msgstr "Weigeren"
 msgid ""
 "You cannot validate leaves for employee %s: too few remaining days (%s)."
 msgstr ""
+"U kunt geen verlof goedkeuren voor medewerker %s: onvoldoende resterende "
+"dagen (%s)."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -263,7 +270,7 @@ msgstr "Bevestigen"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The start date must be before the end date !"
-msgstr ""
+msgstr "De begindatum moet liggen vóór de einddatum !"
 
 #. module: hr_holidays
 #: model:ir.module.module,description:hr_holidays.module_meta_information
@@ -385,7 +392,7 @@ msgstr "Tarwe"
 #. module: hr_holidays
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr ""
+msgstr "Fout! Verlof begindatum moet liggen vóór de verlof einddatum !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -402,7 +409,7 @@ msgstr "Verlofsoort zoeken"
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "You have to select an employee or a category"
-msgstr ""
+msgstr "U moet een medewerker of categorie selecteren"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -429,6 +436,8 @@ msgid ""
 "If you set a meeting type, OpenERP will create a meeting in the calendar "
 "once a leave is validated."
 msgstr ""
+"Als u een afspraaksoort instelt, maakt OpenERP een afspraak in de agenda "
+"zodra het verlof is goedgekeurd."
 
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
@@ -506,7 +515,7 @@ msgstr "Vakantie"
 #: field:hr.holidays,case_id:0
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting"
-msgstr ""
+msgstr "Afspraak"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -538,7 +547,7 @@ msgstr "Actief"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
 msgid "Leaves To Validate"
-msgstr ""
+msgstr "Goed te keuren verlof"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -548,7 +557,7 @@ msgstr "Uitgebreide filters..."
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0 !"
-msgstr ""
+msgstr "Het aantal dagen moet groter zijn dan 0 !"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
@@ -594,7 +603,7 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Misc"
-msgstr ""
+msgstr "Overig"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -696,7 +705,7 @@ msgstr ""
 #: code:addons/hr_holidays/hr_holidays.py:186
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
-msgstr ""
+msgstr "U kunt geen verlof verwijderen dat niet in Concept status staat !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -759,7 +768,7 @@ msgstr "Lila"
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
-msgstr ""
+msgstr "Maximum toegestaan"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0

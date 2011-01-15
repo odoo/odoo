@@ -13,7 +13,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 04:57+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:05+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
@@ -227,7 +227,7 @@ msgstr ""
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Not Applicable"
-msgstr "No Aplicable"
+msgstr "No aplicable"
 
 #. module: stock
 #: help:stock.tracking,serial:0
@@ -674,7 +674,7 @@ msgstr "Paquetes"
 #. module: stock
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Está intentando asignar un lote que no es del mismo producto"
 
 #. module: stock
 #: view:res.partner:0
@@ -968,18 +968,18 @@ msgstr "Padre izquierdo"
 #: code:addons/stock/wizard/stock_partial_move.py:132
 #, python-format
 msgid "Delivery Information"
-msgstr ""
+msgstr "Información de envío"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:48
 #, python-format
 msgid "Stock Inventory is done"
-msgstr ""
+msgstr "Inventario de stock realizado"
 
 #. module: stock
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Error: Código EAN erróneo"
 
 #. module: stock
 #: code:addons/stock/product.py:148
@@ -987,6 +987,8 @@ msgstr ""
 msgid ""
 "There is no stock output account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"No se ha definido una cuenta de salida de stock para este producto: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -1427,13 +1429,13 @@ msgstr "Acción Inválida !"
 #: code:addons/stock/wizard/stock_partial_move.py:139
 #, python-format
 msgid "Receive Information"
-msgstr ""
+msgstr "Información de recepción"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview
 #: report:lot.stock.overview:0
 msgid "Location Inventory Overview"
-msgstr ""
+msgstr "Resumen inventario ubicación"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_replacement
@@ -1459,7 +1461,7 @@ msgstr "Trazabilidad hacia abajo"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:113
 #, python-format
 msgid "No Invoices were created"
-msgstr ""
+msgstr "No se han creado facturas"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_company
@@ -1470,7 +1472,7 @@ msgstr "OpenERP S.A."
 #: code:addons/stock/wizard/stock_partial_move.py:140
 #, python-format
 msgid "Receive"
-msgstr ""
+msgstr "Recibir"
 
 #. module: stock
 #: help:stock.incoterms,active:0
@@ -1886,6 +1888,10 @@ msgid ""
 "moves. Use this report when you want to analyse the different routes taken "
 "by your products and inventory management performance."
 msgstr ""
+"El análisis de movimientos el permite analizar y verificar fácilmente los "
+"movimientos de stock de su compañía. Utilice este informe cuando quiera "
+"analizar las diferentes rutas tomadas por sus productos y el rendimiento de "
+"su inventario."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -2094,7 +2100,7 @@ msgstr "Gestión de inventario"
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "Partial Delivery"
-msgstr ""
+msgstr "Envío parcial"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2329,13 +2335,13 @@ msgstr "Movimiento stock"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Delay(Days)"
-msgstr ""
+msgstr "Retraso (días)"
 
 #. module: stock
 #: field:stock.move.memory.in,move_id:0
 #: field:stock.move.memory.out,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "Asiento"
 
 #. module: stock
 #: help:stock.picking,min_date:0
@@ -2357,7 +2363,7 @@ msgstr "Revisiones"
 #. module: stock
 #: view:stock.picking:0
 msgid "This operation will cancel the shipment. Do you want to continue?"
-msgstr ""
+msgstr "Esta operación cancelará el envío. ¿Desea continuar?"
 
 #. module: stock
 #: help:product.product,valuation:0
@@ -2381,6 +2387,9 @@ msgid ""
 "levels. Sort and group by selection criteria in order to better analyse and "
 "manage your company  activities."
 msgstr ""
+"El análisis de inventario le permite verificar y analizar fácilmente los "
+"niveles de stock de su compañia. Ordene y agrupe por criterios de selección "
+"para analizar y gestionar mejor las actividades de su empresa."
 
 #. module: stock
 #: help:report.stock.move,location_id:0
@@ -2508,6 +2517,10 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
+"Muestra los últimos inventarios realizados sobre sus productos y los ordena "
+"fácilmente con filtros específicos. Si realiza inventarios parciales "
+"frecuentemente, necesita este informe para asegurar que el stock de cada "
+"producto ha sido controlado al menos una vez al año."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
@@ -2593,7 +2606,7 @@ msgstr "Fechas de completación"
 #. module: stock
 #: help:stock.production.lot,name:0
 msgid "Unique production lot, will be displayed as: PREFIX/SERIAL [INT_REF]"
-msgstr ""
+msgstr "Lote de producción único, se mostrará como: PREFIJO/SERIE [REF_INT]"
 
 #. module: stock
 #: help:stock.tracking,active:0
@@ -2645,6 +2658,8 @@ msgstr "Unidad de medida"
 msgid ""
 "There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"No se ha definido una cuenta de entrada de stock para este producto: \"%s\" "
+"(id: %d)"
 
 #. module: stock
 #: code:addons/stock/stock.py:2302
@@ -2667,6 +2682,8 @@ msgstr "Rellenar Inventario"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
+"Error: La UdM por defecto y la UdM de compra deben estar en la misma "
+"categoría."
 
 #. module: stock
 #: help:product.category,property_stock_account_input_categ:0
@@ -3001,7 +3018,7 @@ msgstr "Productos de consumo"
 #: code:addons/stock/stock.py:1646
 #, python-format
 msgid "Insufficient Stock in Lot !"
-msgstr ""
+msgstr "¡Stock insuficiente en el lote!"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -3049,7 +3066,7 @@ msgstr ""
 #: field:stock.move.memory.in,wizard_id:0
 #: field:stock.move.memory.out,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "Asistente"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -3103,7 +3120,7 @@ msgstr "Asientos contables"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_intermediatelocation0
@@ -3526,7 +3543,7 @@ msgstr "Diario Cadena"
 #: code:addons/stock/stock.py:729
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
-msgstr ""
+msgstr "No suficiente stock, no ha sido posible reservar los productos."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
@@ -3581,6 +3598,10 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"La lista de envíos entrantes contiene todos los pedidos que va a recibir de "
+"su proveedor. Un envío entrante contiene la lista de productos a recibir en "
+"función del pedido de compra original. Puede validar el envío totalmente o "
+"parcialmente ."
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -3618,12 +3639,12 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Return Products"
-msgstr ""
+msgstr "Devolver productos"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Validate Inventory"
-msgstr ""
+msgstr "Validar inventario"
 
 #. module: stock
 #: help:stock.move,price_currency_id:0
@@ -3712,7 +3733,7 @@ msgstr ""
 #. module: stock
 #: view:board.board:0
 msgid "Outgoing Products Delay"
-msgstr ""
+msgstr "Retraso productos de salida"
 
 #. module: stock
 #: field:stock.move.split.lines,use_exist:0
@@ -3900,6 +3921,8 @@ msgid ""
 "Total quantity after split exceeds the quantity to split for this product: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Cantidad total después de que la división exceda la cantidad para dividir "
+"para este producto: \"%s\" (id: %d)"
 
 #. module: stock
 #: view:stock.move:0
@@ -3933,7 +3956,7 @@ msgstr "cantidad."
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Debe asignar un lote de producción para este producto"
 
 #. module: stock
 #: view:stock.move:0
@@ -3988,7 +4011,7 @@ msgstr "Mayo"
 #: code:addons/stock/wizard/stock_partial_move.py:133
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Enviar"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
@@ -5296,3 +5319,85 @@ msgstr "Detalles opcionales de la ubicación, solo para información"
 #~ msgstr ""
 #~ "Esta es la lista para todas las ordenes de envios, que deben ser preparadas "
 #~ "deacuerdo a tus diferentes ordenes de venta y las reglas de logistica"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."
+
+#~ msgid ""
+#~ "The Internal Moves lists all inventory operations you have to perform in "
+#~ "your warehouse. All operations can be categorized into stock journals, so "
+#~ "that each worker has it's own list of operations to perform in his own "
+#~ "journal. Most operations are prepared automatically by OpenERP according to "
+#~ "your pre-configured logistics rules but you can also record manual stock "
+#~ "operations."
+#~ msgstr ""
+#~ "Los movimientos internos muestran todas las operaciones de inventario que "
+#~ "debe realizar en su almacén. Todas las operaciones pueden ser categorizadas "
+#~ "en diarios de inventario, para que cada empleado tenga su propia lista de "
+#~ "operaciones a realizar en su propio diario. La mayoría de operaciones son "
+#~ "preparadas automáticamente por OpenERP en función de las reglas logísticas "
+#~ "preconfiguradas, pero puede igualmente crear operaciones de stock "
+#~ "manualmente."
+
+#~ msgid ""
+#~ "This menu gives you the full traceability of inventory operations made on a "
+#~ "specific product. You can filter on the product to see all the past or "
+#~ "future movements made on the product."
+#~ msgstr ""
+#~ "Este menú le indica la trazabilidad completa de operaciones de inventario "
+#~ "realizadas sobre un producto. Puede filtrar sobre un producto para ver todos "
+#~ "los movimientos, futuros y pasados, realizados sobre el producto."
+
+#~ msgid ""
+#~ "This is the list of all the production lots (serial numbers) you recorded. "
+#~ "After having selected a lot, you can get the up-stream or down-stream "
+#~ "traceability of the products contained in lot."
+#~ msgstr ""
+#~ "Esta es la lista de todos los lotes de producción (números de serie) que ha "
+#~ "creado. Después de seleccionar un lote, puede obtener la trazabilidad "
+#~ "(ascendente o descendente) de los productos de dicho lote."
+
+#~ msgid ""
+#~ "You will find here the list of all products you are waiting for, according "
+#~ "to your preceding purchase orders. Once you receive an order, you can filter "
+#~ "based on the name of the supplier or the purchase order reference. Then you "
+#~ "can confirm all products received using the buttons on the right of each "
+#~ "line."
+#~ msgstr ""
+#~ "Encontrará aquí la lista de todos los productos que está esperando, en "
+#~ "función de las órdenes de compra realizadas anteriormente. Cuando reciba un "
+#~ "pedido, puede filtrar por el nombre del proveedor o por la referencia del "
+#~ "pedido. Entonces puede confirmar los productos recibidos gracias a los "
+#~ "botones situados a la derecha de cada línea."
+
+#~ msgid ""
+#~ "This is the structure of your company's warehouses and locations. You can "
+#~ "click on a location in order to get the list of the products and their stock "
+#~ "level in this particular location and all its children."
+#~ msgstr ""
+#~ "Esta es la estructura de los almacenes y ubicaciones de su compañía. Puede "
+#~ "hacer clic en una ubicación para obtener la lista de productos y su nivel de "
+#~ "stock para esta ubicación en particular y todos sus hijos."
+
+#~ msgid ""
+#~ "This is the list of all your packs. After having selected a Pack, you can "
+#~ "get the up-stream or down-stream traceability of the products contained in "
+#~ "the pack."
+#~ msgstr ""
+#~ "Esta es la lista de todos sus paquetes. Después de haber seleccionado un "
+#~ "paquete, puede obtener la trazabilidad para arriba y para abajo de los "
+#~ "productos contenidos en el paquete."
+
+#~ msgid ""
+#~ "The stock journals system allows you assign each stock operation into a "
+#~ "specific journal according to the type of operation to perform or the "
+#~ "worker/team that should perform the operation. Examples of stock journals "
+#~ "may be: quality control, pick lists, packing, etc."
+#~ msgstr ""
+#~ "El sistema de diarios de stock permite asignar cada operación de stock a un "
+#~ "diario específico dependiendo del tipo de operación a realizar o el empleado "
+#~ "/ equipo que debe de realizar la operación. Algunos ejemplos de diarios de "
+#~ "stock: control calidad, lista de preparación, embalaje, etc"
+
+#~ msgid "stock.move.memory"
+#~ msgstr "stock.movimiento.memoria"

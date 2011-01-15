@@ -16,7 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:19+0000\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:27+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -188,7 +188,7 @@ msgstr ""
 #: code:addons/account/invoice.py:1421
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "¡Aviso!"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -215,7 +215,7 @@ msgstr "Negativo"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr ""
+msgstr "Diario: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -1141,6 +1141,10 @@ msgid ""
 "purchase orders or receipts. This way, you can control the invoice from your "
 "supplier according to what you purchased or received."
 msgstr ""
+"Con las facturas de proveedor puede introducir y gestionar facturas emitidas "
+"por sus proveedores. OpenERP también puede generar borradores de factura "
+"automáticamente desde pedidos o albaranes de compra. De esta forma, puede "
+"contrastar la factura de su proveedor con lo comprado o recibido."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1279,7 +1283,7 @@ msgstr "Buscar platilla de impuesto"
 #. module: account
 #: report:account.invoice:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Su referencia"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -1421,6 +1425,10 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
+"Una entrada de diario consiste en varias lineas del diario, cada una "
+"registra una transaccion al debe o haber. OpenERP crea automaticamente un "
+"asiento contable por documento: factura, reembolso, pago a proveedor, "
+"extracto bancario, etc."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1486,7 +1494,7 @@ msgstr "Plantilla para Tipos de Contribuyentes"
 #. module: account
 #: model:account.tax.code,name:account.account_tax_code_0
 msgid "Tax Code Test"
-msgstr ""
+msgstr "Test código impuesto"
 
 #. module: account
 #: field:account.automatic.reconcile,reconciled:0
@@ -1565,6 +1573,12 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"Un extracto bancario es un resumen de todas las transacciones financieras "
+"ocurridas sobre un periodo y depositadas en una cuenta, tarjeta de creditoo "
+"algun otro tipo de cuenta financiera. El saldo inicial es propuesto "
+"automaticamente y el saldo final se encuentra en tu extracto. Cuando usted "
+"está en la columna de pago de una línea, puede presionar F1 para abrir el "
+"formulario de la reconciliación."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -3611,6 +3625,7 @@ msgstr "#Asientos"
 msgid ""
 "You selected an Unit of Measure which is not compatible with the product."
 msgstr ""
+"Ha seleccionado una unidad de medida que no es compatible con el producto."
 
 #. module: account
 #: code:addons/account/invoice.py:473
@@ -3711,6 +3726,10 @@ msgid ""
 "debit/credit accounts, of type 'situation' and with a centralized "
 "counterpart."
 msgstr ""
+"Lo más recomendable es usar un diario dedicado a contener los asientos de "
+"apertura de todos los ejercicios. Tenga en cuenta que lo debería definir con "
+"cuentas de debe/haber por defecto, de tipo 'situación' y con una "
+"contrapartida centralizada."
 
 #. module: account
 #: view:account.installer:0
@@ -3753,6 +3772,10 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
+"A partir de este informe, puede tener una visión general del importe "
+"facturado a sus clientes, así como los retrasos en los pagos. La herramienta "
+"de búsqueda también se puede utilizar para personalizar los informes de las "
+"facturas y por tanto, adaptar este análisis a sus necesidades."
 
 #. module: account
 #: view:account.invoice.confirm:0
@@ -3829,6 +3852,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"Si el campo activo se desmarca, permite ocultar la cuenta sin eliminarla."
 
 #. module: account
 #: view:account.tax.template:0
@@ -3881,6 +3905,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using sale price"
 msgstr ""
+"Esta cuenta se utilizará para valorar el stock saliente para la categoría de "
+"producto actual utilizando el precio de venta."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3932,7 +3958,7 @@ msgstr "Month"
 #. module: account
 #: field:account.invoice.report,uom_name:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referencia UdM"
 
 #. module: account
 #: field:account.account,note:0
@@ -4041,7 +4067,7 @@ msgstr "Check if you want to display Accounts with 0 balance too."
 #. module: account
 #: view:account.tax:0
 msgid "Compute Code"
-msgstr ""
+msgstr "Código cálculo"
 
 #. module: account
 #: view:account.account.template:0
@@ -4147,7 +4173,7 @@ msgstr "Account Journal Select"
 #. module: account
 #: view:account.invoice:0
 msgid "Print Invoice"
-msgstr ""
+msgstr "Imprimir factura"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4706,7 +4732,7 @@ msgstr "Pagos"
 #. module: account
 #: view:account.tax:0
 msgid "Reverse Compute Code"
-msgstr ""
+msgstr "Código cálculo inverso"
 
 #. module: account
 #: field:account.subscription.line,move_id:0
@@ -4735,6 +4761,7 @@ msgstr "Nombre de Columna"
 msgid ""
 "This report gives you an overview of the situation of your general journals"
 msgstr ""
+"Este informe proporciona una vista general de la situación de sus diarios"
 
 #. module: account
 #: field:account.entries.report,year:0
@@ -5250,6 +5277,11 @@ msgid ""
 "impossible any new entry record. Close a fiscal year when you need to "
 "finalize your end of year results definitive "
 msgstr ""
+"Si no debe introducir más asientos en un ejercicio fiscal, lo puede cerrar "
+"desde aquí. Se cerrarán todos los períodos abiertos en este ejercicio que "
+"hará imposible introducir ningún asiento nuevo. Cierre un ejercicio fiscal "
+"cuando necesite finalizar los resultados de fin de ejercicio "
+"definitivamente. "
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -5459,6 +5491,10 @@ msgid ""
 "OpenERP allows you to define the tax structure and manage it from this menu. "
 "You can define both numeric and alphanumeric tax codes."
 msgstr ""
+"La definicion de codigo de impuesto depende de la declaracion de impuestos "
+"de tu pais. OpenERP permite definir tu estructura de impuestos y "
+"administrarla desde este menu. Puedes definir codigos de dos tipos: "
+"numericos y alfanumericos."
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
@@ -5571,7 +5607,7 @@ msgstr "Invalid action !"
 #: code:addons/account/wizard/account_move_journal.py:102
 #, python-format
 msgid "Period: %s"
-msgstr ""
+msgstr "Período: %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -5679,6 +5715,10 @@ msgid ""
 "line of the expense account. OpenERP will propose to you automatically the "
 "Tax related to this account and the counterpart \"Account Payable\"."
 msgstr ""
+"Esta vista puede ser usada por los contadores para registrar asientos en "
+"OpenERP. Si deseas registrar una factura de proveedor, empieza por registrar "
+"la linea de la cuenta de egresos. OpenERP propondra automaticamente el "
+"impuesto relacionado a esta cuenta y la contraparte de \"Cuenta por Pagar\""
 
 #. module: account
 #: field:account.entries.report,date_created:0
@@ -6044,6 +6084,10 @@ msgid ""
 "the tool search to analyse information about analytic entries generated in "
 "the system."
 msgstr ""
+"Desde esta vista, dispone de un análisis de los distintos asientos "
+"analíticos de la cuenta analítica que ha definido para ajustarse a sus "
+"necesidades del negocio. Utilice la herramienta de búsqueda para analizar la "
+"información sobre los asientos analíticos generados en el sistema."
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -6095,7 +6139,7 @@ msgstr "Centralización"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Accounting Chart from a Chart Template"
-msgstr ""
+msgstr "Generar su plan contable desde una plantilla de plan contable"
 
 #. module: account
 #: view:account.account:0
@@ -6237,6 +6281,13 @@ msgid ""
 "account. From this view, you can create and manage the account types you "
 "need for your company."
 msgstr ""
+"Un tipo de cuenta se utiliza para determinar cómo se utiliza una cuenta en "
+"cada diario. El método de diferido de un tipo de cuenta determina el proceso "
+"para el cierre anual. Informes como el Balance General y el informe de "
+"pérdidas y ganancias utiliza la categoría (ganancias / pérdida o balance). "
+"Por ejemplo, el tipo de cuenta podría estar vinculado a una cuenta de "
+"activo, de gastos, o cuenta por pagar. Desde esta vista, puede crear y "
+"gestionar los tipos de cuenta que usted necesita para su empresa."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_reconcile_tree
@@ -6391,6 +6442,11 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"Para que una factura se considere pagada, los apuntes contables de la "
+"factura deben estar conciliados con sus contrapartidas, normalmente pagos. "
+"Con la funcionalidad de reconciliación automática, OpenERP realiza su propia "
+"búsqueda de apuntes a conciliar en una serie de cuentas. Encuentra los "
+"apuntes, para cada tercero, donde las cantidades se correspondan."
 
 #. module: account
 #: view:account.move:0
@@ -6419,6 +6475,8 @@ msgid ""
 "This report is an analysis done by a partner. It is a PDF report containing "
 "one line per partner representing the cumulative credit balance"
 msgstr ""
+"Este informe es un análisis realizado por una empresa. Es un informe PDF que "
+"contiene una línea por empresa representando el saldo del haber acumulativo."
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:61
@@ -6504,6 +6562,9 @@ msgid ""
 "allowing you to quickly check the balance of each of your accounts in a "
 "single report"
 msgstr ""
+"Este informe le permite imprimir o generar un pdf de su balance de sumas y "
+"saldos permitiendo comprobar con rapidez el saldo de cada una de sus cuentas "
+"en un único informe."
 
 #. module: account
 #: help:account.move,to_check:0
@@ -6684,6 +6745,11 @@ msgid ""
 "an agreement with a customer or a supplier. With Define Recurring Entries, "
 "you can create such entries to automate the postings in the system."
 msgstr ""
+"Una entrada recurrente es una entrada de varios que se produce de forma "
+"recurrente a partir de una fecha específica, es decir, equivalente a la "
+"firma de un contrato o un acuerdo con un cliente o proveedor. Con Definir "
+"las entradas Recurrentes, puede crear las entradas como para automatizar las "
+"contabilizaciones en el sistema."
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
@@ -6700,6 +6766,11 @@ msgid ""
 "basis. You can enter the coins that are in your cash box, and then post "
 "entries when money comes in or goes out of the cash box."
 msgstr ""
+"Una caja registradora le permite administrar las entradas de efectivo en los "
+"diarios de efectivo. Esta característica proporciona una manera fácil para "
+"el seguimiento de los pagos en efectivo sobre una base diaria. Puede "
+"introducir las monedas que están en su caja, y luego enviar las entradas "
+"cuando el dinero entra o sale de la caja."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -6854,6 +6925,9 @@ msgid ""
 "You can search for individual account entries through useful information. To "
 "search for account entries, open a journal, then select a record line."
 msgstr ""
+"Puedes buscar por entrada de cuentas individuales atraves de información "
+"útil. Para buscar asientos contables, abra un diario, luego seleccione la "
+"linea de registro."
 
 #. module: account
 #: report:account.invoice:0
@@ -7092,6 +7166,12 @@ msgid ""
 "Situation' to be used at the time of new fiscal year creation or end of year "
 "entries generation."
 msgstr ""
+"Seleccione 'Ventas' para el diario de ventas que será usado cuando se creen "
+"facturas. Seleccione 'Compras' para el diario a usar cuando se aprueben "
+"pedidos de compra. Seleccione 'Efectivo' (Caja) para que se use a la hora de "
+"hacer pagos. Seleccione 'General' para operaciones misceláneas. Seleccione "
+"'Situación apertura/cierre' para usarlo cuando se crea un nuevo ejercicio "
+"fiscal o la generación del asiento de cierre."
 
 #. module: account
 #: report:account.invoice:0
@@ -7335,6 +7415,11 @@ msgid ""
 "in which they will appear. Then you can create a new journal and link your "
 "view to it."
 msgstr ""
+"Aqui puedes personalizar una vista de diario existente o crear una nueva. "
+"Las vista de diarios determinan la forma como puedes registrar entradas en "
+"tu diario. Selecciona los campos que tu deseas que aparezcan en tu diario y "
+"determina la secuencia en la que apareceran. Entonces puedes crear un nuevo "
+"diario y ligarlo a tu vista."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -7643,11 +7728,15 @@ msgid ""
 "will see the taxes with codes related to your legal statement according to "
 "your country."
 msgstr ""
+"El plan de impuestos es usado para generar tu declaracion periodica. Tu "
+"veras los impuestos con los codigos relacionados a tu declaracion oficial "
+"deacuerdo a tu pais."
 
 #. module: account
 #: view:account.installer.modules:0
 msgid "Add extra Accounting functionalities to the ones already installed."
 msgstr ""
+"Añade funcionalidades contables extras a las que ya tiene instaladas."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -7784,6 +7873,10 @@ msgid ""
 "can easily generate refunds and reconcile them directly from the invoice "
 "form."
 msgstr ""
+"Con reembolsos al cliente puede gestionar las notas de crédito para sus "
+"clientes. Un reembolso es un documento que acredita una factura completa o "
+"parcialmente. Usted puede generar las devoluciones y conciliar con ellos "
+"directamente desde el formulario de factura."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -7833,6 +7926,9 @@ msgid ""
 "added, Loss: Amount will be duducted), which is calculated from Profilt & "
 "Loss Report"
 msgstr ""
+"Esta cuenta es usada para trasferir Perdidas/Ganacias (Ganacias: El monto se "
+"sumara, Perdidas: El monto se restara), que es calculado del reporte de "
+"Perdidas y Ganacias."
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -7944,6 +8040,10 @@ msgid ""
 "sales orders or deliveries. You should only confirm them before sending them "
 "to your customers."
 msgstr ""
+"Con las facturas del cliente puede crear y gestionar las facturas de venta "
+"emitidas a sus clientes. OpenERP tambien puede generar facturas en borrador "
+"automaticamente desde ordenes de venta o envios. Solo debes confirmarlos "
+"antes de enviarlos a tus clientes."
 
 #. module: account
 #: view:account.entries.report:0
@@ -8138,6 +8238,8 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
 msgstr ""
+"El importe del recibo debe ser el mismo importe que el de la línea del "
+"extracto"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1131
@@ -8216,6 +8318,13 @@ msgid ""
 "would be referred to as FY 2011. You are not obliged to follow the actual "
 "calendar year."
 msgstr ""
+"Definir ejercicio de su empresa de acuerdo a sus necesidades. Un ejercicio "
+"es un punto al final de la cual las cuentas de una empresa se componen (por "
+"lo general 12 meses). El ejercicio que normalmente se conoce la fecha en que "
+"termina. Por ejemplo, si el año financiero de la compañía termina 30 de "
+"noviembre 2011, a continuación, todo lo que entre diciembre 1, 2010 y 30 de "
+"noviembre 2011 se conoce como el Año Fiscal 2011. Usted no está obligado a "
+"seguir el año calendario real."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
@@ -8572,6 +8681,10 @@ msgid ""
 "partially. You can easily generate refunds and reconcile them directly from "
 "the invoice form."
 msgstr ""
+"Con el reembolso de proveedores puedes manejar las notas de credito que "
+"recibes de tus proveedores. Un reembolso es un documento que acredita una "
+"factura por completo o parcialmente. Usted puede generar las devoluciones y "
+"conciliar con ellos directamente desde el formulario de factura."
 
 #. module: account
 #: view:account.account.template:0
@@ -8725,6 +8838,12 @@ msgid ""
 "closed or left open depending on your company's activities over a specific "
 "period."
 msgstr ""
+"Here you can define a financial period, an interval of time in your "
+"company's financial year. An accounting period typically is a month or a "
+"quarter. It usually corresponds to the periods of the tax declaration. "
+"Create and manage periods from here and decide whether a period should be "
+"closed or left open depending on your company's activities over a specific "
+"period."
 
 #. module: account
 #: report:account.move.voucher:0
@@ -9120,6 +9239,9 @@ msgid ""
 "payment term!\n"
 "Please define partner on it!"
 msgstr ""
+"La fecha de vencimiento de la línea de asiento generado por la línea del "
+"modelo '%s' se basa en el plazo de pago de la empresa.\n"
+"¡Por favor, defina la empresa en él!"
 
 #. module: account
 #: field:account.cashbox.line,number:0
@@ -9271,6 +9393,8 @@ msgid ""
 "This report allows you to print or generate a pdf of your general ledger "
 "with details of all your account journals"
 msgstr ""
+"Este informe le permite imprimir o generar un pdf de su libro mayor con el "
+"detalle de todos sus diarios contables."
 
 #. module: account
 #: selection:account.account,type:0
@@ -9436,7 +9560,7 @@ msgstr "Total"
 #: code:addons/account/wizard/account_move_journal.py:97
 #, python-format
 msgid "Journal: All"
-msgstr ""
+msgstr "Diario: Todos"
 
 #. module: account
 #: field:account.account,company_id:0
@@ -9566,6 +9690,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using cost price"
 msgstr ""
+"Esta cuenta se utilizará para valorar el stock saliente para la categoría de "
+"producto actual utilizando el precio de coste."
 
 #. module: account
 #: report:account.move.voucher:0
@@ -9778,6 +9904,12 @@ msgid ""
 "may keep several types of specialized journals such as a cash journal, "
 "purchase journal, sales journal..."
 msgstr ""
+"Create and manage your company's journals from this menu. A journal is used "
+"to record transactions of all accounting data related to the day-to-day "
+"business of your company using double-entry bookkeeping system. Depending on "
+"the nature of its activities and the number of daily transactions, a company "
+"may keep several types of specialized journals such as a cash journal, "
+"purchase journal, sales journal..."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
@@ -9952,6 +10084,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the analytic "
 "journal without removing it."
 msgstr ""
+"Si el campo activo se desmarca, permite ocultar el diario analítico sin "
+"eliminarlo."
 
 #. module: account
 #: field:account.analytic.line,ref:0
@@ -10053,6 +10187,13 @@ msgid ""
 "certain amount of information. They have to be certified by an external "
 "auditor annually."
 msgstr ""
+"Create and manage the accounts you need to record journal entries. An "
+"account is part of a ledger allowing your company to register all kinds of "
+"debit and credit transactions. Companies present their annual accounts in "
+"two main parts: the balance sheet and the income statement (profit and loss "
+"account). The annual accounts of a company are required by law to disclose a "
+"certain amount of information. They have to be certified by an external "
+"auditor annually."
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
