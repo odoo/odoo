@@ -540,7 +540,7 @@ class account_invoice(osv.osv):
             journal_ids = obj_journal.search(cr, uid, [('company_id','=',company_id), ('type', '=', journal_type)])
             if journal_ids:
                 val['journal_id'] = journal_ids[0]
-            res_journal_default = self.pool.get('ir.values').get(cr, uid, 'default', False, ['account.invoice'])
+            res_journal_default = self.pool.get('ir.values').get(cr, uid, 'default', 'type=%s' % (type), ['account.invoice'])
             for r in res_journal_default:
                 if r[1] == 'journal_id' and r[2] in journal_ids:
                     val['journal_id'] = r[2]

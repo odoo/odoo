@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-07 16:26+0000\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-13 11:34+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-08 05:00+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:29+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -253,9 +253,11 @@ msgstr ""
 "clientes."
 
 #. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Shipping Default Policy"
-msgstr "Política de envío por defecto"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sales Manager Dashboard"
+msgstr "Tablero responsable ventas"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -1508,13 +1510,6 @@ msgstr ""
 "entrega de forma manual o automática."
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Dashboard"
-msgstr "Tablero de ventas"
-
-#. module: sale
 #: code:addons/sale/sale.py:1165
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
@@ -2001,6 +1996,11 @@ msgstr "El pedido de venta '%s' ha sido cambiado a estado borrador."
 #: selection:sale.order.line,type:0
 msgid "from stock"
 msgstr "desde stock"
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Política de envío por defecto"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -2854,9 +2854,6 @@ msgstr "Facturar desde albaranes"
 #~ msgid "Date on which sale order is created"
 #~ msgstr "Fecha en que el pedido de venta es creado."
 
-#~ msgid "Sales Manager Dashboard"
-#~ msgstr "Tablero responsable ventas"
-
 #~ msgid "From a sale order"
 #~ msgstr "Desde un pedido de venta"
 
@@ -3212,3 +3209,6 @@ msgstr "Facturar desde albaranes"
 #~ "En función de la configuración del pedido de venta, se generará una factura "
 #~ "borrador para que únicamente tenga que confirmarla para facturar a su "
 #~ "cliente."
+
+#~ msgid "Sales Dashboard"
+#~ msgstr "Tablero de ventas"

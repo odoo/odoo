@@ -90,4 +90,13 @@ class product_product(osv.osv):
         for bom in bom_obj.browse(cr, uid, bom_ids, context=context):
             _compute_price(bom)
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        default.update({
+            'bom_ids': []
+        })
+        return super(product_product, self).copy(cr, uid, id, default, context=context)
+
+
 product_product()

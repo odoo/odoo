@@ -430,7 +430,7 @@ class account_account(osv.osv):
 
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id']),
-        (_check_type, 'You cannot create an account! \nMake sure if the account has children then it should be type "View"! ', ['type']),
+        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -536,10 +536,14 @@ class account_account(osv.osv):
         if context is None:
             context = {}
 
+        # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
             if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
+                # Allow the write if the value is the same
+                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
+                    if vals['company_id']!=i:
+                        raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
@@ -2317,7 +2321,7 @@ class account_account_template(osv.osv):
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id']),
-        (_check_type, 'You cannot create an account template! \nMake sure if the account template has parent then it should be type "View"! ', ['type']),
+        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
 
     ]
 

@@ -22,10 +22,7 @@
 from lxml import etree
 import time
 from datetime import datetime, date
-from operator import itemgetter
-from itertools import groupby
 
-from tools.misc import flatten
 from tools.translate import _
 from osv import fields, osv
 
@@ -129,8 +126,8 @@ class project(osv.osv):
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
 
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose, but a user has to be member of a project to add a the to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'parent_id': fields.many2one('project.project', 'Parent Project'),
+        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
+            help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
@@ -322,7 +319,6 @@ class task(osv.osv):
 
     # Compute: effective_hours, total_hours, progress
     def _hours_get(self, cr, uid, ids, field_names, args, context=None):
-        project_obj = self.pool.get('project.project')
         res = {}
         cr.execute("SELECT task_id, COALESCE(SUM(hours),0) FROM project_task_work WHERE task_id IN %s GROUP BY task_id",(tuple(ids),))
         hours = dict(cr.fetchall())
@@ -454,7 +450,7 @@ class task(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c)
     }
 
-    _order = "sequence, priority, date_start, id"
+    _order = "sequence,priority, date_start, name, id"
 
     def _check_recursion(self, cr, uid, ids, context=None):
         obj_task = self.browse(cr, uid, ids[0], context=context)
@@ -632,7 +628,7 @@ class task(osv.osv):
         Delegate Task to another users.
         """
         task = self.browse(cr, uid, task_id, context=context)
-        new_task_id = self.copy(cr, uid, task.id, {
+        self.copy(cr, uid, task.id, {
             'name': delegate_data['name'],
             'user_id': delegate_data['user_id'],
             'planned_hours': delegate_data['planned_hours'],

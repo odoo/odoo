@@ -170,6 +170,8 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
+                            <field name="active" groups="base.group_extended" />
+                            <newline/>
                             <group col="2" colspan="2">
                                 <separator string="Currency" colspan="2"/>
                                 <field name="currency_id"/>
@@ -179,7 +181,6 @@
                                 <separator string="Reconcile" colspan="2"/>
                                 <field name="reconcile"/>
                             </group>
-                            <field name="active" groups="base.group_extended" />
                             <separator string="Default Taxes" colspan="4"/>
                             <field colspan="4" name="tax_ids" nolabel="1" domain="[('parent_id','=',False)]"/>
                             <separator string="Consolidated Children" colspan="4"/>
@@ -557,6 +558,7 @@
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
                         <field name="currency" invisible="1"/>
+                        <field name='company_id' widget="selection" groups="base.group_multi_company" />
                     </group>
                     <notebook colspan="4">
                         <page string="Transaction" name="statement_line_ids">
@@ -2387,6 +2389,7 @@
                 <group string="res_config_contents" position="replace">
                     <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     <field name ="code_digits" groups="base.group_extended"/>
+                    <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
                     <field name ="seq_journal" groups="base.group_extended"/>
                     <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
@@ -2570,7 +2573,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
+                                    <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines">
@@ -2580,7 +2583,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
+                                    <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
                                     <field name="sequence"/>
                                     <separator colspan="4" string="Notes"/>
