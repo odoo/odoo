@@ -3891,7 +3891,7 @@ class orm(orm_template):
         else:
             # extract the field names, to be able to qualify them and add desc/asc
             m2o_order_list = []
-            for order_part in m2o_order.split(",",1):
+            for order_part in m2o_order.split(","):
                 m2o_order_list.append(order_part.strip().split(" ",1)[0].strip())
             m2o_order = m2o_order_list
 
