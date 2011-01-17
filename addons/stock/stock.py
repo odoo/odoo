@@ -208,6 +208,8 @@ class stock_location(osv.osv):
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
+        'valuation_in_account_id': fields.many2one('account.account', 'Valuation In Account',domain = [('type','=','regular')], help='This account will be used for incoming move for this location, instead of account from Product variation account.'),
+        'valuation_out_account_id': fields.many2one('account.account', 'Valuation Out Account',domain = [('type','=','regular')], help='This account will be used for outgoing move for this location, instead of account from Product variation account.'),
     }
     _defaults = {
         'active': True,
@@ -1985,8 +1987,16 @@ class stock_move(osv.osv):
         """
         product_obj=self.pool.get('product.product')
         accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
-        acc_src = accounts['stock_account_input']
-        acc_dest = accounts['stock_account_output']
+        if move.location_id.valuation_out_account_id:
+            acc_src = move.location_id.valuation_out_account_id.id
+        else:
+            acc_src = accounts['stock_account_input']
+
+        if move.location_dest_id.valuation_in_account_id:
+            acc_dest = move.location_dest_id.valuation_in_account_id.id
+        else:
+            acc_dest = accounts['stock_account_output']
+
         acc_variation = accounts.get('property_stock_variation', False)
         journal_id = accounts['stock_journal']
 
