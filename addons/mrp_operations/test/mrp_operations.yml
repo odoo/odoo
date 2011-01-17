@@ -9,7 +9,7 @@
     date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
-    name: MO/00002
+    name: MO/0123456
     product_id: product.product_product_pc1
     product_qty: 5.0
     product_uom: product.product_uom_unit
@@ -51,7 +51,7 @@
 -
   !python {model: mrp.production}: |
     from tools.translate import _
-    order_ids = self.search(cr, uid, [('state','=','ready')])
+    order_ids = self.search(cr, uid, [('state','=','ready'),('origin','like','%MO/0123456')])
     assert order_ids, _('No new manufacturing order!')
 -
   I check that there one more work order created for new production order.
@@ -59,7 +59,7 @@
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
     prod_obj = self.pool.get('mrp.production')
-    prod_order_ids = prod_obj.search(cr, uid, [('state','=','ready')])
+    prod_order_ids = prod_obj.search(cr, uid, [('state','=','ready'),('origin','like','%MO/0123456')])
     workorder_id = self.search(cr, uid, [('production_id','=', prod_order_ids[0]),('state','=','draft')])
     assert workorder_id, _('No Work order!')
 -
@@ -68,7 +68,7 @@
   !python {model: mrp.production}: |
     import netsvc
     wf_service = netsvc.LocalService("workflow")
-    prod_order_ids = self.search(cr, uid, [('state','=','ready')])
+    prod_order_ids = self.search(cr, uid, [('state','=','ready'),('origin','like','%MO/0123456')])
     for po in prod_order_ids:
         wf_service.trg_validate(uid, 'mrp.production', po, 'button_produce', cr)
 -
@@ -82,7 +82,7 @@
 -
   !python {model: mrp.product.produce}: |
     prod_obj = self.pool.get('mrp.production')
-    prod_order_ids = prod_obj.search(cr, uid, [('state','=','in_production')])
+    prod_order_ids = prod_obj.search(cr, uid, [('origin','like','%MO/0123456')])
     self.do_produce(cr, uid, [ref("mrp_product_produce_0")], {"lang": "en_US", "tz":
       False, "search_default_current": 1, "active_model": "mrp.production", "active_ids":
       prod_order_ids, "active_id": prod_order_ids[0], })
@@ -92,10 +92,11 @@
   !python {model: mrp.production.workcenter.line}: |
     from tools.translate import _
     prod_obj = self.pool.get('mrp.production')
-    prod_order_ids = prod_obj.search(cr, uid, [('state','=','done')])
+    prod_order_ids = prod_obj.search(cr, uid, [('origin','like','%MO/0123456')])
+    assert prod_order_ids, _('Workorder not found')
     workorder_id = self.search(cr, uid, [('production_id','=', prod_order_ids[0])])
     workorder_bro = self.browse(cr, uid, workorder_id[0])
-    assert workorder_bro.state == 'done', 'Work order is not done! It is %s' % workorder_bro.state
+    assert workorder_bro.state == 'done', _('Work order is not done! It is %s') % workorder_bro.state
 -
   Now I check my original production order is now ready.
 -
