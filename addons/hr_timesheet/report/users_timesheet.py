@@ -91,7 +91,6 @@ class report_custom(report_rml):
         for id in data['form']['employee_ids']:
             user = emp_obj.browse(cr, uid, id).user_id.id
             empl_name = emp_obj.browse(cr, uid, id).name
-
             if user:
                 emp_xml += emp_create_xml(cr, user, som, eom, empl_name)
         # Computing the xml
