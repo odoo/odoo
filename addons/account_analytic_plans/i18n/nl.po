@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-11-27 07:39+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-14 13:03+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:10+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -88,7 +88,7 @@ msgstr "Ok"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
@@ -118,7 +118,7 @@ msgstr "Code"
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Verkeerde debet of credit waarde in boekingsregel!"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
@@ -143,7 +143,7 @@ msgstr "Kostenplaats"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "De code van het dagboek moet uniek zijn per bedrijf !"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,ref:0
@@ -155,11 +155,13 @@ msgstr "Kostenplaats referentie"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"U kunt geen boeking maken op een debiteuren/crediteuren rekening zonder een "
+"relatie aan te geven."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Verkooporderregel"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
@@ -210,7 +212,7 @@ msgstr "Kostenplaatsschema's"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Perc(%)"
-msgstr ""
+msgstr "Perc(%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
@@ -362,7 +364,7 @@ msgstr "Account1 Id"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "Bedrijf moet hetzelfde zijn voor de betreffende rekening en periode."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
@@ -470,7 +472,7 @@ msgstr "Verdelingscode"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -516,7 +518,7 @@ msgstr "Volgnummer"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "De naam van het dagboek moet uniek zijn per bedrijf !"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:214
@@ -527,7 +529,7 @@ msgstr "Waarde fout"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
 
 #~ msgid "Currency:"
 #~ msgstr "Valuta:"
