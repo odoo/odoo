@@ -901,7 +901,8 @@ class account_move_line(osv.osv):
         if context.get('account_id', False):
             cr.execute('SELECT code FROM account_account WHERE id = %s', (context['account_id'], ))
             res = cr.fetchone()
-            res = _('Entries: ')+ (res[0] or '')
+            if res:
+                res = _('Entries: ')+ (res[0] or '')
             return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
