@@ -60,7 +60,7 @@ class account_analytic_account(osv.osv):
             return res
 
         where_date = ''
-        where_clause_args = [tuple(child_ids)]  
+        where_clause_args = [tuple(child_ids)]
         if context.get('from_date', False):
             where_date += " AND l.date >= %s"
             where_clause_args  += [context['from_date']]
@@ -71,20 +71,20 @@ class account_analytic_account(osv.osv):
               SELECT a.id,
                      sum(
                          CASE WHEN l.amount > 0
-                         THEN l.amount 
+                         THEN l.amount
                          ELSE 0.0
                          END
                           ) as debit,
                      sum(
                          CASE WHEN l.amount < 0
                          THEN -l.amount
-                         ELSE 0.0 
+                         ELSE 0.0
                          END
                           ) as credit,
                      COALESCE(SUM(l.amount),0) AS balance,
                      COALESCE(SUM(l.unit_amount),0) AS quantity
-              FROM account_analytic_account a 
-                  LEFT JOIN account_analytic_line l ON (a.id = l.account_id) 
+              FROM account_analytic_account a
+                  LEFT JOIN account_analytic_line l ON (a.id = l.account_id)
               WHERE a.id IN %s
               """ + where_date + """
               GROUP BY a.id""", where_clause_args)
@@ -128,7 +128,7 @@ class account_analytic_account(osv.osv):
         'contact_id': fields.many2one('res.partner.address', 'Contact'),
         'user_id': fields.many2one('res.users', 'Account Manager'),
         'date_start': fields.date('Date Start'),
-        'date': fields.date('Date End'),
+        'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('draft','Draft'),('open','Open'), ('pending','Pending'),('cancelled', 'Cancelled'),('close','Closed'),('template', 'Template')], 'State', required=True,
                                   help='* When an account is created its in \'Draft\' state.\
@@ -230,7 +230,7 @@ class account_analytic_line(osv.osv):
 
     _columns = {
         'name': fields.char('Description', size=256, required=True),
-        'date': fields.date('Date', required=True, select=1),
+        'date': fields.date('Date', required=True, select=True),
         'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Quantity', help='Specifies the amount of quantity to count.'),
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True, domain=[('type','<>','view')]),
