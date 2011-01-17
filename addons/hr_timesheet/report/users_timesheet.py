@@ -26,6 +26,7 @@ import time
 import pooler
 from tools.translate import _
 from report import report_sxw
+from tools import ustr
 
 
 def lengthmonth(year, month):
@@ -111,7 +112,7 @@ class report_custom(report_rml):
         %s
         %s
         </report>
-        ''' % (header_xml,date_xml, emp_xml)
+        ''' % (header_xml,date_xml, ustr(emp_xml))
         return xml
 
 report_custom('report.hr.analytical.timesheet_users', 'hr.employee', '', 'addons/hr_timesheet/report/users_timesheet.xsl')
