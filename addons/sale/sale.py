@@ -403,7 +403,7 @@ class sale_order(osv.osv):
             'name': order.client_order_ref or '',
             'origin': order.name,
             'type': 'out_invoice',
-            'reference': "P%dSO%d" % (order.partner_id.id, order.id),
+            'reference': order.client_order_ref or order.name,
             'account_id': a,
             'partner_id': order.partner_id.id,
             'journal_id': journal_ids[0],
