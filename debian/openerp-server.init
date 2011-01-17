@@ -29,7 +29,8 @@ case "${1}" in
 
 		start-stop-daemon --start --quiet --pidfile /var/run/${NAME}.pid \
 			--chuid ${USER} --background --make-pidfile \
-			--exec ${DAEMON} -- --config=/etc/openerp-server.conf
+			--exec ${DAEMON} -- --config=/etc/openerp-server.conf \
+			    --logfile=/var/log/openerp-server.log
 
 		echo "${NAME}."
 		;;
@@ -53,7 +54,8 @@ case "${1}" in
 
 		start-stop-daemon --start --quiet --pidfile /var/run/${NAME}.pid \
 			--chuid ${USER} --background --make-pidfile \
-			--exec ${DAEMON} -- --config=/etc/openerp-server.conf
+			--exec ${DAEMON} -- --config=/etc/openerp-server.conf \
+			    --logfile=/var/log/openerp-server.log
 
 		echo "${NAME}."
 		;;
