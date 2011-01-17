@@ -176,7 +176,7 @@ configuration
 
     _columns = {
         'url' : fields.char('Caldav Server', size=264, required=True, help="Url of the caldav server, use for synchronization"),
-        'caldav_doc_file':fields.binary('Caldav Document', readonly=True, help="download full caldav Documentation."),
+        #'doc_link':fields.char('Caldav Documentation', size="264", help="The link to Caldav Online Documentation.", readonly=True),
         'description':fields.text('Description', readonly=True)
     }
 
@@ -218,7 +218,7 @@ configuration
         file = open(addons.get_module_resource('caldav','doc', 'caldav_doc.pdf'),'rb')
         res['caldav_doc_file'] = base64.encodestring(file.read())
         
-        
+        #res['doc_link'] = 'http://doc.openerp.com/'
         res['url'] = prefix+url
         return res
 
@@ -238,7 +238,6 @@ class user_preference(osv.osv_memory):
                'calendar' :fields.many2one('basic.calendar', 'Calendar', required=True),
                'service': fields.selection([('webdav','CalDAV')], "Services"),
                'device' : fields.selection([('other', 'Other'), ('iphone', 'iPhone'), ('android', 'Android based device'),('thunderbird', 'Sunbird/Thunderbird'), ('evolution','Evolution')], "Software/Devices"),
-               'doc_link':fields.char('Caldav Documentation', size="264", help="The link to Caldav Online Documentation.", readonly=True),
     }
     
     def _get_default_calendar(self, cr, uid, context):
@@ -262,7 +261,7 @@ class user_preference(osv.osv_memory):
               'collection' : _get_default_collection,
               'calendar' : _get_default_calendar,
               'device' : 'other',
-              'doc_link' : 'http://doc.openerp.com/'
+              
     }    
    
     def open_window(self, cr, uid, ids, context=None):
