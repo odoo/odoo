@@ -536,10 +536,14 @@ class account_account(osv.osv):
         if context is None:
             context = {}
 
+        # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
             if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
+                # Allow the write if the value is the same
+                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
+                    if vals['company_id']!=i:
+                        raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():

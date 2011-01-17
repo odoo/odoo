@@ -365,6 +365,10 @@ class DAVClient(object):
         assert res, "uid %s not found" % uid
         self.user = res[0]['login']
         self.passwd = res[0]['password']
+        if self.passwd.startswith('$1$'):
+            # md5 by base crypt. We cannot decode, wild guess 
+            # that passwd = login
+            self.passwd = self.user
         return True
 
     def set_useragent(self, uastr):

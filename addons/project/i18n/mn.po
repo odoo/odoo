@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-11-25 19:38+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:01+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -27,7 +27,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:657
+#: code:addons/project/project.py:658
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "The task '%s' has been delegated to %s."
@@ -106,10 +106,9 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:86
-#, python-format
-msgid "Task '%s' Closed"
-msgstr "Хаагдсан '%s' даалгавар"
+#: help:project.project,priority:0
+msgid "Gives the sequence order when displaying the list of projects"
+msgstr ""
 
 #. module: project
 #: constraint:project.project:0
@@ -189,14 +188,6 @@ msgid "Warn Message"
 msgstr "Анхааруулах зурвас"
 
 #. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's member. Not used in any computation, just for information purpose."
-msgstr ""
-"Төслийн гишүүн. Ямар нэгэн тооцоололд хэрэглэгдэхгүй, зөвхөн мэдээллийн "
-"чанартай."
-
-#. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
 msgstr "Нэр"
@@ -246,7 +237,7 @@ msgid "Day"
 msgstr "Өдөр"
 
 #. module: project
-#: code:addons/project/project.py:570
+#: code:addons/project/project.py:571
 #, python-format
 msgid "The task '%s' is done"
 msgstr "'%s' дууссан даалгавар"
@@ -323,12 +314,6 @@ msgid ""
 "Helps generate invoices based on time spent on tasks, if activated on the "
 "project."
 msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
-msgid "Parent Tasks"
-msgstr "Эцэг даалгавар"
 
 #. module: project
 #: view:project.project:0
@@ -439,7 +424,7 @@ msgid "Reactivate Project"
 msgstr "Төслийг дахин нээх"
 
 #. module: project
-#: code:addons/project/project.py:552
+#: code:addons/project/project.py:553
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Хаагдсан '%s' даалгавар"
@@ -489,8 +474,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "Алдаа! Та цикл хэлбэрийн аналитик данс үүсгэх боломжгүй."
 
 #. module: project
-#: code:addons/project/project.py:224
-#: code:addons/project/project.py:245
+#: code:addons/project/project.py:225
+#: code:addons/project/project.py:246
 #, python-format
 msgid " (copy)"
 msgstr " (хувилах)"
@@ -629,7 +614,7 @@ msgid "Reevaluate"
 msgstr "Дахин үнэлэх"
 
 #. module: project
-#: code:addons/project/project.py:530
+#: code:addons/project/project.py:531
 #, python-format
 msgid "Send Email after close task"
 msgstr ""
@@ -672,9 +657,10 @@ msgid "Planned Time"
 msgstr "Төлөвлөсөн хугацаа"
 
 #. module: project
-#: help:project.task.close,manager_warn:0
-msgid "Warn Manager by Email"
-msgstr ""
+#: code:addons/project/wizard/project_task_close.py:86
+#, python-format
+msgid "Task '%s' Closed"
+msgstr "Хаагдсан '%s' даалгавар"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -721,7 +707,7 @@ msgid "Starting Date"
 msgstr "Эхлэл Огноо"
 
 #. module: project
-#: code:addons/project/project.py:266
+#: code:addons/project/project.py:267
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -746,7 +732,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:621
+#: code:addons/project/project.py:622
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "Нээсэн '%s' даалгавар"
@@ -987,9 +973,10 @@ msgid "Start Date"
 msgstr "Эхлэх огноо"
 
 #. module: project
-#: help:project.project,priority:0
-msgid "Gives the sequence order when displaying a list of task"
-msgstr ""
+#: view:project.task:0
+#: field:project.task,parent_ids:0
+msgid "Parent Tasks"
+msgstr "Эцэг даалгавар"
 
 #. module: project
 #: field:project.project,warn_customer:0
@@ -1151,6 +1138,7 @@ msgid "Project Dashboard"
 msgstr "Төслийн самбар"
 
 #. module: project
+#: view:project.project:0
 #: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Толгой төсөл"
@@ -1181,7 +1169,7 @@ msgid "Customer Email"
 msgstr "Үйлчлүүлэгчийн Эмэйл"
 
 #. module: project
-#: code:addons/project/project.py:189
+#: code:addons/project/project.py:190
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "Төсөл '%s' хаагдлаа."
@@ -1195,6 +1183,11 @@ msgstr "Даалгавар засах"
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "10 сар"
+
+#. module: project
+#: help:project.task.close,manager_warn:0
+msgid "Warn Manager by Email"
+msgstr ""
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
@@ -1224,7 +1217,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Даалгавар дууссан үед дууссан төлөвтэй болно."
 
 #. module: project
-#: code:addons/project/project.py:211
+#: code:addons/project/project.py:212
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "Төсөл '%s' нээгдлээ."
@@ -1307,6 +1300,13 @@ msgid "Getting Things Done"
 msgstr ""
 
 #. module: project
+#: help:project.project,members:0
+msgid ""
+"Project's member. Not used in any computation, just for information purpose, "
+"but a user has to be member of a project to add a the to this project."
+msgstr ""
+
+#. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
 msgstr "Хэрэглэгчид и-мейлээр анхааруулах"
@@ -1354,7 +1354,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:581
+#: code:addons/project/project.py:582
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Даалгавар '%s' явц"
@@ -1728,7 +1728,7 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:664
+#: code:addons/project/project.py:665
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "Даалгавар '%s' хүлээгдэж байна."
@@ -1805,7 +1805,7 @@ msgid "Validation State"
 msgstr "Батлагдсан төлөв"
 
 #. module: project
-#: code:addons/project/project.py:601
+#: code:addons/project/project.py:602
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Даалгавар '%s' цуцлагдсан."
@@ -1833,7 +1833,7 @@ msgid "Create Date"
 msgstr "Үүсэх огноо"
 
 #. module: project
-#: code:addons/project/project.py:609
+#: code:addons/project/project.py:610
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "Даалгавар '%s'-г цуцалсан."
@@ -1847,11 +1847,6 @@ msgstr "_Илгээх"
 #: field:project.task.work,name:0
 msgid "Work summary"
 msgstr "Ажлын тойм"
-
-#. module: project
-#: view:project.project:0
-msgid "Scheduling"
-msgstr "Төлөвлөгөө"
 
 #. module: project
 #: view:project.installer:0
@@ -1935,6 +1930,12 @@ msgstr "Төсөв"
 
 #~ msgid "Days"
 #~ msgstr "Өдөр"
+
+#~ msgid ""
+#~ "Project's member. Not used in any computation, just for information purpose."
+#~ msgstr ""
+#~ "Төслийн гишүүн. Ямар нэгэн тооцоололд хэрэглэгдэхгүй, зөвхөн мэдээллийн "
+#~ "чанартай."
 
 #~ msgid "All Tasks"
 #~ msgstr "Бүх даалгавар"
@@ -2163,6 +2164,9 @@ msgstr "Төсөв"
 
 #~ msgid "is Done."
 #~ msgstr "Дууссан."
+
+#~ msgid "Scheduling"
+#~ msgstr "Төлөвлөгөө"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "osv_memory объект дээр дүрэм хэрэглэх боломжгүй !"
