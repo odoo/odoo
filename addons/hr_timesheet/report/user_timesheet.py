@@ -49,7 +49,6 @@ class report_custom(report_rml):
         emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
         user_id = emp_obj.browse(cr, uid, emp_id).user_id.id
         empl_name = emp_obj.browse(cr, uid, emp_id).name
-
         # Computing the dates (start of month: som, and end of month: eom)
         som = datetime.date(data['form']['year'], data['form']['month'], 1)
         eom = som + datetime.timedelta(lengthmonth(som.year, som.month))
