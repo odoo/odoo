@@ -1,28 +1,30 @@
 Source: openerp-server
 Section: net
 Priority: optional
-Maintainer: Debian Open Object Maintainers <open-object@lists.debian-maintainers.org>
-Uploaders: Daniel Baumann <daniel@debian.org>
-Build-Depends: debhelper (>= 7.0.50~), python, quilt (>= 0.46-7)
+Maintainer: OpenERP SA. <xrg@openerp.com>
+Uploaders: Xrg <xrg@openerp.com>
+Build-Depends: debhelper (>= 7.0.50~), python
 Build-Depends-Indep:
  python-libxslt1, python-lxml, python-pychart, python-pydot, python-psycopg2,
  python-reportlab
 Standards-Version: 3.9.1
 Homepage: http://www.openerp.com/
-Vcs-Browser: http://git.debian-maintainers.org/?p=open-object/openerp-server.git
-Vcs-Git: git://git.debian-maintainers.org/git/open-object/openerp-server.git
+Vcs-Browser: http://git.hellug.gr/?p=xrg/openobject-server;a=summary
+Vcs-Git: http://members.hellug.gr/xrg/repos/openobject-server
+Vcs-Bzr: https://code.launchpad.net/openobject-server
 
 Package: openerp-server
 Section: net
 Architecture: all
 Depends:
  ${misc:Depends}, adduser, python,  python-libxslt1, python-lxml,
- python-psycopg2, python-pydot, python-pychart, python-reportlab, python-tz
+ python-psycopg2, python-pydot, python-pychart, python-reportlab, python-tz,
+ python-pyparsing, python-yaml, python-mako, postgresql-client (>= 8.4)
 Conflicts: tinyerp-server
 Replaces: tinyerp-server
 Recommends:
- graphviz, ghostscript, postgresql, postgresql-client, python-imaging,
- python-matplotlib, python-openssl, python-pyparsing
+ graphviz, ghostscript, postgresql, python-imaging,
+ python-matplotlib
 Suggests: openerp-client
 Description: Enterprise Resource Management (server)
  Open ERP, previously known as TinyERP, is a complete ERP and CRM. The main
@@ -34,3 +36,4 @@ Description: Enterprise Resource Management (server)
  .
  This package contains the Open ERP server, install openerp-client package for
  the client.
+

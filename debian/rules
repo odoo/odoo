@@ -1,7 +1,7 @@
 #!/usr/bin/make -f
 
 %:
-	dh --with quilt ${@}
+	dh  ${@}
 
 override_dh_auto_clean:
 	dh_auto_clean
@@ -9,7 +9,15 @@ override_dh_auto_clean:
 	rm -rf build
 
 override_dh_auto_install:
-	NO_CHECK_MODULES=1 python setup.py install --install-layout=deb --no-compile --prefix=$(CURDIR)/debian/openerp-server/usr
+	# Adding ALL addons to the server package
+	if [ -d ../addons ] ; then \
+	    pushd ../addons ; \
+		echo > server_modules.list ; \
+	        for ADD_DIR in * ; do \
+	            [ -d "$$ADD_DIR" ] && [ -r "$$ADD_DIR"/__openerp__.py ] && echo "$$ADD_DIR" >> server_modules.list ; \
+		done ; \
+	    popd ; fi
+	NO_CHECK_MODULES=1 python setup.py install --install-layout=deb --no-compile --root=$(CURDIR)/debian/openerp-server
 
 	# Adjusting program location
 	sed -i -e 's|cd .*|cd /usr/share/pyshared/openerp-server|' debian/openerp-server/usr/bin/openerp-server
