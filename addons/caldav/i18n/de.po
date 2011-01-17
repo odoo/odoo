@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-12 13:55+0000\n"
+"PO-Revision-Date: 2011-01-15 23:26+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:56+0000\n"
+"X-Launchpad-Export-Date: 2011-01-16 05:06+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: caldav
@@ -26,7 +26,7 @@ msgstr "Mapping Felder"
 #. module: caldav
 #: help:caldav.browse,url:0
 msgid "Url of the caldav server, use for synchronization"
-msgstr ""
+msgstr "URL für caldav Servers zur Datensynchronisation"
 
 #. module: caldav
 #: field:basic.calendar.alias,name:0
@@ -85,12 +85,12 @@ msgstr "Zu erledigen"
 #. module: caldav
 #: model:ir.model,name:caldav.model_user_preference
 msgid "User preference Form"
-msgstr ""
+msgstr "Benutzereigenschaften"
 
 #. module: caldav
 #: field:user.preference,service:0
 msgid "Services"
-msgstr ""
+msgstr "Dienstleistungen"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
@@ -100,7 +100,7 @@ msgstr "Ausdruck als Konstante"
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Evolution"
-msgstr ""
+msgstr "Evolution"
 
 #. module: caldav
 #: view:calendar.event.import:0
@@ -123,7 +123,7 @@ msgstr "Datei Name"
 #. module: caldav
 #: field:caldav.browse,url:0
 msgid "Caldav Server"
-msgstr ""
+msgstr "CalDav Server"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
@@ -134,12 +134,12 @@ msgstr "Fehler!"
 #. module: caldav
 #: help:caldav.browse,caldav_doc_file:0
 msgid "download full caldav Documentation."
-msgstr ""
+msgstr "Download der vollständigen caldav Dokumentation"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "iPhone"
-msgstr ""
+msgstr "iPhone"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:32
@@ -168,6 +168,28 @@ msgid ""
 "        CALENDAR_NAME: Name of calendar to access\n"
 "     "
 msgstr ""
+"\n"
+"  * WEBDAV Server ermöglichen einen Remote Zugriff auf Kalender.\n"
+"  * Eine Synchronisation von Terminkalendern erfolgt durch den Einsatz von "
+"WEBDAV\n"
+"  * Konfigurieren Sie die Attribute von Terminen und Aufgaben innerhalb der "
+"OpenERP Anwendungen\n"
+"  * Möglichkeit einer Anwendung von ical Import/Export Funktionen\n"
+"\n"
+"    Um Kalender über CalDav Clients zu nutzen, geben Sie dort folgendes "
+"Adressmuster an:\n"
+"        http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/\n"
+"    Um OpenERP Kalender durch WebCal remote anzubinden, verwenden Sie "
+"folgendes URL Adressmuster:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"        Wobei folgendes gilt:\n"
+"        HOSTNAME: Host auf dem der OpenERP Server (mit webdav) läuft\n"
+"        PORT : Port auf dem der OpenERP Server läuft (Standard : 8069)\n"
+"        DATABASE_NAME: Datenbank auf der ein OpenERP Kalender erzeugt wurde\n"
+"        CALENDAR_NAME: Bezeichnung des Kalenders\n"
+"     "
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:147
@@ -201,6 +223,34 @@ msgid ""
 "\n"
 "7. Then Finish, your meetings should appear now in your calendar view\n"
 msgstr ""
+"\n"
+"Erforderliche Vorbereitungen\n"
+"----------------------------------------\n"
+"Wenn Sie Thunderbird benutzen, müssen Sie zuerst dort das Lightning Kalender "
+"Plugin installieren\n"
+"http://www.mozilla.org/projects/calendar/lightning/\n"
+"\n"
+"Konfiguration\n"
+"-------------------\n"
+"\n"
+"1. Gehen Sie zur Kalenderansicht\n"
+"\n"
+"2. Datei -> Neuer Kalender\n"
+"\n"
+"3. Wählen Sie \"Im Netzwerk\"\n"
+"\n"
+"4. Wählen Sie als Format CalDav\n"
+"   und als URL nach dem obigen Muster (z.B. "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"   \n"
+"5. Wählen Sie einen Namen und eine Farbe für den Kalender, wir empfehlen "
+"außerdem die Benachrichtung zu deaktivieren.\n"
+"\n"
+"6. Dann geben Sie die OpenERP Anmeldedaten an (aktivieren Sie \"Benutze "
+"Passwort Manager zur Speicherung der Anmeldung\")\n"
+"\n"
+"7. Abschließend beenden Sie des Assistenten, damit Ihre Termine in der "
+"Kalenderansicht erscheinen\n"
 
 #. module: caldav
 #: selection:basic.calendar,type:0
@@ -276,7 +326,7 @@ msgstr "Fehler! Sie können keine rekursiven Ordner erzeugen."
 #. module: caldav
 #: view:user.preference:0
 msgid "_Open"
-msgstr ""
+msgstr "_Öffnen"
 
 #. module: caldav
 #: field:basic.calendar,type:0

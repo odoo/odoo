@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-14 12:54+0000\n"
+"PO-Revision-Date: 2011-01-15 12:33+0000\n"
 "Last-Translator: Stefan Rijnhart (Therp) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:19+0000\n"
+"X-Launchpad-Export-Date: 2011-01-16 05:04+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -3292,7 +3292,7 @@ msgid ""
 "or 'Done' state!"
 msgstr ""
 "De geselecteerde factuur of facturen kunnen niet gewijzigd worden, aangezien "
-"de status al 'Geannulleerd' of 'Verwerkt' is."
+"de status al 'Geannuleerd' of 'Verwerkt' is."
 
 #. module: account
 #: code:addons/account/account.py:522
@@ -3972,12 +3972,19 @@ msgid ""
 "the system on document validation (invoices, bank statements...) and will be "
 "created in 'Posted' state."
 msgstr ""
+"Alle handmatig aangemaakte journaalposten staan normaal eerst op "
+"'Ongeboekt', maar u kunt de optie aanvinken om deze status over te slaan "
+"voor het desbetreffende dagboek. In dat geval zullen de journaalposten zich "
+"hetzelfde gedragen als de journaalposten die door het systeem worden "
+"gegenereerd na validatie van boekstukken (facturen, bankafschriften, ...) en "
+"meteen worden aangemaakt als 'Geboekt'."
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:91
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
 msgstr ""
+"Er is geen kostenrekening gedefinieerd voor dit product: \"%s\" (id:%d)"
 
 #. module: account
 #: view:res.partner:0
@@ -4022,7 +4029,7 @@ msgstr ""
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! The duration of the Fiscal Year is invalid. "
-msgstr ""
+msgstr "Fout! De duur van het fiscale jaar is ongeldig. "
 
 #. module: account
 #: field:report.aged.receivable,name:0
@@ -4042,7 +4049,7 @@ msgstr ""
 #. module: account
 #: view:account.account.template:0
 msgid "Default taxes"
-msgstr ""
+msgstr "Standaardbelastingen"
 
 #. module: account
 #: code:addons/account/invoice.py:88
@@ -4065,7 +4072,7 @@ msgstr ""
 #. module: account
 #: field:account.journal,view_id:0
 msgid "Display Mode"
-msgstr ""
+msgstr "Weergavemodus"
 
 #. module: account
 #: model:process.node,note:account.process_node_importinvoice0
@@ -7138,7 +7145,7 @@ msgstr "Verkoopbelastingen"
 #: selection:account.entries.report,type:0
 #: selection:account.journal,type:0
 msgid "Cash"
-msgstr "Contanten"
+msgstr "Kas"
 
 #. module: account
 #: field:account.fiscal.position.account,account_dest_id:0
@@ -7281,7 +7288,7 @@ msgstr ""
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
-msgstr "Mutatieoverzicht per relatie"
+msgstr "Saldilijst per relatie"
 
 #. module: account
 #: report:account.account.balance.landscape:0

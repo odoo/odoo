@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 00:59+0000\n"
+"PO-Revision-Date: 2011-01-15 18:24+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 04:52+0000\n"
+"X-Launchpad-Export-Date: 2011-01-16 05:02+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: base
@@ -1918,7 +1918,7 @@ msgid ""
 "Display and manage the list of all countries that can be assigned to your "
 "partner records. You can create or delete countries to make sure the ones "
 "you are working on will be maintained."
-msgstr ""
+msgstr "显示和管理所有可分配给您的伙伴记录的国家名单。您可以创建或删除，以确保您正在使用国家名称的保持不变。"
 
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_7
@@ -2095,7 +2095,7 @@ msgid ""
 "Invalid \"order\" specified. A valid \"order\" specification is a comma-"
 "separated list of valid field names (optionally followed by asc/desc for the "
 "direction)"
-msgstr ""
+msgstr "指定了无效的“顺序”。一个有效的“顺序”是用逗号隔开的字段名列表（可以按升序/降序排列）"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module_dependency
@@ -2195,7 +2195,7 @@ msgstr "workflow.activity"
 msgid ""
 "Reference of the target resource, whose model/table depends on the 'Resource "
 "Name' field."
-msgstr ""
+msgstr "引用的目标资源，就是依“资源名”字段指定的模型/表"
 
 #. module: base
 #: field:ir.model.fields,select_level:0
@@ -2521,7 +2521,7 @@ msgstr "GPL-2 或更新版本"
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_sir
 msgid "M."
-msgstr ""
+msgstr "先生"
 
 #. module: base
 #: code:addons/base/module/module.py:429
@@ -3343,7 +3343,7 @@ msgstr "应用于删除"
 #: code:addons/base/ir/ir_model.py:319
 #, python-format
 msgid "Cannot rename column to %s, because that column already exists!"
-msgstr ""
+msgstr "不能重命名列名为 %s，因为已经存在同名列。"
 
 #. module: base
 #: view:ir.attachment:0
@@ -3499,6 +3499,9 @@ msgid ""
 "plugin, don't forget to register emails to each contact so that the gateway "
 "will automatically attach incoming emails to the right partner."
 msgstr ""
+"客户就是一个您与之发生业务的实体，比如公司或组织。客户可以有多个联系人或联系地址。您可以使用历史标签页来查看一个客户所有的相关交易，比如：销售单、电子邮件"
+"、商机等等，如果您使用邮件网关和 Outlook 或 Thunderbird "
+"插件，别忘记给每个联系人注册邮件信息，这样系统可以自动把接收到的邮件附加到正确的业务伙伴上。"
 
 #. module: base
 #: field:ir.actions.report.xml,name:0
@@ -3546,7 +3549,7 @@ msgstr "蒙特塞拉特"
 msgid ""
 "The Selection Options expression is not a valid Pythonic expression.Please "
 "provide an expression in the [('key','Label'), ...] format."
-msgstr ""
+msgstr "选择项表达式不是有效的 Python 表达式。请提供一个按照格式 [('key','Label'), ...] 撰写的表达式."
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
@@ -3865,7 +3868,7 @@ msgstr "业务伙伴地址列表"
 msgid ""
 "Whether values for this field can be translated (enables the translation "
 "mechanism for that field)"
-msgstr ""
+msgstr "决定是否能够翻译此字段的各个取值（激活此字段的翻译机制）"
 
 #. module: base
 #: view:res.lang:0
@@ -4221,7 +4224,7 @@ msgstr "请提供创建操作后保存记录标识符的字段名称。如果为
 #. module: base
 #: help:ir.model.fields,relation:0
 msgid "For relationship fields, the technical name of the target model"
-msgstr ""
+msgstr "对于关系字段，技术性名称就是目标模型的名字。"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -4503,7 +4506,7 @@ msgid ""
 "The configuration wizards are used to help you configure a new instance of "
 "OpenERP. They are launched during the installation of new modules, but you "
 "can choose to restart some wizards manually from this menu."
-msgstr ""
+msgstr "配置向导将帮助您配置一个新的 OpenERP 实例。向导将在安装新模块的时候启动，但是您也可以在此菜单中手工重新启动一些向导。"
 
 #. module: base
 #: code:addons/base/res/res_user.py:206
@@ -4511,7 +4514,7 @@ msgstr ""
 msgid ""
 "Please use the change password wizard (in User Preferences or User menu) to "
 "change your own password."
-msgstr ""
+msgstr "请使用更改密码向导（在用户首选项或用户菜单中）来更改您的密码。"
 
 #. module: base
 #: code:addons/orm.py:1350
@@ -4914,7 +4917,7 @@ msgstr "法语（瑞士）/ Français (CH)"
 msgid ""
 "If specified, this action will be opened at logon for this user, in addition "
 "to the standard menu."
-msgstr ""
+msgstr "如果指定，此动作将于用户登录后和标准菜单一起执行"
 
 #. module: base
 #: view:ir.values:0
@@ -5038,7 +5041,7 @@ msgstr "尼日利亚"
 #: code:addons/base/ir/ir_model.py:250
 #, python-format
 msgid "For selection fields, the Selection Options must be given!"
-msgstr ""
+msgstr "对于选择字段，必须给出可选择的项目信息！"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_sms_send
@@ -5190,7 +5193,7 @@ msgstr "如果您归属于用户组，则此菜单的可见性将有这些用户
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: view:ir.ui.view.custom:0
 msgid "Customized Views"
-msgstr ""
+msgstr "自定义视图"
 
 #. module: base
 #: view:partner.sms.send:0
@@ -5399,7 +5402,7 @@ msgstr "法属留尼旺岛"
 #, python-format
 msgid ""
 "New column name must still start with x_ , because it is a custom field!"
-msgstr ""
+msgstr "新的列名必须以 x_ 开头，因为这是自定义字段。"
 
 #. module: base
 #: view:ir.model.access:0
@@ -5895,7 +5898,7 @@ msgstr "将要安装的模块"
 msgid ""
 "It gives the status if the tip has to be displayed or not when a user "
 "executes an action"
-msgstr ""
+msgstr "此处决定是否在用户执行操作时显示提示信息"
 
 #. module: base
 #: view:ir.model:0
@@ -6199,7 +6202,7 @@ msgstr "属性"
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
 "get the required padding size."
-msgstr ""
+msgstr "OpenERP 将自动添加几个“0”在“下一个数字”左侧满足填充要求。"
 
 #. module: base
 #: view:res.lang:0
@@ -6442,7 +6445,7 @@ msgstr "找不到货币 %s 日期 %s 的比率。"
 msgid ""
 "Customized views are used when users reorganize the content of their "
 "dashboard views (via web client)"
-msgstr ""
+msgstr "自定义视图用于用户重新组织他们的仪表盘视图内容（经由 Web 客户端）"
 
 #. module: base
 #: field:ir.model,name:0
@@ -6479,7 +6482,7 @@ msgstr "图标"
 #. module: base
 #: help:ir.model.fields,model_id:0
 msgid "The model this field belongs to"
-msgstr ""
+msgstr "该字段所属的模型"
 
 #. module: base
 #: model:res.country,name:base.mq
@@ -7069,12 +7072,12 @@ msgstr "取消安装"
 #. module: base
 #: field:ir.model.fields,selection:0
 msgid "Selection Options"
-msgstr ""
+msgstr "选择项目"
 
 #. module: base
 #: field:res.partner.category,parent_right:0
 msgid "Right parent"
-msgstr ""
+msgstr "Right parent"
 
 #. module: base
 #: view:res.lang:0
@@ -7185,7 +7188,7 @@ msgstr "函数执行次数（负数表示没有限制）"
 msgid ""
 "Changing the type of a column is not yet supported. Please drop it and "
 "create it again!"
-msgstr ""
+msgstr "还不支持更改列类型，请先删除该列再重新创建。"
 
 #. module: base
 #: field:ir.ui.view_sc,user_id:0
@@ -7544,7 +7547,7 @@ msgstr "二进制文件或外部URL"
 #: field:res.config.users,new_password:0
 #: field:res.users,new_password:0
 msgid "Change password"
-msgstr ""
+msgstr "更改密码"
 
 #. module: base
 #: model:res.country,name:base.nl
@@ -7578,7 +7581,7 @@ msgid ""
 "or data in your OpenERP instance. To install some modules, click on the "
 "button \"Schedule for Installation\" from the form view, then click on "
 "\"Apply Scheduled Upgrades\" to migrate your system."
-msgstr ""
+msgstr "您可以通过安装新模块来启用新的特性、菜单、报表或数据。要安装模块请先单击“准备安装”按钮然后单击“执行已安排的升级”来迁移您的系统。"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_emails
@@ -7711,6 +7714,8 @@ msgid ""
 "defining a list of (key, label) pairs. For example: "
 "[('blue','Blue'),('yellow','Yellow')]"
 msgstr ""
+"选择字段的选项列表，请指定一个 Python 形如 (key, label) 的列表表达式，比如： "
+"[('blue',u'蓝色'),('yellow',u'黄色')]"
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -7722,7 +7727,7 @@ msgstr "选择"
 msgid ""
 "Indicates whether this object model lives in memory only, i.e. is not "
 "persisted (osv.osv_memory)"
-msgstr ""
+msgstr "标识此对象模型是否仅存于内存，比如一个不需要持久化的对象（osv.osv_memory）"
 
 #. module: base
 #: field:res.partner,child_ids:0
@@ -7823,7 +7828,7 @@ msgstr "首选项"
 #. module: base
 #: model:res.partner.category,name:base.res_partner_category_consumers0
 msgid "Consumers"
-msgstr ""
+msgstr "客户"
 
 #. module: base
 #: view:res.config:0
@@ -7844,7 +7849,7 @@ msgstr "该名称指定的对象方法将在计划任务执行后被调用。"
 msgid ""
 "The Selection Options expression is must be in the [('key','Label'), ...] "
 "format!"
-msgstr ""
+msgstr "选项表达式必须是 [('key','Label'), ...] 格式！"
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -7863,6 +7868,8 @@ msgid ""
 "--\n"
 "%(name)s %(email)s\n"
 msgstr ""
+"--\n"
+"%(name)s %(email)s\n"
 
 #. module: base
 #: model:res.country,name:base.eh
@@ -8294,7 +8301,7 @@ msgstr "丹麦语 / Dansk"
 #. module: base
 #: selection:ir.model.fields,select_level:0
 msgid "Advanced Search (deprecated)"
-msgstr ""
+msgstr "高级搜索（已废弃）"
 
 #. module: base
 #: model:res.country,name:base.cx
@@ -8520,7 +8527,7 @@ msgstr "注册合同"
 msgid ""
 "3. If user belongs to several groups, the results from step 2 are combined "
 "with logical OR operator"
-msgstr ""
+msgstr "3. 如果用户属于多个组，那么第2部的结果将使用“或”操作符进行组合。"
 
 #. module: base
 #: code:addons/base/publisher_warranty/publisher_warranty.py:145
@@ -8687,7 +8694,7 @@ msgstr "资源"
 #. module: base
 #: field:ir.ui.menu,web_icon:0
 msgid "Web Icon File"
-msgstr ""
+msgstr "网页图标文件"
 
 #. module: base
 #: selection:base.language.install,lang:0

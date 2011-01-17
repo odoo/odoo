@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 17:17+0000\n"
+"PO-Revision-Date: 2011-01-15 22:31+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:20+0000\n"
+"X-Launchpad-Export-Date: 2011-01-16 05:04+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -32,6 +32,7 @@ msgstr "Sonstige Konfiguration"
 #, python-format
 msgid "No End of year journal defined for the fiscal year"
 msgstr ""
+"Es ist kein Journal für den Jahresabschluss des Geschäftsjahres definiert"
 
 #. module: account
 #: code:addons/account/account.py:506
@@ -3638,7 +3639,7 @@ msgstr "Preis/ME"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
 msgid "Analytic Items"
-msgstr ""
+msgstr "Analytische Buchungen"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1128
@@ -4356,6 +4357,9 @@ msgid ""
 "You cannot create an account! \n"
 "Make sure if the account has children then it should be type \"View\"!"
 msgstr ""
+"Sie können kein Finanzkonto erzeugen!\n"
+"Stellen Sie sicher, dass Sie die Kontoart Ansicht verwenden, wenn es sich um "
+"ein übergeordnetes Konto handelt."
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -7328,7 +7332,7 @@ msgstr "Journal Verkauf"
 #: code:addons/account/wizard/account_move_journal.py:104
 #, python-format
 msgid "Open Journal Items !"
-msgstr ""
+msgstr "Öffne Journalbuchungen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -8216,6 +8220,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
+"Der verbleibende Restsaldo in Unternehmenswährung nach vorgenommener Buchung "
+"auf dem Debitoren- oder Kreditorenkonto."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9878,6 +9884,9 @@ msgid ""
 "Make sure if the account template has parent then it should be type "
 "\"View\"! "
 msgstr ""
+"Sie können keinen Kontenplan erzeugen!\n"
+"Stellen Sie sicher, dass die Finanzkontovorlage eines übergeordneten Kontos "
+"den Typ \"Ansicht\" haben sollte. "
 
 #. module: account
 #: view:account.subscription:0
@@ -10315,6 +10324,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+"Der verbleibende Saldo auf einem Debitor oder Kreditor nach vorgenommenen "
+"Buchung in der Landeswährung."
 
 #~ msgid "Keep empty to use the period of the validation date."
 #~ msgstr "Frei lassen für Periode des Validierungsdatums."
