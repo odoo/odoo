@@ -945,7 +945,7 @@ class account_move_line(osv.osv):
         journal_pool = self.pool.get('account.journal')
         if context is None:
             context = {}
-        result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
+        result = super(account_move_line, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
             #Remove the toolbar from the form view
             if view_type == 'form':
@@ -1044,7 +1044,13 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
-            attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
+
+            if field in ('journal_id',):
+                attrs.append("invisible=\"context.get('journal_id', False)\"")
+            elif field in ('period_id',):
+                attrs.append("invisible=\"context.get('period_id', False)\"")
+            else:
+                attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 
         xml += '''</tree>'''
