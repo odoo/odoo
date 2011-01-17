@@ -26,18 +26,21 @@ import inspect
 import itertools
 import locale
 import os
+import pooler
 import re
+import logging
 import tarfile
 import tempfile
+import threading
 from os.path import join
-import logging
 
 from datetime import datetime
 from lxml import etree
 
-import tools, pooler
+import tools
 import netsvc
 from tools.misc import UpdateableStr
+from tools.misc import SKIPPED_ELEMENT_TYPES
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
@@ -96,7 +99,27 @@ _LOCALE2WIN32 = {
     'sr_CS': 'Serbian (Cyrillic)_Serbia and Montenegro',
     'sk_SK': 'Slovak_Slovakia',
     'sl_SI': 'Slovenian_Slovenia',
+    #should find more specific locales for spanish countries,
+    #but better than nothing
+    'es_AR': 'Spanish_Spain',
+    'es_BO': 'Spanish_Spain',
+    'es_CL': 'Spanish_Spain',
+    'es_CO': 'Spanish_Spain',
+    'es_CR': 'Spanish_Spain',
+    'es_DO': 'Spanish_Spain',
+    'es_EC': 'Spanish_Spain',
     'es_ES': 'Spanish_Spain',
+    'es_GT': 'Spanish_Spain',
+    'es_HN': 'Spanish_Spain',
+    'es_MX': 'Spanish_Spain',
+    'es_NI': 'Spanish_Spain',
+    'es_PA': 'Spanish_Spain',
+    'es_PE': 'Spanish_Spain',
+    'es_PR': 'Spanish_Spain',
+    'es_PY': 'Spanish_Spain',
+    'es_SV': 'Spanish_Spain',
+    'es_UY': 'Spanish_Spain',
+    'es_VE': 'Spanish_Spain',
     'sv_SE': 'Swedish_Sweden',
     'ta_IN': 'English_Australia',
     'th_TH': 'Thai_Thailand',
@@ -132,62 +155,104 @@ logger = logging.getLogger('translate')
 
 class GettextAlias(object):
 
+    def _get_db(self):
+        # find current DB based on thread/worker db name (see netsvc)
+        db_name = getattr(threading.currentThread(), 'dbname', None)
+        if db_name:
+            return pooler.get_db_only(db_name)
+
     def _get_cr(self, frame):
         is_new_cr = False
-        cr = frame.f_locals.get('cr')
+        cr = frame.f_locals.get('cr', frame.f_locals.get('cursor'))
         if not cr:
             s = frame.f_locals.get('self', {})
-            cr = getattr(s, 'cr', False)
-            if not cr:
-                if frame.f_globals.get('pooler', False):
-                    # TODO: we should probably get rid of the 'is_new_cr' case: no cr in locals -> no translation for you
-                    dbs = frame.f_globals['pooler'].pool_dic.keys()
-                    if len(dbs) == 1:
-                        cr = pooler.get_db(dbs[0]).cursor()
-                        is_new_cr = True
+            cr = getattr(s, 'cr', None)
+        if not cr:
+            db = self._get_db()
+            if db:
+                cr = db.cursor()
+                is_new_cr = True
         return cr, is_new_cr
-    
+
     def _get_lang(self, frame):
-        lang = frame.f_locals.get('context', {}).get('lang', False)
+        lang = None
+        ctx = frame.f_locals.get('context')
+        if not ctx:
+            kwargs = frame.f_locals.get('kwargs')
+            if kwargs is None:
+                args = frame.f_locals.get('args')
+                if args and isinstance(args, (list, tuple)) \
+                        and isinstance(args[-1], dict):
+                    ctx = args[-1]
+            elif isinstance(kwargs, dict):
+                ctx = kwargs.get('context')
+        if ctx:
+            lang = ctx.get('lang')
         if not lang:
-            args = frame.f_locals.get('args', False)
-            if args:
-                lang = args[-1].get('lang', False)
-            if not lang:
-                s = frame.f_locals.get('self', {})
-                c = getattr(s, 'localcontext', {})
-                lang = c.get('lang', False)
+            s = frame.f_locals.get('self', {})
+            c = getattr(s, 'localcontext', None)
+            if c:
+                lang = c.get('lang')
         return lang
-    
+
     def __call__(self, source):
-        is_new_cr = False
         res = source
+        cr = None
+        is_new_cr = False
         try:
-            frame = inspect.stack()[1][0]
-            cr, is_new_cr = self._get_cr(frame)
+            frame = inspect.currentframe()
+            if frame is None:
+                return source
+            frame = frame.f_back
+            if not frame:
+                return source
             lang = self._get_lang(frame)
-            if lang and cr:
-                cr.execute('SELECT value FROM ir_translation WHERE lang=%s AND type IN (%s, %s) AND src=%s', (lang, 'code','sql_constraint', source))
-                res_trans = cr.fetchone()
-                res = res_trans and res_trans[0] or source
+            if lang:
+                cr, is_new_cr = self._get_cr(frame)
+                if cr:
+                    # Try to use ir.translation to benefit from global cache if possible
+                    pool = pooler.get_pool(cr.dbname)
+                    res = pool.get('ir.translation')._get_source(cr, 1, None, ('code','sql_constraint'), lang, source)
+                else:
+                    logger.debug('no context cursor detected, skipping translation for "%r"', source)
+            else:
+                logger.debug('no translation language detected, skipping translation for "%r" ', source)
         except Exception:
-            logger.debug('translation went wrong for string %s', repr(source))
+            logger.debug('translation went wrong for "%r", skipped', source)
+                # if so, double-check the root/base translations filenames
         finally:
-            if is_new_cr:
+            if cr and is_new_cr:
                 cr.close()
         return res
 
 _ = GettextAlias()
 
 
+def quote(s):
+    """Returns quoted PO term string, with special PO characters escaped"""
+    assert r"\n" not in s, "Translation terms may not include escaped newlines ('\\n'), please use only literal newlines! (in '%s')" % s
+    return '"%s"' % s.replace('\\','\\\\') \
+                     .replace('"','\\"') \
+                     .replace('\n', '\\n"\n"')
+
+re_escaped_char = re.compile(r"(\\.)")
+re_escaped_replacements = {'n': '\n', }
+
+def _sub_replacement(match_obj):
+    return re_escaped_replacements.get(match_obj.group(1)[1], match_obj.group(1)[1])
+
+def unquote(str):
+    """Returns unquoted PO term string, with special PO characters unescaped"""
+    return re_escaped_char.sub(_sub_replacement, str[1:-1])
+
 # class to handle po files
 class TinyPoFile(object):
     def __init__(self, buffer):
-        self.logger = netsvc.Logger()
+        self.logger = logging.getLogger('i18n')
         self.buffer = buffer
 
-    def warn(self, msg):
-        self.logger.notifyChannel("i18n", netsvc.LOG_WARNING, msg)
+    def warn(self, msg, *args):
+        self.logger.warning(msg, *args)
 
     def __iter__(self):
         self.buffer.seek(0)
@@ -211,15 +276,12 @@ class TinyPoFile(object):
         return (self.lines_count - len(self.lines))
 
     def next(self):
-        def unquote(str):
-            return str[1:-1].replace("\\n", "\n")   \
-                            .replace("\\\\ ", "\\ ") \
-                            .replace('\\"', '"')
-
         type = name = res_id = source = trad = None
 
         if self.tnrs:
             type, name, res_id, source, trad = self.tnrs.pop(0)
+            if not res_id:
+                res_id = '0'
         else:
             tmp_tnrs = []
             line = None
@@ -284,7 +346,9 @@ class TinyPoFile(object):
         self.first = False
 
         if name is None:
-            self.warn('Missing "#:" formated comment for the following source:\n\t%s' % (source,))
+            if not fuzzy:
+                self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s',
+                        self.cur_line(), source[:30])
             return self.next()
         return type, name, res_id, source, trad
 
@@ -312,16 +376,11 @@ class TinyPoFile(object):
                               'version': release.version,
                               'modules': reduce(lambda s, m: s + "#\t* %s\n" % m, modules, ""),
                               'bugmail': release.support_email,
-                              'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')+"+0000",
+                              'now': datetime.utcnow().strftime('%Y-%m-%d %H:%M')+"+0000",
                             }
                           )
 
     def write(self, modules, tnrs, source, trad):
-        def quote(s):
-            return '"%s"' % s.replace('"','\\"') \
-                             .replace('\n', '\\n"\n"') \
-                             .replace(' \\ ',' \\\\ ')
-
 
         plurial = len(modules) > 1 and 's' or ''
         self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
@@ -350,7 +409,7 @@ class TinyPoFile(object):
 
 # Methods to export the translation file
 
-def trans_export(lang, modules, buffer, format, dbname=None):
+def trans_export(lang, modules, buffer, format, cr):
 
     def _process(format, modules, rows, buffer, lang, newlang):
         if format == 'csv':
@@ -379,7 +438,9 @@ def trans_export(lang, modules, buffer, format, dbname=None):
             rows_by_module = {}
             for row in rows:
                 module = row[0]
-                rows_by_module.setdefault(module, []).append(row)
+                # first row is the "header", as in csv, it will be popped
+                rows_by_module.setdefault(module, [['module', 'type', 'name', 'res_id', 'src', ''],])
+                rows_by_module[module].append(row)
 
             tmpdir = tempfile.mkdtemp()
             for mod, modrows in rows_by_module.items():
@@ -400,7 +461,7 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     newlang = not bool(lang)
     if newlang:
         lang = 'en_US'
-    trans = trans_generate(lang, modules, dbname)
+    trans = trans_generate(lang, modules, cr)
     if newlang and format!='csv':
         for trx in trans:
             trx[-1] = ''
@@ -408,12 +469,13 @@ def trans_export(lang, modules, buffer, format, dbname=None):
     _process(format, modules, trans, buffer, lang, newlang)
     del trans
 
-
 def trans_parse_xsl(de):
     res = []
     for n in de:
         if n.get("t"):
-            for m in [j for j in n if j.text]:
+            for m in n:
+                if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+                    continue
                 l = m.text.strip().replace('\n',' ')
                 if len(l):
                     res.append(l.encode("utf8"))
@@ -423,7 +485,9 @@ def trans_parse_xsl(de):
 def trans_parse_rml(de):
     res = []
     for n in de:
-        for m in [j for j in n if j.text]:
+        for m in n:
+            if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+                continue
             string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
             for s in string_list:
                 if s:
@@ -433,10 +497,15 @@ def trans_parse_rml(de):
 
 def trans_parse_view(de):
     res = []
+    if de.tag == 'attribute' and de.get("name") == 'string':
+        if de.text:
+            res.append(de.text.encode("utf8"))
     if de.get("string"):
         res.append(de.get('string').encode("utf8"))
     if de.get("sum"):
         res.append(de.get('sum').encode("utf8"))
+    if de.get("confirm"):
+        res.append(de.get('confirm').encode("utf8"))
     for n in de:
         res.extend(trans_parse_view(n))
     return res
@@ -455,30 +524,34 @@ def in_modules(object_name, modules):
     module = module_dict.get(module, module)
     return module in modules
 
-def trans_generate(lang, modules, dbname=None):
-    logger = netsvc.Logger()
-    if not dbname:
-        dbname=tools.config['db_name']
-        if not modules:
-            modules = ['all']
+def trans_generate(lang, modules, cr):
+    logger = logging.getLogger('i18n')
+    dbname = cr.dbname
 
     pool = pooler.get_pool(dbname)
     trans_obj = pool.get('ir.translation')
     model_data_obj = pool.get('ir.model.data')
-    cr = pooler.get_db(dbname).cursor()
     uid = 1
     l = pool.obj_pool.items()
     l.sort()
 
     query = 'SELECT name, model, res_id, module'    \
             '  FROM ir_model_data'
+
+    query_models = """SELECT m.id, m.model, imd.module
+            FROM ir_model AS m, ir_model_data AS imd
+            WHERE m.id = imd.res_id AND imd.model = 'ir.model' """
+
     if 'all_installed' in modules:
         query += ' WHERE module IN ( SELECT name FROM ir_module_module WHERE state = \'installed\') '
+        query_models += " AND imd.module in ( SELECT name FROM ir_module_module WHERE state = 'installed') "
     query_param = None
     if 'all' not in modules:
         query += ' WHERE module IN %s'
+        query_models += ' AND imd.module in %s'
         query_param = (tuple(modules),)
     query += ' ORDER BY module, model, name'
+    query_models += ' ORDER BY module, model'
 
     cr.execute(query, query_param)
 
@@ -499,12 +572,12 @@ def trans_generate(lang, modules, dbname=None):
         xml_name = "%s.%s" % (module, encode(xml_name))
 
         if not pool.get(model):
-            logger.notifyChannel("db", netsvc.LOG_ERROR, "Unable to find object %r" % (model,))
+            logger.error("Unable to find object %r", model)
             continue
 
         exists = pool.get(model).exists(cr, uid, res_id)
         if not exists:
-            logger.notifyChannel("db", netsvc.LOG_WARNING, "Unable to find object %r with id %d" % (model, res_id))
+            logger.warning("Unable to find object %r with id %d", model, res_id)
             continue
         obj = pool.get(model).browse(cr, uid, res_id)
 
@@ -531,7 +604,7 @@ def trans_generate(lang, modules, dbname=None):
 
                         # export fields
                         if not result.has_key('fields'):
-                            logger.notifyChannel("db",netsvc.LOG_WARNING,"res has no fields: %r" % result)
+                            logger.warning("res has no fields: %r", result)
                             continue
                         for field_name, field_def in result['fields'].iteritems():
                             res_name = name + ',' + field_name
@@ -560,7 +633,7 @@ def trans_generate(lang, modules, dbname=None):
             try:
                 field_name = encode(obj.name)
             except AttributeError, exc:
-                logger.notifyChannel("db", netsvc.LOG_ERROR, "name error in %s: %s" % (xml_name,str(exc)))
+                logger.error("name error in %s: %s", xml_name, str(exc))
                 continue
             objmodel = pool.get(obj.model)
             if not objmodel or not field_name in objmodel._columns:
@@ -604,20 +677,17 @@ def trans_generate(lang, modules, dbname=None):
                 report_type = "xsl"
             if fname and obj.report_type in ('pdf', 'xsl'):
                 try:
-                    d = etree.parse(tools.file_open(fname))
-                    for t in parse_func(d.iter()):
-                        push_translation(module, report_type, name, 0, t)
+                    report_file = tools.file_open(fname)
+                    try:
+                        d = etree.parse(report_file)
+                        for t in parse_func(d.iter()):
+                            push_translation(module, report_type, name, 0, t)
+                    finally:
+                        report_file.close()
                 except (IOError, etree.XMLSyntaxError):
-                    logging.getLogger("i18n").exception("couldn't export translation for report %s %s %s", name, report_type, fname)
+                    logger.exception("couldn't export translation for report %s %s %s", name, report_type, fname)
 
-        for constraint in pool.get(model)._constraints:
-            msg = constraint[1]
-            # Check presence of __call__ directly instead of using
-            # callable() because it will be deprecated as of Python 3.0
-            if not hasattr(msg, '__call__'):
-                push_translation(module, 'constraint', model, 0, encode(msg))
-
-        for field_name,field_def in pool.get(model)._columns.items():
+        for field_name,field_def in obj._table._columns.items():
             if field_def.translate:
                 name = model + "," + field_name
                 try:
@@ -626,31 +696,49 @@ def trans_generate(lang, modules, dbname=None):
                     trad = ''
                 push_translation(module, 'model', name, xml_name, encode(trad))
 
+        # End of data for ir.model.data query results
+
+    cr.execute(query_models, query_param)
+
+    def push_constraint_msg(module, term_type, model, msg):
+        # Check presence of __call__ directly instead of using
+        # callable() because it will be deprecated as of Python 3.0
+        if not hasattr(msg, '__call__'):
+            push_translation(module, term_type, model, 0, encode(msg))
+
+    for (model_id, model, module) in cr.fetchall():
+        module = encode(module)
+        model = encode(model)
+
+        model_obj = pool.get(model)
+
+        if not model_obj:
+            logging.getLogger("i18n").error("Unable to find object %r", model)
+            continue
+
+        for constraint in getattr(model_obj, '_constraints', []):
+            push_constraint_msg(module, 'constraint', model, constraint[1])
+
+        for constraint in getattr(model_obj, '_sql_constraints', []):
+            push_constraint_msg(module, 'sql_constraint', model, constraint[2])
+
     # parse source code for _() calls
     def get_module_from_path(path, mod_paths=None):
-#        if not mod_paths:
-##             First, construct a list of possible paths
-#            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
-#            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
-#            mod_paths=[def_path]
-#            for adp in ad_paths:
-#                mod_paths.append(adp)
-#                if not adp.startswith('/'):
-#                    mod_paths.append(os.path.join(def_path,adp))
-#                elif adp.startswith(def_path):
-#                    mod_paths.append(adp[len(def_path)+1:])
-#        for mp in mod_paths:
-#            if path.startswith(mp) and (os.path.dirname(path) != mp):
-#                path = path[len(mp)+1:]
-#                return path.split(os.path.sep)[0]
-        path_dir = os.path.dirname(path[1:])
-        if path_dir:
-            if os.path.exists(os.path.join(tools.config['addons_path'],path[1:])):
-                return path.split(os.path.sep)[1]
-            else:
-                root_addons = os.path.join(tools.config['root_path'], 'addons')
-                if os.path.exists(os.path.join(root_addons,path[1:])):
-                    return path.split(os.path.sep)[1]
+        if not mod_paths:
+            # First, construct a list of possible paths
+            def_path = os.path.abspath(os.path.join(tools.config['root_path'], 'addons'))     # default addons path (base)
+            ad_paths= map(lambda m: os.path.abspath(m.strip()),tools.config['addons_path'].split(','))
+            mod_paths=[def_path]
+            for adp in ad_paths:
+                mod_paths.append(adp)
+                if not os.path.isabs(adp):
+                    mod_paths.append(adp)
+                elif adp.startswith(def_path):
+                    mod_paths.append(adp[len(def_path)+1:])
+        for mp in mod_paths:
+            if path.startswith(mp) and (os.path.dirname(path) != mp):
+                path = path[len(mp)+1:]
+                return path.split(os.path.sep)[0]
         return 'base'   # files that are not in a module are considered as being in 'base' module
 
     modobj = pool.get('ir.module.module')
@@ -659,25 +747,75 @@ def trans_generate(lang, modules, dbname=None):
 
     root_path = os.path.join(tools.config['root_path'], 'addons')
 
-    if root_path in tools.config['addons_path'] :
-        path_list = [root_path]
+    apaths = map(os.path.abspath, map(str.strip, tools.config['addons_path'].split(',')))
+    if root_path in apaths:
+        path_list = apaths
     else :
-        path_list = [root_path,tools.config['addons_path']]
+        path_list = [root_path,] + apaths
+
+    # Also scan these non-addon paths
+    for bin_path in ['osv', 'report' ]:
+        path_list.append(os.path.join(tools.config['root_path'], bin_path))
+
+    logger.debug("Scanning modules at paths: ", path_list)
+
+    mod_paths = []
+    join_dquotes = re.compile(r'([^\\])"[\s\\]*"', re.DOTALL)
+    join_quotes = re.compile(r'([^\\])\'[\s\\]*\'', re.DOTALL)
+    re_dquotes = re.compile(r'[^a-zA-Z0-9_]_\([\s]*"(.+?)"[\s]*?\)', re.DOTALL)
+    re_quotes = re.compile(r'[^a-zA-Z0-9_]_\([\s]*\'(.+?)\'[\s]*?\)', re.DOTALL)
 
     def export_code_terms_from_file(fname, path, root, terms_type):
         fabsolutepath = join(root, fname)
         frelativepath = fabsolutepath[len(path):]
-        module = get_module_from_path(frelativepath)
+        module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
         is_mod_installed = module in installed_modules
         if (('all' in modules) or (module in modules)) and is_mod_installed:
-            code_string = tools.file_open(fabsolutepath, subdir='').read()
-            iter = re.finditer('[^a-zA-Z0-9_]_\([\s]*["\'](.+?)["\'][\s]*\)', code_string, re.S)
+            logger.debug("Scanning code of %s at module: %s", frelativepath, module)
+            src_file = tools.file_open(fabsolutepath, subdir='')
+            try:
+                code_string = src_file.read()
+            finally:
+                src_file.close()
             if module in installed_modules:
                 frelativepath = str("addons" + frelativepath)
-            for i in iter:
-                push_translation(module, terms_type, frelativepath, 0, encode(i.group(1)))
+            ite = re_dquotes.finditer(code_string)
+            code_offset = 0
+            code_line = 1
+            for i in ite:
+                src = i.group(1)
+                if src.startswith('""'):
+                    assert src.endswith('""'), "Incorrect usage of _(..) function (should contain only literal strings!) in file %s near: %s" % (frelativepath, src[:30])
+                    src = src[2:-2]
+                else:
+                    src = join_dquotes.sub(r'\1', src)
+                # try to count the lines from the last pos to our place:
+                code_line += code_string[code_offset:i.start(1)].count('\n')
+                # now, since we did a binary read of a python source file, we
+                # have to expand pythonic escapes like the interpreter does.
+                src = src.decode('string_escape')
+                push_translation(module, terms_type, frelativepath, code_line, encode(src))
+                code_line += i.group(1).count('\n')
+                code_offset = i.end() # we have counted newlines up to the match end
+
+            ite = re_quotes.finditer(code_string)
+            code_offset = 0 #reset counters
+            code_line = 1
+            for i in ite:
+                src = i.group(1)
+                if src.startswith("''"):
+                    assert src.endswith("''"), "Incorrect usage of _(..) function (should contain only literal strings!) in file %s near: %s" % (frelativepath, src[:30])
+                    src = src[2:-2]
+                else:
+                    src = join_quotes.sub(r'\1', src)
+                code_line += code_string[code_offset:i.start(1)].count('\n')
+                src = src.decode('string_escape')
+                push_translation(module, terms_type, frelativepath, code_line, encode(src))
+                code_line += i.group(1).count('\n')
+                code_offset = i.end() # we have counted newlines up to the match end
 
     for path in path_list:
+        logger.debug("Scanning files of modules at %s", path)
         for root, dummy, files in tools.osutil.walksymlinks(path):
             for fname in itertools.chain(fnmatch.filter(files, '*.py')):
                 export_code_terms_from_file(fname, path, root, 'code')
@@ -692,26 +830,32 @@ def trans_generate(lang, modules, dbname=None):
         trans = trans_obj._get_source(cr, uid, name, type, lang, source)
         out.append([module, type, name, id, source, encode(trans) or ''])
 
-    cr.close()
     return out
 
-def trans_load(db_name, filename, lang, strict=False, verbose=True, context={}):
-    logger = netsvc.Logger()
+def trans_load(cr, filename, lang, verbose=True, context=None):
+    logger = logging.getLogger('i18n')
     try:
         fileobj = open(filename,'r')
+        logger.info("loading %s", filename)
         fileformat = os.path.splitext(filename)[-1][1:].lower()
-        r = trans_load_data(db_name, fileobj, fileformat, lang, strict=strict, verbose=verbose, context=context)
+        r = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, context=context)
         fileobj.close()
         return r
     except IOError:
         if verbose:
-            logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+            logger.error("couldn't read translation file %s", filename)
         return None
 
-def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=None, verbose=True, context={}):
-    logger = netsvc.Logger()
+def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True, context=None):
+    """Populates the ir_translation table. Fixing the res_ids so that they point
+    correctly to ir_model_data is done in a separate step, using the
+    'trans_update_res_ids' function below."""
+    logger = logging.getLogger('i18n')
     if verbose:
-        logger.notifyChannel("i18n", netsvc.LOG_INFO, 'loading translation file for language %s' % (lang))
+        logger.info('loading translation file for language %s', lang)
+    if context is None:
+        context = {}
+    db_name = cr.dbname
     pool = pooler.get_pool(db_name)
     lang_obj = pool.get('res.lang')
     trans_obj = pool.get('ir.translation')
@@ -719,47 +863,11 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
     iso_lang = tools.get_iso_codes(lang)
     try:
         uid = 1
-        cr = pooler.get_db(db_name).cursor()
         ids = lang_obj.search(cr, uid, [('code','=', lang)])
 
         if not ids:
             # lets create the language with locale information
-            fail = True
-            for ln in get_locales(lang):
-                try:
-                    locale.setlocale(locale.LC_ALL, str(ln))
-                    fail = False
-                    break
-                except locale.Error:
-                    continue
-            if fail:
-                lc = locale.getdefaultlocale()[0]
-                msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
-                logger.notifyChannel('i18n', netsvc.LOG_WARNING, msg % (lang, lc))
-
-            if not lang_name:
-                lang_name = tools.get_languages().get(lang, lang)
-
-            def fix_xa0(s):
-                if s == '\xa0':
-                    return '\xc2\xa0'
-                return s
-
-            lang_info = {
-                'code': lang,
-                'iso_code': iso_lang,
-                'name': lang_name,
-                'translatable': 1,
-                'date_format' : str(locale.nl_langinfo(locale.D_FMT).replace('%y', '%Y')),
-                'time_format' : str(locale.nl_langinfo(locale.T_FMT)),
-                'decimal_point' : fix_xa0(str(locale.localeconv()['decimal_point'])),
-                'thousands_sep' : fix_xa0(str(locale.localeconv()['thousands_sep'])),
-            }
-
-            try:
-                lang_obj.create(cr, uid, lang_info)
-            finally:
-                resetlocale()
+            lang_obj.load_lang(cr, 1, lang=lang, lang_name=lang_name)
 
 
         # now, the serious things: we read the language file
@@ -774,6 +882,7 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
             reader = TinyPoFile(fileobj)
             f = ['type', 'name', 'res_id', 'src', 'value']
         else:
+            logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
         # read the rest of the file
@@ -794,69 +903,46 @@ def trans_load_data(db_name, fileobj, fileformat, lang, strict=False, lang_name=
                 dic[f[i]] = row[i]
 
             try:
-                dic['res_id'] = int(dic['res_id'])
+                dic['res_id'] = dic['res_id'] and int(dic['res_id']) or 0
+                dic['module'] = False
+                dic['xml_id'] = False
             except:
-                model_data_ids = model_data_obj.search(cr, uid, [
-                    ('model', '=', dic['name'].split(',')[0]),
-                    ('module', '=', dic['res_id'].split('.', 1)[0]),
-                    ('name', '=', dic['res_id'].split('.', 1)[1]),
-                    ])
-                if model_data_ids:
-                    dic['res_id'] = model_data_obj.browse(cr, uid,
-                            model_data_ids[0]).res_id
-                else:
-                    dic['res_id'] = False
+                split_id = dic['res_id'].split('.', 1)
+                dic['module'] = split_id[0]
+                dic['xml_id'] = split_id[1]
+                dic['res_id'] = False
 
-            if dic['type'] == 'model' and not strict:
-                (model, field) = dic['name'].split(',')
-
-                # get the ids of the resources of this model which share
-                # the same source
-                obj = pool.get(model)
-                if obj:
-                    if field not in obj.fields_get_keys(cr, uid):
-                        continue
-                    ids = obj.search(cr, uid, [(field, '=', dic['src'])])
-
-                    # if the resource id (res_id) is in that list, use it,
-                    # otherwise use the whole list
-                    if not ids:
-                        ids = []
-                    ids = (dic['res_id'] in ids) and [dic['res_id']] or ids
-                    for id in ids:
-                        dic['res_id'] = id
-                        ids = trans_obj.search(cr, uid, [
-                            ('lang', '=', lang),
-                            ('type', '=', dic['type']),
-                            ('name', '=', dic['name']),
-                            ('src', '=', dic['src']),
-                            ('res_id', '=', dic['res_id'])
-                        ])
-                        if ids:
-                            if context.get('overwrite', False):
-                                trans_obj.write(cr, uid, ids, {'value': dic['value']})
-                        else:
-                            trans_obj.create(cr, uid, dic)
+            args = [
+                ('lang', '=', lang),
+                ('type', '=', dic['type']),
+                ('name', '=', dic['name']),
+                ('src', '=', dic['src']),
+            ]
+            if dic['type'] == 'model':
+                args.append(('res_id', '=', dic['res_id']))
+            ids = trans_obj.search(cr, uid, args)
+            if ids:
+                if context.get('overwrite') and dic['value']:
+                    trans_obj.write(cr, uid, ids, {'value': dic['value']})
             else:
-                ids = trans_obj.search(cr, uid, [
-                    ('lang', '=', lang),
-                    ('type', '=', dic['type']),
-                    ('name', '=', dic['name']),
-                    ('src', '=', dic['src'])
-                ])
-                if ids:
-                    if context.get('overwrite', False):
-                        trans_obj.write(cr, uid, ids, {'value': dic['value']})
-                else:
-                    trans_obj.create(cr, uid, dic)
-            cr.commit()
-        cr.close()
+                trans_obj.create(cr, uid, dic)
         if verbose:
-            logger.notifyChannel("i18n", netsvc.LOG_INFO,
-                    "translation file loaded succesfully")
+            logger.info("translation file loaded succesfully")
     except IOError:
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
-        logger.notifyChannel("i18n", netsvc.LOG_ERROR, "couldn't read translation file %s" % (filename,))
+        logger.exception("couldn't read translation file %s", filename)
+
+def trans_update_res_ids(cr):
+    cr.execute("""
+            UPDATE ir_translation
+            SET res_id = (SELECT ir_model_data.res_id
+                          FROM ir_model_data
+                          WHERE ir_translation.module = ir_model_data.module
+                              AND ir_translation.xml_id = ir_model_data.name)
+            WHERE ir_translation.module is not null
+                AND ir_translation.xml_id is not null
+                AND ir_translation.res_id = 0;
+    """)
 
 def get_locales(lang=None):
     if lang is None:
@@ -897,6 +983,19 @@ def resetlocale():
             return locale.setlocale(locale.LC_ALL, ln)
         except locale.Error:
             continue
+
+def load_language(cr, lang):
+    """Loads a translation terms for a language.
+    Used mainly to automate language loading at db initialization.
+    
+    :param lang: language ISO code with optional _underscore_ and l10n flavor (ex: 'fr', 'fr_BE', but not 'fr-BE')
+    :type lang: str
+    """
+    pool = pooler.get_pool(cr.dbname)
+    language_installer = pool.get('base.language.install')
+    uid = 1
+    oid = language_installer.create(cr, uid, {'lang': lang})
+    language_installer.lang_install(cr, uid, [oid], context=None)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -6,7 +6,7 @@
             <field name="model">res.lang</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree editable="bottom" string="Languages">
+                <tree string="Languages">
                     <field name="name"/>
                     <field name="code"/>
                     <field name="iso_code"/>
@@ -49,25 +49,25 @@
 	                     <label align="0.0" string="%%B - Full month name." />
 	                     <newline/>
 	                     <label align="0.0" string="%%c - Appropriate date and time representation." />
-	                     <label align="0.0" string="%%d - Day of the month as a decimal number [01,31]." />
+	                     <label align="0.0" string="%%d - Day of the month [01,31]." />
 	                     <newline/>
-	                     <label align="0.0" string="%%H - Hour (24-hour clock) as a decimal number [00,23]." />
-	                     <label align="0.0" string="%%I - Hour (12-hour clock) as a decimal number [01,12]." />
+	                     <label align="0.0" string="%%H - Hour (24-hour clock) [00,23]." />
+	                     <label align="0.0" string="%%I - Hour (12-hour clock) [01,12]." />
 	                     <newline/>
-	                     <label align="0.0" string="%%j - Day of the year as a decimal number [001,366]." />
-	                     <label align="0.0" string="%%m - Month as a decimal number [01,12]." />
+	                     <label align="0.0" string="%%j - Day of the year [001,366]." />
+	                     <label align="0.0" string="%%m - Month number [01,12]." />
 	                     <newline/>
-	                     <label align="0.0" string="%%M - Minute as a decimal number [00,59]." />
+	                     <label align="0.0" string="%%M - Minute [00,59]." />
 	                     <label align="0.0" string="%%p - Equivalent of either AM or PM." />
 	                     <newline/>
-	                     <label align="0.0" string="%%S - Second as a decimal number [00,61]." />
-	                     <label align="0.0" string="%%w - Weekday as a decimal number [0(Sunday),6]." />
+	                     <label align="0.0" string="%%S - Seconds [00,61]." />
+	                     <label align="0.0" string="%%w - Weekday number [0(Sunday),6]." />
 	                     <newline/>
 	                     <label align="0.0" string="%%x - Appropriate date representation." />
 	                     <label align="0.0" string="%%X - Appropriate time representation." />
 	                     <newline/>
-	                     <label align="0.0" string="%%y - Year without century as a decimal number [00,99]." />
-	                     <label align="0.0" string="%%Y - Year with century as a decimal number." />
+	                     <label align="0.0" string="%%y - Year without century [00,99]." />
+	                     <label align="0.0" string="%%Y - Year with century." />
 	                     <newline/>
 	                     <label align="0.0" string="%%U - Week number of the year (Sunday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Sunday are considered to be in week 0." />
 	                	 <label align="0.0" string="%%W - Week number of the year (Monday as the first day of the week) as a decimal number [00,53]. All days in a new year preceding the first Monday are considered to be in week 0." />
@@ -76,7 +76,7 @@
                     </group>
                     <newline/>
                     <group colspan="4" col="4">
-	                    <separator string="Examples"/>
+	                    <separator string="Examples" colspan="4"/>
 	                    <newline/>
 	                    <label align="0.0" string="1.  %%c              ==> Fri Dec  5 18:25:20 2008"/>
 		                <label align="0.0" string="2.  %%a ,%%A         ==> Fri, Friday"/>

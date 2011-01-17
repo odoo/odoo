@@ -18,12 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+import logging
 from operator import attrgetter
 
 from osv import osv, fields
 from tools.translate import _
 import netsvc
+from tools import ustr
 import pooler
 
 
@@ -37,6 +38,7 @@ class res_config_configurable(osv.osv_memory):
     _name = 'res.config'
     _inherit = 'ir.wizard.screen'
     logger = netsvc.Logger()
+    __logger = logging.getLogger(_name)
 
     def get_current_progress(self, cr, uid, context=None):
         '''Return a description the current progress of configuration:
@@ -63,14 +65,13 @@ class res_config_configurable(osv.osv_memory):
 
     def _next_action(self, cr, uid, context=None):
         todos = self.pool.get('ir.actions.todo')
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'getting next %s' % todos)
+        self.__logger.info('getting next %s', todos)
         active_todos = todos.search(cr, uid, [('state','=','open')],
                                     limit=1)
-        dont_skip_todo = True
         if active_todos:
             todo_obj = todos.browse(cr, uid, active_todos[0], context=None)
             todo_groups = map(lambda x:x.id, todo_obj.groups_id)
+            dont_skip_todo = True
             if todo_groups:
                 cr.execute("select 1 from res_groups_users_rel where uid=%s and gid IN %s",(uid, tuple(todo_groups),))
                 dont_skip_todo = bool(cr.fetchone())
@@ -84,31 +85,20 @@ class res_config_configurable(osv.osv_memory):
     def _set_previous_todo(self, cr, uid, state, context=None):
         """ lookup the previous (which is still the next at this point)
         ir.actions.todo, set it to whatever state was provided.
-
-        Raises
-        `LookupError`: if we couldn't find *any* previous todo
-        `ValueError`: if no state is provided
-        anything ir_actions_todo.write can throw
         """
-        if context is None:
-            context = {}
         # this is ultra brittle, but apart from storing the todo id
         # into the res.config view, I'm not sure how to get the
         # "previous" todo
         previous_todo = self._next_action(cr, uid, context=context)
         if not previous_todo:
-            raise LookupError(_("Couldn't find previous ir.actions.todo"))
-        if not state:
-            raise ValueError(_("Can't set an ir.actions.todo's state to "
-                               "nothingness"))
+            self.__logger.warn(_("Couldn't find previous ir.actions.todo"))
+            return
         previous_todo.write({'state':state})
 
     def _next(self, cr, uid, context=None):
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'getting next operation')
+        self.__logger.info('getting next operation')
         next = self._next_action(cr, uid)
-        self.logger.notifyChannel('actions', netsvc.LOG_INFO,
-                                  'next action is %s' % next)
+        self.__logger.info('next action is %s', next)
         if next:
             action = next.action_id
             return {
@@ -119,9 +109,7 @@ class res_config_configurable(osv.osv_memory):
                 'type': action.type,
                 'target': action.target,
             }
-        self.logger.notifyChannel(
-            'actions', netsvc.LOG_INFO,
-            'all configuration actions have been executed')
+        self.__logger.info('all configuration actions have been executed')
 
         current_user_menu = self.pool.get('res.users')\
             .browse(cr, uid, uid).menu_id
@@ -175,10 +163,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        try:
-            self._set_previous_todo(cr, uid, state='done', context=context)
-        except Exception, e:
-            raise osv.except_osv(_('Error'), e.message)
+        self._set_previous_todo(cr, uid, state='done', context=context)
         next = self.execute(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
@@ -191,10 +176,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        try:
-            self._set_previous_todo(cr, uid, state='skip', context=context)
-        except Exception, e:
-            raise osv.except_osv(_('Error'), e.message)
+        self._set_previous_todo(cr, uid, state='skip', context=context)
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
@@ -210,10 +192,7 @@ class res_config_configurable(osv.osv_memory):
         an action dictionary -- executes the action provided by calling
         ``next``.
         """
-        try:
-            self._set_previous_todo(cr, uid, state='cancel', context=context)
-        except Exception, e:
-            raise osv.except_osv(_('Error'), e.message)
+        self._set_previous_todo(cr, uid, state='cancel', context=context)
         next = self.cancel(cr, uid, ids, context=None)
         if next: return next
         return self.next(cr, uid, ids, context=context)
@@ -301,7 +280,7 @@ class res_config_installer(osv.osv_memory):
     ``res.config``). Hooks and additionals *are not run* when skipping
     installation, even for already installed addons.
 
-    Again, setup your hooks accordinly.
+    Again, setup your hooks accordingly.
 
     .. [#] note that since a mapping key needs to be hashable, it's
            possible to use a tuple or a frozenset, but not a list or a
@@ -314,6 +293,7 @@ class res_config_installer(osv.osv_memory):
     """
     _name = 'res.config.installer'
     _inherit = 'res.config'
+    __logger = logging.getLogger(_name)
 
     _install_if = {}
 
@@ -400,23 +380,20 @@ class res_config_installer(osv.osv_memory):
                 continue
             fields[module.name].update(
                 readonly=True,
-                help=fields[module.name].get('help', '') +
+                help= ustr(fields[module.name].get('help', '')) +
                      _('\n\nThis addon is already installed on your system'))
-
         return fields
 
     def execute(self, cr, uid, ids, context=None):
         modules = self.pool.get('ir.module.module')
         to_install = list(self.modules_to_install(
             cr, uid, ids, context=context))
-        self.logger.notifyChannel(
-            'installer', netsvc.LOG_INFO,
-            'Selecting addons %s to install'%to_install)
+        self.__logger.info('Selecting addons %s to install', to_install)
         modules.state_update(
             cr, uid,
             modules.search(cr, uid, [('name','in',to_install)]),
             'to install', ['uninstalled'], context=context)
-        cr.commit() #TOFIX: after remove this statement, installation wizard is fail 
+        cr.commit() #TOFIX: after remove this statement, installation wizard is fail
         pooler.restart_pool(cr.dbname, update_module=True)
 res_config_installer()
 
@@ -433,6 +410,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
     '''
     _name='ir.actions.configuration.wizard'
     _inherit = 'res.config'
+    __logger = logging.getLogger(_name)
 
     def _next_action_note(self, cr, uid, ids, context=None):
         next = self._next_action(cr, uid)
@@ -440,9 +418,9 @@ class ir_actions_configuration_wizard(osv.osv_memory):
             # if the next one is also an old-style extension, you never know...
             if next.note:
                 return next.note
-            return "Click 'Continue' to configure the next addon..."
-        return "Your database is now fully configured.\n\n"\
-            "Click 'Continue' and enjoy your OpenERP experience..."
+            return _("Click 'Continue' to configure the next addon...")
+        return _("Your database is now fully configured.\n\n"\
+            "Click 'Continue' and enjoy your OpenERP experience...")
 
     _columns = {
         'note': fields.text('Next Wizard', readonly=True),
@@ -452,8 +430,7 @@ class ir_actions_configuration_wizard(osv.osv_memory):
         }
 
     def execute(self, cr, uid, ids, context=None):
-        self.logger.notifyChannel(
-            'configuration', netsvc.LOG_WARNING, DEPRECATION_MESSAGE)
+        self.__logger.warn(DEPRECATION_MESSAGE)
 
 ir_actions_configuration_wizard()
 

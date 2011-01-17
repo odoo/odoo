@@ -47,7 +47,7 @@ class base_language_export(osv.osv_memory):
         mods = map(lambda m: m.name, this.modules) or ['all']
         mods.sort()
         buf=cStringIO.StringIO()
-        tools.trans_export(this.lang, mods, buf, this.format, dbname=cr.dbname)
+        tools.trans_export(this.lang, mods, buf, this.format, cr)
         if this.format == 'csv':
             this.advice = _("Save this document to a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the latest column before reimporting it.")
         elif this.format == 'po':

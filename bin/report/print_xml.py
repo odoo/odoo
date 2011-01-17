@@ -254,7 +254,7 @@ class document(object):
                             for el_cld in node:
                                 self.parse_node(el_cld, el, v)
             else:
-                # if there is no "type" attribute in the node, copy it to the xml data and parse its childs
+                # if there is no "type" attribute in the node, copy it to the xml data and parse its children
                 if not node.tag == etree.Comment:
                     if node.tag == parent.tag:
                         el = parent
@@ -283,9 +283,13 @@ class document(object):
         if not context:
             context={}
         # parses the xml template to memory
-        self.dom = etree.XML(tools.file_open(filename).read())
-        self.doc = etree.Element(self.dom.tag)
-        self.parse_tree(ids, model, context)
+        src_file = tools.file_open(filename)
+        try:
+            self.dom = etree.XML(src_file.read())
+            self.doc = etree.Element(self.dom.tag)
+            self.parse_tree(ids, model, context)
+        finally:
+            src_file.close()
 
     def close(self):
         self.doc = None

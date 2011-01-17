@@ -19,14 +19,16 @@
 #
 ##############################################################################
 import logging
+import re
+import time
 from operator import itemgetter
+
 from osv import fields,osv
-import ir, re
+import ir
 import netsvc
 from osv.orm import except_orm, browse_record
-
-import time
 import tools
+from tools.safe_eval import safe_eval as eval
 from tools import config
 from tools.translate import _
 import pooler
@@ -43,7 +45,7 @@ def _get_fields_type(self, cr, uid, context=None):
 class ir_model(osv.osv):
     _name = 'ir.model'
     _description = "Objects"
-    _rec_name = 'name'
+    _order = 'model'
 
     def _is_osv_memory(self, cr, uid, ids, field_name, arg, context=None):
         models = self.browse(cr, uid, ids, context=context)
@@ -57,7 +59,7 @@ class ir_model(osv.osv):
             return []
         field, operator, value = domain[0]
         if operator not in ['=', '!=']:
-            raise osv.except_osv('Invalid search criterions','The osv_memory field can only be compared with = and != operator.')
+            raise osv.except_osv(_('Invalid search criterions'), _('The osv_memory field can only be compared with = and != operator.'))
         value = bool(value) if operator == '=' else not bool(value)
         all_model_ids = self.search(cr, uid, [], context=context)
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
@@ -75,12 +77,14 @@ class ir_model(osv.osv):
             fnct_search=_search_osv_memory,
             help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)")
     }
+    
     _defaults = {
         'model': lambda *a: 'x_',
-        'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
+        'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
-    def _check_model_name(self, cr, uid, ids):
-        for model in self.browse(cr, uid, ids):
+    
+    def _check_model_name(self, cr, uid, ids, context=None):
+        for model in self.browse(cr, uid, ids, context=context):
             if model.state=='manual':
                 if not model.model.startswith('x_'):
                     return False
@@ -88,8 +92,10 @@ class ir_model(osv.osv):
                 return False
         return True
 
+    def _model_name_msg(self, cr, uid, ids, context=None):
+        return _('The Object name must start with x_ and not contain any special character !')
     _constraints = [
-        (_check_model_name, 'The Object name must start with x_ and not contain any special character !', ['model']),
+        (_check_model_name, _model_name_msg, ['model']),
     ]
 
     # overridden to allow searching both on model name (model field)
@@ -148,42 +154,78 @@ class ir_model_fields(osv.osv):
     _description = "Fields"
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
-        'model': fields.char('Object Name', size=64, required=True, select=1),
-        'relation': fields.char('Object Relation', size=64),
-        'relation_field': fields.char('Relation Field', size=64),
-        'model_id': fields.many2one('ir.model', 'Object ID', required=True, select=True, ondelete='cascade'),
+        'model': fields.char('Object Name', size=64, required=True, select=1,
+            help="The technical name of the model this field belongs to"),
+        'relation': fields.char('Object Relation', size=64,
+            help="For relationship fields, the technical name of the target model"),
+        'relation_field': fields.char('Relation Field', size=64,
+            help="For one2many fields, the field on the target model that implement the opposite many2one relationship"),
+        'model_id': fields.many2one('ir.model', 'Model', required=True, select=True, ondelete='cascade',
+            help="The model this field belongs to"),
         'field_description': fields.char('Field Label', required=True, size=256),
         'ttype': fields.selection(_get_fields_type, 'Field Type',size=64, required=True),
-        'selection': fields.char('Field Selection',size=128),
+        'selection': fields.char('Selection Options',size=128, help="List of options for a selection field, "
+            "specified as a Python expression defining a list of (key, label) pairs. "
+            "For example: [('blue','Blue'),('yellow','Yellow')]"),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
-        'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search')],'Searchable', required=True),
-        'translate': fields.boolean('Translate'),
+        'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
+        'translate': fields.boolean('Translate', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
         'size': fields.integer('Size'),
         'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On delete', help='On delete property for many2one fields'),
-        'domain': fields.char('Domain', size=256),
+        'domain': fields.char('Domain', size=256, help="The optional domain to restrict possible values for relationship fields, "
+            "specified as a Python expression defining a list of triplets. "
+            "For example: [('color','=','red')]"),
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
     }
     _rec_name='field_description'
     _defaults = {
-        'view_load': lambda *a: 0,
-        'selection': lambda *a: "[]",
-        'domain': lambda *a: "[]",
-        'name': lambda *a: 'x_',
+        'view_load': 0,
+        'selection': "",
+        'domain': "[]",
+        'name': 'x_',
         'state': lambda self,cr,uid,ctx={}: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
-        'on_delete': lambda *a: 'set null',
-        'select_level': lambda *a: '0',
-        'size': lambda *a: 64,
-        'field_description': lambda *a: '',
-        'selectable': lambda *a: 1,
+        'on_delete': 'set null',
+        'select_level': '0',
+        'size': 64,
+        'field_description': '',
+        'selectable': 1,
     }
-    _order = "id"
+    _order = "name"
+
+    def _check_selection(self, cr, uid, selection, context=None):
+        try:
+            selection_list = eval(selection)
+        except Exception:
+            logging.getLogger('ir.model').warning('Invalid selection list definition for fields.selection', exc_info=True)
+            raise except_orm(_('Error'),
+                    _("The Selection Options expression is not a valid Pythonic expression." \
+                      "Please provide an expression in the [('key','Label'), ...] format."))
+
+        check = True
+        if not (isinstance(selection_list, list) and selection_list):
+            check = False
+        else:
+            for item in selection_list:
+                if not (isinstance(item, (tuple,list)) and len(item) == 2):
+                    check = False
+                    break
+
+        if not check:
+                raise except_orm(_('Error'),
+                    _("The Selection Options expression is must be in the [('key','Label'), ...] format!"))
+        return True
+
+    def _size_gt_zero_msg(self, cr, user, ids, context=None):
+        return _('Size of the field can never be less than 1 !')
+
     _sql_constraints = [
-        ('size_gt_zero', 'CHECK (size>0)', 'Size of the field can never be less than 1 !'),
+        ('size_gt_zero', 'CHECK (size>0)',_size_gt_zero_msg ),
     ]
+
     def unlink(self, cr, user, ids, context=None):
         for field in self.browse(cr, user, ids, context):
             if field.state <> 'manual':
@@ -203,13 +245,17 @@ class ir_model_fields(osv.osv):
             context = {}
         if context and context.get('manual',False):
             vals['state'] = 'manual'
+        if vals.get('ttype', False) == 'selection':
+            if not vals.get('selection',False):
+                raise except_orm(_('Error'), _('For selection fields, the Selection Options must be given!'))
+            self._check_selection(cr, user, vals['selection'], context=context)
         res = super(ir_model_fields,self).create(cr, user, vals, context)
         if vals.get('state','base') == 'manual':
             if not vals['name'].startswith('x_'):
                 raise except_orm(_('Error'), _("Custom fields must have a name that starts with 'x_' !"))
 
             if vals.get('relation',False) and not self.pool.get('ir.model').search(cr, user, [('model','=',vals['relation'])]):
-                 raise except_orm(_('Error'), _("Model %s Does not Exist !" % vals['relation']))
+                 raise except_orm(_('Error'), _("Model %s does not exist!") % vals['relation'])
 
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
@@ -220,13 +266,120 @@ class ir_model_fields(osv.osv):
 
         return res
 
+    def write(self, cr, user, ids, vals, context=None):
+        if context is None:
+            context = {}
+        if context and context.get('manual',False):
+            vals['state'] = 'manual'
+
+        column_rename = None # if set, *one* column can be renamed here
+        obj = None
+        models_patch = {}    # structs of (obj, [(field, prop, change_to),..])
+                             # data to be updated on the orm model
+
+        # static table of properties
+        model_props = [ # (our-name, fields.prop, set_fn)
+            ('field_description', 'string', lambda a: a),
+            ('required', 'required', bool),
+            ('readonly', 'readonly', bool),
+            ('domain', '_domain', lambda a: a),
+            ('size', 'size', int),
+            ('on_delete', 'ondelete', str),
+            ('translate', 'translate', bool),
+            ('view_load', 'view_load', bool),
+            ('selectable', 'selectable', bool),
+            ('select_level', 'select', int),
+            ('selection', 'selection', eval),
+            ]
+
+        if vals and ids:
+            checked_selection = False # need only check it once, so defer
+
+            for item in self.browse(cr, user, ids, context=context):
+                if not (obj and obj._name == item.model):
+                    obj = self.pool.get(item.model)
+
+                if item.state != 'manual':
+                    raise except_orm(_('Error!'),
+                        _('Properties of base fields cannot be altered in this manner! '
+                          'Please modify them through Python code, '
+                          'preferably through a custom addon!'))
+
+                if item.ttype == 'selection' and 'selection' in vals \
+                        and not checked_selection:
+                    self._check_selection(cr, user, vals['selection'], context=context)
+                    checked_selection = True
+
+                final_name = item.name
+                if 'name' in vals and vals['name'] != item.name:
+                    # We need to rename the column
+                    if column_rename:
+                        raise except_orm(_('Error!'), _('Can only rename one column at a time!'))
+                    if vals['name'] in obj._columns:
+                        raise except_orm(_('Error!'), _('Cannot rename column to %s, because that column already exists!') % vals['name'])
+                    if vals.get('state', 'base') == 'manual' and not vals['name'].startswith('x_'):
+                        raise except_orm(_('Error!'), _('New column name must still start with x_ , because it is a custom field!'))
+                    if '\'' in vals['name'] or '"' in vals['name'] or ';' in vals['name']:
+                        raise ValueError('Invalid character in column name')
+                    column_rename = (obj, (obj._table, item.name, vals['name']))
+                    final_name = vals['name']
+
+                if 'model_id' in vals and vals['model_id'] != item.model_id:
+                    raise except_orm(_("Error!"), _("Changing the model of a field is forbidden!"))
+
+                if 'ttype' in vals and vals['ttype'] != item.ttype:
+                    raise except_orm(_("Error!"), _("Changing the type of a column is not yet supported. "
+                                "Please drop it and create it again!"))
+
+                # We don't check the 'state', because it might come from the context
+                # (thus be set for multiple fields) and will be ignored anyway.
+                if obj:
+                    models_patch.setdefault(obj._name, (obj,[]))
+                    # find out which properties (per model) we need to update
+                    for field_name, field_property, set_fn in model_props:
+                        if field_name in vals:
+                            property_value = set_fn(vals[field_name])
+                            if getattr(obj._columns[item.name], field_property) != property_value:
+                                models_patch[obj._name][1].append((final_name, field_property, property_value))
+                        # our dict is ready here, but no properties are changed so far
+
+        # These shall never be written (modified)
+        for column_name in ('model_id', 'model', 'state'):
+            if column_name in vals:
+                del vals[column_name]
+
+        res = super(ir_model_fields,self).write(cr, user, ids, vals, context=context)
+
+        if column_rename:
+            cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % column_rename[1])
+            # This is VERY risky, but let us have this feature:
+            # we want to change the key of column in obj._columns dict
+            col = column_rename[0]._columns.pop(column_rename[1][1]) # take object out, w/o copy
+            column_rename[0]._columns[column_rename[1][2]] = col
+
+        if models_patch:
+            # We have to update _columns of the model(s) and then call their
+            # _auto_init to sync the db with the model. Hopefully, since write()
+            # was called earlier, they will be in-sync before the _auto_init.
+            # Anything we don't update in _columns now will be reset from
+            # the model into ir.model.fields (db).
+            ctx = context.copy()
+            ctx.update({'select': vals.get('select_level','0'),'update_custom_fields':True})
+
+            for model_key, patch_struct in models_patch.items():
+                obj = patch_struct[0]
+                for col_name, col_prop, val in patch_struct[1]:
+                    setattr(obj._columns[col_name], col_prop, val)
+                obj._auto_init(cr, ctx)
+        return res
+
 ir_model_fields()
 
 class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
-        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True),
+        'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True, ondelete='cascade'),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
@@ -317,14 +470,24 @@ class ir_model_access(osv.osv):
             r = cr.fetchone()[0]
 
         if not r and raise_exception:
+            cr.execute('''select
+                    g.name
+                from
+                    ir_model_access a 
+                    left join ir_model m on (a.model_id=m.id) 
+                    left join res_groups g on (a.group_id=g.id)
+                where
+                    m.model=%s and
+                    a.group_id is not null and perm_''' + mode, (model_name, ))
+            groups = ', '.join(map(lambda x: x[0], cr.fetchall())) or '/'
             msgs = {
-                'read':   _('You can not read this document! (%s)'),
-                'write':  _('You can not write in this document! (%s)'),
-                'create': _('You can not create this kind of document! (%s)'),
-                'unlink': _('You can not delete this document! (%s)'),
+                'read':   _("You can not read this document (%s) ! Be sure your user belongs to one of these groups: %s."),
+                'write':  _("You can not write in this document (%s) ! Be sure your user belongs to one of these groups: %s."),
+                'create': _("You can not create this document (%s) ! Be sure your user belongs to one of these groups: %s."),
+                'unlink': _("You can not delete this document (%s) ! Be sure your user belongs to one of these groups: %s."),
             }
 
-            raise except_orm(_('AccessError'), msgs[mode] % model_name )
+            raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
         return r
 
     check = tools.cache()(check)
@@ -369,6 +532,7 @@ ir_model_access()
 class ir_model_data(osv.osv):
     _name = 'ir.model.data'
     __logger = logging.getLogger('addons.base.'+_name)
+    _order = 'module,model,name'
     _columns = {
         'name': fields.char('XML Identifier', required=True, size=128, select=1),
         'model': fields.char('Object', required=True, size=64, select=1),
@@ -381,8 +545,8 @@ class ir_model_data(osv.osv):
     _defaults = {
         'date_init': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'date_update': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'noupdate': lambda *a: False,
-        'module': lambda *a: ''
+        'noupdate': False,
+        'module': ''
     }
     _sql_constraints = [
         ('module_name_uniq', 'unique(name, module)', 'You cannot have multiple records with the same id for the same module !'),
@@ -393,6 +557,12 @@ class ir_model_data(osv.osv):
         self.loads = {}
         self.doinit = True
         self.unlink_mark = {}
+
+    def _auto_init(self, cr, context=None):
+        super(ir_model_data, self)._auto_init(cr, context)
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_model_data_module_name_index\'')
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX ir_model_data_module_name_index ON ir_model_data (module, name)')
 
     @tools.cache()
     def _get_id(self, cr, uid, module, xml_id):
@@ -429,6 +599,10 @@ class ir_model_data(osv.osv):
         model_obj = self.pool.get(model)
         if not context:
             context = {}
+
+        # records created during module install should result in res.log entries that are already read!
+        context = dict(context, res_log_read=True)
+
         if xml_id and ('.' in xml_id):
             assert len(xml_id.split('.'))==2, _("'%s' contains too many dots. XML ids should not contain dots ! These are used to refer to other modules data, as in module.reference_id") % (xml_id)
             module, xml_id = xml_id.split('.')
@@ -437,18 +611,19 @@ class ir_model_data(osv.osv):
         action_id = False
 
         if xml_id:
-            cr.execute('select id,res_id from ir_model_data where module=%s and name=%s', (module,xml_id))
+            cr.execute('''SELECT imd.id, imd.res_id, md.id
+                          FROM ir_model_data imd LEFT JOIN %s md ON (imd.res_id = md.id)
+                          WHERE imd.module=%%s AND imd.name=%%s''' % model_obj._table,
+                          (module, xml_id))
             results = cr.fetchall()
-            for action_id2,res_id2 in results:
-                cr.execute('select id from '+model_obj._table+' where id=%s', (res_id2,))
-                result3 = cr.fetchone()
-                if not result3:
+            for imd_id2,res_id2,real_id2 in results:
+                if not real_id2:
                     self._get_id.clear_cache(cr.dbname, uid, module, xml_id)
                     self.get_object_reference.clear_cache(cr.dbname, uid, module, xml_id)
-                    cr.execute('delete from ir_model_data where id=%s', (action_id2,))
+                    cr.execute('delete from ir_model_data where id=%s', (imd_id2,))
                     res_id = False
                 else:
-                    res_id,action_id = res_id2,action_id2
+                    res_id,action_id = res_id2,imd_id2
 
         if action_id and res_id:
             model_obj.write(cr, uid, [res_id], values, context=context)
@@ -588,7 +763,7 @@ class ir_model_data(osv.osv):
                         cr.commit()
                     except Exception:
                         cr.rollback()
-                        self.__logger.exception(
+                        self.__logger.warn(
                             'Could not delete id: %d of model %s\nThere '
                             'should be some relation that points to this '
                             'resource\nYou should manually fix this and '

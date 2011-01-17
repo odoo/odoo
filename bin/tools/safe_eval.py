@@ -39,6 +39,8 @@ import os
 
 __all__ = ['test_expr', 'literal_eval', 'safe_eval', 'const_eval', 'ext_eval' ]
 
+_ALLOWED_MODULES = ['_strptime']
+
 _CONST_OPCODES = set(opmap[x] for x in [
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP','POP_BLOCK','SETUP_LOOP',
     'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
@@ -54,8 +56,12 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
     'STORE_MAP', 'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
-    'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'JUMP_ABSOLUTE',
-    'DELETE_NAME', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE','MAKE_FUNCTION','JUMP_FORWARD'
+    'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'DELETE_NAME',
+    'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
+    'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3',
+    # New in Python 2.7 - http://bugs.python.org/issue4715 :
+    'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE',
+    'POP_JUMP_IF_TRUE'
     ] if x in opmap))
 
 _logger = logging.getLogger('safe_eval')
@@ -203,7 +209,10 @@ except ImportError:
             node_or_string = node_or_string.body
         return _convert(node_or_string)
 
-
+def _import(name, globals={}, locals={}, fromlist=[], level=-1):
+    if name in _ALLOWED_MODULES:
+        return __import__(name, globals, locals, level)
+    raise ImportError(name)
 
 def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=False):
     """safe_eval(expression[, globals[, locals[, mode[, nocopy]]]]) -> result
@@ -249,6 +258,7 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
 
     globals_dict.update(
             __builtins__ = {
+                '__import__': _import,
                 'True': True,
                 'False': False,
                 'None': None,

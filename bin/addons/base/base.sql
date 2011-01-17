@@ -161,7 +161,8 @@ CREATE TABLE res_groups (
 
 CREATE TABLE res_groups_users_rel (
     uid integer NOT NULL references res_users on delete cascade,
-    gid integer NOT NULL references res_groups on delete cascade
+    gid integer NOT NULL references res_groups on delete cascade,
+    UNIQUE("uid","gid")
 );
 
 create index res_groups_users_rel_uid_idx on res_groups_users_rel (uid);
@@ -288,6 +289,7 @@ CREATE TABLE ir_module_module (
     description text,
     demo boolean default False,
     web boolean DEFAULT FALSE,
+    license character varying(32),
     primary key(id)
 );
 ALTER TABLE ir_module_module add constraint name_uniq unique (name);

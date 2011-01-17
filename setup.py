@@ -33,7 +33,7 @@ import glob
 
 from pprint import pprint as pp
 
-from setuptools import setup as official_setup, find_packages
+from setuptools import setup, find_packages
 from setuptools.command.install import install
 from distutils.sysconfig import get_python_lib
 
@@ -103,9 +103,7 @@ def data_files():
             files.append((root, [join(root, name) for name in names]))
         #for root, _, names in os.walk('pixmaps'):
         #    files.append((root, [join(root, name) for name in names]))
-        files.append(('.', [join('bin', 'import_xml.rng'),
-                            join('bin', 'server.pkey'),
-                            join('bin', 'server.cert')]))
+        files.append(('.', [join('bin', 'import_xml.rng'),]))
     else:
         man_directory = join('share', 'man')
         files.append((join(man_directory, 'man1'), ['man/openerp-server.1']))
@@ -120,9 +118,7 @@ def data_files():
 
         openerp_site_packages = join(get_python_lib(prefix=''), 'openerp-server')
 
-        files.append((openerp_site_packages, [join('bin', 'import_xml.rng'),
-                                              join('bin', 'server.pkey'),
-                                              join('bin', 'server.cert')]))
+        files.append((openerp_site_packages, [join('bin', 'import_xml.rng'),]))
 
         if sys.version_info[0:2] == (2,5):
             files.append((openerp_site_packages, [ join('python25-compat','BaseHTTPServer.py'),
@@ -173,20 +169,17 @@ options = {
         "optimize": 2,
         "dist_dir": 'dist',
         "packages": [
-                 "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
-                 "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
-                 "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
-                 "pydot", "asyncore","asynchat", "reportlab", "vobject",
-                 "HTMLParser", "select", "mako", "poplib",
-                 "imaplib", "smtplib", "email", "yaml", "DAV",
-                 ],
+            "lxml", "lxml.builder", "lxml._elementpath", "lxml.etree",
+            "lxml.objectify", "decimal", "xml", "xml", "xml.dom", "xml.xpath",
+            "encodings", "dateutil", "wizard", "pychart", "PIL", "pyparsing",
+            "pydot", "asyncore","asynchat", "reportlab", "vobject",
+            "HTMLParser", "select", "mako", "poplib",
+            "imaplib", "smtplib", "email", "yaml", "DAV",
+            "uuid",
+        ],
         "excludes" : ["Tkconstants","Tkinter","tcl"],
     }
 }
-
-def setup(**kwargs):
-    #pp(kwargs)
-    return official_setup(**kwargs)
 
 setup(name             = name,
       version          = version,
@@ -229,13 +222,8 @@ setup(name             = name,
           'reportlab',
           'caldav',
           'pyyaml',
-          #'django',
           'pywebdav'
-          #'cx_Oracle',
-          #'mysqldb',
           'feedparser',
-          #'bsddb3',
-          'egenix-mx-base'
       ],
       extras_require={
           'SSL' : ['pyopenssl'],

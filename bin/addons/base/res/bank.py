@@ -25,6 +25,7 @@ from osv import fields, osv
 class Bank(osv.osv):
     _description='Bank'
     _name = 'res.bank'
+    _order = 'name'
     _columns = {
         'name': fields.char('Name', size=128, required=True),
         'code': fields.char('Code', size=64),

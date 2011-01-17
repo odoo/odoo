@@ -34,10 +34,10 @@ import thread
 
 class OpenERPServerService(win32serviceutil.ServiceFramework):
     # required info
-    _svc_name_ = "openerp-service"
-    _svc_display_name_ = "OpenERP Server"
+    _svc_name_ = "openerp-server-6.0"
+    _svc_display_name_ = "OpenERP Server 6.0"
     # optionnal info
-    _svc_description_ = "OpenERP Server service"
+    _svc_description_ = "OpenERP Server 6.0 service"
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)

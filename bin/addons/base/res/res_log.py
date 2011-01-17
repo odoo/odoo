@@ -20,24 +20,23 @@
 ##############################################################################
 
 from osv import fields, osv
-import tools
 
 class res_log(osv.osv):
     _name = 'res.log'
     _columns = {
-        'name': fields.char('Message', size=128, help='The logging message.', required=True),
-        'user_id': fields.many2one('res.users','User', required=True),
-        'res_model': fields.char('Object', size=128),
+        'name': fields.char('Message', size=250, help='The logging message.', required=True, select=1),
+        'user_id': fields.many2one('res.users','User'),
+        'res_model': fields.char('Object', size=128, select=1),
         'context': fields.char('Context', size=250),
         'res_id': fields.integer('Object ID'),
         'secondary': fields.boolean('Secondary Log', help='Do not display this log if it belongs to the same object the user is working on'),
-        'create_date': fields.datetime('Created Date', readonly=True),
-        'read': fields.boolean('Read', help="If this log item has been read, get() should not send it to the client")
+        'create_date': fields.datetime('Creation Date', readonly=True, select=1),
+        'read': fields.boolean('Read', help="If this log item has been read, get() should not send it to the client"),
     }
     _defaults = {
         'user_id': lambda self,cr,uid,ctx: uid,
         'context': "{}",
-        'read': False
+        'read': False,
     }
     _order='create_date desc'
 
@@ -50,12 +49,20 @@ class res_log(osv.osv):
             cr.execute('CREATE INDEX %s ON res_log (user_id, read)' %
                        self._index_name)
 
+    def create(self, cr, uid, vals, context=None):
+        create_context = context and dict(context) or {}
+        if 'res_log_read' in create_context:
+            vals['read'] = create_context.pop('res_log_read')
+        if create_context and not vals.get('context'):
+            vals['context'] = create_context
+        return super(res_log, self).create(cr, uid, vals, context=context)
+
     # TODO: do not return secondary log if same object than in the model (but unlink it)
     def get(self, cr, uid, context=None):
         unread_log_ids = self.search(cr, uid,
             [('user_id','=',uid), ('read', '=', False)], context=context)
         res = self.read(cr, uid, unread_log_ids,
-            ['name','res_model','res_id'],
+            ['name','res_model','res_id','context'],
             context=context)
         res.reverse()
         result = []
