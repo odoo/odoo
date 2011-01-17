@@ -664,8 +664,10 @@ class ir_model_data(osv.osv):
                         },context=context)
                     if model_obj._inherits:
                         for table in model_obj._inherits:
-                            inherit_id = model_obj.browse(cr, uid,
-                                    res_id,context=context)[model_obj._inherits[table]]
+                            inherit_id = getattr(model_obj.browse(cr, uid,
+                                    res_id,context=context), model_obj._inherits[table])
+                            if isinstance(inherit_id, browse_record): # most likely
+                                inherit_id = inherit_id.id
                             self.create(cr, uid, {
                                 'name': xml_id + '_' + table.replace('.', '_'),
                                 'model': table,
