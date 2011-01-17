@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+EXTRA_MODULES_PATH ?= ../addons
+
 %:
 	dh  ${@}
 
@@ -10,13 +12,13 @@ override_dh_auto_clean:
 
 override_dh_auto_install:
 	# Adding ALL addons to the server package
-	if [ -d ../addons ] ; then \
-	    pushd ../addons ; \
+	if [ -d "${EXTRA_MODULES_PATH}" ] ; then \
+	    cd ${EXTRA_MODULES_PATH} ; \
 		echo > server_modules.list ; \
 	        for ADD_DIR in * ; do \
 	            [ -d "$$ADD_DIR" ] && [ -r "$$ADD_DIR"/__openerp__.py ] && echo "$$ADD_DIR" >> server_modules.list ; \
 		done ; \
-	    popd ; fi
+	fi
 	NO_CHECK_MODULES=1 python setup.py install --install-layout=deb --no-compile --root=$(CURDIR)/debian/openerp-server
 
 	# Adjusting program location
