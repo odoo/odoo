@@ -342,7 +342,11 @@ class mrp_bom(osv.osv):
         if context is None:
             context = {}
         bom_data = self.read(cr, uid, id, [], context=context)
-        default.update({'name': bom_data['name'] + ' ' + _('Copy'), 'bom_id':False})
+        default.update({'name': bom_data['name'] + ' ' + _('Copy')})
+        if context.get('copy_from_product',False):
+            #Check for the BOM LINES(child BoM)
+            if not bom_data['bom_lines']:
+                return 0
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
 mrp_bom()

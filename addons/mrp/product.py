@@ -24,31 +24,31 @@ from tools.translate import _
 
 
 class product_product(osv.osv):
-    _inherit = "product.product"    
+    _inherit = "product.product"
 
     def get_product_accounts(self, cr, uid, product_id, context=None):
         """ To get the stock input account, stock output account and stock journal related to product.
-        @param product_id: product id            
+        @param product_id: product id
         @return: dictionary which contains information regarding stock input account, stock output account and stock journal
         """
         product_obj = self.pool.get('product.product').browse(cr, uid, product_id, False)
         res = super(product_product,self).get_product_accounts(cr, uid, product_id, context=context)
-        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False 
+        stock_input_acc = product_obj.property_stock_account_input and product_obj.property_stock_account_input.id or False
         if not stock_input_acc:
             stock_input_acc = product_obj.categ_id.property_stock_account_input_categ and product_obj.categ_id.property_stock_account_input_categ.id or False
-        
+
         stock_output_acc = product_obj.property_stock_account_output and product_obj.property_stock_account_output.id or False
         if not stock_output_acc:
             stock_output_acc = product_obj.categ_id.property_stock_account_output_categ and product_obj.categ_id.property_stock_account_output_categ.id or False
 
         journal_id = product_obj.categ_id.property_stock_journal and product_obj.categ_id.property_stock_journal.id or False
-        
+
         res.update({'stock_account_input': stock_input_acc})
         res.update({'stock_account_output': stock_output_acc})
-        res.update({'stock_journal': journal_id})  
-        
+        res.update({'stock_journal': journal_id})
+
         return res
-    
+
 
     _columns = {
         "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials'),
@@ -89,5 +89,12 @@ class product_product(osv.osv):
 
         for bom in bom_obj.browse(cr, uid, bom_ids, context=context):
             _compute_price(bom)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            context = {}
+        context.update({'copy_from_product': True})
+        return super(product_product, self).copy(cr, uid, id, default=default,
+                    context=context)
 
 product_product()
