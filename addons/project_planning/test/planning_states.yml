@@ -3,8 +3,8 @@
 - 
   !record {model: report_account_analytic.planning, id: report_account_analytic_planning_projectplanning0}:
     business_days: 20
-    date_from: '2010-06-01'
-    date_to: '2010-06-30'
+    date_from: !eval time.strftime('%Y-%m-%d')
+    date_to: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+1,datetime.now().day)"
     name: Project Planning
     state: draft
     user_id: base.user_demo

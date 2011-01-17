@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-02 07:21+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-12 15:57+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:30+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:49+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,state:0
@@ -113,7 +113,7 @@ msgstr "Dag"
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,evaluation_id:0
 msgid "Evaluation Form"
-msgstr ""
+msgstr "Beoordeling formulier"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -126,6 +126,8 @@ msgid ""
 "This number of months will be used to schedule the first evaluation date of "
 "the employee when selecting an evaluation plan. "
 msgstr ""
+"Dit aantal maanden wordt gebruikt voor het plannen van de eerste beoordeling "
+"datum van de medewerker bij het selecteren van een beoordelingsplan. "
 
 #. module: hr_evaluation
 #: view:hr.employee:0
@@ -142,6 +144,7 @@ msgstr "Aanvraag gesprek"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Fout ! U kunt geen afdeling selecteren waarvan de medewerker de beheerder is."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -186,7 +189,7 @@ msgstr "July"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
 msgid "Periodicity of Evaluations (months)"
-msgstr ""
+msgstr "Periodiciteit van beoordelingen (maanden)"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:242
@@ -206,7 +209,7 @@ msgstr "Einddatum"
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_first:0
 msgid "First Evaluation in (months)"
-msgstr ""
+msgstr "Eerste beoordeling in (maanden)"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:81
@@ -265,6 +268,8 @@ msgid ""
 "The number of month that depicts the delay between each evaluation of this "
 "plan (after the first one)."
 msgstr ""
+"Het aantal maanden de wachttijd tussen beoordelingen van dit plan aangeeft "
+"(na de eerste)."
 
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
@@ -293,6 +298,21 @@ msgid ""
 "          in the form of.Implements a dashboard for My Current Evaluations\n"
 "         "
 msgstr ""
+"\n"
+"          Mogelijkheid om medewerker beoordelingen te maken.\n"
+"          Een beoordeling kan door een medewerker voor ondergeschikten "
+"worden gemaakt,\n"
+"          zowel bij junior als zijn manager. De beoordeling wordt gedaan "
+"volgens een plan\n"
+"          in zich verscheidene enquêtes kunnen worden gemaakt en het kan "
+"worden gedefinieerd \n"
+"          welk niveau van de medewerker hiërarchie wat invult en de finale "
+"controle en beoordeling\n"
+"          wordt door de manager gedaan. Elke door een medewerker ingevulde "
+"beoordeling kan \n"
+"          in het formulier worden bekeken. Implementeert een dashboard voor "
+"Mijn actuele beoordelingen\n"
+"         "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -410,6 +430,11 @@ msgid ""
 "manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
 "final evaluation by the manager."
 msgstr ""
+"Elke medewerker wordt toegewezen aan een beoordelingsplan. Zo'n plan "
+"definieert de frequentie en de manier waarop u uw periodieke personeel "
+"beoordeling beheert. U kunt stappen definiëren en daar enquêtes aan "
+"koppelen. OpenERP beheert allerlei soorten beoordelingen: bottom-up, top-"
+"down, zelf-beoordeling en definitieve beoordeling door de manager."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -613,7 +638,7 @@ msgstr "Uitgebreide filters..."
 #. module: hr_evaluation
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Fout ! U kunt geen recursieve hiërarchie van medewerkers maken."
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -728,7 +753,7 @@ msgstr "Alle antwoorden naar de medewerker versturen"
 #. module: hr_evaluation
 #: field:hr.employee,evaluation_date:0
 msgid "Next Evaluation Date"
-msgstr ""
+msgstr "Volgende beoordelingsdatum"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -761,6 +786,9 @@ msgid ""
 "employee's evaluation plan. Each user receives automatic emails and requests "
 "to evaluate their colleagues periodically."
 msgstr ""
+"Interview aanvragen worden automatisch door OpenERP gegenereerd volgens het "
+"beoordelingsplan van de medewerker. Elke gebruiker ontvangt automatisch "
+"emails en aanvragen om hun collega's periodiek te beoordelen."
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan:0
@@ -917,6 +945,8 @@ msgid ""
 "The date of the next evaluation is computed by the evaluation plan's dates "
 "(first evaluation + periodicity)."
 msgstr ""
+"De datum van de volgende beoordeling wordt berekend door de beoordelingsplan "
+"data (eerste beoordeling en periodiciteit)."
 
 #~ msgid "Information"
 #~ msgstr "Informatie"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-11-19 07:35+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 15:24+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:55+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -120,6 +120,8 @@ msgid ""
 "Determines an additional criterion to add to the filter when selecting new "
 "records to inject in the campaign."
 msgstr ""
+"Een aanvullend criterium vaststellen om toe te voegen aan het filter bij het "
+"selecteren van nieuwe records om in de campagne in te brengen."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,object_id:0
@@ -138,6 +140,15 @@ msgid ""
 "   - transitions: list of campaign transitions outgoing from this activity\n"
 "...- re: Python regular expression module"
 msgstr ""
+"Python expressioe om te besluiten of de activiteit kan worden uitgevoerd, "
+"anders wordt het verwijderd of geannuleerd. De expressie mag de volgende "
+"[browsable] variabelen gebruiken:\n"
+"   - activity: de campagne activiteit\n"
+"   - workitem: het campagne workitem\n"
+"   - resource: het resource object dat dit campagne item vertegenwoordigt\n"
+"   - transitions: lijst van campagne overgangen die uitgaan van deze "
+"activiteit\n"
+"...- re: Python reguliere expressie module"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -170,13 +181,13 @@ msgstr "Geen voorbeeld"
 #: view:marketing.campaign.segment:0
 #: field:marketing.campaign.segment,date_run:0
 msgid "Launch Date"
-msgstr ""
+msgstr "Aanvangsdatum"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,day:0
 msgid "Day"
-msgstr ""
+msgstr "Dag"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -191,12 +202,12 @@ msgstr "Herstellen"
 #. module: marketing_campaign
 #: help:marketing.campaign,object_id:0
 msgid "Choose the resource on which you want this campaign to be run"
-msgstr ""
+msgstr "Kies de resource waarop u deze campagne wilt uitvoeren"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_last_date:0
 msgid "Last Synchronization"
-msgstr ""
+msgstr "Laatste synchronisatie"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -207,7 +218,7 @@ msgstr "Jaar(en)"
 #: code:addons/marketing_campaign/marketing_campaign.py:209
 #, python-format
 msgid "Sorry, campaign duplication is not supported at the moment."
-msgstr ""
+msgstr "Sorry, campagne duplicatie is momenteel niet ondersteund."
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,sync_last_date:0
@@ -215,6 +226,8 @@ msgid ""
 "Date on which this segment was synchronized last time (automatically or "
 "manually)"
 msgstr ""
+"Datum waarop dit segment de laatste keer was gesynchroniseerd (automatisch "
+"of handmatig)"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,state:0
@@ -254,7 +267,7 @@ msgstr ""
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_run:0
 msgid "Initial start date of this segment."
-msgstr ""
+msgstr "Initiele startdatum van dit segment."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -279,6 +292,8 @@ msgid ""
 "The generated workitems will be linked to the partner related to the record. "
 "If the record is the partner itself leave this field empty."
 msgstr ""
+"De gegenereerde workitems worden gekoppeld aan de relatie gerelateerd aan "
+"het record. Als het record zelf de relatie is, laat dan dit veld leeg."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -292,7 +307,7 @@ msgstr "Segment"
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
 msgid "Cost / Revenue"
-msgstr ""
+msgstr "Kosten / Opbrengsten"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -305,11 +320,20 @@ msgid ""
 "of the resource record\n"
 "  "
 msgstr ""
+"De soort actie om uit te voeren als een item bij deze actie komt, zoals:\n"
+"   - Email: verstuur een email gebruik makend van een voorgedefinieerde "
+"email sjabloon\n"
+"   - Report: druk een bestaand overzicht af gedefinieerd bij het resource "
+"item en sla het op in de aangegeven map\n"
+"   - Aangepaste actie: voor een voorgedefinieerde actie uit, bijv. om velden "
+"in het resource record te wijzigen\n"
+"  "
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_next_sync:0
 msgid "Next time the synchronization job is scheduled to run automatically"
 msgstr ""
+"Volgende tijd waarop de synchronisatie taak is gepland automatisch te lopen"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -332,7 +356,7 @@ msgstr "Overgangen"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,keep_if_condition_not_met:0
 msgid "Don't delete workitems"
-msgstr ""
+msgstr "Verwijder geen workitems"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -377,7 +401,7 @@ msgstr "Naam bron"
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,sync_mode:0
 msgid "Synchronization mode"
-msgstr ""
+msgstr "Synchronizatie stand"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -388,12 +412,12 @@ msgstr "Uitvoeren"
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
-msgstr ""
+msgstr "Voorgaande activiteiten"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
 msgid "Date this segment was last closed or cancelled."
-msgstr ""
+msgstr "Datum waarop dit segment het laatst verwijderd of geannuleerd is."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -428,7 +452,7 @@ msgstr "Land"
 #: field:marketing.campaign.activity,report_id:0
 #: selection:marketing.campaign.activity,type:0
 msgid "Report"
-msgstr ""
+msgstr "Overzicht"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -447,6 +471,9 @@ msgid ""
 "reached this point has entailed a certain cost. You can get cost statistics "
 "in the Reporting section"
 msgstr ""
+"Stel variabele kosten in als u overweegt dat elk campagne item dat dit punt "
+"heeft bereikt bepaalde kosten heeft gemaakt. U kunt kosten statistieken "
+"krijgen in de rapportage sectie"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -493,7 +520,7 @@ msgstr "Vaste kosten"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
-msgstr ""
+msgstr "Pas gewijzigd"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
@@ -530,7 +557,7 @@ msgstr "Volgende activiteit"
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 msgid "Campaign Follow-up"
-msgstr ""
+msgstr "Campagne opvolging"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,email_template_id:0
@@ -550,7 +577,7 @@ msgstr "Testmodus"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records modified after last sync (no duplicates)"
-msgstr ""
+msgstr "Alleen records gewijzigd na de laatste sync (geen dubbelen)"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_ir_actions_report_xml
@@ -560,7 +587,7 @@ msgstr "ir.actions.report.xml"
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
 msgid "Campaign Statistics"
-msgstr ""
+msgstr "Campagne statistieken"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,server_action_id:0
@@ -583,7 +610,7 @@ msgstr "Campagne analyse"
 #. module: marketing_campaign
 #: sql_constraint:marketing.campaign.transition:0
 msgid "The interval must be positive or zero"
-msgstr ""
+msgstr "Het interval moet positief of nul zijn"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -593,7 +620,7 @@ msgstr "Test in realtime"
 #. module: marketing_campaign
 #: sql_constraint:email.template:0
 msgid "The template name must be unique !"
-msgstr ""
+msgstr "De sjabloon naam moet uniek zijn!"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -608,7 +635,7 @@ msgstr "Map"
 #. module: marketing_campaign
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -649,6 +676,30 @@ msgid ""
 "application as it depends on CRM Leads.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voorziet in leads automatisering door marketing campagnes "
+"(campagnes kunnen in feite op elke resource worden gedefinieerd, niet allen "
+"de CRM Leads).\n"
+"         De campagnes zijn dynamisch en meer-kanaals. Het process loopt als "
+"volgt:\n"
+"          * Ontwerp marketing campagnes zoals workflows, inclusief te "
+"versturen email sjablonen, af te drukken overzichten en per email verstuurd, "
+"aangepaste acties, etc.\n"
+"          * Definieer invoer segmenten die de items selecteren die aan de "
+"campaign meedoen (bijv. leads van bepaalde landen, etc.)\n"
+"          * Voer uw campagne uit in simulatie stand om het real-time te "
+"testen or versneld, en verfijn hem\n"
+"          * U kunt de campagne ook in handmatige stand starten, waarbij elke "
+"actie een handmatige bevestiging vereist\n"
+"          * Breng uw campagne vervolgens live en volg de statistieken "
+"terwijl de campagne alles automatisch doet. \n"
+"          Terwijl de campagne loopt kunt u natuurlijk doorgaan met het "
+"optimaliseren van de parameters, invoer segmenten, workflow, etc.\n"
+"          \n"
+"          P.S.  Als u demonstratie gegevens nodig heeft, kunt u de "
+"marketing_campaign_crm_demo module installeren, maar deze installeert ook de "
+"CRM applicatie omdat die ook afhankelijk is van CRM Leads.\n"
+"    "
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -682,12 +733,12 @@ msgstr "Juni"
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "All records (no duplicates)"
-msgstr ""
+msgstr "Alle records (zonder dubbelen)"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Created"
-msgstr ""
+msgstr "Nieuw gemaakt"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
@@ -730,11 +781,13 @@ msgid ""
 "The campaign cannot be started: the email account is not approved in email "
 "activity '%s'"
 msgstr ""
+"De campagne kan niet worden gestart: de email account is niet goedgekeurd in "
+"email activiteit '%s'"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,email_template_id:0
 msgid "Email Template"
-msgstr ""
+msgstr "Email sjabloon"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -750,7 +803,7 @@ msgstr "Uitvoeringsdatum"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_workitem
 msgid "Campaign Workitem"
-msgstr ""
+msgstr "Campagne workitem"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_activity
@@ -821,6 +874,11 @@ msgid ""
 "could be sending an email template that has previously been created in the "
 "system."
 msgstr ""
+"Een marketing campagne is een gebeurtenis of activiteit die u helpt bij het "
+"beheren en benaderen van uw relaties met specifieke berichten. Een campagne "
+"kan veel activiteiten bevatten die in specifieke situaties worden "
+"geactiveerd. Een actie kan zijn het versturen van een email sjabloon dat "
+"vooraf is gedefinieerd in het systeem."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -835,7 +893,7 @@ msgstr "Klaar"
 #: code:addons/marketing_campaign/marketing_campaign.py:209
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Bewerking niet ondersteund"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
@@ -851,12 +909,12 @@ msgstr "Sluiten"
 #. module: marketing_campaign
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
-msgstr ""
+msgstr "Model van filter moet gelijk zijn aan model van de campagne "
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Synchronize Manually"
-msgstr ""
+msgstr "Handmatig synchroniseren"
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:154
@@ -939,7 +997,7 @@ msgstr "Loopt"
 #: code:addons/marketing_campaign/marketing_campaign.py:489
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
-msgstr ""
+msgstr "Na %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
@@ -974,6 +1032,9 @@ msgid ""
 "revenue on each campaign activity. Cost and Revenue statistics are included "
 "in Campaign Reporting."
 msgstr ""
+"Vaste kosten voor het uitvoeren van deze campagne. U kunt ook variabele "
+"kosten en opbrengsten specificeren per campagne activiteit. Kosten en "
+"opbrengsten statistieken zijn bijgevoegd in campagne rapportage."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:746
@@ -996,6 +1057,7 @@ msgstr "De campagne kan niet worden gestart: er zitten geen activiteiten in"
 #: help:marketing.campaign.workitem,date:0
 msgid "If date is not set, this workitem has to be run manually"
 msgstr ""
+"Als datum niet is ingesteld moet het workitem handmatig worden uitgevoerd"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -1025,6 +1087,11 @@ msgid ""
 "view of the Resource. If no filter is set, all records are selected without "
 "filtering. The synchronization mode may also add a criterion to the filter."
 msgstr ""
+"Filter om de passende resource records te selecteren die horen bij het "
+"segment. Nieuwe filters kunnen worden gemaakt en opgeslagen door geavanceerd "
+"zoeken in de lijstweergave van de resource. Als geen filter is ingesteld "
+"worden alle records geselecteerd zonder filter. De synchronisatie stand kan "
+"ook een criterium toevoegen aan het filter."
 
 #. module: marketing_campaign
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
@@ -1035,7 +1102,7 @@ msgstr "Campagne opvolging"
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
 msgid "Next Synchronization"
-msgstr ""
+msgstr "Volgende synchronisatie"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -1046,12 +1113,12 @@ msgstr "Filter"
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "All"
-msgstr ""
+msgstr "Alles"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.segment,sync_mode:0
 msgid "Only records created after last sync"
-msgstr ""
+msgstr "Alleen records gemaakt na de laatste sync"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0

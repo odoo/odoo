@@ -26,7 +26,7 @@
 
         <record id="line1_purchase" model="purchase.order.line">
             <field name="order_id" ref="order_purchase1"/>
-            <field name="date_planned">2010/09/15</field>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
             <field name="name">New server config + material</field>
             <field model="product.product" name="product_id" search="[]"/>
             <field model="product.uom" name="product_uom" search="[]"/>
@@ -36,7 +36,7 @@
 
         <record id="line2_purchase" model="purchase.order.line">
             <field name="order_id" ref="order_purchase1"/>
-            <field name="date_planned">2010/09/15</field>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
             <field name="name">[PC1] Basic PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
@@ -46,7 +46,7 @@
 
         <record id="line3_purchase" model="purchase.order.line">
             <field name="order_id" ref="order_purchase2"/>
-            <field name="date_planned">2010/09/15</field>
+            <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
             <field name="name">[PC3] Medium PC</field>
             <field name="product_id" ref="product.product_product_pc1"/>
             <field name="product_uom" ref="product.product_uom_unit"/>

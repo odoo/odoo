@@ -45,6 +45,11 @@ class account_voucher(osv.osv):
     def _get_journal(self, cr, uid, context=None):
         if context is None: context = {}
         journal_pool = self.pool.get('account.journal')
+        invoice_pool = self.pool.get('account.invoice')
+        if context.get('invoice_id', False):
+            currency_id = invoice_pool.browse(cr, uid, context['invoice_id'], context=context).currency_id.id
+            journal_id = journal_pool.search(cr, uid, [('currency', '=', currency_id)], limit=1)
+            return journal_id and journal_id[0] or False
         if context.get('journal_id', False):
             return context.get('journal_id')
         if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
@@ -700,7 +705,7 @@ class account_voucher(osv.osv):
                     continue
                 #we check if the voucher line is fully paid or not and create a move line to balance the payment and initial invoice if needed
                 if line.amount == line.amount_unreconciled:
-                    amount = line.move_line_id.amount_residual #residual amount in company currency 
+                    amount = line.move_line_id.amount_residual #residual amount in company currency
                 else:
                     amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context_multi_currency)
                 move_line = {
@@ -766,7 +771,6 @@ class account_voucher(osv.osv):
                     #'amount_currency': company_currency <> current_currency and currency_pool.compute(cr, uid, company_currency, current_currency, diff * -1, context=context_multi_currency) or 0.0,
                     #'currency_id': company_currency <> current_currency and current_currency or False,
                 }
-
                 move_line_pool.create(cr, uid, move_line)
             self.write(cr, uid, [inv.id], {
                 'move_id': move_id,
@@ -840,7 +844,7 @@ class account_voucher_line(osv.osv):
         'date_due': fields.related('move_line_id','date_maturity', type='date', relation='account.move.line', string='Due Date', readonly=1),
         'amount_original': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Original Amount', store=True),
         'amount_unreconciled': fields.function(_compute_balance, method=True, multi='dc', type='float', string='Open Balance', store=True),
-        'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True),
+        'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
     }
     _defaults = {
         'name': ''
