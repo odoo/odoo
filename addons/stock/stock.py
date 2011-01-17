@@ -272,7 +272,7 @@ class stock_location(osv.osv):
         context['compute_child'] = False
 
         if not product_ids:
-            product_ids = product_obj.search(cr, uid, [])
+            product_ids = product_obj.search(cr, uid, [], context={'active_test': False})
 
         products = product_obj.browse(cr, uid, product_ids, context=context)
         products_by_uom = {}

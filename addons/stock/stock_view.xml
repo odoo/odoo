@@ -1779,6 +1779,8 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="7"/>
+
         <act_window
             context="{'location': active_id}"
             domain="[('type','&lt;&gt;','service')]"

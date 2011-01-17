@@ -363,7 +363,7 @@ class purchase_order(osv.osv):
                     _('There is no purchase journal defined for this company: "%s" (id:%d)') % (o.company_id.name, o.company_id.id))
             inv = {
                 'name': o.partner_ref or o.name,
-                'reference': "P%dPO%d" % (o.partner_id.id, o.id),
+                'reference': o.partner_ref or o.name,
                 'account_id': a,
                 'type': 'in_invoice',
                 'partner_id': o.partner_id.id,
@@ -440,7 +440,7 @@ class purchase_order(osv.osv):
                 if order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     dest = order.location_id.id
                     move = self.pool.get('stock.move').create(cr, uid, {
-                        'name': 'PO:'+order_line.name,
+                        'name': order.name + ': ' +(order_line.name or ''),
                         'product_id': order_line.product_id.id,
                         'product_qty': order_line.product_qty,
                         'product_uos_qty': order_line.product_qty,

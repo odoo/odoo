@@ -158,7 +158,7 @@ class purchase_line_invoice(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
-            'context': "{'type':'in_invoice'}",
+            'context': "{'type':'in_invoice', 'journal_type': 'purchase'}",
             'type': 'ir.actions.act_window'
         }
 purchase_line_invoice()
