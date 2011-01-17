@@ -120,7 +120,7 @@ Dit is een basismodule om een uitgebreid grootboek- en BTW schema voor Nederland
                  ],
 
     "installable": True,
-    'certificate': '',
+    'certificate': '00976041422960053277',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

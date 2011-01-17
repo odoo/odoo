@@ -101,7 +101,6 @@ class account_move_line(osv.osv):
             query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
 
         query += company_clause
-
         return query
 
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
@@ -911,7 +910,7 @@ class account_move_line(osv.osv):
         cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
         p = cr.fetchone()[0] or ''
         if j or p:
-            return j+(p and (':'+p) or '')
+            return j + (p and (':' + p) or '')
         return False
 
     def onchange_date(self, cr, user, ids, date, context=None):
@@ -955,6 +954,7 @@ class account_move_line(osv.osv):
             if view_type == 'search' and result['fields'].get('journal_id', False):
                 result['fields']['journal_id']['selection'] = journal_pool.name_search(cr, uid, '', [], context=context)
                 ctx = context.copy()
+                #we add the refunds journal in the selection field of journal
                 if context.get('journal_type', False) == 'sale':
                     ctx.update({'journal_type': 'sale_refund'})
                     result['fields']['journal_id']['selection'] += journal_pool.name_search(cr, uid, '', [], context=ctx)
