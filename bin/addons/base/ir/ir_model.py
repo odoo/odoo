@@ -652,7 +652,7 @@ class ir_model_data(osv.osv):
                             'name': xml_id + '_' + table.replace('.', '_'),
                             'model': table,
                             'module': module,
-                            'res_id': inherit_id,
+                            'res_id': inherit_id.id,
                             'noupdate': noupdate,
                             },context=context)
         else:
@@ -674,7 +674,7 @@ class ir_model_data(osv.osv):
                                 'name': xml_id + '_' + table.replace('.', '_'),
                                 'model': table,
                                 'module': module,
-                                'res_id': inherit_id,
+                                'res_id': inherit_id.id,
                                 'noupdate': noupdate,
                                 },context=context)
         if xml_id:
