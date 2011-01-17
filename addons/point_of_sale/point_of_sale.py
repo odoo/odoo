@@ -33,7 +33,7 @@ class pos_config_journal(osv.osv):
     """ Point of Sale journal configuration"""
     _name = 'pos.config.journal'
     _description = "Journal Configuration"
-    
+
     _columns = {
         'name': fields.char('Description', size=64),
         'code': fields.char('Code', size=64),
@@ -46,7 +46,7 @@ pos_config_journal()
 class pos_company_discount(osv.osv):
     """ Company Discount and Cashboxes """
     _inherit = 'res.company'
-    
+
     _columns = {
         'company_discount': fields.float('Max Discount(%)', digits_compute=dp.get_precision('Point Of Sale')),
         'max_diff': fields.float('Max Difference for Cashboxes', digits_compute=dp.get_precision('Point Of Sale Discount')),
@@ -247,14 +247,14 @@ class pos_order(osv.osv):
         'num_sale': fields.char('Internal Note', size=64),
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True,
             states={'draft': [('readonly', False)]}, readonly=True),
-        'date_order': fields.datetime('Date Ordered', readonly=True),
+        'date_order': fields.datetime('Date Ordered', readonly=True, select=True),
         'date_validation': fields.function(_get_date_payment,
                                            method=True,
                                            string='Validation Date',
-                                           type='date', store=True),
+                                           type='date', select=True, store=True),
         'date_payment': fields.function(_get_date_payment2, method=True,
                                         string='Payment Date',
-                                        type='date', store=True),
+                                        type='date', select=True, store=True),
         'date_validity': fields.date('Validity Date', required=True),
         'user_id': fields.many2one('res.users', 'Connected Salesman', help="Person who uses the the cash register. It could be a reliever, a student or an interim employee."),
         'user_salesman_id': fields.many2one('res.users', 'Cashier', required=True, help="User who is logged into the system."),
@@ -329,7 +329,7 @@ class pos_order(osv.osv):
 
 
     def test_order_lines(self, cr, uid, order, context=None):
-        """ Test order line is created or not for the order 
+        """ Test order line is created or not for the order
         @param name: Names of fields.
         @return: True
         """
@@ -570,9 +570,9 @@ class pos_order(osv.osv):
         return statement_id
 
     def add_product(self, cr, uid, order_id, product_id, qty, context=None):
-        
+
         """Create a new order line the order"""
-        
+
         line_obj = self.pool.get('pos.order.line')
         values = self.read(cr, uid, order_id, ['partner_id', 'pricelist_id'])
 
@@ -593,9 +593,9 @@ class pos_order(osv.osv):
         return order_line_id, price
 
     def refund(self, cr, uid, ids, context=None):
-        
+
         """Create a copy of order  for refund order"""
-        
+
         clone_list = []
         line_obj = self.pool.get('pos.order.line')
 
@@ -620,9 +620,9 @@ class pos_order(osv.osv):
         return clone_list
 
     def action_invoice(self, cr, uid, ids, context=None):
-        
+
         """Create a invoice of order  """
-        
+
         inv_ref = self.pool.get('account.invoice')
         inv_line_ref = self.pool.get('account.invoice.line')
         product_obj = self.pool.get('product.product')
