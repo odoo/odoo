@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-02 10:48+0000\n"
+"PO-Revision-Date: 2011-01-11 17:16+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:08+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: product
@@ -56,7 +56,7 @@ msgstr "Mainboard ASUStek A7V8X-X"
 #. module: product
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
+msgstr "Ez a minimum rendelési darabszám a fő beszállítónál."
 
 #. module: product
 #: model:product.uom,name:product.uom_day
@@ -66,7 +66,7 @@ msgstr "Nap"
 #. module: product
 #: view:product.product:0
 msgid "UoM"
-msgstr ""
+msgstr "ME"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
@@ -105,7 +105,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "Rögzített"
 
 #. module: product
 #: code:addons/product/pricelist.py:186
@@ -113,7 +113,7 @@ msgstr ""
 #: code:addons/product/pricelist.py:357
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Figyelem !"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_pricelist
@@ -139,12 +139,13 @@ msgstr "Szabály neve"
 #: field:product.product,code:0
 #: field:product.product,default_code:0
 msgid "Reference"
-msgstr ""
+msgstr "Hivatkozás"
 
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You can not create recursive categories."
 msgstr ""
+"Hiba ! Rekurzív (körkörösen egymásra mutató) kategóriák nem hozhatóak létre."
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
@@ -169,6 +170,9 @@ msgid ""
 "Produce will generate production order or tasks, according to the product "
 "type. Purchase will trigger purchase orders when requested."
 msgstr ""
+"A 'gyártás' a termék típusától függően gyártási rendelést vagy "
+"projektfeladatokat készít. A 'vásárlás' beszerzési rendelést készít ha "
+"szükség van a termékre."
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -331,7 +335,7 @@ msgstr ""
 #. module: product
 #: field:product.price_list,qty1:0
 msgid "Quantity-1"
-msgstr ""
+msgstr "Mennyiség-1"
 
 #. module: product
 #: help:product.packaging,ul_qty:0
@@ -341,7 +345,7 @@ msgstr ""
 #. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
-msgstr ""
+msgstr "Csomagolási mennyiség"
 
 #. module: product
 #: view:product.product:0
@@ -374,7 +378,7 @@ msgstr "Listaár"
 #. module: product
 #: field:product.price_list,qty5:0
 msgid "Quantity-5"
-msgstr ""
+msgstr "Mennyiség-5"
 
 #. module: product
 #: model:product.category,name:product.product_category_10
@@ -467,7 +471,7 @@ msgstr ""
 #. module: product
 #: field:product.price_list,qty2:0
 msgid "Quantity-2"
-msgstr ""
+msgstr "Mennyiség-2"
 
 #. module: product
 #: field:product.price_list,qty3:0
@@ -489,7 +493,7 @@ msgstr ""
 #. module: product
 #: field:product.price_list,qty4:0
 msgid "Quantity-4"
-msgstr ""
+msgstr "Mennyiség-4"
 
 #. module: product
 #: view:res.partner:0
@@ -798,7 +802,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
-msgstr ""
+msgstr "Beszerzés és tárhelyek"
 
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
@@ -880,7 +884,7 @@ msgstr ""
 #. module: product
 #: field:product.packaging,weight:0
 msgid "Total Package Weight"
-msgstr ""
+msgstr "Csomagolás össz súlya"
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1002,7 +1006,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,items_id:0
 msgid "Price List Items"
-msgstr ""
+msgstr "Árlista tételek"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_uom_categ_form_action
@@ -1974,7 +1978,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
-msgid "Weigths"
+msgid "Weights"
 msgstr "Súlyok"
 
 #. module: product

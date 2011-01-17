@@ -302,17 +302,7 @@ class product_template(osv.osv):
         'loc_case': fields.char('Case', size=16),
         'company_id': fields.many2one('res.company', 'Company',select=1),
     }
-    
-    def unlink(self, cr, uid, ids, context=None):
-       temp = self.read(cr, uid, ids,context=context)
-       unlink_ids = []
-       for t in temp:
-           unlink_ids.append(t['id'])
-       osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
-       return True
-    
-    
-  
+
     def _get_uom_id(self, cr, uid, *args):
         cr.execute('select id from product_uom order by id limit 1')
         res = cr.fetchone()
