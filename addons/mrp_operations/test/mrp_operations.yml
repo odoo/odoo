@@ -93,8 +93,9 @@
     from tools.translate import _
     prod_obj = self.pool.get('mrp.production')
     prod_order_ids = prod_obj.search(cr, uid, [('state','=','done')])
-    workorder_id = self.search(cr, uid, [('production_id','=', prod_order_ids[0]),('state','=','done')])
-    assert workorder_id, _('Work order is not done!')
+    workorder_id = self.search(cr, uid, [('production_id','=', prod_order_ids[0])])
+    workorder_bro = self.browse(cr, uid, workorder_id[0])
+    assert workorder_bro.state == 'done', 'Work order is not done! It is %s' % workorder_bro.state
 -
   Now I check my original production order is now ready.
 -
