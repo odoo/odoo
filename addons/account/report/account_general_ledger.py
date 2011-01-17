@@ -121,7 +121,7 @@ class general_ledger(report_sxw.rml_parse, common_report_header):
                     res.append(child_account)
             elif self.display_account == 'bal_solde':
                 if child_account.type != 'view' and num_entry <> 0:
-                    if currency_obj.is_zero(self.cr, self.uid, currency, sold_account) != 0:
+                    if not currency_obj.is_zero(self.cr, self.uid, currency, sold_account):
                         res.append(child_account)
             else:
                 res.append(child_account)
