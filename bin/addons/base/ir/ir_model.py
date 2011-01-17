@@ -554,9 +554,13 @@ class ir_model_data(osv.osv):
 
     def __init__(self, pool, cr):
         osv.osv.__init__(self, pool, cr)
-        self.loads = {}
         self.doinit = True
         self.unlink_mark = {}
+
+        # also stored in pool to avoid being discarded along with this osv instance
+        if getattr(pool, 'model_data_reference_ids', None) is None:
+            self.pool.model_data_reference_ids = {}
+        self.loads = self.pool.model_data_reference_ids
 
     def _auto_init(self, cr, context=None):
         super(ir_model_data, self)._auto_init(cr, context)
