@@ -23,7 +23,11 @@
     "version" : "0.1",
     "depends" : ["base"],
     "author" : "OpenERP SA",
-    "description": """Adds support for authentication by ldap server""",
+    "description": """Adds support for authentication by ldap server.
+This module only works with Unix/Linux
+    """,
+
+
     "website" : "http://www.openerp.com",
     "category" : "Generic Modules/Others",
     "init_xml" : [
@@ -36,6 +40,9 @@
     "active": False,
     "installable": True,
     "certificate" : "001141446349334700221",
+    "dependencies" : {
+        'python' : ['ldap'],
+    }
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
