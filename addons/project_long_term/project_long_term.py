@@ -364,7 +364,12 @@ def Phase_%d():
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Phase = eval('Phase_%d' % phase.id)
-            phase = Task.BalancedProject(Phase)
+            phase = None
+            try:
+                phase = Task.BalancedProject(Phase)
+            except :
+                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+        
         
             for task_id in task_ids:
                 task = eval("phase.Task_%d" % task_id)
@@ -510,7 +515,8 @@ def Project_%d():
             try:
                 project = Task.BalancedProject(Project)
             except :
-                raise osv.except_osv(_('Error !'),_('Invalid resource allocation, Phase Scheduling is not possible.\nPlease check project member resource.'))
+                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+            
             for phase_id in phase_ids:
                 act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
                 resources = act_phase.resource_ids
@@ -573,7 +579,10 @@ def Project_%d():
             #Creating resources using the member of the Project
             u_ids = [i.id for i in project.members]
             resource_objs = resource_pool.generate_resources(cr, uid, u_ids, calendar_id, context=context)
-            start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d")
+            try:
+                start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d")
+            except:
+                raise osv.except_osv(_('Error !'),_('Task Scheduling is not possible.\nProject should have the Start date for scheduling.'))
             func_str = ''
             start = start_date
             minimum_time_unit = 1
@@ -634,7 +643,12 @@ def Project_%d():
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
-            project = Task.BalancedProject(Project)
+            project = None
+            try:
+                project = Task.BalancedProject(Project)
+            except :
+                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+            
             for task_id in task_ids:
                 task = eval("project.Task_%d" % task_id)
                 start_date = task.start.to_datetime()
