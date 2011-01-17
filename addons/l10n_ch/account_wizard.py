@@ -18,16 +18,26 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import tools
+from osv import  osv
+import addons
 
-import account_wizard
-import invoice
-import company
-import partner
-import company
-import wizard
-import payment
-import report
-import bank
-import account_move_line
+class WizardMultiChartsAccounts(osv.osv_memory):
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _inherit ='wizard.multi.charts.accounts'
+    _defaults = {
+        'bank_accounts_id': False,
+        'code_digits': 0,
+        'sale_tax': False,
+        'purchase_tax':False
+    }
+ 
+    def execute(self, cr, uid, ids, context=None):
+        """Override of code in order to be able to link journal with account in XML"""
+        res = super(WizardMultiChartsAccounts, self).execute(cr, uid, ids, context)
+        path = addons.get_module_resource('l10n_ch/sterchi_chart/account_journal_rel.xml')
+        tools.convert_xml_import(cr, 'l10n_ch', path, idref=None, mode='init', noupdate=True, report=None)
+        return res
+        
+WizardMultiChartsAccounts()   
+
