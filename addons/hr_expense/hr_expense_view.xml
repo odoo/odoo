@@ -112,7 +112,7 @@
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Accounting data"/>
                             <field name="journal_id"/>
-                            <field name="invoice_id"/>
+                            <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
                             </group>
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Validation"/>
