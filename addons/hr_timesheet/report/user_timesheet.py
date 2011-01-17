@@ -27,7 +27,6 @@ from tools.translate import _
 import time
 import pooler
 from report import report_sxw
-import unicodedata
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
@@ -50,8 +49,6 @@ class report_custom(report_rml):
         emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
         user_id = emp_obj.browse(cr, uid, emp_id).user_id.id
         empl_name = emp_obj.browse(cr, uid, emp_id).name
-        if isinstance(empl_name,unicode):
-            empl_name = (unicodedata.normalize('NFKD', unicode(empl_name)).encode('ASCII', 'ignore'))
 
  
         # Computing the dates (start of month: som, and end of month: eom)

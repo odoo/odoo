@@ -26,7 +26,6 @@ import time
 import pooler
 from tools.translate import _
 from report import report_sxw
-import unicodedata
 
 
 def lengthmonth(year, month):
@@ -92,8 +91,6 @@ class report_custom(report_rml):
         for id in data['form']['employee_ids']:
             user = emp_obj.browse(cr, uid, id).user_id.id
             empl_name = emp_obj.browse(cr, uid, id).name
-            if isinstance(empl_name,unicode):
-                empl_name = (unicodedata.normalize('NFKD', unicode(empl_name)).encode('ASCII', 'ignore'))
 
             if user:
                 emp_xml += emp_create_xml(cr, user, som, eom, empl_name)
