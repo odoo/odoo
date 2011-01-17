@@ -369,7 +369,7 @@ class resource_calendar_leaves(osv.osv):
     _description = "Leave Detail"
     _columns = {
         'name' : fields.char("Name", size=64),
-        'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company",readonly=True),
+        'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company", store=True, readonly=True),
         'calendar_id' : fields.many2one("resource.calendar", "Working time"),
         'date_from' : fields.datetime('Start Date', required=True),
         'date_to' : fields.datetime('End Date', required=True),

@@ -4,17 +4,17 @@
 -
   !record {model: procurement.order, id: mrp_production_mo0}:
     company_id: base.main_company
-    date_planned: '2010-08-05 17:59:49'
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_id: stock.stock_location_stock
     name: PROC/TEST/0001
     product_id: product.product_product_pc2
     product_qty: 10.0
     product_uom: product.product_uom_unit
     product_uos_qty: 0.0
-- 
+-
   |
   I confirm the procurement order PROC/TEST/0001.
-- 
+-
   !workflow {model: procurement.order, action: button_confirm, ref: mrp_production_mo0}
 -
   |

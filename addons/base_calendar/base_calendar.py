@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from dateutil import parser
 from dateutil import rrule
 from osv import fields, osv
@@ -410,6 +410,8 @@ property or property parameter."),
             return res
         cal = vobject.iCalendar()
         event = cal.add('vevent')
+        if not event_obj.date_deadline or not event_obj.date:
+              raise osv.except_osv(_('Warning !'),_("Couldn't Invite because date is not specified!"))     
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)
@@ -461,7 +463,6 @@ property or property parameter."),
             attendee_add.params['ROLE'] = [str(attendee.role)]
             attendee_add.params['RSVP'] = [str(attendee.rsvp)]
             attendee_add.value = 'MAILTO:' + (attendee.email or '')
-            
         res = cal.serialize()
         return res
 
@@ -560,7 +561,7 @@ property or property parameter."),
             if vals.ref and vals.ref.user_id:
                 mod_obj = self.pool.get(vals.ref._name)
                 defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id}
-                new_event = mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
+                mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
 
         return True
@@ -924,7 +925,6 @@ class calendar_event(osv.osv):
         """
         if not allday or not ids:
             return {}
-        event = self.browse(cr, uid, ids, context=context)[0]
         value = {
                  'duration': 24
                  }
@@ -1205,7 +1205,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
     def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
         if not context:
             context = {}
-        data_obj = self.pool.get('ir.model.data')
+    
         value = {}
         if edit_all and rrule_type:
             for id in ids:

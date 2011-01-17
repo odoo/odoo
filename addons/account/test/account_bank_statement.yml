@@ -6,14 +6,14 @@
   !record {model: account.bank.statement, id: account_bank_statement_0}:
     balance_end_real: 0.0
     balance_start: 0.0
-    date: '2010-10-14'
+    date: !eval time.strftime('%Y-%m-%d')
     journal_id: account.bank_journal
     name: /
     period_id: account.period_10
     line_ids:
       - account_id: account.a_recv
         amount: 1000.0
-        date: '2010-10-14'
+        date: !eval time.strftime('%Y-%m-%d')
         name: a
         partner_id: base.res_partner_4
         sequence: 0.0

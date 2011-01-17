@@ -31,10 +31,10 @@
     acc_expense: account.a_pay
     acc_income: account.a_recv
     account_analytic_id: account.analytic_root
-    auction1: '2010-05-24'
-    auction2: '2010-05-25'
-    expo1: '2010-05-21'
-    expo2: '2010-05-22'
+    auction1: !eval "'%s-05-24' %(datetime.now().year)"
+    auction2: !eval "'%s-05-25' %(datetime.now().year)"
+    expo1: !eval "'%s-05-21' %(datetime.now().year)"
+    expo2: !eval "'%s-05-22' %(datetime.now().year)"
     journal_id: account.expenses_journal
     journal_seller_id: account.sales_journal
     name: Picasso's painting exhibition
@@ -42,7 +42,7 @@
   An object is being deposited for an auction,I create a seller's deposit record.
 -
   !record {model: auction.deposit, id: auction_deposit_ad1}:
-    date_dep: '2010-05-18'
+    date_dep: !eval "'%s-05-18' %(datetime.now().year)"
     method: keep
     name: AD/007
     partner_id: base.res_partner_9
@@ -95,7 +95,7 @@
 -
   !record {model: account.bank.statement, id: account_bank_statement_st0}:
     balance_end_real: 0.0
-    date: '2010-05-19'
+    date: !eval "'%s-05-19' %(datetime.now().year)"
     journal_id: account.bank_journal
     name: St. 05/19
     period_id: account.period_5
@@ -132,7 +132,7 @@
 -  
   !record {model: auction.lots.make.invoice, id: auction_lots_make_invoice_0}:
     amount: 3500.0
-    number: 2010/002
+    number: !eval "'%s/002' %(datetime.now().year)"
     objects: 1
 -
   I click on the "Create Invoices" button.
@@ -154,7 +154,7 @@
   !record {model: auction.lots.make.invoice.buyer, id: auction_lots_make_invoice_buyer_0}:
     amount: 3500.0
     buyer_id: base.res_partner_3
-    number: 2010/003
+    number: !eval "'%s/003' %(datetime.now().year)"
     objects: 1
 -
   I click on the "Create Invoices" button.

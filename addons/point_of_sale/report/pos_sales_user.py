@@ -43,8 +43,7 @@ class pos_sales_user(report_sxw.rml_parse):
                         "and po.company_id=rc.id and po.user_id=ru.id and po.user_id IN %s " \
                     ,(dt1,dt2,tuple(form['user_id'])))
 
-        data = self.cr.dictfetchall()
-        return data
+        return self.cr.dictfetchall()
 
 report_sxw.report_sxw('report.pos.sales.user', 'pos.order', 'addons/point_of_sale/report/pos_sales_user.rml', parser=pos_sales_user,header='internal')
 

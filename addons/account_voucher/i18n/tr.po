@@ -6,26 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-11 11:45+0000\n"
-"Last-Translator: Engin BAHADIR <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-15 22:23+0000\n"
+"Last-Translator: Arif Aydogmus <arifaydogmus@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-16 05:06+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
 msgid "Unreconciliation transactions"
-msgstr ""
+msgstr "Mutabakatsız hareketler"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:259
+#: code:addons/account_voucher/account_voucher.py:242
 #, python-format
 msgid "Write-Off"
-msgstr ""
+msgstr "Amortisman"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr "Gruplama"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "Açık ya da ödenmiş çekler silinemez !"
@@ -88,7 +88,7 @@ msgid "Bill Payment"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -210,11 +210,6 @@ msgid "Due Date"
 msgstr "Vade Tarihi"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Kapanmış bir hesap için hareket işlemleri yapılamaz."
-
-#. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
 msgstr "Notlar"
@@ -255,11 +250,6 @@ msgstr "Toplam"
 #: view:account.voucher:0
 msgid "Payment Options"
 msgstr "Ödeme Seçenekleri"
-
-#. module: account_voucher
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Muhasebe hesabındaki borç / alacak değeri hatalı !"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -316,24 +306,9 @@ msgid "Analytic Account"
 msgstr "Analiz Hesabı"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"Bir cari belirtmeden borç/alacak hesabı için hareket işlemi yapamazsınız."
-
-#. module: account_voucher
-#: help:account.voucher,state:0
-msgid ""
-" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' state is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
-"* The 'Cancelled' state is used when user cancel voucher."
-msgstr ""
+#: view:account.voucher:0
+msgid "Payment Information"
+msgstr "Ödeme Bilgileri"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -417,7 +392,7 @@ msgid "Voucher Entries"
 msgstr "Çek Kayıtları"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Error !"
 msgstr "Hata !"
@@ -445,7 +420,7 @@ msgid "Sales Receipt"
 msgstr ""
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Invalid action !"
 msgstr "Geçersiz İşlem !"
@@ -466,11 +441,6 @@ msgid "Unreconciliation"
 msgstr "Mutabakatsız"
 
 #. module: account_voucher
-#: field:account.voucher,tax_amount:0
-msgid "Tax Amount"
-msgstr "Vergi Tutarı"
-
-#. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
@@ -484,15 +454,15 @@ msgid "Pay Invoice"
 msgstr "Fatura Ödemesi"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Hesap kodu ve Vergi kodu yok !"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Payment Information"
-msgstr "Ödeme Bilgileri"
+#: field:account.voucher,tax_amount:0
+msgid "Tax Amount"
+msgstr "Vergi Tutarı"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -727,7 +697,7 @@ msgid "Credit"
 msgstr "Alacak"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr ""
@@ -770,8 +740,16 @@ msgid "Bill Date"
 msgstr ""
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+#: help:account.voucher,state:0
+msgid ""
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
+"an voucher number.                         \n"
+"* The 'Posted' state is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account                         "
+"\n"
+"* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
 
 #. module: account_voucher
@@ -841,7 +819,6 @@ msgstr ""
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
-#: model:ir.model,name:account_voucher.model_account_move_line
 msgid "Journal Items"
 msgstr ""
 
@@ -851,11 +828,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
-msgstr ""
-
-#. module: account_voucher
-#: field:account.move.line,amount_unreconciled:0
-msgid "Unreconciled Amount"
 msgstr ""
 
 #. module: account_voucher
@@ -1045,11 +1017,6 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr ""
-
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
 
@@ -1202,3 +1169,14 @@ msgstr ""
 
 #~ msgid "Bank Receipt Voucher"
 #~ msgstr "Banka Tahsilat Fişi"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Kapanmış bir hesap için hareket işlemleri yapılamaz."
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Muhasebe hesabındaki borç / alacak değeri hatalı !"
+
+#~ msgid ""
+#~ "You can not create move line on receivable/payable account without partner"
+#~ msgstr ""
+#~ "Bir cari belirtmeden borç/alacak hesabı için hareket işlemi yapamazsınız."

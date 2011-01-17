@@ -48,6 +48,6 @@
     'demo_xml': ['stock_orderpoint.xml'],
     'installable': True,
     'active': False,
-    'certificate': '',
+    'certificate': '00954248826881074509',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

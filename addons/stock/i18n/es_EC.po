@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-21 16:52+0000\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-13 04:45+0000\n"
 "Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:40+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:05+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -101,6 +101,10 @@ msgid ""
 "per location. You can use it once a year when you do the general inventory "
 "or whenever you need it, to correct the current stock level of a product."
 msgstr ""
+"Los inventarios periódicos se utilizan para contar el número de productos "
+"disponibles por ubicación. Lo puede utilizar una vez al año cuando realice "
+"el inventario general, o cuando lo necesite, para corregir el nivel actual "
+"de stock de un producto."
 
 #. module: stock
 #: view:stock.picking:0
@@ -137,6 +141,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
+"Esta es la lista de órdenes de envíos que deben de ser preparadas, en "
+"función de sus pedidos de venta y sus reglas logísticas."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -155,7 +161,7 @@ msgid "UoM"
 msgstr "UdM"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:93
+#: code:addons/stock/wizard/stock_change_product_qty.py:90
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
@@ -334,7 +340,7 @@ msgstr "Lote de producción"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Categorías de unidades de medida"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -569,6 +575,11 @@ msgid ""
 "buttons on the right of each line. You can filter the products to deliver by "
 "customer, products or sale order (using the Origin field)."
 msgstr ""
+"En esta lista encontrará todos los productos que ha de entregar a sus "
+"clientes. Puede procesar las entregas directamente desde esta lista usando "
+"los botones a la derecha de cada línea. Puede filtrar los productos a "
+"entregar por cliente, producto o pedido de venta (utilizando el campo "
+"origen)."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -620,6 +631,10 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"The stock journal system allows you to assign each stock operation to a "
+"specific journal according to the type of operation to perform or the "
+"worker/team that should perform the operation. Examples of stock journals "
+"may be: quality control, pick lists, packing, etc."
 
 #. module: stock
 #: field:stock.location,complete_name:0
@@ -2533,7 +2548,7 @@ msgid "Maxtor Suppliers"
 msgstr "Proveedores Maxtor"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:69
+#: code:addons/stock/wizard/stock_change_product_qty.py:66
 #: code:addons/stock/wizard/stock_change_standard_price.py:106
 #, python-format
 msgid "Active ID is not set in Context"
@@ -3460,7 +3475,7 @@ msgid "Product Category"
 msgstr "Categoría de producto"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:77
+#: code:addons/stock/wizard/stock_change_product_qty.py:74
 #, python-format
 msgid "INV: "
 msgstr ""
@@ -5304,3 +5319,85 @@ msgstr "Detalles opcionales de la ubicación, solo para información"
 #~ msgstr ""
 #~ "Esta es la lista para todas las ordenes de envios, que deben ser preparadas "
 #~ "deacuerdo a tus diferentes ordenes de venta y las reglas de logistica"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr "Error: La UdV debe estar en una categoría diferente que la UdM."
+
+#~ msgid ""
+#~ "The Internal Moves lists all inventory operations you have to perform in "
+#~ "your warehouse. All operations can be categorized into stock journals, so "
+#~ "that each worker has it's own list of operations to perform in his own "
+#~ "journal. Most operations are prepared automatically by OpenERP according to "
+#~ "your pre-configured logistics rules but you can also record manual stock "
+#~ "operations."
+#~ msgstr ""
+#~ "Los movimientos internos muestran todas las operaciones de inventario que "
+#~ "debe realizar en su almacén. Todas las operaciones pueden ser categorizadas "
+#~ "en diarios de inventario, para que cada empleado tenga su propia lista de "
+#~ "operaciones a realizar en su propio diario. La mayoría de operaciones son "
+#~ "preparadas automáticamente por OpenERP en función de las reglas logísticas "
+#~ "preconfiguradas, pero puede igualmente crear operaciones de stock "
+#~ "manualmente."
+
+#~ msgid ""
+#~ "This menu gives you the full traceability of inventory operations made on a "
+#~ "specific product. You can filter on the product to see all the past or "
+#~ "future movements made on the product."
+#~ msgstr ""
+#~ "Este menú le indica la trazabilidad completa de operaciones de inventario "
+#~ "realizadas sobre un producto. Puede filtrar sobre un producto para ver todos "
+#~ "los movimientos, futuros y pasados, realizados sobre el producto."
+
+#~ msgid ""
+#~ "This is the list of all the production lots (serial numbers) you recorded. "
+#~ "After having selected a lot, you can get the up-stream or down-stream "
+#~ "traceability of the products contained in lot."
+#~ msgstr ""
+#~ "Esta es la lista de todos los lotes de producción (números de serie) que ha "
+#~ "creado. Después de seleccionar un lote, puede obtener la trazabilidad "
+#~ "(ascendente o descendente) de los productos de dicho lote."
+
+#~ msgid ""
+#~ "You will find here the list of all products you are waiting for, according "
+#~ "to your preceding purchase orders. Once you receive an order, you can filter "
+#~ "based on the name of the supplier or the purchase order reference. Then you "
+#~ "can confirm all products received using the buttons on the right of each "
+#~ "line."
+#~ msgstr ""
+#~ "Encontrará aquí la lista de todos los productos que está esperando, en "
+#~ "función de las órdenes de compra realizadas anteriormente. Cuando reciba un "
+#~ "pedido, puede filtrar por el nombre del proveedor o por la referencia del "
+#~ "pedido. Entonces puede confirmar los productos recibidos gracias a los "
+#~ "botones situados a la derecha de cada línea."
+
+#~ msgid ""
+#~ "This is the structure of your company's warehouses and locations. You can "
+#~ "click on a location in order to get the list of the products and their stock "
+#~ "level in this particular location and all its children."
+#~ msgstr ""
+#~ "Esta es la estructura de los almacenes y ubicaciones de su compañía. Puede "
+#~ "hacer clic en una ubicación para obtener la lista de productos y su nivel de "
+#~ "stock para esta ubicación en particular y todos sus hijos."
+
+#~ msgid ""
+#~ "This is the list of all your packs. After having selected a Pack, you can "
+#~ "get the up-stream or down-stream traceability of the products contained in "
+#~ "the pack."
+#~ msgstr ""
+#~ "Esta es la lista de todos sus paquetes. Después de haber seleccionado un "
+#~ "paquete, puede obtener la trazabilidad para arriba y para abajo de los "
+#~ "productos contenidos en el paquete."
+
+#~ msgid ""
+#~ "The stock journals system allows you assign each stock operation into a "
+#~ "specific journal according to the type of operation to perform or the "
+#~ "worker/team that should perform the operation. Examples of stock journals "
+#~ "may be: quality control, pick lists, packing, etc."
+#~ msgstr ""
+#~ "El sistema de diarios de stock permite asignar cada operación de stock a un "
+#~ "diario específico dependiendo del tipo de operación a realizar o el empleado "
+#~ "/ equipo que debe de realizar la operación. Algunos ejemplos de diarios de "
+#~ "stock: control calidad, lista de preparación, embalaje, etc"
+
+#~ msgid "stock.move.memory"
+#~ msgstr "stock.movimiento.memoria"

@@ -27,7 +27,7 @@
   When I select the product "club1", the price of 2.75 is automatically proposed
 -
   !record {model: lunch.order, id: lunch_order_0}:
-    date: '2010-04-19'
+    date: !eval time.strftime('%Y-%m-%d')
     product: 'lunch_product_club1'
     price: 2.75
     user_id: base.user_root
@@ -66,7 +66,7 @@
   I create a new lunch order "LU002" for the "Club1" product, at another date.
 -
   !record {model: lunch.order, id: lunch_order_1}:
-    date: '2010-04-22'
+    date: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month,datetime.now().day+2)"
     product: 'lunch_product_club1'
     price: 2.75
     user_id: base.user_root
