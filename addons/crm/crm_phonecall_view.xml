@@ -82,7 +82,7 @@
                 <group col="3" colspan="2">
                     <separator colspan="3" string="Contacts" />
                     <field name="partner_id"
-                        on_change="onchange_partner_id(partner_id, email_from)" />
+                        on_change="onchange_partner_id(partner_id)" />
                     <button string="Create a Partner"
                         icon="terp-partner"
                         name="%(action_crm_phonecall2partner)d"
@@ -91,7 +91,7 @@
                         groups="base.group_partner_manager"/>
                     <newline/>
                     <field name="partner_address_id"
-                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                        on_change="onchange_partner_address_id(partner_address_id)" />
                     <newline/>
                     <field name="partner_mobile" />
                 </group>
