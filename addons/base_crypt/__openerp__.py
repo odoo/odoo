@@ -40,4 +40,5 @@ unless you are using a secure protocol such as XML-RPCS.
     "data" : [],
     "active": False,
     "installable": True,
+    "certificate" : "00721290471310299725",
 }

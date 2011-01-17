@@ -34,7 +34,8 @@
         "users_ldap_view.xml",
     ],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "001141446349334700221",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

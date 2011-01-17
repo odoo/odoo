@@ -37,6 +37,7 @@
         "l10n_in_wizard.xml",
     ],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "001308250150600713245",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
