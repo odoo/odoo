@@ -27,7 +27,7 @@ class publisher_warranty_contract(osv.osv):
 
     @cache(skiparg=3, timeout=300)
     def is_livechat_enable(self, cr, uid):
-        domain = [('state', '=', 'valid'), ('kind', '=', 'support')]
+        domain = [('state', '=', 'valid'), ('check_support', '=', True)]
         return self.search_count(cr, uid, domain) != 0
 
     @cache(skiparg=3)
