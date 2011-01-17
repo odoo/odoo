@@ -482,6 +482,19 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True),
     }
+    
+    def unlink(self, cr, uid, ids, context=None):
+        unlink_ids = []
+        unlink_product_tmpl_ids = []
+        for product in self.browse(cr, uid, ids, context=context):
+            tmpl_id = product.product_tmpl_id.id
+            # Check if the product is last product of this template
+            other_product_ids = self.search(cr, uid, [('product_tmpl_id', '=', tmpl_id), ('id', '!=', product.id)], context=context)
+            if not other_product_ids:
+                 unlink_product_tmpl_ids.append(tmpl_id)
+            unlink_ids.append(product.id)
+        self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
+        return super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
 
     def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
         if uom_id and uom_po_id:
