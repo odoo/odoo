@@ -25,7 +25,8 @@
     "version" : "1.1",
     "depends" : ["marketing",
                  "document",
-                 "email_template"
+                 "email_template",
+                 "decimal_precision"
                 ],
     "author" : "OpenERP SA",
     "category": 'Generic Modules/Marketing',

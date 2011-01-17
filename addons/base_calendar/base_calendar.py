@@ -411,7 +411,7 @@ property or property parameter."),
         cal = vobject.iCalendar()
         event = cal.add('vevent')
         if not event_obj.date_deadline or not event_obj.date:
-              raise osv.except_osv(_('Warning !'),_("You must enter Date"))            
+              raise osv.except_osv(_('Warning !'),_("Couldn't Invite because date is not specified!"))     
         event.add('created').value = ics_datetime(time.strftime('%Y-%m-%d %H:%M:%S'))
         event.add('dtstart').value = ics_datetime(event_obj.date)
         event.add('dtend').value = ics_datetime(event_obj.date_deadline)

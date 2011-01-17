@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-09 11:16+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2011-01-11 22:26+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:15+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:54+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: stock
@@ -118,6 +119,10 @@ msgid ""
 "per location. You can use it once a year when you do the general inventory "
 "or whenever you need it, to correct the current stock level of a product."
 msgstr ""
+"Les inventaires périodiques sont utilisés pour comptabiliser le nombre de "
+"produits disponibles par emplacement. On peut l'utiliser une fois par an "
+"pour l'inventaire général ou à chaque fois que cela est nécessaire afin de "
+"corriger le niveau de stock actuel d'un produit."
 
 #. module: stock
 #: view:stock.picking:0
@@ -483,6 +488,10 @@ msgid ""
 "incoming stock moves will be posted in this account. If not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Lors de la valorisation en temps réel de l'inventaire, une contrepartie "
+"d'écritures comptables pour tous les mouvements de stock entrants sera "
+"inscrite dans ce compte. Si la valorisation n'est pas établie sur le "
+"produit, la catégorie de produit est utilisée."
 
 #. module: stock
 #: field:report.stock.inventory,location_type:0
@@ -588,6 +597,11 @@ msgid ""
 "buttons on the right of each line. You can filter the products to deliver by "
 "customer, products or sale order (using the Origin field)."
 msgstr ""
+"Vous trouverez dans cette liste tous les produits à livrer aux clients. On "
+"peut traiter les livraisons directement à partir de cette liste en utilisant "
+"les boutons à droite de chaque ligne. On peut filtrer les produits à livrer "
+"par client, par produit ou par bon de commande (en utilisant le champ "
+"\"Origine\")."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -882,7 +896,7 @@ msgstr "Prix unitaire"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines_exist
 msgid "Exist Split lines"
-msgstr ""
+msgstr "Il existe les lignes de séparation"
 
 #. module: stock
 #: field:stock.move,date_expected:0
@@ -1138,7 +1152,7 @@ msgstr "Date d'envoi prévue"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Not Available"
-msgstr ""
+msgstr "Indisponible"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -2440,7 +2454,7 @@ msgstr "Créer"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Dates"
-msgstr ""
+msgstr "Dates"
 
 #. module: stock
 #: field:stock.move,priority:0
@@ -2450,7 +2464,7 @@ msgstr "Priorité"
 #. module: stock
 #: view:stock.move:0
 msgid "Source"
-msgstr ""
+msgstr "Origine"
 
 #. module: stock
 #: code:addons/stock/stock.py:2557
@@ -2509,7 +2523,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Unités de mesure"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -3047,12 +3061,12 @@ msgstr "Valeur Totale"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produits par catégorie"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 msgid "Products Categories"
-msgstr ""
+msgstr "Catégories de produits"
 
 #. module: stock
 #: field:stock.move.memory.in,wizard_id:0
@@ -4117,7 +4131,7 @@ msgstr "Emplacements physiques"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
 msgid "Partial Move"
-msgstr ""
+msgstr "Mouvement partiel"
 
 #. module: stock
 #: help:stock.location,posx:0

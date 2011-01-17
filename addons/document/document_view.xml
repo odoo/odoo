@@ -93,8 +93,9 @@
                         <field name="ressource_id" select="2" readonly="1"/>
                     </group>
                     <group colspan="4" col="2" attrs="{'invisible': [('type','!=','ressource'),('resource_parent_type_id','=',False)]}">
-                        <field name="resource_find_all" groups="base.group_extended"/>
+                        <field name="resource_find_all" groups="base.group_extended" />
                     </group>
+
                 </page>
                 <page string="Generated Files" groups="base.group_extended">
                     <label colspan="4" string="For each entry here, virtual files will appear in this folder." />

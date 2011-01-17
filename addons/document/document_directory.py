@@ -104,7 +104,7 @@ class document_directory(osv.osv):
         'type': 'directory',
         'ressource_id': 0,
         'storage_id': _get_def_storage, # Still, it is bad practice to set it everywhere.
-        'resource_find_all': False,
+        'resource_find_all': True,
     }
     _sql_constraints = [
         ('dirname_uniq', 'unique (name,parent_id,ressource_id,ressource_parent_type_id)', 'The directory name must be unique !'),
@@ -159,7 +159,6 @@ class document_directory(osv.osv):
 
     def __init__(self, *args, **kwargs):
         super(document_directory, self).__init__(*args, **kwargs)
-
 
     def onchange_content_id(self, cr, uid, ids, ressource_type_id):
         return {}
