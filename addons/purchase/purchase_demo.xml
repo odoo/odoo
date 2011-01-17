@@ -5,19 +5,19 @@
         <record id="base.user_demo" model="res.users">
             <field eval="[(4, ref('group_purchase_user'))]" name="groups_id"/>
         </record>
-    
+
     <!--Resource: purchase.order-->
 
         <record id="order_purchase1" model="purchase.order">
             <field name="location_id" ref="stock.stock_location_stock"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
             <field name="partner_id" ref="base.res_partner_asus"/>
             <field name="partner_address_id" ref="base.res_partner_address_tang"/>
         </record>
 
         <record id="order_purchase2" model="purchase.order">
             <field name="location_id" ref="stock.stock_location_stock"/>
-            <field model="product.pricelist" name="pricelist_id" search="[]"/>
+            <field name="pricelist_id" ref="purchase.list0"/>
             <field name="partner_id" ref="base.res_partner_3"/>
             <field name="partner_address_id" ref="base.res_partner_address_zen"/>
         </record>
@@ -48,7 +48,7 @@
             <field name="order_id" ref="order_purchase2"/>
             <field name="date_planned" eval="time.strftime('%Y/%m/%d')"/>
             <field name="name">[PC3] Medium PC</field>
-            <field name="product_id" ref="product.product_product_pc1"/>
+            <field name="product_id" ref="product.product_product_pc3"/>
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">900</field>
             <field name="product_qty">1</field>
