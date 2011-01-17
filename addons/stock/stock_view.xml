@@ -410,7 +410,7 @@
             <field name="context">{'full':'1',"search_default_available":1}</field>
             <field name="help">This is the list of all the production lots (serial numbers) you recorded. When you select a lot, you can get the upstream or downstream traceability of the products contained in lot. By default, the list is filtred on the serial numbers that are available in your warehouse but you can uncheck the 'Available' button to get all the lots you produced, received or delivered to customers.</field>
         </record>
-        <menuitem action="action_production_lot_form" id="menu_action_production_lot_form" 
+        <menuitem action="action_production_lot_form" id="menu_action_production_lot_form"
             parent="menu_traceability" groups="base.group_extended"
             sequence="1"/>
 
@@ -501,6 +501,9 @@
                         <field name="posx"/>
                         <field name="posy"/>
                         <field name="posz"/>
+                        <separator string="Accounting Information" colspan="2" groups="base.group_extended"/>
+                        <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}" groups="base.group_extended"/>
+                        <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}" groups="base.group_extended"/>
                     </group>
                     <separator string="Additional Information" colspan="4"/>
                     <field colspan="4" name="comment" nolabel="1"/>
