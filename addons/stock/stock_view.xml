@@ -493,8 +493,6 @@
                         <field name="chained_auto_packing"/>
                         <field name="chained_delay"/>
                         <field name="chained_journal_id"/>
-                        <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
-                        <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
                         <field name="chained_picking_type"/>
                         <field name="chained_company_id" widget="selection"/>
                     </group>
@@ -503,6 +501,9 @@
                         <field name="posx"/>
                         <field name="posy"/>
                         <field name="posz"/>
+                        <separator string="Accounting Information" colspan="2" groups="base.group_extended"/>
+                        <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}" groups="base.group_extended"/>
+                        <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}" groups="base.group_extended"/>
                     </group>
                     <separator string="Additional Information" colspan="4"/>
                     <field colspan="4" name="comment" nolabel="1"/>
