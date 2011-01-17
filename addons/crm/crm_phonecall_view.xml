@@ -196,7 +196,7 @@
         <field name="model">crm.phonecall</field>
         <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)">
+            <tree string="Phone Calls" colors="grey:state in ('cancel','done');blue:state in ('pending',)" editable="top">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
