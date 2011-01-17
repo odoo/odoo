@@ -17,10 +17,10 @@
   </tabs>
   <tabpanels>
     <tabpanel id="configtab">
-    	<vbox style="border:1px solid black">
+    	<vbox style="border:1px solid">
 	      	<groupbox id="gpConnection" align ="center" >
- <separator class="groove-thin" orient="horizontal" width="94"/> 
-			  <caption label="&gpConnection.label;"/>
+ 				<separator class="groove-thin" orient="horizontal" width="94"/> 
+			  	<caption label="&gpConnection.label;"/>
 				<hbox>
 					<label  align="right" id="url"  value="&txturl.label;" width="80" />
 					<textbox id="txturl" width="200" readonly="true" />
@@ -50,28 +50,28 @@
 		</vbox>
 
         <separator class="groove-thin" orient="horizontal" width="10"/> 
-        <vbox style="border:1px solid black" width="94">
-      <groupbox id="webgroup" > 
-        <vbox>
-         <caption label="&webConnection.label;"/>
-        </vbox>
-        <separator class="groove-thin" orient="horizontal" width="10"/> 
-        <hbox>
-        <label  align="right" id="url"  value="&txtweburl.label;" width="80" />
-		<textbox id="txtweburl" width="200" readonly="true"/>
-        </hbox>
-     
-        <hbox >
-		    <spacer width="113"/>
-		    <button align="center" id="websetconnection" label="&setconnection.label;" oncommand="openConfigChangeweb();" image="&imagesearch.value;"/>
-         <button align="center" id="webopenconnection" label="&openconnection.label;" oncommand="testConnection_web();" image="&imageok.value;"/>
-		</hbox>
-</groupbox>  
- </vbox>
+        <vbox style="border:0.5px solid"  >
+		  	<groupbox id="webgroup" align ="center"> 
+				<vbox>
+			 		<caption label="&webConnection.label;"/>
+				</vbox>
+				<separator class="groove-thin" orient="horizontal" width="10"/> 
+				<hbox>
+					<label  align="right" id="url"  value="&txtweburl.label;" width="80" />
+					<textbox id="txtweburl" width="200" readonly="true"/>
+				</hbox>
+			 
+				<hbox >
+					<spacer width="113"/>
+					<button align="center" id="websetconnection" label="&setconnection.label;" oncommand="openConfigChangeweb();" image="&imagesearch.value;"/>
+				 	<button align="center" id="webopenconnection" label="&openconnection.label;" oncommand="testConnection_web();" image="&imageok.value;"/>
+				</hbox>
+			</groupbox>  
+ 		</vbox>
     </tabpanel>
  
     <tabpanel id="objecttab">
-		<groupbox id="gpObject" width="700" >
+		<groupbox id="gpObject"  align ="center">
 		<caption label="&listDocument.header;"/>
 			<hbox>
 				<vbox>
@@ -109,7 +109,9 @@
     </tabpanel>
     <tabpanel id="abouttab">
 		<groupbox id="gpAbout" width="770" align="center">
-			<caption label="&gpAbout.label;"/>
+			<caption label="&gpAbout.label;" align="center"/>
+
+			<vbox style="border:1px solid black" width="770"/>
 			<description>&openerp.paresent;</description>
 			<image src="chrome://openerp_plugin/skin/logo.png" sizemode="stretch" align="center"/>
 

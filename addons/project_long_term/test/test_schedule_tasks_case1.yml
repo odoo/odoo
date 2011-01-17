@@ -259,5 +259,5 @@
   !python {model: project.task}: |
     task_ids = self.search(cr, uid, [('project_id','=',ref('project_project_projecta0'))])
     for task in self.browse(cr, uid, task_ids):
-      if (not task.user_id) or (not task.date_start) or (not task.date_end):
+      if (not task.date_start) or (not task.date_end):
         raise AssertionError("Tasks are not scheduled.")

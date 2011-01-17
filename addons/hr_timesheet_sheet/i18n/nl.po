@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-04 09:23+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 08:39+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:13+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:35+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
@@ -302,6 +302,26 @@ msgid ""
 "* Maximal difference between timesheet and attendances\n"
 "    "
 msgstr ""
+"\n"
+"Deze module helpt u om makkelijk urenverantwoording en aanwezigheid in te\n"
+"voeren in hetzelfde scherm. Het bovenste deel is voor aanwezigheid en het\n"
+"in- en uitklokken. Het onderste deel is voor urenverantwoording.\n"
+"\n"
+"Andere tabbladen bevatten statistische weergaven om u te helpen bij het\n"
+"analyseren van uw tijd of de tijd van uw team:\n"
+"* gewerkte tijd per dag (met aanwezigheid)\n"
+"* gewerkte tijd per project\n"
+"\n"
+"Deze module implementeert ook een compleet urenverantwoording "
+"goedkeuringsproces:\n"
+"* concept urenstaat\n"
+"* Bevestiging aan het eind van de periode door de medewerker\n"
+"* Goedkeuring door de project manager\n"
+"\n"
+"De goedkeuring kan worden geconfigureerd in het bedrijf:\n"
+"* periode grootte (dag, week, maand, jaar)\n"
+"* maximaal verschil tussen urenstaat en aanwezigheid\n"
+"    "
 
 #. module: hr_timesheet_sheet
 #: constraint:res.company:0
@@ -668,6 +688,9 @@ msgid ""
 "on a project (i.e. an analytic account) thus generating costs in the "
 "analytic account concerned."
 msgstr ""
+"Controleer uw urenverantwoording gedurende een specifieke periode. U kunt "
+"ook gewerkte tijd invoeren voor een project (i.e. een kostenplaats) en "
+"daarmee kosten op de kostenplaats genererend."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -725,7 +748,6 @@ msgstr "U kunt niet wijzigen in een bevestigde urenstaat !"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_project_management_timesheet_sheet_form
 msgid "My Timesheet"
 msgstr "Mijn urenverantwoording"
 
@@ -765,7 +787,7 @@ msgstr "Urenstaat op rekening"
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:51
 #, python-format
 msgid "Open Timesheet"
-msgstr ""
+msgstr "Urenstaat openen"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:372
@@ -1074,6 +1096,9 @@ msgstr "Dagboek"
 
 #~ msgid "timesheet is confirmed at the end of the week / month"
 #~ msgstr "Urenstaat wordt bevestigt aan het eind van de week / maand"
+
+#~ msgid "Project Timesheet"
+#~ msgstr "Urenstaat project"
 
 #~ msgid ""
 #~ "Allowed difference between the sign in/out and the timesheet computation for "

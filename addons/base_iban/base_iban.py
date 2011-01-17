@@ -117,7 +117,7 @@ class res_partner_bank(osv.osv):
         iban_country = self.browse(cr, uid, ids)[0].iban[:2]
         if default_iban_check(iban_country):
             iban_example = iban_country in _ref_iban and _ref_iban[iban_country] + ' \nWhere A = Account number, B = National bank code, S = Branch code, C = account No, N = branch No, K = National check digits....' or ''
-            return _('The IBAN does not seems to be correct. You should have entered something like this %s'), (iban_example)
+            return _('The IBAN does not seem to be correct. You should have entered something like this %s'), (iban_example)
         return _('The IBAN is invalid, It should begin with the country code'), ()
 
     def name_get(self, cr, uid, ids, context=None):

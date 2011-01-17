@@ -450,7 +450,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         values = {
             'state': 'anonymized',
         }
-        res = ir_model_fields_anonymization_model.write(cr, uid, field_ids, values, context=context)
+        ir_model_fields_anonymization_model.write(cr, uid, field_ids, values, context=context)
 
         # add a result message in the wizard:
         msgs = ["Anonymization successful.",
@@ -578,7 +578,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         try:
             idn = self.pool.get('ir.model.data')._get_id(cr, uid, mod, id_str)
             res = int(self.pool.get('ir.model.data').read(cr, uid, [idn], ['res_id'])[0]['res_id'])
-        except Exception, e:
+        except:
             res = None
         return res
 
