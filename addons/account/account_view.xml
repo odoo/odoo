@@ -558,6 +558,7 @@
                         <field name="balance_start"/>
                         <field name="balance_end_real"/>
                         <field name="currency" invisible="1"/>
+                        <field name='company_id' widget="selection" groups="base.group_multi_company" />
                     </group>
                     <notebook colspan="4">
                         <page string="Transaction" name="statement_line_ids">
@@ -2572,7 +2573,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
+                                    <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
                                 </tree>
                                 <form string="Statement lines">
@@ -2582,7 +2583,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
+                                    <field name="analytic_account_id" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
                                     <field name="sequence"/>
                                     <separator colspan="4" string="Notes"/>

@@ -29,6 +29,7 @@ from report.interface import report_rml
 from report.interface import toxml
 
 from report import report_sxw
+from tools import ustr
 
 one_day = relativedelta(days=1)
 month2name = [0, 'January', 'February', 'March', 'April', 'May', 'Jun', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -60,7 +61,7 @@ class report_custom(report_rml):
                   <name>%s</name>
                   %%s
                 </user>
-                ''' % (toxml(emp['name']))
+                ''' % (ustr(toxml(emp['name'])))
                 today, tomor = month, month + one_day
                 while today.month == month.month:
                     #### Work hour calculation
