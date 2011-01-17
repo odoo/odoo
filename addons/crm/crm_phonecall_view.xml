@@ -127,9 +127,9 @@
         </field>
     </record>
 
-	<!--Inbound Phonecalls Form View -->
+    <!--Inbound Phonecalls Form View -->
 
-	<record model="ir.ui.view" id="crm_case_inbound_phone_form_view">
+    <record model="ir.ui.view" id="crm_case_inbound_phone_form_view">
         <field name="name">CRM - Inbound Phone Call Form</field>
         <field name="model">crm.phonecall</field>
         <field name="type">form</field>
@@ -200,15 +200,15 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
-                	on_change="onchange_partner_id(partner_id, email_from)"
-                	string="Partner" />
+                    on_change="onchange_partner_id(partner_id)"
+                    string="Partner" />
                 <field name="partner_address_id"
-                        on_change="onchange_partner_address_id(partner_address_id, email_from)" />
+                        on_change="onchange_partner_address_id(partner_address_id)" />
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="categ_id" widget="selection"
-                	domain="[('object_id.model', '=', 'crm.phonecall')]"
-                	string="Type" />
+                    domain="[('object_id.model', '=', 'crm.phonecall')]"
+                    string="Type" />
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <button string="Schedule Other Call"
