@@ -2582,6 +2582,15 @@ class stock_inventory(osv.osv):
             self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
         return True
 
+    def action_cancel_draft(self, cr, uid, ids, context=None):
+        """ Cancels the stock move and change inventory state to draft.
+        @return: True
+        """
+        for inv in self.browse(cr, uid, ids, context=context):
+            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
+            self.write(cr, uid, [inv.id], {'state':'draft'}, context=context)
+        return True
+
     def action_cancel_inventary(self, cr, uid, ids, context=None):
         """ Cancels both stock move and inventory
         @return: True
@@ -2600,15 +2609,6 @@ class stock_inventory(osv.osv):
                                                   _('You can not cancel inventory which has any account move with posted state.'))
                          account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
-        return True
-
-    def action_cancel_draft(self, cr, uid, ids, context=None):
-        """ Cancels the stock move and change inventory state to draft.
-        @return: True
-        """
-        for inv in self.browse(cr, uid, ids, context=context):
-            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
-            self.write(cr, uid, [inv.id], {'state':'draft'}, context=context)
         return True
 
 stock_inventory()
