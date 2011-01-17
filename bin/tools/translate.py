@@ -919,7 +919,12 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 ('src', '=', dic['src']),
             ]
             if dic['type'] == 'model':
-                args.append(('res_id', '=', dic['res_id']))
+                if dic['res_id'] is False:
+                    args.append(('res_id', '=', 0))
+                    args.append(('module', '=', dic['module']))
+                    args.append(('xml_id', '=', dic['xml_id']))
+                else:
+                    args.append(('res_id', '=', dic['res_id']))
             ids = trans_obj.search(cr, uid, args)
             if ids:
                 if context.get('overwrite') and dic['value']:
@@ -935,10 +940,10 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 def trans_update_res_ids(cr):
     cr.execute("""
             UPDATE ir_translation
-            SET res_id = (SELECT ir_model_data.res_id
+            SET res_id = COALESCE ((SELECT ir_model_data.res_id
                           FROM ir_model_data
                           WHERE ir_translation.module = ir_model_data.module
-                              AND ir_translation.xml_id = ir_model_data.name)
+                              AND ir_translation.xml_id = ir_model_data.name), 0)
             WHERE ir_translation.module is not null
                 AND ir_translation.xml_id is not null
                 AND ir_translation.res_id = 0;
