@@ -35,14 +35,14 @@ class stock_change_product_qty(osv.osv_memory):
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         result = super(stock_change_product_qty, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         product_id = context and context.get('active_id', False) or False
-        prod_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
 
-        if (context.get('active_model') == 'product.product') and prod_obj:
-            fields=result.get('fields',{})
+        if (context.get('active_model') == 'product.product') and product_id:
+            prod_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            fields = result.get('fields', {})
             if fields and (prod_obj.track_production == True) and (fields.get('prodlot_id')):
                 result['fields']['prodlot_id']['required'] =  True
             else:
-                result['fields']['prodlot_id']['required'] =  False
+                result['fields']['prodlot_id']['required'] = False
         return result
 
     def default_get(self, cr, uid, fields, context):
