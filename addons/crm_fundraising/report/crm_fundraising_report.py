@@ -50,7 +50,7 @@ class crm_fundraising_report(osv.osv):
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'day': fields.char('Day', size=128, readonly=True), 
         'categ_id': fields.many2one('crm.case.categ', 'Category', \
                     domain="[('section_id','=',section_id),\
