@@ -45,9 +45,15 @@ class base_setup_config_choice(osv.osv_memory):
     def get_users(self, cr, uid, context=None):
         user_obj = self.pool.get('res.users')
         user_ids = user_obj.search(cr, uid, [])
-        users = user_obj.browse(cr, uid, user_ids, context=context)
-        user_str = '\n'.join(map(lambda x: '    - %s :\n\t\tLogin : %s \n\t\tPassword : %s' % (x.name, x.login, x.password), users))
-        return _('The following users have been installed : \n')+ user_str
+        user_list = []
+        user_tmpl_nopass = _('    - %s :\n\t\tLogin : %s')
+        user_tmpl_pass =   _('    - %s :\n\t\tLogin : %s \n\t\tPassword : %s')
+        for user in user_obj.browse(cr, uid, user_ids, context=context):
+            if user.password and not user.password.startswith('$'):
+                user_list.append(user_tmpl_pass % (user.name, user.login, user.password))
+            else:
+                user_list.append(user_tmpl_nopass % (user.name, user.login))
+        return _('The following users have been installed : \n')+ '\n'.join(user_list)
 
     _columns = {
         'installed_users':fields.text('Installed Users', readonly=True),
