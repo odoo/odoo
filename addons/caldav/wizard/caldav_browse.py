@@ -237,7 +237,8 @@ class user_preference(osv.osv_memory):
                'collection' :fields.many2one('document.directory', "Calendar Collection", required=True, domain = [('calendar_collection', '=', True)]),
                'calendar' :fields.many2one('basic.calendar', 'Calendar', required=True),
                'service': fields.selection([('webdav','CalDAV')], "Services"),
-               'device' : fields.selection([('other', 'Other'), ('iphone', 'iPhone'), ('android', 'Android based device'),('thunderbird', 'Sunbird/Thunderbird'), ('evolution','Evolution')], "Software/Devices")
+               'device' : fields.selection([('other', 'Other'), ('iphone', 'iPhone'), ('android', 'Android based device'),('thunderbird', 'Sunbird/Thunderbird'), ('evolution','Evolution')], "Software/Devices"),
+               'doc_link':fields.char('Caldav Documentation', size="264", help="The link to Caldav Online Documentation.", readonly=True),
     }
     
     def _get_default_calendar(self, cr, uid, context):
@@ -260,7 +261,8 @@ class user_preference(osv.osv_memory):
               'service': 'webdav',
               'collection' : _get_default_collection,
               'calendar' : _get_default_calendar,
-              'device' : 'other'
+              'device' : 'other',
+              'doc_link' : 'http://doc.openerp.com/'
     }    
    
     def open_window(self, cr, uid, ids, context=None):
