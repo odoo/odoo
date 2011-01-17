@@ -940,10 +940,10 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 def trans_update_res_ids(cr):
     cr.execute("""
             UPDATE ir_translation
-            SET res_id = (SELECT ir_model_data.res_id
+            SET res_id = COALESCE ((SELECT ir_model_data.res_id
                           FROM ir_model_data
                           WHERE ir_translation.module = ir_model_data.module
-                              AND ir_translation.xml_id = ir_model_data.name)
+                              AND ir_translation.xml_id = ir_model_data.name), 0)
             WHERE ir_translation.module is not null
                 AND ir_translation.xml_id is not null
                 AND ir_translation.res_id = 0;
