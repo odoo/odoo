@@ -396,6 +396,7 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
             return
         if not self.parse_rawline():
             self.log_message("Could not parse rawline.")
+            self.wfile.flush()
             return
         # self.parse_request(): # Do NOT parse here. the first line should be the only
         
@@ -404,6 +405,7 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
             if not self.parse_request():
                 return
             self.do_OPTIONS()
+            self.wfile.flush()
             return
             
         for vdir in self.server.vdirs:
@@ -430,9 +432,11 @@ class MultiHTTPHandler(FixSendError, HttpOptions, BaseHTTPRequestHandler):
                             "client closed connection", self.rlpath.rstrip())
                 else:
                     raise
+            self.wfile.flush()
             return
         # if no match:
         self.send_error(404, "Path not found: %s" % self.path)
+        self.wfile.flush()
         return
 
     def _get_ignore_body(self,fore):
@@ -480,10 +484,6 @@ class SecureMultiHTTPHandler(MultiHTTPHandler):
             self.connection.shutdown(socket.SHUT_RDWR)
         except Exception:
             pass
-
-    def handle_one_request(self):
-        MultiHTTPHandler.handle_one_request(self)
-        self.wfile.flush()
 
 import threading
 class ConnThreadingMixIn:
