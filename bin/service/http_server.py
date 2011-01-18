@@ -123,10 +123,12 @@ class HttpLogHandler:
     
 class MultiHandler2(HttpLogHandler, MultiHTTPHandler):
     _logger = logging.getLogger('http')
+    wbufsize = 32768
 
 
 class SecureMultiHandler2(HttpLogHandler, SecureMultiHTTPHandler):
     _logger = logging.getLogger('https')
+    wbufsize = 32768
 
     def getcert_fnames(self):
         tc = tools.config
