@@ -68,18 +68,21 @@ class purchase_order(osv.osv):
         if type(ids)!=type([]):
             ids=[ids]
         for po in self.browse(cr, uid, ids, context=context):
-            cr.execute("""update purchase_order_line set
-                    date_planned=%s
-                where
-                    order_id=%s and
-                    (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
+            if po.order_line:
+                cr.execute("""update purchase_order_line set
+                        date_planned=%s
+                    where
+                        order_id=%s and
+                        (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
+            cr.execute("""update purchase_order set
+                    minimum_planned_date=%s where id=%s""", (value, po.id))
         return True
 
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
-            res[purchase.id] = time.strftime('%Y-%m-%d %H:%M:%S')
+            res[purchase.id] = False
             if purchase.order_line:
                 min_date=purchase.order_line[0].date_planned
                 for line in purchase.order_line:
@@ -191,7 +194,11 @@ class purchase_order(osv.osv):
                 "From Picking: a draft invoice will be pre-generated based on validated receptions.\n" \
                 "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
         ),
-        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products."),
+        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
+            store = {
+                'purchase.order.line': (_get_order, ['date_planned'], 10),
+            }
+        ),
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
