@@ -1416,15 +1416,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Menu">
-                    <group col="8">
+                    <group col="6">
                         <field name="name" string="Menu" />
-                        <field  name="parent_id" colspan="4"/>
+                        <field name="parent_id" colspan="2"/>
                         <field name="sequence" colspan="2"/>
-                        <field name="complete_name" string="Full Path" colspan="8"/>
-                        <field name="action" colspan="4" />
-                        <field name="icon" on_change="onchange_icon(icon)" colspan="2"/>
-                        <field name="icon_pict" widget="picture" nolabel="1" colspan="2"/>
-                        <group col="4" colspan="8" groups="base.group_extended">
+
+                        <field name="complete_name" string="Full Path" colspan="2"/>
+                        <field name="action" colspan="2" />
+                        <field name="icon"  colspan="2"/>
+
+                        <group col="4" colspan="6" groups="base.group_extended">
                             <field name="web_icon" groups="base.group_extended" />
                             <field name="web_icon_hover" groups="base.group_extended" />
                             <field name="web_icon_data" widget="image" groups="base.group_extended"/>
