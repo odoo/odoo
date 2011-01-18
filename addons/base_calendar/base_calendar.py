@@ -29,6 +29,11 @@ import pytz
 import re
 import time
 import tools
+import logging
+_logger = logging.getLogger(__name__)
+
+import pprint
+pp = pprint.PrettyPrinter(indent=4)
 
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
@@ -1080,8 +1085,6 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, context=context):
             event = datas['id']
             if datas.get('rrule_type'):
-                if  datas['rrule_type']=='daily_working':
-                    datas.update({'rrule_type': 'weekly'})
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
                     cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
@@ -1256,7 +1259,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             ids = select
         result = []
         recur_dict = []
-        if ids and (base_start_date or base_until_date):
+        if ids:
             cr.execute("select m.id, m.rrule, m.date, m.date_deadline, m.duration, \
                             m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
                             " m where m.id = ANY(%s)", (ids,) )
@@ -1403,6 +1406,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                  offset, limit, order, context, count)
 
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
+        print "search"
+        print args
+        print res
         return res
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
@@ -1424,9 +1430,28 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             select = ids
         new_ids = []
         res = False
+        print "write"
+        print select
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
-            if len(str(event_id).split('-')) > 1:
+            
+            
+            pp.pprint(vals)
+            
+            
+            event = self.browse(cr,uid, event_id, context=context)
+            if('edit_all' in vals):
+                edit_all = vals['edit_all']
+            else:
+                edit_all = event.edit_all or not event.recurrency
+           
+            print "edit_all"
+            print edit_all
+            
+           
+            if edit_all:
+                print "on edit all"
+            else:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
                 if data.get('rrule'):
@@ -1438,9 +1463,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         })
                     data.update(vals)
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
+                    self.unlink(cr, uid, [event_id], context=context)
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
             if not real_event_id in new_ids:
+                print "quand est-ce qu'on est là"
                 new_ids.append(real_event_id)
 
         if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
@@ -1454,6 +1481,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             context=context)
         vals.update(updated_vals.get('value', {}))
 
+        
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
 
@@ -1511,10 +1539,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         if fields and 'duration' not in fields:
             fields.append('duration')
 
-
+        print select
         for base_calendar_id, real_id in select:
             #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
+            print "test"
+            print res
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
@@ -1552,9 +1582,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @param context: A standard dictionary for contextual values
         @return: True
         """
+        print ids
         res = False
-        for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
+        for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate', 'edit_all'], context=context):
             event_id = event_datas['id']
+            edit_all = event_datas['edit_all']
             if isinstance(event_id, (int, long)):
                 res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
@@ -1562,7 +1594,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             else:
                 str_event, date_new = event_id.split('-')
                 event_id = int(str_event)
-                if event_datas['rrule']:
+                if event_datas['rrule'] and not edit_all:
                     # Remove one of the recurrent event
                     date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
@@ -1601,7 +1633,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
-        return res
+        records = self.browse(cr, uid, [res], context=context)
+        print "create"
+        print real_id2base_calendar_id(records[0].id, records[0].date)
+        
+        return real_id2base_calendar_id(records[0].id, records[0].date)
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
