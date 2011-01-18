@@ -641,7 +641,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
     _columns = {
         'name': fields.date('Date', readonly=True),
         'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True, select="1"),
-        'total_timesheet': fields.float('Project Timesheet', readonly=True),
+        'total_timesheet': fields.float('Total Timesheet', readonly=True),
         'total_attendance': fields.float('Attendance', readonly=True),
         'total_difference': fields.float('Difference', readonly=True),
     }

@@ -202,7 +202,7 @@
   I create record for partial picking.
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
-    date: '2010-04-30 16:53:36'
+    date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
 -
   I make my picking done.
@@ -238,7 +238,7 @@
   I create record for partial picking.
 -
   !record {model: stock.partial.picking, id: stock_partial_picking0}:
-    date: '2010-04-30 16:53:36'
+    date: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 
 -
   I make my picking done.

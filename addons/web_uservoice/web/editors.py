@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import openobject.templating
+from tools.translate import _
 
 class BaseTemplateEditor(openobject.templating.TemplateEditor):
     templates = ['/openobject/controllers/templates/base.mako']

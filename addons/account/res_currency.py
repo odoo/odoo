@@ -21,6 +21,7 @@
 from osv import osv
 
 """Inherit res.currency to handle accounting date values when converting currencies"""
+
 class res_currency_account(osv.osv):
     _inherit = "res.currency"
 
@@ -42,3 +43,5 @@ class res_currency_account(osv.osv):
         return rate
 
 res_currency_account()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

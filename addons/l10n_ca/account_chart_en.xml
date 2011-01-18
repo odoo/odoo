@@ -690,33 +690,65 @@
 	<record id="chart241000_en" model="account.account.template">
 		<field name="code">241000</field>
 		<field name="parent_id" ref="chart240000_en"/>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">TAXES TO PAY</field>
+	</record>
+
+	<record id="chart241100_en" model="account.account.template">
+		<field name="code">241100</field>
+		<field name="parent_id" ref="chart241000_en"/>
 		<field name="type">payable</field>
 		<field name="user_type" ref="user_type_payable_en" />
-		<field name="name">Federal tax to pay</field>
+		<field name="name">GST to pay</field>
+	</record>
+
+	<record id="chart241200_en" model="account.account.template">
+		<field name="code">241200</field>
+		<field name="parent_id" ref="chart241000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">PST to pay</field>
+	</record>
+
+	<record id="chart241300_en" model="account.account.template">
+		<field name="code">241300</field>
+		<field name="parent_id" ref="chart241000_en"/>
+		<field name="type">payable</field>
+		<field name="user_type" ref="user_type_payable_en" />
+		<field name="name">HST to pay</field>
 	</record>
 
 	<record id="chart242000_en" model="account.account.template">
 		<field name="code">242000</field>
 		<field name="parent_id" ref="chart240000_en"/>
-		<field name="type">payable</field>
-		<field name="user_type" ref="user_type_payable_en" />
-		<field name="name">Provincial tax to pay</field>
+		<field name="type">view</field>
+		<field name="user_type" ref="user_type_view_en" />
+		<field name="name">TAXES TO RECEIVE</field>
 	</record>
 
-	<record id="chart243000_en" model="account.account.template">
-		<field name="code">243000</field>
-		<field name="parent_id" ref="chart240000_en"/>
+	<record id="chart242100_en" model="account.account.template">
+		<field name="code">242100</field>
+		<field name="parent_id" ref="chart242000_en"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="user_type_expense_en" />
-		<field name="name">GST</field>
+		<field name="name">GST to receive</field>
 	</record>
 
-	<record id="chart244000_en" model="account.account.template">
-		<field name="code">244000</field>
-		<field name="parent_id" ref="chart240000_en"/>
+	<record id="chart242200_en" model="account.account.template">
+		<field name="code">242200</field>
+		<field name="parent_id" ref="chart242000_en"/>
 		<field name="type">other</field>
 		<field name="user_type" ref="user_type_expense_en" />
-		<field name="name">PST</field>
+		<field name="name">PST to receive</field>
+	</record>
+
+	<record id="chart242300_en" model="account.account.template">
+		<field name="code">242300</field>
+		<field name="parent_id" ref="chart242000_en"/>
+		<field name="type">other</field>
+		<field name="user_type" ref="user_type_expense_en" />
+		<field name="name">HST to receive</field>
 	</record>
 
 	<record id="chart245000_en" model="account.account.template">

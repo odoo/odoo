@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-11 11:04+0000\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-13 22:56+0000\n"
 "Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:58+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:58+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: report_webkit
 #: field:ir.actions.report.xml,webkit_header:0
@@ -30,7 +30,7 @@ msgstr "Modèle WebKit (utilisé si le rapport n'est pas trouvé)"
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Tabloid 29 279.4 x 431.8 mm"
-msgstr ""
+msgstr "Format tabloïd 29 279,4 x 431,8 mm"
 
 #. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.action_header_img
@@ -56,7 +56,7 @@ msgstr "Type d'image (png, gif, jpeg)"
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Executive 4   7.5 x 10 inches, 190.5 x 254 mm"
-msgstr ""
+msgstr "Format exécutif 4 7,5 x 10 pouces, 190,5 x 254 mm"
 
 #. module: report_webkit
 #: field:ir.header_img,company_id:0
@@ -196,7 +196,7 @@ msgstr "Type"
 #: code:addons/report_webkit/wizard/report_webkit_actions.py:134
 #, python-format
 msgid "Client Actions Connections"
-msgstr ""
+msgstr "Liens entre les actions du client"
 
 #. module: report_webkit
 #: field:res.company,header_image:0
@@ -273,6 +273,47 @@ msgid ""
 "Web client WYSIWYG\n"
 "                    "
 msgstr ""
+"Ce module ajoute un nouveau moteur de rapports basé sur la librairie WebKit "
+"(wkhmltopdf) pour supporter les rapports dessinés en HTML + CSS.\n"
+"La structure du module et de la plupart du code est inspiré du module "
+"report_openoffice.\n"
+"Ce module permet :\n"
+"    - la définition de rapports HTML\n"
+"    - le support des en-têtes multiples\n"
+"    - les logos multiples\n"
+"    - le support des multi-sociétés\n"
+"    - le support de HTML et CSS-3 (dans la limite de la version actuelle de "
+"WebKit)\n"
+"    - le support du Javascript\n"
+"    - un débugger HTML de base\n"
+"    - des capacités d'impression de livres\n"
+"    - la définition de marges\n"
+"    - la définition de la taille du papier\n"
+"et plus encore.\n"
+"\n"
+"Les logos et en-têtes multiples peuvent être définis par société.\n"
+"Les styles CSS, l'en-tête et le pied fu corps sont définis par société.\n"
+"\n"
+"La librairie a installer peut se trouver ici\n"
+"http://code.google.com/p/wkhtmltopdf/\n"
+"Les librairies système sont disponibles pour Linux, Mac OS X i386 et Windows "
+"32 bits.\n"
+"\n"
+"Après avoir installé la librairie wkhtmltopdf sur a machine du serveur "
+"OpenERP, vous devez enregistrer\n"
+"chemin vers l'exécutable wkthtmltopdf dans la société.\n"
+"\n"
+"Pour un exemple de rapport, regardez d'abord le module webkit_report_sample, "
+"et cette vidéo :\n"
+"    http://files.me.com/nbessi/06n92k.mov\n"
+"\n"
+"\n"
+"TODO :\n"
+"Support de l'acivation/désactivation du Javascript\n"
+"Support des formats livre et reliure\n"
+"Envoi du Zip et du PDF séparement\n"
+"Client Web WYSIWYG\n"
+"                    "
 
 #. module: report_webkit
 #: view:ir.actions.report.xml:0
@@ -324,7 +365,7 @@ msgstr "Veuillez indiquer une en-tête dans les paramètres de la société"
 #. module: report_webkit
 #: view:report.webkit.actions:0
 msgid "_Ok"
-msgstr ""
+msgstr "_Ok"
 
 #. module: report_webkit
 #: help:report.webkit.actions,print_button:0
@@ -332,6 +373,8 @@ msgid ""
 "Check this to add a Print action for this Report in the sidebar of the "
 "corresponding document types"
 msgstr ""
+"Vérifiez ceci pour ajouter l'action \"Imprimer\" pour ce rapport dans la "
+"barre correspondant aux types de document"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -341,7 +384,7 @@ msgstr "B3 18 353 x 500 mm"
 #. module: report_webkit
 #: help:ir.actions.report.xml,webkit_debug:0
 msgid "Enable the webkit engine debugger"
-msgstr ""
+msgstr "Activer le débogueur du moteur webkit"
 
 #. module: report_webkit
 #: field:ir.header_img,img:0
@@ -351,7 +394,7 @@ msgstr "Image"
 #. module: report_webkit
 #: field:res.company,header_webkit:0
 msgid "Available html"
-msgstr ""
+msgstr "Html disponible"
 
 #. module: report_webkit
 #: help:report.webkit.actions,open_action:0
@@ -359,46 +402,48 @@ msgid ""
 "Check this to view the newly added internal print action after creating it "
 "(technical view) "
 msgstr ""
+"Vérifiez ceci pour voir la nouvelle action d'impression ajoutée après "
+"l'avoir créée (vue technique) "
 
 #. module: report_webkit
 #: view:res.company:0
 msgid "Images"
-msgstr ""
+msgstr "Images"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,orientation:0
 msgid "Portrait"
-msgstr ""
+msgstr "Portrait"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,orientation:0
 msgid "Landscape"
-msgstr ""
+msgstr "Paysage"
 
 #. module: report_webkit
 #: view:ir.header_webkit:0
 msgid "page setup"
-msgstr ""
+msgstr "configuration des pages"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B8  22  62 x 88 mm"
-msgstr ""
+msgstr "B8 22 62 x 88 mm"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A2  7   420 x 594 mm"
-msgstr ""
+msgstr "A2 7 420 x 594 mm"
 
 #. module: report_webkit
 #: field:report.webkit.actions,print_button:0
 msgid "Add print button"
-msgstr ""
+msgstr "Ajoute un bouton d'impression"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A9  13  37 x 52 mm"
-msgstr ""
+msgstr "A9 13 37 x 52 mm"
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_res_company
@@ -408,22 +453,22 @@ msgstr "Sociétés"
 #. module: report_webkit
 #: field:ir.header_webkit,margin_bottom:0
 msgid "Bottom Margin (mm)"
-msgstr ""
+msgstr "Marge du bas (mm)"
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_report_webkit_actions
 msgid "Webkit Actions"
-msgstr ""
+msgstr "Actions Webkit"
 
 #. module: report_webkit
 #: field:report.webkit.actions,open_action:0
 msgid "Open added action"
-msgstr ""
+msgstr "Action d'ouverture ajoutée"
 
 #. module: report_webkit
 #: field:ir.header_webkit,margin_right:0
 msgid "Right Margin (mm)"
-msgstr ""
+msgstr "Marge de droite (mm)"
 
 #. module: report_webkit
 #: field:ir.header_webkit,orientation:0
@@ -433,37 +478,37 @@ msgstr "Orientation"
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B6  20  125 x 176 mm"
-msgstr ""
+msgstr "B6 20 125 x 176 mm"
 
 #. module: report_webkit
 #: help:ir.header_webkit,html:0
 msgid "Set Webkit Report Header"
-msgstr ""
+msgstr "Configurer l'en-tête du rapport Webkit"
 
 #. module: report_webkit
 #: field:ir.header_webkit,format:0
 msgid "Paper size"
-msgstr ""
+msgstr "Taille du papier"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid ":B10    16  31 x 44 mm"
-msgstr ""
+msgstr ":B10 16 31 x 44 mm"
 
 #. module: report_webkit
 #: field:ir.header_webkit,css:0
 msgid "Header CSS"
-msgstr ""
+msgstr "En-tête CSS"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B4  19  250 x 353 mm"
-msgstr ""
+msgstr "B4 19 250 x 353 mm"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A3  8   297 x 420 mm"
-msgstr ""
+msgstr "A3 8 297 x 420 mm"
 
 #. module: report_webkit
 #: code:addons/report_webkit/webkit_report.py:240
@@ -476,26 +521,32 @@ msgid ""
 "          raise except_osv(\n"
 "                _('No header defined for this Webkit report!"
 msgstr ""
+"'))\n"
+"        header = report_xml.webkit_header.html\n"
+"        footer = report_xml.webkit_header.footer_html\n"
+"        if not header and report_xml.header:\n"
+"          raise except_osv(\n"
+"                _('No header defined for this Webkit report!"
 
 #. module: report_webkit
 #: help:res.company,lib_path:0
 msgid "Complete (Absolute) path to the wkhtmltopdf executable."
-msgstr ""
+msgstr "Chemin complet (Absolu) de l'exécutable wkhtmltopdf"
 
 #. module: report_webkit
 #: field:ir.header_webkit,footer_html:0
 msgid "webkit footer"
-msgstr ""
+msgstr "Pied de page Webkit"
 
 #. module: report_webkit
 #: field:ir.actions.report.xml,webkit_debug:0
 msgid "Webkit debug"
-msgstr ""
+msgstr "Debug Webkit"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Letter 2 8.5 x 11 inches, 215.9 x 279.4 mm"
-msgstr ""
+msgstr "Letter 2 8.5 x 11 pouces, 215.9 x 279.4 mm"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
@@ -505,12 +556,12 @@ msgstr "B0 14 1000 x 1414 mm"
 #. module: report_webkit
 #: field:ir.actions.report.xml,report_webkit_data:0
 msgid "Webkit Template"
-msgstr ""
+msgstr "Modèle Webkit"
 
 #. module: report_webkit
 #: model:ir.module.module,shortdesc:report_webkit.module_meta_information
 msgid "Webkit Report Engine"
-msgstr ""
+msgstr "Moteur de rapport Webkit"
 
 #. module: report_webkit
 #: field:ir.header_img,name:0
@@ -521,49 +572,49 @@ msgstr "Nom"
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A5  9   148 x 210 mm"
-msgstr ""
+msgstr "A5 9 148 x 210 mm"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "A8  12  52 x 74 mm"
-msgstr ""
+msgstr "A8 12 52 x 74 mm"
 
 #. module: report_webkit
 #: model:ir.actions.act_window,name:report_webkit.wizard_ofdo_report_actions
 #: view:report.webkit.actions:0
 msgid "Add Print Buttons"
-msgstr ""
+msgstr "Ajoute des boutons d'impression"
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "Comm10E 25  105 x 241 mm, U.S. Common 10 Envelope"
-msgstr ""
+msgstr "Comm10E 25  105 x 241 mm, U.S. Common 10 Enveloppe"
 
 #. module: report_webkit
 #: code:addons/report_webkit/webkit_report.py:240
 #, python-format
 msgid "Webkit Report template not found !"
-msgstr ""
+msgstr "Modèle de rapport Webkit non trouvé !"
 
 #. module: report_webkit
 #: field:ir.header_webkit,margin_left:0
 msgid "Left Margin (mm)"
-msgstr ""
+msgstr "Marge de gauche (mm)"
 
 #. module: report_webkit
 #: view:res.company:0
 msgid "Headers"
-msgstr ""
+msgstr "En-têtes"
 
 #. module: report_webkit
 #: help:ir.header_webkit,footer_html:0
 msgid "Set Webkit Report Footer."
-msgstr ""
+msgstr "Configurer le pied du rapport Webkit."
 
 #. module: report_webkit
 #: selection:ir.header_webkit,format:0
 msgid "B9  23  33 x 62 mm"
-msgstr ""
+msgstr "B9 23 33 x 62 mm"
 
 #. module: report_webkit
 #: model:ir.model,name:report_webkit.model_ir_actions_report_xml

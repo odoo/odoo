@@ -40,7 +40,7 @@ Moreover, it keeps track of all further communications and task states.
     ],
     'installable': True,
     'active': False,
-    'certificate': '',
+    'certificate': '001075048780413258261',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
