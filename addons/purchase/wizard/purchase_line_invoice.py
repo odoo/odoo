@@ -126,9 +126,9 @@ class purchase_line_invoice(osv.osv_memory):
                     else:
                         a = property_obj.get(cr, uid,
                                 'property_account_expense_categ', 'product.category',
-                                context=context)
+                                context=context).id
                     fpos = line.order_id.fiscal_position or False
-                    a = account_fiscal_obj.map_account(cr, uid, fpos, a).id
+                    a = account_fiscal_obj.map_account(cr, uid, fpos, a)
                     inv_id = invoice_line_obj.create(cr, uid, {
                         'name': line.name,
                         'origin': line.order_id.name,
