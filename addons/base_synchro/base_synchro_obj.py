@@ -19,8 +19,6 @@
 #
 ##############################################################################
 from osv import fields,osv
-import tools
-import re
 import time
 
 class base_synchro_server(osv.osv):

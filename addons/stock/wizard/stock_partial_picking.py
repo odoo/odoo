@@ -83,6 +83,10 @@ class stock_partial_picking(osv.osv_memory):
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False)
 
+        if not picking_ids:
+            # not called through an action (e.g. buildbot), return the default.
+            return result
+
         for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
             picking_type = self.get_picking_type(cr, uid, pick, context=context)
         

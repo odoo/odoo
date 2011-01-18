@@ -31,6 +31,7 @@
         "product_manufacturer_view.xml"
     ],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "00720153953662760781",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

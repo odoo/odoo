@@ -63,5 +63,6 @@
         "test": [ #'test/webdav_test1.yml', 
                 ],
         "active": False,
-        "installable": True
+        "installable": True,
+        "certificate" : "001236490750845657973",
 }

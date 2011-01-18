@@ -438,8 +438,8 @@ class mrp_production(osv.osv):
         'date_planned_end': fields.function(_production_date_end, method=True, type='date', string='Scheduled End Date'),
         'date_planned_date': fields.function(_production_date, method=True, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),
-        'date_start': fields.datetime('Start Date'),
-        'date_finished': fields.datetime('End Date'),
+        'date_start': fields.datetime('Start Date', select=True),
+        'date_finished': fields.datetime('End Date', select=True),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),

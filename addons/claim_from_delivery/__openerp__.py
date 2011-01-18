@@ -29,7 +29,8 @@
 ''',
     "update_xml" : ["claim_delivery_view.xml"],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "001101649349223746957",
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
