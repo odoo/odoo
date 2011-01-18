@@ -23,16 +23,16 @@
     weight_net: 0.0
 -
   In order to test the purchase flow,I create a new record where "invoice_method" is From Order.
-- 
+-
   I create purchase order for iPod.
-- 
+-
   !record {model: purchase.order, id: purchase_order_po0}:
     company_id: base.main_company
-    date_order: '2010-05-11'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_method: order
     location_id: stock.stock_location_stock
     order_line:
-      - date_planned: '2010-05-13'
+      - date_planned: !eval time.strftime('%Y-%m-%d')
         name: iPod
         price_unit: 100.0
         product_id: 'product_product_ipod0'
@@ -42,20 +42,20 @@
     partner_address_id: base.res_partner_address_7
     partner_id: base.res_partner_4
     pricelist_id: purchase.list0
-- 
+-
   Initially purchase order is in the draft state.
 -
   !assert {model: purchase.order, id: purchase_order_po0}:
-    - state == 'draft'  
+    - state == 'draft'
 -
   I confirm the purchase order for iPod.
 -
   !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_po0}
--  
+-
   I check that the order which was initially in the draft state has transit to confirm state.
 -
   !assert {model: purchase.order, id: purchase_order_po0}:
-    - state == 'approved'  
+    - state == 'approved'
 -
   I check that an entry gets created in the "Lines to Invoice" of Invoice Control on the basis of purchase order line.
 -
@@ -76,7 +76,7 @@
   I create invoice for products in the purchase order.
 -
   !python {model: purchase.order.line_invoice}: |
-    pur_obj=self.pool.get('purchase.order')  
+    pur_obj=self.pool.get('purchase.order')
     ids = []
     pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po0"))
     for line in pur_id1.order_line:
@@ -104,7 +104,7 @@
   I check that the order which was initially in the confirmed state has transit to approved state.
 -
   !assert {model: purchase.order, id: purchase_order_po0}:
-    - state == 'approved' 
+    - state == 'approved'
 -
   I check that date_approve field of Delivery&Invoices gets bind with the date on which it has been approved.
 -
@@ -112,7 +112,7 @@
     pur_id=self.browse(cr, uid, ref("purchase_order_po0"))
     assert(pur_id.date_approve)
 -
-  I check that an entry gets created in the pickings. 
+  I check that an entry gets created in the pickings.
 -
   !python {model: purchase.order}: |
     pur_id=self.browse(cr, uid, ref("purchase_order_po0"))
@@ -132,7 +132,7 @@
 -
   I check that Traceability moves are created.
 -
-  I check that an invoice_ids field of Delivery&Invoices gets bind with the value.  
+  I check that an invoice_ids field of Delivery&Invoices gets bind with the value.
 -
   !python {model: purchase.order}: |
     pur_id2=self.browse(cr, uid, ref("purchase_order_po0"))

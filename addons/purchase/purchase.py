@@ -615,7 +615,7 @@ class purchase_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',store=True,string='Company'),
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', required=True, readonly=True,
                                   help=' * The \'Draft\' state is set automatically when purchase order in draft state. \
                                        \n* The \'Confirmed\' state is set automatically as confirm when purchase order in confirm state. \
@@ -672,7 +672,7 @@ class purchase_order_line(osv.osv):
         seller_delay = 0
 
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
-        res = {} 
+        res = {}
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay

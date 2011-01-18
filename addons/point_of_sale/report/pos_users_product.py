@@ -34,7 +34,7 @@ class pos_user_product(report_sxw.rml_parse):
 
         })
 
-    def _get_data(self,o):
+    def _get_data(self, o):
         self.total = 0.0
         data={}
         sql1=""" SELECT distinct(o.id) from account_bank_statement s, account_bank_statement_line l,pos_order o,pos_order_line i where  i.order_id=o.id and o.state='paid' and l.statement_id=s.id and l.pos_statement_id=o.id and s.id=%d"""%(o.id)
@@ -51,7 +51,7 @@ class pos_user_product(report_sxw.rml_parse):
             self.total += d['amt']
         return data
 
-    def _get_user(self,object):
+    def _get_user(self, object):
         for o in object:
             sql = """select ru.name from account_bank_statement as abs,res_users ru
                                     where abs.user_id = ru.id

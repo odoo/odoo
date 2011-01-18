@@ -657,20 +657,21 @@ class stock_picking(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
     def action_process(self, cr, uid, ids, context=None):
+        if context is None: context = {}
+        partial_id = self.pool.get("stock.partial.picking").create(
+            cr, uid, {}, context=dict(context, active_ids=ids))
         return {
             'name':_("Products to Process"),
             'view_mode': 'form',
             'view_id': False,
             'view_type': 'form',
             'res_model': 'stock.partial.picking',
+            'res_id': partial_id,
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
             'domain': '[]',
-            'context': {
-                'active_id': ids[0],
-                'active_ids':ids
-            }
+            'context': dict(context, active_ids=ids)
         }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -757,25 +758,14 @@ class stock_picking(osv.osv):
         """ Validates picking directly from draft state.
         @return: True
         """
-        if context is None:
-            context = {}
         wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
-        context.update({'active_ids':ids})
-        return {
-                'name': 'Make Picking',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.partial.picking',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'nodestroy': True,
-                'context':context
-            }
+        return self.action_process(
+            cr, uid, ids, context=context)
     def cancel_assign(self, cr, uid, ids, *args):
         """ Cancels picking and moves.
         @return: True
@@ -1438,7 +1428,7 @@ class stock_production_lot_revision(osv.osv):
         'indice': fields.char('Revision Number', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
-        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
     _defaults = {
@@ -1466,6 +1456,25 @@ class stock_move(osv.osv):
     _description = "Stock Move"
     _order = 'date_expected desc, id'
     _log_create = False
+    
+    def action_partial_move(self, cr, uid, ids, context=None):
+        if context is None: context = {}
+        partial_id = self.pool.get("stock.partial.move").create(
+            cr, uid, {}, context=context)
+        return {
+            'name':_("Products to Process"),
+            'view_mode': 'form',
+            'view_id': False,
+            'view_type': 'form',
+            'res_model': 'stock.partial.move',
+            'res_id': partial_id,
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': context
+        }
+        
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -2588,7 +2597,7 @@ class stock_inventory_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
-        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True),
+        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
     }

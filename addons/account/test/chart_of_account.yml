@@ -43,8 +43,8 @@
 
 -
   !record {model: account.analytic.chart, id: account_analytic_chart_0}:
-    from_date: '2010-01-01'
-    to_date: '2010-06-30'
+    from_date: !eval "'%s-01-01' %(datetime.now().year)"
+    to_date: !eval "'%s-06-30' %(datetime.now().year)"
 -
   I clicked on Open chart Button to open the charts
 

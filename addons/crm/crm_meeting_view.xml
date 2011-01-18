@@ -182,9 +182,7 @@
                                 <newline />
                                 <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')] }"/>
                                 <newline />
-                                
-                                <separator string="Set exception rule" colspan="4"/>
-                                <field name="exrule" colspan="2"/>
+                           
                       
                             </group>
                             <group col="8" colspan="4" name="Select weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">

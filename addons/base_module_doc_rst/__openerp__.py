@@ -36,6 +36,6 @@
     'update_xml': ['base_module_doc_rst_view.xml', 'base_module_doc_rst_wizard.xml', 'module_report.xml'],
     'demo_xml': [],
     'installable': True,
-    'certificate': '',
+    'certificate': '001288481437217734509',
 }
 

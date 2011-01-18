@@ -19,7 +19,6 @@
 #
 ##############################################################################
 from osv import fields, osv
-import netsvc
 import tools
 
 def _type_get(self, cr, uid, context=None):
