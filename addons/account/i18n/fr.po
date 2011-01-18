@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-15 21:21+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-17 19:56+0000\n"
+"Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-16 05:04+0000\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:41+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -121,7 +120,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Rapprochement d'écritures"
+msgstr "Rapprochement de pièces comptables"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
@@ -507,8 +506,8 @@ msgid ""
 "This field contains the informatin related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"Ce champ contient les informations relatives à la numérotation des écritures "
-"de ce journal."
+"Ce champ contient les informations relatives à la numérotation des pièce "
+"comptables de ce journal."
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -954,7 +953,9 @@ msgstr "Partenaire suivant à rapprocher"
 msgid ""
 "You can not do this modification on a confirmed entry ! Please note that you "
 "can just change some non important fields !"
-msgstr "Vous ne pouvez pas modifier une écriture validée."
+msgstr ""
+"Vous ne pouvez pas modifier une pièce comptable validée. Vous pouvez juste "
+"modifier quelques champs moins importants !"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1241,7 +1242,7 @@ msgstr "Taux de Change Sortant"
 #. module: account
 #: help:account.move.line,move_id:0
 msgid "The move of this entry line."
-msgstr "Le mouvement de cette ligne d'écriture."
+msgstr "Le mouvement de cette ligne d'écriture"
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1254,7 +1255,7 @@ msgstr "Nb. de transactions"
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Entry Label"
-msgstr "Libellé de l'écriture"
+msgstr "Libellé de la pièce comptable"
 
 #. module: account
 #: code:addons/account/account.py:976
@@ -1393,7 +1394,7 @@ msgstr "Options du Rapport"
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "Analyse des écritures de journal"
+msgstr "Analyse des écritures comptables"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_partner_all
@@ -1418,7 +1419,7 @@ msgstr "Titulaire du compte bancaire"
 #. module: account
 #: field:res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr "Compte de client"
+msgstr "Compte client"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
@@ -1459,7 +1460,7 @@ msgstr "Créer les écritures"
 #. module: account
 #: field:account.entries.report,nbr:0
 msgid "# of Items"
-msgstr "Nb. d'éléments"
+msgstr "Nb. d'écritures"
 
 #. module: account
 #: field:account.automatic.reconcile,max_amount:0
@@ -1891,7 +1892,7 @@ msgstr "Compte de provisions, pertes et profits"
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Valeur erronée au crédit ou au débit de l'écriture comptable !"
+msgstr "Valeur erronée au crédit ou au débit de la pièce comptable !"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1924,7 +1925,7 @@ msgstr "A/c Code"
 #: field:account.invoice,move_id:0
 #: field:account.invoice,move_name:0
 msgid "Journal Entry"
-msgstr "Écriture"
+msgstr "Pièce comptable"
 
 #. module: account
 #: view:account.tax:0
@@ -2083,7 +2084,7 @@ msgstr "Annuler le rapprochement des écritures"
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
 msgid "Partial Entry lines"
-msgstr "Lignes d'Écriture Partielle"
+msgstr "Lignes d'Entrée Partielle"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -2314,7 +2315,7 @@ msgstr "Laisser vide pour tous les exercices fiscaux ouverts"
 #. module: account
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
-msgstr "Écriture comptable"
+msgstr "Pièce comptable"
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2714,7 +2715,7 @@ msgstr ""
 "Cochez cette case si vous voulez que les nouvelles écritures saisies dans le "
 "journal ne passent pas par l'état \"Brouillon\" et soient enregistrées "
 "directement comme validées. \n"
-"Notez que les écritures générées automatiquement par le système sont "
+"Notez que les pièces comptables générées automatiquement par le système sont "
 "validées automatiquement sans passer par l'état \"Brouillon\"."
 
 #. module: account
@@ -3092,8 +3093,9 @@ msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
 msgstr ""
-"Cet assistant validera toutes les écritures pour un journal particulier et "
-"une période. Une fois validées, les écritures ne peuvent plus être modifiées."
+"Cet assistant validera toutes les pièces comptables pour un journal "
+"particulier et une période. Une fois validées, les pièces comptables ne "
+"peuvent plus être modifiées."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
@@ -3124,12 +3126,12 @@ msgid ""
 " 'Unreconciled' will copy only the journal items that were unreconciled on "
 "the first day of the new fiscal year."
 msgstr ""
-"Définir ici la méthode qui sera utilisée pour générer la fin des écritures "
-"annuelles pour tous les comptes de ce type.\n"
+"Définir ici la méthode qui sera utilisée pour générer la fin des pièces "
+"comptables annuelles pour tous les comptes de ce type.\n"
 "\n"
 "\"Rien\" signifie que rien ne sera fait.\n"
 "\"Balance\" est généralement utilisé pour les comptes de trésorerie.\n"
-"\"Détaillé\" recopie chaque article de journal de l'année précédente, même "
+"\"Détaillé\" recopie chaque écriture comptable de l'année précédente, même "
 "ceux qui ont été réconciliés.\n"
 "\"Non réconcilié\" recopie uniquement les éléments non réconciliés sur le "
 "premier jour du nouvel exercice."
@@ -3307,8 +3309,9 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
-"Toutes les écritures sélectionnées vont être validées et comptabilisées : il "
-"ne sera plus possible de modifier aucune information comptable."
+"Toutes les pièces comptables sélectionnées vont être validées et "
+"comptabilisées : il ne sera plus possible de modifier aucune information "
+"comptable."
 
 #. module: account
 #: code:addons/account/invoice.py:370
@@ -3553,8 +3556,8 @@ msgid ""
 "You cannot validate a Journal Entry unless all journal items are in same "
 "chart of accounts !"
 msgstr ""
-"Impossible de supprimer une écriture du journal si toutes les lignes ne font "
-"pas partie du même plan comptable !"
+"Impossible de supprimer une pièce comptable si toutes les écritures ne font "
+"pas partie du même plan d compte !"
 
 #. module: account
 #: view:account.tax:0
@@ -4065,11 +4068,11 @@ msgid ""
 "the system on document validation (invoices, bank statements...) and will be "
 "created in 'Posted' state."
 msgstr ""
-"Toutes les nouvelles écritures manuelles sont généralement à l'état «non "
-"comptabilisé», mais on peut définir l'option de sauter cet état sur le "
-"journal associé. Dans ce cas, elles seront traitées comme des écritures "
-"créées automatiquement par le système lors de la validation des documents "
-"(factures, relevés bancaires ...) et elles seront créées à l'état "
+"Toutes les nouvelles pièces comptables manuelles sont généralement à l'état "
+"«non comptabilisé», mais on peut définir l'option de sauter cet état sur le "
+"journal associé. Dans ce cas, elles seront traitées comme des pièce "
+"comptables créées automatiquement par le système lors de la validation des "
+"documents (factures, relevés bancaires ...) et elles seront créées à l'état "
 "«comptabilisé»."
 
 #. module: account
@@ -4363,7 +4366,7 @@ msgstr "Tenir compte des écritures rapprochées"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Comptabiliser les écritures dans le journal"
+msgstr "Comptabiliser les pièces comptables dans le journal"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -4616,7 +4619,7 @@ msgstr "Application de la Taxe"
 #: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
 #, python-format
 msgid "Journal Items"
-msgstr "Lignes d'écriture"
+msgstr "Écritures comptables"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -4816,7 +4819,7 @@ msgstr "Code du calcul de renversement"
 #. module: account
 #: field:account.subscription.line,move_id:0
 msgid "Entry"
-msgstr "Écriture"
+msgstr "Pièce comptable"
 
 #. module: account
 #: field:account.tax,python_compute_inv:0
@@ -4882,7 +4885,7 @@ msgstr "Mois"
 #: code:addons/account/account_bank_statement.py:293
 #, python-format
 msgid "Journal Item \"%s\" is not valid"
-msgstr "La ligne d'écriture \"%s\" n'est pas correcte"
+msgstr "L'écriture comptable \"%s\" n'est pas correcte"
 
 #. module: account
 #: view:account.payment.term:0
@@ -4989,8 +4992,8 @@ msgid ""
 "The Journal Entry of the invoice have been totally reconciled with one or "
 "several Journal Entries of payment."
 msgstr ""
-"L'écriture de la facture a été totalement rapprochée avec une ou plusieurs "
-"écritures de règlement."
+"La pièce comptable de la facture a été totalement rapprochée avec une ou "
+"plusieurs pièce comptables de paiement."
 
 #. module: account
 #: field:account.tax,child_depend:0
@@ -5399,7 +5402,7 @@ msgstr "Rapprochement automatique"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Journal Item"
-msgstr "Ligne d'écriture"
+msgstr "Écriture comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_journal
@@ -6540,7 +6543,7 @@ msgstr "À vérifier"
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr "Écritures comptables"
+msgstr "Pièces comptables"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -6651,8 +6654,8 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
-"Cochez cette case si vous n'êtes pas sûr de cette écriture du journal et "
-"pour indiquer que cela devra être visé par un expert-comptable"
+"Cochez cette case si vous n'êtes pas sûr de cette pièce comptable et pour "
+"indiquer que cela devra être visé par un expert-comptable"
 
 #. module: account
 #: help:account.installer.modules,account_voucher:0
@@ -6926,7 +6929,7 @@ msgstr "Modèle de compte de taxe"
 #. module: account
 #: view:account.journal.select:0
 msgid "Are you sure you want to open Journal Entries?"
-msgstr "Voulez-vous vraiment ouvrir les écritures du journal ?"
+msgstr "Voulez-vous vraiment ouvrir les pièces comptables ?"
 
 #. module: account
 #: view:account.state.open:0
@@ -7419,7 +7422,7 @@ msgstr "Code de la case"
 #. module: account
 #: view:validate.account.move:0
 msgid "Post Journal Entries of a Journal"
-msgstr "Comptabiliser les écritures d'un journal"
+msgstr "Comptabiliser les pièces comptables d'un journal"
 
 #. module: account
 #: view:product.product:0
@@ -8188,7 +8191,7 @@ msgstr "Imprimer le relevé de taxe"
 #. module: account
 #: view:account.model.line:0
 msgid "Journal Entry Model Line"
-msgstr "Modèle de ligne d'écriture"
+msgstr "Modèle de pièce comptable"
 
 #. module: account
 #: view:account.invoice:0
@@ -8229,8 +8232,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
-"Le montant restant sur une écriture de charge ou de dépense est exprimée "
-"dans la monnaie de la société."
+"Le montant restant sur une pièce comptable de charge ou de dépense est "
+"exprimée dans la monnaie de la société."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -9329,7 +9332,7 @@ msgstr "Journaux généraux"
 #. module: account
 #: view:account.model:0
 msgid "Journal Entry Model"
-msgstr "Modèle d'écriture comptable"
+msgstr "Modèle de pièce comptable"
 
 #. module: account
 #: code:addons/account/wizard/account_use_model.py:44
@@ -9469,9 +9472,9 @@ msgid ""
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
 msgstr ""
-"Le processus de validation des écritures d'un journal est aussi appelé "
-"\"livre annonce\" et est le processus de transfert des montants en débit et "
-"en crédit d'un journal d'entrée initial vers un grand livre."
+"Le processus de validation des pièces comptables est aussi appelé \"livre "
+"annonce\" et est le processus de transfert des montants en débit et en "
+"crédit d'un journal d'entrée initial vers un grand livre."
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -10072,7 +10075,7 @@ msgstr "Le compte de revenu ou de dépense associé au produit sélectionné."
 #: code:addons/account/account_move_line.py:1117
 #, python-format
 msgid "The date of your Journal Entry is not in the defined period!"
-msgstr "La date de l'écriture n'est pas dans la période définie."
+msgstr "La date de la pièce comptable n'est pas dans la période définie."
 
 #. module: account
 #: field:account.subscription,period_total:0
@@ -10240,7 +10243,7 @@ msgstr "Future"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "Rechercher des écritures"
+msgstr "Rechercher des écritures comptables"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -10308,8 +10311,9 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
-"Le montant restant sur une écriture de charge ou de dépense est exprimée "
-"dans la devise du journal (si elle est différente de la devise de la société)"
+"Le montant restant sur une pièce comptable de charge ou de dépense est "
+"exprimée dans la devise du journal (si elle est différente de la devise de "
+"la société)"
 
 #~ msgid "Keep empty to use the period of the validation date."
 #~ msgstr "Laissez vide pour utiliser la période de la date de validation"
