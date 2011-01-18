@@ -56,7 +56,7 @@ class share_create(osv.osv_memory):
         'domain': fields.char('Domain', size=256, help="Optional domain for further data filtering"),
         'user_type': fields.selection([('existing','Existing external users'),('new','New users (emails required)')],'Users to share with',
                 help="Select the type of user(s) you would like to share data with."),
-        'user_ids': fields.one2many('share.wizard.user', 'share_wizard_id', 'Users'),
+        'user_ids': fields.many2many('res.users', 'share_wizard_res_user_rel', 'share_id', 'user_id', 'Existing users', domain=[('share', '=', True)]),
         'new_users': fields.text("New users"),
         'access_mode': fields.selection([('readwrite','Read & Write'),('readonly','Read-only')],'Access Mode'),
         'result_line_ids': fields.one2many('share.wizard.result.line', 'share_wizard_id', 'Summary', readonly=True),
@@ -339,12 +339,12 @@ class share_create(osv.osv_memory):
             # existing users
             for user in wizard_data.user_ids:
                 share_url = share_root_url % \
-                        {'login': user.user_id.login,
+                        {'login': user.login,
                          'password': '',
                          'dbname': cr.dbname} if format_url else share_root_url
                 result_obj.create(cr, uid, {
                         'share_wizard_id': wizard_data.id,
-                        'login': user.user_id.login,
+                        'login': user.login,
                         'password': existing_passwd_str,
                         'share_url': share_url,
                         'newly_created': False,
@@ -363,7 +363,7 @@ class share_create(osv.osv_memory):
         if wizard_data.user_type == 'new':
             user_ids = self._create_new_share_users(cr, uid, wizard_data, group_id, context=context)
         else:
-            user_ids = [x.user_id.id for x in wizard_data.user_ids]
+            user_ids = [x.id for x in wizard_data.user_ids]
             # reset home action to regular menu as user needs access to multiple items
             user_obj.write(cr, 1, user_ids, {
                                    'groups_id': [(4,group_id)],
@@ -470,15 +470,6 @@ class share_create(osv.osv_memory):
                     self.__logger.warning('Failed to send sharing email from %s to %s', user.user_email, email_to)
         return {'type': 'ir.actions.act_window_close'}
 share_create()
-
-class share_user_ref(osv.osv_memory):
-    _name = 'share.wizard.user'
-    _rec_name = 'user_id'
-    _columns = {
-        'user_id': fields.many2one('res.users', 'Users', required=True, domain=[('share', '=', True)]),
-        'share_wizard_id': fields.many2one('share.wizard', 'Share Wizard', required=True), 
-    }
-share_user_ref()
 
 class share_result_line(osv.osv_memory):
     _name = 'share.wizard.result.line'
