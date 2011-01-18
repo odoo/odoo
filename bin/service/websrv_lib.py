@@ -182,11 +182,12 @@ class FixSendError:
         self.send_header('Connection', 'close')
         self.send_header('Content-Length', len(content) or 0)
         self.end_headers()
-        if hasattr(self, '_flush'):
-            self._flush()
         
         if self.command != 'HEAD' and code >= 200 and code not in (204, 304):
             self.wfile.write(content)
+
+        if hasattr(self, '_flush'):
+            self._flush()
 
 class HttpOptions:
     _HTTP_OPTIONS = {'Allow': ['OPTIONS' ] }
