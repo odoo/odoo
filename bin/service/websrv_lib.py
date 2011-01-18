@@ -481,6 +481,10 @@ class SecureMultiHTTPHandler(MultiHTTPHandler):
         except Exception:
             pass
 
+    def handle_one_request(self):
+        MultiHTTPHandler.handle_one_request(self)
+        self.wfile.flush()
+
 import threading
 class ConnThreadingMixIn:
     """Mix-in class to handle each _connection_ in a new thread.
