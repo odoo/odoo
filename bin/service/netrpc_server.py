@@ -108,8 +108,6 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
         self.__interface = interface
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        # disables Nagle algorithm (avoids 200ms default delay on Windows)
-        self.socket.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         self.socket.bind((self.__interface, self.__port))
         self.socket.listen(5)
         self.threads = []

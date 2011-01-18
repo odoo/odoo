@@ -61,7 +61,15 @@ class mysocket:
         
     def mysend(self, msg, exception=False, traceback=None):
         msg = cPickle.dumps([msg,traceback])
-        self.sock.sendall('%8d%s%s' % (len(msg), exception and "1" or "0", msg))
+        size = len(msg)
+        self.sock.send('%8d' % size)
+        self.sock.send(exception and "1" or "0")
+        totalsent = 0
+        while totalsent < size:
+            sent = self.sock.send(msg[totalsent:])
+            if sent == 0:
+                raise RuntimeError, "socket connection broken"
+            totalsent = totalsent + sent
             
     def myreceive(self):
         buf=''
