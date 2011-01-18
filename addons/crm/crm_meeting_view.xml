@@ -44,7 +44,7 @@
                     <field name="alarm_id" string="Reminder"
                         widget="selection" />
                     <group colspan="2" col="4" >
-                           <field name="recurrency"/>
+                           <field name="recurrency" attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
                            <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
                                 on_change="onchange_edit_all(rrule_type,edit_all)"/>
                     </group>
@@ -165,7 +165,7 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Recurrency Option" attrs="{'invisible':[('recurrency','=',False)]}">
+                    <page string="Recurrency Option" attrs="{'invisible': [('recurrency','=',False)], 'readonly': [('recurrent_uid','!=',False)]}">
                         <group col="4" colspan="4" name="rrule">
                             <group col="4" colspan="4">
                                 <field name="rrule_type" string="Recurrency period"
