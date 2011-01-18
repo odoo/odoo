@@ -42,6 +42,20 @@ def _get_fields_type(self, cr, uid, context=None):
             field_types.remove(types)
     return field_types
 
+def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
+    #pseudo-method used by fields.function in ir.model/ir.model.fields
+    module_pool = self.pool.get("ir.module.module")
+    installed_module_ids = module_pool.search(cr, uid, [('state','=','installed')])
+    installed_module_names = module_pool.read(cr, uid, installed_module_ids, ['name'], context=context)
+    installed_modules = set(x['name'] for x in installed_module_names)
+
+    result = {}
+    xml_ids = osv.osv._get_xml_ids(self, cr, uid, ids)
+    for k,v in xml_ids.iteritems():
+        result[k] = ', '.join(sorted(installed_modules & set(xml_id.split('.')[0] for xml_id in v)))
+    return result
+
+
 class ir_model(osv.osv):
     _name = 'ir.model'
     _description = "Objects"
@@ -65,6 +79,12 @@ class ir_model(osv.osv):
         is_osv_mem = self._is_osv_memory(cr, uid, all_model_ids, 'osv_memory', arg=None, context=context)
         return [('id', 'in', [id for id in is_osv_mem if bool(is_osv_mem[id]) == value])]
 
+    def _view_ids(self, cr, uid, ids, field_name, arg, context=None):
+        models = self.browse(cr, uid, ids)
+        res = {}
+        for model in models:
+            res[model.id] = self.pool.get("ir.ui.view").search(cr, uid, [('model', '=', model.model)])
+        return res
 
     _columns = {
         'name': fields.char('Object Name', size=64, translate=True, required=True),
@@ -75,7 +95,9 @@ class ir_model(osv.osv):
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
         'osv_memory': fields.function(_is_osv_memory, method=True, string='In-memory model', type='boolean',
             fnct_search=_search_osv_memory,
-            help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)")
+            help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)"),
+        'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the object is defined or inherited'),
+        'view_ids': fields.function(_view_ids, method=True, type='one2many', obj='ir.ui.view', string='Views'),
     }
     
     _defaults = {
@@ -152,6 +174,7 @@ ir_model()
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
     _description = "Fields"
+
     _columns = {
         'name': fields.char('Name', required=True, size=64, select=1),
         'model': fields.char('Object Name', size=64, required=True, select=1,
@@ -180,6 +203,7 @@ class ir_model_fields(osv.osv):
         'groups': fields.many2many('res.groups', 'ir_model_fields_group_rel', 'field_id', 'group_id', 'Groups'),
         'view_load': fields.boolean('View Auto-Load'),
         'selectable': fields.boolean('Selectable'),
+        'modules': fields.function(_in_modules, method=True, type='char', size=128, string='In modules', help='List of modules in which the field is defined'),
     }
     _rec_name='field_description'
     _defaults = {

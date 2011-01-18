@@ -4190,7 +4190,7 @@ class orm(orm_template):
                     return False
         return True
 
-    def get_xml_ids(self, cr, uid, ids, *args, **kwargs):
+    def _get_xml_ids(self, cr, uid, ids, *args, **kwargs):
         """Find out the XML ID(s) of any database record.
 
         **Synopsis**: ``_get_xml_ids(cr, uid, ids) -> { 'id': ['module.xml_id'] }``
@@ -4224,7 +4224,7 @@ class orm(orm_template):
                  defaulting to an empty string when there's none
                  (to be usable as a function field).
         """
-        results = self.get_xml_ids(cr, uid, ids)
+        results = self._get_xml_ids(cr, uid, ids)
         for k, v in results.items():
             if results[k]:
                 results[k] = v[0]
