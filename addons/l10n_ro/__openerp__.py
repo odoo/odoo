@@ -30,7 +30,8 @@
     "demo_xml" : [],
     "update_xml" : ['partner_view.xml','account_tax_code.xml','account_chart.xml','account_tax.xml','l10n_chart_ro_wizard.xml'],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "001308250150602948125",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

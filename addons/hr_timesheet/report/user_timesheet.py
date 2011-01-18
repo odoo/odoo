@@ -110,7 +110,7 @@ class report_custom(report_rml):
         <employee>%s</employee>
         %s
         </report>
-        ''' % (header_xml, ustr(empl_name), '\n'.join(date_xml) + '\n'.join(account_xml))
+        ''' % (header_xml, ustr(toxml(empl_name)), '\n'.join(date_xml) + '\n'.join(account_xml))
         return xml
 
 report_custom('report.hr.analytical.timesheet', 'hr.employee', '', 'addons/hr_timesheet/report/user_timesheet.xsl')

@@ -33,6 +33,7 @@
     "update_xml":["security/ir.model.access.csv","sale_margin_view.xml","report/report_margin_view.xml"],
     "active": False,
     "installable": True,
+    "certificate" : "001165700015525701661",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

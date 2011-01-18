@@ -77,7 +77,7 @@ def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, 
     %s
     <employee row="%d" id="%d" name="%s" sum="%s">
     </employee>
-    ''' % (data_xml,row_id,dept, toxml(name),count)
+    ''' % (data_xml,row_id,dept, ustr(toxml(name)),count)
 
     return xml
 

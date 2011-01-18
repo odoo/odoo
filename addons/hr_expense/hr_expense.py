@@ -155,7 +155,9 @@ class hr_expense_expense(osv.osv):
                     'account_analytic_id': l.analytic_account.id,
                 }))
             if not exp.employee_id.address_home_id:
-                raise osv.except_osv(_('Error !'), _('The employee must have a Home address'))
+                raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
+            if not exp.employee_id.address_home_id.partner_id:
+                raise osv.except_osv(_('Error !'), _("The employee's home address must have a partner linked."))
             acc = exp.employee_id.address_home_id.partner_id.property_account_payable.id
             payment_term_id = exp.employee_id.address_home_id.partner_id.property_payment_term.id
             inv = {
@@ -240,24 +242,12 @@ class hr_expense_line(osv.osv):
     _order = "sequence, date_value desc"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
-        if context is None:
-            ctx = {}
-        else:
-            # we only want to update it locally
-            ctx = context.copy()
-
         res = {}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
-            # Compute based on pricetype of employee company
-            employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
-            if employee.user_id:
-                ctx['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
-                amount_unit = product.price_get('standard_price', ctx)[product.id]
-                res['unit_amount'] = amount_unit
-            else:
-                res['unit_amount'] = product.standard_price
+            amount_unit = product.price_get('standard_price', context=context)[product.id]
+            res['unit_amount'] = amount_unit
             if not uom_id:
                 res['uom_id'] = product.uom_id.id
         return {'value': res}

@@ -36,7 +36,7 @@ class account_move_journal(osv.osv_memory):
     }
 
     _defaults = {
-        'target_move': 'posted'
+        'target_move': 'all'
     }
     def _get_period(self, cr, uid, context={}):
         """

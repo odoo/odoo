@@ -1099,11 +1099,6 @@ class pos_order_line(osv.osv):
             return {'value': {'discount': disc, 'price_unit': price_f}}
         return {}
 
-    def onchange_dis(self, cr, uid, ids,  qty, price_subtotal_incl, discount, *a):
-        price_sub = price_subtotal_incl
-        sub_total_discount = price_sub - (price_subtotal_incl*(discount*0.01))
-        return {'value': {'price_subtotal_incl': sub_total_discount}}
-
     def onchange_ded(self, cr, uid, ids, val_ded, price_u, *a):
         res_obj = self.pool.get('res.users')
         comp = res_obj.browse(cr, uid, uid).company_id.company_discount or 0.0
