@@ -403,7 +403,7 @@ class sale_order(osv.osv):
             'name': order.client_order_ref or '',
             'origin': order.name,
             'type': 'out_invoice',
-            'reference': "P%dSO%d" % (order.partner_id.id, order.id),
+            'reference': order.client_order_ref or order.name,
             'account_id': a,
             'partner_id': order.partner_id.id,
             'journal_id': journal_ids[0],
@@ -705,7 +705,6 @@ class sale_order(osv.osv):
                         #'state': 'waiting',
                         'note': line.notes,
                         'company_id': order.company_id.id,
-                        'returned_price': line.price_unit,
                     })
 
                 if line.product_id:
@@ -739,11 +738,12 @@ class sale_order(osv.osv):
                                             proc_obj.write(cr, uid, [proc_id], {'product_qty': mov.product_qty, 'product_uos_qty': mov.product_uos_qty})
 
             val = {}
-            for proc_id in proc_ids:
-                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
             if picking_id:
                 wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
+
+            for proc_id in proc_ids:
+                wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_confirm', cr)
 
             if order.state == 'shipping_except':
                 val['state'] = 'progress'

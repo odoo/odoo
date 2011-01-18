@@ -299,8 +299,11 @@ class pos_order(osv.osv):
         @param name: Names of fields.
         @return: pricelist ID
         """
-        pricelist = self.pool.get('product.pricelist').search(cr, uid, [('name', '=', 'Public Pricelist')], context=context)
-        return pricelist and pricelist[0] or False
+        res = self.pool.get('sale.shop').search(cr, uid, [], context=context)
+        if res:
+            shop = self.pool.get('sale.shop').browse(cr, uid, res[0], context=context)
+            return shop.pricelist_id and shop.pricelist_id.id or False
+        return False
 
     def _journal_default(self, cr, uid, context=None):
         """ To get default pricelist for the order

@@ -251,9 +251,13 @@ class hr_expense_line(osv.osv):
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
             # Compute based on pricetype of employee company
-            ctx['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
-            amount_unit = product.price_get('standard_price', ctx)[product.id]
-            res['unit_amount'] = amount_unit
+            employee = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context)
+            if employee.user_id:
+                ctx['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
+                amount_unit = product.price_get('standard_price', ctx)[product.id]
+                res['unit_amount'] = amount_unit
+            else:
+                res['unit_amount'] = product.standard_price
             if not uom_id:
                 res['uom_id'] = product.uom_id.id
         return {'value': res}

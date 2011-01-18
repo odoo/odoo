@@ -148,7 +148,7 @@ class purchase_order(osv.osv):
     STATE_SELECTION = [
         ('draft', 'Request for Quotation'),
         ('wait', 'Waiting'),
-        ('confirmed', 'Waiting Supplier Ack'),
+        ('confirmed', 'Waiting Approval'),
         ('approved', 'Approved'),
         ('except_picking', 'Shipping Exception'),
         ('except_invoice', 'Invoice Exception'),
@@ -363,7 +363,7 @@ class purchase_order(osv.osv):
                     _('There is no purchase journal defined for this company: "%s" (id:%d)') % (o.company_id.name, o.company_id.id))
             inv = {
                 'name': o.partner_ref or o.name,
-                'reference': "P%dPO%d" % (o.partner_id.id, o.id),
+                'reference': o.partner_ref or o.name,
                 'account_id': a,
                 'type': 'in_invoice',
                 'partner_id': o.partner_id.id,
@@ -440,7 +440,7 @@ class purchase_order(osv.osv):
                 if order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     dest = order.location_id.id
                     move = self.pool.get('stock.move').create(cr, uid, {
-                        'name': 'PO:'+order_line.name,
+                        'name': order.name + ': ' +(order_line.name or ''),
                         'product_id': order_line.product_id.id,
                         'product_qty': order_line.product_qty,
                         'product_uos_qty': order_line.product_qty,
@@ -455,6 +455,7 @@ class purchase_order(osv.osv):
                         'state': 'draft',
                         'purchase_line_id': order_line.id,
                         'company_id': order.company_id.id,
+                        'price_unit': order_line.price_unit
                     })
                     if order_line.move_dest_id:
                         self.pool.get('stock.move').write(cr, uid, [order_line.move_dest_id.id], {'location_id':order.location_id.id})
@@ -815,5 +816,23 @@ class procurement_order(osv.osv):
         return res
 
 procurement_order()
+
+class stock_invoice_onshipping(osv.osv_memory):
+    _inherit = "stock.invoice.onshipping"
+
+    def create_invoice(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        res = super(stock_invoice_onshipping,self).create_invoice(cr, uid, ids, context=context)
+        purchase_obj = self.pool.get('purchase.order')
+        picking_obj = self.pool.get('stock.picking')
+        for pick_id in res:
+            pick = picking_obj.browse(cr, uid, pick_id, context=context)
+            if pick.purchase_id:
+                purchase_obj.write(cr, uid, [pick.purchase_id.id], {
+                    'invoice_ids': [(4, res[pick_id])]}, context=context)
+        return res
+
+stock_invoice_onshipping()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
