@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-29 10:19+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-12 16:20+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:35+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -36,6 +36,11 @@ msgstr ""
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
+msgstr "Επόμενη Ημερομηνία Ενέργειας"
+
+#. module: crm_claim
+#: field:crm.claim.report,probability:0
+msgid "Probability"
 msgstr ""
 
 #. module: crm_claim
@@ -51,7 +56,7 @@ msgstr "Καθηστέρηση για κλείσιμο"
 #. module: crm_claim
 #: field:crm.claim,resolution:0
 msgid "Resolution"
-msgstr ""
+msgstr "Λύση"
 
 #. module: crm_claim
 #: field:crm.claim,company_id:0
@@ -105,7 +110,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim Description"
-msgstr ""
+msgstr "Περιγραφή Αξίωσης"
 
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
@@ -365,7 +370,7 @@ msgstr "Κατηγορία"
 #. module: crm_claim
 #: model:crm.case.categ,name:crm_claim.categ_claim2
 msgid "Value Claims"
-msgstr ""
+msgstr "Αξιώσεις Αξίας"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -407,6 +412,11 @@ msgstr "Έκλεισε"
 #: selection:crm.claim.report,state:0
 msgid "Pending"
 msgstr "Εκκρεμεί"
+
+#. module: crm_claim
+#: view:crm.claim:0
+msgid "Communication & History"
+msgstr ""
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -545,7 +555,7 @@ msgstr "Συνημμένα"
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_case_stage
 msgid "Stage of case"
-msgstr ""
+msgstr "Στάδιο της υπόθεσης"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -608,11 +618,6 @@ msgstr "Λεπτομέρειες"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Cases By Stage and Estimates"
-msgstr "Θέματα ανά Στάδιο και Εκτιμήσεις"
-
-#. module: crm_claim
-#: view:crm.claim:0
 msgid "Reply"
 msgstr "Απάντηση"
 
@@ -668,9 +673,14 @@ msgid ""
 msgstr ""
 
 #. module: crm_claim
+#: field:crm.claim.report,email:0
+msgid "# Emails"
+msgstr ""
+
+#. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
-msgstr ""
+msgstr "Παρακολούθηση"
 
 #. module: crm_claim
 #: help:crm.claim,state:0
@@ -797,6 +807,9 @@ msgstr "Έτος"
 
 #~ msgid "Date of Claim"
 #~ msgstr "Ημερ/νία Αξίωσης"
+
+#~ msgid "Cases By Stage and Estimates"
+#~ msgstr "Θέματα ανά Στάδιο και Εκτιμήσεις"
 
 #~ msgid "Probability (%)"
 #~ msgstr "Πιθανότητα (%)"

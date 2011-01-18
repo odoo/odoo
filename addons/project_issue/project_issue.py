@@ -410,13 +410,16 @@ class project_issue(crm.crm_case, osv.osv):
 
         return res
 
-    def message_update(self, cr, uid, ids, vals={}, msg="", default_act='pending', context=None):
+    def message_update(self, cr, uid, ids, vals=None, msg="", default_act='pending', context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of update mail’s IDs
         """
+
+        if vals is None:
+            vals = {}
 
         if isinstance(ids, (str, int, long)):
             ids = [ids]
@@ -432,6 +435,12 @@ class project_issue(crm.crm_case, osv.osv):
             'revenue': 'planned_revenue',
             'probability': 'probability'
         }
+
+        # Reassign the 'open' state to the case if this one is in pending or done
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.state in ('pending', 'done'):
+                record.write({'state' : 'open'})
+
         vls = { }
         for line in msg['body'].split('\n'):
             line = line.strip()

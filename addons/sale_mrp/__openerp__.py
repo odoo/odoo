@@ -43,6 +43,6 @@
     'test':['test/sale_mrp.yml'],
     'installable': True,
     'active': False,
-    'certificate': '',
+    'certificate': '00395598976683092013',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

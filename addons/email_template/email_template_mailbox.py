@@ -82,21 +82,30 @@ class email_template_mailbox(osv.osv):
                 else :
                     body = values.get('body_text')
                     subtype = "plain"
-                    
+                
+                bcc = cc = False
+                if (values.get('email_bcc') or False):
+                    bcc = values.get('email_bcc') or u''
+                    bcc = bcc.split(',')
+                if (values.get('email_cc') or False):
+                    cc = values.get('email_cc') or u''
+                    cc = cc.split(',')
+                to = values.get('email_to')
+                to = to.split(',')
+                
                 result = tools.email_send(
                     values.get('email_from') or u'',
-                    [values.get('email_to')],
+                    to,
                     values['subject'] or u'', 
                     body or u'',
                     reply_to=values.get('reply_to') or u'',
-                    email_bcc=values.get('email_bcc') or u'',
-                    email_cc=values.get('email_cc') or u'',
+                    email_bcc = bcc,
+                    email_cc = cc,
                     subtype=subtype,
                     attach=attach_to_send,
                     openobject_id=values['message_id']
                 )
                 
-
                 if result == True:
                     account = account_obj.browse(cr, uid, values['account_id'][0], context=context)
                     if account.auto_delete:

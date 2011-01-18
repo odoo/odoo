@@ -1,13 +1,13 @@
 -
   In order to test the manufacturing order working with procurements I will use
-  some products with different supply method and procurement method, also check 
+  some products with different supply method and procurement method, also check
   the bills of material for the products.
 -
   I am creating one manufacturing order.
-- 
+-
   !record {model: mrp.production, id: mrp_production_mo1}:
     company_id: base.main_company
-    date_planned: '2010-05-06 14:55:52'
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
     product_id: product.product_product_pc1
@@ -24,10 +24,10 @@
       })
 -
   I confirm the order.
-- 
+-
   !workflow {model: mrp.production, action: button_confirm, ref: mrp_production_mo1}
 -
-  I am checking Procurement orders for components of PC1. 
+  I am checking Procurement orders for components of PC1.
 -
   !python {model: procurement.order}: |
     from tools.translate import _

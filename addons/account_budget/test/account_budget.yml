@@ -5,9 +5,9 @@
 -
   !record {model: crossovered.budget, id: crossovered_budget_budget0}:
     code: B2011
-    date_from: '2011-01-01'
-    date_to: '2011-12-31'
-    name: Budget 2011
+    date_from: !eval "'%s-01-01' %(datetime.now().year+1)"
+    date_to: !eval "'%s-12-31' %(datetime.now().year+1)"
+    name: !eval "'Budget %s' %(datetime.now().year+1)"
     state: draft
 -
   I created two different budget lines
@@ -17,13 +17,13 @@
   !record {model: crossovered.budget, id: crossovered_budget_budget0}:
     crossovered_budget_line:
       - analytic_account_id: account.analytic_consultancy
-        date_from: '2011-01-01'
-        date_to: '2011-12-31'
+        date_from: !eval "'%s-01-01' %(datetime.now().year+1)"
+        date_to: !eval "'%s-12-31' %(datetime.now().year+1)"
         general_budget_id: account_budget.account_budget_post_purchase0
         planned_amount: 10000.0
       - analytic_account_id: account.analytic_super_product_trainings
-        date_from: '2011-09-01'
-        date_to: '2011-09-30'
+        date_from: !eval "'%s-09-01' %(datetime.now().year+1)"
+        date_to: !eval "'%s-09-30' %(datetime.now().year+1)"
         general_budget_id: account_budget.account_budget_post_sales0
         planned_amount: 400000.0
 

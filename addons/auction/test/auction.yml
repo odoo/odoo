@@ -122,10 +122,10 @@
     acc_expense: account.a_pay
     acc_income: account.a_recv
     account_analytic_id: account.analytic_root
-    auction1: '2010-08-01'
-    auction2: '2010-08-31'
-    expo1: '2010-08-01'
-    expo2: '2010-08-31'
+    auction1: !eval "'%s-08-01' %(datetime.now().year)"
+    auction2: !eval "'%s-08-31' %(datetime.now().year)"
+    expo1: !eval "'%s-08-01' %(datetime.now().year)"
+    expo2: !eval "'%s-08-31' %(datetime.now().year)"
     journal_id: account.expenses_journal
     journal_seller_id: account.sales_journal
     name: Antique furniture exhibition
@@ -137,7 +137,7 @@
   An object is being deposited for an auction,I create a seller's deposit record with deposit cost.  
 -
   !record {model: auction.deposit, id: auction_deposit_ad0}:
-    date_dep: '2010-08-01'
+    date_dep: !eval "'%s-08-01' %(datetime.now().year)"
     method: keep
     name: AD/006
     partner_id: res_partner_mrpinakin0
@@ -251,7 +251,7 @@
   !record {model: auction.lots.make.invoice.buyer, id: auction_lots_make_invoice_buyer_0}:
     amount: 3090.0
     buyer_id: res_partner_mrkjohnson0
-    number: 2010/003
+    number: !eval "'%s/003' %(datetime.now().year)"
     objects: 1
 -
   I click on the "Create Invoices" button.

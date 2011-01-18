@@ -46,8 +46,8 @@
     holiday_status_id: hr_holidays_status_sick0
     name: Sick Leaves for Phil Graves
     number_of_days_temp: 12.0
-    date_from: '2010-05-20 13:59:00'
-    date_to: '2010-05-22 13:59:00'
+    date_from: !eval "'%s-05-20 13:59:00' %(datetime.now().year)"
+    date_to: !eval "'%s-05-22 13:59:00' %(datetime.now().year)"
     type: add
 -
   I confirmed the allocation by clicking on "Confirm" button.
@@ -63,8 +63,8 @@
   I connect as "test_holiday_user1", and create a new leave request for employee "Phil Graves".
 -
   !record {model: hr.holidays, id: hr_holidays_iwanttoleaveforgotohospital0}:
-    date_from: '2010-05-20 11:48:00'
-    date_to: '2010-05-21 11:48:00'
+    date_from: !eval "'%s-05-20 11:48:00' %(datetime.now().year)"
+    date_to: !eval "'%s-05-21 11:48:00' %(datetime.now().year)"
     employee_id: 'hr_employee_philgraves0'
     holiday_status_id: 'hr_holidays_status_sick0'
     name: Appointment with Doctor

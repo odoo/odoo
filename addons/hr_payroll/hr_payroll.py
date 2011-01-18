@@ -661,8 +661,8 @@ class payment_category(osv.osv):
     _name = 'hr.allounce.deduction.categoty'
     _description = 'Allowance Deduction Heads'
     _columns = {
-        'name':fields.char('Categoty Name', size=64, required=True, readonly=False),
-        'code':fields.char('Categoty Code', size=64, required=True, readonly=False),
+        'name':fields.char('Category Name', size=64, required=True, readonly=False),
+        'code':fields.char('Category Code', size=64, required=True, readonly=False),
         'type':fields.selection([
             ('allowance','Allowance'),
             ('deduction','Deduction'),
@@ -721,7 +721,7 @@ class company_contribution(osv.osv):
             ('per','Percentage'),
             ('func','Function Calculation'),
         ],'Amount Type', select=True),
-        'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution, If Employee Contribute 5% then company will and here 0.50 defined then company will contribute 50% on employee 5% contribution'),
+        'contribute_per':fields.float('Contribution', digits=(16, 4), help='Define Company contribution ratio 1.00=100% contribution.'),
         'company_id':fields.many2one('res.company', 'Company', required=False),
         'active':fields.boolean('Active', required=False),
         'note': fields.text('Description'),
@@ -769,7 +769,7 @@ class company_contribution_line(osv.osv):
     """
 
     _name = 'company.contribution.line'
-    _description = 'Allowance Deduction Categoty'
+    _description = 'Allowance Deduction Category'
     _order = 'sequence'
     _columns = {
         'contribution_id':fields.many2one('company.contribution', 'Contribution', required=False),

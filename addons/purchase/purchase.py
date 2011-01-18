@@ -162,8 +162,8 @@ class purchase_order(osv.osv):
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64),
-        'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="Date on which this document has been created."),
-        'date_approve':fields.date('Date Approved', readonly=1, help="Date on which purchase order has been approved"),
+        'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
+        'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True,
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},domain="[('partner_id', '=', partner_id)]"),
@@ -191,7 +191,7 @@ class purchase_order(osv.osv):
                 "From Picking: a draft invoice will be pre-generated based on validated receptions.\n" \
                 "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
         ),
-        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Expected Date', type='date', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
+        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products."),
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
@@ -605,7 +605,7 @@ class purchase_order_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
-        'date_planned': fields.date('Scheduled Date', required=True),
+        'date_planned': fields.date('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
@@ -616,7 +616,7 @@ class purchase_order_line(osv.osv):
         'notes': fields.text('Notes'),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
-        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',store=True,string='Company'),
+        'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'state': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'), ('done', 'Done'), ('cancel', 'Cancelled')], 'State', required=True, readonly=True,
                                   help=' * The \'Draft\' state is set automatically when purchase order in draft state. \
                                        \n* The \'Confirmed\' state is set automatically as confirm when purchase order in confirm state. \
@@ -673,7 +673,7 @@ class purchase_order_line(osv.osv):
         seller_delay = 0
 
         prod_name = self.pool.get('product.product').name_get(cr, uid, [prod.id], context=context)[0][1]
-        res = {} 
+        res = {}
         for s in prod.seller_ids:
             if s.name.id == partner_id:
                 seller_delay = s.delay
