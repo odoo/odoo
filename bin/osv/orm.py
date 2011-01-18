@@ -203,6 +203,8 @@ class browse_record(object):
             # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
             field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+
+            # TODO: improve this, very slow for reports
             if self._fields_process:
                 lang = self._context.get('lang', 'en_US') or 'en_US'
                 lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid, [('code', '=', lang)])
