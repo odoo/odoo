@@ -39,5 +39,5 @@ based on geolocalization.
     ],
     'installable': True,
     'active': False,
-    'certificate': False,
+    'certificate': '00503409558942442061',
 }

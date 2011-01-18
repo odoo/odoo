@@ -342,9 +342,9 @@
                         <page string="Stock Moves">
                             <field colspan="2" name="move_ids" nolabel="1" widget="one2many_list">
                                 <tree  string="Stock Moves">
- 									<field name="picking_id" string="Reference"/>
-									<field name="origin"/>
-									<field name="partner_id"/>
+                                    <field name="picking_id" string="Reference"/>
+                                    <field name="origin"/>
+                                    <field name="partner_id"/>
                                     <field name="product_id"/>
                                     <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)"/>
                                     <field name="product_uom" string="UoM"/>
@@ -493,8 +493,6 @@
                         <field name="chained_auto_packing"/>
                         <field name="chained_delay"/>
                         <field name="chained_journal_id"/>
-                        <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
-                        <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
                         <field name="chained_picking_type"/>
                         <field name="chained_company_id" widget="selection"/>
                     </group>
@@ -503,6 +501,9 @@
                         <field name="posx"/>
                         <field name="posy"/>
                         <field name="posz"/>
+                        <separator string="Accounting Information" colspan="2" groups="base.group_extended"/>
+                        <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}" groups="base.group_extended"/>
+                        <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}" groups="base.group_extended"/>
                     </group>
                     <separator string="Additional Information" colspan="4"/>
                     <field colspan="4" name="comment" nolabel="1"/>
@@ -775,7 +776,7 @@
                                 <button name="action_assign" states="confirmed" string="Check Availability" type="object" icon="gtk-find"/>
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Process"  groups="stock.group_stock_user" type="object" icon="gtk-go-forward"/>
-                                <button states="done" name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl" />
+                                <button states="done" name="%(action_stock_invoice_onshipping)d"  string="Create Invoice"  attrs="{'invisible': ['|',('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl" />
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -902,7 +903,7 @@
                                     <field name="location_id"/>
                                     <field name="date"/>
                                     <field name="state"/>
-                                    <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
+                                    <button name="%(action_partial_move_server)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
                                     <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                                 </tree>
                                 <form string="Stock Moves">
@@ -969,7 +970,7 @@
                                 <button name="force_assign" states="confirmed" string="Force Availability" type="object" icon="gtk-jump-to"/>
                                 <button name="action_process" states="assigned" string="Process" type="object" icon="gtk-go-forward"/>
                                 <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
-                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" states="done" type="action" icon="terp-gtk-go-back-rtl"/>
+                                <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice" states="done"  attrs="{'invisible': ['|',('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" icon="terp-gtk-go-back-rtl"/>
                             </group>
                         </page>
                         <page string="Additional info" groups="base.group_extended,base.group_multi_company">
@@ -1191,7 +1192,7 @@
                                 <group colspan="1" states="done">
                                     <button name="%(act_stock_return_picking)d" string="Return Products" states="done" type="action" icon="gtk-execute"/>
                                 </group>
-                                    <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice" type="action" icon="terp-gtk-go-back-rtl"/>
+                                    <button name="%(action_stock_invoice_onshipping)d"  string="Create Invoice"  attrs="{'invisible': ['|',('invoice_state','=','invoiced'),('invoice_state','=','none')]}" type="action" icon="terp-gtk-go-back-rtl" />
                             </group>
                         </page>
                         <page string="Additional Info" groups="base.group_extended,base.group_multi_company">
@@ -1228,7 +1229,7 @@
                     <group expand="0" string="Extended Filters..." colspan="4" col="8">
                         <filter string="To invoice" name="to_invoice" icon="terp-dolar" domain="[('invoice_state', '=', '2binvoiced')]" />
                     </group>
-					<newline/>
+                    <newline/>
                     <group expand="0" string="Group By..." colspan="4" col="8">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <separator orientation="vertical" />
@@ -1512,7 +1513,7 @@
         ====================================
         Reception Picking (By Stock Move)
         ====================================
-			<!--  from stock_partial_move_view -->
+            <!--  from stock_partial_move_view -->
 
 
 
@@ -1552,7 +1553,7 @@
                     <field name="date"/>
                     <field name="state"/>
                     <button name="action_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                    <button name="%(action_partial_move)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
+                    <button name="%(action_partial_move_server)d" string="Partial" type="action" states="confirmed,assigned" icon="gtk-justify-fill"/>
                     <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
                 </tree>
             </field>
@@ -1641,7 +1642,7 @@
                         <button name="action_cancel" states="assigned,confirmed" string="_Cancel" type="object" icon="gtk-cancel"/>
                         <button name="action_confirm" states="draft" string="Process Later" type="object" icon="gtk-apply"/>
                         <button name="force_assign" states="confirmed" string="Set Available" type="object" icon="gtk-yes"/>
-                        <button name="%(action_partial_move)d" states="assigned" string="Partial" type="action" icon="gtk-justify-fill"/>
+                        <button name="%(action_partial_move_server)d" states="assigned" string="Partial" type="action" icon="gtk-justify-fill"/>
                         <button name="action_done" states="draft,assigned,confirmed" string="Process Now" type="object" icon="gtk-jump-to"/>
                     </group>
                 </form>
@@ -1780,6 +1781,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+
+        <menuitem action="action_incoterms_tree" id="menu_action_incoterm_open" parent="menu_warehouse_config" sequence="7"/>
 
         <act_window
             context="{'location': active_id}"

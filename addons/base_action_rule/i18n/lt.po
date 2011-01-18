@@ -1,0 +1,522 @@
+# Lithuanian translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-14 04:46+0000\n"
+"Last-Translator: Paulius Sladkevičius - http://www.inovera.lt <Unknown>\n"
+"Language-Team: Lithuanian <lt@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:55+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_mail_to_user:0
+msgid ""
+"Check this if you want the rule to send an email to the responsible person."
+msgstr ""
+"Pažymėkite, jeigu norite, kad taisyklė išsiųstu el. laišką atsakingam "
+"asmeniui."
+
+#. module: base_action_rule
+#: field:base.action.rule,act_remind_partner:0
+msgid "Remind Partner"
+msgstr "Priminti partneriui"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_partner_categ_id:0
+msgid "Partner Category"
+msgstr "Partnerio kategorija"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_mail_to_watchers:0
+msgid "Mail to Watchers (CC)"
+msgstr "Siųsti stebėtojams (Cc)"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_state_to:0
+msgid "Button Pressed"
+msgstr "Nuspaustas mygtukas"
+
+#. module: base_action_rule
+#: field:base.action.rule,model_id:0
+msgid "Object"
+msgstr "Objektas"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_mail_to_email:0
+msgid "Mail to these Emails"
+msgstr "Siųsti šiems el. pašto adresams"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_state:0
+msgid "Set State to"
+msgstr "Nustatyti būseną"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_from:0
+msgid "Email From"
+msgstr "El. laiškas nuo"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Email Body"
+msgstr "El. laiško tekstas"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Days"
+msgstr "Dienos"
+
+#. module: base_action_rule
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr "Paskutinis veiksmas"
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:313
+#, python-format
+msgid "Error!"
+msgstr "Klaida!"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_reply_to:0
+msgid "Reply-To"
+msgstr "Atsakyti (kam)"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_email_cc:0
+msgid ""
+"These people will receive a copy of the future communication between partner "
+"and users by email"
+msgstr ""
+"Šie žmonės gaus el. laiško kopiją būsimo bendravimo tarp partnerio ir "
+"naudotojų"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Minutes"
+msgstr "Minutės"
+
+#. module: base_action_rule
+#: field:base.action.rule,name:0
+msgid "Rule Name"
+msgstr "Taisyklės pavadinimas"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_remind_partner:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the partner."
+msgstr ""
+"Pažymėkite, jeigu norite, kad taisyklė išsiųstų priminimą partneriui el. "
+"paštu."
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on Model Partner"
+msgstr "Partnerio sąlygos"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Deadline"
+msgstr "Galutinis terminas"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_partner_id:0
+msgid "Partner"
+msgstr "Partneris"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_subject)s = Object subject"
+msgstr "%(case_subject)s = Įvykio tema"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Email Reminders"
+msgstr "El. pašto priminimai"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Special Keywords to Be Used in The Body"
+msgstr "Specialūs raktažodžiai naudojami tekste"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_state_from:0
+msgid "State"
+msgstr "Būsena"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Use automated actions to automatically trigger actions for various screens. "
+"Example: a lead created by a specific user may be automatically set to a "
+"specific sales team, or an opportunity which still has status pending after "
+"14 days might trigger an automatic reminder email."
+msgstr ""
+
+#. module: base_action_rule
+#: help:base.action.rule,act_mail_to_email:0
+msgid "Email-id of the persons whom mail is to be sent"
+msgstr ""
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+#: model:ir.module.module,shortdesc:base_action_rule.module_meta_information
+msgid "Action Rule"
+msgstr "Veiksmo taisyklė"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Fields to Change"
+msgstr "Laukų nustatymas"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Creation Date"
+msgstr "Sukūrimo data"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Last Action Date"
+msgstr "Paskutinė veiksmo data"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Hours"
+msgstr "Valandos"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_id)s = Object ID"
+msgstr "%(object_id)s = Objekto ID"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Delay After Trigger Date"
+msgstr "Atidėti po įvykio datos"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_remind_attach:0
+msgid "Remind with Attachment"
+msgstr "Priminti su priedais"
+
+#. module: base_action_rule
+#: constraint:ir.cron:0
+msgid "Invalid arguments"
+msgstr "Blogi argumentai"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_user_id:0
+msgid "Set Responsible to"
+msgstr "Nustatyti atsakingą asmenį"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "None"
+msgstr "Nieko"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_email_to:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'To' field of the header"
+msgstr ""
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_user_phone)s = Responsible phone"
+msgstr "%(case_user_phone)s = Atsakingo asmens telefonas"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid ""
+"The rule uses the AND operator. The model must match all non-empty fields so "
+"that the rule executes the action described in the 'Actions' tab."
+msgstr ""
+"Taisyklė naudoja IR operatoriu. Objekto modelis turi atitikti visus "
+"netuščius laukus, tada taisyklė įvykdo veiksmą nurodytą 'Veiksmai' kortelėje."
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_range_type:0
+msgid "Delay type"
+msgstr "Uždelsimo tipas"
+
+#. module: base_action_rule
+#: help:base.action.rule,regex_name:0
+msgid ""
+"Regular expression for matching name of the resource\n"
+"e.g.: 'urgent.*' will search for records having name starting with the "
+"string 'urgent'\n"
+"Note: This is case sensitive search."
+msgstr ""
+"reguliarusis reiškinys atitinkantis pavadinimą\n"
+"pvz.: 'svarb.*' ieškos visų įrašų, kurie turi pavadinimą prasidedanti "
+"'svarb'\n"
+"Pastaba: paieška jautri raidžių dydžiui"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_method:0
+msgid "Call Object Method"
+msgstr "Objekto iškvietimo metodas"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_to:0
+msgid "Email To"
+msgstr "El. laiškas kam"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_mail_to_watchers:0
+msgid ""
+"Check this if you want the rule to mark CC(mail to any other person defined "
+"in actions)."
+msgstr ""
+"Pažymėkite, jeigu norite, kad taisyklė naudotu Cc (siųstų kitiems "
+"nurodytiems asmenims)"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(partner)s = Partner name"
+msgstr "%(partner)s = Partnerio pavadinimas"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Note"
+msgstr "Pastabos"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_email_from:0
+msgid ""
+"Use a python expression to specify the right field on which one than we will "
+"use for the 'From' field of the header"
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_range:0
+msgid "Delay after trigger date"
+msgstr "Atidėti po datos"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions"
+msgstr "Sąlygos"
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_range:0
+msgid ""
+"Delay After Trigger Date,specifies you can put a negative number. If you "
+"need a delay before the trigger date, like sending a reminder 15 minutes "
+"before a meeting."
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule,active:0
+msgid "Active"
+msgstr "Aktyvus"
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:314
+#, python-format
+msgid "No E-Mail ID Found for your Company address!"
+msgstr "Jūsų kompanijos adrese nerastas el. pašto ID!"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_remind_user:0
+msgid "Remind Responsible"
+msgstr "Priminti atsakingam asmeniui"
+
+#. module: base_action_rule
+#: model:ir.module.module,description:base_action_rule.module_meta_information
+msgid "This module allows to implement action rules for any object."
+msgstr ""
+
+#. module: base_action_rule
+#: help:base.action.rule,sequence:0
+msgid "Gives the sequence order when displaying a list of rules."
+msgstr "Suteikia eilės tvarką, pagal kurį atvaizduojamas taisyklių sąrašas"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "Mėnesiai"
+
+#. module: base_action_rule
+#: field:base.action.rule,filter_id:0
+msgid "Filter"
+msgstr "Filtras"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Date"
+msgstr "Data"
+
+#. module: base_action_rule
+#: help:base.action.rule,server_action_id:0
+msgid ""
+"Describes the action name.\n"
+"eg:on which object which action to be taken on basis of which condition"
+msgstr "Apibūdina veiksmo pavadinimas."
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_ir_cron
+msgid "ir.cron"
+msgstr ""
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_description)s = Object description"
+msgstr "%(object_description)s = Object aprašymas"
+
+#. module: base_action_rule
+#: constraint:base.action.rule:0
+msgid "Error: The mail is not well formated"
+msgstr "Klaida: El. laiškas nėra gerai suformatuotas"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Email Actions"
+msgstr "El. pašto veiksmai"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Email Information"
+msgstr "El. pašto informacija"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule
+msgid "Action Rules"
+msgstr "Veiksmo taisyklės"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_mail_body:0
+msgid "Content of mail"
+msgstr "El. laiško turinys"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_user_id:0
+msgid "Responsible"
+msgstr "Atsakingas"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(partner_email)s = Partner Email"
+msgstr "%(partner_email)s = Partnerio el. paštas"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_date)s = Creation date"
+msgstr "%(object_date)s = Sukūrimo data"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_user_email)s = Responsible Email"
+msgstr "%(case_user_email)s = Atsakingo asmens el. paštas"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_mail_body:0
+msgid "Mail body"
+msgstr "El. laiško tekstas"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_remind_user:0
+msgid ""
+"Check this if you want the rule to send a reminder by email to the user."
+msgstr ""
+"Pažymėkite, jei jūs norite, kad taisyklė naudotojui nusiųstu priminimą "
+"elektroniniu paštu."
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Server Action to be Triggered"
+msgstr "Serverio veiksmas"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_mail_to_user:0
+msgid "Mail to Responsible"
+msgstr "Siųsti atsakingam asmeniui"
+
+#. module: base_action_rule
+#: field:base.action.rule,act_email_cc:0
+msgid "Add Watchers (Cc)"
+msgstr "Pridėti stebėtojus (Cc)"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on Model Fields"
+msgstr "Laukų sąlygos"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
+#: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
+msgid "Automated Actions"
+msgstr "Automatiniai veiksmai"
+
+#. module: base_action_rule
+#: field:base.action.rule,server_action_id:0
+msgid "Server Action"
+msgstr "Serverio veiksmai"
+
+#. module: base_action_rule
+#: field:base.action.rule,regex_name:0
+msgid "Regex on Resource Name"
+msgstr "Reguliarusis reiškinys pavadinimui"
+
+#. module: base_action_rule
+#: help:base.action.rule,act_remind_attach:0
+msgid ""
+"Check this if you want that all documents attached to the object be attached "
+"to the reminder email sent."
+msgstr ""
+"Pažymėkite, jei jūs norite, kad visi prie įvykio prisegti dokumentai, būtų "
+"prisegti prie priminimo el. laiško."
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on Timing"
+msgstr "Laiko sąlygos"
+
+#. module: base_action_rule
+#: field:base.action.rule,sequence:0
+msgid "Sequence"
+msgstr "Seka"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Actions"
+msgstr "Veiksmai"
+
+#. module: base_action_rule
+#: help:base.action.rule,active:0
+msgid ""
+"If the active field is set to False, it will allow you to hide the rule "
+"without removing it."
+msgstr ""
+"Jeigu šiam laukui yra panaikintas žymėjimas, tai leis jums išjungti šią "
+"taisyklę be jos ištrinimo."
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "%(object_user)s = Responsible name"
+msgstr "%(case_user)s = Atsakingo asmens vardas"
+
+#. module: base_action_rule
+#: field:base.action.rule,create_date:0
+msgid "Create Date"
+msgstr "Sukūrimo data"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on States"
+msgstr "Būsenų sąlygos"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_date_type:0
+msgid "Trigger Date"
+msgstr "Įvykio data"

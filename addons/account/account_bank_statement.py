@@ -405,6 +405,27 @@ account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
 
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        obj_partner = self.pool.get('res.partner')
+        if context is None:
+            context = {}
+        if not partner_id:
+            return {}
+        part = obj_partner.browse(cr, uid, partner_id, context=context)
+        if not part.supplier and not part.customer:
+            type = 'general'
+        elif part.supplier and part.customer:
+            type = 'general'
+        else:
+            if part.supplier == True:
+                type = 'supplier'
+            if part.customer == True:
+                type = 'customer'
+        res_type = self.onchange_type(cr, uid, ids, partner_id=partner_id, type=type, context=context)
+        if res_type['value'] and res_type['value'].get('account_id', False):
+            return {'value': {'type': type, 'account_id': res_type['value']['account_id']}}
+        return {'value': {'type': type}}
+
     def onchange_type(self, cr, uid, line_id, partner_id, type, context=None):
         res = {'value': {}}
         obj_partner = self.pool.get('res.partner')

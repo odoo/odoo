@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-28 08:41+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-12 18:01+0000\n"
+"Last-Translator: Carlos-smile <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:37+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:02+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -28,7 +27,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr "Volver a incluir la descripción de la tarea en la tarea del usuario."
 
 #. module: project
-#: code:addons/project/project.py:657
+#: code:addons/project/project.py:658
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr "La tarea '%s' ha sido delegada a %s."
@@ -115,10 +114,9 @@ msgstr ""
 "ha asignado la tarea."
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:86
-#, python-format
-msgid "Task '%s' Closed"
-msgstr "Tarea '%s' cerrada"
+#: help:project.project,priority:0
+msgid "Gives the sequence order when displaying the list of projects"
+msgstr ""
 
 #. module: project
 #: constraint:project.project:0
@@ -200,14 +198,6 @@ msgid "Warn Message"
 msgstr "Mensaje de aviso"
 
 #. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's member. Not used in any computation, just for information purpose."
-msgstr ""
-"Miembros del proyecto. No utilizado en ningún cálculo, sólo con el propósito "
-"de informar."
-
-#. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
 msgstr "Nombre etapa"
@@ -257,7 +247,7 @@ msgid "Day"
 msgstr "Día"
 
 #. module: project
-#: code:addons/project/project.py:570
+#: code:addons/project/project.py:571
 #, python-format
 msgid "The task '%s' is done"
 msgstr "La tarea '%s' está realizada"
@@ -338,12 +328,6 @@ msgid ""
 msgstr ""
 "Ayuda a generar facturas basado en el tiempo empleado en las tareas, si se "
 "ha activado en el proyecto."
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
-msgid "Parent Tasks"
-msgstr "Tareas padre"
 
 #. module: project
 #: view:project.project:0
@@ -458,7 +442,7 @@ msgid "Reactivate Project"
 msgstr "Reactivar proyecto"
 
 #. module: project
-#: code:addons/project/project.py:552
+#: code:addons/project/project.py:553
 #, python-format
 msgid "Task '%s' closed"
 msgstr "Tarea '%s' cerrada"
@@ -508,8 +492,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr "¡Error! No puede crear cuentas analíticas recursivas."
 
 #. module: project
-#: code:addons/project/project.py:224
-#: code:addons/project/project.py:245
+#: code:addons/project/project.py:225
+#: code:addons/project/project.py:246
 #, python-format
 msgid " (copy)"
 msgstr " (copia)"
@@ -651,7 +635,7 @@ msgid "Reevaluate"
 msgstr "Re-evaluar"
 
 #. module: project
-#: code:addons/project/project.py:530
+#: code:addons/project/project.py:531
 #, python-format
 msgid "Send Email after close task"
 msgstr "Enviar email después de cerrar la tarea"
@@ -694,9 +678,10 @@ msgid "Planned Time"
 msgstr "Tiempo estimado"
 
 #. module: project
-#: help:project.task.close,manager_warn:0
-msgid "Warn Manager by Email"
-msgstr "Avisar al responsable por email."
+#: code:addons/project/wizard/project_task_close.py:86
+#, python-format
+msgid "Task '%s' Closed"
+msgstr "Tarea '%s' cerrada"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -745,7 +730,7 @@ msgid "Starting Date"
 msgstr "Fecha de inicio"
 
 #. module: project
-#: code:addons/project/project.py:266
+#: code:addons/project/project.py:267
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -770,7 +755,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:621
+#: code:addons/project/project.py:622
 #, python-format
 msgid "The task '%s' is opened."
 msgstr "La tarea '%s' está abierta."
@@ -1013,9 +998,10 @@ msgid "Start Date"
 msgstr "Fecha de inicio"
 
 #. module: project
-#: help:project.project,priority:0
-msgid "Gives the sequence order when displaying a list of task"
-msgstr "Indica el orden de secuencia cuando se muestra una lista de tareas."
+#: view:project.task:0
+#: field:project.task,parent_ids:0
+msgid "Parent Tasks"
+msgstr "Tareas padre"
 
 #. module: project
 #: field:project.project,warn_customer:0
@@ -1181,6 +1167,7 @@ msgid "Project Dashboard"
 msgstr "Tablero de proyectos"
 
 #. module: project
+#: view:project.project:0
 #: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "Proyecto padre"
@@ -1211,7 +1198,7 @@ msgid "Customer Email"
 msgstr "Email cliente"
 
 #. module: project
-#: code:addons/project/project.py:189
+#: code:addons/project/project.py:190
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr "El proyecto '%s' ha sido cerrado."
@@ -1225,6 +1212,11 @@ msgstr "Edición de tarea"
 #: selection:report.project.task.user,month:0
 msgid "October"
 msgstr "Octubre"
+
+#. module: project
+#: help:project.task.close,manager_warn:0
+msgid "Warn Manager by Email"
+msgstr "Avisar al responsable por email."
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
@@ -1255,7 +1247,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "Cuando se completa una tarea, cambia al estado Realizada."
 
 #. module: project
-#: code:addons/project/project.py:211
+#: code:addons/project/project.py:212
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr "El proyecto '%s' ha sido abierto."
@@ -1276,6 +1268,8 @@ msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
+"¡Error! La divisa tiene que ser la misma que la establecida en la compañía "
+"seleccionada"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:79
@@ -1340,6 +1334,13 @@ msgid "Getting Things Done"
 msgstr "Conseguir las cosas terminadas (GTD)"
 
 #. module: project
+#: help:project.project,members:0
+msgid ""
+"Project's member. Not used in any computation, just for information purpose, "
+"but a user has to be member of a project to add a the to this project."
+msgstr ""
+
+#. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
 msgstr "Avisar al cliente por correo electrónico."
@@ -1398,7 +1399,7 @@ msgstr ""
 "tarea, etc"
 
 #. module: project
-#: code:addons/project/project.py:581
+#: code:addons/project/project.py:582
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "Tarea '%s' en progreso"
@@ -1791,7 +1792,7 @@ msgid "Spent Hours"
 msgstr "Horas consumidas"
 
 #. module: project
-#: code:addons/project/project.py:664
+#: code:addons/project/project.py:665
 #, python-format
 msgid "The task '%s' is pending."
 msgstr "La tarea '%s' está pendiente."
@@ -1869,7 +1870,7 @@ msgid "Validation State"
 msgstr "Estado de validación"
 
 #. module: project
-#: code:addons/project/project.py:601
+#: code:addons/project/project.py:602
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "Tarea '%s' cancelada"
@@ -1899,7 +1900,7 @@ msgid "Create Date"
 msgstr "Fecha creación"
 
 #. module: project
-#: code:addons/project/project.py:609
+#: code:addons/project/project.py:610
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr "La tarea '%s' está cancelada."
@@ -1913,11 +1914,6 @@ msgstr "_Enviar"
 #: field:project.task.work,name:0
 msgid "Work summary"
 msgstr "Resumen del trabajo"
-
-#. module: project
-#: view:project.project:0
-msgid "Scheduling"
-msgstr "Planificación"
 
 #. module: project
 #: view:project.installer:0
@@ -1993,6 +1989,12 @@ msgstr "Presupuestos"
 
 #~ msgid "User you want to delegate this task to."
 #~ msgstr "Usuario al que quiere delegar esta tarea."
+
+#~ msgid ""
+#~ "Project's member. Not used in any computation, just for information purpose."
+#~ msgstr ""
+#~ "Miembros del proyecto. No utilizado en ningún cálculo, sólo con el propósito "
+#~ "de informar."
 
 #~ msgid "Unassigned Tasks"
 #~ msgstr "Tareas no asignadas"
@@ -2372,8 +2374,14 @@ msgstr "Presupuestos"
 #~ msgstr ""
 #~ "Si el campo activo se desmarca, permite ocultar el proyecto sin eliminarlo."
 
+#~ msgid "Gives the sequence order when displaying a list of task"
+#~ msgstr "Indica el orden de secuencia cuando se muestra una lista de tareas."
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "¡Error! No puede crear menús recursivos."
+
+#~ msgid "Scheduling"
+#~ msgstr "Planificación"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "¡El tamaño del campo nunca puede ser menor que 1!"

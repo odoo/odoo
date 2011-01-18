@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-08-03 09:24+0000\n"
-"Last-Translator: mga (Open ERP) <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 08:32+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:17+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:38+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
 msgid "Time-laps during which task has to be treated"
-msgstr ""
+msgstr "Interwały, w których zadania będą grupowane"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_timebox
@@ -29,28 +29,28 @@ msgstr ""
 #. module: project_gtd
 #: view:project.task:0
 msgid "Reactivate"
-msgstr ""
+msgstr "Reaktywuj"
 
 #. module: project_gtd
 #: help:project.gtd.timebox,sequence:0
 msgid "Gives the sequence order when displaying a list of timebox."
-msgstr ""
+msgstr "Określa kolejność wyświetlania listy ramek czasowych"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_travel
 msgid "Travel"
-msgstr ""
+msgstr "Podróż"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
 msgid "Timebox Empty Process Completed Successfully."
-msgstr ""
+msgstr "Ramka pusta - Proces zakończony"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "No timebox child of this one !"
-msgstr ""
+msgstr "Ta ramka nie ma ramki podrzędnej !"
 
 #. module: project_gtd
 #: code:addons/project_gtd/project_gtd.py:112
@@ -61,17 +61,17 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
-msgstr ""
+msgstr "Długotrwałe"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_empty
 msgid "Project Timebox Empty"
-msgstr ""
+msgstr "Pusta ramka"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
-msgstr ""
+msgstr "Dzisiaj"
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
@@ -79,7 +79,7 @@ msgstr ""
 #: view:project.task:0
 #: field:project.task,timebox_id:0
 msgid "Timebox"
-msgstr ""
+msgstr "Ramka"
 
 #. module: project_gtd
 #: model:ir.module.module,shortdesc:project_gtd.module_meta_information
@@ -89,29 +89,29 @@ msgstr "GTD - personalny moduł zarządzania czasem"
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
-msgstr ""
+msgstr "Wstaw do ramki"
 
 #. module: project_gtd
 #: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Błąd !"
 
 #. module: project_gtd
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych zadań."
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "_Cancel"
-msgstr ""
+msgstr "_Anuluj"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
 #: view:project.timebox.empty:0
 msgid "Empty Timebox"
-msgstr ""
+msgstr "Opróżnij ramkę"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -120,41 +120,45 @@ msgid ""
 "defines a period of time in order to categorize your tasks: today, this "
 "week, this month, long term."
 msgstr ""
+"Ramki są zdefiniowane według metodologii \"Getting Things Done\" (Skuteczne "
+"wykonywanie zadań). Ramki czasowe definiują okresy do porządkowania czasu "
+"wykonania twoich zadań: Na dzisiaj, W tym tygodniu, W tym miesiącu, W tym "
+"półroczu itd."
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
-msgstr ""
+msgstr "W tym tygodniu"
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_monthly
 msgid "This Month"
-msgstr ""
+msgstr "W tym miesiącu"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
 msgid "Icon"
-msgstr ""
+msgstr "Ikona"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_timebox_fill_plan
 msgid "Project Timebox Fill"
-msgstr ""
+msgstr "Wypełnianie ramki"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Zadanie"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
 msgid "Add to Timebox"
-msgstr ""
+msgstr "Dodaj do ramki"
 
 #. module: project_gtd
 #: field:project.timebox.empty,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_context_tree
@@ -165,7 +169,7 @@ msgstr "Konteksty"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_car
 msgid "Car"
-msgstr ""
+msgstr "Samochód"
 
 #. module: project_gtd
 #: model:ir.module.module,description:project_gtd.module_meta_information
@@ -191,14 +195,14 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_fill
 #: view:project.timebox.fill.plan:0
 msgid "Plannify Timebox"
-msgstr ""
+msgstr "Planuj ramkę"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
 msgid "Timeboxes"
-msgstr ""
+msgstr "Ramki"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
@@ -211,7 +215,7 @@ msgstr "Kontekst"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Next"
-msgstr ""
+msgstr "Następne"
 
 #. module: project_gtd
 #: view:project.timebox.empty:0
@@ -227,7 +231,7 @@ msgstr "GTD - planowanie osobiste"
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
 msgid "Office"
-msgstr ""
+msgstr "Biuro"
 
 #. module: project_gtd
 #: field:project.gtd.context,sequence:0
@@ -238,12 +242,12 @@ msgstr "Numeracja"
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
 msgid "Gives the sequence order when displaying a list of contexts."
-msgstr ""
+msgstr "Określa kolejność wyświetlania kontekstów w listach."
 
 #. module: project_gtd
 #: view:project.gtd.timebox:0
 msgid "Timebox Definition"
-msgstr ""
+msgstr "Definicja ramki czasowej"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,task_ids:0
@@ -254,22 +258,22 @@ msgstr "Wybór zadań"
 #: code:addons/project_gtd/project_gtd.py:111
 #, python-format
 msgid "Inbox"
-msgstr ""
+msgstr "Skrzynka odbiorcza"
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_id:0
 msgid "Get from Timebox"
-msgstr ""
+msgstr "Pobierz z ramki"
 
 #. module: project_gtd
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
-msgstr ""
+msgstr "Kontekst wykonywania zadania"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
-msgstr ""
+msgstr "Dom"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
@@ -278,11 +282,15 @@ msgid ""
 "you to categorize your tasks according to the context in which they have to "
 "be done: at the office, at home, when I take my car, etc."
 msgstr ""
+"Kontekst jest zdefiniowany w metodologii \"Getting Things Done\" (Skuteczne "
+"wykonywanie zadań - planowanie osobiste). Kontekst pozwala porządkować "
+"zadania według miejsca lub otoczenia, w którym zadania powinny być "
+"wykonywane: W biurze, W domu, Kiedy mam samochód itp."
 
 #. module: project_gtd
 #: view:project.task:0
 msgid "Previous"
-msgstr ""
+msgstr "Poprzednie"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

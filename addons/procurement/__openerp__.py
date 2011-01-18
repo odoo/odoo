@@ -46,9 +46,8 @@
         'board_mrp_procurement_view.xml',
     ],
     'demo_xml': ['stock_orderpoint.xml'],
-    'test': ['test/test_procurement.yml'],
     'installable': True,
     'active': False,
-    'certificate': '',
+    'certificate': '00954248826881074509',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

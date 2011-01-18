@@ -117,7 +117,7 @@ class mrp_routing_workcenter(osv.osv):
              help="Routing indicates all the workcenters used, for how long and/or cycles." \
                 "If Routing is indicated then,the third tab of a production order (workcenters) will be automatically pre-completed."),
         'note': fields.text('Description'),
-        'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company'),
+        'company_id': fields.related('routing_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
     _defaults = {
         'cycle_nbr': lambda *a: 1.0,
@@ -342,11 +342,7 @@ class mrp_bom(osv.osv):
         if context is None:
             context = {}
         bom_data = self.read(cr, uid, id, [], context=context)
-        default.update({'name': bom_data['name'] + ' ' + _('Copy')})
-        if context.get('copy_from_product',False):
-            #Check for the BOM LINES(child BoM)
-            if not bom_data['bom_lines']:
-                return 0
+        default.update({'name': bom_data['name'] + ' ' + _('Copy'), 'bom_id':False})
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
 mrp_bom()
@@ -442,8 +438,8 @@ class mrp_production(osv.osv):
         'date_planned_end': fields.function(_production_date_end, method=True, type='date', string='Scheduled End Date'),
         'date_planned_date': fields.function(_production_date, method=True, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled date', required=True, select=1),
-        'date_start': fields.datetime('Start Date'),
-        'date_finished': fields.datetime('End Date'),
+        'date_start': fields.datetime('Start Date', select=True),
+        'date_finished': fields.datetime('End Date', select=True),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)]),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),

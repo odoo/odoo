@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-10 13:59+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 16:44+0000\n"
+"Last-Translator: mgaja <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-11 05:00+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:35+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:188
@@ -223,11 +223,6 @@ msgstr "Entrada de hojas de asistencia del empleado"
 #: field:timesheet.report,account_id:0
 msgid "Analytic Account"
 msgstr "Cuenta analítica"
-
-#. module: hr_timesheet_sheet
-#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
-msgid "Project Timesheet"
-msgstr "Hoja de servicios del proyecto"
 
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
@@ -443,6 +438,7 @@ msgstr "#Cantidad"
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_timesheet:0
 #: field:hr_timesheet_sheet.sheet,total_timesheet_day:0
+#: field:hr_timesheet_sheet.sheet.day,total_timesheet:0
 msgid "Total Timesheet"
 msgstr "Total hoja servicios"
 
@@ -543,6 +539,10 @@ msgid ""
 "your employees. You can group them by specific selection criteria thanks to "
 "the search tool."
 msgstr ""
+"Este informe realiza un análisis de las hojas de asistencia creadas por sus "
+"recursos humanos en el sistema. Le permite tener una visión completa de las "
+"entradas realizadas por sus empleados. Puede agruparlas por criterios "
+"específicos de selección gracias a la herramienta de búsqueda."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -667,6 +667,9 @@ msgid ""
 "on a project (i.e. an analytic account) thus generating costs in the "
 "analytic account concerned."
 msgstr ""
+"Consulte su hoja de asistencia durante un período determinado. También puede "
+"imputar el tiempo dedicado a un proyecto (p. ej. una cuenta analítica), "
+"generando por tanto costes en la cuenta analítica correspondiente."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -703,6 +706,8 @@ msgid ""
 "Allowed difference in hours between the sign in/out and the timesheet "
 "computation for one sheet. Set this to 0 if you do not want any control."
 msgstr ""
+"Diferencia permitida, en horas, entre el fichaje/salida y el cómputo de hoja "
+"de asistencia para una hoja. Póngalo a 0 si no desea ningún tipo de control."
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -722,7 +727,6 @@ msgstr "¡No puede modificar una entrada en una hoja de servicios confirmada!"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_hr_timesheet_current_open
 #: model:ir.actions.server,name:hr_timesheet_sheet.ir_actions_server_timsheet_sheet
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_hr_timesheet_sheet_form_my_current
-#: model:ir.ui.menu,name:hr_timesheet_sheet.menu_act_project_management_timesheet_sheet_form
 msgid "My Timesheet"
 msgstr "Mi hoja de asistencia"
 
@@ -861,6 +865,7 @@ msgstr "Registrar salida"
 #, python-format
 msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
 msgstr ""
+"¡No se pueden eliminar hojas con registros de asistencia codificados!"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
@@ -1043,6 +1048,9 @@ msgstr "Diario"
 
 #~ msgid "timesheet is confirmed at the end of the week / month"
 #~ msgstr "Hoja de servicios es confirmada al final de la semana / mes"
+
+#~ msgid "Project Timesheet"
+#~ msgstr "Hoja de servicios del proyecto"
 
 #~ msgid "Hr Timesheet Process"
 #~ msgstr "Proceso hoja de asistencia RH"

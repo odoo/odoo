@@ -6,8 +6,8 @@
 - 
   !record {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
     categ_id: crm.categ_meet2
-    date: '2010-04-21 16:04:00'
-    date_deadline: '2010-04-22 00:04:00'
+    date: !eval time.strftime('%Y-%m-%d 16:04:00')
+    date_deadline: !eval "'%s-%s-%s 00:04:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
     duration: 8.0
     email_from: info@balmerinc.be
     location: Ahmedabad
@@ -55,7 +55,9 @@
   I will search for one of the recurrent event and count the number of meeting.
 -
   !python {model: crm.meeting}: |
-     ids = self.search(cr, uid, [('date', '>=', '2010-04-21 00:00:00'), ('date', '<=', '2010-05-21 00:00:00')] )
+     import time
+     from datetime import datetime, date, timedelta
+     ids = self.search(cr, uid, [('date', '>=', time.strftime('%Y-%m-%d 00:00:00')), ('date', '<=', (datetime.now()+timedelta(31)).strftime('%Y-%m-%d 00:00:00')), ('name', '=', 'Regarding Presentation')] )
      assert len(ids) == 10      
 
 - |

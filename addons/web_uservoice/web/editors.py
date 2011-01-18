@@ -19,6 +19,7 @@
 #
 ##############################################################################
 import openobject.templating
+from tools.translate import _
 
 class BaseTemplateEditor(openobject.templating.TemplateEditor):
     templates = ['/openobject/controllers/templates/base.mako']
@@ -67,9 +68,10 @@ class HeaderTemplateEditor(openobject.templating.TemplateEditor):
         PAT = '<ul class="tools">'
 
         ul = output.index(PAT)
-        output = output[:ul] + """
-            <p class="logout feedback"><a href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;"><img src="/web_uservoice/static/images/uv_favicon.png" />feedback</a></p>
-        """ + output[ul:]
+        output = output[:ul] + ("""
+            <p class="logout feedback"><a href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;"><img src="/web_uservoice/static/images/uv_favicon.png" />%s</a></p>
+        """ % _('feedback')) + output[ul:]
+
 
         return output
 

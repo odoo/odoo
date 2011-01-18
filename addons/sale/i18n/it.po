@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-06 19:42+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-11 05:17+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-08 05:00+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:28+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -253,9 +253,11 @@ msgstr ""
 "I giorni aggiunti per sicurezza al tempo di consegna promesso al cliente"
 
 #. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Shipping Default Policy"
-msgstr "Politica di spedizione di default"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sales Manager Dashboard"
+msgstr "Dashboard Gestione Vendite"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -1558,13 +1560,6 @@ msgstr ""
 "uscita."
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Dashboard"
-msgstr "Dashboard vendite"
-
-#. module: sale
 #: code:addons/sale/sale.py:1165
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
@@ -2053,6 +2048,11 @@ msgstr "L'ordine di vendita '%s' è stato impostato nello stato bozza."
 #: selection:sale.order.line,type:0
 msgid "from stock"
 msgstr "da Stock"
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Politica di spedizione di default"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -2931,9 +2931,6 @@ msgstr "Fattura basata su Consegne"
 #~ "se si emette fattura sulla base degli ordini di consegna o se si fattura "
 #~ "l'ordine nel suo complesso."
 
-#~ msgid "Sales Manager Dashboard"
-#~ msgstr "Dashboard Gestione Vendite"
-
 #~ msgid "Sales by Customer"
 #~ msgstr "Vednite per cliente"
 
@@ -2977,3 +2974,6 @@ msgstr "Fattura basata su Consegne"
 #~ "preventivo o un nuovo ordine di vendita questo deve essere assegnato ad un "
 #~ "negozio. Il negozio definisce anche il magazzino dal quale i prodotti "
 #~ "verranno consegnati per ciascun ordine."
+
+#~ msgid "Sales Dashboard"
+#~ msgstr "Dashboard vendite"

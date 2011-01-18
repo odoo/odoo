@@ -137,7 +137,7 @@ class crm_opportunity2phonecall(osv.osv_memory):
                 'view_mode': 'tree,form',
                 'res_model': 'crm.phonecall',
                 'res_id' : new_case,
-                'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar'), (False, 'graph')],
+                'views': [(id3, 'form'), (id2, 'tree'), (False, 'calendar')],
                 'type': 'ir.actions.act_window',
                 'search_view_id': res['res_id']
             }

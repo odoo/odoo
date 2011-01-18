@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-12-01 08:47+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 08:52+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:35+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -31,12 +31,17 @@ msgstr "Groepeer op.."
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Responsibilities"
-msgstr ""
+msgstr "Verantwoordelijkheden"
 
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
-msgstr ""
+msgstr "Volgende actie datum"
+
+#. module: crm_claim
+#: field:crm.claim.report,probability:0
+msgid "Probability"
+msgstr "Waarschijnlijkheid"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -51,7 +56,7 @@ msgstr "Vertraging tot sluiting"
 #. module: crm_claim
 #: field:crm.claim,resolution:0
 msgid "Resolution"
-msgstr ""
+msgstr "Oplossing"
 
 #. module: crm_claim
 #: field:crm.claim,company_id:0
@@ -110,7 +115,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim Description"
-msgstr ""
+msgstr "Klachtomschrijving"
 
 #. module: crm_claim
 #: field:crm.claim,message_ids:0
@@ -197,12 +202,12 @@ msgstr "Afdeling"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Root Causes"
-msgstr ""
+msgstr "Basis oorzaken"
 
 #. module: crm_claim
 #: field:crm.claim,user_fault:0
 msgid "Trouble Responsible"
-msgstr ""
+msgstr "Verantwoordelijke gebruiker"
 
 #. module: crm_claim
 #: field:crm.claim,priority:0
@@ -246,7 +251,7 @@ msgstr "Aanmaakdatum"
 #. module: crm_claim
 #: field:crm.claim,name:0
 msgid "Claim Subject"
-msgstr ""
+msgstr "Klant onderwerp"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
@@ -419,6 +424,11 @@ msgid "Pending"
 msgstr "Wacht"
 
 #. module: crm_claim
+#: view:crm.claim:0
+msgid "Communication & History"
+msgstr "Communicatie & Geschiedenis"
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "August"
 msgstr "Augustus"
@@ -561,7 +571,7 @@ msgstr "Bijlagen"
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_case_stage
 msgid "Stage of case"
-msgstr ""
+msgstr "Stadium dossier"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -580,7 +590,7 @@ msgstr "Klaar"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Claim Reporter"
-msgstr ""
+msgstr "Klacht indiener"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -624,18 +634,13 @@ msgstr "Details"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Cases By Stage and Estimates"
-msgstr "Klachten op fase en schattingen"
-
-#. module: crm_claim
-#: view:crm.claim:0
 msgid "Reply"
 msgstr "Beantwoorden"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
 msgid "Root Cause"
-msgstr ""
+msgstr "Basis oorzaak"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -666,7 +671,7 @@ msgstr "Mei"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Resolution Actions"
-msgstr ""
+msgstr "Acties tot oplossing"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
@@ -682,11 +687,21 @@ msgid ""
 "history for a claim (emails sent, intervention type and so on). Claims may "
 "automatically be linked to an email address using the mail gateway module."
 msgstr ""
+"Klachten van uw klanten vastleggen en volgen. Klachten kunnen worden "
+"gekoppeld aan een verkooporder of partij. U kunt emails sturen met bijlagen "
+"en de volledige geschiedenis bijhouden van de klacht (verstuurde emails, "
+"ingreep soorten etc.). Klachten kunnen automatisch worden gekoppeld aan een "
+"emailadres met gebruik van de email gateway module."
+
+#. module: crm_claim
+#: field:crm.claim.report,email:0
+msgid "# Emails"
+msgstr "# Emails"
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Follow Up"
-msgstr ""
+msgstr "Opvolging"
 
 #. module: crm_claim
 #: help:crm.claim,state:0
@@ -735,7 +750,7 @@ msgstr "ID"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Actions"
-msgstr ""
+msgstr "Acties"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -866,6 +881,9 @@ msgstr "Jaar"
 
 #~ msgid "Probability (%)"
 #~ msgstr "Waarschijnlijkheid (%)"
+
+#~ msgid "Cases By Stage and Estimates"
+#~ msgstr "Klachten op fase en schattingen"
 
 #~ msgid "Employee's Name"
 #~ msgstr "Werknemernaam"

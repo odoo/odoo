@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 10:58+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-15 21:31+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-11 05:02+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-16 05:06+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_caldav
 #: help:project.task,exdate:0
@@ -224,6 +225,11 @@ msgid "Thu"
 msgstr "jeu."
 
 #. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "Forever"
+msgstr "Indéfiniment"
+
+#. module: project_caldav
 #: help:project.task,count:0
 msgid "Repeat x times"
 msgstr "Répéter x fois"
@@ -327,7 +333,7 @@ msgstr "Rappel"
 #. module: project_caldav
 #: model:ir.module.module,description:project_caldav.module_meta_information
 msgid " Synchronize between Project task and Caldav Vtodo."
-msgstr ""
+msgstr " Synchroniser entre la tâche du projet et la Vtodo Caldav."
 
 #. module: project_caldav
 #: view:project.task:0
@@ -387,7 +393,12 @@ msgstr "mercredi"
 #. module: project_caldav
 #: view:project.task:0
 msgid "Repeat Times"
-msgstr ""
+msgstr "Répétitions"
+
+#. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "End date"
+msgstr "Date de fin"
 
 #. module: project_caldav
 #: view:project.task:0
@@ -418,6 +429,16 @@ msgstr "de"
 #: selection:project.task,show_as:0
 msgid "Busy"
 msgstr "Occupé(e)"
+
+#. module: project_caldav
+#: field:project.task,interval:0
+msgid "Repeat every"
+msgstr "Répéter tous les"
+
+#. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "Fix amout of times"
+msgstr "Définir le nombre d'occurence"
 
 #. module: project_caldav
 #: field:project.task,recurrency:0
@@ -488,17 +509,12 @@ msgstr "Assigner une tâche"
 #. module: project_caldav
 #: view:project.task:0
 msgid "Recurrency Rule"
-msgstr ""
+msgstr "Règle de récurrence"
 
 #. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "February"
 msgstr "février"
-
-#. module: project_caldav
-#: field:project.task,interval:0
-msgid "Interval"
-msgstr "Intervalle"
 
 #. module: project_caldav
 #: field:project.task,exdate:0
@@ -547,6 +563,11 @@ msgid "Second"
 msgstr "Seconde"
 
 #. module: project_caldav
+#: field:project.task,end_type:0
+msgid "Way to end reccurency"
+msgstr "Méthode pour terminer la récurrence"
+
+#. module: project_caldav
 #: field:project.task,date:0
 #: field:project.task,duration:0
 msgid "Duration"
@@ -555,7 +576,7 @@ msgstr "Durée"
 #. module: project_caldav
 #: selection:project.task,week_list:0
 msgid "Saturday"
-msgstr ""
+msgstr "Samedi"
 
 #. module: project_caldav
 #: selection:project.task,byday:0
@@ -582,3 +603,6 @@ msgstr "Cinquième"
 
 #~ msgid "Custom"
 #~ msgstr "Personnalisé"
+
+#~ msgid "Interval"
+#~ msgstr "Intervalle"

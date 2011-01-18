@@ -208,8 +208,8 @@ class stock_location(osv.osv):
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
-        'valuation_in_account_id': fields.many2one('account.account', 'Valuation In Account',domain = [('type','=','regular')], help='when there is an incoming move for the location, we have to use this field of that location instead of account from product/product category.'),
-        'valuation_out_account_id': fields.many2one('account.account', 'Valuation Out Account',domain = [('type','=','regular')], help='when there is an outgoing move for the location, we have to use this field of that location instead of account from product/product category.'),
+        'valuation_in_account_id': fields.many2one('account.account', 'Stock Input Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as destination, instead of the stock output account from the product.'),
+        'valuation_out_account_id': fields.many2one('account.account', 'Stock Output Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as source, instead of the stock input account from the product.'),
     }
     _defaults = {
         'active': True,
@@ -659,20 +659,21 @@ class stock_picking(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'stock.picking', context=c)
     }
     def action_process(self, cr, uid, ids, context=None):
+        if context is None: context = {}
+        partial_id = self.pool.get("stock.partial.picking").create(
+            cr, uid, {}, context=dict(context, active_ids=ids))
         return {
             'name':_("Products to Process"),
             'view_mode': 'form',
             'view_id': False,
             'view_type': 'form',
             'res_model': 'stock.partial.picking',
+            'res_id': partial_id,
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'target': 'new',
             'domain': '[]',
-            'context': {
-                'active_id': ids[0],
-                'active_ids':ids
-            }
+            'context': dict(context, active_ids=ids)
         }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -759,25 +760,14 @@ class stock_picking(osv.osv):
         """ Validates picking directly from draft state.
         @return: True
         """
-        if context is None:
-            context = {}
         wf_service = netsvc.LocalService("workflow")
         self.draft_force_assign(cr, uid, ids)
         for pick in self.browse(cr, uid, ids, context=context):
             move_ids = [x.id for x in pick.move_lines]
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
-        context.update({'active_ids':ids})
-        return {
-                'name': 'Make Picking',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.partial.picking',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'nodestroy': True,
-                'context':context
-            }
+        return self.action_process(
+            cr, uid, ids, context=context)
     def cancel_assign(self, cr, uid, ids, *args):
         """ Cancels picking and moves.
         @return: True
@@ -1445,7 +1435,7 @@ class stock_production_lot_revision(osv.osv):
         'indice': fields.char('Revision Number', size=16),
         'author_id': fields.many2one('res.users', 'Author'),
         'lot_id': fields.many2one('stock.production.lot', 'Production lot', select=True, ondelete='cascade'),
-        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'company_id': fields.related('lot_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
     _defaults = {
@@ -1473,6 +1463,25 @@ class stock_move(osv.osv):
     _description = "Stock Move"
     _order = 'date_expected desc, id'
     _log_create = False
+    
+    def action_partial_move(self, cr, uid, ids, context=None):
+        if context is None: context = {}
+        partial_id = self.pool.get("stock.partial.move").create(
+            cr, uid, {}, context=context)
+        return {
+            'name':_("Products to Process"),
+            'view_mode': 'form',
+            'view_id': False,
+            'view_type': 'form',
+            'res_model': 'stock.partial.move',
+            'res_id': partial_id,
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'new',
+            'domain': '[]',
+            'context': context
+        }
+        
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -1508,9 +1517,9 @@ class stock_move(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
-        'create_date': fields.datetime('Creation Date', readonly=True),
-        'date': fields.datetime('Date', required=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
-        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, help="Scheduled date for the processing of this move"),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True),
+        'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
+        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
@@ -2009,7 +2018,6 @@ class stock_move(osv.osv):
         if not acc_variation:
             raise osv.except_osv(_('Error!'), _('There is no inventory variation account defined on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-
         return journal_id, acc_src, acc_dest, acc_variation
 
     def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
@@ -2231,6 +2239,8 @@ class stock_move(osv.osv):
                 'tracking_id': move.tracking_id.id,
                 'prodlot_id': move.prodlot_id.id,
             }
+            if move.location_id.usage <> 'internal':
+                default_val.update({'location_id': move.location_dest_id.id})
             new_move = self.copy(cr, uid, move.id, default_val)
 
             res += [new_move]
@@ -2581,6 +2591,15 @@ class stock_inventory(osv.osv):
             self.write(cr, uid, [inv.id], {'state': 'confirm', 'move_ids': [(6, 0, move_ids)]})
         return True
 
+    def action_cancel_draft(self, cr, uid, ids, context=None):
+        """ Cancels the stock move and change inventory state to draft.
+        @return: True
+        """
+        for inv in self.browse(cr, uid, ids, context=context):
+            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
+            self.write(cr, uid, [inv.id], {'state':'draft'}, context=context)
+        return True
+
     def action_cancel_inventary(self, cr, uid, ids, context=None):
         """ Cancels both stock move and inventory
         @return: True
@@ -2601,15 +2620,6 @@ class stock_inventory(osv.osv):
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
         return True
 
-    def action_cancel_draft(self, cr, uid, ids, context=None):
-        """ Cancels the stock move and change inventory state to draft.
-        @return: True
-        """
-        for inv in self.browse(cr, uid, ids, context=context):
-            self.pool.get('stock.move').action_cancel(cr, uid, [x.id for x in inv.move_ids], context=context)
-            self.write(cr, uid, [inv.id], {'state':'draft'}, context=context)
-        return True
-
 stock_inventory()
 
 class stock_inventory_line(osv.osv):
@@ -2621,7 +2631,7 @@ class stock_inventory_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM')),
-        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True),
+        'company_id': fields.related('inventory_id','company_id',type='many2one',relation='res.company',string='Company',store=True, select=True, readonly=True),
         'prod_lot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
         'state': fields.related('inventory_id','state',type='char',string='State',readonly=True),
     }
