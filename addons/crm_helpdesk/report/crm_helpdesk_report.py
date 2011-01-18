@@ -53,7 +53,7 @@ class crm_helpdesk_report(osv.osv):
         'delay_close': fields.float('Delay to Close',digits=(16,2),readonly=True, group_operator="avg"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'date_deadline': fields.date('Deadline'),
+        'date_deadline': fields.date('Deadline', select=True),
         'priority': fields.selection([('5', 'Lowest'), ('4', 'Low'), \
                     ('3', 'Normal'), ('2', 'High'), ('1', 'Highest')], 'Priority'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel'), 
@@ -61,8 +61,8 @@ class crm_helpdesk_report(osv.osv):
                             domain="[('section_id','=',section_id),\
                             ('object_id.model', '=', 'crm.helpdesk')]"),
         'planned_cost': fields.float('Planned Costs'),
-        'create_date': fields.date('Creation Date' , readonly=True),
-        'date_closed': fields.date('Close Date', readonly=True),
+        'create_date': fields.date('Creation Date' , readonly=True, select=True),
+        'date_closed': fields.date('Close Date', readonly=True, select=True),
         'delay_expected': fields.float('Overpassed Deadline',digits=(16,2),readonly=True, group_operator="avg"),
         'day': fields.char('Day', size=128, readonly=True),
         'email': fields.integer('# Emails', size=128, readonly=True),

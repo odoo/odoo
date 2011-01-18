@@ -7,16 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-31 11:00+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-13 17:36+0000\n"
+"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:44+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: wiki
 #: field:wiki.groups,template:0
@@ -132,13 +131,13 @@ msgid "Page Content"
 msgstr "Seiteninhalt"
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:0
+#: code:addons/wiki/wiki.py:236
 #, python-format
 msgid "Warning !"
 msgstr "Warnung"
 
 #. module: wiki
-#: code:addons/wiki/wiki.py:0
+#: code:addons/wiki/wiki.py:236
 #, python-format
 msgid "There are no changes in revisions"
 msgstr "In dieser Version gibt es keine Änderungen"
@@ -198,7 +197,20 @@ msgid "Keywords"
 msgstr "Schlüsselworte"
 
 #. module: wiki
-#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#: model:ir.actions.act_window,help:wiki.action_wiki
+msgid ""
+"With Wiki Pages you can share ideas and questions with your coworkers. You "
+"can create a new document that can be linked to one or several applications "
+"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+"There is a basic wiki editing for text format."
+msgstr ""
+"Wiki Seiten erlauben Ideen und Fragen mit Mitarbeitern gemeinsam zu "
+"bearbeiten. Dokumente können mit mehreren Anwendungen verlinkt werden. "
+"Schüsselwörter können verwendet werden. Bitte verwenden Sie die OpenERP WEB-"
+"Anwendung. Es gibt eine einfache Editiermöglichkeit im Textformat"
+
+#. module: wiki
+#: code:addons/wiki/wizard/wiki_show_diff.py:54
 #, python-format
 msgid "Warning"
 msgstr "Warnung"
@@ -376,7 +388,7 @@ msgid "Create Index"
 msgstr "Erzeuge Inhalt"
 
 #. module: wiki
-#: code:addons/wiki/wizard/wiki_show_diff.py:0
+#: code:addons/wiki/wizard/wiki_show_diff.py:54
 #, python-format
 msgid "You need to select minimum 1 or maximum 2 history revision!"
 msgstr "Bitte 1 oder 2 Versionsnummern auswählen"
@@ -385,21 +397,6 @@ msgstr "Bitte 1 oder 2 Versionsnummern auswählen"
 #: view:wiki.wiki:0
 msgid "Group By..."
 msgstr "Gruppiert je..."
-
-#. module: wiki
-#: model:ir.actions.act_window,help:wiki.action_wiki
-msgid ""
-"Wiki Pages  allows you to share ideas and questions with your coworkers. You "
-"can create a new document that can be link to one or several applications "
-"(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
-"There is a basic wiki editing for text format."
-msgstr ""
-"Wikis ermöglichen Ihnen und ihren Mitarbeitern einen effizienten Austausch "
-"von Wissen aber auch Fragen und Antworten als Plattform des Unternehmens "
-"Know How. Sie können einfach ein neues Dokument erstellen und dieses dann "
-"mit Ihren Anwendungen (z.B. CRM, Verkauf) verknüpfen. Sie können "
-"Schlüsselwörter definieren, die eine einfache Suche nach Dokumenten "
-"erleichtern. Die Texte werden in einem Standard Wiki Format editiert."
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_create_menu
@@ -434,7 +431,7 @@ msgid "Modify By"
 msgstr "Geändert durch"
 
 #. module: wiki
-#: code:addons/wiki/web/widgets/wikimarkup/__init__.py:0
+#: code:addons/wiki/web/widgets/wikimarkup/__init__.py:1981
 #: field:wiki.wiki,toc:0
 #, python-format
 msgid "Table of Contents"
@@ -541,6 +538,19 @@ msgstr "Suche Seite"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid ""
+#~ "Wiki Pages  allows you to share ideas and questions with your coworkers. You "
+#~ "can create a new document that can be link to one or several applications "
+#~ "(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
+#~ "There is a basic wiki editing for text format."
+#~ msgstr ""
+#~ "Wikis ermöglichen Ihnen und ihren Mitarbeitern einen effizienten Austausch "
+#~ "von Wissen aber auch Fragen und Antworten als Plattform des Unternehmens "
+#~ "Know How. Sie können einfach ein neues Dokument erstellen und dieses dann "
+#~ "mit Ihren Anwendungen (z.B. CRM, Verkauf) verknüpfen. Sie können "
+#~ "Schlüsselwörter definieren, die eine einfache Suche nach Dokumenten "
+#~ "erleichtern. Die Texte werden in einem Standard Wiki Format editiert."
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

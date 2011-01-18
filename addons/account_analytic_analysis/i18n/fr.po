@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-12 10:15+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 19:56+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -37,15 +38,11 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Calculé selon la formule : Quantité maximum - Total des heures"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
 msgstr "Erreur d'accès"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "Revenu théorique"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -66,6 +63,14 @@ msgid ""
 "You can also view the report of account analytic summary\n"
 "user-wise as well as month wise.\n"
 msgstr ""
+"\n"
+"Ce module sert à modifier la vue de compte analytique pour afficher\n"
+"des informations importantes aux chefs de projet des sociétés de services.\n"
+"Ajoute un menu pour afficher les informations pertinentes à chaque chef de "
+"projet..\n"
+"\n"
+"Vous pouvez aussi voir le rapport des comptes analytiques par utilisateur \n"
+"ainsi que par mois.\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -79,14 +84,14 @@ msgstr ""
 "Calculé selon la formule suivante : Revenu théorique - Total des coûts"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theorical Margin"
-msgstr "Marge théorique"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Taux de marge réel (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr "Revenu théorique"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -125,6 +130,11 @@ msgstr ""
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Heures restantes"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr "Marge théorique"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -179,7 +189,8 @@ msgid "Invoiced Amount"
 msgstr "Montant facturé"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "Vous essayez d'outrepasser une règle d'accès (Type de Document: %s)"
@@ -198,6 +209,15 @@ msgstr "Heures facturées"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Marge réelle"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
+"Erreur! La monnaie doit être la même que la monnaie de la société "
+"sélectionnée"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -314,8 +334,14 @@ msgstr ""
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valide pour l'architecture de la vue"
 
+#~ msgid "Theorical Revenue"
+#~ msgstr "Revenu théorique"
+
 #~ msgid "New Analytic Account"
 #~ msgstr "Nouveau Compte Analytique"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Marge théorique"
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "Comptes analytiques gérés"

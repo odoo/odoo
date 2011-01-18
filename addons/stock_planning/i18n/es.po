@@ -7,22 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-31 10:24+0000\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-12 16:45+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock_planning
-#: code:addons/stock_planning/wizard/stock_planning_createlines.py:0
+#: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
 #, python-format
 msgid ""
 "No forecasts for selected period or no products in selected category !"
 msgstr ""
+"¡No hay previsiones para el periodo seleccionado o no hay productos en la "
+"categoría seleccionada!"
 
 #. module: stock_planning
 #: help:stock.planning,stock_only:0
@@ -35,7 +37,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
 msgid "Maximum Rule"
-msgstr ""
+msgstr "Regla máximo"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
@@ -54,9 +56,12 @@ msgid ""
 "Forecast value which will be converted to Product Quantity according to "
 "prices."
 msgstr ""
+"Valor de la previsión que será convertido en cantidad de producto en función "
+"de precios."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:621
+#: code:addons/stock_planning/stock_planning.py:663
 #, python-format
 msgid "Incoming Left must be greater than 0 !"
 msgstr ""
@@ -69,7 +74,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:0
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
 #, python-format
 msgid "No products in selected category !"
 msgstr "¡No hay productos en la categoría seleccionada!"
@@ -129,7 +134,8 @@ msgid "Company"
 msgstr "Compañía"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:640
+#: code:addons/stock_planning/stock_planning.py:682
 #, python-format
 msgid ""
 "\n"
@@ -155,7 +161,7 @@ msgstr "Crear periodos de stock y ventas"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Minimum Stock Rule Indicators"
-msgstr ""
+msgstr "Indicadores de regla de stock mínimo"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,period_id:0
@@ -224,7 +230,8 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:644
+#: code:addons/stock_planning/stock_planning.py:686
 #, python-format
 msgid "    Confirmed In Before: "
 msgstr ""
@@ -288,6 +295,8 @@ msgid ""
 "All sales forecasts for whole company (for all Warehouses) of selected "
 "Product during selected Period."
 msgstr ""
+"Todas las previsiones para la compañía entera (para todos los almacenes) del "
+"producto seleccionado durante el periodo seleccionado."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_user:0
@@ -316,13 +325,14 @@ msgid "Procure Incoming Left"
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:646
+#: code:addons/stock_planning/stock_planning.py:688
 #, python-format
 msgid "    Incoming Left: "
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:715
 #, python-format
 msgid "Pick List "
 msgstr ""
@@ -339,10 +349,11 @@ msgstr "Crear"
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
-msgstr ""
+msgstr "Plan maestro de abastecimiento"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:636
+#: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "  Creation Date: "
 msgstr "  Fecha de creación: "
@@ -400,7 +411,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
 msgid "Check this box to see the sales for whole company."
-msgstr ""
+msgstr "Seleccione esta casilla para ver las ventas de todda la compañía."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
@@ -424,15 +435,18 @@ msgid "Product Category"
 msgstr "Categoría de producto"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
-#: code:addons/stock_planning/wizard/stock_planning_createlines.py:0
-#: code:addons/stock_planning/wizard/stock_planning_forecast.py:0
+#: code:addons/stock_planning/stock_planning.py:621
+#: code:addons/stock_planning/stock_planning.py:663
+#: code:addons/stock_planning/stock_planning.py:665
+#: code:addons/stock_planning/stock_planning.py:667
+#: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
+#: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
 #, python-format
 msgid "Error !"
 msgstr "¡ Error !"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:626
 #, python-format
 msgid "Manual planning for "
 msgstr "Planificación manual para "
@@ -443,7 +457,8 @@ msgid "This User"
 msgstr "Este usuario"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:643
+#: code:addons/stock_planning/stock_planning.py:685
 #, python-format
 msgid ""
 "\n"
@@ -458,7 +473,7 @@ msgstr "Previsiones"
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Supply from Another Warehouse"
-msgstr ""
+msgstr "Abastecer desde otro almacen"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -466,13 +481,13 @@ msgid "Calculate Planning"
 msgstr "Calcular planificación"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:636
 #, python-format
 msgid "Procurement created in MPS by user: "
-msgstr ""
+msgstr "Abastecimiento creado en MPS por el usuario: "
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Invalid action !"
 msgstr "¡Acción inválida!"
@@ -493,7 +508,7 @@ msgid "Maximum quantity set in Minimum Stock Rules for this Warhouse"
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:665
 #, python-format
 msgid "You must specify a Source Warehouse !"
 msgstr "¡Debe especificar un almacén origen!"
@@ -588,12 +603,15 @@ msgid "Start Date"
 msgstr "Fecha inicio"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:642
+#: code:addons/stock_planning/stock_planning.py:684
 #, python-format
 msgid ""
 "\n"
 " Already Out: "
 msgstr ""
+"\n"
+" Ya enviado: "
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
@@ -641,7 +659,8 @@ msgid "Warehouse "
 msgstr "Almacén "
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:646
+#: code:addons/stock_planning/stock_planning.py:688
 #, python-format
 msgid ""
 "\n"
@@ -895,13 +914,14 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Cannot delete Validated Sale Forecasts !"
 msgstr "¡ No se pueden borrar previsiones de ventas validadas !"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:641
+#: code:addons/stock_planning/stock_planning.py:683
 #, python-format
 msgid ""
 "\n"
@@ -909,7 +929,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:667
 #, python-format
 msgid ""
 "You must specify a Source Warehouse different than calculated (destination) "
@@ -928,7 +948,7 @@ msgid "Creates forecast lines for selected warehouse and period."
 msgstr "Crear líneas de previsión para el almacén y periodo seleccionados."
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:655
 #, python-format
 msgid "Requisition ("
 msgstr ""
@@ -947,7 +967,8 @@ msgid "Period4"
 msgstr "Periodo4"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:642
+#: code:addons/stock_planning/stock_planning.py:684
 #, python-format
 msgid "    Already In: "
 msgstr ""
@@ -968,7 +989,8 @@ msgid "Period1"
 msgstr "Periodo1"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:647
+#: code:addons/stock_planning/stock_planning.py:689
 #, python-format
 msgid "    Minimum stock: "
 msgstr "    Stock mínimo: "
@@ -1012,7 +1034,8 @@ msgid "Warehouse Forecast"
 msgstr "Previsión almacen"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:643
+#: code:addons/stock_planning/stock_planning.py:685
 #, python-format
 msgid "    Confirmed In: "
 msgstr ""
@@ -1112,7 +1135,8 @@ msgid "Periods"
 msgstr "Periodos"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:638
+#: code:addons/stock_planning/stock_planning.py:680
 #, python-format
 msgid " according to state:"
 msgstr " según el estado:"
@@ -1230,7 +1254,8 @@ msgid "Warehouse which planning will concern."
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:647
+#: code:addons/stock_planning/stock_planning.py:689
 #, python-format
 msgid ""
 "\n"
@@ -1268,7 +1293,8 @@ msgid "Per Warehouse :"
 msgstr "Por almacén :"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:639
+#: code:addons/stock_planning/stock_planning.py:681
 #, python-format
 msgid ""
 "\n"
@@ -1288,7 +1314,8 @@ msgid "Starting date for planning period."
 msgstr "Fecha inicial para el periodo planificado"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:641
+#: code:addons/stock_planning/stock_planning.py:683
 #, python-format
 msgid "    Planned In: "
 msgstr ""
@@ -1359,7 +1386,8 @@ msgid "Product"
 msgstr "Producto"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:638
+#: code:addons/stock_planning/stock_planning.py:680
 #, python-format
 msgid ""
 "\n"
@@ -1374,13 +1402,15 @@ msgid "Product UoM"
 msgstr "UdM de producto"
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:627
+#: code:addons/stock_planning/stock_planning.py:671
+#: code:addons/stock_planning/stock_planning.py:693
 #, python-format
 msgid "MPS("
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "Pick created from MPS by user: "
 msgstr ""
@@ -1449,7 +1479,8 @@ msgid "Shows who created this forecast, or who validated."
 msgstr ""
 
 #. module: stock_planning
-#: code:addons/stock_planning/stock_planning.py:0
+#: code:addons/stock_planning/stock_planning.py:644
+#: code:addons/stock_planning/stock_planning.py:686
 #, python-format
 msgid ""
 "\n"

@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-31 11:01+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 18:12+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:58+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_caldav
 #: help:project.task,exdate:0
@@ -36,6 +36,11 @@ msgstr "Mi"
 #: selection:project.task,rrule_type:0
 msgid "Monthly"
 msgstr "Monatlich"
+
+#. module: project_caldav
+#: help:project.task,recurrency:0
+msgid "Recurrent Meeting"
+msgstr "Wiederkehrender Termin"
 
 #. module: project_caldav
 #: selection:project.task,week_list:0
@@ -94,11 +99,6 @@ msgid "All Day"
 msgstr "Gesamter Tag"
 
 #. module: project_caldav
-#: field:project.task,vtimezone:0
-msgid "Timezone"
-msgstr "Zeitzone"
-
-#. module: project_caldav
 #: selection:project.task,show_as:0
 msgid "Free"
 msgstr "Frei"
@@ -129,19 +129,14 @@ msgid "No Repeat"
 msgstr "Keine Wiederholung"
 
 #. module: project_caldav
-#: view:project.task:0
-msgid "Exclude range"
-msgstr "Zurücknahme Datumsbereich"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
-msgid "Minutes"
-msgstr "Minuten"
-
-#. module: project_caldav
 #: selection:project.task,rrule_type:0
 msgid "Yearly"
 msgstr "Jährl."
+
+#. module: project_caldav
+#: view:project.task:0
+msgid "Recurrency Option"
+msgstr "Terminwiederholung"
 
 #. module: project_caldav
 #: field:project.task,tu:0
@@ -154,15 +149,15 @@ msgid "Repeat Until"
 msgstr "Wiederhole Bis"
 
 #. module: project_caldav
-#: help:project.task,interval:0
-msgid "Repeat every x"
-msgstr "Wiederhole Bis"
-
-#. module: project_caldav
 #: field:project.task,organizer:0
 #: field:project.task,organizer_id:0
 msgid "Organizer"
 msgstr "Zeitplaner"
+
+#. module: project_caldav
+#: help:project.task,edit_all:0
+msgid "Edit all Occurrences  of recurrent Meeting."
+msgstr "Bearbeite alle Einträge für wiederkehrende Termine"
 
 #. module: project_caldav
 #: field:project.task,sa:0
@@ -211,11 +206,6 @@ msgstr "Vertraulich"
 
 #. module: project_caldav
 #: selection:project.task,freq:0
-msgid "Seconds"
-msgstr "Sekunden"
-
-#. module: project_caldav
-#: selection:project.task,freq:0
 msgid "Hours"
 msgstr "Stunden"
 
@@ -235,6 +225,16 @@ msgid "Thu"
 msgstr "Do"
 
 #. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "Forever"
+msgstr ""
+
+#. module: project_caldav
+#: help:project.task,count:0
+msgid "Repeat x times"
+msgstr "Anzahl Wiederholungen"
+
+#. module: project_caldav
 #: selection:project.task,rrule_type:0
 msgid "Daily"
 msgstr "Täglich"
@@ -243,6 +243,11 @@ msgstr "Täglich"
 #: field:project.task,class:0
 msgid "Mark as"
 msgstr "Markiere als"
+
+#. module: project_caldav
+#: field:project.task,count:0
+msgid "Repeat"
+msgstr "Wiederholung"
 
 #. module: project_caldav
 #: help:project.task,rrule_type:0
@@ -255,7 +260,7 @@ msgid "First"
 msgstr "1ster"
 
 #. module: project_caldav
-#: code:addons/project_caldav/project_caldav.py:0
+#: code:addons/project_caldav/project_caldav.py:67
 #, python-format
 msgid "Tasks"
 msgstr "Aufgaben"
@@ -286,14 +291,9 @@ msgid "CalDAV for task management"
 msgstr "Erzeuge Aufgabe für den Produkt Rückstand"
 
 #. module: project_caldav
-#: view:project.task:0
-msgid "Custom Recurrency Rule"
-msgstr "Wähle Daten für Regel"
-
-#. module: project_caldav
-#: help:project.task,count:0
-msgid "Repeat max that times"
-msgstr "Max. Wiederholungen"
+#: field:project.task,vtimezone:0
+msgid "Timezone"
+msgstr "Zeitzone"
 
 #. module: project_caldav
 #: selection:project.task,rrule_type:0
@@ -301,7 +301,7 @@ msgid "Weekly"
 msgstr "Wöchentlich"
 
 #. module: project_caldav
-#: view:project.task:0
+#: field:project.task,edit_all:0
 msgid "Edit All"
 msgstr "Bearbeite Alle"
 
@@ -371,11 +371,6 @@ msgid "November"
 msgstr "November"
 
 #. module: project_caldav
-#: field:project.task,count:0
-msgid "Count"
-msgstr "Anzahl"
-
-#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "October"
 msgstr "Oktober"
@@ -397,6 +392,16 @@ msgstr "Mittwoch"
 
 #. module: project_caldav
 #: view:project.task:0
+msgid "Repeat Times"
+msgstr "Anzahl der Wiederholung"
+
+#. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "End date"
+msgstr ""
+
+#. module: project_caldav
+#: view:project.task:0
 msgid "To"
 msgstr "Bis Datum"
 
@@ -411,6 +416,11 @@ msgid "Frequency"
 msgstr "Frequenz"
 
 #. module: project_caldav
+#: help:project.task,interval:0
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr "Wiederholungsintervall (Tag/Woche/Monat/Jahr)"
+
+#. module: project_caldav
 #: view:project.task:0
 msgid "of"
 msgstr "von"
@@ -419,6 +429,21 @@ msgstr "von"
 #: selection:project.task,show_as:0
 msgid "Busy"
 msgstr "Beschäftigt"
+
+#. module: project_caldav
+#: field:project.task,interval:0
+msgid "Repeat every"
+msgstr ""
+
+#. module: project_caldav
+#: selection:project.task,end_type:0
+msgid "Fix amout of times"
+msgstr ""
+
+#. module: project_caldav
+#: field:project.task,recurrency:0
+msgid "Recurrent"
+msgstr "Terminwiederholung"
 
 #. module: project_caldav
 #: view:project.task:0
@@ -430,11 +455,6 @@ msgstr "Wiederholung"
 #: selection:project.task,week_list:0
 msgid "Thursday"
 msgstr "Donnerstag"
-
-#. module: project_caldav
-#: selection:project.task,rrule_type:0
-msgid "Custom"
-msgstr "Individuell"
 
 #. module: project_caldav
 #: field:project.task,exrule:0
@@ -484,14 +504,14 @@ msgid "Assign Task"
 msgstr "Zuweisen Aufgabe"
 
 #. module: project_caldav
+#: view:project.task:0
+msgid "Recurrency Rule"
+msgstr "Logik Terminwiederholung"
+
+#. module: project_caldav
 #: selection:project.task,month_list:0
 msgid "February"
 msgstr "Februar"
-
-#. module: project_caldav
-#: field:project.task,interval:0
-msgid "Interval"
-msgstr "Intervalle"
 
 #. module: project_caldav
 #: field:project.task,exdate:0
@@ -540,6 +560,11 @@ msgid "Second"
 msgstr "Sekunde"
 
 #. module: project_caldav
+#: field:project.task,end_type:0
+msgid "Way to end reccurency"
+msgstr ""
+
+#. module: project_caldav
 #: field:project.task,date:0
 #: field:project.task,duration:0
 msgid "Duration"
@@ -555,14 +580,41 @@ msgstr "Samstag"
 msgid "Fifth"
 msgstr "5ter"
 
+#~ msgid "Exclude range"
+#~ msgstr "Zurücknahme Datumsbereich"
+
+#~ msgid "Minutes"
+#~ msgstr "Minuten"
+
+#~ msgid "Repeat every x"
+#~ msgstr "Wiederhole Bis"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter XML Quellcode für diese Ansicht!"
+
+#~ msgid "Custom Recurrency Rule"
+#~ msgstr "Wähle Daten für Regel"
+
+#~ msgid "Count"
+#~ msgstr "Anzahl"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Die Objektbezeichnung muss mit einem x_ beginnen und darf keine "
 #~ "Sonderzeichen haben !"
+
+#~ msgid "Custom"
+#~ msgstr "Individuell"
+
+#~ msgid "Interval"
+#~ msgstr "Intervalle"
+
+#~ msgid "Seconds"
+#~ msgstr "Sekunden"
+
+#~ msgid "Repeat max that times"
+#~ msgstr "Max. Wiederholungen"
 
 #~ msgid "Can not map a field more than once"
 #~ msgstr "Kann kein Feld mehr als einmal verbinden"

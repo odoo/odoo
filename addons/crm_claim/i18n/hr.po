@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-09-29 07:48+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -36,6 +36,11 @@ msgstr ""
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim.report,probability:0
+msgid "Probability"
 msgstr ""
 
 #. module: crm_claim
@@ -409,6 +414,11 @@ msgid "Pending"
 msgstr ""
 
 #. module: crm_claim
+#: view:crm.claim:0
+msgid "Communication & History"
+msgstr ""
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "August"
 msgstr ""
@@ -543,13 +553,8 @@ msgid "Attachments"
 msgstr ""
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
-msgid ""
-"Record and track your customers' claims. Claims can be linked to a sales "
-"order or a lot. You can send emails with attachments and get the history of "
-"everything that happened on a specific claim (emails sent, interventions "
-"type and so on..). Claims can be automatically linked to an email address "
-"using the mail gateway module."
+#: model:ir.model,name:crm_claim.model_crm_case_stage
+msgid "Stage of case"
 msgstr ""
 
 #. module: crm_claim
@@ -613,11 +618,6 @@ msgstr ""
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Cases By Stage and Estimates"
-msgstr ""
-
-#. module: crm_claim
-#: view:crm.claim:0
 msgid "Reply"
 msgstr ""
 
@@ -661,6 +661,20 @@ msgstr ""
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 msgid "Report a Claim"
+msgstr ""
+
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
+msgid ""
+"Record and track your customers' claims. Claims may be linked to a sales "
+"order or a lot. You can send emails with attachments and keep the full "
+"history for a claim (emails sent, intervention type and so on). Claims may "
+"automatically be linked to an email address using the mail gateway module."
+msgstr ""
+
+#. module: crm_claim
+#: field:crm.claim.report,email:0
+msgid "# Emails"
 msgstr ""
 
 #. module: crm_claim

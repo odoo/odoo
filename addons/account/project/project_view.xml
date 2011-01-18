@@ -53,7 +53,7 @@
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
             <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
+            <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
                     <field name="name"/>
@@ -243,7 +243,7 @@
         <!-- Entries by Line -->
 
         <record id="action_account_tree1" model="ir.actions.act_window">
-            <field name="name">Analytic Entries</field>
+            <field name="name">Analytic Items</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

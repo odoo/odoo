@@ -63,55 +63,49 @@ class email_template_mailbox(osv.osv):
         return True
     
     def send_this_mail(self, cr, uid, ids=None, context=None):
+        #previous method to send email (link with email account can be found at the revision 4172 and below
         result = True
         attachment_pool = self.pool.get('ir.attachment')
         for id in (ids or []):
             try:
                 account_obj = self.pool.get('email_template.account')
                 values = self.read(cr, uid, id, [], context) 
-                #payload = {}
                 attach_to_send = None
+                
                 if values['attachments_ids']:
-                    #for attid in values['attachments_ids']:
-                        #attachment = attachment_pool.browse(cr, uid, attid, context)#,['datas_fname','datas'])
-                        #payload[attachment.datas_fname] = attachment.datas
                     attach_to_send = self.pool.get('ir.attachment').read(cr, uid, values['attachments_ids'], ['datas_fname','datas', 'name'])
                     attach_to_send = map(lambda x: (x['datas_fname'] or x['name'], base64.decodestring(x['datas'])), attach_to_send)
-                #work around to uniformize send email while waiting for a merge of fetchmail, email_template, mailgate
-                #using tools.send_email instead
-                #No need to use email account
-                #result = account_obj.send_mail(cr, uid,
-                #              [values['account_id'][0]],
-                #              {'To':values.get('email_to') or u'',
-                #               'CC':values.get('email_cc') or u'',
-                #               'BCC':values.get('email_bcc') or u'',
-                #               'Reply-To':values.get('reply_to') or u''},
-                #              values['subject'] or u'',
-                #              {'text':values.get('body_text') or u'', 'html':values.get('body_html') or u''},
-                #              payload=payload,
-                #              message_id=values['message_id'], 
-                #              context=context)
+                
                 if values.get('body_html'):
                     body = values.get('body_html')
                     subtype = "html"
                 else :
                     body = values.get('body_text')
                     subtype = "plain"
-                    
+                
+                bcc = cc = False
+                if (values.get('email_bcc') or False):
+                    bcc = values.get('email_bcc') or u''
+                    bcc = bcc.split(',')
+                if (values.get('email_cc') or False):
+                    cc = values.get('email_cc') or u''
+                    cc = cc.split(',')
+                to = values.get('email_to')
+                to = to.split(',')
+                
                 result = tools.email_send(
                     values.get('email_from') or u'',
-                    [values.get('email_to')],
+                    to,
                     values['subject'] or u'', 
                     body or u'',
                     reply_to=values.get('reply_to') or u'',
-                    email_bcc=values.get('email_bcc') or u'',
-                    email_cc=values.get('email_cc') or u'',
+                    email_bcc = bcc,
+                    email_cc = cc,
                     subtype=subtype,
                     attach=attach_to_send,
                     openobject_id=values['message_id']
                 )
                 
-
                 if result == True:
                     account = account_obj.browse(cr, uid, values['account_id'][0], context=context)
                     if account.auto_delete:

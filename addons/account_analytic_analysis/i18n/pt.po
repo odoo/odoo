@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-12-09 09:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -37,15 +37,11 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Processado ao utilizar a fórmula: Quantidade Máxima - Horas Totais."
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
 msgstr "Erro de acesso"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "Rendimento Teórico"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -75,14 +71,14 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Processado ao utilizar a fórmula: Rendimento Teórico - Custo Total"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theorical Margin"
-msgstr "Margem Teórica"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Margem Real da Taxa (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -121,6 +117,11 @@ msgstr ""
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Horas Restantes"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -175,7 +176,8 @@ msgid "Invoiced Amount"
 msgstr "Montante Facturado"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "Esta a tentar contornar uma regra de acesso (Tipo de documento: %s)."
@@ -194,6 +196,13 @@ msgstr "Horas Facturadas"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Margem Real"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -305,6 +314,9 @@ msgstr ""
 #~ msgid "Hours summary by user"
 #~ msgstr "Resumo de horas por utilizador"
 
+#~ msgid "Theorical Revenue"
+#~ msgstr "Rendimento Teórico"
+
 #~ msgid "Financial Project Management"
 #~ msgstr "Gestão do Projecto Financeiro"
 
@@ -319,6 +331,9 @@ msgstr ""
 
 #~ msgid "New Analytic Account"
 #~ msgstr "Nova Conta Analítica"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Margem Teórica"
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "Contas Analítica Corrente"

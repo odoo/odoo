@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2011-01-01 22:09+0000\n"
-"Last-Translator: Vladimirs Kuzmins <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-02 08:16+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-02 05:01+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:38+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_gtd
 #: help:project.task,timebox_id:0
@@ -48,21 +48,13 @@ msgid "Timebox Empty Process Completed Successfully."
 msgstr "Laika sprīža iztukšošanas process noslēdzies veiksmīgi."
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "No timebox child of this one !"
 msgstr "Šim laika sprīdima nav pakarātotā!"
 
 #. module: project_gtd
-#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
-msgid ""
-"Timeboxes are defined in the \"Getting Things Done\" methodology. It defines "
-"a period of time in order to categorize your tasks: today, this week, this "
-"month, long term."
-msgstr ""
-
-#. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:112
 #, python-format
 msgid "GTD"
 msgstr "GTD"
@@ -101,7 +93,7 @@ msgid "Set to Timebox"
 msgstr "Iestatīt par laika sprīdi"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:0
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
 #, python-format
 msgid "Error !"
 msgstr "Kļūda!"
@@ -121,6 +113,14 @@ msgstr "_Atcelt"
 #: view:project.timebox.empty:0
 msgid "Empty Timebox"
 msgstr "Iztīrīt laika sprīdi"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
+msgid ""
+"Timeboxes are defined in the \"Getting Things Done\" methodology. A timebox "
+"defines a period of time in order to categorize your tasks: today, this "
+"week, this month, long term."
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
@@ -220,7 +220,7 @@ msgid "_Ok"
 msgstr "_Labi"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:110
 #, python-format
 msgid "Getting Things Done"
 msgstr "Getting Things Done"
@@ -235,14 +235,6 @@ msgstr "Birojs"
 #: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Secība"
-
-#. module: project_gtd
-#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
-msgid ""
-"Contexts are defined in the \"Getting Things Done\" methodology. It allows "
-"you to categorize your tasks according to the context in which they have to "
-"be done: at office, at home, when I take my car, etc."
-msgstr ""
 
 #. module: project_gtd
 #: help:project.gtd.context,sequence:0
@@ -260,7 +252,7 @@ msgid "Tasks selection"
 msgstr "Uzdevumu izvēlēšanās"
 
 #. module: project_gtd
-#: code:addons/project_gtd/project_gtd.py:0
+#: code:addons/project_gtd/project_gtd.py:111
 #, python-format
 msgid "Inbox"
 msgstr "Ienākošie"
@@ -279,6 +271,14 @@ msgstr "Konteksta vieta, kur lietotājam jātiek galā ar uzdevumu"
 #: model:project.gtd.context,name:project_gtd.context_home
 msgid "Home"
 msgstr "Mājas"
+
+#. module: project_gtd
+#: model:ir.actions.act_window,help:project_gtd.open_gtd_context_tree
+msgid ""
+"Contexts are defined in the \"Getting Things Done\" methodology. It allows "
+"you to categorize your tasks according to the context in which they have to "
+"be done: at the office, at home, when I take my car, etc."
+msgstr ""
 
 #. module: project_gtd
 #: view:project.task:0

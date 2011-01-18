@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-01 09:42+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 07:42+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:10+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: event
 #: view:event.event:0
@@ -111,7 +111,7 @@ msgid "Confirmation Email"
 msgstr "Bevestigings email"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
 msgid "Registration doesn't have any partner to invoice."
 msgstr "Inschrijving heeft geen relatie om te factureren."
@@ -130,7 +130,7 @@ msgid "Invoice Date"
 msgstr "Factuurdatum"
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:0
+#: code:addons/event/wizard/partner_event_registration.py:93
 #: view:event.registration:0
 #: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
@@ -198,7 +198,7 @@ msgid "Ticket for Opera"
 msgstr "Operakaartje"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:122
 #: view:event.event:0
 #, python-format
 msgid "Confirm Event"
@@ -210,11 +210,6 @@ msgstr "Bevestig evenement"
 #: selection:report.event.registration,state:0
 msgid "Cancelled"
 msgstr "Geannuleerd"
-
-#. module: event
-#: view:event.registration:0
-msgid "Send New Email"
-msgstr "Nieuwe email sturen"
 
 #. module: event
 #: field:event.event,reply_to:0
@@ -268,7 +263,7 @@ msgid "Extra Info"
 msgstr "Extra informatie"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:83
 #, python-format
 msgid "Customer Invoices"
 msgstr "Verkoopfacturen"
@@ -359,22 +354,18 @@ msgid "Number of Registrations or Tickets"
 msgstr "Aantal inschrijvingen of kaartjes"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
 #, python-format
 msgid "Warning !"
 msgstr "Waarschuwing !"
 
 #. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
-msgid ""
-"Event is the low-level object used by meeting and others documents that have "
-"to be synchronized with mobile or calendar applications through caldav. Most "
-"of the users should work on the Calendar menu, and not on the list of events."
-msgstr ""
-"Gebeurtenis is een onderliggend object dat wordt gebruikt door agenda en "
-"andere documenten die moeten worden gesynchroniseerd met mobiele of agenda "
-"applicaties via caldav. De meeste gebruikers werken via het agenda menu en "
-"niet met een lijst van gebeurtenissen."
+#: view:event.registration:0
+msgid "Send New Email"
+msgstr "Nieuwe email sturen"
 
 #. module: event
 #: view:event.event:0
@@ -414,7 +405,7 @@ msgid "To be Invoiced"
 msgstr "Te factureren"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:394
 #, python-format
 msgid "Error !"
 msgstr "Fout !"
@@ -432,7 +423,7 @@ msgid "Cancel Registration"
 msgstr "Inschrijving annuleren"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:395
 #, python-format
 msgid "Registered partner doesn't have an address to make the invoice."
 msgstr "Ingeschreven relatie heeft geen adres om een factuur te maken."
@@ -490,7 +481,7 @@ msgid "Confirm Anyway"
 msgstr "Bevestig alsnog"
 
 #. module: event
-#: code:addons/event/wizard/event_confirm_registration.py:0
+#: code:addons/event/wizard/event_confirm_registration.py:54
 #, python-format
 msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
 msgstr ""
@@ -643,6 +634,21 @@ msgid ""
 "event or per event category in:\n"
 "                Events / Reporting\n"
 msgstr ""
+"Organisatie en beheer van evenementen.\n"
+"\n"
+"    Deze module laat u\n"
+"        * uw evenementen en registraties beheren\n"
+"        * email gebruiken om automatisch te bevestigen en inschrijvingen te "
+"versturen voor elke registratie voor een evenement\n"
+"        * ...\n"
+"    Een dashboard voor verenigingen die bevat:\n"
+"    * Registraties per evenement (grafiek)\n"
+"    Merk op dat:\n"
+"    - U nieuwe soorten evenementen kunt definieren in\n"
+"                Evenementen / Configuratie / Evenementsoorten\n"
+"    - U voorgedefinieerde overzichten over aantallen registraties per "
+"evenement categorie kunt benaderen in:\n"
+"                Evenementen / Overzichten\n"
 
 #. module: event
 #: field:event.confirm.registration,msg:0
@@ -660,7 +666,7 @@ msgid "Reference 2"
 msgstr "Referentie 2"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:357
 #: view:report.event.registration:0
 #, python-format
 msgid "Invoiced"
@@ -696,7 +702,7 @@ msgstr ""
 #. module: event
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
 
 #. module: event
 #: view:event.make.invoice:0
@@ -835,7 +841,7 @@ msgid "Set To Draft"
 msgstr "Zet in concept"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:472
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
@@ -883,7 +889,7 @@ msgid "Attachments"
 msgstr "Bijlagen"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:59
 #, python-format
 msgid "Event related doesn't have any product defined"
 msgstr "Gerelateerd evenement heeft geen product gedefinieerd"
@@ -904,7 +910,7 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "Fout ! Sluitingsdatum kan niet voor startdatum liggen."
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:442
 #: selection:event.event,state:0
 #: view:event.make.invoice:0
 #: selection:event.registration,state:0
@@ -931,7 +937,7 @@ msgid "Year"
 msgstr "Jaar"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:517
 #, python-format
 msgid "Cancel"
 msgstr "Annuleren"
@@ -949,7 +955,7 @@ msgid "Event by Registration"
 msgstr "Evenement per inschrijving"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:432
 #, python-format
 msgid "Open"
 msgstr "Openen"
@@ -960,7 +966,8 @@ msgid "Responsible User"
 msgstr "Verantwoordelijke gebruiker"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:538
+#: code:addons/event/event.py:545
 #, python-format
 msgid "Auto Confirmation: [%s] %s"
 msgstr "Automatische bevestiging: [%s] %s"
@@ -1092,7 +1099,7 @@ msgstr "In_schrijven"
 #. module: event
 #: model:ir.model,name:event.model_partner_event_registration
 msgid "  event Registration "
-msgstr ""
+msgstr "  evenement registratie "
 
 #. module: event
 #: help:event.event,date_begin:0
@@ -1106,7 +1113,7 @@ msgid "Unconfirmed"
 msgstr "Onbevestigd"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:542
 #, python-format
 msgid "Auto Registration: [%s] %s"
 msgstr "Automatische inschrijving: [%s] %s"
@@ -1147,13 +1154,13 @@ msgid "Country"
 msgstr "Land"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:55
 #, python-format
 msgid "Registration is set as Cannot be invoiced"
 msgstr "Inschrijving is ingesteld als niet facturabel"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:500
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
@@ -1216,7 +1223,7 @@ msgid "Event For Registration"
 msgstr "Evenement voor inschrijving"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:51
 #, python-format
 msgid "Invoice cannot be created if the registration is in %s state."
 msgstr "Factuur kan niet gemaakt worden als de inschrijving status %s heeft."
@@ -1249,6 +1256,19 @@ msgstr "Geef minimum aantal inschrijvingen op"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Spreker bevestigd"
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Event is the low level object used by meeting and others documents that "
+"should be synchronized with mobile devices or calendar applications through "
+"caldav. Most of the users should work in the Calendar menu, and not in the "
+"list of events."
+msgstr ""
+"Evenement is het low level object gebruikt door gebeurtenis en andere "
+"documenten die moeten worden gesynchroniseerd met mobiele apparaten of "
+"agenda applicaties via caldav. De meeste gebruikers werken in het Agenda "
+"menu en niet in de evenementlijst."
 
 #~ msgid "Ending date"
 #~ msgstr "Einddatum"
@@ -1508,3 +1528,13 @@ msgstr "Spreker bevestigd"
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
+
+#~ msgid ""
+#~ "Event is the low-level object used by meeting and others documents that have "
+#~ "to be synchronized with mobile or calendar applications through caldav. Most "
+#~ "of the users should work on the Calendar menu, and not on the list of events."
+#~ msgstr ""
+#~ "Gebeurtenis is een onderliggend object dat wordt gebruikt door agenda en "
+#~ "andere documenten die moeten worden gesynchroniseerd met mobiele of agenda "
+#~ "applicaties via caldav. De meeste gebruikers werken via het agenda menu en "
+#~ "niet met een lijst van gebeurtenissen."

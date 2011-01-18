@@ -1,5 +1,5 @@
 -
-  In order to test the module with OpenERP, I will make products with No auto-picking 
+  In order to test the module with OpenERP, I will make products with No auto-picking
   to allow an intermediate picking process to provide raw materials to production orders.
 -
   I create product category for measuring the liquid products. Say Litre.
@@ -138,7 +138,7 @@
     bom_id: mrp_bom_cupoftea0
     routing_id: mrp_routing_productionrouting0
     company_id: base.main_company
-    date_planned: '2010-08-03 15:12:32'
+    date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
     name: MO/00002

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-12-12 00:21+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:53+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:50+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -145,7 +145,13 @@ msgid "Set to Draft"
 msgstr "Sätt till preliminär"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
+#: code:addons/hr_payroll/hr_payroll.py:180
+#: code:addons/hr_payroll/hr_payroll.py:195
+#: code:addons/hr_payroll/hr_payroll.py:285
+#: code:addons/hr_payroll/hr_payroll.py:835
+#: code:addons/hr_payroll/hr_payroll.py:1111
+#: code:addons/hr_payroll/hr_payroll.py:1126
+#: code:addons/hr_payroll/hr_payroll.py:1410
 #, python-format
 msgid "Variable Error: %s "
 msgstr ""
@@ -257,7 +263,7 @@ msgid "Amount"
 msgstr "Belopp"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
+#: code:addons/hr_payroll/hr_payroll.py:1225
 #, python-format
 msgid "Please check configuration of %s, payroll head is missing"
 msgstr ""
@@ -539,7 +545,8 @@ msgid "#"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
+#: code:addons/hr_payroll/hr_payroll.py:469
+#: code:addons/hr_payroll/hr_payroll.py:1225
 #, python-format
 msgid "Error !"
 msgstr "Fel!"
@@ -642,7 +649,13 @@ msgid "To"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
+#: code:addons/hr_payroll/hr_payroll.py:180
+#: code:addons/hr_payroll/hr_payroll.py:195
+#: code:addons/hr_payroll/hr_payroll.py:285
+#: code:addons/hr_payroll/hr_payroll.py:835
+#: code:addons/hr_payroll/hr_payroll.py:1111
+#: code:addons/hr_payroll/hr_payroll.py:1126
+#: code:addons/hr_payroll/hr_payroll.py:1410
 #, python-format
 msgid "Variable Error !"
 msgstr ""
@@ -689,15 +702,14 @@ msgid "Bank Advice Note"
 msgstr ""
 
 #. module: hr_payroll
-#: model:ir.actions.act_window,name:hr_payroll.action_contibution_register_form
-#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contibution_register_form
-msgid "Contibution Register"
-msgstr ""
-
-#. module: hr_payroll
 #: view:hr.payroll.register:0
 #: view:hr.payslip:0
 msgid "Payslip"
+msgstr ""
+
+#. module: hr_payroll
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
 msgstr ""
 
 #. module: hr_payroll
@@ -883,7 +895,6 @@ msgid "For"
 msgstr ""
 
 #. module: hr_payroll
-#: view:hr.passport:0
 #: field:hr.passport,contracts_ids:0
 msgid "Contracts"
 msgstr ""
@@ -1003,7 +1014,7 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:hr.allounce.deduction.categoty,code:0
-msgid "Categoty Code"
+msgid "Category Code"
 msgstr ""
 
 #. module: hr_payroll
@@ -1221,7 +1232,9 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:company.contribution,register_id:0
+#: model:ir.actions.act_window,name:hr_payroll.action_contibution_register_form
 #: model:ir.model,name:hr_payroll.model_hr_contibution_register
+#: model:ir.ui.menu,name:hr_payroll.menu_action_hr_contibution_register_form
 msgid "Contribution Register"
 msgstr ""
 
@@ -1381,7 +1394,7 @@ msgstr ""
 
 #. module: hr_payroll
 #: field:hr.allounce.deduction.categoty,name:0
-msgid "Categoty Name"
+msgid "Category Name"
 msgstr ""
 
 #. module: hr_payroll
@@ -1510,7 +1523,7 @@ msgid "Payroll Configurtion"
 msgstr ""
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:0
+#: code:addons/hr_payroll/hr_payroll.py:469
 #, python-format
 msgid "Please define bank account for the %s employee"
 msgstr ""

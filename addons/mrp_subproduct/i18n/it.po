@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-11-02 07:26+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-12 20:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:48+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:39+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
@@ -28,6 +28,9 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Tutte le quantità prodotto devono essere maggiori di 0.\n"
+"Dovreste installare il modulo mrp_subproducts se volete gestire prodotti "
+"extra nelle distinte base!"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -79,6 +82,15 @@ msgid ""
 "    A + B + C -> D + E\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo permette di produrre parecchi articoli da un ordine di "
+"produzione.\n"
+"E' possibile configurare sotto prodotti nella distinta base dei materiali.\n"
+"Senza questo modulo:\n"
+"    A + B + C -> D\n"
+"Con questo modulo:\n"
+"    A + B + C -> D + E\n"
+"    "
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
@@ -93,7 +105,7 @@ msgstr "Distinta base"
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
 msgid "Error ! You can not create recursive BoM."
-msgstr ""
+msgstr "Errore! Non è possibile creare distinte base ricorsive."
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -108,7 +120,7 @@ msgstr "Variabile"
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "La quantità ordinata non può essere negativa o zero !"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct

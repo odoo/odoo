@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-11-27 07:39+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"PO-Revision-Date: 2011-01-14 13:03+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -70,6 +70,12 @@ msgid "Analytic Plan Line"
 msgstr "Kostenplaats planregel"
 
 #. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
+#, python-format
+msgid "User Error"
+msgstr "Gebruikersfout"
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
 msgstr "Kostenverdeling"
@@ -82,7 +88,7 @@ msgstr "Ok"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "U kunt geen boekingsregel creëren op een gesloten rekening"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
@@ -112,7 +118,7 @@ msgstr "Code"
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Verkeerde debet of credit waarde in boekingsregel!"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
@@ -137,7 +143,7 @@ msgstr "Kostenplaats"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "De code van het dagboek moet uniek zijn per bedrijf !"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,ref:0
@@ -149,14 +155,16 @@ msgstr "Kostenplaats referentie"
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"U kunt geen boeking maken op een debiteuren/crediteuren rekening zonder een "
+"relatie aan te geven."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Verkooporderregel"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
 #: view:analytic.plan.create.model:0
 #, python-format
 msgid "Distribution Model Saved"
@@ -178,13 +186,13 @@ msgid "Percentage"
 msgstr "Percentage"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:201
 #, python-format
 msgid "A model having this name and code already exists !"
 msgstr "Er bestaat al een model met deze naam en code!"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "No analytic plan defined !"
 msgstr "Geen kostenplan gedefinieerd"
@@ -202,10 +210,9 @@ msgid "Analytic Plans"
 msgstr "Kostenplaatsschema's"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:0
-#, python-format
-msgid "User Error"
-msgstr "Gebruikersfout"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Perc(%)"
+msgstr "Perc(%)"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,max_required:0
@@ -270,7 +277,8 @@ msgid "To Date"
 msgstr "Tot datum"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:321
+#: code:addons/account_analytic_plans/account_analytic_plans.py:462
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
 msgstr "U moet een een kostenplaatsdagboek definiëren bij het '%s' dagboek!"
@@ -356,7 +364,7 @@ msgstr "Account1 Id"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "Bedrijf moet hetzelfde zijn voor de betreffende rekening en periode."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
@@ -369,8 +377,9 @@ msgid "Root account of this plan."
 msgstr "Hoofdrekening van dit schema."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "Error"
 msgstr "Fout"
@@ -386,7 +395,7 @@ msgid "Quantity"
 msgstr "Aantal"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:0
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #, python-format
 msgid "Please put a name and a code before saving the model !"
 msgstr "Voer een naam en een code in voor het bewaren van het model!"
@@ -397,7 +406,8 @@ msgid "Print Crossovered Analytic"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:321
+#: code:addons/account_analytic_plans/account_analytic_plans.py:462
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Geen kostenplaatsdagboek !"
@@ -434,7 +444,7 @@ msgid "Analytic Distribution Lines"
 msgstr "Kostenverdelingsregels"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:214
 #, python-format
 msgid "The Total Should be Between %s and %s"
 msgstr "Het totaal dient tussen %s en %s te liggen"
@@ -462,7 +472,7 @@ msgstr "Verdelingscode"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -508,10 +518,10 @@ msgstr "Volgnummer"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "De naam van het dagboek moet uniek zijn per bedrijf !"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:0
+#: code:addons/account_analytic_plans/account_analytic_plans.py:214
 #, python-format
 msgid "Value Error"
 msgstr "Waarde fout"
@@ -519,7 +529,7 @@ msgstr "Waarde fout"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create move line on view account."
-msgstr ""
+msgstr "U kunt geen boekingsregel creëren op een zichtrekening"
 
 #~ msgid "Currency:"
 #~ msgstr "Valuta:"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-10-30 09:28+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
@@ -258,7 +258,7 @@ msgstr ""
 "tähendab teostamist planeeritud kuupäeval."
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
+#: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error !"
 msgstr "Viga !"
@@ -410,7 +410,7 @@ msgid "The successor message of Communication."
 msgstr "Suhtlemise  sõnumi järglane"
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:0
+#: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "No partner defined on entry line"
 msgstr "Ühtegi partnerit pole määratletud kirje real"
@@ -467,6 +467,12 @@ msgstr "See kirje rida viitab telliva kliendi infole."
 #: view:payment.order.create:0
 msgid "Search"
 msgstr ""
+
+#. module: account_payment
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+msgid "Payment Order"
+msgstr "Maksekorraldus"
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -570,10 +576,13 @@ msgid "Information"
 msgstr "Info"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr "Maksekorraldus"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"A payment order is a payment request from your company to pay a supplier "
+"invoice or a customer credit note. Here you can register all payment orders "
+"that should be done, keep track of all payment orders and mention the "
+"invoice reference and the partner the payment should be done for."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -681,15 +690,6 @@ msgstr "Korraldus"
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Kokku"
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request that your company does in order to pay "
-"a supplier invoice or a customer credit note. Here you can register all "
-"payment orders that should be done, keep track of all payment orders and "
-"mention the invoice reference and the partner the payment should be done for."
-msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0

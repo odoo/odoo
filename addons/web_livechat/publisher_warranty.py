@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -32,7 +32,7 @@ class publisher_warranty_contract(osv.osv):
 
     @cache(skiparg=3)
     def get_default_livechat_text(self, cr, uid):
-        return '<a href="http://www.openerp.com/services/subscribe-onsite" target="_blank"><img src="/web_livechat/static/images/busy.png"/>Online Support</a>'
+        return '<a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank"><img src="/web_livechat/static/images/busy.png"/>Support</a>'
 
 publisher_warranty_contract()
 

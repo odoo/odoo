@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-12-11 14:34+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:11+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: event
 #: view:event.event:0
@@ -108,7 +108,7 @@ msgid "Confirmation Email"
 msgstr "E-mail para Confirmação"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
 msgid "Registration doesn't have any partner to invoice."
 msgstr "Inscrição não tem nenhum parceiro para faturar."
@@ -127,7 +127,7 @@ msgid "Invoice Date"
 msgstr "Data de Faturamento"
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:0
+#: code:addons/event/wizard/partner_event_registration.py:93
 #: view:event.registration:0
 #: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
@@ -195,7 +195,7 @@ msgid "Ticket for Opera"
 msgstr "Tíquete para Ópera"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:122
 #: view:event.event:0
 #, python-format
 msgid "Confirm Event"
@@ -207,11 +207,6 @@ msgstr "Confirmar Evento"
 #: selection:report.event.registration,state:0
 msgid "Cancelled"
 msgstr "Cancelado"
-
-#. module: event
-#: view:event.registration:0
-msgid "Send New Email"
-msgstr "Enviar Novo Email"
 
 #. module: event
 #: field:event.event,reply_to:0
@@ -265,7 +260,7 @@ msgid "Extra Info"
 msgstr "Info. Extra"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:83
 #, python-format
 msgid "Customer Invoices"
 msgstr "Faturas de Clientes"
@@ -354,18 +349,18 @@ msgid "Number of Registrations or Tickets"
 msgstr "Número de Inscrições ou Bilhetes"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
 #, python-format
 msgid "Warning !"
 msgstr "Aviso !"
 
 #. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
-msgid ""
-"Event is the low-level object used by meeting and others documents that have "
-"to be synchronized with mobile or calendar applications through caldav. Most "
-"of the users should work on the Calendar menu, and not on the list of events."
-msgstr ""
+#: view:event.registration:0
+msgid "Send New Email"
+msgstr "Enviar Novo Email"
 
 #. module: event
 #: view:event.event:0
@@ -405,7 +400,7 @@ msgid "To be Invoiced"
 msgstr "Para ser Faturado"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:394
 #, python-format
 msgid "Error !"
 msgstr "Erro!"
@@ -423,7 +418,7 @@ msgid "Cancel Registration"
 msgstr "Cancelar Inscrição"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:395
 #, python-format
 msgid "Registered partner doesn't have an address to make the invoice."
 msgstr "Parceiro Inscrito não tem um endereço para gerar faturamento."
@@ -482,7 +477,7 @@ msgid "Confirm Anyway"
 msgstr "Confirmar assim mesmo"
 
 #. module: event
-#: code:addons/event/wizard/event_confirm_registration.py:0
+#: code:addons/event/wizard/event_confirm_registration.py:54
 #, python-format
 msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
 msgstr "Aviso: O Evento '%s' atingiu o Limite Máximo (%s)"
@@ -647,7 +642,7 @@ msgid "Reference 2"
 msgstr "Referência 2"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:357
 #: view:report.event.registration:0
 #, python-format
 msgid "Invoiced"
@@ -822,7 +817,7 @@ msgid "Set To Draft"
 msgstr "Marcar como Rascunho"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:472
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
@@ -870,7 +865,7 @@ msgid "Attachments"
 msgstr "Anexos"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:59
 #, python-format
 msgid "Event related doesn't have any product defined"
 msgstr "O Evento relacionado não tem nenhum produto definido"
@@ -891,7 +886,7 @@ msgid "Error ! Closing Date cannot be set before Beginning Date."
 msgstr "Erro! A Data de Encerramento não pode ser anterior a Data de Início."
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:442
 #: selection:event.event,state:0
 #: view:event.make.invoice:0
 #: selection:event.registration,state:0
@@ -918,7 +913,7 @@ msgid "Year"
 msgstr "Ano"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:517
 #, python-format
 msgid "Cancel"
 msgstr "Cancelar"
@@ -936,7 +931,7 @@ msgid "Event by Registration"
 msgstr "Eventos por Inscrição"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:432
 #, python-format
 msgid "Open"
 msgstr "Abrir"
@@ -947,7 +942,8 @@ msgid "Responsible User"
 msgstr "Usuário Responsável"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:538
+#: code:addons/event/event.py:545
 #, python-format
 msgid "Auto Confirmation: [%s] %s"
 msgstr "Confirmação Automática: [%s] %s"
@@ -1093,7 +1089,7 @@ msgid "Unconfirmed"
 msgstr "Não confirmado"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:542
 #, python-format
 msgid "Auto Registration: [%s] %s"
 msgstr "Inscrição Automática: [%s] %s"
@@ -1134,13 +1130,13 @@ msgid "Country"
 msgstr "País"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:55
 #, python-format
 msgid "Registration is set as Cannot be invoiced"
 msgstr "Inscrição está definida como não pode ser faturada"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:500
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
@@ -1203,7 +1199,7 @@ msgid "Event For Registration"
 msgstr "Evento para Inscrição"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:51
 #, python-format
 msgid "Invoice cannot be created if the registration is in %s state."
 msgstr "Nota Fiscal não pode ser criada se a inscrição está no estado %s."
@@ -1236,6 +1232,15 @@ msgstr "Fornecer o Número Mínimo de Inscrições"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Orador Confirmado"
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Event is the low level object used by meeting and others documents that "
+"should be synchronized with mobile devices or calendar applications through "
+"caldav. Most of the users should work in the Calendar menu, and not in the "
+"list of events."
+msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Invalido XML para Arquitetura da View"

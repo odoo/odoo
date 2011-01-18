@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-10-26 08:25+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -36,15 +36,11 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Izračunato pomoću formule: Najveća količina - Ukupno vrijeme"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
 msgstr "Greška u pristupu"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "Prihodi teoretski"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -74,14 +70,14 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Izračunato pomoću formule: Prihodi Teorijski - Ukupni troškovi"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theorical Margin"
-msgstr "Teoretska margina"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Realna Stopa Margine (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -120,6 +116,11 @@ msgstr ""
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Preostali Sati"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -174,7 +175,8 @@ msgid "Invoiced Amount"
 msgstr "Fakturirani iznos"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "Pokušavate da zaobiđete pravilo za pristup (Dokument tipa: %s)."
@@ -193,6 +195,13 @@ msgstr "Fakturirani sati"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Realna marza"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -301,6 +310,9 @@ msgstr ""
 #~ msgid "My Current Accounts"
 #~ msgstr "Moji tekući računi"
 
+#~ msgid "Theorical Revenue"
+#~ msgstr "Prihodi teoretski"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nevažeći XML za pregled arhitekture"
 
@@ -318,6 +330,9 @@ msgstr ""
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "Tekući analitički računi"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Teoretska margina"
 
 #~ msgid "Invoicing"
 #~ msgstr "Fakturiranje"

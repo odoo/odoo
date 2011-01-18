@@ -184,7 +184,7 @@
             <field name="arch" type="xml">
                 <field name="membership_start" position="after">
                 <newline/>
-              <group expand="0" string="Group By" colspan="10" col="8">
+              <group expand="0" string="Group By..." colspan="10" col="8">
                 <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                   <filter string="Associate Member" name = "associate" icon="terp-partner" domain="[]" context="{'group_by':'associate_member'}"/>
                   <separator orientation="vertical"/>
@@ -201,7 +201,6 @@
             <field name="name">Members</field>
             <field name="res_model">res.partner</field>
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
-            <field name="context">{"search_default_old": 1}</field>
             <field name="context">{"search_default_all_members": 1}</field>
         </record>
 

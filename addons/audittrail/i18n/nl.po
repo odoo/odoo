@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-11-24 09:28+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-11 18:42+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:42+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:42+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: audittrail
 #: model:ir.module.module,shortdesc:audittrail.module_meta_information
@@ -22,7 +22,7 @@ msgid "Audit Trail"
 msgstr "Audittrail"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
+#: code:addons/audittrail/audittrail.py:81
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr "WAARSCHUWING: audittrail is geen onderdeel van de pool"
@@ -54,7 +54,7 @@ msgstr "Audit logs"
 #: view:audittrail.log:0
 #: view:audittrail.rule:0
 msgid "Group By..."
-msgstr ""
+msgstr "Groepeer op..."
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -65,7 +65,7 @@ msgstr "Status"
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "_Subscribe"
-msgstr ""
+msgstr "_Inschrijven"
 
 #. module: audittrail
 #: view:audittrail.rule:0
@@ -138,11 +138,6 @@ msgid "Log Lines"
 msgstr "Logregels"
 
 #. module: audittrail
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
-msgid "Rules"
-msgstr "Regels"
-
-#. module: audittrail
 #: view:audittrail.log:0
 #: field:audittrail.log,object_id:0
 #: field:audittrail.rule,object_id:0
@@ -167,10 +162,11 @@ msgstr "Nieuwe waarde tekst: "
 #. module: audittrail
 #: view:audittrail.rule:0
 msgid "Search Audittrail Rule"
-msgstr ""
+msgstr "Audittrail regel zoeken"
 
 #. module: audittrail
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_rule_tree
+#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_rule_tree
 msgid "Audit Rules"
 msgstr "Audit-regels"
 
@@ -231,6 +227,14 @@ msgid ""
 "    delete on objects and can check logs.\n"
 "    "
 msgstr ""
+"\n"
+"    Deze module geeft de beheerder de rechten\n"
+"    om elke gebruikers transactie op elk object in het\n"
+"    systeem te volgen.\n"
+"\n"
+"    De beheerder kan regels inschrijven voor lees, schrijf en \n"
+"    verwijder op objecten en kan logs controleren.\n"
+"    "
 
 #. module: audittrail
 #: field:audittrail.rule,log_read:0
@@ -238,7 +242,7 @@ msgid "Log Reads"
 msgstr "Log lezen"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:0
+#: code:addons/audittrail/audittrail.py:82
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr "Wijzig audittrail afhankelijkheden -- Zet regel op CONCEPT"
@@ -302,7 +306,7 @@ msgstr "Omschrijving veld"
 #. module: audittrail
 #: view:audittrail.log:0
 msgid "Search Audittrail Log"
-msgstr ""
+msgstr "Audittrail log zoeken"
 
 #. module: audittrail
 #: field:audittrail.rule,log_write:0
@@ -432,6 +436,9 @@ msgstr ""
 
 #~ msgid "Read"
 #~ msgstr "Lezen"
+
+#~ msgid "Rules"
+#~ msgstr "Regels"
 
 #~ msgid "Create"
 #~ msgstr "Maak"

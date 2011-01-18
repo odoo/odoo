@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-02 09:21+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 12:19+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:54+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:52+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -223,7 +223,7 @@ msgid "Previous"
 msgstr "Vorige"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:0
+#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:107
 #: view:hr.applicant:0
 #, python-format
 msgid "Phone Call"
@@ -255,7 +255,7 @@ msgid "Send New Email"
 msgstr "Nieuw email versturen"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:0
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
 #, python-format
 msgid "A partner is already defined on this job request."
 msgstr "Er is al een relatie gedefinieerd bij deze sollicitatie."
@@ -290,10 +290,20 @@ msgid "Good"
 msgstr "Goed"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:0
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:57
 #, python-format
 msgid "Error !"
 msgstr "Fout !"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+msgid ""
+"Define here your stages of the recruitment process, for example: "
+"qualification call, first interview, second interview, refused, hired."
+msgstr ""
+"Definieer hier de stadia in het wervingsproces, bijvoorbeeld: kwalificatie, "
+"eerste interview, tweede interview, afgewezen, aangenomen."
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -582,6 +592,11 @@ msgid "Status"
 msgstr "Status"
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Communication & History"
+msgstr "Communicatie & Geschiedenis"
+
+#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "August"
 msgstr "Augustus"
@@ -713,6 +728,25 @@ msgstr ""
 "Weet u zeker dat u een relatie op basis van deze sollicitatie wilt maken?"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"From this menu you can track applicants in the recruitment process and "
+"manage all operations: meetings, interviews, phone calls, etc. If you setup "
+"the email gateway, applicants and their attached CV are created "
+"automatically when an email is sent to jobs@yourcompany.com. If you install "
+"the document management modules, all documents (CV and motivation letters) "
+"are indexed automatically, so that you can easily search through their "
+"content."
+msgstr ""
+"Vanuit dit menu kunt u kandidaten volgen in het wervingsproces en alle "
+"handelingen beheren: afspraken, interviews, telefoongesprekken, etc. Als u "
+"de email gateway instelt, worden kandidaten en bijgevoegde CV's automatisch "
+"gemaakt als een email wordt gestuurd naar jobs@uwbedrijf.com, Als u de "
+"document management systeem modules installeert, worden alle documenten (CV "
+"en sollicitatiebrieven) automatisch geïndexeerd, zodat u gemakkelijk door de "
+"inhoud kunt zoeken."
+
+#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "History"
 msgstr "Historie"
@@ -752,7 +786,7 @@ msgid "Open"
 msgstr "Geopend"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:0
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:57
 #, python-format
 msgid "A partner is already existing with the same name."
 msgstr "Er bestaat al een relatie met dezelfde naam."
@@ -796,6 +830,17 @@ msgid ""
 "system to store and search in your CV base.\n"
 "    "
 msgstr ""
+"\n"
+"Beheert banen en het wervingsproces. Het is geïntegreerd met de\n"
+"enquete module waardoor u interviews kunt definiëren voor verschillende "
+"banen.\n"
+"\n"
+"Deze module is geïntegreerd met de email gateway om automatisch emails te "
+"volgen\n"
+"die naar jobs@UWBEDRIJF.com worden gestuurd. Het is ook geïntegreerd met het "
+"document\n"
+"management systeem om uw CV bestand vast te leggen en te doorzoeken.\n"
+"    "
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -846,7 +891,7 @@ msgid "Refused"
 msgstr "Afgewezen"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:0
+#: code:addons/hr_recruitment/hr_recruitment.py:412
 #, python-format
 msgid "Applicant '%s' is being hired."
 msgstr "Kandidaat '%s' is aangenomen."
@@ -874,11 +919,6 @@ msgstr "Gemiddeld"
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
 msgid "Degree of Recruitment"
 msgstr "Graden bij werving"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Emails"
-msgstr "Emails"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -919,7 +959,7 @@ msgid "Assign To"
 msgstr "Toewijzen aan"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:0
+#: code:addons/hr_recruitment/hr_recruitment.py:396
 #, python-format
 msgid "The job request '%s' has been set 'in progress'."
 msgstr "De sollicitatie '%s' is op 'loopt' gezet."
@@ -958,6 +998,9 @@ msgstr "Enquête"
 
 #~ msgid "Error ! You cannot create recursive Sales team."
 #~ msgstr "Fout ! U kunt geen recursief verkoopteam maken"
+
+#~ msgid "Emails"
+#~ msgstr "Emails"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "De modulenaam moet uniek zijn !"

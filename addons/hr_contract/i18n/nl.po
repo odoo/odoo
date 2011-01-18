@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-02 08:02+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-12 13:39+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:37+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:38+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -37,9 +37,9 @@ msgid "Trial Start Date"
 msgstr "Startdatum proeftijd"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function Arguments"
-msgstr "Functie argumenten"
+#: view:hr.contract:0
+msgid "Passport"
+msgstr "Paspoort"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -67,9 +67,9 @@ msgid "Current"
 msgstr "Actueel"
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "Afdeling"
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "Factor voor uurkosten"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -82,9 +82,9 @@ msgid "Wage Types"
 msgstr "Soorten lonen"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Calculations"
-msgstr "Berekeningen"
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Afdeling"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -97,12 +97,6 @@ msgstr "Basis"
 #: model:ir.model,name:hr_contract.model_hr_employee
 msgid "Employee"
 msgstr "Medewerker"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "Werktijden"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -120,29 +114,12 @@ msgid "Hours in the period"
 msgstr "Uren in de periode"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function"
-msgstr "Functie"
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
+msgstr "Woon-werk afstand"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Groepeer op..."
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Description"
-msgstr "Omschrijving"
-
-#. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Geboorteplaats"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -151,20 +128,14 @@ msgid "Contracts"
 msgstr "Contracten"
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "Is een manager"
+#: view:hr.employee:0
+msgid "Personal Info"
+msgstr "Persoonlijke informatie"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
 msgstr "Baan"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Passport"
-msgstr "Paspoort"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -192,23 +163,28 @@ msgid ""
 "    You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"    Voegt alle informatie toe aan het medewerker formulier om contracten te "
+"beheren:\n"
+"    * Burgelijke staat,\n"
+"    * Sofi nummer,\n"
+"    * Geboorteplaats en -datum, ...\n"
+"    U kunt verschillende contracten toewijzen per medewerker.\n"
+"    "
 
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,advantages:0
-#: view:hr.employee:0
 msgid "Advantages"
 msgstr "Beloning"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Valid for"
 msgstr "Geldig voor"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Work Permit"
 msgstr "Werkvergunning"
 
@@ -224,14 +200,18 @@ msgid "Contract Types"
 msgstr "Contractsoorten"
 
 #. module: hr_contract
+#: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr "Loonsoort zoeken"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Wage Type"
+msgstr "Loonsoort"
 
 #. module: hr_contract
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Fout ! U kunt geen recursieve hiërarchie van medewerkers maken."
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -256,7 +236,6 @@ msgstr "In kilometers"
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,notes:0
-#: view:hr.employee:0
 msgid "Notes"
 msgstr "Opmerkingen"
 
@@ -265,15 +244,7 @@ msgstr "Opmerkingen"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Loonsoort"
+"Fout ! U kunt geen afdeling selecteren waarvan de medewerker de beheerder is."
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -298,9 +269,10 @@ msgid "Search Wage Period"
 msgstr "Loonperiode zoeken"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Computation"
-msgstr "Loonberekening"
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Werktijden"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -320,15 +292,9 @@ msgid "Job Title"
 msgstr "Functietitel"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Loonperiode"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "Woon-werk afstand"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Is een manager"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
@@ -336,9 +302,14 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Company contribution"
-msgstr "Bedrijfsbijdrage"
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
+msgstr "Fout! startdatum contract moet vóór einddatum contract liggen."
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
+msgstr "Loonsoort zoeken"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
@@ -351,9 +322,10 @@ msgid "Trial End Date"
 msgstr "Einddatum proeftijd"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Factor voor uurkosten"
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Groepeer op..."
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
@@ -366,24 +338,15 @@ msgid "Period"
 msgstr "Periode"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
-msgstr "Loonstrookregel"
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Geboorteplaats"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Employee specific allowances and deductions"
-msgstr "Medewerkersgebonden toelages en inhoudingen"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Contract Details"
-msgstr "Details contract"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Structure"
-msgstr "Beloningsstructuur"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
+msgid "Wage period"
+msgstr "Loonperiode"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -396,13 +359,7 @@ msgstr ""
 "voor een uur werk gebaseerd op het contract met de medewerker."
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "Persoonlijke informatie"
-
-#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Duration"
 msgstr "Duur"
 
@@ -428,6 +385,9 @@ msgstr "Contractsoort zoeken"
 
 #~ msgid "Number of children"
 #~ msgstr "Aantal kinderen"
+
+#~ msgid "Function"
+#~ msgstr "Functie"
 
 #~ msgid "Miscelleanous"
 #~ msgstr "Diversen"
@@ -482,8 +442,35 @@ msgstr "Contractsoort zoeken"
 #~ msgid "Contract Duration"
 #~ msgstr "Contractduur"
 
+#~ msgid "Calculations"
+#~ msgstr "Berekeningen"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fout ! U kunt geen recursief menu maken."
+
+#~ msgid "Function Arguments"
+#~ msgstr "Functie argumenten"
+
+#~ msgid "Description"
+#~ msgstr "Omschrijving"
+
+#~ msgid "Payslip Line"
+#~ msgstr "Loonstrookregel"
+
+#~ msgid "Company contribution"
+#~ msgstr "Bedrijfsbijdrage"
+
+#~ msgid "Salary Computation"
+#~ msgstr "Loonberekening"
+
+#~ msgid "Employee specific allowances and deductions"
+#~ msgstr "Medewerkersgebonden toelages en inhoudingen"
+
+#~ msgid "Contract Details"
+#~ msgstr "Details contract"
+
+#~ msgid "Salary Structure"
+#~ msgstr "Beloningsstructuur"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "De modulenaam moet uniek zijn !"

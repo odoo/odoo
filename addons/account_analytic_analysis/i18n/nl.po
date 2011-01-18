@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-11-26 10:17+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 18:39+0000\n"
+"Last-Translator: Jan Verlaan (Veritos) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -36,15 +36,11 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Berekend met de formule: maximum hoeveelheid - totaal aantal uren"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
 msgstr "Toegangsfout"
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "Theoretische omzet"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -62,6 +58,13 @@ msgid ""
 "You can also view the report of account analytic summary\n"
 "user-wise as well as month wise.\n"
 msgstr ""
+"\n"
+"Deze module is voor het wijzigen van de view op kostenplaatsten om\n"
+"belangrijke data aan de projectmanager van serviceberdijven te tonen.\n"
+"Voegt een menu toe om relevante informatie aan elke manager te tonen.\n"
+"\n"
+"U kunt ook het rapport bekijken met een samenvatting van de\n"
+"kostenplaatsrekening, zowel op gebruikersnivo als maandnivo.\n"
 
 #. module: account_analytic_analysis
 #: field:account.analytic.account,last_invoice_date:0
@@ -74,14 +77,14 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Berekend met de formule: theoretische omzet - totale kosten"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theorical Margin"
-msgstr "Theoretische marge"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Werkelijke marge (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr "Theoretische ontvangsten"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -120,6 +123,11 @@ msgstr ""
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Resterende uren"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr "Theoretische marge"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -174,7 +182,8 @@ msgid "Invoiced Amount"
 msgstr "Gefactureerd bedrag"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "U probeert een toegangsregel te omzeilen (Document type: %s)."
@@ -193,6 +202,15 @@ msgstr "Gefactureerde uren"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Werkelijke marge"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
+"Fout! De munteenheid moet hetzelfde zijn als de munteenheid van het "
+"geselecteerde bedrijf"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -286,7 +304,7 @@ msgstr "Totaal uren"
 #. module: account_analytic_analysis
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Fout! U kunt geen recursieve kostenplaatsen maken."
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,total_cost:0
@@ -313,6 +331,9 @@ msgstr ""
 #~ msgid "My Current Accounts"
 #~ msgstr "Mijn actuele kostenplaatsen"
 
+#~ msgid "Theorical Revenue"
+#~ msgstr "Theoretische omzet"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor weergave!"
 
@@ -324,6 +345,9 @@ msgstr ""
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "Actuele kostenplaatsen"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Theoretische marge"
 
 #~ msgid "Invoicing"
 #~ msgstr "Facturatie"

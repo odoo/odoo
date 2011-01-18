@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-20 11:56+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 13:59+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:59+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:58+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -24,7 +24,7 @@ msgid "In Progress"
 msgstr "В процессе"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
 #, python-format
 msgid "No Product in Tender"
 msgstr "Нет ТМЦ в тендере"
@@ -39,20 +39,6 @@ msgstr "Подтвердить"
 #: field:purchase.requisition,user_id:0
 msgid "Responsible"
 msgstr "Ответственный"
-
-#. module: purchase_requisition
-#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
-msgid ""
-"A purchase requisition is a step before the request for quotation. In a "
-"purchase requisition (or purchase tender), you can record the products you "
-"need to buy and trigger the creation of RfQs to supplier. After the "
-"negotiation, once you have reviewed all the supplier's offers, you can "
-"validate some and cancel others."
-msgstr ""
-"Заявка на закупку это шаг перед запросом цен. В заявке на закупку (или "
-"тендере на закупку) вы записываете ТМЦ для закупки и подтверждаете запросы "
-"цен у поставщиков. После переговоров, просмотрев все предложения "
-"поставщиков, вы можете утвердить одни предложения и отменить другие."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -116,9 +102,9 @@ msgid "Product"
 msgstr "ТМЦ"
 
 #. module: purchase_requisition
-#: view:purchase.requisition:0
-msgid "Quotations"
-msgstr "Предложения"
+#: sql_constraint:purchase.order:0
+msgid "Order Reference must be unique !"
+msgstr ""
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -190,6 +176,20 @@ msgstr "Ссылка на заказ"
 #: view:purchase.requisition:0
 msgid "Start Date"
 msgstr "Дата начала"
+
+#. module: purchase_requisition
+#: model:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
+msgid ""
+"A purchase requisition is the step before a request for quotation. In a "
+"purchase requisition (or purchase tender), you can record the products you "
+"need to buy and trigger the creation of RfQs to suppliers. After the "
+"negotiation, once you have reviewed all the supplier's offers, you can "
+"validate some and cancel others."
+msgstr ""
+"Запрос на закупку это шаг перед запросом цен. В запросе на закупку (или "
+"тендере на закупку) вы записываете ТМЦ для закупки и подтверждаете запросы "
+"цен у поставщиков. После переговоров, просмотрев все предложения "
+"поставщиков, вы можете утвердить одни предложения и отменить другие."
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
@@ -264,7 +264,7 @@ msgid "Purchase Order"
 msgstr "Заказ на закупку"
 
 #. module: purchase_requisition
-#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:0
+#: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:44
 #, python-format
 msgid "Error!"
 msgstr "Ошибка !"
@@ -313,7 +313,7 @@ msgstr "Подробности предложения цен"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Purchase for Requisitions"
-msgstr "Запросы цен"
+msgstr "Закупка по запросам"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -346,6 +346,11 @@ msgstr "Склад"
 #: field:procurement.order,requisition_id:0
 msgid "Latest Requisition"
 msgstr "Последний запрос"
+
+#. module: purchase_requisition
+#: view:purchase.requisition:0
+msgid "Quotations"
+msgstr "Предложения"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -436,3 +441,15 @@ msgstr "Заказы на закупку"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Название модуля должно быть уникальным !"
+
+#~ msgid ""
+#~ "A purchase requisition is a step before the request for quotation. In a "
+#~ "purchase requisition (or purchase tender), you can record the products you "
+#~ "need to buy and trigger the creation of RfQs to supplier. After the "
+#~ "negotiation, once you have reviewed all the supplier's offers, you can "
+#~ "validate some and cancel others."
+#~ msgstr ""
+#~ "Заявка на закупку это шаг перед запросом цен. В заявке на закупку (или "
+#~ "тендере на закупку) вы записываете ТМЦ для закупки и подтверждаете запросы "
+#~ "цен у поставщиков. После переговоров, просмотрев все предложения "
+#~ "поставщиков, вы можете утвердить одни предложения и отменить другие."

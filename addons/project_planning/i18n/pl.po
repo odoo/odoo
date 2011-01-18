@@ -7,15 +7,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-07 18:36+0000\n"
-"Last-Translator: Grzegorz Grzelak (Cirrus.pl) <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 08:50+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: Polish <pl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:58+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:58+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: project_planning
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr "Błąd! Waluta musi być ta sama co waluta wybranej firmy."
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -24,6 +31,8 @@ msgid ""
 "This value is given by the sum of work remaining to do on the task for this "
 "planning, expressed in days."
 msgstr ""
+"Ta wartość jest sumą dni pracy pozostałą do wykonania zadania dla tego "
+"planowania,"
 
 #. module: project_planning
 #: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
@@ -41,7 +50,7 @@ msgstr "Pozycja planowania"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Unallocated Time"
-msgstr ""
+msgstr "Suma czasu nieprzydzielonego"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,name:0
@@ -56,7 +65,7 @@ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych zadań."
 #. module: project_planning
 #: view:board.board:0
 msgid "My Project's planning"
-msgstr ""
+msgstr "Moje planowania"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.account,timesheet:0
@@ -70,6 +79,19 @@ msgstr "Karta czasu pracy"
 #: model:ir.module.module,shortdesc:project_planning.module_meta_information
 msgid "Planning Management Module"
 msgstr "Moduł planowania projektów"
+
+#. module: project_planning
+#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
+msgid ""
+"With its global system to schedule all resources of a company (people and "
+"material), OpenERP allows you to encode and then automatically compute tasks "
+"and phases scheduling, track resource allocation and availability."
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Total planned tasks"
+msgstr "Suma planowanych zadań"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.stat,account_id:0
@@ -131,11 +153,6 @@ msgid "Planning By Account"
 msgstr "Planowanie wg kont"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "Time without"
-msgstr "Czas bez"
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Current Plannings"
 msgstr "Bieżące planowania"
@@ -156,9 +173,9 @@ msgid "Extra Info"
 msgstr "Dodatkowe informacje"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,total_planned:0
-msgid "Total Planned"
-msgstr "Suma planowana"
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr "Do :"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,timesheet:0
@@ -167,6 +184,8 @@ msgid ""
 "This value is given by the sum of all work encoded in the timesheet(s) "
 "between the 'Date From' and 'Date To' of the planning."
 msgstr ""
+"Ta wartość jest sumą dni pracy wprowadzonych do planowania w kartach czasu "
+"pracy pomiędzy \"Data od\" i \"Data do\"."
 
 #. module: project_planning
 #: constraint:account.analytic.account:0
@@ -180,9 +199,10 @@ msgid "Time Allocation without Tasks"
 msgstr "Alokacja czasu bez zadań"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "From"
-msgstr "Od"
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+msgid "Planning Lines"
+msgstr "Pozycje planowania"
 
 #. module: project_planning
 #: constraint:res.company:0
@@ -201,6 +221,8 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to FALSE, expressed in days."
 msgstr ""
+"Ta wartość jest sumą dni przydzieloną wg ODZNACZONEJ opcji 'Przydzielone do "
+"zadań'."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -238,27 +260,26 @@ msgid "Planning"
 msgstr "Planowanie"
 
 #. module: project_planning
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Suma planowana"
+
+#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Time Encoding"
-msgstr ""
+msgstr "Wprowadzanie czasu"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.user,free:0
 msgid "Unallocated Time"
-msgstr ""
-
-#. module: project_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
-#: view:report_account_analytic.planning:0
-msgid "Planning by Account"
-msgstr "Planowanie wg kont"
+msgstr "Czas nieprzydzielony"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.user,plan_open:0
 msgid ""
 "This value is given by the sum of time allocation without task(s) linked, "
 "expressed in days."
-msgstr ""
+msgstr "To jest suma dni przydzielonego bez związku z zadaniami."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -266,9 +287,13 @@ msgid "Delegate"
 msgstr "Przydziel"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Analiza planowania"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"Obliczone w dniach roboczych (Czas przydzielony w zadaniach + Czas "
+"przydzielony poza zadaniami + Urlopy)"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -276,6 +301,18 @@ msgid ""
 "Set here the number of working days within this planning for one person full "
 "time"
 msgstr ""
+"Wprowadź liczbę dni roboczych dla tego planowania na jedną osobę pracującą w "
+"pełnym wymiarze"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "["
+msgstr ""
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "From :"
+msgstr "Od :"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,planning_user_ids:0
@@ -295,14 +332,14 @@ msgid "Planning By Account (in Days)"
 msgstr "Planowanie w kont (w dniach)"
 
 #. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Time without tasks"
+msgstr "Czas bez zadań"
+
+#. module: project_planning
 #: field:report_account_analytic.planning,date_from:0
 msgid "Start Date"
 msgstr "Data Początkowa"
-
-#. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "Total Planned Tasks"
-msgstr "Suma planowanych zadań"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,total_free:0
@@ -315,18 +352,12 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to TRUE expressed in days."
 msgstr ""
+"To jest suma dni przydzielonych z ZAZNACZONĄ opcją 'Przedzielone do zadań'."
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "tasks"
-msgstr "zadania"
-
-#. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
-msgstr ""
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Analiza planowania"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -345,10 +376,10 @@ msgid "Draft"
 msgstr "Projekt"
 
 #. module: project_planning
-#: view:account.analytic.account:0
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
 #: view:report_account_analytic.planning:0
-msgid "Planning Lines"
-msgstr "Pozycje planowania"
+msgid "Planning by Account"
+msgstr "Planowanie wg kont"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -371,6 +402,8 @@ msgid ""
 "This value is given by the total of validated leaves into the 'Date From' "
 "and 'Date To' of the planning."
 msgstr ""
+"To jest suma dni zatwierdzonych nieobecności w planowaniu pomiędzy datami: "
+"'Data od' i 'Data do'."
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,user_id:0
@@ -418,7 +451,7 @@ msgstr "Ilość w bazowej JM"
 #. module: project_planning
 #: field:report_account_analytic.planning.user,plan_tasks:0
 msgid "Time Planned on Tasks"
-msgstr ""
+msgstr "Czas planowany na zadania"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount:0
@@ -486,7 +519,6 @@ msgstr "Reaktywuj"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,user_id:0
-#: report:report_account_analytic.planning.print:0
 msgid "Responsible"
 msgstr "Odpowiedzialny"
 
@@ -496,14 +528,9 @@ msgid "Planning stat"
 msgstr "Stat. planowania"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "To"
-msgstr "Do"
-
-#. module: project_planning
 #: field:report_account_analytic.planning.account,plan_tasks:0
 msgid "Time Allocation of Tasks"
-msgstr ""
+msgstr "Alokacja czasu w zadaniach"
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -511,17 +538,9 @@ msgid "Summary by user"
 msgstr "Podsumowanie wg użytkowników"
 
 #. module: project_planning
-#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
-msgid ""
-"With its commun system for scheduling all resources of a company (people and "
-"materials), OpenERP allows you to encode then compute automatically tasks "
-"and phases scheduling, track resources allocation and availibility."
-msgstr ""
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Time Allocation without Tasks"
-msgstr ""
+msgstr "Suma czasu przydzielonego poza zadaniami"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.user,holiday:0
@@ -531,7 +550,7 @@ msgstr "Nieobecności"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Time Allocation of Tasks"
-msgstr ""
+msgstr "Suma czasu przydzielonego w zadaniach"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,date_to:0
@@ -547,6 +566,16 @@ msgstr "Pozostałe zadania"
 #: report:report_account_analytic.planning.print:0
 msgid "Summary by project"
 msgstr "Podsumowanie wg projektów"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Responsible :"
+msgstr "Odpowiedzialny :"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "]"
+msgstr ""
 
 #. module: project_planning
 #: field:res.company,planning_time_mode_id:0
@@ -568,4 +597,19 @@ msgstr "Menedżer"
 msgid ""
 "This value is given by the sum of time allocation with task(s) linked, "
 "expressed in days."
-msgstr ""
+msgstr "To jest suma dni czasu przydzielonego w zadaniach."
+
+#~ msgid "Time without"
+#~ msgstr "Czas bez"
+
+#~ msgid "From"
+#~ msgstr "Od"
+
+#~ msgid "Total Planned Tasks"
+#~ msgstr "Suma planowanych zadań"
+
+#~ msgid "tasks"
+#~ msgstr "zadania"
+
+#~ msgid "To"
+#~ msgstr "Do"

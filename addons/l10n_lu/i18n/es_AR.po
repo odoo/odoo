@@ -6,25 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2009-09-08 13:28+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:43+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:42+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: l10n_lu
 #: view:vat.declaration.report:0
 msgid "Print Tax Statements"
-msgstr ""
-
-#. module: l10n_lu
-#: model:ir.actions.act_window,name:l10n_lu.action_vat_report
-#: model:ir.model,name:l10n_lu.model_vat_declaration_report
-msgid "VAT Declaration Report"
 msgstr ""
 
 #. module: l10n_lu
@@ -33,14 +27,9 @@ msgid "Company"
 msgstr "Empresa"
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_income
-msgid "Income"
-msgstr "Ingresos"
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_cash_moves
-msgid "Cash"
-msgstr "Efectivo"
+#: field:vat.declaration.report,period_id:0
+msgid "Period"
+msgstr "Período"
 
 #. module: l10n_lu
 #: model:ir.ui.menu,name:l10n_lu.legal_lu
@@ -59,12 +48,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_liability
-msgid "Liability"
-msgstr "Pasivo"
-
-#. module: l10n_lu
-#: code:addons/l10n_lu/wizard/print_vat.py:0
+#: code:addons/l10n_lu/wizard/print_vat.py:65
 #, python-format
 msgid "pdf not created !"
 msgstr ""
@@ -75,24 +59,9 @@ msgid "VAT Declaration"
 msgstr "Declaración de IVA"
 
 #. module: l10n_lu
-#: field:vat.declaration.report,period_id:0
-msgid "Period"
-msgstr "Período"
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_asset
-msgid "Asset"
-msgstr "Activos"
-
-#. module: l10n_lu
-#: code:addons/l10n_lu/wizard/print_vat.py:0
+#: code:addons/l10n_lu/wizard/print_vat.py:65
 #, python-format
 msgid "Please check if package pdftk is installed!"
-msgstr ""
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_cash_equity
-msgid "Equity"
 msgstr ""
 
 #. module: l10n_lu
@@ -106,22 +75,31 @@ msgid "Luxembourg - Plan Comptable Minimum Normalise"
 msgstr ""
 
 #. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_expense
-msgid "Expense"
-msgstr "Egresos"
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_creances
-msgid "Créances"
-msgstr "Obligación"
-
-#. module: l10n_lu
-#: model:account.account.type,name:l10n_lu.account_type_root
-msgid "View"
+#: model:ir.actions.act_window,name:l10n_lu.action_vat_report
+#: model:ir.model,name:l10n_lu.model_vat_declaration_report
+msgid "VAT Declaration Report"
 msgstr ""
 
 #~ msgid "VAT Legal Declaration"
 #~ msgstr "Declaración legal de IVA"
 
+#~ msgid "Liability"
+#~ msgstr "Pasivo"
+
 #~ msgid "Print Taxes Statement"
 #~ msgstr "Imprimir declaración de impuestos"
+
+#~ msgid "Créances"
+#~ msgstr "Obligación"
+
+#~ msgid "Income"
+#~ msgstr "Ingresos"
+
+#~ msgid "Cash"
+#~ msgstr "Efectivo"
+
+#~ msgid "Asset"
+#~ msgstr "Activos"
+
+#~ msgid "Expense"
+#~ msgstr "Egresos"

@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-19 00:14+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 12:36+0000\n"
 "Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
 "<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -94,6 +94,22 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Ce module fournit des fonctionnalités pour améliorer la présentation des "
+"factures.\n"
+"\n"
+"    Il permet de\n"
+"        * trier les lignes d'un facture\n"
+"        * ajouter des titres, des lignes de commentaires, faire des sous-"
+"totaux\n"
+"        * tirer des lignes horizontales et faire des sauts de page\n"
+"\n"
+"    En outre, une option permet d'imprimer toutes les factures sélectionnées "
+"avec un message particulier en bas de page. Cette fonctionnalité est très "
+"utile pour imprimer les factures avec des voeux de fin d'années, des "
+"promotions, etc.\n"
+"\n"
+"    "
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -104,8 +120,8 @@ msgstr "TVA :"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Document"
-msgstr "Document"
+msgid "Tel. :"
+msgstr "Tél. :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -134,9 +150,10 @@ msgid "Product"
 msgstr "Produit"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Écrire les Messages"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Description"
+msgstr "Description"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
@@ -157,7 +174,6 @@ msgstr "Date de la facture"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Taxes:"
 msgstr "Taxes :"
 
@@ -167,9 +183,9 @@ msgid "Source Account"
 msgstr "Compte d'origine"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Annuler"
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Écrire les Messages"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -202,19 +218,17 @@ msgstr "Quantité"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Partner Ref."
-msgstr "Réf. partenaire"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: model:ir.model,name:account_invoice_layout.model_account_invoice
-#: report:notify_account.invoice:0
-msgid "Invoice"
-msgstr "Facture"
+msgid "Refund"
+msgstr "Note de crédit"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
+msgid "Fax :"
+msgstr "Fax :"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
 msgid "Total:"
 msgstr "Total :"
 
@@ -246,10 +260,19 @@ msgid "Amount"
 msgstr "Montant"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "ERP & CRM Solutions..."
+msgstr "Solutions ERP & CRM..."
+
+#. module: account_invoice_layout
 #: report:notify_account.invoice:0
-msgid "Tel. :"
-msgstr "Tél. :"
+msgid "Net Total :"
+msgstr "Total net :"
+
+#. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Total :"
+msgstr "Total :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -270,8 +293,8 @@ msgstr "Message spécial des factures"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Refund"
-msgstr "Note de crédit"
+msgid "Origin"
+msgstr "Origine"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -282,6 +305,12 @@ msgstr "Type"
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
 msgstr "Ligne de séparation"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Your Reference"
+msgstr "Votre référence"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
@@ -312,7 +341,6 @@ msgstr "Ligne de facture"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Net Total:"
 msgstr "Total net :"
 
@@ -323,14 +351,15 @@ msgstr "Ecrire un avis"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
+#: model:ir.model,name:account_invoice_layout.model_account_invoice
 #: report:notify_account.invoice:0
-msgid "Fax :"
-msgstr "Fax :"
+msgid "Invoice"
+msgstr "Facture"
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
-msgstr "Être expert avec les experts..."
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Annuler"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -344,9 +373,17 @@ msgid "Message"
 msgstr "Message"
 
 #. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Taxes :"
+msgstr "Taxes :"
+
+#. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Tous les Messages de Notification"
+
+#~ msgid "Document"
+#~ msgstr "Document"
 
 #~ msgid ":"
 #~ msgstr ":"
@@ -356,9 +393,6 @@ msgstr "Tous les Messages de Notification"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "Réf. client :"
-
-#~ msgid "Description"
-#~ msgstr "Description"
 
 #~ msgid "Canceled Invoice"
 #~ msgstr "Facture annulée"
@@ -401,3 +435,9 @@ msgstr "Tous les Messages de Notification"
 #~ msgstr ""
 #~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de caractère "
 #~ "spécial !"
+
+#~ msgid "Be Expert with the Experts..."
+#~ msgstr "Être expert avec les experts..."
+
+#~ msgid "Partner Ref."
+#~ msgstr "Réf. partenaire"

@@ -170,6 +170,8 @@
                     </group>
                     <notebook colspan="4">
                         <page string="General Information">
+                            <field name="active" groups="base.group_extended" />
+                            <newline/>
                             <group col="2" colspan="2">
                                 <separator string="Currency" colspan="2"/>
                                 <field name="currency_id"/>
@@ -565,7 +567,7 @@
                                     <field name="date" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
@@ -574,12 +576,12 @@
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
+                                    <field name="ref"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
-                                    <field name="ref"/>
                                     <field name="sequence" readonly="0"/>
                                     <separator colspan="4" string="Notes"/>
                                     <field colspan="4" name="note" nolabel="1"/>
@@ -602,7 +604,7 @@
         </record>
 
         <record id="view_bank_statement_periodic_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
+            <field name="name">account.bank.statement.reconcile.form</field>
             <field name="model">account.bank.statement</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -744,7 +746,6 @@
                     <group col="2" colspan="2">
                         <separator string="Reporting Configuration" colspan="4"/>
                         <field name="report_type" select="2"/>
-                        <field name="sign"/>
                     </group>
                     <group col="2" colspan="2">
                         <separator string="Closing Method" colspan="4"/>
@@ -1517,70 +1518,6 @@
             <field eval="11" name="sequence"/>
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_move_line_search"/>
-        </record>
-
-        <record id="view_bank_statement_reconcile_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.form</field>
-            <field name="model">account.bank.statement</field>
-            <field eval="30" name="priority"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Statement">
-                    <group col="6" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="date" select="1"/>
-                        <field name="journal_id" on_change="onchange_journal_id(journal_id)" select="1"/>
-                        <field name="currency"/>
-                        <field name="balance_start"/>
-                        <field name="balance_end_real"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Select entries">
-                            <field colspan="4" domain="[('statement_id', '=', False), ('journal_id', '=', journal_id)]" name="move_line_ids" nolabel="1" widget="many2many"/>
-                        </page>
-                        <page string="Entry encoding">
-                            <separator colspan="4" string="Entry Lines"/>
-                            <field name="period_id"/>
-                            <field colspan="4" name="line_ids" nolabel="1">
-                                <tree editable="bottom" string="Statement lines">
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id', '=', parent.journal_id)]" name="account_id"/>
-                                    <field name="amount"/>
-                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'date':date}" name="reconcile_id"/>
-                                </tree>
-                                <form string="Statement lines">
-                                    <field name="date"/>
-                                    <field name="name"/>
-                                    <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id', '=', parent.journal_id)]" name="account_id"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
-                                    <field name="amount"/>
-                                    <field context="{'partner_id': partner_id, 'amount': amount, 'account_id': account_id, 'date':date}" name="reconcile_id"/>
-                                </form>
-                            </field>
-                        </page>
-                    </notebook>
-                    <group col="7" colspan="4">
-                        <field name="state"/>
-                        <field name="balance_end"/>
-                        <button name="button_cancel" states="confirm" string="Cancel" type="object" icon="gtk-cancel"/>
-                        <button name="button_dummy" states="draft" string="Compute" icon="terp-stock_format-scientific"/>
-                        <button name="button_confirm" states="draft" string="Confirm" type="object" icon="terp-camera_test"/>
-                    </group>
-                </form>
-            </field>
-        </record>
-        <record id="action_bank_statement_reconciliation_form" model="ir.actions.act_window">
-            <field name="name">Statements reconciliation</field>
-            <field name="res_model">account.bank.statement</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-            <field name="search_view_id" ref="view_bank_statement_search"/>
-            <field name="view_id" ref="view_bank_statement_reconcile_form"/>
         </record>
 
         <act_window
@@ -2449,12 +2386,13 @@
                           <attribute name='string'></attribute>
                   </xpath>
                 <group string="res_config_contents" position="replace">
-                    <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                    <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                     <field name ="code_digits" groups="base.group_extended"/>
                     <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)"/>
                     <field name ="seq_journal" groups="base.group_extended"/>
-                  <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
-                  <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
+                    <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
+                    <newline/>
                     <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
                         <form string="Bank Information">
                             <field name="acc_name"/>
@@ -2631,7 +2569,7 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                     <field name="date" groups="base.group_extended"/>
                                     <field name="name"/>
                                     <field name="ref"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id','=',parent.journal_id)]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
@@ -2640,12 +2578,12 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
                                 <form string="Statement lines">
                                     <field name="date"/>
                                     <field name="name"/>
+                                    <field name="ref"/>
+                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field name="partner_id" on_change="onchange_type(partner_id, type)"/>
                                     <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" />
                                     <field name="amount"/>
-                                    <field name="ref"/>
                                     <field name="sequence"/>
                                     <separator colspan="4" string="Notes"/>
                                     <field colspan="4" name="note" nolabel="1"/>
@@ -2756,14 +2694,6 @@ action = self.pool.get('res.config').next(cr, uid, [], context)
         </record>
         <menuitem action="action_view_bank_statement_tree" id="journal_cash_move_lines"
             parent="menu_finance_bank_and_cash"/>
-
-        <record id="action_partner_all" model="ir.actions.act_window">
-            <field name="name">Partners</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_type">form</field>
-            <field name="filter" eval="True"/>
-        </record>
 
         <menuitem id="menu_account_customer" name="Customers"
             parent="menu_finance_receivables"

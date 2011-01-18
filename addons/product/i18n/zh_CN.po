@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-31 10:15+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 19:32+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:03+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:31+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -78,7 +78,7 @@ msgstr "接收"
 #. module: product
 #: field:product.template,mes_type:0
 msgid "Measure Type"
-msgstr "单位类型"
+msgstr "计量类型"
 
 #. module: product
 #: help:res.partner,property_product_pricelist:0
@@ -105,7 +105,9 @@ msgid "Fixed"
 msgstr "固定的"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:186
+#: code:addons/product/pricelist.py:339
+#: code:addons/product/pricelist.py:357
 #, python-format
 msgid "Warning !"
 msgstr "警告！"
@@ -179,7 +181,7 @@ msgstr "价格表明细的详细规则名称"
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
 #: model:ir.ui.menu,name:product.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "计量单位类型"
+msgstr "计量单位类别"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu1_product_template
@@ -251,7 +253,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr "  例: 1*(目标单位) = ratio * (参照单位)"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:378
 #, python-format
 msgid "Products: "
 msgstr "产品： "
@@ -274,9 +276,7 @@ msgid ""
 "'Make to Stock': When needed, take from the stock or wait until re-"
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
-msgstr ""
-"按库存生产:  在仓库或等待重新供应时得到需求.\n"
-" 按订单生产:  在采购或产品获得请求时得到需求."
+msgstr "按库存生产:  在仓库或等待重新供应时得到需求。按订单生产:  在采购或产品获得请求时得到需求。"
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
@@ -312,7 +312,7 @@ msgstr "包装"
 #: view:product.product:0
 #: field:product.template,categ_id:0
 msgid "Category"
-msgstr "类型"
+msgstr "分类"
 
 #. module: product
 #: help:product.pricelist.item,min_quantity:0
@@ -381,7 +381,7 @@ msgstr "IT零部件"
 #. module: product
 #: field:product.template,product_manager:0
 msgid "Product Manager"
-msgstr "产品主管"
+msgstr "产品经理"
 
 #. module: product
 #: field:product.supplierinfo,product_name:0
@@ -392,6 +392,15 @@ msgstr "供应商产品名称"
 #: model:product.template,name:product.product_product_pc3_product_template
 msgid "Medium PC"
 msgstr "多媒体PC"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains detailed "
+"information about your products related to procurement logistics, sales "
+"price, product category, suppliers and so on."
+msgstr ""
 
 #. module: product
 #: view:product.pricelist:0
@@ -490,11 +499,21 @@ msgid "Working Time"
 msgstr "工作时间"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A price list contains rules to be evaluated in order to compute the purchase "
+"or sales price for all the partners assigned to a price list. Price lists "
+"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
+"each version has several rules. Example: the customer price of a product "
+"category will be based on the supplier price multiplied by 1.80."
+msgstr ""
+
+#. module: product
 #: help:product.product,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the product "
 "without removing it."
-msgstr ""
+msgstr "如果“可用”字段没有选中那么将隐藏此产品但不会删除它。"
 
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
@@ -502,7 +521,7 @@ msgid "Metal Cleats"
 msgstr ""
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:340
 #, python-format
 msgid ""
 "No active version for the selected pricelist !\n"
@@ -622,7 +641,7 @@ msgstr "在复制一个版本时它设为不生效. 这样旧版本日期是不�
 #. module: product
 #: model:product.template,name:product.product_product_kitshelfofcm0_product_template
 msgid "KIT Shelf of 100cm"
-msgstr ""
+msgstr "KIT 架 100cm"
 
 #. module: product
 #: field:product.supplierinfo,name:0
@@ -632,7 +651,7 @@ msgstr "供应商"
 #. module: product
 #: model:product.template,name:product.product_product_sidepanel0_product_template
 msgid "Side Panel"
-msgstr ""
+msgstr "侧边面板"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -670,17 +689,12 @@ msgid "To Purchase"
 msgstr "购买"
 
 #. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "ASUStek A7N8X主板"
-
-#. module: product
 #: help:product.supplierinfo,min_qty:0
 msgid ""
 "The minimal quantity to purchase to this supplier, expressed in the supplier "
 "Product UoM if not empty, in the default unit of measure of the product "
 "otherwise."
-msgstr ""
+msgstr "该供应商的最小采购数量，如果供应商产品计量单位为空的话则使用产品默认的计量单位。"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -778,6 +792,12 @@ msgid ""
 msgstr "如果这规则只适合这产品,设置产品. (留空为适用所有产品)"
 
 #. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "产品需求&库位"
+
+#. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr "厨房设计项目"
@@ -795,7 +815,7 @@ msgstr "开发中"
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
 msgid "Shelf of 200cm"
-msgstr ""
+msgstr "200cm 架子"
 
 #. module: product
 #: view:product.uom:0
@@ -839,18 +859,20 @@ msgstr "DDR 256MB PC400"
 #. module: product
 #: view:product.category:0
 msgid "Product Categories"
-msgstr "产品类型"
+msgstr "产品分类"
 
 #. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
-msgstr ""
+msgstr "  例如： 1 * (参考单位) = 比率 * (本单位)"
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "产品需求&库位"
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate between several Units of Measure within the "
+"same category."
+msgstr "创建与管理系统中的计量单位信息。您可以定义统一分类下单位之间的转换比率。"
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -915,14 +937,12 @@ msgid ""
 msgstr "提前期是订单确认到仓库收到货物天数,使用于采购订单自动计算规划调度"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action
 msgid ""
-"A pricelist contains rules to be evaluated in order to compute the purchase "
-"or sale price for all the partners assigned to a pricelist. Pricelists have "
-"several versions (2010, 2011, Promotion of February 2010, etc.) and each "
-"version has several rules. Example: the customer price of this category of "
-"product will be based on the supplier price multiplied by 1.80."
-msgstr ""
+"There can be more than one version of a pricelist. Here you can create and "
+"manage new versions of a price list. Some examples of versions: 2010, 2011, "
+"Summer Promotion, etc."
+msgstr "可以有多个版本的价格表。此处您可以创建与管理新的价格表版本。举几个价格表版本的例子：2010，2011，暑期档等等"
 
 #. module: product
 #: selection:product.template,type:0
@@ -955,20 +975,6 @@ msgid "Partner Information"
 msgstr "业务伙伴信息"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-msgid ""
-"You must define a Product for everything you buy or sell. They can be raw "
-"materials, stockable products, consumables or services. The Product form "
-"contains a detailed information of your products related to procurement "
-"logistics, sales price, product category, suppliers and so on."
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_res_users
-msgid "res.users"
-msgstr "res.users"
-
-#. module: product
 #: selection:product.ul,type:0
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
@@ -996,6 +1002,15 @@ msgid "Price List Items"
 msgstr "价格表明细"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measure are in the same category, they can "
+"be converted to each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr "创建与管理系统中的计量单位分类信息。统一分类的计量单位可以互相转换，比如，“时间”分类下的计量单位包含：小时、天等等"
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr "大于引用的计量单位"
@@ -1021,12 +1036,9 @@ msgid "Price Surcharge"
 msgstr "价格额外费用"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"Create and manage the units of measure you want to be used in your system. "
-"You can define a conversion rate to be used between the several Unit of "
-"Measure within the same category."
-msgstr ""
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
+msgstr "ASUStek A7N8X主板"
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1039,6 +1051,7 @@ msgstr "逻辑单位"
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
 #: view:product.product:0
+#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom,name:0
@@ -1054,7 +1067,17 @@ msgstr "可库存"
 #. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
+msgstr "木梁 4m"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+msgid ""
+"You must define a Product for everything you buy or sell. Products can be "
+"raw materials, stockable products, consumables or services. The Product form "
+"contains detailed information about your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"您必须定义产品信息用于您的销售或采购。产品可以是原材料、可库存商品、消耗品或服务。产品表单包含产品相关的生产物流、售价、分类、供应商等等信息。"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1090,13 +1113,13 @@ msgstr ""
 #: help:product.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "显示产品列表的顺序号"
 
 #. module: product
 #: field:product.uom,factor:0
 #: field:product.uom,factor_inv:0
 msgid "Ratio"
-msgstr ""
+msgstr "比例"
 
 #. module: product
 #: help:product.template,purchase_ok:0
@@ -1216,7 +1239,7 @@ msgid "Pallet Dimension"
 msgstr "垫板尺寸"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:603
 #, python-format
 msgid " (copy)"
 msgstr " (复件)"
@@ -1227,25 +1250,11 @@ msgid "Partners"
 msgstr "业务伙伴列表"
 
 #. module: product
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "两个用户不能使用相同的用户名！"
-
-#. module: product
 #: help:product.template,sale_delay:0
 msgid ""
 "This is the average delay in days between the confirmation of the customer "
 "order and the delivery of the finished products. It's the time you promise "
 "to your customers."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid ""
-"Create and manage the units of measure categories you want to be used in "
-"your system. If several units of measures are in the same category, they can "
-"be converted within each other. For example, in the unit of measure category "
-"\"Time\", you will have the following UoM: Hours, Days."
 msgstr ""
 
 #. module: product
@@ -1255,7 +1264,7 @@ msgid "Second UoM"
 msgstr "第二计量单位"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:142
 #, python-format
 msgid "Error !"
 msgstr "错误！"
@@ -1327,7 +1336,7 @@ msgstr "产品需求"
 #. module: product
 #: field:product.uom,category_id:0
 msgid "UoM Category"
-msgstr "计量单位类型"
+msgstr "计量单位分类"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1340,22 +1349,22 @@ msgid "Purchase Unit of Measure"
 msgstr "采购计量单位"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_category_action
-msgid ""
-"Here is a list of all your products classified by category. You can click on "
-"a category to get the list of all products linked to this category or to a "
-"child of this category."
-msgstr ""
-
-#. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
 msgstr "供应方式"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click a "
+"category to get the list of all products linked to this category or to a "
+"child of this category."
+msgstr ""
+
+#. module: product
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "分组"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu_gen_product_template
@@ -1363,12 +1372,12 @@ msgid "Regular processor config"
 msgstr "通常处理器配置"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:142
 #, python-format
 msgid ""
 "Conversion from Product UoM m to Default UoM PCE is not possible as they "
 "both belong to different Category!."
-msgstr ""
+msgstr "转换产品计量单位到默认的“件”计量单位是不允许的，因为它们属于不同的分类。"
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1401,7 +1410,7 @@ msgstr "基础PC"
 msgid ""
 "If the active field is set to False, it will allow you to hide the pricelist "
 "without removing it."
-msgstr ""
+msgstr "如果“可用”字段没有选中，那么将隐藏此价格表而不是删除它。"
 
 #. module: product
 #: field:product.product,qty_available:0
@@ -1422,12 +1431,7 @@ msgstr "产品计量单位"
 #: constraint:product.template:0
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
-msgstr "错误:默认的计量单位和采购的计量单位必须是同一类型."
-
-#. module: product
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "错误：默认计量单位和采购计量单位必须在同一分类中。"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1452,7 +1456,7 @@ msgstr "购买"
 #. module: product
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
-msgstr "计量单位类型"
+msgstr "计量单位分类"
 
 #. module: product
 #: help:product.packaging,weight_ul:0
@@ -1481,7 +1485,7 @@ msgstr "价格的上浮金额"
 #. module: product
 #: sql_constraint:product.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
-msgstr ""
+msgstr "计量单位的转换比率不能为 0！"
 
 #. module: product
 #: help:product.packaging,ean:0
@@ -1500,6 +1504,7 @@ msgstr "字段值"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
+#: model:ir.ui.menu,name:product.menu_product_pricelist_type_action2
 msgid "Pricelists Types"
 msgstr "价格表类型"
 
@@ -1509,6 +1514,8 @@ msgid ""
 "How many times this UoM is smaller than the reference UoM in this category:\n"
 "1 * (reference unit) = ratio * (this unit)"
 msgstr ""
+"本计量单位与参考计量单位小的倍数：\n"
+"1 * (参考单位) = 比率 * (本单位)"
 
 #. module: product
 #: help:product.template,uom_id:0
@@ -1529,15 +1536,6 @@ msgstr "自选配置PC"
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
 msgstr "单价"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_puchased
-msgid ""
-"Products can be purchased and/or sold. They can be raw materials, stockable "
-"products, consumables or services. The Product form contains a detailed "
-"information on your  products related to procurement logistics, sales price, "
-"product category, suppliers and so on."
-msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1581,6 +1579,13 @@ msgid "Warranty (months)"
 msgstr "保证期(月)"
 
 #. module: product
+#: help:product.pricelist.item,categ_id:0
+msgid ""
+"Set a category of product if this rule only apply to products of a category "
+"and his children. Keep empty for all products"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_product
 #: model:ir.ui.menu,name:product.prod_config_main
 #: model:process.node,name:product.process_node_product0
@@ -1596,7 +1601,7 @@ msgstr "产品"
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
-msgstr "产品"
+msgstr "生产"
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1702,7 +1707,7 @@ msgid ""
 msgstr "计算客户价格的基础价格.有时候它被称为目录价格"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:515
 #, python-format
 msgid "Partner section of the product form"
 msgstr "供应产品的业务伙伴"
@@ -1710,12 +1715,12 @@ msgstr "供应产品的业务伙伴"
 #. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
-msgstr "价格类型名称"
+msgstr "价格种类名称"
 
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr ""
+msgstr "供应商计量单位"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
@@ -1727,7 +1732,7 @@ msgstr "价格表版本生效的开始日期"
 msgid ""
 "Default Unit of Measure used for purchase orders. It must be in the same "
 "category than the default unit of measure."
-msgstr ""
+msgstr "采购单默认使用的计量单位。必须与默认计量单位位于相同分类中。"
 
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
@@ -1742,7 +1747,7 @@ msgstr "长度"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
+msgstr "长度或距离"
 
 #. module: product
 #: model:product.template,name:product.product_product_0_product_template
@@ -1764,7 +1769,7 @@ msgstr "其他商品"
 #. module: product
 #: view:product.product:0
 msgid "Characteristics"
-msgstr ""
+msgstr "特征"
 
 #. module: product
 #: field:product.template,sale_ok:0
@@ -1834,13 +1839,13 @@ msgstr "雇员"
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm0_product_template
 msgid "Shelf of 100cm"
-msgstr ""
+msgstr "100cm 架子"
 
 #. module: product
 #: model:ir.model,name:product.model_product_category
 #: field:product.pricelist.item,categ_id:0
 msgid "Product Category"
-msgstr "产品类型"
+msgstr "产品分类"
 
 #. module: product
 #: report:product.pricelist:0
@@ -1850,7 +1855,7 @@ msgstr "价格表名称"
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "送货周期"
 
 #. module: product
 #: help:product.uom,active:0
@@ -1874,12 +1879,12 @@ msgstr "箱子"
 msgid ""
 "Create and manage your packaging dimensions and types you want to be "
 "maintained in your system."
-msgstr ""
+msgstr "创建与管理包装与包装类型信息。"
 
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm1_product_template
 msgid "Rear Panel SHE200"
-msgstr ""
+msgstr "后面板 SHE200"
 
 #. module: product
 #: help:product.pricelist.type,key:0
@@ -1896,7 +1901,7 @@ msgstr "希捷 7200.8 80GB 硬盘"
 #. module: product
 #: help:product.supplierinfo,qty:0
 msgid "This is a quantity which is converted into Default Uom."
-msgstr ""
+msgstr "转换到默认计量单位的数量"
 
 #. module: product
 #: field:product.packaging,ul:0
@@ -1931,12 +1936,12 @@ msgstr "鼠标"
 #. module: product
 #: field:product.uom,uom_type:0
 msgid "UoM Type"
-msgstr ""
+msgstr "计量单位类型"
 
 #. module: product
 #: help:product.template,product_manager:0
 msgid "This is use as task responsible"
-msgstr ""
+msgstr "作为任务负责人"
 
 #. module: product
 #: help:product.uom,rounding:0
@@ -1959,7 +1964,7 @@ msgstr "行"
 #. module: product
 #: model:product.template,name:product.product_product_rearpanelarm0_product_template
 msgid "Rear Panel SHE100"
-msgstr ""
+msgstr "后面板 SHE100"
 
 #. module: product
 #: model:product.template,name:product.product_product_23_product_template
@@ -1988,6 +1993,8 @@ msgid ""
 "How many times this UoM is bigger than the reference UoM in this category:\n"
 "1 * (this unit) = ratio * (reference unit)"
 msgstr ""
+"此计量单位大于参考单位的倍数：\n"
+"1 * (此单位) = 比率 * (参考单位)"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf0_product_template
@@ -1997,7 +2004,7 @@ msgstr ""
 #. module: product
 #: help:product.packaging,sequence:0
 msgid "Gives the sequence order when displaying a list of packaging."
-msgstr ""
+msgstr "显示包装信息的顺序号"
 
 #. module: product
 #: field:product.pricelist.item,price_round:0
@@ -2014,7 +2021,7 @@ msgstr "最大的价格上浮金额"
 msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "此供应商产品名称用于打印询价单。为空则使用内部名称。"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2024,7 +2031,7 @@ msgstr "可变的"
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr ""
+msgstr "可出租"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
@@ -2070,7 +2077,7 @@ msgstr ""
 #. module: product
 #: view:product.price_list:0
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2090,7 +2097,7 @@ msgstr "销售 属性"
 #. module: product
 #: model:product.uom,name:product.product_uom_ton
 msgid "tonne"
-msgstr ""
+msgstr "吨"
 
 #. module: product
 #: view:product.product:0
@@ -2101,7 +2108,7 @@ msgstr "延迟"
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr ""
+msgstr "产品创建"
 
 #. module: product
 #: help:product.template,type:0
@@ -2122,7 +2129,7 @@ msgid "Description"
 msgstr "说明"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:358
 #, python-format
 msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
@@ -2164,10 +2171,10 @@ msgstr "产品系列"
 #. module: product
 #: model:product.category,name:product.product_category_shelves0
 msgid "Shelves"
-msgstr ""
+msgstr "架子"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:514
 #, python-format
 msgid "Other Pricelist"
 msgstr "其他价格表"
@@ -2226,7 +2233,7 @@ msgstr "标价"
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr ""
+msgstr "分类类型"
 
 #. module: product
 #: model:product.category,name:product.cat2
@@ -2241,29 +2248,14 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_discount:0
-msgid "Price Discount"
-msgstr "价格折扣"
-
-#. module: product
 #: help:product.template,volume:0
 msgid "The volume in m3."
 msgstr "这体积是m3"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"There can be more than one version of a pricelist. If you need to create new "
-"versions of a pricelist, you can do it and manage them from here. Some "
-"examples of versions: 2010, 2011, Promotion of February 2010, etc."
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.item,categ_id:0
-msgid ""
-"Set a category of product if this rule only apply to products of a category "
-"and his children. Keep empty for all products"
-msgstr ""
+#: field:product.pricelist.item,price_discount:0
+msgid "Price Discount"
+msgstr "价格折扣"
 
 #~ msgid "Childs Categories"
 #~ msgstr "子项分类"
@@ -2614,5 +2606,11 @@ msgstr ""
 #~ "without removing it."
 #~ msgstr "如果有效字段设置为真(true),它允许你隐藏价格表而不是删除"
 
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "两个用户不能使用相同的用户名！"
+
 #~ msgid "Supplier Product UoM."
 #~ msgstr "供应商产品计量单位"
+
+#~ msgid "res.users"
+#~ msgstr "res.users"

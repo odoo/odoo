@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-09-19 00:01+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -15,8 +15,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:49+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Plan In Progress"
+msgstr ""
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,wait:0
@@ -43,11 +49,6 @@ msgid "Progress"
 msgstr ""
 
 #. module: hr_evaluation
-#: field:hr.evaluation.interview,evaluation_id:0
-msgid "Evaluation Type"
-msgstr "Tipo de evaluación"
-
-#. module: hr_evaluation
 #: view:board.board:0
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_evaluation_tree
 msgid "My Evaluation Remaining"
@@ -59,7 +60,7 @@ msgid "Legend"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:311
 #, python-format
 msgid "You cannot start evaluation without Evaluation."
 msgstr ""
@@ -81,7 +82,8 @@ msgid "Appreciation"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:242
+#: code:addons/hr_evaluation/hr_evaluation.py:311
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -107,6 +109,11 @@ msgstr ""
 #: view:hr.evaluation.report:0
 #: field:hr.evaluation.report,day:0
 msgid "Day"
+msgstr ""
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,evaluation_id:0
+msgid "Evaluation Form"
 msgstr ""
 
 #. module: hr_evaluation
@@ -182,7 +189,7 @@ msgid "Periodicity of Evaluations (months)"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:242
 #, python-format
 msgid ""
 "You cannot change state, because some appraisal in waiting answer or draft "
@@ -200,17 +207,7 @@ msgid "First Evaluation in (months)"
 msgstr ""
 
 #. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
-msgid ""
-"Each employee can be assigned to an evaluation plan. These plans define the "
-"frequency and the way you manage your periodic personnal evaluation. You "
-"will be able to define steps and attach interview forms to each step. "
-"OpenERP manages all kind of evaluations: bottom-up, top-down, self "
-"evaluation and final evaluation by the manager."
-msgstr ""
-
-#. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:81
 #, python-format
 msgid ""
 "\n"
@@ -286,7 +283,7 @@ msgid "(date)s: Current Date"
 msgstr ""
 
 #. module: hr_evaluation
-#: code:addons/hr_evaluation/hr_evaluation.py:0
+#: code:addons/hr_evaluation/hr_evaluation.py:80
 #, python-format
 msgid "Regarding "
 msgstr ""
@@ -342,9 +339,8 @@ msgid "Send all answers to the manager"
 msgstr ""
 
 #. module: hr_evaluation
-#: selection:hr.evaluation.report,state:0
-#: selection:hr_evaluation.evaluation,state:0
-msgid "Plan In Progress"
+#: view:hr.evaluation.report:0
+msgid "    Month-1    "
 msgstr ""
 
 #. module: hr_evaluation
@@ -359,6 +355,7 @@ msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Print Interview"
 msgstr ""
 
@@ -387,8 +384,13 @@ msgid "Evaluations"
 msgstr "Evaluaciones"
 
 #. module: hr_evaluation
-#: view:hr.evaluation.report:0
-msgid "    Month-1    "
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"Each employee may be assigned an evaluation plan. Such a plan defines the "
+"frequency and the way you manage your periodic personnel evaluation. You "
+"will be able to define steps and attach interviews to each step. OpenERP "
+"manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
+"final evaluation by the manager."
 msgstr ""
 
 #. module: hr_evaluation
@@ -466,6 +468,7 @@ msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Interview Question"
 msgstr ""
 
@@ -484,14 +487,6 @@ msgstr ""
 msgid ""
 "Check this box if you want to wait that all preceding phases are finished "
 "before launching this phase."
-msgstr ""
-
-#. module: hr_evaluation
-#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
-msgid ""
-"Interview Requests are generated automatically by OpenERP according to "
-"employees evaluation plan. Each user receives automatic emails and requests "
-"to perform evaluation of their collegues periodically."
 msgstr ""
 
 #. module: hr_evaluation
@@ -547,6 +542,11 @@ msgstr ""
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 msgid "Start Evaluation"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "To Do"
 msgstr ""
 
 #. module: hr_evaluation
@@ -615,6 +615,7 @@ msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Interview Evaluation"
 msgstr ""
 
@@ -673,6 +674,7 @@ msgstr ""
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
+#: view:hr_evaluation.evaluation:0
 msgid "Interviewer"
 msgstr ""
 
@@ -731,8 +733,11 @@ msgid "In Progress"
 msgstr ""
 
 #. module: hr_evaluation
-#: view:hr.evaluation.interview:0
-msgid "To Do"
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to an "
+"employee's evaluation plan. Each user receives automatic emails and requests "
+"to evaluate their colleagues periodically."
 msgstr ""
 
 #. module: hr_evaluation
@@ -926,6 +931,9 @@ msgstr ""
 
 #~ msgid "To Improve"
 #~ msgstr "A mejorar"
+
+#~ msgid "Evaluation Type"
+#~ msgstr "Tipo de evaluación"
 
 #~ msgid "Status"
 #~ msgstr "Estado"

@@ -7,16 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-31 11:01+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 18:24+0000\n"
+"Last-Translator: silas <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:05+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:57+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: profile_tools
 #: help:misc_tools.installer,idea:0
@@ -36,16 +35,6 @@ msgstr ""
 "Kundendienst, Rechnungen etc. freigeben"
 
 #. module: profile_tools
-#: view:misc_tools.installer:0
-msgid ""
-"Here are applications that can help you improve your organization without "
-"being key in its management."
-msgstr ""
-"Hier finden Sie die Anwendungen, die für Ihre Organisation nützlich sein "
-"können, ohne dass Sie Schlüsselanwendungen für das Management Ihres "
-"Unternehmens sind."
-
-#. module: profile_tools
 #: help:misc_tools.installer,lunch:0
 msgid "A simple module to help you to manage Lunch orders."
 msgstr ""
@@ -53,14 +42,14 @@ msgstr ""
 "Mitarbeiterverpflegung."
 
 #. module: profile_tools
-#: model:ir.actions.act_window,name:profile_tools.action_misc_tools_installer
-msgid "Tools Configuration"
-msgstr "Konfiguration Werkzeuge"
+#: field:misc_tools.installer,subscription:0
+msgid "Recurring Documents"
+msgstr "Wiederkehrende Dokumente"
 
 #. module: profile_tools
-#: view:misc_tools.installer:0
-msgid "Configure Extra Tools"
-msgstr "Konfiguration Extra Anwendungen"
+#: model:ir.model,name:profile_tools.model_misc_tools_installer
+msgid "misc_tools.installer"
+msgstr "misc_tools.installer"
 
 #. module: profile_tools
 #: model:ir.module.module,description:profile_tools.module_meta_information
@@ -72,6 +61,15 @@ msgstr ""
 "Installationstool für die Module lunch, \n"
 " survey,subscription and audittrail\n"
 "    "
+
+#. module: profile_tools
+#: view:misc_tools.installer:0
+msgid ""
+"Extra Tools are applications that can help you improve your organization "
+"although they are not key for company management."
+msgstr ""
+"Extra Werkzeuge sind kleinere, möglicherweise hilfreiche Anwendungen für Ihr "
+"Unternehmen. Es handelt sich dabei nicht um Kernanwendungen von OpenERP."
 
 #. module: profile_tools
 #: view:misc_tools.installer:0
@@ -120,9 +118,14 @@ msgid "Helps to generate automatically recurring documents."
 msgstr "Hilft bei der Erstellung autom. wiederkehrender Dokumente"
 
 #. module: profile_tools
-#: field:misc_tools.installer,subscription:0
-msgid "Recurring Documents"
-msgstr "Wiederkehrende Dokumente"
+#: model:ir.actions.act_window,name:profile_tools.action_misc_tools_installer
+msgid "Tools Configuration"
+msgstr "Konfiguration Werkzeuge"
+
+#. module: profile_tools
+#: field:misc_tools.installer,pad:0
+msgid "Collaborative Note Pads"
+msgstr "Online Notizblock - Pad"
 
 #. module: profile_tools
 #: field:misc_tools.installer,survey:0
@@ -130,9 +133,9 @@ msgid "Survey"
 msgstr "Umfrage"
 
 #. module: profile_tools
-#: model:ir.model,name:profile_tools.model_misc_tools_installer
-msgid "misc_tools.installer"
-msgstr ""
+#: view:misc_tools.installer:0
+msgid "Configure Extra Tools"
+msgstr "Konfiguration Extra Anwendungen"
 
 #. module: profile_tools
 #: field:misc_tools.installer,progress:0
@@ -140,24 +143,19 @@ msgid "Configuration Progress"
 msgstr "Abfolge Konfiguration"
 
 #. module: profile_tools
-#: field:misc_tools.installer,pad:0
-msgid "Native pad integration"
-msgstr "Generische Padintegration"
+#: field:misc_tools.installer,config_logo:0
+msgid "Image"
+msgstr "Bild"
 
 #. module: profile_tools
 #: view:misc_tools.installer:0
 msgid "title"
-msgstr ""
+msgstr "Titel"
 
 #. module: profile_tools
 #: field:misc_tools.installer,share:0
 msgid "Web Share"
 msgstr "Gemeinsames Web"
-
-#. module: profile_tools
-#: field:misc_tools.installer,config_logo:0
-msgid "Image"
-msgstr "Bild"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -193,3 +191,14 @@ msgstr "Bild"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "Native pad integration"
+#~ msgstr "Generische Padintegration"
+
+#~ msgid ""
+#~ "Here are applications that can help you improve your organization without "
+#~ "being key in its management."
+#~ msgstr ""
+#~ "Hier finden Sie die Anwendungen, die für Ihre Organisation nützlich sein "
+#~ "können, ohne dass Sie Schlüsselanwendungen für das Management Ihres "
+#~ "Unternehmens sind."

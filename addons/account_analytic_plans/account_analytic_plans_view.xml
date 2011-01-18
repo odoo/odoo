@@ -312,17 +312,5 @@
             </field>
         </record>
 
-        <record id="view_bank_statement_reconcile_inherit_form" model="ir.ui.view">
-            <field name="name">account.bank.statement.form.inherit_1</field>
-            <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="account.view_bank_statement_reconcile_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='analytic_account_id']" position="replace">
-                    <field name="analytics_id" groups="analytic.group_analytic_accounting"/>
-                </xpath>
-            </field>
-        </record>
-
 </data>
 </openerp>

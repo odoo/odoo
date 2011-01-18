@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-02 07:58+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 11:19+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:41+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:41+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -52,16 +52,24 @@ msgid "Human Resources"
 msgstr "Personeel"
 
 #. module: hr
-#: view:hr.department:0
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
 msgstr "Groepeer op..."
 
 #. module: hr
-#: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "Werk email"
+#: model:ir.actions.act_window,help:hr.action_hr_job
+msgid ""
+"Job Positions are used to define jobs and their requirements. You can keep "
+"track of the number of employees you have per job position and how many you "
+"expect in the future. You can also attach a survey to a job position that "
+"will be used in the recruitment process to evaluate the applicants for this "
+"job position."
+msgstr ""
+"Banen worden gebruikt om functies te definiëren met hun functie-eisen. U "
+"kunt bijhouden hoeveel medewerkers u heeft per baan en hoeveel u er in de "
+"toekomst verwacht. U kunt ook een enquête koppelen aan een baan die in het "
+"wervingsproces wordt gebruikt om de kandidaten voor deze baan te evalueren."
 
 #. module: hr
 #: view:hr.employee:0
@@ -157,7 +165,7 @@ msgstr "Mijn afdeling medewerkers"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "Getrouwd"
 
 #. module: hr
 #: constraint:hr.employee:0
@@ -170,6 +178,17 @@ msgstr ""
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
 msgstr "Medewerker paspoort informatie"
+
+#. module: hr
+#: model:ir.actions.act_window,help:hr.open_module_tree_department
+msgid ""
+"Your Company's Department Structure is used to manage all documents related "
+"to employees by departments: expenses and timesheet validation, leaves "
+"management, recruitments, etc."
+msgstr ""
+"De afdelingsstructuur van uw bedrijf wordt gebruikt om alle documenten te "
+"beheren die gerelateerd zijn aan medewerkers per afdeling: declaraties en "
+"urenstaten, verlof, werving etc."
 
 #. module: hr
 #: view:hr.employee:0
@@ -279,6 +298,11 @@ msgid "Other information"
 msgstr "Overige informatie"
 
 #. module: hr
+#: field:hr.employee,work_email:0
+msgid "Work E-mail"
+msgstr "Werk email"
+
+#. module: hr
 #: field:hr.department,complete_name:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
@@ -328,6 +352,8 @@ msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
 msgstr ""
+"U kunt de basis HR applicatie verbeteren door een paar HR-gerelateerde "
+"functionaliteiten te installeren."
 
 #. module: hr
 #: view:hr.employee:0
@@ -479,7 +505,7 @@ msgstr "Opmerking"
 #. module: hr
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
 
 #. module: hr
 #: view:hr.employee:0
@@ -502,20 +528,9 @@ msgid "Status"
 msgstr "Status"
 
 #. module: hr
-#: model:ir.actions.act_window,help:hr.open_module_tree_department
-msgid ""
-"Your Company's Departments Structure is used to manage all documents related "
-"to employees by departments: expenses and timesheet validation, leaves "
-"management, recruitements, etc."
-msgstr ""
-"De afdeling structuur van uw bedrijf wordt gebruikt voor het beheren van "
-"alle documenten gerelateerd aan medewerkers per afdeling: declaraties en "
-"urenstaat controle, verlofbeheer, werving, etc."
-
-#. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Configureren"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
@@ -564,6 +579,13 @@ msgid ""
 "    * HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"    Module voor personeel management. U kunt beheren:\n"
+"    * Medewerkers en hiërarchieën : U kunt uw medewerkers met gebruiker "
+"definieren en hiërarchieën tonen\n"
+"    * HR afdelingen\n"
+"    * HR banen\n"
+"    "
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -592,7 +614,7 @@ msgstr "Status omschrijving"
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "U kunt niet twee gebruikers hebben met dezelfde gebruikersnaam !"
 
 #. module: hr
 #: view:hr.job:0
@@ -642,7 +664,7 @@ msgstr "Persoonlijke gegevens"
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Paspoort nr"
 
 #. module: hr
 #: view:res.users:0
@@ -680,6 +702,7 @@ msgstr "Privé-adres"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
+#: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendances"
 msgstr "Aanwezigheid"
 
@@ -703,7 +726,7 @@ msgstr "Loonlijst"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "Ongehuwd"
 
 #. module: hr
 #: field:hr.job,name:0
@@ -715,6 +738,11 @@ msgstr "Functienaam"
 #: selection:hr.job,state:0
 msgid "In Position"
 msgstr "Is vervuld"
+
+#. module: hr
+#: field:hr.employee,mobile_phone:0
+msgid "Mobile"
+msgstr "Mobiel"
 
 #. module: hr
 #: view:hr.department:0
@@ -810,7 +838,7 @@ msgstr "Coach"
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "Configureer uw HR applicatie"
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
@@ -818,7 +846,6 @@ msgid "Expenses"
 msgstr "Declaraties"
 
 #. module: hr
-#: view:hr.department:0
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
@@ -828,23 +855,12 @@ msgstr "Manager"
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
 msgid "Widower"
-msgstr ""
+msgstr "Weduwenaar"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
 msgstr "Algemeen loonlijst systeem met geïntegreerde boekhouding."
-
-#. module: hr
-#: model:ir.actions.act_window,help:hr.action_hr_job
-msgid ""
-"JJob Positions is used to define jobs and their requirements. You can attach "
-"a survey to a job position. This survey will be used in the recruitment "
-"process to evaluate the applicants for this job position."
-msgstr ""
-"Vacatures wordt gebruikt om functies en hun vereisten vast te leggen. U kunt "
-"een enquête koppelen aan een vacature. De enquête wordt gebruikt in het "
-"wervingsproces voor evaluatie van kandidaten voor de vacatures."
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -979,6 +995,15 @@ msgstr "Ondergeschikten"
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fout ! U kunt geen recursief menu maken."
 
+#~ msgid ""
+#~ "Your Company's Departments Structure is used to manage all documents related "
+#~ "to employees by departments: expenses and timesheet validation, leaves "
+#~ "management, recruitements, etc."
+#~ msgstr ""
+#~ "De afdeling structuur van uw bedrijf wordt gebruikt voor het beheren van "
+#~ "alle documenten gerelateerd aan medewerkers per afdeling: declaraties en "
+#~ "urenstaat controle, verlofbeheer, werving, etc."
+
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "De veldlengte kan nooit kleiner dan 1 zijn !"
 
@@ -987,3 +1012,12 @@ msgstr "Ondergeschikten"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "De modulenaam moet uniek zijn !"
+
+#~ msgid ""
+#~ "JJob Positions is used to define jobs and their requirements. You can attach "
+#~ "a survey to a job position. This survey will be used in the recruitment "
+#~ "process to evaluate the applicants for this job position."
+#~ msgstr ""
+#~ "Vacatures wordt gebruikt om functies en hun vereisten vast te leggen. U kunt "
+#~ "een enquête koppelen aan een vacature. De enquête wordt gebruikt in het "
+#~ "wervingsproces voor evaluatie van kandidaten voor de vacatures."

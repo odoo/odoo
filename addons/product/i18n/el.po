@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-12-20 13:58+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:53+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:30+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -116,7 +116,9 @@ msgid "Fixed"
 msgstr "Σταθερό"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:186
+#: code:addons/product/pricelist.py:339
+#: code:addons/product/pricelist.py:357
 #, python-format
 msgid "Warning !"
 msgstr "Προσοχή!"
@@ -264,7 +266,7 @@ msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:378
 #, python-format
 msgid "Products: "
 msgstr "Προϊόντα: "
@@ -412,6 +414,15 @@ msgid "Medium PC"
 msgstr "Medium PC"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action_puchased
+msgid ""
+"Products can be purchased and/or sold. They can be raw materials, stockable "
+"products, consumables or services. The Product form contains detailed "
+"information about your products related to procurement logistics, sales "
+"price, product category, suppliers and so on."
+msgstr ""
+
+#. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
 msgstr "Αναζήτηση Τιμών Προϊόντων"
@@ -508,6 +519,16 @@ msgid "Working Time"
 msgstr "Εργάσιμες Ώρες"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_pricelist_action2
+msgid ""
+"A price list contains rules to be evaluated in order to compute the purchase "
+"or sales price for all the partners assigned to a price list. Price lists "
+"have several versions (2010, 2011, Promotion of February 2010, etc.) and "
+"each version has several rules. Example: the customer price of a product "
+"category will be based on the supplier price multiplied by 1.80."
+msgstr ""
+
+#. module: product
 #: help:product.product,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the product "
@@ -520,7 +541,7 @@ msgid "Metal Cleats"
 msgstr "Μεταλικά Στηρίγματα"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:340
 #, python-format
 msgid ""
 "No active version for the selected pricelist !\n"
@@ -691,11 +712,6 @@ msgid "To Purchase"
 msgstr "Επιτρέπεται η αγορά"
 
 #. module: product
-#: model:product.template,name:product.product_product_mb1_product_template
-msgid "Mainboard ASUStek A7N8X"
-msgstr "Mainboard ASUStek A7N8X"
-
-#. module: product
 #: help:product.supplierinfo,min_qty:0
 msgid ""
 "The minimal quantity to purchase to this supplier, expressed in the supplier "
@@ -801,6 +817,12 @@ msgstr ""
 "Διατηρήστε το κενό για όλα τα προϊόντα."
 
 #. module: product
+#: view:product.product:0
+#: view:product.template:0
+msgid "Procurement & Locations"
+msgstr "Προμήθειες & Τοποθεσίες"
+
+#. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
 msgstr "Έργο Σχεδιαμού Κουζίνας"
@@ -870,10 +892,12 @@ msgid "  e.g: 1 * (reference unit) = ratio * (this unit)"
 msgstr ""
 
 #. module: product
-#: view:product.product:0
-#: view:product.template:0
-msgid "Procurement & Locations"
-msgstr "Προμήθειες & Τοποθεσίες"
+#: model:ir.actions.act_window,help:product.product_uom_form_action
+msgid ""
+"Create and manage the units of measure you want to be used in your system. "
+"You can define a conversion rate between several Units of Measure within the "
+"same category."
+msgstr ""
 
 #. module: product
 #: field:product.packaging,weight:0
@@ -939,13 +963,11 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action2
+#: model:ir.actions.act_window,help:product.product_pricelist_action
 msgid ""
-"A pricelist contains rules to be evaluated in order to compute the purchase "
-"or sale price for all the partners assigned to a pricelist. Pricelists have "
-"several versions (2010, 2011, Promotion of February 2010, etc.) and each "
-"version has several rules. Example: the customer price of this category of "
-"product will be based on the supplier price multiplied by 1.80."
+"There can be more than one version of a pricelist. Here you can create and "
+"manage new versions of a price list. Some examples of versions: 2010, 2011, "
+"Summer Promotion, etc."
 msgstr ""
 
 #. module: product
@@ -979,20 +1001,6 @@ msgid "Partner Information"
 msgstr "Πληροφορίες Συνεργάτη"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action
-msgid ""
-"You must define a Product for everything you buy or sell. They can be raw "
-"materials, stockable products, consumables or services. The Product form "
-"contains a detailed information of your products related to procurement "
-"logistics, sales price, product category, suppliers and so on."
-msgstr ""
-
-#. module: product
-#: model:ir.model,name:product.model_res_users
-msgid "res.users"
-msgstr ""
-
-#. module: product
 #: selection:product.ul,type:0
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
@@ -1020,6 +1028,15 @@ msgid "Price List Items"
 msgstr "Εϊδη Τιμοκαταλόγου"
 
 #. module: product
+#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
+msgid ""
+"Create and manage the units of measure categories you want to be used in "
+"your system. If several units of measure are in the same category, they can "
+"be converted to each other. For example, in the unit of measure category "
+"\"Time\", you will have the following UoM: Hours, Days."
+msgstr ""
+
+#. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
 msgstr "Μεγαλύτερο από την αναφερόμενη Μονάδα Μέτρησης"
@@ -1045,12 +1062,9 @@ msgid "Price Surcharge"
 msgstr "Τιμή Προσαύξησης"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_uom_form_action
-msgid ""
-"Create and manage the units of measure you want to be used in your system. "
-"You can define a conversion rate to be used between the several Unit of "
-"Measure within the same category."
-msgstr ""
+#: model:product.template,name:product.product_product_mb1_product_template
+msgid "Mainboard ASUStek A7N8X"
+msgstr "Mainboard ASUStek A7N8X"
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1063,6 +1077,7 @@ msgstr "Αποθηκευτικές Μονάδες"
 #: field:product.pricelist.type,name:0
 #: field:product.pricelist.version,name:0
 #: view:product.product:0
+#: field:product.product,name_template:0
 #: field:product.template,name:0
 #: field:product.ul,name:0
 #: field:product.uom,name:0
@@ -1079,6 +1094,15 @@ msgstr "Αποθηκεύσιμα"
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
 msgstr "Ξύλινο Ανώφλιο 4μ"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_normal_action
+msgid ""
+"You must define a Product for everything you buy or sell. Products can be "
+"raw materials, stockable products, consumables or services. The Product form "
+"contains detailed information about your products related to procurement "
+"logistics, sales price, product category, suppliers and so on."
+msgstr ""
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1246,7 +1270,7 @@ msgid "Pallet Dimension"
 msgstr "Διαστάσεις παλέτας"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:603
 #, python-format
 msgid " (copy)"
 msgstr " (αντίγραφο)"
@@ -1257,25 +1281,11 @@ msgid "Partners"
 msgstr "Συνεργάτες"
 
 #. module: product
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Δεν μπορεί να υπάρχουν δύο χρήστες με το ίδιο όνομα χρήστη!"
-
-#. module: product
 #: help:product.template,sale_delay:0
 msgid ""
 "This is the average delay in days between the confirmation of the customer "
 "order and the delivery of the finished products. It's the time you promise "
 "to your customers."
-msgstr ""
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_uom_categ_form_action
-msgid ""
-"Create and manage the units of measure categories you want to be used in "
-"your system. If several units of measures are in the same category, they can "
-"be converted within each other. For example, in the unit of measure category "
-"\"Time\", you will have the following UoM: Hours, Days."
 msgstr ""
 
 #. module: product
@@ -1285,7 +1295,7 @@ msgid "Second UoM"
 msgstr "Δεύτερη Μονάδα Μέτρησης"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:142
 #, python-format
 msgid "Error !"
 msgstr "Σφάλμα!"
@@ -1370,20 +1380,17 @@ msgid "Purchase Unit of Measure"
 msgstr "Μ.Μ Αγοράς"
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_category_action
-msgid ""
-"Here is a list of all your products classified by category. You can click on "
-"a category to get the list of all products linked to this category or to a "
-"child of this category."
-msgstr ""
-"Εδώ είναι μια λίστα όλων των προϊόντων ταξινομιμένα κατά κατηγορία. Μπορείτε "
-"να κάνετε κλικ σε μια κατηγορία για να πάρετε μια λίστα όλων των προϊόντων "
-"συνδεδεμένα με αυτή την κατηγορία ή την υπο-κατηγορία"
-
-#. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
 msgstr "Μέθοδος απόκτησης"
+
+#. module: product
+#: model:ir.actions.act_window,help:product.product_category_action
+msgid ""
+"Here is a list of all your products classified by category. You can click a "
+"category to get the list of all products linked to this category or to a "
+"child of this category."
+msgstr ""
 
 #. module: product
 #: view:product.product:0
@@ -1396,7 +1403,7 @@ msgid "Regular processor config"
 msgstr "Regular processor config"
 
 #. module: product
-#: code:addons/product/product.py:0
+#: code:addons/product/product.py:142
 #, python-format
 msgid ""
 "Conversion from Product UoM m to Default UoM PCE is not possible as they "
@@ -1460,13 +1467,6 @@ msgid ""
 msgstr ""
 "Σφάλμα: Η προκαθορισμένη ΜΜ και η ΜΜ αγορών πρέπει να είναι στην ίδια "
 "κατηγορία."
-
-#. module: product
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"Η επιλεγμένη εταιρία δεν είναι στις επιτρεπόμενες εταιρίες γι' αυτόν τον "
-"χρήστη"
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1539,6 +1539,7 @@ msgstr "Πεδίο Προϊόντος"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
+#: model:ir.ui.menu,name:product.menu_product_pricelist_type_action2
 msgid "Pricelists Types"
 msgstr "Τύποι Τιμοκαταλόγων"
 
@@ -1572,15 +1573,6 @@ msgstr "Customizable PC"
 #: field:pricelist.partnerinfo,price:0
 msgid "Unit Price"
 msgstr "Τιμή Μονάδας"
-
-#. module: product
-#: model:ir.actions.act_window,help:product.product_normal_action_puchased
-msgid ""
-"Products can be purchased and/or sold. They can be raw materials, stockable "
-"products, consumables or services. The Product form contains a detailed "
-"information on your  products related to procurement logistics, sales price, "
-"product category, suppliers and so on."
-msgstr ""
 
 #. module: product
 #: model:product.category,name:product.product_category_7
@@ -1622,6 +1614,13 @@ msgstr "Συσκευασία κατα επίπεδο"
 #: field:product.template,warranty:0
 msgid "Warranty (months)"
 msgstr "Εγγύηση (μήνες)"
+
+#. module: product
+#: help:product.pricelist.item,categ_id:0
+msgid ""
+"Set a category of product if this rule only apply to products of a category "
+"and his children. Keep empty for all products"
+msgstr ""
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1748,7 +1747,7 @@ msgstr ""
 "και τιμή τιμοκαταλόγου."
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:515
 #, python-format
 msgid "Partner section of the product form"
 msgstr "Τομέας συνεργάτη στην φόρμα προϊόντος"
@@ -2185,7 +2184,7 @@ msgid "Description"
 msgstr "Περιγραφή"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:358
 #, python-format
 msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
@@ -2232,7 +2231,7 @@ msgid "Shelves"
 msgstr "Ράφια"
 
 #. module: product
-#: code:addons/product/pricelist.py:0
+#: code:addons/product/pricelist.py:514
 #, python-format
 msgid "Other Pricelist"
 msgstr "Άλλος Τιμοκατάλογος"
@@ -2306,29 +2305,14 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: field:product.pricelist.item,price_discount:0
-msgid "Price Discount"
-msgstr "Έκπτωση Τιμής"
-
-#. module: product
 #: help:product.template,volume:0
 msgid "The volume in m3."
 msgstr "Ο όγκος σε m3."
 
 #. module: product
-#: model:ir.actions.act_window,help:product.product_pricelist_action
-msgid ""
-"There can be more than one version of a pricelist. If you need to create new "
-"versions of a pricelist, you can do it and manage them from here. Some "
-"examples of versions: 2010, 2011, Promotion of February 2010, etc."
-msgstr ""
-
-#. module: product
-#: help:product.pricelist.item,categ_id:0
-msgid ""
-"Set a category of product if this rule only apply to products of a category "
-"and his children. Keep empty for all products"
-msgstr ""
+#: field:product.pricelist.item,price_discount:0
+msgid "Price Discount"
+msgstr "Έκπτωση Τιμής"
 
 #~ msgid ""
 #~ "The minimal quantity to purchase for this supplier, expressed in the default "
@@ -2759,3 +2743,20 @@ msgstr ""
 
 #~ msgid "Supplier Product UoM."
 #~ msgstr "Μονάδα Μέτρησης Προϊόντος Προμηθευτή"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Δεν μπορεί να υπάρχουν δύο χρήστες με το ίδιο όνομα χρήστη!"
+
+#~ msgid ""
+#~ "Here is a list of all your products classified by category. You can click on "
+#~ "a category to get the list of all products linked to this category or to a "
+#~ "child of this category."
+#~ msgstr ""
+#~ "Εδώ είναι μια λίστα όλων των προϊόντων ταξινομιμένα κατά κατηγορία. Μπορείτε "
+#~ "να κάνετε κλικ σε μια κατηγορία για να πάρετε μια λίστα όλων των προϊόντων "
+#~ "συνδεδεμένα με αυτή την κατηγορία ή την υπο-κατηγορία"
+
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "Η επιλεγμένη εταιρία δεν είναι στις επιτρεπόμενες εταιρίες γι' αυτόν τον "
+#~ "χρήστη"

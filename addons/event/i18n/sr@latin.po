@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-12-23 13:56+0000\n"
 "Last-Translator: Olivier Dony (OpenERP) <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:11+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: event
 #: view:event.event:0
@@ -112,7 +112,7 @@ msgid "Confirmation Email"
 msgstr "Konfirmacioni Email"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:63
 #, python-format
 msgid "Registration doesn't have any partner to invoice."
 msgstr "Registracija nema ni jednog partnera za fakturisanje"
@@ -131,7 +131,7 @@ msgid "Invoice Date"
 msgstr "Datum Fakture"
 
 #. module: event
-#: code:addons/event/wizard/partner_event_registration.py:0
+#: code:addons/event/wizard/partner_event_registration.py:93
 #: view:event.registration:0
 #: model:ir.actions.act_window,name:event.action_partner_event_registration
 #: model:ir.model,name:event.model_event_registration
@@ -199,7 +199,7 @@ msgid "Ticket for Opera"
 msgstr "Karta za Operu"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:122
 #: view:event.event:0
 #, python-format
 msgid "Confirm Event"
@@ -211,11 +211,6 @@ msgstr "Potvrdi Dogadjaj"
 #: selection:report.event.registration,state:0
 msgid "Cancelled"
 msgstr "Otkazano"
-
-#. module: event
-#: view:event.registration:0
-msgid "Send New Email"
-msgstr "Posalji Novi Email"
 
 #. module: event
 #: field:event.event,reply_to:0
@@ -269,7 +264,7 @@ msgid "Extra Info"
 msgstr "Dodatne Informacije"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:83
 #, python-format
 msgid "Customer Invoices"
 msgstr ""
@@ -361,18 +356,18 @@ msgid "Number of Registrations or Tickets"
 msgstr "Broj registracija ili Tiketa"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:50
+#: code:addons/event/wizard/event_make_invoice.py:54
+#: code:addons/event/wizard/event_make_invoice.py:58
+#: code:addons/event/wizard/event_make_invoice.py:62
 #, python-format
 msgid "Warning !"
 msgstr "Upozorenje !"
 
 #. module: event
-#: model:ir.actions.act_window,help:event.action_event_view
-msgid ""
-"Event is the low-level object used by meeting and others documents that have "
-"to be synchronized with mobile or calendar applications through caldav. Most "
-"of the users should work on the Calendar menu, and not on the list of events."
-msgstr ""
+#: view:event.registration:0
+msgid "Send New Email"
+msgstr "Posalji Novi Email"
 
 #. module: event
 #: view:event.event:0
@@ -412,7 +407,7 @@ msgid "To be Invoiced"
 msgstr "Da bude Fakturisano"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:394
 #, python-format
 msgid "Error !"
 msgstr "Greska !"
@@ -430,7 +425,7 @@ msgid "Cancel Registration"
 msgstr "Otkazi Registraciju"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:395
 #, python-format
 msgid "Registered partner doesn't have an address to make the invoice."
 msgstr "zahtevani partner nema adresu da bi napravio fakturu"
@@ -489,7 +484,7 @@ msgid "Confirm Anyway"
 msgstr "Sve jedno Potvrdi"
 
 #. module: event
-#: code:addons/event/wizard/event_confirm_registration.py:0
+#: code:addons/event/wizard/event_confirm_registration.py:54
 #, python-format
 msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
 msgstr "Upozorenje ! Dogadjaj '%s' je dostigao maksimalni limit (%s)."
@@ -658,7 +653,7 @@ msgid "Reference 2"
 msgstr "Referenca 2"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:357
 #: view:report.event.registration:0
 #, python-format
 msgid "Invoiced"
@@ -832,7 +827,7 @@ msgid "Set To Draft"
 msgstr "Postavi u \"U Pripremi'"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:472
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
@@ -880,7 +875,7 @@ msgid "Attachments"
 msgstr "Dodatak"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:59
 #, python-format
 msgid "Event related doesn't have any product defined"
 msgstr "Vezani dogadjaj ne sadrzi ni jedan definisani produkt"
@@ -903,7 +898,7 @@ msgstr ""
 "Datuma Pocetka"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:442
 #: selection:event.event,state:0
 #: view:event.make.invoice:0
 #: selection:event.registration,state:0
@@ -930,7 +925,7 @@ msgid "Year"
 msgstr "Godina"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:517
 #, python-format
 msgid "Cancel"
 msgstr "Otkaži"
@@ -948,7 +943,7 @@ msgid "Event by Registration"
 msgstr "Dogadjaj po registraciji"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:432
 #, python-format
 msgid "Open"
 msgstr "Otvori"
@@ -959,7 +954,8 @@ msgid "Responsible User"
 msgstr "Odgovorni Korisnik"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:538
+#: code:addons/event/event.py:545
 #, python-format
 msgid "Auto Confirmation: [%s] %s"
 msgstr "Auto potvrdjivanje: [%s] %s"
@@ -1105,7 +1101,7 @@ msgid "Unconfirmed"
 msgstr "Nepotvrdjen"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:542
 #, python-format
 msgid "Auto Registration: [%s] %s"
 msgstr "Auto Registracija : [%s] %s"
@@ -1145,13 +1141,13 @@ msgid "Country"
 msgstr "Zemlja"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:55
 #, python-format
 msgid "Registration is set as Cannot be invoiced"
 msgstr "REgistracija je postavljena tako da se ne moze fakturisati"
 
 #. module: event
-#: code:addons/event/event.py:0
+#: code:addons/event/event.py:500
 #: view:event.event:0
 #: view:event.registration:0
 #: view:res.partner:0
@@ -1214,7 +1210,7 @@ msgid "Event For Registration"
 msgstr "Dogadjaj Za Registraciju"
 
 #. module: event
-#: code:addons/event/wizard/event_make_invoice.py:0
+#: code:addons/event/wizard/event_make_invoice.py:51
 #, python-format
 msgid "Invoice cannot be created if the registration is in %s state."
 msgstr ""
@@ -1248,3 +1244,242 @@ msgstr "Daje minimalni broj Registracija"
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
 msgstr "Govornik Potvrdjen"
+
+#. module: event
+#: model:ir.actions.act_window,help:event.action_event_view
+msgid ""
+"Event is the low level object used by meeting and others documents that "
+"should be synchronized with mobile devices or calendar applications through "
+"caldav. Most of the users should work in the Calendar menu, and not in the "
+"list of events."
+msgstr ""
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
+#~ msgid ""
+#~ "Oraganization and management of Event.\n"
+#~ "\n"
+#~ "    This module allow you\n"
+#~ "        * to manage your events and their registrations\n"
+#~ "        * to use emails to automatically confirm and send acknowledgements "
+#~ "for any registration to an event\n"
+#~ "        * ...\n"
+#~ "    A dashboard for associations that includes:\n"
+#~ "    * Registration by Events (graph)\n"
+#~ "    Note that:\n"
+#~ "    - You can define new types of events in\n"
+#~ "                Events / Configuration / Types of Events\n"
+#~ "    - You can access predefined reports about number of registration per "
+#~ "event or per event category in:\n"
+#~ "                Events / Reporting\n"
+#~ msgstr ""
+#~ "Organizacija i Upravljanje Dogadjajima.\n"
+#~ "\n"
+#~ "        Ovaj modul vam omogucava\n"
+#~ "             *Da upravljate svojim dogadjajima i njohovim registracijama.\n"
+#~ "             *Da koristite Emal da automatski potvrdjujete i saljete "
+#~ "zakljucke  bilo kojoj registraciji nekog Dogadjaja\n"
+#~ "             *...\n"
+#~ "        UpravljackaTabla za asociacije koja sadrzi:\n"
+#~ "             *Registracije po Dogadjajima ( Grafikon)\n"
+#~ "             Upamtite da:\n"
+#~ "                 Mozete definisati nove tipove dogadjaja u \n"
+#~ "                                             Events / Configuration / Types "
+#~ "of Events\n"
+#~ "                -Mozete pristupiti predefinisanim izvestajima o broju "
+#~ "registracija po dogadjaju ili po kategoriji dogadjaja u:\n"
+#~ "                                             Events / Reporting\n"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska ! Ne mozes kreirati rekursivne menije."
+
+#~ msgid "Event Registraion"
+#~ msgstr "Registracija Dogadjaja"
+
+#~ msgid "Error: UOS must be in a different category than the UOM"
+#~ msgstr ""
+#~ "Greška: JU (jedinice usluga)  i JM moraju da budu u različitim kategorijama"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Greška: Podrazumevana JM i kupljena JM moraju da budu u istoj kategoriji."
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Greška: Neispravan EAN kod"
+
+#~ msgid "Error ! You cannot create recursive sections."
+#~ msgstr "Greška ! Ne možete stvarati rekurzivne sekcije."
+
+#~ msgid "Ending date"
+#~ msgstr "Datum zavrsetka"
+
+#~ msgid "Draft Registrations"
+#~ msgstr "Registracije u Pripremi"
+
+#~ msgid "Ok"
+#~ msgstr "U redu"
+
+#~ msgid ""
+#~ "Organization and management of events.\n"
+#~ "\n"
+#~ "    This module allow you\n"
+#~ "        * to manage your events and their registrations\n"
+#~ "        * to use emails to automatically confirm and send acknowledgements "
+#~ "for any registration to an event\n"
+#~ "        * ...\n"
+#~ "\n"
+#~ "    Note that:\n"
+#~ "    - You can define new types of events in\n"
+#~ "                Events / Configuration / Types of Events\n"
+#~ "    - You can access predefined reports about number of registration per "
+#~ "event or per event category in :\n"
+#~ "                Events / Reporting\n"
+#~ msgstr ""
+#~ "Organizacija i Upravljanje Dogadjajima\n"
+#~ "\n"
+#~ "    Ovaj vam modul omogucuje\n"
+#~ "        *da upravljate dogadjajima i njihovim registracijama\n"
+#~ "        *da koristite Emailove za automatsku potvrdu i slanje upozorenja za "
+#~ "bilo koju registraciju nekog dogadjaja\n"
+#~ "        *\n"
+#~ "      Upamtite da:\n"
+#~ "     -Mozete da definisete nove tipove dogadjaja u\n"
+#~ "                                                             "
+#~ "Dogadjaji/Podesavanja/Tipovi Dogadjaja\n"
+#~ "    -Mozete da pristupite predefinisanim izvestajima o broju registracija po "
+#~ "dogadjaju ili cak po kategorijama u:\n"
+#~ "                                                            "
+#~ "Dogadjaji/Izvestavanje\n"
+
+#~ msgid "Create Invoices"
+#~ msgstr "Kreiraj Racune"
+
+#~ msgid "Draft Registration"
+#~ msgstr "Registracija u pripremi"
+
+#~ msgid "Invoice Rejected"
+#~ msgstr "Racun Odbijen"
+
+#~ msgid "Badge"
+#~ msgstr "Znacka"
+
+#~ msgid "Events by Categories"
+#~ msgstr "Dogadjaji po Kategorijama"
+
+#~ msgid "Confirm Registrations"
+#~ msgstr "potvrdi Registraciju"
+
+#~ msgid "References"
+#~ msgstr "Reference"
+
+#~ msgid "Registration By Event Types"
+#~ msgstr "Registracije po Tipu Dogadjaja"
+
+#~ msgid "Reporting"
+#~ msgstr "Izveštavanje"
+
+#~ msgid "All Events"
+#~ msgstr "Svi Dogadjaji"
+
+#~ msgid "Case section"
+#~ msgstr "Tip Sekcije"
+
+#~ msgid "The event limit is reached. What do you want to do?"
+#~ msgstr "Limit Dogadjaja je postignut. Sta zelis da uradis?"
+
+#~ msgid "Registration Invoiced"
+#~ msgstr "Registracija fakturisana"
+
+#~ msgid "Configuration"
+#~ msgstr "Podešavanje"
+
+#~ msgid "Error Messages"
+#~ msgstr "Poruke o greskama"
+
+#~ msgid "Parent Category"
+#~ msgstr "Roditeljska Kategorija"
+
+#~ msgid "Badge Name"
+#~ msgstr "Naziv Znacke"
+
+#~ msgid "Canceled"
+#~ msgstr "Отказано"
+
+#~ msgid "Events On Registrations"
+#~ msgstr "Dogadjaji pri Registraciji"
+
+#~ msgid "Invoice Created"
+#~ msgstr "Racun Kreiran"
+
+#~ msgid "Communication history"
+#~ msgstr "Istorija Komunikacija"
+
+#~ msgid "Event description"
+#~ msgstr "Opis Dogadjaja"
+
+#~ msgid "Event type on registration"
+#~ msgstr "Tip Dogadjaja pri registraciji"
+
+#~ msgid "Event Related"
+#~ msgstr "Vezani Dogadjaj"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "Events by section"
+#~ msgstr "Dogadjaji po Sekciji"
+
+#~ msgid "Statistics"
+#~ msgstr "Statistike"
+
+#~ msgid "General"
+#~ msgstr "Opšte"
+
+#~ msgid "Send Reminder"
+#~ msgstr "Posalji Podsetnik"
+
+#~ msgid "All Registrations"
+#~ msgstr "Sve Registracije"
+
+#~ msgid "Events on registrations"
+#~ msgstr "Dogadjaji pri Registraciji"
+
+#~ msgid "New event"
+#~ msgstr "Novi Dogadjaj"
+
+#~ msgid "Badge Title"
+#~ msgstr "Naslov Znacke"
+
+#~ msgid "Case"
+#~ msgstr "Slucaj"
+
+#~ msgid "Badge Partner"
+#~ msgstr "Partner Znacke"
+
+#~ msgid "Confirmed Events"
+#~ msgstr "Potvrdi Dogadjaje"
+
+#~ msgid "Events Organisation"
+#~ msgstr "Organizacija Dogadjaja"
+
+#~ msgid "List Register Partners"
+#~ msgstr "Spisak Registrovanih Partnera"
+
+#~ msgid "Actions"
+#~ msgstr "Akcije"
+
+#~ msgid "Payments"
+#~ msgstr "Isplate"
+
+#~ msgid "Draft Events"
+#~ msgstr "Dodgadjaji iz Pripreme"

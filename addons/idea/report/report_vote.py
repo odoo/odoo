@@ -28,7 +28,7 @@ class report_vote(osv.osv):
     _auto = False
     _rec_name = 'date'
     _columns = {
-        'date': fields.date('Date Order', readonly=True),
+        'date': fields.date('Date Order', readonly=True, select=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),

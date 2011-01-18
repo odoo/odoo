@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-09 08:24+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 18:52+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:08+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:11+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
@@ -36,6 +36,7 @@ msgstr "Socio pagado"
 
 #. module: membership
 #: view:report.membership:0
+#: view:res.partner:0
 msgid "Group By..."
 msgstr "Agrupar por..."
 
@@ -158,7 +159,7 @@ msgid "Date from"
 msgstr "Fecha desde"
 
 #. module: membership
-#: code:addons/membership/membership.py:0
+#: code:addons/membership/membership.py:414
 #, python-format
 msgid "Partner doesn't have an address to make the invoice."
 msgstr "Empresa no tiene una dirección para realizar la factura."
@@ -208,6 +209,19 @@ msgid ""
 "                    -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Indica el estado del socio.\n"
+"                    -No socio: Un miembro que no ha solicitado su "
+"afiliación.\n"
+"                    -Socio cancelado: Un miembro que ha cancelado su "
+"afiliación.\n"
+"                    -Socio antiguo: Un miembro cuya fecha de socio ha "
+"expirado.\n"
+"                    -Socio en espera: Un miembro que ha solicitado su "
+"afiliación y cuya factura se va a crear.\n"
+"                    -Socio facturado: Un miembro cuya factura ha sido "
+"creada.\n"
+"                    -Socio pagado: Un miembro que ha pagado el importe de la "
+"cuota de socio."
 
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
@@ -226,7 +240,8 @@ msgid "Start membership date"
 msgstr "Fecha inicio afiliación"
 
 #. module: membership
-#: code:addons/membership/membership.py:0
+#: code:addons/membership/membership.py:410
+#: code:addons/membership/membership.py:413
 #, python-format
 msgid "Error !"
 msgstr "¡Error!"
@@ -235,11 +250,6 @@ msgstr "¡Error!"
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
 msgstr "Socio ha pagado"
-
-#. module: membership
-#: view:res.partner:0
-msgid "Group By"
-msgstr "Agrupar por"
 
 #. module: membership
 #: field:report.membership,num_waiting:0
@@ -373,6 +383,19 @@ msgid ""
 "invoice and send propositions for membership renewal.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo le permite administrar todas las operaciones de gestión de "
+"socios.\n"
+"Es compatible con diferentes tipos de miembros:\n"
+"* Socio gratuito\n"
+"* Socio asociado (por ejemplo: un grupo se suscribe como socio para todos\n"
+"  los miembros subsidiarios)\n"
+"* Socios pagados\n"
+"* Precios especiales de socio, ...\n"
+"\n"
+"Se integra con ventas y contabilidad para poder facturar automáticamente\n"
+"y enviar propuestas para la renovación de la cuota de socio.\n"
+"    "
 
 #. module: membership
 #: model:ir.model,name:membership.model_account_invoice_line
@@ -396,6 +419,19 @@ msgid ""
 "                        -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Indica el estado del socio.\n"
+"                    -No socio: Un miembro que no ha solicitado su "
+"afiliación.\n"
+"                    -Socio cancelado: Un miembro que ha cancelado su "
+"afiliación.\n"
+"                    -Socio antiguo: Un miembro cuya fecha de socio ha "
+"expirado.\n"
+"                    -Socio en espera: Un miembro que ha solicitado su "
+"afiliación y cuya factura se va a crear.\n"
+"                    -Socio facturado: Un miembro cuya factura ha sido "
+"creada.\n"
+"                    -Socio pagado: Un miembro que ha pagado el importe de la "
+"cuota de socio."
 
 #. module: membership
 #: view:report.membership:0
@@ -409,7 +445,7 @@ msgid "Group by..."
 msgstr "Agrupar por..."
 
 #. module: membership
-#: code:addons/membership/membership.py:0
+#: code:addons/membership/membership.py:411
 #, python-format
 msgid "Partner is a free Member."
 msgstr "La empresa es un socio gratis."
@@ -957,6 +993,9 @@ msgstr "Ingreso realizado"
 
 #~ msgid "Active Membership since this date"
 #~ msgstr "Socio activo desde esta fecha."
+
+#~ msgid "Group By"
+#~ msgstr "Agrupar por"
 
 #~ msgid "Expired date of Membership"
 #~ msgstr "Fecha expiración de socio."

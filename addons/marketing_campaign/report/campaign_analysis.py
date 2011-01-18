@@ -40,7 +40,7 @@ class campaign_analysis(osv.osv):
             wi_ids = self.pool.get('marketing.campaign.workitem').search(cr, uid,
                         [('segment_id.campaign_id', '=', ca_obj.campaign_id.id)])
             total_cost = ca_obj.activity_id.variable_cost + \
-                                ((ca_obj.campaign_id.fixed_cost or 0.00) / len(wi_ids))
+                                ((ca_obj.campaign_id.fixed_cost or 1.00) / len(wi_ids))
             result[ca_obj.id] = total_cost
         return result
     _columns = {
@@ -52,7 +52,7 @@ class campaign_analysis(osv.osv):
                                      ('10','October'), ('11','November'), ('12','December')],
                                   'Month', readonly=True),
         'day': fields.char('Day', size=10, readonly=True),
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Date', readonly=True, select=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
                                                                 readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',

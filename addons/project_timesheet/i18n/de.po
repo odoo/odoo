@@ -6,19 +6,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-31 10:38+0000\n"
+"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"PO-Revision-Date: 2011-01-13 11:51+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:33+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
+#: code:addons/project_timesheet/project_timesheet.py:53
 #, python-format
 msgid "No employee defined for user \"%s\". You must create one."
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Mitarbeiter für diesen Benutzer erstellen."
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
+#: code:addons/project_timesheet/project_timesheet.py:61
 #, python-format
 msgid ""
 "No journal defined on the related employee.\n"
@@ -41,9 +41,9 @@ msgid "Timesheet task"
 msgstr "Zeiterfassung Aufgaben"
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Search Analytic Lines"
-msgstr "Suche Analytische Buchungen"
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by project"
+msgstr "Anmelden / Abmelden bei Projekt"
 
 #. module: project_timesheet
 #: field:project.task.work,hr_analytic_timesheet_id:0
@@ -56,20 +56,19 @@ msgid "Project Task Work"
 msgstr "Projekt Arbeitszeit"
 
 #. module: project_timesheet
-#: selection:report.timesheet.task.user,month:0
-msgid "February"
-msgstr "Februar"
+#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr "report.timesheet.task.user"
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
 #: view:report.timesheet.task.user:0
 msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: project_timesheet
-#: model:process.node,note:project_timesheet.process_node_triggerinvoice0
-msgid "Trigger invoices from sale order lines"
-msgstr "Erzeugt Rechnungen a. Verkaufsauftrag"
+#: constraint:res.partner:0
+msgid "Error ! You can not create recursive associated members."
+msgstr "Fehler ! Sie können keine rekursiven Teilnehmer anlegen"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -81,6 +80,11 @@ msgstr "Oktober"
 #: field:report.timesheet.task.user,year:0
 msgid "Year"
 msgstr "Jahr"
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Analytic account/project"
+msgstr "Analytisches Projektkonto"
 
 #. module: project_timesheet
 #: field:report.timesheet.task.user,task_hrs:0
@@ -98,9 +102,15 @@ msgid " Year "
 msgstr " Jahr "
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Product"
-msgstr "Produkt"
+#: model:ir.model,name:project_timesheet.model_res_partner
+msgid "Partner"
+msgstr "Partner"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:229
+#, python-format
+msgid "Cannot delete Partner which is Assigned to project  !"
+msgstr "Kann Partner, der zum Projekt zugewiesen wurde, nicht löschen!"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -133,19 +143,15 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr "Fehler ! Sie können keine rekursiven Aufgaben definieren."
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Journal"
-msgstr "Journal"
+#: code:addons/project_timesheet/project_timesheet.py:229
+#, python-format
+msgid "Invalid action !"
+msgstr "Fehlerhafte Aktion !"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "June"
 msgstr "Juni"
-
-#. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "My Entries"
-msgstr "Meine Arbeitszeiten"
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task
@@ -158,7 +164,6 @@ msgid "Invoice Tasks Work"
 msgstr "Abrechnen Arbeitszeit"
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
 #: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,user_id:0
 msgid "User"
@@ -178,11 +183,6 @@ msgstr "Datum"
 #: selection:report.timesheet.task.user,month:0
 msgid "July"
 msgstr "Juli"
-
-#. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Extended Filters..."
-msgstr "Erweiterter Filter..."
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_timesheettask0
@@ -219,9 +219,9 @@ msgstr ""
 "    "
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Account"
-msgstr "Analysekonto"
+#: selection:report.timesheet.task.user,month:0
+msgid "February"
+msgstr "Februar"
 
 #. module: project_timesheet
 #: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
@@ -264,7 +264,7 @@ msgid "Tasks by User"
 msgstr "Aufgaben je Benutzer"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
+#: code:addons/project_timesheet/project_timesheet.py:57
 #, python-format
 msgid ""
 "No product defined on the related employee.\n"
@@ -291,9 +291,9 @@ msgid "Invoicing Data"
 msgstr "Abrechnungsdaten"
 
 #. module: project_timesheet
-#: view:account.analytic.line:0
-msgid "Fin.Account"
-msgstr "Finanzkonto"
+#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
+msgid "Encode how much time u spent on your task"
+msgstr "Erfasse Zeit für Aufgabenerledigung"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -306,7 +306,10 @@ msgid "Timesheet/Task hours Report Per Month"
 msgstr "Arbeitstunden und Aufgaben nach Monat"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
+#: code:addons/project_timesheet/project_timesheet.py:52
+#: code:addons/project_timesheet/project_timesheet.py:56
+#: code:addons/project_timesheet/project_timesheet.py:60
+#: code:addons/project_timesheet/project_timesheet.py:67
 #, python-format
 msgid "Bad Configuration !"
 msgstr "Falsche Konfiguration !"
@@ -342,9 +345,9 @@ msgid "After task is completed, Create its invoice."
 msgstr "Nach Erledigung der Aufgabe, kann Rechnung erstellt werden."
 
 #. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
-msgstr ""
+#: model:process.node,note:project_timesheet.process_node_triggerinvoice0
+msgid "Trigger invoices from sale order lines"
+msgstr "Erzeugt Rechnungen a. Verkaufsauftrag"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -358,17 +361,12 @@ msgid "Project Timesheet"
 msgstr "Projekt Zeiterfassung"
 
 #. module: project_timesheet
-#: model:process.transition,note:project_timesheet.process_transition_taskencoding0
-msgid "Encode how much time u spent on your task"
-msgstr "Erfasse Zeit für Aufgabenerledigung"
-
-#. module: project_timesheet
 #: view:project.project:0
 msgid "Invoice Task Work"
 msgstr "Abrechnen Arbeitsstunden"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:0
+#: code:addons/project_timesheet/project_timesheet.py:68
 #, python-format
 msgid ""
 "No product and product category property account defined on the related "
@@ -437,3 +435,24 @@ msgstr ""
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#~ msgid "My Entries"
+#~ msgstr "Meine Arbeitszeiten"
+
+#~ msgid "Journal"
+#~ msgstr "Journal"
+
+#~ msgid "Product"
+#~ msgstr "Produkt"
+
+#~ msgid "Search Analytic Lines"
+#~ msgstr "Suche Analytische Buchungen"
+
+#~ msgid "Extended Filters..."
+#~ msgstr "Erweiterter Filter..."
+
+#~ msgid "Account"
+#~ msgstr "Analysekonto"
+
+#~ msgid "Fin.Account"
+#~ msgstr "Finanzkonto"

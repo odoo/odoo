@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-11-24 09:42+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-13 19:23+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:48+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:47+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: warning
 #: model:ir.model,name:warning.model_purchase_order_line
@@ -35,7 +35,7 @@ msgstr "Messaggio per Riga Ordine di Acquisto"
 #. module: warning
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Errore! Non è possibile creare membri associati ricorsivi."
 
 #. module: warning
 #: model:ir.model,name:warning.model_stock_picking
@@ -56,6 +56,12 @@ msgstr "Avviso sull'acquisto di questo prodotto"
 #: model:ir.model,name:warning.model_product_product
 msgid "Product"
 msgstr "Prodotto"
+
+#. module: warning
+#: sql_constraint:purchase.order:0
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "Il riferimento ordine deve essere unico!"
 
 #. module: warning
 #: view:product.product:0
@@ -141,7 +147,7 @@ msgid "Message for Purchase Order"
 msgstr "Messaggio per l'Ordine di Acquisto"
 
 #. module: warning
-#: code:addons/warning/warning.py:0
+#: code:addons/warning/warning.py:32
 #: help:product.product,purchase_line_warn:0
 #: help:product.product,sale_line_warn:0
 #: help:res.partner,invoice_warn:0
@@ -159,10 +165,15 @@ msgstr ""
 "bloccherà il flusso. Il messaggio deve essere scritto nel campo successivo."
 
 #. module: warning
-#: code:addons/warning/warning.py:0
+#: code:addons/warning/warning.py:67
+#: code:addons/warning/warning.py:96
+#: code:addons/warning/warning.py:132
+#: code:addons/warning/warning.py:163
+#: code:addons/warning/warning.py:213
+#: code:addons/warning/warning.py:246
 #, python-format
 msgid "Alert for %s !"
-msgstr ""
+msgstr "Allarme per %s !"
 
 #. module: warning
 #: field:res.partner,invoice_warn_msg:0
@@ -185,7 +196,12 @@ msgid "Warning on the Purchase Order"
 msgstr "Avviso sull'Ordine di Acquisto"
 
 #. module: warning
-#: code:addons/warning/warning.py:0
+#: code:addons/warning/warning.py:68
+#: code:addons/warning/warning.py:97
+#: code:addons/warning/warning.py:134
+#: code:addons/warning/warning.py:164
+#: code:addons/warning/warning.py:214
+#: code:addons/warning/warning.py:247
 #, python-format
 msgid "Warning for %s"
 msgstr "Avviso per %s"
@@ -198,7 +214,7 @@ msgstr "Avviso sull'Ordine di Vendita"
 #. module: warning
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Errore: Codice EAN non valido"
 
 #. module: warning
 #: field:res.partner,picking_warn_msg:0
@@ -213,12 +229,12 @@ msgstr "Partner"
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Ordine di vendita"
 
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linea ordine di vendita"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valido per Visualizzazione Architettura!"
