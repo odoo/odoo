@@ -716,9 +716,9 @@ class purchase_order_line(osv.osv):
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False,fiscal_position=False):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-                partner_id, date_order=date_order,fiscal_position=fiscal_position)
+                partner_id=partner_id, date_order=date_order,fiscal_position=fiscal_position)
         if 'product_uom' in res['value']:
-            if uom and uom != res['value']['product_uom']:
+            if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
                 seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
                 res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % seller_uom_name }})
             del res['value']['product_uom']
