@@ -29,11 +29,7 @@ import pytz
 import re
 import time
 import tools
-import logging
-_logger = logging.getLogger(__name__)
 
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
 
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
@@ -1406,9 +1402,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                                  offset, limit, order, context, count)
 
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
-        print "search"
-        print args
-        print res
         return res
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
@@ -1430,34 +1423,20 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             select = ids
         new_ids = []
         res = False
-        print "write"
-        print select
         for event_id in select:
-            real_event_id = base_calendar_id2real_id(event_id)
-            
-            
-            pp.pprint(vals)
-            
+            real_event_id = base_calendar_id2real_id(event_id)   
             
             event = self.browse(cr,uid, event_id, context=context)
             if('edit_all' in vals):
                 edit_all = vals['edit_all']
             else:
                 edit_all = event.edit_all or not event.recurrency
-           
-            print "edit_all"
-            print edit_all
-            
-           
-            if edit_all:
-                print "on edit all"
-            else:
+
+            if not edit_all:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
                 if data.get('rrule'):
                     data.update({
-                        'recurrent_uid': real_event_id,
-                        'recurrent_id': data.get('date'),
                         'rrule_type': 'none',
                         'rrule': ''
                         })
@@ -1467,7 +1446,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
             if not real_event_id in new_ids:
-                print "quand est-ce qu'on est là"
                 new_ids.append(real_event_id)
 
         if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
@@ -1539,12 +1517,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         if fields and 'duration' not in fields:
             fields.append('duration')
 
-        print select
+
         for base_calendar_id, real_id in select:
             #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
-            print "test"
-            print res
+            if not res:
+                res = {}
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
@@ -1582,11 +1560,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        print ids
         res = False
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate', 'edit_all'], context=context):
             event_id = event_datas['id']
-            edit_all = event_datas['edit_all']
+            edit_all = event_datas.get('edit_all', False)
             if isinstance(event_id, (int, long)):
                 res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
@@ -1599,7 +1576,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                     date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
                     exdate = (event_datas['exdate'] and (event_datas['exdate'] + ',')  or '') + date_new
-                    res = self.write(cr, uid, [event_id], {'exdate': exdate})
+                    res = super(calendar_event, self).write(cr, uid, [event_id], {'exdate': exdate})
                 else:
                     res = super(calendar_event, self).unlink(cr, uid, [event_id], context=context)
                     self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
@@ -1634,9 +1611,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
         records = self.browse(cr, uid, [res], context=context)
-        print "create"
-        print real_id2base_calendar_id(records[0].id, records[0].date)
-        
         return real_id2base_calendar_id(records[0].id, records[0].date)
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
