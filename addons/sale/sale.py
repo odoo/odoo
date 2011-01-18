@@ -185,7 +185,7 @@ class sale_order(osv.osv):
         for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
             result[line.order_id.id] = True
         return result.keys()
-    
+
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True,
             readonly=True, states={'draft': [('readonly', False)]}, select=True),
@@ -202,9 +202,9 @@ class sale_order(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Cancelled')
             ], 'Order State', readonly=True, help="Gives the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception). \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the date 'Ordered Date'.", select=True),
-        'date_order': fields.date('Ordered Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
-        'create_date': fields.date('Creation Date', readonly=True, help="Date on which sales order is created."),
-        'date_confirm': fields.date('Confirmation Date', readonly=True, help="Date on which sales order is confirmed."),
+        'date_order': fields.date('Ordered Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)]}),
+        'create_date': fields.date('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
+        'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
         'user_id': fields.many2one('res.users', 'Salesman', states={'draft': [('readonly', False)]}, select=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)]}, required=True, change_default=True, select=True),
         'partner_invoice_id': fields.many2one('res.partner.address', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)]}, help="Invoice address for current sales order."),
@@ -403,7 +403,7 @@ class sale_order(osv.osv):
             'name': order.client_order_ref or '',
             'origin': order.name,
             'type': 'out_invoice',
-            'reference': "P%dSO%d" % (order.partner_id.id, order.id),
+            'reference': order.client_order_ref or order.name,
             'account_id': a,
             'partner_id': order.partner_id.id,
             'journal_id': journal_ids[0],

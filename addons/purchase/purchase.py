@@ -370,7 +370,7 @@ class purchase_order(osv.osv):
                     _('There is no purchase journal defined for this company: "%s" (id:%d)') % (o.company_id.name, o.company_id.id))
             inv = {
                 'name': o.partner_ref or o.name,
-                'reference': "P%dPO%d" % (o.partner_id.id, o.id),
+                'reference': o.partner_ref or o.name,
                 'account_id': a,
                 'type': 'in_invoice',
                 'partner_id': o.partner_id.id,
@@ -447,7 +447,7 @@ class purchase_order(osv.osv):
                 if order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     dest = order.location_id.id
                     move = self.pool.get('stock.move').create(cr, uid, {
-                        'name': 'PO:'+order_line.name,
+                        'name': order.name + ': ' +(order_line.name or ''),
                         'product_id': order_line.product_id.id,
                         'product_qty': order_line.product_qty,
                         'product_uos_qty': order_line.product_qty,
@@ -723,9 +723,9 @@ class purchase_order_line(osv.osv):
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False,fiscal_position=False):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-                partner_id, date_order=date_order,fiscal_position=fiscal_position)
+                partner_id=partner_id, date_order=date_order,fiscal_position=fiscal_position)
         if 'product_uom' in res['value']:
-            if uom and uom != res['value']['product_uom']:
+            if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
                 seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
                 res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % seller_uom_name }})
             del res['value']['product_uom']

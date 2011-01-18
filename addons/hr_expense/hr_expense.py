@@ -60,12 +60,12 @@ class hr_expense_expense(osv.osv):
         'name': fields.char('Description', size=128, required=True),
         'id': fields.integer('Sheet ID', readonly=True),
         'ref': fields.char('Reference', size=32),
-        'date': fields.date('Date'),
+        'date': fields.date('Date', select=True),
         'journal_id': fields.many2one('account.journal', 'Force Journal', help = "The journal used when the expense is invoiced"),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'user_id': fields.many2one('res.users', 'User', required=True),
-        'date_confirm': fields.date('Confirmation Date', help = "Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
-        'date_valid': fields.date('Validation Date', help = "Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
+        'date_confirm': fields.date('Confirmation Date', select=True, help = "Date of the confirmation of the sheet expense. It's filled when the button Confirm is pressed."),
+        'date_valid': fields.date('Validation Date', select=True, help = "Date of the acceptation of the sheet expense. It's filled when the button Accept is pressed."),
         'user_valid': fields.many2one('res.users', 'Validation User'),
         'account_move_id': fields.many2one('account.move', 'Ledger Posting'),
         'line_ids': fields.one2many('hr.expense.line', 'expense_id', 'Expense Lines', readonly=True, states={'draft':[('readonly',False)]} ),
@@ -155,7 +155,9 @@ class hr_expense_expense(osv.osv):
                     'account_analytic_id': l.analytic_account.id,
                 }))
             if not exp.employee_id.address_home_id:
-                raise osv.except_osv(_('Error !'), _('The employee must have a Home address'))
+                raise osv.except_osv(_('Error !'), _('The employee must have a Home address.'))
+            if not exp.employee_id.address_home_id.partner_id:
+                raise osv.except_osv(_('Error !'), _("The employee's home address must have a partner linked."))
             acc = exp.employee_id.address_home_id.partner_id.property_account_payable.id
             payment_term_id = exp.employee_id.address_home_id.partner_id.property_payment_term.id
             inv = {
@@ -240,19 +242,11 @@ class hr_expense_line(osv.osv):
     _order = "sequence, date_value desc"
 
     def onchange_product_id(self, cr, uid, ids, product_id, uom_id, employee_id, context=None):
-        if context is None:
-            ctx = {}
-        else:
-            # we only want to update it locally
-            ctx = context.copy()
-
         res = {}
         if product_id:
             product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
             res['name'] = product.name
-            # Compute based on pricetype of employee company
-            ctx['currency_id'] = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).user_id.company_id.currency_id.id
-            amount_unit = product.price_get('standard_price', ctx)[product.id]
+            amount_unit = product.price_get('standard_price', context=context)[product.id]
             res['unit_amount'] = amount_unit
             if not uom_id:
                 res['uom_id'] = product.uom_id.id

@@ -12,4 +12,5 @@
         'tools_view.xml'
     ],
     "installable": True,
+    "certificate" : "00571588675379342237"
 }

@@ -37,6 +37,7 @@
                     "account_coda_view.xml"],
     "active"    : False,
     "installable" : True,
+    "certificate" : "001237207321716002029",
 
 }
 
