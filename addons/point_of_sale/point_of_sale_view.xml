@@ -17,7 +17,7 @@
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="shop_id" widget="selection"/>
-                        <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
+                        <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)" groups="base.group_extended"/>
                         <field name="contract_number" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
@@ -29,7 +29,6 @@
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
                                     <field name="price_unit" readonly="1"/>
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
-                                    <field name="notice" on_change="onchange_dis(qty,price_subtotal_incl,discount)"/>
                                     <field name="price_subtotal" />
                                     <field name="price_subtotal_incl" sum="Subtotal"/>
                                 </tree>
