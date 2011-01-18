@@ -63,7 +63,7 @@
 -
   !record {model: hr.recruitment.job2phonecall, id: hr_recruitment_forinterview0}:
     user_id: base.user_root
-    deadline: '2010-05-28 11:51:00'
+    deadline: !eval time.strftime('%Y-%m-%d 11:51:00')
     note: 'For interview.'
     category_id: 'crm_case_categ_employee0'
 
@@ -84,8 +84,8 @@
   !record {model: crm.meeting, id: crm_meeting_fresher0}:
     alarm_id: base_calendar.alarm1
     count: 0.0
-    date: '2010-05-27 00:00:00'
-    date_deadline: '2010-05-27 08:00:00'
+    date: !eval "'%s-%s-%s 00:00:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
+    date_deadline: !eval "'%s-%s-%s 08:00:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
     day: 0.0
     duration: 8.0
     name: Fresher

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-09-17 17:43+0000\n"
-"Last-Translator: Paco Molinero <paco@byasl.com>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 03:51+0000\n"
+"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:12+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:34+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -25,7 +25,7 @@ msgstr "Subtotal"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Note:"
-msgstr ""
+msgstr "Observación:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -94,18 +94,33 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Este módulo proporciona varias funcionalidades para mejorar la "
+"presentación de las facturas.\n"
+"\n"
+"    Permite la posibilidad de:\n"
+"        * ordenar todas las líneas de una factura\n"
+"        * añadir títulos, líneas de comentario, líneas con subtotales\n"
+"        * dibujar líneas horizontales y poner saltos de página\n"
+"\n"
+"    Además existe una opción que permite imprimir todas las facturas "
+"seleccionadas con un mensaje especial en la parte inferior. Esta "
+"característica puede ser muy útil para imprimir sus facturas con "
+"felicitaciones de fin de año, condiciones especiales puntuales, ...\n"
+"\n"
+"    "
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "VAT :"
-msgstr ""
+msgstr "Impuesto :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel. :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -137,12 +152,14 @@ msgstr "Producto"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
 msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de líneas de "
+"factura."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -154,7 +171,7 @@ msgstr "Precio"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Fecha de facturación"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -191,7 +208,7 @@ msgstr "Mensaje especial"
 #. module: account_invoice_layout
 #: help:account.invoice.special.msg,message:0
 msgid "Message to Print at the bottom of report"
-msgstr ""
+msgstr "Mensaje a imprimir en el pie del informe."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -209,12 +226,12 @@ msgstr "Factura de abono"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fax :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 msgid "Total:"
-msgstr ""
+msgstr "Total:"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -246,17 +263,17 @@ msgstr "Importe"
 #. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
 msgid "ERP & CRM Solutions..."
-msgstr ""
+msgstr "Soluciones ERP & CRM"
 
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Total neto:"
 
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Total :"
-msgstr ""
+msgstr "Total :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -272,13 +289,13 @@ msgstr "Número de secuencia"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_special_msg
 msgid "Account Invoice Special Message"
-msgstr ""
+msgstr "Mensaje especial factura contable"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Origin"
-msgstr ""
+msgstr "Origen"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -294,12 +311,12 @@ msgstr "Línea de separación"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Su referencia"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "Invoices Layout Improvement"
-msgstr ""
+msgstr "Mejora de la plantilla de las facturas"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -321,12 +338,12 @@ msgstr "Impuesto"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Detalle de Factura"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Total neto:"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
@@ -359,7 +376,7 @@ msgstr "Mensaje"
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Impuestos :"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form

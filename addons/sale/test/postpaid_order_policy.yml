@@ -3,7 +3,7 @@
   I create a Sale Order for Slider Mobile for qty 500 having Shipping Policy is 'Invoice on order after Delivery'
 -
   !record {model: sale.order, id: sale_order_so8}:
-    date_order: '2010-07-15'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: Test_SO008
     order_line:
@@ -24,19 +24,19 @@
     picking_policy: direct
     pricelist_id: product.list0
     shop_id: sale.shop
-- 
+-
   I confirm the Sale Order.
-- 
-  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so8} 
+-
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_so8}
 -
   I verify that the picking has been generated for the sale order
-- 
+-
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so8"))
     assert so.picking_ids,"Picking has not been generated for sale_order_so8"
 -
   Then I done the picking
-- 
+-
   !python {model: stock.picking }: |
    import time
    sale_order_obj = self.pool.get('sale.order')
@@ -55,7 +55,7 @@
           'product_id': move.product_id.id,
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
-      } 
+      }
       self.do_partial(cr, uid, [pick.id],partial_datas)
 -
   I verify that picking order is in done state.
@@ -66,7 +66,7 @@
    picking_id = self.search(cr, uid, [('origin','=',so.name),('type','=','out')])
    if picking_id:
      pick = self.browse(cr,uid,picking_id[0])
-     assert (pick.state == 'done'), "Picking for SO is not in done state." 
+     assert (pick.state == 'done'), "Picking for SO is not in done state."
 -
   I verify that delivery order has been generated for sale order
 -
@@ -96,8 +96,8 @@
           'product_id': move.product_id.id,
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
-      } 
-      self.do_partial(cr, uid, [pick.id],partial_datas)  
+      }
+      self.do_partial(cr, uid, [pick.id],partial_datas)
 -
   I verify that delivery state is done
 -
@@ -170,7 +170,7 @@
         pur_ids = pur_obj.search(cr, uid, [('origin','=',so.name)])
         for pur in pur_ids:
           wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_confirm', cr)
-- 
+-
   I click on the "Approved by supplier" button to approve the purchase order
 -
   !python {model: sale.order}: |
@@ -187,7 +187,7 @@
         for pur in pur_ids:
           wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_approve', cr)
 -
-  I verify that a picking related to purchase order has been generated. 
+  I verify that a picking related to purchase order has been generated.
 -
   !python {model: sale.order}: |
     modules = self.pool.get('ir.module.module')
@@ -199,11 +199,11 @@
         pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
         po = pur_obj.browse(cr, uid, pur_id)[0]
         assert(po.picking_ids),"Picking for purchase order has not been generated"
--  
+-
   Then I click on the "Products Received" button of Incoming Shipments
 -
   !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: '2010-07-15 17:52:09'
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
 -
   I click on the "Validate" button
 -
@@ -239,7 +239,7 @@
         ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ),('state', '=', 'done')])
         assert ids, _('Picking is not in the done state!')
 -
-  I verify that a "Picked" has been set to true 
+  I verify that a "Picked" has been set to true
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so8"))
@@ -250,20 +250,20 @@
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so8"))
     assert so.invoice_ids, "Invoice has not been generated"
-- 
+-
   I open the Invoice for the SO.
-- 
+-
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so8"))
     import netsvc
-    wf_service = netsvc.LocalService("workflow")  
+    wf_service = netsvc.LocalService("workflow")
     invoice_ids = so.invoice_ids
     for invoice in invoice_ids:
-      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr) 
+      wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
 -
   Assign analytic journal into bank journal
-- 
+-
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
 -
@@ -279,7 +279,7 @@
         ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
         name='test')
 -
-  I verify the invoice are in paid state or not. 
+  I verify the invoice are in paid state or not.
 -
   !python {model: account.invoice}: |
     modules = self.pool.get('ir.module.module')
@@ -291,13 +291,13 @@
         invoice_ids = so.invoice_ids
         for invoice in invoice_ids:
             assert (invoice.state) =='paid', "Invoice for SO is not in done state."
--    
+-
   I verify that Paid has been set to true.
 -
   !python {model: sale.order}: |
     sale_id=self.browse(cr, uid, ref("sale_order_so8"))
     assert(sale_id.invoiced == True), "Paid has not been set to true"
--  
+-
   I verify that sale order is in done state
 -
    !python {model: sale.order}: |

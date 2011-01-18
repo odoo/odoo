@@ -101,14 +101,13 @@ class account_move_line(osv.osv):
             query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
 
         query += company_clause
-
         return query
 
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
         """
-           This function returns the residual amount on a receivable or payable account.move.line. 
-           By default, it returns an amount in the currency of this journal entry (maybe different 
-           of the company currency), but if you pass 'residual_in_company_currency' = True in the 
+           This function returns the residual amount on a receivable or payable account.move.line.
+           By default, it returns an amount in the currency of this journal entry (maybe different
+           of the company currency), but if you pass 'residual_in_company_currency' = True in the
            context then the returned amount will be in company currency.
         """
         res = {}
@@ -120,13 +119,13 @@ class account_move_line(osv.osv):
                 'amount_residual': 0.0,
                 'amount_residual_currency': 0.0,
             }
- 
+
             if move_line.reconcile_id:
                 continue
             if not move_line.account_id.type in ('payable', 'receivable'):
                 #this function does not suport to be used on move lines not related to payable or receivable accounts
                 continue
-            
+
             if move_line.currency_id:
                 move_line_total = move_line.amount_currency
                 sign = move_line.amount_currency < 0 and -1 or 1
@@ -911,7 +910,7 @@ class account_move_line(osv.osv):
         cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
         p = cr.fetchone()[0] or ''
         if j or p:
-            return j+(p and (':'+p) or '')
+            return j + (p and (':' + p) or '')
         return False
 
     def onchange_date(self, cr, user, ids, date, context=None):
@@ -954,6 +953,14 @@ class account_move_line(osv.osv):
             #Restrict the list of journal view in search view
             if view_type == 'search' and result['fields'].get('journal_id', False):
                 result['fields']['journal_id']['selection'] = journal_pool.name_search(cr, uid, '', [], context=context)
+                ctx = context.copy()
+                #we add the refunds journal in the selection field of journal
+                if context.get('journal_type', False) == 'sale':
+                    ctx.update({'journal_type': 'sale_refund'})
+                    result['fields']['journal_id']['selection'] += journal_pool.name_search(cr, uid, '', [], context=ctx)
+                elif context.get('journal_type', False) == 'purchase':
+                    ctx.update({'journal_type': 'purchase_refund'})
+                    result['fields']['journal_id']['selection'] += journal_pool.name_search(cr, uid, '', [], context=ctx)
             return result
         if context.get('view_mode', False):
             return result

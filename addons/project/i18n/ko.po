@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-08-03 09:18+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:01+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -28,7 +28,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:657
+#: code:addons/project/project.py:658
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr ""
@@ -110,9 +110,8 @@ msgid ""
 msgstr "총 남은 시간은 과제를 담당한 이에 의해 주기적으로 재 측정될 수 있습니다."
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:86
-#, python-format
-msgid "Task '%s' Closed"
+#: help:project.project,priority:0
+msgid "Gives the sequence order when displaying the list of projects"
 msgstr ""
 
 #. module: project
@@ -191,12 +190,6 @@ msgid "Warn Message"
 msgstr ""
 
 #. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's member. Not used in any computation, just for information purpose."
-msgstr "프로젝트 멤버: 계산이 아니라 단지 정보 목적임."
-
-#. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
 msgstr ""
@@ -246,7 +239,7 @@ msgid "Day"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:570
+#: code:addons/project/project.py:571
 #, python-format
 msgid "The task '%s' is done"
 msgstr ""
@@ -322,12 +315,6 @@ msgstr "과제 시작"
 msgid ""
 "Helps generate invoices based on time spent on tasks, if activated on the "
 "project."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
-msgid "Parent Tasks"
 msgstr ""
 
 #. module: project
@@ -438,7 +425,7 @@ msgid "Reactivate Project"
 msgstr "프로젝트를 다시 활성화"
 
 #. module: project
-#: code:addons/project/project.py:552
+#: code:addons/project/project.py:553
 #, python-format
 msgid "Task '%s' closed"
 msgstr "과제 '%s' 완료됨"
@@ -488,8 +475,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:224
-#: code:addons/project/project.py:245
+#: code:addons/project/project.py:225
+#: code:addons/project/project.py:246
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -628,7 +615,7 @@ msgid "Reevaluate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:530
+#: code:addons/project/project.py:531
 #, python-format
 msgid "Send Email after close task"
 msgstr ""
@@ -671,8 +658,9 @@ msgid "Planned Time"
 msgstr "계획된 시간"
 
 #. module: project
-#: help:project.task.close,manager_warn:0
-msgid "Warn Manager by Email"
+#: code:addons/project/wizard/project_task_close.py:86
+#, python-format
+msgid "Task '%s' Closed"
 msgstr ""
 
 #. module: project
@@ -720,7 +708,7 @@ msgid "Starting Date"
 msgstr "시작 날짜"
 
 #. module: project
-#: code:addons/project/project.py:266
+#: code:addons/project/project.py:267
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -745,7 +733,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:621
+#: code:addons/project/project.py:622
 #, python-format
 msgid "The task '%s' is opened."
 msgstr ""
@@ -981,8 +969,9 @@ msgid "Start Date"
 msgstr ""
 
 #. module: project
-#: help:project.project,priority:0
-msgid "Gives the sequence order when displaying a list of task"
+#: view:project.task:0
+#: field:project.task,parent_ids:0
+msgid "Parent Tasks"
 msgstr ""
 
 #. module: project
@@ -1145,6 +1134,7 @@ msgid "Project Dashboard"
 msgstr "프로젝트 대시보드"
 
 #. module: project
+#: view:project.project:0
 #: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "파트너 프로젝트"
@@ -1175,7 +1165,7 @@ msgid "Customer Email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:189
+#: code:addons/project/project.py:190
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr ""
@@ -1188,6 +1178,11 @@ msgstr "과제 edition"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
+msgstr ""
+
+#. module: project
+#: help:project.task.close,manager_warn:0
+msgid "Warn Manager by Email"
 msgstr ""
 
 #. module: project
@@ -1218,7 +1213,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "과제가 완료되면, '완료' 상태가 됩니다."
 
 #. module: project
-#: code:addons/project/project.py:211
+#: code:addons/project/project.py:212
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr ""
@@ -1301,6 +1296,13 @@ msgid "Getting Things Done"
 msgstr ""
 
 #. module: project
+#: help:project.project,members:0
+msgid ""
+"Project's member. Not used in any computation, just for information purpose, "
+"but a user has to be member of a project to add a the to this project."
+msgstr ""
+
+#. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
 msgstr ""
@@ -1348,7 +1350,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:581
+#: code:addons/project/project.py:582
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "진행 중인 과제 '%s'"
@@ -1723,7 +1725,7 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:664
+#: code:addons/project/project.py:665
 #, python-format
 msgid "The task '%s' is pending."
 msgstr ""
@@ -1798,7 +1800,7 @@ msgid "Validation State"
 msgstr "검증 상태"
 
 #. module: project
-#: code:addons/project/project.py:601
+#: code:addons/project/project.py:602
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr "과제 '%s' 취소됨"
@@ -1826,7 +1828,7 @@ msgid "Create Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:609
+#: code:addons/project/project.py:610
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr ""
@@ -1840,11 +1842,6 @@ msgstr ""
 #: field:project.task.work,name:0
 msgid "Work summary"
 msgstr "작업 개요"
-
-#. module: project
-#: view:project.project:0
-msgid "Scheduling"
-msgstr ""
 
 #. module: project
 #: view:project.installer:0
@@ -1904,6 +1901,10 @@ msgstr ""
 
 #~ msgid "My Running Projects"
 #~ msgstr "내 진행 중인 프로젝트"
+
+#~ msgid ""
+#~ "Project's member. Not used in any computation, just for information purpose."
+#~ msgstr "프로젝트 멤버: 계산이 아니라 단지 정보 목적임."
 
 #~ msgid "Update"
 #~ msgstr "업데이트"

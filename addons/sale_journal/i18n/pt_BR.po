@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-11 18:15+0000\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-14 09:27+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -47,6 +47,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Se o campo Ativo estiver Falso (desmarcado), a fatura não será mostrada "
+"mesmo sem ser removida."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -85,6 +87,31 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    O módulos de diários de venda permitem que você categorize suas\n"
+"    vendas e entregas (listas de separação) em diferentes diários.\n"
+"    Este módulo é muito útil para grandes empresas que\n"
+"    trabalham por departamentos.\n"
+"\n"
+"    Você pode usar um diário para diferentes propósitos, alguns exemplos:\n"
+"    * isolar vendas de diferentes departamentos\n"
+"    * diários de entregas por caminhão ou por UPS\n"
+"\n"
+"    Diários tem um responsável e passam por diferentes status:\n"
+"    * provisório, aberto, cancelado, concluído.\n"
+"\n"
+"    Operações em lote podem ser processadas em diferentes diários para\n"
+"    confirmar todas as vendas de uma só vez, para validar ou faturar "
+"embalagem, ...\n"
+"\n"
+"    Também suportam métodos de faturamento em lote que podem ser "
+"configurados por\n"
+"    parceiros e pedidos de venda. Exemplos:\n"
+"    * faturamento diário,\n"
+"    * faturamento mensal, ...\n"
+"\n"
+"    Algumas estatísticas por diários também são fornecidas.\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -108,6 +135,10 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Tipos de fatura são usadas por parceiros, pedidos de venda e pedidos de "
+"entrega. Você pode criar um diário específico de faturamento para agrupar "
+"seu faturamento de acordo com as necessidades de seus clientes: diariamente, "
+"cada Quarta-Feira, mensalmente, etc."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -142,7 +173,7 @@ msgstr "Parceiro"
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr "Tipos de fatura"
+msgstr "Tipos de Fatura"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking

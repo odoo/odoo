@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+    
        <record id="hr_timesheet_sheet_graph" model="ir.ui.view">
          <field name="name">hr.timesheet.sheet.graph</field>
          <field name="model">hr_timesheet_sheet.sheet</field>
@@ -26,7 +27,20 @@
                 </form>
             </field>
         </record>
-
+        <record id="hr_timesheet_account_filter" model="ir.ui.view">
+            <field name="name">hr.timesheet.account.filter</field>
+            <field name="model">hr_timesheet_sheet.sheet.account</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search Account">
+                    <group col="10" colspan="4">
+                        <field name="sheet_id" />
+                        <field name="name" groups="analytic.group_analytic_accounting"/>
+                        <field name="invoice_rate"/>
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="hr_timesheet_account_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.account.tree</field>
             <field name="model">hr_timesheet_sheet.sheet.account</field>
