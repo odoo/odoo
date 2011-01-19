@@ -586,11 +586,11 @@ class account_journal_column(osv.osv):
         'name': fields.char('Column Name', size=64, required=True),
         'field': fields.selection(_col_get, 'Field Name', method=True, required=True, size=32),
         'view_id': fields.many2one('account.journal.view', 'Journal View', select=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
     }
-    _order = "sequence"
+    _order = "view_id, sequence"
 
 account_journal_column()
 
