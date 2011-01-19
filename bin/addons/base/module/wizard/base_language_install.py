@@ -50,7 +50,18 @@ class base_language_install(osv.osv_memory):
                 context = {'overwrite': True}
             modobj.update_translations(cr, uid, mids, lang, context or {})
             self.write(cr, uid, ids, {'state': 'done'}, context=context)
-        return False
+        return {
+            'name': _('Language Pack'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': False,
+            'res_model': 'base.language.install',
+            'domain': [],
+            'context': dict(context, active_ids=ids),
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'res_id': ids and ids[0] or False,
+        }
 base_language_install()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
