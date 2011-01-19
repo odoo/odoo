@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-13 16:48+0000\n"
+"PO-Revision-Date: 2011-01-18 09:21+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:41+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
@@ -842,7 +842,7 @@ msgstr "Wareneingang"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Scrap"
-msgstr "Abfall/wegwerfen"
+msgstr "Ausschuss melden"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -1529,7 +1529,7 @@ msgstr "Leer lassen, wenn dieses Feld für alle Unternehmen Güligkeit hat."
 #: code:addons/stock/stock.py:2198
 #, python-format
 msgid "Please provide a positive quantity to scrap!"
-msgstr "Geben Sie bitte eine positive Menge als Abfall ein."
+msgstr "Geben Sie bitte eine positive Menge als Ausschuss ein"
 
 #. module: stock
 #: field:stock.location,chained_delay:0
@@ -1579,7 +1579,7 @@ msgstr "Lieferantenlagerort"
 #: code:addons/stock/stock.py:2217
 #, python-format
 msgid "were scrapped"
-msgstr "wurden zu Abfall"
+msgstr "wurde als Ausschuss gemeldet"
 
 #. module: stock
 #: view:stock.move:0
@@ -1780,7 +1780,7 @@ msgstr "Sie können keine Position aus dem Los entfernen!"
 #: view:stock.move.scrap:0
 #: view:stock.picking:0
 msgid "Scrap Products"
-msgstr "Abfall Produkte"
+msgstr "Ausschuss buchen"
 
 #. module: stock
 #: code:addons/stock/stock.py:1135
@@ -2237,7 +2237,7 @@ msgstr "Teillieferung"
 #: model:stock.location,name:stock.stock_location_scrapped
 #: field:stock.move,scrapped:0
 msgid "Scrapped"
-msgstr "Abfall"
+msgstr "Ausschuss"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2595,7 +2595,7 @@ msgstr "Erzwinge Verfügbarkeit"
 #: model:ir.actions.act_window,name:stock.move_scrap
 #: view:stock.move.scrap:0
 msgid "Scrap Move"
-msgstr "Abfallbuchung"
+msgstr "Buchung Ausschuss"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:138
@@ -2758,7 +2758,7 @@ msgstr "Produktionslosnummer"
 #. module: stock
 #: field:stock.move,product_uos_qty:0
 msgid "Quantity (UOS)"
-msgstr "Menge (UOS)"
+msgstr "Menge (VE)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1647
@@ -3496,7 +3496,9 @@ msgstr "Zugang:"
 #: help:stock.location,scrap_location:0
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
-msgstr "Lagerort für Abfall und beschädigte Produkte"
+msgstr ""
+"Aktivieren Sie diese Option, um diesen Lagerort für Ausschuss / beschädigte "
+"Produkte einzusetzen."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
@@ -4150,7 +4152,7 @@ msgstr "Identifikation Fertigungslos"
 #: field:stock.location,scrap_location:0
 #: view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr "Lagerort für Abfall"
+msgstr "Lagerort für Ausschuss"
 
 #. module: stock
 #: selection:report.stock.move,month:0

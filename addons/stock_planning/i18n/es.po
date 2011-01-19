@@ -8,14 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-18 01:08+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"PO-Revision-Date: 2011-01-18 22:43+0000\n"
+"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-18 04:45+0000\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:46+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock_planning
@@ -91,6 +90,9 @@ msgid ""
 "Warehouse which forecasts will concern. If during stock planning you will "
 "need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Almacén al que conciernen las previsiones. Si durante la planificación de "
+"stock necesita previsiones de ventas para todos los almacenes escoja ahora "
+"un almacén cualquiera."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_left:0
@@ -210,6 +212,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warhouse'."
 msgstr ""
+"Almacén usado como origen en el movimiento de suministro creado por "
+"'Suministrar desde otro almacén'."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
@@ -253,7 +257,7 @@ msgstr "Previsiones de stock y ventas"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
 msgid "stock.sale.forecast"
-msgstr ""
+msgstr "stock.ventas.prevision"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_dept_id:0
@@ -349,7 +353,7 @@ msgstr "    Entradas restante: "
 #: code:addons/stock_planning/stock_planning.py:715
 #, python-format
 msgid "Pick List "
-msgstr ""
+msgstr "Lista de recogida "
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
@@ -711,6 +715,11 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
+"Introduzca la cantidad saliente planificada para el almacén seleccionado "
+"durante el periodo seleccionado y para el producto seleccionado. Para "
+"planificar este valor puede fijarse en las salidas confirmadas o las "
+"previsiones de ventas. Este valor debería ser igual o superior a las salidas "
+"confirmadas."
 
 #. module: stock_planning
 #: model:ir.module.module,description:stock_planning.module_meta_information
@@ -1289,6 +1298,9 @@ msgid ""
 "Shows which warehouse this forecast concerns. If during stock planning you "
 "will need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Muestra a qué almacén concierne esta previsión. Si durante la planificación "
+"de stock necesita previsiones de ventas para todos los almacenes escoja "
+"ahora un almacén cualquiera."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
@@ -1377,6 +1389,10 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"Cantidad restante de la cantidad entrante planificada. Se calcula mediante "
+"la diferencia entre las entradas planificadas y las entradas confirmadas. "
+"Para el periodo actual las entradas realizadas también se calculan. Este "
+"valor se usa para crear abastecimientos para la cantidad faltante."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
@@ -1397,6 +1413,10 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warhouse' with Supply Warehouse."
 msgstr ""
+"Marque esta opción para suministrar desde la ubicación stock del almacén de "
+"suministro. Si no se marca, el suministro se realizará desde la ubicación de "
+"salida del almacén de suministro. Utilizado en 'Suministrar desde otro "
+"almacén' con un almacén de suministro."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1412,7 +1432,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "Muestra a que periodo concierne esta previsión."
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
@@ -1454,18 +1474,18 @@ msgstr "UdM de producto"
 #: code:addons/stock_planning/stock_planning.py:693
 #, python-format
 msgid "MPS("
-msgstr ""
+msgstr "MPS("
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "Pick created from MPS by user: "
-msgstr ""
+msgstr "Albarán creado desde MPS por el usuario: "
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
 msgid "Procure To Stock Location"
-msgstr ""
+msgstr "Abastecimiento a ubicación stock"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1497,6 +1517,8 @@ msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
 msgstr ""
+"Marcar para usar sólo las previsiones validadas. Si no se marca el sistema "
+"usa las previsiones validadas y borrador."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
@@ -1525,7 +1547,7 @@ msgstr "Periodos de stock y ventas"
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr ""
+msgstr "Muestra quién creó esta previsión, o quién la validó."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
