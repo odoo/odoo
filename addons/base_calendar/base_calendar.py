@@ -1615,7 +1615,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
         records = self.browse(cr, uid, [res], context=context)
-        return real_id2base_calendar_id(records[0].id, records[0].date)
+        #return real_id2base_calendar_id(records[0].id, records[0].date)
+        return base_calendar_id2real_id(records[0].id)
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
