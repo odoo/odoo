@@ -1738,6 +1738,13 @@ class ir_attachment(osv.osv):
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
                             limit=limit, order=order,
                             context=context, count=False)
+                            
+    def create(self, cr, uid, vals, context=None):
+       if context:
+           id = context.get('default_res_id', False)
+           context.update({'default_res_id' : base_calendar_id2real_id(id)})
+       return super(ir_attachment, self).create(cr, uid, vals, context=context)
+       
 ir_attachment()
 
 class ir_values(osv.osv):
