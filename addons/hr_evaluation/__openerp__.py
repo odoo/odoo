@@ -48,7 +48,8 @@
         ],
     "test": ["test/test_hr_evaluation.yml"],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "00883207679172998429",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -181,7 +181,7 @@ class account_voucher(osv.osv):
             ('receipt','Receipt'),
         ],'Default Type', readonly=True, states={'draft':[('readonly',False)]}),
         'name':fields.char('Memo', size=256, readonly=True, states={'draft':[('readonly',False)]}),
-        'date':fields.date('Date', readonly=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
+        'date':fields.date('Date', readonly=True, select=True, states={'draft':[('readonly',False)]}, help="Effective date for accounting entries"),
         'journal_id':fields.many2one('account.journal', 'Journal', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'account_id':fields.many2one('account.account', 'Account', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'line_ids':fields.one2many('account.voucher.line','voucher_id','Voucher Lines', readonly=True, states={'draft':[('readonly',False)]}),
@@ -218,7 +218,7 @@ class account_voucher(osv.osv):
         ],'Payment', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_id':fields.many2one('account.tax', 'Tax', readonly=True, states={'draft':[('readonly',False)]}),
         'pre_line':fields.boolean('Previous Payments ?', required=False),
-        'date_due': fields.date('Due Date', readonly=True, states={'draft':[('readonly',False)]}),
+        'date_due': fields.date('Due Date', readonly=True, select=True, states={'draft':[('readonly',False)]}),
         'payment_option':fields.selection([
                                            ('without_writeoff', 'Keep Open'),
                                            ('with_writeoff', 'Reconcile with Write-Off'),

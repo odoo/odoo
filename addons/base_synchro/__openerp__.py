@@ -32,5 +32,6 @@
                        "security/ir.model.access.csv",],
         "active":False,
         "installable":True,
+        "certificate" : "00925429283944551453",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

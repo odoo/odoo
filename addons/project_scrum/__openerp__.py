@@ -65,5 +65,6 @@
     'test': ['test/project_scrum_report.yml'],
     'installable': True,
     'active': False,
+    'certificate' : '00736750152003010781',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

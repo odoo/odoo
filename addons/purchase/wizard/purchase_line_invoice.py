@@ -126,7 +126,7 @@ class purchase_line_invoice(osv.osv_memory):
                     else:
                         a = property_obj.get(cr, uid,
                                 'property_account_expense_categ', 'product.category',
-                                context=context)
+                                context=context).id
                     fpos = line.order_id.fiscal_position or False
                     a = account_fiscal_obj.map_account(cr, uid, fpos, a)
                     inv_id = invoice_line_obj.create(cr, uid, {
@@ -158,7 +158,7 @@ class purchase_line_invoice(osv.osv_memory):
             'view_mode': 'tree,form',
             'res_model': 'account.invoice',
             'view_id': False,
-            'context': "{'type':'in_invoice'}",
+            'context': "{'type':'in_invoice', 'journal_type': 'purchase'}",
             'type': 'ir.actions.act_window'
         }
 purchase_line_invoice()

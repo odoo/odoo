@@ -58,6 +58,19 @@ class stock_picking(osv.osv):
         'purchase_id': False,
     }
 
+    def _get_address_invoice(self, cr, uid, picking):
+        """ Gets invoice address of a partner
+        @return {'contact': address, 'invoice': address} for invoice
+        """
+        res = super(stock_picking, self)._get_address_invoice(cr, uid, picking)
+        if picking.purchase_id:
+            partner_obj = self.pool.get('res.partner')
+            partner = picking.purchase_id.partner_id or picking.address_id.partner_id
+            data = partner_obj.address_get(cr, uid, [partner.id],
+                ['contact', 'invoice'])
+            res.update(data)
+        return res
+
     def get_currency_id(self, cursor, user, picking):
         if picking.purchase_id:
             return picking.purchase_id.pricelist_id.currency_id.id
@@ -130,8 +143,12 @@ class stock_partial_picking(osv.osv_memory):
                 if has_product_cost and m.product_id.cost_method == 'average' and m.purchase_line_id:
                     # We use the original PO unit purchase price as the basis for the cost, expressed
                     # in the currency of the PO (i.e the PO's pricelist currency)
-                    res['move%s_product_price'%(m.id)] =  m.purchase_line_id.price_unit
-                    res['move%s_product_currency'%(m.id)] = pick.purchase_id.pricelist_id.currency_id.id
+                    list_index = 0
+                    for item in res['product_moves_in']:
+                        if item['move_id'] == m.id:
+                            res['product_moves_in'][list_index]['cost'] = m.purchase_line_id.price_unit
+                            res['product_moves_in'][list_index]['currency'] = m.picking_id.purchase_id.pricelist_id.currency_id.id
+                        list_index += 1
         return res
 stock_partial_picking()
 
@@ -155,8 +172,12 @@ class stock_partial_move(osv.osv_memory):
                 and m.purchase_line_id and m.picking_id.purchase_id:
                     # We use the original PO unit purchase price as the basis for the cost, expressed
                     # in the currency of the PO (i.e the PO's pricelist currency)
-                    res['move%s_product_price'%(m.id)] = m.purchase_line_id.price_unit
-                    res['move%s_product_currency'%(m.id)] = m.picking_id.purchase_id.pricelist_id.currency_id.id
+                    list_index = 0
+                    for item in res['product_moves_in']:
+                        if item['move_id'] == m.id:
+                            res['product_moves_in'][list_index]['cost'] = m.purchase_line_id.price_unit
+                            res['product_moves_in'][list_index]['currency'] = m.picking_id.purchase_id.pricelist_id.currency_id.id
+                        list_index += 1
         return res
 stock_partial_move()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

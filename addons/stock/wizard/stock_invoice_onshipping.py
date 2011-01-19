@@ -85,34 +85,18 @@ class stock_invoice_onshipping(osv.osv_memory):
             raise osv.except_osv(_('Warning !'), _('None of these picking lists require invoicing.'))
         return res
 
-
-
-    def create_invoice(self, cr, uid, ids, context=None):
+    def open_invoice(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        picking_pool = self.pool.get('stock.picking')
-        data_pool = self.pool.get('ir.model.data')
-        onshipdata_obj = self.read(cr, uid, ids[0], ['journal_id', 'group', 'invoice_date'])
-        if context.get('new_picking', False):
-            onshipdata_obj['id'] = onshipdata_obj.new_picking
-            onshipdata_obj[ids] = onshipdata_obj.new_picking
-
-        context['date_inv'] = onshipdata_obj['invoice_date']
         invoice_ids = []
-        active_ids = context.get('active_ids', [])
-        active_picking = picking_pool.browse(cr, uid, context.get('active_id',False), context=context)
-        inv_type = picking_pool._get_invoice_type(active_picking)
-
-        res = picking_pool.action_invoice_create(cr, uid, active_ids,
-              journal_id = onshipdata_obj['journal_id'],
-              group = onshipdata_obj['group'],
-              type = None,
-              context=context)
+        data_pool = self.pool.get('ir.model.data')
+        res = self.create_invoice(cr, uid, ids, context=context)
         invoice_ids += res.values()
-        if not invoice_ids:
-            raise osv.except_osv(_('Error'), _('No Invoices were created'))
+        inv_type = context.get('inv_type', False)
         action_model = False
         action = {}
+        if not invoice_ids:
+            raise osv.except_osv(_('Error'), _('No Invoices were created'))
         if inv_type == "out_invoice":
             action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree1")
         elif inv_type == "in_invoice":
@@ -126,6 +110,26 @@ class stock_invoice_onshipping(osv.osv_memory):
             action = action_pool.read(cr, uid, action_id, context=context)
             action['domain'] = "[('id','in', ["+','.join(map(str,invoice_ids))+"])]"
         return action
+
+    def create_invoice(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        picking_pool = self.pool.get('stock.picking')
+        onshipdata_obj = self.read(cr, uid, ids, ['journal_id', 'group', 'invoice_date'])
+        if context.get('new_picking', False):
+            onshipdata_obj['id'] = onshipdata_obj.new_picking
+            onshipdata_obj[ids] = onshipdata_obj.new_picking
+        context['date_inv'] = onshipdata_obj[0]['invoice_date']
+        active_ids = context.get('active_ids', [])
+        active_picking = picking_pool.browse(cr, uid, context.get('active_id',False), context=context)
+        inv_type = picking_pool._get_invoice_type(active_picking)
+        context['inv_type'] = inv_type
+        res = picking_pool.action_invoice_create(cr, uid, active_ids,
+              journal_id = onshipdata_obj[0]['journal_id'],
+              group = onshipdata_obj[0]['group'],
+              type = None,
+              context=context)
+        return res
 
 stock_invoice_onshipping()
 

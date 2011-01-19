@@ -42,6 +42,7 @@
     ],
     "test" : ['test/sale_layout_report.yml'],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "00982333536005187677",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -38,7 +38,8 @@
     "update_xml" : ['account_tax_code.xml',"account_chart.xml",
                     'account_tax.xml','l10n_chart_pl_wizard.xml'],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "00885794372803776829",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

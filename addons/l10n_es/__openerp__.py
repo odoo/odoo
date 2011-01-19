@@ -53,5 +53,6 @@ for yearly account reporting (balance, profit & losses).
     "update_xml" : [
     ],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "00408828172062583229",
 }
