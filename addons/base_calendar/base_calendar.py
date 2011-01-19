@@ -1413,11 +1413,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @param vals: Dictionary of field value.
         @param context: A standard dictionary for contextual values
         @return: True
-        """
-        old_vals = self.read(cr, uid, ids, ['rrule'], context)[0]
-        if 'rrule' in vals and not vals['rrule'] and not old_vals['rrule']: 
-            del vals['rrule']
-        
+        """        
         if context is None:
             context = {}
         if isinstance(ids, (str, int, long)):
@@ -1439,11 +1435,12 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
                 if data.get('rrule'):
+                    data.update(vals)
                     data.update({
                         'rrule_type': 'none',
                         'rrule': ''
                         })
-                    data.update(vals)
+                    
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
                     self.unlink(cr, uid, [event_id], context=context)
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
@@ -1572,7 +1569,15 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
                 self.unlink_events(cr, uid, [event_id], context=context)
             else:
-                str_event, date_new = event_id.split('-')
+                select = event_id.split('-')
+                if(len(select) < 2):
+                    str_event = event_id
+                    date_new = time.strftime("%Y%m%d%H%M%S", \
+                            time.strptime(event_datas['date'], "%Y-%m-%d %H:%M:%S"))         
+                else:
+                    str_event, date_new = select
+
+                
                 event_id = int(str_event)
                 if event_datas['rrule'] and not edit_all:
                     # Remove one of the recurrent event
