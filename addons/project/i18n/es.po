@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-12 18:01+0000\n"
-"Last-Translator: Carlos-smile <Unknown>\n"
+"PO-Revision-Date: 2011-01-16 18:25+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:02+0000\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:38+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: project
@@ -117,6 +118,7 @@ msgstr ""
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying the list of projects"
 msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de proyectos."
 
 #. module: project
 #: constraint:project.project:0
@@ -753,6 +755,9 @@ msgid ""
 "task, up to the closing of the task or issue. You will use these stages in "
 "order to track the progress in solving a task or an issue."
 msgstr ""
+"Define los pasos que se utilizarán en el proyecto desde la creación de la "
+"tarea, hasta el cierre de la tarea o incidencia. Usará estas etapas con el "
+"fin de seguir el progreso en la solución de una tarea o una incidencia."
 
 #. module: project
 #: code:addons/project/project.py:622
@@ -910,6 +915,15 @@ msgid ""
 "configuration. With the project_mrp module, sales orders can create tasks "
 "automatically when they are confirmed."
 msgstr ""
+"Una tarea representa un trabajo que debe realizarse. Cada usuario trabaja en "
+"su propia lista de tareas, donde puede registrar su trabajo de la tarea en "
+"horas. Puede trabajar y cerrar la tarea él mismo o delegarla a otro usuario. "
+"Si delega una tarea a otro usuario, obtiene una nueva tarea en estado "
+"pendiente, que se volverá a abrir cuando tenga que revisar el trabajo "
+"realizado. Si instala el módulo project_timesheet, el trabajo de las tareas "
+"puede facturarse en base a la configuración del proyecto. Con el módulo "
+"project_mrp, los pedidos de venta pueden crear tareas automáticamente cuando "
+"se confirman."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1268,8 +1282,7 @@ msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
-"¡Error! La divisa tiene que ser la misma que la establecida en la compañía "
-"seleccionada"
+"¡Error! La moneda debe ser la misma que la moneda de la compañía seleccionada"
 
 #. module: project
 #: code:addons/project/wizard/project_task_close.py:79
@@ -1339,6 +1352,9 @@ msgid ""
 "Project's member. Not used in any computation, just for information purpose, "
 "but a user has to be member of a project to add a the to this project."
 msgstr ""
+"Miembro del proyecto. No se utiliza en ningún cálculo, sólo con finalidad "
+"informativa, pero un usuario debe ser miembro de un proyecto para agregarlo "
+"al proyecto."
 
 #. module: project
 #: help:project.task.close,partner_warn:0
@@ -1858,6 +1874,15 @@ msgid ""
 "to invoice the time spent on a project task, you can find project tasks to "
 "be invoiced in the billing section."
 msgstr ""
+"Un proyecto contiene un conjunto de tareas o incidencias que serán "
+"realizadas por los recursos asignados a él. Un proyecto puede estructurarse "
+"jerárquicamente, como hijo de un proyecto padre. Esto le permite diseñar "
+"grandes estructuras de proyecto con distintas fases repartidas en el ciclo "
+"de vida del proyecto. Cada usuario puede establecer su proyecto por defecto "
+"en sus propias preferencias para filtrar automáticamente las tareas o "
+"incidencias en las que normalmente trabaja. Si opta por facturar el tiempo "
+"empleado en una tarea del proyecto, puede encontrar las tareas del proyecto "
+"a facturar en la sección de facturación."
 
 #. module: project
 #: field:project.project,total_hours:0

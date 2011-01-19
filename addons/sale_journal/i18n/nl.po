@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2010-08-07 07:44+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-18 08:10+0000\n"
+"Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:45+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale_journal
@@ -24,22 +24,22 @@ msgstr "Notitie"
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr ""
+msgstr "Het soort dagboek gebruikt voor verkopen en picking."
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Orderreferentie moet uniek zijn!"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturatie"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Verkopen & Inkopen"
+msgstr "Verkopen & inkopen"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -47,6 +47,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Als het actief veld uitstaat kunt u het de factuursoort verbergen zonder "
+"deze te verwijderen."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
@@ -56,7 +58,7 @@ msgstr "Notities"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Method"
-msgstr "Factuur methode"
+msgstr "Facturatie methode"
 
 #. module: sale_journal
 #: model:ir.module.module,description:sale_journal.module_meta_information
@@ -85,11 +87,35 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    Met de verkoop dagboek module categoriseert u verkopen\n"
+"    en leveringen (picklijsten) tussen verschillende dagboeken.\n"
+"    Deze module is handig voor grotere bedrijven die werken\n"
+"    met afdelingen.\n"
+"\n"
+"    U kunt het dagboek op meer manieren gebruiken, bijv.:\n"
+"    * isoleren verkopen van verschillende afdelingen\n"
+"    * dagboek van leveringen per vrachtauto of per UPS\n"
+"\n"
+"    Dagboeken hebben een verantwoordelijke en doorlopen\n"
+"    verschillende statussen: concept, open, geannuleerd, gereed.\n"
+"\n"
+"    Batch verwerkingen kunnen worden uitgevoerd op de\n"
+"    verschillende dagboeken voor het bevestigen van alle verkopen\n"
+"    ineens, het bevestigen of factureren van leveringen, ...\n"
+"\n"
+"    Het ondersteunt ook batch facturatie methoden die kunnen\n"
+"    worden geconfigureerd per relatie, verkooporder, voorbeelden:\n"
+"    * dagelijkse facturatie,\n"
+"    * maandelijkse facturatie, ...\n"
+"\n"
+"    Some statistics by journals are provided.\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
-msgstr "Niet gegroupeerd"
+msgstr "Niet gegroepeerd"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
@@ -99,7 +125,7 @@ msgstr "Gegroepeerd"
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -108,6 +134,10 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Factuursoorten worden gebruikt voor relaties, verkooporders en "
+"afleveropdrachten. U kunt een specifiek facturatie dagboek maken om uw "
+"facturatie te groeperen volgens klantbehoefte: dagelijks, elke woensdag, "
+"maandelijks, etc."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -117,7 +147,7 @@ msgstr "Facturatie-methode"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "Verkooporder"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -125,7 +155,7 @@ msgstr ""
 #: field:sale_journal.invoice.type,name:0
 #: field:stock.picking,invoice_type_id:0
 msgid "Invoice Type"
-msgstr "Factuurtype"
+msgstr "Factuursoort"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
@@ -135,24 +165,24 @@ msgstr "Actief"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Relatie"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr "Facturatie-methoden"
+msgstr "Factuursoorten"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Picklijst"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information
 msgid "Managing sales and deliveries by journal"
-msgstr "Beheer verkoop en verzendingen per dagboek"
+msgstr "Beheer verkopen en verzendingen per dagboek"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor overzicht"

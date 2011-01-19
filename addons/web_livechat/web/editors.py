@@ -32,8 +32,7 @@ class BaseTemplateEditor(openobject.templating.TemplateEditor):
         output = output[:end_head] + """
     <link rel="stylesheet" type="text/css" href="/web_livechat/static/css/lc.css"/>
     <%
-        if 'livechat' not in cp.session:
-            cp.session['livechat'] = rpc.session.execute('object', 'execute', 'publisher_warranty.contract', 'is_livechat_enable')
+        cp.session['livechat'] = rpc.session.execute('object', 'execute', 'publisher_warranty.contract', 'is_livechat_enable')
     %>
     % if cp.session['livechat']:
 <script type="text/javascript">

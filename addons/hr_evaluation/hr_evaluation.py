@@ -143,7 +143,7 @@ class hr_evaluation(osv.osv):
     _description = "Employee Evaluation"
     _rec_name = 'employee_id'
     _columns = {
-        'date': fields.date("Evaluation Deadline", required=True),
+        'date': fields.date("Evaluation Deadline", required=True, select=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'note_summary': fields.text('Evaluation Summary'),
         'note_action': fields.text('Action Plan',
@@ -165,7 +165,7 @@ class hr_evaluation(osv.osv):
             ('done','Done'),
             ('cancel','Cancelled'),
         ], 'State', required=True, readonly=True),
-        'date_close': fields.date('Ending Date'),
+        'date_close': fields.date('Ending Date', select=True),
         'progress': fields.float("Progress"),
     }
     _defaults = {

@@ -106,7 +106,7 @@
                         <separator string="Stocks" colspan="4"/>
                         <field name="qty_available"/>
                         <button name="%(action_view_change_product_quantity)d" string="Update" attrs="{'invisible': [('type', '=', 'service')]}"
-                            type="action" icon="gtk-execute" groups = "stock.group_stock_manager,base.group_sale_manager,purchase.group_purchase_manager,stock.group_stock_manager,mrp.group_mrp_manager"/>
+                            type="action" icon="gtk-execute" groups = "stock.group_stock_manager,stock.group_stock_user"/>
                         <newline/>
                         <field name="virtual_available"/>
                     </group>

@@ -96,7 +96,6 @@ class purchase_requisition_line(osv.osv):
         'product_qty': fields.float('Quantity', digits=(16,2)),
         'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'requisition_id' : fields.many2one('purchase.requisition','Purchase Requisition', ondelete='cascade')
     }
 
     def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context=None):

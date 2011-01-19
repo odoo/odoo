@@ -35,6 +35,7 @@
         'data/account_tax_template.xml'
     ],
     'installable': True,
+    'certificate' : '001280994939126801405',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
