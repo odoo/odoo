@@ -1399,10 +1399,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         continue
                     until_date = arg[2]
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
-                                 offset, limit, order, context, count)
-
+                                 offset, limit, order, context, count=False)
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
-        return res
+        return len(res) if count else res
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         """
