@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from dateutil import parser
 from dateutil import rrule
 from osv import fields, osv
