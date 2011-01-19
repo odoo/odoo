@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-15 19:12+0000\n"
+"PO-Revision-Date: 2011-01-17 10:32+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-16 05:05+0000\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:44+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: auction
@@ -38,7 +38,7 @@ msgstr "Piszkozat"
 #: view:report.auction:0
 #: field:report.auction,seller:0
 msgid "Seller"
-msgstr ""
+msgstr "Eladó"
 
 #. module: auction
 #: field:auction.lots,name:0
@@ -264,7 +264,7 @@ msgstr "Tételek"
 #: model:account.tax,name:auction.auction_tax5
 #: field:auction.dates,seller_costs:0
 msgid "Seller Costs"
-msgstr ""
+msgstr "Eladói költségek"
 
 #. module: auction
 #: view:auction.bid:0
@@ -300,13 +300,13 @@ msgstr "Tétel képe"
 #: code:addons/auction/wizard/auction_lots_buyer_map.py:70
 #, python-format
 msgid "No buyer is set for this lot."
-msgstr ""
+msgstr "Nincs vásárló beállítva ehhez a tételhez."
 
 #. module: auction
 #: code:addons/auction/auction.py:578
 #, python-format
 msgid "The Buyer \"%s\" has no Invoice Address."
-msgstr ""
+msgstr "A vásárlónak \"%s\" nincs számlázási címe"
 
 #. module: auction
 #: view:auction.dates:0
@@ -346,7 +346,7 @@ msgstr "Aukciós tételek keresése"
 #. module: auction
 #: field:report.auction,net_revenue:0
 msgid "Net Revenue"
-msgstr ""
+msgstr "Nettó bevétel"
 
 #. module: auction
 #: field:report.auction.adjudication,state:0
@@ -421,7 +421,7 @@ msgstr ""
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lots_make_invoice_buyer
 msgid "Make Invoice for Buyer"
-msgstr ""
+msgstr "Számla készítése a vásárlónak"
 
 #. module: auction
 #: field:auction.lots,gross_revenue:0
@@ -626,7 +626,7 @@ msgstr "Március"
 #. module: auction
 #: model:account.tax,name:auction.auction_tax4
 msgid "Seller Costs1"
-msgstr ""
+msgstr "Eladói költségek1"
 
 #. module: auction
 #: field:auction.deposit,create_uid:0
@@ -1137,7 +1137,7 @@ msgstr "Eladói űrlap"
 #: field:auction.lots,lot_type:0
 #: field:report.auction,lot_type:0
 msgid "Object category"
-msgstr ""
+msgstr "Tétel kategória"
 
 #. module: auction
 #: view:auction.taken:0
@@ -1373,7 +1373,7 @@ msgstr ""
 #. module: auction
 #: view:auction.dates:0
 msgid "Buyer Commissions"
-msgstr ""
+msgstr "Vásárlói jutalékok"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_report_auction
@@ -1395,7 +1395,7 @@ msgstr ""
 #. module: auction
 #: view:auction.dates:0
 msgid "Beginning of the auction"
-msgstr ""
+msgstr "Aukció kezdete"
 
 #. module: auction
 #: help:auction.pay.buy,statement_id3:0
@@ -1458,7 +1458,7 @@ msgstr ""
 #. module: auction
 #: report:buyer.list:0
 msgid "Lot"
-msgstr ""
+msgstr "Tétel"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_artists
@@ -1505,7 +1505,7 @@ msgstr ""
 #. module: auction
 #: model:account.tax,name:auction.auction_tax1
 msgid "TVA"
-msgstr ""
+msgstr "ÁFA"
 
 #. module: auction
 #: field:auction.lots,important:0
@@ -1520,7 +1520,7 @@ msgstr "Összesen:"
 #. module: auction
 #: model:account.tax,name:auction.auction_tax2
 msgid "TVA1"
-msgstr ""
+msgstr "ÁFA1"
 
 #. module: auction
 #: view:report.auction.object.date:0
@@ -1577,7 +1577,7 @@ msgstr "Számla"
 #. module: auction
 #: field:auction.lots,vnd_lim:0
 msgid "Seller limit"
-msgstr ""
+msgstr "Eladói limit"
 
 #. module: auction
 #: field:auction.deposit,transfer:0
@@ -1632,7 +1632,7 @@ msgstr ")"
 #. module: auction
 #: view:auction.lots:0
 msgid "Seller Information"
-msgstr ""
+msgstr "Eladói információ"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -1646,7 +1646,7 @@ msgstr "Tételek"
 #. module: auction
 #: view:auction.dates:0
 msgid "Seller Invoices"
-msgstr ""
+msgstr "Eladói számlák"
 
 #. module: auction
 #: report:auction.total.rml:0
@@ -1678,12 +1678,12 @@ msgstr "SMS szövege"
 #. module: auction
 #: field:auction.dates,auction1:0
 msgid "First Auction Day"
-msgstr ""
+msgstr "Első aukciós nap"
 
 #. module: auction
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Create Invoices For Buyer"
-msgstr ""
+msgstr "Számla létrehozása a vásárlónak"
 
 #. module: auction
 #: view:auction.dates:0
@@ -1724,22 +1724,22 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "Lots"
-msgstr ""
+msgstr "Tételek"
 
 #. module: auction
 #: field:auction.lots,seller_price:0
 msgid "Seller price"
-msgstr ""
+msgstr "Eladási ár"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buy_id_list
 msgid "Buyer List"
-msgstr ""
+msgstr "Vásárlói lista"
 
 #. module: auction
 #: report:buyer.list:0
 msgid "Buyer costs("
-msgstr ""
+msgstr "Vásárlói költségek("
 
 #. module: auction
 #: field:auction.pay.buy,statement_id1:0
@@ -1752,7 +1752,7 @@ msgstr ""
 #: help:auction.lots,seller_price:0
 #: help:auction.lots.make.invoice,amount:0
 msgid "Seller Price"
-msgstr ""
+msgstr "Eladási ár"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax20
@@ -1763,7 +1763,7 @@ msgstr ""
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id1
 msgid "VAT 1%"
-msgstr ""
+msgstr "ÁFA 1%"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax
@@ -1778,7 +1778,7 @@ msgstr ""
 #. module: auction
 #: field:report.auction.object.date,name:0
 msgid "Created date"
-msgstr ""
+msgstr "Létrehozás dátuma"
 
 #. module: auction
 #: help:auction.lots,bord_vnd_id:0
@@ -1791,19 +1791,19 @@ msgstr ""
 #: field:auction.lots,net_revenue:0
 #: field:report.object.encoded,net_revenue:0
 msgid "Net revenue"
-msgstr ""
+msgstr "Nettó bevétel"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_catalog_flagey_report.py:63
 #: code:addons/auction/wizard/auction_pay_buy.py:87
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
 
 #. module: auction
 #: report:auction.total.rml:0
 msgid "# of items:"
-msgstr ""
+msgstr "Tételek száma"
 
 #. module: auction
 #: model:account.tax,name:auction.tax_buyer_author
@@ -1837,7 +1837,7 @@ msgstr ""
 #. module: auction
 #: view:auction.taken:0
 msgid "OK"
-msgstr ""
+msgstr "Ok"
 
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.buyer_form_id
@@ -1847,13 +1847,13 @@ msgstr ""
 #. module: auction
 #: field:auction.bid,partner_id:0
 msgid "Buyer Name"
-msgstr ""
+msgstr "Vásárló neve"
 
 #. module: auction
 #: view:report.auction:0
 #: field:report.auction,day:0
 msgid "Day"
-msgstr ""
+msgstr "Nap"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_lots_make_invoice
@@ -1869,12 +1869,12 @@ msgstr ""
 #: selection:auction.dates,state:0
 #: selection:report.auction.adjudication,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Lezárt"
 
 #. module: auction
 #: view:auction.dates:0
 msgid "Search Next Auction Dates"
-msgstr ""
+msgstr "Következő aukciós időpont keresése"
 
 #. module: auction
 #: view:auction.catalog.flagey:0
@@ -1889,7 +1889,7 @@ msgstr ""
 #. module: auction
 #: field:auction.lots,obj_comm:0
 msgid "Commission"
-msgstr ""
+msgstr "Jutalék"
 
 #. module: auction
 #: view:board.board:0
@@ -1914,7 +1914,7 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "Catalog"
-msgstr ""
+msgstr "Katalógus"
 
 #. module: auction
 #: help:auction.lots,auction_id:0
@@ -1966,7 +1966,7 @@ msgstr ""
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id3
 msgid "VAT 10%"
-msgstr ""
+msgstr "ÁFA 10%"
 
 #. module: auction
 #: field:auction.artists,name:0
@@ -1976,28 +1976,28 @@ msgstr ""
 #. module: auction
 #: selection:report.auction,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: auction
 #: field:auction.lots,image:0
 msgid "Image"
-msgstr ""
+msgstr "Kép"
 
 #. module: auction
 #: help:auction.lots,buyer_price:0
 #: help:auction.lots.make.invoice.buyer,amount:0
 msgid "Buyer Price"
-msgstr ""
+msgstr "Vásárlói ár"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_lot_category
 msgid "Auction Lots Category"
-msgstr ""
+msgstr "Aukciós tételek kategóriái"
 
 #. module: auction
 #: model:account.tax.code,name:auction.account_tax_code_id2
 msgid "VAT 20%"
-msgstr ""
+msgstr "ÁFA 20%"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer_sel
@@ -2013,7 +2013,7 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.seller_form_id
 msgid "Seller List"
-msgstr ""
+msgstr "Eladók listája"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2023,12 +2023,12 @@ msgstr ""
 #. module: auction
 #: field:auction.lot.category,name:0
 msgid "Category Name"
-msgstr ""
+msgstr "Kategória neve"
 
 #. module: auction
 #: report:buyer.list:0
 msgid "........."
-msgstr ""
+msgstr ".........."
 
 #. module: auction
 #: view:report.auction:0
@@ -2044,12 +2044,12 @@ msgstr ""
 #: view:auction.dates:0
 #: model:ir.model,name:auction.model_auction_dates
 msgid "Auction Dates"
-msgstr ""
+msgstr "Aukciós időpontok"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.menu_board_auction_open
 msgid "Auction DashBoard"
-msgstr ""
+msgstr "Aukció vezérlőpult"
 
 #. module: auction
 #: view:report.auction:0
@@ -2058,7 +2058,7 @@ msgstr ""
 #: field:report.auction.object.date,user_id:0
 #: field:report.object.encoded,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Felhasználó"
 
 #. module: auction
 #: view:auction.pay.buy:0
@@ -2074,12 +2074,12 @@ msgstr ""
 #. module: auction
 #: help:auction.lots,net_revenue:0
 msgid "Buyer Price - Seller Price - Indirect Cost"
-msgstr ""
+msgstr "Vásárllási ár - Eladási ár - Közvetett költségek"
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.act_auction_lot_open_bid
 msgid "Open Bids"
-msgstr ""
+msgstr "Nyitott ajánlatok"
 
 #. module: auction
 #: field:auction.artists,pseudo:0
@@ -2089,18 +2089,18 @@ msgstr ""
 #. module: auction
 #: view:auction.lots:0
 msgid "Not sold"
-msgstr ""
+msgstr "Nincs eladva"
 
 #. module: auction
 #: model:account.tax,name:auction.auction_tax3
 #: field:auction.dates,buyer_costs:0
 msgid "Buyer Costs"
-msgstr ""
+msgstr "Vásárlói költségek"
 
 #. module: auction
 #: report:auction.total.rml:0
 msgid "Auction Date:"
-msgstr ""
+msgstr "Aukció időpontja:"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_aie_send.py:167
@@ -2109,19 +2109,19 @@ msgstr ""
 #: code:addons/auction/wizard/auction_lots_numerotate.py:145
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Hiba"
 
 #. module: auction
 #: field:auction.dates,buyer_invoice_history:0
 #: field:auction.lots,ach_inv_id:0
 #: view:auction.lots.make.invoice.buyer:0
 msgid "Buyer Invoice"
-msgstr ""
+msgstr "Vásárlói számla"
 
 #. module: auction
 #: report:auction.bids:0
 msgid "Tel"
-msgstr ""
+msgstr "Tel"
 
 #. module: auction
 #: field:auction.lots,artist_id:0
@@ -2136,7 +2136,7 @@ msgstr ""
 #. module: auction
 #: view:auction.deposit:0
 msgid "General Information"
-msgstr ""
+msgstr "Általános információ"
 
 #. module: auction
 #: view:auction.lots.auction.move:0
@@ -2181,7 +2181,7 @@ msgstr ""
 #. module: auction
 #: field:auction.dates,auction2:0
 msgid "Last Auction Day"
-msgstr ""
+msgstr "Utolsó aukciós időpont"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2199,12 +2199,12 @@ msgstr ""
 #: field:auction.deposit,info:0
 #: report:bids.phones.details:0
 msgid "Description"
-msgstr ""
+msgstr "Leírás"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "May"
-msgstr ""
+msgstr "Május"
 
 #. module: auction
 #: field:auction.lots,obj_price:0
@@ -2219,17 +2219,17 @@ msgstr ""
 #. module: auction
 #: field:auction.lots.sms.send,password:0
 msgid "Password"
-msgstr ""
+msgstr "Jelszó"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "February"
-msgstr ""
+msgstr "Február"
 
 #. module: auction
 #: selection:report.auction,month:0
 msgid "April"
-msgstr ""
+msgstr "Április"
 
 #. module: auction
 #: view:auction.pay.buy:0
@@ -2254,12 +2254,12 @@ msgstr ""
 #. module: auction
 #: field:report.auction,buyer_login:0
 msgid "Buyer Login"
-msgstr ""
+msgstr "Vásárlói bejelentkezés"
 
 #. module: auction
 #: field:auction.deposit,tax_id:0
 msgid "Expenses"
-msgstr ""
+msgstr "Kiadások"
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer
@@ -2269,7 +2269,7 @@ msgstr ""
 #. module: auction
 #: report:auction.total.rml:0
 msgid "Auction name:"
-msgstr ""
+msgstr "Aukció neve:"
 
 #. module: auction
 #: view:board.board:0
@@ -2279,13 +2279,13 @@ msgstr ""
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.art2
 msgid "Artists Biography"
-msgstr ""
+msgstr "Művészek életrajza"
 
 #. module: auction
 #: view:report.auction:0
 #: field:report.auction,year:0
 msgid "Year"
-msgstr ""
+msgstr "Év"
 
 #. module: auction
 #: field:auction.lots,history_ids:0

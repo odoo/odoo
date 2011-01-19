@@ -33,7 +33,8 @@
 Used, for example, in food industries.''',
     "update_xml" : ["product_expiry_view.xml"],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate": "00421222123914960109",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

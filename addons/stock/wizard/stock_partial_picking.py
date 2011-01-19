@@ -33,51 +33,75 @@ class stock_partial_picking(osv.osv_memory):
         'product_moves_in' : fields.one2many('stock.move.memory.in', 'wizard_id', 'Moves'),
      }
     
-    def __is_in(self,cr, uid, pick_ids):
+    def get_picking_type(self, cr, uid, picking, context=None):
+        picking_type = picking.type
+        for move in picking.move_lines:
+            if picking.type == 'in' and move.product_id.cost_method == 'average':
+                picking_type = 'in'
+                break
+            else:
+                picking_type = 'out'
+        return picking_type
+    
+    def default_get(self, cr, uid, fields, context=None):
+        """ To get default values for the object.
+         @param self: The object pointer.
+         @param cr: A database cursor
+         @param uid: ID of the user currently logged in
+         @param fields: List of fields for which we want default values
+         @param context: A standard dictionary
+         @return: A dictionary which of fields with values.
         """
-            @return: True if one of the moves has as picking type 'in'
-        """
-        if not pick_ids:
-            return False
+        if context is None:
+            context = {}
+            
+        pick_obj = self.pool.get('stock.picking')
+        res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
+        picking_ids = context.get('active_ids', [])
+        if not picking_ids:
+            return res
+
+        result = []
+        for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
+            pick_type = self.get_picking_type(cr, uid, pick, context=context)
+            for m in pick.move_lines:
+                if m.state in ('done', 'cancel'):
+                    continue
+                result.append(self.__create_partial_picking_memory(m, pick_type))
+
+        if 'product_moves_in' in fields:
+            res.update({'product_moves_in': result})
+        if 'product_moves_out' in fields:
+            res.update({'product_moves_out': result})
+        if 'date' in fields:
+            res.update({'date': time.strftime('%Y-%m-%d %H:%M:%S')})
+        return res
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        result = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
        
         pick_obj = self.pool.get('stock.picking')
-        pick_ids = pick_obj.search(cr, uid, [('id','in',pick_ids)])
-        
-       
-        for pick in pick_obj.browse(cr, uid, pick_ids):
-            for move in pick.move_lines:
-                if pick.type == 'in' and move.product_id.cost_method == 'average':
-                    return True
-        return False
-    
-    def __get_picking_type(self, cr, uid, pick_ids):
-        if self.__is_in(cr, uid, pick_ids):
-            return "product_moves_in"
-        else:
-            return "product_moves_out"
-
-    def view_init(self, cr, uid, fields_list, context=None):
-        res = super(stock_partial_picking, self).view_init(cr, uid, fields_list, context=context)
-        return res
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False,submenu=False):
-        result = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar,submenu)
-       
-        
         picking_ids = context.get('active_ids', False)
-        picking_type = self.__get_picking_type(cr, uid, picking_ids)
+
+        if not picking_ids:
+            # not called through an action (e.g. buildbot), return the default.
+            return result
+
+        for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
+            picking_type = self.get_picking_type(cr, uid, pick, context=context)
         
         _moves_arch_lst = """<form string="%s">
                         <field name="date" invisible="1"/>
                         <separator colspan="4" string="%s"/>
                         <field name="%s" colspan="4" nolabel="1" mode="tree,form" width="550" height="200" ></field>
-                        """ % (_('Process Document'), _('Products'), picking_type)
+                        """ % (_('Process Document'), _('Products'), "product_moves_" + picking_type)
         _moves_fields = result['fields']
+
+        # add field related to picking type only
         _moves_fields.update({
-                            'product_moves_in' : {'relation': 'stock.move.memory.in', 'type' : 'one2many', 'string' : 'Product Moves'},
-                            'product_moves_out' : {'relation': 'stock.move.memory.out', 'type' : 'one2many', 'string' : 'Product Moves'}
+                            'product_moves_' + picking_type: {'relation': 'stock.move.memory.'+picking_type, 'type' : 'one2many', 'string' : 'Product Moves'}, 
                             })
-            
+
         _moves_arch_lst += """
                 <separator string="" colspan="4" />
                 <label string="" colspan="2"/>
@@ -92,43 +116,21 @@ class stock_partial_picking(osv.osv_memory):
         result['fields'] = _moves_fields
         return result
 
-    def __create_partial_picking_memory(self, picking, is_in):
+    def __create_partial_picking_memory(self, picking, pick_type):
         move_memory = {
-            'product_id' : picking.product_id.id,
-            'quantity' : picking.product_qty,
-            'product_uom' : picking.product_uom.id,
-            'prodlot_id' : picking.prodlot_id.id,
-            'move_id' : picking.id,
+            'product_id' : picking.product_id.id, 
+            'quantity' : picking.product_qty, 
+            'product_uom' : picking.product_uom.id, 
+            'prodlot_id' : picking.prodlot_id.id, 
+            'move_id' : picking.id, 
         }
     
-        if is_in:
+        if pick_type == 'in':
             move_memory.update({
-                'cost' : picking.product_id.standard_price,
-                'currency' : picking.product_id.company_id and picking.product_id.company_id.currency_id and  picking.product_id.company_id.currency_id.id or False,
+                'cost' : picking.product_id.standard_price, 
+                'currency' : picking.product_id.company_id.currency_id.id, 
             })
         return move_memory
-
-    def __get_active_stock_pickings(self, cr, uid, context=None):
-        pick_obj = self.pool.get('stock.picking')
-        if not context:
-            context = {}
-               
-        res = []
-        for pick in pick_obj.browse(cr, uid, context.get('active_ids', []), context):
-            need_product_cost = (pick.type == 'in')
-            for m in pick.move_lines:
-                if m.state in ('done', 'cancel'):
-                    continue           
-                res.append(self.__create_partial_picking_memory(m, need_product_cost))
-            
-        return res
-    
-    _defaults = {
-        'product_moves_in' : __get_active_stock_pickings,
-        'product_moves_out' : __get_active_stock_pickings,
-        'date' : lambda *a : time.strftime('%Y-%m-%d %H:%M:%S'),
-    }
-    
 
     def do_partial(self, cr, uid, ids, context=None):
         """ Makes partial moves and pickings done.
@@ -140,6 +142,9 @@ class stock_partial_picking(osv.osv_memory):
         @return: A dictionary which of fields with values.
         """
         pick_obj = self.pool.get('stock.picking')
+        move_obj = self.pool.get('stock.move')
+        location_obj = self.pool.get('stock.location')
+        
         picking_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context=context)
         partial_datas = {
@@ -147,40 +152,24 @@ class stock_partial_picking(osv.osv_memory):
         }
 
         for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
-            need_product_cost = (pick.type == 'in')
-            moves_list = need_product_cost and partial.product_moves_in  or partial.product_moves_out
-            p_moves = {}
-            for product_move in moves_list:
-                p_moves[product_move.move_id.id] = product_move
-            
-            
-            for move in pick.move_lines:
-                if move.state in ('done', 'cancel'):
-                    continue
-                if not p_moves.get(move.id):
-                    continue
-                
-                partial_datas['move%s' % (move.id)] = {
-                    'product_id' : p_moves[move.id].id,
-                    'product_qty' : p_moves[move.id].quantity,
-                    'product_uom' :p_moves[move.id].product_uom.id,
-                    'prodlot_id' : p_moves[move.id].prodlot_id.id,
+            picking_type = self.get_picking_type(cr, uid, pick, context=context)
+            moves_list = picking_type == 'in' and partial.product_moves_in or partial.product_moves_out
+
+            for move in moves_list:
+                partial_datas['move%s' % (move.move_id.id)] = {
+                    'product_id': move.id, 
+                    'product_qty': move.quantity, 
+                    'product_uom': move.product_uom.id, 
+                    'prodlot_id': move.prodlot_id.id, 
                 }
-            
-               
-                if (move.picking_id.type == 'in') and (move.product_id.cost_method == 'average'):
-                    partial_datas['move%s' % (move.id)].update({
-                                                    'product_price' : p_moves[move.id].cost,
-                                                    'product_currency': p_moves[move.id].currency.id,
+                if (picking_type == 'in') and (move.product_id.cost_method == 'average'):
+                    partial_datas['move%s' % (move.move_id.id)].update({
+                                                    'product_price' : move.cost, 
+                                                    'product_currency': move.currency.id, 
                                                     })
         pick_obj.do_partial(cr, uid, picking_ids, partial_datas, context=context)
-        return {'type': 'ir.actions.act_window_close'}
-
-        
-   
+        return {}
 
 stock_partial_picking()
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

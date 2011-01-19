@@ -57,5 +57,6 @@ This module provides leads automation through marketing campaigns (campaigns can
     ],
     'installable': True,
     'active': False,
+    'certificate' : '00421723279617928365',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -44,6 +44,7 @@
     'test': ['test/test_crm_fund.yml'], 
     'installable': True, 
     'active': False, 
+    'certificate' : '00871545204231528989',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

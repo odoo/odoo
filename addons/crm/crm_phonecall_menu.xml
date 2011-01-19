@@ -67,7 +67,7 @@
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
         <field name="domain" eval="'[(\'categ_id\',\'=\','+str(ref('categ_phone1'))+')]'"/>
-        <field name="context" eval="'{\'search_default_section_id\':section_id, \'set_editable\':True,\'default_state\':\'open\', \'search_default_current\':1,\'search_default_today\':1, \'default_categ_id\': ' + str(ref('categ_phone1')) +'}'"/>
+        <field name="context" eval="'{\'search_default_section_id\':section_id, \'default_state\':\'open\', \'search_default_current\':1,\'search_default_today\':1, \'default_categ_id\': ' + str(ref('categ_phone1')) +'}'"/>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
         <field name="help">The Inbound Calls tool allows you to log your inbound calls on the fly. Each call you get will appear on the partner form to trace every contact you have with a partner. From the phone call form, you can trigger a request for another call, a meeting or an opportunity.</field>
 

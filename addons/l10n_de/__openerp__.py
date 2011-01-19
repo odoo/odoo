@@ -121,16 +121,16 @@
 
 
 {
-        "name" : "Deutschland - SKR03 and SKR04",
-        "version" : "1.0",
-        "author" : "openbig.org",
-        "website" : "http://www.openbig.org",
-        "category" : "Localisation/Account Charts",
-        "description": """Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.""",
-        "depends" : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
-        "init_xml" : [ ],
-        "demo_xml" : [ ],
-        "update_xml" : [
+    "name" : "Deutschland - SKR03 and SKR04",
+    "version" : "1.0",
+    "author" : "openbig.org",
+    "website" : "http://www.openbig.org",
+    "category" : "Localisation/Account Charts",
+    "description": """Dieses  Modul beinhaltet einen deutschen Kontenrahmen basierend auf dem SKR03.""",
+    "depends" : ['base', 'account', 'base_iban', 'base_vat', 'account_chart'],
+    "init_xml" : [ ],
+    "demo_xml" : [ ],
+    "update_xml" : [
         "account_tax_skr03.xml",
         "account_types_skr03.xml",
         "account_chart_skr03.xml",
@@ -142,6 +142,7 @@
         "account_chart_template_skr04.xml",
         "account_tax_fiscal_position_skr04.xml",
         "l10n_de_wizard.xml",
-        ],
-     "installable": True
+    ],
+    "installable": True,
+    "certificate": "00517849017945584893",
 } 

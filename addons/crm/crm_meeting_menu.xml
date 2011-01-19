@@ -93,12 +93,6 @@
         action="crm_case_categ_meet" parent="menu_meeting_sale"
         sequence="1" />
 
-    <record id="ir_ui_view_sc_calendar0" model="ir.ui.view_sc">
-        <field name="name">Meetings</field>
-        <field name="resource">ir.ui.menu</field>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
-    </record>
     <record id="action_view_attendee_form" model="ir.actions.act_window">
          <field name="name">Meeting Invitations</field>
          <field name="type">ir.actions.act_window</field>

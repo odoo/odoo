@@ -25,6 +25,7 @@ import tools
 import binascii
 import email
 from email.header import decode_header
+from email.utils import parsedate
 import base64
 import re
 from tools.translate import _
@@ -110,6 +111,11 @@ class mailgate_thread(osv.osv):
             context = {}
         if attach is None:
             attach = []
+
+        if email_date:
+            edate = parsedate(email_date)
+            if edate is not None:
+                email_date = time.strftime('%Y-%m-%d %H:%M:%S', edate)
 
         # The mailgate sends the ids of the cases and not the object list
 

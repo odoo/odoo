@@ -36,7 +36,8 @@
     "demo_xml"  : [],
     "update_xml" : ["product_view.xml",],
     "active"    : False,
-    "installable": True
+    "installable": True,
+    "certificate":"00557423080410733581",
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
