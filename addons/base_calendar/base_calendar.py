@@ -1415,7 +1415,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @param context: A standard dictionary for contextual values
         @return: True
         """
-        old_vals = self.read(cr, uid, ids, 'rrule', context)[0]
+        old_vals = self.read(cr, uid, ids, ['rrule'], context)[0]
         if 'rrule' in vals and not vals['rrule'] and not old_vals['rrule']: 
             del vals['rrule']
         
