@@ -52,7 +52,7 @@ class crm_phonecall_report(osv.osv):
                                   ('07', 'July'), ('08', 'August'),\
                                   ('09', 'September'), ('10', 'October'),\
                                   ('11', 'November'), ('12', 'December')], 'Month', readonly=True),
-        'create_date': fields.datetime('Create Date', readonly=True),
+        'create_date': fields.datetime('Create Date', readonly=True, select=True),
         'day': fields.char('Day', size=128, readonly=True), 
         'delay_close': fields.float('Delay to close', digits=(16,2),readonly=True, group_operator="avg",help="Number of Days to close the case"),
         'duration': fields.float('Duration', digits=(16,2),readonly=True, group_operator="avg"),
@@ -62,9 +62,9 @@ class crm_phonecall_report(osv.osv):
                         ('object_id.model', '=', 'crm.phonecall')]"),
         'partner_id': fields.many2one('res.partner', 'Partner' , readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'opening_date': fields.date('Opening Date', readonly=True),
-        'creation_date': fields.date('Creation Date', readonly=True),
-        'date_closed': fields.date('Close Date', readonly=True),
+        'opening_date': fields.date('Opening Date', readonly=True, select=True),
+        'creation_date': fields.date('Creation Date', readonly=True, select=True),
+        'date_closed': fields.date('Close Date', readonly=True, select=True),
     }
 
     def init(self, cr):

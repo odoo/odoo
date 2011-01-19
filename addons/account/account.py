@@ -1130,7 +1130,7 @@ class account_move(osv.osv):
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
-        'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
+        'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
         'narration':fields.text('Narration'),
         'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
@@ -2610,6 +2610,24 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
 
+    def _get_purchase_tax(self, cr, uid, context=None):
+        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        if ids:
+            chart_template_id = ids[0]
+            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+            return purchase_tax_ids[0]
+        return False
+
+    def _get_sale_tax(self, cr, uid, context=None):
+        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        if ids:
+            chart_template_id = ids[0]
+            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+            return sale_tax_ids[0]
+        return False
+
     def _get_chart(self, cr, uid, context=None):
         ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
         if ids:
@@ -2626,6 +2644,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
         'chart_template_id': _get_chart,
         'bank_accounts_id': _get_default_accounts,
+        'sale_tax': _get_sale_tax,
+        'purchase_tax': _get_purchase_tax,
         'code_digits': 6,
         'seq_journal': True
     }

@@ -197,13 +197,21 @@ class stock_return_picking(osv.osv_memory):
             pick_obj.write(cr, uid, [pick.id], {'invoice_state':'none'})
         wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
         pick_obj.force_assign(cr, uid, [new_picking], context)
+        # Update view id in context, lp:702939
+        view_list = {
+                'out': 'view_picking_out_tree',
+                'in': 'view_picking_in_tree',
+                'internal': 'vpicktree',
+            }
+        data_obj = self.pool.get('ir.model.data')
+        res = data_obj.get_object_reference(cr, uid, 'stock', view_list.get(new_type, 'vpicktree'))
+        context.update({'view_id': res and res[1] or False})
         return {
             'domain': "[('id', 'in', ["+str(new_picking)+"])]",
             'name': 'Picking List',
             'view_type':'form',
             'view_mode':'tree,form',
             'res_model':'stock.picking',
-            'view_id':False,
             'type':'ir.actions.act_window',
             'context':context,
         }

@@ -562,8 +562,12 @@ class res_partner(osv.osv):
             sum = 8 * int(vat[0]) + 7 * int(vat[1]) + 6 * int(vat[2]) + \
                     5 * int(vat[3]) + 4 * int(vat[4]) + 3 * int(vat[5]) + \
                     2 * int(vat[6]) + 10 * int(vat[7]) + int(vat[8])
-            if sum % 97 != 0:
-                return False
+            if int(vat[0:3]) > 100:
+                if sum % 97 not in (0, 55, 42):
+                    return False
+            else:
+                if sum % 97 != 0:
+                    return False
             return True
         elif len(vat) in (12, 13):
             try:

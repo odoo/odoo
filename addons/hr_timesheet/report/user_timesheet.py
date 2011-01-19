@@ -27,6 +27,7 @@ from tools.translate import _
 import time
 import pooler
 from report import report_sxw
+from tools import ustr
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
@@ -49,7 +50,7 @@ class report_custom(report_rml):
         emp_obj = pooler.get_pool(cr.dbname).get('hr.employee')
         user_id = emp_obj.browse(cr, uid, emp_id).user_id.id
         empl_name = emp_obj.browse(cr, uid, emp_id).name
- 
+
         # Computing the dates (start of month: som, and end of month: eom)
         som = datetime.date(data['form']['year'], data['form']['month'], 1)
         eom = som + datetime.timedelta(lengthmonth(som.year, som.month))
@@ -109,7 +110,7 @@ class report_custom(report_rml):
         <employee>%s</employee>
         %s
         </report>
-        ''' % (header_xml,toxml(empl_name), '\n'.join(date_xml) + '\n'.join(account_xml))
+        ''' % (header_xml, ustr(toxml(empl_name)), '\n'.join(date_xml) + '\n'.join(account_xml))
         return xml
 
 report_custom('report.hr.analytical.timesheet', 'hr.employee', '', 'addons/hr_timesheet/report/user_timesheet.xsl')
