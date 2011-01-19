@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-11 10:33+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-18 00:51+0000\n"
 "Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:55+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:39+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -72,6 +72,15 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Vous pouvez créer une demande de devis lorsque vous voulez acheter des "
+"produits à un fournisseur mais que l'achat n'est pas encore confirmé. "
+"Utilisez aussi ce menu pour passer en revues les demandes de devis créées "
+"automatiquement et basées sur vos règles logistiques (stock minimum, "
+"approvisionnement à la commande, etc). Vous pouvez convertir une demande de "
+"devis en bon de commande une fois que la commande est confirmée. Si vous "
+"utilisez l'interface étendue (dans les préférences utilisateurs), vous "
+"pouvez sélectionner comment contrôler vos factures fournisseur : basées sur "
+"les commandes, basées sur les réceptions ou création manuelle."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -81,7 +90,7 @@ msgstr "Sur marchandise reçue"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Non facturée"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -115,12 +124,15 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Utiliser ce menu pour rechercher les bons de commandes par référence, par "
+"fournisseur, par produit, etc. Pour chaque bon de commande, vous pouvez "
+"suivre les produits reçus et contrôler les factures du fournisseur."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Le fournisseur sélectionné peut seulement vendre ce produit par %s"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
@@ -255,7 +267,7 @@ msgstr "Confirmé par fournisseur"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "UdM de référence"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -265,7 +277,7 @@ msgstr "Origine"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "UdM de référence"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -330,7 +342,7 @@ msgstr "Total Net :"
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure Your Purchases Management Application"
-msgstr ""
+msgstr "Configurez votre application de gestion des achats"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
@@ -341,7 +353,7 @@ msgstr "Produits"
 #. module: purchase
 #: field:purchase.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Progression de la Configuration"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -369,7 +381,7 @@ msgstr "Montant d'achat supérieur à la limite"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Convert to Purchase Order"
-msgstr "Convertir en ordre d'achat"
+msgstr "Convertir en bon de commande"
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0
@@ -397,7 +409,7 @@ msgstr "Produits Entrants"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Produits à expédier"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -469,7 +481,7 @@ msgstr "Plans de comptes analytiques des achats"
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
 msgid "purchase.installer"
-msgstr ""
+msgstr "purchase.installer"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
@@ -623,7 +635,7 @@ msgstr "Montant hors-taxe"
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "Listes de prix"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
@@ -650,7 +662,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr ""
+msgstr "Factures générées pour un bon de commande"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
@@ -773,6 +785,11 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"Utilisez ce menu pour contrôler les factures à recevoir des fournisseurs. "
+"OpenERP génère par avance des factures à l'état 'Brouillon' depuis les bons "
+"de commande ou les réceptions, en fonction de vos paramètres. Une fois que "
+"vous avez reçu la facture du fournisseur, vous pouvez faire la "
+"correspondance avec la facture à l'état 'Brouillon' et la valider."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -900,7 +917,7 @@ msgstr "Délai de livraison"
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Receive Products"
-msgstr "Réceptionner les produits"
+msgstr "Réception de produits"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
@@ -943,7 +960,7 @@ msgstr "En attente de confirmation du fournisseur"
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr "Demande de Devis"
+msgstr "Demande de prix :"
 
 #. module: purchase
 #: view:board.board:0
@@ -1067,7 +1084,7 @@ msgstr "Négociation par fournisseur"
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchase Properties"
-msgstr ""
+msgstr "Propriétés d'achat"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -1121,7 +1138,7 @@ msgstr "Date a laquelle ce document a été créé"
 #. module: purchase
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Ventes et achats"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1232,6 +1249,8 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
 msgstr ""
+"Le fournisseur choisi prévoit une quantité minimale de %s, vous ne pouvez "
+"pas commandez moins."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1272,7 +1291,7 @@ msgstr "Valeur des produits"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Types de listes de prix"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1294,7 +1313,7 @@ msgstr "Historique"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produits par catégorie"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1334,7 +1353,7 @@ msgstr "Sous-total"
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr "Appels d'offre"
+msgstr "Demande de prix"
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
@@ -1374,7 +1393,7 @@ msgstr "Position Fiscale"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr "Demande de devis N°"
+msgstr "Demande de prix N°"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
@@ -1413,7 +1432,7 @@ msgstr "Le fournisseur valide l'ordre d'achat."
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: view:purchase.report:0
 msgid "Purchase Orders"
-msgstr "Bon de commande"
+msgstr "Bons de commande"
 
 #. module: purchase
 #: field:purchase.order,origin:0
@@ -1445,7 +1464,7 @@ msgstr "Total des commandes par utilisateur par mois"
 #: selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Request for Quotation"
-msgstr "Demande de devis"
+msgstr "Demande de prix"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1481,7 +1500,7 @@ msgstr "Entrepôt"
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr "Appel d'offres"
+msgstr "Demandes de prix."
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1580,7 +1599,7 @@ msgstr "Livraison"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr "Appel d'offres"
+msgstr "Demandes de prix"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
@@ -1633,7 +1652,7 @@ msgstr "Février"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "Catégories de produits"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1790,7 +1809,7 @@ msgstr "Total"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Versions de la liste de prix"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
@@ -1874,7 +1893,7 @@ msgstr "Titre"
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
 msgid "Partial Move"
-msgstr ""
+msgstr "Mouvement partiel"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1890,7 +1909,7 @@ msgstr "Unités de mesure"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
-msgstr ""
+msgstr "Commandes"
 
 #. module: purchase
 #: help:purchase.order,name:0
@@ -1905,7 +1924,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
-msgstr ""
+msgstr "Tableau de bord des achats"
 
 #~ msgid "You can not have 2 pricelist version that overlaps!"
 #~ msgstr ""

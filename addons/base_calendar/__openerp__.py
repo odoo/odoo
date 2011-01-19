@@ -45,6 +45,7 @@
     "test" : ['test/base_calendar_test.yml'],
     "installable" : True,
     "active" : False,
+    "certificate" : "00694071962960352821",
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-08-31 08:17+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-16 18:43+0000\n"
+"Last-Translator: Emerson <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:35+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:45+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -23,6 +23,8 @@ msgstr ""
 msgid ""
 "No forecasts for selected period or no products in selected category !"
 msgstr ""
+"Sem previsão para o período selecionado ou nenhum produto na categoria "
+"selecionada !"
 
 #. module: stock_planning
 #: help:stock.planning,stock_only:0
@@ -31,22 +33,25 @@ msgid ""
 "selected calculation is made for input, stock and output location of "
 "warehouse."
 msgstr ""
+"Marque para calcular o local de estoque do armazém selecionado apenas. Se "
+"não marcar, o cálculo é feito pelo local de entrada, estoque e saída do "
+"armazém."
 
 #. module: stock_planning
 #: field:stock.planning,maximum_op:0
 msgid "Maximum Rule"
-msgstr ""
+msgstr "Regra de Máximo"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
 msgid "This Copmany Period1"
-msgstr ""
+msgstr "Esta Empresa Periodo1"
 
 #. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Group By..."
-msgstr ""
+msgstr "Agrupar Por..."
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_amt:0
@@ -54,13 +59,15 @@ msgid ""
 "Forecast value which will be converted to Product Quantity according to "
 "prices."
 msgstr ""
+"Valor de previsão que será convertido para Quantidade do Produto de acordo "
+"com os preços."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:621
 #: code:addons/stock_planning/stock_planning.py:663
 #, python-format
 msgid "Incoming Left must be greater than 0 !"
-msgstr ""
+msgstr "Entrada Restante deve ser maior que 0 !"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_before:0
@@ -68,12 +75,14 @@ msgid ""
 "Planned Out in periods before calculated. Between start date of current "
 "period and one day before start of calculated period."
 msgstr ""
+"Saída Planejada em períodos antes do calculado. Entre a data inicial do "
+"período atual e um dia antes de iniciar o período calculado."
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
 #, python-format
 msgid "No products in selected category !"
-msgstr ""
+msgstr "Não há produto na categoria selecionada !"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,warehouse_id:0
@@ -81,11 +90,14 @@ msgid ""
 "Warehouse which forecasts will concern. If during stock planning you will "
 "need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Armazém para o qual as previsões incidirão. Se durante o planejamento de "
+"estoque você precisar da previsão de vendas para todos os armazéns, escolha "
+"todos os armazéns agora."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_left:0
 msgid "Expected Out"
-msgstr ""
+msgstr "Saída Prevista"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -95,27 +107,28 @@ msgstr " "
 #. module: stock_planning
 #: field:stock.planning,incoming_left:0
 msgid "Incoming Left"
-msgstr ""
+msgstr "Entrada Restante"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Requisition history"
-msgstr ""
+msgstr "Histórico de requisição"
 
 #. module: stock_planning
 #: view:stock.sale.forecast.createlines:0
 msgid "Create Forecasts Lines"
-msgstr ""
+msgstr "Criar Linhas Previstas"
 
 #. module: stock_planning
 #: help:stock.planning,outgoing:0
 msgid "Quantity of all confirmed outgoing moves in calculated Period."
 msgstr ""
+"Quantidade de todos os movimentos de saída confirmados no Período calculado."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Daily Periods"
-msgstr ""
+msgstr "Criar Períodos Diários"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -125,7 +138,7 @@ msgstr ""
 #: field:stock.sale.forecast,company_id:0
 #: field:stock.sale.forecast.createlines,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:640
@@ -135,6 +148,8 @@ msgid ""
 "\n"
 " Initial Stock: "
 msgstr ""
+"\n"
+" Estoque Inicial: "
 
 #. module: stock_planning
 #: help:stock.planning,warehouse_forecast:0
@@ -142,32 +157,34 @@ msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
 "selected Period."
 msgstr ""
+"Todas as previsões de venda do o Armazém selecionado para o Produto "
+"selecionado durante o Período selecionado."
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
 msgid "Create Stock and Sales Periods"
-msgstr ""
+msgstr "Criar Períodos de Estoque e Vendas"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Minimum Stock Rule Indicators"
-msgstr ""
+msgstr "Indicadores de Regra para Estoque Mínimo"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,period_id:0
 msgid "Period which forecasts will concern."
-msgstr ""
+msgstr "Período no qual as previsões vão incidir."
 
 #. module: stock_planning
 #: field:stock.planning,stock_only:0
 msgid "Stock Location Only"
-msgstr ""
+msgstr "Apenas Local de Estoque"
 
 #. module: stock_planning
 #: help:stock.planning,already_out:0
 msgid ""
 "Quantity which is already dispatched out of this warehouse in current period."
-msgstr ""
+msgstr "Quantidade que foi despachada deste armazém no período atual."
 
 #. module: stock_planning
 #: help:stock.planning,procure_to_stock:0
@@ -175,16 +192,18 @@ msgid ""
 "Chect to make procurement to stock location of selected warehouse. If not "
 "selected procurement will be made into input location of warehouse."
 msgstr ""
+"Marque para criar aquisição para o local de estoque do armazém selecionado. "
+"Se não selecionar, a aquisição será feita no local de entrada do armazém."
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Current Period Situation"
-msgstr ""
+msgstr "Situação do Período Atual"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Monthly Periods"
-msgstr ""
+msgstr "Criar Períodos Mensais"
 
 #. module: stock_planning
 #: help:stock.planning,supply_warehouse_id:0
@@ -192,6 +211,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warhouse'."
 msgstr ""
+"Armazém usado como origem no suprimento criado pelo 'Suprir a partir de "
+"Outro Armazém'."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
@@ -201,35 +222,35 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,outgoing_before:0
 msgid "Planned Out Before"
-msgstr ""
+msgstr "Planejamento de Saída Anterior"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,forecasted_products:0
 msgid "All Products with Forecast"
-msgstr ""
+msgstr "Todos os Produtos com Previsão"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Periods :"
-msgstr ""
+msgstr "Períodos :"
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
 msgid ""
 "Quantity which is already picked up to this warehouse in current period."
-msgstr ""
+msgstr "Quantidade que já foi retirada deste armazém no período atual."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
 #: code:addons/stock_planning/stock_planning.py:686
 #, python-format
 msgid "    Confirmed In Before: "
-msgstr ""
+msgstr "    Entrada Confirmada Anterior: "
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Stock and Sales Forecast"
-msgstr ""
+msgstr "Previsão de Estoque e Vendas"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
@@ -239,17 +260,17 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_dept_id:0
 msgid "This Department"
-msgstr ""
+msgstr "Este Departamento"
 
 #. module: stock_planning
 #: field:stock.planning,to_procure:0
 msgid "Planned In"
-msgstr ""
+msgstr "Entrada Planejada"
 
 #. module: stock_planning
 #: field:stock.planning,stock_simulation:0
 msgid "Stock Simulation"
-msgstr ""
+msgstr "Simulação de Estoque"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
@@ -263,21 +284,25 @@ msgid ""
 "Between start date of current period and one day before start of calculated "
 "period."
 msgstr ""
+"Entrada confirmada em períodos antes do calculado (Incluisive Entrada "
+"Confirmada). Entre a data inicial do período atual e um dia antes do início "
+"do período calculado."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Search  Sales Forecast"
-msgstr ""
+msgstr "Procurar Previsão de Vendas"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_user:0
 msgid "This User Period5"
-msgstr ""
+msgstr "Este Usuário Periodo5"
 
 #. module: stock_planning
 #: help:stock.planning,history:0
 msgid "History of procurement or internal supply of this planning line."
 msgstr ""
+"Histórico de aquisicão ou suprimento interno para esta linha de planejamento."
 
 #. module: stock_planning
 #: help:stock.planning,company_forecast:0
@@ -285,51 +310,53 @@ msgid ""
 "All sales forecasts for whole company (for all Warehouses) of selected "
 "Product during selected Period."
 msgstr ""
+"Todas as previsões de vendas para toda a empresa (todos os Armazéns) do "
+"Produto selecionado durante o Período selecionado."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_user:0
 msgid "This User Period1"
-msgstr ""
+msgstr "Este Usuário Periodo1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_user:0
 msgid "This User Period3"
-msgstr ""
+msgstr "Este Usuário Periodo3"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_main
 #: view:stock.planning:0
 msgid "Stock Planning"
-msgstr ""
+msgstr "Planejamento de Estoque"
 
 #. module: stock_planning
 #: field:stock.planning,minimum_op:0
 msgid "Minimum Rule"
-msgstr ""
+msgstr "Regra para Mínimos"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Procure Incoming Left"
-msgstr ""
+msgstr "Adquirir Entrada Restante"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:646
 #: code:addons/stock_planning/stock_planning.py:688
 #, python-format
 msgid "    Incoming Left: "
-msgstr ""
+msgstr "    Entrada Restante: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:715
 #, python-format
 msgid "Pick List "
-msgstr ""
+msgstr "Lista de Separação "
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Create"
-msgstr ""
+msgstr "Criar"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_planning_form
@@ -337,14 +364,14 @@ msgstr ""
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning
 #: view:stock.planning:0
 msgid "Master Procurement Schedule"
-msgstr ""
+msgstr "Agenda Principal de Aquisição"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:636
 #: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "  Creation Date: "
-msgstr ""
+msgstr "  Data de Criação: "
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
@@ -352,7 +379,7 @@ msgstr ""
 #: field:stock.sale.forecast,period_id:0
 #: field:stock.sale.forecast.createlines,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Período"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -360,17 +387,19 @@ msgstr ""
 #: field:stock.planning,state:0
 #: field:stock.sale.forecast,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category of products which created forecasts will concern."
 msgstr ""
+"Categoria de Produto dos produtos sobre os quais a previsão criada irá "
+"incidir."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period
 msgid "stock period"
-msgstr ""
+msgstr "período do estoque"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast_createlines
@@ -383,7 +412,7 @@ msgstr ""
 #: field:stock.sale.forecast,warehouse_id:0
 #: field:stock.sale.forecast.createlines,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Armazém"
 
 #. module: stock_planning
 #: help:stock.planning,stock_simulation:0
@@ -395,32 +424,39 @@ msgid ""
 "Initial Stock - Planned Out Before + Incoming Before - Planned Out + Planned "
 "In."
 msgstr ""
+"Simulação de Estoque no final do Período selecionado.\n"
+" Para o período atual é: \n"
+"Estoque Inicial - Saídas Confirmada + Entrada Confirmada - Saída Prevista + "
+"Entrada Restante.\n"
+"Para próximos períodos será: \n"
+"Estoque Inicial - Saída Planejada Anterior + Entrada Anterior - Saída "
+"Planejada + Entrada Planejada."
 
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
 msgid "Check this box to see the sales for whole company."
-msgstr ""
+msgstr "Marque este box para ver as vendas da empresa toda."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Search Stock Planning"
-msgstr ""
+msgstr "Procurar Planejamento de Estoque"
 
 #. module: stock_planning
 #: field:stock.planning,incoming_before:0
 msgid "Incoming Before"
-msgstr ""
+msgstr "Chegada Antes de"
 
 #. module: stock_planning
 #: field:stock.planning.createlines,product_categ_id:0
 #: field:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category"
-msgstr ""
+msgstr "Categoria de Produto"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:621
@@ -431,18 +467,18 @@ msgstr ""
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:59
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Erro !"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
 #, python-format
 msgid "Manual planning for "
-msgstr ""
+msgstr "Planejamento Manual para "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_user_id:0
 msgid "This User"
-msgstr ""
+msgstr "Este Usuário"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:643
@@ -452,80 +488,82 @@ msgid ""
 "\n"
 " Confirmed Out: "
 msgstr ""
+"\n"
+" Saída Confirmada: "
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecasts"
-msgstr ""
+msgstr "Previsões"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Supply from Another Warehouse"
-msgstr ""
+msgstr "Suprir a partir de outro Armazém"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculate Planning"
-msgstr ""
+msgstr "Calcular Planejamento"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:636
 #, python-format
 msgid "Procurement created in MPS by user: "
-msgstr ""
+msgstr "Aquisição criada no MPS pelo usuário: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Ação invalida !"
 
 #. module: stock_planning
 #: help:stock.planning,stock_start:0
 msgid "Stock quantity one day before current period."
-msgstr ""
+msgstr "Quantidade em estoque um dia antes do período atual."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
-msgstr ""
+msgstr "Criar Períodos Semanais"
 
 #. module: stock_planning
 #: help:stock.planning,maximum_op:0
 msgid "Maximum quantity set in Minimum Stock Rules for this Warhouse"
-msgstr ""
+msgstr "Quantidade máxima nas Regras de Estoque Mínimo para este Armazém"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:665
 #, python-format
 msgid "You must specify a Source Warehouse !"
-msgstr ""
+msgstr "Você precisa especificar um Armazém Origem !"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 msgid "Creates planning lines for selected period and warehouse."
-msgstr ""
+msgstr "Cria linhas de planejamento para o período e armazém selecionado."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_user:0
 msgid "This User Period4"
-msgstr ""
+msgstr "Este Usuário Periodo4"
 
 #. module: stock_planning
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Note: Doesn't duplicate existing lines created by you."
-msgstr ""
+msgstr "Nota: Não duplique linhas existentes criadas por você."
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Stock and Sales Period"
-msgstr ""
+msgstr "Período de Estoque e Vendas"
 
 #. module: stock_planning
 #: field:stock.planning,company_forecast:0
 msgid "Company Forecast"
-msgstr ""
+msgstr "Previsão para a Empresa"
 
 #. module: stock_planning
 #: help:stock.planning,product_uom:0
@@ -534,60 +572,62 @@ msgid ""
 "Unit of Measure used to show the quanities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
 msgstr ""
+"Unidade de Medida usada para mostrar a quantidade calculada de estoque. Você "
+"pode usar da categoria padrão ou da segunda categoria (categoria UdS )."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per User :"
-msgstr ""
+msgstr "Por Usuário :"
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_all
 #: view:stock.sale.forecast:0
 msgid "Sales Forecasts"
-msgstr ""
+msgstr "Previsão de Vendas"
 
 #. module: stock_planning
 #: field:stock.period,name:0
 #: field:stock.period.createlines,name:0
 msgid "Period Name"
-msgstr ""
+msgstr "Nome do Período"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
 msgid "Created/Validated by"
-msgstr ""
+msgstr "Criado/Validado por"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Internal Supply"
-msgstr ""
+msgstr "Suprimento Interno"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
 msgid "This Company Period4"
-msgstr ""
+msgstr "Esta Empresa Periodo4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_company:0
 msgid "This Company Period5"
-msgstr ""
+msgstr "Esta Empresa Periodo5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_company:0
 msgid "This Company Period2"
-msgstr ""
+msgstr "Esta Empresa Periodo2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_company:0
 msgid "This Company Period3"
-msgstr ""
+msgstr "Esta Empresa Periodo3"
 
 #. module: stock_planning
 #: field:stock.period,date_start:0
 #: field:stock.period.createlines,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Data de Início"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
@@ -597,11 +637,13 @@ msgid ""
 "\n"
 " Already Out: "
 msgstr ""
+"\n"
+" Saída Confirmada: "
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
 msgid "Validated Forecasts"
-msgstr ""
+msgstr "Previsões Validadas"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,product_categ_id:0
@@ -609,39 +651,42 @@ msgid ""
 "Planning will be created for products from Product Category selected by this "
 "field. This field is ignored when you check \"All Forecasted Product\" box."
 msgstr ""
+"O planejamento será criado para os produtos da Categoria de Produto "
+"selecionada neste campo. Ele é ignorado quando você marca o box \"Todos os "
+"Produtos em Previsão\"."
 
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
 msgid "Planned Out"
-msgstr ""
+msgstr "Saída Planejada"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Department :"
-msgstr ""
+msgstr "Por Departamento :"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Forecast"
-msgstr ""
+msgstr "Previsão"
 
 #. module: stock_planning
 #: selection:stock.period,state:0
 #: selection:stock.planning,state:0
 #: selection:stock.sale.forecast,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Provisório"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Closed"
-msgstr ""
+msgstr "Fechada"
 
 #. module: stock_planning
 #: view:stock.planning:0
 #: view:stock.sale.forecast:0
 msgid "Warehouse "
-msgstr ""
+msgstr "Armazém "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:646
@@ -651,11 +696,13 @@ msgid ""
 "\n"
 " Expected Out: "
 msgstr ""
+"\n"
+" Saída Prevista: "
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create periods for Stock and Sales Planning"
-msgstr ""
+msgstr "Criar períodos para Planejamento de Estoque e Vendas"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -902,7 +949,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Cannot delete Validated Sale Forecasts !"
-msgstr ""
+msgstr "Previsões de Venda Validadas não podem ser excluídas !"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -912,6 +959,8 @@ msgid ""
 "\n"
 " Planned Out: "
 msgstr ""
+"\n"
+" Saída Planejada: "
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:667
@@ -920,23 +969,25 @@ msgid ""
 "You must specify a Source Warehouse different than calculated (destination) "
 "Warehouse !"
 msgstr ""
+"Você precisa especificar um Armazém Origem diferente do Armazém Calculado "
+"(destino) !"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_sale_forecast_createlines
 msgid "Create Sales Forecasts"
-msgstr ""
+msgstr "Criar Previsões de Vendas"
 
 #. module: stock_planning
 #: view:stock.sale.forecast.createlines:0
 msgid "Creates forecast lines for selected warehouse and period."
-msgstr ""
+msgstr "Criar linhas de previsão para o armazém e período selecionado."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:655
 #, python-format
 msgid "Requisition ("
-msgstr ""
+msgstr "Requisição ("
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_left:0
@@ -949,116 +1000,116 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
 msgid "Period4"
-msgstr ""
+msgstr "Periodo4"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
 #: code:addons/stock_planning/stock_planning.py:684
 #, python-format
 msgid "    Already In: "
-msgstr ""
+msgstr "    Entrada Confirmada: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_id:0
 msgid "Period2"
-msgstr ""
+msgstr "Periodo2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_id:0
 msgid "Period3"
-msgstr ""
+msgstr "Periodo3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_id:0
 msgid "Period1"
-msgstr ""
+msgstr "Periodo1"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
 #: code:addons/stock_planning/stock_planning.py:689
 #, python-format
 msgid "    Minimum stock: "
-msgstr ""
+msgstr "    Estoque mínimo: "
 
 #. module: stock_planning
 #: field:stock.planning,active_uom:0
 #: field:stock.sale.forecast,active_uom:0
 msgid "Active UoM"
-msgstr ""
+msgstr "UdM Ativa"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_planning_createlines_form
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_createlines
 #: view:stock.planning.createlines:0
 msgid "Create Stock Planning Lines"
-msgstr ""
+msgstr "Criar Linhas de Planejamento de Estoque"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "General Info"
-msgstr ""
+msgstr "Informação Geral"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_view_stock_sale_forecast_form
 msgid "Sales Forecast"
-msgstr ""
+msgstr "Previsão de Vendas"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Planning and Situation for Calculated Period"
-msgstr ""
+msgstr "Planejamento e Situação do Período Calculado"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_warehouse:0
 msgid "This Warehouse Period1"
-msgstr ""
+msgstr "Este Armazém Periodo1"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_forecast:0
 msgid "Warehouse Forecast"
-msgstr ""
+msgstr "Previsão para Armazém"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:643
 #: code:addons/stock_planning/stock_planning.py:685
 #, python-format
 msgid "    Confirmed In: "
-msgstr ""
+msgstr "    Entrada Confirmada: "
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Sales history"
-msgstr ""
+msgstr "Histórico de Vendas"
 
 #. module: stock_planning
 #: field:stock.planning,supply_warehouse_id:0
 msgid "Source Warehouse"
-msgstr ""
+msgstr "Armazém Origem"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_qty:0
 msgid "Forecasted quantity."
-msgstr ""
+msgstr "Quantidade prevista"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Stock"
-msgstr ""
+msgstr "Estoque"
 
 #. module: stock_planning
 #: field:stock.planning,stock_supply_location:0
 msgid "Stock Supply Location"
-msgstr ""
+msgstr "Local para Suprimento de Estoque"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
-msgstr ""
+msgstr "Data de encerramento para o período de planejamento."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_user:0
 msgid "This User Period2"
-msgstr ""
+msgstr "Este Usuário Periodo2"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,forecasted_products:0
@@ -1066,70 +1117,73 @@ msgid ""
 "Check this box to create planning for all products having any forecast for "
 "selected Warehouse and Period. Product Category field will be ignored."
 msgstr ""
+"Marque esta caixa para criar o planejamento para todos os produtos com "
+"previsão para o Armazém e Período selecionado. O campo Categoria de Produto "
+"será ignorado."
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
 msgid "Already In"
-msgstr ""
+msgstr "Entrada Confirmada"
 
 #. module: stock_planning
 #: field:stock.planning,product_uom_categ:0
 #: field:stock.planning,product_uos_categ:0
 #: field:stock.sale.forecast,product_uom_categ:0
 msgid "Product UoM Category"
-msgstr ""
+msgstr "Categoria para UdM do Produto"
 
 #. module: stock_planning
 #: field:stock.planning,incoming:0
 msgid "Confirmed In"
-msgstr ""
+msgstr "Entrada Confirmada"
 
 #. module: stock_planning
 #: field:stock.planning,line_time:0
 msgid "Past/Future"
-msgstr ""
+msgstr "Passado/Futuro"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
 msgid "Product UoS Category"
-msgstr ""
+msgstr "Categoria da UdS do Produto"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
 msgid "Product Quantity"
-msgstr ""
+msgstr "Quantidade do Produto"
 
 #. module: stock_planning
 #: field:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy Last Forecast"
-msgstr ""
+msgstr "Copiar Última Previsão"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr ""
+msgstr "Mostra o produto sobre o qual esta previsão incide."
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
 msgid "Done"
-msgstr ""
+msgstr "Concluído"
 
 #. module: stock_planning
 #: field:stock.period.createlines,period_ids:0
 msgid "Periods"
-msgstr ""
+msgstr "Períodos"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:638
 #: code:addons/stock_planning/stock_planning.py:680
 #, python-format
 msgid " according to state:"
-msgstr ""
+msgstr " de acordo com o status:"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -1137,89 +1191,89 @@ msgstr ""
 #: view:stock.planning.createlines:0
 #: view:stock.sale.forecast.createlines:0
 msgid "Close"
-msgstr ""
+msgstr "Fechar"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 #: selection:stock.sale.forecast,state:0
 msgid "Validated"
-msgstr ""
+msgstr "Validado"
 
 #. module: stock_planning
 #: view:stock.period:0
 #: selection:stock.period,state:0
 msgid "Open"
-msgstr ""
+msgstr "Aberto"
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,copy_forecast:0
 msgid "Copy quantities from last Stock and Sale Forecast."
-msgstr ""
+msgstr "Copiar quantidades da última Previsão de Estoque e Vendas."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_dept:0
 msgid "This Dept Period1"
-msgstr ""
+msgstr "Este Depto Periodo1"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_dept:0
 msgid "This Dept Period3"
-msgstr ""
+msgstr "Este Depto Periodo3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_dept:0
 msgid "This Dept Period2"
-msgstr ""
+msgstr "Este Depto Periodo2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_dept:0
 msgid "This Dept Period5"
-msgstr ""
+msgstr "Este Depto Periodo5"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_dept:0
 msgid "This Dept Period4"
-msgstr ""
+msgstr "Este Depto Periodo4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_warehouse:0
 msgid "This Warehouse Period2"
-msgstr ""
+msgstr "Este Armazém Periodo2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_per_warehouse:0
 msgid "This Warehouse Period3"
-msgstr ""
+msgstr "Este Armazém Periodo3"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
 msgid "Confirmed Out"
-msgstr ""
+msgstr "Saída Confirmada"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsável"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Default UOM"
-msgstr ""
+msgstr "UdM Padrão"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_warehouse:0
 msgid "This Warehouse Period4"
-msgstr ""
+msgstr "Este Armazém Periodo4"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_per_warehouse:0
 msgid "This Warehouse Period5"
-msgstr ""
+msgstr "Este Armazém Periodo5"
 
 #. module: stock_planning
 #: view:stock.period:0
 msgid "Current"
-msgstr ""
+msgstr "Atual"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -1232,11 +1286,14 @@ msgid ""
 "Shows which warehouse this forecast concerns. If during stock planning you "
 "will need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Mostra em qual armazém esta previsão incide. Se durante o planejamento de "
+"estoque você vai precisar da previsão de vendas para todos os armazéns, "
+"escolha qualquer armazém agora."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
 msgid "Warehouse which planning will concern."
-msgstr ""
+msgstr "Armazém sobre o qual o planejamento incidirá."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
@@ -1246,6 +1303,8 @@ msgid ""
 "\n"
 " Stock Simulation: "
 msgstr ""
+"\n"
+" Simulação de Estoque: "
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -1254,26 +1313,29 @@ msgid ""
 "observe Stock simulation. This value should be equal or greater than "
 "Confirmed In."
 msgstr ""
+"Entre com a quantidade que (pelos seus planos) deveria chegar. Mude este "
+"valor e observe a simulação de Estoque. Este valor deveria ser igual ou "
+"maior que a Entrada Confirmada."
 
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr ""
+msgstr "Período sobre o qual o planejamento incidirá."
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
 msgid "Already Out"
-msgstr ""
+msgstr "Saída Confirmada"
 
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr ""
+msgstr "Produto para o qual este planejamento foi criado."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Per Warehouse :"
-msgstr ""
+msgstr "Por Armazém :"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:639
@@ -1283,28 +1345,30 @@ msgid ""
 "\n"
 " Warehouse Forecast: "
 msgstr ""
+"\n"
+" Previsão para Armazém: "
 
 #. module: stock_planning
 #: field:stock.planning,history:0
 msgid "Procurement History"
-msgstr ""
+msgstr "Histórico de Aquisição"
 
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
 msgid "Starting date for planning period."
-msgstr ""
+msgstr "Data inicial para o período de planejamento."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
 #: code:addons/stock_planning/stock_planning.py:683
 #, python-format
 msgid "    Planned In: "
-msgstr ""
+msgstr "    Entrada Planejada: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
 msgid "Per Company"
-msgstr ""
+msgstr "Por Empresa"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_left:0
@@ -1318,12 +1382,14 @@ msgstr ""
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
 msgstr ""
+"Quantidade de todos os movimentos de entrada confirmados no Período "
+"calculado."
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
 #: field:stock.period.createlines,date_stop:0
 msgid "End Date"
-msgstr ""
+msgstr "Data Final"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -1336,27 +1402,28 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "No Requisition"
-msgstr ""
+msgstr "Sem Requisição"
 
 #. module: stock_planning
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warhouse"
 msgstr ""
+"Quantidade mínima configurada nas Regras de Estoque Mínimo para este Armazém"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "Mostra o período sobre o qual esta previsão incide."
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
 msgid "UoM"
-msgstr ""
+msgstr "UdM"
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Calculated Period Simulation"
-msgstr ""
+msgstr "Simulação do Período Calculado"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1364,7 +1431,7 @@ msgstr ""
 #: view:stock.sale.forecast:0
 #: field:stock.sale.forecast,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produto"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:638
@@ -1374,11 +1441,13 @@ msgid ""
 "\n"
 "For period: "
 msgstr ""
+"\n"
+"Para o período: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
-msgstr ""
+msgstr "UdM do Produto"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:627
@@ -1386,23 +1455,23 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:693
 #, python-format
 msgid "MPS("
-msgstr ""
+msgstr "MPS("
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:678
 #, python-format
 msgid "Pick created from MPS by user: "
-msgstr ""
+msgstr "Separação criada pelo MPS pelo usuário: "
 
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
 msgid "Procure To Stock Location"
-msgstr ""
+msgstr "Aquisição para o Local de Estoque"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Approve"
-msgstr ""
+msgstr "Aprovar"
 
 #. module: stock_planning
 #: help:stock.planning,period_id:0
@@ -1410,16 +1479,18 @@ msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
 msgstr ""
+"Período para este planejamento. A Requisição será criada para o início do "
+"período."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Calculate Sales History"
-msgstr ""
+msgstr "Histórico do Cálculo de Vendas"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_amt:0
 msgid "Product Amount"
-msgstr ""
+msgstr "Montante do Produto"
 
 #. module: stock_planning
 #: help:stock.planning,confirmed_forecasts_only:0
@@ -1427,21 +1498,23 @@ msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
 msgstr ""
+"Marque para usar apenas previsões validadas. Se não marcar, o sistema usa "
+"previsões validadas e provisórias."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
 msgid "Period5"
-msgstr ""
+msgstr "Periodo5"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form
 msgid "Stock and Sales Planning Periods"
-msgstr ""
+msgstr "Períodos de Planejamento para Estoque e Vendas"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_warehouse_id:0
 msgid "This Warehouse"
-msgstr ""
+msgstr "Este Armazém"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_form
@@ -1450,12 +1523,12 @@ msgstr ""
 #: view:stock.period:0
 #: view:stock.period.createlines:0
 msgid "Stock and Sales Periods"
-msgstr ""
+msgstr "Períodos para Estoque e Vendas"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr ""
+msgstr "Mostra quem criou esta previsão ou quem validou."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:644
@@ -1465,8 +1538,10 @@ msgid ""
 "\n"
 " Planned Out Before: "
 msgstr ""
+"\n"
+" Saída Planejada Anterior: "
 
 #. module: stock_planning
 #: field:stock.planning,stock_start:0
 msgid "Initial Stock"
-msgstr ""
+msgstr "Estoque Inicial"

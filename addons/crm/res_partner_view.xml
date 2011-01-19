@@ -54,7 +54,7 @@
                         <tree string="Phone Calls" colors="gray:state in ('draft', 'cancel','done','pending')">
                             <field name="date" string="Date"/>
                             <field name="name" string="Call Summary"/>
-                            <field name="categ_id"/>
+                            <field name="categ_id" string="Type" widget="selection"/>
                             <field name="user_id"/>
                             <field name="state"/>
                             <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>

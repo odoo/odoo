@@ -60,7 +60,7 @@
   !record {model: payment.order, id: payment_order_0}:
     date_prefered: due
     mode: payment_mode_m0
-    reference: 2010/006
+    reference: !eval "'%s/006' %(datetime.now().year)"
     user_id: base.user_root
 
 
@@ -68,7 +68,7 @@
   Creating a payment.order.create record
 -
   !record {model: payment.order.create, id: payment_order_create_0}:
-    duedate: '2010-06-04'
+    duedate: !eval time.strftime('%Y-%m-%d')
 
 -
   I searched the entries using "Payment Create Order" wizard

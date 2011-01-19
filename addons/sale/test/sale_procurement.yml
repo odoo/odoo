@@ -25,7 +25,7 @@
     uom_po_id: product.product_uom_kgm
 -
   I define Minimum stock rule for my stockable product Wood (qty between 10 and 15)
-- 
+-
   !record {model: stock.warehouse.orderpoint, id: stock_warehouse_orderpoint_op0}:
     company_id: base.main_company
     location_id: stock.stock_location_stock
@@ -38,11 +38,11 @@
     warehouse_id: stock.warehouse0
 -
   Now I make a sale order for table.
-- 
+-
   !record {model: sale.order, id: sale_order_so3}:
     amount_total: 5.0
     amount_untaxed: 5.0
-    date_order: '2010-04-30'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     order_line:
       - company_id: base.main_company
@@ -65,7 +65,7 @@
     shop_id: sale.shop
 -
   I confirm the order.
-- 
+-
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so3}
 -
   I check that procurement is generated.
@@ -76,7 +76,7 @@
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so3"))
     proc_ids = self.search(cr, uid, [('origin','=',so.name)])
     assert proc_ids, _('No Procurements!')
-- 
+-
   I run the scheduler.
 -
   !function {model: procurement.order, name: run_scheduler}:

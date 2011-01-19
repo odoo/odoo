@@ -686,7 +686,7 @@ class openerp_dav_handler(dav_interface):
         except Exception:
             node = False
         
-        objname = uri2[-1]
+        objname = misc.ustr(uri2[-1])
         
         ret = None
         if not node:
@@ -719,7 +719,7 @@ class openerp_dav_handler(dav_interface):
                 etag = str(newchild.get_etag(cr))
             except Exception, e:
                 self.parent.log_error("Cannot get etag for node: %s" % e)
-            ret = (hurl, etag)
+            ret = (str(hurl), etag)
         else:
             self._try_function(node.set_data, (cr, data), "save %s" % objname, cr=cr)
             

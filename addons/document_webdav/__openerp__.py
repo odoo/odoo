@@ -30,7 +30,7 @@
 
 {
         "name" : "WebDAV server for Document Management",
-        "version" : "2.2",
+        "version" : "2.3",
         "author" : "OpenERP SA",
         "category" : "Generic Modules/Others",
         "website": "http://www.openerp.com",
@@ -49,6 +49,9 @@
           ; since the messages are routed to the python logging, with
           ; levels "debug" and "debug_rpc" respectively, you can leave
           ; these options on
+          
+        Also implements IETF RFC 5785 for services discovery on a http server,
+        which needs explicit configuration in openerp-server.conf, too.
 """,
         "depends" : ["base", "document"],
         "init_xml" : [],
@@ -60,5 +63,6 @@
         "test": [ #'test/webdav_test1.yml', 
                 ],
         "active": False,
-        "installable": True
+        "installable": True,
+        "certificate" : "001236490750845657973",
 }

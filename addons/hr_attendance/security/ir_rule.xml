@@ -14,6 +14,12 @@
             <field name="domain_force">[(1,'=',1)]</field>
             <field name="groups" eval="[(4,ref('base.group_hr_manager'))]"/>
         </record>
+        <record id="property_rule_attendace_employee" model="ir.rule">
+            <field name="name">Employee Attendance</field>
+            <field model="ir.model" name="model_id" ref="model_hr_attendance"/>
+            <field name="domain_force">[('employee_id.user_id','=',user.id)]</field>
+            <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+        </record>
 
 
     </data>

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-12-23 16:03+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:23+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:43+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -23,7 +23,7 @@ msgid "Unreconciliation transactions"
 msgstr "Neponistene transakcije"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:259
+#: code:addons/account_voucher/account_voucher.py:242
 #, python-format
 msgid "Write-Off"
 msgstr ""
@@ -55,7 +55,7 @@ msgid "Group By..."
 msgstr "Grupirano po"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr "Ne mozes obrisati vaucer(e) koji su vec otvoreni ili placeni !"
@@ -95,7 +95,7 @@ msgid "Bill Payment"
 msgstr "Isplate racuna"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -217,11 +217,6 @@ msgid "Due Date"
 msgstr "Datum dospeća"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr ""
-
-#. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
 msgstr "Napomene"
@@ -262,11 +257,6 @@ msgstr "Iznos"
 #: view:account.voucher:0
 msgid "Payment Options"
 msgstr "Opcije Placanja"
-
-#. module: account_voucher
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -323,23 +313,9 @@ msgid "Analytic Account"
 msgstr "Analitički konto"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-
-#. module: account_voucher
-#: help:account.voucher,state:0
-msgid ""
-" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' state is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
-"* The 'Cancelled' state is used when user cancel voucher."
-msgstr ""
+#: view:account.voucher:0
+msgid "Payment Information"
+msgstr "Informacije Placanja"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -423,7 +399,7 @@ msgid "Voucher Entries"
 msgstr "Sadrzaj Vaucera"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Error !"
 msgstr "Greška !"
@@ -451,7 +427,7 @@ msgid "Sales Receipt"
 msgstr "Racun Prodaje"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Invalid action !"
 msgstr "Neispravna akcija!"
@@ -472,11 +448,6 @@ msgid "Unreconciliation"
 msgstr "Poništavanje zatvaranja"
 
 #. module: account_voucher
-#: field:account.voucher,tax_amount:0
-msgid "Tax Amount"
-msgstr "Iznos poreza"
-
-#. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
@@ -490,15 +461,15 @@ msgid "Pay Invoice"
 msgstr "Racun"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Nema bazne postavke naloga kao ni poreza za isti."
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Payment Information"
-msgstr "Informacije Placanja"
+#: field:account.voucher,tax_amount:0
+msgid "Tax Amount"
+msgstr "Iznos poreza"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -733,7 +704,7 @@ msgid "Credit"
 msgstr "Kredit"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "Molim definisite sekvencu Knjige"
@@ -776,8 +747,16 @@ msgid "Bill Date"
 msgstr "Datum Racuna"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
+#: help:account.voucher,state:0
+msgid ""
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
+"an voucher number.                         \n"
+"* The 'Posted' state is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account                         "
+"\n"
+"* The 'Cancelled' state is used when user cancel voucher."
 msgstr ""
 
 #. module: account_voucher
@@ -847,7 +826,6 @@ msgstr "Predračun"
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
-#: model:ir.model,name:account_voucher.model_account_move_line
 msgid "Journal Items"
 msgstr "Sadrzaj Dnevnika"
 
@@ -858,11 +836,6 @@ msgstr "Sadrzaj Dnevnika"
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
 msgstr "Placanja Stranki"
-
-#. module: account_voucher
-#: field:account.move.line,amount_unreconciled:0
-msgid "Unreconciled Amount"
-msgstr "Stornirana Suma"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -1053,10 +1026,120 @@ msgstr "Otvori Stanje"
 msgid "Total"
 msgstr "Ukupno"
 
-#. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr ""
+#~ msgid "Form view not available for Payment Lines"
+#~ msgstr "Pregled Forme nije dostupan za linije Placanja"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Pogrešno ime modela u definiciji akcije."
+
+#~ msgid "Ref. :"
+#~ msgstr "Ref. :"
 
 #~ msgid "Originial Amount"
 #~ msgstr "Originalna Suma"
+
+#~ msgid "Receiver's Signature"
+#~ msgstr "Potpis Primaoca"
+
+#~ msgid "Journal:"
+#~ msgstr "Dnevnik:"
+
+#~ msgid "Authorised Signatory"
+#~ msgstr "Autorizovanj Potpis"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid "Vendor Payment"
+#~ msgstr "Placanja Proizvodjaca"
+
+#~ msgid "Error ! You can not create recursive Menu."
+#~ msgstr "Greska! Ne mozete kreirati rekursivni meni."
+
+#~ msgid "Unreconciled Amount"
+#~ msgstr "Stornirana Suma"
+
+#~ msgid "Vendor"
+#~ msgstr "proizvođač"
+
+#~ msgid "Extended options..."
+#~ msgstr "Dodatne Opcije"
+
+#~ msgid "Open Vendor Journal Entries"
+#~ msgstr "Otvori Dnevnik Proizvodjaca"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "Ime objekta mora da počinje sa x_ i ne sme da sadrži specijalne karaktere !"
+
+#, python-format
+#~ msgid "Please change partner and try again !"
+#~ msgstr "Molim p;romenite partnera i probajte ponovo !"
+
+#~ msgid "-"
+#~ msgstr "-"
+
+#~ msgid "Rules are not supported for osv_memory objects !"
+#~ msgstr "Pravila nisu podrzana od strane osv_memory objekata !"
+
+#, python-format
+#~ msgid "Invalid Error !"
+#~ msgstr "Nedefinisana Greska !"
+
+#~ msgid "Vendor Invoices and Outstanding transactions"
+#~ msgstr "Proizvodjacevi racuni i neobradjene transakcije"
+
+#~ msgid "Journal Voucher"
+#~ msgstr "Nalog za knjiženje"
+
+#~ msgid "Opening Balance Entry"
+#~ msgstr "Otvaranje sadrzaja salda"
+
+#~ msgid "Contra Voucher"
+#~ msgstr "Suprotna priznanica"
+
+#~ msgid ","
+#~ msgstr ","
+
+#~ msgid "State :"
+#~ msgstr "Stanje :"
+
+#~ msgid "Bank Receipts"
+#~ msgstr "Bankovni primitci"
+
+#~ msgid "Total Credit"
+#~ msgstr "Ukupno potrazuje"
+
+#~ msgid "D"
+#~ msgstr "D"
+
+#~ msgid "Open Voucher Entries"
+#~ msgstr "Otvori Stavke Priznanice"
+
+#~ msgid "Total Debit"
+#~ msgstr "Ukupno duguje"
+
+#~ msgid "Level"
+#~ msgstr "Nivo"
+
+#~ msgid "Account Entry Line"
+#~ msgstr "Stavke knjiženja"
+
+#~ msgid "Voucher Line"
+#~ msgstr "Red Priznanice"
+
+#~ msgid "Journal Sale Voucher"
+#~ msgstr "Dnevnik prodaje priznanicama"
+
+#~ msgid "Receipt Vouchers"
+#~ msgstr "Priznanice prijema"
+
+#~ msgid "No."
+#~ msgstr "Br."
+
+#~ msgid "Create"
+#~ msgstr "Kreiraj"
+
+#~ msgid "Payment Vouchers"
+#~ msgstr "Priznanice plaćanja"

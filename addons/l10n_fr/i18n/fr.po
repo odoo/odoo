@@ -6,27 +6,110 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-02 09:56+0000\n"
-"Last-Translator: Christophe Chauvet - http://www.syleam.fr/ <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 05:52+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:53+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:16+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_1
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_5
-msgid "France"
-msgstr "France"
+#: sql_constraint:l10n.fr.line:0
+msgid "The variable name must be unique !"
+msgstr "Un nom de variable doit être unique !"
+
+#. module: l10n_fr
+#: field:l10n.fr.line,definition:0
+msgid "Definition"
+msgstr "Définition"
+
+#. module: l10n_fr
+#: field:l10n.fr.report,code:0
+msgid "Code"
+msgstr "Code"
+
+#. module: l10n_fr
+#: model:ir.model,name:l10n_fr.model_account_cdr_report
+msgid "Account CDR Report"
+msgstr "Rapport Compte CDR"
+
+#. module: l10n_fr
+#: field:l10n.fr.line,name:0
+#: field:l10n.fr.report,name:0
+msgid "Name"
+msgstr "Nom"
+
+#. module: l10n_fr
+#: model:ir.actions.act_window,name:l10n_fr.action_account_cdr_report
+msgid "Compte de resultat Report"
+msgstr "Rapport Compte de résultat"
+
+#. module: l10n_fr
+#: model:ir.model,name:l10n_fr.model_l10n_fr_line
+msgid "Report Lines for l10n_fr"
+msgstr "Lignes de rapport pour l10n_fr"
+
+#. module: l10n_fr
+#: view:account.bilan.report:0
+#: model:ir.actions.act_window,name:l10n_fr.action_account_bilan_report
+msgid "Bilan Report"
+msgstr "Rapport de bilan"
+
+#. module: l10n_fr
+#: model:ir.module.module,shortdesc:l10n_fr.module_meta_information
+msgid "France - Plan Comptable Général"
+msgstr "France - Plan Comptable Général"
+
+#. module: l10n_fr
+#: field:l10n.fr.report,line_ids:0
+msgid "Lines"
+msgstr "Lignes"
 
 #. module: l10n_fr
 #: view:account.bilan.report:0
 #: view:account.cdr.report:0
 msgid "Print"
 msgstr "Imprimer"
+
+#. module: l10n_fr
+#: field:account.bilan.report,fiscalyear_id:0
+#: field:account.cdr.report,fiscalyear_id:0
+msgid "Fiscal Year"
+msgstr "Exercice fiscal"
+
+#. module: l10n_fr
+#: model:ir.model,name:l10n_fr.model_l10n_fr_report
+msgid "Report for l10n_fr"
+msgstr "Rapport pour l10n_fr"
+
+#. module: l10n_fr
+#: view:account.cdr.report:0
+msgid "Compte de resultant"
+msgstr "Compte de résultat"
+
+#. module: l10n_fr
+#: field:l10n.fr.line,code:0
+msgid "Variable Name"
+msgstr "Nom de la variable"
+
+#. module: l10n_fr
+#: sql_constraint:l10n.fr.report:0
+msgid "The code report must be unique !"
+msgstr "Un code de rapport doit être unique !"
+
+#. module: l10n_fr
+#: view:account.bilan.report:0
+#: view:account.cdr.report:0
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: l10n_fr
+#: field:l10n.fr.line,report_id:0
+msgid "Report"
+msgstr "Rapport"
 
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_account_bilan_report
@@ -42,120 +125,6 @@ msgid ""
 msgstr ""
 "Ce module prend en charge le Plan Comptable Général français dans OpenERP.\n"
 "Crédits : Sistheo Zeekom CrysaLEAD\n"
-
-#. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_2
-msgid "Zone Euro"
-msgstr "Zone Euro"
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_account_cdr_report
-msgid "Account CDR Report"
-msgstr "Rapport Compte CDR"
-
-#. module: l10n_fr
-#: view:account.cdr.report:0
-msgid "Compte de resultant"
-msgstr "Compte de résultat"
-
-#. module: l10n_fr
-#: sql_constraint:l10n.fr.report:0
-msgid "The code report must be unique !"
-msgstr "Un code de rapport doit être unique !"
-
-#. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_4
-msgid "Hors Euro"
-msgstr "Hors Euro"
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_l10n_fr_line
-msgid "Report Lines for l10n_fr"
-msgstr "Lignes de rapport pour l10n_fr"
-
-#. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_7
-msgid "TVA sur les encaissements"
-msgstr "TVA sur les encaissements"
-
-#. module: l10n_fr
-#: field:l10n.fr.line,definition:0
-msgid "Definition"
-msgstr "Définition"
-
-#. module: l10n_fr
-#: field:l10n.fr.line,name:0
-#: field:l10n.fr.report,name:0
-msgid "Name"
-msgstr "Nom"
-
-#. module: l10n_fr
-#: model:ir.actions.act_window,name:l10n_fr.action_account_cdr_report
-msgid "Compte de resultat Report"
-msgstr "Rapport Compte de résultat"
-
-#. module: l10n_fr
-#: field:l10n.fr.report,line_ids:0
-msgid "Lines"
-msgstr "Lignes"
-
-#. module: l10n_fr
-#: field:l10n.fr.line,report_id:0
-msgid "Report"
-msgstr "Rapport"
-
-#. module: l10n_fr
-#: field:account.bilan.report,fiscalyear_id:0
-#: field:account.cdr.report,fiscalyear_id:0
-msgid "Fiscal Year"
-msgstr "Exercice fiscal"
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_l10n_fr_report
-msgid "Report for l10n_fr"
-msgstr "Rapport pour l10n_fr"
-
-#. module: l10n_fr
-#: sql_constraint:l10n.fr.line:0
-msgid "The variable name must be unique !"
-msgstr "Un nom de variable doit être unique !"
-
-#. module: l10n_fr
-#: field:l10n.fr.report,code:0
-msgid "Code"
-msgstr "Code"
-
-#. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_6
-msgid "TVA sur le débits"
-msgstr "TVA sur les débits"
-
-#. module: l10n_fr
-#: view:account.bilan.report:0
-#: model:ir.actions.act_window,name:l10n_fr.action_account_bilan_report
-msgid "Bilan Report"
-msgstr "Rapport de bilan"
-
-#. module: l10n_fr
-#: model:ir.module.module,shortdesc:l10n_fr.module_meta_information
-msgid "France - Plan Comptable Général"
-msgstr "France - Plan Comptable Général"
-
-#. module: l10n_fr
-#: model:account.fiscal.position.template,name:l10n_fr.fiscal_position_template_3
-msgid "DOM-TOM"
-msgstr "DOM-TOM"
-
-#. module: l10n_fr
-#: view:account.bilan.report:0
-#: view:account.cdr.report:0
-msgid "Cancel"
-msgstr "Annuler"
-
-#. module: l10n_fr
-#: field:l10n.fr.line,code:0
-msgid "Variable Name"
-msgstr "Nom de la variable"
 
 #~ msgid "Asset"
 #~ msgstr "Actifs"
@@ -282,6 +251,9 @@ msgstr "Nom de la variable"
 #~ msgid "Différences négatives de change"
 #~ msgstr "Différences négatives de change"
 
+#~ msgid "Hors Euro"
+#~ msgstr "Hors Euro"
+
 #~ msgid "( IV )"
 #~ msgstr "( IV )"
 
@@ -384,6 +356,9 @@ msgstr "Nom de la variable"
 #~ msgid "Créances clients et comptes rattachés"
 #~ msgstr "Créances clients et comptes rattachés"
 
+#~ msgid "France"
+#~ msgstr "France"
+
 #~ msgid "rêts"
 #~ msgstr "Prêts"
 
@@ -413,6 +388,9 @@ msgstr "Nom de la variable"
 
 #~ msgid "Avances et acomptes"
 #~ msgstr "Avances et acomptes"
+
+#~ msgid "TVA sur les encaissements"
+#~ msgstr "TVA sur les encaissements"
 
 #~ msgid "Sur immobilisations : dotations aux amortissements"
 #~ msgstr "Sur immobilisations : dotations aux amortissements"
@@ -586,6 +564,9 @@ msgstr "Nom de la variable"
 #~ msgid "Différences positives de change"
 #~ msgstr "Différences positives de change"
 
+#~ msgid "DOM-TOM"
+#~ msgstr "DOM-TOM"
+
 #~ msgid "Autres achats et charges externes"
 #~ msgstr "Autres achats et charges externes"
 
@@ -633,6 +614,9 @@ msgstr "Nom de la variable"
 
 #~ msgid "Imprimé le :"
 #~ msgstr "Imprimé le :"
+
+#~ msgid "Zone Euro"
+#~ msgstr "Zone Euro"
 
 #~ msgid "A"
 #~ msgstr "A"
@@ -720,3 +704,6 @@ msgstr "Nom de la variable"
 
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "L'ID du certificat du module doit être unique !"
+
+#~ msgid "TVA sur le débits"
+#~ msgstr "TVA sur les débits"

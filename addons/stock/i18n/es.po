@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 12:12+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-16 23:57+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-11 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:39+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #~ msgid "Stock Management"
 #~ msgstr "Gestión de inventario"
@@ -144,7 +145,7 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
-"Esta es la lista de órdenes de envíos que deben de ser preparadas, en "
+"Esta es la lista de albaranes de salida que deben de ser preparados, en "
 "función de sus pedidos de venta y sus reglas logísticas."
 
 #. module: stock
@@ -164,7 +165,7 @@ msgid "UoM"
 msgstr "UdM"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:93
+#: code:addons/stock/wizard/stock_change_product_qty.py:90
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
@@ -839,7 +840,7 @@ msgstr "P&L futuras"
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree4
 #: view:stock.picking:0
 msgid "Incoming Shipments"
-msgstr "Envíos de entrada"
+msgstr "Albaranes de entrada"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -1098,7 +1099,7 @@ msgstr "Autor"
 #: code:addons/stock/stock.py:1305
 #, python-format
 msgid "Delivery Order"
-msgstr "Orden de entrega"
+msgstr "Albarán de salida"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_in
@@ -1564,6 +1565,12 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Cuando se crea un movimiento de stock está en estado 'Borrador'.\n"
+" Después se establece en estado 'No disponible' si el planificador no ha "
+"encontrado los productos.\n"
+" Cuando los productos están reservados se establece como 'Disponible'.\n"
+" Cuando el albarán se envía el estado es 'Realizado'.              \n"
+"El estado es 'En espera' si el movimiento está a la espera de otro."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1669,7 +1676,7 @@ msgstr "Lote seguimiento"
 #. module: stock
 #: view:stock.picking:0
 msgid "Back Orders"
-msgstr "Pedidos pendientes"
+msgstr "Albaranes pendientes"
 
 #. module: stock
 #: view:product.product:0
@@ -1776,7 +1783,7 @@ msgstr "¡No puede eliminar una línea de lote!"
 #: view:stock.move.scrap:0
 #: view:stock.picking:0
 msgid "Scrap Products"
-msgstr "Productos de desecho"
+msgstr "Desechar productos"
 
 #. module: stock
 #: code:addons/stock/stock.py:1135
@@ -2326,11 +2333,11 @@ msgid ""
 "the supplier or the purchase order reference. Then you can confirm all "
 "products received using the buttons on the right of each line."
 msgstr ""
-"Aquí podrá recibir los productos individuales, sin importar de que orden "
-"orden de compra o preparación de pedido vienen. Encontrará la lista de todos "
-"los productos que está esperando. Una vez recibida la orden, puede filtrar "
-"basándose en el nombre del proveedor o en la referencia de la orden de "
-"compra. Entonces, puede confirmar  todos los productos recibidos usando los "
+"Aquí podrá recibir los productos individuales, sin importar de que pedido de "
+"compra o albarán de entrada provienen. Encontrará la lista de todos los "
+"productos que está esperando. Una vez recibida el albarán, puede filtrar "
+"basándose en el nombre del proveedor o en la referencia del pedido de "
+"compra. Entonces, puede confirmar todos los productos recibidos usando los "
 "botones a la derecha de cada línea."
 
 #. module: stock
@@ -2564,7 +2571,7 @@ msgid "Maxtor Suppliers"
 msgstr "Proveedores Maxtor"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:69
+#: code:addons/stock/wizard/stock_change_product_qty.py:66
 #: code:addons/stock/wizard/stock_change_standard_price.py:106
 #, python-format
 msgid "Active ID is not set in Context"
@@ -2762,7 +2769,7 @@ msgstr "Dirección de contacto :"
 #. module: stock
 #: field:stock.move,backorder_id:0
 msgid "Back Order"
-msgstr "Pedido pendiente"
+msgstr "Albarán pendiente"
 
 #. module: stock
 #: field:stock.incoterms,active:0
@@ -3265,7 +3272,7 @@ msgstr "Motivo"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Delivery Order:"
-msgstr "Orden de entrega:"
+msgstr "Albarán de salida:"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -3392,6 +3399,15 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"Determina si esta ubicación está encadenada a otra, por ejemplo cualquier "
+"producto que entre en esta ubicación debe ir a la siguiente ubicación "
+"encadenada. La ubicación encadenada se determina en función del tipo: \n"
+"*Ninguna: No se encadena con ninguna.\n"
+"*Cliente: Se utiliza la ubicación encadenada definida en el campo Ubicación "
+"del cliente del formulario del cliente especificado en el albarán de los "
+"productos entrantes.\n"
+"*Ubicación fija: Se utiliza la ubicación encadenada del siguiente campo: "
+"Ubicación encadenada si fija."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -3412,7 +3428,7 @@ msgstr "está realizado."
 #: model:ir.ui.menu,name:stock.menu_action_picking_tree
 #: view:stock.picking:0
 msgid "Delivery Orders"
-msgstr "Órdenes de entrega"
+msgstr "Albaranes de salida"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
@@ -3479,7 +3495,7 @@ msgstr "Cantidad de salida total"
 #. module: stock
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr "Pedido pendiente de"
+msgstr "Albarán pendiente de"
 
 #. module: stock
 #: help:stock.move.memory.in,cost:0
@@ -3497,7 +3513,7 @@ msgid "Product Category"
 msgstr "Categoría de producto"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:77
+#: code:addons/stock/wizard/stock_change_product_qty.py:74
 #, python-format
 msgid "INV: "
 msgstr "INV: "
@@ -3620,10 +3636,10 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
-"La lista de envíos entrantes contiene todos los pedidos que va a recibir de "
-"su proveedor. Un envío entrante contiene la lista de productos a recibir en "
-"función del pedido de compra original. Puede validar el envío totalmente o "
-"parcialmente ."
+"Los albaranes de entrada son la lista de todos los pedidos que va a recibir "
+"de su proveedor. Un albarán de entrada contiene la lista de productos a "
+"recibir en función del pedido de compra original. Puede validar el envío "
+"totalmente o parcialmente."
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -3750,6 +3766,11 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Cuando se crea un movimiento de stock está en estado 'Borrador'.\n"
+" Después se establece en estado 'Confirmado'.\n"
+" Si está disponible en stock se establece como 'Disponible'.\n"
+" Cuando el albarán se envía el estado es 'Realizado'.              \n"
+"El estado es 'En espera' si el movimiento está a la espera de otro."
 
 #. module: stock
 #: view:board.board:0

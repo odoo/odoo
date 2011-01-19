@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-31 10:26+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-16 17:59+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:35+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:45+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_issue
 #: field:project.issue.report,delay_open:0
@@ -31,7 +32,7 @@ msgstr "Agrupar por..."
 #. module: project_issue
 #: field:project.issue,working_hours_open:0
 msgid "Working Hours to Open the Issue"
-msgstr "Horas de trabajo para abrir la cuestión"
+msgstr "Horas de trabajo para abrir la incidencia"
 
 #. module: project_issue
 #: constraint:project.project:0
@@ -75,7 +76,7 @@ msgstr "Email de los observadores"
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "Close Working hours"
-msgstr ""
+msgstr "Cerrar horas de trabajo"
 
 #. module: project_issue
 #: model:ir.model,name:project_issue.model_project_issue_version
@@ -94,6 +95,8 @@ msgid ""
 "You cannot escalate this issue.\n"
 "The relevant Project has not configured the Escalation Project!"
 msgstr ""
+"No puede escalar esta incidencia.\n"
+"¡El proyecto relevante no tienen configurado el escalado de proyecto!"
 
 #. module: project_issue
 #: constraint:project.project:0
@@ -190,6 +193,8 @@ msgid ""
 "If any issue is escalated from the current Project, it will be listed under "
 "the project selected here."
 msgstr ""
+"Si alguna incidencia del proyecto actual se intensificó, se mostrará dentro "
+"del proyecto seleccionado aquí."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -204,6 +209,11 @@ msgid ""
 "analyse the time required to open or close an issue, the number of email to "
 "exchange and the time spent on average by issues."
 msgstr ""
+"Este informe sobre las incidencias del proyecto permite analizar la calidad "
+"de su soporte o los servicios postventa. Puede hacer un seguimiento de las "
+"incidencias por antigüedad. Puede analizar el tiempo requerido en abrir o "
+"cerrar una incidencia, el número de correos intercambiados y el tiempo "
+"gastado en promedio por incidencia."
 
 #. module: project_issue
 #: view:project.issue:0
@@ -314,6 +324,12 @@ msgid "Creation Date"
 msgstr "Fecha de creación"
 
 #. module: project_issue
+#: model:ir.actions.act_window,name:project_issue.project_issue_version_action
+#: model:ir.ui.menu,name:project_issue.menu_project_issue_version_act
+msgid "Versions"
+msgstr "Versiones"
+
+#. module: project_issue
 #: field:project.issue,partner_phone:0
 msgid "Phone"
 msgstr "Teléfono"
@@ -369,15 +385,14 @@ msgid "Project issues"
 msgstr "Incidencias proyecto"
 
 #. module: project_issue
-#: model:ir.actions.act_window,name:project_issue.project_issue_version_action
-#: model:ir.ui.menu,name:project_issue.menu_project_issue_version_act
-msgid "Versions"
-msgstr "Versiones"
+#: view:project.issue:0
+msgid "Communication & History"
+msgstr ""
 
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "My Open Project Issue"
-msgstr "Mi incidencia de proyecto abierta"
+msgstr "Mis incidencias de proyecto abiertas"
 
 #. module: project_issue
 #: model:ir.actions.act_window,name:project_issue.action_view_my_project_issue_tree
@@ -406,6 +421,9 @@ msgid ""
 "customer. With each commercial opportunity, you can indicate the canall "
 "which is this opportunity source."
 msgstr ""
+"Los canales representan los diferentes métodos de comunicación disponibles "
+"con el cliente. En cada oportunidad comercial, puede indicar el canal del "
+"origen de esta oportunidad."
 
 #. module: project_issue
 #: model:ir.actions.act_window,help:project_issue.project_issue_version_action
@@ -424,7 +442,7 @@ msgstr "Tareas"
 #. module: project_issue
 #: field:project.issue.report,nbr:0
 msgid "# of Issues"
-msgstr "núm. de tareas"
+msgstr "Nº de incidencias"
 
 #. module: project_issue
 #: selection:project.issue.report,month:0
@@ -482,6 +500,10 @@ msgid ""
 "        This module provide Issues/Bugs Management in Project\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo proporciona la gestión de incidencias/errores en "
+"proyectos.\n"
+"    "
 
 #. module: project_issue
 #: view:project.issue:0
@@ -494,7 +516,7 @@ msgstr "Categoría"
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "#Number of Project Issues"
-msgstr ""
+msgstr "Nº de incidencias de proyecto"
 
 #. module: project_issue
 #: help:project.issue,email_cc:0
@@ -547,7 +569,7 @@ msgstr "Estado"
 #. module: project_issue
 #: view:project.issue.report:0
 msgid "#Project Issues"
-msgstr ""
+msgstr "Nº de incidencias del proyecto"
 
 #. module: project_issue
 #: view:board.board:0
@@ -736,7 +758,7 @@ msgstr "Incidencias"
 #: model:ir.ui.menu,name:project_issue.menu_project_confi
 #: view:project.issue.report:0
 msgid "Project Issue"
-msgstr "Indicencia proyecto"
+msgstr "Incidencia proyecto"
 
 #. module: project_issue
 #: view:project.issue:0
@@ -893,7 +915,7 @@ msgstr "Referencias"
 #. module: project_issue
 #: field:project.issue,working_hours_close:0
 msgid "Working Hours to Close the Issue"
-msgstr ""
+msgstr "Horas de trabajo para cerrar la incidencia"
 
 #. module: project_issue
 #: field:project.issue,id:0
@@ -910,7 +932,7 @@ msgstr "Sin título"
 #: help:project.issue.report,delay_close:0
 #: help:project.issue.report,delay_open:0
 msgid "Number of Days to close the project issue"
-msgstr ""
+msgstr "Número de días para cerrar la incidencia de proyecto"
 
 #. module: project_issue
 #: view:project.issue.report:0
@@ -953,7 +975,7 @@ msgstr "Duración"
 #. module: project_issue
 #: view:board.board:0
 msgid "My Open Issues by Creation Date"
-msgstr ""
+msgstr "Mis incidencias abiertas por fecha de creación"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nombre del modelo no válido en la definición de la acción."

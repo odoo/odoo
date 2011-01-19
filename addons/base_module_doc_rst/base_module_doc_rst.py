@@ -23,9 +23,7 @@ import pydot
 import base64
 
 import report
-from osv import fields, osv, orm
-import tools
-from tools.translate import _
+from osv import fields, osv
 import addons
 
 class module(osv.osv):

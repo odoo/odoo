@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-11 07:39+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-17 17:31+0000\n"
 "Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:44+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_voucher
 #: view:account.voucher.unreconcile:0
@@ -22,7 +22,7 @@ msgid "Unreconciliation transactions"
 msgstr "Transactions non rapprochées"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:259
+#: code:addons/account_voucher/account_voucher.py:242
 #, python-format
 msgid "Write-Off"
 msgstr "Ajustement"
@@ -54,7 +54,7 @@ msgid "Group By..."
 msgstr "Regrouper par..."
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Cannot delete Voucher(s) which are already opened or paid !"
 msgstr ""
@@ -97,7 +97,7 @@ msgid "Bill Payment"
 msgstr "Paiement de la note"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid ""
 "You have to configure account base code and account tax code on the '%s' tax!"
@@ -228,11 +228,6 @@ msgid "Due Date"
 msgstr "Date d'échéance"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "Impossible de créer une ligne d'écriture sur un compte clôturé"
-
-#. module: account_voucher
 #: field:account.voucher,narration:0
 msgid "Notes"
 msgstr "Notes"
@@ -278,11 +273,6 @@ msgstr "Montant"
 #: view:account.voucher:0
 msgid "Payment Options"
 msgstr "Options de paiement"
-
-#. module: account_voucher
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Valeur erronée au crédit ou au débit de l'écriture comptable !"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -339,33 +329,9 @@ msgid "Analytic Account"
 msgstr "Compte Analytique"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"Vous ne pouvez pas créer de lignes d'écriture sur un compte client "
-"débiteur/fournisseur créditeur sans partenaire"
-
-#. module: account_voucher
-#: help:account.voucher,state:0
-msgid ""
-" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
-"Voucher.                         \n"
-"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
-"an voucher number.                         \n"
-"* The 'Posted' state is used when user create voucher,a voucher number is "
-"generated and voucher entries are created in account                         "
-"\n"
-"* The 'Cancelled' state is used when user cancel voucher."
-msgstr ""
-" * L'état \"Brouillon\" est utilisé quand un utilisateur saisit un nouveau "
-"justificatif non-confirmé.                         \n"
-"* Quand le justificatif est à l'état \"Pro-forma\", le justificatif n'a pas "
-"de numéro.                         \n"
-"* L'état \"Comptabilisé\" est utilisé lorsque l'utilisateur crée un "
-"justificatif, un numéro de justificatif est généré et les pièces comptables "
-"des justificatifs sont créés en comptabilité.                         \n"
-"* L'état 'Annulé' est utilisé lorsque l'utilisateur annule le justificatif."
+#: view:account.voucher:0
+msgid "Payment Information"
+msgstr "Information sur le paiement"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -429,7 +395,7 @@ msgstr "État"
 #. module: account_voucher
 #: model:ir.module.module,shortdesc:account_voucher.module_meta_information
 msgid "Accounting Voucher Entries"
-msgstr ""
+msgstr "Comptabilisation des règlements par justificatifs"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -449,7 +415,7 @@ msgid "Voucher Entries"
 msgstr "Saisie de pièces"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Error !"
 msgstr "Erreur !"
@@ -462,7 +428,7 @@ msgstr "Justificatif fournisseur"
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_review_voucher_list
 msgid "Vouchers Entries"
-msgstr ""
+msgstr "Écritures comptables des justificatifs"
 
 #. module: account_voucher
 #: field:account.voucher,name:0
@@ -477,7 +443,7 @@ msgid "Sales Receipt"
 msgstr "Reçu de ventes"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:607
+#: code:addons/account_voucher/account_voucher.py:591
 #, python-format
 msgid "Invalid action !"
 msgstr "Action incorrecte !"
@@ -498,11 +464,6 @@ msgid "Unreconciliation"
 msgstr "Annulation du rapprochement"
 
 #. module: account_voucher
-#: field:account.voucher,tax_amount:0
-msgid "Tax Amount"
-msgstr "Montant de la taxe"
-
-#. module: account_voucher
 #: view:sale.receipt.report:0
 #: field:sale.receipt.report,due_delay:0
 msgid "Avg. Due Delay"
@@ -516,20 +477,20 @@ msgid "Pay Invoice"
 msgstr "Payer la facture"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:753
+#: code:addons/account_voucher/account_voucher.py:741
 #, python-format
 msgid "No Account Base Code and Account Tax Code!"
 msgstr "Aucun code comptable de base et aucun code comptable de taxe !"
 
 #. module: account_voucher
-#: view:account.voucher:0
-msgid "Payment Information"
-msgstr "Information sur le paiement"
+#: field:account.voucher,tax_amount:0
+msgid "Tax Amount"
+msgstr "Montant de la taxe"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Entry"
-msgstr ""
+msgstr "Écriture comptable d'un justificatif"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -765,7 +726,7 @@ msgid "Credit"
 msgstr "Crédit"
 
 #. module: account_voucher
-#: code:addons/account_voucher/account_voucher.py:656
+#: code:addons/account_voucher/account_voucher.py:640
 #, python-format
 msgid "Please define a sequence on the journal !"
 msgstr "Veuillez définir une séquence pour ce journal !"
@@ -808,9 +769,25 @@ msgid "Bill Date"
 msgstr "Date de facturation"
 
 #. module: account_voucher
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "La société doit être la même pour les comptes et périodes liées."
+#: help:account.voucher,state:0
+msgid ""
+" * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+"Voucher.                         \n"
+"* The 'Pro-forma' when voucher is in Pro-forma state,voucher does not have "
+"an voucher number.                         \n"
+"* The 'Posted' state is used when user create voucher,a voucher number is "
+"generated and voucher entries are created in account                         "
+"\n"
+"* The 'Cancelled' state is used when user cancel voucher."
+msgstr ""
+" * L'état \"Brouillon\" est utilisé quand un utilisateur saisit un nouveau "
+"justificatif non-confirmé.                         \n"
+"* Quand le justificatif est à l'état \"Pro-forma\", le justificatif n'a pas "
+"de numéro.                         \n"
+"* L'état \"Comptabilisé\" est utilisé lorsque l'utilisateur crée un "
+"justificatif, un numéro de justificatif est généré et les pièces comptables "
+"des justificatifs sont créés en comptabilité.                         \n"
+"* L'état 'Annulé' est utilisé lorsque l'utilisateur annule le justificatif."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -859,7 +836,7 @@ msgstr "Facture"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Voucher Items"
-msgstr "Éléments de justificatif"
+msgstr "Écritures de justificatif"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -879,7 +856,6 @@ msgstr "Pro-forma"
 #. module: account_voucher
 #: view:account.voucher:0
 #: field:account.voucher,move_ids:0
-#: model:ir.model,name:account_voucher.model_account_move_line
 msgid "Journal Items"
 msgstr "Ècritures comptable"
 
@@ -889,12 +865,7 @@ msgstr "Ècritures comptable"
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_receipt
 #: model:ir.ui.menu,name:account_voucher.menu_action_vendor_receipt
 msgid "Customer Payment"
-msgstr "Paiement client"
-
-#. module: account_voucher
-#: field:account.move.line,amount_unreconciled:0
-msgid "Unreconciled Amount"
-msgstr "montant non réconcilié"
+msgstr "Paiements client"
 
 #. module: account_voucher
 #: view:account.statement.from.invoice:0
@@ -1085,12 +1056,6 @@ msgstr "Solde initial"
 msgid "Total"
 msgstr "Total"
 
-#. module: account_voucher
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr ""
-"Vous ne pouvez pas créer de ligne d'écriture sur un compte de type \"Vue\"."
-
 #~ msgid "Bank Receipts"
 #~ msgstr "Reçus bancaires"
 
@@ -1213,3 +1178,25 @@ msgstr ""
 
 #~ msgid "Originial Amount"
 #~ msgstr "Total originel"
+
+#~ msgid "You can not create move line on closed account."
+#~ msgstr "Impossible de créer une ligne d'écriture sur un compte clôturé"
+
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "Valeur erronée au crédit ou au débit de l'écriture comptable !"
+
+#~ msgid "Unreconciled Amount"
+#~ msgstr "montant non réconcilié"
+
+#~ msgid ""
+#~ "You can not create move line on receivable/payable account without partner"
+#~ msgstr ""
+#~ "Vous ne pouvez pas créer de lignes d'écriture sur un compte client "
+#~ "débiteur/fournisseur créditeur sans partenaire"
+
+#~ msgid "Company must be same for its related account and period."
+#~ msgstr "La société doit être la même pour les comptes et périodes liées."
+
+#~ msgid "You can not create move line on view account."
+#~ msgstr ""
+#~ "Vous ne pouvez pas créer de ligne d'écriture sur un compte de type \"Vue\"."
