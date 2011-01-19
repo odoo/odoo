@@ -1417,7 +1417,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @return: True
         """        
         #removing useless value
-        old_vals = self.read(cr, uid, ids[0], ['rrule'], context)
+        old_vals = self.read(cr, uid, ids[0] if type(ids) == list else ids, ['rrule'], context)
         if not old_vals:
             old_vals = {}
         if not 'rrule' in old_vals:
