@@ -32,4 +32,5 @@
     "active": False,
     "website": "http://www.openerp.com",
     "installable": True,
+    "certificate" : "001114200456808204637",
 }

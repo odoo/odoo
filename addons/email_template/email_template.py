@@ -574,7 +574,7 @@ This is useful for CRM leads for example"),
             # we should keep it all, name is probably specified in the address
             email_from = from_account['email_id']
         else:
-            email_from = tools.ustr(from_account['name']) + "<" + tools.ustr('email_id') + ">",
+            email_from = tools.ustr(from_account['name']) + "<" + tools.ustr(email_id) + ">"
 
         # FIXME: should do this in a loop and rename template fields to the corresponding
         # mailbox fields. (makes no sense to have different names I think.

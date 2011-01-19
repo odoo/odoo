@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-14 08:36+0000\n"
-"Last-Translator: Ana Juaristi Olalde <ajuaristio@gmail.com>\n"
+"PO-Revision-Date: 2011-01-18 01:06+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:24+0000\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:42+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -5517,6 +5518,10 @@ msgid ""
 "OpenERP allows you to define the tax structure and manage it from this menu. "
 "You can define both numeric and alphanumeric tax codes."
 msgstr ""
+"La definición de los códigos de impuestos depende de la declaración de "
+"impuestos de su país. OpenERP le permite definir y gestionar la estructura "
+"de impuestos desde este menú. Puede definir códigos tanto numéricos como "
+"alfanuméricos."
 
 #. module: account
 #: help:account.partner.reconcile.process,progress:0
@@ -5737,6 +5742,11 @@ msgid ""
 "line of the expense account. OpenERP will propose to you automatically the "
 "Tax related to this account and the counterpart \"Account Payable\"."
 msgstr ""
+"Esta vista puede ser utilizada por los contables para registrar apuntes "
+"rápidamente en OpenERP. Si desea registrar una factura de proveedor, "
+"comience registrando la línea de la cuenta de gastos. OpenERP le propondrá "
+"automáticamente el impuesto asociado a esta cuenta y la \"cuenta a pagar\" "
+"de contrapartida."
 
 #. module: account
 #: field:account.entries.report,date_created:0
@@ -6768,6 +6778,11 @@ msgid ""
 "an agreement with a customer or a supplier. With Define Recurring Entries, "
 "you can create such entries to automate the postings in the system."
 msgstr ""
+"Un asiento recurrente es un asiento contable que ocurre de forma recurrente "
+"desde una determinada fecha. Por ejemplo la firma de un contrato o un "
+"acuerdo con un cliente o un proveedor. Con la definición de asientos "
+"recurrentes, puede crear estos asientos para automatizar las anotaciones "
+"contables en el sistema."
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
@@ -6784,6 +6799,11 @@ msgid ""
 "basis. You can enter the coins that are in your cash box, and then post "
 "entries when money comes in or goes out of the cash box."
 msgstr ""
+"Un registro de caja le permite gestionar los asientos de caja en sus diarios "
+"de caja. Esta funcionalidad provee una forma fácil de realizar el "
+"seguimiento de los pagos de caja diariamente. Puede introducir las monedas "
+"que tiene en su caja y luego registrar asientos cuando el dinero entra o "
+"sale de la caja."
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -6939,6 +6959,9 @@ msgid ""
 "You can search for individual account entries through useful information. To "
 "search for account entries, open a journal, then select a record line."
 msgstr ""
+"Puede buscar un asiento contable en concreto a través de información útil. "
+"Para buscar asientos contables, abra un diario, luego seleccione una línea "
+"de registro."
 
 #. module: account
 #: report:account.invoice:0
@@ -7266,7 +7289,7 @@ msgstr "Diario de ventas"
 #: code:addons/account/wizard/account_move_journal.py:104
 #, python-format
 msgid "Open Journal Items !"
-msgstr ""
+msgstr "¡Asientos abiertos!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -7431,6 +7454,11 @@ msgid ""
 "in which they will appear. Then you can create a new journal and link your "
 "view to it."
 msgstr ""
+"Aquí puede personalizar una vista de un diario existente o crear una nueva "
+"vista. Las vistas de diarios determinan la forma en la que puede registrar "
+"asientos en sus diarios. Seleccione los campos que desea que aparezcan en un "
+"diario y determine la secuencia en que aparecen. Después puede crear un "
+"diario nuevo y asociarle una vista."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -7739,6 +7767,9 @@ msgid ""
 "will see the taxes with codes related to your legal statement according to "
 "your country."
 msgstr ""
+"El plan de impuestos se usa para generar sus informes periódicos de "
+"impuestos. Verá los impuestos con códigos relativos a sus requisitos legales "
+"de acuerdo a su país."
 
 #. module: account
 #: view:account.installer.modules:0
@@ -7881,6 +7912,10 @@ msgid ""
 "can easily generate refunds and reconcile them directly from the invoice "
 "form."
 msgstr ""
+"Con las facturas rectificativas (abonos) a clientes puede gestionar las "
+"devoluciones de sus clientes. Una factura rectificativa es un documento que "
+"abona una factura completa o parcialmente. Puede generar fácilmente facturas "
+"rectificativas y conciliarlas directamente desde el formulario de factura."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -7931,6 +7966,9 @@ msgid ""
 "added, Loss: Amount will be duducted), which is calculated from Profilt & "
 "Loss Report"
 msgstr ""
+"Esta cuenta se usa para transferir pérdidas/ganancias (Ganancia: El importe "
+"será añadido, Pérdida: El importe será deducido), que se calcula en el "
+"informe de pérdidas y ganancias."
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -8042,6 +8080,10 @@ msgid ""
 "sales orders or deliveries. You should only confirm them before sending them "
 "to your customers."
 msgstr ""
+"Con las facturas de cliente puede crear y gestionar las facturas de venta "
+"emitidas a sus clientes. OpenERP también puede generar automáticamente "
+"facturas borrador desde los pedidos o desde albaranes. Sólo deberá "
+"confirmarlas antes de ser enviadas a sus clientes."
 
 #. module: account
 #: view:account.entries.report:0
@@ -8134,6 +8176,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
+"El importe residual de un apunte a cobrar o a pagar expresado en la moneda "
+"de la compañía."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -8320,6 +8364,13 @@ msgid ""
 "would be referred to as FY 2011. You are not obliged to follow the actual "
 "calendar year."
 msgstr ""
+"Defina el ejercicio fiscal de su compañía de acuerdo a sus necesidades. Un "
+"ejercicio fiscal es un periodo al final del cual se cierran las cuentas "
+"(usualmente 12 meses). El ejercicio fiscal usualmente se referencia por el "
+"año en el que acaba. Por ejemplo, si el ejercicio fiscal de una compañía "
+"termina el 30 de noviembre de 2011, entonces todo lo que haya entre el 1 de "
+"diciembre de 2010 y el 30 de noviembre de 2011 se referencia como EF2011. No "
+"está obligado a seguir el año de calendario real."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
@@ -8837,6 +8888,12 @@ msgid ""
 "closed or left open depending on your company's activities over a specific "
 "period."
 msgstr ""
+"Aquí puede definir un periodo fiscal, un intervalo de tiempo dentro del "
+"ejercicio fiscal de su compañía. Un periodo contable típicamente es un mes o "
+"un trimestre. Usualmente corresponde a los periodos de la declaración de "
+"impuestos. Cree y gestione periodos aquí y decida qué periodo se debería "
+"cerrar o dejar abierto dependiendo de las actividades de su compañía en un "
+"periodo específico."
 
 #. module: account
 #: report:account.move.voucher:0
@@ -9765,6 +9822,9 @@ msgid ""
 "Make sure if the account template has parent then it should be type "
 "\"View\"! "
 msgstr ""
+"¡No puede crear una plantilla de cuenta!\n"
+"¡Asegúrese de que si la plantilla de cuenta tiene un padre, que sea de tipo "
+"\"Vista\"! "
 
 #. module: account
 #: view:account.subscription:0
@@ -9900,6 +9960,13 @@ msgid ""
 "may keep several types of specialized journals such as a cash journal, "
 "purchase journal, sales journal..."
 msgstr ""
+"Cree y gestione los periodos de su compañía desde este menú. Se utiliza un "
+"diario para registrar transacciones de todos los datos contables relativos "
+"al día a día del negocio de su compañía utilizando el sistema contable de "
+"doble entrada. Dependiendo de la naturaleza de sus actividades y el número "
+"de transacciones diarias, una compañía puede mantener diversos tipos de "
+"diarios especializados como un diario de caja, un diario de compra, un "
+"diario de venta, ..."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
@@ -10180,6 +10247,13 @@ msgid ""
 "certain amount of information. They have to be certified by an external "
 "auditor annually."
 msgstr ""
+"Cree y gestione las cuentas que necesite para codificar asientos en los "
+"diarios. Una cuenta es parte de un plan de cuentas que permite a su compañía "
+"registrar todo tipo de transacciones de crédito y débito. Las compañías "
+"presentan sus cuentas anuales en dos partes principales: El balance y la "
+"cuenta de pérdidas y ganancias. Las cuentas anuales de una compañía son "
+"requeridas por ley para que contengan cierta cantidad de información. Tienen "
+"que ser certificadas por un auditor externo anualmente."
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
@@ -10187,6 +10261,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+"El importe residual de un apunte a cobrar o a pagar expresado en su moneda "
+"(puede ser diferente de la moneda de la compañía)."
 
 #~ msgid "Error! You can not create recursive account."
 #~ msgstr "Error! No puede crear una cuenta recursiva."

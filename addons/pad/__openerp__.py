@@ -17,4 +17,5 @@ company customize which Pad installation should be used to link to new pads
     'installable': True,
     'active': False,
     'web': True,
+    'certificate' : '001183545978470526509',
 }

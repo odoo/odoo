@@ -40,7 +40,8 @@
     ],
     "active": False,
     "test":['test/purchase_requisition_report.yml'],
-    "installable": True
+    "installable": True,
+    "certificate" : "001023264099823179629",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

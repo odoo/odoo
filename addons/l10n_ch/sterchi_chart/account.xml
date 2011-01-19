@@ -4500,10 +4500,10 @@
             <field name="note"/>
             <field ref="ch_299_00" name="parent_id"/>
         </record>
-        <record id="ch_3_8" model="account.account.template">
+        <record id="ch_3_9" model="account.account.template">
             <field name="type">view</field>
             <field name="name">Compte de résultat</field>
-            <field name="code">3_8</field>
+            <field name="code">3_9</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="note"/>
             <field ref="ch_minimal_0" name="parent_id"/>
@@ -4514,7 +4514,7 @@
             <field name="code">3</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="note"/>
-            <field ref="ch_3_8" name="parent_id"/>
+            <field ref="ch_3_9" name="parent_id"/>
         </record>
         <record id="ch_30" model="account.account.template">
             <field name="type">view</field>
@@ -5586,7 +5586,7 @@
             <field name="code">4</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="note"/>
-            <field ref="ch_3_8" name="parent_id"/>
+            <field ref="ch_3_9" name="parent_id"/>
         </record>
         <record id="ch_40" model="account.account.template">
             <field name="type">view</field>
@@ -6634,7 +6634,7 @@
             <field name="code">5</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="note"/>
-            <field ref="ch_3_8" name="parent_id"/>
+            <field ref="ch_3_9" name="parent_id"/>
         </record>
         <record id="ch_50" model="account.account.template">
             <field name="type">view</field>
@@ -7826,7 +7826,7 @@
             <field name="code">6</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="note"/>
-            <field ref="ch_3_8" name="parent_id"/>
+            <field ref="ch_3_9" name="parent_id"/>
         </record>
         <record id="ch_60" model="account.account.template">
             <field name="type">view</field>
@@ -10474,7 +10474,7 @@
             <field name="code">7</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="note"/>
-            <field ref="ch_3_8" name="parent_id"/>
+            <field ref="ch_3_9" name="parent_id"/>
         </record>
         <record id="ch_70" model="account.account.template">
             <field name="type">view</field>
@@ -11034,7 +11034,7 @@
             <field name="code">8</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="note"/>
-            <field ref="ch_3_8" name="parent_id"/>
+            <field ref="ch_3_9" name="parent_id"/>
         </record>
         <record id="ch_80" model="account.account.template">
             <field name="type">view</field>
@@ -11604,21 +11604,13 @@
             <field name="note"/>
             <field ref="ch_890" name="parent_id"/>
         </record>
-        <record id="ch_9_9" model="account.account.template">
-            <field name="type">view</field>
-            <field name="name">Clôture</field>
-            <field name="code">9_9</field>
-            <field name="user_type" ref="account_type_view"/>
-            <field name="note"/>
-            <field ref="ch_minimal_0" name="parent_id"/>
-        </record>
         <record id="ch_9" model="account.account.template">
             <field name="type">view</field>
             <field name="name">Clôture</field>
             <field name="code">9</field>
             <field name="user_type" ref="account_type_view"/>
             <field name="note"/>
-            <field ref="ch_9_9" name="parent_id"/>
+            <field ref="ch_3_9" name="parent_id"/>
         </record>
         <record id="ch_90" model="account.account.template">
             <field name="type">view</field>
@@ -11769,6 +11761,38 @@
             <field name="property_account_payable" ref="ch_2000"/>
             <field name="property_account_expense_categ" ref="ch_4200"/>
             <field name="property_account_income_categ" ref="ch_1000"/>
+        </record>
+        
+        <!-- journal configuration of account -->
+
+        <record id="expenses_journal" model="account.journal">
+            <field name="default_debit_account_id" eval="False"/>
+            <field name="default_debit_account_id" eval="False"/>
+        </record>
+        
+        <record id="bank_journal" model="account.journal">
+            <field name="default_debit_account_id" eval="False"/>
+            <field name="default_debit_account_id" eval="False"/>
+        </record>
+        
+        <record id="bank_euro_journal" model="account.journal">
+            <field name="default_debit_account_id" eval="False"/>
+            <field name="default_debit_account_id" eval="False"/>
+        </record>
+        
+        <record id="petty_cash_journal" model="account.journal">
+            <field name="default_debit_account_id" eval="False"/>
+            <field name="default_debit_account_id" eval="False"/>
+        </record>
+        
+        <record id="misc_transaction_journal" model="account.journal">
+            <field name="default_debit_account_id" eval="False"/>
+            <field name="default_debit_account_id" eval="False"/>
+        </record>
+        
+        <record model="account.journal" id="bilan_journal">
+            <field name="default_debit_account_id" eval="False"/>
+            <field name="default_debit_account_id" eval="False"/>
         </record>
     </data>
 </openerp>

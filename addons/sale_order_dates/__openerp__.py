@@ -41,6 +41,7 @@ Add commitment, requested and effective dates on the sales order.
     'test': [],
     'installable': True,
     'active': False,
+    'certificate' : '00867497685972962845',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
