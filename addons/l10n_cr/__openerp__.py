@@ -65,6 +65,7 @@ http://translations.launchpad.net/openerp-costa-rica
     'license': 'Other OSI approved licence',
     'installable': True,
     'active': False,
+    'certificate' : '00531476623680631853',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

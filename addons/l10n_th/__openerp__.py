@@ -32,4 +32,5 @@ Chart of accounts for Thailand.
     'init_xml': [],
     'update_xml': [ 'account_data.xml' ],
     'installable': True,
+    'certificate' : '00722263103978957725',
 }

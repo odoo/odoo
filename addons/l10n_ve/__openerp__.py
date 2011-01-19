@@ -37,7 +37,8 @@ Este módulo es para manejar un catálogo de cuentas ejemplo para Venezuela.
     "update_xml" : ['account_tax_code.xml',"account_chart.xml",
                     'account_tax.xml','l10n_chart_ve_wizard.xml'],
     "active": False,
-    "installable": True
+    "installable": True,
+    "certificate" : "00763145921185574557",
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

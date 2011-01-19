@@ -466,6 +466,40 @@
             </field>
         </record>
 
+        <record id="action3" model="ir.actions.act_window">
+            <field name="name">Downstream traceability</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move</field>
+            <field name="domain">[('id','in',active_ids)]</field>
+            <field name="view_type">tree</field>
+            <field eval="stock_move_tree2" name="view_id"/>
+        </record>
+
+        <record id="ir_move_traceability_upstream" model="ir.values">
+            <field name="key2">tree_but_action</field>
+            <field name="model">stock.move</field>
+            <field name="name">Downstream traceability</field>
+            <field eval="'ir.actions.act_window,'+str(action3)" name="value"/>
+            <field eval="True" name="object"/>
+        </record>
+
+        <record id="action5" model="ir.actions.act_window">
+            <field name="name">Upstream traceability</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move</field>
+            <field name="domain">[('id','in',active_ids)]</field>
+            <field name="view_type">tree</field>
+            <field eval="stock_move_tree" name="view_id"/>
+        </record>
+
+        <record id="ir_move_traceability_downstream" model="ir.values">
+            <field name="key2">tree_but_action</field>
+            <field name="model">stock.move</field>
+            <field name="name">Upstream traceability</field>
+            <field eval="'ir.actions.act_window,'+str(action5)" name="value"/>
+            <field eval="True" name="object"/>
+        </record>
+
         <record id="view_location_form" model="ir.ui.view">
             <field name="name">stock.location.form</field>
             <field name="model">stock.location</field>
@@ -699,10 +733,6 @@
                                         attrs="{'invisible': [('tracking_id','&lt;&gt;',False)]}"
                                         icon="terp-stock_effects-object-colorize"
                                         groups="base.group_extended"
-                                        states="draft,assigned,confirmed"/>
-                                    <button name="%(split_into)d" string="Put in a new pack" type="action"
-                                        groups="base.group_extended"
-                                        icon="terp-stock_effects-object-colorize"
                                         states="draft,assigned,confirmed"/>
                                     <button name="%(split_into)d" string="Put in a new pack" type="action"
                                         groups="base.group_extended"
