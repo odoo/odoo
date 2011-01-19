@@ -75,8 +75,8 @@ class crm_meeting(crm_case, osv.osv):
                                     size=16, readonly=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft', 
-        'active': lambda *a: 1,
+        'state': 'draft', 
+        'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
