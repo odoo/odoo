@@ -1255,7 +1255,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             ids = select
         result = []
         recur_dict = []
-        if ids:
+        if ids and (base_start_date or base_until_date):
             cr.execute("select m.id, m.rrule, m.date, m.date_deadline, m.duration, \
                             m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
                             " m where m.id = ANY(%s)", (ids,) )
