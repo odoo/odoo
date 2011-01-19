@@ -21,6 +21,7 @@
 
 import tools
 from osv import osv, fields
+from tools.translate import _
 
 class base_language_install(osv.osv_memory):
     """ Install Language"""

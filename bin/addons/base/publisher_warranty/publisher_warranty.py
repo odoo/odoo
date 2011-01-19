@@ -303,6 +303,7 @@ class publisher_warranty_contract_wizard(osv.osv_memory):
 
         self.write(cr, uid, ids, {"state": "finished"})
 
+        # We should return an action ?
         return True
 
 
