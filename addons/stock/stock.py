@@ -208,6 +208,8 @@ class stock_location(osv.osv):
         'stock_virtual_value': fields.function(_product_value, method=True, type='float', string='Virtual Stock Value', multi="stock", digits_compute=dp.get_precision('Account')),
         'company_id': fields.many2one('res.company', 'Company', select=1, help='Let this field empty if this location is shared between all companies'),
         'scrap_location': fields.boolean('Scrap Location', help='Check this box to allow using this location to put scrapped/damaged goods.'),
+        'valuation_in_account_id': fields.many2one('account.account', 'Stock Input Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as destination, instead of the stock output account from the product.'),
+        'valuation_out_account_id': fields.many2one('account.account', 'Stock Output Account',domain = [('type','=','other')], help='This account will be used to value stock moves that have this location as source, instead of the stock input account from the product.'),
     }
     _defaults = {
         'active': True,
@@ -1515,9 +1517,9 @@ class stock_move(osv.osv):
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
         'priority': fields.selection([('0', 'Not urgent'), ('1', 'Urgent')], 'Priority'),
-        'create_date': fields.datetime('Creation Date', readonly=True),
-        'date': fields.datetime('Date', required=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
-        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, help="Scheduled date for the processing of this move"),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True),
+        'date': fields.datetime('Date', required=True, select=True, help="Move date: scheduled date until move is done, then date of actual move processing", readonly=True),
+        'date_expected': fields.datetime('Scheduled Date', states={'done': [('readonly', True)]},required=True, select=True, help="Scheduled date for the processing of this move"),
         'product_id': fields.many2one('product.product', 'Product', required=True, select=True, domain=[('type','<>','service')],states={'done': [('readonly', True)]}),
 
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product UoM'), required=True,states={'done': [('readonly', True)]}),
@@ -1985,8 +1987,16 @@ class stock_move(osv.osv):
         """
         product_obj=self.pool.get('product.product')
         accounts = product_obj.get_product_accounts(cr, uid, move.product_id.id, context)
-        acc_src = accounts['stock_account_input']
-        acc_dest = accounts['stock_account_output']
+        if move.location_id.valuation_out_account_id:
+            acc_src = move.location_id.valuation_out_account_id.id
+        else:
+            acc_src = accounts['stock_account_input']
+
+        if move.location_dest_id.valuation_in_account_id:
+            acc_dest = move.location_dest_id.valuation_in_account_id.id
+        else:
+            acc_dest = accounts['stock_account_output']
+
         acc_variation = accounts.get('property_stock_variation', False)
         journal_id = accounts['stock_journal']
 
@@ -2008,7 +2018,6 @@ class stock_move(osv.osv):
         if not acc_variation:
             raise osv.except_osv(_('Error!'), _('There is no inventory variation account defined on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
-
         return journal_id, acc_src, acc_dest, acc_variation
 
     def _get_reference_accounting_values_for_valuation(self, cr, uid, move, context=None):
@@ -2605,7 +2614,7 @@ class stock_inventory(osv.osv):
                      account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
                      for account_move in account_move_data_l:
                          if account_move['state'] == 'posted':
-                             raise osv.except_osv(_('UserError'), 
+                             raise osv.except_osv(_('UserError'),
                                                   _('You can not cancel inventory which has any account move with posted state.'))
                          account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)

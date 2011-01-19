@@ -68,18 +68,21 @@ class purchase_order(osv.osv):
         if type(ids)!=type([]):
             ids=[ids]
         for po in self.browse(cr, uid, ids, context=context):
-            cr.execute("""update purchase_order_line set
-                    date_planned=%s
-                where
-                    order_id=%s and
-                    (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
+            if po.order_line:
+                cr.execute("""update purchase_order_line set
+                        date_planned=%s
+                    where
+                        order_id=%s and
+                        (date_planned=%s or date_planned<%s)""", (value,po.id,po.minimum_planned_date,value))
+            cr.execute("""update purchase_order set
+                    minimum_planned_date=%s where id=%s""", (value, po.id))
         return True
 
     def _minimum_planned_date(self, cr, uid, ids, field_name, arg, context=None):
         res={}
         purchase_obj=self.browse(cr, uid, ids, context=context)
         for purchase in purchase_obj:
-            res[purchase.id] = time.strftime('%Y-%m-%d %H:%M:%S')
+            res[purchase.id] = False
             if purchase.order_line:
                 min_date=purchase.order_line[0].date_planned
                 for line in purchase.order_line:
@@ -162,8 +165,8 @@ class purchase_order(osv.osv):
             help="Reference of the document that generated this purchase order request."
         ),
         'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64),
-        'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, help="Date on which this document has been created."),
-        'date_approve':fields.date('Date Approved', readonly=1, help="Date on which purchase order has been approved"),
+        'date_order':fields.date('Date Ordered', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
+        'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
         'partner_address_id':fields.many2one('res.partner.address', 'Address', required=True,
             states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]},domain="[('partner_id', '=', partner_id)]"),
@@ -191,7 +194,11 @@ class purchase_order(osv.osv):
                 "From Picking: a draft invoice will be pre-generated based on validated receptions.\n" \
                 "Manual: allows you to generate suppliers invoices by chosing in the uninvoiced lines of all manual purchase orders."
         ),
-        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True,store=True, string='Expected Date', type='date', help="This is computed as the minimum scheduled date of all purchase order lines' products."),
+        'minimum_planned_date':fields.function(_minimum_planned_date, fnct_inv=_set_minimum_planned_date, method=True, string='Expected Date', type='date', select=True, help="This is computed as the minimum scheduled date of all purchase order lines' products.",
+            store = {
+                'purchase.order.line': (_get_order, ['date_planned'], 10),
+            }
+        ),
         'amount_untaxed': fields.function(_amount_all, method=True, digits_compute= dp.get_precision('Purchase Price'), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
@@ -605,7 +612,7 @@ class purchase_order_line(osv.osv):
     _columns = {
         'name': fields.char('Description', size=256, required=True),
         'product_qty': fields.float('Quantity', required=True, digits=(16,2)),
-        'date_planned': fields.date('Scheduled Date', required=True),
+        'date_planned': fields.date('Scheduled Date', required=True, select=True),
         'taxes_id': fields.many2many('account.tax', 'purchase_order_taxe', 'ord_id', 'tax_id', 'Taxes'),
         'product_uom': fields.many2one('product.uom', 'Product UOM', required=True),
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
@@ -693,7 +700,7 @@ class purchase_order_line(osv.osv):
         dt = (datetime.now() + relativedelta(days=int(seller_delay) or 0.0)).strftime('%Y-%m-%d %H:%M:%S')
 
 
-        res.update({'value': {'price_unit': price, 'name': name or prod_name,
+        res.update({'value': {'price_unit': price, 'name': prod_name,
             'taxes_id':map(lambda x: x.id, prod.supplier_taxes_id),
             'date_planned': date_planned or dt,'notes': notes or prod.description_purchase,
             'product_qty': qty,
@@ -714,11 +721,13 @@ class purchase_order_line(osv.osv):
         return res
 
     def product_uom_change(self, cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False,fiscal_position=False):
+            partner_id, date_order=False, fiscal_position=False, date_planned=False,
+            name=False, price_unit=False, notes=False):
         res = self.product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-                partner_id, date_order=date_order,fiscal_position=fiscal_position)
+                partner_id, date_order=date_order, fiscal_position=fiscal_position, date_planned=date_planned,
+            name=name, price_unit=price_unit, notes=notes)
         if 'product_uom' in res['value']:
-            if uom and uom != res['value']['product_uom']:
+            if uom and (uom != res['value']['product_uom']) and res['value']['product_uom']:
                 seller_uom_name = self.pool.get('product.uom').read(cr, uid, [res['value']['product_uom']], ['name'])[0]['name']
                 res.update({'warning': {'title': _('Warning'), 'message': _('The selected supplier only sells this product by %s') % seller_uom_name }})
             del res['value']['product_uom']

@@ -2393,8 +2393,8 @@
                     <field name ="seq_journal" groups="base.group_extended"/>
                     <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
-                    <newline/>
-                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list">
+                    <newline/> <!-- extended view because the web UI is not good for one2many -->
+                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="base.group_extended"> 
                         <form string="Bank Information">
                             <field name="acc_name"/>
                             <field name="account_type"/>

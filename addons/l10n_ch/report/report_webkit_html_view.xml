@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data> 
+        <record id="ir_header_webkit_bvr_invoice0" model="ir.header_webkit">
+            <field eval="&quot;&quot;&quot;Portrait&quot;&quot;&quot;" name="orientation"/>
+            <field eval="&quot;&quot;&quot;A4&quot;&quot;&quot;" name="format"/>
+            <field name="html"><![CDATA[<html>
+                    <head>
+                        <script>
+                            function subst() {
+                            var vars={};
+                            var x=document.location.search.substring(1).split('&');
+                            for(var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+                            var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+                            for(var i in x) {
+                            var y = document.getElementsByClassName(x[i]);
+                            for(var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+                                }
+                                }
+                                </script>
+                                <style type="text/css">
+                                    ${css}
+                                </style>
+                    </head>
+                    <body style="border:0; margin: 0;" onload="subst()">
+                        <table class="header" style="border-bottom: 0px solid black; width: 100%;padding-left:20mm">
+                            <tr style="vertical-align:top" >
+                                <td>${helper.embed_logo_by_name('camptocamp_logo', width=64)}</td>
+                                <td style="text-align:right">
+                                <table style="border-top: 0px solid black; width: 100%;height:100%">
+                                    <tr style="vertical-align:top">
+                                        <td style="text-align:right;font-size:12" width="80%"><span class="page"/></td><td style="text-align:left;font-size:12;"> / <span class="topage"/></td>
+                                    </tr>
+                                </table> </td>
+                            </tr>
+                            <tr>
+                                <td><br/></td>
+                                <td style="text-align:right"> </td>
+                            </tr>
+                            <tr>
+                                <td>${company.partner_id.name |entity}</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td >${company.partner_id.address and company.partner_id.address[0].street or ''|entity}</td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>Phone: ${company.partner_id.address and company.partner_id.address[0].phone or ''|entity} </td>
+                                <td/>
+                            </tr>
+                            <tr>
+                                <td>Mail: <a href="mailto:${company.partner_id.address and company.partner_id.address[0].email or ''|entity}">${company.partner_id.address and company.partner_id.address[0].email or ''|entity}</a><br/></td>
+                            </tr>
+                        </table> ${_debug or ''} <br/></body>
+                    </html>]]>
+            </field>
+            <field eval="45" name="margin_top"/>
+            <field eval="0.01" name="margin_bottom"/>
+            <field eval="0.01" name="margin_left"/>
+            <field eval="0.01" name="margin_right"/>
+            <field name="css" ><![CDATA[
+
+body {
+font-family:helvetica;
+font-size:12;
+}
+
+
+.dest_address {
+margin-left:60%;
+font-size:12;
+}
+.header {
+margin-left:0;
+text-align:left;
+width:300px;
+font-size:12;
+}
+
+.title {
+font-size:16;
+font-weight: bold;
+
+}
+
+
+.basic_table{
+text-align:center;
+border:1px solid lightGrey;
+border-collapse: collapse;
+}
+.basic_table td {
+border:1px solid lightGrey;
+font-size:12;
+
+
+}
+
+.list_table {
+border-color:black;
+text-align:center;
+border-collapse: collapse;
+
+}
+.list_table td {
+border-color:gray;
+border-top:1px solid gray;
+text-align:left;
+font-size:12;
+padding-right:3px
+padding-left:3px
+padding-top:3px
+padding-bottom:3px
+}
+
+.list_table th {
+border-bottom:2px solid black;
+text-align:left;
+font-size:12;
+font-weight:bold;
+padding-right:3px
+padding-left:3px
+}
+
+.list_tabe thead {
+    display:table-header-group;
+}
+
+
+.total {
+width:100%;
+}
+.lib {
+width:10.3%;
+}
+.tot {
+text-align:right;
+width:15%;
+}
+.lefttot {
+width:74%;
+}
+.tax {
+width:50%;
+}]]></field>
+    <field eval="&quot;&quot;&quot;BVR header&quot;&quot;&quot;" name="name"/>
+    </record>
+        
+    <report auto="True" 
+        id="report_bvr_invoice_html" 
+        model="account.invoice" 
+        name="invoice_web_bvr"  
+        file="l10n_ch/report/report_webkit_html.mako" 
+        string="BVR invoice" 
+        report_type="webkit" 
+        />
+    <record id="l10n_ch.report_bvr_invoice_html" model="ir.actions.report.xml">
+        <field name="webkit_header" ref="ir_header_webkit_bvr_invoice0" />
+    </record>
+    </data>
+</openerp>

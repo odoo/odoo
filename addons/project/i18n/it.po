@@ -7,13 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-15 19:38+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"PO-Revision-Date: 2011-01-17 06:56+0000\n"
+"Last-Translator: Lorenzo Battistini - agilebg.com "
+"<lorenzo.battistini@agilebg.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-16 05:03+0000\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:38+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: project
@@ -114,7 +115,7 @@ msgstr ""
 #. module: project
 #: help:project.project,priority:0
 msgid "Gives the sequence order when displaying the list of projects"
-msgstr ""
+msgstr "Stabilisce la sequenza con cui visualizzare la lista di progetti"
 
 #. module: project
 #: constraint:project.project:0
@@ -358,7 +359,7 @@ msgstr "Titolo Email"
 #. module: project
 #: view:project.installer:0
 msgid "Configure Your Project Management Application"
-msgstr ""
+msgstr "Configura l'appliaczione di gestione progetti"
 
 #. module: project
 #: model:process.node,name:project.process_node_donetask0
@@ -754,9 +755,9 @@ msgid ""
 "order to track the progress in solving a task or an issue."
 msgstr ""
 "Definisce i passi che verranno utilizzati nel progetto, dalla creazione "
-"dell'attività, fino alla chiusura dell'attività o problematica. Potete "
-"utilizzare questi stadi per tracciare l'avanzamento nella risoluzione "
-"dell'attività o problematica."
+"dell'attività, fino alla chiusura dell'attività o problematica. Questi stadi "
+"verranno utilizzati al fine di tenere traccia dei progressi nella "
+"risoluzione delle attività o problematiche."
 
 #. module: project
 #: code:addons/project/project.py:622
@@ -913,6 +914,15 @@ msgid ""
 "configuration. With the project_mrp module, sales orders can create tasks "
 "automatically when they are confirmed."
 msgstr ""
+"Un'attività rappresenta un lavoro che deve essere fatto. Ogni utente lavora "
+"sulla propria lista di attività nella quale può registrare le ore spese su "
+"di esse. Può lavorare e chiudere l'attività lui stesso o delegarla ad un "
+"altro utente. Se si delega un'attività ad un altro utente, si ottiene una "
+"nuova attività nello stato 'In sospeso', che verrà riaperta quando si dovrà "
+"revisionare il lavoro effettuato. Se si installa il modulo "
+"project_timesheet, il lavoro delle attività può essere fatturato sulla base "
+"della configurazione del progetto. Con il modulo project_mrp, gli ordini di "
+"vendita potranno creare automaticamente le attività una volta confermati."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1344,6 +1354,9 @@ msgid ""
 "Project's member. Not used in any computation, just for information purpose, "
 "but a user has to be member of a project to add a the to this project."
 msgstr ""
+"Membri del progetto. Non utilizzato in alcun calcolo, solo a scopo "
+"informativo, ma un utente deve essere membro di un progetto per aggiungere "
+"un'attività a questo progetto."
 
 #. module: project
 #: help:project.task.close,partner_warn:0
@@ -1577,7 +1590,7 @@ msgid ""
 "Enables long-term projects tracking, including multiple-phase projects and "
 "resource allocation handling."
 msgstr ""
-"Abilita il tracciamente dei progettia lungo termine, inclusi progetti a "
+"Abilita il tracciamento dei progetti a lungo termine, inclusi progetti a "
 "multi-fase e gestione allocazione risorse."
 
 #. module: project
@@ -1861,6 +1874,15 @@ msgid ""
 "to invoice the time spent on a project task, you can find project tasks to "
 "be invoiced in the billing section."
 msgstr ""
+"Un progetto contiene un insieme di attività o problematiche che saranno "
+"affrontate dalle risorse assegnate ad esso. Un progetto può essere "
+"strutturato gerarchicamente, come figlio di un progetto genitore. Questo "
+"permette di progettare strutture di grossi progetti con varie fasi che si "
+"estendono nel ciclo di durata del progetto. Ogni utente può impostare il "
+"proprio progetto di default nelle proprie preferenze per filtrare "
+"automaticamente le attività o le problematiche su cui lavora solitamente. Se "
+"si sceglie di fatturare il tempo impiegato su una attività, si possono "
+"trovare le attività da fatturare nella sezione dedicata."
 
 #. module: project
 #: field:project.project,total_hours:0

@@ -169,7 +169,7 @@ class project_issue(crm.crm_case, osv.osv):
         'id': fields.integer('ID'),
         'name': fields.char('Issue', size=128, required=True),
         'active': fields.boolean('Active', required=False),
-        'create_date': fields.datetime('Creation Date', readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True,select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'date_deadline': fields.date('Deadline'),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
@@ -188,9 +188,9 @@ class project_issue(crm.crm_case, osv.osv):
                                   \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
-        'date_open': fields.datetime('Opened', readonly=True),
+        'date_open': fields.datetime('Opened', readonly=True,select=True),
         # Project Issue fields
-        'date_closed': fields.datetime('Closed', readonly=True),
+        'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
         'canal_id': fields.many2one('res.partner.canal', 'Channel', help="The channels represent the different communication modes available with the customer." \
                                                                         " With each commercial opportunity, you can indicate the canall which is this opportunity source."),

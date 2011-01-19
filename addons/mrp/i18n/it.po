@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-15 19:32+0000\n"
-"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
+"PO-Revision-Date: 2011-01-17 09:33+0000\n"
+"Last-Translator: Davide Corio - Domsense <davide.corio@domsense.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-16 05:03+0000\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:39+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp
@@ -110,7 +110,7 @@ msgstr "Giorno"
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
-msgstr "Linee di Lavorazione"
+msgstr "Routings"
 
 #. module: mrp
 #: field:mrp.workcenter,product_id:0
@@ -139,7 +139,7 @@ msgid ""
 "of the routing."
 msgstr ""
 "Numero di cicli che il centro di lavoro dovrà eseguire nello specifico step "
-"della linea."
+"del routing."
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -536,8 +536,8 @@ msgid ""
 "The Bill of Material is linked to a routing, i.e. the succession of work "
 "centers."
 msgstr ""
-"La Distinta Base è collegata ad una linea di lavorazione, ad esempio una "
-"successione di centri di lavoro."
+"La Distinta Base è collegata ad un routing, ad esempio una successione di "
+"centri di lavoro."
 
 #. module: mrp
 #: constraint:product.product:0
@@ -631,8 +631,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the routing "
 "without removing it."
 msgstr ""
-"Se il campo \"attivo\" è False, consentirà di nascondere la linea di "
-"lavorazione senza rimuoverla."
+"Se il campo \"attivo\" è False, consentirà di nascondere ilrouting senza "
+"rimuoverlo."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
@@ -695,9 +695,9 @@ msgid ""
 "plannification."
 msgstr ""
 "La lista delle operazioni (lista dei centri di lavoro) necessario per "
-"produrre i prodotti finiti. La linea di lavorazione è prevalentemente "
-"utilizzata per calcolare i costi dei centri di lavoro durante le operazioni "
-"a per pianificare i carichi futuri dei centri di lavoro in base alla "
+"produrre i prodotti finiti. Il routing è prevalentemente utilizzata per "
+"calcolare i costi dei centri di lavoro durante le operazioni a per "
+"pianificare i carichi futuri dei centri di lavoro in base alla "
 "pianificazione della produzione."
 
 #. module: mrp
@@ -869,8 +869,8 @@ msgid ""
 "Time in hours for this work center to achieve the operation of the specified "
 "routing."
 msgstr ""
-"Tempo in ore affinchè il centro di lavoro completi le operazioni della "
-"specifica linea di produzione."
+"Tempo in ore affinchè il centro di lavoro completi le operazioni delrouting "
+"specifico."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1059,7 +1059,7 @@ msgstr "Make to stock (produrre per far scorta)"
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing work centers."
-msgstr "Ordine di visualizzazione della lista delle linee di produzione."
+msgstr "Ordine di visualizzazione della lista dei routing."
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1214,7 +1214,7 @@ msgstr ""
 "OpenERP.\n"
 "\n"
 "    Caratteristiche:\n"
-"    * Produci per Stock / Produci su Ordine (per linea)\n"
+"    * Produci per Stock / Produci su Ordine (per routing)\n"
 "    * Distinte base multi-livello. Nessun limite\n"
 "    * Cicli di lavorazione multi-livello. Nessun limite\n"
 "    * Cicli e centri di lavoro integrati con la contabilità analitica\n"
@@ -1310,9 +1310,9 @@ msgid ""
 "They are attached to bills of materials that will define the required raw "
 "materials."
 msgstr ""
-"Le linee di lavorazione consentono di creare e gestire le operazioni che "
-"devono essere seguite dai centri di lavoro per la produzione di un prodotto. "
-"Sono collegate alla distinta base che definisce la materia prima necessaria."
+"I routing consentono di creare e gestire le operazioni che devono essere "
+"seguite dai centri di lavoro per la produzione di un prodotto. Sono "
+"collegate alla distinta base che definisce la materia prima necessaria."
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
@@ -1815,9 +1815,9 @@ msgid ""
 "planning."
 msgstr ""
 "Lista delle operazioni (lista centri di lavoro) per la produzione dei "
-"prodotti finiti. La linea di produzione è prevalentemente utilizzato per "
-"calcolare i costi dei centri di lavoro durante le operazioni e per la "
-"pianificazione del carico basato sulla pianificazione della produzione."
+"prodotti finiti. Il routing è prevalentemente utilizzato per calcolare i "
+"costi dei centri di lavoro durante le operazioni e per la pianificazione del "
+"carico basato sulla pianificazione della produzione."
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -2162,7 +2162,7 @@ msgstr "Assegnazione da Ordine di Produzione o di Acquisto."
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
-msgstr "Linea Superiore"
+msgstr "Routing Superiore"
 
 #. module: mrp
 #: view:mrp.installer:0
@@ -2319,8 +2319,8 @@ msgid ""
 "Routing is indicated then,the third tab of a production order (workcenters) "
 "will be automatically pre-completed."
 msgstr ""
-"La Linea indica tutti i centri di lavoro utilizzati, per quanto tempo e/o "
-"per quanti cicli. Se la Linea viene indicata, allora il terzo tab "
+"Il Routing indica tutti i centri di lavoro utilizzati, per quanto tempo e/o "
+"per quanti cicli. Se il Routing viene specificato, allora il terzo tab "
 "dell'ordine di produzione (centri di lavoro) verrà automaticamente pre-"
 "compilato."
 
@@ -2365,7 +2365,7 @@ msgstr ""
 #: view:mrp.routing:0
 #: model:process.node,name:mrp.process_node_routing0
 msgid "Routing"
-msgstr "Linea di Produzione"
+msgstr "Routing"
 
 #. module: mrp
 #: field:mrp.installer,mrp_operations:0

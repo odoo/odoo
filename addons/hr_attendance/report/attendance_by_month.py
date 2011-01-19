@@ -61,7 +61,7 @@ class report_custom(report_rml):
                   <name>%s</name>
                   %%s
                 </user>
-                ''' % (ustr(emp['name']))
+                ''' % (ustr(toxml(emp['name'])))
                 today, tomor = month, month + one_day
                 while today.month == month.month:
                     #### Work hour calculation

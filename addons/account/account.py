@@ -586,11 +586,11 @@ class account_journal_column(osv.osv):
         'name': fields.char('Column Name', size=64, required=True),
         'field': fields.selection(_col_get, 'Field Name', method=True, required=True, size=32),
         'view_id': fields.many2one('account.journal.view', 'Journal View', select=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
     }
-    _order = "sequence"
+    _order = "view_id, sequence"
 
 account_journal_column()
 
@@ -2610,6 +2610,24 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
 
+    def _get_purchase_tax(self, cr, uid, context=None):
+        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        if ids:
+            chart_template_id = ids[0]
+            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+            return purchase_tax_ids[0]
+        return False
+
+    def _get_sale_tax(self, cr, uid, context=None):
+        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        if ids:
+            chart_template_id = ids[0]
+            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+            return sale_tax_ids[0]
+        return False
+
     def _get_chart(self, cr, uid, context=None):
         ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
         if ids:
@@ -2626,6 +2644,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
         'chart_template_id': _get_chart,
         'bank_accounts_id': _get_default_accounts,
+        'sale_tax': _get_sale_tax,
+        'purchase_tax': _get_purchase_tax,
         'code_digits': 6,
         'seq_journal': True
     }

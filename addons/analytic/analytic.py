@@ -35,7 +35,7 @@ class account_analytic_account(osv.osv):
             for son in account.child_ids:
                 res = recursive_computation(son.id, res)
                 for field in field_names:
-                    if account.currency_id.id == son.currency_id.id:
+                    if account.currency_id.id == son.currency_id.id or field=='quantity':
                         res[account.id][field] += res[son.id][field]
                     else:
                         res[account.id][field] += currency_obj.compute(cr, uid, son.currency_id.id, account.currency_id.id, res[son.id][field], context=context)
@@ -109,6 +109,20 @@ class account_analytic_account(osv.osv):
     def _complete_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = self.name_get(cr, uid, ids)
         return dict(res)
+    
+    def _child_compute(self, cr, uid, ids, name, arg, context=None):
+        result = {}
+        if context is None:
+            context = {}
+        
+        for account in self.browse(cr, uid, ids, context=context):
+            for child in account.child_ids:
+                if child.state == 'template':
+                    account.child_ids.pop(account.child_ids.index(child))
+            result[account.id] = map(lambda x: x.id, account.child_ids)
+
+        return result
+
 
     _columns = {
         'name': fields.char('Account Name', size=128, required=True),
@@ -118,6 +132,7 @@ class account_analytic_account(osv.osv):
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
+        'child_complete_ids': fields.function(_child_compute, relation='account.analytic.account', method=True, string="Account Hierarchy", type='many2many'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
         'balance': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Balance', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'debit': fields.function(_debit_credit_bal_qtty, method=True, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),

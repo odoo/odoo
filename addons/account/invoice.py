@@ -910,7 +910,7 @@ class account_invoice(osv.osv):
             }
             period_id = inv.period_id and inv.period_id.id or False
             if not period_id:
-                period_ids = self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d'))])
+                period_ids = self.pool.get('account.period').search(cr, uid, [('date_start','<=',inv.date_invoice or time.strftime('%Y-%m-%d')),('date_stop','>=',inv.date_invoice or time.strftime('%Y-%m-%d')), ('company_id', '=', inv.company_id.id)])
                 if period_ids:
                     period_id = period_ids[0]
             if period_id:

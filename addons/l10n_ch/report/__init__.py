@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
-#
-#  __init__.py
-#  l10n_ch
-#
-#  Created by Nicolas Bessi based on Credric Krier contribution
-#
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+ #-*- coding: utf-8 -*-
 ##############################################################################
+#
+# Copyright (c) 2010 Camptocamp SA (http://www.camptocamp.com) 
+# All Right Reserved
+#
+# Author : Nicolas Bessi (Camptocamp)
+#
 # WARNING: This program as such is intended to be used by professional
 # programmers who take the whole responsability of assessing all potential
 # consequences resulting from its eventual inadequacies and bugs
@@ -30,6 +29,4 @@
 #
 ##############################################################################
 
-import bvr_report
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import report_webkit_html
