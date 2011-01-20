@@ -1439,12 +1439,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             if('edit_all' in vals):
                 edit_all = vals['edit_all']
 
-            
-                
             if not edit_all:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
                 if data.get('rrule'):
+                    data.update(vals)
                     data.update({
                         'recurrent_uid': real_event_id,
                         'recurrent_id': data.get('date'),
@@ -1453,7 +1452,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         'exdate': False,
                         'recurrency': False,
                         })
-                    data.update(vals)
+                    
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
                     # add this occurance date in exdate in main meeting
                     str_event, date_new = event_id.split('-')
@@ -1775,11 +1774,12 @@ class ir_attachment(osv.osv):
         for i, arg in enumerate(new_args):
             if arg[0] == 'res_id':
                 ids = arg[2]
-                if arg[1].lower() in ('in', 'not in'):
-                    if not isinstance(ids, (tuple, list)):
-                        ids = [ids]
-
-                    ids = map(base_calendar_id2real_id, ids)
+                if not isinstance(arg[2], (tuple, list)):
+                    ids = [ids]
+                
+                ids = map(base_calendar_id2real_id, ids)
+                if not isinstance(arg[2], (tuple, list)):
+                    ids = len(ids) and ids[0] or []
 
                 new_args[i] = (arg[0], arg[1], ids)
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
