@@ -368,7 +368,7 @@ def Phase_%d():
             try:
                 phase = Task.BalancedProject(Phase)
             except :
-                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+                raise osv.except_osv(_('Error !'),_('Invalid Project Members.\nPhase Scheduling is not possible.'))
         
         
             for task_id in task_ids:
@@ -515,7 +515,7 @@ def Project_%d():
             try:
                 project = Task.BalancedProject(Project)
             except :
-                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+                raise osv.except_osv(_('Error !'),_('Invalid Project Members.\nPhase Scheduling is not possible.'))
             
             for phase_id in phase_ids:
                 act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
