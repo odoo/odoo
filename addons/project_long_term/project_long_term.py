@@ -23,7 +23,6 @@ from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task 
-import logging
 
 class project_phase(osv.osv):
     _name = "project.phase"
