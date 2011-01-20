@@ -1740,6 +1740,14 @@ class ir_attachment(osv.osv):
         for arg in args:
             args1.append(map(lambda x:str(x).split('-')[0], arg))
         return super(ir_attachment, self).search_count(cr, user, args1, context)
+        
+        
+    
+    def create(self, cr, uid, vals, context=None):
+        if context:
+            id = context.get('default_res_id', False)
+            context.update({'default_res_id' : base_calendar_id2real_id(id)})
+        return super(ir_attachment, self).create(cr, uid, vals, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -1757,9 +1765,9 @@ class ir_attachment(osv.osv):
         for i, arg in enumerate(new_args):
             if arg[0] == 'res_id':
                 new_args[i] = (arg[0], arg[1], base_calendar_id2real_id(arg[2]))
+
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
-                            limit=limit, order=order,
-                            context=context, count=False)
+                            limit=limit, order=order, context=context, count=False)
 ir_attachment()
 
 class ir_values(osv.osv):
