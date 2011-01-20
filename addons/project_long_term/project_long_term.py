@@ -452,7 +452,6 @@ class project(osv.osv):
             flag = False
             res_msg = ''
             memebrs_ids = []
-            resource_user_ids = []
             if project.members:
                 memebrs_ids = [use.id for use in project.members]
             phase_ids = phase_pool.search(cr, uid, [('project_id', '=', project.id)], context=context)
