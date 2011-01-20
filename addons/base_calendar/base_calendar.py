@@ -1198,7 +1198,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             'active': 1,
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
-            'edit_all' : True,
+            'edit_all' : False,
     }
 
     def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
