@@ -297,8 +297,9 @@ class survey_question_wiz(osv.osv_memory):
                                 fields[tools.ustr(que.id) + "_" + tools.ustr(ans.id)] = {'type':'datetime', 'string':ans.answer}
 
                         elif que_rec.type == 'descriptive_text':
-                            for que_test in que_rec.descriptive_text.split('\n'):
-                                etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
+                            if que_rec.descriptive_text:
+                                for que_test in que_rec.descriptive_text.split('\n'):
+                                    etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
 
                         elif que_rec.type == 'single_textbox':
                             etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_single", 'nolabel':"1" ,'colspan':"4"})

@@ -34,6 +34,8 @@
     'demo_xml': [],
     'installable': True,
     'active': False,
+    "certificate" : "001101250473177981989",
+
 
 }
 

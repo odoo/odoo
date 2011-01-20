@@ -40,7 +40,6 @@ class account_followup_stat(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'blocked': fields.boolean('Blocked', readonly=True),
         'period_id': fields.many2one('account.period', 'Period', readonly=True),
-
     }
     _order = 'date_move'
 
@@ -69,7 +68,7 @@ class account_followup_stat(osv.osv):
         cr.execute("""
             create or replace view account_followup_stat as (
                 SELECT
-                    l.id AS id,
+                    l.partner_id as id,
                     l.partner_id AS partner_id,
                     min(l.date) AS date_move,
                     max(l.date) AS date_move_last,

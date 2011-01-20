@@ -1,22 +1,22 @@
-- |  
+- |
   In Order to test the Membership in OpenERP, which allows us to manage all operations for managing memberships.
 - |
   I'm creating "Golden Membership" which has Membership fee 80 EURO and It's started from 1st June to 31st Dec.
-- 
+-
   !record {model: product.product, id: product_product_membershipproduct0}:
     categ_id: product.cat1
     membership: 1
-    membership_date_from: '2010-06-01'
-    membership_date_to: '2010-12-31'
+    membership_date_from: !eval datetime.today().strftime("%Y-%m-%d")
+    membership_date_to: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+6,datetime.now().day)"
     name: Golden Membership
     type: service
     list_price: 80.00
-    
+
 - |
   "Mark Johnson" want to join "Golden Membership".
 - |
   I'm creating new member "Mark Johnson".
-- 
+-
   !record {model: res.partner, id: res_partner_markjohnson0}:
     address:
       - city: paris
@@ -27,31 +27,31 @@
         zip: '75016'
     name: Mark Johnson
 - |
-  I'm checking  "Current Membership State" of "Mark Johnson". It is an "Non Member" or not. 
-- 
+  I'm checking  "Current Membership State" of "Mark Johnson". It is an "Non Member" or not.
+-
   !assert {model: res.partner, id: res_partner_markjohnson0}:
       - membership_state == 'none', 'Member should be has "Current Membership State" in "Non Member".'
 - |
   I'm doing to make membership invoice for "Mark Johnson" on joining "Golden Membership".
-- 
+-
   !python {model: res.partner}: |
     self.create_membership_invoice(cr, uid, [ref("res_partner_markjohnson0")], product_id=ref("product_product_membershipproduct0"), datas={"amount":80.00})
 - |
-  I'm checking  "Current Membership State" of "Mark Johnson". It is an "Waiting Member" or not. 
-- 
+  I'm checking  "Current Membership State" of "Mark Johnson". It is an "Waiting Member" or not.
+-
   !assert {model: res.partner, id: res_partner_markjohnson0}:
       - membership_state == 'waiting', 'Member should be has "Current Membership State" in "Waiting Member".'
 - |
   I'm Opening that Invoice which is created for "Mark Johnson".
 -
   !python {model: res.partner}: |
-        import netsvc  
+        import netsvc
         from tools.translate import _
         invoice_pool = self.pool.get('account.invoice')
         partner_pool = self.pool.get('res.partner')
         membership_line_pool = self.pool.get('membership.membership_line')
         membership_pool = self.pool.get('product.product')
-        
+
         membership_line_ids = membership_line_pool.search(cr, uid, [('membership_id','=',ref('product_product_membershipproduct0')),('partner','=',ref('res_partner_markjohnson0'))])
         membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
         assert membership_lines, _('Membership is not registrated.')
@@ -63,7 +63,7 @@
 -
   !assert {model: res.partner, id: res_partner_markjohnson0}:
      - membership_state == 'invoiced', 'Member should be has "Current Membership State" in "Invoiced Member".'
-  
+
 - |
   I'm creating free member "Ms. Johnson" of "Golden Membership".
 -
@@ -80,19 +80,19 @@
 
 - |
   I'm checking "Current membership state" of "Ms. Johnson". It is an "Free Member" or not.
-- 
+-
   !assert {model: res.partner, id: res_partner_msjohnson0}:
      - membership_state == 'free', 'Member should be has "Current Membership State" in "Free Member".'
 
 - |
   I'm set "Mark Johnson" as a associated member of "Ms. Johnson" and also set Non free member.
-- 
+-
   !python {model: res.partner}: |
     self.write(cr, uid, [ref("res_partner_msjohnson0")], {'free_member': False, 'associate_member': ref("res_partner_markjohnson0")})
 
 - |
   I'm checking "Current membership state" of "Ms. Johnson". It is an "Paid Member" or not.
-- 
+-
   !assert {model: res.partner, id: res_partner_msjohnson0}:
      - membership_state == 'paid', 'Member should be has "Current Membership State" in "Paid Member".'
 
@@ -102,8 +102,8 @@
   !record {model: product.product, id: product_product_membershipproduct1}:
     categ_id: product.cat1
     membership: 1
-    membership_date_from: '2010-06-01'
-    membership_date_to: '2010-12-31'
+    membership_date_from: !eval datetime.today().strftime("%Y-%m-%d")
+    membership_date_to: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+6,datetime.now().day)"
     name: Silver Membership
     type: service
     list_price: 50.00
@@ -127,16 +127,16 @@
         membership_line_pool = self.pool.get('membership.membership_line')
         membership_pool = self.pool.get('product.product')
         invoice_refund_pool = self.pool.get('account.invoice.refund')
-        
+
         membership_line_ids = membership_line_pool.search(cr, uid, [('membership_id','=',ref('product_product_membershipproduct0')),('partner','=',ref('res_partner_markjohnson0'))])
         membership_lines = membership_line_pool.browse(cr, uid, membership_line_ids)
         assert membership_lines, _('Membership is not registrated.')
         membership_line = membership_lines[0]
         refund_id = invoice_refund_pool.create(cr, uid, {'description': 'Refund of Membership', 'filter_refund': 'refund'}, {'active_id': membership_line.account_invoice_id.id})
-        invoice_refund_pool.invoice_refund(cr, uid, [refund_id], {'active_id': membership_line.account_invoice_id.id, 'active_ids': [membership_line.account_invoice_id.id]}) 
+        invoice_refund_pool.invoice_refund(cr, uid, [refund_id], {'active_id': membership_line.account_invoice_id.id, 'active_ids': [membership_line.account_invoice_id.id]})
 - |
   I'm checking "Current membership state" of "Mark Johnson". It is an "Cancelled Member" or not.
 -
   !assert {model: res.partner, id: res_partner_markjohnson0}:
       - membership_state == 'canceled', 'Member should be has "Current Membership State" in "Cancelled Member".'
-  
+

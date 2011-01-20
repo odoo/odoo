@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-11 21:25+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 19:55+0000\n"
+"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:55+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:07+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
@@ -366,7 +366,7 @@ msgstr "Octubre"
 #: code:addons/mrp/report/price.py:177
 #, python-format
 msgid "Components Cost of "
-msgstr ""
+msgstr "Coste de los componentes de "
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procurestockableproduct0
@@ -1212,6 +1212,42 @@ msgid ""
 "    * List of procurement in exception\n"
 "    "
 msgstr ""
+"\n"
+"    Este es el módulo base para gestionar los procesos de fabricación en "
+"OpenERP.\n"
+"\n"
+"    Características:\n"
+"    *Obtener para stock / Obtener bajo pedido (por línea)\n"
+"    *BoMs multi-niveles, sin límite\n"
+"    *Ubicaciones multi-nivel, sin límite\n"
+"    *Ubicaciones y centros de trabajo integrados con la contabilidad "
+"analítica\n"
+"    *Ejecución periódica del cálculo de la planificación / Módulo 'Just In "
+"Time'\n"
+"    *Multi-pv, multi-almacén\n"
+"    *Diferentes políticas de pedido\n"
+"    *Método de coste por producto: precio estándar, precio medio\n"
+"    *Fácil análisis de problemas o necesidades\n"
+"    *Muy flexible\n"
+"    *Permite inspeccionar la estructura completa de Facturas de Materiales\n"
+"        que incluyen BoMs hijas y fantasmas\n"
+"    Soporta integración y planificación de mercancías almacenables,\n"
+"    y consumo de servicios. Los servicios se integran completamente con el "
+"resto\n"
+"    de la aplicación. Por ejemplo, se puede establecer una servicio de "
+"subcontratación\n"
+"    en una BoM para encargar automáticamente el montaje de su producción.\n"
+"\n"
+"    Los informes que facilita este módulo:\n"
+"    *Componentes y estructura de la BoMs\n"
+"    *Previsión de carga de los centros de trabajo\n"
+"    *Previsión de almacén\n"
+"    Tableros proporcionados en este módulo:\n"
+"    *Lista de órdenes de producción próximas\n"
+"    *Lista de entregas\n"
+"    *Gráfico de carga del centro de trabajo\n"
+"    *Lista de órdenes de fabricación con excepciones\n"
+"    "
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action4
@@ -1430,6 +1466,12 @@ msgid ""
 "product needs. You can either create a bill of materials to define specific "
 "production steps or define a single multi-level bill of materials."
 msgstr ""
+"Las listas de materiales maestras le permiten crear y gestionar la lista de "
+"las materias primas necesarias utilizadas para fabricar un producto acabado. "
+"OpenERP utilizará estas LdMs para proponer automáticamente órdenes de "
+"fabricación en función de las necesidades de producto. Puede crear una lista "
+"de materiales para definir los pasos de producción o definir una única lista "
+"de materiales multi-nivel."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
@@ -2197,7 +2239,7 @@ msgstr "Semana"
 #. module: mrp
 #: field:mrp.installer,progress:0
 msgid "Configuration Progress"
-msgstr "Progreso configuración"
+msgstr "Progreso de la configuración"
 
 #. module: mrp
 #: selection:mrp.production,priority:0

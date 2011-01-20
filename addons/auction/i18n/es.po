@@ -6,15 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-11 07:26+0000\n"
-"Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-16 17:35+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:44+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: auction
 #: model:ir.ui.menu,name:auction.auction_report_menu
@@ -162,6 +163,8 @@ msgid ""
 "When auction starts the state is 'Draft'.\n"
 " At the end of auction, the state becomes 'Closed'."
 msgstr ""
+"Cuando la subasta se inicia el estado es 'Borrador'.\n"
+" Al final de la subasta, el estado se convierte en 'Cerrada'."
 
 #. module: auction
 #: field:auction.dates,account_analytic_id:0
@@ -320,7 +323,7 @@ msgstr "Comisiones"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_deposit_cost
 msgid "Auction Deposit Cost"
-msgstr ""
+msgstr "Coste del depósito de la subasta"
 
 #. module: auction
 #: view:auction.deposit:0
@@ -713,7 +716,7 @@ msgstr ""
 #. module: auction
 #: help:auction.lots,ach_emp:0
 msgid "When state is Taken Away, this field is marked as True"
-msgstr ""
+msgstr "Cuando el estado es 'Retirado', este campo se marca como verdadero."
 
 #. module: auction
 #: model:ir.actions.act_window,name:auction.action_auction_taken
@@ -815,7 +818,7 @@ msgstr "No existe dirección de factura"
 #. module: auction
 #: model:ir.actions.report.xml,name:auction.v_huissier
 msgid "Bailiffs Listing"
-msgstr ""
+msgstr "Listado cobradores de deudas"
 
 #. module: auction
 #: code:addons/auction/wizard/auction_lots_numerotate.py:103
@@ -1794,6 +1797,8 @@ msgid ""
 "Provide deposit information: seller, Withdrawned Method, Object, Deposit "
 "Costs"
 msgstr ""
+"Proporciona información del depósito: vendedor, método de retirada, objeto, "
+"costes del depósito"
 
 #. module: auction
 #: field:auction.lots,net_revenue:0
@@ -1841,6 +1846,21 @@ msgid ""
 "       * My Objects By Day (list)\n"
 "    "
 msgstr ""
+"\n"
+"     Este módulo gestiona los registros de los artistas,\n"
+"     los artículos que se ponen a subasta, los compradores y\n"
+"     los vendedores.\n"
+"\n"
+"     Gestiona completamente una subasta como la gestión de las ofertas,\n"
+"     el seguimiento de los artículos que se venden junto con el pago\n"
+"     y los objetos pendientes de pago, incluida la entrega de los "
+"artículos.\n"
+"     Tableros para la subasta, que incluye:\n"
+"       * Mis últimos objetos (la lista)\n"
+"       * Mis últimos depósitos (lista)\n"
+"       * Estadística de objetos (lista)\n"
+"       * Mis objetos por día (lista)\n"
+"    "
 
 #. module: auction
 #: view:auction.taken:0
@@ -1944,7 +1964,7 @@ msgstr "Configuración"
 #, python-format
 msgid ""
 "You should pay all the total: \"%.2f\" are missing to accomplish the payment."
-msgstr ""
+msgstr "Debe pagar todo el total: Faltan \"%.2f\" para liquidar el pago."
 
 #. module: auction
 #: model:ir.model,name:auction.model_auction_pay_buy
@@ -2200,7 +2220,7 @@ msgstr "Descripción de objetos"
 #: code:addons/auction/wizard/auction_pay_buy.py:87
 #, python-format
 msgid "No auction date for \"%s\": Please set one."
-msgstr ""
+msgstr "No hay fecha de la subasta para \"%s\": Por favor seleccione una."
 
 #. module: auction
 #: view:auction.deposit:0
@@ -2272,7 +2292,7 @@ msgstr "Gastos"
 #. module: auction
 #: model:ir.model,name:auction.model_auction_payer
 msgid "Auction payer"
-msgstr ""
+msgstr "Pagador de la subasta"
 
 #. module: auction
 #: report:auction.total.rml:0

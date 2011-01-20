@@ -22,17 +22,29 @@
 from osv import osv
 from tools import cache
 
+def _gen_cache_clear(method):
+    def func(self, cr, *args, **kwargs):
+        s = super(publisher_warranty_contract, self)
+        r = getattr(s, method)(cr, *args, **kwargs)
+        self.is_livechat_enable.clear_cache(cr.dbname)
+        return r
+    return func
+
 class publisher_warranty_contract(osv.osv):
     _inherit = 'publisher_warranty.contract'
 
+    create = _gen_cache_clear('create')
+    write = _gen_cache_clear('write')
+    unlink = _gen_cache_clear('unlink')
+
     @cache(skiparg=3, timeout=300)
     def is_livechat_enable(self, cr, uid):
-        domain = [('state', '=', 'valid'), ('kind', '=', 'support')]
+        domain = [('state', '=', 'valid'), ('check_support', '=', True)]
         return self.search_count(cr, uid, domain) != 0
 
     @cache(skiparg=3)
     def get_default_livechat_text(self, cr, uid):
-        return '<a href="http://www.openerp.com/services/subscribe-onsite" target="_blank"><img src="/web_livechat/static/images/busy.png"/>Support</a>'
+        return '<a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank"><img src="/web_livechat/static/images/busy.png"/>Support</a>'
 
 publisher_warranty_contract()
 

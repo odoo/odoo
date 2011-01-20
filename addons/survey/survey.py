@@ -184,7 +184,7 @@ class survey_page(osv.osv):
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
                 data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
         if context.has_key('survey_id'):
-            data['survey_id'] = context['survey_id']
+            data['survey_id'] = context.get('survey_id', False)
         return data
 
     def survey_save(self, cr, uid, ids, context=None):
@@ -714,7 +714,7 @@ class survey_request(osv.osv):
         'email': fields.char("E-mail", size=64),
         'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
         'response': fields.many2one('survey.response', 'Answer'),
-        'state': fields.selection([('draft','Draft'),('waiting_answer', 'Wating Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
+        'state': fields.selection([('draft','Draft'),('waiting_answer', 'Waiting Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
     }
     _defaults = {
         'state': lambda * a: 'draft',

@@ -80,4 +80,5 @@ Web client WYSIWYG
     ],
     "installable" : True,
     "active" : False,
+    "certificate" : "001159699313338995949",
 }

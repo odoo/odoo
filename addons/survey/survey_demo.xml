@@ -29,7 +29,7 @@
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
             <field name="response_user">5</field>
-            <field name="date_open">2010-03-03 14:25:03</field>
+            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
            </record>
 
         <record id="survey_page_who_are_you" model="survey.page">
@@ -505,7 +505,7 @@
             <field name="tot_comp_survey">1</field>
             <field name="tot_start_survey">1</field>
             <field name="response_user">5</field>
-            <field name="date_open">2010-03-03 14:25:03</field>
+            <field name="date_open" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
            </record>
 
         <record id="survey_page_odoo_who_are_you" model="survey.page">
@@ -2827,21 +2827,21 @@
 
     <data noupdate="1">
         <record id="survey_history_0" model="survey.history">
-            <field name="date">2010-03-03 14:25:03</field>
+            <field name="date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="survey_id" ref="survey.survey_partner_feedback"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
     </data>
     <data noupdate="1">
         <record id="survey_history_1" model="survey.history">
-            <field name="date">2010-03-03 14:29:36</field>
+            <field name="date" eval="time.strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="survey_id" ref="survey.survey_odoo_feedback"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
     </data>
     <data noupdate="1">
         <record id="survey_response_0" model="survey.response">
-            <field name="date_create">2010-03-03 14:25:03.603599</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.603599'"/>
             <field name="state">done</field>
             <field name="survey_id" ref="survey.survey_partner_feedback"/>
             <field name="user_id" ref="base.user_root"/>
@@ -2850,7 +2850,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_1" model="survey.response">
-            <field name="date_create">2010-03-03 14:29:36.247905</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.247905'"/>
             <field name="state">done</field>
             <field name="survey_id" ref="survey.survey_odoo_feedback"/>
             <field name="user_id" ref="base.user_root"/>
@@ -2859,7 +2859,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_0" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:25:03.631622</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.631622'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_your_customers"/>
@@ -2867,7 +2867,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_1" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:25:03.653849</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.653849'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_located"/>
@@ -2875,7 +2875,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_2" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:25:03.671836</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.671836'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_company_size"/>
@@ -2883,7 +2883,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_3" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:25:03.689999</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.689999'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_offical_partner"/>
@@ -2891,7 +2891,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_4" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:25:03.706175</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.706175'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="single_text">OpenERP SA</field>
@@ -2900,7 +2900,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_5" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:25:29.087116</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.087116'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_partnership_contract"/>
@@ -2908,7 +2908,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_6" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:25:29.107571</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.107571'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_contract_customers"/>
@@ -2916,7 +2916,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_7" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:25:29.126023</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.126023'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_sell_to_your_customers"/>
@@ -2924,7 +2924,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_8" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:26:14.844451</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.844451'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_partners_about"/>
@@ -2932,7 +2932,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_9" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:26:14.872224</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.872224'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_launchpad_reporting"/>
@@ -2940,7 +2940,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_10" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:26:14.897764</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.897764'"/>
             <field name="state">skip</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_partners_on_which_subjects"/>
@@ -2948,7 +2948,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_11" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:26:14.918989</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.918989'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_0"/>
             <field name="question_id" ref="survey.survey_question_Leads"/>
@@ -2956,7 +2956,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_12" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:29:36.27459</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.27459'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_discover_odoo"/>
@@ -2964,7 +2964,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_13" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:29:36.301461</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.301461'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_company_sector"/>
@@ -2972,7 +2972,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_14" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:29:36.33203</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.33203'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="single_text">OpenERP SA</field>
@@ -2981,7 +2981,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_15" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:29:36.35911</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.35911'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_mange_with_odoo"/>
@@ -2989,7 +2989,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_16" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:30:11.376172</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.376172'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_continue_using_odoo"/>
@@ -2997,7 +2997,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_17" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:30:11.397675</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.397675'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_subscribe_to_odoo"/>
@@ -3005,7 +3005,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_18" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:30:11.414119</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.414119'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_configure_the_application"/>
@@ -3013,7 +3013,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_19" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:31:18.637519</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.637519'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_would_you_prefer_use"/>
@@ -3021,7 +3021,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_20" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:31:18.653091</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.653091'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="single_text">survey</field>
@@ -3030,7 +3030,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_21" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:31:18.669619</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.669619'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_give_your_opinion"/>
@@ -3038,7 +3038,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_22" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:31:18.691933</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.691933'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_you_think_about"/>
@@ -3046,7 +3046,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_23" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:32:08.47899</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.47899'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_dms"/>
@@ -3054,7 +3054,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_24" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:32:08.501274</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.501274'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_offer_opinion_about_odoo"/>
@@ -3062,7 +3062,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_25" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:32:08.523878</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.523878'"/>
             <field name="state">skip</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_offer_comments_them_here"/>
@@ -3070,7 +3070,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_26" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:32:08.538988</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.538988'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_would_you_prefer_receive_your_prepaid_bill"/>
@@ -3078,7 +3078,7 @@
     </data>
     <data noupdate="1">
         <record id="survey_response_line_27" model="survey.response.line">
-            <field name="date_create">2010-03-03 14:32:08.555196</field>
+            <field name="date_create" eval="time.strftime('%Y-%m-%d %H:%M:%S')+'.555196'"/>
             <field name="state">done</field>
             <field name="response_id" ref="survey_response_1"/>
             <field name="question_id" ref="survey.survey_question_odoo_support_services"/>

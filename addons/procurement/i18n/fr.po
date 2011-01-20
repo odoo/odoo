@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-11 22:14+0000\n"
-"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 01:05+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:58+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:53+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -485,6 +485,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
 msgstr ""
+"Si le champ \"Actif\" n'est pas coché, cela vous permettra de cacher les "
+"points de commande sans les supprimer."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -763,7 +765,7 @@ msgstr "Règles du stock minimum"
 #. module: procurement
 #: field:procurement.order,close_move:0
 msgid "Close Move at end"
-msgstr ""
+msgstr "Fermer le transfert à la fin"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -910,6 +912,17 @@ msgid ""
 "others require manual intervention (those are identified by a specific error "
 "message)."
 msgstr ""
+"Les ordres d'approvisionnement représentent le besoin d'une certaine "
+"quantité de produit, à un moment et pour un emplacement donnés. Les bons de "
+"commande sont une source typique d'ordres d'approvisionnement (mais ce sont "
+"des documents distincts). Selon les paramètres d'approvisionnement et la "
+"configuration du produit, le moteur d'approvisionnement essaiera de "
+"satisfaire le besoin en allouant des produits à partir du stock, en "
+"commandant les produits à un fournisseur, ou en passant un ordre de "
+"fabrication, etc. Un incident d'approvisionnement arrive quand le système ne "
+"trouve pas de moyen pour satisfaire le besoin. Quelques incidents se "
+"résoudront automatiquement, mais d'autres nécessiteront une intervention "
+"manuelle (ceux-ci sont identifiés par un message d'erreur particulier)."
 
 #. module: procurement
 #: field:procurement.order,product_uom:0

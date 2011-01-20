@@ -289,8 +289,8 @@
 -
   !record {model: pos.order, id: pos_order_pos0}:
     company_id: base.main_company
-    date_order: '2010-05-13 15:02:48'
-    date_validity: '2010-11-13'
+    date_order: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+    date_validity: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+6,datetime.now().day)"
     lines:
       - company_id: base.main_company
         name: Order Line/01
@@ -327,16 +327,24 @@
   I open the statement.
 - 
   !python {model: pos.open.statement}: |
-    self.open_statement(cr, uid, [ref("pos_open_statement_0")], {"lang": "en_US", "active_model":
-      "ir.ui.menu", "active_ids": [ref("point_of_sale.menu_open_statement")], "tz":
-      False, "active_id": ref("point_of_sale.menu_open_statement"), })
+    jou_obj = self.pool.get('account.journal')
+    statement_obj = self.pool.get('account.bank.statement')
+    cr.execute("SELECT DISTINCT journal_id FROM pos_journal_users "
+                    "WHERE user_id = %s ORDER BY journal_id"% (uid, ))
+    jou_ids = map(lambda x1: x1[0], cr.fetchall())
+    journal_ids = jou_obj.search(cr, uid, [('auto_cash', '=', True), ('type', '=', 'cash'), ('id', 'in', jou_ids)], context=context)
+    ids = statement_obj.search(cr, uid, [('state', '=', 'open'), ('user_id', '=', uid), ('journal_id', 'in', journal_ids)], context=context)
+    if not ids:
+        self.open_statement(cr, uid, [ref("pos_open_statement_0")], {"lang": "en_US", "active_model":
+          "ir.ui.menu", "active_ids": [ref("point_of_sale.menu_open_statement")], "tz":
+          False, "active_id": ref("point_of_sale.menu_open_statement"), })
 -
   I click on the "Make Payment" wizard.  
 - 
   !record {model: pos.make.payment, id: pos_make_payment_0}:
     amount: 1615.0
     journal: 7
-    payment_date: "2010-05-13"
+    payment_date: !eval time.strftime("%Y-%m-%d")
     payment_name: Payment
     product_id: product_product_hppaviliondesktoppcs0
     pricelist_id: product.list0
@@ -398,7 +406,7 @@
   !record {model: pos.make.payment, id: pos_make_payment_1}:
     amount: 680.0
     journal: 7
-    payment_date: "2010-05-13"
+    payment_date: !eval time.strftime("%Y-%m-%d")
     payment_name: Payment
     product_id: product_product_hppaviliondesktoppcs0
     pricelist_id: product.list0

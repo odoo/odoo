@@ -19,15 +19,10 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
+from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task 
-import operator
-from new import classobj
-import types
-import new
 
 class project_phase(osv.osv):
     _name = "project.phase"
@@ -219,9 +214,7 @@ class project_phase(osv.osv):
         if context is None:
             context = {}
         phase_ids = []
-        resource_pool = self.pool.get('resource.resource')
         data_pool = self.pool.get('ir.model.data')
-        resource_allocation_pool = self.pool.get('project.resource.allocation')
         uom_pool = self.pool.get('product.uom')
         task_pool = self.pool.get('project.task')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
@@ -304,9 +297,6 @@ class project_phase(osv.osv):
             ids = [ids]
         task_pool = self.pool.get('project.task')
         resource_pool = self.pool.get('resource.resource')
-        data_pool = self.pool.get('ir.model.data')
-        resource_allocation_pool = self.pool.get('project.resource.allocation')
-
         for phase in self.browse(cr, uid, ids, context=context):
             project = phase.project_id
             calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
@@ -374,7 +364,12 @@ def Phase_%d():
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Phase = eval('Phase_%d' % phase.id)
-            phase = Task.BalancedProject(Phase)
+            phase = None
+            try:
+                phase = Task.BalancedProject(Phase)
+            except :
+                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+        
         
             for task_id in task_ids:
                 task = eval("phase.Task_%d" % task_id)
@@ -448,7 +443,6 @@ class project(osv.osv):
         resource_pool = self.pool.get('resource.resource')
         data_pool = self.pool.get('ir.model.data')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
-        uom_pool = self.pool.get('product.uom')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
 
         for project in self.browse(cr, uid, ids, context=context):
@@ -517,8 +511,12 @@ def Project_%d():
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
-            project = Task.BalancedProject(Project)
-
+            project = None
+            try:
+                project = Task.BalancedProject(Project)
+            except :
+                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+            
             for phase_id in phase_ids:
                 act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
                 resources = act_phase.resource_ids
@@ -558,7 +556,7 @@ def Project_%d():
     #TODO: DO Resource allocation and compute availability
     def compute_allocation(self, rc, uid, ids, start_date, end_date, context=None):
         if context ==  None:
-            contex = {}
+            context = {}
         allocation = {}
         return allocation
 
@@ -573,8 +571,6 @@ def Project_%d():
         task_pool = self.pool.get('project.task')
         resource_pool = self.pool.get('resource.resource')
         data_pool = self.pool.get('ir.model.data')
-        resource_allocation_pool = self.pool.get('project.resource.allocation')
-        uom_pool = self.pool.get('product.uom')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
 
         for project in self.browse(cr, uid, ids, context=context):
@@ -583,7 +579,10 @@ def Project_%d():
             #Creating resources using the member of the Project
             u_ids = [i.id for i in project.members]
             resource_objs = resource_pool.generate_resources(cr, uid, u_ids, calendar_id, context=context)
-            start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d")
+            try:
+                start_date = datetime.strftime((datetime.strptime(start_date, "%Y-%m-%d")), "%Y-%m-%d")
+            except:
+                raise osv.except_osv(_('Error !'),_('Task Scheduling is not possible.\nProject should have the Start date for scheduling.'))
             func_str = ''
             start = start_date
             minimum_time_unit = 1
@@ -644,7 +643,12 @@ def Project_%d():
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
-            project = Task.BalancedProject(Project)
+            project = None
+            try:
+                project = Task.BalancedProject(Project)
+            except :
+                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+            
             for task_id in task_ids:
                 task = eval("project.Task_%d" % task_id)
                 start_date = task.start.to_datetime()
@@ -684,9 +688,6 @@ class project_task(osv.osv):
     def generate_task(self, cr, uid, task_id, parent=False, flag=False, context=None):
         if context is None:
             context = {}
-        phase_pool = self.pool.get('project.phase')
-        resource_pool = self.pool.get('resource.resource')
-        resource_allocation_pool = self.pool.get('project.resource.allocation')
         task = self.browse(cr, uid, task_id, context=context)
         duration = str(task.planned_hours )+ 'H'
         str_resource = False

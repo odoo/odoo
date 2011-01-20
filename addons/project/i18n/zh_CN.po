@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-10-30 14:54+0000\n"
-"Last-Translator: Black Jack <onetimespeed@hotmail.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 13:36+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:37+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:02+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -27,7 +27,7 @@ msgid "Reinclude the description of the task in the task of the user"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:657
+#: code:addons/project/project.py:658
 #, python-format
 msgid "The task '%s' has been delegated to %s."
 msgstr ""
@@ -43,7 +43,7 @@ msgstr "这将设置项目和任务的计量单位如果你使用链接的时间
 #. module: project
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "选择的公司不属于此用户允许访问的公司。"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -53,7 +53,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Deadlines"
-msgstr ""
+msgstr "截止期限"
 
 #. module: project
 #: code:addons/project/project.py:121
@@ -74,7 +74,7 @@ msgstr ""
 #. module: project
 #: field:project.installer,project_issue:0
 msgid "Issues Tracker"
-msgstr ""
+msgstr "问题跟踪程序"
 
 #. module: project
 #: field:project.installer,hr_timesheet_sheet:0
@@ -106,9 +106,8 @@ msgid ""
 msgstr "总剩余时间,任务接收者能重新估计"
 
 #. module: project
-#: code:addons/project/wizard/project_task_close.py:86
-#, python-format
-msgid "Task '%s' Closed"
+#: help:project.project,priority:0
+msgid "Gives the sequence order when displaying the list of projects"
 msgstr ""
 
 #. module: project
@@ -187,12 +186,6 @@ msgid "Warn Message"
 msgstr ""
 
 #. module: project
-#: help:project.project,members:0
-msgid ""
-"Project's member. Not used in any computation, just for information purpose."
-msgstr "项目成员不使用任何计算只是为了显示"
-
-#. module: project
 #: field:project.task.type,name:0
 msgid "Stage Name"
 msgstr ""
@@ -242,7 +235,7 @@ msgid "Day"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:570
+#: code:addons/project/project.py:571
 #, python-format
 msgid "The task '%s' is done"
 msgstr ""
@@ -318,12 +311,6 @@ msgstr "开始任务"
 msgid ""
 "Helps generate invoices based on time spent on tasks, if activated on the "
 "project."
-msgstr ""
-
-#. module: project
-#: view:project.task:0
-#: field:project.task,parent_ids:0
-msgid "Parent Tasks"
 msgstr ""
 
 #. module: project
@@ -434,7 +421,7 @@ msgid "Reactivate Project"
 msgstr "重新启动项目"
 
 #. module: project
-#: code:addons/project/project.py:552
+#: code:addons/project/project.py:553
 #, python-format
 msgid "Task '%s' closed"
 msgstr ""
@@ -484,8 +471,8 @@ msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:224
-#: code:addons/project/project.py:245
+#: code:addons/project/project.py:225
+#: code:addons/project/project.py:246
 #, python-format
 msgid " (copy)"
 msgstr ""
@@ -624,7 +611,7 @@ msgid "Reevaluate"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:530
+#: code:addons/project/project.py:531
 #, python-format
 msgid "Send Email after close task"
 msgstr ""
@@ -667,9 +654,10 @@ msgid "Planned Time"
 msgstr "已计划的时间"
 
 #. module: project
-#: help:project.task.close,manager_warn:0
-msgid "Warn Manager by Email"
-msgstr ""
+#: code:addons/project/wizard/project_task_close.py:86
+#, python-format
+msgid "Task '%s' Closed"
+msgstr "任务“%s”已经关闭"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -716,7 +704,7 @@ msgid "Starting Date"
 msgstr "开始日期"
 
 #. module: project
-#: code:addons/project/project.py:266
+#: code:addons/project/project.py:267
 #: model:ir.actions.act_window,name:project.open_view_project_all
 #: model:ir.ui.menu,name:project.menu_open_view_project_all
 #: view:project.project:0
@@ -741,7 +729,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:621
+#: code:addons/project/project.py:622
 #, python-format
 msgid "The task '%s' is opened."
 msgstr ""
@@ -977,8 +965,9 @@ msgid "Start Date"
 msgstr ""
 
 #. module: project
-#: help:project.project,priority:0
-msgid "Gives the sequence order when displaying a list of task"
+#: view:project.task:0
+#: field:project.task,parent_ids:0
+msgid "Parent Tasks"
 msgstr ""
 
 #. module: project
@@ -1141,6 +1130,7 @@ msgid "Project Dashboard"
 msgstr "项目控制台"
 
 #. module: project
+#: view:project.project:0
 #: field:project.project,parent_id:0
 msgid "Parent Project"
 msgstr "上级项目"
@@ -1171,7 +1161,7 @@ msgid "Customer Email"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:189
+#: code:addons/project/project.py:190
 #, python-format
 msgid "The project '%s' has been closed."
 msgstr ""
@@ -1184,6 +1174,11 @@ msgstr "任务编辑"
 #. module: project
 #: selection:report.project.task.user,month:0
 msgid "October"
+msgstr ""
+
+#. module: project
+#: help:project.task.close,manager_warn:0
+msgid "Warn Manager by Email"
 msgstr ""
 
 #. module: project
@@ -1214,7 +1209,7 @@ msgid "When task is completed, it will come into the done state."
 msgstr "当任务完成它将进入完成状态"
 
 #. module: project
-#: code:addons/project/project.py:211
+#: code:addons/project/project.py:212
 #, python-format
 msgid "The project '%s' has been opened."
 msgstr ""
@@ -1297,6 +1292,13 @@ msgid "Getting Things Done"
 msgstr ""
 
 #. module: project
+#: help:project.project,members:0
+msgid ""
+"Project's member. Not used in any computation, just for information purpose, "
+"but a user has to be member of a project to add a the to this project."
+msgstr ""
+
+#. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
 msgstr ""
@@ -1344,7 +1346,7 @@ msgid ""
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:581
+#: code:addons/project/project.py:582
 #, python-format
 msgid "Task '%s' set in progress"
 msgstr "任务 '%s' 设置进度"
@@ -1717,7 +1719,7 @@ msgid "Spent Hours"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:664
+#: code:addons/project/project.py:665
 #, python-format
 msgid "The task '%s' is pending."
 msgstr ""
@@ -1792,7 +1794,7 @@ msgid "Validation State"
 msgstr "确认状态"
 
 #. module: project
-#: code:addons/project/project.py:601
+#: code:addons/project/project.py:602
 #, python-format
 msgid "Task '%s' cancelled"
 msgstr ""
@@ -1820,7 +1822,7 @@ msgid "Create Date"
 msgstr ""
 
 #. module: project
-#: code:addons/project/project.py:609
+#: code:addons/project/project.py:610
 #, python-format
 msgid "The task '%s' is cancelled."
 msgstr ""
@@ -1834,11 +1836,6 @@ msgstr ""
 #: field:project.task.work,name:0
 msgid "Work summary"
 msgstr "工作摘要"
-
-#. module: project
-#: view:project.project:0
-msgid "Scheduling"
-msgstr ""
 
 #. module: project
 #: view:project.installer:0
@@ -2125,6 +2122,10 @@ msgstr ""
 #~ "Couldn't send mail because the contact for this task (%s) has no email "
 #~ "address!"
 #~ msgstr "任务 %s 无法发送邮件因为联系人没有邮箱地址"
+
+#~ msgid ""
+#~ "Project's member. Not used in any computation, just for information purpose."
+#~ msgstr "项目成员不使用任何计算只是为了显示"
 
 #~ msgid "Estimated time to close this task by the delegated user."
 #~ msgstr "委托用户结束这任务的估计时间"

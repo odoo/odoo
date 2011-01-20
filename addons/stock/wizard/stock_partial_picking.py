@@ -28,9 +28,9 @@ class stock_partial_picking(osv.osv_memory):
     _name = "stock.partial.picking"
     _description = "Partial Picking"
     _columns = {
-        'date': fields.datetime('Date', required=True), 
-        'product_moves_out' : fields.one2many('stock.move.memory.out', 'wizard_id', 'Moves'), 
-        'product_moves_in' : fields.one2many('stock.move.memory.in', 'wizard_id', 'Moves'), 
+        'date': fields.datetime('Date', required=True),
+        'product_moves_out' : fields.one2many('stock.move.memory.out', 'wizard_id', 'Moves'),
+        'product_moves_in' : fields.one2many('stock.move.memory.in', 'wizard_id', 'Moves'),
      }
     
     def get_picking_type(self, cr, uid, picking, context=None):
@@ -82,6 +82,10 @@ class stock_partial_picking(osv.osv_memory):
        
         pick_obj = self.pool.get('stock.picking')
         picking_ids = context.get('active_ids', False)
+
+        if not picking_ids:
+            # not called through an action (e.g. buildbot), return the default.
+            return result
 
         for pick in pick_obj.browse(cr, uid, picking_ids, context=context):
             picking_type = self.get_picking_type(cr, uid, pick, context=context)

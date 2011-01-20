@@ -7,7 +7,7 @@
 - 
   !record {model: crm.claim, id: crm_claim_damagedproduct0}:
     categ_id: crm_claim.categ_claim2
-    date: '2010-04-21 20:13:00'
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     email_from: info@balmerinc.be
     name: 'Damaged product '
     partner_address_id: base.res_partner_address_1
