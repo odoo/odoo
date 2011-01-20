@@ -1751,7 +1751,14 @@ class ir_attachment(osv.osv):
         new_args = args
         for i, arg in enumerate(new_args):
             if arg[0] == 'res_id':
-                new_args[i] = (arg[0], arg[1], base_calendar_id2real_id(arg[2]))
+                ids = arg[2]
+                if arg[1].lower() in ('in', 'not in'):
+                    if not isinstance(ids, (tuple, list)):
+                        ids = [ids]
+
+                    ids = map(base_calendar_id2real_id, ids)
+
+                new_args[i] = (arg[0], arg[1], ids)
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
                             limit=limit, order=order,
                             context=context, count=False)
