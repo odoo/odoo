@@ -421,8 +421,8 @@
                             <group col="2" colspan="2">
                                 <group colspan="2" col="2">
                                     <separator string="Accounts" colspan="4"/>
-                                    <field name="default_debit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                                    <field name="default_credit_account_id" attrs="{'required':[('type','=','cash')]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                                    <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                                 </group>
                                 <group colspan="2" col="2">
                                     <separator string="Journal View" colspan="4"/>
@@ -2394,7 +2394,7 @@
                     <field name="sale_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                     <field name="purchase_tax" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('purchase', 'all'))]"/>
                     <newline/> <!-- extended view because the web UI is not good for one2many -->
-                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="base.group_extended"> 
+                    <field colspan="4" mode="tree" name="bank_accounts_id" nolabel="1" widget="one2many_list" groups="base.group_extended">
                         <form string="Bank Information">
                             <field name="acc_name"/>
                             <field name="account_type"/>
