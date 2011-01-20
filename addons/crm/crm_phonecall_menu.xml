@@ -31,7 +31,7 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,calendar</field>
         <field name="view_id" ref="crm_case_phone_tree_view"/>
-        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
+        <field name="context">{"search_default_user_id":uid, 'search_default_section_id': context.get('section_id',False)}</field>
         <field name="search_view_id" ref="crm.view_crm_case_phonecalls_filter"/>
     </record>
 
