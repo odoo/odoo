@@ -44,10 +44,6 @@ class ir_ui_menu(osv.osv):
         self.pool.get('ir.model.access').register_cache_clearing_method(self._name, 'clear_cache')
         return r
 
-    def __del__(self):
-        self.pool.get('ir.model.access').unregister_cache_clearing_method(self._name, 'clear_cache')
-        return super(ir_ui_menu, self).__del__()
-
     def clear_cache(self):
         # radical but this doesn't frequently happen
         self._cache = {}
