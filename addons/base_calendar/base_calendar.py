@@ -1403,17 +1403,17 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
         return res
     
-    def get_edit_all(self, cr, uid, id, vals=None, context=None):
+    def get_edit_all(self, cr, uid, id, vals=None):
         """
             return true if we have to edit all meeting from the same recurrent
             or only on occurency
         """
-        
-        meeting = self.browse(cr,uid,[id], context=context)
+        print id
+        meeting = self.read(cr,uid, id, ['edit_all', 'recurrency'] )
         if(vals and 'edit_all' in vals): #we jsut check edit_all
             return vals['edit_all']
         else: #it's a recurrent event and edit_all is already check
-            return meeting.recurrency and meeting.edit_all 
+            return meeting['recurrency'] and meeting['edit_all'] 
 
         
 
@@ -1439,7 +1439,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
             
-            if(self.get_edit_all(cr, uid, id, vals=vals, context=context)):
+            if(self.get_edit_all(cr, uid, event_id, vals=vals)):
                 event_id = real_event_id
             
             
@@ -1573,7 +1573,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
             
-            if self.get_edit_all(cr, uid, event_id, vals=None, context=context):
+            if self.get_edit_all(cr, uid, event_id, vals=None):
                 event_id = base_calendar_id2real_id(event_id)
             
             if isinstance(event_id, (int, long)):
