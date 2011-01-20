@@ -1853,11 +1853,6 @@ class stock_move(osv.osv):
         """
         moves = self.browse(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
-        res_obj = self.pool.get('res.company')
-        location_obj = self.pool.get('stock.location')
-        move_obj = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
-
         self.create_chained_picking(cr, uid, moves, context)
         return []
 
