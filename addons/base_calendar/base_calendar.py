@@ -1198,7 +1198,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             'active': 1,
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
-            'edit_all' : True,
+            'edit_all' : False,
     }
 
     def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
@@ -1483,6 +1483,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             vals.get('allday', False),
             context=context)
         vals.update(updated_vals.get('value', {}))
+
+        if not 'edit_all' in vals:
+            vals['edit_all'] = False
 
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
