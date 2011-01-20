@@ -23,6 +23,7 @@ from datetime import datetime
 from tools.translate import _
 from osv import fields, osv
 from resource.faces import task as Task 
+import logging
 
 class project_phase(osv.osv):
     _name = "project.phase"
@@ -360,17 +361,18 @@ def Phase_%d():
                     parent = task
                 task_ids.append(task.id)
             func_str += cls_str
-    
+            phase_id = phase.id
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Phase = eval('Phase_%d' % phase.id)
             phase = None
             try:
                 phase = Task.BalancedProject(Phase)
-            except :
-                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
-        
-        
+            except Exception, e:
+                import traceback
+                logging.getLogger('project').warning("Error on sheduling tasks of phase#%s: %s \n%s",phase_id, str(e), traceback.format_exc())
+                raise osv.except_osv(_('Error !'),_('Sorry, Phase Scheduling is not possible due to some errors. Please check traceback in server log for more.'))
+
             for task_id in task_ids:
                 task = eval("phase.Task_%d" % task_id)
                 start_date = task.start.to_datetime()
@@ -444,6 +446,26 @@ class project(osv.osv):
         data_pool = self.pool.get('ir.model.data')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
+        
+        #Checking the Valid Phase resource allocation from project member
+        for project in self.browse(cr, uid, ids, context=context):
+            flag = False
+            res_msg = ''
+            memebrs_ids = []
+            resource_user_ids = []
+            if project.members:
+                memebrs_ids = [use.id for use in project.members]
+            phase_ids = phase_pool.search(cr, uid, [('project_id', '=', project.id)], context=context)
+            if phase_ids:
+                for phase in phase_pool.browse(cr, uid, phase_ids, context=context):
+                    if phase.resource_ids:
+                        res_ids = [ re.id for re in  phase.resource_ids] 
+                        for res in resource_allocation_pool.browse(cr, uid,res_ids, context=context):
+                            if res.resource_id.user_id.id not in memebrs_ids:
+                                res_msg += " '%s' %s , "%(res.resource_id.name,res.resource_id.user_id.name)
+                                flag = True
+            if flag:
+                raise osv.except_osv(_('Warning !'),_("Resource %s is/are not Members of the Project '%s' .")%(res_msg[:-3], project.name))
 
         for project in self.browse(cr, uid, ids, context=context):
             root_phase_ids = phase_pool.search(cr, uid, [('project_id', '=', project.id),
@@ -508,14 +530,17 @@ def Project_%d():
                 func_str += phases
                 phase_ids += child_phase_ids
         
+            project_id = project.id
             # Allocating Memory for the required Project and Pahses and Resources
             exec(func_str)
             Project = eval('Project_%d' % project.id)
             project = None
             try:
                 project = Task.BalancedProject(Project)
-            except :
-                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+            except Exception, e:
+                import traceback
+                logging.getLogger('project').warning("Error on sheduling phases of project#%s: %s \n%s", project_id, str(e), traceback.format_exc())
+                raise osv.except_osv(_('Error !'),_('Sorry, Phase Scheduling is not possible due to some errors. Please check traceback in server log for more.'))
             
             for phase_id in phase_ids:
                 act_phase = phase_pool.browse(cr, uid, phase_id, context=context)
@@ -647,7 +672,7 @@ def Project_%d():
             try:
                 project = Task.BalancedProject(Project)
             except :
-                raise osv.except_osv(_('Error !'),_('Phase Scheduling is not possible.\nProject should have the Start date and member for scheduling.'))
+                raise osv.except_osv(_('Error !'),_('Task Scheduling is not possible.\nProject should have the Start date for scheduling.'))
             
             for task_id in task_ids:
                 task = eval("project.Task_%d" % task_id)
