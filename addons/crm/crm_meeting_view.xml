@@ -43,8 +43,8 @@
                     <field name="location" />
                     <field name="alarm_id" string="Reminder"
                         widget="selection" />
-                    <group colspan="2" col="4" attrs="{'readonly': [('state','=','done')]}">
-                           <field name="recurrency"/>
+                    <group colspan="2" col="4" attrs="{'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}">
+                           <field name="recurrency" attrs="{'readonly' : [('edit_all', '=', False)] }"/>
                            <field name="edit_all" attrs="{'invisible':[('recurrency','=', False)]}"
                                 on_change="onchange_edit_all(rrule_type,edit_all)"/>
                     </group>
@@ -70,7 +70,7 @@
                             <separator colspan="2" string="Visibility"/>
                             <field name="class" string="Privacy"/>
                             <field name="show_as" string="Show time as" groups="base.group_extended"/>
-                            <field name="rrule" invisible="1" />
+                            <field name="rrule" invisible="1" readonly="1"/>
                             <field name="recurrent_id" invisible="1"/>
                             <field name="recurrent_uid" invisible="1"/>
                         </group>
@@ -165,7 +165,7 @@
                             </form>
                         </field>
                     </page>
-                    <page string="Recurrency Option" attrs="{'invisible': [('recurrency','=',False)], 'readonly': [('state','=','done')]}">
+                    <page string="Recurrency Option" attrs="{'invisible': [('recurrency','=',False)], 'readonly': ['|', ('edit_all', '=', False), '|', ('recurrent_uid','!=',False), ('state','=','done')]}">
                         <group col="4" colspan="4" name="rrule">
                             <group col="4" colspan="4">
                                 <field name="rrule_type" string="Recurrency period" />
