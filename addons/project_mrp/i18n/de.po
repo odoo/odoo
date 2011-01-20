@@ -7,44 +7,44 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-12-31 10:39+0000\n"
+"PO-Revision-Date: 2011-01-18 11:22+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:34+0000\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:45+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
 msgid "For each product, on type service and on order"
 msgstr ""
-"Für jedes Produkt mit dem Typ Dienstleistungen (Service) und der "
-"Beschaffungsmethode 'von Auftrag'"
+"Für jedes Produkt mit der Produktart Dienstleistungen (Service) und der "
+"Beschaffungsmethode 'Beschaffe von Auftrag'"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procurement Task"
-msgstr "Beschaffungsauftrags Aufgabe"
+msgstr "Aufgabe von Beschaffungsauftrag"
 
 #. module: project_mrp
 #: model:ir.module.module,shortdesc:project_mrp.module_meta_information
 msgid "Procurement and Project Management integration"
-msgstr "Beschaffungs und Projketmanagement Integration"
+msgstr "Projektmanagement Integration mit Beschaffung"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
-msgstr ""
-"Bei Produktart Service (Dienstleistungen), wird diese Aufgabe generiert."
+msgstr "Für die Produktart Dienstleistungen, wird eine Aufgabe generiert."
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
 msgid "if product type is 'service' then it creates the task."
 msgstr ""
-"Falls Produkttyp \"Service\" (Dienstleistung) wird eine Aufgabe erzeugt."
+"Falls die Produktart Dienstleistung hinterlegt wurde, wird eine Aufgabe "
+"erzeugt."
 
 #. module: project_mrp
 #: constraint:project.task:0
@@ -78,7 +78,7 @@ msgstr "Beschaffung"
 #: model:process.node,name:project_mrp.process_node_procuretasktask0
 #: field:procurement.order,task_id:0
 msgid "Task"
-msgstr "Aufgaben"
+msgstr "Aufgabe"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
@@ -126,7 +126,8 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Diese Anwendung erstellt die Verlinkung zwischen Beschaffungsaufträgen für \n"
+"Diese Anwendung erstellt die Verknüpfung zwischen Beschaffungsaufträgen für "
+"\n"
 "Produkte der Art \"Dienstleistung\" und Aufgaben für das Projektmanagement.\n"
 "\n"
 "Durch die Installation der Anwendung wird für jede einzelne Position eines "
@@ -135,8 +136,8 @@ msgstr ""
 "Projektmanagement erstellt, \n"
 "wenn folgende Kriterien erfüllt werden:\n"
 "  * Produktart = Dienstleistung\n"
-"  * Dispositionsmethode = Disponiere von Auftrag\n"
-"  * Einkaufsmethode = Produziere\n"
+"  * Dispositionsmethode = Beschaffe von Auftrag\n"
+"  * Beschaffungssmethode = Fertigung\n"
 "\n"
 "Die neue Aufgabe wird zunächst ohne Projektbezug erstellt, Sie können\n"
 "ein Projekt ergänzen.\n"
@@ -154,14 +155,15 @@ msgstr ""
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
 msgstr ""
-"Wenn die Beschaffungsmethode  \"Auftragsfertigung\" und die Liefermethode  "
-"\"Produktion\" ist"
+"Wenn die Dispositionsmethode  \"Beschaffe von Auftrag\" und die "
+"Beschaffungsmethode  \"Fertigung\" ist"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
 msgstr ""
-"Im Falle dass Sie Dienstleistungen aufgrund von Verkaufsaufträgen verkaufen"
+"Für den Fall, dass Sie Dienstleistungen auf Basis von Verkaufsaufträgen "
+"verkaufen"
 
 #~ msgid "If procure method is Make to order and supply method is produce"
 #~ msgstr ""

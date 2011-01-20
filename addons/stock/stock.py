@@ -1463,7 +1463,7 @@ class stock_move(osv.osv):
     _description = "Stock Move"
     _order = 'date_expected desc, id'
     _log_create = False
-    
+
     def action_partial_move(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.move").create(
@@ -1481,7 +1481,7 @@ class stock_move(osv.osv):
             'domain': '[]',
             'context': context
         }
-        
+
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
