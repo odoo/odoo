@@ -1198,6 +1198,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             'active': 1,
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
+            'edit_all' : True,
     }
 
     def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
@@ -1408,7 +1409,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             return true if we have to edit all meeting from the same recurrent
             or only on occurency
         """
-        print id
         meeting = self.read(cr,uid, id, ['edit_all', 'recurrency'] )
         if(vals and 'edit_all' in vals): #we jsut check edit_all
             return vals['edit_all']
@@ -1445,16 +1445,24 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
-                                                    'rrule', 'duration'])
+                                                    'rrule', 'duration', 'exdate'])
                 if data.get('rrule'):
                     data.update({
                         'recurrent_uid': real_event_id,
                         'recurrent_id': data.get('date'),
                         'rrule_type': 'none',
-                        'rrule': ''
+                        'rrule': '',
+                        'edit_all': False,
                         })
                     data.update(vals)
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
+                    
+                    date_new = event_id.split('-')[1]
+                    date_new = time.strftime("%Y%m%dT%H%M%S", \
+                                 time.strptime(date_new, "%Y%m%d%H%M%S"))
+                    exdate = (data['exdate'] and (data['exdate'] + ',')  or '') + date_new
+                    res = self.write(cr, uid, [real_event_id], {'exdate': exdate})
+                    
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
             if not real_event_id in new_ids:
