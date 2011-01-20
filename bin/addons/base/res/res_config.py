@@ -394,7 +394,7 @@ class res_config_installer(osv.osv_memory):
             modules.search(cr, uid, [('name','in',to_install)]),
             'to install', ['uninstalled'], context=context)
         cr.commit() #TOFIX: after remove this statement, installation wizard is fail
-        pooler.restart_pool(cr.dbname, update_module=True)
+        new_db, self.pool = pooler.restart_pool(cr.dbname, update_module=True)
 res_config_installer()
 
 DEPRECATION_MESSAGE = 'You are using an addon using old-style configuration '\

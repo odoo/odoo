@@ -531,7 +531,9 @@ class ir_model_access(osv.osv):
     def call_cache_clearing_methods(self, cr):
         self.check.clear_cache(cr.dbname)    # clear the cache of check function
         for model, method in self.__cache_clearing_methods:
-            getattr(self.pool.get(model), method)()
+            object_ = self.pool.get(model)
+            if object_:
+                getattr(object_, method)()
 
     #
     # Check rights on actions

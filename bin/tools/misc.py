@@ -162,16 +162,22 @@ def exec_pg_command_pipe(name, *args):
     prog = find_pg_tool(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
+    # on win32, passing close_fds=True is not compatible
+    # with redirecting std[in/err/out]
     pop = subprocess.Popen((prog,) + args, bufsize= -1,
-          stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+          stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+          close_fds=(os.name=="posix"))
     return (pop.stdin, pop.stdout)
 
 def exec_command_pipe(name, *args):
     prog = find_in_path(name)
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
+    # on win32, passing close_fds=True is not compatible
+    # with redirecting std[in/err/out]
     pop = subprocess.Popen((prog,) + args, bufsize= -1,
-          stdin=subprocess.PIPE, stdout=subprocess.PIPE, close_fds=True)
+          stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+          close_fds=(os.name=="posix"))
     return (pop.stdin, pop.stdout)
 
 #----------------------------------------------------------
