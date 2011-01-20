@@ -1442,7 +1442,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             
                 
             if not edit_all:
-            #if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
                 if data.get('rrule'):
@@ -1460,8 +1459,16 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 new_ids.append(real_event_id)
 
             if not recurrency:
+                #clear all recurrent property
+                clear_vals = {
+                        'recurrent_uid': False,
+                        'recurrent_id': False,
+                        'rrule_type': 'none',
+                        'rrule': ''
+                        }
+                super(calendar_event, self).write(cr, uid, [real_event_id], clear_vals, context=context)
                 # unlink all replica of that event after removing recurrency option
-                self.unlink_events(cr, uid, [event_id], context=context)
+                self.unlink_events(cr, uid, [real_event_id], context=context)
 
         if vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
