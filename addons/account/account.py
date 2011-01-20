@@ -2616,7 +2616,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             chart_template_id = ids[0]
             purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
-            return purchase_tax_ids[0]
+            return purchase_tax_ids and purchase_tax_ids[0] or False
         return False
 
     def _get_sale_tax(self, cr, uid, context=None):
@@ -2625,7 +2625,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             chart_template_id = ids[0]
             sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
-            return sale_tax_ids[0]
+            return sale_tax_ids and sale_tax_ids[0] or False
         return False
 
     def _get_chart(self, cr, uid, context=None):
