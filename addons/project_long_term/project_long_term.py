@@ -444,6 +444,26 @@ class project(osv.osv):
         data_pool = self.pool.get('ir.model.data')
         resource_allocation_pool = self.pool.get('project.resource.allocation')
         data_model, day_uom_id = data_pool.get_object_reference(cr, uid, 'product', 'uom_day')
+        
+        #Checking the Valid Phase resource allocation from project member
+        for project in self.browse(cr, uid, ids, context=context):
+            flag = False
+            res_msg = ''
+            memebrs_ids = []
+            resource_user_ids = []
+            if project.members:
+                memebrs_ids = [use.id for use in project.members]
+            phase_ids = phase_pool.search(cr, uid, [('project_id', '=', project.id)], context=context)
+            if phase_ids:
+                for phase in phase_pool.browse(cr, uid, phase_ids, context=context):
+                    if phase.resource_ids:
+                        res_ids = [ re.id for re in  phase.resource_ids] 
+                        for res in resource_allocation_pool.browse(cr, uid,res_ids, context=context):
+                            if res.resource_id.user_id.id not in memebrs_ids:
+                                res_msg += " '%s' %s , "%(res.resource_id.name,res.resource_id.user_id.name)
+                                flag = True
+            if flag:
+                raise osv.except_osv(_('Warning !'),_("Resource %s is/are not Members of the Project '%s' .")%(res_msg[:-3], project.name))
 
         for project in self.browse(cr, uid, ids, context=context):
             root_phase_ids = phase_pool.search(cr, uid, [('project_id', '=', project.id),
