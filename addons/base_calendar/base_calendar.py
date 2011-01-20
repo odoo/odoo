@@ -1080,8 +1080,6 @@ class calendar_event(osv.osv):
         for datas in self.read(cr, uid, ids, context=context):
             event = datas['id']
             if datas.get('rrule_type'):
-                if  datas['rrule_type']=='daily_working':
-                    datas.update({'rrule_type': 'weekly'})
                 if datas.get('rrule_type') == 'none':
                     result[event] = False
                     cr.execute("UPDATE %s set exrule=Null where id=%%s" % self._table,( event,))
