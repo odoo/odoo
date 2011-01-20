@@ -74,6 +74,8 @@ def base_calendar_id2real_id(base_calendar_id=None, with_date=False):
 
         if len(res) >= 2:
             real_id = res[0]
+            if not real_id:
+                return int(base_calendar_id)
             if with_date:
                 real_date = time.strftime("%Y-%m-%d %H:%M:%S", \
                                  time.strptime(res[1], "%Y%m%d%H%M%S"))
