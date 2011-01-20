@@ -1591,14 +1591,18 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             str_event, date_new = event_id.split('-')
             event_id = int(str_event)
             # Remove one of the recurrent main event
-            main_event = self.browse(cr, uid, event_id, context=context)
-            if main_event.recurrent_uid:
-                res = self.unlink(cr, uid, [main_event.id], context=context)
+            event = self.browse(cr, uid, event_id, context=context)
+            if event.recurrent_uid:
+                res = self.unlink(cr, uid, [event.id], context=context)
+                main_event_id =  event.recurrent_uid
             else:
-                date_ex = time.strftime("%Y%m%dT%H%M%S", \
-                         time.strptime(date_new, "%Y%m%d%H%M%S"))
-                exdate = (main_event.exdate and (main_event.exdate + ',')  or '') + date_ex
-                res = super(calendar_event, self).write(cr, uid, [main_event.id], {'exdate': exdate})
+                main_event_id = event.id
+
+            main_event = self.browse(cr, uid, main_event_id, context=context)
+            date_ex = time.strftime("%Y%m%dT%H%M%S", \
+                     time.strptime(date_new, "%Y%m%d%H%M%S"))
+            exdate = (main_event.exdate and (main_event.exdate + ',')  or '') + date_ex
+            res = super(calendar_event, self).write(cr, uid, [main_event.id], {'exdate': exdate})
         return res
 
     def create(self, cr, uid, vals, context=None):
