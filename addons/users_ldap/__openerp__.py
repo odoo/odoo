@@ -40,7 +40,7 @@ This module only works with Unix/Linux
     "active": False,
     "installable": True,
     "certificate" : "001141446349334700221",
-    "dependencies" : {
+    "external_dependencies" : {
         'python' : ['ldap'],
     }
 }
