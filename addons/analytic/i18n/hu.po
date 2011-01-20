@@ -7,29 +7,29 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-18 11:14+0000\n"
+"PO-Revision-Date: 2011-01-20 00:48+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:46+0000\n"
+"X-Launchpad-Export-Date: 2011-01-20 04:53+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr "Alárendelt számlák"
+msgstr "Alárendelt gyűjtőkódok"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
 msgid "Account Name"
-msgstr "Számla megnevezése"
+msgstr "Gyűjtőkód megnevezése"
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr "Adja meg a mennyiséget."
+msgstr "Itt lehet megadni a mennyiséget."
 
 #. module: analytic
 #: model:ir.module.module,description:analytic.module_meta_information
@@ -58,7 +58,7 @@ msgstr "Tervezet"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Closed"
-msgstr "Lezárás dátuma"
+msgstr "Lezárt"
 
 #. module: analytic
 #: field:account.analytic.account,debit:0
@@ -83,30 +83,30 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
-"* A számla létrehozásakor 'Tervezet' állapotban van.                         "
-"         \n"
-"* Ha van társult partnere, 'Nyitott'-ra változik.                            "
+"* A gyűjtőkód létrehozásakor 'tervezet' állapotban van.                      "
+"            \n"
+"* Ha van társult partnere, 'nyitott'-ra változik.                            "
 "      \n"
-"* Ha függő egyenlege van, akkor 'Függőben levő'.                             "
-"     \n"
-"* Végül, amikor minden tranzakció lezajlott, 'Lezárt' állapotba kerül.       "
-"                           \n"
-"* A projekt 'Sablon' vagy 'Futó' állapotban lehet.\n"
-" Ha 'Sablon', akkor véghez vihetünk projekteket a sablon projekt alapján. "
+"* Ha függő egyenlege van, akkor 'függőben lévő'.                             "
+"      \n"
+"* Végül, amikor minden tranzakció lezajlott, 'lezárt' állapotba kerül.       "
+"                            \n"
+"* A projekt 'sablon' vagy 'futó' állapotban lehet.\n"
+" Ha 'sablon', akkor projekteket készíthetünk a sablon projekt alapján. "
 "'Futó' állapotban vannak a normál projektek.                                 "
-" \n"
-" Ha ellenőrizendő, akkor 'Függőben levő' az állapota.\n"
-" Amikor a projekt befejeződik, 'Kész' állapotba kerül."
+"\n"
+" Ha ellenőrizendő, akkor 'függőben lévő' az állapota.\n"
+" Amikor a projekt befejeződik, 'kész' állapotba kerül."
 
 #. module: analytic
 #: field:account.analytic.account,type:0
 msgid "Account Type"
-msgstr "Számlatípus"
+msgstr "Gyűjtőkód típusa"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Template"
-msgstr "Minta"
+msgstr "Sablon"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -216,7 +216,7 @@ msgstr "Egyenleg"
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr "Hiba! Nem hozhat létre rekurzív gyűjtőkódot."
+msgstr "Hiba! Nem hozhat létre rekurzív gyűjtőkódokat."
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -224,7 +224,8 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
-"A 'Gyűjtő' típusú számlákra nem lehet könyvelni. Összegzésre szolgálnak."
+"Gyűjtő típusú számlákra/gyűjtőkódokra nem lehet könyvelni. Összegzésre "
+"szolgálnak."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -234,12 +235,12 @@ msgstr "Záró dátum"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Account Code"
-msgstr "Számla száma"
+msgstr "Gyűjtőkód kódja"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Account Name"
-msgstr "Teljes számla név"
+msgstr "Gyűjtőkód teljes neve"
 
 #. module: analytic
 #: field:account.analytic.line,account_id:0
@@ -251,7 +252,7 @@ msgstr "Gyűjtőkód"
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "View"
-msgstr "Nézet"
+msgstr "Gyűjtő"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -261,7 +262,7 @@ msgstr "Partner"
 #. module: analytic
 #: field:account.analytic.account,date_start:0
 msgid "Date Start"
-msgstr "Kezdődátum"
+msgstr "Kezdő dátum"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0

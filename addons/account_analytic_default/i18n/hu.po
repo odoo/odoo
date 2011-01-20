@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-14 13:35+0000\n"
+"PO-Revision-Date: 2011-01-19 19:15+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:36+0000\n"
+"X-Launchpad-Export-Date: 2011-01-20 04:53+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_default
@@ -29,14 +29,16 @@ msgid ""
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
 "Válassza ki a partnert, amely az alapértelmezések között meghatározott "
-"gyűjtőkódot fogja használni"
+"gyűjtőkódot fogja használni (pl. új kimenő számla vagy vevői megrendelés "
+"készítésekor, ha kiválasztja a partnert, az automatikusan ezt a gyűjtőkódot "
+"fogja alkalmazni)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_product
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_user
 msgid "Analytic Rules"
-msgstr ""
+msgstr "Analitikus szabályok"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,analytic_id:0
@@ -46,12 +48,12 @@ msgstr "Gyűjtőkód"
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Current"
-msgstr "Folyamatban levő"
+msgstr "Folyamatban lévő"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
@@ -76,7 +78,9 @@ msgid ""
 "company, it will automatically take this as an analytical account)"
 msgstr ""
 "Válassza ki a vállalatot, amely az alapértelmezések között meghatározott "
-"gyűjtőkódot fogja használni"
+"gyűjtőkódot fogja használni (pl. új kimenő számla vagy vevői megrendelés "
+"készítésekor, ha kiválasztja a vállalatot, az automatikusan ezt a "
+"gyűjtőkódot fogja alkalmazni)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
@@ -92,7 +96,7 @@ msgstr "Termék"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Költségfelosztás"
+msgstr "Felosztás"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -150,7 +154,7 @@ msgstr ""
 "* Partner\n"
 "* Felhasználó\n"
 "* Vállalat\n"
-"* Dátum\"\n"
+"* Dátum\n"
 "    "
 
 #. module: account_analytic_default
@@ -161,7 +165,9 @@ msgid ""
 "product, it will automatically take this as an analytical account)"
 msgstr ""
 "Válassza ki a terméket, amely az alapértelmezések között meghatározott "
-"gyűjtőkódot fogja használni"
+"gyűjtőkódot fogja használni (pl. új kimenő számla vagy vevői megrendelés "
+"készítésekor, ha kiválasztja a terméket, az automatikusan ezt a gyűjtőkódot "
+"fogja alkalmazni)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -199,7 +205,7 @@ msgstr "Kezdő dátum"
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr "Megadja a költségfelosztások listázási sorrendjét."
+msgstr "Megadja a felosztások listázási sorrendjét."
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
