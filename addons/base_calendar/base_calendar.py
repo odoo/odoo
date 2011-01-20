@@ -1416,6 +1416,16 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @param context: A standard dictionary for contextual values
         @return: True
         """        
+        #removing useless value
+        if type(ids) == int or (type(ids) == list and len(ids) > 0):
+            old_vals = self.read(cr, uid, ids[0] if type(ids) == list else ids, ['rrule'], context)
+            if not old_vals:
+                old_vals = {}
+            if not 'rrule' in old_vals:
+                old_vals["rrule"] = ""
+            if 'rrule' in vals and not vals['rrule'] and not old_vals['rrule']: 
+                del vals['rrule']
+        
         if context is None:
             context = {}
         if isinstance(ids, (str, int, long)):
