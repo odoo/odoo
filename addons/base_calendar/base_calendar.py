@@ -1450,6 +1450,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration', 'exdate'])
                 if data.get('rrule'):
+                    data.update(vals)
                     data.update({
                         'recurrent_uid': real_event_id,
                         'recurrent_id': data.get('date'),
@@ -1457,7 +1458,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         'rrule': '',
                         'edit_all': False,
                         })
-                    data.update(vals)
+                    
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
                     
                     date_new = event_id.split('-')[1]
