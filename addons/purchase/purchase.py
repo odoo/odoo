@@ -217,7 +217,7 @@ class purchase_order(osv.osv):
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
     }
     _defaults = {
-        'date_order': time.strftime('%Y-%m-%d'),
+        'date_order': lambda *a: time.strftime('%Y-%m-%d'),
         'state': 'draft',
         'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
         'shipped': 0,
