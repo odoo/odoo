@@ -167,12 +167,15 @@ class expression(object):
                     self.__exp[i] = self.__DUMMY_LEAF
                 else:
                     subexp = field.search(cr, uid, table, left, [self.__exp[i]], context=context)
-                    # we assume that the expression is valid
-                    # we create a dummy leaf for forcing the parsing of the resulting expression
-                    self.__exp[i] = '&'
-                    self.__exp.insert(i + 1, self.__DUMMY_LEAF)
-                    for j, se in enumerate(subexp):
-                        self.__exp.insert(i + 2 + j, se)
+                    if not subexp:
+                        self.__exp[i] = self.__DUMMY_LEAF
+                    else:
+                        # we assume that the expression is valid
+                        # we create a dummy leaf for forcing the parsing of the resulting expression
+                        self.__exp[i] = '&'
+                        self.__exp.insert(i + 1, self.__DUMMY_LEAF)
+                        for j, se in enumerate(subexp):
+                            self.__exp.insert(i + 2 + j, se)
             # else, the value of the field is store in the database, so we search on it
 
             elif field._type == 'one2many':

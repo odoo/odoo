@@ -2,8 +2,8 @@
 
 ### BEGIN INIT INFO
 # Provides:		openerp-server
-# Required-Start:	$syslog
-# Required-Stop:	$syslog
+# Required-Start:	$remote_fs $syslog
+# Required-Stop:	$remote_fs $syslog
 # Should-Start:		$network
 # Should-Stop:		$network
 # Default-Start:	2 3 4 5
@@ -29,7 +29,8 @@ case "${1}" in
 
 		start-stop-daemon --start --quiet --pidfile /var/run/${NAME}.pid \
 			--chuid ${USER} --background --make-pidfile \
-			--exec ${DAEMON} -- --config=/etc/openerp-server.conf
+			--exec ${DAEMON} -- --config=/etc/openerp-server.conf \
+			    --logfile=/var/log/openerp-server.log
 
 		echo "${NAME}."
 		;;
@@ -53,7 +54,8 @@ case "${1}" in
 
 		start-stop-daemon --start --quiet --pidfile /var/run/${NAME}.pid \
 			--chuid ${USER} --background --make-pidfile \
-			--exec ${DAEMON} -- --config=/etc/openerp-server.conf
+			--exec ${DAEMON} -- --config=/etc/openerp-server.conf \
+			    --logfile=/var/log/openerp-server.log
 
 		echo "${NAME}."
 		;;

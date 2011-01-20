@@ -19,11 +19,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+import base64
+import cStringIO
 import imp
 import logging
 import os
 import re
+import StringIO
 import urllib
+import zipfile
 import zipimport
 
 import addons
@@ -554,6 +558,58 @@ class module(osv.osv):
             else:
                 self._web_dependencies(
                     cr, uid, parent, context=context)
+
+    def _translations_subdir(self, module):
+        """ Returns the path to the subdirectory holding translations for the
+        module files, or None if it can't find one
+
+        :param module: a module object
+        :type module: browse(ir.module.module)
+        """
+        subdir = addons.get_module_resource(module.name, 'po')
+        if subdir: return subdir
+        # old naming convention
+        subdir = addons.get_module_resource(module.name, 'i18n')
+        if subdir: return subdir
+        return None
+
+    def _add_translations(self, module, web_data):
+        """ Adds translation data to a zipped web module
+
+        :param module: a module descriptor
+        :type module: browse(ir.module.module)
+        :param web_data: zipped data of a web module
+        :type web_data: bytes
+        """
+        # cStringIO.StringIO is either read or write, not r/w
+        web_zip = StringIO.StringIO(web_data)
+        web_archive = zipfile.ZipFile(web_zip, 'a')
+
+        # get the contents of the i18n or po folder and move them to the
+        # po/messages subdirectory of the web module.
+        # The POT file will be incorrectly named, but that should not
+        # matter since the web client is not going to use it, only the PO
+        # files.
+        translations_file = cStringIO.StringIO(
+            addons.zip_directory(self._translations_subdir(module), False))
+        translations_archive = zipfile.ZipFile(translations_file)
+
+        for path in translations_archive.namelist():
+            web_path = os.path.join(
+                'web', 'po', 'messages', os.path.basename(path))
+            web_archive.writestr(
+                web_path,
+                translations_archive.read(path))
+
+        translations_archive.close()
+        translations_file.close()
+
+        web_archive.close()
+        try:
+            return web_zip.getvalue()
+        finally:
+            web_zip.close()
+
     def get_web(self, cr, uid, names, context=None):
         """ get_web(cr, uid, [module_name], context) -> [{name, depends, content}]
 
@@ -568,15 +624,21 @@ class module(osv.osv):
         if not modules: return []
         self.__logger.info('Sending web content of modules %s '
                            'to web client', names)
-        return [
-            {'name': module.name,
-             'version': module.installed_version,
-             'depends': list(self._web_dependencies(
-                 cr, uid, module, context=context)),
-             'content': addons.zip_directory(
-                 addons.get_module_resource(module.name, 'web'))}
-            for module in modules
-        ]
+
+        modules_data = []
+        for module in modules:
+            web_data = addons.zip_directory(
+                addons.get_module_resource(module.name, 'web'), False)
+            if self._translations_subdir(module):
+                web_data = self._add_translations(module, web_data)
+            modules_data.append({
+                'name': module.name,
+                'version': module.installed_version,
+                'depends': list(self._web_dependencies(
+                    cr, uid, module, context=context)),
+                'content': base64.encodestring(web_data)
+            })
+        return modules_data
 
 module()
 

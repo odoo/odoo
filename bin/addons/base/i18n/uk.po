@@ -6,14 +6,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-12-16 08:59+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-04 14:08+0000\n"
+"X-Launchpad-Export-Date: 2011-01-12 04:52+0000\n"
 "X-Generator: Launchpad (build Unknown)\n"
 
 #. module: base
@@ -111,11 +111,19 @@ msgid "Created Views"
 msgstr "Створені види"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:339
+#: code:addons/base/ir/ir_model.py:485
 #, python-format
 msgid ""
 "You can not write in this document (%s) ! Be sure your user belongs to one "
 "of these groups: %s."
+msgstr ""
+
+#. module: base
+#: help:ir.model.fields,domain:0
+msgid ""
+"The optional domain to restrict possible values for relationship fields, "
+"specified as a Python expression defining a list of triplets. For example: "
+"[('color','=','red')]"
 msgstr ""
 
 #. module: base
@@ -129,9 +137,18 @@ msgid "Target Window"
 msgstr "Цільове вікно"
 
 #. module: base
-#: model:res.country,name:base.kr
-msgid "South Korea"
-msgstr "Південна Корея"
+#: code:addons/base/res/res_user.py:507
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:304
+#, python-format
+msgid ""
+"Properties of base fields cannot be altered in this manner! Please modify "
+"them through Python code, preferably through a custom addon!"
+msgstr ""
 
 #. module: base
 #: code:addons/osv.py:133
@@ -341,7 +358,7 @@ msgid "Netherlands Antilles"
 msgstr "Нідерландські Антильські Острови"
 
 #. module: base
-#: code:addons/base/res/res_user.py:373
+#: code:addons/base/res/res_user.py:389
 #, python-format
 msgid ""
 "You can not remove the admin user as it is used internally for resources "
@@ -384,6 +401,11 @@ msgstr "Метод read не реалізований у цьому об'єкт�
 msgid "This ISO code is the name of po files to use for translations"
 msgstr ""
 "Цей код ISO визначає ім`я po файлів, які використовуюсться для перекладу"
+
+#. module: base
+#: view:base.module.upgrade:0
+msgid "Your system will be updated."
+msgstr ""
 
 #. module: base
 #: field:ir.actions.todo,note:0
@@ -455,7 +477,7 @@ msgid "Miscellaneous Suppliers"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:216
+#: code:addons/base/ir/ir_model.py:255
 #, python-format
 msgid "Custom fields must have a name that starts with 'x_' !"
 msgstr "Назва поля користувача має починатися з 'x_'!"
@@ -791,6 +813,12 @@ msgid "Human Resources Dashboard"
 msgstr ""
 
 #. module: base
+#: code:addons/base/res/res_user.py:507
+#, python-format
+msgid "Setting empty passwords is not allowed for security reasons!"
+msgstr ""
+
+#. module: base
 #: selection:ir.actions.server,state:0
 #: selection:workflow.activity,kind:0
 msgid "Dummy"
@@ -805,6 +833,11 @@ msgstr "Неправильний XML для архітектури виду!"
 #: model:res.country,name:base.ky
 msgid "Cayman Islands"
 msgstr "Кайманові острови"
+
+#. module: base
+#: model:res.country,name:base.kr
+msgid "South Korea"
+msgstr "Південна Корея"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_workflow_transition_form
@@ -916,6 +949,12 @@ msgid "Marshall Islands"
 msgstr "Маршаллові Острови"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:328
+#, python-format
+msgid "Changing the model of a field is forbidden!"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.ht
 msgid "Haiti"
 msgstr "Гаїті"
@@ -940,6 +979,12 @@ msgstr ""
 #: view:ir.rule:0
 msgid ""
 "2. Group-specific rules are combined together with a logical AND operator"
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_user.py:206
+#, python-format
+msgid "Operation Canceled"
 msgstr ""
 
 #. module: base
@@ -1079,12 +1124,22 @@ msgid "Reports"
 msgstr "Звіти"
 
 #. module: base
+#: help:ir.actions.act_window.view,multi:0
+#: help:ir.actions.report.xml,multi:0
+msgid ""
+"If set to true, the action will not be displayed on the right toolbar of a "
+"form view."
+msgstr ""
+"Якщо встановити значення \"істина\", ця дія не буде відображена на правому "
+"пеналі виду форми."
+
+#. module: base
 #: field:workflow,on_create:0
 msgid "On Create"
 msgstr "Коли створюється"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:461
+#: code:addons/base/ir/ir_model.py:607
 #, python-format
 msgid ""
 "'%s' contains too many dots. XML ids should not contain dots ! These are "
@@ -1126,9 +1181,11 @@ msgid "Wizard Info"
 msgstr "Інформація про майстра"
 
 #. module: base
-#: model:res.country,name:base.km
-msgid "Comoros"
-msgstr "Коморські Острови"
+#: view:base.language.export:0
+#: model:ir.actions.act_window,name:base.action_wizard_lang_export
+#: model:ir.ui.menu,name:base.menu_wizard_lang_export
+msgid "Export Translation"
+msgstr ""
 
 #. module: base
 #: help:res.log,secondary:0
@@ -1184,17 +1241,6 @@ msgstr "Приєднане ID"
 #: view:ir.sequence:0
 msgid "Day: %(day)s"
 msgstr "День: %(day)s"
-
-#. module: base
-#: model:ir.actions.act_window,help:base.open_module_tree
-msgid ""
-"List all certified modules available to configure your OpenERP. Modules that "
-"are installed are flagged as such. You can search for a specific module "
-"using the name or the description of the module. You do not need to install "
-"modules one by one, you can install many at the same time by clicking on the "
-"schedule button in this list. Then, apply the schedule upgrade from Action "
-"menu once for all the ones you have scheduled for installation."
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mv
@@ -1307,7 +1353,7 @@ msgid "Formula"
 msgstr "Формула"
 
 #. module: base
-#: code:addons/base/res/res_user.py:373
+#: code:addons/base/res/res_user.py:389
 #, python-format
 msgid "Can not remove root user!"
 msgstr "Неможливо видалити користувача root!"
@@ -1319,7 +1365,7 @@ msgstr "Малаві"
 
 #. module: base
 #: code:addons/base/res/res_user.py:51
-#: code:addons/base/res/res_user.py:397
+#: code:addons/base/res/res_user.py:413
 #, python-format
 msgid "%s (copy)"
 msgstr ""
@@ -1495,11 +1541,6 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: field:change.user.password,new_password:0
-msgid "New Password"
-msgstr ""
-
-#. module: base
 #: model:ir.actions.act_window,help:base.action_ui_view
 msgid ""
 "Views allows you to personalize each view of OpenERP. You can add new "
@@ -1605,6 +1646,11 @@ msgid "Groups (no group = global)"
 msgstr ""
 
 #. module: base
+#: model:res.country,name:base.fo
+msgid "Faroe Islands"
+msgstr "Фарерські Острови"
+
+#. module: base
 #: selection:res.config.users,view:0
 #: selection:res.config.view,view:0
 #: selection:res.users,view:0
@@ -1637,7 +1683,7 @@ msgid "Madagascar"
 msgstr "Мадагаскар"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:94
+#: code:addons/base/ir/ir_model.py:96
 #, python-format
 msgid ""
 "The Object name must start with x_ and not contain any special character !"
@@ -1827,6 +1873,12 @@ msgid "Messages"
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:303
+#: code:addons/base/ir/ir_model.py:317
+#: code:addons/base/ir/ir_model.py:319
+#: code:addons/base/ir/ir_model.py:321
+#: code:addons/base/ir/ir_model.py:328
+#: code:addons/base/ir/ir_model.py:331
 #: code:addons/base/module/wizard/base_update_translations.py:38
 #, python-format
 msgid "Error!"
@@ -1889,6 +1941,11 @@ msgid "Korean (KR) / 한국어 (KR)"
 msgstr ""
 
 #. module: base
+#: help:ir.model.fields,model:0
+msgid "The technical name of the model this field belongs to"
+msgstr ""
+
+#. module: base
 #: field:ir.actions.server,action_id:0
 #: selection:ir.actions.server,state:0
 msgid "Client Action"
@@ -1924,6 +1981,11 @@ msgstr "Неможливо оновити модуль '%s'. Він не вст�
 #: model:res.country,name:base.cu
 msgid "Cuba"
 msgstr "Куба"
+
+#. module: base
+#: model:ir.model,name:base.model_res_partner_event
+msgid "res.partner.event"
+msgstr "res.partner.event"
 
 #. module: base
 #: model:res.widget,title:base.facebook_widget
@@ -2136,6 +2198,13 @@ msgid "workflow.activity"
 msgstr "workflow.activity"
 
 #. module: base
+#: help:ir.ui.view_sc,res_id:0
+msgid ""
+"Reference of the target resource, whose model/table depends on the 'Resource "
+"Name' field."
+msgstr ""
+
+#. module: base
 #: field:ir.model.fields,select_level:0
 msgid "Searchable"
 msgstr "Пошук можливий"
@@ -2219,6 +2288,7 @@ msgstr ""
 #: view:ir.module.module:0
 #: field:ir.module.module.dependency,module_id:0
 #: report:ir.module.reference.graph:0
+#: field:ir.translation,module:0
 msgid "Module"
 msgstr "Модуль"
 
@@ -2287,7 +2357,7 @@ msgid "Mayotte"
 msgstr "Майотта"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:593
+#: code:addons/base/ir/ir_actions.py:597
 #, python-format
 msgid "Please specify an action to launch !"
 msgstr "Будьласка вкажіть дію до виконання !"
@@ -2439,11 +2509,6 @@ msgstr "Помилка! Не можна створювати рекурсивн�
 #: view:res.lang:0
 msgid "%x - Appropriate date representation."
 msgstr "%x - Прийнятне представлення дати."
-
-#. module: base
-#: model:ir.model,name:base.model_change_user_password
-msgid "change.user.password"
-msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -2782,11 +2847,6 @@ msgid "Trigger Object"
 msgstr ""
 
 #. module: base
-#: help:change.user.password,confirm_password:0
-msgid "Enter the new password again for confirmation."
-msgstr ""
-
-#. module: base
 #: view:res.users:0
 msgid "Current Activity"
 msgstr ""
@@ -2824,8 +2884,8 @@ msgid "Sequence Type"
 msgstr "Тип послідовності"
 
 #. module: base
-#: selection:base.language.install,lang:0
-msgid "Hindi / हिंदी"
+#: view:ir.ui.view.custom:0
+msgid "Customized Architecture"
 msgstr ""
 
 #. module: base
@@ -2850,6 +2910,7 @@ msgstr "SQL Constraint"
 
 #. module: base
 #: field:ir.actions.server,srcmodel_id:0
+#: field:ir.model.fields,model_id:0
 msgid "Model"
 msgstr "Модель"
 
@@ -2958,10 +3019,9 @@ msgstr ""
 "Ви намагаєтеся видалити модуль, який встановлено або буде встановлено"
 
 #. module: base
-#: help:ir.values,key2:0
-msgid ""
-"The kind of action or button in the client side that will trigger the action."
-msgstr "Вид дії або кнопки на клієнтському боці, яка запустить дію."
+#: view:base.module.upgrade:0
+msgid "The selected modules have been updated / installed !"
+msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -2980,6 +3040,11 @@ msgstr "Гватемала"
 #: model:ir.ui.menu,name:base.menu_workflow_root
 msgid "Workflows"
 msgstr "Процеси"
+
+#. module: base
+#: field:ir.translation,xml_id:0
+msgid "XML Id"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_config_user_form
@@ -3022,7 +3087,7 @@ msgid "Lesotho"
 msgstr "Лесото"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:112
+#: code:addons/base/ir/ir_model.py:114
 #, python-format
 msgid "You can not remove the model '%s' !"
 msgstr "Ви не можете видалити модель '%s'!"
@@ -3120,7 +3185,7 @@ msgid "API ID"
 msgstr "API ID"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:340
+#: code:addons/base/ir/ir_model.py:486
 #, python-format
 msgid ""
 "You can not create this document (%s) ! Be sure your user belongs to one of "
@@ -3250,11 +3315,6 @@ msgid "System update completed"
 msgstr ""
 
 #. module: base
-#: field:ir.model.fields,selection:0
-msgid "Field Selection"
-msgstr "Вибір поля"
-
-#. module: base
 #: selection:res.request,state:0
 msgid "draft"
 msgstr "чорновик"
@@ -3291,14 +3351,10 @@ msgid "Apply For Delete"
 msgstr ""
 
 #. module: base
-#: help:ir.actions.act_window.view,multi:0
-#: help:ir.actions.report.xml,multi:0
-msgid ""
-"If set to true, the action will not be displayed on the right toolbar of a "
-"form view."
+#: code:addons/base/ir/ir_model.py:319
+#, python-format
+msgid "Cannot rename column to %s, because that column already exists!"
 msgstr ""
-"Якщо встановити значення \"істина\", ця дія не буде відображена на правому "
-"пеналі виду форми."
 
 #. module: base
 #: view:ir.attachment:0
@@ -3498,6 +3554,14 @@ msgid "Montserrat"
 msgstr "Монтсерат"
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:205
+#, python-format
+msgid ""
+"The Selection Options expression is not a valid Pythonic expression.Please "
+"provide an expression in the [('key','Label'), ...] format."
+msgstr ""
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_translation_app
 msgid "Application Terms"
 msgstr "Терміни, Мови"
@@ -3538,8 +3602,10 @@ msgid "Starter Partner"
 msgstr ""
 
 #. module: base
-#: view:base.module.upgrade:0
-msgid "Your system will be updated."
+#: help:ir.model.fields,relation_field:0
+msgid ""
+"For one2many fields, the field on the target model that implement the "
+"opposite many2one relationship"
 msgstr ""
 
 #. module: base
@@ -3708,7 +3774,7 @@ msgid "Flow Start"
 msgstr "Старт потоку"
 
 #. module: base
-#: code:addons/__init__.py:827
+#: code:addons/__init__.py:834
 #, python-format
 msgid "module base cannot be loaded! (hint: verify addons-path)"
 msgstr ""
@@ -3740,9 +3806,9 @@ msgid "Guadeloupe (French)"
 msgstr "Гваделупська (French)"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:86
-#: code:addons/base/res/res_lang.py:88
-#: code:addons/base/res/res_lang.py:90
+#: code:addons/base/res/res_lang.py:157
+#: code:addons/base/res/res_lang.py:159
+#: code:addons/base/res/res_lang.py:161
 #, python-format
 msgid "User Error"
 msgstr ""
@@ -3806,6 +3872,13 @@ msgstr ""
 #: view:res.partner.address:0
 msgid "Partner Addresses"
 msgstr "Адреси партнерів"
+
+#. module: base
+#: help:ir.model.fields,translate:0
+msgid ""
+"Whether values for this field can be translated (enables the translation "
+"mechanism for that field)"
+msgstr ""
 
 #. module: base
 #: view:res.lang:0
@@ -3967,11 +4040,6 @@ msgstr "Запит історії"
 #: view:res.groups:0
 msgid "Menus"
 msgstr "Меню"
-
-#. module: base
-#: view:base.module.upgrade:0
-msgid "The selected modules have been updated / installed !"
-msgstr ""
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -4164,6 +4232,11 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: help:ir.model.fields,relation:0
+msgid "For relationship fields, the technical name of the target model"
+msgstr ""
+
+#. module: base
 #: selection:base.language.install,lang:0
 msgid "Indonesian / Bahasa Indonesia"
 msgstr ""
@@ -4215,6 +4288,11 @@ msgid "Serial Key"
 msgstr ""
 
 #. module: base
+#: selection:res.request,priority:0
+msgid "Low"
+msgstr "Низький"
+
+#. module: base
 #: model:ir.ui.menu,name:base.menu_audit
 msgid "Audit"
 msgstr ""
@@ -4243,11 +4321,6 @@ msgstr ""
 #: field:ir.model.access,perm_create:0
 msgid "Create Access"
 msgstr "Доступ для створення"
-
-#. module: base
-#: field:change.user.password,current_password:0
-msgid "Current Password"
-msgstr ""
 
 #. module: base
 #: field:res.partner.address,state_id:0
@@ -4443,6 +4516,14 @@ msgid ""
 "The configuration wizards are used to help you configure a new instance of "
 "OpenERP. They are launched during the installation of new modules, but you "
 "can choose to restart some wizards manually from this menu."
+msgstr ""
+
+#. module: base
+#: code:addons/base/res/res_user.py:206
+#, python-format
+msgid ""
+"Please use the change password wizard (in User Preferences or User menu) to "
+"change your own password."
 msgstr ""
 
 #. module: base
@@ -4710,7 +4791,7 @@ msgid "Change My Preferences"
 msgstr "Змінити мої вподобання"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:160
+#: code:addons/base/ir/ir_actions.py:164
 #, python-format
 msgid "Invalid model name in the action definition."
 msgstr ""
@@ -4905,9 +4986,9 @@ msgid "ir.ui.menu"
 msgstr "ir.ui.menu"
 
 #. module: base
-#: view:partner.wizard.ean.check:0
-msgid "Ignore"
-msgstr ""
+#: model:res.country,name:base.us
+msgid "United States"
+msgstr "Сполучені Штати"
 
 #. module: base
 #: view:ir.module.module:0
@@ -4932,7 +5013,7 @@ msgid "ir.server.object.lines"
 msgstr "ir.server.object.lines"
 
 #. module: base
-#: code:addons/base/module/module.py:530
+#: code:addons/base/module/module.py:531
 #, python-format
 msgid "Module %s: Invalid Quality Certificate"
 msgstr "Модуль %s: Невірний Сертифікат Якості"
@@ -4966,9 +5047,10 @@ msgid "Nigeria"
 msgstr "Нігерія"
 
 #. module: base
-#: model:ir.model,name:base.model_res_partner_event
-msgid "res.partner.event"
-msgstr "res.partner.event"
+#: code:addons/base/ir/ir_model.py:250
+#, python-format
+msgid "For selection fields, the Selection Options must be given!"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_sms_send
@@ -4989,12 +5071,6 @@ msgstr ""
 #: view:ir.values:0
 msgid "Values for Event Type"
 msgstr "Значення для Типу Події"
-
-#. module: base
-#: code:addons/base/res/res_user.py:605
-#, python-format
-msgid "The current password does not match, please double-check it."
-msgstr ""
 
 #. module: base
 #: selection:ir.model.fields,select_level:0
@@ -5122,6 +5198,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,name:base.action_ui_view_custom
+#: model:ir.ui.menu,name:base.menu_action_ui_view_custom
+#: view:ir.ui.view.custom:0
+msgid "Customized Views"
+msgstr ""
+
+#. module: base
 #: view:partner.sms.send:0
 msgid "Bulk SMS send"
 msgstr "Масова розсилка повідомлень"
@@ -5144,7 +5227,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:241
+#: code:addons/base/res/res_user.py:257
 #, python-format
 msgid ""
 "Please keep in mind that documents currently displayed may not be relevant "
@@ -5322,16 +5405,18 @@ msgid "Reunion (French)"
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:321
+#, python-format
+msgid ""
+"New column name must still start with x_ , because it is a custom field!"
+msgstr ""
+
+#. module: base
 #: view:ir.model.access:0
 #: view:ir.rule:0
 #: field:ir.rule,global:0
 msgid "Global"
 msgstr "Глобальне"
-
-#. module: base
-#: view:change.user.password:0
-msgid "You must logout and login again after changing your password."
-msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mp
@@ -5344,7 +5429,7 @@ msgid "Solomon Islands"
 msgstr "Соломонові Острови"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:344
+#: code:addons/base/ir/ir_model.py:490
 #: code:addons/orm.py:1897
 #: code:addons/orm.py:2972
 #: code:addons/orm.py:3165
@@ -5360,7 +5445,7 @@ msgid "Waiting"
 msgstr ""
 
 #. module: base
-#: code:addons/__init__.py:827
+#: code:addons/__init__.py:834
 #, python-format
 msgid "Could not load base module"
 msgstr ""
@@ -5414,9 +5499,9 @@ msgid "Module Category"
 msgstr "Категорія модулів"
 
 #. module: base
-#: model:res.country,name:base.us
-msgid "United States"
-msgstr "Сполучені Штати"
+#: view:partner.wizard.ean.check:0
+msgid "Ignore"
+msgstr ""
 
 #. module: base
 #: report:ir.module.reference.graph:0
@@ -5567,13 +5652,13 @@ msgid "res.widget"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:219
+#: code:addons/base/ir/ir_model.py:258
 #, python-format
 msgid "Model %s does not exist!"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_lang.py:88
+#: code:addons/base/res/res_lang.py:159
 #, python-format
 msgid "You cannot delete the language which is User's Preferred Language !"
 msgstr ""
@@ -5608,7 +5693,6 @@ msgstr "Ядро OpenERP, необхідне для всього встанов�
 #: view:base.module.update:0
 #: view:base.module.upgrade:0
 #: view:base.update.translations:0
-#: view:change.user.password:0
 #: view:partner.clear.ids:0
 #: view:partner.sms.send:0
 #: view:partner.wizard.spam:0
@@ -5628,6 +5712,11 @@ msgid "Neutral Zone"
 msgstr "Нейтральна Зона"
 
 #. module: base
+#: selection:base.language.install,lang:0
+msgid "Hindi / हिंदी"
+msgstr ""
+
+#. module: base
 #: view:ir.model:0
 msgid "Custom"
 msgstr ""
@@ -5635,11 +5724,6 @@ msgstr ""
 #. module: base
 #: view:res.request:0
 msgid "Current"
-msgstr ""
-
-#. module: base
-#: help:change.user.password,new_password:0
-msgid "Enter the new password."
 msgstr ""
 
 #. module: base
@@ -5756,7 +5840,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:625
+#: code:addons/base/ir/ir_actions.py:629
 #, python-format
 msgid "Please specify server option --email-from !"
 msgstr ""
@@ -5916,11 +6000,6 @@ msgid "Sequence Codes"
 msgstr ""
 
 #. module: base
-#: field:change.user.password,confirm_password:0
-msgid "Confirm Password"
-msgstr ""
-
-#. module: base
 #: selection:base.language.install,lang:0
 msgid "Spanish (CO) / Español (CO)"
 msgstr ""
@@ -5958,6 +6037,12 @@ msgid "res.log"
 msgstr ""
 
 #. module: base
+#: help:ir.translation,module:0
+#: help:ir.translation,xml_id:0
+msgid "Maps to the ir_model_data for which this translation is provided."
+msgstr ""
+
+#. module: base
 #: view:workflow.activity:0
 #: field:workflow.activity,flow_stop:0
 msgid "Flow Stop"
@@ -5975,8 +6060,6 @@ msgstr "Афганістан"
 
 #. module: base
 #: code:addons/base/module/wizard/base_module_import.py:67
-#: code:addons/base/res/res_user.py:594
-#: code:addons/base/res/res_user.py:605
 #, python-format
 msgid "Error !"
 msgstr "Помилка!"
@@ -6090,13 +6173,6 @@ msgid "Pitcairn Island"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:594
-#, python-format
-msgid ""
-"The new and confirmation passwords do not match, please double-check them."
-msgstr ""
-
-#. module: base
 #: view:base.module.upgrade:0
 msgid ""
 "We suggest to reload the menu tab to see the new menus (Ctrl+T then Ctrl+R)."
@@ -6178,11 +6254,6 @@ msgstr "Інші дії"
 #: view:res.config.users:0
 msgid "Done"
 msgstr "Виконано"
-
-#. module: base
-#: view:change.user.password:0
-msgid "Change"
-msgstr ""
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_miss
@@ -6272,7 +6343,7 @@ msgid "To browse official translations, you can start with these links:"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:338
+#: code:addons/base/ir/ir_model.py:484
 #, python-format
 msgid ""
 "You can not read this document (%s) ! Be sure your user belongs to one of "
@@ -6375,6 +6446,13 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.actions.act_window,help:base.action_ui_view_custom
+msgid ""
+"Customized views are used when users reorganize the content of their "
+"dashboard views (via web client)"
+msgstr ""
+
+#. module: base
 #: field:ir.model,name:0
 #: field:ir.model.fields,model:0
 #: field:ir.values,model:0
@@ -6405,6 +6483,11 @@ msgstr "Вихідні Переміщення"
 #: field:ir.ui.menu,icon:0
 msgid "Icon"
 msgstr "Значок"
+
+#. module: base
+#: help:ir.model.fields,model_id:0
+msgid "The model this field belongs to"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.mq
@@ -6451,7 +6534,7 @@ msgid "Samoa"
 msgstr "Самоа"
 
 #. module: base
-#: code:addons/base/res/res_lang.py:90
+#: code:addons/base/res/res_lang.py:161
 #, python-format
 msgid ""
 "You cannot delete the language which is Active !\n"
@@ -6472,8 +6555,8 @@ msgid "Child IDs"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:709
-#: code:addons/base/ir/ir_actions.py:712
+#: code:addons/base/ir/ir_actions.py:713
+#: code:addons/base/ir/ir_actions.py:716
 #, python-format
 msgid "Problem in configuration `Record Id` in Server Action!"
 msgstr ""
@@ -6787,9 +6870,9 @@ msgid "Grenada"
 msgstr "Гренада"
 
 #. module: base
-#: view:ir.actions.server:0
-msgid "Trigger Configuration"
-msgstr "Налаштування тригерів"
+#: model:res.country,name:base.wf
+msgid "Wallis and Futuna Islands"
+msgstr "Острови Велліс та Футуна"
 
 #. module: base
 #: selection:server.action.create,init,type:0
@@ -6825,7 +6908,7 @@ msgid "ir.wizard.screen"
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:189
+#: code:addons/base/ir/ir_model.py:223
 #, python-format
 msgid "Size of the field can never be less than 1 !"
 msgstr ""
@@ -6973,11 +7056,9 @@ msgid "Manufacturing"
 msgstr ""
 
 #. module: base
-#: view:base.language.export:0
-#: model:ir.actions.act_window,name:base.action_wizard_lang_export
-#: model:ir.ui.menu,name:base.menu_wizard_lang_export
-msgid "Export Translation"
-msgstr ""
+#: model:res.country,name:base.km
+msgid "Comoros"
+msgstr "Коморські Острови"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_server_action
@@ -6990,6 +7071,11 @@ msgstr "Дії на сервері"
 #: view:ir.module.module:0
 msgid "Cancel Install"
 msgstr "Скасувати встановлення"
+
+#. module: base
+#: field:ir.model.fields,selection:0
+msgid "Selection Options"
+msgstr ""
 
 #. module: base
 #: field:res.partner.category,parent_right:0
@@ -7007,7 +7093,7 @@ msgid "Copy Object"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:551
+#: code:addons/base/res/res_user.py:581
 #, python-format
 msgid ""
 "Group(s) cannot be deleted, because some user(s) still belong to them: %s !"
@@ -7097,12 +7183,20 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:331
+#, python-format
+msgid ""
+"Changing the type of a column is not yet supported. Please drop it and "
+"create it again!"
+msgstr ""
+
+#. module: base
 #: field:ir.ui.view_sc,user_id:0
 msgid "User Ref."
 msgstr "Користувач"
 
 #. module: base
-#: code:addons/base/res/res_user.py:550
+#: code:addons/base/res/res_user.py:580
 #, python-format
 msgid "Warning !"
 msgstr ""
@@ -7248,7 +7342,7 @@ msgid "workflow.triggers"
 msgstr "workflow.triggers"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:60
+#: code:addons/base/ir/ir_model.py:62
 #, python-format
 msgid "Invalid search criterions"
 msgstr ""
@@ -7286,13 +7380,6 @@ msgstr "Вид"
 #: selection:ir.translation,type:0
 msgid "Selection"
 msgstr "Selection"
-
-#. module: base
-#: view:change.user.password:0
-#: model:ir.actions.act_window,name:base.action_view_change_password_form
-#: view:res.users:0
-msgid "Change Password"
-msgstr ""
 
 #. module: base
 #: field:res.company,rml_header1:0
@@ -7431,6 +7518,14 @@ msgid "Norwegian Bokmål / Norsk bokmål"
 msgstr ""
 
 #. module: base
+#: help:res.config.users,new_password:0
+#: help:res.users,new_password:0
+msgid ""
+"Only specify a value if you want to change the user password. This user will "
+"have to logout and login again!"
+msgstr ""
+
+#. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
 msgid "Madam"
 msgstr "Пані"
@@ -7448,6 +7543,12 @@ msgstr ""
 #. module: base
 #: help:ir.attachment,type:0
 msgid "Binary File or external URL"
+msgstr ""
+
+#. module: base
+#: field:res.config.users,new_password:0
+#: field:res.users,new_password:0
+msgid "Change password"
 msgstr ""
 
 #. module: base
@@ -7473,6 +7574,15 @@ msgstr "ir.values"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Occitan (FR, post 1500) / Occitan"
+msgstr ""
+
+#. module: base
+#: model:ir.actions.act_window,help:base.open_module_tree
+msgid ""
+"You can install new modules in order to activate new features, menu, reports "
+"or data in your OpenERP instance. To install some modules, click on the "
+"button \"Schedule for Installation\" from the form view, then click on "
+"\"Apply Scheduled Upgrades\" to migrate your system."
 msgstr ""
 
 #. module: base
@@ -7544,11 +7654,6 @@ msgid "Croatian / hrvatski jezik"
 msgstr "Хорватська / Croatian"
 
 #. module: base
-#: help:change.user.password,current_password:0
-msgid "Enter your current password."
-msgstr ""
-
-#. module: base
 #: field:base.language.install,overwrite:0
 msgid "Overwrite Existing Terms"
 msgstr ""
@@ -7564,9 +7669,9 @@ msgid "The code of the country must be unique !"
 msgstr ""
 
 #. module: base
-#: model:ir.ui.menu,name:base.menu_project_management_time_tracking
-msgid "Time Tracking"
-msgstr ""
+#: selection:ir.module.module.dependency,state:0
+msgid "Uninstallable"
+msgstr "Видаляється"
 
 #. module: base
 #: view:res.partner.category:0
@@ -7607,9 +7712,12 @@ msgid "Menu Action"
 msgstr "Дія меню"
 
 #. module: base
-#: model:res.country,name:base.fo
-msgid "Faroe Islands"
-msgstr "Фарерські Острови"
+#: help:ir.model.fields,selection:0
+msgid ""
+"List of options for a selection field, specified as a Python expression "
+"defining a list of (key, label) pairs. For example: "
+"[('blue','Blue'),('yellow','Yellow')]"
+msgstr ""
 
 #. module: base
 #: selection:base.language.export,state:0
@@ -7738,6 +7846,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/ir/ir_model.py:219
+#, python-format
+msgid ""
+"The Selection Options expression is must be in the [('key','Label'), ...] "
+"format!"
+msgstr ""
+
+#. module: base
 #: view:ir.actions.report.xml:0
 msgid "Miscellaneous"
 msgstr ""
@@ -7748,7 +7864,7 @@ msgid "China"
 msgstr "Китай"
 
 #. module: base
-#: code:addons/base/res/res_user.py:486
+#: code:addons/base/res/res_user.py:516
 #, python-format
 msgid ""
 "--\n"
@@ -7838,7 +7954,6 @@ msgid "ltd"
 msgstr ""
 
 #. module: base
-#: field:ir.model.fields,model_id:0
 #: field:ir.values,res_id:0
 #: field:res.log,res_id:0
 msgid "Object ID"
@@ -7946,7 +8061,7 @@ msgid "Account No."
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_lang.py:86
+#: code:addons/base/res/res_lang.py:157
 #, python-format
 msgid "Base Language 'en_US' can not be deleted !"
 msgstr ""
@@ -8047,7 +8162,7 @@ msgid "Auto-Refresh"
 msgstr "Автопоновлення"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:60
+#: code:addons/base/ir/ir_model.py:62
 #, python-format
 msgid "The osv_memory field can only be compared with = and != operator."
 msgstr ""
@@ -8056,11 +8171,6 @@ msgstr ""
 #: selection:ir.ui.view,type:0
 msgid "Diagram"
 msgstr ""
-
-#. module: base
-#: model:res.country,name:base.wf
-msgid "Wallis and Futuna Islands"
-msgstr "Острови Велліс та Футуна"
 
 #. module: base
 #: help:multi_company.default,name:0
@@ -8119,14 +8229,17 @@ msgid "Turkmenistan"
 msgstr "Туркменістан"
 
 #. module: base
-#: code:addons/base/ir/ir_actions.py:593
-#: code:addons/base/ir/ir_actions.py:625
-#: code:addons/base/ir/ir_actions.py:709
-#: code:addons/base/ir/ir_actions.py:712
-#: code:addons/base/ir/ir_model.py:112
-#: code:addons/base/ir/ir_model.py:197
-#: code:addons/base/ir/ir_model.py:216
-#: code:addons/base/ir/ir_model.py:219
+#: code:addons/base/ir/ir_actions.py:597
+#: code:addons/base/ir/ir_actions.py:629
+#: code:addons/base/ir/ir_actions.py:713
+#: code:addons/base/ir/ir_actions.py:716
+#: code:addons/base/ir/ir_model.py:114
+#: code:addons/base/ir/ir_model.py:204
+#: code:addons/base/ir/ir_model.py:218
+#: code:addons/base/ir/ir_model.py:232
+#: code:addons/base/ir/ir_model.py:250
+#: code:addons/base/ir/ir_model.py:255
+#: code:addons/base/ir/ir_model.py:258
 #: code:addons/base/module/module.py:215
 #: code:addons/base/module/module.py:258
 #: code:addons/base/module/module.py:262
@@ -8135,7 +8248,7 @@ msgstr "Туркменістан"
 #: code:addons/base/module/module.py:321
 #: code:addons/base/module/module.py:336
 #: code:addons/base/module/module.py:429
-#: code:addons/base/module/module.py:530
+#: code:addons/base/module/module.py:531
 #: code:addons/base/publisher_warranty/publisher_warranty.py:163
 #: code:addons/base/publisher_warranty/publisher_warranty.py:281
 #: code:addons/base/res/res_currency.py:100
@@ -8184,6 +8297,11 @@ msgid "Danish / Dansk"
 msgstr ""
 
 #. module: base
+#: selection:ir.model.fields,select_level:0
+msgid "Advanced Search (deprecated)"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cx
 msgid "Christmas Island"
 msgstr "Острів Різдва"
@@ -8192,11 +8310,6 @@ msgstr "Острів Різдва"
 #: view:ir.actions.server:0
 msgid "Other Actions Configuration"
 msgstr "Налаштування інших дій"
-
-#. module: base
-#: selection:ir.module.module.dependency,state:0
-msgid "Uninstallable"
-msgstr "Видаляється"
 
 #. module: base
 #: view:res.config.installer:0
@@ -8391,12 +8504,13 @@ msgid "Luxembourg"
 msgstr "Люксембург"
 
 #. module: base
-#: selection:res.request,priority:0
-msgid "Low"
-msgstr "Низький"
+#: help:ir.values,key2:0
+msgid ""
+"The kind of action or button in the client side that will trigger the action."
+msgstr "Вид дії або кнопки на клієнтському боці, яка запустить дію."
 
 #. module: base
-#: code:addons/base/ir/ir_ui_menu.py:305
+#: code:addons/base/ir/ir_ui_menu.py:285
 #, python-format
 msgid "Error ! You can not create recursive Menu."
 msgstr ""
@@ -8565,7 +8679,7 @@ msgid "View Auto-Load"
 msgstr "Продивитися автозавантаження"
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:197
+#: code:addons/base/ir/ir_model.py:232
 #, python-format
 msgid "You cannot remove the field '%s' !"
 msgstr ""
@@ -8606,7 +8720,7 @@ msgid ""
 msgstr ""
 
 #. module: base
-#: code:addons/base/ir/ir_model.py:341
+#: code:addons/base/ir/ir_model.py:487
 #, python-format
 msgid ""
 "You can not delete this document (%s) ! Be sure your user belongs to one of "
@@ -8764,9 +8878,9 @@ msgid "Czech / Čeština"
 msgstr "Чеська / Czech"
 
 #. module: base
-#: selection:ir.model.fields,select_level:0
-msgid "Advanced Search"
-msgstr "Розширений пошук"
+#: view:ir.actions.server:0
+msgid "Trigger Configuration"
+msgstr "Налаштування тригерів"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_partner_supplier_form
@@ -8893,6 +9007,12 @@ msgstr ""
 #: view:res.company:0
 msgid "Portrait"
 msgstr "Портрет"
+
+#. module: base
+#: code:addons/base/ir/ir_model.py:317
+#, python-format
+msgid "Can only rename one column at a time!"
+msgstr ""
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -9063,7 +9183,7 @@ msgid "Account Owner"
 msgstr ""
 
 #. module: base
-#: code:addons/base/res/res_user.py:240
+#: code:addons/base/res/res_user.py:256
 #, python-format
 msgid "Company Switch Warning"
 msgstr ""
@@ -9659,6 +9779,9 @@ msgstr "Російська / Russian"
 
 #~ msgid "wizard.module.lang.export"
 #~ msgstr "wizard.module.lang.export"
+
+#~ msgid "Field Selection"
+#~ msgstr "Вибір поля"
 
 #~ msgid "Sale Opportunity"
 #~ msgstr "Можливість продажу"
@@ -10307,6 +10430,9 @@ msgstr "Російська / Russian"
 
 #~ msgid "STOCK_EXECUTE"
 #~ msgstr "STOCK_EXECUTE"
+
+#~ msgid "Advanced Search"
+#~ msgstr "Розширений пошук"
 
 #~ msgid "STOCK_COLOR_PICKER"
 #~ msgstr "STOCK_COLOR_PICKER"

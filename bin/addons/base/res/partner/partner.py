@@ -113,9 +113,9 @@ class res_partner(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title','Partner Form'),
-        'parent_id': fields.many2one('res.partner','Parent Partner', select=2),
+        'parent_id': fields.many2one('res.partner','Parent Partner'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Partner Ref.'),
-        'ref': fields.char('Reference', size=64),
+        'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language', size=5, help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
         'user_id': fields.many2one('res.users', 'Salesman', help='The internal user that is in charge of communicating with this partner if any.'),
         'vat': fields.char('VAT',size=32 ,help="Value Added Tax number. Check the box if the partner is subjected to the VAT. Used by the VAT legal statement."),
@@ -273,7 +273,7 @@ res_partner()
 class res_partner_address(osv.osv):
     _description ='Partner Addresses'
     _name = 'res.partner.address'
-    _order = 'name'
+    _order = 'type, name'
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner Name', ondelete='set null', select=True, help="Keep empty for a private address, not related to partner."),
         'type': fields.selection( [ ('default','Default'),('invoice','Invoice'), ('delivery','Delivery'), ('contact','Contact'), ('other','Other') ],'Address Type', help="Used to select automatically the right address according to the context in sales and purchases documents."),

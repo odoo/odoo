@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -53,6 +54,7 @@ psycopg2.extensions.register_type(psycopg2.extensions.new_type((700, 701, 1700,)
 
 import tools
 from tools.func import wraps, frame_codeinfo
+from netsvc import Agent
 from datetime import datetime as mdt
 from datetime import timedelta
 import threading
@@ -128,12 +130,12 @@ class Cursor(object):
             params = params or None
             res = self._obj.execute(query, params)
         except psycopg2.ProgrammingError, pe:
-            if log_exceptions or self.sql_log:
+            if log_exceptions:
                 self.__logger.error("Programming error: %s, in query %s", pe, query)
             raise
         except Exception:
-            if log_exceptions or self.sql_log:
-                self.__logger.error("bad query: %s", self._obj.query or query)
+            if log_exceptions:
+                self.__logger.exception("bad query: %s", self._obj.query or query)
             raise
 
         if self.sql_log:
@@ -382,6 +384,7 @@ def db_connect(db_name):
 
 def close_db(db_name):
     _Pool.close_all(dsn(db_name))
+    Agent.cancel(db_name)
     tools.cache.clean_caches_for_db(db_name)
     ct = currentThread()
     if hasattr(ct, 'dbname'):

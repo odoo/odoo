@@ -41,6 +41,9 @@ _intervalTypes = {
 }
 
 class ir_cron(osv.osv, netsvc.Agent):
+    """ This is the ORM object that periodically executes actions.
+        Note that we use the netsvc.Agent()._logger member.
+    """
     _name = "ir.cron"
     _order = 'name'
     _columns = {
@@ -74,7 +77,7 @@ class ir_cron(osv.osv, netsvc.Agent):
         try:
             for this in self.browse(cr, uid, ids, context):
                 str2tuple(this.args)
-        except:
+        except Exception:
             return False
         return True
 
@@ -90,8 +93,8 @@ class ir_cron(osv.osv, netsvc.Agent):
             try:
                 f(cr, uid, *args)
             except Exception, e:
-                self._logger.notifyChannel('timers', netsvc.LOG_ERROR, "Job call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (model, func, args))
-                self._logger.notifyChannel('timers', netsvc.LOG_ERROR, tools.exception_to_unicode(e))
+                cr.rollback()
+                self._logger.exception("Job call of self.pool.get('%s').%s(cr, uid, *%r) failed" % (model, func, args))
 
 
     def _poolJobs(self, db_name, check=False):
@@ -135,9 +138,7 @@ class ir_cron(osv.osv, netsvc.Agent):
                 self.setAlarm(self._poolJobs, next_call, db_name, db_name)
 
         except Exception, ex:
-            logger = netsvc.Logger()
-            logger.notifyChannel('cron', netsvc.LOG_WARNING,
-                'Exception in cron:'+str(ex))
+            self._logger.warning('Exception in cron:', exc_info=True)
 
         finally:
             cr.commit()

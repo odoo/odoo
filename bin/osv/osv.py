@@ -340,7 +340,12 @@ class osv(osv_base, orm.orm):
                                 exist = False
                                 for c2 in range(len(new)):
                                      #For _constraints, we should check field and methods as well
-                                     if new[c2][2]==c[2] and new[c2][0]==c[0]:
+                                     if new[c2][2]==c[2] and (new[c2][0] == c[0] \
+                                            or getattr(new[c2][0],'__name__', True) == \
+                                                getattr(c[0],'__name__', False)):
+                                        # If new class defines a constraint with
+                                        # same function name, we let it override
+                                        # the old one.
                                         new[c2] = c
                                         exist = True
                                         break

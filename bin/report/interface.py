@@ -33,16 +33,12 @@ import render
 import urllib
 
 #
-# encode a value to a string in utf8 and converts XML entities
+# coerce any type to a unicode string (to preserve non-ascii characters)
+# and escape XML entities
 #
-def toxml(val):
-    if isinstance(val, str):
-        str_utf8 = val
-    elif isinstance(val, unicode):
-        str_utf8 = tools.ustr(val)
-    else:
-        str_utf8 = str(val)
-    return str_utf8.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;')
+def toxml(value):
+    unicode_value = tools.ustr(value)
+    return unicode_value.replace('&', '&amp;').replace('<','&lt;').replace('>','&gt;')
 
 class report_int(netsvc.Service):
     def __init__(self, name, audience='*'):

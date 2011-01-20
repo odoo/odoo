@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -285,8 +285,6 @@ def get_module_resource(module, *args):
     elif os.path.exists(resource_path):
         return resource_path
     return False
-
-
 
 def get_modules():
     """Returns the list of module names
@@ -679,8 +677,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     cr.rollback()
 
     def _load_data(cr, module_name, id_map, mode, kind):
-        noupdate = (kind == 'demo')
         for filename in package.data.get(kind, []):
+            noupdate = (kind == 'demo')
             _, ext = os.path.splitext(filename)
             log.info("module %s: loading %s", module_name, filename)
             pathname = os.path.join(module_name, filename)
@@ -824,8 +822,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         report = tools.assertion_report()
         # NOTE: Try to also load the modules that have been marked as uninstallable previously...
         STATES_TO_LOAD = ['installed', 'to upgrade', 'uninstallable']
-        if 'base' in tools.config['update']:
-            cr.execute("update ir_module_module set state=%s where name=%s", ('to upgrade', 'base'))
+        if 'base' in tools.config['update'] or 'all' in tools.config['update']:
+            cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
         graph = create_graph(cr, ['base'], force)

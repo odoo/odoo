@@ -309,7 +309,7 @@ class Agent(object):
     """
     __tasks = []
     __tasks_by_db = {}
-    _logger = Logger()
+    _logger = logging.getLogger('netsvc.agent')
 
     @classmethod
     def setAlarm(cls, function, timestamp, db_name, *args, **kwargs):
@@ -320,6 +320,7 @@ class Agent(object):
     @classmethod
     def cancel(cls, db_name):
         """Cancel all tasks for a given database. If None is passed, all tasks are cancelled"""
+        cls._logger.debug("Cancel timers for %s db", db_name or 'all')
         if db_name is None:
             cls.__tasks, cls.__tasks_by_db = [], {}
         else:
@@ -334,7 +335,7 @@ class Agent(object):
     @classmethod
     def runner(cls):
         """Neverending function (intended to be ran in a dedicated thread) that
-           checks every 60 seconds tasks to run.
+           checks every 60 seconds tasks to run. TODO: make configurable
         """
         current_thread = threading.currentThread()
         while True:
@@ -346,7 +347,7 @@ class Agent(object):
                     # null timestamp -> cancelled task
                     continue
                 current_thread.dbname = dbname   # hack hack
-                cls._logger.notifyChannel('timers', LOG_DEBUG, "Run %s.%s(*%r, **%r)" % (function.im_class.__name__, function.func_name, args, kwargs))
+                cls._logger.debug("Run %s.%s(*%s, **%s)", function.im_class.__name__, function.func_name, args, kwargs)
                 delattr(current_thread, 'dbname')
                 task_thread = threading.Thread(target=function, name='netsvc.Agent.task', args=args, kwargs=kwargs)
                 # force non-daemon task threads (the runner thread must be daemon, and this property is inherited by default)
@@ -361,7 +362,6 @@ agent_runner = threading.Thread(target=Agent.runner, name="netsvc.Agent.runner")
 # threads it spawns are not marked daemon)
 agent_runner.setDaemon(True)
 agent_runner.start()
-
 
 import traceback
 

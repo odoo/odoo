@@ -187,7 +187,7 @@ class db(netsvc.ExportService):
 
         self._set_pg_psw_env_var()
 
-        cmd = ['pg_dump', '--format=c', '--no-owner' , '-w']
+        cmd = ['pg_dump', '--format=c', '--no-owner']
         if tools.config['db_user']:
             cmd.append('--username=' + tools.config['db_user'])
         if tools.config['db_host']:
@@ -223,7 +223,7 @@ class db(netsvc.ExportService):
 
         self._create_empty_database(db_name)
 
-        cmd = ['pg_restore', '--no-owner', '-w']
+        cmd = ['pg_restore', '--no-owner']
         if tools.config['db_user']:
             cmd.append('--username=' + tools.config['db_user'])
         if tools.config['db_host']:

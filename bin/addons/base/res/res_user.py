@@ -3,6 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -28,7 +29,6 @@ import pooler
 from tools.translate import _
 from service import security
 import netsvc
-import time
 
 class groups(osv.osv):
     _name = "res.groups"
@@ -411,11 +411,12 @@ class users(osv.osv):
         if default is None:
             default = {}
         copy_pattern = _("%s (copy)")
-        default.update(login=(copy_pattern % user2copy['login']),
+        copydef = dict(login=(copy_pattern % user2copy['login']),
                        name=(copy_pattern % user2copy['name']),
                        address_id=False, # avoid sharing the address of the copied user!
                        )
-        return super(users, self).copy(cr, uid, id, default, context)
+        copydef.update(default)
+        return super(users, self).copy(cr, uid, id, copydef, context)
 
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, uid, uid, context)
@@ -459,8 +460,7 @@ class users(osv.osv):
     def check(self, db, uid, passwd):
         if not passwd:
             return False
-        cached_pass = self._uid_cache.get(db, {}).get(uid)
-        if (cached_pass is not None) and cached_pass == passwd:
+        if self._uid_cache.get(db, {}).get(uid) == passwd:
             return True
         cr = pooler.get_db(db).cursor()
         try:

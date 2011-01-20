@@ -203,6 +203,8 @@ class browse_record(object):
             # read the results
             field_names = map(lambda x: x[0], fields_to_fetch)
             field_values = self._table.read(self._cr, self._uid, ids, field_names, context=self._context, load="_classic_write")
+
+            # TODO: improve this, very slow for reports
             if self._fields_process:
                 lang = self._context.get('lang', 'en_US') or 'en_US'
                 lang_obj_ids = self.pool.get('res.lang').search(self._cr, self._uid, [('code', '=', lang)])
@@ -423,7 +425,7 @@ class orm_template(object):
             model_id = cr.fetchone()[0]
         if 'module' in context:
             name_id = 'model_'+self._name.replace('.', '_')
-            cr.execute('select * from ir_model_data where name=%s and res_id=%s and module=%s', (name_id, model_id, context['module']))
+            cr.execute('select * from ir_model_data where name=%s and module=%s', (name_id, context['module']))
             if not cr.rowcount:
                 cr.execute("INSERT INTO ir_model_data (name,date_init,date_update,module,model,res_id) VALUES (%s, now(), now(), %s, %s, %s)", \
                     (name_id, context['module'], 'ir.model', model_id)
@@ -726,7 +728,7 @@ class orm_template(object):
                 id = ir_model_data[0]['res_id']
             else:
                 obj_model = self.pool.get(model_name)
-                ids = obj_model.name_search(cr, uid, id)
+                ids = obj_model.name_search(cr, uid, id, operator='=')
                 if not ids:
                     raise ValueError('No record found for %s' % (id,))
                 id = ids[0][0]
@@ -2134,10 +2136,11 @@ class orm(orm_template):
 
         # Take care of adding join(s) if groupby is an '_inherits'ed field
         groupby_list = groupby
+        qualified_groupby_field = groupby
         if groupby:
             if isinstance(groupby, list):
                 groupby = groupby[0]
-            self._inherits_join_calc(groupby, query)
+            qualified_groupby_field = self._inherits_join_calc(groupby, query)
 
         if groupby:
             assert not groupby or groupby in fields, "Fields in 'groupby' must appear in the list of fields to read (perhaps it's missing in the list view?)"
@@ -2151,10 +2154,10 @@ class orm(orm_template):
         if groupby:
             if fget.get(groupby):
                 if fget[groupby]['type'] in ('date', 'datetime'):
-                    flist = "to_char(%s,'yyyy-mm') as %s " % (groupby, groupby)
-                    groupby = "to_char(%s,'yyyy-mm')" % (groupby)
+                    flist = "to_char(%s,'yyyy-mm') as %s " % (qualified_groupby_field, groupby)
+                    groupby = "to_char(%s,'yyyy-mm')" % (qualified_groupby_field)
                 else:
-                    flist = groupby
+                    flist = qualified_groupby_field
             else:
                 # Don't allow arbitrary values, as this would be a SQL injection vector!
                 raise except_orm(_('Invalid group_by'),
@@ -2168,10 +2171,11 @@ class orm(orm_template):
             if f not in ['id', 'sequence']:
                 group_operator = fget[f].get('group_operator', 'sum')
                 if flist:
-                    flist += ','
-                flist += group_operator+'('+f+') as '+f
+                    flist += ', '
+                qualified_field = '"%s"."%s"' % (self._table, f)
+                flist += "%s(%s) AS %s" % (group_operator, qualified_field, f)
 
-        gb = groupby and (' GROUP BY '+groupby) or ''
+        gb = groupby and (' GROUP BY ' + qualified_groupby_field) or ''
 
         from_clause, where_clause, where_clause_params = query.get_sql()
         where_clause = where_clause and ' WHERE ' + where_clause
@@ -2559,7 +2563,7 @@ class orm(orm_template):
                                 # add the NOT NULL constraint
                                 cr.commit()
                                 try:
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     cr.commit()
                                     self.__schema.debug("Table '%s': column '%s': added NOT NULL constraint",
                                                         self._table, k)
@@ -2592,7 +2596,7 @@ class orm(orm_template):
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
                                 cr.commit()
                                 msg = "Table '%s': dropping index for column '%s' of type '%s' as it is not required anymore"
-                                self.__schema.warn(msg, self._table, k, f._type)
+                                self.__schema.debug(msg, self._table, k, f._type)
 
                             if isinstance(f, fields.many2one):
                                 ref = self.pool.get(f._obj)._table
@@ -2665,7 +2669,7 @@ class orm(orm_template):
                             if f.required:
                                 try:
                                     cr.commit()
-                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k))
+                                    cr.execute('ALTER TABLE "%s" ALTER COLUMN "%s" SET NOT NULL' % (self._table, k), log_exceptions=False)
                                     self.__schema.debug("Table '%s': column '%s': added a NOT NULL constraint",
                                         self._table, k)
                                 except Exception:
@@ -2908,7 +2912,7 @@ class orm(orm_template):
             context = {}
         self.pool.get('ir.model.access').check(cr, user, self._name, 'read', context=context)
         if not fields:
-            fields = self._columns.keys() + self._inherit_fields.keys()
+            fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
             select = [ids]
         else:
@@ -3460,16 +3464,16 @@ class orm(orm_template):
         result.sort()
 
         done = {}
-        for order, object, ids, fields in result:
-            key = (object, tuple(fields))
+        for order, object, ids_to_update, fields_to_recompute in result:
+            key = (object, tuple(fields_to_recompute))
             done.setdefault(key, {})
             # avoid to do several times the same computation
             todo = []
-            for id in ids:
+            for id in ids_to_update:
                 if id not in done[key]:
                     done[key][id] = True
                     todo.append(id)
-            self.pool.get(object)._store_set_values(cr, user, todo, fields, context)
+            self.pool.get(object)._store_set_values(cr, user, todo, fields_to_recompute, context)
 
         wf_service = netsvc.LocalService("workflow")
         for id in ids:
@@ -3657,6 +3661,15 @@ class orm(orm_template):
         return id_new
 
     def _store_get_values(self, cr, uid, ids, fields, context):
+        """Returns an ordered list of fields.functions to call due to
+           an update operation on ``fields`` of records with ``ids``,
+           obtained by calling the 'store' functions of these fields,
+           as setup by their 'store' attribute.
+
+           :return: [(priority, model_name, [record_ids,], [function_fields,])]
+        """
+        # FIXME: rewrite, cleanup, use real variable names
+        # e.g.: http://pastie.org/1222060
         result = {}
         fncts = self.pool._store_function.get(self._name, [])
         for fnct in range(len(fncts)):
@@ -3695,6 +3708,8 @@ class orm(orm_template):
         return result2
 
     def _store_set_values(self, cr, uid, ids, fields, context):
+        """Calls the fields.function's "implementation function" for all ``fields``, on records with ``ids`` (taking care of
+           respecting ``multi`` attributes), and stores the resulting values in the database directly."""
         if not ids:
             return True
         field_flag = False
@@ -3878,7 +3893,7 @@ class orm(orm_template):
         else:
             # extract the field names, to be able to qualify them and add desc/asc
             m2o_order_list = []
-            for order_part in m2o_order.split(",",1):
+            for order_part in m2o_order.split(","):
                 m2o_order_list.append(order_part.strip().split(" ",1)[0].strip())
             m2o_order = m2o_order_list
 
@@ -4175,7 +4190,7 @@ class orm(orm_template):
                     return False
         return True
 
-    def get_xml_ids(self, cr, uid, ids, *args, **kwargs):
+    def _get_xml_ids(self, cr, uid, ids, *args, **kwargs):
         """Find out the XML ID(s) of any database record.
 
         **Synopsis**: ``_get_xml_ids(cr, uid, ids) -> { 'id': ['module.xml_id'] }``
@@ -4209,7 +4224,7 @@ class orm(orm_template):
                  defaulting to an empty string when there's none
                  (to be usable as a function field).
         """
-        results = self.get_xml_ids(cr, uid, ids)
+        results = self._get_xml_ids(cr, uid, ids)
         for k, v in results.items():
             if results[k]:
                 results[k] = v[0]

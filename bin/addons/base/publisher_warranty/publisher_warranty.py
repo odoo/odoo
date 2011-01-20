@@ -121,8 +121,8 @@ class publisher_warranty_contract(osv.osv):
             raise
         except Exception:
             _logger.warning("Error sending problem report", exc_info=1)
-            raise osv.except_osv("Connection error", "An error occured during the connection " +
-                                 "with the publisher warranty server.")
+            raise osv.except_osv(_("Error"),
+                                 _("Error during communication with the publisher warranty server."))
 
         return True
 
@@ -142,7 +142,7 @@ class publisher_warranty_contract(osv.osv):
         validated2 = contract.state != "unvalidated"
         if not validated and not validated2:
             raise osv.except_osv(_("Contract validation error"),
-                                 _("Please check your publisher warranty contract name and validity."))
+                                 _("Please verify your publisher warranty serial number and validity."))
         return True
 
     def get_logs(self, cr, uid, ids, cron_mode=True, context=None):
@@ -165,14 +165,26 @@ class publisher_warranty_contract(osv.osv):
             contracts = result["contracts"]
             for contract in contracts:
                 c_id = self.search(cr, uid, [("name","=",contract)])[0]
-                date_from = contracts[contract][0]
-                date_to = contracts[contract][1]
-                state = contracts[contract][2]
-                self.write(cr, uid, c_id, {
-                    "date_start": date_from,
-                    "date_stop": date_to,
-                    "state": state,
-                })
+                # for backward compatibility
+                if type(contracts[contract]) == tuple:
+                    self.write(cr, uid, c_id, {
+                        "date_start": contracts[contract][0],
+                        "date_stop": contracts[contract][1],
+                        "state": contracts[contract][2],
+                        "check_support": False,
+                        "check_opw": False,
+                        "kind": "",
+                    })
+                else:
+                    self.write(cr, uid, c_id, {
+                        "date_start": contracts[contract]["date_from"],
+                        "date_stop": contracts[contract]["date_to"],
+                        "state": contracts[contract]["state"],
+                        "check_support": contracts[contract]["check_support"],
+                        "check_opw": contracts[contract]["check_opw"],
+                        "kind": contracts[contract]["kind"],
+                    })
+
 
             limit_date = (datetime.datetime.now() - _PREVIOUS_LOG_CHECK).strftime(misc.DEFAULT_SERVER_DATETIME_FORMAT)
             for message in result["messages"]:
@@ -220,12 +232,14 @@ class publisher_warranty_contract(osv.osv):
         return True
 
     _columns = {
-        'name' : fields.char('Serial Key', size=384, required=True),
+        'name' : fields.char('Serial Key', size=384, required=True, help="Your OpenERP Publisher's Warranty Contract unique key, also called serial number."),
         'date_start' : fields.date('Starting Date', readonly=True),
         'date_stop' : fields.date('Ending Date', readonly=True),
         'state' : fields.selection([('unvalidated', 'Unvalidated'), ('valid', 'Valid')
                             , ('terminated', 'Terminated'), ('canceled', 'Canceled')], string="State", readonly=True),
         'kind' : fields.char('Kind', size=64, readonly=True),
+        "check_support": fields.boolean("Support Level 1", readonly=True),
+        "check_opw": fields.boolean("OPW", readonly=True, help="Checked if this is an OpenERP Publisher's Warranty contract (versus older contract types"),
     }
 
     _defaults = {
@@ -233,7 +247,7 @@ class publisher_warranty_contract(osv.osv):
     }
 
     _sql_constraints = [
-        ('uniq_name', 'unique(name)', "Your publisher warranty contract is already subscribed in the system !")
+        ('uniq_name', 'unique(name)', "That contract is already registered in the system.")
     ]
 
 publisher_warranty_contract()
@@ -260,7 +274,7 @@ class publisher_warranty_contract_wizard(osv.osv_memory):
     _inherit = "ir.wizard.screen"
 
     _columns = {
-        'name' : fields.char('Serial Key', size=256, required=True ),
+        'name' : fields.char('Serial Key', size=256, required=True, help="Your OpenERP Publisher's Warranty Contract unique key, also called serial number."),
         'state' : fields.selection([("draft", "Draft"), ("finished", "Finished")])
     }
 
@@ -289,6 +303,7 @@ class publisher_warranty_contract_wizard(osv.osv_memory):
 
         self.write(cr, uid, ids, {"state": "finished"})
 
+        # We should return an action ?
         return True
 
 
