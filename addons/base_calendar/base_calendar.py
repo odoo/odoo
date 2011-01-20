@@ -1262,8 +1262,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         recur_dict = []
         if ids and (base_start_date or base_until_date):
             cr.execute("select m.id, m.rrule, m.date, m.date_deadline, m.duration, \
-                            m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid from " + self._table + \
-                            " m where recurrency=True and m.id = ANY(%s)", (ids,) )
+                            m.exdate, m.exrule, m.recurrent_id, m.recurrent_uid, m.recurrency from " + self._table + \
+                            " m where m.id = ANY(%s)", (ids,) )
 
             count = 0
             for data in cr.dictfetchall():
