@@ -1483,6 +1483,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             vals.get('allday', False),
             context=context)
         vals.update(updated_vals.get('value', {}))
+        vals['edit_all'] = False#.update(updated_vals.get('value', {}))
 
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
