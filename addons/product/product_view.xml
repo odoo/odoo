@@ -9,7 +9,7 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Product">
-                   <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>                   
+                   <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Stockable" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]"/>
                    <separator orientation="vertical"/>
                    <filter string="To Sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
@@ -30,7 +30,7 @@
                        <separator orientation="vertical"/>
                        <filter string='Type' icon="terp-stock_symbol-selection" domain="[]" context="{'group_by' : 'type'}" />
                    </group>
-                   
+
                 </search>
             </field>
         </record>
@@ -101,7 +101,7 @@
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
-                                <separator string="Weigths" colspan="2"/>
+                                <separator string="Weights" colspan="2"/>
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
@@ -567,7 +567,7 @@
                             </group>
 
                             <group colspan="2" col="2" groups="base.group_extended">
-                                <separator string="Weigths" colspan="2"/>
+                                <separator string="Weights" colspan="2"/>
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
@@ -634,12 +634,6 @@
             <field name="res_model">product.template</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="product_template_tree_view"/>
-        </record>
-        <record id="ir_ui_view_sc_product0" model="ir.ui.view_sc">
-            <field name="name">Products</field>
-            <field name="resource">ir.ui.menu</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="res_id" ref="product.menu_products"/>
         </record>
 
     </data>

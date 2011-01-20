@@ -54,7 +54,7 @@ class account_move_line(osv.osv):
     _inherit = 'account.move.line'
     _columns = {
         'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level'),
-        'followup_date': fields.date('Latest Follow-up'),
+        'followup_date': fields.date('Latest Follow-up', select=True),
                 }
 
 account_move_line()

@@ -494,12 +494,12 @@ class account_move_line(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, ondelete='restrict'),
-        'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
-        'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
+        'date_maturity': fields.date('Due date', select=True ,help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
+        'date': fields.related('move_id','date', string='Effective date', type='date', required=True, select=True,
                                 store = {
                                     'account.move': (_get_move_lines, ['date'], 20)
                                 }),
-        'date_created': fields.date('Creation date'),
+        'date_created': fields.date('Creation date', select=True),
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
@@ -945,7 +945,7 @@ class account_move_line(osv.osv):
         journal_pool = self.pool.get('account.journal')
         if context is None:
             context = {}
-        result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
+        result = super(account_move_line, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
             #Remove the toolbar from the form view
             if view_type == 'form':
@@ -1044,7 +1044,13 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
-            attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
+
+            if field in ('journal_id',):
+                attrs.append("invisible=\"context.get('journal_id', False)\"")
+            elif field in ('period_id',):
+                attrs.append("invisible=\"context.get('period_id', False)\"")
+            else:
+                attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 
         xml += '''</tree>'''

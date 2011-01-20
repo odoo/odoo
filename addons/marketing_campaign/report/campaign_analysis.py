@@ -52,7 +52,7 @@ class campaign_analysis(osv.osv):
                                      ('10','October'), ('11','November'), ('12','December')],
                                   'Month', readonly=True),
         'day': fields.char('Day', size=10, readonly=True),
-        'date': fields.date('Date', readonly=True),
+        'date': fields.date('Date', readonly=True, select=True),
         'campaign_id': fields.many2one('marketing.campaign', 'Campaign',
                                                                 readonly=True),
         'activity_id': fields.many2one('marketing.campaign.activity', 'Activity',

@@ -49,4 +49,5 @@
                    ],
     "installable" : True,
     "active" : False,
+    "certificate" : "00436592682591421981",
 }

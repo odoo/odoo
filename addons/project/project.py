@@ -400,10 +400,10 @@ class task(osv.osv):
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
-        'create_date': fields.datetime('Create Date', readonly=True),
-        'date_start': fields.datetime('Starting Date'),
-        'date_end': fields.datetime('Ending Date'),
-        'date_deadline': fields.date('Deadline'),
+        'create_date': fields.datetime('Create Date', readonly=True,select=True),
+        'date_start': fields.datetime('Starting Date',select=True),
+        'date_end': fields.datetime('Ending Date',select=True),
+        'date_deadline': fields.date('Deadline',select=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
@@ -476,8 +476,20 @@ class task(osv.osv):
             ids = child_ids
         return True
 
+    def _check_dates(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        obj_task = self.browse(cr, uid, ids[0], context=context)
+        start = obj_task.date_start or False
+        end = obj_task.date_end or False
+        if start and end :
+            if start > end:        
+                return False
+        return True           
+
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids'])
+        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
+        (_check_dates, 'Error ! Task end-date must be greater then task start-date', ['date_start','date_end'])
     ]
     #
     # Override view according to the company definition
@@ -541,6 +553,7 @@ class task(osv.osv):
         """
         request = self.pool.get('res.request')
         for task in self.browse(cr, uid, ids, context=context):
+            vals = {}
             project = task.project_id
             if project:
                 # Send request to project manager
@@ -563,7 +576,11 @@ class task(osv.osv):
                             reopen = False
                     if reopen:
                         self.do_reopen(cr, uid, [parent_id.id])
-            self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+            vals.update({'state': 'done'})
+            vals.update({'remaining_hours': 0.0})
+            if not task.date_end:
+                vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
+            self.write(cr, uid, [task.id],vals)
             message = _("The task '%s' is done") % (task.name,)
             self.log(cr, uid, task.id, message)
         return True

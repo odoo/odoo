@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from lxml import etree
 from osv import fields, osv
 
 class base_contact_installer(osv.osv_memory):
