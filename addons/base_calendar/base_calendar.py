@@ -1402,6 +1402,20 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
 
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
         return res
+    
+    def get_edit_all(self, cr, uid, id, vals=None, context=None):
+        """
+            return true if we have to edit all meeting from the same recurrent
+            or only on occurency
+        """
+        
+        meeting = self.browse(cr,uid,[id], context=context)
+        if(vals and 'edit_all' in vals): #we jsut check edit_all
+            return vals['edit_all']
+        else: #it's a recurrent event and edit_all is already check
+            return meeting.recurrency and meeting.edit_all 
+
+        
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         """
@@ -1424,6 +1438,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = False
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
+            
+            if(self.get_edit_all(cr, uid, id, vals=vals, context=context)):
+                event_id = real_event_id
+            
+            
             if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                     'rrule', 'duration'])
@@ -1553,6 +1572,10 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = False
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
+            
+            if self.get_edit_all(cr, uid, event_id, vals=None, context=context):
+                event_id = base_calendar_id2real_id(event_id)
+            
             if isinstance(event_id, (int, long)):
                 res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
