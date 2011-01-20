@@ -1432,9 +1432,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = False
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
-            event = self.browse(cr, uid, event_id, context=context)
+            event = self.browse(cr, uid, real_event_id, context=context)
             edit_all = event.edit_all
-            recurrency = vals.get('recurrency', False)
+            recurrency = event.recurrency or vals.get('recurrency', False)
 
             if('edit_all' in vals):
                 edit_all = vals['edit_all']
@@ -1449,10 +1449,18 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         'recurrent_uid': real_event_id,
                         'recurrent_id': data.get('date'),
                         'rrule_type': 'none',
-                        'rrule': ''
+                        'rrule': '',
+                        'exdate': False,
+                        'recurrency': False,
                         })
                     data.update(vals)
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
+                    # add this occurance date in exdate in main meeting
+                    str_event, date_new = event_id.split('-')
+                    date_ex = time.strftime("%Y%m%dT%H%M%S", \
+                                    time.strptime(date_new, "%Y%m%d%H%M%S"))
+                    exdate = (event.exdate and (event.exdate + ',')  or '') + date_ex
+                    super(calendar_event, self).write(cr, uid, [event.id], {'exdate': exdate})
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
             if not real_event_id in new_ids:
@@ -1464,7 +1472,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         'recurrent_uid': False,
                         'recurrent_id': False,
                         'rrule_type': 'none',
-                        'rrule': ''
+                        'rrule': '',
+                        'exdate': False,
                         }
                 super(calendar_event, self).write(cr, uid, [real_event_id], clear_vals, context=context)
                 # unlink all replica of that event after removing recurrency option
@@ -1604,12 +1613,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 main_event_id =  event.recurrent_uid
             else:
                 main_event_id = event.id
-
-            main_event = self.browse(cr, uid, main_event_id, context=context)
-            date_ex = time.strftime("%Y%m%dT%H%M%S", \
-                     time.strptime(date_new, "%Y%m%d%H%M%S"))
-            exdate = (main_event.exdate and (main_event.exdate + ',')  or '') + date_ex
-            res = super(calendar_event, self).write(cr, uid, [main_event.id], {'exdate': exdate})
+                main_event = self.browse(cr, uid, main_event_id, context=context)
+                date_ex = time.strftime("%Y%m%dT%H%M%S", \
+                         time.strptime(date_new, "%Y%m%d%H%M%S"))
+                exdate = (main_event.exdate and (main_event.exdate + ',')  or '') + date_ex
+                res = super(calendar_event, self).write(cr, uid, [main_event.id], {'exdate': exdate})
         return res
 
     def create(self, cr, uid, vals, context=None):
