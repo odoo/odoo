@@ -1404,16 +1404,33 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
         return res
     
+<<<<<<< TREE
     def get_edit_all(self, cr, uid, id, vals=None):
+=======
+    def get_edit_all(self, cr, uid, id, vals=None, context=None):
+>>>>>>> MERGE-SOURCE
         """
             return true if we have to edit all meeting from the same recurrent
             or only on occurency
         """
+<<<<<<< TREE
         meeting = self.read(cr,uid, id, ['edit_all', 'recurrency'] )
+=======
+        
+        meeting = self.browse(cr,uid,[id], context=context)
+>>>>>>> MERGE-SOURCE
         if(vals and 'edit_all' in vals): #we jsut check edit_all
+<<<<<<< TREE
             return vals['edit_all']
+=======
+            return edit_all = vals['edit_all']
+>>>>>>> MERGE-SOURCE
         else: #it's a recurrent event and edit_all is already check
+<<<<<<< TREE
             return meeting['recurrency'] and meeting['edit_all'] 
+=======
+            return edit_all = meeting.recurrency and meeting.edit_all 
+>>>>>>> MERGE-SOURCE
 
         
 
@@ -1439,6 +1456,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         for event_id in select:
             real_event_id = base_calendar_id2real_id(event_id)
             
+
             if(self.get_edit_all(cr, uid, event_id, vals=vals)):
                 event_id = real_event_id
             
@@ -1583,7 +1601,11 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
             
+<<<<<<< TREE
             if self.get_edit_all(cr, uid, event_id, vals=None):
+=======
+            if(self.get_edit_all(self, cr, uid, event_id, vals=None, context=context):
+>>>>>>> MERGE-SOURCE
                 event_id = base_calendar_id2real_id(event_id)
             
             if isinstance(event_id, (int, long)):
