@@ -205,14 +205,13 @@
                                 <group col="2" colspan="1">
                                     <field name="day"
                                         attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')],
-                                            'invisible' : ['|', ('select1','=','day'), ('rrule_type','!=','monthly')]}" />
+                                            'invisible' : [('select1','=','day')]}" />
                                 </group>
-                                <group col="3" colspan="1"
-                                    attrs="{'invisible' : ['|', ('select1','=','date'), ('rrule_type','!=','monthly')]}">
+                                <group col="3" colspan="1">
                                     <field name="byday" string="The"
-                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')]}" />
+                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
                                     <field name="week_list" nolabel="1"
-                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')]}" />
+                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
                                 </group>
                             </group>
                         </group>

@@ -1457,6 +1457,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         'rrule_type': 'none',
                         'rrule': '',
                         'edit_all': False,
+                        'recurrency' : False,
                         })
                     
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
