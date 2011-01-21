@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-18 07:19+0000\n"
-"Last-Translator: Davide Corio - Domsense <davide.corio@domsense.com>\n"
+"PO-Revision-Date: 2011-01-21 01:52+0000\n"
+"Last-Translator: Vincenzo Marino <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:43+0000\n"
+"X-Launchpad-Export-Date: 2011-01-21 04:39+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -443,7 +443,7 @@ msgid ""
 "entries of this journal."
 msgstr ""
 "Questo campo contiene informazioni relative alla numerazione delle scritture "
-"in questo registro."
+"in questo giornale."
 
 #. module: account
 #: field:account.journal,default_debit_account_id:0
@@ -484,9 +484,9 @@ msgid ""
 "it comes to 'Printed' state. When all transactions are done, it comes in "
 "'Done' state."
 msgstr ""
-"Quando viene creato un registro periodico il suo stato è 'bozza', se "
-"stampato il suo stato  è: 'stampato'. Quando sono registrate tutte le "
-"tranazioni il suo stato è: 'Completato'"
+"Quando viene creato un periodo giornale il suo stato è 'Bozza', se stampato "
+"il suo stato  è: 'Stampato'. Quando sono registrate tutte le transazioni il "
+"suo stato è: 'Completato'"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_tax_chart
@@ -705,7 +705,7 @@ msgstr "Periodo delle voci di apertura"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
 msgid "Journal Period"
-msgstr "Periodo del registro"
+msgstr "Periodo del giornale"
 
 #. module: account
 #: code:addons/account/account_move_line.py:732
@@ -1359,7 +1359,7 @@ msgstr "Conto di credito"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
 msgid "Central Journal"
-msgstr "Registro centralizzato"
+msgstr "Giornale centralizzato"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1271
@@ -1720,7 +1720,7 @@ msgid ""
 "period without removing it."
 msgstr ""
 "Il campo, impostato come \"falso\", permette di nascondere il periodo "
-"fiscale del registro senza eliminarlo."
+"fiscale del giornale senza eliminarlo."
 
 #. module: account
 #: view:res.partner:0
@@ -1777,7 +1777,7 @@ msgstr "Rif. cliente:"
 #: code:addons/account/account_cash_statement.py:328
 #, python-format
 msgid "User %s does not have rights to access %s journal !"
-msgstr "L'utente %s non ha diritti di accesso al registro %s !"
+msgstr "L'utente %s non ha diritti di accesso al giornale %s!"
 
 #. module: account
 #: help:account.period,special:0
@@ -1893,7 +1893,7 @@ msgstr "Conto analitico"
 #: code:addons/account/account_bank_statement.py:332
 #, python-format
 msgid "Please verify that an account is defined in the journal."
-msgstr "Verificare che al registro sia associato un conto."
+msgstr "Verificare che al giornale sia associato un conto."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -1946,7 +1946,7 @@ msgid ""
 "journal. Otherwise, all will use the same sequence."
 msgstr ""
 "Spuntare la casella se si vuole utilizzare una sequenza diversa per ogni "
-"registro creato. Altrimenti tutti utilizzeranno la stessa sequenza."
+"giornale creato. Altrimenti tutti utilizzeranno la stessa sequenza."
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -2457,7 +2457,7 @@ msgid ""
 "This report gives you an overview of the situation of a specific journal"
 msgstr ""
 "Quesrto report fornisce una visione generale della situazione di uno "
-"specifico registro"
+"specifico giornale"
 
 #. module: account
 #: constraint:product.category:0
@@ -2518,7 +2518,7 @@ msgid ""
 "You cannot modify company of this journal as its related record exist in "
 "Entry Lines"
 msgstr ""
-"Non si può modificare l'azienda di questo registro poiché esistono voci "
+"Non si può modificare l'azienda di questo giornale poiché esistono voci "
 "correlate alla ditta fra le registrazioni."
 
 #. module: account
@@ -2668,7 +2668,7 @@ msgstr "Questo wizard crea voci contabili ricorrenti."
 #: code:addons/account/account.py:1181
 #, python-format
 msgid "No sequence defined on the journal !"
-msgstr "Manca la definizione di una sequenza per il registro."
+msgstr "Manca la definizione di una sequenza per il giornale."
 
 #. module: account
 #: code:addons/account/account.py:2083
@@ -2678,7 +2678,7 @@ msgstr "Manca la definizione di una sequenza per il registro."
 #: code:addons/account/wizard/account_use_model.py:81
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "Occorre definire un registro analitico per il registro: '%s'!"
+msgstr "Occorre definire un giornale analitico per il giornale: '%s'!"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -3007,7 +3007,7 @@ msgstr "Mastrino  partner"
 #. module: account
 #: help:account.journal.column,sequence:0
 msgid "Gives the sequence order to journal column."
-msgstr "Fornisce l'ordine di sequenza per la colonna del registro"
+msgstr "Fornisce l'ordine di sequenza per la colonna del giornale"
 
 #. module: account
 #: view:account.tax.template:0
@@ -3028,7 +3028,7 @@ msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
 msgstr ""
-"Questo wizard rende valide tutte le registrazoni di un particolare registro "
+"Questo wizard rende valide tutte le registrazoni di un particolare giornale "
 "o periodo. Una volta che questo è stato fatto non si possono più fare "
 "modifiche."
 
@@ -6352,7 +6352,7 @@ msgid ""
 "this journal or of the invoice related to this journal"
 msgstr ""
 "Spuntare la casella se si vuole permettere la cancellazione delle "
-"registrazioni di questo giornale o delle fatture collegate a questo registro."
+"registrazioni di questo giornale o delle fatture collegate a questo giornale."
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -7300,7 +7300,7 @@ msgstr "Vendite per tipo conto"
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated Journal Items."
-msgstr ""
+msgstr "Collegamento alle voci del giornale generate automaticamente."
 
 #. module: account
 #: selection:account.installer,period:0
@@ -7371,6 +7371,9 @@ msgid ""
 "to the higher ones. The order is important if you have a tax with several "
 "tax children. In this case, the evaluation order is important."
 msgstr ""
+"Il campo delle sequenze è usato per ordinare le linee delle tasse dalla più "
+"bassa alla più alta. L'ordine è importante se si ha una tassa con differenti "
+"sottotasse figlie. in questo caso, l'ordine di valutazione è importante."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
@@ -7467,7 +7470,7 @@ msgstr "Scegliere una valuta da applicare alla fattura"
 #: code:addons/account/wizard/account_invoice_refund.py:100
 #, python-format
 msgid "Can not %s draft/proforma/cancel invoice."
-msgstr ""
+msgstr "Non è possibile eseguire %s bozza/proforma/cancella fattura."
 
 #. module: account
 #: code:addons/account/invoice.py:787
@@ -7671,6 +7674,8 @@ msgid ""
 "Modify Invoice: Cancels the current invoice and creates a new copy of it "
 "ready for editing."
 msgstr ""
+"Modifica Fattura: Cancella la fattura corrente e ne crea una nuova copia "
+"pronta per essere modificata."
 
 #. module: account
 #: model:ir.module.module,shortdesc:account.module_meta_information
@@ -7743,12 +7748,12 @@ msgstr "Modelli di \"posizioni fiscali\""
 #. module: account
 #: view:account.entries.report:0
 msgid "Int.Type"
-msgstr ""
+msgstr "int.Tipo"
 
 #. module: account
 #: field:account.move.line,tax_amount:0
 msgid "Tax/Base Amount"
-msgstr ""
+msgstr "Tassa/Imponibile"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -7773,6 +7778,13 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Questo menù stampa la dichiarazione IVA basata sulle fatture o i pagamenti. "
+"Puoi selezionare uno o più periodi dell'anno fiscale. Le informazioni "
+"necessarie per la dichiarazione fiscale sono automaticamente generate da "
+"OpenERP dalle fatture (o, in alcune nazioni, dai pagamenti). Questi dati "
+"sono aggiornati il tempo reale. Questo è molto utile in quanto rende "
+"possibile una visione preliminare in qualsiasi momento il debito relativo "
+"alle tasse all'inizio o fine del mese o del trimestre."
 
 #. module: account
 #: report:account.invoice:0
@@ -7839,12 +7851,12 @@ msgstr "Import automatico dei movimenti bancari"
 #: model:ir.actions.act_window,name:account.action_account_journal_view
 #: model:ir.ui.menu,name:account.menu_action_account_journal_view
 msgid "Journal Views"
-msgstr ""
+msgstr "Visuali Libro Giornale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
 msgid "Move bank reconcile"
-msgstr ""
+msgstr "Riconciliazione movimenti bancari"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -7917,6 +7929,10 @@ msgid ""
 "sales orders or deliveries. You should only confirm them before sending them "
 "to your customers."
 msgstr ""
+"Con il modulo Fatture Clienti, è possibile creare e gestire le fatture di "
+"vendita emanate nei confronti dei propri clienti. OpenERP può anche generare "
+"fatture di bozza automaticamente dagli ordini di vendita o dalle spedizioni. "
+"E' semplicemente necessario confermarle prima di spedirle ai clienti."
 
 #. module: account
 #: view:account.entries.report:0
@@ -7967,7 +7983,7 @@ msgstr ""
 #. module: account
 #: view:account.model.line:0
 msgid "Journal Entry Model Line"
-msgstr ""
+msgstr "Modello di linea del Libro Giornale"
 
 #. module: account
 #: view:account.invoice:0
@@ -8008,11 +8024,13 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
+"L'ammontare residuo di una voce del registro Pagabile o Incassabile espressa "
+"nella moneta di conto dell'Azienda."
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  valuation: balance"
-msgstr ""
+msgstr "  valutazione: bilancio"
 
 #. module: account
 #: view:account.tax.code:0
@@ -8112,6 +8130,7 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
 msgstr ""
+"L'importo del documento deve essere lo stesso della linea del resoconto"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1131
@@ -8130,6 +8149,7 @@ msgstr "Lasciare vuoto per tutti gli anni fiscali aperti"
 #, python-format
 msgid "The account move (%s) for centralisation has been confirmed!"
 msgstr ""
+"La movimentazione del conto (%s) è stata confermata per la centralizzazione!"
 
 #. module: account
 #: help:account.move.line,amount_currency:0
@@ -8178,6 +8198,8 @@ msgstr ""
 #: model:process.transition,note:account.process_transition_validentries0
 msgid "Accountant validates the accounting entries coming from the invoice."
 msgstr ""
+"L'addetto alla contabilità convalida le registrazioni contabili che arrivano "
+"dalle fatture."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_fiscalyear_form
@@ -8190,6 +8212,13 @@ msgid ""
 "would be referred to as FY 2011. You are not obliged to follow the actual "
 "calendar year."
 msgstr ""
+"Imposta l'anno finanziario (esercizio) dell'azienda in base ai relativi "
+"bisogni. Un anno finanziario è il periodo alla fine del quale i conti "
+"dell'azienda sono chiusi (solitamente 12 mesi). L'anno finanziario è "
+"normalmente riferito alla data in cui è chiuso. Per esempio, se l'esercizio "
+"di un azienda finisce il 30 novembre 2011, allora tutto tra il 01 dicembre "
+"2010 e il 30 novembre 2011 sarà riferito al FY2011. Non si è obbligati a "
+"seguire il calendario solare."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_reconcile_open
@@ -8213,6 +8242,16 @@ msgid ""
 "* The 'Paid' state is set automatically when invoice is paid.            \n"
 "* The 'Cancelled' state is used when user cancel invoice."
 msgstr ""
+" * Lo stato di 'Bozza' è usato quando un utente sta codificando una nuova "
+"fattura non confermata.             \n"
+"* Il 'Pro-forma' è usato quando le fatture sono nello stato di 'Pro-forma', "
+"questo tipo di fatture non hanno un numero.             \n"
+"* Lo stato 'Aperta' è usato quando l'utente crea una fattura, un numero "
+"viene generato automaticamente. Rimane aperta fin quando l'utente non paga "
+"la fattura.             \n"
+"* Lo stato di 'Pagata' è automaticante impostato quando una fattura è "
+"pagata.            \n"
+"* Lo stato 'Cancellata' è usata quando l'utente cancella una fattura."
 
 #. module: account
 #: field:account.invoice.refund,period:0
@@ -8244,7 +8283,7 @@ msgstr "Giornale delle voci di apertura"
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
 msgid "Draft invoices are checked, validated and printed."
-msgstr ""
+msgstr "Le Bozze di fatture sono marcate, convalidate e stampate."
 
 #. module: account
 #: help:account.chart.template,property_reserve_and_surplus_account:0
@@ -8353,7 +8392,7 @@ msgstr "Pagamento registrato"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close states of Fiscal year and periods"
-msgstr ""
+msgstr "Chiudi lo stato dell'anno Fiscale e dei periodi"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -8393,7 +8432,7 @@ msgstr "Gentile Signora, Egregio Signore"
 #. module: account
 #: view:account.installer.modules:0
 msgid "Configure Your Accounting Application"
-msgstr ""
+msgstr "Configura l'applicazione di Contabilità"
 
 #. module: account
 #: code:addons/account/account.py:2820
@@ -8408,6 +8447,8 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft invoices."
 msgstr ""
+"Costi Analitici (Schede Attività. Prodotti acquistati, ...) provengono dai "
+"conti analitici. Questi generano le Bozze di Fatture."
 
 #. module: account
 #: help:account.journal,view_id:0
@@ -8417,6 +8458,11 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"Mostra la visuale usata quando si scrive o si naviga nelle registrazioni in "
+"questo libro giornale. La visuale fa si che OpenERP sappia quali campi deve "
+"rendere visibili, obbligatori o in sola lettura ed in quale ordine. Si può "
+"creare una vista personalizzata per una codifica più agevole e veloce di "
+"ciascun libro giornale."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -8446,7 +8492,7 @@ msgstr "Periodo di inizio"
 #: code:addons/account/account.py:2333
 #, python-format
 msgid "Cannot locate parent code for template account!"
-msgstr ""
+msgstr "Non è possibile localizzare il codice padre del modello del conto!"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -8478,6 +8524,8 @@ msgstr "Totale crediti"
 #: model:process.transition,note:account.process_transition_suppliervalidentries0
 msgid "Accountant validates the accounting entries coming from the invoice. "
 msgstr ""
+"Il responsabile della Contabilità convalida le registrazioni contabili "
+"provenienti dalle fatture. "
 
 #. module: account
 #: code:addons/account/invoice.py:1008
@@ -8605,6 +8653,8 @@ msgid ""
 "This report is analysis by partner. It is a PDF report containing one line "
 "per partner representing the cumulative credit balance."
 msgstr ""
+"Questo rapporto è un analisi dei Partner. E' in formato PDF e contiene una "
+"linea per ogni partner rappresentando il bilancio del credito cumulativo."
 
 #. module: account
 #: selection:account.account,type:0
@@ -8673,6 +8723,12 @@ msgid ""
 "closed or left open depending on your company's activities over a specific "
 "period."
 msgstr ""
+"Quì è possibile definire il periodo finanziario dell'esercizio, che "
+"rappresenta un intervallo temporale dell'intero esercizio annuale. Un "
+"periodo contabile è solitamente un mese o un trimestre. Esso, corrisponde al "
+"periodo della dichiarazione fiscale. Crea o organizza i periodi da quì e "
+"decidi quando un periodo deve essere chiuso o lasciato aperto a seconda "
+"delle attività dell'azienda per un determinato periodo."
 
 #. module: account
 #: report:account.move.voucher:0

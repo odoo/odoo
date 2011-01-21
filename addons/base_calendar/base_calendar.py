@@ -19,7 +19,7 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from dateutil import parser
 from dateutil import rrule
 from osv import fields, osv
@@ -29,7 +29,6 @@ import pytz
 import re
 import time
 import tools
-
 
 months = {
     1: "January", 2: "February", 3: "March", 4: "April", \
@@ -1199,6 +1198,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             'active': 1,
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
+            'edit_all' : False,
     }
 
     def onchange_edit_all(self, cr, uid, ids, rrule_type,edit_all, context=None):
@@ -1266,8 +1266,6 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                 until_date = base_until_date and datetime.strptime(base_until_date[:10]+ ' 23:59:59', "%Y-%m-%d %H:%M:%S") or False
                 if count > limit:
                     break
-                if not data['date']:
-                    continue
                 event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
 #                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
                 start_date = event_date
@@ -1401,9 +1399,25 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
                         continue
                     until_date = arg[2]
         res = super(calendar_event, self).search(cr, uid, args_without_date, \
-                                 offset, limit, order, context, count=False)
+                                 offset, limit, order, context, count)
+
         res = self.get_recurrent_ids(cr, uid, res, start_date, until_date, limit)
-        return len(res) if count else res
+        return res
+    
+
+    def get_edit_all(self, cr, uid, id, vals=None):
+        """
+            return true if we have to edit all meeting from the same recurrent
+            or only on occurency
+        """
+        meeting = self.read(cr,uid, id, ['edit_all', 'recurrency'] )
+        if(vals and 'edit_all' in vals): #we jsut check edit_all
+            return vals['edit_all']
+        else: #it's a recurrent event and edit_all is already check
+            return meeting['recurrency'] and meeting['edit_all'] 
+
+
+        
 
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         """
@@ -1415,7 +1429,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @param vals: Dictionary of field value.
         @param context: A standard dictionary for contextual values
         @return: True
-        """        
+        """
         if context is None:
             context = {}
         if isinstance(ids, (str, int, long)):
@@ -1425,26 +1439,35 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         new_ids = []
         res = False
         for event_id in select:
-            real_event_id = base_calendar_id2real_id(event_id)   
+            real_event_id = base_calendar_id2real_id(event_id)
             
-            event = self.browse(cr,uid, event_id, context=context)
-            if('edit_all' in vals):
-                edit_all = vals['edit_all']
-            else:
-                edit_all = event.edit_all or not event.recurrency
 
-            if not edit_all:
+            if(self.get_edit_all(cr, uid, event_id, vals=vals)):
+                event_id = real_event_id
+            
+            
+            if len(str(event_id).split('-')) > 1:
                 data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
-                                                    'rrule', 'duration'])
+                                                    'rrule', 'duration', 'exdate'])
                 if data.get('rrule'):
                     data.update(vals)
                     data.update({
+                        'recurrent_uid': real_event_id,
+                        'recurrent_id': data.get('date'),
                         'rrule_type': 'none',
-                        'rrule': ''
+                        'rrule': '',
+                        'edit_all': False,
+                        'recurrency' : False,
                         })
                     
                     new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
-                    self.unlink(cr, uid, [event_id], context=context)
+                    
+                    date_new = event_id.split('-')[1]
+                    date_new = time.strftime("%Y%m%dT%H%M%S", \
+                                 time.strptime(date_new, "%Y%m%d%H%M%S"))
+                    exdate = (data['exdate'] and (data['exdate'] + ',')  or '') + date_new
+                    res = self.write(cr, uid, [real_event_id], {'exdate': exdate})
+                    
                     context.update({'active_id': new_id, 'active_ids': [new_id]})
                     continue
             if not real_event_id in new_ids:
@@ -1461,7 +1484,9 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
             context=context)
         vals.update(updated_vals.get('value', {}))
 
-        
+        if not 'edit_all' in vals:
+            vals['edit_all'] = False
+
         if new_ids:
             res = super(calendar_event, self).write(cr, uid, new_ids, vals, context=context)
 
@@ -1523,8 +1548,8 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         for base_calendar_id, real_id in select:
             #REVET: Revision ID: olt@tinyerp.com-20100924131709-cqsd1ut234ni6txn
             res = super(calendar_event, self).read(cr, uid, real_id, fields=fields, context=context, load=load)
-            if not res:
-                res = {}
+            if not res :
+                continue
             ls = base_calendar_id2real_id(base_calendar_id, with_date=res and res.get('duration', 0) or 0)
             if not isinstance(ls, (str, int, long)) and len(ls) >= 2:
                 res['date'] = ls[1]
@@ -1563,30 +1588,25 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         @return: True
         """
         res = False
-        for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate', 'edit_all'], context=context):
+        for event_datas in self.read(cr, uid, ids, ['date', 'rrule', 'exdate'], context=context):
             event_id = event_datas['id']
-            edit_all = event_datas.get('edit_all', False)
+            
+            if self.get_edit_all(cr, uid, event_id, vals=None):
+                event_id = base_calendar_id2real_id(event_id)
+            
             if isinstance(event_id, (int, long)):
                 res = super(calendar_event, self).unlink(cr, uid, event_id, context=context)
                 self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
                 self.unlink_events(cr, uid, [event_id], context=context)
             else:
-                select = event_id.split('-')
-                if(len(select) < 2):
-                    str_event = event_id
-                    date_new = time.strftime("%Y%m%d%H%M%S", \
-                            time.strptime(event_datas['date'], "%Y-%m-%d %H:%M:%S"))         
-                else:
-                    str_event, date_new = select
-
-                
+                str_event, date_new = event_id.split('-')
                 event_id = int(str_event)
-                if event_datas['rrule'] and not edit_all:
+                if event_datas['rrule']:
                     # Remove one of the recurrent event
                     date_new = time.strftime("%Y%m%dT%H%M%S", \
                                  time.strptime(date_new, "%Y%m%d%H%M%S"))
                     exdate = (event_datas['exdate'] and (event_datas['exdate'] + ',')  or '') + date_new
-                    res = super(calendar_event, self).write(cr, uid, [event_id], {'exdate': exdate})
+                    res = self.write(cr, uid, [event_id], {'exdate': exdate})
                 else:
                     res = super(calendar_event, self).unlink(cr, uid, [event_id], context=context)
                     self.pool.get('res.alarm').do_alarm_unlink(cr, uid, [event_id], self._name)
@@ -1620,9 +1640,7 @@ e.g.: Every other month on the last Sunday of the month for 10 occurrences:\
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
-        records = self.browse(cr, uid, [res], context=context)
-        #return real_id2base_calendar_id(records[0].id, records[0].date)
-        return base_calendar_id2real_id(records[0].id)
+        return res
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
@@ -1725,6 +1743,14 @@ class ir_attachment(osv.osv):
         for arg in args:
             args1.append(map(lambda x:str(x).split('-')[0], arg))
         return super(ir_attachment, self).search_count(cr, user, args1, context)
+        
+        
+    
+    def create(self, cr, uid, vals, context=None):
+        if context:
+            id = context.get('default_res_id', False)
+            context.update({'default_res_id' : base_calendar_id2real_id(id)})
+        return super(ir_attachment, self).create(cr, uid, vals, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False):
@@ -1742,16 +1768,9 @@ class ir_attachment(osv.osv):
         for i, arg in enumerate(new_args):
             if arg[0] == 'res_id':
                 new_args[i] = (arg[0], arg[1], base_calendar_id2real_id(arg[2]))
+
         return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
-                            limit=limit, order=order,
-                            context=context, count=False)
-                            
-    def create(self, cr, uid, vals, context=None):
-       if context:
-           id = context.get('default_res_id', False)
-           context.update({'default_res_id' : base_calendar_id2real_id(id)})
-       return super(ir_attachment, self).create(cr, uid, vals, context=context)
-       
+                            limit=limit, order=order, context=context, count=False)
 ir_attachment()
 
 class ir_values(osv.osv):

@@ -870,7 +870,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Cancelled\' state is set when a user cancel the sales order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesman'),
-        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
     _order = 'sequence, id desc'
     _defaults = {
