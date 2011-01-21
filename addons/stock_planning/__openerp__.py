@@ -22,17 +22,17 @@
 {
     "name":"Master Procurement Schedule",
     "version":"1.1",
-    "author":"OpenERP SA and Grzegorz Grzelak (Cirrus)",
-    "category":"Custom",
-    "depends":["hr","stock","sale"],
+    "author":"OpenERP SA and Grzegorz Grzelak (OpenGLOBE)",
+    "category":"Stock",
+    "depends":["hr","stock","sale","procurement"],
     "description": """
 This module is based on original OpenERP SA module stock_planning version 1.0 of the same name Master Procurement Schedule.
 
 Purpose of MPS is to allow create a manual procurement (requisition) apart of MRP scheduler (which works automatically on minimum stock rules).
 
 Terms used in the module:
-- Stock and Sales Period - is the time (between Start Date and End Date) for which you plan Stock and Sales Forecast and make Procurement Planning. 
-- Stock and Sales Forecast - is the quantity of products you plan to sell in the Period.
+- Stock Period - is the time (between Start Date and End Date) for which you plan Stock and Sales Forecast and make Procurement Planning. 
+- Sales Forecast - is the quantity of products you plan to sell in the Period.
 - Stock Planning - is the quantity of products you plan to purchase or produce for the Period.
 
 Because we have another module sale_forecast which uses terms "Sales Forecast" and "Planning" as amount values we will use terms "Stock and Sales Forecast" and "Stock Planning" to emphasize that we use quantity values. 
@@ -44,14 +44,14 @@ Activity with this module is divided to three steps:
 
 Periods
 =======
-You have two menu items for Periods in "Sales Management - Configuration". There are:
-- "Create Sales Periods" - Which automates creating daily, weekly or monthly periods.
-- "Stock and sales Periods" - Which allows to create any type of periods, change the dates and change the State of period.
+You have two menu items for Periods in "Warehouse - Configuration - Stock Periods". There are:
+- "Create Stock Periods" - Which automates creating daily, weekly or monthly periods.
+- "Stock Periods" - Which allows to create any type of periods, change the dates and change the State of period.
 
-Creating periods is the first step you have to do to use modules features. You can create custom periods using "New" button in "Stock and Sales Periods" form or view but it is recommended to use automating tool.
+Creating periods is the first step you have to do to use modules features. You can create custom periods using "New" button in "Stock Periods" form or view but it is recommended to use automating tool "Create Stock Periods".
 
 Remarks:
-- These periods (officially Stock and Sales Periods) are separated of Financial or other periods in the system.
+- These periods (Stock Periods) are separated of Financial or other periods in the system.
 - Periods are not assigned to companies (when you use multicompany feature at all). Module suppose that you use the same periods across companies. If you wish to use different periods for different companies define them as you wish (they can overlap). Later on in this text will be indications how to use such periods.
 - When periods are created automatically their start and finish dates are with start hour 00:00:00 and end hour 23:59:00. Fe. when you create daily periods they will have start date 31.01.2010 00:00:00 and end date 31.01.2010 23:59:00. It works only in automatic creation of periods. When you create periods manually you have to take care about hours because you can have incorrect values form sales or stock. 
 - If you use overlapping periods for the same product, warehouse and company results can be unpredictable.
@@ -59,11 +59,11 @@ Remarks:
 
 Sales Forecasts
 ===============
-You have few menus for Sales forecast in "Sales Management - Sales Forecasts".
-- "Create Sales Forecasts for Sales Periods" - which automates creating forecasts lines according to some parameters.
+You have few menus for Sales forecast in "Sales - Sales Forecasts".
+- "Create Sales Forecasts" - which automates creating forecasts lines according to some parameters.
 - "Sales Forecasts" - few menus for working with forecasts lists and forms.
 
-Menu "Create Sales Forecasts for Sales Periods" creates Forecasts for products from selected Category, for selected Period and for selected Warehouse. It is an option "Copy Last Forecast" to copy forecast and other settings of period before this one to created one.
+Menu "Create Sales Forecasts" creates Forecasts for products from selected Category, for selected Period and for selected Warehouse. It is an option "Copy Last Forecast" to copy forecast and other settings of period before this one to created one.
 
 Remarks:
 - This tool doesn't create lines, if relevant lines (for the same Product, Period, Warehouse and validated or created by you) already exists. If you wish to create another forecast, if relevant lines exists you have to do it manually using menus described bellow.
@@ -71,21 +71,21 @@ Remarks:
 - When you choose "Copy Last Forecast" created line takes quantity and some settings from your (validated by you or created by you if not validated yet) forecast which is for last period before period of created forecast. If there are few your forecasts for period before this one (it is possible) system takes one of them (no rule which of them).
 
 
-Menus "Sales Forecasts"
+Menu "Sales Forecasts"
 On "Sales Forecast" form mainly you have to enter a forecast quantity in "Product Quantity". Further calculation can work for draft forecasts. But validation can save your data against any accidental changes. You can click "Validate" button but it is not mandatory.
 
 Instead of forecast quantity you can enter amount of forecast sales in field "Product Amount". System will count quantity from amount according to Sale price of the Product.
 
-All values on the form are expressed in unit of measure selected on form. You can select one of unit of measure from default category or from second category. When you change unit of measure the quanities will be recalculated according to new UoM: editable values (blue fields) immediately, non edited fields after clicking of "Calculate Planning" button.
+All values on the form are expressed in unit of measure selected on form. You can select one of unit of measure from default category or from second category. When you change unit of measure the quanities will be recalculated according to new UoM: editable values (blue fields) immediately, non edited fields after clicking of "Calculate Sales History" button.
 
 To find proper value for Sale Forecast you can use "Sales History" table for this product. You have to enter parameters to the top and left of this table and system will count sale quantities according to these parameters. So you can select fe. your department (at the top) then (to the left): last period, period before last and period year ago.
 
 Remarks:
-
+- Developers can consider to replace sales history "per Department" with "per Sales Team" as Sales Team was introduced in 6.0.
 
 Procurement Planning
 ====================
-Menu for Planning you can find in "Warehouse - Stock Planning".
+Menu for Planning you can find in "Warehouse - Manual Planning".
 - "Create Stock Planning Lines" - allows you to automate creating planning lines according to some parameters.
 - "Master Procurement Scheduler" - is the most important menu of the module which allows to create procurement.
 
