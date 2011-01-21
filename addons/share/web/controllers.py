@@ -13,22 +13,15 @@ class ShareWizardController(openerp.controllers.SecuredController):
     _cp_path = "/share"
 
     @expose()
-    def index(self, domain, search_domain, context, name, view_type):
+    def index(self, domain, search_domain, context, view_id):
         context = ast.literal_eval(context)
-        view_name = context.get('_terp_view_name') or name
-        if not view_name: return
 
-        action_id = rpc.RPCProxy('ir.actions.actions').search(
-            [('name','=',view_name)], 0, 0, 0, context)
-        
-        if not action_id:
-            action_id = rpc.RPCProxy('ir.actions.act_window').search([('view_type','=', view_type),('name','=',view_name)], 0, 0, 0, context)
-            
-        if not action_id: return
+        action_id = rpc.RPCProxy('ir.actions.act_window').search(
+            [('view_id','=',int(view_id))], context=context)
+        if not action_id: return ""
 
         domain = ast.literal_eval(domain)
-        search_domain = ast.literal_eval(search_domain)
-        domain.extend(search_domain)
+        domain.extend(ast.literal_eval(search_domain))
 
         action_id = action_id[0]
         share_model =  'share.wizard'

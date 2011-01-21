@@ -24,11 +24,10 @@ class ShareActionEditor(openobject.templating.TemplateEditor):
                                    jQuery(this).attr(
                                        "href",
                                        openobject.http.getURL('/share', {
-                                           context: jQuery(idSelector("_terp_context")).val(),
-                                           domain: jQuery(idSelector("_terp_domain")).val(),
-                                           name: jQuery(idSelector("_terp_string")).val(),
-                                           view_type: jQuery(idSelector("_terp_view_type")).val(),
-                                           search_domain: jQuery(idSelector("_terp_search_domain")).val(),
+                                           context: jQuery("#_terp_context").val(),
+                                           domain: jQuery("#_terp_domain").val(),
+                                           view_id: jQuery("#_terp_view_id").val(),
+                                           search_domain: jQuery("#_terp_search_domain").val(),
                                    }));
                                });
                            });
