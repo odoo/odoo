@@ -10,15 +10,11 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Forecasts Lines">
-                    <separator colspan ="4" string="Creates forecast lines for selected warehouse and period."/>
                     <field name="period_id"/>
+                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                     <field name="copy_forecast"/>
                     <field name="product_categ_id" widget="selection"/>
-                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    <newline/>
-                    <label colspan ="4" string="Note: Doesn't duplicate existing lines created by you."/>
-                    <separator colspan ="4" />
                     <group colspan="4">
                         <button icon="gtk-cancel"  special="cancel" string="Close"/>
                         <button icon="gtk-execute" name="create_forecast" string="Create" type="object" />
@@ -34,7 +30,7 @@
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_stock_sale_forecast_createlines_form"/>
             <field name="target">new</field>
-            <field name="help">This wizard simplify creating many forecast lines. After creating you can fill them just with some values.</field>
+            <field name="help">This wizard simplify creating many forecast lines. After creating you can fill them just with some values. The wizard doesn't duplicate existing lines created already by you.</field>
         </record>
 
         <menuitem id="menu_stock_sale_forecast_createlines" name="Create Sales Forecasts" 

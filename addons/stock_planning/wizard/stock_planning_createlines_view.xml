@@ -11,10 +11,10 @@
             <field name="arch" type="xml">
                 <form string="Create Stock Planning Lines">
                     <field name="period_id" widget="selection"/>
-                    <field name="product_categ_id" attrs="{'required':[('forecasted_products','=',0)]}" widget="selection"/>
+                    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
                     <field name="warehouse_id" domain = "[('company_id','=',company_id)] "/>
                     <field name="forecasted_products"/>
-                    <field name="company_id" widget= "selection" on_change="onchange_company(company_id)" groups="base.group_multi_company"/>
+                    <field name="product_categ_id" attrs="{'required':[('forecasted_products','=',0)]}" widget="selection"/>
                     <group colspan="4">
                         <button icon="gtk-cancel" special="cancel" string="Close"/>
                         <button icon="gtk-ok" name="create_planning" string="Create" type="object"/>
