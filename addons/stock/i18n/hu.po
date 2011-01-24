@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-14 00:18+0000\n"
+"PO-Revision-Date: 2011-01-23 00:40+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:03+0000\n"
+"X-Launchpad-Export-Date: 2011-01-23 04:57+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/stock/product.py:76
 #, python-format
 msgid "Variation Account is not specified for Product Category: %s"
-msgstr ""
+msgstr "%s termék kategóriára nem állítottak be készletszámlát."
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -58,7 +58,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr ""
+msgstr "Utolsó leltárak"
 
 #. module: stock
 #: view:stock.move:0
@@ -74,14 +74,14 @@ msgstr "Felülvizsgálat száma"
 #: view:stock.move.memory.in:0
 #: view:stock.move.memory.out:0
 msgid "Product Moves"
-msgstr ""
+msgstr "Termékmozgások"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
 #: model:ir.ui.menu,name:stock.menu_action_stock_move_report
 #: view:report.stock.move:0
 msgid "Moves Analysis"
-msgstr ""
+msgstr "Készletmozgások elemzése"
 
 #. module: stock
 #: help:stock.production.lot,ref:0
@@ -89,6 +89,8 @@ msgid ""
 "Internal reference number in case it differs from the manufacturer's serial "
 "number"
 msgstr ""
+"Belső hivatkozási szám, abban az esetben, ha az eltér a gyártó "
+"sorozatszámától"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -156,7 +158,7 @@ msgstr "ME"
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
 msgid "Physical Inventories"
-msgstr ""
+msgstr "Fizikai leltárak"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
@@ -219,7 +221,7 @@ msgstr "Nem alkalmazható"
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr ""
+msgstr "Más hivatkozás vagy sorozatszám"
 
 #. module: stock
 #: field:stock.move,origin:0
@@ -263,6 +265,8 @@ msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
 msgstr ""
+"Ha bejelölt, a rendszer minden termék mennyiségét 0-ra állítja, hogy "
+"támogassa a vakleltár elkészítését"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -305,7 +309,7 @@ msgstr "Partner"
 #: help:stock.move.memory.in,currency:0
 #: help:stock.move.memory.out,currency:0
 msgid "Currency in which Unit cost is expressed"
-msgstr ""
+msgstr "Önköltség pénzneme"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:135
@@ -360,7 +364,7 @@ msgstr "Leltár megerősítése"
 #: field:stock.picking,state:0
 #: report:stock.picking.list:0
 msgid "State"
-msgstr "Állam"
+msgstr "Állapot"
 
 #. module: stock
 #: field:stock.location,stock_real_value:0
@@ -420,7 +424,7 @@ msgstr ""
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
 msgid "In Qty"
-msgstr ""
+msgstr "Bejövő menny."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:115
@@ -442,7 +446,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,price_currency_id:0
 msgid "Currency for average price"
-msgstr "Pénznem a mérlegelt átlagárra"
+msgstr "Mérlegelt átlagár pénzneme"
 
 #. module: stock
 #: help:product.template,property_stock_account_input:0
@@ -452,7 +456,7 @@ msgid ""
 "product, the one from the product category is used."
 msgstr ""
 "Ha valós idejű készletkönyvelést alkalmazunk, minden készletnövekedés mozgás "
-"követel oldala ez a főkönyvi számla lesz. Ha a termékre nincs beállítva, "
+"követel oldala ez a főkönyvi számla lesz. Ha a termékre nem állították be, "
 "akkor a termék kategóriánál meghatározott számlát használja a rendszer."
 
 #. module: stock
@@ -475,7 +479,7 @@ msgstr "Tétel címkéje"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
 msgid "Moves Statistics"
-msgstr ""
+msgstr "Készletmozgás statisztika"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -509,6 +513,8 @@ msgid ""
 "There is no stock output account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Nem állítottak be készletcsökkenés főkönyvi számlát erre a termékre vagy a "
+"termék kategóriájára: \"%s\" (kód:%d)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
@@ -646,7 +652,7 @@ msgstr ""
 #. module: stock
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Értékesítés és Beszerzés"
+msgstr "Értékesítés és beszerzés"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -757,7 +763,7 @@ msgstr ""
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Periodical (manual)"
-msgstr ""
+msgstr "Időszaki (kézi)"
 
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
@@ -772,7 +778,7 @@ msgstr "IT Beszállítók"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form_draft
 msgid "Draft Physical Inventories"
-msgstr ""
+msgstr "Fizikai leltártervezetek"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -785,7 +791,7 @@ msgstr ""
 #: model:ir.model,name:stock.model_stock_change_product_qty
 #: view:stock.change.product.qty:0
 msgid "Change Product Quantity"
-msgstr ""
+msgstr "Termékmennyiség megváltoztatása"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -893,7 +899,7 @@ msgstr ""
 #. module: stock
 #: view:report.stock.move:0
 msgid "Month-1"
-msgstr "Hónap-1"
+msgstr "Előző hónap"
 
 #. module: stock
 #: help:stock.location,active:0
@@ -945,6 +951,7 @@ msgstr "Hiba: Helytelen vonalkód"
 msgid ""
 "There is no stock output account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"\"%s\" (kód: %d) termékre nem állítottak be készletcsökkenés főkönyvi számlát"
 
 #. module: stock
 #: field:product.template,property_stock_production:0
@@ -954,7 +961,7 @@ msgstr "Gyártási hely"
 #. module: stock
 #: help:stock.picking,address_id:0
 msgid "Address of partner"
-msgstr ""
+msgstr "Partner címe"
 
 #. module: stock
 #: model:res.company,overdue_msg:stock.res_company_shop0
@@ -1019,7 +1026,7 @@ msgstr "Rendelés szállítása"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_in
 msgid "stock.move.memory.in"
-msgstr ""
+msgstr "stock.move.memory.in"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1045,7 +1052,7 @@ msgstr "Várható szállítási dátum"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Not Available"
-msgstr ""
+msgstr "Nem elérhető"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -1154,12 +1161,15 @@ msgid ""
 "Can not create Journal Entry, Output Account defined on this product and "
 "Variant account on category of this product are same."
 msgstr ""
+"A rendszer nem tud könyvelési tételt előállítani, mert a termék "
+"készletcsökkenés főkönyvi számlája és a termék kategória készlet főkönyvi "
+"számlája ugyanaz."
 
 #. module: stock
 #: code:addons/stock/stock.py:1322
 #, python-format
 msgid "is in draft state."
-msgstr ""
+msgstr "tervezet állapotban van."
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_tracking_form
@@ -1182,7 +1192,7 @@ msgstr "Összekapcsolás típusa"
 #: code:addons/stock/wizard/stock_return_picking.py:135
 #, python-format
 msgid "To be refunded/invoiced"
-msgstr ""
+msgstr "Jóváírandó/számlázandó"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_shop0
@@ -1222,18 +1232,20 @@ msgstr "További információ"
 #: code:addons/stock/stock.py:1602
 #, python-format
 msgid "Operation forbidden"
-msgstr ""
+msgstr "Tiltott művelet"
 
 #. module: stock
 #: field:stock.location.product,from_date:0
 msgid "From"
-msgstr "Kezdő"
+msgstr "Kezdő dátum"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:79
 #, python-format
 msgid "You may only return pickings that are Confirmed, Available or Done!"
 msgstr ""
+"Csak jóváhagyott, rendelkezésre álló vagy kész állapotú készletmozgásokat "
+"lehet visszáruzni!"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1309,7 +1321,7 @@ msgstr "Leltársor ID"
 #. module: stock
 #: help:stock.location,address_id:0
 msgid "Address of  customer or supplier."
-msgstr ""
+msgstr "Vevő vagy szállító címe"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -1366,12 +1378,12 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:113
 #, python-format
 msgid "No Invoices were created"
-msgstr ""
+msgstr "Nem készültek számlák"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_company
 msgid "OpenERP S.A."
-msgstr ""
+msgstr "OpenERP S.A."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:140
@@ -1408,6 +1420,16 @@ msgid ""
 "* Done: has been processed, can't be modified or cancelled anymore\n"
 "* Cancelled: has been cancelled, can't be confirmed anymore"
 msgstr ""
+"* Tervezet: még nem hagyták jóvá, és a rendszer addig nem ütemezi be, amíg "
+"jóvá nem hagyják\n"
+"* Jóváhagyott: még várja, hogy legyen elegendő termék\n"
+"* Rendelkezésre álló: a termékek foglalásra kerültek, egyszerűen "
+"jóváhagyásra várnak.\n"
+"* Várakozó: egy másik mozgás befejezésére vár, mielőtt automatikusan "
+"rendelkezésre állóra változik (pl. beszerzés megrendelésre folyamatok "
+"esetében)\n"
+"* Kész: végrehajtásra került, többé nem lehet módosítani vagy törölni\n"
+"* Törölt: törlésre került, többé nem hagyható jóvá"
 
 #. module: stock
 #: help:stock.location,company_id:0
@@ -1446,6 +1468,14 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"A készletmozgás létrehozásakor 'tervezet' állapotban van.\n"
+" Ezután 'nem elérhető' állapotba kerül, ha az ütemező nem talál elegendő "
+"terméket.\n"
+" Ha a termékek foglalásra kerülnek, az állapot 'rendelkezésre álló'-ra "
+"változik.\n"
+" Amikor a készletkiadást/bevételezést végrehajtják, az állapota 'kész' lesz. "
+"             \n"
+"Ha a mozgás egy másik mozgás befejezésére vár, akkor az állapota 'várakozó'."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1481,13 +1511,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_inventory
 msgid "Stock Statistics"
-msgstr ""
+msgstr "Készletstatisztika"
 
 #. module: stock
 #: field:stock.move.memory.in,currency:0
 #: field:stock.move.memory.out,currency:0
 msgid "Currency"
-msgstr ""
+msgstr "Pénznem"
 
 #. module: stock
 #: field:product.product,track_production:0
@@ -1676,7 +1706,7 @@ msgstr "Mégsem"
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Kiszedés ismétlése"
+msgstr "Visszáruzás"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -1718,7 +1748,7 @@ msgstr "Szállítási cím :"
 #: code:addons/stock/wizard/stock_return_picking.py:120
 #, python-format
 msgid "Provide the quantities of the returned products."
-msgstr ""
+msgstr "Kérem, adja meg a visszáruzott termékek mennyiségét!"
 
 #. module: stock
 #: code:addons/stock/stock.py:1978
@@ -1727,17 +1757,20 @@ msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
 "Variant account on category of this product are same."
 msgstr ""
+"A rendszer nem képes előállítani a könyvelési tételt, mert a termék "
+"készletnövekedés főkönyvi számlája és a termék kategória készlet főkönyvi "
+"számlája ugyanaz."
 
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "Cost Price"
-msgstr "Beszerzési ár"
+msgstr "Bekerülési érték"
 
 #. module: stock
 #: view:product.product:0
 #: field:product.product,valuation:0
 msgid "Inventory Valuation"
-msgstr "Leltárértékelés"
+msgstr "Készletkönyvelés"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1748,7 +1781,7 @@ msgstr "Számla készítése"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Process Later"
-msgstr "Későbbi folyamat"
+msgstr "Későbbi végrehajtás"
 
 #. module: stock
 #: help:res.partner,property_stock_supplier:0
@@ -1779,6 +1812,9 @@ msgid ""
 "moves. Use this report when you want to analyse the different routes taken "
 "by your products and inventory management performance."
 msgstr ""
+"A készletmozgások elemzése menüpont  lehetővé teszi a készletmozgások könnyű "
+"ellenőrzését és elemzését. Használja ezt a kimutatást, ha elemezni akarja a "
+"termékek által megtett különböző utakat és a készletkezelés teljesítményét."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -1793,7 +1829,7 @@ msgstr "Ár"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Search Inventory"
-msgstr ""
+msgstr "Leltár keresése"
 
 #. module: stock
 #: field:stock.move.track,quantity:0
@@ -1807,6 +1843,8 @@ msgid ""
 "There is no stock input account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Nem állítottak be készletnövekedés főkönyvi számlát a \"%s\" (kód: %d) "
+"termékre vagy annak kategóriájára"
 
 #. module: stock
 #: code:addons/stock/product.py:357
@@ -1886,7 +1924,7 @@ msgstr "Raktározható"
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Real Time (automated)"
-msgstr ""
+msgstr "Valós idejű (automatikus)"
 
 #. module: stock
 #: help:stock.move,tracking_id:0
@@ -1916,7 +1954,7 @@ msgstr "Leltár helye"
 #: view:report.stock.inventory:0
 #: view:report.stock.move:0
 msgid "Total value"
-msgstr ""
+msgstr "Összesen"
 
 #. module: stock
 #: help:stock.location,chained_journal_id:0
@@ -1940,7 +1978,7 @@ msgstr ""
 #: field:stock.move.memory.in,cost:0
 #: field:stock.move.memory.out,cost:0
 msgid "Cost"
-msgstr ""
+msgstr "Önköltség"
 
 #. module: stock
 #: field:product.category,property_stock_account_input_categ:0
@@ -1982,6 +2020,8 @@ msgid ""
 "Move date: scheduled date until move is done, then date of actual move "
 "processing"
 msgstr ""
+"Készletmozgás dátuma: beütemezett dátum, amíg a mozgás nem ment végbe, "
+"azután a tényleges mozgás feldolgozás dátuma"
 
 #. module: stock
 #: field:report.stock.lines.date,date:0
@@ -2071,6 +2111,7 @@ msgstr "Egyéb"
 #, python-format
 msgid "Could not find any difference between standard price and new price!"
 msgstr ""
+"A rendszer nem talált különbséget az elszámoló ár és az új ár között!"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking
@@ -2107,7 +2148,7 @@ msgstr "Jövőbeni mennyiség"
 #. module: stock
 #: field:product.category,property_stock_variation:0
 msgid "Stock Variation Account"
-msgstr "Készletszámla"
+msgstr "Készlet főkönyvi számla"
 
 #. module: stock
 #: field:stock.move,note:0
@@ -2148,7 +2189,7 @@ msgstr "Termékek"
 #. module: stock
 #: view:stock.change.standard.price:0
 msgid "Change Price"
-msgstr ""
+msgstr "Ár megváltoztatása"
 
 #. module: stock
 #: field:stock.picking,move_type:0
@@ -2189,7 +2230,7 @@ msgstr "Készletmozgás"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Delay(Days)"
-msgstr ""
+msgstr "Késedelem (napok)"
 
 #. module: stock
 #: field:stock.move.memory.in,move_id:0
@@ -2206,7 +2247,7 @@ msgstr ""
 #: code:addons/stock/product.py:373
 #, python-format
 msgid "P&L Qty"
-msgstr "Eredménykimutatás menny."
+msgstr ""
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -2241,6 +2282,9 @@ msgid ""
 "levels. Sort and group by selection criteria in order to better analyse and "
 "manage your company  activities."
 msgstr ""
+"A készletelemzés menüpont lehetővé teszi a készletszintek könnyű "
+"ellenőrzését és elemzését. Válassza ki és csoportosítsa a tételeket, hogy "
+"jobban tudja elemezni a vállalat tevékenységét."
 
 #. module: stock
 #: help:report.stock.move,location_id:0
@@ -2365,6 +2409,11 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
+"Ez a menüpont termékenként megjeleníti az utolsó leltár időpontját. "
+"Speciális szűrési feltételek segítségével megkönnyíti a tételek "
+"kiválasztását. Ha a vállalatnál folyamatos leltározást alkalmaznak, akkor "
+"Önnek szüksége van erre a kimutatásra, hogy biztosítsa, hogy minden termék "
+"évente legalább egyszer leltározásra kerüljön."
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_product_history
@@ -2501,6 +2550,7 @@ msgstr "Mértékegység"
 msgid ""
 "There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
+"\"%s\" (kód: %d) termék készletnövekedés főkönyvi számláját nem állították be"
 
 #. module: stock
 #: code:addons/stock/stock.py:2302
@@ -2574,7 +2624,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Set Available"
-msgstr "Rendelkezésre álló"
+msgstr "Beállítás rendelkezésre állónak"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -2591,12 +2641,12 @@ msgstr "Rendelés hátralék"
 #: field:stock.location,active:0
 #: field:stock.tracking,active:0
 msgid "Active"
-msgstr "aktív"
+msgstr "Aktív"
 
 #. module: stock
 #: model:ir.module.module,shortdesc:stock.module_meta_information
 msgid "Inventory Management"
-msgstr "Leltárirányítás"
+msgstr "Készletkezelés"
 
 #. module: stock
 #: view:product.template:0
@@ -2662,7 +2712,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location.product,to_date:0
 msgid "To"
-msgstr "Eddig:"
+msgstr "Záró dátum"
 
 #. module: stock
 #: view:stock.move:0
@@ -2693,7 +2743,7 @@ msgstr ""
 #. module: stock
 #: view:product.category:0
 msgid "Accounting Stock Properties"
-msgstr "Kép tulajdonságai szűrő"
+msgstr "Készletkönyvelési jellemzők"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_out
@@ -2767,14 +2817,14 @@ msgstr "Felelős"
 #. module: stock
 #: field:stock.move,returned_price:0
 msgid "Returned product price"
-msgstr ""
+msgstr "Visszáruzott termék ára"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_report
 #: model:ir.ui.menu,name:stock.menu_action_stock_inventory_report
 #: view:report.stock.inventory:0
 msgid "Inventory Analysis"
-msgstr ""
+msgstr "Készletelemzés"
 
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
@@ -2825,7 +2875,7 @@ msgstr "Számlázás"
 #: code:addons/stock/stock.py:2297
 #, python-format
 msgid "Please provide Proper Quantity !"
-msgstr ""
+msgstr "Kérem, adja meg a helyes mennyiséget!"
 
 #. module: stock
 #: field:stock.move,product_uos:0
@@ -2884,12 +2934,12 @@ msgstr "Szállítók"
 #: field:report.stock.inventory,value:0
 #: field:report.stock.move,value:0
 msgid "Total Value"
-msgstr ""
+msgstr "Összérték"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr "Termékkategóriák"
+msgstr "Termékek kategóriák szerint"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
@@ -2900,7 +2950,7 @@ msgstr "Termék kategóriák"
 #: field:stock.move.memory.in,wizard_id:0
 #: field:stock.move.memory.out,wizard_id:0
 msgid "Wizard"
-msgstr ""
+msgstr "Varázsló"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -2928,6 +2978,12 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
+"A belső mozgások menüpont minden készletműveletet megjelenít, amelyet végre "
+"kell hajtani a raktárban. Minden műveletet készletnaplókba lehet sorolni, "
+"ezáltal minden dolgozónak a saját naplójában megvan a saját listája a "
+"végrehajtandó műveletekről. A rendszer a legtöbb műveletet az előre "
+"beállított logisztikai szabályok alapján automatikusan elkészíti, de kézi "
+"készletműveleteket is be lehet rögzíteni."
 
 #. module: stock
 #: view:stock.move:0
@@ -3017,23 +3073,23 @@ msgstr "Számlázandó"
 #: code:addons/stock/wizard/stock_return_picking.py:120
 #, python-format
 msgid "Return lines"
-msgstr "Adóbontás"
+msgstr "Visszáru sorok"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
 #: view:report.stock.lines.date:0
 msgid "Dates of Inventories"
-msgstr "Leltár dátuma"
+msgstr "Leltár dátumok"
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total incoming quantity"
-msgstr ""
+msgstr "Összes beérkező mennyiség"
 
 #. module: stock
 #: field:report.stock.move,product_qty_out:0
 msgid "Out Qty"
-msgstr ""
+msgstr "Kimenő menny."
 
 #. module: stock
 #: field:stock.production.lot,move_ids:0
@@ -3043,7 +3099,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_out
 msgid "stock.move.memory.out"
-msgstr ""
+msgstr "stock.move.memory.out"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:115
@@ -3060,7 +3116,7 @@ msgstr "Tegye az aktuális csomagba"
 #. module: stock
 #: view:stock.inventory:0
 msgid "Lot Inventory"
-msgstr "Leltári egyenleg"
+msgstr ""
 
 #. module: stock
 #: view:stock.move:0
@@ -3102,12 +3158,12 @@ msgstr "Felhasználói hiba"
 #: view:stock.move.track:0
 #: view:stock.split.into:0
 msgid "Ok"
-msgstr "Ok"
+msgstr "Rendben"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
 msgid "Non European Customers"
-msgstr "Nincs európai ügyfél"
+msgstr "Európán kívüli vevők"
 
 #. module: stock
 #: code:addons/stock/product.py:76
@@ -3137,6 +3193,8 @@ msgid ""
 "There is no inventory variation account defined on the product category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"\"%s\" (kód: %d) termék kategóriára nem állítottak be készlet főkönyvi "
+"számlát"
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -3155,7 +3213,7 @@ msgstr "Törölt"
 #. module: stock
 #: view:stock.move:0
 msgid "Picking"
-msgstr ""
+msgstr "Kiszedés"
 
 #. module: stock
 #: help:stock.picking,move_type:0
@@ -3166,7 +3224,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:83
 #, python-format
 msgid "This picking list does not require invoicing."
-msgstr ""
+msgstr "Ezt a kiszedési listát nem kell számlázni."
 
 #. module: stock
 #: selection:report.stock.move,type:0
@@ -3202,7 +3260,7 @@ msgstr "Figyelmeztetés"
 #: code:addons/stock/stock.py:2557
 #, python-format
 msgid "is done."
-msgstr ""
+msgstr "elkészült."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree
@@ -3267,7 +3325,7 @@ msgstr "Kapcsolódó kiszedések"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Total outgoing quantity"
-msgstr ""
+msgstr "Összes kimenő mennyiség"
 
 #. module: stock
 #: field:stock.picking,backorder_id:0
@@ -3278,7 +3336,7 @@ msgstr ""
 #: help:stock.move.memory.in,cost:0
 #: help:stock.move.memory.out,cost:0
 msgid "Unit Cost for this product line"
-msgstr ""
+msgstr "A termék önköltsége"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -3315,7 +3373,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
 #: view:stock.invoice.onshipping:0
 msgid "Create invoice"
-msgstr "Számla előállítása"
+msgstr "Számla készítése"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_configuration
@@ -3343,6 +3401,11 @@ msgid ""
 "If cost price is decreased, stock variation account will be creadited and "
 "stock input account will be debited."
 msgstr ""
+"Ha az elszámoló árat növelik, akkor a készletszámlát megterhelik és a "
+"készletcsökkenés számlát jóváírják az értékkel (= árváltozás összege * valós "
+"készlet mennyisége).\n"
+"Ha az elszámoló árat csökkentik, akkor a készletnövekedés számlát "
+"megterhelik és a készletszámlát jóváírják."
 
 #. module: stock
 #: field:stock.location,chained_journal_id:0
@@ -3427,7 +3490,7 @@ msgstr "Terméksablon"
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -3441,16 +3504,19 @@ msgid ""
 "specific product. You can filter on the product to see all the past or "
 "future movements for the product."
 msgstr ""
+"Ez a menüpont lehetővé teszi a termék készletműveleteinek teljes körű nyomon "
+"követését. Ön szűrhet a termékre, hogy megtekintse a termék múltbeli vagy "
+"jövőbeni mozgásait."
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Return Products"
-msgstr ""
+msgstr "Visszáruzás"
 
 #. module: stock
 #: view:stock.inventory:0
 msgid "Validate Inventory"
-msgstr "Érvényes leltár"
+msgstr "Leltár jóváhagyása"
 
 #. module: stock
 #: help:stock.move,price_currency_id:0
@@ -3465,12 +3531,12 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
 msgid "Products Moves"
-msgstr ""
+msgstr "Termékmozgások"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
 msgid "Invoiced"
-msgstr "Számlázott"
+msgstr "Kiszámlázott"
 
 #. module: stock
 #: field:stock.move,address_id:0
@@ -3520,7 +3586,7 @@ msgstr "Tervezet"
 #: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
 #: report:stock.inventory.move:0
 msgid "Stock Inventory"
-msgstr ""
+msgstr "Készletleltár"
 
 #. module: stock
 #: help:report.stock.inventory,state:0
@@ -3531,6 +3597,12 @@ msgid ""
 " When the picking it done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"A készletmozgás létrehozásakor 'tervezet' állapotban van.\n"
+" Ezután 'jóváhagyott' állapotba kerül.\n"
+" Ha van elegendő készlet, az állapot 'rendelkezésre álló'-ra változik.\n"
+" Amikor a készletkiadást/bevételezést végrehajtják, az állapota 'kész' lesz. "
+"             \n"
+"Ha a mozgás egy másik mozgás befejezésére vár, akkor az állapota 'várakozó'."
 
 #. module: stock
 #: view:board.board:0
@@ -3575,19 +3647,19 @@ msgstr "Beállítás nullára"
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:85
 #, python-format
 msgid "None of these picking lists require invoicing."
-msgstr ""
+msgstr "Egyik kiszedési listát sem kell számlázni."
 
 #. module: stock
 #: selection:report.stock.move,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: stock
 #: code:addons/stock/product.py:101
 #: code:addons/stock/stock.py:1987
 #, python-format
 msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
-msgstr ""
+msgstr "\"%s\" (kód: %d) termék kategóriára nem állítottak be naplót."
 
 #. module: stock
 #: code:addons/stock/product.py:379
@@ -3599,7 +3671,7 @@ msgstr "Nem tervezett mennyiség"
 #: code:addons/stock/stock.py:1318
 #, python-format
 msgid "is scheduled"
-msgstr ""
+msgstr "beütemezésre került."
 
 #. module: stock
 #: field:stock.location,chained_company_id:0
@@ -3656,7 +3728,7 @@ msgstr "XML fájl"
 #. module: stock
 #: view:stock.change.product.qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Mennyiség kiválasztása"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_location_tree
@@ -3745,7 +3817,7 @@ msgstr ""
 #: code:addons/stock/stock.py:2348
 #, python-format
 msgid "quantity."
-msgstr ""
+msgstr "mennyiség."
 
 #. module: stock
 #: constraint:stock.move:0
@@ -3776,6 +3848,8 @@ msgid ""
 "There are no products to return (only lines in Done state and not fully "
 "returned yet can be returned)!"
 msgstr ""
+"Nincsenek visszáruzható termékek (csak kész állapotú és nem teljesen "
+"visszáruzott tételeket lehet visszáruzni)!"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split
@@ -3813,7 +3887,7 @@ msgid ""
 "product, the one from the product category is used."
 msgstr ""
 "Ha valós idejű készletkönyvelést alkalmazunk, minden készletcsökkenés mozgás "
-"tartozik oldala ez a főkönyvi számla lesz. Ha a termékre nincs beállítva, "
+"tartozik oldala ez a főkönyvi számla lesz. Ha a termékre nem állították be, "
 "akkor a termék kategóriánál meghatározott számlát használja a rendszer."
 
 #. module: stock
@@ -3887,7 +3961,7 @@ msgstr "Jövő"
 #. module: stock
 #: field:stock.invoice.onshipping,invoice_date:0
 msgid "Invoiced date"
-msgstr ""
+msgstr "Számla kelte"
 
 #. module: stock
 #: code:addons/stock/stock.py:729
@@ -3913,7 +3987,7 @@ msgstr ""
 #. module: stock
 #: view:product.product:0
 msgid "Cost Price:"
-msgstr "Beszerzési ár:"
+msgstr "Bekerülési érték:"
 
 #. module: stock
 #: help:stock.move,move_dest_id:0

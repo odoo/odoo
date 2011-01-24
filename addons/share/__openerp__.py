@@ -22,7 +22,7 @@
 
 {
     "name" : "Sharing Tools",
-    "version" : "1.1",
+    "version" : "1.2",
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": 'Generic Modules',

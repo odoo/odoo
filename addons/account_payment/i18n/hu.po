@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-18 10:25+0000\n"
+"PO-Revision-Date: 2011-01-20 10:42+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:45+0000\n"
+"X-Launchpad-Export-Date: 2011-01-21 04:40+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled date if fixed"
-msgstr "Tervezett dátum (ha a preferált dátum 'Rögzített')"
+msgstr "Tervezett dátum (ha a preferált dátum 'rögzített')"
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -40,7 +40,7 @@ msgstr "Alkalmazandó fizetési mód kiválasztása"
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -51,6 +51,12 @@ msgid ""
 "* a basic mechanism to easily plug various automated payment.\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul biztosítja:\n"
+"* a számlák kifizetésének hatékonyabb kezelését,\n"
+"* a különféle automatizált átutalások könnyű végrehajtására szolgáló "
+"alapmechanizmust.\n"
+"    "
 
 #. module: account_payment
 #: field:payment.order,line_ids:0
@@ -71,9 +77,9 @@ msgid ""
 " Once the bank is confirmed the state is set to 'Confirmed'.\n"
 " Then the order is paid the state is 'Done'."
 msgstr ""
-"Az átutalási megbízás berögzítéskor 'Tervezet' állapotba kerül. \n"
-" Miután a bank jóváhagyja, állapota 'Jóváhagyott'-ra változik. \n"
-" Ha az átutalás megtörténik, az állapota 'Kész' lesz."
+"Az átutalási megbízás berögzítéskor 'tervezet' állapotba kerül. \n"
+" Miután a bank jóváhagyja, állapota 'jóváhagyott'-ra változik. \n"
+" Ha az átutalás megtörténik, az állapota 'kész' lesz."
 
 #. module: account_payment
 #: help:account.invoice,amount_to_pay:0
@@ -134,7 +140,7 @@ msgstr "_Hozzáadás az átutalási megbízáshoz"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
-msgstr ""
+msgstr "Átutalás hozzáadása a kivonathoz"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -145,7 +151,7 @@ msgstr "Összeg"
 #. module: account_payment
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Rossz tartozik vagy követel összeg a könyvelési tételben"
+msgstr "Hibás tartozik vagy követel összeg szerepel a könyvelési tételben!"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -182,7 +188,7 @@ msgstr "Átutalási megbízások"
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
-msgstr "Közvetlenül"
+msgstr "Azonnali"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -256,15 +262,15 @@ msgid ""
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
 msgstr ""
-"Válassza ki az átutalási megbízás teljesítésének dátumát: 'Rögzített' az Ön "
-"által meghatározott időpontban megy végbe. 'Azonnali' és 'Fizetési határidő' "
+"Válassza ki az átutalási megbízás teljesítésének dátumát: 'rögzített' az Ön "
+"által meghatározott időpontban megy végbe, 'azonnali' és 'fizetési határidő' "
 "értelemszerűen."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error !"
-msgstr "Hiba !"
+msgstr "Hiba!"
 
 #. module: account_payment
 #: view:account.move.line:0
@@ -274,17 +280,17 @@ msgstr "Tartozik összesen"
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution date"
-msgstr "Kivitelezés dátuma"
+msgstr "Átutalás végrehajtásának dátuma"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
 msgid "Bank or Cash Journal for the Payment Mode"
-msgstr "Bank- vagy pénztárnapló a fizetési módra"
+msgstr "A fizetési mód bank- vagy pénztárnaplója"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr "Állandó dátum"
+msgstr "Rögzített"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
@@ -336,7 +342,7 @@ msgstr "Közlemény típusa"
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information
 msgid "Payment Management"
-msgstr "Kifizetések kezelése"
+msgstr "Átutalások kezelése"
 
 #. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
@@ -374,13 +380,13 @@ msgid ""
 "If no payment date is specified, the bank will treat this payment line "
 "directly"
 msgstr ""
-"Ha nincs átutalási dátum meghatározva, a bank ezt a tételt azonnali "
-"utalásként fogja kezelni."
+"Ha nem határoztak meg átutalási dátumot, akkor a bank ezt a tételt azonnali "
+"átutalásként fogja kezelni."
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_populate_statement
 msgid "Account Payment Populate Statement"
-msgstr ""
+msgstr "Átutalás hozzáadása a kivonathoz"
 
 #. module: account_payment
 #: help:payment.mode,name:0
@@ -395,7 +401,7 @@ msgstr "Értéknap"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Payment Type"
-msgstr "Fizetés típusa"
+msgstr "Átutalás típusa"
 
 #. module: account_payment
 #: help:payment.line,amount_currency:0
@@ -411,7 +417,7 @@ msgstr "Tervezet"
 #. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
-msgstr "A közlemény következő üzenete."
+msgstr "A közlemény következő része."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
@@ -427,18 +433,18 @@ msgstr "Jogosult címe"
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr "Kivonat benépesítése:"
+msgstr "Hozzáadás a kivonathoz:"
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr "Követelés összesen"
+msgstr "Követel összesen"
 
 #. module: account_payment
 #: help:payment.order,date_scheduled:0
 msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr ""
-"Írjon be egy dátumot, ha a 'Preferált dátum'-nál 'Értéknap'-ot választott"
+"Írjon be egy dátumot, ha a preferált dátumnál rögzítettet választott."
 
 #. module: account_payment
 #: field:payment.order,user_id:0
@@ -459,15 +465,14 @@ msgstr "Könyvelési tételsorok"
 #. module: account_payment
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
-"A vállalatnak ugyanannak kell lenni a kapcsolt számlára és időszakra."
+msgstr "A kapcsolt számla és az időszak vállalatának ugyanannak kell lennie."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
 msgid ""
 "This Entry Line will be referred for the information of the ordering "
 "customer."
-msgstr "A jogosult adatait tartalmazza."
+msgstr "A tételsor a jogosult adatait tartalmazza."
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -523,7 +528,7 @@ msgstr "Jogosult"
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_account_payment_make_payment
 msgid "Account make payment"
-msgstr "Fizetés végrehajtása"
+msgstr "Átutalás végrehajtása"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -565,7 +570,7 @@ msgstr "Számla"
 #. module: account_payment
 #: field:payment.line,communication:0
 msgid "Communication"
-msgstr "Kommunikáció"
+msgstr "Közlemény"
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -573,7 +578,7 @@ msgstr "Kommunikáció"
 #: view:payment.order:0
 #: view:payment.order.create:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -622,7 +627,7 @@ msgstr "Jogosult bankszámlaszáma"
 #. module: account_payment
 #: view:account.payment.make.payment:0
 msgid "Are you sure you want to make payment?"
-msgstr "Biztos benne, hogy kifizeti?"
+msgstr "Biztos benne, hogy végrehajtja az átutalást?"
 
 #. module: account_payment
 #: view:payment.mode:0
@@ -633,12 +638,12 @@ msgstr "Napló"
 #. module: account_payment
 #: field:payment.mode,bank_id:0
 msgid "Bank account"
-msgstr "Bankszámla"
+msgstr "Bankszámlaszám"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Confirm Payments"
-msgstr "Átutalás jóváhagyása"
+msgstr "Átutalások jóváhagyása"
 
 #. module: account_payment
 #: field:payment.line,company_currency:0
@@ -680,7 +685,7 @@ msgstr "Név"
 #. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
-msgstr "Bankszámla"
+msgstr "Bankszámlaszám"
 
 #. module: account_payment
 #: view:payment.line:0
@@ -718,7 +723,7 @@ msgstr "Partner"
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_create_payment_order
 msgid "Populate Payment"
-msgstr "Kivonat benépesítése:"
+msgstr "Hozzáadás a kivonathoz"
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0

@@ -591,8 +591,6 @@ class pos_order(osv.osv):
             'qty': qty,
             'price_unit': price,
         }, context=context)
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_write(uid, 'pos.order', order_id, cr)
         return order_line_id, price
 
     def refund(self, cr, uid, ids, context=None):
