@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-15 23:26+0000\n"
+"PO-Revision-Date: 2011-01-16 10:50+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-16 05:06+0000\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:45+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: caldav
@@ -374,6 +374,28 @@ msgid ""
 "side.     \n"
 "     "
 msgstr ""
+"\n"
+"    1. Gehen Sie zur Kalenderansicht\n"
+"\n"
+"    2. Datei -> Neu -> Kalender\n"
+"\n"
+"    3. Füllen Sie das Formular aus:\n"
+"        - Typ : CalDav\n"
+"        - Bezeichnugn : Ihre freie Wahl (z.B. : Meeting)\n"
+"        - url : "
+"http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings (z.B. : "
+"http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings), den Pfad "
+"finden Sie im Kopfbereich dieses Fensters\n"
+"        - Deaktivieren Sie \"User SSL\"\n"
+"        - Benutzer : Ihr Benutzername (z.B. : Demo)\n"
+"        - Aktualisierung : Jedesmal, wenn Sie die Daten der "
+"Kalenderanwendung mit dem Server synchronisieren wollen.\n"
+"\n"
+"    4. Klicken Sie OK und geben Sie die OpenERP Anmeldedaten ein\n"
+"\n"
+"    5. Ein neuer Kalender, mit der von Ihnen hinterlegten Bezeichnung sollte "
+"jetzt auf der linken Seite erscheinen.     \n"
+"     "
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
@@ -383,7 +405,7 @@ msgstr "Kalender Merkmale"
 #. module: caldav
 #: model:ir.model,name:caldav.model_caldav_browse
 msgid "Caldav Browse"
-msgstr ""
+msgstr "Caldav durchsuchen"
 
 #. module: caldav
 #: model:ir.module.module,description:caldav.module_meta_information
@@ -440,7 +462,7 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Android based device"
-msgstr ""
+msgstr "Android OS Gerät"
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
@@ -465,7 +487,7 @@ msgstr "Gebe Pfad an zum Remote Kalender"
 #. module: caldav
 #: view:caldav.browse:0
 msgid "_Ok"
-msgstr ""
+msgstr "_OK"
 
 #. module: caldav
 #: field:basic.calendar.lines,domain:0
@@ -510,7 +532,7 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,service:0
 msgid "CalDAV"
-msgstr ""
+msgstr "CalDAV"
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
@@ -530,7 +552,7 @@ msgstr "Nachricht..."
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Other"
-msgstr ""
+msgstr "Anderes Gerät"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -606,6 +628,35 @@ msgid ""
 "    \n"
 "    "
 msgstr ""
+"\n"
+"Vorbereitungen\n"
+"----------------------\n"
+"\n"
+"Es existiert kein allgemeingültiger Weg für eine OpenERP - CalDAV "
+"Kalendersynchronisation.\n"
+"Insofern müssen Sie zunächst eine  Drittanwendung installieren: Calendar "
+"(CalDav)  \n"
+"Aktuell ist dieses die einzige Möglichkeit.\n"
+"\n"
+"Konfiguration\n"
+"-------------------\n"
+"\n"
+"1. Öffnen Sie Calendar Syn\n"
+"     Sie erhalten eine Anwendung mit 2 Aktenreitern\n"
+"     Verbleiben Sie auf dem ersten Reiter\n"
+"   \n"
+"2. CalDav Calendar URL: Tragen Sie die obige URL ein (z.B.  "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"\n"
+"3. Tragen Sie den OpenERP Benutzer und das Passwort ein\n"
+"\n"
+"4. Wenn Ihr Server kein SSL unterstützt, erhalten Sie eine Warnmeldung, die "
+"Sie mit \"Ja\" bestätigen.\n"
+"\n"
+"5. Dann synchronisieren Sie manuell oder konfigurieren Sie eine automatische "
+"Synchronisation, die alle x Minuten startet.\n"
+"    \n"
+"    "
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:53
@@ -668,6 +719,75 @@ msgid ""
 "      now trusts it.   \n"
 "    "
 msgstr ""
+"\n"
+"    Für eine SSL spezifische Konfiguration lesen Sie bitte die folgenden "
+"Ausführungen:\n"
+"\n"
+"Für das Setup Ihres Kalenders benötigen Sie folgende Schritte:\n"
+"\n"
+"1. Klicken Sie auf  \"Konfiguration\" und wechseln Sie zur \"EMail, "
+"Kontakte, Kalender\" Seite.\n"
+"\n"
+"2. Gehen Sie zu  \"Hinzufügen Benutzer Account\"\n"
+"\n"
+"3. Klicken Sie auf \"Weitere\"\n"
+"\n"
+"4. Über die  \"Kalender\" Gruppe klicken Sie auf: \"Hinzufügen CalDAV "
+"Konto\"\n"
+"\n"
+"5. Geben Sie die Adresse des Hosts ein\n"
+"   (z.B. : url ist http://openerp.com:8069/webdav/db_1/calendars/ , "
+"openerp.com ist der Host)\n"
+"\n"
+"6. Tragen Sie  die OpenERP Anmeldedaten ein\n"
+"\n"
+"7. Als Beschreibung können Sie entweder den Servernamen belassen oder\n"
+"   Sie verwenden eine Bezeichnung wie \"OpenERP Kalender\".\n"
+"\n"
+"9. Wenn Sie keinen SSL Server verwenden, erhalten Sie einen Fehler, den Sie "
+"vernachlässigen können und auf \"Weiter\" klicken.\n"
+"\n"
+"10. Dann klicken Sie auf \"Erweiterte Konfiguration\" und spezifizieren dir "
+"richtigen Ports und Pfade. \n"
+"    \n"
+"11. Spezifizieren Sie die korrekten Ports für den OpenERP Server: 8071 für "
+"SSL, 8069 ohne SSL.\n"
+"\n"
+"12. Tragen Sie die \"Amelde URL\" für den richtigen Pfad zu OpenERP CalDav "
+"ein:\n"
+"    Die URL (ie : http://my.server.ip:8069/webdav/dbname/calendars/ )\n"
+"\n"
+"13. Klicken Sie auf \"Erledigt\". Das iphone wird sich dann hoffentlich mit "
+"dem OpenERP Server verbinden lassen\n"
+"    und prüfen, ob es das angegebene Benutzerkonto verwenden darf.\n"
+"\n"
+"\n"
+"14. Wechseln Sie zum  iPhone and erfassen Sie die Kalender Anwendung.\n"
+"    Ihre OpenERP Kalender werden immer durch Klick auf den \"Kalender\" "
+"Button sichtbar\n"
+"    \"Calendars\" button.\n"
+"    Beachten Sie, dass Sie bei der Erstellung von Terminen immer auswählen, "
+"in welchen Kalender\n"
+"    gespeichert werden soll.\n"
+"\n"
+"Wenn Sie SSL benötigen (und Ihr Zertifikat ist kein verfifiziertes "
+"Zertifikat, welches oftmals der Fall ist),\n"
+"müssen Sie zuerst dafür sorgen, dass Ihr iphone das Zertifikat trotzdem als "
+"vertrauenswürdig akzeptiert.\n"
+"Folgen Sie hierzu den folgenden Schritten:\n"
+"\n"
+"    Schritt 1: Öffnen Sie den Safari Browser und geben Sie ide https "
+"Verbindung zu Ihrem OpenERP Server ein:\n"
+"        https://my.server.ip:8071/\n"
+"        (unter der Annahme, dass Ihr Server unter \"my.server.ip\" "
+"erreichbar ist und der HTTPS Port des\n"
+"         Servers dem Standard 8071 entspricht)\n"
+"    Schritt 2: Safari wird einen Verbindungsversuch unternehmen und einen "
+"Warnhinweis zum Zertifkat\n"
+"        ausgeben. Prüfen Sie Ihr Zertifikat und klicken Sie auf "
+"\"Vertrauen\", damit das iphone das Zertifikat\n"
+"        als vertrauenswürdig annimmt.   \n"
+"    "
 
 #. module: caldav
 #: sql_constraint:document.directory:0
@@ -677,7 +797,7 @@ msgstr "Das Verzeichnis muss eindeutig sein"
 #. module: caldav
 #: view:user.preference:0
 msgid "User Preference"
-msgstr ""
+msgstr "Benutzer Eigenschaften"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
@@ -714,7 +834,7 @@ msgstr "Wähle .ics Datei"
 #. module: caldav
 #: field:caldav.browse,caldav_doc_file:0
 msgid "Caldav Document"
-msgstr ""
+msgstr "Caldav Dokumentation"
 
 #. module: caldav
 #: field:basic.calendar.lines,mapping_ids:0
@@ -724,7 +844,7 @@ msgstr "Mapping Felder"
 #. module: caldav
 #: view:caldav.browse:0
 msgid "Browse caldav"
-msgstr ""
+msgstr "Caldav durchsuchen"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar
@@ -739,7 +859,7 @@ msgstr "Weitere Info"
 #. module: caldav
 #: field:user.preference,device:0
 msgid "Software/Devices"
-msgstr ""
+msgstr "Software/Geräte"
 
 #. module: caldav
 #: help:basic.calendar,has_webcal:0
@@ -849,7 +969,7 @@ msgstr "Speichern .ics Datei"
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Sunbird/Thunderbird"
-msgstr ""
+msgstr "Sunbird/Thunderbird"
 
 #. module: caldav
 #: field:basic.calendar,calendar_order:0

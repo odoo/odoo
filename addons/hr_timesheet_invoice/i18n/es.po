@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 12:51+0000\n"
+"PO-Revision-Date: 2011-01-18 09:11+0000\n"
 "Last-Translator: Borja López Soilán <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:34+0000\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:45+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_timesheet_invoice
@@ -190,7 +190,7 @@ msgstr "Cuenta analítica a cerrar"
 #. module: hr_timesheet_invoice
 #: view:board.board:0
 msgid "Uninvoice Lines With Billing Rate"
-msgstr ""
+msgstr "No facturar líneas con coste"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -266,7 +266,7 @@ msgstr "Hojas de trabajo"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_cost_ledger
 msgid "hr.timesheet.analytic.cost.ledger"
-msgstr ""
+msgstr "rrhh.partehoras.analitica.coste.libro"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
@@ -357,6 +357,12 @@ msgid ""
 "revenue\n"
 "reports, eso."
 msgstr ""
+"\n"
+"Módulo para generar facturas basadas en los costes (recursos humanos, "
+"gastos, ...).\n"
+"Puede definir tarifas en la cuenta analítica, hacer algunos informes sobre "
+"ingresos\n"
+"teóricos, ..."
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
@@ -365,6 +371,10 @@ msgid ""
 "costs in this analytic account: timesheets, expenses, ...You can configure "
 "an automatic invoice rate on analytic accounts."
 msgstr ""
+"Rellene este campo si va a generar automáticamente las facturas basadas en "
+"los costes de esta cuenta analítica: hojas de servicios, gastos, ... Se "
+"puede configurar un porcentaje de facturación automática en las cuentas "
+"analíticas."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.analytic.profit:0
@@ -403,7 +413,7 @@ msgstr "Fecha impresión"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_analytic_timesheet_tree
 msgid "Bill Tasks Works"
-msgstr ""
+msgstr "Facturar trabajos de tareas"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -545,7 +555,7 @@ msgstr "Desde"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Pending"
-msgstr ""
+msgstr "Pendiente"
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,amount_invoiced:0
@@ -682,6 +692,8 @@ msgid ""
 "Please fill in the partner and pricelist field in the analytic account:\n"
 "%s"
 msgstr ""
+"Rellene los campos empresa y tarifa de la cuenta analítica:\n"
+"%s"
 
 #. module: hr_timesheet_invoice
 #: constraint:account.analytic.account:0
@@ -689,6 +701,7 @@ msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
+"¡Error! La moneda debe ser la misma que la moneda de la compañía seleccionada"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
@@ -731,7 +744,7 @@ msgstr "Cuenta general"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
 msgid "Print Timesheet Profit"
-msgstr ""
+msgstr "Imprimir beneficio de la hoja de servicios"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
@@ -791,7 +804,7 @@ msgstr "Cancelar"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Close"
-msgstr ""
+msgstr "Cerrar"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -812,7 +825,7 @@ msgstr ""
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_line
 #: view:report.timesheet.line:0
 msgid "Timesheet Line"
-msgstr "Línea de hoja de asistencia"
+msgstr "Línea de la hoja de servicios"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
@@ -833,6 +846,9 @@ msgid ""
 "Analytic Account:\n"
 "%s"
 msgstr ""
+"Rellene los campos empresa o cliente y la tarifa de venta de la cuenta "
+"analítica:\n"
+"%s"
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
@@ -896,7 +912,7 @@ msgstr "Producto"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_uninvoiced_line
 msgid "Uninvoice lines with billing rate"
-msgstr ""
+msgstr "No facturar líneas con coste"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -925,7 +941,7 @@ msgstr "Diario"
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,balance_product:0
 msgid "The product that will be used to invoice the remaining amount"
-msgstr ""
+msgstr "El producto que se utilizará para facturar el importe restante."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_analytic_timesheet_open_tree
@@ -1044,7 +1060,7 @@ msgstr "Unidades"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Type of Invoicing"
-msgstr ""
+msgstr "Tipo de facturación"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:0

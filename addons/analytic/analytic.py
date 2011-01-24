@@ -35,7 +35,7 @@ class account_analytic_account(osv.osv):
             for son in account.child_ids:
                 res = recursive_computation(son.id, res)
                 for field in field_names:
-                    if account.currency_id.id == son.currency_id.id:
+                    if account.currency_id.id == son.currency_id.id or field=='quantity':
                         res[account.id][field] += res[son.id][field]
                     else:
                         res[account.id][field] += currency_obj.compute(cr, uid, son.currency_id.id, account.currency_id.id, res[son.id][field], context=context)

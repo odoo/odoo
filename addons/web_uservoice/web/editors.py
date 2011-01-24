@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,6 @@
 #
 ##############################################################################
 import openobject.templating
-from tools.translate import _
 
 class BaseTemplateEditor(openobject.templating.TemplateEditor):
     templates = ['/openobject/controllers/templates/base.mako']
