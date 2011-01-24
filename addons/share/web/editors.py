@@ -26,7 +26,7 @@ class ShareActionEditor(openobject.templating.TemplateEditor):
                                        openobject.http.getURL('/share', {
                                            context: jQuery("#_terp_context").val(),
                                            domain: jQuery("#_terp_domain").val(),
-                                           name: jQuery("#_terp_string").val(),
+                                           view_id: jQuery("#_terp_view_id").val(),
                                            search_domain: jQuery("#_terp_search_domain").val(),
                                    }));
                                });

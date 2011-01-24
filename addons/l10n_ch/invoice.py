@@ -1,37 +1,25 @@
-# -*- coding: utf-8 -*-
-#
-#  bank.py
-#  invoice.py
-#
-#  Created by Nicolas Bessi based on Credric Krier contribution
-#
-#  Copyright (c) 2009 CamptoCamp. All rights reserved.
+# -*- encoding: utf-8 -*-
 ##############################################################################
-# WARNING: This program as such is intended to be used by professional
-# programmers who take the whole responsability of assessing all potential
-# consequences resulting from its eventual inadequacies and bugs
-# End users who are looking for a ready-to-use solution with commercial
-# garantees and support are strongly adviced to contract a Free Software
-# Service Company
 #
-# This program is Free Software; you can redistribute it and/or
-# modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
-# of the License, or (at your option) any later version.
+#    Author: Nicolas Bessi. Copyright Camptocamp SA
+#    Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
 #
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 from datetime import datetime
-
 from osv import fields, osv
 from tools import mod10r
 
@@ -72,7 +60,7 @@ class account_invoice(osv.osv):
                 for line in invoice.move_id.line_id:
                     if not line.date_maturity or \
                             datetime.strptime(line.date_maturity, '%Y-%m-%d') \
-                            < datetime.today():
+                            < datetime.now():
                         res[invoice.id] += line.amount_to_pay
         return res
 
@@ -96,13 +84,13 @@ class account_invoice(osv.osv):
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
     ## @return a boolean True if valid False if invalid
-    def _check_bvr(self, cr, uid, ids, context=None):
+    def _check_bvr(self, cr, uid, ids):
         """
         Function to validate a bvr reference like :
         0100054150009>132000000000000000000000014+ 1300132412>
         The validation is based on l10n_ch
         """
-        invoices = self.browse(cr,uid,ids, context=context)
+        invoices = self.browse(cr,uid,ids)
         for invoice in invoices:
             if invoice.reference_type == 'bvr':
                 if not invoice.reference:
@@ -123,10 +111,10 @@ class account_invoice(osv.osv):
     ## @param user res.user.id that is currently loged
     ## @parma ids invoices id
     ## @return a boolean True if valid False if invalid
-    def _check_reference_type(self, cursor, user, ids, context=None):
+    def _check_reference_type(self, cursor, user, ids):
         """Check the customer invoice reference type depending
         on the BVR reference type and the invoice partner bank type"""
-        for invoice in self.browse(cursor, user, ids, context=context):
+        for invoice in self.browse(cursor, user, ids):
             if invoice.type in 'in_invoice':
                 if invoice.partner_bank_id and \
                         invoice.partner_bank_id.state in \
@@ -203,7 +191,7 @@ class account_tax_code(osv.osv):
     _name = 'account.tax.code'
     _inherit = "account.tax.code"
     _columns = {
-        ### The case code of the taxt code
+        ### The case code of the tax code
         'code': fields.char('Case Code', size=512),
     }
 
