@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-23 20:54+0000\n"
+"PO-Revision-Date: 2011-01-24 23:31+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-24 04:54+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 04:55+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -4611,7 +4611,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,refund_journal:0
 msgid "Fill this if the journal is to be used for refunds of invoices."
-msgstr ""
+msgstr "Preencha se o diário for usado para reembolso de faturas."
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -4761,7 +4761,7 @@ msgstr "Nome da Coluna"
 #: view:account.general.journal:0
 msgid ""
 "This report gives you an overview of the situation of your general journals"
-msgstr ""
+msgstr "Este relatorio apresenta um resumo da situação dos diários gerais."
 
 #. module: account
 #: field:account.entries.report,year:0
@@ -4917,6 +4917,8 @@ msgid ""
 "The Journal Entry of the invoice have been totally reconciled with one or "
 "several Journal Entries of payment."
 msgstr ""
+"O Lançamento no Diário da fatura foi reconciliado totalmente com um ou "
+"vários Lançamentos de pagamento no Diário."
 
 #. module: account
 #: field:account.tax,child_depend:0
@@ -4990,7 +4992,7 @@ msgstr "Modelos de código de imposto"
 #. module: account
 #: model:ir.model,name:account.model_account_installer
 msgid "account.installer"
-msgstr ""
+msgstr "account.installer"
 
 #. module: account
 #: field:account.tax.template,include_base_amount:0
@@ -5302,7 +5304,7 @@ msgstr "Válido Até"
 #. module: account
 #: view:board.board:0
 msgid "Aged Receivables"
-msgstr ""
+msgstr "Recebíveis Vencidos"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
@@ -5478,6 +5480,9 @@ msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
 msgstr ""
+"Mostra o progresso de hoje no processo de reconciliação. A partir dos \n"
+"Parceiros Reconciliados Hoje \\ (Parceiros Restantes + Parceiros "
+"Reconciliados Hoje)"
 
 #. module: account
 #: help:account.payment.term.line,value:0
@@ -5499,13 +5504,13 @@ msgstr "Forçar período"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "# de Linhas"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:60
 #, python-format
 msgid "New currency is not confirured properly !"
-msgstr ""
+msgstr "A nova moeda não está configurada corretamente !"
 
 #. module: account
 #: field:account.aged.trial.balance,filter:0
@@ -5524,7 +5529,7 @@ msgstr ""
 #: field:account.report.general.ledger,filter:0
 #: field:account.vat.declaration,filter:0
 msgid "Filter by"
-msgstr ""
+msgstr "Filtrar por"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1131
@@ -5578,7 +5583,7 @@ msgstr "Ação invalida !"
 #: code:addons/account/wizard/account_move_journal.py:102
 #, python-format
 msgid "Period: %s"
-msgstr ""
+msgstr "Período: %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -5606,7 +5611,7 @@ msgstr "Nada"
 #. module: account
 #: view:analytic.entries.report:0
 msgid "  365 Days  "
-msgstr ""
+msgstr "  365 dias  "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree3
@@ -5633,12 +5638,12 @@ msgstr ""
 #: code:addons/account/wizard/account_report_common.py:126
 #, python-format
 msgid "not implemented"
-msgstr ""
+msgstr "não implementado"
 
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr ""
+msgstr "Empresa relacionada a este diário"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:44
@@ -5688,7 +5693,7 @@ msgstr ""
 #. module: account
 #: field:account.entries.report,date_created:0
 msgid "Date Created"
-msgstr ""
+msgstr "Data Criada"
 
 #. module: account
 #: field:account.payment.term.line,value_amount:0
@@ -5713,12 +5718,14 @@ msgid ""
 "As soon as the reconciliation is done, the invoice's state turns to “done” "
 "(i.e. paid) in the system."
 msgstr ""
+"Assim que a reconciliação é feita, os status das faturas mudam para "
+"'concluído' (pago) no sistema."
 
 #. module: account
 #: code:addons/account/invoice.py:989
 #, python-format
 msgid "is validated."
-msgstr ""
+msgstr "está validada."
 
 #. module: account
 #: view:account.chart.template:0
@@ -5729,12 +5736,12 @@ msgstr "Conta principal"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Reconciliation Date"
-msgstr ""
+msgstr "Data da Última Reconciliação"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Linha Analítica"
 
 #. module: account
 #: field:product.template,taxes_id:0
@@ -5744,18 +5751,18 @@ msgstr "Taxas de clientes"
 #. module: account
 #: view:account.addtmpl.wizard:0
 msgid "Create an Account based on this template"
-msgstr ""
+msgstr "Criar uma Conta baseada neste modelo"
 
 #. module: account
 #: view:account.account.type:0
 #: view:account.tax.code:0
 msgid "Reporting Configuration"
-msgstr ""
+msgstr "Configuração de Relatório"
 
 #. module: account
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
+msgstr "A Empresa precisar ser a mesma para a conta relacionada e período."
 
 #. module: account
 #: field:account.tax,type:0
@@ -5777,7 +5784,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Empresas"
 
 #. module: account
 #: code:addons/account/account.py:532
@@ -5786,11 +5793,13 @@ msgid ""
 "You cannot modify Company of account as its related record exist in Entry "
 "Lines"
 msgstr ""
+"Você não pode modificar a Empresa da conta com registros relacionados "
+"existentes nas Linhas de Lançamento"
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
 msgid "Select a fiscal year to close"
-msgstr ""
+msgstr "Selecione um ano fiscal para fechar"
 
 #. module: account
 #: help:account.chart.template,tax_template_ids:0
@@ -5905,17 +5914,17 @@ msgstr "Configure seu Plano de Contas"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  number of days: 30"
-msgstr ""
+msgstr "  número de dias: 30"
 
 #. module: account
 #: help:account.analytic.line,currency_id:0
 msgid "The related account currency if not equal to the company one."
-msgstr ""
+msgstr "A moeda da conta relacionada é diferente da moeda da empresa."
 
 #. module: account
 #: view:account.analytic.account:0
 msgid "Current"
-msgstr ""
+msgstr "Atual"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5940,7 +5949,7 @@ msgstr "Energia"
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Type"
-msgstr ""
+msgstr "Tipo de Reembolso"
 
 #. module: account
 #: report:account.invoice:0
