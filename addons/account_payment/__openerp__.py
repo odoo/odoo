@@ -24,15 +24,12 @@
     "version": "1.1",
     "author": "OpenERP SA",
     "category": "Generic Modules/Payment",
-    "depends": ["account"],
-    "init_xml": [],
     "description": """
 This module provides :
 * a more efficient way to manage invoice payment.
 * a basic mechanism to easily plug various automated payment.
     """,
-    'author': 'OpenERP SA',
-    'depends': ['account_voucher'],
+    'depends': ['account','account_voucher'],
     'init_xml': [],
     'update_xml': [
         'security/account_payment_security.xml',
