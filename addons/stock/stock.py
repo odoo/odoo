@@ -1594,9 +1594,9 @@ class stock_move(osv.osv):
                 pass
         if context.get('address_in_id', False):
             part_obj_add = self.pool.get('res.partner.address').browse(cr, uid, context['address_in_id'], context=context)
-            if not part_obj_add.partner_id:
-                return False
-            return part_obj_add.partner_id.property_stock_supplier.id
+            if part_obj_add.partner_id:
+                return part_obj_add.partner_id.property_stock_supplier.id
+        return False
 
     _defaults = {
         'location_id': _default_location_source,

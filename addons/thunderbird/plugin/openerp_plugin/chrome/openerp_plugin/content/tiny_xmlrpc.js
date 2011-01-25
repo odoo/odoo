@@ -686,6 +686,10 @@ var listDbHandler = {
     },
 
     onError: function (client, ctxt, status, errorMsg) {
+        if(status == 0) {
+            setconnect_server("true");
+            setDBList("false");
+        }
         
     }
 };
