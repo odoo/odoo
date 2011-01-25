@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-12 15:11+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:05+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 07:06+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
@@ -156,7 +156,7 @@ msgstr "计量单位"
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
 msgid "Physical Inventories"
-msgstr ""
+msgstr "盘点单"
 
 #. module: stock
 #: field:product.category,property_stock_journal:0
@@ -168,7 +168,7 @@ msgstr "库存业务类型"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Incoming"
-msgstr "进仓"
+msgstr "入库"
 
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
@@ -189,7 +189,7 @@ msgstr "部分分拣单的库存调拨数据丢失#%s"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_partial_move
 msgid "Deliver/Receive Products"
-msgstr "送货单"
+msgstr "送货/收货单"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -525,7 +525,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_product_packaging_stock_action
 #: field:stock.move,product_packaging:0
 msgid "Packaging"
-msgstr "分拣单"
+msgstr "包装"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -573,7 +573,7 @@ msgstr ""
 #. module: stock
 #: field:stock.tracking,serial:0
 msgid "Additional Reference"
-msgstr ""
+msgstr "附加引用单号"
 
 #. module: stock
 #: view:stock.production.lot.revision:0
@@ -743,7 +743,7 @@ msgstr "输入库位"
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Date of Order"
-msgstr ""
+msgstr "此单据上的日期"
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -763,7 +763,7 @@ msgstr "IT供应商"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form_draft
 msgid "Draft Physical Inventories"
-msgstr ""
+msgstr "盘点单草稿"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -895,7 +895,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
 msgid "Packing list"
-msgstr "分拣单列表"
+msgstr "装箱单"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1381,7 +1381,7 @@ msgstr ""
 #: view:stock.picking:0
 #: field:stock.picking,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "单据日期"
 
 #. module: stock
 #: field:stock.location,location_id:0
@@ -1805,7 +1805,7 @@ msgstr "已接收数量"
 #. module: stock
 #: field:stock.production.lot,ref:0
 msgid "Internal Reference"
-msgstr ""
+msgstr "内部引用单号"
 
 #. module: stock
 #: help:stock.production.lot,prefix:0
@@ -2079,7 +2079,7 @@ msgstr ""
 #. module: stock
 #: field:product.product,track_incoming:0
 msgid "Track Incoming Lots"
-msgstr ""
+msgstr "跟踪入库批次"
 
 #. module: stock
 #: view:board.board:0
@@ -2397,7 +2397,7 @@ msgstr ""
 #: view:stock.move:0
 #, python-format
 msgid "Receive Products"
-msgstr ""
+msgstr "收货"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:131
@@ -2405,7 +2405,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_action_pdct_out
 #, python-format
 msgid "Deliver Products"
-msgstr ""
+msgstr "送货"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2621,7 +2621,7 @@ msgstr "跟踪前缀"
 #. module: stock
 #: field:stock.inventory,name:0
 msgid "Inventory Reference"
-msgstr ""
+msgstr "盘点单号"
 
 #. module: stock
 #: code:addons/stock/stock.py:1307
@@ -3435,7 +3435,7 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_products_moves
 msgid "Products Moves"
-msgstr ""
+msgstr "货物移动"
 
 #. module: stock
 #: selection:stock.picking,invoice_state:0
@@ -3909,883 +3909,3 @@ msgstr ""
 #: help:stock.location,posz:0
 msgid "Optional localization details, for information purpose only"
 msgstr ""
-
-#~ msgid "Status"
-#~ msgstr "状态"
-
-#~ msgid "LIFO"
-#~ msgstr "后进先出"
-
-#~ msgid "Amount"
-#~ msgstr "金额"
-
-#~ msgid "Serial"
-#~ msgstr "序号"
-
-#~ msgid "Tracking Number"
-#~ msgstr "跟踪号"
-
-#~ msgid "Date create"
-#~ msgstr "创建日期"
-
-#~ msgid "Date Created"
-#~ msgstr "创建日期"
-
-#~ msgid "Allocation Method"
-#~ msgstr "分配方法"
-
-#~ msgid "Dest. Address"
-#~ msgstr "目标地址"
-
-#~ msgid "FIFO"
-#~ msgstr "先进先出"
-
-#~ msgid "Create invoices"
-#~ msgstr "创建发票"
-
-#~ msgid "Tracking"
-#~ msgstr "跟踪"
-
-#~ msgid "Stock Management"
-#~ msgstr "库存管理"
-
-#~ msgid "STOCK_MEDIA_FORWARD"
-#~ msgstr "STOCK_MEDIA_FORWARD"
-
-#~ msgid "Revision"
-#~ msgstr "修订版"
-
-#~ msgid "STOCK_SORT_ASCENDING"
-#~ msgstr "STOCK_SORT_ASCENDING"
-
-#~ msgid "STOCK_SAVE"
-#~ msgstr "STOCK_SAVE"
-
-#~ msgid "terp-account"
-#~ msgstr "terp-account"
-
-#, python-format
-#~ msgid "Futur Stock"
-#~ msgstr "预计库存"
-
-#, python-format
-#~ msgid "Futur Productions"
-#~ msgstr "计划生产"
-
-#~ msgid "STOCK_ZOOM_100"
-#~ msgstr "STOCK_ZOOM_100"
-
-#~ msgid "STOCK_CANCEL"
-#~ msgstr "STOCK_CANCEL"
-
-#~ msgid "STOCK_NEW"
-#~ msgstr "STOCK_NEW"
-
-#, python-format
-#~ msgid "Futur Receptions"
-#~ msgstr "预期接收"
-
-#~ msgid "STOCK_QUIT"
-#~ msgstr "STOCK_QUIT"
-
-#~ msgid "terp-hr"
-#~ msgstr "terp-hr"
-
-#~ msgid "terp-purchase"
-#~ msgstr "terp-purchase"
-
-#~ msgid "STOCK_GOTO_TOP"
-#~ msgstr "STOCK_GOTO_TOP"
-
-#~ msgid "STOCK_ABOUT"
-#~ msgstr "STOCK_ABOUT"
-
-#~ msgid "STOCK_DND"
-#~ msgstr "STOCK_DND"
-
-#~ msgid "STOCK_GOTO_FIRST"
-#~ msgstr "STOCK_GOTO_FIRST"
-
-#~ msgid "STOCK_FLOPPY"
-#~ msgstr "STOCK_FLOPPY"
-
-#~ msgid "Move Lines"
-#~ msgstr "调拨明细"
-
-#~ msgid "STOCK_UNDERLINE"
-#~ msgstr "STOCK_UNDERLINE"
-
-#~ msgid "STOCK_PREFERENCES"
-#~ msgstr "STOCK_PREFERENCES"
-
-#~ msgid "STOCK_BOLD"
-#~ msgstr "STOCK_BOLD"
-
-#~ msgid "terp-graph"
-#~ msgstr "terp-graph"
-
-#~ msgid "Track line"
-#~ msgstr "跟踪明细"
-
-#~ msgid "STOCK_MEDIA_REWIND"
-#~ msgstr "STOCK_MEDIA_REWIND"
-
-#~ msgid "Stock Level 1"
-#~ msgstr "库存层1"
-
-#~ msgid "Draft Moves"
-#~ msgstr "调拨草稿"
-
-#~ msgid "Stock Properties"
-#~ msgstr "库存属性"
-
-#~ msgid "Customer Invoice"
-#~ msgstr "客户发票"
-
-#~ msgid "STOCK_CUT"
-#~ msgstr "STOCK_CUT"
-
-#~ msgid "STOCK_ZOOM_FIT"
-#~ msgstr "STOCK_ZOOM_FIT"
-
-#~ msgid "Calendar of Deliveries"
-#~ msgstr "送货日程表"
-
-#~ msgid "Latest Date of Inventory"
-#~ msgstr "最近盘存日期"
-
-#~ msgid "STOCK_SAVE_AS"
-#~ msgstr "STOCK_SAVE_AS"
-
-#~ msgid "STOCK_DIALOG_ERROR"
-#~ msgstr "STOCK_DIALOG_ERROR"
-
-#~ msgid "STOCK_UNDELETE"
-#~ msgstr "STOCK_UNDELETE"
-
-#~ msgid "STOCK_GO_FORWARD"
-#~ msgstr "STOCK_GO_FORWARD"
-
-#~ msgid "STOCK_GOTO_BOTTOM"
-#~ msgstr "STOCK_GOTO_BOTTOM"
-
-#~ msgid "Tracking Lot"
-#~ msgstr "跟踪批次"
-
-#~ msgid "STOCK_INDEX"
-#~ msgstr "STOCK_INDEX"
-
-#~ msgid "STOCK_PASTE"
-#~ msgstr "STOCK_PASTE"
-
-#~ msgid "STOCK_SELECT_FONT"
-#~ msgstr "STOCK_SELECT_FONT"
-
-#~ msgid "STOCK_DIALOG_QUESTION"
-#~ msgstr "STOCK_DIALOG_QUESTION"
-
-#~ msgid "STOCK_EXECUTE"
-#~ msgstr "STOCK_EXECUTE"
-
-#~ msgid "terp-stock"
-#~ msgstr "terp-stock"
-
-#, python-format
-#~ msgid "Futur Deliveries"
-#~ msgstr "计划交货"
-
-#~ msgid "STOCK_MEDIA_RECORD"
-#~ msgstr "STOCK_MEDIA_RECORD"
-
-#~ msgid "terp-report"
-#~ msgstr "terp-report"
-
-#~ msgid "STOCK_FILE"
-#~ msgstr "STOCK_FILE"
-
-#~ msgid "STOCK_GO_DOWN"
-#~ msgstr "STOCK_GO_DOWN"
-
-#~ msgid "STOCK_OK"
-#~ msgstr "STOCK_OK"
-
-#~ msgid "STOCK_EDIT"
-#~ msgstr "STOCK_EDIT"
-
-#~ msgid "STOCK_CONNECT"
-#~ msgstr "STOCK_CONNECT"
-
-#~ msgid "All Stock Moves"
-#~ msgstr "所有库存调拨"
-
-#~ msgid "Finished products"
-#~ msgstr "成品"
-
-#~ msgid "STOCK_UNDO"
-#~ msgstr "STOCK_UNDO"
-
-#~ msgid "STOCK_GO_BACK"
-#~ msgstr "STOCK_GO_BACK"
-
-#~ msgid "STOCK_HELP"
-#~ msgstr "STOCK_HELP"
-
-#, python-format
-#~ msgid "Invoice state"
-#~ msgstr "发票状态"
-
-#~ msgid "terp-administration"
-#~ msgstr "terp-administration"
-
-#~ msgid "STOCK_APPLY"
-#~ msgstr "STOCK_APPLY"
-
-#~ msgid "STOCK_JUSTIFY_FILL"
-#~ msgstr "STOCK_JUSTIFY_FILL"
-
-#~ msgid "terp-crm"
-#~ msgstr "terp-crm"
-
-#, python-format
-#~ msgid "Invoice is not created"
-#~ msgstr "没有创建发票"
-
-#, python-format
-#~ msgid "Please select at least two inventories."
-#~ msgstr "请选择至少2个盘存"
-
-#~ msgid "STOCK_STRIKETHROUGH"
-#~ msgstr "STOCK_STRIKETHROUGH"
-
-#~ msgid "Periodical Inventory"
-#~ msgstr "定期盘存"
-
-#~ msgid "terp-partner"
-#~ msgstr "terp-partner"
-
-#~ msgid "Qty"
-#~ msgstr "数量"
-
-#~ msgid "STOCK_SPELL_CHECK"
-#~ msgstr "STOCK_SPELL_CHECK"
-
-#~ msgid "Draft Periodical Inventories"
-#~ msgstr "定期盘存草稿"
-
-#~ msgid "STOCK_MISSING_IMAGE"
-#~ msgstr "STOCK_MISSING_IMAGE"
-
-#~ msgid "Stock Tracking Lots"
-#~ msgstr "库存跟踪批次"
-
-#~ msgid "STOCK_HARDDISK"
-#~ msgstr "STOCK_HARDDISK"
-
-#~ msgid "STOCK_COPY"
-#~ msgstr "STOCK_COPY"
-
-#, python-format
-#~ msgid "Futur Qty"
-#~ msgstr "计划数量"
-
-#, python-format
-#~ msgid "Invoice is already created."
-#~ msgstr "发票已创建"
-
-#~ msgid "STOCK_CDROM"
-#~ msgstr "STOCK_CDROM"
-
-#~ msgid "STOCK_FIND_AND_REPLACE"
-#~ msgstr "STOCK_FIND_AND_REPLACE"
-
-#~ msgid "STOCK_STOP"
-#~ msgstr "STOCK_STOP"
-
-#~ msgid "STOCK_REFRESH"
-#~ msgstr "STOCK_REFRESH"
-
-#~ msgid "STOCK_CONVERT"
-#~ msgstr "STOCK_CONVERT"
-
-#~ msgid "STOCK_ZOOM_IN"
-#~ msgstr "STOCK_ZOOM_IN"
-
-#~ msgid "STOCK_DIALOG_WARNING"
-#~ msgstr "STOCK_DIALOG_WARNING"
-
-#~ msgid "terp-calendar"
-#~ msgstr "terp-calendar"
-
-#~ msgid "STOCK_ITALIC"
-#~ msgstr "STOCK_ITALIC"
-
-#~ msgid "STOCK_YES"
-#~ msgstr "STOCK_YES"
-
-#~ msgid "Invoice Status"
-#~ msgstr "发票状态"
-
-#~ msgid "Dest. Move"
-#~ msgstr "调拨目的点"
-
-#~ msgid "Future Stock Forecast"
-#~ msgstr "预测未来库存"
-
-#, python-format
-#~ msgid "No production sequence defined"
-#~ msgstr "无生产序列定义"
-
-#~ msgid "STOCK_JUSTIFY_LEFT"
-#~ msgstr "STOCK_JUSTIFY_LEFT"
-
-#~ msgid "Planned Date"
-#~ msgstr "计划日期"
-
-#~ msgid "STOCK_COLOR_PICKER"
-#~ msgstr "STOCK_COLOR_PICKER"
-
-#~ msgid "STOCK_DELETE"
-#~ msgstr "STOCK_DELETE"
-
-#~ msgid "Created Date"
-#~ msgstr "创建日期"
-
-#~ msgid "STOCK_CLEAR"
-#~ msgstr "STOCK_CLEAR"
-
-#~ msgid "STOCK_HOME"
-#~ msgstr "STOCK_HOME"
-
-#~ msgid "STOCK_SORT_DESCENDING"
-#~ msgstr "STOCK_SORT_DESCENDING"
-
-#~ msgid "Tracking Lots"
-#~ msgstr "跟踪批次"
-
-#~ msgid "STOCK_PROPERTIES"
-#~ msgstr "STOCK_PROPERTIES"
-
-#~ msgid "STOCK_GO_UP"
-#~ msgstr "STOCK_GO_UP"
-
-#~ msgid "terp-mrp"
-#~ msgstr "terp-mrp"
-
-#~ msgid "STOCK_MEDIA_STOP"
-#~ msgstr "STOCK_MEDIA_STOP"
-
-#~ msgid "STOCK_DND_MULTIPLE"
-#~ msgstr "STOCK_DND_MULTIPLE"
-
-#~ msgid "STOCK_DIALOG_AUTHENTICATION"
-#~ msgstr "STOCK_DIALOG_AUTHENTICATION"
-
-#~ msgid "STOCK_REMOVE"
-#~ msgstr "STOCK_REMOVE"
-
-#~ msgid "STOCK_ZOOM_OUT"
-#~ msgstr "STOCK_ZOOM_OUT"
-
-#~ msgid "STOCK_NO"
-#~ msgstr "STOCK_NO"
-
-#~ msgid "Nearest"
-#~ msgstr "最近"
-
-#~ msgid "STOCK_PRINT"
-#~ msgstr "STOCK_PRINT"
-
-#~ msgid "STOCK_SELECT_COLOR"
-#~ msgstr "STOCK_SELECT_COLOR"
-
-#~ msgid "STOCK_CLOSE"
-#~ msgstr "STOCK_CLOSE"
-
-#~ msgid "STOCK_REDO"
-#~ msgstr "STOCK_REDO"
-
-#~ msgid "Tiny sprl"
-#~ msgstr "Tiny sprl"
-
-#~ msgid "STOCK_ADD"
-#~ msgstr "STOCK_ADD"
-
-#~ msgid "STOCK_DIALOG_INFO"
-#~ msgstr "STOCK_DIALOG_INFO"
-
-#~ msgid "terp-sale"
-#~ msgstr "terp-sale"
-
-#~ msgid "terp-tools"
-#~ msgstr "terp-tools"
-
-#~ msgid "STOCK_JUMP_TO"
-#~ msgstr "STOCK_JUMP_TO"
-
-#~ msgid "Chained Delay (days)"
-#~ msgstr "连锁延迟(天)"
-
-#~ msgid "STOCK_PRINT_PREVIEW"
-#~ msgstr "STOCK_PRINT_PREVIEW"
-
-#~ msgid "STOCK_FIND"
-#~ msgstr "STOCK_FIND"
-
-#~ msgid "STOCK_MEDIA_PAUSE"
-#~ msgstr "STOCK_MEDIA_PAUSE"
-
-#~ msgid "Track Outging Lots"
-#~ msgstr "跟踪出库批次"
-
-#~ msgid "STOCK_OPEN"
-#~ msgstr "STOCK_OPEN"
-
-#~ msgid "STOCK_MEDIA_PLAY"
-#~ msgstr "STOCK_MEDIA_PLAY"
-
-#~ msgid "STOCK_MEDIA_PREVIOUS"
-#~ msgstr "STOCK_MEDIA_PREVIOUS"
-
-#~ msgid "Moves Tracked"
-#~ msgstr "调拨跟踪"
-
-#~ msgid "STOCK_DISCONNECT"
-#~ msgstr "STOCK_DISCONNECT"
-
-#~ msgid "terp-project"
-#~ msgstr "terp-project"
-
-#~ msgid "STOCK_NETWORK"
-#~ msgstr "STOCK_NETWORK"
-
-#, python-format
-#~ msgid "Please select one and only one inventory !"
-#~ msgstr "请选定唯一的盘存"
-
-#~ msgid "STOCK_UNINDENT"
-#~ msgstr "STOCK_UNINDENT"
-
-#~ msgid "Canceled"
-#~ msgstr "已取消"
-
-#~ msgid "STOCK_JUSTIFY_CENTER"
-#~ msgstr "STOCK_JUSTIFY_CENTER"
-
-#~ msgid "STOCK_GOTO_LAST"
-#~ msgstr "STOCK_GOTO_LAST"
-
-#~ msgid "STOCK_DIRECTORY"
-#~ msgstr "STOCK_DIRECTORY"
-
-#, python-format
-#~ msgid "Futur P&L"
-#~ msgstr "计划益损"
-
-#~ msgid "Track Production Lots"
-#~ msgstr "跟踪生产批次"
-
-#~ msgid "STOCK_REVERT_TO_SAVED"
-#~ msgstr "STOCK_REVERT_TO_SAVED"
-
-#~ msgid "Supplier Invoice"
-#~ msgstr "供应商发票"
-
-#~ msgid "terp-product"
-#~ msgstr "terp-product"
-
-#~ msgid "Close"
-#~ msgstr "关闭"
-
-#~ msgid "STOCK_JUSTIFY_RIGHT"
-#~ msgstr "STOCK_JUSTIFY_RIGHT"
-
-#~ msgid "STOCK_INDENT"
-#~ msgstr "STOCK_INDENT"
-
-#~ msgid "Inventory line"
-#~ msgstr "盘存明细"
-
-#~ msgid "Move State"
-#~ msgstr "调拨状态"
-
-#~ msgid "STOCK_MEDIA_NEXT"
-#~ msgstr "STOCK_MEDIA_NEXT"
-
-#~ msgid "weight"
-#~ msgstr "重量"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr "对象名必须以“x_”开始且不能包含任何特殊字符！"
-
-#~ msgid "Units"
-#~ msgstr "单位"
-
-#~ msgid "Auto-Packing"
-#~ msgstr "自动创建分拣单"
-
-#~ msgid "Max. Planned Date"
-#~ msgstr "最大计划日期"
-
-#~ msgid "Confirmed Packing Waiting Availability"
-#~ msgstr "确认分拣单等待可用"
-
-#~ msgid "Sub Products"
-#~ msgstr "子产品"
-
-#~ msgid "Total :"
-#~ msgstr "合计:"
-
-#~ msgid "Customer Refund"
-#~ msgstr "客户退货"
-
-#~ msgid "Stock location"
-#~ msgstr "库存库位"
-
-#~ msgid "Product Id"
-#~ msgstr "产品ID"
-
-#~ msgid "Tracking/Serial"
-#~ msgstr "跟踪号/序号"
-
-#~ msgid "Set to Zero"
-#~ msgstr "设为0"
-
-#~ msgid "Available Moves"
-#~ msgstr "可调拨"
-
-#~ msgid "Open Products"
-#~ msgstr "待处理产品"
-
-#~ msgid "Supplier Refund"
-#~ msgstr "供应商退货"
-
-#~ msgid "Validate"
-#~ msgstr "确认"
-
-#~ msgid "Move lines"
-#~ msgstr "调拨明细"
-
-#~ msgid "New Periodical Inventory"
-#~ msgstr "新的定期盘存"
-
-#~ msgid "Delivery Orders to Process"
-#~ msgstr "处理送货单"
-
-#~ msgid "Lots by location"
-#~ msgstr "库位批次"
-
-#~ msgid "Future Delivery Orders"
-#~ msgstr "未来的送货单"
-
-#~ msgid "Set Stock to Zero"
-#~ msgstr "设库存为0"
-
-#~ msgid "Workshop"
-#~ msgstr "工厂"
-
-#~ msgid "Location Overview"
-#~ msgstr "库位概述"
-
-#~ msgid "Components"
-#~ msgstr "零部件"
-
-#~ msgid "Stock Locations Structure"
-#~ msgstr "库存库位结构"
-
-#~ msgid ""
-#~ "This account will be used, instead of the default one, to value output stock"
-#~ msgstr "默认作为记录出库值科目"
-
-#~ msgid "Stock by Lots"
-#~ msgstr "库存批次"
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "by production orders"
-#~ msgstr "对于当前产品(模板)该库存库位默认作为你生产时库存调拨的源库位."
-
-#~ msgid "Add"
-#~ msgstr "增加"
-
-#~ msgid "Set Stock to 0"
-#~ msgstr "设库存为0"
-
-#~ msgid "Localisation"
-#~ msgstr "本地"
-
-#~ msgid "Do you want to set stocks to zero ?"
-#~ msgstr "你真的设库存为0?"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "直接送货"
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "by procurements"
-#~ msgstr "对于当前产品(模板)该库存库位默认作为产品需求的库存调拨源库位."
-
-#~ msgid "Date Order"
-#~ msgstr "订购日期"
-
-#~ msgid "Print Item Labels"
-#~ msgstr "打印产品标签"
-
-#~ msgid "Inventory Account"
-#~ msgstr "盘存科目"
-
-#~ msgid "Set Stocks to Zero"
-#~ msgstr "设库存为0"
-
-#~ msgid "Low Level"
-#~ msgstr "底层"
-
-#~ msgid "Delivery"
-#~ msgstr "送货"
-
-#~ msgid "Locations' Values"
-#~ msgstr "库位值"
-
-#~ msgid "Others info"
-#~ msgstr "其它信息"
-
-#~ msgid "Move History"
-#~ msgstr "库存移动记录"
-
-#~ msgid "Make Parcel"
-#~ msgstr "打包"
-
-#~ msgid "Products Sent"
-#~ msgstr "已发出产品"
-
-#~ msgid "Non Assigned Products:"
-#~ msgstr "未分派的产品"
-
-#~ msgid "Force to use a Production Lot during production order"
-#~ msgstr "生产单指定生产批次"
-
-#~ msgid "Force to use a Production Lot during receptions"
-#~ msgstr "入库时指定批次"
-
-#~ msgid "Track Incomming Lots"
-#~ msgstr "跟踪入库批次"
-
-#~ msgid ""
-#~ "OpenERP Stock Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "系统库存管理模块能管理多仓库多和结构化仓库库位\n"
-#~ "使用复式记录管理提供灵活和强大库存控制:\n"
-#~ "* 调拨历史和计划\n"
-#~ "* 不同的库存管理方法(FIFO, LIFO, ...)\n"
-#~ "* 存货估计(标准和平均估价)\n"
-#~ "* 自动重开单规则(库存级别,jit)\n"
-#~ "* 存货清单不同的鲁棒性\n"
-#~ "* 条码支持\n"
-#~ "* 通过复式录入系统实现快速检测错误\n"
-#~ "* 跟踪能力(上游,下游,产品批号,序列号)\n"
-#~ "    "
-
-#~ msgid ""
-#~ "Tracking lot is the code that will be put on the logistical unit/pallet"
-#~ msgstr "跟踪批次号是帖在包装或垫板上的代码"
-
-#~ msgid "Fill Inventory for specific location"
-#~ msgstr "填写库存的具体库位"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "在动作定义中使用了无效的模快名。"
-
-#~ msgid "Unreceived Products"
-#~ msgstr "未接收的产品"
-
-#~ msgid "Include all childs for the location"
-#~ msgstr "包括所有该库位的子库位"
-
-#~ msgid "This account will be used to value the output stock"
-#~ msgstr "这科目用于记录出库值"
-
-#~ msgid ""
-#~ "For the current product (template), this stock location will be used, "
-#~ "instead of the default one, as the source location for stock moves generated "
-#~ "when you do an inventory"
-#~ msgstr "对于当前产品(模板), 这库存库位将作为默认值, 库存盘点时作为库存调拨的源库位."
-
-#~ msgid "Location Content (With children)"
-#~ msgstr "库位内容(包括子项)"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "无效的视图结构xml文件!"
-
-#~ msgid "This account will be used to value the input stock"
-#~ msgstr "这科目用于记录入库值"
-
-#~ msgid ""
-#~ "OpenERP Inventory Management module can manage multi-warehouses, multi and "
-#~ "structured stock locations.\n"
-#~ "Thanks to the double entry management, the inventory controlling is powerful "
-#~ "and flexible:\n"
-#~ "* Moves history and planning,\n"
-#~ "* Different inventory methods (FIFO, LIFO, ...)\n"
-#~ "* Stock valuation (standard or average price, ...)\n"
-#~ "* Robustness faced with Inventory differences\n"
-#~ "* Automatic reordering rules (stock level, JIT, ...)\n"
-#~ "* Bar code supported\n"
-#~ "* Rapid detection of mistakes through double entry system\n"
-#~ "* Traceability (upstream/downstream, production lots, serial number, ...)\n"
-#~ "    "
-#~ msgstr ""
-#~ "\"库存管理模块可以管理多仓库, 多样化结构的仓储地点.\\n\"\n"
-#~ "\"感谢复式记帐管理, 存货管理很强大并且灵活:\\n\"\n"
-#~ "\"* 调拨历史和计划\\n\"\n"
-#~ "\"* 不同的库存管理法 (先进先出, 先进后出, ...)\\n\"\n"
-#~ "\"* 库存估价 (标准或平均价格, ...)\\n\"\n"
-#~ "\"* 稳健面临盘存差错\\n\"\n"
-#~ "\"* 自动重新订货规则 (库存水平, JIT, ...)\\n\"\n"
-#~ "\"* 支持条码\\n\"\n"
-#~ "\"* 通过复式记帐系统快速检测错误\\n\"\n"
-#~ "\"* 可追溯性(向上追溯/向下追溯,产品批次,序列号, ...)\\n\"\n"
-#~ "    "
-
-#~ msgid "Force to use a Production Lot during deliveries"
-#~ msgstr "送货时指定批次"
-
-#~ msgid ""
-#~ "This account will be used, instead of the default one, to value input stock"
-#~ msgstr "这科目默认作为记录入库值"
-
-#~ msgid "Confirm (Do Not Process Now)"
-#~ msgstr "确认(现在不处理)"
-
-#~ msgid ""
-#~ "Scheduled date for the movement of the products or real date if the move is "
-#~ "done."
-#~ msgstr "如果调拨完成. 产品调拨的预定日期或实际日期"
-
-#~ msgid ""
-#~ "This is used only if you selected a chained location type.\n"
-#~ "The 'Automatic Move' value will create a stock move after the current one "
-#~ "that will be validated automatically. With 'Manual Operation', the stock "
-#~ "move has to be validated by a worker. With 'Automatic No Step Added', the "
-#~ "location is replaced in the original move."
-#~ msgstr ""
-#~ "如果你只选择链式库位类型.\n"
-#~ "'自动调拨' 将创建一个库存调拨后将自动确认. '手动操作' 库存调拨需要人手确认. '自动不增加'步骤' 库位将取代调拨源库位."
-
-#~ msgid ""
-#~ "This journal will be used for the accounting move generated by stock move"
-#~ msgstr "这业务类型用于库存调拨产生会计凭证."
-
-#~ msgid "Return"
-#~ msgstr "退货"
-
-#~ msgid "Origin Reference"
-#~ msgstr "来源单号"
-
-#~ msgid "Internal Ref"
-#~ msgstr "内部关联单号"
-
-#, python-format
-#~ msgid "Invoice cannot be created from Packing."
-#~ msgstr "不可从分拣单创建发票"
-
-#~ msgid "Packing result"
-#~ msgstr "分拣单结果"
-
-#~ msgid "Packing List:"
-#~ msgstr "分拣单列表："
-
-#~ msgid "Available Packing"
-#~ msgstr "有效分拣单"
-
-#~ msgid "Packing Done"
-#~ msgstr "分拣完成"
-
-#~ msgid "Return packing"
-#~ msgstr "退回分拣单"
-
-#~ msgid "New Reception Packing"
-#~ msgstr "新的进仓单"
-
-#~ msgid "Split move lines in two"
-#~ msgstr "拆分调拨明细"
-
-#~ msgid "Products Received"
-#~ msgstr "接收产品"
-
-#~ msgid "Fill From Unreceived Products"
-#~ msgstr "在未接收的产品里选"
-
-#~ msgid "Incoming Products"
-#~ msgstr "进仓单"
-
-#~ msgid "Outgoing Products"
-#~ msgstr "出仓单"
-
-#~ msgid "Split move line"
-#~ msgstr "拆分调拨明细"
-
-#~ msgid "Split in Two"
-#~ msgstr "拆分"
-
-#~ msgid "Make Picking"
-#~ msgstr "创建分拣单"
-
-#~ msgid "Make packing"
-#~ msgstr "创建分拣单"
-
-#~ msgid "Packing List"
-#~ msgstr "分拣单列表"
-
-#~ msgid "Packing to Process"
-#~ msgstr "分拣单处理"
-
-#~ msgid "The packing has been successfully made !"
-#~ msgstr "这分拣单已完成!"
-
-#~ msgid "Input Packing List"
-#~ msgstr "进仓分拣单"
-
-#~ msgid "New Internal Packing"
-#~ msgstr "新的内部分拣单"
-
-#~ msgid "Partial packing"
-#~ msgstr "部分分拣"
-
-#, python-format
-#~ msgid "to be invoiced"
-#~ msgstr "待开票"
-
-#~ msgid "Not from Packing"
-#~ msgstr "按来自订单产生的发票"
-
-#~ msgid ""
-#~ "This is the list of all delivery orders that must be prepared, according to "
-#~ "your different sales orders and your logistics rules."
-#~ msgstr "这是根据不同的销售订单和物流规则所有准备好的发货单据"
-
-#~ msgid ""
-#~ "When the stock move is created it is in the 'Draft' state.\n"
-#~ " After that it is set to 'Confirmed' state.\n"
-#~ " If stock is available state is set to 'Available'.\n"
-#~ " When the picking is done the state is 'Done'.                               "
-#~ "   \n"
-#~ "The state is 'Waiting' if the move is waiting for another one."
-#~ msgstr ""
-#~ "新建的库存调拨状态是‘草稿’\n"
-#~ "然后将为‘确认’\n"
-#~ "如果库存可用状态将为‘可用’\n"
-#~ "当分拣完成状态将为‘完成’"

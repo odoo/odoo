@@ -7,20 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 23:56+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:06+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:49+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp
 #: field:mrp.production,move_created_ids:0
 #: field:mrp.production,move_created_ids2:0
 msgid "Moves Created"
-msgstr ""
+msgstr "Mozgás létrehozása"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_production_action
@@ -50,7 +50,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.module.module,shortdesc:mrp.module_meta_information
 msgid "Manufacturing Resource Planning"
-msgstr ""
+msgstr "Gyártási források tervezése"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -68,6 +68,8 @@ msgid ""
 "The 'Minimum stock rule' allows the system to create procurement orders "
 "automatically as soon as the minimum stock is reached."
 msgstr ""
+"A \"minimális készlet szabály\" lehetővé teszi, hogy a rendszer automatikus "
+"megrendeléseket hozzon létre, ha a készlet eléri a minimumot."
 
 #. module: mrp
 #: field:mrp.production,picking_id:0
@@ -85,7 +87,7 @@ msgstr "Óránkénti költség"
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Cost Price per Uom"
-msgstr ""
+msgstr "Beszerzési ár/ME"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -142,7 +144,7 @@ msgstr "Hivatkozás"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Finished Products"
-msgstr ""
+msgstr "Befejezett termékek"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -188,12 +190,12 @@ msgstr ""
 #: view:mrp.production.order:0
 #: field:mrp.production.order,state:0
 msgid "State"
-msgstr ""
+msgstr "Állapot"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
-msgstr ""
+msgstr "Költség/óra"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduction0
@@ -248,12 +250,12 @@ msgstr "Munkaciklus számla"
 #: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Work Cost"
-msgstr ""
+msgstr "Munkaköltség"
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "["
-msgstr ""
+msgstr "["
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
@@ -263,7 +265,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.workcenter:0
 msgid "Capacity Information"
-msgstr ""
+msgstr "Kapacitási információ"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -278,7 +280,7 @@ msgstr "Pozíció"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom
 msgid "Master Data"
-msgstr ""
+msgstr "Törzsadatok"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockmts0
@@ -375,7 +377,7 @@ msgstr "Órák száma"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Confirm Production"
-msgstr ""
+msgstr "Termelés megerősítése"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduct0
@@ -394,7 +396,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.installer,mrp_repair:0
 msgid "Repairs"
-msgstr ""
+msgstr "Javítások"
 
 #. module: mrp
 #: field:mrp.installer,stock_location:0
@@ -404,7 +406,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_view_resource_calendar_search_mrp
 msgid "Working Time"
-msgstr ""
+msgstr "Munkaidő"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
@@ -441,7 +443,7 @@ msgstr ""
 #. module: mrp
 #: view:board.board:0
 msgid "Stock Value Variation"
-msgstr ""
+msgstr "Készletérték változása"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action2
@@ -532,7 +534,7 @@ msgstr "Szerző"
 #. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
-msgstr ""
+msgstr "Készletérték"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_product_bom_structure
@@ -548,7 +550,7 @@ msgstr ""
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Supplier Price per Uom"
-msgstr ""
+msgstr "Szállítói ár/ME"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -577,7 +579,7 @@ msgstr ""
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "Picking Exception"
-msgstr ""
+msgstr "Kiszedési kivétel"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
@@ -646,7 +648,7 @@ msgstr "Tervezés"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Ready"
-msgstr ""
+msgstr "Kész"
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -673,7 +675,7 @@ msgstr ""
 #: view:mrp.production.order:0
 #: selection:mrp.production.order,state:0
 msgid "In Production"
-msgstr ""
+msgstr "Termelésben"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_property
@@ -761,7 +763,7 @@ msgstr "Ajánlatkérés"
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
 msgid "Procurement rule"
-msgstr ""
+msgstr "Beszerzési szabály"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -805,7 +807,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Gyártási rendelés"
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
@@ -935,7 +937,7 @@ msgstr "Db"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_production0
 msgid "Manufacturing Plan."
-msgstr ""
+msgstr "Gyártás tervezése"
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -957,7 +959,7 @@ msgstr ""
 #: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -981,12 +983,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,move_prod_id:0
 msgid "Move product"
-msgstr ""
+msgstr "Termékmozgás"
 
 #. module: mrp
 #: view:mrp.production:0
 msgid "Late"
-msgstr ""
+msgstr "Később"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
@@ -1007,7 +1009,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Start Production"
-msgstr ""
+msgstr "Termelés elkezdése"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.open_board_manufacturing
@@ -1035,7 +1037,7 @@ msgstr ""
 #. module: mrp
 #: model:process.node,note:mrp.process_node_billofmaterial0
 msgid "Product's structure"
-msgstr ""
+msgstr "Termékstruktúra"
 
 #. module: mrp
 #: field:mrp.bom,name:0
@@ -1069,7 +1071,7 @@ msgstr "Mód"
 #. module: mrp
 #: report:bom.structure:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
@@ -1090,12 +1092,12 @@ msgstr ""
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "Rendelési mennyiség nem lehet negatív vagy nulla !"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
 msgid "Manufacturing Orders in Progress"
-msgstr ""
+msgstr "Gyártási rendelések folyamatban"
 
 #. module: mrp
 #: model:ir.module.module,description:mrp.module_meta_information
@@ -1155,7 +1157,7 @@ msgstr "Csoportosítás..."
 #: code:addons/mrp/report/price.py:121
 #, python-format
 msgid "Cycles Cost"
-msgstr ""
+msgstr "Ciklusos költségek"
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -1267,7 +1269,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
 msgid "Day by day"
-msgstr ""
+msgstr "Nap mint nap"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1366,12 +1368,12 @@ msgstr ""
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Components suppliers"
-msgstr ""
+msgstr "Alkatrészek beszállítói"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_installer
 msgid "mrp.installer"
-msgstr ""
+msgstr "mrp.installer"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1409,7 +1411,7 @@ msgstr "Kezdő dátum"
 #. module: mrp
 #: field:mrp.workcenter,costs_hour_account_id:0
 msgid "Hour Account"
-msgstr ""
+msgstr "Órabér"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1424,7 +1426,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.production:0
 msgid "Pending"
-msgstr ""
+msgstr "Függőben lévő"
 
 #. module: mrp
 #: field:mrp.bom,active:0
@@ -1435,7 +1437,7 @@ msgstr "aktív"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_procureproducts0
 msgid "Procure Products"
-msgstr ""
+msgstr "Beszerzett termékek"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_workcenter_load_tree
@@ -1629,7 +1631,7 @@ msgstr "Gyártás elemzése"
 #: code:addons/mrp/mrp.py:345
 #, python-format
 msgid "Copy"
-msgstr ""
+msgstr "Másolás"
 
 #. module: mrp
 #: view:mrp.production.lot.line:0
@@ -1661,7 +1663,7 @@ msgstr "Termék eladási egysége"
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "#Line Orders"
-msgstr ""
+msgstr "Rendelési sorok száma"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1716,7 +1718,7 @@ msgstr ""
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "Gyártási rendelések"
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -1737,7 +1739,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
 msgid "Cost per cycle"
-msgstr ""
+msgstr "Költség/ciklus"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_serviceproduct0
@@ -1798,7 +1800,7 @@ msgstr "Gyártási rendelés"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productminimumstockrule0
 msgid "Automatic procurement rule"
-msgstr ""
+msgstr "Automatikus beszerzési szabály"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1815,7 +1817,7 @@ msgstr "Termék eladási egység mennyisége"
 #: view:mrp.bom:0
 #, python-format
 msgid "Components"
-msgstr ""
+msgstr "Összetevők"
 
 #. module: mrp
 #: report:bom.structure:0
@@ -1993,7 +1995,7 @@ msgstr ""
 #. module: mrp
 #: view:mrp.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Beállítás"
 
 #. module: mrp
 #: help:mrp.workcenter,time_start:0
@@ -2003,7 +2005,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: mrp
 #: field:mrp.installer,config_logo:0
@@ -2072,7 +2074,7 @@ msgstr "Normál"
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
 msgid "Manufacturing Steps."
-msgstr ""
+msgstr "Gyártási lépések"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:136
@@ -2089,7 +2091,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.production.order,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: mrp
 #: field:mrp.bom,bom_id:0
@@ -2300,7 +2302,7 @@ msgstr "Gyártás"
 #. module: mrp
 #: view:board.board:0
 msgid "Next Production Orders"
-msgstr ""
+msgstr "Következő gyártási rendelés"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0

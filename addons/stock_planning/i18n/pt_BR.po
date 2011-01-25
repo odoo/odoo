@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-16 18:43+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-18 04:45+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 07:07+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock_planning
@@ -217,7 +217,7 @@ msgstr ""
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period_createlines
 msgid "stock.period.createlines"
-msgstr ""
+msgstr "stock.period.createlines"
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_before:0
@@ -255,7 +255,7 @@ msgstr "Previsão de Estoque e Vendas"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast
 msgid "stock.sale.forecast"
-msgstr ""
+msgstr "stock.sale.forecast"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_dept_id:0
@@ -275,7 +275,7 @@ msgstr "Simulação de Estoque"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
 msgid "stock.planning.createlines"
-msgstr ""
+msgstr "stock.planning.createlines"
 
 #. module: stock_planning
 #: help:stock.planning,incoming_before:0
@@ -404,7 +404,7 @@ msgstr "período do estoque"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_sale_forecast_createlines
 msgid "stock.sale.forecast.createlines"
-msgstr ""
+msgstr "stock.sale.forecast.createlines"
 
 #. module: stock_planning
 #: field:stock.planning,warehouse_id:0
@@ -426,7 +426,7 @@ msgid ""
 msgstr ""
 "Simulação de Estoque no final do Período selecionado.\n"
 " Para o período atual é: \n"
-"Estoque Inicial - Saídas Confirmada + Entrada Confirmada - Saída Prevista + "
+"Estoque Inicial - Saída Realizada + Entrada Realizada - Saída Prevista + "
 "Entrada Restante.\n"
 "Para próximos períodos será: \n"
 "Estoque Inicial - Saída Planejada Anterior + Entrada Anterior - Saída "
@@ -638,7 +638,7 @@ msgid ""
 " Already Out: "
 msgstr ""
 "\n"
-" Saída Confirmada: "
+" Saída Realizada: "
 
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
@@ -711,6 +711,9 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
+"Lance a quantidade planejada de saída do Armazém, Período e Produto "
+"selecionado. Para planejar este valor, olhe na Saída Confirmada ou Previsões "
+"de Vendas. Este valor deve ser igual ou maior que a Saída Confirmada."
 
 #. module: stock_planning
 #: model:ir.module.module,description:stock_planning.module_meta_information
@@ -996,6 +999,9 @@ msgid ""
 "Planned Out and Confirmed Out. For current period Already Out is also "
 "calculated"
 msgstr ""
+"Quantidade prevista para sair no período selecionado. É uma diferença entre "
+"a Saída Planejada e a Saída Confirmada. Para o período atual, a Saída "
+"Realizada também é calculada"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_id:0
@@ -1278,7 +1284,7 @@ msgstr "Atual"
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
 msgid "stock.planning"
-msgstr ""
+msgstr "stock.planning"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,warehouse_id:0
@@ -1325,7 +1331,7 @@ msgstr "Período sobre o qual o planejamento incidirá."
 #. module: stock_planning
 #: field:stock.planning,already_out:0
 msgid "Already Out"
-msgstr "Saída Confirmada"
+msgstr "Saída Realizada"
 
 #. module: stock_planning
 #: help:stock.planning,product_id:0
@@ -1377,6 +1383,10 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"Quantidade restante da quantidade de entrada Planejada. É calculada pela "
+"diferença entre a Entrada Planejada e Entrada Confirmada. Para o período "
+"atual, a Entrada Realizada é calculada também. Este valor é usado para criar "
+"aquisições para quantidade em falta."
 
 #. module: stock_planning
 #: help:stock.planning,incoming:0
@@ -1398,6 +1408,10 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warhouse' with Supply Warehouse."
 msgstr ""
+"Marque para abastecer a partir do Local de estoque do Armazém de "
+"Fornecimento. Se não estiver marcado, o abastecimeto será feito a partir do "
+"Local de saída do Armazém do Fornecimento. Usado no 'Suprir a partir de "
+"Outro Armazém' com Armazém de Suprimento."
 
 #. module: stock_planning
 #: view:stock.planning:0

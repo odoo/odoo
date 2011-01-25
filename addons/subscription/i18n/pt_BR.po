@@ -7,20 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-17 12:20+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-18 04:39+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 07:07+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
 #: field:subscription.subscription.history,document_id:0
 msgid "Source Document"
-msgstr "Docmento Fonte"
+msgstr "Documento de Origem"
 
 #. module: subscription
 #: field:subscription.document,model:0
@@ -45,7 +45,7 @@ msgstr "Primeira Data"
 #. module: subscription
 #: field:subscription.document.fields,field:0
 msgid "Field"
-msgstr "Nome dos campos"
+msgstr "Campo"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -133,7 +133,7 @@ msgstr "Usuário"
 #. module: subscription
 #: field:subscription.subscription,interval_type:0
 msgid "Interval Unit"
-msgstr "Unidade Intervalo"
+msgstr "Unidade de Intervalo"
 
 #. module: subscription
 #: field:subscription.subscription.history,date:0
@@ -151,6 +151,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
 msgstr ""
+"Se o campo Ativo estiver marcado, será permitido que você esconda o "
+"documento de inscrição sem removê-lo."
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
@@ -170,6 +172,8 @@ msgid ""
 "You cannot modify the Object linked to the Document Type!\n"
 "Create another Document instead !"
 msgstr ""
+"Você não pode modificar o Objeto relacionado ao Tipo de Documento!\n"
+"Crie outro Documento em vez disso !"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -219,30 +223,30 @@ msgstr "Parceiro"
 #. module: subscription
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
-msgstr ""
+msgstr "Agendamento que é executado na inscrição"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.config_recuuring_event
 #: model:ir.ui.menu,name:subscription.next_id_45
 msgid "Recurring Events"
-msgstr ""
+msgstr "Eventos Recorrentes"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Subsription Data"
-msgstr "Data de Subscrições"
+msgstr "Data da Inscrição"
 
 #. module: subscription
 #: help:subscription.subscription,note:0
 msgid "Description or Summary of Subscription"
-msgstr ""
+msgstr "Descrição ou Resumo da Inscrição"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: view:subscription.document:0
 #: field:subscription.document.fields,document_id:0
 msgid "Subscription Document"
-msgstr "Documento de Envio"
+msgstr "Documento de Inscrição"
 
 #. module: subscription
 #: help:subscription.subscription,active:0
@@ -250,11 +254,15 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
 msgstr ""
+"Se o campo Ativo estiver desmarcado, você poderá esconder a inscrição sem "
+"removê-la."
 
 #. module: subscription
 #: help:subscription.document.fields,value:0
 msgid "Default value is considered for field when new document is generated."
 msgstr ""
+"O valor Padrão é considerado para o campo quando um novo documento for "
+"gerado."
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -274,13 +282,14 @@ msgstr "Processo"
 #. module: subscription
 #: model:ir.module.module,shortdesc:subscription.module_meta_information
 msgid "Subscription and recurring operations"
-msgstr ""
+msgstr "Inscrição e operações recorrentes"
 
 #. module: subscription
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
 msgstr ""
+"O Usuário pode escolher o documento origem deseja usar para criar documentos"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
@@ -298,7 +307,7 @@ msgstr "Documento Origem Errado !"
 #: model:ir.model,name:subscription.model_subscription_document_fields
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
-msgstr "Campos de Documento de Subscrição"
+msgstr "Campos de Documento de Inscrição"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -331,15 +340,3 @@ msgstr "Valor Padrão"
 #: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
 msgstr "Documentos Criados"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "O nome do objeto precisa iniciar com x_ e não conter nenhum caracter "
-#~ "especial!"
-
-#~ msgid "Configuration"
-#~ msgstr "Configuração"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Invalido XML para Arquitetura da View"

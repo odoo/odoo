@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-13 23:36+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:17+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:32+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: base_setup
 #: field:base.setup.company,city:0
 msgid "City"
-msgstr "Város"
+msgstr "Helység"
 
 #. module: base_setup
 #: view:base.setup.installer:0
@@ -49,7 +49,7 @@ msgstr "Bankszámlaszám"
 #. module: base_setup
 #: field:base.setup.installer,profile_tools:0
 msgid "Extra Tools"
-msgstr "Extra eszközök"
+msgstr "További Eszközök"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer1:0
@@ -62,29 +62,28 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
-"Segít Önnek a gyártási folyamatok menedzselésében és azoknak a folyamatoknak "
-"a jelentéseinek létrehozásában."
+"Segít Önnek a gyártási folyamatok kezelésében és az azokhoz tartozó "
+"jelentések létrehozásában."
 
 #. module: base_setup
 #: help:base.setup.installer,marketing:0
 msgid "Helps you manage your marketing campaigns step by step."
-msgstr ""
-"Segít Önnek az Ön marketing kampányainak menedzselésében lépésről lépésre."
+msgstr "Segít Önnek a marketing kampányok kezelésében lépésről lépésre."
 
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Your database is now created."
-msgstr "Az Ön adatbázisa létrehozva."
+msgstr "Az Ön adatbázisa létrejött."
 
 #. module: base_setup
 #: field:base.setup.installer,point_of_sale:0
 msgid "Point of Sales"
-msgstr "Értékesítési pontok"
+msgstr "Pénztárgép működés"
 
 #. module: base_setup
 #: field:base.setup.installer,association:0
 msgid "Associations"
-msgstr "Társítások"
+msgstr "Egyesületek"
 
 #. module: base_setup
 #: help:base.setup.installer,account_accountant:0
@@ -92,20 +91,20 @@ msgid ""
 "Helps you handle your accounting needs, if you are not an accountant, we "
 "suggest you to install only the Invoicing "
 msgstr ""
-"Segít Önnek a számlázási szükségletei kezelésében, ha Ön nem könyvelő, azt "
-"javasoljuk, hogy csak a Számlázást telepítse. "
+"Segít Önnek a könyvelésben, de ha Ön nem könyvelő, azt javasoljuk, hogy csak "
+"a Számlázást telepítse. "
 
 #. module: base_setup
 #: code:addons/base_setup/__init__.py:50
 #, python-format
 msgid "The following users have been installed : \n"
-msgstr "A következő felhasználók lettek installálva : \n"
+msgstr "A következő felhasználók lettek létrehozva : \n"
 
 #. module: base_setup
 #: field:base.setup.company,progress:0
 #: field:base.setup.installer,progress:0
 msgid "Configuration Progress"
-msgstr "Folyamat beállítása"
+msgstr "Beállítási folyamat"
 
 #. module: base_setup
 #: field:base.setup.company,rml_footer2:0
@@ -136,7 +135,7 @@ msgstr "Vállalat"
 #. module: base_setup
 #: field:base.setup.installer,sale:0
 msgid "Sales Management"
-msgstr "Értékesítés menedzsment"
+msgstr "Értékesítés kezelés"
 
 #. module: base_setup
 #: help:base.setup.installer,profile_tools:0
@@ -145,7 +144,7 @@ msgid ""
 "Lunch and Ideas box."
 msgstr ""
 "Lehetővé teszi, hogy telepítsen különböző érdekes, de nem alapvető "
-"eszközöket, mint Felmérés, Ebédidő és Ötlet doboz."
+"eszközöket, mint Felmérés, Ebédrendelés és Ötlet doboz."
 
 #. module: base_setup
 #: view:base.setup.config:0
@@ -154,7 +153,7 @@ msgid ""
 "an administrator."
 msgstr ""
 "Elkezdheti a rendszer konfigurálását vagy közvetlenül kapcsolódhat az "
-"adatbázishoz adminisztrátorként."
+"adatbázishoz rendszergazdaként."
 
 #. module: base_setup
 #: field:base.setup.installer,report_designer:0
@@ -177,6 +176,8 @@ msgid ""
 "Your company information will be used to personalize documents issued with "
 "OpenERP such as invoices, sales orders and much more."
 msgstr ""
+"A cég adatai arra lesznek felhasználva, hogy személyre legyenek szabva a "
+"generált dokumentumok, úgymint számlák, vevő rendelések, stb."
 
 #. module: base_setup
 #: view:base.setup.installer:0
@@ -186,7 +187,7 @@ msgstr "Pozíció"
 #. module: base_setup
 #: field:base.setup.installer,knowledge:0
 msgid "Knowledge Management"
-msgstr "Tudásmenedzsment"
+msgstr "Tudáskezelés"
 
 #. module: base_setup
 #: model:ir.module.module,description:base_setup.module_meta_information
@@ -206,6 +207,20 @@ msgid ""
 "    footer, the account chart to install and the language.\n"
 "    "
 msgstr ""
+"\n"
+"    Ez a modul biztosít egy beállítási felületet, hogy segítsen\n"
+"    a felhasználóknak egy új rendszer beállításában.\n"
+"\n"
+"    Lehetőséget ad alapvető profilok közül választani:\n"
+"    * Minimális profil\n"
+"    * Könyvelő profil\n"
+"    * Szolgáltató cégeknek\n"
+"    * Gyáraknak\n"
+"\n"
+"    Továbbá alapvető kérdésekkel segít a cégre testre szabni a felületet,\n"
+"    a fejlécet és a láblécet, beállítani a könyvelési számlákat és a "
+"nyelvet.\n"
+"    "
 
 #. module: base_setup
 #: help:base.setup.installer,product_expiry:0
@@ -213,8 +228,8 @@ msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your industry."
 msgstr ""
-"Telepíti az OpenERP alkalmazások egy előre kiválasztott beállítását, amely "
-"segít Önnek az iparának menedzselésében."
+"Telepíti előre kiválasztott OpenERP modulok kombinációit, amik segítenek az "
+"üzletének a jobb kézben tartásában."
 
 #. module: base_setup
 #: help:base.setup.installer,project:0
@@ -222,8 +237,8 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
-"Segít Önnek a projektjei és feladatai menedzselésében, azok "
-"nyomonkövetésével, tervezések készítésével, stb..."
+"Segít Önnek a projektjei és feladatai kezelésében, azok nyomon követésével, "
+"automata tervezés könnyítéssel, stb..."
 
 #. module: base_setup
 #: field:base.setup.company,name:0
@@ -233,7 +248,7 @@ msgstr "Vállalat neve"
 #. module: base_setup
 #: view:base.setup.config:0
 msgid "Skip Configuration Wizards"
-msgstr "Konfigurációs varázslók kihagyása"
+msgstr "Beállítási lépések kihagyása"
 
 #. module: base_setup
 #: help:base.setup.installer,hr:0
@@ -241,9 +256,8 @@ msgid ""
 "Helps you manage your human resources by encoding your employees structure, "
 "generating work sheets, tracking attendance and more."
 msgstr ""
-"Segít Önnek a humán erőforrásainak menedzselésében az alkalmazottainak "
-"struktúrájának kódolásával, munkalapok létrehozásával, résztvevők "
-"nyomonkövetésével, stb."
+"Segít Önnek a humán erőforrások kezelésében az alkalmazottak struktúrájának "
+"lekódolásával, munkalapok létrehozásával, résztvevők nyomon követésével, stb."
 
 #. module: base_setup
 #: help:base.setup.installer,account_voucher:0
@@ -251,8 +265,8 @@ msgid ""
 "Allows you to create your invoices and track the payments. It is an easier "
 "version of the accounting module for managers who are not accountants."
 msgstr ""
-"Lehetővé teszi számlák készítését és a kifizetések nyomon követését.  Ez a "
-"könyvelési modul egyszerűbb változata nem könyvelők számára."
+"Lehetővé teszi számlák készítését és a fizetések követését. Ez a könyvelési "
+"modul egyszerűbb változata nem könyvelők számára."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_company
@@ -265,8 +279,8 @@ msgid ""
 "Helps you manage your purchase-related processes such as requests for "
 "quotations, supplier invoices, etc..."
 msgstr ""
-"Segít Önnek a beszerzéseihez kapcsolódó folyamatainak menedzselésében, mint "
-"például kért mennyiségek, beszállítói számlák, stb..."
+"Segít Önnek a beszerzéseihez kapcsolódó folyamatainak kezelésében, mint "
+"például beszerzési igények, beszállítói számlák, stb..."
 
 #. module: base_setup
 #: help:base.setup.company,rml_footer2:0
@@ -275,9 +289,9 @@ msgid ""
 "We suggest you to put bank information here:\n"
 "IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
 msgstr ""
-"Ez a mondat meg fog jelenni az Ön jelentéseinek alján.\n"
+"Ez a mondat a jelentések alján fog megjelenni.\n"
 "Azt javasoljuk, hogy itt adja meg a bank információkat:\n"
-"IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT:BE0477.472.701"
+"IBAN: HU24 1171 4007 8060 1443 - SWIFT: OTPV-HU-HB - VAT: HU12345678"
 
 #. module: base_setup
 #: field:base.setup.company,street2:0
@@ -325,8 +339,8 @@ msgid ""
 "Lets you install addons geared towards sharing knowledge with and between "
 "your employees."
 msgstr ""
-"Lehetővé teszi a bekapcsolt addon-ok telepítését a tudástár megosztása "
-"érdekében a munkavállalók között."
+"Olyan addon-okat telepíthet, amik segítségével a tudás alapú információt "
+"használhatják és oszthatják meg a dolgozók egymás között."
 
 #. module: base_setup
 #: view:base.setup.installer:0
@@ -334,17 +348,19 @@ msgid ""
 "Select the Applications you want your system to cover. If you are not sure "
 "about your exact needs at this stage, you can easily install them later."
 msgstr ""
+"Kiválaszthatja a felhasználni kívánt programokat. Ha jelenleg nem tudja "
+"pontosan mit is szeretne, később is telepítheti őket."
 
 #. module: base_setup
 #: view:base.setup.company:0
 #: model:ir.actions.act_window,name:base_setup.action_base_setup_company
 msgid "Company Configuration"
-msgstr "Cég konfiguráció"
+msgstr "Cég testreszabás"
 
 #. module: base_setup
 #: field:base.setup.company,logo:0
 msgid "Logo"
-msgstr "Logó"
+msgstr "Embléma"
 
 #. module: base_setup
 #: help:base.setup.installer,point_of_sale:0
@@ -353,29 +369,30 @@ msgid ""
 "simplified payment mode encoding, automatic picking lists generation and "
 "more."
 msgstr ""
-"Segít Önnek, hogy a legtöbbet hozza ki az értékesítési helyeiből gyors "
-"értékesítési kódolással, egyszerűsített fizetési mód kódolással, automatikus "
-"csomaglisták generálásával, stb."
+"Segít Önnek, hogy a legtöbbet hozza ki a számlázásnál egyszerűsített adat "
+"bevitellel, egyszerűsített fizetési információ bevitellel, automatikus "
+"szállítólevél generálással, stb..."
 
 #. module: base_setup
 #: field:base.setup.installer,purchase:0
 msgid "Purchase Management"
-msgstr "Beszerzésmenedzsment"
+msgstr "Beszerzés kezelés"
 
 #. module: base_setup
 #: help:base.setup.installer,sale:0
 msgid "Helps you handle your quotations, sale orders and invoicing."
-msgstr "Segít Önnek a mennyiségei, értékesítései és számlázása kezelésében."
+msgstr ""
+"Segít Önnek az érdeklődések, a megrendelések majd a számlázások kezelésében."
 
 #. module: base_setup
 #: field:base.setup.installer,stock:0
 msgid "Warehouse Management"
-msgstr "Raktármenedzsment"
+msgstr "Raktár kezelés"
 
 #. module: base_setup
 #: field:base.setup.installer,project:0
 msgid "Project Management"
-msgstr "Projektmenedzsment"
+msgstr "Projekt kezelés"
 
 #. module: base_setup
 #: field:base.setup.config,installed_users:0
@@ -390,7 +407,7 @@ msgstr "Új adatbázis"
 #. module: base_setup
 #: field:base.setup.installer,crm:0
 msgid "Customer Relationship Management"
-msgstr "Ügyfélkapcsolati menedzsment"
+msgstr "Ügyfélkapcsolat kezelés"
 
 #. module: base_setup
 #: help:base.setup.installer,auction:0
@@ -400,7 +417,7 @@ msgid ""
 msgstr ""
 "A kiválasztott OpenERP alkalmazások egy előre kiválasztott beállítását "
 "telepíti, hogy segítsen Önnek az aukciói valamint az azokhoz tartozó üzleti "
-"folyamatok menedzselésében."
+"folyamatok kezelésében."
 
 #. module: base_setup
 #: help:base.setup.company,rml_header1:0
@@ -409,9 +426,9 @@ msgid ""
 "We suggest you to put a slogan here:\n"
 "\"Open Source Business Solutions\"."
 msgstr ""
-"Ez a mondat meg fog jelenni a jelentéseinek a jobb felső sarkában.\n"
-"Azt javasoljuk, hogy adja meg a szlogenjét itt:\n"
-"\"Nyílt Forráskódú Üzleti Megoldás\"."
+"Ez a mondat meg fog jelenni a jelentések jobb felső sarkában.\n"
+"Azt javasoljuk, hogy itt adja meg a szlogenjét:\n"
+"\"Nyílt Forráskódú Üzleti Megoldások\"."
 
 #. module: base_setup
 #: help:base.setup.installer,report_designer:0
@@ -419,8 +436,8 @@ msgid ""
 "Lets you install various tools to simplify and enhance OpenERP's report "
 "creation."
 msgstr ""
-"Lehetővé teszi, hogy különböző eszközöket telepítsen, hogy egyszerűsítse és "
-"fokozza az OpenERP jelentések létrehozását."
+"Több különböző eszközt telepíthet, hogy egyszerűsítse és fejlessze az "
+"OpenERP rendszerével generálható riportokat."
 
 #. module: base_setup
 #: field:base.setup.company,rml_header1:0
@@ -463,7 +480,8 @@ msgid ""
 msgstr ""
 "Ez a mondat meg fog jelenni az Ön jelentéseinek alján.\n"
 "Azt javasoljuk, hogy írjon ide hivatalos mondatokat:\n"
-"Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-07"
+"Web: http://openerp.com - Fax: +36 (1) 1234-56-78 - OTP Bank: 11714007-"
+"80601443"
 
 #. module: base_setup
 #: field:base.setup.company,website:0
@@ -473,7 +491,7 @@ msgstr "Vállalat weboldala"
 #. module: base_setup
 #: view:base.setup.installer:0
 msgid "Install Specific Industry Applications"
-msgstr "Speciális Ipari Alkalmazások telepítése"
+msgstr "Különböző profilú cégekhez kialakított modulok telepítése"
 
 #. module: base_setup
 #: field:base.setup.company,street:0
@@ -483,7 +501,7 @@ msgstr "Utca"
 #. module: base_setup
 #: view:base.setup.company:0
 msgid "Configure Your Company Information"
-msgstr ""
+msgstr "Adja meg a cégének az adatait"
 
 #. module: base_setup
 #: help:base.setup.company,website:0
@@ -503,10 +521,10 @@ msgid ""
 "or issues. Can automatically send reminders, escalate requests or trigger "
 "business-specific actions based on standard events."
 msgstr ""
-"Segít Önnek az ügyfelekkel való kapcsolatok nyomonkövetésében és "
-"menedzselésében, mint például vezetések, kérések vagy kiadások. "
-"Automatikusan küldhet emlékeztetőket, kitejesztheti a kéréseket vagy "
-"indíthat üzlet-specifikus műveleteket az állandó események alapján."
+"Segít Önnek az ügyfelekkel való kapcsolatok nyomon követésében "
+"éskezelésében, mint például találkozók, igények vagy poblémák. Automatikusan "
+"küldhet emlékeztetőket, kiterjesztheti a kéréseket vagy indíthat üzlet-"
+"specifikus műveleteket az események alapján."
 
 #. module: base_setup
 #: help:base.setup.installer,stock:0
@@ -514,7 +532,7 @@ msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
 "receptions, etc."
 msgstr ""
-"Segít Önnek a készletek és a fő raktárkészlet műveletek menedzselésében: "
+"Segít Önnek a készletek és a fő raktárkészlet műveletek kezelésében: "
 "megrendelések szállítása, átvételek, stb."
 
 #. module: base_setup
@@ -528,81 +546,10 @@ msgid ""
 "Installs a preselected set of OpenERP applications which will help you "
 "manage your association more efficiently."
 msgstr ""
-"Az OpenERP alkalmazások egy előre kiválasztott beállításainak telepítése, "
-"amely segít Önnek a hatékonyabb társításai menedzselésében."
+"A kiválasztott OpenERP alkalmazások egy előre kiválasztott beállítását "
+"telepíti, hogy segítsen Önnek az egyesületének kezelésében."
 
 #. module: base_setup
 #: model:ir.model,name:base_setup.model_base_setup_config
 msgid "base.setup.config"
 msgstr "base.setup.config"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Az objektum nevének x_ -sal kell kezdődnie és nem tartalmazhat speciális "
-#~ "karaktereket"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Érvénytelen modell név a művelet meghatározásában."
-
-#~ msgid "The certificate ID of the module must be unique !"
-#~ msgstr "A modul tanúsítvány ID-jének egyedinek kell lennie !"
-
-#~ msgid "The name of the module must be unique !"
-#~ msgstr "A modul névnek egyedinek kell lennie !"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Érvénytelen XML a nézet architektúrában!"
-
-#~ msgid "Size of the field can never be less than 1 !"
-#~ msgstr "A mező mérete soha nem lehet kevesebb, mint 1 !"
-
-#~ msgid ""
-#~ "The following users have been installed : \n"
-#~ "\"\n"
-#~ "\""
-#~ msgstr ""
-#~ "A következő felhasználók lettek telepítve : \n"
-#~ "\"\n"
-#~ "\""
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "\"\n"
-#~ "\"We suggest you to put bank information here:\n"
-#~ "\"\n"
-#~ "\"IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
-#~ msgstr ""
-#~ "Ez a mondat jelenik meg a jelentések alján.\n"
-#~ "\"\n"
-#~ "\"Javasoljuk, hogy a banki információk jelenlenek meg itt:\n"
-#~ "\"\n"
-#~ "\"IBAN: BE74 1262 0121 6907 - SWIFT: CPDF BE71 - VAT: BE0477.472.701"
-
-#~ msgid ""
-#~ "This sentence will appear at the top right corner of your reports.\n"
-#~ "\"\n"
-#~ "\"We suggest you to put a slogan here:\n"
-#~ "\"\n"
-#~ "\"\"Open Source Business Solutions\"."
-#~ msgstr ""
-#~ "Ez a mondat jelenik meg a jelentés jobb felső sarkában.\n"
-#~ "\"\n"
-#~ "\"Javasoljuk, hogy adja meg szlogenjét itt:\n"
-#~ "\"\n"
-#~ "\"\"Nyílt Forráskódú Üzleti Megoldás.\""
-
-#~ msgid ""
-#~ "This sentence will appear at the bottom of your reports.\n"
-#~ "\"\n"
-#~ "\"We suggest you to write legal sentences here:\n"
-#~ "\"\n"
-#~ "\"Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-"
-#~ "07"
-#~ msgstr ""
-#~ "Ez a mondat jelenik meg a jelentések alján.\n"
-#~ "\"\n"
-#~ "\"Javasoljuk, hogy írjon ide hivatalos mondatot:\n"
-#~ "\"\n"
-#~ "\"Web: http://openerp.com - Fax: +32.81.73.35.01 - Fortis Bank: 126-2013269-"
-#~ "07"

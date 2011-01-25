@@ -7,32 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-17 20:02+0000\n"
-"Last-Translator: Aline (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2011-01-20 07:29+0000\n"
+"Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-18 04:44+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:41+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
-#, python-format
-msgid "The Sign-in date must be in the past"
-msgstr "La date du pointage en entrée doit être passée"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
-#, python-format
-msgid "A sign-in must be right after a sign-out !"
-msgstr "Un pointage en entrée doit être précédé d'un pointage en sortie !"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
-msgstr "Un pointage en sortie doit être précédé d'un pointage en entrée !"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -190,6 +172,18 @@ msgid "Warning"
 msgstr "Avertissement"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:169
+#, python-format
+msgid "The Sign-in date must be in the past"
+msgstr "La date du pointage en entrée doit être passée"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:162
+#, python-format
+msgid "A sign-in must be right after a sign-out !"
+msgstr "Un pointage en entrée doit être précédé d'un pointage en sortie !"
+
+#. module: hr_attendance
 #: field:hr.employee,state:0
 #: model:ir.model,name:hr_attendance.model_hr_attendance
 msgid "Attendance"
@@ -332,6 +326,12 @@ msgstr "hr.sign.out.ask"
 #: selection:hr.attendance.month,month:0
 msgid "August"
 msgstr "Août"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
+#, python-format
+msgid "A sign-out must be right after a sign-in !"
+msgstr "Un pointage en sortie doit être précédé d'un pointage en entrée !"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -601,109 +601,3 @@ msgstr "Année"
 #: view:hr.sign.in.out.ask:0
 msgid "hr.sign.in.out.ask"
 msgstr "hr.sign.in.out.ask"
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign out with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Vous essayez de pointer votre sortie avec une date antérieure à un autre "
-#~ "pointage !\n"
-#~ "Contactez l'administrateur pour corriger vos présences."
-
-#~ msgid "Action reason"
-#~ msgstr "Motif de pointage"
-
-#~ msgid "Print Attendance Report"
-#~ msgstr "Imprimer le rapport de présence"
-
-#~ msgid "Employee's name"
-#~ msgstr "Nom de l'employé"
-
-#~ msgid "Select a time span"
-#~ msgstr "Sélectionnez une période"
-
-#~ msgid "Select a starting and a end date"
-#~ msgstr "Sélectionnez une date de début et de fin"
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign in with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Vous avez essayé de pointer une entrée à une date antérieure à un autre "
-#~ "évènement !\n"
-#~ "Contactez l'administrateur pour corriger vos présences."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
-#~ "caractères spéciaux !"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valide pour l'architecture de la vue !"
-
-#~ msgid "You are now ready to sign in or out of the attendance follow up"
-#~ msgstr ""
-#~ "Vous pouvez maintenant pointer votre entrée ou votre sortie dans le suivi de "
-#~ "présence"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de modèle non valide dans la définition de l'action."
-
-#, python-format
-#~ msgid ""
-#~ "You tried to sign with a date anterior to another event !\n"
-#~ "Try to contact the administrator to correct attendances."
-#~ msgstr ""
-#~ "Vous essayez de pointer à une date antérieure à un autre évènement.\n"
-#~ "Contactez l'administrateur pour corriger vos pointages."
-
-#~ msgid ""
-#~ "You did not signed out the last time. Please enter the date and time you "
-#~ "signed out."
-#~ msgstr ""
-#~ "Vous n'avez pas pointé la dernière fois. Veuillez entrer la date et l'heure "
-#~ "de votre sortie."
-
-#~ msgid "Print Attendance Error Report"
-#~ msgstr "Imprimer le rapport des erreurs de pointage"
-
-#~ msgid ""
-#~ "You did not signed in the last time. Please enter the date and time you "
-#~ "signed in."
-#~ msgstr ""
-#~ "Vous n'avez pas pointé votre dernière entrée. Veuillez indiquer la date et "
-#~ "l'heure de votre arrivée."
-
-#~ msgid "Print Timesheet"
-#~ msgstr "Imprimer la feuille de présence"
-
-#~ msgid "Print Timesheet by week"
-#~ msgstr "Imprimer la feuille de présence par semaine"
-
-#~ msgid "Print Timesheet by month"
-#~ msgstr "Imprimer la feuille de présence par mois"
-
-#~ msgid "Select a month"
-#~ msgstr "Choisissez un mois"
-
-#~ msgid "This module aims to manage employee's attendances."
-#~ msgstr "Ce module vise à gérer les présences des employés."
-
-#~ msgid "Error ! You can not create recursive Menu."
-#~ msgstr "Erreur! Vous ne pouvez pas créer de menu récursif."
-
-#~ msgid "Rules are not supported for osv_memory objects !"
-#~ msgstr "Les règles ne sont pas compatibles avec les objets osv_memory !"
-
-#~ msgid ""
-#~ "Time Tracking functionality aims to manage employee's attendances on the "
-#~ "basis of the actions (Sign in/Sign out) performed by them. You can also link "
-#~ "this to an attendance machine using OpenERP's webservices features."
-#~ msgstr ""
-#~ "La fonctionnalité de gestion du temps a pour but de gérer les présences des "
-#~ "employés sur la base de leurs propres actions (pointage en entrée/sortie). "
-#~ "Vous pouvez aussi lier cette fonctionnalité à une pointeuse en utilisant les "
-#~ "webservices."

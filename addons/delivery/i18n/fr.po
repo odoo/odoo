@@ -7,21 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 20:57+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2011-01-20 03:36+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:08+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 06:37+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valide pour l'architecture de la vue !"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Erreur : l'UdV doit appartenir à une autre catégorie que l'UdM"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -46,7 +39,7 @@ msgstr "Poids net"
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr "Ordre de livraison"
+msgstr "Bon de livraison"
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:141
@@ -84,7 +77,7 @@ msgstr "Ligne de tarif"
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr "Ordre de livraison"
+msgstr "Bon de livraison"
 
 #. module: delivery
 #: view:res.partner:0
@@ -112,7 +105,7 @@ msgstr "Pays"
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr "Ordre de livraison :"
+msgstr "Bon de livraison"
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -550,99 +543,3 @@ msgstr "États"
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "Type de prix"
-
-#~ msgid "Add Delivery Costs"
-#~ msgstr "Ajouter les frais de port"
-
-#~ msgid "Delivery method"
-#~ msgstr "Méthode de livraison"
-
-#~ msgid "Notes"
-#~ msgstr "Notes"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "Erreur: code EAN invalide"
-
-#~ msgid "Cancel"
-#~ msgstr "Annuler"
-
-#~ msgid "The VAT doesn't seem to be correct."
-#~ msgstr "Le numéro de TVA ne semble pas correct."
-
-#~ msgid "Delivery line of grid"
-#~ msgstr "Ligne de tarif de livraison"
-
-#, python-format
-#~ msgid "No grid avaible !"
-#~ msgstr "Aucun tarif disponible !"
-
-#~ msgid "This delivery method will be used when invoicing from packing."
-#~ msgstr ""
-#~ "Cette méthode de livraison sera utilisé lors de la facturation depuis les "
-#~ "colisages"
-
-#~ msgid ""
-#~ "Complete this field if you plan to invoice the shipping based on packing."
-#~ msgstr ""
-#~ "Remplissez ce champ si vous prévoyez de facturer le port en vous basant sur "
-#~ "les colisages."
-
-#~ msgid ""
-#~ "Allows you to add delivery methods in sales orders and packing. You can "
-#~ "define your own carrier and delivery grids for prices. When creating "
-#~ "invoices from picking, Open ERP is able to add and compute the shipping line."
-#~ msgstr ""
-#~ "Permet d'ajouter une méthode de livraison aux commandes de ventes et aux "
-#~ "colisages. Vous pouvez définir votre transporteur et les tarifs de "
-#~ "livraisons pour les prix. Lorsqu'une facture est crée depuis le colisage, "
-#~ "OpenERP est capable d'ajouter une ligne de livraison et d'en calculer le "
-#~ "prix."
-
-#~ msgid "Packing to be invoiced"
-#~ msgstr "Colisage à facturer"
-
-#~ msgid "Carrier and delivery grids"
-#~ msgstr "Transporteur et tarifs de livraison"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Le nom de l'objet doit commencer par x_ et ne doit pas contenir de "
-#~ "caractères spéciaux !"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nom de modèle non valide dans la définition de l'action."
-
-#~ msgid ""
-#~ "Error: The default UOM and the purchase UOM must be in the same category."
-#~ msgstr ""
-#~ "Erreur: l'UdM par défaut et l'UdM d'achat doivent appartenir à la même "
-#~ "catégorie."
-
-#~ msgid "Generate Draft Invoices On Receptions"
-#~ msgstr "Créer les factures brouillon sur les réceptions"
-
-#~ msgid "Sale Order"
-#~ msgstr "Commande de vente"
-
-#~ msgid ""
-#~ "Create and manage the delivery method(s) you want your sales to be processed "
-#~ "with. Each delivery method can be assigned to a pricelist which computes the "
-#~ "price of the delivery according to the products sold or delivered."
-#~ msgstr ""
-#~ "Créez et gérer les méthodes de livraisons avec lesquelles vous voulez "
-#~ "traiter vos commandes de vente. Chaque méthode de livraison peut être "
-#~ "associée à une liste de prix qui calcule le prix de la livraison en fonction "
-#~ "des produits vendus ou livrés."
-
-#~ msgid ""
-#~ "The delivery pricelist allows you to compute the cost and sales price of the "
-#~ "delivery based on the weight of the products and other criteria. You can "
-#~ "define several pricelists for one delivery method, for each region such as "
-#~ "countries or a zone in a specific country defined by a zip code range."
-#~ msgstr ""
-#~ "La liste de prix de la livraison vous permet de calculer le coût et le prix "
-#~ "de vente de la livraison en fonction des poids des produits et d'autres "
-#~ "critères. Vous pouvez définir plusieurs listes de prix pour une même méthode "
-#~ "de livraison, pour chaque région comme par exemple des pays ou des zones à "
-#~ "l'intérieur d'un pays définies par une plage de codes postaux."

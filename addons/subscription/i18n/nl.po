@@ -7,20 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2010-10-30 10:20+0000\n"
+"PO-Revision-Date: 2011-01-19 12:00+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:05+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 07:07+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
 #: field:subscription.subscription.history,document_id:0
 msgid "Source Document"
-msgstr "Source Document"
+msgstr "Bron document"
 
 #. module: subscription
 #: field:subscription.document,model:0
@@ -30,12 +30,12 @@ msgstr "Object"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "This Week"
-msgstr ""
+msgstr "Deze week"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Search Subscription"
-msgstr ""
+msgstr "Abonnement zoeken"
 
 #. module: subscription
 #: field:subscription.subscription,date_init:0
@@ -51,12 +51,12 @@ msgstr "Veldnaam"
 #: view:subscription.subscription:0
 #: field:subscription.subscription,state:0
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
 msgid "Subscription history"
-msgstr "Subscription history"
+msgstr "Abonnement geschiedenis"
 
 #. module: subscription
 #: selection:subscription.subscription,state:0
@@ -76,20 +76,20 @@ msgstr "Weken"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Today"
-msgstr ""
+msgstr "Vandaag"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:44
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Fout !"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
 #: model:ir.ui.menu,name:subscription.menu_action_subscription_form
 #: view:subscription.subscription:0
 msgid "Subscriptions"
-msgstr "Subscriptions"
+msgstr "Abonnementen"
 
 #. module: subscription
 #: field:subscription.subscription,interval_number:0
@@ -118,12 +118,12 @@ msgstr ""
 #: view:subscription.subscription:0
 #: selection:subscription.subscription,state:0
 msgid "Running"
-msgstr "Running"
+msgstr "Loopt"
 
 #. module: subscription
 #: view:subscription.subscription.history:0
 msgid "Subscription History"
-msgstr "Subscription History"
+msgstr "Abonnement geschiedenis"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -152,6 +152,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription document without removing it."
 msgstr ""
+"Als het actief veld uitstaat, kunt u het abonnement verbergen zonder deze te "
+"verwijderen."
 
 #. module: subscription
 #: selection:subscription.subscription.history,document_id:0
@@ -171,6 +173,8 @@ msgid ""
 "You cannot modify the Object linked to the Document Type!\n"
 "Create another Document instead !"
 msgstr ""
+"U kunt het object dat aan dit document is gekoppeld niet wijzigen !\n"
+"Maak in plaats daarvan een ander document aan !"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -209,7 +213,7 @@ msgstr "Cron opdracht"
 #: model:ir.model,name:subscription.model_subscription_subscription
 #: field:subscription.subscription.history,subscription_id:0
 msgid "Subscription"
-msgstr "Subscription"
+msgstr "Abonnement"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -220,30 +224,30 @@ msgstr "Relatie"
 #. module: subscription
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
-msgstr ""
+msgstr "Planner die loopt op abonnement"
 
 #. module: subscription
 #: model:ir.ui.menu,name:subscription.config_recuuring_event
 #: model:ir.ui.menu,name:subscription.next_id_45
 msgid "Recurring Events"
-msgstr ""
+msgstr "Terugkerende gebeurtenissen"
 
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Subsription Data"
-msgstr "Subsription Data"
+msgstr "Abonnement gegevens"
 
 #. module: subscription
 #: help:subscription.subscription,note:0
 msgid "Description or Summary of Subscription"
-msgstr ""
+msgstr "Omschrijving of samenvatting van abonnement"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_document
 #: view:subscription.document:0
 #: field:subscription.document.fields,document_id:0
 msgid "Subscription Document"
-msgstr "Subscription Document"
+msgstr "Abonnement document"
 
 #. module: subscription
 #: help:subscription.subscription,active:0
@@ -251,11 +255,15 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "subscription without removing it."
 msgstr ""
+"Als het actief veld uitstaat, kunt u het abonnement verbergen zonder deze te "
+"verwijderen."
 
 #. module: subscription
 #: help:subscription.document.fields,value:0
 msgid "Default value is considered for field when new document is generated."
 msgstr ""
+"Standaard waarde wordt voorgesteld voor veld als nieuw document wordt "
+"gegenereerd."
 
 #. module: subscription
 #: selection:subscription.document.fields,value:0
@@ -265,7 +273,7 @@ msgstr "Onwaar"
 #. module: subscription
 #: view:subscription.subscription:0
 msgid "Group By..."
-msgstr ""
+msgstr "Groepeer op..."
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -275,19 +283,20 @@ msgstr "Verwerken"
 #. module: subscription
 #: model:ir.module.module,shortdesc:subscription.module_meta_information
 msgid "Subscription and recurring operations"
-msgstr "Abonnementen en terugkerende operaties"
+msgstr "Abonnementen en terugkerende bewerkingen"
 
 #. module: subscription
 #: help:subscription.subscription,doc_source:0
 msgid ""
 "User can choose the source document on which he wants to create documents"
 msgstr ""
+"Gebruiker kan het brondocument kiezen waarop hij documenten wil maken"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_document_form
 #: model:ir.ui.menu,name:subscription.menu_action_document_form
 msgid "Document Types"
-msgstr "Documentsoort"
+msgstr "Documentsoorten"
 
 #. module: subscription
 #: code:addons/subscription/subscription.py:115
@@ -299,7 +308,7 @@ msgstr "Fout brondocument !"
 #: model:ir.model,name:subscription.model_subscription_document_fields
 #: view:subscription.document.fields:0
 msgid "Subscription Document Fields"
-msgstr "Subscription Document Fields"
+msgstr "Abonnement document velden"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -325,39 +334,10 @@ msgstr ""
 #. module: subscription
 #: field:subscription.document.fields,value:0
 msgid "Default Value"
-msgstr "Standaard Waarde"
+msgstr "Standaardwaarde"
 
 #. module: subscription
 #: view:subscription.subscription:0
 #: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
-msgstr "Documenten gecreëerd"
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
-
-#~ msgid "Status"
-#~ msgstr "Status"
-
-#~ msgid "Subscription document fields"
-#~ msgstr "Subscription document fields"
-
-#~ msgid "Configuration"
-#~ msgstr "Instellingen"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Ongeldige XML voor overzicht"
-
-#~ msgid "Subscription document"
-#~ msgstr "Subscription document"
-
-#~ msgid "All Subscriptions"
-#~ msgstr "Alle abonnementen"
-
-#~ msgid "Tools"
-#~ msgstr "Gereedschappen"
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+msgstr "Documenten gemaakt"
