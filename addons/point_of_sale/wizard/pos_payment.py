@@ -133,7 +133,7 @@ class pos_make_payment(osv.osv_memory):
         prod_obj = self.pool.get('product.product')
         if product_id:
             product = prod_obj.browse(cr, uid, product_id)
-            amount = amount - product.list_price
+            amount = product.list_price
         return {'value': {'amount': amount}}
 
     def check(self, cr, uid, ids, context=None):
@@ -148,10 +148,8 @@ class pos_make_payment(osv.osv_memory):
         order = order_obj.browse(cr, uid, active_id, context=context)
         amount = order.amount_total - order.amount_paid
         data =  self.read(cr, uid, ids, context=context)[0]
-        # Todo need to check ...
         if data['is_acc']:
-            line_id, price = order_obj.add_product(cr, uid, order.id, data['product_id'], -1.0, context=context)
-            amount = order.amount_total - order.amount_paid - price
+            amount = self.pool.get('product.product').browse(cr, uid, data['product_id'], context=context).list_price
 
         if amount != 0.0:
             order_obj.write(cr, uid, [active_id], {'invoice_wanted': data['invoice_wanted'], 'partner_id': data['partner_id']}, context=context)
@@ -175,13 +173,11 @@ class pos_make_payment(osv.osv_memory):
                     order_obj.write(cr, uid, [active_id], {'state':'paid'}, context=context)
                 return self.print_report(cr, uid, ids, context=context)
 
-        if order.amount_paid > 0.0:
-            context.update({'flag': True})
-            # Todo need to check
-            order_obj.action_paid(cr, uid, [active_id], context=context)
-            order_obj.write(cr, uid, [active_id], {'state': 'advance'}, context=context)
-            return self.print_report(cr, uid, ids, context=context)
-        return {}
+        context.update({'flag': True})
+        # Todo need to check
+        order_obj.action_paid(cr, uid, [active_id], context=context)
+        order_obj.write(cr, uid, [active_id], {'state': 'advance'}, context=context)
+        return self.print_report(cr, uid, ids, context=context)
 
 
     def create_invoice(self, cr, uid, ids, context=None):
