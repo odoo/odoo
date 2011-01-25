@@ -612,7 +612,6 @@ function createMenuItem_db(aLabel) {
 //xmlrpc request handler for getting the list of database
 var listDbHandler = {
     onResult: function(client, context, result) {
-        setconnect_server("true")
         netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
         var arrMethodList = result.QueryInterface(Components.interfaces.nsISupportsArray);
                 // Set the number of results
@@ -625,7 +624,7 @@ var listDbHandler = {
         var database = ""
         if (count > 0)
         {
-            setDBList("true")
+            setDBList("true");
             var label = document.getElementById("database_option");
             var vbox = document.createElement("vbox");
             var hbox = document.createElement("hbox");
@@ -658,7 +657,7 @@ var listDbHandler = {
         }
         else
         {
-            setDBList("false")
+            setDBList("false");
         }
         // Loop through the results, adding items to the list
         if (count)
@@ -686,18 +685,14 @@ var listDbHandler = {
     },
 
     onError: function (client, ctxt, status, errorMsg) {
-        if(status == 0) {
-            setconnect_server("true");
-            setDBList("false");
-        }
-        
+        setDBList("false");       
     }
 };
 //function to get the database list
 function getDbList(argControl)
 {
-    setDBList("false")
-    setconnect_server("false")
+    setDBList("true");
+    setconnect_server("true");
     // Enable correct security
     netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
     // Get the instance of the XML-RPC client
@@ -1845,7 +1840,6 @@ function testConnection(){
 function testConnection_web(){
     var branchobj = getPref();
     weburl = getWebServerURL();
-//    window.open(weburl, "", "chrome","resizable=yes,scrollbars=yes,status=yes");
     var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance();
     messenger = messenger.QueryInterface(Components.interfaces.nsIMessenger);
     messenger.launchExternalURL(weburl);
@@ -1877,6 +1871,7 @@ var listcreateLoginHandler = {
 
 //function to check the login information
 function createConnection(){
+    setconnect_server("true");
     var branchobj = getPref();
     setServerService('xmlrpc/common');
     netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
