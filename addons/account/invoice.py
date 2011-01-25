@@ -518,7 +518,7 @@ class account_invoice(osv.osv):
                                 if not result_id:
                                     raise osv.except_osv(_('Configuration Error !'),
                                         _('Can not find account chart for this company in invoice line account, Please Create account.'))
-                                inv_line_obj.write(cr, uid, [line.id], {'account_id': result_id[0]})
+                                inv_line_obj.write(cr, uid, [line.id], {'account_id': result_id[-1]})
             else:
                 if invoice_line:
                     for inv_line in invoice_line:
@@ -1313,7 +1313,6 @@ class account_invoice_line(osv.osv):
             exp_pro_id = property_obj.search(cr, uid, [('name','=','property_account_expense'),('res_id','=','product.template,'+str(res.product_tmpl_id.id)+''),('company_id','=',company_id)])
             if not exp_pro_id:
                 exp_pro_id = property_obj.search(cr, uid, [('name','=','property_account_expense_categ'),('res_id','=','product.template,'+str(res.categ_id.id)+''),('company_id','=',company_id)])
-
             if not in_pro_id:
                 in_acc = res.product_tmpl_id.property_account_income
                 in_acc_cate = res.categ_id.property_account_income_categ
@@ -1357,11 +1356,11 @@ class account_invoice_line(osv.osv):
                 in_obj_acc = account_obj.browse(cr, uid, in_res_id, context=context)
                 exp_obj_acc = account_obj.browse(cr, uid, exp_res_id, context=context)
                 if in_acc or ex_acc:
-                    res.product_tmpl_id.property_account_income = in_obj_acc[0]
-                    res.product_tmpl_id.property_account_expense = exp_obj_acc[0]
+                    res.product_tmpl_id.property_account_income = in_obj_acc[-1]
+                    res.product_tmpl_id.property_account_expense = exp_obj_acc[-1]
                 else:
-                    res.categ_id.property_account_income_categ = in_obj_acc[0]
-                    res.categ_id.property_account_expense_categ = exp_obj_acc[0]
+                    res.categ_id.property_account_income_categ = in_obj_acc[-1]
+                    res.categ_id.property_account_expense_categ = exp_obj_acc[-1]
 
         if type in ('out_invoice','out_refund'):
             a = res.product_tmpl_id.property_account_income.id
