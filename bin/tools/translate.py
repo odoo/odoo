@@ -38,7 +38,6 @@ from datetime import datetime
 from lxml import etree
 
 import tools
-import netsvc
 from tools.misc import UpdateableStr
 from tools.misc import SKIPPED_ELEMENT_TYPES
 
@@ -587,6 +586,7 @@ def trans_generate(lang, modules, cr):
                 push_translation(module, 'view', encode(obj.model), 0, t)
         elif model=='ir.actions.wizard':
             service_name = 'wizard.'+encode(obj.wiz_name)
+            import netsvc
             if netsvc.Service._services.get(service_name):
                 obj2 = netsvc.Service._services[service_name]
                 for state_name, state_def in obj2.states.iteritems():
