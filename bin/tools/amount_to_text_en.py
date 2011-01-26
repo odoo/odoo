@@ -99,13 +99,13 @@ def amount_to_text(nbr, lang='en', currency='euro'):
     Example:
         1654: thousands six cent cinquante-quatre.
     """
-    import loglevels
+    import netsvc
 #    if nbr > 10000000:
 #        netsvc.Logger().notifyChannel('translate', netsvc.LOG_WARNING, _("Number too large '%d', can not translate it"))
 #        return str(nbr)
     
     if not _translate_funcs.has_key(lang):
-        loglevels.Logger().notifyChannel('translate', loglevels.LOG_WARNING, _("no translation function found for lang: '%s'" % (lang,)))
+        netsvc.Logger().notifyChannel('translate', netsvc.LOG_WARNING, _("no translation function found for lang: '%s'" % (lang,)))
         #TODO: (default should be en) same as above
         lang = 'en'
     return _translate_funcs[lang](abs(nbr), currency)

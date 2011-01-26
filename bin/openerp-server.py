@@ -62,7 +62,6 @@ logger = logging.getLogger('server')
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
 import tools
-tools.config.parse_config()
 logger.info("OpenERP version - %s", release.version)
 for name, value in [('addons_path', tools.config['addons_path']),
                     ('database hostname', tools.config['db_host'] or 'localhost'),

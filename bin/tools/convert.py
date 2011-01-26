@@ -41,7 +41,8 @@ except:
 from datetime import datetime, timedelta
 from lxml import etree
 import misc
-import loglevels
+import netsvc
+import osv
 import pooler
 from config import config
 from tools.translate import _
@@ -540,7 +541,6 @@ form: module.record_id""" % (xml_id,)
             id = _eval_xml(self, rec[0], self.pool, cr, self.uid, self.idref)
 
         uid = self.get_uid(cr, self.uid, data_node, rec)
-        import netsvc
         wf_service = netsvc.LocalService("workflow")
         wf_service.trg_validate(uid, model,
             id,
@@ -688,7 +688,7 @@ form: module.record_id""" % (xml_id,)
         rec_src = rec.get("search",'').encode('utf8')
         rec_src_count = rec.get("count")
 
-        severity = rec.get("severity",'').encode('ascii') or loglevels.LOG_ERROR
+        severity = rec.get("severity",'').encode('ascii') or netsvc.LOG_ERROR
         rec_string = rec.get("string",'').encode('utf8') or 'unknown'
 
         ids = None
@@ -825,7 +825,6 @@ form: module.record_id""" % (xml_id,)
             else:
                 f_val = _eval_xml(self,field, self.pool, cr, self.uid, self.idref)
                 if model._columns.has_key(f_name):
-                    import osv
                     if isinstance(model._columns[f_name], osv.fields.integer):
                         f_val = int(f_val)
             res[f_name] = f_val
@@ -965,9 +964,9 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
     try:
         relaxng.assert_(doc)
     except Exception:
-        logger = loglevels.Logger()
-        logger.notifyChannel('init', loglevels.LOG_ERROR, 'The XML file does not fit the required schema !')
-        logger.notifyChannel('init', loglevels.LOG_ERROR, misc.ustr(relaxng.error_log.last_error))
+        logger = netsvc.Logger()
+        logger.notifyChannel('init', netsvc.LOG_ERROR, 'The XML file does not fit the required schema !')
+        logger.notifyChannel('init', netsvc.LOG_ERROR, misc.ustr(relaxng.error_log.last_error))
         raise
 
     if idref is None:

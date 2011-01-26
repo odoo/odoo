@@ -55,7 +55,7 @@ try:
 except ImportError:
     html2text = None
 
-import loglevels
+import netsvc
 from config import config
 from lru import LRU
 
@@ -434,10 +434,10 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
     """
     class WriteToLogger(object):
         def __init__(self):
-            self.logger = loglevels.Logger()
+            self.logger = netsvc.Logger()
 
         def write(self, s):
-            self.logger.notifyChannel('email_send', loglevels.LOG_DEBUG, s)
+            self.logger.notifyChannel('email_send', netsvc.LOG_DEBUG, s)
 
     if openobject_id:
         message['Message-Id'] = generate_tracking_message_id(openobject_id)
@@ -1094,7 +1094,7 @@ def logged(f):
 
         vector.append('  result: %s' % pformat(res))
         vector.append('  time delta: %s' % (time.time() - timeb4))
-        loglevels.Logger().notifyChannel('logged', loglevels.LOG_DEBUG, '\n'.join(vector))
+        netsvc.Logger().notifyChannel('logged', netsvc.LOG_DEBUG, '\n'.join(vector))
         return res
 
     return wrapper
@@ -1300,7 +1300,7 @@ def detect_server_timezone():
     try:
         import pytz
     except Exception:
-        loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
+        netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
             "Python pytz module is not available. Timezone will be set to UTC by default.")
         return 'UTC'
 
@@ -1334,14 +1334,14 @@ def detect_server_timezone():
         if value:
             try:
                 tz = pytz.timezone(value)
-                loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_INFO,
+                netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_INFO,
                     "Using timezone %s obtained from %s." % (tz.zone,source))
                 return value
             except pytz.UnknownTimeZoneError:
-                loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
+                netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
                     "The timezone specified in %s (%s) is invalid, ignoring it." % (source,value))
 
-    loglevels.Logger().notifyChannel("detect_server_timezone", loglevels.LOG_WARNING,
+    netsvc.Logger().notifyChannel("detect_server_timezone", netsvc.LOG_WARNING,
         "No valid timezone could be detected, using default UTC timezone. You can specify it explicitly with option 'timezone' in the server configuration.")
     return 'UTC'
 

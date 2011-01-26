@@ -23,7 +23,7 @@ import ConfigParser
 import optparse
 import os
 import sys
-import loglevels
+import netsvc
 import logging
 import release
 
@@ -102,7 +102,7 @@ class configmanager(object):
         self.config_file = fname
         self.has_ssl = check_ssl()
 
-        self._LOGLEVELS = dict([(getattr(loglevels, 'LOG_%s' % x), getattr(logging, x))
+        self._LOGLEVELS = dict([(getattr(netsvc, 'LOG_%s' % x), getattr(logging, x))
                           for x in ('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'TEST', 'DEBUG', 'DEBUG_RPC', 'DEBUG_SQL', 'DEBUG_RPC_ANSWER','NOTSET')])
 
         version = "%s %s" % (release.description, release.version)
@@ -495,4 +495,9 @@ class configmanager(object):
         return self.options[key]
 
 config = configmanager()
+
+# FIXME:following line should be called explicitly by the server
+# when it starts, to allow doing 'import tools.config' from
+# other python executables without parsing *their* args.
+config.parse_config()
 

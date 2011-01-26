@@ -21,7 +21,7 @@
 
 import copy
 import win32
-from config import config
+from config import *
 from misc import *
 from convert import *
 from translate import *
