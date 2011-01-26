@@ -37,6 +37,9 @@ from pprint import pformat
 import warnings
 import heapq
 
+# TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
+from loglevels import *
+
 class Service(object):
     """ Base class for *Local* services
 
@@ -130,27 +133,6 @@ class ExportService(object):
         else:
             raise
 
-LOG_NOTSET = 'notset'
-LOG_DEBUG_SQL = 'debug_sql'
-LOG_DEBUG_RPC_ANSWER = 'debug_rpc_answer'
-LOG_DEBUG_RPC = 'debug_rpc'
-LOG_DEBUG = 'debug'
-LOG_TEST = 'test'
-LOG_INFO = 'info'
-LOG_WARNING = 'warn'
-LOG_ERROR = 'error'
-LOG_CRITICAL = 'critical'
-
-logging.DEBUG_RPC_ANSWER = logging.DEBUG - 4
-logging.addLevelName(logging.DEBUG_RPC_ANSWER, 'DEBUG_RPC_ANSWER')
-logging.DEBUG_RPC = logging.DEBUG - 2
-logging.addLevelName(logging.DEBUG_RPC, 'DEBUG_RPC')
-logging.DEBUG_SQL = logging.DEBUG_RPC - 3
-logging.addLevelName(logging.DEBUG_SQL, 'DEBUG_SQL')
-
-logging.TEST = logging.INFO - 5
-logging.addLevelName(logging.TEST, 'TEST')
-
 BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, _NOTHING, DEFAULT = range(10)
 #The background is set with 40 plus the number of the color, and the foreground with 30
 #These are the sequences need to get colored ouput
@@ -228,66 +210,6 @@ def init_logger():
     logger = logging.getLogger()
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
-
-
-class Logger(object):
-    def __init__(self):
-        warnings.warn("The netsvc.Logger API shouldn't be used anymore, please "
-                      "use the standard `logging.getLogger` API instead",
-                      PendingDeprecationWarning, stacklevel=2)
-        super(Logger, self).__init__()
-
-    def notifyChannel(self, name, level, msg):
-        warnings.warn("notifyChannel API shouldn't be used anymore, please use "
-                      "the standard `logging` module instead",
-                      PendingDeprecationWarning, stacklevel=2)
-        from service.web_services import common
-
-        log = logging.getLogger(tools.ustr(name))
-
-        if level in [LOG_DEBUG_RPC, LOG_TEST] and not hasattr(log, level):
-            fct = lambda msg, *args, **kwargs: log.log(getattr(logging, level.upper()), msg, *args, **kwargs)
-            setattr(log, level, fct)
-
-
-        level_method = getattr(log, level)
-
-        if isinstance(msg, Exception):
-            msg = tools.exception_to_unicode(msg)
-
-        try:
-            msg = tools.ustr(msg).strip()
-            if level in (LOG_ERROR, LOG_CRITICAL) and tools.config.get_misc('debug','env_info',False):
-                msg = common().exp_get_server_environment() + "\n" + msg
-
-            result = msg.split('\n')
-        except UnicodeDecodeError:
-            result = msg.strip().split('\n')
-        try:
-            if len(result)>1:
-                for idx, s in enumerate(result):
-                    level_method('[%02d]: %s' % (idx+1, s,))
-            elif result:
-                level_method(result[0])
-        except IOError:
-            # TODO: perhaps reset the logger streams?
-            #if logrotate closes our files, we end up here..
-            pass
-        except Exception:
-            # better ignore the exception and carry on..
-            pass
-
-    def set_loglevel(self, level, logger=None):
-        if logger is not None:
-            log = logging.getLogger(str(logger))
-        else:
-            log = logging.getLogger()
-        log.setLevel(logging.INFO) # make sure next msg is printed
-        log.info("Log level changed to %s" % logging.getLevelName(level))
-        log.setLevel(level)
-
-    def shutdown(self):
-        logging.shutdown()
 
 import tools
 init_logger()
