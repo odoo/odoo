@@ -42,7 +42,6 @@ from datetime import datetime, timedelta
 from lxml import etree
 import misc
 import loglevels
-import osv
 import pooler
 from config import config
 from tools.translate import _
@@ -826,6 +825,7 @@ form: module.record_id""" % (xml_id,)
             else:
                 f_val = _eval_xml(self,field, self.pool, cr, self.uid, self.idref)
                 if model._columns.has_key(f_name):
+                    import osv
                     if isinstance(model._columns[f_name], osv.fields.integer):
                         f_val = int(f_val)
             res[f_name] = f_val

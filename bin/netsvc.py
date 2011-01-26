@@ -39,6 +39,7 @@ import heapq
 
 # TODO modules that import netsvc only for things from loglevels must be changed to use loglevels.
 from loglevels import *
+import tools
 
 class Service(object):
     """ Base class for *Local* services
@@ -211,7 +212,6 @@ def init_logger():
     logger.addHandler(handler)
     logger.setLevel(int(tools.config['log_level'] or '0'))
 
-import tools
 init_logger()
 
 class Agent(object):

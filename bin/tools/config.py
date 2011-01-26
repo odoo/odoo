@@ -496,8 +496,3 @@ class configmanager(object):
 
 config = configmanager()
 
-# FIXME:following line should be called explicitly by the server
-# when it starts, to allow doing 'import tools.config' from
-# other python executables without parsing *their* args.
-config.parse_config()
-
