@@ -10,26 +10,31 @@
             <field name="name">Bilan : Liquidites et titres</field>
             <field name="code">cash</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_adjusting_asset">
             <field name="name">Bilan : Actif de regularisation</field>
             <field name="code">adjusting_asset</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_equity">
             <field name="name">Bilan : Capitaux propres</field>
             <field name="code">equity</field>
             <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_income">
             <field name="name">PP : Chiffre d'affaires</field>
             <field name="code">income</field>
             <field name="close_method">none</field>
+            <field name="report_type">income</field>
         </record>
         <record model="account.account.type" id="account_type_adj_liability">
             <field name="name">Bilan : Passifs de regularisation</field>
             <field name="code">adj_liability</field>
             <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_closing">
             <field name="name">Autre : Cloture</field>
@@ -40,103 +45,123 @@
             <field name="name">PP : Amortissement</field>
             <field name="code">depreciation</field>
             <field name="close_method">none</field>
+            <field name="report_type">expense</field>
         </record>
         <record model="account.account.type" id="account_type_financial_result">
             <field name="name">PP : Resultat financier</field>
             <field name="code">financial_result</field>
             <field name="close_method">none</field>
+            <field name="report_type">income</field>
         </record>
         <record model="account.account.type" id="account_type_financial_asset">
             <field name="name">Bilan : Immobilisations financieres</field>
             <field name="code">financial_asset</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_building_asset">
             <field name="name">Bilan : Immo corporelles immobilieres</field>
             <field name="code">building_asset</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_non_ope_asset">
             <field name="name">Bilan : Actifs hors exploitation</field>
             <field name="code">non_ope_asset</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_other_ope_exp">
             <field name="name">PP : Autres charges d'exploitation</field>
             <field name="code">other_ope_expense</field>
             <field name="close_method">none</field>
+            <field name="report_type">expense</field>
         </record>
         <record model="account.account.type" id="account_type_non_ope_debts">
             <field name="name">Bilan : Dettes hors exploitation</field>
             <field name="code">non_ope_debts</field>
             <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_fixed_asset">
             <field name="name">Bilan : Immo corporelles mobilieres</field>
             <field name="code">fixed_asset</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_intangible_asset">
             <field name="name">Bilan : Immo incorporelles</field>
             <field name="code">intangible_asset</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_inventory">
             <field name="name">Bilan : Stocks</field>
             <field name="code">inventory</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_lt_liability">
             <field name="name">Bilan : Dettes à LT</field>
             <field name="code">lt_liability</field>
             <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_non_ope_result">
             <field name="name">PP : Resultat activites annexes</field>
             <field name="code">non_oper_result</field>
             <field name="close_method">none</field>
+            <field name="report_type">income</field>
         </record>
         <record model="account.account.type" id="account_type_other_payable">
             <field name="name">Bilan : Autres creanciers à CT</field>
             <field name="code">other_payable</field>
             <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_other_receivable">
             <field name="name">Bilan : Autres créances</field>
             <field name="code">other_receivable</field>
             <field name="close_method">balance</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_personnal_exp">
             <field name="name">PP : Charge de personnel</field>
             <field name="code">personnal_exp</field>
             <field name="close_method">none</field>
+            <field name="report_type">expense</field>
         </record>
         <record model="account.account.type" id="account_type_prov_reserve">
             <field name="name">Bilan : Provisions et reserves</field>
             <field name="code">provision_reserve</field>
             <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_purchase">
             <field name="name">PP : Achat de marchandise</field>
             <field name="code">purchase</field>
             <field name="close_method">none</field>
+            <field name="report_type">expense</field>
         </record>
         <record model="account.account.type" id="account_type_report_result">
             <field name="name">Bilan : Resultat reporte</field>
             <field name="code">report_result</field>
             <field name="close_method">balance</field>
+            <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_receivable">
             <field name="name">Bilan : Debiteurs</field>
             <field name="code">receivable</field>
             <field name="partner_account">True</field>
             <field name="close_method">unreconciled</field>
+            <field name="report_type">asset</field>
         </record>
         <record model="account.account.type" id="account_type_payable">
             <field name="name">Bilan : Fournisseurs</field>
             <field name="code">payable</field>
             <field name="partner_account">True</field>
             <field name="close_method">unreconciled</field>
+            <field name="report_type">liability</field>
         </record>
         <record model="account.account.type" id="account_type_consolidation">
             <field name="name">Autre : Consolidation</field>
@@ -146,11 +171,6 @@
         <record model="account.account.type" id="account_type_other">
             <field name="name">Autre : Other</field>
             <field name="code">other</field>
-            <field name="close_method">none</field>
-        </record>
-        <record model="account.account.type" id="account_type_closed">
-            <field name="name">Autre : Closed</field>
-            <field name="code">closed</field>
             <field name="close_method">none</field>
         </record>
         <record id="ch_minimal_0" model="account.account.template">
