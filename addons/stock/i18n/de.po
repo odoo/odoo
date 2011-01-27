@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-06 12:02+0000\n"
-"Last-Translator: Vo Minh Thu <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-18 09:21+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-08 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:41+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -101,6 +102,10 @@ msgid ""
 "per location. You can use it once a year when you do the general inventory "
 "or whenever you need it, to correct the current stock level of a product."
 msgstr ""
+"Die permanente Inventur kann jederzeit für eine körperliche Bestandsaufnahme "
+"eines Produkts angewendet werden. Sie können die Bestandsaufnahme allerdings "
+"auch nur einmal jährlich am Stück im Rahmen einer Jahresübergabe vornehmen, "
+"um über diesen Weg Buchbestand  und Istbestand auszugleichen."
 
 #. module: stock
 #: view:stock.picking:0
@@ -137,6 +142,8 @@ msgid ""
 "This is the list of all delivery orders that have to be prepared, according "
 "to your different sales orders and your logistics rules."
 msgstr ""
+"Diese Liste beinhaltet in Abhängigkeit zum jeweiligen Verkaufsauftrag alle "
+"auszuführenden Lieferaufträge, die zur Bearbeitung anstehen."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -155,7 +162,7 @@ msgid "UoM"
 msgstr "ME"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:93
+#: code:addons/stock/wizard/stock_change_product_qty.py:90
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 #, python-format
@@ -333,7 +340,7 @@ msgstr "Fertigungslos"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Mengeneinheiten Kategorien"
 
 #. module: stock
 #: help:stock.incoterms,code:0
@@ -567,6 +574,11 @@ msgid ""
 "buttons on the right of each line. You can filter the products to deliver by "
 "customer, products or sale order (using the Origin field)."
 msgstr ""
+"Hier finden Sie eine Liste aller Produkte die an Kunden auszuliefern sind. "
+"Sie können die Auslieferung dann direkt über diese Liste ausführen, indem "
+"Sie den Button ganz rechts in den einzelnen Positionszeilen klicken. Die "
+"Liste kann bei Bedarf nach Kunden, Produkten oder Auftragsnummer gefiltert "
+"werden."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
@@ -618,6 +630,9 @@ msgid ""
 "worker/team that should perform the operation. Examples of stock journals "
 "may be: quality control, pick lists, packing, etc."
 msgstr ""
+"Die Journale für das Lager ermöglichen zur organisatorischen Unterstützung "
+"eine gesonderte Zuweisung von Lieferaufträgen zu bestimmten auszuführenden "
+"Lagervorgängen oder zu verantwortlichen Lagermitarbeitern."
 
 #. module: stock
 #: field:stock.location,complete_name:0
@@ -827,7 +842,7 @@ msgstr "Wareneingang"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Scrap"
-msgstr "Abfall/wegwerfen"
+msgstr "Ausschuss melden"
 
 #. module: stock
 #: field:stock.location,child_ids:0
@@ -1081,7 +1096,7 @@ msgstr "Lieferauftrag"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_in
 msgid "stock.move.memory.in"
-msgstr ""
+msgstr "stock.move.memory.in"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -1107,7 +1122,7 @@ msgstr "Erwartete Auslieferung"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Not Available"
-msgstr ""
+msgstr "Nicht verfügbar"
 
 #. module: stock
 #: selection:report.stock.move,month:0
@@ -1246,6 +1261,9 @@ msgid ""
 "This is the list of all your packs. When you select a Pack, you can get the "
 "upstream or downstream traceability of the products contained in the pack."
 msgstr ""
+"Sie sehen hier eine Liste aller Pakete. Wählen Sie eins aus, um die "
+"Produktlieferungen dieses Pakets zurück- bzw. nachzuverfolgen "
+"(zurückverfolgen = Upstream, nachverfolgen = Downstream)."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_ups_final
@@ -1511,7 +1529,7 @@ msgstr "Leer lassen, wenn dieses Feld für alle Unternehmen Güligkeit hat."
 #: code:addons/stock/stock.py:2198
 #, python-format
 msgid "Please provide a positive quantity to scrap!"
-msgstr "Geben Sie bitte eine positive Menge als Abfall ein."
+msgstr "Geben Sie bitte eine positive Menge als Ausschuss ein"
 
 #. module: stock
 #: field:stock.location,chained_delay:0
@@ -1539,6 +1557,16 @@ msgid ""
 " When the picking is done the state is 'Done'.              \n"
 "The state is 'Waiting' if the move is waiting for another one."
 msgstr ""
+"Wenn ein Lieferauftrag erstellt wird, befindet er sich zunächst im 'Entwurf' "
+"Zustand.\n"
+"* Danach wird der Status auf 'Nicht verfügbar' geändert, wenn der "
+"Beschaffungsassistent keine verfügbaren Bestände errechnet.\n"
+"* Wenn Produkt vorhanden sind und durch den Beschaffungsassistenten "
+"reserviert wurde, ändert sich der Status auf: 'Verfügbar'.\n"
+"* Wenn der Lieferauftrag ausgeführt wurde ändert sich der Status auf "
+"'Erledigt'.                    \n"
+"Der Status ist 'Im Wartezustand', wenn auf die Erledigung eines anderen "
+"Lieferauftrags gewartet werden muss."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -1551,7 +1579,7 @@ msgstr "Lieferantenlagerort"
 #: code:addons/stock/stock.py:2217
 #, python-format
 msgid "were scrapped"
-msgstr "wurden zu Abfall"
+msgstr "wurde als Ausschuss gemeldet"
 
 #. module: stock
 #: view:stock.move:0
@@ -1752,7 +1780,7 @@ msgstr "Sie können keine Position aus dem Los entfernen!"
 #: view:stock.move.scrap:0
 #: view:stock.picking:0
 msgid "Scrap Products"
-msgstr "Abfall Produkte"
+msgstr "Ausschuss buchen"
 
 #. module: stock
 #: code:addons/stock/stock.py:1135
@@ -2209,7 +2237,7 @@ msgstr "Teillieferung"
 #: model:stock.location,name:stock.stock_location_scrapped
 #: field:stock.move,scrapped:0
 msgid "Scrapped"
-msgstr "Abfall"
+msgstr "Ausschuss"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2308,6 +2336,13 @@ msgid ""
 "the supplier or the purchase order reference. Then you can confirm all "
 "products received using the buttons on the right of each line."
 msgstr ""
+"Sie können hier den Warenzugang einzelner Produkte unabhängig vom "
+"ursprünglichen Beschaffungs- oder Lieferauftrag erfassen. Sie finden hier "
+"demnach eine Liste aller Produkte auf dessen Warenzugang Sie warten. Sobald "
+"Sie einen Warenzugang erhalten, können Sie die Liste nach Lieferant oder "
+"Beschaffungsauftragsnummer filtern. Dann können Sie am rechten äußeren Rand "
+"der Zeile den Warenempfang durch einen einfachen Klick Zeile für Zeile "
+"bestätigen."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2400,6 +2435,16 @@ msgid ""
 "location to the Stock location. Each report can be performed on physical, "
 "partner or virtual locations."
 msgstr ""
+"Definieren Sie Ihre Lagerorte zur individuellen Abbildung Ihrer "
+"Lagerorganisation. OpenERP ist in der Lage reale Lagerorte (Zentrallager, "
+"Regale, etc.), Lagerorte bei Partnern (Kunden, Lieferanten) und virtuelle "
+"Lagerorte, wie zum Beispiel das Materiallager der Produktion, abzubilden. "
+"Jede Lieferung in OpenERP erzeugt eine Lagerbuchung für ein Produkt von\r\n"
+"einem Lagerort zu einem Anderen. Für das Beispiel einer Produktlieferung von "
+"einem Lieferanten, erzeugt OpenERP eine Lagerbuchung vom Lieferantenlagerort "
+"zum Hauptlager. Jede Bestandsauswertung kann sowohl für reale als auch "
+"für\r\n"
+"virtuelle Lagerorte erstellt werden."
 
 #. module: stock
 #: view:stock.invoice.onshipping:0
@@ -2478,7 +2523,7 @@ msgstr "Resultat Lagerortaustausch"
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Mengeneinheiten"
 
 #. module: stock
 #: selection:stock.location,chained_location_type:0
@@ -2535,7 +2580,7 @@ msgid "Maxtor Suppliers"
 msgstr "Maxtor Suppliers"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:69
+#: code:addons/stock/wizard/stock_change_product_qty.py:66
 #: code:addons/stock/wizard/stock_change_standard_price.py:106
 #, python-format
 msgid "Active ID is not set in Context"
@@ -2550,7 +2595,7 @@ msgstr "Erzwinge Verfügbarkeit"
 #: model:ir.actions.act_window,name:stock.move_scrap
 #: view:stock.move.scrap:0
 msgid "Scrap Move"
-msgstr "Abfallbuchung"
+msgstr "Buchung Ausschuss"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_move.py:138
@@ -2713,7 +2758,7 @@ msgstr "Produktionslosnummer"
 #. module: stock
 #: field:stock.move,product_uos_qty:0
 msgid "Quantity (UOS)"
-msgstr "Menge (UOS)"
+msgstr "Menge (VE)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1647
@@ -2837,7 +2882,7 @@ msgstr "Revisions Name"
 #: model:ir.ui.menu,name:stock.menu_stock_root
 #: view:stock.warehouse:0
 msgid "Warehouse"
-msgstr "Lagerverwaltung"
+msgstr "Lager"
 
 #. module: stock
 #: view:stock.location.product:0
@@ -2927,7 +2972,7 @@ msgstr "Verantwortlich"
 #. module: stock
 #: field:stock.move,returned_price:0
 msgid "Returned product price"
-msgstr ""
+msgstr "Produktpreis Retoure"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_report
@@ -3049,7 +3094,7 @@ msgstr "Gesamt Wert"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produkte nach Kategorien"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
@@ -3088,6 +3133,14 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
+"Die Internen Lieferungen zeigen alle Bestandsbuchungen, die in Ihrem "
+"Zentrallager stattfinden oder stattgefunden haben. Alle Liefervorgänge "
+"können bei Bedarf in Lagerjournalen kategorisiert werden, so das jeder "
+"Lagerarbeiter sein eigenes Journal mit seiner eigenen Liste von "
+"durchzuführenden bzw. bereits erledigten Lieferungen, vorfinden kann. Die "
+"meisten Lieferungen werden von OpenERP automatisch nach den von Ihnen "
+"definierten Regeln für den Warenfluss ausgeführt, alternativ können Sie aber "
+"auch manuelle Lieferungen erfassen."
 
 #. module: stock
 #: view:stock.move:0
@@ -3205,7 +3258,7 @@ msgstr "Buchungen für diese Produktionslos"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_memory_out
 msgid "stock.move.memory.out"
-msgstr ""
+msgstr "stock.move.memory.out"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:115
@@ -3244,6 +3297,13 @@ msgid ""
 "'Available' button to get all the lots you produced, received or delivered "
 "to customers."
 msgstr ""
+"Diese Liste zeigt Ihnen alle Fertigungslose. Wenn Sie ein Los ausgewählt "
+"haben, können Sie dann die zugehörigen Lieferungen sowohl upstream als auch "
+"downstream zurück- bzw. nachverfolgen. Im Standard wird diese Liste über die "
+"Losnummern mit vorhandenen Beständen vorgefiltert. Diesen Filter können Sie "
+"sehr einfach durch einen Klick auf den Button 'Verfügbar' entfernen und "
+"dadurch alle Fertigungslose sehen, die Sie produziert, empfangen oder an "
+"Kunden versendet haben."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3436,7 +3496,9 @@ msgstr "Zugang:"
 #: help:stock.location,scrap_location:0
 msgid ""
 "Check this box to allow using this location to put scrapped/damaged goods."
-msgstr "Lagerort für Abfall und beschädigte Produkte"
+msgstr ""
+"Aktivieren Sie diese Option, um diesen Lagerort für Ausschuss / beschädigte "
+"Produkte einzusetzen."
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_relate_picking
@@ -3469,10 +3531,10 @@ msgid "Product Category"
 msgstr "Produktkategorie"
 
 #. module: stock
-#: code:addons/stock/wizard/stock_change_product_qty.py:77
+#: code:addons/stock/wizard/stock_change_product_qty.py:74
 #, python-format
 msgid "INV: "
-msgstr ""
+msgstr "INV: "
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.next_id_61
@@ -3634,6 +3696,10 @@ msgid ""
 "specific product. You can filter on the product to see all the past or "
 "future movements for the product."
 msgstr ""
+"Dieses Menü gibt Ihnen die Möglichkeit alle Lieferungen und "
+"Bestandsbuchungen eines bestimmten Produktes nachzuvollziehen. Sie können "
+"hierbei Filter verwenden, um entweder alle bereits erfolgten oder alle "
+"zukünftigen Lieferungen anzuzeigen."
 
 #. module: stock
 #: view:stock.picking:0
@@ -3870,6 +3936,10 @@ msgid ""
 "click on a location to get the list of the products and their stock level in "
 "this particular location and all its children."
 msgstr ""
+"Durch diese Ansicht können Sie die Struktur Ihrer Zentralläger mit den dort "
+"vorhanden Lagerorten nachvollziehen. Sie können auf einen Lagerort klicken, "
+"um eine Liste der dort gelagerten Produkte sowie deren Lagerbestand auf "
+"diesem Lagerort mitsamt sämtlicher untergeordneter Lagerorte einzusehen."
 
 #. module: stock
 #: model:res.request.link,name:stock.req_link_tracking
@@ -4082,7 +4152,7 @@ msgstr "Identifikation Fertigungslos"
 #: field:stock.location,scrap_location:0
 #: view:stock.move.scrap:0
 msgid "Scrap Location"
-msgstr "Lagerort für Abfall"
+msgstr "Lagerort für Ausschuss"
 
 #. module: stock
 #: selection:report.stock.move,month:0

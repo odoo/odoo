@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-09 00:03+0000\n"
-"Last-Translator: Carlos @ smile.fr <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-18 01:17+0000\n"
+"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
+"<jesteve@zikzakmedia.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:19+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:46+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -135,7 +136,7 @@ msgstr "Público"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid " "
-msgstr ""
+msgstr " "
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -262,7 +263,7 @@ msgid "Invitation Detail"
 msgstr "Detalle de la invitación"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:1354
+#: code:addons/base_calendar/base_calendar.py:1356
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
@@ -342,7 +343,7 @@ msgid ""
 "    - Recurring events\n"
 "    - Invitations to people"
 msgstr ""
-"Sistema de calendario lleno de funcionalidades que soporta:\n"
+"Completo sistema de calendario que soporta:\n"
 "    - Calendario de eventos\n"
 "    - Alertas (crea peticiones)\n"
 "    - Eventos recursivos\n"
@@ -425,7 +426,7 @@ msgstr "Evento"
 #: help:calendar.event,edit_all:0
 #: help:calendar.todo,edit_all:0
 msgid "Edit all Occurrences  of recurrent Meeting."
-msgstr ""
+msgstr "Editar todas las ocurrencias de la reunión recurrente."
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_occurs:0
@@ -551,6 +552,8 @@ msgid ""
 "Create specific calendar alarms that may be assigned to calendar events or "
 "meetings."
 msgstr ""
+"Crear alarmas específicas que puedan ser asignadas a eventos de calendario o "
+"reuniones."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -608,6 +611,12 @@ msgstr "Delegada en"
 #: view:calendar.attendee:0
 msgid "Required Reply"
 msgstr "Respuesta requerida"
+
+#. module: base_calendar
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "Forever"
+msgstr "Siempre"
 
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
@@ -888,7 +897,7 @@ msgstr "Recordatorio"
 #: model:ir.actions.act_window,name:base_calendar.action_base_calendar_set_exrule
 #: model:ir.model,name:base_calendar.model_base_calendar_set_exrule
 msgid "Set Exrule"
-msgstr ""
+msgstr "Establecer Exregla"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1057,8 +1066,6 @@ msgstr "Relacionado con"
 #. module: base_calendar
 #: field:base.calendar.set.exrule,interval:0
 #: field:calendar.alarm,trigger_interval:0
-#: field:calendar.event,interval:0
-#: field:calendar.todo,interval:0
 #: field:res.alarm,trigger_interval:0
 msgid "Interval"
 msgstr "Intervalo"
@@ -1093,7 +1100,7 @@ msgstr "Activo"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr ""
+msgstr "Elija el día del mes en que se repetirá la reunión"
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1137,6 +1144,12 @@ msgid "Defines the action to be invoked when an alarm is triggered"
 msgstr "Define la acción a invocar cuando salte la alarma"
 
 #. module: base_calendar
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "End date"
+msgstr "Fecha de fin"
+
+#. module: base_calendar
 #: view:calendar.event:0
 msgid "Search Events"
 msgstr "Buscar eventos"
@@ -1144,7 +1157,7 @@ msgstr "Buscar eventos"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency Option"
-msgstr ""
+msgstr "Opción de recurrencia"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
@@ -1210,7 +1223,7 @@ msgstr "Hecho"
 #: help:calendar.event,interval:0
 #: help:calendar.todo,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "Repetir cada (días/semana/mes/año)"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -1249,6 +1262,8 @@ msgid ""
 "calendar component, than that                             provided by the "
 "\"SUMMARY\" property"
 msgstr ""
+"Facilita una descripción más completa del componente del calendario que la "
+"facilitada por la propiedad \"RESUMEN\""
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1276,10 +1291,22 @@ msgid "Tentative"
 msgstr "Provisional"
 
 #. module: base_calendar
+#: field:calendar.event,interval:0
+#: field:calendar.todo,interval:0
+msgid "Repeat every"
+msgstr "Repetir cada"
+
+#. module: base_calendar
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "Fix amout of times"
+msgstr "Cantidad fija de veces"
+
+#. module: base_calendar
 #: field:calendar.event,recurrency:0
 #: field:calendar.todo,recurrency:0
 msgid "Recurrent"
-msgstr ""
+msgstr "Recurrente"
 
 #. module: base_calendar
 #: field:calendar.event,rrule_type:0
@@ -1424,7 +1451,7 @@ msgstr "Sáb"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day where repeat the meeting"
-msgstr ""
+msgstr "Eligir día en el que repetir la cita"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
@@ -1501,11 +1528,6 @@ msgid "Sent By User"
 msgstr "Enviado por usuario"
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "Repeat interval"
-msgstr ""
-
-#. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
 #: selection:calendar.event,month_list:0
 #: selection:calendar.todo,month_list:0
@@ -1515,7 +1537,7 @@ msgstr "Abril"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
-msgstr ""
+msgstr "Periodo de recurrencia"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,week_list:0
@@ -1626,6 +1648,12 @@ msgid "Free/Busy"
 msgstr "Libre/Ocupado"
 
 #. module: base_calendar
+#: field:calendar.event,end_type:0
+#: field:calendar.todo,end_type:0
+msgid "Way to end reccurency"
+msgstr "Forma de terminar recurrencia"
+
+#. module: base_calendar
 #: field:calendar.alarm,duration:0
 #: field:calendar.alarm,trigger_duration:0
 #: field:calendar.event,duration:0
@@ -1658,8 +1686,8 @@ msgid ""
 msgstr ""
 "* Apunta a un recurso de sonido, que se escucha cuando la alarma se activa "
 "por audio.\n"
-"* El archivo que está intentando ser enviado como archivos adjuntos para el "
-"correo electrónico.\n"
+"* El archivo que está intentando ser enviado como adjunto en el correo "
+"electrónico.\n"
 "* Apunta a un recurso de procedimiento, que se invoca cuando la alarma se "
 "activa por procedimiento."
 
@@ -1697,3 +1725,6 @@ msgstr "Quinto"
 #~ msgstr ""
 #~ "Cree alarmas específicas del calendario que se puede asignar a los eventos "
 #~ "del calendario o reuniones."
+
+#~ msgid "Repeat interval"
+#~ msgstr "Intervalo de repetición"

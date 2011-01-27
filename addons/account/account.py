@@ -419,8 +419,18 @@ class account_account(osv.osv):
             ids = child_ids
         return True
 
+    def _check_type(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        accounts = self.browse(cr, uid, ids, context=context)
+        for account in accounts:
+            if account.child_id and account.type != 'view':
+                return False
+        return True
+
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
+        (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id']),
+        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -526,10 +536,14 @@ class account_account(osv.osv):
         if context is None:
             context = {}
 
+        # Dont allow changing the company_id when account_move_line already exist
         if 'company_id' in vals:
             move_lines = self.pool.get('account.move.line').search(cr, uid, [('account_id', 'in', ids)])
             if move_lines:
-                raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
+                # Allow the write if the value is the same
+                for i in [i['company_id'][0] for i in self.read(cr,uid,ids,['company_id'])]:
+                    if vals['company_id']!=i:
+                        raise osv.except_osv(_('Warning !'), _('You cannot modify Company of account as its related record exist in Entry Lines'))
         if 'active' in vals and not vals['active']:
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
@@ -572,11 +586,11 @@ class account_journal_column(osv.osv):
         'name': fields.char('Column Name', size=64, required=True),
         'field': fields.selection(_col_get, 'Field Name', method=True, required=True, size=32),
         'view_id': fields.many2one('account.journal.view', 'Journal View', select=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
     }
-    _order = "sequence"
+    _order = "view_id, sequence"
 
 account_journal_column()
 
@@ -965,7 +979,7 @@ class account_journal_period(osv.osv):
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'State', required=True, readonly=True,
                                   help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
-        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company')
+        'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
     def _check(self, cr, uid, ids, context=None):
@@ -1116,16 +1130,16 @@ class account_move(osv.osv):
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
         'amount': fields.function(_amount_compute, method=True, string='Amount', digits_compute=dp.get_precision('Account'), type='float', fnct_search=_search_amount),
-        'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}),
+        'date': fields.date('Date', required=True, states={'posted':[('readonly',True)]}, select=True),
         'narration':fields.text('Narration'),
-        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company',store=True),
+        'company_id': fields.related('journal_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
     _defaults = {
         'name': '/',
         'state': 'draft',
         'period_id': _get_period,
         'date': lambda *a: time.strftime('%Y-%m-%d'),
-        'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
     def _check_centralisation(self, cursor, user, ids, context=None):
@@ -1612,7 +1626,6 @@ class account_tax_code(osv.osv):
         ids = self.search(cr, user, ['|',('name',operator,name),('code',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
-
     def name_get(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
@@ -1647,6 +1660,7 @@ class account_tax_code(osv.osv):
         (_check_recursion, 'Error ! You can not create recursive accounts.', ['parent_id'])
     ]
     _order = 'code'
+
 account_tax_code()
 
 class account_tax(osv.osv):
@@ -2295,11 +2309,21 @@ class account_account_template(osv.osv):
         'nocreate': False,
     }
 
+    def _check_type(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        accounts = self.browse(cr, uid, ids, context=context)
+        for account in accounts:
+            if account.parent_id and account.parent_id.type != 'view':
+                return False
+        return True
+
     _check_recursion = check_cycle
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id'])
-    ]
+        (_check_recursion, 'Error ! You can not create recursive account templates.', ['parent_id']),
+        (_check_type, 'Configuration Error! \nYou cannot define children to an account with internal type different of "View"! ', ['type']),
 
+    ]
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -2512,7 +2536,7 @@ class account_fiscal_position_template(osv.osv):
     _description = 'Template for Fiscal Position'
 
     _columns = {
-        'name': fields.char('Fiscal Position Template', size=64, translate=True, required=True),
+        'name': fields.char('Fiscal Position Template', size=64, required=True),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'account_ids': fields.one2many('account.fiscal.position.account.template', 'position_id', 'Account Mapping'),
         'tax_ids': fields.one2many('account.fiscal.position.tax.template', 'position_id', 'Tax Mapping')
@@ -2586,6 +2610,24 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res['value']["purchase_tax"] = purchase_tax_ids and purchase_tax_ids[0] or False
         return res
 
+    def _get_purchase_tax(self, cr, uid, context=None):
+        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        if ids:
+            chart_template_id = ids[0]
+            purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
+            return purchase_tax_ids and purchase_tax_ids[0] or False
+        return False
+
+    def _get_sale_tax(self, cr, uid, context=None):
+        ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
+        if ids:
+            chart_template_id = ids[0]
+            sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
+                                          , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
+            return sale_tax_ids and sale_tax_ids[0] or False
+        return False
+
     def _get_chart(self, cr, uid, context=None):
         ids = self.pool.get('account.chart.template').search(cr, uid, [], context=context)
         if ids:
@@ -2602,6 +2644,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
         'chart_template_id': _get_chart,
         'bank_accounts_id': _get_default_accounts,
+        'sale_tax': _get_sale_tax,
+        'purchase_tax': _get_purchase_tax,
         'code_digits': 6,
         'seq_journal': True
     }

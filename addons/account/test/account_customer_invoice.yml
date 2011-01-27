@@ -7,7 +7,7 @@
     address_invoice_id: base.res_partner_address_zen
     company_id: base.main_company
     currency_id: base.EUR
-    date_invoice: '2010-05-26'
+    date_invoice: !eval time.strftime('%Y-%m-%d')
     invoice_line:
       - account_id: account.a_sale
         name: '[PC3] Medium PC'

@@ -48,6 +48,7 @@ automatically new claims based on incoming emails.
     'test': ['test/test_crm_claim.yml'], 
     'installable': True,
     'active': False,
+    'certificate' : '00612027414703404749',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

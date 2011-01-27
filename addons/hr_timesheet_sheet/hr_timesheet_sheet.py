@@ -262,7 +262,7 @@ class hr_timesheet_sheet(osv.osv):
         'user_id': fields.related('employee_id', 'user_id', type="many2one", relation="res.users", store=True, string="User", required=False, readonly=True),#fields.many2one('res.users', 'User', required=True, select=1, states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'date_from': fields.date('Date from', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
         'date_to': fields.date('Date to', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
-        'date_current': fields.date('Current date', required=True),
+        'date_current': fields.date('Current date', required=True, select=1),
         'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id',
             'Timesheet lines', domain=[('date', '=', time.strftime('%Y-%m-%d'))],
             readonly=True, states={
@@ -641,7 +641,7 @@ class hr_timesheet_sheet_sheet_day(osv.osv):
     _columns = {
         'name': fields.date('Date', readonly=True),
         'sheet_id': fields.many2one('hr_timesheet_sheet.sheet', 'Sheet', readonly=True, select="1"),
-        'total_timesheet': fields.float('Project Timesheet', readonly=True),
+        'total_timesheet': fields.float('Total Timesheet', readonly=True),
         'total_attendance': fields.float('Attendance', readonly=True),
         'total_difference': fields.float('Difference', readonly=True),
     }

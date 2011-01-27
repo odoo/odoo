@@ -1,0 +1,80 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * product_visible_discount
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-26 00:49+0000\n"
+"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2011-01-27 04:37+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:147
+#, python-format
+msgid "No Purchase Pricelist Found !"
+msgstr "Nem található beszerzési árlista !"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:155
+#, python-format
+msgid "No Sale Pricelist Found "
+msgstr "Nem található eladási árlista "
+
+#. module: product_visible_discount
+#: model:ir.module.module,description:product_visible_discount.module_meta_information
+msgid ""
+"\n"
+"    This module lets you calculate discounts on Sale Order lines and Invoice "
+"lines base on the partner's pricelist.\n"
+"    To this end, a new check box named \"Visible Discount\" is added to the "
+"pricelist form.\n"
+"    Example:\n"
+"        For the product PC1 and the partner \"Asustek\": if listprice=450, "
+"and the price calculated using Asustek's pricelist is 225\n"
+"        If the check box is checked, we will have on the sale order line: "
+"Unit price=450, Discount=50,00, Net price=225\n"
+"        If the check box is unchecked, we will have on Sale Order and "
+"Invoice lines: Unit price=225, Discount=0,00, Net price=225\n"
+"    "
+msgstr ""
+
+#. module: product_visible_discount
+#: model:ir.module.module,shortdesc:product_visible_discount.module_meta_information
+#: field:product.pricelist,visible_discount:0
+msgid "Visible Discount"
+msgstr "Látható engedmény"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_account_invoice_line
+msgid "Invoice Line"
+msgstr "Számlasor"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:155
+#, python-format
+msgid "You must first define a pricelist for Customer !"
+msgstr "Először meg kell határozni egy árlistát a Vevőhöz !"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_product_pricelist
+msgid "Pricelist"
+msgstr "Árlista"
+
+#. module: product_visible_discount
+#: code:addons/product_visible_discount/product_visible_discount.py:147
+#, python-format
+msgid "You must first define a pricelist for Supplier !"
+msgstr "Először meg kell határozni egy árlistát a Szállítóhoz !"
+
+#. module: product_visible_discount
+#: model:ir.model,name:product_visible_discount.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Vevői megrendelés sor"

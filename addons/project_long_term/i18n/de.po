@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-31 14:22+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-12 18:37+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:56+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -62,7 +62,7 @@ msgstr "Ressourcenaufteilung"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Displaying settings"
-msgstr ""
+msgstr "Anzeigekonfiguration"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
@@ -130,7 +130,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr "Fehler ! Sie können keine Eskalation in dasselbe Projekt vornehmen!"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:130
+#: code:addons/project_long_term/project_long_term.py:133
 #, python-format
 msgid "Day"
 msgstr "Tag"
@@ -157,18 +157,12 @@ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
 msgstr "ME (Mengeneinheit) entspr. Einheit für die Dauer"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:489
-#, python-format
-msgid ""
-"Resources should be allocated to your phases and Members should be assigned "
-"to your Project!"
-msgstr ""
-
-#. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
 msgstr ""
+" Wird berechnet durch einen Planungsassistenten in Abhängigkeit von Beginn "
+"und Dauer."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -192,12 +186,6 @@ msgstr "Fehler!"
 #: selection:project.phase,state:0
 msgid "Cancelled"
 msgstr "Abgebrochen"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:426
-#, python-format
-msgid "No tasks to compute for Project '%s'."
-msgstr "Keine Aufgaben zur Berechnung für Projekt '%s'."
 
 #. module: project_long_term
 #: help:project.resource.allocation,date_end:0
@@ -227,7 +215,7 @@ msgid "Compute Phase Scheduling"
 msgstr "Berechne Terminierung der Phasen"
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:192
+#: code:addons/project_long_term/project_long_term.py:195
 #, python-format
 msgid " (copy)"
 msgstr " (Kopie)"
@@ -348,7 +336,16 @@ msgstr "OK"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Schedule and Display info"
+msgstr "Info Planungsassistent und Anzeige"
+
+#. module: project_long_term
+#: help:project.phase,date_start:0
+msgid ""
+"It's computed by the scheduler according the project date or the end date of "
+"the previous phase."
 msgstr ""
+"Wird berechnet durch einen Planungsassistenten in Abhängigkeit vom "
+"Projektdatum oder dem Ende Datum der vorherigen Projektphase."
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -363,7 +360,7 @@ msgstr "Start Datum der Phase muss vor dem Ende Datum sein."
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
 msgid "project.schedule.tasks"
-msgstr ""
+msgstr "project.schedule.tasks"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.act_project_phase
@@ -375,6 +372,14 @@ msgid ""
 "human resources, convert your phases into a series of tasks when you start "
 "working on the project."
 msgstr ""
+"Ein Projekt kann in verschiedene Phasen aufgeteilt werden. Für jede Phase "
+"können Sie zur automatischen Terminierung die Ressourcenaufteilung "
+"definieren, Aufgaben beschreiben und die Phase sowohl mit vorhergehenden als "
+"auch nachfolgenden Phasen verknüpfen oder Bedingungen für feste Termine "
+"hinterlegen. Benutzen Sie das Modul Planung für Langzeitprojekte zur "
+"langfristigen Planung und Aufteilung verfügbarer Personalressourcen. "
+"Konvertieren Sie die Phasen in konkrete Aufgabenlisten, wenn Sie die "
+"Bearbeitung der Phasen eröffnen."
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
@@ -415,14 +420,6 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: project_long_term
-#: help:project.phase,date_start:0
-msgid ""
-"It's computed according to the phases order : the start date of the 1st "
-"phase is set by you while the other start dates depend on the end date of "
-"their previous phases"
-msgstr "Beginn der Phase"
-
-#. module: project_long_term
 #: view:project.phase:0
 msgid "Task Detail"
 msgstr "Aufgaben Detail"
@@ -436,24 +433,6 @@ msgstr "Zeiterfassung Arbeitsstunden für die Ausrichtung des Gantt Charts"
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
 msgstr "Berechnung Aufgaben f. Projekt"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:244
-#, python-format
-msgid "No responsible person assigned !"
-msgstr "Keinen Verantwortlichen zugewiesen!"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:489
-#, python-format
-msgid "Error"
-msgstr "Fehler"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:244
-#, python-format
-msgid "You must assign a responsible person for phase '%s' !"
-msgstr "Sie müssen einen Verantwortlichen für die Phase zuweisen '%s' !"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -547,12 +526,6 @@ msgid "Phase"
 msgstr "Phase"
 
 #. module: project_long_term
-#: help:project.phase,date_start:0
-msgid ""
-"It's computed by the scheduler according the project date or the end date of the previous phase."
-msgstr "Beginn der Phase"
-
-#. module: project_long_term
 #: help:project.phase,state:0
 msgid ""
 "If the phase is created the state 'Draft'.\n"
@@ -587,7 +560,7 @@ msgstr "Bezeichnung"
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Tasks Details"
-msgstr ""
+msgstr "Aufgabendetails"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
@@ -603,12 +576,6 @@ msgstr "Ressource Detail"
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
 msgid "Scheduling"
 msgstr "Terminierung"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:329
-#, python-format
-msgid "No tasks to compute for Phase '%s'."
-msgstr "Keine Aufgaben zur Berechnung für Phase: '%s'."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -682,6 +649,9 @@ msgstr "Dauer"
 #~ "Usability of this resource for this project phase in percentage (=50%)"
 #~ msgstr "Verfügbarkeit der Ressource für diese Projektphase in Prozent (=50%)"
 
+#~ msgid "Ending Date of the phase"
+#~ msgstr "Ende Datum d. Phase"
+
 #~ msgid "This wizard will schedule phases for all or specified project"
 #~ msgstr "Der Assistent kalkuliert die Phasen für alle oder ein spez. Projekt"
 
@@ -707,6 +677,18 @@ msgstr "Dauer"
 #~ msgid "Compute"
 #~ msgstr "Berechne"
 
+#, python-format
+#~ msgid "No responsible person assigned !"
+#~ msgstr "Keinen Verantwortlichen zugewiesen!"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Fehler"
+
+#, python-format
+#~ msgid "You must assign a responsible person for phase '%s' !"
+#~ msgstr "Sie müssen einen Verantwortlichen für die Phase zuweisen '%s' !"
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -720,8 +702,15 @@ msgstr "Dauer"
 #~ msgid "Other Info"
 #~ msgstr "Weitere Info"
 
+#~ msgid "Starting Date of the phase"
+#~ msgstr "Beginn der Phase"
+
 #~ msgid "The certificate ID of the module must be unique !"
 #~ msgstr "Die Zertifikat ID des Moduls sollte eindeutig sein !"
+
+#, python-format
+#~ msgid "No tasks to compute for Project '%s'."
+#~ msgstr "Keine Aufgaben zur Berechnung für Projekt '%s'."
 
 #~ msgid ""
 #~ "A project can be split into the different phases. For each phase, you can "
@@ -744,6 +733,10 @@ msgstr "Dauer"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"
 
 #, python-format
+#~ msgid "No tasks to compute for Phase '%s'."
+#~ msgstr "Keine Aufgaben zur Berechnung für Phase: '%s'."
+
+#, python-format
 #~ msgid "Should have Resources Allocation or Project Members!"
 #~ msgstr ""
 #~ "Es sollte eine Ressourcenaufteilung oder Projektmitarbeiter existieren!"
@@ -754,3 +747,17 @@ msgstr "Dauer"
 #~ msgid ""
 #~ "It's computed by the scheduler according to the start date and the duration."
 #~ msgstr "Ende Datum d. Phase"
+
+#~ msgid ""
+#~ "It's computed according to the phases order : the start date of the 1st "
+#~ "phase is set by you while the other start dates depend on the end date of "
+#~ "their previous phases"
+#~ msgstr "Beginn der Phase"
+
+#, python-format
+#~ msgid ""
+#~ "Resources should be allocated to your phases and Members should be assigned "
+#~ "to your Project!"
+#~ msgstr ""
+#~ "Ressourcen sollten auf Ihre Projektphasen verteilt werden, "
+#~ "Projektmitarbeiter sollten auf Ihre Projekte verteilt werden."

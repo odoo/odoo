@@ -17,7 +17,7 @@
                         <field name="name"/>
                         <field name="date_order"/>
                         <field name="shop_id" widget="selection"/>
-                        <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)"/>
+                        <field name="partner_id" on_change="onchange_partner_pricelist(partner_id)" groups="base.group_extended"/>
                         <field name="contract_number" groups="base.group_extended"/>
                     </group>
                     <notebook colspan="4">
@@ -27,9 +27,8 @@
                                     <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,qty,parent.partner_id)" width="275" />
                                     <field name="qty" on_change="onchange_qty(discount, qty, price_unit)"/>
                                     <field name="price_ded" on_change="onchange_ded(price_ded, price_subtotal_incl,price_unit)" invisible="1"/>
-                                    <field name="price_unit" readonly="1"/>
+                                    <field name="price_unit"/>
                                     <field name="discount" on_change="onchange_discount(discount,price_unit)" />
-                                    <field name="notice" on_change="onchange_dis(qty,price_subtotal_incl,discount)"/>
                                     <field name="price_subtotal" />
                                     <field name="price_subtotal_incl" sum="Subtotal"/>
                                 </tree>
@@ -52,7 +51,7 @@
                             <separator colspan="4"/>
                             <group colspan="4" col="8">
                                 <field name="state" />
-                                <button name="%(action_add_product)d" string="Add product" type="action" icon="gtk-ok" states="draft"/>
+                                <button name="%(action_add_product)d" string="Add product" type="action" icon="gtk-ok" states="advance" groups="base.group_extended"/>
                                 <button name="%(action_pos_payment)d" string="Make Payment" icon="terp-dolar" type="action" states="draft,advance" />
                                 <button name="%(action_report_pos_receipt)d" string="Reprint" icon="gtk-print" type="action" states="paid,done,invoiced"/>
                                 <button name="set_to_draft" string="Set to draft" states="paid" icon="gtk-execute" type="object" />

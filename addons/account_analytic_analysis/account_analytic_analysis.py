@@ -628,7 +628,7 @@ class account_analytic_account_summary_month(osv.osv):
         tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_month')
         cr.execute('CREATE VIEW account_analytic_analysis_summary_month AS (' \
                 'SELECT ' \
-                    '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000))::integer AS id, ' \
+                    '(TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') + (d.account_id  * 1000000::bigint))::bigint AS id, ' \
                     'd.account_id AS account_id, ' \
                     'TO_CHAR(d.month, \'Mon YYYY\') AS month, ' \
                     'TO_NUMBER(TO_CHAR(d.month, \'YYYYMM\'), \'999999\') AS month_id, ' \

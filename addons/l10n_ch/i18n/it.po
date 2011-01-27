@@ -7,24 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2010-12-10 17:15+0000\n"
-"PO-Revision-Date: 2010-12-11 13:27+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2011-01-14 00:31+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:50+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:48+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_account_tax_code
 msgid "Tax Code"
-msgstr ""
+msgstr "Codice tassa"
 
 #. module: l10n_ch
 #: view:bvr.invoices.report:0
 msgid "BVR Invoices Report"
-msgstr ""
+msgstr "Report fatture BVR"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_intangible_asset
@@ -60,7 +60,7 @@ msgstr ""
 #: code:addons/l10n_ch/wizard/create_dta.py:0
 #, python-format
 msgid "No bank account for the company."
-msgstr ""
+msgstr "Nessun conto banca per l'azienda"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/bvr_import.py:0
@@ -103,7 +103,7 @@ msgstr ""
 #: code:addons/l10n_ch/wizard/create_dta.py:0
 #, python-format
 msgid "The Bank type %s of the bank account: %s is not supported"
-msgstr ""
+msgstr "Il tipo di banca %s del conto bancario %s non è supportato"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/create_dta.py:0
@@ -136,7 +136,7 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_bvr_report
 msgid "bvr.report"
-msgstr ""
+msgstr "bvr.report"
 
 #. module: l10n_ch
 #: model:res.partner.bank.type.field,name:l10n_ch.bank_field_bvbank
@@ -156,12 +156,12 @@ msgstr "Errore Utente"
 #. module: l10n_ch
 #: model:ir.actions.act_window,name:l10n_ch.action_account_bvr_report
 msgid "BVR"
-msgstr ""
+msgstr "BVR"
 
 #. module: l10n_ch
 #: constraint:account.tax.code:0
 msgid "Error ! You can not create recursive accounts."
-msgstr ""
+msgstr "Errore! Non è possibile creare conti ricorsivi"
 
 #. module: l10n_ch
 #: constraint:account.invoice:0
@@ -178,17 +178,19 @@ msgstr ""
 msgid ""
 "You can not create move line on receivable/payable account without partner"
 msgstr ""
+"Non si possono creare voci in un conto di pagamento o riscossione senza "
+"indicare un partner"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Total record different from the computed!"
-msgstr ""
+msgstr "Record totali differenti da quelli calcolati!"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/bvr_report.py:0
@@ -197,6 +199,8 @@ msgid ""
 "No bank specified on invoice:\n"
 "%s"
 msgstr ""
+"Nessuna banca specificata nella fattura:\n"
+"%s"
 
 #. module: l10n_ch
 #: field:res.partner.bank,bvr_number:0
@@ -207,7 +211,7 @@ msgstr "Numero di aderente"
 #: code:addons/l10n_ch/wizard/bvr_import.py:0
 #, python-format
 msgid "Number record different from the computed!"
-msgstr ""
+msgstr "Numero di record differenti da quelli calcolati!"
 
 #. module: l10n_ch
 #: field:res.bank,clearing:0
@@ -217,7 +221,7 @@ msgstr "Numero di clearing"
 #. module: l10n_ch
 #: model:res.partner.bank.type,name:l10n_ch.bvbank
 msgid "DTA-BVBANK"
-msgstr ""
+msgstr "DTA-BVBANK"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_financial_asset
@@ -227,19 +231,19 @@ msgstr ""
 #. module: l10n_ch
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Errore! Non è possibile creare aziende ricorsive."
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/create_dta.py:0
 #, python-format
 msgid "No IBAN for the company bank account."
-msgstr ""
+msgstr "Nessun IBAN per il conto banca dell'azienda"
 
 #. module: l10n_ch
 #: view:bvr.invoices.report:0
 #: view:bvr.report:0
 msgid "Print"
-msgstr ""
+msgstr "Stampa"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/create_dta.py:0
@@ -311,7 +315,7 @@ msgstr ""
 #. module: l10n_ch
 #: view:bvr.report:0
 msgid "BVR Report"
-msgstr ""
+msgstr "Report BVR"
 
 #. module: l10n_ch
 #: field:res.partner.bank,print_bank:0
@@ -333,18 +337,18 @@ msgstr ""
 #: code:addons/l10n_ch/wizard/create_dta.py:0
 #, python-format
 msgid "not implemented"
-msgstr ""
+msgstr "non implementato"
 
 #. module: l10n_ch
 #: model:res.partner.title,shortcut:l10n_ch.res_c_partner_title_madame
 #: model:res.partner.title,shortcut:l10n_ch.res_partner_title_madame
 msgid "Mme."
-msgstr ""
+msgstr "Sig.ra"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_bvr_invoices_report
 msgid "bvr.invoices.report"
-msgstr ""
+msgstr "bvr.invoices.report"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_view
@@ -371,7 +375,7 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.actions.act_window,name:l10n_ch.action_account_bvr_invoices_report
 msgid "Invoices BVR"
-msgstr ""
+msgstr "Fatture BVR"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/create_dta.py:0
@@ -412,7 +416,7 @@ msgstr ""
 #. module: l10n_ch
 #: field:bvr.import.wizard,file:0
 msgid "BVR File"
-msgstr ""
+msgstr "File BVR"
 
 #. module: l10n_ch
 #: view:bvr.import.wizard:0
@@ -422,7 +426,7 @@ msgstr "Importa"
 #. module: l10n_ch
 #: constraint:account.invoice:0
 msgid "Error: Invalid Bvr Number (wrong checksum)."
-msgstr ""
+msgstr "Errore: Numero BVR non valido (errato carattere di controllo)."
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_non_ope_debts
@@ -477,6 +481,7 @@ msgstr ""
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
 msgstr ""
+"L'azienda deve essere la stessa per il periodo ed il conto ad essa correlato."
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/create_dta.py:0
@@ -496,7 +501,7 @@ msgstr ""
 #: model:res.partner.title,shortcut:l10n_ch.res_c_partner_title_mlle
 #: model:res.partner.title,shortcut:l10n_ch.res_partner_title_mlle
 msgid "Mlle"
-msgstr ""
+msgstr "Sig.ina"
 
 #. module: l10n_ch
 #: model:res.partner.bank.type,name:l10n_ch.bank_dta
@@ -506,7 +511,7 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Aziende"
 
 #. module: l10n_ch
 #: model:res.partner.title,name:l10n_ch.res_c_partner_title_madame
@@ -517,14 +522,14 @@ msgstr "Signora"
 #. module: l10n_ch
 #: model:res.partner.bank.type,name:l10n_ch.bvpost
 msgid "DTA-BVPOST"
-msgstr ""
+msgstr "DTA-BVPOST"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/bvr_import.py:0
 #: code:addons/l10n_ch/wizard/create_dta.py:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Errore"
 
 #. module: l10n_ch
 #: model:res.partner.title,name:l10n_ch.res_c_partner_title_societe
@@ -550,12 +555,12 @@ msgstr ""
 #: model:res.partner.title,name:l10n_ch.res_c_partner_title_mlle
 #: model:res.partner.title,name:l10n_ch.res_partner_title_mlle
 msgid "Mademoiselle"
-msgstr ""
+msgstr "Sig.ina"
 
 #. module: l10n_ch
 #: model:ir.module.module,shortdesc:l10n_ch.module_meta_information
 msgid "Switzerland localisation corrected by Camptocamp"
-msgstr ""
+msgstr "Localizzazione svizzera"
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_res_partner_bank
@@ -635,7 +640,7 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_create_dta_wizard
 msgid "create.dta.wizard"
-msgstr ""
+msgstr "create.dta.wizard"
 
 #. module: l10n_ch
 #: code:addons/l10n_ch/wizard/create_dta.py:0
@@ -654,7 +659,7 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_res_bank
 msgid "Bank"
-msgstr ""
+msgstr "Banca"
 
 #. module: l10n_ch
 #: model:res.partner.title,shortcut:l10n_ch.res_c_partner_title_mme_m
@@ -665,13 +670,13 @@ msgstr ""
 #. module: l10n_ch
 #: model:res.partner.bank.type,name:l10n_ch.bvrbank
 msgid "DTA-BVRBANK"
-msgstr ""
+msgstr "DTA-BVRBANK"
 
 #. module: l10n_ch
 #: field:bvr.invoices.report,name:0
 #: field:bvr.report,name:0
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_consolidation
@@ -715,7 +720,7 @@ msgstr ""
 #. module: l10n_ch
 #: model:res.partner.bank.type,name:l10n_ch.dta_iban
 msgid "DTA-IBAN"
-msgstr ""
+msgstr "DTA-IBAN"
 
 #. module: l10n_ch
 #: model:res.partner.bank.type.field,name:l10n_ch.acc_num_field_bvbank
@@ -755,7 +760,7 @@ msgstr ""
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_bvr_import_wizard
 msgid "bvr.import.wizard"
-msgstr ""
+msgstr "bvr.import.wizard"
 
 #. module: l10n_ch
 #: model:res.partner.bank.type.field,name:l10n_ch.bvr_num_field_bvrbank
@@ -767,7 +772,7 @@ msgstr ""
 #: model:res.partner.title,shortcut:l10n_ch.res_c_partner_title_sir
 #: model:res.partner.title,shortcut:l10n_ch.res_partner_title_sir
 msgid "M. "
-msgstr ""
+msgstr "Sig. "
 
 #. module: l10n_ch
 #: model:account.account.type,name:l10n_ch.account_type_closing

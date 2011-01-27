@@ -29,9 +29,6 @@ except ImportError:
     import pickle
 import random
 import datetime
-
-import netsvc
-import pooler, tools
 from osv import fields, osv
 from tools.translate import _
 
@@ -257,7 +254,6 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
     def _get_summary_value(self, cr, uid, context=None):
         summary = u''
         anon_field_obj = self.pool.get('ir.model.fields.anonymization')
-        ir_model_obj = self.pool.get('ir.model')
         ir_model_fields_obj = self.pool.get('ir.model.fields')
 
         anon_field_ids = anon_field_obj.search(cr, uid, [('state', '<>', 'not_existing')], context=context)
@@ -341,10 +337,6 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 # remove the placeholer:
                 eview.remove(placeholder)
             else:
-                from olilib.openerp import Terp, ppt, pst
-                import pydb; pydb.debugger(['set listsize 40'])
-                print
-
                 # unstable ?
                 raise
 
@@ -458,7 +450,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         values = {
             'state': 'anonymized',
         }
-        res = ir_model_fields_anonymization_model.write(cr, uid, field_ids, values, context=context)
+        ir_model_fields_anonymization_model.write(cr, uid, field_ids, values, context=context)
 
         # add a result message in the wizard:
         msgs = ["Anonymization successful.",
@@ -549,7 +541,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             values = {
                 'state': 'clear',
             }
-            res = ir_model_fields_anonymization_model.write(cr, uid, field_ids, values, context=context)
+            ir_model_fields_anonymization_model.write(cr, uid, field_ids, values, context=context)
 
             # add a result message in the wizard:
             msg = '\n'.join(["Successfully reversed the anonymization.",
@@ -586,7 +578,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         try:
             idn = self.pool.get('ir.model.data')._get_id(cr, uid, mod, id_str)
             res = int(self.pool.get('ir.model.data').read(cr, uid, [idn], ['res_id'])[0]['res_id'])
-        except Exception, e:
+        except:
             res = None
         return res
 

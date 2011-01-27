@@ -6,41 +6,41 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2009-09-08 14:14+0000\n"
-"Last-Translator: Ivica Perić <ivica.peric@ipsoft-tg.com>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-17 01:09+0000\n"
+"Last-Translator: Goran Kliska (Aplikacija d.o.o.) <gkliska@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:11+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-18 04:43+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_payment
 #: field:payment.order,date_scheduled:0
 msgid "Scheduled date if fixed"
-msgstr ""
+msgstr "Zakazani datum ako je fiskno"
 
 #. module: account_payment
 #: field:payment.line,currency:0
 msgid "Partner Currency"
-msgstr ""
+msgstr "Valuta partnera"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Set to draft"
-msgstr ""
+msgstr "Stavi u pripremu"
 
 #. module: account_payment
 #: help:payment.order,mode:0
 msgid "Select the Payment Mode to be applied."
-msgstr ""
+msgstr "Odaberite način plaćanja koji će biti primjenjen."
 
 #. module: account_payment
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupiraj po..."
 
 #. module: account_payment
 #: model:ir.module.module,description:account_payment.module_meta_information
@@ -55,14 +55,14 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,line_ids:0
 msgid "Payment lines"
-msgstr ""
+msgstr "Retci plaćanja"
 
 #. module: account_payment
 #: view:payment.line:0
 #: field:payment.line,info_owner:0
 #: view:payment.order:0
 msgid "Owner Account"
-msgstr ""
+msgstr "Račun vlasnika"
 
 #. module: account_payment
 #: help:payment.order,state:0
@@ -78,26 +78,28 @@ msgid ""
 "The amount which should be paid at the current date\n"
 "minus the amount which is already in payment order"
 msgstr ""
+"Iznos koji bi trebao biti plaćen na tekući datum\n"
+"minus iznos koji je već u nalogu za plaćanje"
 
 #. module: account_payment
 #: field:payment.mode,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Tvrtka"
 
 #. module: account_payment
 #: field:payment.order,date_prefered:0
 msgid "Preferred date"
-msgstr ""
+msgstr "Željeni datum"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Free"
-msgstr ""
+msgstr "Slobodno"
 
 #. module: account_payment
 #: field:payment.order.create,entries:0
 msgid "Entries"
-msgstr ""
+msgstr "Stavke"
 
 #. module: account_payment
 #: report:payment.order:0
@@ -108,7 +110,7 @@ msgstr ""
 #: field:payment.line,ml_maturity_date:0
 #: field:payment.order.create,duedate:0
 msgid "Due Date"
-msgstr ""
+msgstr "Datum dospijeća"
 
 #. module: account_payment
 #: constraint:account.move.line:0
@@ -118,7 +120,7 @@ msgstr ""
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Account Entry Line"
-msgstr ""
+msgstr "Stavke knjiženja"
 
 #. module: account_payment
 #: view:payment.order.create:0
@@ -135,7 +137,7 @@ msgstr ""
 #: report:payment.order:0
 #: view:payment.order:0
 msgid "Amount"
-msgstr ""
+msgstr "Iznos"
 
 #. module: account_payment
 #: sql_constraint:account.move.line:0
@@ -145,23 +147,23 @@ msgstr ""
 #. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
-msgstr ""
+msgstr "Ukupno u valuti tvrtke"
 
 #. module: account_payment
 #: selection:payment.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Poništeno"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree_new
 msgid "New Payment Order"
-msgstr ""
+msgstr "Novi nalog za plaćanje"
 
 #. module: account_payment
 #: report:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
-msgstr ""
+msgstr "Veza"
 
 #. module: account_payment
 #: sql_constraint:payment.line:0
@@ -172,12 +174,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr ""
+msgstr "Nalozi za plaćanje"
 
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Directly"
-msgstr ""
+msgstr "Izravno"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_line_form
@@ -185,45 +187,45 @@ msgstr ""
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Payment Line"
-msgstr ""
+msgstr "Redak plaćanja"
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Amount Total"
-msgstr ""
+msgstr "Ukupni iznos"
 
 #. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Potvrđeno"
 
 #. module: account_payment
 #: help:payment.line,ml_date_created:0
 msgid "Invoice Effective Date"
-msgstr ""
+msgstr "Efektivni datum računa"
 
 #. module: account_payment
 #: report:payment.order:0
 msgid "Execution Type"
-msgstr ""
+msgstr "Tip izvršenja"
 
 #. module: account_payment
 #: selection:payment.line,state:0
 msgid "Structured"
-msgstr ""
+msgstr "Strukturiran"
 
 #. module: account_payment
 #: view:payment.order:0
 #: field:payment.order,state:0
 msgid "State"
-msgstr ""
+msgstr "Stanje"
 
 #. module: account_payment
 #: view:payment.line:0
 #: view:payment.order:0
 msgid "Transaction Information"
-msgstr ""
+msgstr "Podatci o transakciji"
 
 #. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_mode_form
@@ -232,12 +234,12 @@ msgstr ""
 #: view:payment.mode:0
 #: view:payment.order:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Način plaćanja"
 
 #. module: account_payment
 #: field:payment.line,ml_date_created:0
 msgid "Effective Date"
-msgstr ""
+msgstr "Efektivni datum"
 
 #. module: account_payment
 #: field:payment.line,ml_inv_ref:0
@@ -251,22 +253,25 @@ msgid ""
 "by you.'Directly' stands for the direct execution.'Due date' stands for the "
 "scheduled date of execution."
 msgstr ""
+"Odaberite opciju za nalog za plaćanje: \"Fiksno\" znači datum naveden od "
+"vaše strane. \"Izravno\" znači izravno izvršenje. \"Datum odgode\" znači "
+"zakazan datum izvršenja."
 
 #. module: account_payment
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Greška !"
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
-msgstr ""
+msgstr "Ukupno duguje"
 
 #. module: account_payment
 #: field:payment.order,date_done:0
 msgid "Execution date"
-msgstr ""
+msgstr "Datum izvršenja"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -276,18 +281,18 @@ msgstr ""
 #. module: account_payment
 #: selection:payment.order,date_prefered:0
 msgid "Fixed date"
-msgstr ""
+msgstr "Fiksni datum"
 
 #. module: account_payment
 #: field:payment.line,info_partner:0
 #: view:payment.order:0
 msgid "Destination Account"
-msgstr ""
+msgstr "Ciljni konto"
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Desitination Account"
-msgstr ""
+msgstr "Ciljni konto"
 
 #. module: account_payment
 #: view:payment.order:0
@@ -303,27 +308,27 @@ msgstr ""
 #. module: account_payment
 #: field:payment.line,create_date:0
 msgid "Created"
-msgstr ""
+msgstr "Kreiran"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Select Invoices to Pay"
-msgstr ""
+msgstr "Odaberite račune za plaćanje"
 
 #. module: account_payment
 #: view:payment.line:0
 msgid "Currency Amount Total"
-msgstr ""
+msgstr "Ukupni iznos u valuti"
 
 #. module: account_payment
 #: view:payment.order:0
 msgid "Make Payments"
-msgstr ""
+msgstr "Napravite plaćanja"
 
 #. module: account_payment
 #: field:payment.line,state:0
 msgid "Communication Type"
-msgstr ""
+msgstr "Vrsta veze"
 
 #. module: account_payment
 #: model:ir.module.module,shortdesc:account_payment.module_meta_information

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-31 11:07+0000\n"
-"Last-Translator: Sbh (Open ERP) <sbh@tinyerp.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 23:26+0000\n"
+"Last-Translator: Bhumika Shrimali (OpenERP) <sbh@tinyerp.com>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:36+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:56+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
@@ -108,7 +108,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:130
+#: code:addons/project_long_term/project_long_term.py:133
 #, python-format
 msgid "Day"
 msgstr "Dia"
@@ -132,14 +132,6 @@ msgstr "Fases anteriores"
 #. module: project_long_term
 #: help:project.phase,product_uom:0
 msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:489
-#, python-format
-msgid ""
-"Resources should be allocated to your phases and Members should be assigned "
-"to your Project!"
 msgstr ""
 
 #. module: project_long_term
@@ -172,12 +164,6 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:426
-#, python-format
-msgid "No tasks to compute for Project '%s'."
-msgstr ""
-
-#. module: project_long_term
 #: help:project.resource.allocation,date_end:0
 msgid "Ending Date"
 msgstr "Data de fim"
@@ -205,7 +191,7 @@ msgid "Compute Phase Scheduling"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:192
+#: code:addons/project_long_term/project_long_term.py:195
 #, python-format
 msgid " (copy)"
 msgstr " (cópia)"
@@ -325,6 +311,13 @@ msgid "Schedule and Display info"
 msgstr ""
 
 #. module: project_long_term
+#: help:project.phase,date_start:0
+msgid ""
+"It's computed by the scheduler according the project date or the end date of "
+"the previous phase."
+msgstr "Data de início da fase"
+
+#. module: project_long_term
 #: view:project.phase:0
 msgid "Month"
 msgstr "Mês"
@@ -389,14 +382,6 @@ msgid "User"
 msgstr "Utilizador"
 
 #. module: project_long_term
-#: help:project.phase,date_start:0
-msgid ""
-"It's computed according to the phases order : the start date of the 1st "
-"phase is set by you while the other start dates depend on the end date of "
-"their previous phases"
-msgstr "Data de início da fase"
-
-#. module: project_long_term
 #: view:project.phase:0
 msgid "Task Detail"
 msgstr "Detalhe da tarefa"
@@ -409,24 +394,6 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:244
-#, python-format
-msgid "No responsible person assigned !"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:489
-#, python-format
-msgid "Error"
-msgstr "Erro"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:244
-#, python-format
-msgid "You must assign a responsible person for phase '%s' !"
 msgstr ""
 
 #. module: project_long_term
@@ -520,12 +487,6 @@ msgid "Phase"
 msgstr "Fase"
 
 #. module: project_long_term
-#: help:project.phase,date_start:0
-msgid ""
-"It's computed by the scheduler according the project date or the end date of the previous phase."
-msgstr "Data de início da fase"
-
-#. module: project_long_term
 #: help:project.phase,state:0
 msgid ""
 "If the phase is created the state 'Draft'.\n"
@@ -570,12 +531,6 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
 msgid "Scheduling"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:329
-#, python-format
-msgid "No tasks to compute for Phase '%s'."
 msgstr ""
 
 #. module: project_long_term
@@ -634,9 +589,25 @@ msgstr ""
 msgid "Duration"
 msgstr "Duração"
 
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Erro"
+
 #~ msgid "Other Info"
 #~ msgstr "Outras informações"
+
+#~ msgid "Starting Date of the phase"
+#~ msgstr "Data de início da fase"
+
+#~ msgid "Ending Date of the phase"
+#~ msgstr "Data de fim da fase"
 
 #~ msgid ""
 #~ "It's computed by the scheduler according to the start date and the duration."
 #~ msgstr "Data de fim da fase"
+
+#~ msgid ""
+#~ "It's computed according to the phases order : the start date of the 1st "
+#~ "phase is set by you while the other start dates depend on the end date of "
+#~ "their previous phases"
+#~ msgstr "Data de início da fase"

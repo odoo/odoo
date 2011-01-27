@@ -64,10 +64,10 @@
   I create my current timesheet for "Mark Johnson".
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
-    date_current: '2010-05-26'
-    date_from: '2010-05-01'
-    date_to: '2010-05-31'
-    name: Week-22(2010)
+    date_current: !eval "'%s-05-26' %(datetime.now().year)"
+    date_from: !eval "'%s-05-01' %(datetime.now().year)"
+    date_to: !eval "'%s-05-31' %(datetime.now().year)"
+    name: !eval "'Week-22(%s)' %(datetime.now().year)"
     state: new
     user_id: base.user_root
     employee_id: 'hr_employee_employee0'
@@ -77,7 +77,7 @@
   !record {model: hr.attendance, id: hr_attendance_0}:
     action: sign_in
     employee_id: 'hr_employee_employee0'
-    name: '2010-05-26 10:08:08'
+    name: !eval "'%s-05-26 10:08:08' %(datetime.now().year)"
 
 -
   At the time of logout, I create attendance and perform "Sign Out".
@@ -85,7 +85,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr_employee_employee0'
-    name: '2010-05-26 15:10:55'
+    name: !eval "'%s-05-26 15:10:55' %(datetime.now().year)"
 
 -
   I create Timesheet Entry for time spend on today work.
@@ -94,7 +94,7 @@
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
       - account_id: account.analytic_sednacom
-        date: '2010-05-26'
+        date: !eval "'%s-05-26' %(datetime.now().year)"
         name: 'Develop yaml for hr module'
         unit_amount: 3.00
         amount: -90.00
@@ -125,7 +125,7 @@
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     timesheet_ids:
       - account_id: account.analytic_sednacom
-        date: '2010-05-26'
+        date: !eval "'%s-05-26' %(datetime.now().year)"
         name: 'Develop yaml for hr module'
         unit_amount: 2.0
         amount: -90.00

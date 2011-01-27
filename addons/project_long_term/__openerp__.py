@@ -60,7 +60,7 @@ Features.
     ],
     'installable': True,
     'active': False,
-    'certificate': None,
+    'certificate': '001227470751077315069',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

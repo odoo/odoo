@@ -2,7 +2,7 @@
 ##############################################################################
 #    
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -67,9 +67,10 @@ class HeaderTemplateEditor(openobject.templating.TemplateEditor):
         PAT = '<ul class="tools">'
 
         ul = output.index(PAT)
-        output = output[:ul] + """
-            <p class="logout feedback"><a href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;"><img src="/web_uservoice/static/images/uv_favicon.png" />feedback</a></p>
-        """ + output[ul:]
+        output = output[:ul] + ("""
+            <p class="logout feedback"><a href="#" onclick="UserVoice.Popin.show(uservoiceOptions); return false;"><img src="/web_uservoice/static/images/uv_favicon.png" />%s</a></p>
+        """ % _('feedback')) + output[ul:]
+
 
         return output
 

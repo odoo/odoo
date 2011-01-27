@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 09:14+0000\n"
-"PO-Revision-Date: 2010-11-22 07:39+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-23 10:45+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:54+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-24 04:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:295
@@ -51,6 +51,29 @@ msgid ""
 "Sent\n"
 "\n"
 msgstr ""
+"\n"
+"    Moduli per automatizzare le lettere per fatture non pagate, con "
+"richiamate multi livello.\n"
+"\n"
+"    E' possibile definire i vostri livelli multipli di richiamata attraverso "
+"il menù:\n"
+"        Contabilità / Configurazione / Varie / Follow up\n"
+"\n"
+"    Una volta definito, è possibile stampare le richiamate automaticamente, "
+"ogni giorno\n"
+"    semplicemente cliccando sul menù:\n"
+"        Contabilità / Processi periodici / Fatturazione / Invio follow up\n"
+"\n"
+"    Esso genererà un file PDF con tutte le lettere in accordo ai\n"
+"    differenti livelli di richiamata definiti. E' possibile definire "
+"differenti politiche\n"
+"    per differenzi aziende. E' inoltre possibile inviare mail al cliente.\n"
+"\n"
+"    Da notare che se volete cambiare il livello di follow up per una data "
+"voce partner/conto, è possibile farlo nel menù:\n"
+"        Contabilità / Report / Report generico / Conti partner / Invio "
+"Follow up\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -66,6 +89,10 @@ msgid ""
 "E-Mail sent to following Partners successfully. !\n"
 "\n"
 msgstr ""
+"\n"
+"\n"
+"Email inviata ai seguenti partner correttamente!\n"
+"\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -191,7 +218,7 @@ msgstr "Partners"
 #: code:addons/account_followup/wizard/account_followup_print.py:138
 #, python-format
 msgid "Invoices Reminder"
-msgstr ""
+msgstr "Promemoria fatture"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -225,6 +252,10 @@ msgid ""
 "You can send them the default message for unpaid invoices or manually enter "
 "a message should you need to remind them of a specific information."
 msgstr ""
+"Questa caratteristica vi permette di inviare promemoria ai partner con "
+"fatture in sospeso. E' possibile inviare dei messaggi di default, per "
+"fatture non pagate, o, manualmente, inserire il messaggio che vorrete "
+"mettere come promemoria di una specifica informazione."
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -235,6 +266,7 @@ msgstr "Rif"
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr ""
+"Fornisce l'ordinamento quando è visualizzata un elenco di righe follow up"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -245,13 +277,13 @@ msgstr "Contenuto email"
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
 msgid "Follow-up Level"
-msgstr ""
+msgstr "Livello follow up"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
-msgstr ""
+msgstr "Ultimo follow up"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -280,7 +312,7 @@ msgstr ""
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
 msgid "Send Email in Partner Language"
-msgstr ""
+msgstr "Invia email nella lingua del partner"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -305,7 +337,7 @@ msgstr "Mesasggio stampato"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send followups"
-msgstr ""
+msgstr "Invia i follow up"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -358,27 +390,27 @@ msgstr ""
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Send Mails"
-msgstr ""
+msgstr "Invia email"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr ""
+msgstr "Statistiche follow up per partner"
 
 #. module: account_followup
 #: model:ir.module.module,shortdesc:account_followup.module_meta_information
 msgid "Accounting follow-ups management"
-msgstr ""
+msgstr "Gestione follow up contabilità"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
-msgstr ""
+msgstr "Bloccato"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -395,7 +427,7 @@ msgstr "Dovuto"
 #: code:addons/account_followup/wizard/account_followup_print.py:56
 #, python-format
 msgid "Select Partners"
-msgstr ""
+msgstr "Seleziona i partner"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -405,12 +437,12 @@ msgstr "Impostazioni E-mail"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr ""
+msgstr "Stampa i follow up"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr ""
+msgstr "Ultimo follow up"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -425,7 +457,7 @@ msgstr "Bilancio:"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr ""
+msgstr "Statistiche follow up"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -435,17 +467,18 @@ msgstr "Pagato"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr ""
+msgstr "%(user_signature)s: Nome utente"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr ""
+msgstr "Voci Giornale"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
 msgstr ""
+"L'azienda deve essere la stessa per il periodo ed il conto ad essa correlato."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -459,11 +492,13 @@ msgid ""
 "All E-mails have been successfully sent to Partners:.\n"
 "\n"
 msgstr ""
+"Tutte le email sono state spedite correttamente ai partner:\n"
+"\n"
 
 #. module: account_followup
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Errore! Non è possibile creare aziende ricorsive."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -473,12 +508,12 @@ msgstr "%(company_name)s: Nome utente Azienda"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Aziende"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Followup Lines"
-msgstr ""
+msgstr "Righe follow up"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -493,17 +528,17 @@ msgstr ""
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr ""
+msgstr "%(partner_name)s: Nome partner"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-Up lines"
-msgstr ""
+msgstr "Righe follow up"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr ""
+msgstr "%(company_currency)s: Valuta azienda dell'utente"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -521,7 +556,7 @@ msgstr "Tipo di termine"
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr ""
+msgstr "Stampa follow up & invia email ai clienti"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -532,12 +567,12 @@ msgstr "Ultimo movimento"
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Followup Report"
-msgstr ""
+msgstr "Report follow up"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
-msgstr ""
+msgstr "Periodo"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -548,7 +583,7 @@ msgstr "Annulla"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Lines"
-msgstr ""
+msgstr "Righe follow up"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -558,7 +593,7 @@ msgstr ""
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr ""
+msgstr "Massimo livello follow up"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -579,7 +614,7 @@ msgstr "%(date)s: Data corrente"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Followup Level"
-msgstr ""
+msgstr "Livello follow up"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -591,12 +626,12 @@ msgstr "Descrizione"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr ""
+msgstr "Questo anno fiscale"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr ""
+msgstr "Voci partner"
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -615,7 +650,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
-msgstr ""
+msgstr "Follow up inviati"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -646,6 +681,8 @@ msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
 "\n"
 msgstr ""
+"L'email non è stata spedita ai seguenti partner, email non disponibile!\n"
+"\n"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -706,7 +743,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr ""
+msgstr "Criterio follow up"
 
 #. module: account_followup
 #: constraint:account.move.line:0

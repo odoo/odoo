@@ -136,7 +136,7 @@ class crm_lead(crm_case, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority'),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage', domain="[('type','=','lead')]"),
-        'user_id': fields.many2one('res.users', 'Salesman',help='By Default Salesman is Administrator when create New User'),
+        'user_id': fields.many2one('res.users', 'Salesman'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -301,9 +301,9 @@ class crm_lead(crm_case, osv.osv):
             message=''
             for case in self.browse(cr, uid, ids, context=context):
                 if case.type == 'lead' or  context.get('stage_type',False)=='lead':
-                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
                 elif case.type == 'opportunity':
-                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
                 self.log(cr, uid, case.id, message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
     

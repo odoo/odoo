@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2011-01-07 14:26+0000\n"
-"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-21 20:36+0000\n"
+"Last-Translator: Open Net Sàrl <openerp@open-net.ch>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-08 05:01+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-22 04:53+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Value Mapping"
 msgstr "Correspondance de valeur"
+
+#. module: caldav
+#: help:caldav.browse,url:0
+msgid "Url of the caldav server, use for synchronization"
+msgstr "Url the serveur Caldav, utiliser pour la synchronisation"
 
 #. module: caldav
 #: field:basic.calendar.alias,name:0
@@ -59,11 +64,12 @@ msgid "Can not map a field more than once"
 msgstr "Un champ ne peut avoir plus d'une correspondance"
 
 #. module: caldav
-#: selection:basic.calendar,type:0
-#: selection:basic.calendar.attributes,type:0
-#: selection:basic.calendar.lines,name:0
-msgid "TODO"
-msgstr "Á faire"
+#: code:addons/caldav/calendar.py:772
+#: code:addons/caldav/calendar.py:861
+#: code:addons/caldav/wizard/calendar_event_import.py:63
+#, python-format
+msgid "Warning !"
+msgstr "Avertissement !"
 
 #. module: caldav
 #: field:basic.calendar.lines,object_id:0
@@ -71,9 +77,29 @@ msgid "Object"
 msgstr "Objet"
 
 #. module: caldav
+#: view:basic.calendar:0
+msgid "Todo"
+msgstr "À faire"
+
+#. module: caldav
+#: model:ir.model,name:caldav.model_user_preference
+msgid "User preference Form"
+msgstr "Formulaire des préférences utilisateur"
+
+#. module: caldav
+#: field:user.preference,service:0
+msgid "Services"
+msgstr "Services"
+
+#. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Expression as constant"
 msgstr "L'expression représentant une constante"
+
+#. module: caldav
+#: selection:user.preference,device:0
+msgid "Evolution"
+msgstr "Évolution"
 
 #. module: caldav
 #: view:calendar.event.import:0
@@ -95,18 +121,149 @@ msgid "File name"
 msgstr "Nom du fichier"
 
 #. module: caldav
+#: field:caldav.browse,url:0
+msgid "Caldav Server"
+msgstr "Serveur Caldav"
+
+#. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Error!"
 msgstr "Erreur !"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:772
-#: code:addons/caldav/calendar.py:861
-#: code:addons/caldav/wizard/calendar_event_import.py:63
+#: help:caldav.browse,caldav_doc_file:0
+msgid "download full caldav Documentation."
+msgstr "Télécharger la documentation complète sur Caldav"
+
+#. module: caldav
+#: selection:user.preference,device:0
+msgid "iPhone"
+msgstr "iPhone"
+
+#. module: caldav
+#: code:addons/caldav/wizard/caldav_browse.py:32
 #, python-format
-msgid "Warning !"
-msgstr "Avertissement !"
+msgid ""
+"\n"
+"  * Webdav server that provides remote access to calendar\n"
+"  * Synchronisation of calendar using WebDAV\n"
+"  * Customize calendar event and todo attribute with any of OpenERP model\n"
+"  * Provides iCal Import/Export functionality\n"
+"\n"
+"    To access Calendars using CalDAV clients, point them to:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c\n"
+"\n"
+"    To access OpenERP Calendar using WebCal to remote site use the URL "
+"like:\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"      Where,\n"
+"        HOSTNAME: Host on which OpenERP server(With webdav) is running\n"
+"        PORT : Port on which OpenERP server is running (By Default : 8069)\n"
+"        DATABASE_NAME: Name of database on which OpenERP Calendar is "
+"created\n"
+"        CALENDAR_NAME: Name of calendar to access\n"
+"     "
+msgstr ""
+"\n"
+"  * Le serveur Webdav fournit un accès distant au calendrier\n"
+"  * La synchronisation du calendrier en utilisant WebDAV\n"
+"  * Personnalisation des événements du calendrier et des attributs à ajouter "
+"avec n'importe quel modèle OpenERP\n"
+"  * Fournit une fonctionnalité d'import/export iCal\n"
+"\n"
+"    Pour accéder aux calendrier en utilisant des clients CalDAV, pointer les "
+"sur :\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/calendars/users/USERNAME/c\n"
+"\n"
+"    To access OpenERP Calendar using WebCal to remote site use the URL "
+"like:\n"
+"    Pour accéder au calendrier OpenERP en utisant WebCal depuis un site "
+"distant, utilisez une adresse du type\n"
+"        "
+"http://HOSTNAME:PORT/webdav/DATABASE_NAME/Calendars/CALENDAR_NAME.ics\n"
+"\n"
+"      Où :\n"
+"        HOSTNAME: Hôte sur lequel le serveur OpenERP (Avec webdav) est "
+"lancé\n"
+"        PORT : Port sur lequel le serveur OpenERP est lancé (Par défaut : "
+"8069)\n"
+"        DATABASE_NAME: Nom de la base de données sur laquelle le calendrier "
+"OpenERP est créé\n"
+"        CALENDAR_NAME: Nom du calendrier auquel accéder\n"
+"     "
+
+#. module: caldav
+#: code:addons/caldav/wizard/caldav_browse.py:147
+#, python-format
+msgid ""
+"\n"
+"Prerequire\n"
+"----------\n"
+"If you are using thunderbird, first you need to install the lightning "
+"module\n"
+"http://www.mozilla.org/projects/calendar/lightning/\n"
+"\n"
+"configuration\n"
+"-------------\n"
+"\n"
+"1. Go to Calendar View\n"
+"\n"
+"2. File -> New Calendar\n"
+"\n"
+"3. Chosse \"On the Network\"\n"
+"\n"
+"4. for format choose CalDav\n"
+"   and as location the url given above (ie : "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"   \n"
+"5. Choose a name and a color for the Calendar, and we advice you to uncheck "
+"\"alarm\"\n"
+"\n"
+"6. Then put your openerp login and password (to give the password only check "
+"the box \"Use password Manager to remember this password\"\n"
+"\n"
+"7. Then Finish, your meetings should appear now in your calendar view\n"
+msgstr ""
+"\n"
+"Pré-requis\n"
+"----------\n"
+"Si vous utilisez Thunderbird, vous avez d'abord besoin du module Lightning\n"
+"http://www.mozilla.org/projects/calendar/lightning/\n"
+"\n"
+"Configuration\n"
+"----------\n"
+"\n"
+"1. Allez dans Vue Calendrier\n"
+"\n"
+"2. Fichier -> Nouveau calendrier\n"
+"\n"
+"3. Choisissez \"Sur le réseau\"\n"
+"\n"
+"4. pour le format, choisissez CalDAV\n"
+"   et pour l'emplacement, l'adresse donnée plus haut "
+"(http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"   \n"
+"5. Choisissez un nom et une couleur pour le calendrier, et nous vous "
+"conseillons de décocher \"Alarme\"\n"
+"\n"
+"6. Puis, entrez votre identifiant et votre mot de passe OpenERP (pour garder "
+"le mot de passe, cochez la case \"Utilisez le gestionnaire de mots de passe "
+"pour sauvegarder le mot de passe\"\n"
+"\n"
+" Puis, cliquez sur 'Terminer', vos rendez-vous doivent maintenant apparaître "
+"dans votre vue calendrier\n"
+
+#. module: caldav
+#: selection:basic.calendar,type:0
+#: selection:basic.calendar.attributes,type:0
+#: selection:basic.calendar.lines,name:0
+msgid "TODO"
+msgstr "Á faire"
 
 #. module: caldav
 #: view:calendar.event.export:0
@@ -144,6 +301,7 @@ msgstr "Importer ICS"
 #. module: caldav
 #: view:calendar.event.import:0
 #: view:calendar.event.subscribe:0
+#: view:user.preference:0
 msgid "_Cancel"
 msgstr "_Annuler"
 
@@ -162,6 +320,7 @@ msgstr "Évènement"
 
 #. module: caldav
 #: field:document.directory,calendar_collection:0
+#: field:user.preference,collection:0
 msgid "Calendar Collection"
 msgstr "Colleciton de calendrier"
 
@@ -169,6 +328,11 @@ msgstr "Colleciton de calendrier"
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
 msgstr "Erreur ! Vous ne pouvez pas créer de répertoires récursifs."
+
+#. module: caldav
+#: view:user.preference:0
+msgid "_Open"
+msgstr "_Ouvrir"
 
 #. module: caldav
 #: field:basic.calendar,type:0
@@ -190,9 +354,64 @@ msgid "Error !"
 msgstr "Erreur !"
 
 #. module: caldav
+#: code:addons/caldav/wizard/caldav_browse.py:128
+#, python-format
+msgid ""
+"\n"
+"    1. Go to Calendar View\n"
+"\n"
+"    2. File -> New -> Calendar\n"
+"\n"
+"    3. Fill the form \n"
+"        - type : CalDav\n"
+"        - name : Whaterver you want (ie : Meeting)\n"
+"        - url : "
+"http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings (ie : "
+"http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings) the one "
+"given on the top of this window\n"
+"        - uncheck \"User SSL\"\n"
+"        - Username : Your username (ie : Demo)\n"
+"        - Refresh : everytime you want that evolution synchronize the data "
+"with the server\n"
+"\n"
+"    4. Click ok and give your openerp password\n"
+"\n"
+"    5. A new calendar named with the name you gave should appear on the left "
+"side.     \n"
+"     "
+msgstr ""
+"\n"
+"    1. Allez dans la vue Calendrier\n"
+"\n"
+"    2. Fichier -> Nouveau -> Calendrier\n"
+"\n"
+"    3. Remplissez le formulaire \n"
+"        - type : CalDAV\n"
+"        - nom : Ce que vous voulez (ex: Rendez-Vous)\n"
+"        - url : "
+"http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings (ie : "
+"http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings) le seule "
+"donné au dessus de la fenêtre\n"
+"        - Décochez \"Utiliser SSL\"\n"
+"        - Nom d'utilisateur : Votre nom d'utilisateur (ex : demo)\n"
+"        - Rafraîchissement : chaque fois que vous voulez synchroniser les "
+"données avec le serveur\n"
+"\n"
+"    4. Cliquez sur 'Ok' et donnez votre mot de passe OpenERP\n"
+"\n"
+"    5. A nouveau calendrier appelé avec le nom que vous avez donné sur le "
+"côté gauche.     \n"
+"     "
+
+#. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
 msgid "Calendar attributes"
 msgstr "Attributs du calendrier"
+
+#. module: caldav
+#: model:ir.model,name:caldav.model_caldav_browse
+msgid "Caldav Browse"
+msgstr "Naviguer dans CalDav"
 
 #. module: caldav
 #: model:ir.module.module,description:caldav.module_meta_information
@@ -247,6 +466,11 @@ msgstr ""
 "        CALENDAR_NAME : Nom du calendrier à accéder\n"
 
 #. module: caldav
+#: selection:user.preference,device:0
+msgid "Android based device"
+msgstr "Appareil basé sur Androïd"
+
+#. module: caldav
 #: field:basic.calendar,create_date:0
 msgid "Created Date"
 msgstr "Date de création"
@@ -267,9 +491,19 @@ msgid "Provide path for remote calendar"
 msgstr "Fournissez un chemin pour le calendrier distant"
 
 #. module: caldav
+#: view:caldav.browse:0
+msgid "_Ok"
+msgstr "_Ok"
+
+#. module: caldav
 #: field:basic.calendar.lines,domain:0
 msgid "Domain"
 msgstr "Domaine"
+
+#. module: caldav
+#: view:calendar.event.subscribe:0
+msgid "_Subscribe"
+msgstr "_S'abonner"
 
 #. module: caldav
 #: field:basic.calendar,user_id:0
@@ -281,13 +515,17 @@ msgstr "Propriétaire"
 #: field:basic.calendar.alias,cal_line_id:0
 #: field:basic.calendar.lines,calendar_id:0
 #: model:ir.ui.menu,name:caldav.menu_calendar
+#: field:user.preference,calendar:0
 msgid "Calendar"
 msgstr "Calendrier"
 
 #. module: caldav
-#: view:basic.calendar:0
-msgid "Todo"
-msgstr "À faire"
+#: code:addons/caldav/calendar.py:41
+#, python-format
+msgid ""
+"Please install python-vobject from http://vobject.skyhouseconsulting.com/"
+msgstr ""
+"Veuillez installer python-vobject from http://vobject.skyhouseconsulting.com/"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:63
@@ -295,6 +533,11 @@ msgstr "À faire"
 msgid "Invalid format of the ics, file can not be imported"
 msgstr ""
 "Format de fichier ics no valide, le fichier ne peut pas être importer"
+
+#. module: caldav
+#: selection:user.preference,service:0
+msgid "CalDAV"
+msgstr "CalDAV"
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
@@ -310,6 +553,11 @@ msgstr "Res. ID"
 #: view:calendar.event.subscribe:0
 msgid "Message..."
 msgstr "Message..."
+
+#. module: caldav
+#: selection:user.preference,device:0
+msgid "Other"
+msgstr "Autre"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -356,9 +604,187 @@ msgid "Write Date"
 msgstr "Date d'écriture"
 
 #. module: caldav
+#: code:addons/caldav/wizard/caldav_browse.py:104
+#, python-format
+msgid ""
+"\n"
+"Prerequire\n"
+"----------\n"
+"There is no buit-in way to synchronize calendar with caldav.\n"
+"So you need to install a third part software : Calendar (CalDav) \n"
+"for now it's the only one\n"
+"\n"
+"configuration\n"
+"-------------\n"
+"\n"
+"1. Open Calendar Sync\n"
+"   I'll get an interface with 2 tabs\n"
+"   Stay on the first one\n"
+"   \n"
+"2. CaDAV Calendar URL : put the URL given above (ie : "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"\n"
+"3. Put your openerp username and password\n"
+"\n"
+"4. If your server don't use SSL, you'll get a warnign, say \"Yes\"\n"
+"\n"
+"5. Then you can synchronize manually or custom the settings to synchronize "
+"every x minutes.\n"
+"    \n"
+"    "
+msgstr ""
+"\n"
+"Pré-requis\n"
+"---------------\n"
+"Il n'y a pas d'outil intégré pour synchroniser le calendrier avec caldav.\n"
+"Vous devez donc installer un logiciel tiers : Calendar (CalDav) \n"
+"Pour le moment, c'est le seul\n"
+"\n"
+"Configuration\n"
+"-------------------\n"
+"\n"
+"1. Ouvrir Calendar Sync\n"
+"   Vous devez tomber sur une interface avec 2 onglets\n"
+"   Restez sur le premier\n"
+"   \n"
+"2. CalDav Calendar URL : mettre ici l'URL donnée plus haut (ex : "
+"http://host.com:8069/webdav/db/calendars/users/demo/c/Meetings)\n"
+"\n"
+"3. Entrez vos nom d'utilisateur et mot de passe OpenERP\n"
+"\n"
+"4. Si votre serveur n'utilise pas SSL, vous aurez un message "
+"d'avertissement, dites \"Oui\"\n"
+"\n"
+"5. Puis, vous pouvez synchroniser manuellement ou définir un paramètre "
+"personnalisé pour synchroniser toutes les x minutes.\n"
+"    \n"
+"    "
+
+#. module: caldav
+#: code:addons/caldav/wizard/caldav_browse.py:53
+#, python-format
+msgid ""
+"\n"
+"    For SSL specific configuration see the documentation below\n"
+"\n"
+"Now, to setup the calendars, you need to:\n"
+"\n"
+"1. Click on the \"Settings\" and go to the \"Mail, Contacts, Calendars\" "
+"page.\n"
+"2. Go to \"Add account...\"\n"
+"3. Click on \"Other\"\n"
+"4. From the \"Calendars\" group, select \"Add CalDAV Account\"\n"
+"\n"
+"5. Enter the host's name \n"
+"   (ie : if the url is http://openerp.com:8069/webdav/db_1/calendars/ , "
+"openerp.com is the host)\n"
+"\n"
+"6. Fill Username and password with your openerp login and password\n"
+"\n"
+"7. As a description, you can either leave the server's name or\n"
+"   something like \"OpenERP calendars\".\n"
+"\n"
+"9. If you are not using a SSL server, you'll get an error, do not worry and "
+"push \"Continue\"\n"
+"\n"
+"10. Then click to \"Advanced Settings\" to specify the right\n"
+"    ports and paths. \n"
+"    \n"
+"11. Specify the port for the OpenERP server: 8071 for SSL, 8069 without.\n"
+"\n"
+"12. Set the \"Account URL\" to the right path of the OpenERP webdav:\n"
+"    the url given by the wizard (ie : "
+"http://my.server.ip:8069/webdav/dbname/calendars/ )\n"
+"\n"
+"11. Click on Done. The phone will hopefully connect to the OpenERP server\n"
+"    and verify it can use the account.\n"
+"\n"
+"12. Go to the main menu of the iPhone and enter the Calendar application.\n"
+"    Your OpenERP calendars will be visible inside the selection of the\n"
+"    \"Calendars\" button.\n"
+"    Note that when creating a new calendar entry, you will have to specify\n"
+"    which calendar it should be saved at.\n"
+"\n"
+"\n"
+"\n"
+"IF you need SSL (and your certificate is not a verified one, as usual),\n"
+"then you first will need to let the iPhone trust that. Follow these\n"
+"steps:\n"
+"\n"
+"    s1. Open Safari and enter the https location of the OpenERP server:\n"
+"      https://my.server.ip:8071/\n"
+"      (assuming you have the server at \"my.server.ip\" and the HTTPS port\n"
+"      is the default 8071)\n"
+"    s2. Safari will try to connect and issue a warning about the "
+"certificate\n"
+"      used. Inspect the certificate and click \"Accept\" so that iPhone\n"
+"      now trusts it.   \n"
+"    "
+msgstr ""
+"\n"
+"    Pour les configurations SSL particulières, voir la documentation ci-"
+"dessous.\n"
+"\n"
+"Pour configurer les calendriers, il faut :\n"
+"\n"
+"1. Cliquer sur \"Paramètres\" et aller à la page \"Courrier, Contacts, "
+"Calendriers\"\n"
+"2. Aller à \"Ajouter un compte...\"\n"
+"3. Cliquer sur  \"Autre\"\n"
+"4. À partir du groupe \"Calendriers\", sélectionner \"Ajouter un Compte "
+"CalDAV\"\n"
+"5. Entrer le nom de l'hôte \n"
+"   (c'est à dire : si l'URL est "
+"http://openerp.com:8069/webdav/db_1/calendars/ , openerp.com est l'hôte)\n"
+"6. Remplir les champs \"Nom Utilisateur\" et \"Mot de passe\" avec votre "
+"identification et mot de passe OpenERP\n"
+"7. Comme description, on peut laisser le nom du serveur ou mettre quelque-"
+"chose comme \"Calendriers OpenERP\"\n"
+"9. Si vous utilises un serveur SSL, une erreur apparaîtra, ne pas en tenir "
+"compte et activer \"Continuer\"\n"
+"10. Ensuite cliquer sur \"Configuration avancée\" pour définir les ports et "
+"les chemins d'accès\n"
+"11. Définir le port du serveur OpenERP : 8071 avec SSL, sinon 8069\n"
+"12. Définir l' \"URL du compte\" vers le bon chemin d'accès au WebDAV "
+"OpenERP :\n"
+"    l'URL donnée par l'assistant (ex : "
+"http://my.server.ip:8069/webdav/dbname/calendars/ )\n"
+"11. Cliquer sur \"Terminé\". Le téléphone se connectera naturellement au "
+"serveur OpenERP et\n"
+"    vérifiera qu'il peut utiliser le compte\n"
+"12. Aller sur le menu principal de l'iPhone et entrer dans l'application "
+"Calendrier.\n"
+"    Vos calendriers OpenERP seront visibles avec la sélection du bouton "
+"\"Calendriers\"\n"
+"    Noter qu'à la création d'une nouvelle entrée de calendrier, il faudra "
+"définir dans quel \n"
+"   calendrier il faudra le sauvegarder.\n"
+"\n"
+"Si SSL est demandé (et, comme de coutume, votre certificat ne sera pas "
+"vérifié), \n"
+"alors il faudra laisser l'iPhone le faire. Suivre les étapes\n"
+"suivantes :\n"
+"\n"
+"    s1. Ouvrir Safari et entrer l'adresse HTTPS du serveur OpenERP :\n"
+"      https://my.server.ip:8071/\n"
+"      (sachant que le serveur est \"my.server.ip\" et que son port HTTPS\n"
+"      est 8071 par défaut)\n"
+"    s2. Safari tentera une connexion et publiera un avertissement relatif au "
+"certificat\n"
+"      utilisé. Vérifier le certificat et cliquer sur \"Accept\" afin que "
+"l'iPhone\n"
+"      le reconnaisse désormais.   \n"
+"    "
+
+#. module: caldav
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
 msgstr "Le nom du répertoire doit être unique !"
+
+#. module: caldav
+#: view:user.preference:0
+msgid "User Preference"
+msgstr "Préférence utilisateur"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
@@ -393,9 +819,19 @@ msgid "Select ICS file"
 msgstr "Sélectionner un fichier ICS"
 
 #. module: caldav
+#: field:caldav.browse,caldav_doc_file:0
+msgid "Caldav Document"
+msgstr "Document CalDav"
+
+#. module: caldav
 #: field:basic.calendar.lines,mapping_ids:0
 msgid "Fields Mapping"
 msgstr "Correspondance de champs"
+
+#. module: caldav
+#: view:caldav.browse:0
+msgid "Browse caldav"
+msgstr "Naviguer dans caldav"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar
@@ -408,9 +844,9 @@ msgid "Other Info"
 msgstr "Autres Informations"
 
 #. module: caldav
-#: view:calendar.event.subscribe:0
-msgid "_Subscribe"
-msgstr "_S'abonner"
+#: field:user.preference,device:0
+msgid "Software/Devices"
+msgstr "Logiciels/Appareils"
 
 #. module: caldav
 #: help:basic.calendar,has_webcal:0
@@ -429,6 +865,8 @@ msgstr "Fonction"
 #. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,description:0
+#: view:caldav.browse:0
+#: field:caldav.browse,description:0
 msgid "Description"
 msgstr "Description"
 
@@ -510,14 +948,14 @@ msgid "vobject Import Error!"
 msgstr "Erreur d'importation librairie vobject"
 
 #. module: caldav
-#: view:basic.calendar:0
-msgid "MY"
-msgstr "MON"
-
-#. module: caldav
 #: field:calendar.event.export,file_path:0
 msgid "Save ICS file"
 msgstr "Sauvegarder le fichier ICS"
+
+#. module: caldav
+#: selection:user.preference,device:0
+msgid "Sunbird/Thunderbird"
+msgstr "Sunbird/Thunderbird"
 
 #. module: caldav
 #: field:basic.calendar,calendar_order:0
@@ -535,12 +973,9 @@ msgid "Color"
 msgstr "Couleur"
 
 #. module: caldav
-#: code:addons/caldav/calendar.py:41
-#, python-format
-msgid ""
-"Please install python-vobject from http://vobject.skyhouseconsulting.com/"
-msgstr ""
-"Veuillez installer python-vobject from http://vobject.skyhouseconsulting.com/"
+#: view:basic.calendar:0
+msgid "MY"
+msgstr "MON"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
@@ -577,3 +1012,6 @@ msgstr ""
 
 #~ msgid "description"
 #~ msgstr "description"
+
+#~ msgid "Modifided Date"
+#~ msgstr "Date de modification"

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-11-30 16:41+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-14 16:47+0000\n"
+"Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:22+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:42+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_product_product
@@ -37,6 +37,17 @@ msgid ""
 "    supplier in the routing of the assembly operation.\n"
 "    "
 msgstr ""
+"\n"
+"    Este módulo permite um processo de separação intermediário para "
+"fornecer\n"
+"    matéria prima para os pedidos de produção.\n"
+"\n"
+"    Um exemplo de uso deste módulo é o gerenciamento da produção feita por "
+"seus\n"
+"    contratados (sub-contratação). Para isto, configure seu produto acabado\n"
+"    que for sub-contratado para \"Sem Auto-Separação\" e coloque o local do\n"
+"    contratado na rota da operação de montagem.\n"
+"    "
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_mrp_production
@@ -56,7 +67,7 @@ msgstr "Escolha Automática para matérias-primas de ordens de produção."
 #. module: stock_no_autopicking
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Erro: Código EAN inválido"
 
 #. module: stock_no_autopicking
 #: model:ir.module.module,shortdesc:stock_no_autopicking.module_meta_information
@@ -66,7 +77,7 @@ msgstr "Estoque sem Auto-Escolha"
 #. module: stock_no_autopicking
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero !"
-msgstr ""
+msgstr "Quantidade do pedido não pode ser negativa ou zero !"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Invalido XML para Arquitetura da View"

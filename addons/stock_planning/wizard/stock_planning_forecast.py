@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import osv, fields
+from tools.translate import _
 
 # Creates forecasts records for products from selected Product Category for selected 'Warehouse - Period'
 # Object added by contributor in ver 1.1

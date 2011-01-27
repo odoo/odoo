@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 00:56+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-18 10:25+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-10 05:19+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:46+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: procurement
 #: view:make.procurement:0
@@ -168,9 +168,9 @@ msgid ""
 "When the virtual stock goes belong the Min Quantity, OpenERP generates a "
 "procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
-"Wenn der fiktive Bestand unter den Meldebestand sinkt, erzeugt OpenERP "
-"automatisch einen  Bestellvorschlag der den Bestand auf die Max. Menge "
-"wiederauffüllt."
+"Wenn der fiktive Bestand den Minimalbestand erreicht oder unterschreitet , "
+"erzeugt OpenERP automatisch einen Bestellvorschlag in Höhe der Differenz zum "
+"Auffüllbestand."
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -366,7 +366,7 @@ msgid ""
 "order method."
 msgstr ""
 "Wenn Sie per Hand Beschaffungsaufträge erfassen, kann es sinnvoll sein das "
-"Dispositionsverfahren 'Disponiere von Auftrag' beim Produkt zu konfigurieren."
+"Dispositionsverfahren 'Beschaffe von Auftrag' beim Produkt zu konfigurieren."
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
@@ -376,7 +376,7 @@ msgstr "Automatische Beschaffung"
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Max Quantity"
-msgstr "Max. Menge"
+msgstr "Auffüllbestand"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
@@ -458,7 +458,7 @@ msgstr ""
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
-msgstr "Min. Menge"
+msgstr "Minimalbestand"
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -495,9 +495,9 @@ msgid ""
 "When the virtual stock goes belong the Max Quantity, OpenERP generates a "
 "procurement to bring the virtual stock to the Max Quantity."
 msgstr ""
-"Wenn der fiktive Bestand unter die Max Menge sinkt, erzeugt OpenERP autom. "
-"einen Beschaffungsvorschlag, um den fiktiven Bestand wieder auf die Max "
-"Menge aufzufüllen."
+"Wenn der fiktive Bestand unter den Auffüllbestand sinkt, erzeugt OpenERP "
+"automatisch einen Beschaffungsvorschlag, um den fiktiven Bestand wieder bis "
+"zum Auffüllbestand aufzustocken."
 
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
@@ -631,7 +631,7 @@ msgstr "Multiple Menge muss grösser 0 sein."
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
-msgstr "Bestelle bis zu Max. Menge"
+msgstr "Beschaffe bis Auffüllbestand"
 
 #. module: procurement
 #: field:procurement.order,date_close:0
@@ -814,7 +814,7 @@ msgstr "Produkt ME"
 #. module: procurement
 #: model:process.node,name:procurement.process_node_serviceonorder0
 msgid "Make to Order"
-msgstr "Disponiere von Auftrag"
+msgstr "Beschaffe von Auftrag"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -840,9 +840,9 @@ msgstr ""
 "der Bestandssituation automatisch Fertigungsaufträge oder "
 "Beschaffungsaufträge vorschlägt. Sobald der fiktive Bestand (=verfügbarer "
 "Bestand abzüglich bestätigte Verkaufsaufträge und Bestandsreservierungen) "
-"geringer als der Meldebestand ist, erzeugt OpenERP einen "
-"Beschaffungsauftrag, um den Bestand wieder bis zum angegebenen Max. Bestand "
-"aufzufüllen."
+"geringer als der Minimalbestand ist, erzeugt OpenERP einen "
+"Beschaffungsauftrag, um den Bestand wieder bis zum angegebenen "
+"Auffüllbestand aufzustocken."
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -914,6 +914,17 @@ msgid ""
 "others require manual intervention (those are identified by a specific error "
 "message)."
 msgstr ""
+"Beschaffungsaufträge repräsentieren den Bedarf an Produkten, zu einer "
+"bestimmten Zeit an einem bestimmten Ort. Verkaufsaufträge sind eine typische "
+"Quelle für Beschaffungsaufträge (es handelt sich allerdings um verschiedene "
+"Belege). In Abhängigkeit der Konfiguration für die Beschaffung, wird die "
+"Beschaffungsdisposition automatisch berechnen, wie der jeweilige Bedarf zu "
+"decken ist, sei es durch eine Entnahme von verfügbaren Beständen, eine "
+"Bestellung bei Lieferanten oder durch die Fertigung von Produkten, etc. Ein "
+"Beschaffungsfehler tritt auf, wenn das System nicht in der Lage ist, eine "
+"geeignete Beschaffungsmöglichkeit vorzuschlagen. Einige Fehler lösen sich "
+"dabei von selbst, andere erfordern einen Eingriff (diese sind "
+"gekennzeichnet)."
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
@@ -932,6 +943,11 @@ msgid ""
 "procurements. All procurements that are not between today and today+range "
 "are skipped for future computation."
 msgstr ""
+"In diesem maximalen Zeitfenster prüft der automatische Beschaffungsvorschlag "
+"auf automatisch zu erzeugende Beschaffungsaufträge. Alle "
+"Beschaffungsaufträge, die ausserhalb dieses Zeitfensters (also zwischen "
+"heute und heute + Zeitfenster) liegen, werden für die Berechnung nicht "
+"herangezogen ."
 
 #. module: procurement
 #: selection:procurement.order,priority:0

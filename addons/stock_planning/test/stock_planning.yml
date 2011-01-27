@@ -5,39 +5,39 @@
   I create weekly stock periods for the month of July.
 -
   I create stock period for the first week of July.
-- 
+-
   !record {model: stock.period, id: stock_period_01}:
-    date_start: '2010-07-01 00:00:00'
-    date_stop: '2010-07-06 23:59:00'
-    name: 2010, week 27
+    date_start: !eval "'%s-07-01 00:00:00' %(datetime.now().year)"
+    date_stop: !eval "'%s-07-06 23:59:00' %(datetime.now().year)"
+    name: !eval "'%s, week 27' %(datetime.now().year)"
 -
   I create stock period for the second week of July.
-- 
+-
   !record {model: stock.period, id: stock_period_02}:
-    date_start: '2010-07-07 00:00:00'
-    date_stop: '2010-07-12 23:59:00'
-    name: 2010, week 28
+    date_start: !eval "'%s-07-07 00:00:00' %(datetime.now().year)"
+    date_stop: !eval "'%s-07-12 23:59:00' %(datetime.now().year)"
+    name: !eval "'%s, week 28' %(datetime.now().year)"
 -
   I create stock period for the third week of July.
-- 
+-
   !record {model: stock.period, id: stock_period_03}:
-    date_start: '2010-07-15 00:00:00'
-    date_stop: '2010-07-20 23:59:00'
-    name: 2010, week 29
+    date_start: !eval "'%s-07-15 00:00:00' %(datetime.now().year)"
+    date_stop: !eval "'%s-07-20 23:59:00' %(datetime.now().year)"
+    name: !eval "'%s, week 29' %(datetime.now().year)"
 -
   I create stock period for the fourth week of July.
-- 
+-
   !record {model: stock.period, id: stock_period_04}:
-    date_start: '2010-07-22 00:00:00'
-    date_stop: '2010-07-27 23:59:00'
-    name: 2010, week 30
+    date_start: !eval "'%s-07-22 00:00:00' %(datetime.now().year)"
+    date_stop: !eval "'%s-07-27 23:59:00' %(datetime.now().year)"
+    name: !eval "'%s, week 30' %(datetime.now().year)"
 -
   I create stock period for the fifth week of July.
-- 
+-
   !record {model: stock.period, id: stock_period_05}:
-    date_start: '2010-07-29 00:00:00'
-    date_stop: '2010-07-31 23:59:00'
-    name: 2010, week 31
+    date_start: !eval "'%s-07-29 00:00:00' %(datetime.now().year)"
+    date_stop: !eval "'%s-07-31 23:59:00' %(datetime.now().year)"
+    name: !eval "'%s, week 31' %(datetime.now().year)"
 -
   Now I create the forecast for this period for all PCs.
 -
@@ -46,7 +46,7 @@
     period_id: stock_period_03
     product_categ_id: product.product_category_pc
     warehouse_id: stock.warehouse0
-- 
+-
   Performing an osv_memory action create_forecast on module stock.sale.forecast.createlines
 -
   !python {model: stock.sale.forecast.createlines}: |
@@ -56,9 +56,9 @@
       })
 -
   I create a sale order for PC1-Basic PC and PC3-Medium PC.
-- 
+-
   !record {model: sale.order, id: sale_order_so0}:
-    date_order: '2010-07-20'
+    date_order: !eval time.strftime('%Y-07-20')
     invoice_quantity: order
     name: SO006
     order_line:
@@ -105,17 +105,17 @@
       False, "search_default_create_uid": 1, "active_model": "ir.ui.menu", "department_id":
       False, "active_ids": [ref("stock_planning.menu_stock_sale_forecast_all")], "active_id":
       ref("stock_planning.menu_stock_sale_forecast_all"), })
-- 
+-
   I create Master procurement schedule for the third week of July.
-- 
+-
   !record {model: stock.planning.createlines, id: stock_planning_createlines_0}:
     company_id: base.main_company
     period_id: stock_period_03
     product_categ_id: product.product_category_pc
     warehouse_id: stock.warehouse0
-- 
+-
   Performing an osv_memory action create_planning on module stock.planning.createlines
-- 
+-
   !python {model: stock.planning.createlines}: |
     self.create_planning(cr, uid, [ref("stock_planning_createlines_0")], {"lang":
       "en_US", "tz": False, "active_model": "ir.ui.menu", "active_ids": [ref("stock_planning.menu_stock_planning_createlines")],
@@ -146,5 +146,5 @@
   I check whether the procurement orders are created or not.
 -
   !python {model: procurement.order}: |
-    proc_ids = self.search(cr, uid, [('origin','=','MPS(admin) 2010, week 29'),('product_id','=',ref("product.product_product_pc1"))])
+    proc_ids = self.search(cr, uid, [('origin','=','MPS(admin) 2011, week 29'),('product_id','=',ref("product.product_product_pc1"))])
     assert proc_ids,'No Procurements!'

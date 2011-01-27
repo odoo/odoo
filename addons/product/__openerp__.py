@@ -53,6 +53,7 @@
         'product_data.xml',
         'product_report.xml',
         'product_view.xml',
+        'product_shortcut_data.xml',
         'pricelist_view.xml',
         'partner_view.xml',
         'process/product_process.xml'

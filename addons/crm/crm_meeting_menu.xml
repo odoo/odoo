@@ -52,7 +52,8 @@
         <field name="view_id" ref="crm_case_calendar_view_meet"/>
         <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
         <field name="search_view_id" ref="view_crm_case_meetings_filter"/>
-        <field name="help">The meeting calendar is shared between the sales teams and fully integrated with other applications such as the employee holidays or the business opportunities. You can also synchronize meetings with your mobile phone using the caldav interface.</field>
+        <field name="help">The meeting calendar is shared between the sales teams and fully integrated with other applications such as the employee holidays or the business opportunities. You can also synchronize meetings with your mobile phone using the caldav interface.
+        </field>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_crm_tag_calendar_meet">
@@ -92,12 +93,6 @@
         action="crm_case_categ_meet" parent="menu_meeting_sale"
         sequence="1" />
 
-    <record id="ir_ui_view_sc_calendar0" model="ir.ui.view_sc">
-        <field name="name">Meetings</field>
-        <field name="resource">ir.ui.menu</field>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="res_id" ref="crm.menu_crm_case_categ_meet"/>
-    </record>
     <record id="action_view_attendee_form" model="ir.actions.act_window">
          <field name="name">Meeting Invitations</field>
          <field name="type">ir.actions.act_window</field>

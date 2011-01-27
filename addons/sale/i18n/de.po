@@ -7,15 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-05 17:41+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-18 11:11+0000\n"
+"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
+"consulting.net>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:06+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:44+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale
 #: view:board.board:0
@@ -144,6 +145,18 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
+"Verkaufsaufträge helfen Ihnen bei der Erstellung und Verwaltung von "
+"Angeboten an Ihre Kunden und bei der Auftragserfassung. OpenERP schlägt "
+"zunächst die Erstellung eines Angebots an Kunden vor. Durch die "
+"Kundenbestellung und Bestätigung des Auftrags wird das Angebot dann "
+"automatisch zum Auftrag. OpenERP kann verschiedene Produkttypen verwalten, "
+"insofern kann ein Verkaufsauftrag  je nach Konfiguration der Produkte "
+"automtisch die Erstellung von Aufgaben für das Projektmanagement, "
+"Lieferaufträge an Kunden, Angebotsanfragen für Bestellungen bei Lieferanten "
+"oder Fertigungsaufträge auslösen. Ebenso kann durch eine entsprechende "
+"Auftragskonfiguration bereits direkt eine Ausgangsrechnung im Zustand "
+"Entwurf vorgeschlagen werden, die dann für die Fakturierung nur noch "
+"aufzurufen und zu bestätigen ist."
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -259,9 +272,11 @@ msgstr ""
 "Auslieferungszeit (an den Kunden)."
 
 #. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Shipping Default Policy"
-msgstr "Standard für Abrechnung Lieferauftrag"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sales Manager Dashboard"
+msgstr "Pinnwand Vertriebsleitung"
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -774,7 +789,7 @@ msgid ""
 "only after the scheduler(s) have been launched."
 msgstr ""
 "Hier wird angezeigt, ob der Auftrag bereits ausgeliefert wurde. Dieses Feld "
-"wird immer nach Durchführung der automatischen Beschaffungsdisposition "
+"wird immer nach Durchführung des automatischen Beschaffungsvorschlags "
 "aktualisiert."
 
 #. module: sale
@@ -984,7 +999,7 @@ msgstr "Gesamtumsatz"
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "Disposition von Auftrag"
+msgstr "Beschaffe von Auftrag"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
@@ -1084,7 +1099,7 @@ msgstr "Warteliste"
 #. module: sale
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
-msgstr "Dispositionsverfahren"
+msgstr "Dispositionsmethode"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -1448,9 +1463,9 @@ msgstr ""
 "von Rechnungsbelegen ein Fehler aufgetreten ist und somit eine vorherige  "
 "Überarbeitung erforderlich ist.\n"
 "\n"
-"Der Wartezustand wird automatisch zugewiesen wenn eine Rechnung bereits "
-"bestätigt wurde, zunächst aber ein weiterer Dispositionslauf für das "
-"Bestelldatum durchgeführt werden sollte."
+"Der Wartezustand wird automatisch zugewiesen, wenn eine Rechnung bereits "
+"bestätigt wurde, zunächst aber ein weiterer automatischer "
+"Beschaffungsvorschlag für das Bestelldatum durchgeführt werden sollte."
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1563,13 +1578,6 @@ msgstr ""
 "Je nach Definition des Ausliefungslagers wird die Lagerbewegung zwischen "
 "Auslieferungslager und dem Kunden durch einen Lieferauftrag entweder manuell "
 "oder automatisch erstellt"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Dashboard"
-msgstr "Pinnwand Verkauf"
 
 #. module: sale
 #: code:addons/sale/sale.py:1165
@@ -2056,7 +2064,12 @@ msgstr "Der Auftrag '%s' wurde in den Zustand Entwurf versetzt"
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "from stock"
-msgstr "Disposition vom Lager"
+msgstr "Beschaffung an Lager"
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Standard für Abrechnung Lieferauftrag"
 
 #. module: sale
 #: view:sale.open.invoice:0
@@ -2093,6 +2106,11 @@ msgid ""
 "warehouse from which the products will be delivered for each particular "
 "sales."
 msgstr ""
+"Wenn Sie Ihre Produkte über verschiedene Verkaufsshops vertreiben, können "
+"Sie diese hier definieren und verwalten. Immer wenn Sie ein neues Angebot "
+"erstellen, müssen Sie zwingend einen Verkaufsshop angeben. Dieser "
+"Verkaufsshop steuert dann von welchem Zentrallager die Produktauslieferung "
+"an den Kunden erfolgen soll."
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -2979,9 +2997,6 @@ msgstr "Rechnung durch Lieferung"
 #~ msgid "From a sale order"
 #~ msgstr "Rechnung von einem Verkaufsauftrag"
 
-#~ msgid "Sales Manager Dashboard"
-#~ msgstr "Pinnwand Vertriebsleitung"
-
 #~ msgid "Sale Open Invoice"
 #~ msgstr "Öffne Ausgangsrechnung"
 
@@ -3271,3 +3286,6 @@ msgstr "Rechnung durch Lieferung"
 #~ "zwingend einem Verkaufsshop zugeordnet sein. Einem Verkaufsshop wird auch "
 #~ "ein Lager zugeordnet,wodurch der Lagerort bestimmt wird, von dem die "
 #~ "Produkte an Kunden ausgeliefert werden."
+
+#~ msgid "Sales Dashboard"
+#~ msgstr "Pinnwand Verkauf"

@@ -53,7 +53,7 @@
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
             <field name="type">tree</field>
-            <field name="field_parent">child_ids</field>
+            <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree colors="red:(date&lt;current_date);black:(date&gt;=current_date);black:(date==False)" string="Analytic account" toolbar="1">
                     <field name="name"/>

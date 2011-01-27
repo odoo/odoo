@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-29 08:29+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 09:43+0000\n"
+"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:44+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:09+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -73,6 +72,14 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Puede crear una petición de presupuesto cuando quiera obtener productos de "
+"un proveedor pero la compra todavía no se haya confirmado. Utilice asimismo "
+"este menú para revisar las peticiones de compra creadas automáticamente en "
+"base a sus reglas de logística (stock mínimo, MTO, etc). Puede convertir la "
+"petición en una compra una vez el pedido se haya confirmado. Si utiliza la "
+"interfaz extendida (desde las Preferencias de Usuario), puede elegir la "
+"forma de controlar sus facturas de proveedor: basadas en pedido, basadas en "
+"recepciones o codificación manual."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -82,7 +89,7 @@ msgstr "Desde albarán"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "No facturado"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -116,6 +123,9 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Utilice este menú para buscar en sus pedidos de compra por referencia, "
+"proveedor, producto, etc. Para cada pedido de compra, puede obtener los "
+"productos recibidos, y controlar las facturas de los proveedores."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
@@ -132,7 +142,7 @@ msgstr "Facturas de proveedor"
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "¡La referencia del pedido debe ser única!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -255,7 +265,7 @@ msgstr "Aprobado"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Referecnia UdM"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -265,7 +275,7 @@ msgstr "Origen"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Referencia UdM"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -770,6 +780,10 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"Use este menú para controlar las facturas a recibir de su proveedor. OpenERP "
+"pregenera facturas borrador a aprtir de sus órdenes de compra o recepciones, "
+"en fución de los parámetros. En cuanto reciba la factura del proveedor, "
+"puede verificarla con la factura borrador y validarla."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -845,6 +859,11 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
+"Si establece el control de facturación de una órden de compra a \"Manual\", "
+"puede seguir aquí todas las líneas de las órdenes de compra para las cuales "
+"no ha recibido todavía la factura de proveedor correspondiente. Una vez esté "
+"listo para recibir una factura de proveedor, puede generar una factura de "
+"proveedor en borrador basada en las lineas desde este menú."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -879,7 +898,7 @@ msgstr "Petición de compra"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Categorías de unidades de medida"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1259,7 +1278,7 @@ msgstr "Valor productos"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Tipos de listas de precios"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1281,7 +1300,7 @@ msgstr "Historia"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Productos por categoría"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1554,6 +1573,9 @@ msgid ""
 "suppliers. You can track all your interactions with them through the History "
 "tab: emails, orders, meetings, etc."
 msgstr ""
+"Acceda a los registros de sus proveedores y mantenga una buena relación con "
+"ellos.  Puede mantener el registro de todas sus interacciones con ellos "
+"gracias a la pestaña histórico: emails, reuniones, etc."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1617,7 +1639,7 @@ msgstr "Febrero"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "Categorías de productos"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1869,7 +1891,7 @@ msgstr "Movimientos de stock"
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Unidades de medida"
 
 #. module: purchase
 #: view:purchase.report:0

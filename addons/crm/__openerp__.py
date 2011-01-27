@@ -41,7 +41,7 @@ appropriate staff, and make sure all future correspondence gets to the right
 place.
 
 The CRM module has a email gateway for the synchronisation interface
-between mails and OpenERP. 
+between mails and OpenERP.
 Create dashboard for CRM that includes:
     * My Leads (list)
     * Leads by Stage (graph)
@@ -95,6 +95,7 @@ Create dashboard for CRM that includes:
 
         'crm_meeting_view.xml',
         'crm_meeting_menu.xml',
+        'crm_meeting_shortcut_data.xml',
 
         'crm_phonecall_view.xml',
         'crm_phonecall_menu.xml',
@@ -106,12 +107,12 @@ Create dashboard for CRM that includes:
         'report/crm_phonecall_report_view.xml',
 
         'process/crm_configuration_process.xml',
-        'crm_installer_view.xml', 
-        
+        'crm_installer_view.xml',
+
         'res_partner_view.xml',
         'board_crm_view.xml',
         'board_crm_statistical_view.xml',
-       
+
     ],
     'demo_xml': [
         'crm_demo.xml',
@@ -126,6 +127,7 @@ Create dashboard for CRM that includes:
             'test/test_crm_opportunity.yml',
             'test/test_crm_phonecall.yml',
             'test/test_crm_recurrent_meeting.yml',
+            'test/test_crm_stage_changes.yml',
              ],
     'installable': True,
     'active': False,

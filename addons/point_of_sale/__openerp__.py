@@ -76,5 +76,6 @@ Main features :
             'test/point_of_sale_report.yml',
     ],
     'installable': True,
+    'certificate' : '001156338024966477869',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

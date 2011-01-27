@@ -17,6 +17,7 @@
             <field model="stock.warehouse" name="warehouse_id" search="[]"/>
             <field model="account.payment.term" name="payment_default_id" search="[]"/>
             <field model="res.company" name="company_id" search="[]"/>
+            <field name="pricelist_id" ref="product.list0"/>
         </record>
 
         <function eval="('default',False,'shop_id', [('sale.order', False)], shop, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>

@@ -4,10 +4,10 @@
 -
   !record {model: account.period, id: account_period_jan0}:
     company_id: base.main_company
-    date_start: '2010-01-01'
-    date_stop: '2010-01-31'
+    date_start: !eval "'%s-01-01' %(datetime.now().year)"
+    date_stop: !eval "'%s-01-31' %(datetime.now().year)"
     fiscalyear_id: account.data_fiscalyear
-    name: Jan-2010
+    name: !eval "'Jan-%s' %(datetime.now().year)"
     special: 1
 
 -
@@ -16,7 +16,7 @@
   !assert {model: account.period, id: account_period_jan0, string: Period is in Draft state}:
     - state == 'draft'
 -
-  I use "Close a Period" wizard to close period Jan-2010
+  I use "Close a Period" wizard to close period
 -
   !record {model: account.period.close, id: account_period_close_0}:
     sure: 1
