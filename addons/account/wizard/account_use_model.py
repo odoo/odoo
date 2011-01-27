@@ -107,7 +107,7 @@ class account_use_model(osv.osv_memory):
                 })
                 c = context.copy()
                 c.update({'journal_id': model.journal_id.id,'period_id': period_id})
-                id_line = account_move_line_obj.create(cr, uid, val, context=c)
+                account_move_line_obj.create(cr, uid, val, context=c)
 
         context.update({'move_ids':move_ids})
         model_data_ids = mod_obj.search(cr, uid,[('model','=','ir.ui.view'),('name','=','view_move_form')], context=context)
