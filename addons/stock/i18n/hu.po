@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-23 00:40+0000\n"
+"PO-Revision-Date: 2011-01-26 15:17+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-24 04:53+0000\n"
+"X-Launchpad-Export-Date: 2011-01-27 04:35+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/stock/product.py:76
 #, python-format
 msgid "Variation Account is not specified for Product Category: %s"
-msgstr "%s termék kategóriára nem állítottak be készletszámlát."
+msgstr "%s termék kategóriára nem állítottak be készlet főkönyvi számlát."
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -504,7 +504,7 @@ msgstr ""
 #. module: stock
 #: field:stock.move,move_history_ids:0
 msgid "Move History (child moves)"
-msgstr ""
+msgstr "Mozgáselőzmények (almozgások)"
 
 #. module: stock
 #: code:addons/stock/stock.py:1984
@@ -513,8 +513,8 @@ msgid ""
 "There is no stock output account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
-"Nem állítottak be készletcsökkenés főkönyvi számlát erre a termékre vagy a "
-"termék kategóriájára: \"%s\" (kód:%d)"
+"\"%s\" (kód: %d) termékre vagy annak kategóriájára nem állítottak be "
+"készletcsökkenés főkönyvi számlát"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree6
@@ -758,7 +758,7 @@ msgstr "Beviteli _módok"
 #. module: stock
 #: help:stock.picking,date:0
 msgid "Date of Order"
-msgstr ""
+msgstr "Rendelés időpontja"
 
 #. module: stock
 #: selection:product.product,valuation:0
@@ -932,7 +932,7 @@ msgstr "Baloldali szülő"
 #: code:addons/stock/wizard/stock_partial_move.py:132
 #, python-format
 msgid "Delivery Information"
-msgstr ""
+msgstr "Szállítási információ"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:48
@@ -1090,7 +1090,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move.split:0
 msgid "Lot number"
-msgstr ""
+msgstr "Tételszám"
 
 #. module: stock
 #: field:stock.inventory.line,product_uom:0
@@ -1303,7 +1303,7 @@ msgstr "Általános IT beszállítók"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Picking List:"
-msgstr ""
+msgstr "Kiszedési lista:"
 
 #. module: stock
 #: field:stock.inventory,date:0
@@ -1402,7 +1402,7 @@ msgstr ""
 #: view:stock.picking:0
 #: field:stock.picking,date:0
 msgid "Order Date"
-msgstr ""
+msgstr "Megrendelés dátuma"
 
 #. module: stock
 #: field:stock.location,location_id:0
@@ -1426,7 +1426,7 @@ msgstr ""
 "* Rendelkezésre álló: a termékek foglalásra kerültek, egyszerűen "
 "jóváhagyásra várnak.\n"
 "* Várakozó: egy másik mozgás befejezésére vár, mielőtt automatikusan "
-"rendelkezésre állóra változik (pl. beszerzés megrendelésre folyamatok "
+"rendelkezésre állóra változik (pl. rendelésre gyártás/beszerzés folyamatok "
 "esetében)\n"
 "* Kész: végrehajtásra került, többé nem lehet módosítani vagy törölni\n"
 "* Törölt: törlésre került, többé nem hagyható jóvá"
@@ -1589,7 +1589,7 @@ msgstr ""
 #. module: stock
 #: view:stock.location:0
 msgid "Localization"
-msgstr ""
+msgstr "Lokalizáció"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_report_tracklots
@@ -1665,7 +1665,7 @@ msgstr "Kód"
 #. module: stock
 #: view:stock.inventory.line.split:0
 msgid "Lots Number"
-msgstr ""
+msgstr "Tételek száma"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.open_board_warehouse
@@ -1843,8 +1843,8 @@ msgid ""
 "There is no stock input account defined for this product or its category: "
 "\"%s\" (id: %d)"
 msgstr ""
-"Nem állítottak be készletnövekedés főkönyvi számlát a \"%s\" (kód: %d) "
-"termékre vagy annak kategóriájára"
+"\"%s\" (kód: %d) termékre vagy annak kategóriájára nem állítottak be "
+"készletnövekedés főkönyvi számlát"
 
 #. module: stock
 #: code:addons/stock/product.py:357
@@ -1972,7 +1972,7 @@ msgstr "Beérkező termék"
 #. module: stock
 #: view:stock.move:0
 msgid "Creation"
-msgstr ""
+msgstr "Létrehozás"
 
 #. module: stock
 #: field:stock.move.memory.in,cost:0
@@ -1996,7 +1996,7 @@ msgstr "Raktármenedzsment"
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "Partial Delivery"
-msgstr ""
+msgstr "Részleges szállítás"
 
 #. module: stock
 #: selection:stock.location,chained_auto_packing:0
@@ -2236,7 +2236,7 @@ msgstr "Késedelem (napok)"
 #: field:stock.move.memory.in,move_id:0
 #: field:stock.move.memory.out,move_id:0
 msgid "Move"
-msgstr ""
+msgstr "Mozgatás"
 
 #. module: stock
 #: help:stock.picking,min_date:0
@@ -2520,7 +2520,7 @@ msgstr "Készletek"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Todo"
-msgstr ""
+msgstr "Tennivalók"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2550,7 +2550,7 @@ msgstr "Mértékegység"
 msgid ""
 "There is no stock input account defined for this product: \"%s\" (id: %d)"
 msgstr ""
-"\"%s\" (kód: %d) termék készletnövekedés főkönyvi számláját nem állították be"
+"\"%s\" (kód: %d) termékre nem állítottak be készletnövekedés főkönyvi számlát"
 
 #. module: stock
 #: code:addons/stock/stock.py:2302
@@ -2607,7 +2607,7 @@ msgstr "Tétel"
 #. module: stock
 #: view:stock.move.split:0
 msgid "Production Lot Number"
-msgstr ""
+msgstr "Gyártási tétel száma"
 
 #. module: stock
 #: field:stock.move,product_uos_qty:0
@@ -2801,7 +2801,7 @@ msgstr "Nem sürgős"
 #. module: stock
 #: view:stock.move:0
 msgid "To Do"
-msgstr ""
+msgstr "Tennivalók"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_warehouse_form
@@ -2890,7 +2890,7 @@ msgstr "Z pozíció"
 #. module: stock
 #: field:stock.ups,weight:0
 msgid "Lot weight"
-msgstr ""
+msgstr "Tétel súlya"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_consume
@@ -2988,7 +2988,7 @@ msgstr ""
 #. module: stock
 #: view:stock.move:0
 msgid "Order"
-msgstr ""
+msgstr "Megrendelés"
 
 #. module: stock
 #: field:stock.tracking,name:0
@@ -3015,7 +3015,7 @@ msgstr "Összesen"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_intermediatelocation0
 msgid "Internal Shippings"
-msgstr ""
+msgstr "Belső szállítások"
 
 #. module: stock
 #: field:stock.change.standard.price,enable_stock_in_out_acc:0
@@ -3126,7 +3126,7 @@ msgstr "Ok"
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Delivery Order:"
-msgstr ""
+msgstr "Szállítólevél:"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_production_lot_form
@@ -3384,7 +3384,7 @@ msgstr "Beállítások"
 #: field:stock.inventory.line.split,use_exist:0
 #: field:stock.move.split,use_exist:0
 msgid "Existing Lots"
-msgstr ""
+msgstr "Létező tételek"
 
 #. module: stock
 #: field:product.product,location_id:0
@@ -3659,7 +3659,7 @@ msgstr "November"
 #: code:addons/stock/stock.py:1987
 #, python-format
 msgid "There is no journal defined on the product category: \"%s\" (id: %d)"
-msgstr "\"%s\" (kód: %d) termék kategóriára nem állítottak be naplót."
+msgstr "\"%s\" (kód: %d) termék kategóriára nem állítottak be naplót"
 
 #. module: stock
 #: code:addons/stock/product.py:379
@@ -3703,7 +3703,7 @@ msgstr "Jövöbeni készletmozgások"
 #. module: stock
 #: field:stock.move,move_history_ids2:0
 msgid "Move History (parent moves)"
-msgstr ""
+msgstr "Mozgás előzmények (főmozgások)"
 
 #. module: stock
 #: code:addons/stock/product.py:361
@@ -3877,7 +3877,7 @@ msgstr "Május"
 #: code:addons/stock/wizard/stock_partial_move.py:133
 #, python-format
 msgid "Deliver"
-msgstr ""
+msgstr "Szállítás"
 
 #. module: stock
 #: help:product.template,property_stock_account_output:0
