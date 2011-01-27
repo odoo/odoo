@@ -207,7 +207,6 @@ class account_balance_landscape(report_sxw.rml_parse):
             return cmp(x.code, y.code)
         for n in range(0,len(accounts)):
             accounts[n].sort(cmp_code)
-        common={}
         merged_accounts=zip(*accounts)
 
         for entry in merged_accounts:
