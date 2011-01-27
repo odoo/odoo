@@ -995,7 +995,7 @@ class account_journal_period(osv.osv):
         return super(account_journal_period, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        period_id=vals.get('period_id',False)
+        period_id = vals.get('period_id',False)
         if period_id:
             period = self.pool.get('account.period').browse(cr, uid, period_id, context=context)
             vals['state']=period.state
