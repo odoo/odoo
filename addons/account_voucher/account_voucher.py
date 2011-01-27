@@ -722,13 +722,16 @@ class account_voucher(osv.osv):
 
             for line in inv.line_ids:
                 #create one move line per voucher line where amount is not 0.0
-                if not line.amount:
+                if not line.amount and not inv.payment_option == 'with_writeoff':
                     continue
                 #we check if the voucher line is fully paid or not and create a move line to balance the payment and initial invoice if needed
                 if line.amount == line.amount_unreconciled:
                     amount = line.move_line_id.amount_residual #residual amount in company currency
                 else:
-                    amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context_multi_currency)
+                    if inv.payment_option == 'with_writeoff':
+                        amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.amount_unreconciled or line.amount, context=context_multi_currency)
+                    else:
+                        amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context_multi_currency)
                 move_line = {
                     'journal_id': inv.journal_id.id,
                     'period_id': inv.period_id.id,
@@ -749,7 +752,6 @@ class account_voucher(osv.osv):
                         line.type = 'cr'
                     else:
                         line.type = 'dr'
-
                 if (line.type=='dr'):
                     line_total += amount
                     move_line['debit'] = amount
