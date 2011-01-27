@@ -294,28 +294,38 @@ class crm_lead(crm_case, osv.osv):
             
         if 'date_closed' in vals:
             return super(crm_lead,self).write(cr, uid, ids, vals, context=context)
-            
-        if 'stage_id' in vals and vals['stage_id']:
-            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
-            self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
-            message=''
-            for case in self.browse(cr, uid, ids, context=context):
-                if case.type == 'lead' or  context.get('stage_type',False)=='lead':
-                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-                elif case.type == 'opportunity':
-                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, stage_obj.name)
-                self.log(cr, uid, case.id, message)
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
     
     def stage_next(self, cr, uid, ids, context=None):
         stage = super(crm_lead, self).stage_next(cr, uid, ids, context=context)
         if stage:
             stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+            for case in self.browse(cr, uid, ids, context=context):
+                if case.type == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                elif case.type == 'opportunity':
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                self.log(cr, uid, case.id, message)            
             if stage_obj.on_change:
                 data = {'probability': stage_obj.probability}
                 self.write(cr, uid, ids, data)
         return stage
     
+    def stage_previous(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            self.history(cr, uid, ids, _('Stage'), details=stage_obj.name)
+            for case in self.browse(cr, uid, ids, context=context):
+                if case.type == 'lead':
+                    message = _("The stage of lead '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                elif case.type == 'opportunity':
+                    message = _("The stage of opportunity '%s' has been changed to '%s'.") % (case.name, case.stage_id.name)
+                self.log(cr, uid, case.id, message)            
+        return stage
+    
+   
     def message_new(self, cr, uid, msg, context=None):
         """
         Automatically calls when new email message arrives
