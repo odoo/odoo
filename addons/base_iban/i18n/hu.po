@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-16 17:55+0000\n"
+"PO-Revision-Date: 2011-01-20 13:10+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-18 04:39+0000\n"
+"X-Launchpad-Export-Date: 2011-01-21 04:39+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: base_iban
@@ -28,6 +28,7 @@ msgid ""
 "The IBAN does not seems to be correct. You should have entered something "
 "like this %s"
 msgstr ""
+"Az IBAN nem tűnik helyesnek. Valami ehhez hasonlót kellett volna megadnia: %s"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_zip_field
@@ -52,28 +53,28 @@ msgstr "country_id"
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_swift_field
 msgid "bic"
-msgstr ""
+msgstr "BIC (SWIFT) kód"
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_iban_field
 msgid "iban"
-msgstr "iban"
+msgstr "IBAN"
 
 #. module: base_iban
 #: code:addons/base_iban/base_iban.py:121
 #, python-format
 msgid "The IBAN is invalid, It should begin with the country code"
-msgstr ""
+msgstr "Az IBAN érvénytelen, az országkóddal kell kezdődnie."
 
 #. module: base_iban
 #: field:res.partner.bank,iban:0
 msgid "IBAN"
-msgstr "iban"
+msgstr "IBAN"
 
 #. module: base_iban
 #: model:res.partner.bank.type,name:base_iban.bank_iban
 msgid "IBAN Account"
-msgstr ""
+msgstr "IBAN szám"
 
 #. module: base_iban
 #: model:ir.module.module,description:base_iban.module_meta_information
@@ -84,6 +85,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Ez a modul lehetővé teszi a nemzetközi bankszámlaszám (IBAN) kezelését és "
+"ellenőrzi annak érvényességét.\n"
+"\n"
+"    "
 
 #. module: base_iban
 #: model:res.partner.bank.type.field,name:base_iban.bank_acc_number_field

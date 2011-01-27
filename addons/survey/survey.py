@@ -184,7 +184,7 @@ class survey_page(osv.osv):
             if len(context['line_order'][-1]) > 2 and type(context['line_order'][-1][2]) == type({}) and context['line_order'][-1][2].has_key('sequence'):
                 data['sequence'] = context['line_order'][-1][2]['sequence'] + 1
         if context.has_key('survey_id'):
-            data['survey_id'] = context['survey_id']
+            data['survey_id'] = context.get('survey_id', False)
         return data
 
     def survey_save(self, cr, uid, ids, context=None):

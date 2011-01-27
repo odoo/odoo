@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-12 13:47+0000\n"
+"PO-Revision-Date: 2011-01-18 10:57+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-14 05:34+0000\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:45+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp_operations
@@ -29,7 +29,7 @@ msgstr "Arbeitsaufträge"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
 msgid "Cancel the operation."
-msgstr "Abbrechen des Vorgangs."
+msgstr "Abbrechen des Arbeitsauftrags"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
@@ -51,7 +51,7 @@ msgstr "Gruppierung..."
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_workorder0
 msgid "Information from the routing definition."
-msgstr "Information über die Fertigungsabfolge."
+msgstr "Information von der Arbeitsplan Definition"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -62,7 +62,7 @@ msgstr "März"
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
 #: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
 msgid "Work Centers"
-msgstr "Fertigungsstellen"
+msgstr "Arbeitsplätze"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -84,7 +84,7 @@ msgstr "Produkt zu Fertigen"
 #. module: mrp_operations
 #: view:mrp_operations.operation:0
 msgid "Production Operation"
-msgstr "Fertigungsvorgang"
+msgstr "Arbeitsauftrag"
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
@@ -94,7 +94,7 @@ msgstr "Keine zwingende Abfolge"
 #. module: mrp_operations
 #: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
 msgid "Mrp Operations"
-msgstr "Fertigungsvorgänge"
+msgstr "Arbeitsaufträge"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -110,7 +110,7 @@ msgstr "Fertigungsauftrag"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Picking Exception"
-msgstr "Lieferauftrag Fehler"
+msgstr "Ausnahme Lieferauftrag"
 
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_productionstart0
@@ -122,7 +122,7 @@ msgstr "Erstellung von Arbeitsaufträgen"
 #, python-format
 msgid "You cannot Pause the Operation other then Start/Resume state !"
 msgstr ""
-"Sie können den Vorgang nicht unterbrechen wenn der aktuelle Status "
+"Sie können den Arbeitsauftrag nicht unterbrechen, wenn der aktuelle Status "
 "'Erledigt' oder 'Entwurf' ist."
 
 #. module: mrp_operations
@@ -130,7 +130,7 @@ msgstr ""
 #: view:mrp.workorder:0
 #: field:mrp.workorder,workcenter_id:0
 msgid "Workcenter"
-msgstr "Fertigungsstelle"
+msgstr "Arbeitsplatz"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
@@ -153,7 +153,7 @@ msgstr "Fehler !"
 #: selection:mrp.workorder,state:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Cancelled"
-msgstr "Abgebrochen"
+msgstr "Storniert"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
@@ -164,7 +164,7 @@ msgstr "Bestätigte Arbeitsaufträge"
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
 #: view:mrp.production.workcenter.line:0
 msgid "Operations"
-msgstr "Fertigungsvorgänge"
+msgstr "Arbeitsaufträge"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_stock_move
@@ -201,7 +201,7 @@ msgstr "Status"
 #: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
 #: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
 msgid "Work Order"
-msgstr "Fertigungsvorgänge"
+msgstr "Arbeitsauftrag"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_workstartoperation0
@@ -209,8 +209,8 @@ msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
 msgstr ""
-"Hier finden Sie je einen Auftrag je Fertigungsstelle. Diese Information wird "
-"generiert von der Anzahl der Zyklen oder der Zyklendauer."
+"Hier finden Sie je einen Arbeitsauftrag je Arbeitsplatz. Diese Information "
+"wird generiert von der Anzahl der Arbeitszyklen oder der Zyklendauer."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -245,8 +245,8 @@ msgstr ""
 #, python-format
 msgid "You cannot finish the operation without Starting/Resuming it !"
 msgstr ""
-"Sie können den Fertigungsvorgang nicht beenden ohne ihn vorher zu Starten "
-"oder Fortzusetzen !"
+"Sie können den Arbeitsauftrag nicht beenden ohne ihn vorher zu Starten oder "
+"Fortzusetzen !"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -257,7 +257,7 @@ msgstr "Geplantes Datum"
 #: code:addons/mrp_operations/mrp_operations.py:477
 #, python-format
 msgid "There is no Operation to be cancelled !"
-msgstr "Es gibt keinen Fertigungsvorgang der zu Beenden wäre !"
+msgstr "Es gibt keinen Arbeitsauftrag der zu beenden wäre !"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -273,7 +273,7 @@ msgstr "Juli"
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,name:0
 msgid "Operation Name"
-msgstr "Fertigungsvorgang"
+msgstr "Arbeitsauftrag"
 
 #. module: mrp_operations
 #: field:mrp_operations.operation.code,start_stop:0
@@ -289,11 +289,11 @@ msgid ""
 "different impacts on the costs of manufacturing and planning depending on "
 "the available workload."
 msgstr ""
-"Für die Fertigung oder die Montage von Fertigungsprodukten durch die "
-"Verwendung von Bauteilen müssen Fertigungsvorgänge beschrieben werden. "
-"Fertigungsvorgänge werden oftmals auch durch Arbeitsaufträge repräsentiert. "
-"Unterschiedliche Fertigungsvorgänge haben dabei auch unterschiedliche "
-"Auswirkungen auf die Fertigungskosten und Planung der Fertigungskapazität."
+"Für die Fertigung oder die Montage von Produkten durch die Verwendung von "
+"Vormaterial müssen Arbeitspläne beschrieben werden. Arbeitspläne werden "
+"oftmals auch durch Arbeitsaufträge repräsentiert. Unterschiedliche "
+"Arbeitspläne haben dabei auch unterschiedliche Auswirkungen auf die "
+"Fertigungskosten und Planung der Fertigungskapazität."
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
@@ -312,13 +312,13 @@ msgid ""
 "Operation has already started !You  can either Pause /Finish/Cancel the "
 "operation"
 msgstr ""
-"Fertigungsvorgang wurde bereits gestartet! Sie können den Zustand durch "
-"Pause / Beenden / Abbrechen ändern"
+"Arbeitsauftrag wurde bereits gestartet! Sie können den Zustand durch Pause / "
+"Beenden / Abbrechen ändern"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
 msgid "Operation Cancelled"
-msgstr "Vorgang wurde abgebrochen"
+msgstr "Arbeitsauftrag wurde storniert"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -339,7 +339,7 @@ msgstr "Monat"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Canceled"
-msgstr "Abgebrochen"
+msgstr "Storniert"
 
 #. module: mrp_operations
 #: model:ir.model,name:mrp_operations.model_mrp_operations_operation
@@ -361,7 +361,7 @@ msgstr "Start Datum"
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 msgid "Waiting Goods"
-msgstr "Warte auf Bauteile"
+msgstr "Erwartet Material"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -402,8 +402,8 @@ msgid ""
 "When the operation needs to be cancelled, you can do it in the work order "
 "form."
 msgstr ""
-"Wenn der Vorgang abgebrochen werden muss, können Sie dieses im Formular für "
-"die Arbeitsaufträge durchführen."
+"Wenn der Arbeitsauftrag storniert werden muss, können Sie dieses im Formular "
+"für die Arbeitsaufträge durchführen."
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -420,12 +420,12 @@ msgstr "Gesamt Zyklen"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Pending"
-msgstr "Unerledigt"
+msgstr "Im Wartezustand"
 
 #. module: mrp_operations
 #: view:mrp_operations.operation.code:0
 msgid "Production Operation Code"
-msgstr "Fertigungsvorgang Nummer"
+msgstr "Arbeitsauftragsnummer"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:465
@@ -478,7 +478,7 @@ msgid ""
 msgstr ""
 "\n"
 "     Diese Anwendung erweitert die Fertigungsaufträge um Status, Start Datum "
-"und Ende Datum für Fertigungsvorgänge\n"
+"und Ende Datum für Arbeitsaufträge\n"
 "     (im Aktenreiter Arbeitsaufträge)\n"
 "      Status: Entwurf, Bestätigt, Fertig, Abgebrochen\n"
 "      Bei Klick auf Beendigen, Bestätigen oder  Abbrechen wird zunächst auch "
@@ -515,7 +515,7 @@ msgstr "Juni"
 #: code:addons/mrp_operations/mrp_operations.py:480
 #, python-format
 msgid "Operation is already finished !"
-msgstr "Vorgang ist bereits abgeschlossen !"
+msgstr "Arbeitsauftrag ist bereits abgeschlossen !"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
@@ -547,7 +547,7 @@ msgstr "November"
 #: help:mrp.production.workcenter.line,delay:0
 msgid "This is lead time between operation start and stop in this workcenter"
 msgstr ""
-"Die Zeitverzögerung zwischen Start und Ende des Fertigungsvorgangs an dieser "
+"Die Zeitverzögerung zwischen Start und Ende des Arbeitsauftrags an dieser "
 "Fertigungsstelle"
 
 #. module: mrp_operations
@@ -568,13 +568,13 @@ msgstr "Januar"
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
 msgid "Finish the operation."
-msgstr "Vorgang erledigen."
+msgstr "Arbeitsauftrag erledigen."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:450
 #, python-format
 msgid "Operation is not started yet !"
-msgstr "Vorgang wurde noch nicht gestartet !"
+msgstr "Arbeitsauftrag wurde noch nicht gestartet !"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_productionorder0
@@ -588,7 +588,7 @@ msgstr "Information zum Fertigungsauftrag."
 #: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid "Sorry!"
-msgstr "Sorry !"
+msgstr "Entschuldigung!"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -599,13 +599,13 @@ msgstr "Aktuell"
 #: field:mrp_operations.operation,code_id:0
 #: field:mrp_operations.operation.code,code:0
 msgid "Code"
-msgstr "Kurzbezeichnung"
+msgstr "Kürzel"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:473
 #, python-format
 msgid "Operation is Already Cancelled  !"
-msgstr "Vorgang wurde bereits abgebrochen !"
+msgstr "Arbeitsauftrag wurde bereits storniert !"
 
 #. module: mrp_operations
 #: model:ir.module.module,shortdesc:mrp_operations.module_meta_information
@@ -617,7 +617,7 @@ msgstr ""
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
 msgid "Operation Codes"
-msgstr "Vorgangscode"
+msgstr "Auftragskürzel"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,qty:0
@@ -627,14 +627,14 @@ msgstr "Anzahl"
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_doneoperation0
 msgid "Operation Done"
-msgstr "Vorgang erledigt"
+msgstr "Arbeitsauftrag erledigt"
 
 #. module: mrp_operations
 #: selection:mrp.production.workcenter.line,production_state:0
 #: view:mrp.workorder:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Done"
-msgstr "Fertig"
+msgstr "Erledigt"
 
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
@@ -656,17 +656,17 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
-"Arbeitsaufträge repräsentieren einzelne Schritte eines durchzuführenden "
-"Fertigungsvorgangs im Rahmen von Fertigungsaufträgen. Sobald Sie einen "
-"Arbeitsauftrag beginnen wird der Fertigungsauftrag automatisch als 'In "
-"Bearbeitung' gekennzeichnet. Sobald Sie den letzten Arbeitsauftrag zu einem "
-"Fertigungsauftrag beenden, wird auch der Fertigungsauftrag beendet sowie das "
-"zu produzierende Produkt als fertig erstellt gemeldet."
+"Arbeitsaufträge repräsentieren einzelne Schritte eines Arbeitsplans im "
+"Rahmen von Fertigungsaufträgen. Sobald Sie einen Arbeitsauftrag beginnen, "
+"wird der Fertigungsauftrag automatisch als 'In Bearbeitung' gekennzeichnet. "
+"Sobald Sie den letzten Arbeitsauftrag zu einem Fertigungsauftrag beenden, "
+"wird auch der Fertigungsauftrag beendet sowie das zu produzierende Produkt "
+"als fertig erstellt gemeldet."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
 msgid "Start Operation"
-msgstr "Starte Vorgang"
+msgstr "Starte Auftrag"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -676,7 +676,7 @@ msgstr "Information"
 #. module: mrp_operations
 #: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
 msgid "Work Centers Barcode"
-msgstr "Barcode Fertigungsstelle"
+msgstr "Arbeitsplatz Barcode"
 
 #. module: mrp_operations
 #: constraint:stock.move:0
@@ -710,7 +710,7 @@ msgstr "Suche Arbeitsaufträge"
 #: field:mrp_operations.operation,workcenter_id:0
 #: model:process.node,name:mrp_operations.process_node_workorder0
 msgid "Work Center"
-msgstr "Fertigungsstelle"
+msgstr "Arbeitsplatz"
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -770,12 +770,12 @@ msgstr "ME"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Hours by Work Center"
-msgstr "Stunden nach Fertigungsstellen"
+msgstr "Stunden nach Arbeitsplätzen"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,delay:0
 msgid "Working Hours"
-msgstr "Stunden"
+msgstr "Arbeitsstunden"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -792,12 +792,12 @@ msgstr "Februar"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
 msgid "Operation cancelled"
-msgstr "Vorgang wurde beendet"
+msgstr "Arbeitsauftrag storniert"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_startoperation0
 msgid "Start the operation."
-msgstr "Starte Vorgang"
+msgstr "Starte Arbeitsauftrag"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -807,12 +807,12 @@ msgstr "April"
 #. module: mrp_operations
 #: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
 msgid "Operation done"
-msgstr "Vorgänge erledigt"
+msgstr "Arbeitsauftrag erledigt"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
 msgid "#Line Orders"
-msgstr "# Auftragszeilen"
+msgstr "Auftragspositionen"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
@@ -820,8 +820,8 @@ msgid ""
 "When the operation is finished, the operator updates the system by finishing "
 "the work order."
 msgstr ""
-"Wenn der Vorgang beendet wird, aktualisiert der verantwortliche Mitarbeiter "
-"das System durch Beendigung des Fertigungsauftrags."
+"Wenn der Arbeitsauftrag beendet wird, aktualisiert der verantwortliche "
+"Mitarbeiter das System durch Beendigung des Fertigungsauftrags."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0

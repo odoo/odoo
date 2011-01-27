@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-14 14:11+0000\n"
+"PO-Revision-Date: 2011-01-19 22:09+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:50+0000\n"
+"X-Launchpad-Export-Date: 2011-01-20 04:53+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_coda
@@ -26,12 +26,12 @@ msgstr "Banknapló"
 #: view:account.coda:0
 #: field:account.coda.import,note:0
 msgid "Log"
-msgstr ""
+msgstr "Napló"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda_import
 msgid "Account Coda Import"
-msgstr "Coda importálás"
+msgstr "Coda importálása"
 
 #. module: account_coda
 #: field:account.coda,name:0
@@ -41,12 +41,12 @@ msgstr "Coda fájl"
 #. module: account_coda
 #: view:account.coda:0
 msgid "Group By..."
-msgstr "Csoportosítás..."
+msgstr "Csoportosítás"
 
 #. module: account_coda
 #: field:account.coda.import,awaiting_account:0
 msgid "Default Account for Unrecognized Movement"
-msgstr "Alapértelmezett számla a beazonosíthatatlan tételekre"
+msgstr "Alapértelmezett számla a beazonosítatlan tételekre"
 
 #. module: account_coda
 #: help:account.coda,date:0
@@ -56,7 +56,7 @@ msgstr "Importálás dátuma"
 #. module: account_coda
 #: field:account.coda,note:0
 msgid "Import log"
-msgstr ""
+msgstr "Importálási napló"
 
 #. module: account_coda
 #: view:account.coda.import:0
@@ -80,8 +80,8 @@ msgid ""
 "Set here the default account that will be used, if the partner is found but "
 "does not have the bank account, or if he is domiciled"
 msgstr ""
-"Állítsa be az alapértelmezett számlát, amely akkor lesz használva, ha a "
-"partnernek nincs bankszámlája"
+"Állítsa be az alapértelmezett számlát, amelyet akkor használ a rendszer, ha "
+"a partnernek nincs bankszámlája"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -95,8 +95,8 @@ msgid ""
 "Set here the payable account that will be used, by default, if the partner "
 "is not found"
 msgstr ""
-"Állítsa be a szállító főkönyvi számlát, amely alapértelmezésként lesz "
-"használva, ha a partnert nem találja a rendszer"
+"Állítsa be a szállító főkönyvi számlát, amelyet alapértelmezésként használ a "
+"rendszer, ha a partnert nem találja"
 
 #. module: account_coda
 #: view:account.coda:0
@@ -118,7 +118,7 @@ msgstr "Dátum"
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_statement
 msgid "Coda Import Logs"
-msgstr ""
+msgstr "Coda importálási naplók"
 
 #. module: account_coda
 #: model:ir.model,name:account_coda.model_account_coda
@@ -138,18 +138,18 @@ msgstr "Bankkivonatok részleteinek tárolása"
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: account_coda
 #: view:account.coda.import:0
 msgid "Open Statements"
-msgstr "Kivonatok nyitása"
+msgstr "Kivonatok megnyitása"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:167
 #, python-format
 msgid "The bank account %s is not defined for the partner %s.\n"
-msgstr "A(z) %s bankszámla nincs beállítva a(z) %s partnerre .\n"
+msgstr "A(z) %s bankszámlát nem állították be a(z) %s partnerre.\n"
 
 #. module: account_coda
 #: model:ir.ui.menu,name:account_coda.menu_account_coda_import
@@ -201,8 +201,8 @@ msgid ""
 "Set here the receivable account that will be used, by default, if the "
 "partner is not found"
 msgstr ""
-"Állítsa be a vevő főkönyvi számlát, amely alapértelmezésként lesz használva, "
-"ha a partnert nem találja a rendszer"
+"Állítsa be a vevő főkönyvi számlát, amelyet alapértelmezésként használ a "
+"rendszer, ha a partnert nem találja"
 
 #. module: account_coda
 #: field:account.coda.import,coda:0
@@ -218,7 +218,7 @@ msgstr "Bankkivonat"
 #. module: account_coda
 #: model:ir.actions.act_window,name:account_coda.action_account_coda
 msgid "Coda Logs"
-msgstr ""
+msgstr "Coda naplók"
 
 #. module: account_coda
 #: code:addons/account_coda/wizard/account_coda_import.py:311
@@ -244,12 +244,12 @@ msgstr "Zárás"
 #. module: account_coda
 #: field:account.coda,statement_ids:0
 msgid "Generated Bank Statements"
-msgstr "Előállíított bankkivonatok"
+msgstr "Előállított bankkivonatok"
 
 #. module: account_coda
 #: model:ir.module.module,shortdesc:account_coda.module_meta_information
 msgid "Account CODA - import bank statements from coda file"
-msgstr "CODA - bankkivonatok importálása Coda file-ból"
+msgstr "CODA - bankkivonatok importálása coda file-ból"
 
 #. module: account_coda
 #: view:account.coda.import:0
