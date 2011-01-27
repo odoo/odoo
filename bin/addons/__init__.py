@@ -882,13 +882,13 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             logger.notifyChannel('init', netsvc.LOG_DEBUG, 'Updating graph with %d more modules' % (len(module_list)))
             processed_modules.extend(load_module_graph(cr, graph, status, report=report, skip_modules=processed_modules))
 
+        # load custom models
+        cr.execute('select model from ir_model where state=%s', ('manual',))
+        for model in cr.dictfetchall():
+            pool.get('ir.model').instanciate(cr, 1, model['model'], {})
+
         # STEP 4: Finish and cleanup
         if processed_modules:
-            # load custom models
-            cr.execute('select model from ir_model where state=%s', ('manual',))
-            for model in cr.dictfetchall():
-                pool.get('ir.model').instanciate(cr, 1, model['model'], {})
-
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
