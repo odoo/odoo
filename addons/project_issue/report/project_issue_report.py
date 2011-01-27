@@ -105,7 +105,6 @@ class project_issue_report(osv.osv):
                     (SELECT count(id) FROM mailgate_message WHERE model='project.issue' AND res_id=c.id) AS email
                 FROM
                     project_issue c
-                WHERE c.categ_id IN (select res_id from ir_model_data WHERE model = 'crm.case.categ' and name='bug_categ')
             )""")
 
 project_issue_report()
