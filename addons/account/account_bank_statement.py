@@ -314,7 +314,6 @@ class account_bank_statement(osv.osv):
         return state=='draft'
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
-        done = []
         obj_seq = self.pool.get('ir.sequence')
         if context is None:
             context = {}
@@ -355,7 +354,6 @@ class account_bank_statement(osv.osv):
 
             self.write(cr, uid, [st.id], {'name': st_number}, context=context)
             self.log(cr, uid, st.id, _('Statement %s is confirmed, journal items are created.') % (st_number,))
-            done.append(st.id)
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
