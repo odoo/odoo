@@ -46,8 +46,11 @@ class ir_attachment(osv.osv):
                 res_ids.setdefault(values['res_model'],[]).append(values['res_id'])
 
         for model, mids in res_ids.items():
-            cr.execute('select id from '+self.pool.get(model)._table+' where id in %s', (tuple(ids),))
+            # ignore attachments that are not attached to a resource anymore when checking access rights
+            # (resource was deleted but attachment was not)
+            cr.execute('select id from '+self.pool.get(model)._table+' where id in %s', (tuple(mids),))
             mids = [x[0] for x in cr.fetchall()]
+
             self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None,
