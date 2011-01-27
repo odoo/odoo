@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-24 13:27+0000\n"
+"PO-Revision-Date: 2011-01-25 13:20+0000\n"
 "Last-Translator: Adriano Prado <adrianojprado@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 04:56+0000\n"
+"X-Launchpad-Export-Date: 2011-01-26 04:39+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp_operations
@@ -23,7 +23,7 @@ msgstr ""
 #: view:mrp.production.workcenter.line:0
 #: view:mrp.workorder:0
 msgid "Work Orders"
-msgstr "Ordens de Trabalho"
+msgstr "Ordens de Serviço"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_canceloperation0
@@ -68,12 +68,12 @@ msgstr "Centros de Trabalho"
 #: view:mrp.production.workcenter.line:0
 #: selection:mrp_operations.operation.code,start_stop:0
 msgid "Resume"
-msgstr ""
+msgstr "Continuar"
 
 #. module: mrp_operations
 #: report:mrp.code.barcode:0
 msgid "("
-msgstr ""
+msgstr "("
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -205,6 +205,8 @@ msgid ""
 "There is 1 work order per work center. The information about the number of "
 "cycles or the cycle time."
 msgstr ""
+"Existe uma Ordem de Serviço por Centro de Trabalho. As informações sobre o "
+"número de ciclos, ou o tempo de ciclo."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -280,6 +282,11 @@ msgid ""
 "different impacts on the costs of manufacturing and planning depending on "
 "the available workload."
 msgstr ""
+"Para a fabricação ou montagem de produtos, e uso de matérias-primas e "
+"produtos acabados, você deve também lidar com as operações de fabricação. As "
+"operações de fabricação são freqüentemente chamados de Ordens de Serviço. As "
+"diversas operações terão diferentes impactos sobre os custos de produção e "
+"planejamento, dependendo da carga de trabalho disponível."
 
 #. module: mrp_operations
 #: field:mrp_operations.operation,order_date:0
@@ -416,7 +423,7 @@ msgstr "Código de Operação de Produção"
 #: code:addons/mrp_operations/mrp_operations.py:465
 #, python-format
 msgid " You cannot Resume the operation other then Pause state !"
-msgstr ""
+msgstr " Você não pode continuar a operação que não está em estado de pausa!"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -608,6 +615,11 @@ msgid ""
 "latest operation of a manufacturing order, the MO is automatically done and "
 "the related products are produced."
 msgstr ""
+"As Ordens de Serviço são a lista de operações a serem realizadas para cada "
+"Ordem de Produção. Uma vez iniciado o primeiro trabalho de uma Ordem de "
+"Produção, a ordem de produção é automaticamente marcado como iniciada. Uma "
+"vez que você terminar a última operação de uma OP, o MO é feita "
+"automaticamente e os produtos relacionados são produzidos."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -687,6 +699,8 @@ msgid ""
 "Check this to be able to move independently all production orders, without "
 "moving dependent ones."
 msgstr ""
+"Selecione isso para ser capaz de mover de forma independente todas as OP, "
+"sem mover as dependentes."
 
 #. module: mrp_operations
 #: report:mrp.code.barcode:0

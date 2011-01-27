@@ -99,6 +99,7 @@ class report_aged_receivable(osv.osv):
         return res
 
     def _calc_bal(self, cr, uid, ids, name, args, context=None):
+        print"-dfdfd-----"
         res = {}
         for period in self.read(cr, uid, ids, ['name'], context=context):
            date1,date2 = period['name'].split(' to ')
