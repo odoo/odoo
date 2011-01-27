@@ -10,8 +10,8 @@
   Create task 'Plan all projects'
 - 
   !record {model: project.task, id: project_task_planallprojects0}:
-    date_deadline: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month,datetime.now().day+6)"
-    date_end: !eval "'%s-%s-%s %s:%s:%s' %(datetime.now().year,datetime.now().month,datetime.now().day+3,datetime.now().hour,datetime.now().minute,datetime.now().second)"
+    date_deadline: !eval "'%s-%s-%s' %(datetime.now().year, datetime.now().month, datetime.now().day)"
+    date_end: !eval "'%s-%s-%s %s:%s:%s' %(datetime.now().year, datetime.now().month, datetime.now().day, datetime.now().hour, datetime.now().minute, datetime.now().second)"
     date_start: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     name: Plan all projects
     planned_hours: 24.0
