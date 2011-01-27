@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-24 21:27+0000\n"
+"PO-Revision-Date: 2011-01-26 12:26+0000\n"
 "Last-Translator: Adriano Prado <adrianojprado@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 04:54+0000\n"
+"X-Launchpad-Export-Date: 2011-01-27 04:35+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp
@@ -720,6 +720,8 @@ msgid ""
 "Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
 "promotion of stock."
 msgstr ""
+"Produto UOS (Unidade de Venda) é a unidade de medida para o faturamento e "
+"promoção do estoque."
 
 #. module: mrp
 #: view:mrp.product_price:0
@@ -968,7 +970,7 @@ msgstr "Agendamento Just In Time"
 #: view:mrp.property:0
 #: view:mrp.property.group:0
 msgid "Property Group"
-msgstr "Propriedade Grupo"
+msgstr "Grupo de Propriedades"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1608,7 +1610,7 @@ msgstr "Centro de Trabalho"
 #. module: mrp
 #: field:mrp.workcenter,capacity_per_cycle:0
 msgid "Capacity per Cycle"
-msgstr "Capacity per Cycle"
+msgstr "Capacidade por Ciclo"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -1644,7 +1646,7 @@ msgstr "Imprime a Estrutura de Custo do Produto"
 #: field:mrp.bom,product_uos:0
 #: field:mrp.production.product.line,product_uos:0
 msgid "Product UOS"
-msgstr "UdV do Produto"
+msgstr "Und de Venda"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -1665,14 +1667,14 @@ msgstr "Produtos de Consumo"
 #: field:mrp.production.order,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product UOM"
-msgstr "UdM Produto"
+msgstr "Und do Produto"
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_stock0
 #: model:process.transition,name:mrp.process_transition_servicemto0
 #: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Make to Order"
-msgstr "Fazer sob Demanda"
+msgstr "Adquirir Sempre"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_mrp_production_order
@@ -1713,12 +1715,12 @@ msgstr ""
 #. module: mrp
 #: field:mrp.production,product_uos:0
 msgid "Product UoS"
-msgstr "UdV do Produto"
+msgstr "Und de Venda"
 
 #. module: mrp
 #: view:mrp.production.order:0
 msgid "#Line Orders"
-msgstr ""
+msgstr "Linha Ordens"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1748,7 +1750,7 @@ msgstr "Propriedades da Categorias"
 #. module: mrp
 #: help:mrp.production.workcenter.line,sequence:0
 msgid "Gives the sequence order when displaying a list of work orders."
-msgstr ""
+msgstr "Fornece a ordem sequencial ao exibir uma lista de ordens de serviço."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -1789,7 +1791,7 @@ msgstr ""
 #: view:mrp.production:0
 #: report:mrp.production.order:0
 msgid "Work Orders"
-msgstr "Ordens de Trabalho"
+msgstr "Ordens de Serviço"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1868,7 +1870,7 @@ msgstr "Calcular Dados"
 #. module: mrp
 #: field:mrp.production,product_uos_qty:0
 msgid "Product UoS Qty"
-msgstr ""
+msgstr "Qtd Und Venda"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:130
@@ -1896,7 +1898,7 @@ msgstr "Válido de"
 #. module: mrp
 #: selection:mrp.bom,type:0
 msgid "Normal BoM"
-msgstr "BoM Normal"
+msgstr "LdM Normal"
 
 #. module: mrp
 #: field:res.company,manufacturing_lead:0
@@ -1907,7 +1909,7 @@ msgstr "Tempo para produção"
 #: field:mrp.bom,product_uos_qty:0
 #: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Qty"
-msgstr ""
+msgstr "Qtd Und Venda"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -2156,7 +2158,7 @@ msgstr "Novembro"
 #. module: mrp
 #: field:mrp.bom,bom_id:0
 msgid "Parent BoM"
-msgstr "BoM Superior"
+msgstr "LdM Superior"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
@@ -2375,7 +2377,7 @@ msgstr "Fevereiro"
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
-msgstr ""
+msgstr "Grupos de Propriedades"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
