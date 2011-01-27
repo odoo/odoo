@@ -588,18 +588,10 @@ class account_move_line(osv.osv):
                 return False
         return True
 
-    def _check_partner_id(self, cr, uid, ids, context=None):
-        lines = self.browse(cr, uid, ids, context=context)
-        for l in lines:
-            if l.account_id.type in ('receivable', 'payable') and not l.partner_id:
-                return False
-        return True
-
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
         (_check_company_id, 'Company must be same for its related account and period.',['company_id'] ),
-        (_check_partner_id, 'You can not create move line on receivable/payable account without partner', ['account_id'] )
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
