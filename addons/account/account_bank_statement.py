@@ -461,7 +461,7 @@ class account_bank_statement_line(osv.osv):
             select=True, required=True, ondelete='cascade'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_ids': fields.many2many('account.move',
-            'account_bank_statement_line_move_rel', 'move_id','statement_id',
+            'account_bank_statement_line_move_rel', 'statement_id','move_id',
             'Moves'),
         'ref': fields.char('Reference', size=32),
         'note': fields.text('Notes'),
