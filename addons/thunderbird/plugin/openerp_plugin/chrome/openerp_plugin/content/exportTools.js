@@ -196,12 +196,11 @@ function getPredefinedFolder(type) {
 
 		var fname = msgDate8601string+"-"+subj+"-"+hdr.messageKey;
 	}
+	var rand1=Math.floor(Math.random()*100000)
+	var rand2=Math.floor(Math.random()*100000)
+	fname = rand1+'openerp-eml'+rand2
 	setFileName(fname)
 	fname = fname.replace(/[\x00-\x19]/g,"_");
-	if (mustcorrectname)
-		fname = nametoascii(fname);
-	else
-		fname = fname.replace(/[\/\\:,<>*\?\"\|]/g,"_");
 	return fname;
 }
 
