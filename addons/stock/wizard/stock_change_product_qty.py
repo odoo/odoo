@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
+import tools
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
