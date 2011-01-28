@@ -421,6 +421,15 @@
             <field name="analytic_journal_id" ref="sit"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
+        <record id="miscellaneous_journal" model="account.journal">
+            <field name="name">Miscellaneous Journal - (test)</field>
+            <field name="code">TMIS</field>
+            <field name="type">general</field>
+            <field name="view_id" ref="account_journal_bank_view"/>
+            <field name="sequence_id" ref="sequence_journal"/>
+            <field name="analytic_journal_id" ref="sit"/>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
 
         <!--
         Product income and expense accounts, default parameters

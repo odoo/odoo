@@ -416,11 +416,20 @@ class account_installer(osv.osv_memory):
                 'company_id': company_id.id
             }
             seq_id_purchase_refund = obj_sequence.create(cr, uid, seq_refund_purchase, context=context)
+            seq_opening_journal = {
+                'name': 'Opening Entries Journal',
+                'code': 'account.journal',
+                'prefix': 'TOEJ/%(year)s/',
+                'padding': 3,
+                'company_id': company_id.id
+            }
+            seq_id_opening = obj_sequence.create(cr, uid, seq_opening_journal, context=context)
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
             seq_id_sale_refund = seq_id
             seq_id_purchase_refund = seq_id
+            seq_id_opening = seq_id
 
         vals_journal['view_id'] = view_id
 
@@ -507,6 +516,21 @@ class account_installer(osv.osv_memory):
                 'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id]
             })
         obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Opening Entries Journal
+        if obj_multi.property_account_income_opening and obj_multi.property_account_expense_opening:
+            vals_journal = {
+                'view_id': view_id,
+                'name': _('Opening Entries Journal'),
+                'type': 'situation',
+                'code': _('TOEJ'),
+                'sequence_id': seq_id_opening,
+                'analytic_journal_id': analitical_journal_purchase,
+                'company_id': company_id.id,
+                'default_credit_account_id': acc_template_ref[obj_multi.property_account_income_opening.id],
+                'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_opening.id]
+                }
+            obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Bank Journals
         view_id_cash = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal View')], context=context)[0] #TOFIX: Why put fixed name ?
