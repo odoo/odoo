@@ -681,7 +681,7 @@ var listDbHandler = {
 
 
     onFault: function (client, ctxt, fault) {
-        
+        setDBList("false");
     },
 
     onError: function (client, ctxt, status, errorMsg) {
@@ -691,7 +691,7 @@ var listDbHandler = {
 //function to get the database list
 function getDbList(argControl)
 {
-    setDBList("true");
+    setDBList("false");
     setconnect_server("true");
     // Enable correct security
     netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect UniversalBrowserAccess');
