@@ -438,8 +438,7 @@ def TestConnection(btnProcessor,*args):
                 win32ui.MessageBox("Authentication Error !\nBad Database Name !", "OpenERP Connection", flag_excl)
                 return
         except Exception,e:
-            print "Exception %s: %s"%(type(e),str(e))
-    win32ui.MessageBox(str(dbname),"DBNAME")
+            pass
     if not dbname:
         win32ui.MessageBox("No database found on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return
