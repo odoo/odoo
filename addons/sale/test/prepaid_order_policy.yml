@@ -1,8 +1,8 @@
--    
+-
   I create a Sale Order for LG Viewty Smart for qty 500 having Shipping Policy is 'Payment Before Delivery'
 -
   !record {model: sale.order, id: sale_order_so1}:
-    date_order: '2010-07-20'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: Test_SO001
     order_line:
@@ -55,7 +55,7 @@
       wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
 -
   I assign an analytic journal to the Bank journal
-- 
+-
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
 -
@@ -71,7 +71,7 @@
         ref('account.period_5'), ref('sale.account_journal_bankjournal0'),
         name='test002')
 -
-  I verify the invoice is in done state or not. 
+  I verify the invoice is in done state or not.
 -
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')
@@ -133,7 +133,7 @@
     assert proc_ids, _('No Procurements!')
 -
   Then I click on the "Run Procurement" button
-- 
+-
   !python {model: procurement.order}: |
     sale_order_obj = self.pool.get('sale.order')
     so = sale_order_obj.browse(cr, uid, ref("sale_order_so1"))
@@ -168,7 +168,7 @@
         pur_obj=self.pool.get('purchase.order')
         pur_id=pur_obj.search(cr, uid, [('origin','=',so.name)])
         assert pur_id, _('Purchase order has not been generated')
-- 
+-
   I click on the "Confirm" button to confirm the purchase order
 -
   !python {model: sale.order}: |
@@ -184,7 +184,7 @@
         pur_ids = pur_obj.search(cr, uid, [('origin','=',so.name)])
         for pur in pur_ids:
           wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_confirm', cr)
-- 
+-
   I click on the "Approved by supplier" button to approve the purchase order
 -
   !python {model: sale.order}: |
@@ -199,9 +199,9 @@
         wf_service = netsvc.LocalService("workflow")
         pur_ids = pur_obj.search(cr, uid, [('origin','=',so.name)])
         for pur in pur_ids:
-          wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_approve', cr) 
+          wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_approve', cr)
 -
-  I verify that a picking related to purchase order has been generated. 
+  I verify that a picking related to purchase order has been generated.
 -
   !python {model: sale.order}: |
     modules = self.pool.get('ir.module.module')
@@ -217,7 +217,7 @@
   Then I click on the "Products Received" button of Incoming Shipments
 -
   !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: '2010-07-20 17:52:09'
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
 -
   I click on the "Validate" button
 -
@@ -253,7 +253,7 @@
         ids = picking_obj.search(cr, uid, [('purchase_id', '=', po.id ),('state', '=', 'done')])
         assert ids, _('Picking is not in the done state!')
 -
-  I verify that a "Picked" has been set to true 
+  I verify that a "Picked" has been set to true
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so1"))

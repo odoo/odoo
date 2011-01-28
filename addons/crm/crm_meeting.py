@@ -75,8 +75,8 @@ class crm_meeting(crm_case, osv.osv):
                                     size=16, readonly=True),
     }
     _defaults = {
-        'state': lambda *a: 'draft', 
-        'active': lambda *a: 1,
+        'state': 'draft', 
+        'active': 1,
         'user_id': lambda self, cr, uid, ctx: uid,
     }
 
@@ -146,7 +146,7 @@ class res_users(osv.osv):
                                         'user_id': user_id}, context=context)
         except:
             # Tolerate a missing shortcut. See product/product.py for similar code.
-            logging.getLogger('orm').warning('Skipped Products shortcut for user "%s"', data.get('name','<new'))
+            logging.getLogger('orm').debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
             
         return user_id
 

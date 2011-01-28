@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-12-16 17:27+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-24 15:31+0000\n"
+"Last-Translator: Tran Tuan <Unknown>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:07+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-25 04:55+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #, python-format
 #~ msgid ""
@@ -31,12 +31,12 @@ msgstr ""
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_sales_by_salesman
 msgid "Sales by Salesman in last 90 days"
-msgstr ""
+msgstr "Đơn hàng xếp theo người bán"
 
 #. module: sale
 #: help:sale.installer,delivery:0
 msgid "Allows you to compute delivery costs on your quotations."
-msgstr ""
+msgstr "Cho phép bạn tính toán chi phí giao hàng trên Đơn chào hàng của bạn"
 
 #. module: sale
 #: help:sale.order,picking_policy:0
@@ -68,7 +68,7 @@ msgstr "Ngày"
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
 #: view:sale.order:0
 msgid "Cancel Order"
-msgstr "Hủy đơn chào hàng"
+msgstr "Huỷ Đơn đặt hàng"
 
 #. module: sale
 #: view:sale.config.picking_policy:0
@@ -79,7 +79,7 @@ msgstr ""
 #: code:addons/sale/sale.py:603
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
-msgstr ""
+msgstr "Đơn chào hàng '%s' đã được chuyển thành Đơn đặt hàng"
 
 #. module: sale
 #: selection:sale.order,order_policy:0
@@ -95,7 +95,7 @@ msgstr "Cảnh báo !"
 #. module: sale
 #: report:sale.order:0
 msgid "VAT"
-msgstr "Thuế giá trị gia tăng (GTGT)"
+msgstr "Thuế GTGT"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
@@ -113,7 +113,7 @@ msgstr "Toàn bộ một lần"
 #: field:sale.report,analytic_account_id:0
 #: field:sale.shop,project_id:0
 msgid "Analytic Account"
-msgstr "Tài khoản phân tích"
+msgstr "Tài khoản KTQT"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_line_tree2
@@ -150,6 +150,13 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
+"Sales Orders help you manage quotations and orders from your customers. You "
+"are suggested to start by creating a quotation. Once it is confirmed, the "
+"quotation will be converted into a Sales Order. The System can handle "
+"several types of products so that a sales order may trigger tasks, delivery "
+"orders, manufacturing orders, purchases and so on. Based on the "
+"configuration of the sales order, a draft invoice will be generated so that "
+"you just have to confirm it when you want to bill your customer"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -254,9 +261,11 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Shipping Default Policy"
-msgstr "Chính sách vận chuyển mặc định"
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.open_board_sales_manager
+#: model:ir.ui.menu,name:sale.menu_board_sales_manager
+msgid "Sales Manager Dashboard"
+msgstr ""
 
 #. module: sale
 #: field:sale.order.line,product_packaging:0
@@ -322,7 +331,7 @@ msgstr ""
 #. module: sale
 #: view:sale.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Cấu hình"
 
 #. module: sale
 #: constraint:stock.move:0
@@ -1465,13 +1474,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Dashboard"
-msgstr ""
-
-#. module: sale
 #: code:addons/sale/sale.py:1165
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
@@ -1920,6 +1922,11 @@ msgstr ""
 #: selection:sale.order.line,type:0
 msgid "from stock"
 msgstr "theo nhu cầu dự báo"
+
+#. module: sale
+#: field:sale.config.picking_policy,order_policy:0
+msgid "Shipping Default Policy"
+msgstr "Chính sách vận chuyển mặc định"
 
 #. module: sale
 #: view:sale.open.invoice:0

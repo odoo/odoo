@@ -126,7 +126,8 @@ class project(osv.osv):
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
         'warn_manager': fields.boolean('Warn Manager', help="If you check this field, the project manager will receive a request each time a task is completed by his team.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
 
-        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members', help="Project's member. Not used in any computation, just for information purpose, but a user has to be member of a project to add a the to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
+        'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
+            help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
         'tasks': fields.one2many('project.task', 'project_id', "Project tasks"),
         'planned_hours': fields.function(_progress_rate, multi="progress", method=True, string='Planned Time', help="Sum of planned hours of all tasks related to this project and its child projects.",
             store = {
@@ -399,10 +400,10 @@ class task(osv.osv):
         'state': fields.selection([('draft', 'Draft'),('open', 'In Progress'),('pending', 'Pending'), ('cancelled', 'Cancelled'), ('done', 'Done')], 'State', readonly=True, required=True,
                                   help='If the task is created the state is \'Draft\'.\n If the task is started, the state becomes \'In Progress\'.\n If review is needed the task is in \'Pending\' state.\
                                   \n If the task is over, the states is set to \'Done\'.'),
-        'create_date': fields.datetime('Create Date', readonly=True),
-        'date_start': fields.datetime('Starting Date'),
-        'date_end': fields.datetime('Ending Date'),
-        'date_deadline': fields.date('Deadline'),
+        'create_date': fields.datetime('Create Date', readonly=True,select=True),
+        'date_start': fields.datetime('Starting Date',select=True),
+        'date_end': fields.datetime('Ending Date',select=True),
+        'date_deadline': fields.date('Deadline',select=True),
         'project_id': fields.many2one('project.project', 'Project', ondelete='cascade'),
         'parent_ids': fields.many2many('project.task', 'project_task_parent_rel', 'task_id', 'parent_id', 'Parent Tasks'),
         'child_ids': fields.many2many('project.task', 'project_task_parent_rel', 'parent_id', 'task_id', 'Delegated Tasks'),
@@ -475,8 +476,20 @@ class task(osv.osv):
             ids = child_ids
         return True
 
+    def _check_dates(self, cr, uid, ids, context=None):
+        if context == None:
+            context = {}
+        obj_task = self.browse(cr, uid, ids[0], context=context)
+        start = obj_task.date_start or False
+        end = obj_task.date_end or False
+        if start and end :
+            if start > end:        
+                return False
+        return True           
+
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids'])
+        (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
+        (_check_dates, 'Error ! Task end-date must be greater then task start-date', ['date_start','date_end'])
     ]
     #
     # Override view according to the company definition
@@ -540,6 +553,7 @@ class task(osv.osv):
         """
         request = self.pool.get('res.request')
         for task in self.browse(cr, uid, ids, context=context):
+            vals = {}
             project = task.project_id
             if project:
                 # Send request to project manager
@@ -562,7 +576,11 @@ class task(osv.osv):
                             reopen = False
                     if reopen:
                         self.do_reopen(cr, uid, [parent_id.id])
-            self.write(cr, uid, [task.id], {'state': 'done', 'date_end':time.strftime('%Y-%m-%d %H:%M:%S'), 'remaining_hours': 0.0})
+            vals.update({'state': 'done'})
+            vals.update({'remaining_hours': 0.0})
+            if not task.date_end:
+                vals.update({ 'date_end':time.strftime('%Y-%m-%d %H:%M:%S')})
+            self.write(cr, uid, [task.id],vals)
             message = _("The task '%s' is done") % (task.name,)
             self.log(cr, uid, task.id, message)
         return True
@@ -694,7 +712,7 @@ class project_work(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True),
         'hours': fields.float('Time Spent'),
         'user_id': fields.many2one('res.users', 'Done by', required=True),
-        'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True)
+        'company_id': fields.related('task_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
 
     _defaults = {

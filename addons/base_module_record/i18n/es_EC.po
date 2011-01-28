@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:57+0000\n"
-"PO-Revision-Date: 2010-09-17 19:08+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 04:05+0000\n"
+"Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:53+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:16+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_objects,info,category:0
@@ -34,12 +33,15 @@ msgid ""
 "publish it on OpenERP.com, in the 'Modules' section. You can do it through "
 "the website or using features of the 'base_module_publish' module."
 msgstr ""
+"Si cree que su módulo podría interesar a otras personas, nos gustaría que lo "
+"publique en OpenERP.com, en la sección 'Módulos'. Puede hacerlo a través de "
+"la página web o usando las características del módulo 'base_module_publish'."
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,info,end:0
 #: wizard_button:base_module_record.module_record_data,save_yaml,end:0
 msgid "End"
-msgstr ""
+msgstr "Finalizar"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,init:0
@@ -153,13 +155,13 @@ msgstr "¡Módulo creado correctamente!"
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_objects,save_yaml:0
 msgid "YAML file successfully created !"
-msgstr ""
+msgstr "¡Fichero YAML creado correctamente!"
 
 #. module: base_module_record
 #: wizard_view:base_module_record.module_record_data,info:0
 #: wizard_view:base_module_record.module_record_data,save_yaml:0
 msgid "Result, paste this to your module's xml"
-msgstr ""
+msgstr "Resultado, pegue esto en el xml de su módulo"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_data,init,filter_cond:0
@@ -193,7 +195,7 @@ msgstr "Grabar"
 #. module: base_module_record
 #: model:ir.module.module,shortdesc:base_module_record.module_meta_information
 msgid "Module Record"
-msgstr ""
+msgstr "Grabador de módulos"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_objects,info,save:0
@@ -204,13 +206,13 @@ msgstr "Continuar"
 #: model:ir.actions.wizard,name:base_module_record.wizard_base_module_record_data
 #: model:ir.ui.menu,name:base_module_record.menu_wizard_base_module_record_data
 msgid "Export Customizations As Data File"
-msgstr ""
+msgstr "Exportar personalizaciones como un fichero de datos"
 
 #. module: base_module_record
 #: code:addons/base_module_record/wizard/base_module_save.py:129
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Error"
 
 #. module: base_module_record
 #: selection:base_module_record.module_record_objects,info,data_kind:0
@@ -242,13 +244,13 @@ msgstr "Información del módulo"
 #: wizard_field:base_module_record.module_record_data,init,info_yaml:0
 #: wizard_field:base_module_record.module_record_objects,init,info_yaml:0
 msgid "YAML"
-msgstr ""
+msgstr "YAML"
 
 #. module: base_module_record
 #: wizard_field:base_module_record.module_record_data,info,res_text:0
 #: wizard_field:base_module_record.module_record_data,save_yaml,res_text:0
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 #. module: base_module_record
 #: wizard_button:base_module_record.module_record_data,init,end:0
@@ -293,6 +295,29 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"Este módulo le permite crear un nuevo módulo sin ningún tipo de desarrollo.\n"
+"Graba todas las operaciones sobre los objetos durante la sesión de grabación "
+"y\n"
+"produce un módulo. ZIP. De esta forma puede crear su propio módulo "
+"directamente\n"
+"desde el cliente de OpenERP.\n"
+"\n"
+"Esta versión funciona para crear y actualizar los registros existentes. "
+"Recalcula\n"
+"dependencias y enlaces para todo tipo de widgets (many2one, many2many, "
+"...).\n"
+"También soporta flujos de trabajo y datos de demostración/actualización.\n"
+"\n"
+"Esto le ayudará a crear fácilmente módulos reutilizables y publicables\n"
+"para las configuraciones personalizadas y datos de demostración/prueba.\n"
+"\n"
+"Cómo utilizarlo:\n"
+"Ejecute Administración/Personalización/Creación de módulos/Exportar "
+"personalizaciones como un asistente de módulo.\n"
+"Seleccione la fecha y hora de grabación y los objetos que se grabarán y "
+"Grabar módulo.\n"
+"    "
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

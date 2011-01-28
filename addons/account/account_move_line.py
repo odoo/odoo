@@ -101,14 +101,13 @@ class account_move_line(osv.osv):
             query += ' AND '+obj+'.account_id IN (%s)' % ','.join(map(str, child_ids))
 
         query += company_clause
-
         return query
 
     def _amount_residual(self, cr, uid, ids, field_names, args, context=None):
         """
-           This function returns the residual amount on a receivable or payable account.move.line. 
-           By default, it returns an amount in the currency of this journal entry (maybe different 
-           of the company currency), but if you pass 'residual_in_company_currency' = True in the 
+           This function returns the residual amount on a receivable or payable account.move.line.
+           By default, it returns an amount in the currency of this journal entry (maybe different
+           of the company currency), but if you pass 'residual_in_company_currency' = True in the
            context then the returned amount will be in company currency.
         """
         res = {}
@@ -120,13 +119,13 @@ class account_move_line(osv.osv):
                 'amount_residual': 0.0,
                 'amount_residual_currency': 0.0,
             }
- 
+
             if move_line.reconcile_id:
                 continue
             if not move_line.account_id.type in ('payable', 'receivable'):
                 #this function does not suport to be used on move lines not related to payable or receivable accounts
                 continue
-            
+
             if move_line.currency_id:
                 move_line_total = move_line.amount_currency
                 sign = move_line.amount_currency < 0 and -1 or 1
@@ -495,12 +494,12 @@ class account_move_line(osv.osv):
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, select=1),
         'blocked': fields.boolean('Litigation', help="You can check this box to mark this journal item as a litigation with the associated partner"),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, ondelete='restrict'),
-        'date_maturity': fields.date('Due date', help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
-        'date': fields.related('move_id','date', string='Effective date', type='date', required=True,
+        'date_maturity': fields.date('Due date', select=True ,help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line."),
+        'date': fields.related('move_id','date', string='Effective date', type='date', required=True, select=True,
                                 store = {
                                     'account.move': (_get_move_lines, ['date'], 20)
                                 }),
-        'date_created': fields.date('Creation date'),
+        'date_created': fields.date('Creation date', select=True),
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation')], 'Centralisation', size=6),
         'balance': fields.function(_balance, fnct_search=_balance_search, method=True, string='Balance'),
@@ -589,18 +588,10 @@ class account_move_line(osv.osv):
                 return False
         return True
 
-    def _check_partner_id(self, cr, uid, ids, context=None):
-        lines = self.browse(cr, uid, ids, context=context)
-        for l in lines:
-            if l.account_id.type in ('receivable', 'payable') and not l.partner_id:
-                return False
-        return True
-
     _constraints = [
         (_check_no_view, 'You can not create move line on view account.', ['account_id']),
         (_check_no_closed, 'You can not create move line on closed account.', ['account_id']),
         (_check_company_id, 'Company must be same for its related account and period.',['company_id'] ),
-        (_check_partner_id, 'You can not create move line on receivable/payable account without partner', ['account_id'] )
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -902,7 +893,8 @@ class account_move_line(osv.osv):
         if context.get('account_id', False):
             cr.execute('SELECT code FROM account_account WHERE id = %s', (context['account_id'], ))
             res = cr.fetchone()
-            res = _('Entries: ')+ (res[0] or '')
+            if res:
+                res = _('Entries: ')+ (res[0] or '')
             return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
@@ -911,7 +903,7 @@ class account_move_line(osv.osv):
         cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
         p = cr.fetchone()[0] or ''
         if j or p:
-            return j+(p and (':'+p) or '')
+            return j + (p and (':' + p) or '')
         return False
 
     def onchange_date(self, cr, user, ids, date, context=None):
@@ -945,7 +937,7 @@ class account_move_line(osv.osv):
         journal_pool = self.pool.get('account.journal')
         if context is None:
             context = {}
-        result = super(osv.osv, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
+        result = super(account_move_line, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type != 'tree':
             #Remove the toolbar from the form view
             if view_type == 'form':
@@ -954,6 +946,14 @@ class account_move_line(osv.osv):
             #Restrict the list of journal view in search view
             if view_type == 'search' and result['fields'].get('journal_id', False):
                 result['fields']['journal_id']['selection'] = journal_pool.name_search(cr, uid, '', [], context=context)
+                ctx = context.copy()
+                #we add the refunds journal in the selection field of journal
+                if context.get('journal_type', False) == 'sale':
+                    ctx.update({'journal_type': 'sale_refund'})
+                    result['fields']['journal_id']['selection'] += journal_pool.name_search(cr, uid, '', [], context=ctx)
+                elif context.get('journal_type', False) == 'purchase':
+                    ctx.update({'journal_type': 'purchase_refund'})
+                    result['fields']['journal_id']['selection'] += journal_pool.name_search(cr, uid, '', [], context=ctx)
             return result
         if context.get('view_mode', False):
             return result
@@ -1036,7 +1036,13 @@ class account_move_line(osv.osv):
 
             if field in widths:
                 attrs.append('width="'+str(widths[field])+'"')
-            attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
+
+            if field in ('journal_id',):
+                attrs.append("invisible=\"context.get('journal_id', False)\"")
+            elif field in ('period_id',):
+                attrs.append("invisible=\"context.get('period_id', False)\"")
+            else:
+                attrs.append("invisible=\"context.get('visible_id') not in %s\"" % (fields.get(field)))
             xml += '''<field name="%s" %s/>\n''' % (field,' '.join(attrs))
 
         xml += '''</tree>'''

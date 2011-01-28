@@ -20,6 +20,19 @@
                 </tree>
             </field>
         </record>
+        <record model="ir.ui.view" id="view_voucher_line_form">
+            <field name="name">account.voucher.line.form</field>
+            <field name="model">account.voucher.line</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Voucher Lines">
+                    <field name="name"/>
+                    <field name="account_id"/>
+                    <field name="partner_id"/>
+                    <field name="amount"/>
+                </form>
+            </field>
+        </record>
 
         <record model="ir.ui.view" id="view_voucher_form">
             <field name="name">account.voucher.form</field>

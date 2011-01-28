@@ -58,7 +58,7 @@ class report_custom(report_rml):
               <name>%s</name>
               %%s
             </user>
-            ''' % toxml(emp['name'])
+            ''' % ustr(toxml(emp['name']))
             while monday != last_monday:
                 #### Work hour calculation
                 sql = '''

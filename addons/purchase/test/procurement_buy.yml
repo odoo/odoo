@@ -1,9 +1,9 @@
 -
-  In order to test the procurement with product type buy in OpenERP, I will create product 
+  In order to test the procurement with product type buy in OpenERP, I will create product
   and then I will create procurement for this product.
--        
+-
   I create  product.
-- 
+-
   !record {model: product.product, id: product_product_cddrive0}:
     categ_id: product.product_category_3
     cost_method: standard
@@ -27,12 +27,12 @@
         name: base.res_partner_asus
         min_qty: 2.0
         qty: 5.0
--  
+-
   I create  procurement order.
-- 
+-
   !record {model: procurement.order, id: procurement_order_testcase0}:
     company_id: base.main_company
-    date_planned: '2010-07-07 15:38:53'
+    date_planned: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     location_id: stock.stock_location_stock
     name: Test Case
     priority: '1'
@@ -43,13 +43,13 @@
     product_uos: product.product_uom_unit
     product_uos_qty: 0.0
     state: draft
-- 
+-
   I confirm on procurement order.
-- 
+-
   !workflow {model: procurement.order, action: button_confirm, ref: procurement_order_testcase0}
-- 
+-
   I run the scheduler.
-- 
+-
   !function {model: procurement.order, name: run_scheduler}:
     - model: procurement.order
       search: "[]"
@@ -66,19 +66,19 @@
   !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.browse(cr, uid, [ref('procurement_order_testcase0')])[0]
-    assert(proc_ids.state == 'running'), _('Exception') 
-- 
+    assert(proc_ids.state == 'running'), _('Exception')
+-
   I confirm  and Approve the purchase order.
-- 
+-
   !python {model: purchase.order}: |
     procurement_obj = self.pool.get('procurement.order')
     proc_ids = procurement_obj.browse(cr, uid, [ref('procurement_order_testcase0')])[0]
     import netsvc
     wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'purchase.order',proc_ids.purchase_id.id,'purchase_confirm', cr)  
--   
+    wf_service.trg_validate(uid, 'purchase.order',proc_ids.purchase_id.id,'purchase_confirm', cr)
+-
   I receive the order of the supplier ASUStek from the Incoming Shipments menu.
--   
+-
   !python {model: stock.picking }: |
    import time
    procurement_obj = self.pool.get('procurement.order')
@@ -96,7 +96,7 @@
           'product_id': move.product_id,
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
-      } 
+      }
       self.do_partial(cr, uid, [picking.id], partial_datas)
 -
   I confirm the Reservation.
@@ -111,4 +111,4 @@
   !python {model: procurement.order}: |
     from tools.translate import _
     proc_ids = self.browse(cr, uid, [ref('procurement_order_testcase0')])[0]
-    assert(proc_ids.state == 'done'), _('Order is not in done state') 
+    assert(proc_ids.state == 'done'), _('Order is not in done state')

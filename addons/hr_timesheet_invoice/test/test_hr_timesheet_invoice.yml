@@ -7,7 +7,7 @@
     account_id: account.analytic_sednacom
     amount: -1.0
     company_id: base.main_company
-    date: '2010-05-30'
+    date: !eval time.strftime('%Y-%m-%d')
     general_account_id: account.a_expense
     journal_id: hr_timesheet.analytic_journal
     name: develop yaml for hr module

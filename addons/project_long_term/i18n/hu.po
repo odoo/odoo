@@ -1,26 +1,25 @@
-# Hungarian translation for openobject-addons
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
-# This file is distributed under the same license as the openobject-addons package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#    * project_long_term
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: openobject-addons\n"
-"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 11:05+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: Hungarian <hu@li.org>\n"
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-25 13:12+0000\n"
+"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-11 05:02+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-26 04:39+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_long_term
 #: model:ir.module.module,shortdesc:project_long_term.module_meta_information
 msgid "Long Term Project Management"
-msgstr ""
+msgstr "Hosszútávú projektmenedzsment"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -31,28 +30,30 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.phase,next_phase_ids:0
 msgid "Next Phases"
-msgstr ""
+msgstr "Következő fázis"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Project's Tasks"
-msgstr ""
+msgstr "Projekt feladatok"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
 msgid "Phases"
-msgstr ""
+msgstr "Fázisok"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: view:project.resource.allocation:0
 msgid "Group By..."
-msgstr ""
+msgstr "Csoportosítás..."
 
 #. module: project_long_term
 #: constraint:project.project:0
 msgid "Error! project start-date must be lower then project end-date."
 msgstr ""
+"Hiba! A projekt kezdő dátumának előbbinek kell lennie, mint a projekt "
+"befejező dátumának."
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
@@ -94,7 +95,7 @@ msgstr ""
 #. module: project_long_term
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív feladatokat."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
@@ -108,15 +109,15 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:130
+#: code:addons/project_long_term/project_long_term.py:133
 #, python-format
 msgid "Day"
-msgstr ""
+msgstr "Nap"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_task
 msgid "Task"
-msgstr ""
+msgstr "Feladat"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -127,19 +128,11 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
-msgstr ""
+msgstr "Előző fázis"
 
 #. module: project_long_term
 #: help:project.phase,product_uom:0
 msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:489
-#, python-format
-msgid ""
-"Resources should be allocated to your phases and Members should be assigned "
-"to your Project!"
 msgstr ""
 
 #. module: project_long_term
@@ -158,39 +151,33 @@ msgstr ""
 #: field:project.resource.allocation,project_id:0
 #: view:project.task:0
 msgid "Project"
-msgstr ""
+msgstr "Projekt"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:50
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Hiba!"
 
 #. module: project_long_term
 #: selection:project.phase,state:0
 msgid "Cancelled"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:426
-#, python-format
-msgid "No tasks to compute for Project '%s'."
-msgstr ""
+msgstr "Törölt"
 
 #. module: project_long_term
 #: help:project.resource.allocation,date_end:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Befejező dátum"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Planning"
-msgstr ""
+msgstr "Tervezés"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
-msgstr ""
+msgstr "Határidő"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -205,23 +192,23 @@ msgid "Compute Phase Scheduling"
 msgstr ""
 
 #. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:192
+#: code:addons/project_long_term/project_long_term.py:195
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (másolat)"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: view:project.resource.allocation:0
 #: field:project.resource.allocation,useability:0
 msgid "Availability"
-msgstr ""
+msgstr "Elérhetőség"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,state:0
 msgid "State"
-msgstr ""
+msgstr "Státusz"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -268,7 +255,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
 #: view:project.resource.allocation:0
 msgid "Resources"
-msgstr ""
+msgstr "Források"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
@@ -325,9 +312,16 @@ msgid "Schedule and Display info"
 msgstr ""
 
 #. module: project_long_term
+#: help:project.phase,date_start:0
+msgid ""
+"It's computed by the scheduler according the project date or the end date of "
+"the previous phase."
+msgstr ""
+
+#. module: project_long_term
 #: view:project.phase:0
 msgid "Month"
-msgstr ""
+msgstr "Hónap"
 
 #. module: project_long_term
 #: constraint:project.phase:0
@@ -337,7 +331,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
 msgid "project.schedule.tasks"
-msgstr ""
+msgstr "project.schedule.tasks"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.act_project_phase
@@ -354,7 +348,7 @@ msgstr ""
 #: field:project.phase,date_start:0
 #: field:project.resource.allocation,date_start:0
 msgid "Start Date"
-msgstr ""
+msgstr "Kezdődátum"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -370,35 +364,28 @@ msgstr ""
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Tervezet"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Függőben lévő"
 
 #. module: project_long_term
 #: field:project.resource.allocation,name:0
 msgid "unknown"
-msgstr ""
+msgstr "ismeretlen"
 
 #. module: project_long_term
 #: field:project.resource.allocation,user_id:0
 msgid "User"
-msgstr ""
-
-#. module: project_long_term
-#: help:project.phase,date_start:0
-msgid ""
-"It's computed by the scheduler according the project date or the end date of "
-"the previous phase."
-msgstr ""
+msgstr "Felhasználó"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Task Detail"
-msgstr ""
+msgstr "Feladat részletei"
 
 #. module: project_long_term
 #: help:project.project,resource_calendar_id:0
@@ -408,24 +395,6 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:244
-#, python-format
-msgid "No responsible person assigned !"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:489
-#, python-format
-msgid "Error"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:244
-#, python-format
-msgid "You must assign a responsible person for phase '%s' !"
 msgstr ""
 
 #. module: project_long_term
@@ -446,50 +415,50 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.project,phase_ids:0
 msgid "Project Phases"
-msgstr ""
+msgstr "Projektfázisok"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "Done"
-msgstr ""
+msgstr "Kész"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: selection:project.phase,state:0
 msgid "In Progress"
-msgstr ""
+msgstr "Folyamatban"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Remaining Hours"
-msgstr ""
+msgstr "Hátralévő idő"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,responsible_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Felelős"
 
 #. module: project_long_term
 #: field:project.project,resource_calendar_id:0
 msgid "Working Time"
-msgstr ""
+msgstr "Munkaidő"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Current"
-msgstr ""
+msgstr "Jelenleg"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Start Phase"
-msgstr ""
+msgstr "Kezdőfázis"
 
 #. module: project_long_term
 #: code:addons/project_long_term/wizard/project_compute_phases.py:50
@@ -501,7 +470,7 @@ msgstr ""
 #: view:project.phase:0
 #: field:project.phase,total_hours:0
 msgid "Total Hours"
-msgstr ""
+msgstr "Összes óra"
 
 #. module: project_long_term
 #: view:project.schedule.tasks:0
@@ -516,7 +485,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.resource.allocation:0
 msgid "Phase"
-msgstr ""
+msgstr "Szakasz"
 
 #. module: project_long_term
 #: help:project.phase,state:0
@@ -532,44 +501,38 @@ msgstr ""
 #: field:project.phase,date_end:0
 #: field:project.resource.allocation,date_end:0
 msgid "End Date"
-msgstr ""
+msgstr "Befejezés dátuma"
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
 #: field:project.resource.allocation,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Forrás"
 
 #. module: project_long_term
 #: field:project.phase,name:0
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Tasks Details"
-msgstr ""
+msgstr "Feladatok részletei"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar
 msgid "Working Period"
-msgstr ""
+msgstr "Munkaidő"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_resource_resource
 msgid "Resource Detail"
-msgstr ""
+msgstr "Forrás részletei"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
 msgid "Scheduling"
-msgstr ""
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:329
-#, python-format
-msgid "No tasks to compute for Phase '%s'."
-msgstr ""
+msgstr "Ütemezés"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_phase
@@ -578,7 +541,7 @@ msgstr ""
 #: view:project.task:0
 #: field:project.task,phase_id:0
 msgid "Project Phase"
-msgstr ""
+msgstr "Projektfázis"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -588,7 +551,7 @@ msgstr ""
 #. module: project_long_term
 #: field:project.schedule.tasks,msg:0
 msgid "Message"
-msgstr ""
+msgstr "Üzenet"
 
 #. module: project_long_term
 #: constraint:project.phase:0
@@ -598,7 +561,7 @@ msgstr ""
 #. module: project_long_term
 #: field:project.phase,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sorszám"
 
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
@@ -615,7 +578,7 @@ msgstr ""
 #: view:project.phase:0
 #: view:project.schedule.tasks:0
 msgid "Schedule Tasks"
-msgstr ""
+msgstr "Ütemezett feladatok"
 
 #. module: project_long_term
 #: help:project.phase,duration:0

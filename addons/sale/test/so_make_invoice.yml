@@ -5,7 +5,7 @@
   I create a Sale Order for Slider Mobile for qty 100 having order_policy manual.
 -
   !record {model: sale.order, id: sale_order_so3}:
-    date_order: '2010-08-02'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: Test_SO003
     order_line:
@@ -34,7 +34,7 @@
   I create a Sale Order for products Slider Mobile and LG Viewty Smart for qty 100 having order_policy manual.
 -
   !record {model: sale.order, id: sale_order_so4}:
-    date_order: '2010-08-02'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: Test_SO004
     order_line:
@@ -74,7 +74,7 @@
 -
   !record {model: sale.make.invoice, id: sale_make_invoice_1}:
     grouped: 1
-    invoice_date: '2010-08-02'
+    invoice_date: !eval time.strftime('%Y-%m-%d')
 -
   Then I click on the "Create Invoices" button of wizard
 -

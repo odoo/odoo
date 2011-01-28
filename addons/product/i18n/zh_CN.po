@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-12 01:34+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-24 01:32+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-25 04:56+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -148,7 +148,7 @@ msgstr "错误!你不能创建递归的分类"
 msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
-msgstr ""
+msgstr "触发此规则的最小数量，如果指定了供应商计量单位就使用供应商计量单位表示，没有的话使用默认计量单位。"
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -323,7 +323,7 @@ msgstr "该规则只适用于业务伙伴采购/销售超过一定的数量"
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
 msgid "Wood 2mm"
-msgstr ""
+msgstr "木材 2mm"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -400,7 +400,7 @@ msgid ""
 "products, consumables or services. The Product form contains detailed "
 "information about your products related to procurement logistics, sales "
 "price, product category, suppliers and so on."
-msgstr ""
+msgstr "产品可以采购或销售。可以是原料、可库存产品、消耗品或服务。此产品表单包含了产品需求逻辑的详细信息。"
 
 #. module: product
 #: view:product.pricelist:0
@@ -481,7 +481,7 @@ msgstr "代码"
 msgid ""
 "Choose here the Unit of Measure in which the prices and quantities are "
 "expressed below."
-msgstr ""
+msgstr "选择用于表示下面的价格和数量的计量单位。"
 
 #. module: product
 #: field:product.price_list,qty4:0
@@ -507,18 +507,20 @@ msgid ""
 "each version has several rules. Example: the customer price of a product "
 "category will be based on the supplier price multiplied by 1.80."
 msgstr ""
+"价格表包含了用于计算相关业务伙伴采购与销售价格规则的信息。价格表可以包含多个版本（2010，2011，2010 "
+"二月涨价方案等）且每个版本可以包含多个规则。比如：产品的客户价格基于供应商价格乘以 1.80。"
 
 #. module: product
 #: help:product.product,active:0
 msgid ""
 "If the active field is set to False, it will allow you to hide the product "
 "without removing it."
-msgstr ""
+msgstr "如果“可用”字段没有选中那么将隐藏此产品但不会删除它。"
 
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
 msgid "Metal Cleats"
-msgstr ""
+msgstr "金属螺栓"
 
 #. module: product
 #: code:addons/product/pricelist.py:340
@@ -592,7 +594,7 @@ msgstr "产品模板"
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "餐饮支出"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -716,7 +718,7 @@ msgstr "配件"
 #. module: product
 #: field:product.template,sale_delay:0
 msgid "Customer Lead Time"
-msgstr "客户交货提前期"
+msgstr "客户交货提前期（日）"
 
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
@@ -730,6 +732,7 @@ msgid ""
 "management. For example, in food industries, you will manage a stock of ham "
 "but invoice in Kg. Keep empty to use the default UOM."
 msgstr ""
+"许多公司用于管理两个计量单位：发票和库存。比如，食品行业中，您使用件作为单位来管理火腿的库存但在发票中使用千克。为空表示使用默认计量单位。"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -795,7 +798,7 @@ msgstr "如果这规则只适合这产品,设置产品. (留空为适用所有�
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
-msgstr "产品需求&库位"
+msgstr "需求与货位"
 
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
@@ -815,7 +818,7 @@ msgstr "开发中"
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
 msgid "Shelf of 200cm"
-msgstr ""
+msgstr "200cm 架子"
 
 #. module: product
 #: view:product.uom:0
@@ -962,7 +965,7 @@ msgstr "序列"
 #. module: product
 #: view:product.price_list:0
 msgid "Calculate Product Price per unit base on pricelist version."
-msgstr "产品价格计算单位根据价格表版本"
+msgstr "基于价格表版本计算产品单位价格"
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
@@ -1067,7 +1070,7 @@ msgstr "可库存"
 #. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
-msgstr ""
+msgstr "木梁 4m"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -1119,7 +1122,7 @@ msgstr "显示产品列表的顺序号"
 #: field:product.uom,factor:0
 #: field:product.uom,factor_inv:0
 msgid "Ratio"
-msgstr ""
+msgstr "比例"
 
 #. module: product
 #: help:product.template,purchase_ok:0
@@ -1186,6 +1189,22 @@ msgid ""
 "    Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"    此模块是系统中用于管理产品和价格表的基本模块。\n"
+"\n"
+"    产品管理可以支持规格、不同的定价方式、供应商信息、生成库存或订单、不同的计量单位、包装和属性等。\n"
+"\n"
+"    价格表支持：\n"
+"    * 多级折扣（按产品、分类、数量）\n"
+"    * 基于不同的条件计算价格：\n"
+"        * 其他价格表\n"
+"        * 成本\n"
+"        * 售价\n"
+"        * 供应商价格 ...\n"
+"    价格表可以设置到产品和（或）业务伙伴。\n"
+"\n"
+"    打印带条码的产品标签。\n"
+"    "
 
 #. module: product
 #: help:product.template,seller_delay:0
@@ -1225,7 +1244,7 @@ msgstr "产品"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr ""
+msgstr "层板或箱子的层数"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -1255,7 +1274,7 @@ msgid ""
 "This is the average delay in days between the confirmation of the customer "
 "order and the delivery of the finished products. It's the time you promise "
 "to your customers."
-msgstr ""
+msgstr "此处是从确认客户订单到完整产品送货的平均延迟时间，是您对客户承诺的发货时间。"
 
 #. module: product
 #: view:product.product:0
@@ -1292,7 +1311,7 @@ msgstr "PC"
 msgid ""
 "This supplier's product code will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
-msgstr ""
+msgstr "这是供应商的产品代码，将用于打印询价单。如果使用内部的代码请保持为空。"
 
 #. module: product
 #: selection:product.template,procure_method:0
@@ -1310,7 +1329,7 @@ msgid ""
 "Gives the order in which the pricelist items will be checked. The evaluation "
 "gives highest priority to lowest sequence and stops as soon as a matching "
 "item is found."
-msgstr ""
+msgstr "价格表检测的顺序。越小的序号将有越高的优先级进行条件匹配。"
 
 #. module: product
 #: selection:product.template,type:0
@@ -1359,7 +1378,7 @@ msgid ""
 "Here is a list of all your products classified by category. You can click a "
 "category to get the list of all products linked to this category or to a "
 "child of this category."
-msgstr ""
+msgstr "此处是所有产品的分类表。您可以单击一个分类来查看该分类下的所有产品或下级分类。"
 
 #. module: product
 #: view:product.product:0
@@ -1446,7 +1465,7 @@ msgstr "计量单位属性"
 #. module: product
 #: model:product.template,name:product.product_product_shelf1_product_template
 msgid "Rack 200cm"
-msgstr ""
+msgstr "行李架 200cm"
 
 #. module: product
 #: selection:product.template,supply_method:0
@@ -1475,7 +1494,7 @@ msgstr "小于引用的计量单位"
 #: field:product.product,active:0
 #: field:product.uom,active:0
 msgid "Active"
-msgstr "生效"
+msgstr "可用"
 
 #. module: product
 #: field:product.product,price_margin:0
@@ -1583,7 +1602,7 @@ msgstr "保证期(月)"
 msgid ""
 "Set a category of product if this rule only apply to products of a category "
 "and his children. Keep empty for all products"
-msgstr ""
+msgstr "指定此规则要应用到的产品分类及其下级分类，如果为空则应用于所有产品。"
 
 #. module: product
 #: model:ir.model,name:product.model_product_product
@@ -1611,7 +1630,7 @@ msgstr "按订单生产"
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
-msgstr ""
+msgstr "您可以放入货板或箱子的产品数量。"
 
 #. module: product
 #: field:product.product,variants:0
@@ -1638,7 +1657,7 @@ msgstr "计量单位->销售单位 系数"
 #. module: product
 #: help:product.supplierinfo,sequence:0
 msgid "Assigns the priority to the list of product supplier."
-msgstr ""
+msgstr "赋予供应商在其列表中的优先级"
 
 #. module: product
 #: field:product.template,uom_id:0
@@ -1737,7 +1756,7 @@ msgstr "采购单默认使用的计量单位。必须与默认计量单位位于
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
 msgid "This product is configured with example of push/pull flows"
-msgstr ""
+msgstr "此产品已经配置为推/拉流程的例子。"
 
 #. module: product
 #: field:product.packaging,length:0
@@ -1779,7 +1798,7 @@ msgstr "可以卖出"
 #. module: product
 #: field:product.template,produce_delay:0
 msgid "Manufacturing Lead Time"
-msgstr "生产提前期"
+msgstr "生产提前期(日)"
 
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
@@ -1824,7 +1843,7 @@ msgstr "* ( 1 + "
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr ""
+msgstr "完整包装的重量，指货板或者包装箱"
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
@@ -1862,7 +1881,7 @@ msgstr "送货周期"
 msgid ""
 "By unchecking the active field you can disable a unit of measure without "
 "deleting it."
-msgstr ""
+msgstr "如果您取消选定“可用”字段的话可以隐藏此计量单位而不删除它。"
 
 #. module: product
 #: field:product.template,seller_delay:0
@@ -1948,7 +1967,7 @@ msgstr "作为任务负责人"
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
 "that cannot be further split, such as a piece."
-msgstr ""
+msgstr "计算出的数量将乘以此值。如果计量单位不能再进一步分割（比如“件”）的话请填写 1.0。"
 
 #. module: product
 #: view:product.product:0
@@ -1999,7 +2018,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_shelf0_product_template
 msgid "Rack 100cm"
-msgstr ""
+msgstr "行李架 100cm"
 
 #. module: product
 #: help:product.packaging,sequence:0
@@ -2052,7 +2071,7 @@ msgstr "毛重"
 #. module: product
 #: model:product.template,name:product.product_product_assemblysection0_product_template
 msgid "Assembly Section"
-msgstr ""
+msgstr "装配"
 
 #. module: product
 #: model:product.category,name:product.product_category_3
@@ -2097,7 +2116,7 @@ msgstr "销售 属性"
 #. module: product
 #: model:product.uom,name:product.product_uom_ton
 msgid "tonne"
-msgstr ""
+msgstr "吨"
 
 #. module: product
 #: view:product.product:0
@@ -2134,7 +2153,7 @@ msgstr "说明"
 msgid ""
 "Could not resolve product category, you have defined cyclic categories of "
 "products!"
-msgstr ""
+msgstr "不能分辨产品分类，因为您定义了循环的产品分类！"
 
 #. module: product
 #: view:product.template:0
@@ -2208,7 +2227,7 @@ msgstr "生命周期结束"
 msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
-msgstr ""
+msgstr "指定同一产品的多种包装方式。此处与分拣单并不冲突且主要用于 EDI 模块。"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -2246,6 +2265,8 @@ msgid ""
 "Coefficient to convert UOM to UOS\n"
 " uos = uom * coeff"
 msgstr ""
+"从 UoM 到 UoS 的转换系数：\n"
+" uos = uom * 系数"
 
 #. module: product
 #: help:product.template,volume:0

@@ -6,32 +6,32 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2010-09-09 07:00+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-23 19:35+0000\n"
+"Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 05:12+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-24 04:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Sub Total"
-msgstr ""
+msgstr "Ara Toplam"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Note:"
-msgstr ""
+msgstr "Not:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "İptal edilimiş fatura"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -43,13 +43,13 @@ msgstr "Ünvan"
 #: model:ir.actions.act_window,name:account_invoice_layout.action_account_invoice_special_msg
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_layout_message
 msgid "Invoices with Layout and Message"
-msgstr ""
+msgstr "Yerleşimli ve mesajlı faturalar"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Disc. (%)"
-msgstr ""
+msgstr "İnd. (%)"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -59,13 +59,13 @@ msgstr "Not"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
 msgid "Notify By Messages"
-msgstr ""
+msgstr "Mesajla Bilgilendir"
 
 #. module: account_invoice_layout
 #: help:notify.message,msg:0
 msgid ""
 "This notification will appear at the bottom of the Invoices when printed."
-msgstr ""
+msgstr "Bu uyarı faturalar basıldığında faturanın altına yazılacak"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -92,24 +92,38 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Bu modül fatura şablonlarını geliştirmek için hazırlanmış özellikler "
+"içerir.\n"
+"\n"
+"    Size sağladığı fonksiyonlar\n"
+"        * Order all the lines of an invoice\n"
+"        * Başlıklar, yorum satırları ve ara toplamlar ekleyebilirsiniz\n"
+"        * Yatay çizgiler çizebilirsiniz, sayfa sonları koyabilirsiniz\n"
+"\n"
+"    Ek olarak, seçtiğiniz faturaları altlarına özel bir mesaj yazarak "
+"basabilirsiniz. Bu fonksiyonu bayram, yeni yıl dileklerini faturaların "
+"altına basmak için kullanabilirsiniz.\n"
+"\n"
+"    "
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "VAT :"
-msgstr ""
+msgstr "KDV :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Tel. :"
-msgstr ""
+msgstr "Tel :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "PRO-FORMA"
-msgstr ""
+msgstr "PROFORMA"
 
 #. module: account_invoice_layout
 #: field:account.invoice,abstract_line_ids:0
@@ -124,7 +138,7 @@ msgstr "Sıra"
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_finan_config_notify_message
 msgid "Notification Message"
-msgstr ""
+msgstr "Bilgilendirme Mesajı"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -135,12 +149,12 @@ msgstr "Ürün"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice lines."
-msgstr ""
+msgstr "Fatura satırlarının sıralamasını nasıl yapılacağını verir"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -152,7 +166,7 @@ msgstr "Fiyat"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Invoice Date"
-msgstr ""
+msgstr "Fatura Tarihi"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -162,12 +176,12 @@ msgstr "Vergi:"
 #. module: account_invoice_layout
 #: field:account.invoice.line,functional_field:0
 msgid "Source Account"
-msgstr ""
+msgstr "Kaynak Hesap"
 
 #. module: account_invoice_layout
 #: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
 msgid "Write Messages"
-msgstr ""
+msgstr "Mesajı Yaz"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -178,18 +192,18 @@ msgstr "Matrah"
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Page Break"
-msgstr ""
+msgstr "Sayfa Sonu"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 #: field:notify.message,msg:0
 msgid "Special Message"
-msgstr ""
+msgstr "Özel Mesaj"
 
 #. module: account_invoice_layout
 #: help:account.invoice.special.msg,message:0
 msgid "Message to Print at the bottom of report"
-msgstr ""
+msgstr "Raporun altına yazılacak mesaj"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -201,18 +215,18 @@ msgstr "Miktar"
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Refund"
-msgstr ""
+msgstr "Geri Ödeme"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Fax :"
-msgstr ""
+msgstr "Faks:"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 msgid "Total:"
-msgstr ""
+msgstr "Toplam:"
 
 #. module: account_invoice_layout
 #: view:account.invoice.special.msg:0
@@ -222,18 +236,18 @@ msgstr "Mesaj Seç"
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Messages"
-msgstr ""
+msgstr "Mesajlar"
 
 #. module: account_invoice_layout
 #: model:ir.actions.report.xml,name:account_invoice_layout.account_invoices_1
 msgid "Invoices with Layout"
-msgstr ""
+msgstr "Şablonlu Faturalar"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Description / Taxes"
-msgstr ""
+msgstr "Açıklama / Vergiler"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -244,17 +258,17 @@ msgstr "Miktar"
 #. module: account_invoice_layout
 #: model:notify.message,msg:account_invoice_layout.demo_message1
 msgid "ERP & CRM Solutions..."
-msgstr ""
+msgstr "ERP & CRM çözümleri"
 
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Genel Toplam :"
 
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Total :"
-msgstr ""
+msgstr "Toplam :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -265,18 +279,18 @@ msgstr "Taslak Fatura"
 #. module: account_invoice_layout
 #: field:account.invoice.line,sequence:0
 msgid "Sequence Number"
-msgstr ""
+msgstr "Sıra No"
 
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_special_msg
 msgid "Account Invoice Special Message"
-msgstr ""
+msgstr "Cari Fatura Özel Mesajı"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Origin"
-msgstr ""
+msgstr "Menşei"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -286,18 +300,18 @@ msgstr "Tipi"
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
-msgstr ""
+msgstr "Ayraç Çizgi"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
 msgid "Your Reference"
-msgstr ""
+msgstr "Referansınız"
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "Invoices Layout Improvement"
-msgstr ""
+msgstr "Fatura Şablon İyileştirmesi"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -319,17 +333,17 @@ msgstr "Vergi"
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Fatura Kalemi"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 msgid "Net Total:"
-msgstr ""
+msgstr "Net Toplam:"
 
 #. module: account_invoice_layout
 #: view:notify.message:0
 msgid "Write a notification or a wishful message."
-msgstr ""
+msgstr "Bir uyarı ya da tebrik mesajı yazabilirsiniz."
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -357,7 +371,7 @@ msgstr "Mesaj"
 #. module: account_invoice_layout
 #: report:notify_account.invoice:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Vergi :"
 
 #. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form

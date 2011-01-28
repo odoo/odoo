@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2010-11-28 19:32+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-22 13:10+0000\n"
+"Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-06 04:44+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-23 04:57+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -69,6 +69,13 @@ msgid ""
 "supplier invoices: based on the order, based on the receptions or manual "
 "encoding."
 msgstr ""
+"Możesz wygenerować zapytanie ofertowe, kiedy chcesz zakupić coś, ale zakup "
+"jest jeszcze nie potwierdzony. To menu wyświetla również zapytania ofertowe "
+"utworzone automatycznie z reguł logistycznych (minimalny zapas, na "
+"zamówienie itp.). Zapytanie ofertowe po zatwierdzeniu staje się zamówieniem "
+"zakupu. Jeśli stosujesz interfejs rozszerzony, to możesz decydować o "
+"sposobie powstawania faktur zakupowych w systemie: wg zamówienia, wg przyjęć "
+"lub ręcznie."
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
@@ -78,7 +85,7 @@ msgstr "Z pobrania"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Nie zafakturowane"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
@@ -112,12 +119,14 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Stosuj to menu do przeglądania zamówień zakupu wg numerów, dostawców, dat "
+"itd. W zamówieniu zakupu możesz przeglądać produkty i sprawdzać stan faktur."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:722
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Wybrany dostawca sprzedaje ten produkt tylko po %s"
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:156
@@ -128,7 +137,7 @@ msgstr "Faktury od dostawców"
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Numer zamówienia musi być unikalny !"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
@@ -249,7 +258,7 @@ msgstr "Zaaprobowane"
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "JM"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -259,7 +268,7 @@ msgstr "Pochodzenie"
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "JM"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
@@ -323,7 +332,7 @@ msgstr "Suma netto :"
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure Your Purchases Management Application"
-msgstr ""
+msgstr "Konfiguruj aplikację zakupów"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
@@ -457,7 +466,7 @@ msgstr "Ostrzeżenie"
 #. module: purchase
 #: field:purchase.installer,purchase_analytic_plans:0
 msgid "Purchase Analytic Plans"
-msgstr "Plany analizy zakupów"
+msgstr "Analityczne plany zakupów"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
@@ -522,7 +531,7 @@ msgstr "Wystawianie faktur"
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
@@ -614,7 +623,7 @@ msgstr "Kwota bez podatku"
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "Cenniki"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
@@ -641,7 +650,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr ""
+msgstr "Faktury wygenerowane do zamówienia zakupu"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:282
@@ -762,6 +771,11 @@ msgid ""
 "according to your settings. Once you receive a supplier invoice, you can "
 "match it with the draft invoice and validate it."
 msgstr ""
+"To menu służy do przeglądania spodziewanych lub przychodzących faktur od "
+"dostawców. OpenERP według twoich ustawień może automatycznie generować "
+"projekty faktur, których powinieneś się spodziewać. Kiedy rzeczywista "
+"faktura nadejdzie, to wystarczy projekt skonfrontować z rzeczywistą fakturą "
+"i go zatwierdzić."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -835,6 +849,10 @@ msgid ""
 "supplier invoice yet. Once you are ready to receive a supplier invoice, you "
 "can generate a draft supplier invoice based on the lines from this menu."
 msgstr ""
+"Jeśli w zamówieniu ustawiłeś fakturowanie jako \"Ręczne\", to możesz "
+"sprawdzać pozycje zamówienia, które nie zostały jeszcze zafakturowane. Kiedy "
+"wiesz, że otrzymasz fakturę, to możesz wygenerować projekt na podstawie "
+"pozycji z tego menu."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -869,7 +887,7 @@ msgstr "Zlecenie zakupu"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Kategorie jednostek miary"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -892,7 +910,7 @@ msgstr "Zapotrzebowanie"
 #: view:purchase.order:0
 #: field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Faktury"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
@@ -1021,6 +1039,7 @@ msgstr "Pozycja zamówienia zakupu"
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
 msgstr ""
+"Błąd ! Tworzenie rekurencyjnych elementów skojarzonych jest zabronione."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1077,7 +1096,7 @@ msgstr "Wydawane produkty do zafakturowania"
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguruj"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
@@ -1088,7 +1107,7 @@ msgstr "Il. na produkt"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Próbujesz powiązać z numerem partii z innego produktu"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -1187,6 +1206,15 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Moduł zakupów służy do obsługi zapytań ofertowych i zamówień zakupu.\n"
+"    Projekt faktury od dostawcy tworzony automatycznie do zamówienia.\n"
+"    Konsola zakupów zawierająca:\n"
+"    * Bieżące zamówienia zakupu\n"
+"    * Projekty zamówień zakupu\n"
+"    * Miesięczny wykres dla kupowanych ilości i wartości    \n"
+"\n"
+"    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:685
@@ -1195,6 +1223,8 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
 msgstr ""
+"Wybrany dostawca ma ustawioną minimalną ilość na %s. Nie możesz kupować "
+"mniej."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -1214,7 +1244,7 @@ msgstr "Anuluj zamówienie zakupu"
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Musisz podać nr partii dla tego produktu"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -1235,7 +1265,7 @@ msgstr "Wartość produktów"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Typy cenników"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1257,7 +1287,7 @@ msgstr "Historia"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Produkty wg kategorii"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1320,7 +1350,7 @@ msgstr "Domyślna wersja cennika zakupu"
 #: view:purchase.installer:0
 msgid ""
 "Extend your Purchases Management Application with additional functionalities."
-msgstr ""
+msgstr "Rozszerz aplikację zakupów o dodatkowe funkcjonalności."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
@@ -1529,6 +1559,9 @@ msgid ""
 "suppliers. You can track all your interactions with them through the History "
 "tab: emails, orders, meetings, etc."
 msgstr ""
+"Tutaj masz dostęp do danych dostawców. Możesz sprawdzać historię relacji z "
+"dostawcami w zakładce Historia. Znajdziesz tam historię wiadomości, spraw, "
+"zamówień i spotkań."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1592,7 +1625,7 @@ msgstr "Luty"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "Kategorie produktów"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -1746,7 +1779,7 @@ msgstr "Suma"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Wersje cennika"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
@@ -1841,7 +1874,7 @@ msgstr "Przesunięcia zapasów"
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Jedn. miary"
 
 #. module: purchase
 #: view:purchase.report:0

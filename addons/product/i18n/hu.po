@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-11 17:16+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-25 21:32+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-26 04:38+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -24,7 +24,7 @@ msgstr "DDR 512MB PC400"
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
-msgstr ""
+msgstr "Rétegek száma"
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -56,7 +56,7 @@ msgstr "Mainboard ASUStek A7V8X-X"
 #. module: product
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr "Ez a minimum rendelési darabszám a fő beszállítónál."
+msgstr "A főszállítótól minimálisan beszerezhető mennyiség."
 
 #. module: product
 #: model:product.uom,name:product.uom_day
@@ -81,7 +81,7 @@ msgstr "Bejövő"
 #. module: product
 #: field:product.template,mes_type:0
 msgid "Measure Type"
-msgstr ""
+msgstr "Mértékegység típusa"
 
 #. module: product
 #: help:res.partner,property_product_pricelist:0
@@ -89,6 +89,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
+"Az aktuális partnernek történő értékesítéseknél a rendszer az "
+"alapértelmezett helyett ezt az árlistát fogja használni"
 
 #. module: product
 #: constraint:product.supplierinfo:0
@@ -96,16 +98,18 @@ msgid ""
 "Error: The default UOM and the Supplier Product UOM must be in the same "
 "category."
 msgstr ""
+"Hiba! Az alapértelmezett mértékegység és a beszállító  termékének "
+"mértékegysége ugyanabban a kategóriában kell legyen."
 
 #. module: product
 #: field:product.template,seller_qty:0
 msgid "Supplier Quantity"
-msgstr ""
+msgstr "Szállítói mennyiség"
 
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Fixed"
-msgstr "Rögzített"
+msgstr "Állandó"
 
 #. module: product
 #: code:addons/product/pricelist.py:186
@@ -144,8 +148,7 @@ msgstr "Hivatkozás"
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You can not create recursive categories."
-msgstr ""
-"Hiba ! Rekurzív (körkörösen egymásra mutató) kategóriák nem hozhatóak létre."
+msgstr "Hiba! Nem hozhat létre rekurzív kategóriákat."
 
 #. module: product
 #: help:pricelist.partnerinfo,min_quantity:0
@@ -170,9 +173,9 @@ msgid ""
 "Produce will generate production order or tasks, according to the product "
 "type. Purchase will trigger purchase orders when requested."
 msgstr ""
-"A 'gyártás' a termék típusától függően gyártási rendelést vagy "
-"projektfeladatokat készít. A 'vásárlás' beszerzési rendelést készít ha "
-"szükség van a termékre."
+"A \"gyártás\" a termék típusától függően termelési utasítást vagy "
+"feladatokat generál. A \"beszerzés\" szállítói megrendeléseket generál, "
+"amikor kérik."
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -182,7 +185,7 @@ msgstr "Átlagár"
 #. module: product
 #: help:product.pricelist.item,name:0
 msgid "Explicit rule name for this pricelist line."
-msgstr ""
+msgstr "Ennek az árlista szabálynak a neve."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
@@ -193,7 +196,7 @@ msgstr "Mértékegység kategóriák"
 #. module: product
 #: model:product.template,name:product.product_product_cpu1_product_template
 msgid "Processor AMD Athlon XP 1800+"
-msgstr ""
+msgstr "Processor AMD Athlon XP 1800+"
 
 #. module: product
 #: model:product.template,name:product.product_product_20_product_template
@@ -218,12 +221,12 @@ msgstr "db"
 #. module: product
 #: view:product.template:0
 msgid "Miscelleanous"
-msgstr "Egyéb"
+msgstr "Vegyes"
 
 #. module: product
 #: model:product.template,name:product.product_product_worker0_product_template
 msgid "Worker"
-msgstr ""
+msgstr "Munkás"
 
 #. module: product
 #: help:product.template,sale_ok:0
@@ -231,28 +234,29 @@ msgid ""
 "Determines if the product can be visible in the list of product within a "
 "selection from a sale order line."
 msgstr ""
+"Meghatározza, hogy a termék választható-e vevői megrendelések készítésénél."
 
 #. module: product
 #: model:product.pricelist.version,name:product.ver0
 msgid "Default Public Pricelist Version"
-msgstr ""
+msgstr "Alapértelmezett, nyilvános árlistaverzió"
 
 #. module: product
 #: selection:product.template,cost_method:0
 msgid "Standard Price"
-msgstr ""
+msgstr "Elszámoló ár"
 
 #. module: product
 #: model:product.pricelist.type,name:product.pricelist_type_sale
 #: field:res.partner,property_product_pricelist:0
 msgid "Sale Pricelist"
-msgstr "Értékesítési árlista"
+msgstr "Eladási árlista"
 
 #. module: product
 #: view:product.template:0
 #: field:product.template,type:0
 msgid "Product Type"
-msgstr "Termék típus"
+msgstr "Terméktípus"
 
 #. module: product
 #: view:product.uom:0
@@ -268,7 +272,7 @@ msgstr "Termékek: "
 #. module: product
 #: field:product.category,parent_id:0
 msgid "Parent Category"
-msgstr "Szülő kategória"
+msgstr "Főkategória"
 
 #. module: product
 #: help:product.product,outgoing_qty:0
@@ -288,22 +292,22 @@ msgstr ""
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Supplier name, price, product code, ..."
-msgstr ""
+msgstr "Szállító neve, ár, termékkód..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
 msgid "HDD Seagate 7200.8 160GB"
-msgstr ""
+msgstr "HDD Seagate 7200.8 160GB"
 
 #. module: product
 #: field:product.product,ean13:0
 msgid "EAN13"
-msgstr ""
+msgstr "EAN13"
 
 #. module: product
 #: field:product.template,seller_id:0
 msgid "Main Supplier"
-msgstr ""
+msgstr "Főszállító"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_ul_form_action
@@ -313,7 +317,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.ul:0
 msgid "Packaging"
-msgstr ""
+msgstr "Csomagolás"
 
 #. module: product
 #: view:product.product:0
@@ -326,11 +330,13 @@ msgstr "Kategória"
 msgid ""
 "The rule only applies if the partner buys/sells more than this quantity."
 msgstr ""
+"A szabály csak akkor érvényes, ha a partner többet vesz/ad el, mint ez a "
+"mennyiség."
 
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
 msgid "Wood 2mm"
-msgstr ""
+msgstr "Fa 2mm"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -340,12 +346,12 @@ msgstr "Mennyiség-1"
 #. module: product
 #: help:product.packaging,ul_qty:0
 msgid "The number of packages by layer"
-msgstr ""
+msgstr "Csomagok száma rétegek szerint"
 
 #. module: product
 #: field:product.packaging,qty:0
 msgid "Quantity by Package"
-msgstr "Csomagolási mennyiség"
+msgstr "Csomagmennyiség"
 
 #. module: product
 #: view:product.product:0
@@ -357,23 +363,23 @@ msgstr "Állapot"
 #. module: product
 #: help:product.template,categ_id:0
 msgid "Select category for the current product"
-msgstr ""
+msgstr "Válassza ki az aktuális termék kategóriáját."
 
 #. module: product
 #: field:product.product,outgoing_qty:0
 msgid "Outgoing"
-msgstr ""
+msgstr "Kimenő"
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr ""
+msgstr "A kategória hivatkozási mértékegysége"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
 #: field:product.product,lst_price:0
 msgid "Public Price"
-msgstr "Listaár"
+msgstr "Publikus ár"
 
 #. module: product
 #: field:product.price_list,qty5:0
@@ -383,7 +389,7 @@ msgstr "Mennyiség-5"
 #. module: product
 #: model:product.category,name:product.product_category_10
 msgid "IT components"
-msgstr ""
+msgstr "IT komponensek"
 
 #. module: product
 #: field:product.template,product_manager:0
@@ -393,12 +399,12 @@ msgstr "Termékfelelős"
 #. module: product
 #: field:product.supplierinfo,product_name:0
 msgid "Supplier Product Name"
-msgstr ""
+msgstr "Szállítói termék megnevezés"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc3_product_template
 msgid "Medium PC"
-msgstr ""
+msgstr "Medium PC"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action_puchased
@@ -412,7 +418,7 @@ msgstr ""
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
-msgstr ""
+msgstr "Termékárak keresése"
 
 #. module: product
 #: view:product.product:0
@@ -425,12 +431,12 @@ msgstr "Értékesítési leírás"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Storage Localisation"
-msgstr ""
+msgstr "Tárolási lokalizálás"
 
 #. module: product
 #: help:product.packaging,length:0
 msgid "The length of the package"
-msgstr ""
+msgstr "A csomag hossza"
 
 #. module: product
 #: help:product.template,weight_net:0
@@ -440,7 +446,7 @@ msgstr "Nettó súly (kg)"
 #. module: product
 #: help:product.template,state:0
 msgid "Tells the user if he can use the product or not."
-msgstr ""
+msgstr "Informálja a felhasználót a termék használhatóságáról."
 
 #. module: product
 #: field:pricelist.partnerinfo,min_quantity:0
@@ -456,7 +462,7 @@ msgstr "Magasság"
 #. module: product
 #: help:product.pricelist.version,date_end:0
 msgid "Ending date for this pricelist version to be valid."
-msgstr ""
+msgstr "Az a dátum, ameddig ez az árlista verzió érvényes."
 
 #. module: product
 #: model:product.category,name:product.cat0
@@ -466,7 +472,7 @@ msgstr "Minden termék"
 #. module: product
 #: model:ir.model,name:product.model_pricelist_partnerinfo
 msgid "pricelist.partnerinfo"
-msgstr ""
+msgstr "pricelist.partnerinfo"
 
 #. module: product
 #: field:product.price_list,qty2:0
@@ -476,12 +482,12 @@ msgstr "Mennyiség-2"
 #. module: product
 #: field:product.price_list,qty3:0
 msgid "Quantity-3"
-msgstr ""
+msgstr "Mennyiség-3"
 
 #. module: product
 #: view:product.product:0
 msgid "Codes"
-msgstr ""
+msgstr "Kódok"
 
 #. module: product
 #: help:product.supplierinfo,product_uom:0
@@ -498,12 +504,12 @@ msgstr "Mennyiség-4"
 #. module: product
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr "Beszerzés, értékesítés"
+msgstr "Értékesítés és Beszerzés"
 
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_wtime
 msgid "Working Time"
-msgstr ""
+msgstr "Munkaidő"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action2
@@ -534,6 +540,8 @@ msgid ""
 "No active version for the selected pricelist !\n"
 "Please create or activate one."
 msgstr ""
+"Nincs aktív verziója a kiválasztott árlistának !\n"
+"Kérjük hozzon létre vagy aktiváljon egyet."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -543,12 +551,12 @@ msgstr "Termék ME kategória"
 #. module: product
 #: model:product.ul,name:product.product_ul_box
 msgid "Box 20x20x40"
-msgstr ""
+msgstr "Doboz 20x20x40"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Price Computation"
-msgstr "Árszámítás"
+msgstr "Ár számítása"
 
 #. module: product
 #: field:product.template,purchase_ok:0
@@ -558,7 +566,7 @@ msgstr "Beszerezhető"
 #. module: product
 #: model:product.template,name:product.product_product_cpu2_product_template
 msgid "High speed processor config"
-msgstr ""
+msgstr "Nagy sebességű processzor beállítása"
 
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
@@ -566,6 +574,8 @@ msgid ""
 "1 or several supplier(s) can be linked to a product. All information stands "
 "in the product form."
 msgstr ""
+"Egy vagy több szállító csatolható egy termékhez. Minden információ a termék "
+"űrlapján található."
 
 #. module: product
 #: help:product.uom,category_id:0
@@ -577,33 +587,33 @@ msgstr ""
 #. module: product
 #: help:product.packaging,width:0
 msgid "The width of the package"
-msgstr ""
+msgstr "Csomag szélessége"
 
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Virtual Stock"
-msgstr "Felhasználható készlet"
+msgstr "Virtuális készlet"
 
 #. module: product
 #: selection:product.category,type:0
 msgid "View"
-msgstr ""
+msgstr "Nézet"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
 msgid "Product Templates"
-msgstr ""
+msgstr "Terméksablonok"
 
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "Éttermi költségek"
 
 #. module: product
 #: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Hiba: Érvénytelen EAN kód"
+msgstr "Hiba: Érvénytelen vonalkód"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
@@ -613,7 +623,7 @@ msgstr "Min. mennyiség"
 #. module: product
 #: model:ir.model,name:product.model_product_price_type
 msgid "Price Type"
-msgstr ""
+msgstr "Ártípus"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -646,12 +656,12 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_kitshelfofcm0_product_template
 msgid "KIT Shelf of 100cm"
-msgstr ""
+msgstr "KIT Polc 100cm"
 
 #. module: product
 #: field:product.supplierinfo,name:0
 msgid "Supplier"
-msgstr ""
+msgstr "Szállító"
 
 #. module: product
 #: model:product.template,name:product.product_product_sidepanel0_product_template
@@ -661,7 +671,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
 msgid "Kit Keyboard + Mouse"
-msgstr ""
+msgstr "Kit Billentyűzet + Egér"
 
 #. module: product
 #: field:product.price.type,name:0
@@ -671,7 +681,7 @@ msgstr "Ár neve"
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
 msgid "Processor AMD Athlon XP 2200+"
-msgstr ""
+msgstr "Processor AMD Athlon XP 2200+"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.action_product_price_list
@@ -686,7 +696,7 @@ msgstr "Árlista"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Szállítók"
 
 #. module: product
 #: view:product.product:0
@@ -716,17 +726,17 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
-msgstr ""
+msgstr "Kiegészítők"
 
 #. module: product
 #: field:product.template,sale_delay:0
 msgid "Customer Lead Time"
-msgstr ""
+msgstr "Vevő átfutási idő"
 
 #. module: product
 #: model:process.transition,name:product.process_transition_supplierofproduct0
 msgid "Supplier of the product"
-msgstr ""
+msgstr "Termék szállítója"
 
 #. module: product
 #: help:product.template,uos_id:0
@@ -744,17 +754,17 @@ msgstr "Min. árrés"
 #. module: product
 #: field:product.category,child_id:0
 msgid "Child Categories"
-msgstr ""
+msgstr "Alkategóriák"
 
 #. module: product
 #: field:product.pricelist.version,date_end:0
 msgid "End Date"
-msgstr "Befejezés dátuma"
+msgstr "Záró dátum"
 
 #. module: product
 #: view:product.price_list:0
 msgid "Print"
-msgstr ""
+msgstr "Nyomtatás"
 
 #. module: product
 #: view:product.product:0
@@ -772,17 +782,17 @@ msgstr "Árlisták"
 #. module: product
 #: field:product.product,partner_ref:0
 msgid "Customer ref"
-msgstr ""
+msgstr "Vevői hiv."
 
 #. module: product
 #: view:product.product:0
 msgid "Miscellaneous"
-msgstr ""
+msgstr "Vegyes"
 
 #. module: product
 #: field:product.pricelist.type,key:0
 msgid "Key"
-msgstr ""
+msgstr "Kulcs"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -795,24 +805,24 @@ msgid ""
 "Set a product if this rule only apply to one product. Keep empty for all "
 "products"
 msgstr ""
-"Válasszon ki egy terméket, ha a szabály csak arra vonatkozik. Hagyja üresen "
-"minden termékhez."
+"Ha kiválaszt egy terméket, a szabály csak arra fog vonatkozni. Hagyja üresen "
+"ha nem kívánja korlátozni."
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
-msgstr "Beszerzés és tárhelyek"
+msgstr "Beszerzés és Helyek"
 
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
 msgid "Kitchen Design Project"
-msgstr ""
+msgstr "Konyhadesign projekt"
 
 #. module: product
 #: model:product.uom,name:product.uom_hour
 msgid "Hour"
-msgstr ""
+msgstr "Óra"
 
 #. module: product
 #: selection:product.template,state:0
@@ -822,28 +832,28 @@ msgstr "Fejlesztés alatt"
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm1_product_template
 msgid "Shelf of 200cm"
-msgstr ""
+msgstr "Polc 200cm"
 
 #. module: product
 #: view:product.uom:0
 msgid "Ratio & Precision"
-msgstr ""
+msgstr "Arány és pontosság"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_gram
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #. module: product
 #: model:product.category,name:product.product_category_11
 msgid "IT components kits"
-msgstr ""
+msgstr "IT-komponens készletek"
 
 #. module: product
 #: selection:product.category,type:0
 #: selection:product.template,state:0
 msgid "Normal"
-msgstr ""
+msgstr "Normál"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -861,7 +871,7 @@ msgstr "Pénznem"
 #. module: product
 #: model:product.template,name:product.product_product_ram_product_template
 msgid "DDR 256MB PC400"
-msgstr ""
+msgstr "DDR 256MB PC400"
 
 #. module: product
 #: view:product.category:0
@@ -889,7 +899,7 @@ msgstr "Csomagolás össz súlya"
 #. module: product
 #: help:product.packaging,code:0
 msgid "The code of the transport unit."
-msgstr ""
+msgstr "A szállítási egység kódja."
 
 #. module: product
 #: help:product.template,standard_price:0
@@ -897,16 +907,18 @@ msgid ""
 "Product's cost for accounting stock valuation. It is the base price for the "
 "supplier price."
 msgstr ""
+"A termék bekerülési értéke a készletkönyvelésben. A rendszer ezt tekinti "
+"alapárnak a szállítók által számlázott árak esetében."
 
 #. module: product
 #: view:product.price.type:0
 msgid "Products Price Type"
-msgstr ""
+msgstr "Termékek ártipusa"
 
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Extra áreltérés"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan_product_template
@@ -916,12 +928,12 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Information about a product supplier"
-msgstr "Információ a termék beszállítójáról."
+msgstr "Információ a termék szállítójáról"
 
 #. module: product
 #: view:product.product:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Kiterjesztett szűrők…"
 
 #. module: product
 #: view:product.product:0
@@ -933,7 +945,7 @@ msgstr "Beszerzési leírás"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "Nem lehet két egybevágó árlista verziója!"
 
 #. module: product
 #: help:product.supplierinfo,delay:0
@@ -974,34 +986,34 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_ul
 msgid "Shipping Unit"
-msgstr ""
+msgstr "Szállítási egység"
 
 #. module: product
 #: field:pricelist.partnerinfo,suppinfo_id:0
 msgid "Partner Information"
-msgstr ""
+msgstr "Partner információ"
 
 #. module: product
 #: selection:product.ul,type:0
 #: model:product.uom.categ,name:product.product_uom_categ_unit
 msgid "Unit"
-msgstr ""
+msgstr "Egység"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Information"
-msgstr ""
+msgstr "Információ"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Products Listprices Items"
-msgstr ""
+msgstr "Termékek árlista tételei"
 
 #. module: product
 #: view:product.packaging:0
 msgid "Other Info"
-msgstr ""
+msgstr "Egyéb információ"
 
 #. module: product
 #: field:product.pricelist.version,items_id:0
@@ -1020,12 +1032,12 @@ msgstr ""
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Bigger than the reference UoM"
-msgstr ""
+msgstr "Nagyobb, mint a hivatkozási mértékegység"
 
 #. module: product
 #: model:ir.module.module,shortdesc:product.module_meta_information
 msgid "Products & Pricelists"
-msgstr ""
+msgstr "Termékek és árlisták"
 
 #. module: product
 #: view:product.product:0
@@ -1035,17 +1047,17 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_services0
 msgid "Marketable Services"
-msgstr ""
+msgstr "Piacképes szolgáltatások"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr ""
+msgstr "Felár"
 
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
 msgid "Mainboard ASUStek A7N8X"
-msgstr ""
+msgstr "Mainboard ASUStek A7N8X"
 
 #. module: product
 #: field:product.product,packaging:0
@@ -1069,7 +1081,7 @@ msgstr "Név"
 #. module: product
 #: view:product.product:0
 msgid "Stockable"
-msgstr ""
+msgstr "Készletezhető"
 
 #. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
@@ -1088,22 +1100,22 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
 msgid "kg"
-msgstr ""
+msgstr "kg"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_meter
 msgid "m"
-msgstr ""
+msgstr "m"
 
 #. module: product
 #: selection:product.template,state:0
 msgid "Obsolete"
-msgstr ""
+msgstr "Elavult"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_km
 msgid "km"
-msgstr ""
+msgstr "km"
 
 #. module: product
 #: help:product.template,cost_method:0
@@ -1112,6 +1124,9 @@ msgid ""
 "at the end of the year), Average Price: the cost price is recomputed at each "
 "reception of products."
 msgstr ""
+"Elszámoló ár: rögzített bekerülési érték, időközönként újraszámítva "
+"(általában az év végén). Mérlegelt átlagár: a bekerülési érték minden termék "
+"bevételezéskor újraszámítódik."
 
 #. module: product
 #: help:product.category,sequence:0
@@ -1123,7 +1138,7 @@ msgstr ""
 #: field:product.uom,factor:0
 #: field:product.uom,factor_inv:0
 msgid "Ratio"
-msgstr ""
+msgstr "Arány"
 
 #. module: product
 #: help:product.template,purchase_ok:0
@@ -1131,7 +1146,8 @@ msgid ""
 "Determine if the product is visible in the list of products within a "
 "selection from a purchase order line."
 msgstr ""
-"Meghatározza, hogy a termék választható-e beszerzési rendelések készítésénél."
+"Meghatározza, hogy a termék választható-e szállítói megrendelések "
+"készítésénél."
 
 #. module: product
 #: field:product.template,weight_net:0
@@ -1146,22 +1162,22 @@ msgstr "Szélesség"
 #. module: product
 #: help:product.price.type,field:0
 msgid "Associated field in the product form."
-msgstr ""
+msgstr "Kapcsolt mező a termékűrlapon."
 
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Mértékegység"
 
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Beszerzési módszer"
 
 #. module: product
 #: report:product.pricelist:0
 msgid "Printing Date"
-msgstr ""
+msgstr "Nyomtatás dátuma"
 
 #. module: product
 #: field:product.template,uos_id:0
@@ -1204,6 +1220,7 @@ msgstr ""
 #: help:product.template,seller_id:0
 msgid "Main Supplier who has highest priority in Supplier List."
 msgstr ""
+"Főszállító, akinek a legmagasabb a prioritása a szállítók listájában."
 
 #. module: product
 #: model:product.category,name:product.product_category_services
@@ -1214,7 +1231,7 @@ msgstr "Szolgáltatások"
 #. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
 msgid "If Other Pricelist"
-msgstr "Alapárlista"
+msgstr ""
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_normal_action
@@ -1228,24 +1245,24 @@ msgstr "Termékek"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr ""
+msgstr "Rétegek száma a raklapon vagy a dobozban"
 
 #. module: product
 #: help:product.pricelist.item,base:0
 msgid "The mode for computing the price for this rule."
-msgstr ""
+msgstr "A szabályhoz tartozó ár számításának módja."
 
 #. module: product
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Pallet Dimension"
-msgstr ""
+msgstr "Raklapméret"
 
 #. module: product
 #: code:addons/product/product.py:603
 #, python-format
 msgid " (copy)"
-msgstr ""
+msgstr " (másolat)"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -1264,13 +1281,13 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Second UoM"
-msgstr "Második mértékegység"
+msgstr "Másodlagos mértékegység"
 
 #. module: product
 #: code:addons/product/product.py:142
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Hiba !"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_form_action
@@ -1278,7 +1295,7 @@ msgstr ""
 #: model:ir.ui.menu,name:product.next_id_16
 #: view:product.uom:0
 msgid "Units of Measure"
-msgstr "Mértékegységek"
+msgstr "Mértékegység"
 
 #. module: product
 #: field:product.supplierinfo,min_qty:0
@@ -1288,7 +1305,7 @@ msgstr "Minimum mennyiség"
 #. module: product
 #: model:product.category,name:product.product_category_pc
 msgid "PC"
-msgstr ""
+msgstr "PC"
 
 #. module: product
 #: help:product.supplierinfo,product_code:0
@@ -1300,12 +1317,12 @@ msgstr ""
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "Készletre gyártás"
+msgstr "Készletre gyártás/vásárlás"
 
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
 msgid "Price List Version"
-msgstr ""
+msgstr "Árlistaverzió"
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
@@ -1318,7 +1335,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr ""
+msgstr "Felhasználható"
 
 #. module: product
 #: help:product.price.type,currency_id:0
@@ -1334,7 +1351,7 @@ msgstr "Bruttó súly (kg)"
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
-msgstr ""
+msgstr "Beszerzés"
 
 #. module: product
 #: field:product.uom,category_id:0
@@ -1349,12 +1366,12 @@ msgstr "Állvány"
 #. module: product
 #: field:product.template,uom_po_id:0
 msgid "Purchase Unit of Measure"
-msgstr ""
+msgstr "Beszerzés mértékegysége"
 
 #. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
-msgstr ""
+msgstr "Ellátási módszer"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
@@ -1367,12 +1384,12 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Group by..."
-msgstr ""
+msgstr "Csoportosítás..."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu_gen_product_template
 msgid "Regular processor config"
-msgstr ""
+msgstr "Rendszeres processzor beállítás"
 
 #. module: product
 #: code:addons/product/product.py:142
@@ -1385,7 +1402,7 @@ msgstr ""
 #. module: product
 #: field:product.pricelist.version,date_start:0
 msgid "Start Date"
-msgstr "Kezdés dátuma"
+msgstr "Kezdő dátum"
 
 #. module: product
 #: help:product.template,produce_delay:0
@@ -1406,7 +1423,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
 msgid "Basic PC"
-msgstr ""
+msgstr "Alap PC"
 
 #. module: product
 #: help:product.pricelist,active:0
@@ -1423,7 +1440,7 @@ msgstr "Valós készlet"
 #. module: product
 #: model:product.uom,name:product.product_uom_cm
 msgid "cm"
-msgstr ""
+msgstr "cm"
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom
@@ -1436,7 +1453,7 @@ msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
 "Hiba: Az alapértelmezett mennyiségi egységnek és a beszerzési mennyiségi "
-"egységének ugyanabban a kategóriában kell lennie."
+"egységnek ugyanabban a kategóriában kell lennie."
 
 #. module: product
 #: field:product.uom,rounding:0
@@ -1446,17 +1463,17 @@ msgstr "Kerekítési pontosság"
 #. module: product
 #: view:product.uom:0
 msgid "Unit of Measure Properties"
-msgstr ""
+msgstr "Mértékegység tulajdonságai"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelf1_product_template
 msgid "Rack 200cm"
-msgstr ""
+msgstr "Rack 200cm"
 
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr ""
+msgstr "Vásárlás"
 
 #. module: product
 #: view:product.uom.categ:0
@@ -1466,12 +1483,12 @@ msgstr "Mennyiségi egység kategóriák"
 #. module: product
 #: help:product.packaging,weight_ul:0
 msgid "The weight of the empty UL"
-msgstr ""
+msgstr "Az üres csomagolási egység súlya."
 
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Smaller than the reference UoM"
-msgstr ""
+msgstr "Kisebb, mint a hivatkozási mértékegység"
 
 #. module: product
 #: field:product.price.type,active:0
@@ -1485,7 +1502,7 @@ msgstr "Aktív"
 #. module: product
 #: field:product.product,price_margin:0
 msgid "Variant Price Margin"
-msgstr ""
+msgstr "Árrés eltérés"
 
 #. module: product
 #: sql_constraint:product.uom:0
@@ -1500,12 +1517,12 @@ msgstr "A csomagolási egység EAN kódja."
 #. module: product
 #: field:product.packaging,weight_ul:0
 msgid "Empty Package Weight"
-msgstr ""
+msgstr "Üres csomag súlya"
 
 #. module: product
 #: field:product.price.type,field:0
 msgid "Product Field"
-msgstr ""
+msgstr "Termékmező"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_type_action
@@ -1529,12 +1546,12 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_misc0
 msgid "Misc"
-msgstr ""
+msgstr "Vegyes"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc4_product_template
 msgid "Customizable PC"
-msgstr ""
+msgstr "PC testreszabása"
 
 #. module: product
 #: field:pricelist.partnerinfo,price:0
@@ -1550,27 +1567,27 @@ msgstr ""
 #. module: product
 #: model:product.pricelist,name:product.list0
 msgid "Public Pricelist"
-msgstr ""
+msgstr "Publikus árlista"
 
 #. module: product
 #: model:product.category,name:product.product_category_marketableproduct0
 msgid "Marketable Products"
-msgstr ""
+msgstr "Piacképes termékek"
 
 #. module: product
 #: field:product.supplierinfo,product_code:0
 msgid "Supplier Product Code"
-msgstr ""
+msgstr "Szállítói termékkód"
 
 #. module: product
 #: view:product.product:0
 msgid "Default UOM"
-msgstr ""
+msgstr "Alapértelmezett mértékegység"
 
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
-msgstr ""
+msgstr "Raklap"
 
 #. module: product
 #: field:product.packaging,ul_qty:0
@@ -1605,17 +1622,18 @@ msgstr "Termék"
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Produce"
-msgstr ""
+msgstr "Gyártás"
 
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Rendelésre gyártás"
+msgstr "Rendelésre gyártás/vásárlás"
 
 #. module: product
 #: help:product.packaging,qty:0
 msgid "The total number of products you can put by pallet or box."
 msgstr ""
+"A termékek maximális darabszáma, amit a raklapra vagy a dobozba rakhat."
 
 #. module: product
 #: field:product.product,variants:0
@@ -1647,7 +1665,7 @@ msgstr ""
 #. module: product
 #: field:product.template,uom_id:0
 msgid "Default Unit Of Measure"
-msgstr ""
+msgstr "Alapértelmezett mértékegység"
 
 #. module: product
 #: model:product.template,name:product.product_product_tow1_product_template
@@ -1657,12 +1675,12 @@ msgstr ""
 #. module: product
 #: field:product.packaging,ean:0
 msgid "EAN"
-msgstr ""
+msgstr "EAN"
 
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Rounding Method"
-msgstr "Kerekítési metódus"
+msgstr "Kerekítési módszer"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1672,7 +1690,7 @@ msgstr "Termék címkék"
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box
 msgid "Box 30x40x60"
-msgstr ""
+msgstr "Doboz 30x40x60"
 
 #. module: product
 #: selection:product.template,type:0
@@ -1696,7 +1714,7 @@ msgstr "Termék árlisták"
 #: field:product.supplierinfo,company_id:0
 #: field:product.template,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Vállalat"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_price_type_action
@@ -1719,17 +1737,17 @@ msgstr "A termék űrlap Partner adatai"
 #. module: product
 #: help:product.price.type,name:0
 msgid "Name of this kind of price."
-msgstr ""
+msgstr "Ártípus neve"
 
 #. module: product
 #: field:product.supplierinfo,product_uom:0
 msgid "Supplier UoM"
-msgstr ""
+msgstr "Szállítói ME"
 
 #. module: product
 #: help:product.pricelist.version,date_start:0
 msgid "Starting date for this pricelist version to be valid."
-msgstr ""
+msgstr "Kezdő időpont, amikortól ez az árlista verzió érvényes."
 
 #. module: product
 #: help:product.template,uom_po_id:0
@@ -1751,7 +1769,7 @@ msgstr "Hossz"
 #. module: product
 #: model:product.uom.categ,name:product.uom_categ_length
 msgid "Length / Distance"
-msgstr ""
+msgstr "Hossz / Távolság"
 
 #. module: product
 #: model:product.template,name:product.product_product_0_product_template
@@ -1768,17 +1786,17 @@ msgstr "Árlista típus"
 #. module: product
 #: model:product.category,name:product.product_category_otherproducts0
 msgid "Other Products"
-msgstr ""
+msgstr "Egyéb termékek"
 
 #. module: product
 #: view:product.product:0
 msgid "Characteristics"
-msgstr ""
+msgstr "Jellemzők"
 
 #. module: product
 #: field:product.template,sale_ok:0
 msgid "Can be Sold"
-msgstr ""
+msgstr "Értékesíthető"
 
 #. module: product
 #: field:product.template,produce_delay:0
@@ -1788,17 +1806,17 @@ msgstr "Gyártási átfutási idő"
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
 msgid "Supplier Pricelist"
-msgstr "Beszállítói árlista"
+msgstr "Szállítói árlista"
 
 #. module: product
 #: field:product.pricelist.item,base:0
 msgid "Based on"
-msgstr ""
+msgstr "Alapul"
 
 #. module: product
 #: model:product.category,name:product.product_category_rawmaterial0
 msgid "Raw Materials"
-msgstr ""
+msgstr "Nyersanyagok"
 
 #. module: product
 #: help:product.product,virtual_available:0
@@ -1823,22 +1841,22 @@ msgstr "Árlista változat"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "* ( 1 + "
-msgstr ""
+msgstr "* ( 1 + "
 
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr ""
+msgstr "A teljes csomag, raklap vagy doboz tömege."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
 msgid "HDD Seagate 7200.8 120GB"
-msgstr ""
+msgstr "HDD Seagate 7200.8 120GB"
 
 #. module: product
 #: model:product.template,name:product.product_product_employee0_product_template
 msgid "Employee"
-msgstr ""
+msgstr "Alkalmazott"
 
 #. module: product
 #: model:product.template,name:product.product_product_shelfofcm0_product_template
@@ -1854,12 +1872,12 @@ msgstr "Termék kategória"
 #. module: product
 #: report:product.pricelist:0
 msgid "Price List Name"
-msgstr ""
+msgstr "Árlista név"
 
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Szállítási átfutási idő"
 
 #. module: product
 #: help:product.uom,active:0
@@ -1871,7 +1889,7 @@ msgstr ""
 #. module: product
 #: field:product.template,seller_delay:0
 msgid "Supplier Lead Time"
-msgstr ""
+msgstr "Beszerzési átfutási idő"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1900,7 +1918,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
 msgid "HDD Seagate 7200.8 80GB"
-msgstr ""
+msgstr "HDD Seagate 7200.8 80GB"
 
 #. module: product
 #: help:product.supplierinfo,qty:0
@@ -1910,17 +1928,17 @@ msgstr ""
 #. module: product
 #: field:product.packaging,ul:0
 msgid "Type of Package"
-msgstr ""
+msgstr "Csomagolás típusa"
 
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pack"
-msgstr ""
+msgstr "Csomag"
 
 #. module: product
 #: model:product.category,name:product.product_category_4
 msgid "Dello Computer"
-msgstr ""
+msgstr "Dello számítógép"
 
 #. module: product
 #: model:product.uom.categ,name:product.product_uom_categ_kgm
@@ -1940,7 +1958,7 @@ msgstr "Egér"
 #. module: product
 #: field:product.uom,uom_type:0
 msgid "UoM Type"
-msgstr ""
+msgstr "Mértékegység típusa"
 
 #. module: product
 #: help:product.template,product_manager:0
@@ -1973,7 +1991,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_23_product_template
 msgid "Complete PC With Peripherals"
-msgstr ""
+msgstr "Komplett PC perifériákkal"
 
 #. module: product
 #: view:product.product:0
@@ -1984,12 +2002,12 @@ msgstr "Súlyok"
 #. module: product
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
 
 #. module: product
 #: model:product.template,name:product.product_product_hotelexpenses0_product_template
 msgid "Hotel Expenses"
-msgstr ""
+msgstr "Hotel költségek"
 
 #. module: product
 #: help:product.uom,factor_inv:0
@@ -2001,7 +2019,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_shelf0_product_template
 msgid "Rack 100cm"
-msgstr ""
+msgstr "Rack 100cm"
 
 #. module: product
 #: help:product.packaging,sequence:0
@@ -2016,7 +2034,7 @@ msgstr "Árkerekítés"
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
 msgid "Max. Price Margin"
-msgstr ""
+msgstr "Max. árrés"
 
 #. module: product
 #: help:product.supplierinfo,product_name:0
@@ -2028,23 +2046,23 @@ msgstr ""
 #. module: product
 #: selection:product.template,mes_type:0
 msgid "Variable"
-msgstr ""
+msgstr "Változó"
 
 #. module: product
 #: field:product.template,rental:0
 msgid "Can be Rent"
-msgstr ""
+msgstr "Bérelhető"
 
 #. module: product
 #: model:product.price.type,name:product.standard_price
 #: field:product.template,standard_price:0
 msgid "Cost Price"
-msgstr "Önköltségi ár"
+msgstr "Bekerülési érték"
 
 #. module: product
 #: field:product.pricelist.item,price_min_margin:0
 msgid "Min. Price Margin"
-msgstr ""
+msgstr "Min. árrés"
 
 #. module: product
 #: field:product.template,weight:0
@@ -2059,12 +2077,12 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_3
 msgid "Computer Stuff"
-msgstr ""
+msgstr "Számítógépes dolgok"
 
 #. module: product
 #: model:product.category,name:product.product_category_8
 msgid "Phone Help"
-msgstr ""
+msgstr "Telefonos segítség"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2073,11 +2091,15 @@ msgid ""
 "Rounding is applied after the discount and before the surcharge.\n"
 "To have prices that end in 9.99, set rounding 10, surcharge -0.01"
 msgstr ""
+"Az ár ennek az értéknek csak a többszöröse lehet.\n"
+"A kerekítés az engedmény figyelembevétele után és a felár\n"
+"hozzáadása előtt kerül alkalmazásra. 9,99-re végződő ár\n"
+"készítéséhez 10-es kerekítést és -0,01 felárat használjon."
 
 #. module: product
 #: view:product.price_list:0
 msgid "Close"
-msgstr ""
+msgstr "Zárás"
 
 #. module: product
 #: model:ir.model,name:product.model_product_pricelist_item
@@ -2087,28 +2109,28 @@ msgstr "Árlista tétel"
 #. module: product
 #: model:product.template,name:product.product_product_21_product_template
 msgid "RAM on demand"
-msgstr ""
+msgstr "RAM igény"
 
 #. module: product
 #: view:res.partner:0
 msgid "Sales Properties"
-msgstr ""
+msgstr "Értékesítési tulajdonságok"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_ton
 msgid "tonne"
-msgstr ""
+msgstr "tonna"
 
 #. module: product
 #: view:product.product:0
 #: view:product.template:0
 msgid "Delays"
-msgstr ""
+msgstr "Késedelmek"
 
 #. module: product
 #: model:process.node,note:product.process_node_product0
 msgid "Creation of the product"
-msgstr ""
+msgstr "Termék létrehozása"
 
 #. module: product
 #: help:product.template,type:0
@@ -2144,7 +2166,7 @@ msgstr "Termékleírás"
 #. module: product
 #: view:product.pricelist.item:0
 msgid " ) + "
-msgstr ""
+msgstr " ) + "
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -2171,13 +2193,13 @@ msgstr "Termékváltozat"
 #. module: product
 #: model:product.category,name:product.product_category_shelves0
 msgid "Shelves"
-msgstr ""
+msgstr "Polcok"
 
 #. module: product
 #: code:addons/product/pricelist.py:514
 #, python-format
 msgid "Other Pricelist"
-msgstr ""
+msgstr "Másik árlista"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template
@@ -2190,13 +2212,13 @@ msgstr "Terméksablon"
 #. module: product
 #: field:product.template,cost_method:0
 msgid "Costing Method"
-msgstr "Árképzési metódus"
+msgstr "Nyilvántartási ár fajtája"
 
 #. module: product
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Palletization"
-msgstr ""
+msgstr "Raklapos rakomány"
 
 #. module: product
 #: selection:product.template,state:0
@@ -2223,17 +2245,17 @@ msgstr "Árlista változatok"
 #: field:product.pricelist.item,sequence:0
 #: field:product.supplierinfo,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sorszám"
 
 #. module: product
 #: field:product.template,list_price:0
 msgid "Sale Price"
-msgstr ""
+msgstr "Eladási ár"
 
 #. module: product
 #: field:product.category,type:0
 msgid "Category Type"
-msgstr ""
+msgstr "Kategória típus"
 
 #. module: product
 #: model:product.category,name:product.cat2
@@ -2250,12 +2272,12 @@ msgstr ""
 #. module: product
 #: help:product.template,volume:0
 msgid "The volume in m3."
-msgstr ""
+msgstr "A térfogat köbméterben."
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
-msgstr ""
+msgstr "Árengedmény"
 
 #~ msgid "Childs Categories"
 #~ msgstr "Gyerek kategóriák"

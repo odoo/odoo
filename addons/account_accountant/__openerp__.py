@@ -37,6 +37,6 @@ items and the chart of accounts.
     'test': [],
     'installable': True,
     'active': False,
-    'certificate': '',
+    'certificate': '00395091383933390541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -4,7 +4,7 @@
   I select Date at which helpdesk request is created.
 - 
   !record {model: crm.helpdesk, id: crm_helpdesk_somefunctionalquestion0}:
-    date: '2010-04-22 10:17:00'
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
     email_from: info@balmerinc.be
     name: Some functional question.
     partner_address_id: base.res_partner_address_1

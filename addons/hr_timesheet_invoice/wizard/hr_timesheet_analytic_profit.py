@@ -30,7 +30,7 @@ class account_analytic_profit(osv.osv_memory):
         'date_from': fields.date('From', required=True),
         'date_to': fields.date('To', required=True),
         'journal_ids': fields.many2many('account.analytic.journal', 'analytic_profit_journal_rel', 'analytic_id', 'journal_id', 'Journal', required=True),
-        'employee_ids': fields.many2many('res.users', 'analytic_profit_emp_rel', 'analytic_id', 'emp_id', 'Employee', required=True),
+        'employee_ids': fields.many2many('res.users', 'analytic_profit_emp_rel', 'analytic_id', 'emp_id', 'User', required=True),
                 }
 
     def _date_from(*a):

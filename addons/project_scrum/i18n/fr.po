@@ -6,20 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 13:21+0000\n"
-"Last-Translator: Aline (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-18 16:47+0000\n"
+"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
+"<maxime.chambreuil@savoirfairelinux.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-11 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:41+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_scrum
 #: help:project.scrum.email,scrum_master_email:0
 msgid "Email Id of Scrum Master"
-msgstr "Email du scrum Master"
+msgstr "Courriel du scrum Master"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.assign.sprint:0
@@ -68,6 +69,29 @@ msgid ""
 "    * http://controlchaos.com\n"
 "    "
 msgstr ""
+"\n"
+"    Ce module implémente tous les concepts de la méthodologie de\n"
+"     gestion de projet Scrum pour les sociétés d'informatique :\n"
+"     * Projet avec sprint, directeur de produit, scrum master\n"
+"     * Sprints avec revues, mêlées quotidiennes, retours\n"
+"     * Backlog de produit\n"
+"     * Backlog de sprint\n"
+" \n"
+"     Ceci ajoute quelques concepts au module de gestion de projets :\n"
+"     * Feuille de route à court-terme, long-terme\n"
+"     * Requêtes fonctionnelles/clients et requêtes techniques\n"
+" \n"
+"     Cela créé aussi un nouveau rapport :\n"
+"     * Graphique de burn-down\n"
+" \n"
+"     Les projets et tâches Scrum héritent des projets et tâches\n"
+"     réelles, donc vous pouvez continuer à travailler sur des tâches "
+"normales qui\n"
+"     inclueront aussi des tâches depuis les projets Scrum.\n"
+" \n"
+"     Plus d'informations sur la méthodologie :\n"
+"     * http://controlchaos.com\n"
+"    "
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
@@ -83,6 +107,11 @@ msgid ""
 "which the team implements a list of product backlogs. The sprint review is "
 "organized when the team presents its work to the customer and product owner."
 msgstr ""
+"La méthodologie agile SCRUM est utilisée dans des projets de développement "
+"logiciel. Avec cette méthodologie, un sprint est une période courte (e.g. un "
+"mois) pendant laquelle l'équipe implémente une liste de backlog de produit. "
+"La revue de sprint est organisée lorsque l'équipe présente son travail au "
+"client et au directeur de produit."
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
@@ -189,6 +218,7 @@ msgstr "project.scrum.email"
 #: constraint:project.project:0
 msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
+"Erreur ! Vous ne pouvez pas assigner une escalade sur le même projet !"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,name:0
@@ -217,12 +247,18 @@ msgid ""
 "this methodology, a daily meeting is organized by the scrum master with his "
 "team in order to detect the difficulties the team faced/will face."
 msgstr ""
+"La méthodologie agile SCRUM est utilisée dans des projets de développement "
+"logiciel. Avec cette méthodologie, une réunion est organisée chaque jour par "
+"le scrum master avec son équipe afin de détecter les difficultés que "
+"l'équipe rencontre/va rencontrer."
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:316
 #, python-format
 msgid "Please provide email address for product owner defined on sprint."
 msgstr ""
+"Veuillez renseigner l'adresse email du directeur de produit assigné au "
+"sprint."
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:327
@@ -268,7 +304,7 @@ msgstr "Aucun"
 #: code:addons/project_scrum/project_scrum.py:325
 #, python-format
 msgid "*Blocks encountered:"
-msgstr ""
+msgstr "* Blocages rencontrés :"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -305,7 +341,7 @@ msgstr "Tâche pour aujourd'hui"
 #. module: project_scrum
 #: field:project.scrum.backlog.assign.sprint,state_open:0
 msgid "Open Backlog"
-msgstr ""
+msgstr "Backlog ouvert"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -321,7 +357,7 @@ msgstr "Date de début"
 #: code:addons/project_scrum/wizard/project_scrum_email.py:94
 #, python-format
 msgid "Blocking points encountered:"
-msgstr ""
+msgstr "Points bloquants rencontrés :"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
@@ -338,7 +374,7 @@ msgstr "_Annuler"
 #. module: project_scrum
 #: help:project.scrum.sprint,scrum_master_id:0
 msgid "The person who is maintains the processes for the product"
-msgstr ""
+msgstr "La personne qui maintient les processus pour le produit"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -367,6 +403,7 @@ msgstr "Sprints"
 #, python-format
 msgid "Email notification could not be sent to the product owner %s"
 msgstr ""
+"La notification par email n'a pas pu être envoyée au directeur de produit %s"
 
 #. module: project_scrum
 #: field:project.scrum.backlog.assign.sprint,convert_to_task:0
@@ -376,7 +413,7 @@ msgstr "Convertir en tâche"
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
 msgid "Are you sure you want to merge these Backlogs?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir fusionner ces backlogs ?"
 
 #. module: project_scrum
 #: help:project.scrum.backlog.create.task,user_id:0
@@ -448,7 +485,7 @@ msgstr "Scrum"
 #: code:addons/project_scrum/project_scrum.py:324
 #, python-format
 msgid "Hello "
-msgstr ""
+msgstr "Bonjour "
 
 #. module: project_scrum
 #: field:project.scrum.meeting,question_today:0
@@ -472,7 +509,7 @@ msgstr "Avertissement"
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_backlog_assign_sprint
 msgid "Assign sprint to backlogs"
-msgstr ""
+msgstr "Assigner le sprint aux backlogs"
 
 #. module: project_scrum
 #: help:project.scrum.sprint,expected_hours:0
@@ -533,12 +570,12 @@ msgstr "Déléguer"
 #. module: project_scrum
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Mon tableau de bord"
 
 #. module: project_scrum
 #: view:postpone.wizard:0
 msgid "Postpone Backlog"
-msgstr ""
+msgstr "Différer le backlog"
 
 #. module: project_scrum
 #: view:board.board:0
@@ -564,7 +601,7 @@ msgstr "Tâches"
 #. module: project_scrum
 #: field:project.scrum.email,product_owner_email:0
 msgid "Product Owner Email"
-msgstr "Email du propriétaire du produit"
+msgstr "Courriel du Product Owner"
 
 #. module: project_scrum
 #: view:project.scrum.email:0
@@ -574,7 +611,7 @@ msgstr "_Envoyer"
 #. module: project_scrum
 #: help:project.scrum.backlog.assign.sprint,sprint_id:0
 msgid "Select Sprint to assign backlog."
-msgstr ""
+msgstr "Sélectionner le sprint à assigner au backlog."
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,progress:0
@@ -597,6 +634,7 @@ msgstr "Blocages rencontrés"
 #: help:project.scrum.backlog.assign.sprint,state_open:0
 msgid "Change the state of product backlogs to open if its in draft state"
 msgstr ""
+"Change l'état des backlogs de produit à ouvrir s'ils sont en état brouillon"
 
 #. module: project_scrum
 #: view:project.scrum.email:0
@@ -607,7 +645,7 @@ msgstr "Message"
 #. module: project_scrum
 #: field:project.scrum.email,scrum_master_email:0
 msgid "Scrum Master Email"
-msgstr ""
+msgstr "Email du Scrum Master"
 
 #. module: project_scrum
 #: help:project.project,product_owner_id:0
@@ -630,7 +668,7 @@ msgstr "Sprint du scrum"
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Product owner"
-msgstr ""
+msgstr "Directeur de produit"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
@@ -658,6 +696,8 @@ msgstr "Brouillon"
 msgid ""
 "Related product backlog that contains this task. Used in SCRUM methodology"
 msgstr ""
+"Backlog de produit associé qui contient les tâches. Utilisé dans la "
+"méthodologie SCRUM."
 
 #. module: project_scrum
 #: view:project.scrum.meeting:0
@@ -670,7 +710,7 @@ msgstr "Que planifiez vous de faire d'ici la prochaine réunion ?"
 #: view:postpone.wizard:0
 #: view:project.scrum.product.backlog:0
 msgid "Postpone"
-msgstr ""
+msgstr "Différer"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -684,7 +724,7 @@ msgstr "En attente"
 #: view:project.scrum.meeting:0
 #: view:project.scrum.sprint:0
 msgid "Optional Info"
-msgstr ""
+msgstr "Information optionnelle"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_backlog_create_task
@@ -705,7 +745,7 @@ msgstr "Directeur de Produit"
 #. module: project_scrum
 #: help:project.scrum.product.backlog,sequence:0
 msgid "Gives the sequence order when displaying a list of product backlog."
-msgstr ""
+msgstr "Donne l'ordre d'affichage de la liste des backlogs de produits."
 
 #. module: project_scrum
 #: model:process.node,name:project_scrum.process_node_productbacklog0
@@ -727,7 +767,7 @@ msgstr "Je vous remercie"
 #. module: project_scrum
 #: help:project.scrum.backlog.assign.sprint,convert_to_task:0
 msgid "Create Task for Product Backlog"
-msgstr ""
+msgstr "Créer une tâche pour le backlog de produit"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,active:0
@@ -743,12 +783,12 @@ msgstr "Réunions de Scrum"
 #. module: project_scrum
 #: help:project.scrum.product.backlog,expected_hours:0
 msgid "Estimated total time to do the Backlog"
-msgstr ""
+msgstr "Temps total estimé pour faire le backlog"
 
 #. module: project_scrum
 #: help:project.scrum.backlog.merge,project_id:0
 msgid "Select project for the new product backlog"
-msgstr ""
+msgstr "Sélectionnez le projet pour le nouveau backlog de produit"
 
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
@@ -764,7 +804,7 @@ msgstr "Vue du sprint du backlog"
 #: code:addons/project_scrum/project_scrum.py:325
 #, python-format
 msgid "No Blocks"
-msgstr ""
+msgstr "Nb de blocs"
 
 #. module: project_scrum
 #: field:project.scrum.meeting,question_backlog:0
@@ -795,20 +835,20 @@ msgstr "Séquence"
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Send to Product Owner"
-msgstr ""
+msgstr "Envoyer au directeur de produit"
 
 #. module: project_scrum
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project_scrum.action_view_backlog_progress_graph
 #: view:project.scrum.product.backlog:0
 msgid "Backlog Progress"
-msgstr ""
+msgstr "Progression du backlog"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:301
 #, python-format
 msgid "Email notification could not be sent to the scrum master %s"
-msgstr ""
+msgstr "La notification par email n'a pas pu être envoyée au scrum master %s"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -857,7 +897,7 @@ msgstr "Heures restantes"
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,name:0
@@ -875,12 +915,12 @@ msgstr "Actuelle"
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
 msgid "My Backlogs"
-msgstr ""
+msgstr "Mes backlogs"
 
 #. module: project_scrum
 #: view:project.scrum.email:0
 msgid "Send Email for Scrum Meeting Details"
-msgstr ""
+msgstr "Envoyer un email pour les détails de la réunion Scrum"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,help:project_scrum.action_product_backlog_form
@@ -890,6 +930,11 @@ msgid ""
 "can be planified in a development sprint and may be split into several "
 "tasks. The product backlog is managed by the product owner of the project."
 msgstr ""
+"La méthodologie agile Scrum est utilisée dans les projets de développement "
+"logiciel. Le backlog de produit est une liste de fonctionnalités à "
+"implémenter. Un backlog de produit peut être planifié dans un sprint de "
+"développement et peut être découper en plusieurs tâches. Le backlog de "
+"produit est gérer par le directeur de produit du projet."
 
 #. module: project_scrum
 #: model:process.transition,name:project_scrum.process_transition_backlogtask0
@@ -915,7 +960,7 @@ msgstr "Rendez-vous Scrum"
 #: model:ir.actions.report.xml,name:project_scrum.report_scrum_sprint_burndown_chart
 #: view:project.scrum.sprint:0
 msgid "Burndown Chart"
-msgstr ""
+msgstr "Graphe d'avancement"
 
 #. module: project_scrum
 #: view:project.scrum.sprint:0
@@ -925,7 +970,7 @@ msgstr "Rendez-vous Journaliers"
 #. module: project_scrum
 #: view:project.scrum.sprint:0
 msgid "Expected hours"
-msgstr ""
+msgstr "Heures estimées"
 
 #. module: project_scrum
 #: field:project.project,sprint_size:0
@@ -935,7 +980,7 @@ msgstr "Jours du Sprint"
 #. module: project_scrum
 #: help:project.scrum.email,product_owner_email:0
 msgid "Email Id of Product Owner"
-msgstr ""
+msgstr "Identifiant du email du directeur de produit"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,progress:0
@@ -946,7 +991,7 @@ msgstr "Avancement (0-100)"
 #: code:addons/project_scrum/project_scrum.py:324
 #, python-format
 msgid "I am sending you Daily Meeting Details of date"
-msgstr ""
+msgstr "Je vous envoie les détails de la mêlée quotidienne de la date"
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,active:0
@@ -954,11 +999,13 @@ msgid ""
 "If Active field is set to true, it will allow you to hide the product "
 "backlog without removing it."
 msgstr ""
+"Cochez le champ \"Actif\" pour cacher le backlog du produit sans le "
+"supprimer."
 
 #. module: project_scrum
 #: help:project.scrum.product.backlog,task_hours:0
 msgid "Estimated time of the total hours of the tasks"
-msgstr ""
+msgstr "Estimation du nombre total d'heures pour les tâches"
 
 #. module: project_scrum
 #: view:project.project:0
@@ -968,7 +1015,7 @@ msgstr "Données Scrum"
 #. module: project_scrum
 #: field:project.project,scrum:0
 msgid "Is a Scrum Project"
-msgstr ""
+msgstr "Est un projet Scrum"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -983,7 +1030,7 @@ msgstr "Détails des Tâches"
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_postpone_wizard
 msgid "postpone.wizard"
-msgstr ""
+msgstr "postpone.wizard"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -996,29 +1043,34 @@ msgid ""
 "This wizard merge backlogs and create one new backlog with draft state (Old "
 "backlogs Will be deleted). And it also merge old tasks from backlogs"
 msgstr ""
+"Cet assistant fusionne les backlogs et crée un nouveau backlog avec un état "
+"'Brouillon' (Les anciens backlogs seront supprimés). Et il assemble aussi "
+"les anciennes tâches des backlogs."
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:325
 #, python-format
 msgid "*Task for Today:"
-msgstr ""
+msgstr "*Tâche pour aujourd'hui :"
 
 #. module: project_scrum
 #: code:addons/project_scrum/project_scrum.py:303
 #, python-format
 msgid "Please provide email address for scrum master defined on sprint."
 msgstr ""
+"Veuillez fournir une adresse email pour le chef de mêlée défini pour le "
+"sprint."
 
 #. module: project_scrum
 #: view:project.scrum.backlog.merge:0
 msgid "Select the project for merged backlogs"
-msgstr ""
+msgstr "Sélectionnez le projet pour les backlogs fusionnés"
 
 #. module: project_scrum
 #: view:board.board:0
 #: model:ir.actions.act_window,name:project_scrum.action_view_my_scrum_sprint_tree
 msgid "My Sprint"
-msgstr ""
+msgstr "Mon sprint"
 
 #. module: project_scrum
 #: field:project.scrum.product.backlog,effective_hours:0
@@ -1029,17 +1081,18 @@ msgstr "Heures consommées"
 #: help:project.scrum.product.backlog,effective_hours:0
 msgid "Computed using the sum of the time spent on every related tasks"
 msgstr ""
+"Calculé en utilisant la somme du temps passé sur toutes les tâches associées"
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.open_board_project_scrum
 #: model:ir.ui.menu,name:project_scrum.menu_deshboard_scurm
 msgid "Scrum Dashboard"
-msgstr ""
+msgstr "Tableau de bord Scrum"
 
 #. module: project_scrum
 #: model:ir.model,name:project_scrum.model_project_scrum_sprint
 msgid "Project Scrum Sprint"
-msgstr ""
+msgstr "Sprint du projet Scrum"
 
 #. module: project_scrum
 #: view:project.scrum.product.backlog:0
@@ -1062,13 +1115,13 @@ msgstr "Merci,"
 #: code:addons/project_scrum/project_scrum.py:90
 #, python-format
 msgid "The sprint '%s' has been closed."
-msgstr ""
+msgstr "Le sprint \"%s\" a été fermé."
 
 #. module: project_scrum
 #: model:ir.actions.act_window,name:project_scrum.action_scrum_backlog_to_sprint
 #: view:project.scrum.backlog.assign.sprint:0
 msgid "Assign Sprint"
-msgstr ""
+msgstr "Assigner le sprint"
 
 #. module: project_scrum
 #: field:project.scrum.backlog.create.task,user_id:0
@@ -1078,7 +1131,7 @@ msgstr "Attribué à"
 #. module: project_scrum
 #: view:postpone.wizard:0
 msgid "Are you sure to postpone Backlog ?"
-msgstr ""
+msgstr "Êtes-vous sûr de vouloir différer le backlog ?"
 
 #. module: project_scrum
 #: field:project.scrum.backlog.assign.sprint,sprint_id:0
@@ -1095,7 +1148,7 @@ msgstr "Sprint"
 #: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:39
 #, python-format
 msgid "Please select at least two product Backlogs"
-msgstr ""
+msgstr "Veuillez sélectionner au moins deux backlogs de produit"
 
 #. module: project_scrum
 #: field:project.scrum.sprint,review:0

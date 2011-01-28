@@ -7,16 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-11 15:07+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-19 08:41+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-12 04:58+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-20 04:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_planning
 #: constraint:account.analytic.account:0
@@ -24,8 +23,7 @@ msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
-"Erreur ! La monnaie doit être la même que la monnaie de la société "
-"sélectionnée"
+"Erreur ! La devise doit être la même que la devise de la société sélectionnée"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -34,8 +32,8 @@ msgid ""
 "This value is given by the sum of work remaining to do on the task for this "
 "planning, expressed in days."
 msgstr ""
-"Cette valeur indique le nombre de jours restant pour la tâche dans ce "
-"planning."
+"Cette valeur, exprimée en jours, correspond à la somme des travaux restant à "
+"réaliser pour la tâche dans cette planification."
 
 #. module: project_planning
 #: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
@@ -90,10 +88,10 @@ msgid ""
 "material), OpenERP allows you to encode and then automatically compute tasks "
 "and phases scheduling, track resource allocation and availability."
 msgstr ""
-"Avec son système global de planification des ressources de la société "
-"(personnes et matériels), OpenERP vous permet de saisir et ensuite de "
-"calculer automatiquement les tâches et les phases planifiées, de suivre "
-"l'allocation des ressources et leur disponibilité."
+"Avec son système global de planification des ressources d'une société "
+"(personnes et matériels), OpenERP permet de saisir puis de calculer "
+"automatiquement les tâches et les phases planifiées, de suivre l'allocation "
+"des ressources et leur disponibilité."
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -137,7 +135,7 @@ msgstr "Démarrer la tâche"
 #. module: project_planning
 #: selection:report_account_analytic.planning,state:0
 msgid "Cancelled"
-msgstr "Annulé"
+msgstr "Annulée"
 
 #. module: project_planning
 #: view:account.analytic.account:0
@@ -239,7 +237,7 @@ msgstr "Divers"
 #. module: project_planning
 #: help:res.company,planning_time_mode_id:0
 msgid "This will set the unit of measure used in plannings."
-msgstr "Ceci définit l'unité de mesure qui sera utilisée en planification."
+msgstr "Ceci définit l'unité de mesure utilisée pour les planifications."
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -360,8 +358,8 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to TRUE expressed in days."
 msgstr ""
-"Cette valeur, exprimée en jours, est la somme des temps alloués dont la "
-"coche 'Affecté à une tâche' est à VRAI."
+"Cette valeur, exprimée en jours, est la somme des temps alloués dont la case "
+"à cocher 'Affecté à des tâches' est à VRAI."
 
 #. module: project_planning
 #: field:report_account_analytic.planning,stat_ids:0
@@ -371,7 +369,7 @@ msgstr "Analyse des plannings"
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
 msgid "Qty UoM"
-msgstr "Qté UoM"
+msgstr "Qté UdM"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,note:0
@@ -456,13 +454,12 @@ msgstr ""
 "* la gestion de projets\n"
 "\n"
 "Donc, chaque manager de département peut connaitre si quelqu'un de son "
-"équipe a du temps libre pour un certain planning (en prenant en "
-"considération les congés validés) ou si il doit encore enregistrer des "
-"tâches.\n"
+"équipe a du temps libre pour un planning donné (en prenant en considération "
+"les congés validés) ou si il peut encore saisir des tâches.\n"
 "\n"
 "À la fin du mois, le manager du planning peut également vérifier si les "
-"feuilles de temps enregistrées respectent les temps planifiés sur chaque "
-"compte analytique.\n"
+"feuilles de temps saisies respectent les temps planifiés sur chaque compte "
+"analytique.\n"
 
 #. module: project_planning
 #: model:ir.model,name:project_planning.model_res_company
@@ -499,7 +496,7 @@ msgstr "Lignes de planning"
 #: view:report_account_analytic.planning:0
 #: selection:report_account_analytic.planning,state:0
 msgid "Done"
-msgstr "Terminé"
+msgstr "Effectué"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -514,13 +511,13 @@ msgstr "Planning par utilisateur (en jours)"
 #. module: project_planning
 #: view:report_account_analytic.planning.stat:0
 msgid "Planning statistics"
-msgstr "Statistiques du planning"
+msgstr "Statistiques de planification"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 #: selection:report_account_analytic.planning,state:0
 msgid "Open"
-msgstr "Ouvrir"
+msgstr "Ouverte"
 
 #. module: project_planning
 #: model:ir.model,name:project_planning.model_report_account_analytic_planning_user
@@ -536,7 +533,7 @@ msgstr "Informations"
 #. module: project_planning
 #: field:report_account_analytic.planning,business_days:0
 msgid "Business Days"
-msgstr "Jour Ouvrés"
+msgstr "Jours ouvrés"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -571,7 +568,7 @@ msgstr "Temps total alloué sans tâches"
 #. module: project_planning
 #: field:report_account_analytic.planning.user,holiday:0
 msgid "Leaves"
-msgstr "Congés"
+msgstr "Absences"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -624,8 +621,8 @@ msgid ""
 "This value is given by the sum of time allocation with task(s) linked, "
 "expressed in days."
 msgstr ""
-"Cette valeur, exprimée en jour, est le résultat de la somme des temps "
-"alloués qui sont liés à des tâches."
+"Cette valeur est le résultat de la somme des temps alloués, liés à des "
+"tâches, exprimée en jour."
 
 #~ msgid "From"
 #~ msgstr "De"

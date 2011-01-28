@@ -35,6 +35,7 @@
     "update_xml": ['product_visible_discount_view.xml'],
     "active": False,
     "installable": True,
+    "certificate" : "001144718884654279901",
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

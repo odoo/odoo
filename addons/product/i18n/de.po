@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-10 16:19+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-18 10:19+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-11 04:59+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:45+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -178,9 +178,9 @@ msgid ""
 "Produce will generate production order or tasks, according to the product "
 "type. Purchase will trigger purchase orders when requested."
 msgstr ""
-"'Produziere' wird einen Fertigungsauftrag generieren oder eine Aufgabe "
-"(Projekte), je nachdem wie die Produktart definiert wurde. 'Kaufe' wird "
-"hingegen einen Beschaffungsauftrag vorschlagen."
+"'Fertigung' wird einen Fertigungsauftrag generieren oder eine Aufgabe, je "
+"nachdem wie die Produktart definiert wurde. 'Einkauf' wird hingegen einen "
+"Beschaffungsauftrag für den Einkauf vorschlagen."
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -297,8 +297,8 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Disponiere vom Lager' - wenn Produkt benötigt wird, wird der verfügbare "
-"Lagerbestand verwendet oder auf neue Lieferungen gewartet. 'Disponiere von "
+"'Beschaffe an Lager' - wenn Produkt benötigt wird, wird der verfügbare "
+"Lagerbestand verwendet oder auf neue Lieferungen gewartet. 'Beschaffe von "
 "Auftrag' - wenn Produkt benötigt wird, wird  entweder ein "
 "Beschaffungsauftrag oder ein Fertigungsauftrag erzeugt."
 
@@ -428,7 +428,7 @@ msgid ""
 "price, product category, suppliers and so on."
 msgstr ""
 "Produkte können ge- und/oder verkauft werden. Produkte können Rohstoffe, "
-"Lagerprodukte, Verbrauchswaren, oder Dienstleistungen sein. Das "
+"Lagerprodukte, Verbrauchsmaterial, oder Dienstleistungen sein. Das "
 "Produktformular enthält detaillierte Informationen über Ihre Produkte. Zum "
 "Beispiel: Verkaufspreis, Produktkategorie, Lieferant(en) und so weiter."
 
@@ -999,8 +999,8 @@ msgid ""
 "automatic computation of the purchase order planning."
 msgstr ""
 "Zeitspanne in Tagen zwischen Bestätigung eines Beschaffungsauftrags und "
-"Warenlieferung. Wird bei der Disposition für die automatische Erstellung von "
-"Bestellvorschlägen benötigt."
+"Warenlieferung. Wird für die automatische Erstellung von "
+"Beschaffungsvorschlägen für den Einkauf und die Fertigung benötigt."
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_pricelist_action
@@ -1154,7 +1154,7 @@ msgid ""
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
 "Alle Produkte, die Sie ein- oder verkaufen, müssen definiert werden. "
-"Produkte können Rohstoffe, Lagerprodukte, Verbrauchswaren oder "
+"Produkte können Rohstoffe, Lagerprodukte, Verbrauchsmaterial oder "
 "Dienstleistungen sein. Das Eingabeformular für die Erstellung von Produkten "
 "beinhaltet detaillierte Informationen z.B. über die Beschaffung, Preise, "
 "Kategoriezuordnung, Lieferanten, Lieferzeiten etc."
@@ -1276,8 +1276,8 @@ msgstr ""
 "\n"
 "     Das Produkt Modul unterstützt Varianten, unterschiedliche Preislisten, "
 "Lieferanten\n"
-"     Informationen, verschiedene Dispositionsverfahren vom Lager / vom "
-"Auftrag, verschiedene Mengeneinheiten,\n"
+"     Informationen, verschiedene Dispositionsverfahren wie Beschaffung an "
+"Lager / Beschaffung von Auftrag, verschiedene   Mengeneinheiten,\n"
 "     verschiedene Produktverpackungen sowie die Definition von "
 "Produkteigenschaften.\n"
 "\n"
@@ -1410,7 +1410,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "Disponiere vom Lager (MtS)"
+msgstr "Beschaffe an Lager"
 
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
@@ -1432,7 +1432,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr "Verbrauchsware"
+msgstr "Verbrauchsmaterial"
 
 #. module: product
 #: help:product.price.type,currency_id:0
@@ -1468,7 +1468,7 @@ msgstr "Einkauf Mengeneinheit"
 #. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
-msgstr "Einkaufsmethode"
+msgstr "Beschaffungsmethode"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
@@ -1584,7 +1584,7 @@ msgstr "Rack 200cm"
 #. module: product
 #: selection:product.template,supply_method:0
 msgid "Buy"
-msgstr "Einkaufen"
+msgstr "Einkauf"
 
 #. module: product
 #: view:product.uom.categ:0
@@ -1743,7 +1743,7 @@ msgstr "Produziere"
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Disponiere von Auftrag (MtO)"
+msgstr "Beschaffe von Auftrag"
 
 #. module: product
 #: help:product.packaging,qty:0
@@ -1920,7 +1920,7 @@ msgstr "Kann verkauft werden"
 #. module: product
 #: field:product.template,produce_delay:0
 msgid "Manufacturing Lead Time"
-msgstr "Fertigungszeit"
+msgstr "Durchlaufzeit Fertigung"
 
 #. module: product
 #: field:product.supplierinfo,pricelist_ids:0
@@ -2277,8 +2277,8 @@ msgid ""
 "products with infinite stock, or for use when you have no inventory "
 "management in the system."
 msgstr ""
-"Beinflusst den Beschaffungsprozess. \"Verbrauchswaren\" sind Lagerprodukte "
-"mit unendlicher Lagermenge, bzw. zu verwenden, wenn kein "
+"Die Produktart beinflusst den Beschaffungsprozess. Verbrauchsmaterialien "
+"sind Lagerprodukte mit unendlicher Lagermenge, bzw. zu verwenden, wenn kein "
 "Lagerverwaltungssystem installiert ist."
 
 #. module: product
