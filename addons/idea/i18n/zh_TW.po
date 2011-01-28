@@ -7,24 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-25 06:16+0000\n"
+"PO-Revision-Date: 2011-01-27 04:02+0000\n"
 "Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:46+0000\n"
+"X-Launchpad-Export-Date: 2011-01-28 05:37+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr ""
+msgstr "如設為「是」則顯示點子創作人"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
 msgid "Idea select"
-msgstr ""
+msgstr "選取點子"
 
 #. module: idea
 #: view:idea.idea:0
@@ -48,7 +48,7 @@ msgstr "遞交投票"
 #: model:ir.actions.act_window,name:idea.action_report_vote_all
 #: model:ir.ui.menu,name:idea.menu_report_vote_all
 msgid "Ideas Analysis"
-msgstr ""
+msgstr "點子分析"
 
 #. module: idea
 #: view:idea.category:0
@@ -56,7 +56,7 @@ msgstr ""
 #: view:idea.vote:0
 #: view:report.vote:0
 msgid "Group By..."
-msgstr ""
+msgstr "分組根據..."
 
 #. module: idea
 #: model:ir.module.module,description:idea.module_meta_information
@@ -71,11 +71,18 @@ msgid ""
 "    The managers can obtain an easy view on best ideas from all the users.\n"
 "    Once installed, check the menu 'Ideas' in the 'Tools' main menu."
 msgstr ""
+"\n"
+"    本模組讓用戶容易及方便參與公司內部創作。\n"
+"    所有人都可就不同議題表達意見及提出新點子。\n"
+"    然後其他人可提出評語及投票。\n"
+"    每個點子根據不同投票計算分數。\n"
+"    管理人員可看到最佳點子及得知其他人的看法。\n"
+"    安裝後看看選單內「工具」中之「點子」。"
 
 #. module: idea
 #: model:ir.module.module,shortdesc:idea.module_meta_information
 msgid "Idea Manager"
-msgstr ""
+msgstr "點子總管"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -86,7 +93,7 @@ msgstr "三月"
 #: code:addons/idea/wizard/idea_post_vote.py:92
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
-msgstr ""
+msgstr "點子要處於「開放」狀態始可投票。"
 
 #. module: idea
 #: view:report.vote:0
@@ -107,7 +114,7 @@ msgstr "票數"
 #. module: idea
 #: model:ir.model,name:idea.model_report_vote
 msgid "Idea Vote Statistics"
-msgstr ""
+msgstr "點子投票統計"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -125,7 +132,7 @@ msgstr "取消"
 #. module: idea
 #: view:idea.category:0
 msgid "Category of ideas"
-msgstr ""
+msgstr "點子分類"
 
 #. module: idea
 #: code:addons/idea/idea.py:253
@@ -148,12 +155,12 @@ msgstr "   月份   "
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote
 msgid "Idea Vote"
-msgstr ""
+msgstr "點子投票"
 
 #. module: idea
 #: field:idea.category,parent_id:0
 msgid "Parent Categories"
-msgstr ""
+msgstr "上級分類"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -166,34 +173,34 @@ msgstr "很差"
 #. module: idea
 #: view:idea.vote:0
 msgid "Ideas vote"
-msgstr ""
+msgstr "點子投票"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "行數"
 
 #. module: idea
 #: code:addons/idea/wizard/idea_post_vote.py:89
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
-msgstr ""
+msgstr "不能就此點子投票多於%s次"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Ideas Categories"
-msgstr ""
+msgstr "點子分類"
 
 #. module: idea
 #: help:idea.idea,description:0
 msgid "Content of the idea"
-msgstr ""
+msgstr "點子內容"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
 msgid "Idea Category"
-msgstr ""
+msgstr "點子分類"
 
 #. module: idea
 #: view:idea.idea:0
@@ -212,17 +219,17 @@ msgstr "未投票"
 #. module: idea
 #: sql_constraint:idea.category:0
 msgid "The name of the category must be unique"
-msgstr ""
+msgstr "分類名稱不能重覆"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_select
 msgid "select idea"
-msgstr ""
+msgstr "選取點子"
 
 #. module: idea
 #: view:idea.stat:0
 msgid "stat"
-msgstr ""
+msgstr "統計"
 
 #. module: idea
 #: field:idea.category,child_ids:0
@@ -253,12 +260,12 @@ msgstr "好"
 #. module: idea
 #: help:idea.idea,open_date:0
 msgid "Date when an idea opened"
-msgstr ""
+msgstr "點子開放日期"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Idea Detail"
-msgstr ""
+msgstr "點子詳情"
 
 #. module: idea
 #: help:idea.idea,state:0
@@ -267,12 +274,15 @@ msgid ""
 " It is             opened by the user, the state is 'Opened'.            \n"
 "If the idea is accepted, the state is 'Accepted'."
 msgstr ""
+"當有人提出點子時狀態為「草案」。\n"
+" 有人開啟，狀態為「開放」。            \n"
+"如有人接受，狀態為「接受」。"
 
 #. module: idea
 #: field:idea.category,visibility:0
 #: field:idea.idea,visibility:0
 msgid "Open Idea?"
-msgstr ""
+msgstr "要開啟點子嗎？"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -296,12 +306,12 @@ msgstr "分類"
 #. module: idea
 #: view:report.vote:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    月份-1    "
 
 #. module: idea
 #: field:idea.idea,open_date:0
 msgid "Open date"
-msgstr ""
+msgstr "開放日期"
 
 #. module: idea
 #: field:idea.idea,vote_ids:0
@@ -318,7 +328,7 @@ msgstr "得票統計"
 #. module: idea
 #: field:idea.idea,vote_limit:0
 msgid "Maximum Vote per User"
-msgstr ""
+msgstr "每用戶最大投票數"
 
 #. module: idea
 #: view:idea.category:0
@@ -354,7 +364,7 @@ msgstr "月"
 #: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
 #: model:ir.actions.act_window,name:idea.action_idea_idea_open
 msgid "Open Ideas"
-msgstr ""
+msgstr "開放點子"
 
 #. module: idea
 #: view:idea.category:0
@@ -388,23 +398,23 @@ msgstr "已開啟"
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
 msgid "Idea's Votes"
-msgstr ""
+msgstr "點子的票數"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "New Idea"
-msgstr ""
+msgstr "新點子"
 
 #. module: idea
 #: view:idea.vote.stat:0
 msgid "vote_stat of ideas"
-msgstr ""
+msgstr "點子投票統計"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
 #: model:ir.ui.menu,name:idea.menu_idea_category_tree
 msgid "Ideas by Categories"
-msgstr ""
+msgstr "點子分類"
 
 #. module: idea
 #: selection:idea.idea,state:0
@@ -423,7 +433,7 @@ msgstr "八月"
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Normal"
-msgstr "一般"
+msgstr "普通"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -434,12 +444,12 @@ msgstr "六月"
 #: field:report.vote,creater_id:0
 #: field:report.vote,user_id:0
 msgid "User Name"
-msgstr "用戶名稱"
+msgstr "用戶名"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
 msgid "Idea Votes Statistics"
-msgstr ""
+msgstr "點子投票統計"
 
 #. module: idea
 #: field:idea.comment,user_id:0
@@ -457,12 +467,12 @@ msgstr "日期"
 #. module: idea
 #: view:idea.post.vote:0
 msgid "Post"
-msgstr "發表"
+msgstr "張貼"
 
 #. module: idea
 #: field:idea.idea,my_vote:0
 msgid "My Vote"
-msgstr ""
+msgstr "我的投票"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -483,7 +493,7 @@ msgstr "一月"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
 msgid "idea.idea"
-msgstr ""
+msgstr "點子.點子"
 
 #. module: idea
 #: field:idea.category,summary:0
@@ -493,7 +503,7 @@ msgstr "總結"
 #. module: idea
 #: field:idea.idea,name:0
 msgid "Idea Summary"
-msgstr ""
+msgstr "點子總結"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -508,30 +518,30 @@ msgstr "歷史"
 #. module: idea
 #: view:idea.idea:0
 msgid "Vots Statistics"
-msgstr ""
+msgstr "投票統計"
 
 #. module: idea
 #: field:report.vote,date:0
 msgid "Date Order"
-msgstr "時期排序"
+msgstr "日期排序"
 
 #. module: idea
 #: view:idea.idea:0
 #: field:idea.idea,user_id:0
 #: view:report.vote:0
 msgid "Creator"
-msgstr "建立者"
+msgstr "創作者"
 
 #. module: idea
 #: view:idea.post.vote:0
 #: model:ir.ui.menu,name:idea.menu_give_vote
 msgid "Give Vote"
-msgstr ""
+msgstr "投票"
 
 #. module: idea
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
-msgstr ""
+msgstr "如每名用戶只能投一票則設為「1」"
 
 #. module: idea
 #: view:idea.post.vote:0
@@ -552,7 +562,7 @@ msgstr "開啟"
 #. module: idea
 #: view:report.vote:0
 msgid "Idea Vote Analysis"
-msgstr ""
+msgstr "點子投票分析"
 
 #. module: idea
 #: view:idea.idea:0
@@ -561,12 +571,12 @@ msgstr ""
 #: model:ir.ui.menu,name:idea.menu_ideas
 #: model:ir.ui.menu,name:idea.menu_ideas1
 msgid "Ideas"
-msgstr ""
+msgstr "點子"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_post_vote
 msgid "Post vote"
-msgstr ""
+msgstr "張貼投票"
 
 #. module: idea
 #: view:idea.idea:0
@@ -606,7 +616,7 @@ msgstr "遭拒"
 #: code:addons/idea/idea.py:253
 #, python-format
 msgid "Draft/Accepted/Cancelled ideas Could not be voted"
-msgstr ""
+msgstr "草案／已接受／已取消點子不能投票"
 
 #. module: idea
 #: view:idea.vote:0
@@ -641,7 +651,7 @@ msgstr "評語數"
 #. module: idea
 #: field:idea.vote,score:0
 msgid "Vote Status"
-msgstr ""
+msgstr "投票狀態"
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
@@ -658,7 +668,7 @@ msgstr "平均得分"
 #: view:report.vote:0
 #: field:report.vote,idea_id:0
 msgid "Idea"
-msgstr ""
+msgstr "點子"
 
 #. module: idea
 #: view:idea.idea:0
@@ -668,7 +678,7 @@ msgstr "接受"
 #. module: idea
 #: field:idea.post.vote,vote:0
 msgid "Post Vote"
-msgstr ""
+msgstr "張貼投票"
 
 #. module: idea
 #: view:report.vote:0
@@ -679,4 +689,4 @@ msgstr "年份"
 #. module: idea
 #: view:idea.select:0
 msgid "Select Idea for Vote"
-msgstr ""
+msgstr "選取要投票點子"
