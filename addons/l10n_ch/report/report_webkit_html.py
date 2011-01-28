@@ -119,7 +119,7 @@ class l10n_ch_report_webkit_html(report_sxw.rml_parse):
                                 invoice_obj.name_get(cursor, self.uid, [invoice.id],
                                     context={})[0][1]))
             if not self._compile_check_bvr.match(
-                    invoice.partner_bank_id.bvr_number or ''):
+                    invoice.partner_bank_id.post_number or ''):
                 raise wizard.except_wizard(_('UserError'),
                         _("Your bank BVR number should be of the form 0X-XXX-X! " +
                                 'Please check your company ' +
