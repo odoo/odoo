@@ -94,7 +94,7 @@ class account_invoice(osv.osv):
             if invoice.move_id:
                 for m in invoice.move_id.line_id:
                     if m.account_id.type in ('receivable','payable'):
-                        result[invoice.id] = m.amount_residual_currency
+                        result[invoice.id] += m.amount_residual_currency
         return result
 
     # Give Journal Items related to the payment reconciled to this invoice
