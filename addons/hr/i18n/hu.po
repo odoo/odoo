@@ -7,40 +7,40 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-12 13:18+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
+"PO-Revision-Date: 2011-01-24 22:04+0000\n"
+"Last-Translator: Csaba TOTH <csaba.toth@i3rendszerhaz.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:41+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 04:56+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
 msgid "Openerp user"
-msgstr ""
+msgstr "OpenERP felhasználó"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,requirements:0
 msgid "Requirements"
-msgstr ""
+msgstr "Követelmények"
 
 #. module: hr
 #: constraint:hr.department:0
 msgid "Error! You can not create recursive departments."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív részlegeket."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_contactofemployee0
 msgid "Link the employee to information"
-msgstr ""
+msgstr "Kapcsolja össze az alkalmazottat az információval"
 
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "TAJ szám"
 
 #. module: hr
 #: model:ir.module.module,shortdesc:hr.module_meta_information
@@ -55,7 +55,7 @@ msgstr "Humán erőforrás"
 #: view:hr.employee:0
 #: view:hr.job:0
 msgid "Group By..."
-msgstr ""
+msgstr "Csoportosítás..."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.action_hr_job
@@ -74,32 +74,32 @@ msgstr ""
 #: field:hr.job,department_id:0
 #: view:res.users:0
 msgid "Department"
-msgstr ""
+msgstr "Részleg"
 
 #. module: hr
 #: help:hr.installer,hr_attendance:0
 msgid "Simplifies the management of employee's attendances."
-msgstr ""
+msgstr "Egyszerűsíti az alkalmazott jelenléteinek kezelését."
 
 #. module: hr
 #: view:hr.job:0
 msgid "Mark as Old"
-msgstr ""
+msgstr "Bejelölés réginek"
 
 #. module: hr
 #: view:hr.job:0
 msgid "Jobs"
-msgstr ""
+msgstr "Munkák"
 
 #. module: hr
 #: view:hr.job:0
 msgid "In Recruitment"
-msgstr ""
+msgstr "Munkaerő-felvétel"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "title"
-msgstr ""
+msgstr "pozíció"
 
 #. module: hr
 #: field:hr.department,company_id:0
@@ -107,17 +107,17 @@ msgstr ""
 #: view:hr.job:0
 #: field:hr.job,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Vállalat"
 
 #. module: hr
 #: field:hr.job,no_of_recruitment:0
 msgid "Expected in Recruitment"
-msgstr ""
+msgstr "Várható felvételek"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_config
 msgid "Holidays"
-msgstr ""
+msgstr "Szabadságok"
 
 #. module: hr
 #: help:hr.installer,hr_holidays:0
@@ -127,7 +127,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_marital_status
 msgid "Employee Marital Status"
-msgstr ""
+msgstr "Alkalmazott családi állapota"
 
 #. module: hr
 #: help:hr.employee,partner_id:0
@@ -135,42 +135,46 @@ msgid ""
 "Partner that is related to the current employee. Accounting transaction will "
 "be written on this partner belongs to employee."
 msgstr ""
+"Partner aki ehhez az alkalmazotthoz tartozik. Könyvelési tranzakciók akik "
+"ennél a partnernél keletkeznek ehhez az alkalmazotthoz lesznek társítva."
 
 #. module: hr
 #: model:process.transition,name:hr.process_transition_employeeuser0
 msgid "Link a user to an employee"
-msgstr ""
+msgstr "Felhasználó dolgozóhoz rendelése"
 
 #. module: hr
 #: field:hr.installer,hr_contract:0
 msgid "Employee's Contracts"
-msgstr ""
+msgstr "Munkavállalói szerződések"
 
 #. module: hr
 #: help:hr.installer,hr_payroll:0
 msgid "Generic Payroll system."
-msgstr ""
+msgstr "Általános bérezési rendszer"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "My Departments Employee"
-msgstr ""
+msgstr "Részlegem alkalmazottai"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_married
 msgid "Married"
-msgstr ""
+msgstr "Házas"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr ""
+"Hiba! Nem választhat ki olyan részleget, amelynek az alkalmazott a "
+"menedzsere."
 
 #. module: hr
 #: help:hr.employee,passport_id:0
 msgid "Employee Passport Information"
-msgstr ""
+msgstr "Alkalmazott útlevél információja"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -179,16 +183,19 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"A vállalatának szervezeti felosztása arra használható, hogy szervezetenként "
+"kezelje a dokumentumokat, úgymint kiadások, idő beosztások jóváhagyása, "
+"üzenetkezelés, felvétel, stb."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Position"
-msgstr ""
+msgstr "Beosztás"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
 msgid "Employee Hierarchy"
-msgstr ""
+msgstr "Dolgozói hierarchia"
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_employeeuser0
@@ -201,22 +208,22 @@ msgstr ""
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Recruitement"
-msgstr ""
+msgstr "Munkaerő-felvétel"
 
 #. module: hr
 #: field:hr.employee,identification_id:0
 msgid "Identification No"
-msgstr ""
+msgstr "Személyi igazolvány száma"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
 msgid "No of Employee"
-msgstr ""
+msgstr "Alkalmazott sorszáma"
 
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr ""
+msgstr "Nő"
 
 #. module: hr
 #: help:hr.installer,hr_timesheet_sheet:0
@@ -227,49 +234,49 @@ msgstr ""
 #. module: hr
 #: field:hr.installer,hr_evaluation:0
 msgid "Periodic Evaluations"
-msgstr ""
+msgstr "Időszakos értékelések"
 
 #. module: hr
 #: field:hr.installer,hr_timesheet_sheet:0
 msgid "Timesheets"
-msgstr ""
+msgstr "Munkaidő kimutatások"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_employee_tree
 msgid "Employees Structure"
-msgstr ""
+msgstr "Dolgozói Struktúra"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Social IDs"
-msgstr ""
+msgstr "Személyes adatok"
 
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employee with that job."
-msgstr ""
+msgstr "Alkalmazottak száma ezzel a munkakörrel"
 
 #. module: hr
 #: field:hr.employee,work_phone:0
 msgid "Work Phone"
-msgstr ""
+msgstr "Munkahelyi telefon"
 
 #. module: hr
 #: field:hr.employee.category,child_ids:0
 msgid "Child Categories"
-msgstr ""
+msgstr "Alkategóriák"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,description:0
 #: model:ir.model,name:hr.model_hr_job
 msgid "Job Description"
-msgstr ""
+msgstr "Munkaköri leírás"
 
 #. module: hr
 #: field:hr.employee,work_location:0
 msgid "Office Location"
-msgstr ""
+msgstr "Iroda címe"
 
 #. module: hr
 #: view:hr.employee:0
@@ -277,98 +284,98 @@ msgstr ""
 #: model:ir.model,name:hr.model_hr_employee
 #: model:process.node,name:hr.process_node_employee0
 msgid "Employee"
-msgstr ""
+msgstr "Alkalmazott"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_employeecontact0
 msgid "Other information"
-msgstr ""
+msgstr "Egyéb információ"
 
 #. module: hr
 #: field:hr.employee,work_email:0
 msgid "Work E-mail"
-msgstr ""
+msgstr "Munkahelyi e-mailcím"
 
 #. module: hr
 #: field:hr.department,complete_name:0
 #: field:hr.employee.category,complete_name:0
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #. module: hr
 #: field:hr.employee,birthday:0
 msgid "Date of Birth"
-msgstr ""
+msgstr "Születési idő"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Jelentés"
 
 #. module: hr
 #: model:ir.model,name:hr.model_ir_actions_act_window
 msgid "ir.actions.act_window"
-msgstr ""
+msgstr "ir.actions.act_window"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
 msgid "Human Resources Dashboard"
-msgstr ""
+msgstr "HR vezérlőpult"
 
 #. module: hr
 #: view:hr.employee:0
 #: field:hr.employee,job_id:0
 #: view:hr.job:0
 msgid "Job"
-msgstr ""
+msgstr "Munka"
 
 #. module: hr
 #: view:hr.department:0
 #: field:hr.department,member_ids:0
 msgid "Members"
-msgstr ""
+msgstr "Tagok"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_configuration
 msgid "Configuration"
-msgstr ""
+msgstr "Beállítások"
 
 #. module: hr
 #: view:hr.installer:0
 msgid ""
 "You can enhance the base HR Application by installing few HR-related "
 "functionalities."
-msgstr ""
+msgstr "Felturbózhatja az alap HR modult további kiegészítők telepítésével."
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Categories"
-msgstr ""
+msgstr "Kategóriák"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
 msgid "Expected Employees"
-msgstr ""
+msgstr "Javasolt alkalmazottak"
 
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Társadalombiztosítási szám"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_divorced
 msgid "Divorced"
-msgstr ""
+msgstr "Elvált"
 
 #. module: hr
 #: field:hr.employee.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Szülő kategória"
 
 #. module: hr
 #: constraint:hr.employee.category:0
 msgid "Error ! You cannot create recursive Categories."
-msgstr ""
+msgstr "Hiba ! Nem hozhat lérte rekurzív kategóriákat."
 
 #. module: hr
 #: view:hr.department:0
@@ -377,12 +384,12 @@ msgstr ""
 #: view:res.users:0
 #: field:res.users,context_department_id:0
 msgid "Departments"
-msgstr ""
+msgstr "Részlegek"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_employeecontact0
 msgid "Employee Contact"
-msgstr ""
+msgstr "Alkalmazotti kapcsolat"
 
 #. module: hr
 #: view:board.board:0
@@ -392,34 +399,34 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Male"
-msgstr ""
+msgstr "Férfi"
 
 #. module: hr
 #: field:hr.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Beállítási folyamat"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_form
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_form
 msgid "Categories of Employee"
-msgstr ""
+msgstr "Alkalmazotti kategóriák"
 
 #. module: hr
 #: view:hr.employee.category:0
 #: model:ir.model,name:hr.model_hr_employee_category
 msgid "Employee Category"
-msgstr ""
+msgstr "Alkalmazotti kategória"
 
 #. module: hr
 #: field:hr.installer,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Kép"
 
 #. module: hr
 #: model:process.process,name:hr.process_process_employeecontractprocess0
 msgid "Employee Contract"
-msgstr ""
+msgstr "Alkalmazott szerződése"
 
 #. module: hr
 #: help:hr.installer,hr_evaluation:0
@@ -431,23 +438,23 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_department
 msgid "hr.department"
-msgstr ""
+msgstr "hr.department"
 
 #. module: hr
 #: help:hr.employee,parent_id:0
 msgid "It is linked with manager of Department"
-msgstr ""
+msgstr "A részleg vezetőjéhez van hozzárendelve"
 
 #. module: hr
 #: field:hr.installer,hr_recruitment:0
 msgid "Recruitment Process"
-msgstr ""
+msgstr "Felvételi folyamat"
 
 #. module: hr
 #: field:hr.employee,category_ids:0
 #: field:hr.employee.category,name:0
 msgid "Category"
-msgstr ""
+msgstr "Kategória"
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_view_employee_list_my
@@ -467,78 +474,79 @@ msgstr ""
 #. module: hr
 #: help:hr.employee,bank_account_id:0
 msgid "Employee bank salary account"
-msgstr ""
+msgstr "Dolgozó bank számla száma"
 
 #. module: hr
 #: field:hr.department,note:0
 msgid "Note"
-msgstr ""
+msgstr "Megjegyzés"
 
 #. module: hr
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
+"A kiválasztott cég nincs az engedélyezett cégek között ehhez a felhasználóhoz"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Contact Information"
-msgstr ""
+msgstr "Kapcsolat információk"
 
 #. module: hr
 #: field:hr.employee,address_id:0
 msgid "Working Address"
-msgstr ""
+msgstr "Munkahely címe"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr_manager
 msgid "HR Manager Dashboard"
-msgstr ""
+msgstr "HR Vezető vezérlőpult"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Status"
-msgstr ""
+msgstr "Státusz"
 
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Beállítás"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
 msgid "Categories structure"
-msgstr ""
+msgstr "Kategóriák strukturája"
 
 #. module: hr
 #: field:hr.employee,partner_id:0
 msgid "unknown"
-msgstr ""
+msgstr "ismeretlen"
 
 #. module: hr
 #: field:hr.installer,hr_holidays:0
 msgid "Holidays / Leaves Management"
-msgstr ""
+msgstr "Munkaszüneti napok / Szabadságok kezelése"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr ""
+msgstr "Adóazonosító jele"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Active"
-msgstr ""
+msgstr "Aktív"
 
 #. module: hr
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Hiba! Nem hozhat létre rekurzív alkalmazotti hierarchiát."
 
 #. module: hr
 #: view:hr.department:0
 msgid "Companies"
-msgstr ""
+msgstr "Vállalatok"
 
 #. module: hr
 #: model:ir.module.module,description:hr.module_meta_information
@@ -551,6 +559,13 @@ msgid ""
 "    * HR Jobs\n"
 "    "
 msgstr ""
+"\n"
+"    Modul az emberi erőforrás kezeléshez. Ezzel tudja kezelni:\n"
+"    * Alkalmazottak és hierarchiák : Megadhatja a dolgozók felhasználói "
+"hozzáférését és hierarchiájukat\n"
+"    * HR Részlegeket\n"
+"    * HR munkákat\n"
+"    "
 
 #. module: hr
 #: model:process.transition,note:hr.process_transition_contactofemployee0
@@ -558,32 +573,34 @@ msgid ""
 "In the Employee form, there are different kind of information like Contact "
 "information."
 msgstr ""
+"Az alkalmazottak adatlapján különböző típusú infoprmációk találhatóak, mint "
+"például elérhetőségi információk."
 
 #. module: hr
 #: help:hr.job,expected_employees:0
 msgid "Required number of Employees in total for that job."
-msgstr ""
+msgstr "Szükséges a dolgozók összlétszámát megadni ehhez a munkához."
 
 #. module: hr
 #: selection:hr.job,state:0
 msgid "Old"
-msgstr ""
+msgstr "Régi"
 
 #. module: hr
 #: field:hr.employee.marital.status,description:0
 msgid "Status Description"
-msgstr ""
+msgstr "Státusz leírása"
 
 #. module: hr
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Nem létezhet két felhasználó ugyanazzal a felhasználói névvel !"
 
 #. module: hr
 #: view:hr.job:0
 #: field:hr.job,state:0
 msgid "State"
-msgstr ""
+msgstr "Állapot"
 
 #. module: hr
 #: field:hr.employee,marital:0
@@ -592,7 +609,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.action_hr_marital_status
 #: model:ir.ui.menu,name:hr.hr_menu_marital_status
 msgid "Marital Status"
-msgstr ""
+msgstr "Családi állapot"
 
 #. module: hr
 #: help:hr.installer,hr_recruitment:0
@@ -602,37 +619,37 @@ msgstr ""
 #. module: hr
 #: model:process.node,note:hr.process_node_employee0
 msgid "Employee form and structure"
-msgstr ""
+msgstr "Dolgozói űrlap és struktúra"
 
 #. module: hr
 #: field:hr.employee,photo:0
 msgid "Photo"
-msgstr ""
+msgstr "Fénykép"
 
 #. module: hr
 #: model:ir.model,name:hr.model_res_users
 msgid "res.users"
-msgstr ""
+msgstr "res.users"
 
 #. module: hr
 #: field:hr.installer,hr_payroll_account:0
 msgid "Payroll Accounting"
-msgstr ""
+msgstr "Bérszámfejtés"
 
 #. module: hr
 #: view:hr.employee:0
 msgid "Personal Information"
-msgstr ""
+msgstr "Személyes információk"
 
 #. module: hr
 #: field:hr.employee,passport_id:0
 msgid "Passport No"
-msgstr ""
+msgstr "Útlevélszám"
 
 #. module: hr
 #: view:res.users:0
 msgid "Current Activity"
-msgstr ""
+msgstr "Jelenlegi tevékenység"
 
 #. module: hr
 #: help:hr.installer,hr_expense:0
@@ -644,22 +661,22 @@ msgstr ""
 #. module: hr
 #: view:hr.job:0
 msgid "Current"
-msgstr ""
+msgstr "Jelenlegi"
 
 #. module: hr
 #: field:hr.department,parent_id:0
 msgid "Parent Department"
-msgstr ""
+msgstr "Szülő részleg"
 
 #. module: hr
 #: view:hr.employee.category:0
 msgid "Employees Categories"
-msgstr ""
+msgstr "Munkavállalói kategóriák"
 
 #. module: hr
 #: field:hr.employee,address_home_id:0
 msgid "Home Address"
-msgstr ""
+msgstr "Otthoni cím"
 
 #. module: hr
 #: field:hr.installer,hr_attendance:0
@@ -671,81 +688,81 @@ msgstr ""
 #: view:hr.employee.marital.status:0
 #: view:hr.job:0
 msgid "Description"
-msgstr ""
+msgstr "Leírás"
 
 #. module: hr
 #: help:hr.installer,hr_contract:0
 msgid "Extends employee profiles to help manage their contracts."
-msgstr ""
+msgstr "Kibővíti a munkavállalói adatlapot a szerződések kezelésével."
 
 #. module: hr
 #: field:hr.installer,hr_payroll:0
 msgid "Payroll"
-msgstr ""
+msgstr "Bérszámfejtés"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_single
 msgid "Single"
-msgstr ""
+msgstr "Egyedülálló"
 
 #. module: hr
 #: field:hr.job,name:0
 msgid "Job Name"
-msgstr ""
+msgstr "Munka megnevezése"
 
 #. module: hr
 #: view:hr.job:0
 #: selection:hr.job,state:0
 msgid "In Position"
-msgstr ""
+msgstr "Pozícióban"
 
 #. module: hr
 #: field:hr.employee,mobile_phone:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilszám"
 
 #. module: hr
 #: view:hr.department:0
 msgid "department"
-msgstr ""
+msgstr "részleg"
 
 #. module: hr
 #: field:hr.employee,country_id:0
 msgid "Nationality"
-msgstr ""
+msgstr "Nemzetiség"
 
 #. module: hr
 #: view:hr.department:0
 #: view:hr.employee:0
 #: field:hr.employee,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Megjegyzések"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_installer
 msgid "hr.installer"
-msgstr ""
+msgstr "hr.installer"
 
 #. module: hr
 #: view:board.board:0
 msgid "HR Manager Board"
-msgstr ""
+msgstr "HR Vezető munkalap"
 
 #. module: hr
 #: field:hr.employee,resource_id:0
 msgid "Resource"
-msgstr ""
+msgstr "Erőforrás"
 
 #. module: hr
 #: view:hr.installer:0
 #: model:ir.actions.act_window,name:hr.action_hr_installer
 msgid "Human Resources Application Configuration"
-msgstr ""
+msgstr "HR alkalmazások beállítása"
 
 #. module: hr
 #: field:hr.employee,gender:0
 msgid "Gender"
-msgstr ""
+msgstr "Neme"
 
 #. module: hr
 #: view:hr.employee:0
@@ -756,38 +773,38 @@ msgstr ""
 #: model:ir.ui.menu,name:hr.menu_open_view_employee_list_my
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_configuration_form
 msgid "Employees"
-msgstr ""
+msgstr "Alkalmazottak"
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankszámla"
 
 #. module: hr
 #: field:hr.department,name:0
 msgid "Department Name"
-msgstr ""
+msgstr "Részleg neve"
 
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Társadalombiztosítási szám"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
 msgid "Creation of a OpenERP user"
-msgstr ""
+msgstr "OpenERP felhasználó létrehozása"
 
 #. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
-msgstr ""
+msgstr "Alrészlegek"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action_hr_job
 #: model:ir.ui.menu,name:hr.menu_hr_job
 msgid "Job Positions"
-msgstr ""
+msgstr "Álláspozíciók"
 
 #. module: hr
 #: view:hr.employee:0
@@ -798,31 +815,31 @@ msgstr ""
 #. module: hr
 #: view:hr.installer:0
 msgid "Configure Your Human Resources Application"
-msgstr ""
+msgstr "Testreszabja a HR programot"
 
 #. module: hr
 #: field:hr.installer,hr_expense:0
 msgid "Expenses"
-msgstr ""
+msgstr "Költségek"
 
 #. module: hr
 #: field:hr.department,manager_id:0
 #: view:hr.employee:0
 #: field:hr.employee,parent_id:0
 msgid "Manager"
-msgstr ""
+msgstr "Vezető"
 
 #. module: hr
 #: model:hr.employee.marital.status,name:hr.hr_employee_marital_status_widower
 msgid "Widower"
-msgstr ""
+msgstr "Özvegy"
 
 #. module: hr
 #: help:hr.installer,hr_payroll_account:0
 msgid "Generic Payroll system Integrated with Accountings."
-msgstr ""
+msgstr "Általános bérező rendszer a könyvelésbe integrálva."
 
 #. module: hr
 #: field:hr.employee,child_ids:0
 msgid "Subordinates"
-msgstr ""
+msgstr "Beosztottak"

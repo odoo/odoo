@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 23:53+0000\n"
+"PO-Revision-Date: 2011-01-24 16:24+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:35+0000\n"
+"X-Launchpad-Export-Date: 2011-01-25 04:56+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_timesheet_sheet
@@ -42,7 +42,7 @@ msgstr "Szolgáltatás"
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:38
 #, python-format
 msgid "No employee defined for your user !"
-msgstr ""
+msgstr "A felhasználóra nem állítottak be alkalmazottat!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -68,7 +68,7 @@ msgstr "Osztály, részleg"
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Task timesheet"
-msgstr ""
+msgstr "Feladat munkaidő-kimutatása"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -81,6 +81,7 @@ msgstr "Ma"
 msgid ""
 "Please verify that the total difference of the sheet is lower than %.2f !"
 msgstr ""
+"Kérem, ellenőrizze, hogy a táblázat összes eltérése kisebb, mint %.2f!"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -122,12 +123,12 @@ msgstr "Dátumig"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_invoiceonwork0
 msgid "Based on the timesheet"
-msgstr ""
+msgstr "Munkaidő-kimutatás alapján"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_validatetimesheet0
 msgid "Validate"
-msgstr "Érvényesít"
+msgstr "Jóváhagyás"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -141,7 +142,7 @@ msgstr "Nap"
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "Present"
-msgstr ""
+msgstr "Jelen van"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -159,7 +160,7 @@ msgstr "Felhasználói hiba"
 #: view:hr_timesheet_sheet.sheet:0
 #: model:process.transition.action,name:hr_timesheet_sheet.process_transition_action_refusetimesheet0
 msgid "Refuse"
-msgstr "Elutasít"
+msgstr "Elutasítás"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:608
@@ -168,6 +169,8 @@ msgstr "Elutasít"
 msgid ""
 "You cannot enter an attendance date outside the current timesheet dates!"
 msgstr ""
+"Nem adhat meg az aktuális munkaidő-kimutatás dátumain kívül eső jelenlét "
+"dátumot!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_current_open
@@ -184,13 +187,13 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:246
 #, python-format
 msgid "You can not sign in from an other date than today"
-msgstr ""
+msgstr "Nem jelentkezhet be a maitól eltérő dátummal"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
 #: view:timesheet.report:0
 msgid " Month-1 "
-msgstr " Hónap-1 "
+msgstr " Előző hónap "
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_validatetimesheet0
@@ -206,7 +209,7 @@ msgstr "Vigyázat!"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_attendance0
 msgid "Employee's timesheet entry"
-msgstr ""
+msgstr "Alkalmazotti munkaidő-kimutatás tétel"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -220,7 +223,7 @@ msgstr "Gyűjtőkód"
 #. module: hr_timesheet_sheet
 #: field:timesheet.report,nbr:0
 msgid "#Nbr"
-msgstr ""
+msgstr "Szám"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,date_from:0
@@ -251,7 +254,7 @@ msgstr "Munkaidő-kimutatások"
 #: view:timesheet.report:0
 #: selection:timesheet.report,state:0
 msgid "Confirmed"
-msgstr "Megerősítve"
+msgstr "Megerősített"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet.day,total_attendance:0
@@ -294,19 +297,19 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Hiba! Ön nem hozhat létre rekurzív cégeket!"
+msgstr "Hiba! Ön nem hozhat létre rekurzív vállalatokat."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,state:0
 #: view:timesheet.report:0
 #: field:timesheet.report,state:0
 msgid "State"
-msgstr ""
+msgstr "Állapot"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_confirmedtimesheet0
 msgid "State is 'confirmed'."
-msgstr ""
+msgstr "Az állapot megerősített."
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,employee_id:0
@@ -317,18 +320,18 @@ msgstr "Alkalmazott"
 #: selection:hr_timesheet_sheet.sheet,state:0
 #: selection:timesheet.report,state:0
 msgid "New"
-msgstr "új"
+msgstr "Új"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:174
 #, python-format
 msgid "You cannot duplicate a timesheet !"
-msgstr ""
+msgstr "Nem duplikálhatja a munkaidő-kimutatást !"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_week_attendance_graph
 msgid "My Total Attendances By Week"
-msgstr ""
+msgstr "Az összes jelenlétem hetek szerint"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:174
@@ -364,7 +367,7 @@ msgstr "Órák"
 #: view:timesheet.report:0
 #: field:timesheet.report,cost:0
 msgid "#Cost"
-msgstr ""
+msgstr "Költség"
 
 #. module: hr_timesheet_sheet
 #: constraint:hr.attendance:0
@@ -374,7 +377,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
 msgid "No employee defined"
-msgstr ""
+msgstr "Nincs alkalmazott definiálva"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:372
@@ -386,7 +389,7 @@ msgstr "Érvénytelen művelet !"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_validatetimesheet0
 msgid "The project manager validates the timesheets."
-msgstr ""
+msgstr "A projektmenedzser jóváhagyja a munkaidő-kimutatást."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -411,7 +414,7 @@ msgstr ""
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_workontask0
 msgid "Work on Task"
-msgstr ""
+msgstr "Munka a feladaton"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -422,7 +425,7 @@ msgstr "Napi nézet"
 #: view:timesheet.report:0
 #: field:timesheet.report,quantity:0
 msgid "#Quantity"
-msgstr ""
+msgstr "Mennyiség"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_timesheet:0
@@ -445,12 +448,12 @@ msgstr "Bejelentkezés"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_timesheet:0
 msgid "#Total Timesheet"
-msgstr ""
+msgstr "Munkaidő-kimutatás összesen"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_current_open
 msgid "hr.timesheet.current.open"
-msgstr ""
+msgstr "hr.timesheet.current.open"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -467,12 +470,12 @@ msgstr "Szeptember"
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "It will open your current timesheet"
-msgstr ""
+msgstr "Megnyitja az Ön aktuális munkaidő-kimutatását"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -487,17 +490,17 @@ msgstr "Hónap"
 #: view:timesheet.report:0
 #: field:timesheet.report,total_diff:0
 msgid "#Total Diff"
-msgstr ""
+msgstr "Összes eltérés"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "In Draft"
-msgstr ""
+msgstr "Tervezet"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "Sign in/out"
-msgstr ""
+msgstr "Bejelentkezés/Kijelentkezés"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,name:hr_timesheet_sheet.process_transition_invoiceontimesheet0
@@ -510,11 +513,15 @@ msgid ""
 "The timesheet line represents the time spent by the employee on a specific "
 "service provided."
 msgstr ""
+"A munkaidő-kimutatás sora mutatja az alkalmazott által a szolgáltatáson "
+"eltöltött időt."
 
 #. module: hr_timesheet_sheet
 #: constraint:hr_timesheet_sheet.sheet:0
 msgid "You must select a Current date which is in the timesheet dates !"
 msgstr ""
+"Olyan aktuális dátumot kell kiválasztania, amely beleesik a munkaidő-"
+"kimutatás dátumtartományába!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,help:hr_timesheet_sheet.action_hr_timesheet_report_stat_all
@@ -524,6 +531,10 @@ msgid ""
 "your employees. You can group them by specific selection criteria thanks to "
 "the search tool."
 msgstr ""
+"Ez a jelentés elemzést nyújt a munkavállalók által készített munkaidő-"
+"kimutatásokról. Lehetővé teszi az alkalmazottak által berögzített tételek "
+"teljes áttekintését. Ön a kereső eszköznek köszönhetően speciális feltételek "
+"kiválasztásával csoportosíthatja ezeket a tételeket."
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state:0
@@ -540,12 +551,12 @@ msgstr "Munkaidő-kimutatás megengedett eltérése (órában)"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_invoiceontimesheet0
 msgid "The invoice is created based on the timesheet."
-msgstr ""
+msgstr "A számla a munkaidő-kimutatás alapján készült."
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "Draft Timesheet"
-msgstr ""
+msgstr "Munkaidő-kimutatás tervezet"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -580,13 +591,13 @@ msgstr "Jelenlegi állapot"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:631
 #, python-format
 msgid "You cannot modify an entry in a confirmed timesheet !"
-msgstr ""
+msgstr "Jóváhagyott munkaidő-kimutatásban nem módosíthat tételt!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_account
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_timesheet_sheet_sheet_day
 msgid "Timesheets by Period"
-msgstr "Munkaidő-kimutatások periódusonként"
+msgstr "Időszak szerinti munkaidő-kimutatások"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -600,7 +611,7 @@ msgstr "Felhasználó"
 #. module: hr_timesheet_sheet
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_by_day
 msgid "Timesheet by Account"
-msgstr "Számlánkénti munkaidő-kimutatás"
+msgstr "Gyűjtőkód szerinti munkaidő-kimutatás"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,date:0
@@ -612,7 +623,7 @@ msgstr "Dátum"
 #: selection:hr.timesheet.report,month:0
 #: selection:timesheet.report,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -633,7 +644,7 @@ msgstr "Munkaidő-kimutatás sorok"
 #. module: hr_timesheet_sheet
 #: view:board.board:0
 msgid "My Total Attendance By Week"
-msgstr ""
+msgstr "Összes jelenlétem hetek szerint"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -648,6 +659,10 @@ msgid ""
 "on a project (i.e. an analytic account) thus generating costs in the "
 "analytic account concerned."
 msgstr ""
+"Ebben a menüpontban lehet ellenőrizni az adott időszaki munkaidő-"
+"kimutatásokat. Ön továbbá berögzítheti a projekten (azaz gyűjtőkódon) "
+"eltöltött időt, ezáltal a rendszer költségeket generál az érintett "
+"gyűjtőkódon."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -658,7 +673,7 @@ msgstr "Január"
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_attendancetimesheet0
 msgid "The employee signs in and signs out."
-msgstr ""
+msgstr "Az alkalmazott bejelentkezik és kijelentkezik."
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_res_company
@@ -696,7 +711,7 @@ msgstr "Időszak"
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:494
 #, python-format
 msgid "You can not modify an entry in a confirmed timesheet !"
-msgstr ""
+msgstr "Jóváhagyott táblázatban nem módosíthat tételt!"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
@@ -716,12 +731,12 @@ msgstr "Kész"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_drafttimesheetsheet0
 msgid "State is 'draft'."
-msgstr "Az állapot 'Tervezet'."
+msgstr "Az állapot 'tervezet'."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.current.open:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_validatedtimesheet0
@@ -731,12 +746,12 @@ msgstr "Jóváhagyott"
 #. module: hr_timesheet_sheet
 #: model:process.node,name:hr_timesheet_sheet.process_node_invoiceonwork0
 msgid "Invoice on Work"
-msgstr ""
+msgstr "Számla a munka alapján"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet.account:0
 msgid "Timesheet by Accounts"
-msgstr "Számlák szerinti munkaidő-kimutatás"
+msgstr "Gyűjtőkódok szerinti munkaidő-kimutatás"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/wizard/hr_timesheet_current.py:51
@@ -748,12 +763,12 @@ msgstr ""
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:372
 #, python-format
 msgid "Cannot delete Sheet(s) which are already confirmed !"
-msgstr ""
+msgstr "Jóváhagyott táblázato(ka)t nem törölhet!"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_validatedtimesheet0
 msgid "State is 'validated'."
-msgstr "Az állapot 'Jóváhagyott'."
+msgstr "Az állapot 'jóváhagyott'."
 
 #. module: hr_timesheet_sheet
 #: help:hr_timesheet_sheet.sheet,state:0
@@ -765,6 +780,12 @@ msgid ""
 "* The 'Done' state is used when users timesheet is accepted by his/her "
 "senior."
 msgstr ""
+" * 'Tervezet' állapotban van a munkaidő-kimutatás, amikor a felhasználó "
+"berögzíti azt, és még nem hagyja jóvá.\n"
+"* 'Jóváhagyott' állapotba kerül a munkaidő-kimutatás, ha a felhasználó "
+"jóváhagyja azt.\n"
+"* 'Kész'-re változik a munkaidő-kimutatás állapota, amikor a felhasználó "
+"felettese elfogadja azt."
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0
@@ -776,7 +797,7 @@ msgstr "Munkaidő-kimutatás elemzése"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Search Timesheet"
-msgstr ""
+msgstr "Munkaidő-kimutatás keresése"
 
 #. module: hr_timesheet_sheet
 #: code:addons/hr_timesheet_sheet/hr_timesheet_sheet.py:170
@@ -785,6 +806,8 @@ msgid ""
 "The timesheet cannot be validated as it does not contain equal no. of sign "
 "ins and sign outs!"
 msgstr ""
+"A munkaidő-kimutatás nem hagyható jóvá, mert nem egyező számú bejelentkezést "
+"és kijelentkezést tartalmaz!"
 
 #. module: hr_timesheet_sheet
 #: model:ir.model,name:hr_timesheet_sheet.model_hr_analytic_timesheet
@@ -804,7 +827,7 @@ msgstr "Termék"
 #: field:hr_timesheet_sheet.sheet,attendances_ids:0
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.act_hr_timesheet_sheet_sheet_2_hr_attendance
 msgid "Attendances"
-msgstr ""
+msgstr "Jelenlétek"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,name:0
@@ -817,6 +840,7 @@ msgstr "Leírás"
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_confirmtimesheet0
 msgid "The employee periodically confirms his own timesheets."
 msgstr ""
+"Az alkalmazott időszakonként jóváhagyja a saját munkaidő-kimutatását."
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -827,7 +851,7 @@ msgstr "Május"
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_workontask0
 msgid "Defines the work summary of task"
-msgstr ""
+msgstr "Meghatározza a feladat munkaösszesítését"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -839,11 +863,13 @@ msgstr "Kijelentkezés"
 #, python-format
 msgid "Cannot delete Sheet(s) which have attendance entries encoded !"
 msgstr ""
+"Nem lehet törölni olyan táblázato(ka)t, amely(ek)be jelenlét tételeket "
+"berögzítettek!"
 
 #. module: hr_timesheet_sheet
 #: model:process.transition,note:hr_timesheet_sheet.process_transition_tasktimesheet0
 msgid "Moves task entry into the timesheet line"
-msgstr ""
+msgstr "Feladattételeket mozgat a munkaidő-kimutatás sorba"
 
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
@@ -854,14 +880,14 @@ msgstr "Nappal"
 #: model:ir.actions.act_window,name:hr_timesheet_sheet.action_timesheet_report_stat_all
 #: model:ir.ui.menu,name:hr_timesheet_sheet.menu_timesheet_report_all
 msgid "Timesheet Sheet Analysis"
-msgstr ""
+msgstr "Munkaidő-kimutatás táblázat elemzése"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,total_difference:0
 #: field:hr_timesheet_sheet.sheet,total_difference_day:0
 #: field:hr_timesheet_sheet.sheet.day,total_difference:0
 msgid "Difference"
-msgstr "Különbség"
+msgstr "Eltérés"
 
 #. module: hr_timesheet_sheet
 #: selection:hr_timesheet_sheet.sheet,state_attendance:0
@@ -877,12 +903,12 @@ msgstr "Február"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Employees"
-msgstr ""
+msgstr "Alkalmazottak"
 
 #. module: hr_timesheet_sheet
 #: model:process.node,note:hr_timesheet_sheet.process_node_timesheet0
 msgid "Information of time spent on a service"
-msgstr ""
+msgstr "Információ a szolgáltatásra fordított időről"
 
 #. module: hr_timesheet_sheet
 #: selection:hr.timesheet.report,month:0
@@ -903,7 +929,7 @@ msgstr "Számlázási ráta"
 #. module: hr_timesheet_sheet
 #: view:hr_timesheet_sheet.sheet:0
 msgid "Approve"
-msgstr "Jóváhagy"
+msgstr "Jóváhagyás"
 
 #. module: hr_timesheet_sheet
 #: field:hr_timesheet_sheet.sheet,account_ids:0
@@ -914,13 +940,13 @@ msgstr "Gyűjtőkódok"
 #: view:timesheet.report:0
 #: field:timesheet.report,to_invoice:0
 msgid "Type of Invoicing"
-msgstr "Számlázás típusa"
+msgstr "Számlázási típus"
 
 #. module: hr_timesheet_sheet
 #: view:timesheet.report:0
 #: field:timesheet.report,total_attendance:0
 msgid "#Total Attendance"
-msgstr ""
+msgstr "Összes jelenlét"
 
 #. module: hr_timesheet_sheet
 #: field:hr.timesheet.report,cost:0
@@ -936,7 +962,7 @@ msgstr "Aktuális dátum"
 #. module: hr_timesheet_sheet
 #: model:process.process,name:hr_timesheet_sheet.process_process_hrtimesheetprocess0
 msgid "Hr Timesheet"
-msgstr ""
+msgstr "Munkaidő-kimutatás"
 
 #. module: hr_timesheet_sheet
 #: view:hr.timesheet.report:0

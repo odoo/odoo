@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-18 00:10+0000\n"
-"Last-Translator: Thorsten Vocks <Unknown>\n"
+"PO-Revision-Date: 2011-01-18 11:32+0000\n"
+"Last-Translator: Ferdinand-chricar <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-18 04:39+0000\n"
+"X-Launchpad-Export-Date: 2011-01-19 04:41+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: mrp
@@ -253,7 +253,7 @@ msgstr "Revision"
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
 msgid "Reporting"
-msgstr "Auswertungen"
+msgstr "Berichtswesen"
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -834,10 +834,11 @@ msgid ""
 "order creates a RFQ for a subcontracting purchase order or waits until the "
 "service is done (= the delivery of the products)."
 msgstr ""
-"In Abhängigkeit von der Einkaufsmethode (Einkaufen bzw. Produzieren) erzeugt "
-"ein Beschaffungsauftrag eine Anfrage für einen Fremdfertigungsauftrag oder "
-"wartet solange bis die beauftragte Dienstleistung in Form von Aufgabe(n) "
-"abgeschlossen ist (=Lieferung des Produkts)."
+"In Abhängigkeit von der Beschaffungsmethode (Einkauf bzw. Fertigung) einer "
+"Dienstleistung erzeugt ein Beschaffungsauftrag entweder eine Angebotsanfrage "
+"an einen externen Dienstleister oder wartet solange bis die beauftragte "
+"Dienstleistung in Form von Aufgabe(n) abgeschlossen ist (=Lieferung des "
+"Produkts)."
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1052,7 +1053,7 @@ msgstr "Verspätet"
 #. module: mrp
 #: model:process.node,name:mrp.process_node_servicemts0
 msgid "Make to stock"
-msgstr "Disponiere vom Lager"
+msgstr "Beschaffe an Lager"
 
 #. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
@@ -1217,7 +1218,7 @@ msgstr ""
 "    Diese OpenERP Anwendung steuert Fertigungsaufträge.\n"
 "\n"
 "     Folgende Funktionalitäten werden angeboten:\n"
-"     * Disposition vom Lager / Disposition vom Auftrag\n"
+"     * Beschaffe an Lager/ Beschaffe von Auftrag \n"
 "     * Multidimensionale Stücklisten ohne Begrenzung der Dimensionen\n"
 "     * Multidimensionaler Fertigungsablauf ohne Begrenzung der Dimensionen\n"
 "     * Integration von Fertigungsabläufen und Fertigungsstellen mit "
@@ -1234,7 +1235,7 @@ msgstr ""
 "Bauteile- oder Phantomstücklisten.\n"
 "\n"
 "     Die Anwendung unterstützt eine vollständige Integration und Planung von "
-"Beständen der Lagerprodukte, Verbrauchsprodukte oder Dienstleistungen. "
+"Beständen der Lagerprodukte, Verbrauchsmaterial oder Dienstleistungen. "
 "Dienstleistungen sind vollständig integriert in andere Anwendungen.\n"
 "\n"
 "     So können Sie zum Beispiel Dienstleistungen in Stücklisten der "
@@ -1244,7 +1245,7 @@ msgstr ""
 "\n"
 "     Folgende Auswertungen werden angeboten:\n"
 "    * Produktstruktur und Produktbestandteile einer Stückliste\n"
-"    * Auslastungsvorschau für Fertigungsstellen\n"
+"    * Auslastungsvorschau von Arbeitsplätzen\n"
 "    * Ausgabe eines Fertigungsauftrags\n"
 "    * Vorschau von Lagerbeständen\n"
 "\n"
@@ -1252,7 +1253,7 @@ msgstr ""
 "      * Arbeitsliste anstehender Fertigungsaufträge\n"
 "      * Arbeitsliste für den Versand / Auslieferung\n"
 "      * Grafische Übersicht der Auslastung\n"
-"      * Fehlerliste der Materialdisposition\n"
+"      * Ausnahmeliste der Beschaffung\n"
 "    "
 
 #. module: mrp
@@ -1454,7 +1455,7 @@ msgstr "Sicherheitstage für jede Tätigkeit im Fertigungsauftrag"
 #: model:process.transition,name:mrp.process_transition_servicemts0
 #: model:process.transition,name:mrp.process_transition_stockmts0
 msgid "Make to Stock"
-msgstr "Disponiere vom Lager"
+msgstr "Beschaffe an Lager"
 
 #. module: mrp
 #: selection:mrp.production.order,month:0
@@ -1760,7 +1761,7 @@ msgstr "Mengeneinheit"
 #: model:process.transition,name:mrp.process_transition_servicemto0
 #: model:process.transition,name:mrp.process_transition_stockproduct0
 msgid "Make to Order"
-msgstr "Disponiere von Auftrag"
+msgstr "Beschaffe von Auftrag"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_mrp_production_order
@@ -2116,7 +2117,7 @@ msgstr ""
 #. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Order"
-msgstr "Disponiere von Auftrag"
+msgstr "Beschaffe von Auftrag"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration

@@ -586,11 +586,11 @@ class account_journal_column(osv.osv):
         'name': fields.char('Column Name', size=64, required=True),
         'field': fields.selection(_col_get, 'Field Name', method=True, required=True, size=32),
         'view_id': fields.many2one('account.journal.view', 'Journal View', select=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column."),
+        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True),
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
     }
-    _order = "sequence"
+    _order = "view_id, sequence"
 
 account_journal_column()
 
@@ -2616,7 +2616,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             chart_template_id = ids[0]
             purchase_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('purchase','all'))], order="sequence")
-            return purchase_tax_ids[0]
+            return purchase_tax_ids and purchase_tax_ids[0] or False
         return False
 
     def _get_sale_tax(self, cr, uid, context=None):
@@ -2625,7 +2625,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             chart_template_id = ids[0]
             sale_tax_ids = self.pool.get('account.tax.template').search(cr, uid, [("chart_template_id"
                                           , "=", chart_template_id), ('type_tax_use', 'in', ('sale','all'))], order="sequence")
-            return sale_tax_ids[0]
+            return sale_tax_ids and sale_tax_ids[0] or False
         return False
 
     def _get_chart(self, cr, uid, context=None):

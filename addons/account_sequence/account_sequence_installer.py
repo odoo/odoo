@@ -45,8 +45,6 @@ class account_sequence_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        jou_obj = self.pool.get('account.journal')
-        obj_sequence = self.pool.get('ir.sequence')
         record = self.browse(cr, uid, ids, context=context)[0]
         j_ids = []
         if record.company_id:
@@ -66,9 +64,11 @@ class account_sequence_installer(osv.osv_memory):
             'padding' : record.padding,
             'company_id': company_id,
         }
-       
+
+        obj_sequence = self.pool.get('ir.sequence')
         ir_seq = obj_sequence.create(cr, uid, vals, context)
         res =  super(account_sequence_installer, self).execute(cr, uid, ids, context=context)
+        jou_obj = self.pool.get('account.journal')
         journal_ids = jou_obj.search(cr, uid, search_criteria, context=context)
         for journal in jou_obj.browse(cr, uid, journal_ids, context=context):
             if not journal.internal_sequence_id:
