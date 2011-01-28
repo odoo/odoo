@@ -109,12 +109,12 @@ class account_analytic_account(osv.osv):
     def _complete_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = self.name_get(cr, uid, ids)
         return dict(res)
-    
+
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
         result = {}
         if context is None:
             context = {}
-        
+
         for account in self.browse(cr, uid, ids, context=context):
             for child in account.child_ids:
                 if child.state == 'template':
@@ -229,6 +229,7 @@ class account_analytic_account(osv.osv):
             return self.name_get(cr, uid, project_ids, context=context)
         account = self.search(cr, uid, [('code', '=', name)]+args, limit=limit, context=context)
         if not account:
+            name = name.split('/ ')[-1]
             account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args, limit=limit, context=context)
             newacc = account
             while newacc:
