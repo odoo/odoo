@@ -33,6 +33,7 @@ import addons
 import pooler
 from tools.config import config
 from mako.template import Template
+from tools.translate import _
 
 
 class l10n_ch_report_webkit_html(report_sxw.rml_parse):
@@ -60,12 +61,12 @@ class l10n_ch_report_webkit_html(report_sxw.rml_parse):
 
     def police_absolute_path(self, inner_path) :
         """Will get the ocrb police absolute path"""
-        path = addons.get_module_resource('l10n_ch/report/'+inner_path)
+        path = addons.get_module_resource(os.path.join('l10n_ch','report',inner_path))
         return  path
         
     def bvr_absolute_path(self) :
         """Will get the ocrb police absolute path"""
-        path = addons.get_module_resource('l10n_ch/report/bvr1.jpg')
+        path = addons.get_module_resource(os.path.join('l10n_ch','report','bvr1.jpg'))
         return  path
         
     def headheight(self):
@@ -113,18 +114,18 @@ class l10n_ch_report_webkit_html(report_sxw.rml_parse):
         ids = [x.id for x in invoices]
         for invoice in invoice_obj.browse(cursor, self.uid, ids):
             if not invoice.partner_bank_id:
-                raise wizard.except_wizard('UserError',
-                        'No bank specified on invoice:\n' + \
+                raise wizard.except_wizard(_('UserError'),
+                        _('No bank specified on invoice:\n' + \
                                 invoice_obj.name_get(cursor, self.uid, [invoice.id],
-                                    context={})[0][1])
+                                    context={})[0][1]))
             if not self._compile_check_bvr.match(
                     invoice.partner_bank_id.bvr_number or ''):
-                raise wizard.except_wizard('UserError',
-                        "Your bank BVR number should be of the form 0X-XXX-X! " +
+                raise wizard.except_wizard(_('UserError'),
+                        _("Your bank BVR number should be of the form 0X-XXX-X! " +
                                 'Please check your company ' +
                                 'information for the invoice:\n' + 
                                 invoice_obj.name_get(cursor, self.uid, [invoice.id],
-                                    context={})[0][1])
+                                    context={})[0][1]))
             if invoice.partner_bank_id.bvr_adherent_num \
                     and not self._compile_check_bvr_add_num.match(
                             invoice.partner_bank_id.bvr_adherent_num):
@@ -198,7 +199,7 @@ class BVRWebKitParser(webkit_report.WebKitParser):
         #default_filters=['unicode', 'entity'] can be used to set global filter
         body_mako_tpl = Template(parse_template ,input_encoding='utf-8')
         #BVR specific
-        bvr_path = addons.get_module_resource('l10n_ch/report/bvr.mako')
+        bvr_path = addons.get_module_resource(os.path.join('l10n_ch','report','bvr.mako'))
         body_bvr_tpl = Template(file(bvr_path).read(), input_encoding='utf-8')
 
         helper = report_helper.WebKitHelper(cursor, uid, report_xml.id, context)

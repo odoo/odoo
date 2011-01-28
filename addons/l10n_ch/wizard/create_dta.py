@@ -554,7 +554,7 @@ def _create_dta(obj, cr, uid, data, context=None):
         dta = dta + record_gt890(v).generate()
 
     dta_data = base64.encodestring(dta)
-    payment_obj.set_done(cr, uid, data['id'], context)
+    payment_obj.set_done(cr, uid, [data['id']], context)
     attachment_obj.create(cr, uid, {
         'name': 'DTA',
         'datas': dta_data,

@@ -60,7 +60,7 @@ class AccountMoveLine(osv.osv):
 
     _inherit = 'account.move.line'
 
-    def line2bank(self, cr, uid, ids, payment_type='manual', context=None):
+    def __line2bank(self, cr, uid, ids, payment_type='manual', context=None):
         """add a link to account.move.line in order to link
         supplier invoice line and bank. The original link
         was defined in account_payment"""
