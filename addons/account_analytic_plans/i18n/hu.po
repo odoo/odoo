@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-18 00:49+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
+"PO-Revision-Date: 2011-01-25 10:56+0000\n"
+"Last-Translator: Csaba TOTH <csaba.toth@i3rendszerhaz.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-19 04:45+0000\n"
+"X-Launchpad-Export-Date: 2011-01-26 04:39+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_plans
@@ -98,12 +98,12 @@ msgstr "Modellterv"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
-msgstr "Számla2 azonosító"
+msgstr "2.gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
 msgid "Account Id"
-msgstr "Számla azonosító"
+msgstr "Gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -118,12 +118,12 @@ msgstr "Kód"
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Rossz tartozik vagy követel összeg a könyvelési tételben"
+msgstr "Hibás tartozik vagy követel összeg szerepel a könyvelési tételben!"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
 msgid "Account6 Id"
-msgstr "Számla6 azonosító"
+msgstr "6.gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
@@ -143,7 +143,7 @@ msgstr "Gyűjtőkód"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "A napló kódjának egyedinek kell lenni!"
+msgstr "A napló kódjának egyedinek kell lennie!"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,ref:0
@@ -166,12 +166,12 @@ msgstr "Megrendelési tétel"
 #: view:analytic.plan.create.model:0
 #, python-format
 msgid "Distribution Model Saved"
-msgstr "Felosztási modell lementve"
+msgstr "Lementett felosztási modell"
 
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
 msgid "Analytic Distribution's Models"
-msgstr "Költségfelosztási modell"
+msgstr "Felosztási modell"
 
 #. module: account_analytic_plans
 #: view:account.crossovered.analytic:0
@@ -193,7 +193,7 @@ msgstr "Egy ugyanilyen nevű és kódú modell már létezik!"
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "No analytic plan defined !"
-msgstr "Nincs analitikus terv meghatározva!"
+msgstr "Nem határoztak meg analitikus tervet!"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -258,7 +258,7 @@ msgstr "Vállalat"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
-msgstr "Számla5 azonosító"
+msgstr "5.gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -268,7 +268,7 @@ msgstr ""
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
-msgstr "Gyökér analitikus számla"
+msgstr "Gyökér gyűjtőkód"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -280,7 +280,7 @@ msgstr "Záró dátum"
 #: code:addons/account_analytic_plans/account_analytic_plans.py:462
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "Meg kell határoznia egy '%s' típusú gyűjtő naplót!"
+msgstr "A(z) '%s' naplóhoz meg kell határoznia egy gyűjtő naplót!"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -334,6 +334,41 @@ msgid ""
 "of distribution models.\n"
 "        "
 msgstr ""
+"Ez a modul lehetővé teszi több analitikus terv használatát a főkönyvi "
+"könyvelés\n"
+"során, hogy több gyűjtőkód tétel készüljön, amikor a számlák vagy a tételek\n"
+"könyvelésre kerülnek. \n"
+"\n"
+"Például meghatározhatja a következő gyűjtőkód struktúrát:\n"
+"  Projektek\n"
+"      1. projekt\n"
+"          1.1 alprojekt\n"
+"          1.2 alprojekt\n"
+"      2. projekt\n"
+"  Üzletkötő\n"
+"      Erik\n"
+"      Fábián\n"
+"\n"
+"Itt két tervünk van: a Projektek és az Üzletkötő. Egy számlasornak képesnek "
+"kell\n"
+"lennie gyűjtőkód tételeket írni mindkét tervbe: pl. az 1.1 alprojektbe és a "
+"Fábiánba.\n"
+"A számlasor összegét tehát szét kell osztani. Az alábbi példában legyen egy\n"
+"számla, amely két alprojektet érint és egy üzletkötőhöz van rendelve:\n"
+"\n"
+"1. terv:\n"
+"    1.1 alprojekt: 50%\n"
+"    1.2 alprojekt: 50%\n"
+"2. terv:\n"
+"    Erik: 100%\n"
+"\n"
+"Így amikor a számla ezen sora jóváhagyásra kerül, a rendszer 3 gyűjtőkód "
+"tételt\n"
+"fog előállítani egy könyvelési tételre.\n"
+"Az analitikus terv meghatározza a minimális és maximális százalékot a "
+"felosztási\n"
+"modellek létrehozásának időpontjában.\n"
+"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -358,23 +393,22 @@ msgstr "Könyvelési tételsorok"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
 msgid "Account1 Id"
-msgstr "Számla1 azonosító"
+msgstr "1.gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be same for its related account and period."
-msgstr ""
-"A vállalatnak ugyanannak kell lenni a kapcsolt számlára és időszakra."
+msgstr "A kapcsolt számla és az időszak vállalatának ugyanannak kell lennie."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
 msgid "Minimum Allowed (%)"
-msgstr "Minimálisan engedélyezett (%)"
+msgstr "Min. engedélyezett (%)"
 
 #. module: account_analytic_plans
 #: help:account.analytic.plan.line,root_analytic_id:0
 msgid "Root account of this plan."
-msgstr "A terv gyökérszámlája."
+msgstr "A terv gyökér gyűjtőkódja."
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:201
@@ -398,7 +432,7 @@ msgstr "Mennyiség"
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #, python-format
 msgid "Please put a name and a code before saving the model !"
-msgstr "Kérem, adja meg a nevet és a kódot mielőtt menti a modellt!"
+msgstr "Kérem, a modell mentése előtt adja meg a nevet és a kódot!"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
@@ -420,7 +454,7 @@ msgstr "Bankkivonat"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
-msgstr "Számla3 azonosító"
+msgstr "3.gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -431,17 +465,17 @@ msgstr "Számla"
 #: view:account.crossovered.analytic:0
 #: view:analytic.plan.create.model:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégse"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
-msgstr "Számla4 azonosító"
+msgstr "4.gyűjtőkód azonosító"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
-msgstr "Költségfelosztás sorok"
+msgstr "Felosztás sorok"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:214
@@ -452,22 +486,22 @@ msgstr "A végösszegnek %s és %s között kellene lennie!"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "at"
-msgstr ""
+msgstr "_"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Account Name"
-msgstr "Számla megnevezése"
+msgstr "Gyűjtőkód megnevezése"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
-msgstr "Költségfelosztás sor"
+msgstr "Felosztás sor"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,code:0
 msgid "Distribution Code"
-msgstr "Költségfelosztás kód"
+msgstr "Felosztás kód"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -488,7 +522,7 @@ msgstr "100.00%"
 #: field:account.move.line,analytics_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr "Költségfelosztás"
+msgstr "Felosztás"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_journal
@@ -518,7 +552,7 @@ msgstr "Sorszám"
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "A napló névnek egyedinek kell lenni!"
+msgstr "A napló névnek egyedinek kell lennie!"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:214

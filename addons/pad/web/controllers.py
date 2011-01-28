@@ -30,5 +30,6 @@ class Piratepad(openerp.controllers.SecuredController):
         attachment_id = rpc.RPCProxy('ir.attachment').create({
             'name': pad_name,
             'url': pad_link,
+            'type': 'url'
             }, ctx)
         return {'id': attachment_id, 'name': pad_name, 'url': pad_link}
