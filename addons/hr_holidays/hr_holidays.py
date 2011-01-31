@@ -111,7 +111,7 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name': fields.char('Description', required=True, size=64),
-        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'), 
+        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')],
             'State', readonly=True, help='When the holiday request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Approval\'.\
             If the admin accepts it, the state is \'Approved\'. If it is refused, the state is \'Refused\'.'),
@@ -290,7 +290,7 @@ class hr_holidays(osv.osv):
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
             if record.case_id:
-                obj_crm_meeting.unlink(cr, uid, [record.case_id])
+                obj_crm_meeting.unlink(cr, uid, [int(record.case_id)])
 
             # If a category that created several holidays, cancel all related
             wf_service = netsvc.LocalService("workflow")
