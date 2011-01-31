@@ -573,6 +573,7 @@ class mrp_production(osv.osv):
         """
         results = []
         bom_obj = self.pool.get('mrp.bom')
+        uom_obj = self.pool.get('product.uom')
         prod_line_obj = self.pool.get('mrp.production.product.line')
         workcenter_line_obj = self.pool.get('mrp.production.workcenter.line')
         for production in self.browse(cr, uid, ids):
@@ -590,7 +591,7 @@ class mrp_production(osv.osv):
             if not bom_id:
                 raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
 
-            factor = production.product_qty * production.product_uom.factor_inv / bom_point.product_uom.factor
+            factor = uom_obj._compute_qty(cr, uid, production.product_uom.id, production.product_qty, bom_point.product_uom.id)
             res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
             results = res[0]
             results2 = res[1]
