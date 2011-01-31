@@ -24,6 +24,7 @@ import time
 import netsvc
 from osv import fields, osv
 from tools.translate import _
+import decimal_precision as dp
 
 def _employee_get(obj, cr, uid, context=None):
     if context is None:
@@ -225,8 +226,8 @@ class hr_expense_line(osv.osv):
         'name': fields.char('Expense Note', size=128, required=True),
         'date_value': fields.date('Date', required=True),
         'expense_id': fields.many2one('hr.expense.expense', 'Expense', ondelete='cascade', select=True),
-        'total_amount': fields.function(_amount, method=True, string='Total'),
-        'unit_amount': fields.float('Unit Price'),
+        'total_amount': fields.function(_amount, method=True, string='Total', digits_compute=dp.get_precision('Account')),
+        'unit_amount': fields.float('Unit Price', digits_compute=dp.get_precision('Account')),
         'unit_quantity': fields.float('Quantities' ),
         'product_id': fields.many2one('product.product', 'Product', domain=[('hr_expense_ok','=',True)]),
         'uom_id': fields.many2one('product.uom', 'UoM' ),
