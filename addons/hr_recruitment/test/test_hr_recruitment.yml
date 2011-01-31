@@ -84,8 +84,8 @@
   !record {model: crm.meeting, id: crm_meeting_fresher0}:
     alarm_id: base_calendar.alarm1
     count: 0.0
-    date: !eval "'%s-%s-%s 00:00:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
-    date_deadline: !eval "'%s-%s-%s 08:00:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
+    date: !eval "'%s-%s-%s 00:00:00' %(datetime.now().year, (datetime.now()+timedelta(1)).month, (datetime.now()+timedelta(1)).day)"
+    date_deadline: !eval "'%s-%s-%s 08:00:00' %(datetime.now().year, (datetime.now()+timedelta(1)).month, (datetime.now()+timedelta(1)).day)"
     day: 0.0
     duration: 8.0
     name: Fresher
