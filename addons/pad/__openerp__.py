@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Enhanced support for (Ether)Pad attachments',
-    'version': '1.0',
+    'version': '1.0.1',
     'category': 'Generic Modules/Others',
     'description': """
 Adds enhanced support for (Ether)Pad attachments in the web client, lets the
