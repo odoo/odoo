@@ -1389,7 +1389,6 @@ function getPartnerList(){
     xmlRpcClient.asyncCall(listPartnerHandler,cmdPartnerList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
 
-
 //function to create the xmlrpc supported variables for xmlrpc request
 function dictcontact(a,b){
     var temp = xmlRpcClient.createType(xmlRpcClient.ARRAY,{});
