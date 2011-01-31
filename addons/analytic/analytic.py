@@ -230,7 +230,7 @@ class account_analytic_account(osv.osv):
         account = self.search(cr, uid, [('code', '=', name)]+args, limit=limit, context=context)
         if not account:
             if context.get('analytic_act_window', False):
-                account = self.search(cr, uid, [('id', '=', context.get('active_id'))]+args, limit=limit, context=context)
+                account = self.search(cr, uid, [('id', '=', context['active_id'])]+args, limit=limit, context=context)
             else:
                 account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args, limit=limit, context=context)
             newacc = account
