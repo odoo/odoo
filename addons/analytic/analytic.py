@@ -229,9 +229,8 @@ class account_analytic_account(osv.osv):
             return self.name_get(cr, uid, project_ids, context=context)
         account = self.search(cr, uid, [('code', '=', name)]+args, limit=limit, context=context)
         if not account:
-            if context.get('act_window', False):
-                active_id = context.get('active_id')
-                account = self.search(cr, uid, [('id', '=', active_id)]+args, limit=limit, context=context)
+            if context.get('analytic_act_window', False):
+                account = self.search(cr, uid, [('id', '=', context.get('active_id'))]+args, limit=limit, context=context)
             else:
                 account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args, limit=limit, context=context)
             newacc = account
