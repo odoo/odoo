@@ -93,7 +93,7 @@
     journal_id: account_journal_cash0
     line_ids:
         - name: statement
-          date: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+5,datetime.now().day)"
+          date: !eval "(datetime.now() + timedelta(5*31)).strftime('%Y-%m-%d')" 
           type: customer
           account_id: account_pos_account_sales
           amount: 100
