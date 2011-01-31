@@ -7,25 +7,25 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-13 23:52+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
+"PO-Revision-Date: 2011-01-25 10:50+0000\n"
+"Last-Translator: Csaba TOTH <csaba.toth@i3rendszerhaz.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:34+0000\n"
+"X-Launchpad-Export-Date: 2011-01-26 04:39+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 #: view:report_timesheet.user:0
 msgid "Timesheet by user"
-msgstr "Munkaidő-kimutatás felhasználók szerint"
+msgstr "Felhasználó szerinti munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
 msgid "Type of invoicing"
-msgstr "Számlázás típusa"
+msgstr "Számlázási típus"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -36,12 +36,12 @@ msgstr "Nyereség"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:68
 #, python-format
 msgid "Analytic account incomplete"
-msgstr "Befejezetlen gyűjtőkód"
+msgstr "Nem adott meg gyűjtőkódot!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create_final
 msgid "Create invoice from timesheet final"
-msgstr ""
+msgstr "Végszámla készítése munkaidő-kimutatásból"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -66,7 +66,7 @@ msgstr "Számlázandó"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_user
 msgid "Timesheet per day"
-msgstr "Munkaidő-kimutatás/nap"
+msgstr "Naponkénti munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -88,8 +88,8 @@ msgid ""
 "The product to invoice is defined on the employee form, the price will be "
 "deduced by this pricelist on the product."
 msgstr ""
-"A kiszámlázandó termék a dolgozó törzsben került meghatározásra, az ár a "
-"termékhez tartozó árlistából lesz kiszedve."
+"A kiszámlázandó termék az alkalmazott törzsben került meghatározásra, az "
+"árat a termékhez tartozó árlistából veszi a rendszer."
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_factor
@@ -129,7 +129,7 @@ msgstr "ME"
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Account"
-msgstr "Számla"
+msgstr "Gyűjtőkód"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,time:0
@@ -145,7 +145,7 @@ msgstr "Kiszámlázott összeg"
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Uninvoiced line with billing rate"
-msgstr ""
+msgstr "Nem számlázott sor számlázási rátával"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,account_id:0
@@ -165,7 +165,7 @@ msgstr "Összeg"
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Reactivate Account"
-msgstr ""
+msgstr "Gyűjtőkód újraaktíválása"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create,name:0
@@ -175,7 +175,7 @@ msgstr "Minden elvégzett munka részletezése megjelenik a számlában"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_invoice_create
 msgid "Create invoice from timesheet"
-msgstr ""
+msgstr "Számla készítése munkaidő-kimutatásból"
 
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
@@ -201,13 +201,13 @@ msgstr "Csoportosítás..."
 #: view:hr.timesheet.invoice.create:0
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Create Invoices"
-msgstr "Számlák létrehozása"
+msgstr "Számlák készítése"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account_date
 #: view:report_timesheet.account.date:0
 msgid "Daily timesheet per account"
-msgstr "Számlánkénti napi munkaidő-kimutatás"
+msgstr "Gyűjtőkódonkénti napi munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create.final:0
@@ -218,7 +218,7 @@ msgstr "Gyűjtőkód végszámlája"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:76
 #, python-format
 msgid "Analytic Account incomplete"
-msgstr "Befejezetlen gyűjtőkód"
+msgstr "Nem adott meg gyűjtőkódot!"
 
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_account_analytic_account
@@ -236,12 +236,12 @@ msgstr "Határidő"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_my_account
 msgid "Accounts to invoice"
-msgstr "Számlázandó tételek"
+msgstr "Számlázandó gyűjtőkódok"
 
 #. module: hr_timesheet_invoice
 #: field:report.analytic.account.close,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: hr_timesheet_invoice
 #: constraint:account.analytic.account:0
@@ -266,7 +266,7 @@ msgstr "Munkaidő-kimutatások"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_cost_ledger
 msgid "hr.timesheet.analytic.cost.ledger"
-msgstr ""
+msgstr "hr.timesheet.analytic.cost.ledger"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_create_final
@@ -300,7 +300,7 @@ msgstr "Állapot"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Az adatok nem megfelelőek!"
 
 #. module: hr_timesheet_invoice
 #: report:hr.timesheet.invoice.account.analytic.account.cost_ledger:0
@@ -334,7 +334,7 @@ msgstr "Név"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice
 msgid "Lines to Invoice"
-msgstr "Számla sorai"
+msgstr "Kiszámlázandó sorok"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/hr_timesheet_invoice.py:118
@@ -345,7 +345,7 @@ msgstr "Hiba !"
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor3
 msgid "Gratis"
-msgstr ""
+msgstr "Ingyen"
 
 #. module: hr_timesheet_invoice
 #: model:ir.module.module,description:hr_timesheet_invoice.module_meta_information
@@ -357,6 +357,11 @@ msgid ""
 "revenue\n"
 "reports, eso."
 msgstr ""
+"\n"
+"Költségeken alapuló számlák készítésére szolgáló modul.\n"
+"Ön a modul segítségével árlistákat állíthat be a gyűjtőkódokhoz, elméleti "
+"bevétel\n"
+"kimutatásokat készíthet, stb."
 
 #. module: hr_timesheet_invoice
 #: help:account.analytic.account,to_invoice:0
@@ -366,7 +371,7 @@ msgid ""
 "an automatic invoice rate on analytic accounts."
 msgstr ""
 "Jelölje be ezt a mezőt, ha a gyűjtőkódok költségei alapján automatikusan "
-"akar számlákat generálni. A gyűjtőkódokra beállíthat egy automatikus "
+"akar számlákat készíteni. A gyűjtőkódokra beállíthat egy automatikus "
 "számlázási rátát."
 
 #. module: hr_timesheet_invoice
@@ -375,13 +380,13 @@ msgstr ""
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.report_analytical_profit
 #: model:ir.ui.menu,name:hr_timesheet_invoice.menu_hr_timesheet_analytic_profit
 msgid "Timesheet Profit"
-msgstr ""
+msgstr "Munkaidő-kimutatás eredménylevezetése"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:80
 #, python-format
 msgid "Partner incomplete"
-msgstr ""
+msgstr "Nem adott meg partnert!"
 
 #. module: hr_timesheet_invoice
 #: help:hr.timesheet.invoice.create.final,name:0
@@ -433,12 +438,12 @@ msgstr "Kiszámlázandó gyűjtőkód tételek kimutatása"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_user_stat_all
 msgid "Timesheet by User"
-msgstr "Munkaidő-kimutatás felhasználók szerint"
+msgstr "Felhasználó szerinti munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_invoice_stat_all
 msgid "Timesheet by Invoice"
-msgstr ""
+msgstr "Számla szerinti munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_analytic_account_tree
@@ -459,7 +464,7 @@ msgstr "Igen (100%)"
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Employee or Journal Name"
-msgstr "Munkavállaló vagy napló neve"
+msgstr "Alkalmazott vagy napló neve"
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:189
@@ -474,7 +479,7 @@ msgstr "Számlák"
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "December"
-msgstr ""
+msgstr "December"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,month:0
@@ -514,7 +519,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
 msgid "Non Assigned timesheets to users"
-msgstr ""
+msgstr "Felhasználóhoz nem hozzárendelt munkaidő-kimutatások"
 
 #. module: hr_timesheet_invoice
 #: field:report.timesheet.line,invoice_id:0
@@ -539,12 +544,12 @@ msgstr "Felhasználói számlázási ráta"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account:0
 msgid "Timesheet by account"
-msgstr "Számlák szerinti munkaidő-kimutatás"
+msgstr "Gyűjtőkód szerinti munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_from:0
 msgid "From"
-msgstr ""
+msgstr "Kezdő dátum"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
@@ -580,12 +585,12 @@ msgstr "Augusztus"
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_hr_timesheet_invoice_cost_ledger
 #: model:ir.actions.report.xml,name:hr_timesheet_invoice.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
-msgstr "Analitikus számla karton"
+msgstr "Gyűjtőkód karton"
 
 #. module: hr_timesheet_invoice
 #: model:hr_timesheet_invoice.factor,name:hr_timesheet_invoice.timesheet_invoice_factor2
 msgid "50%"
-msgstr ""
+msgstr "50%"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -605,12 +610,12 @@ msgstr "Az elvégzett munka dátumának megjelenítése"
 #: model:ir.model,name:hr_timesheet_invoice.model_report_timesheet_account
 #: view:report_timesheet.account:0
 msgid "Timesheet per account"
-msgstr "Számlánkénti munkaidő-kimutatás"
+msgstr "Gyűjtőkódonkénti munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_stat_all
 msgid "Timesheet by Account"
-msgstr "Számlánkénti munkaidő-kimutatás"
+msgstr "Gyűjtőkód szerinti munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,date:0
@@ -623,7 +628,7 @@ msgstr "Dátum"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:81
 #, python-format
 msgid "Please fill in the Address field in the Partner: %s."
-msgstr ""
+msgstr "Kérem, töltse ki a cím mezőt a %s partner törzsben!"
 
 #. module: hr_timesheet_invoice
 #: selection:report.account.analytic.line.to.invoice,month:0
@@ -632,7 +637,7 @@ msgstr ""
 #: selection:report_timesheet.account.date,month:0
 #: selection:report_timesheet.user,month:0
 msgid "November"
-msgstr ""
+msgstr "November"
 
 #. module: hr_timesheet_invoice
 #: view:report.timesheet.line:0
@@ -647,7 +652,7 @@ msgstr "Számlázandó"
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "Eff."
-msgstr ""
+msgstr "Hat."
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -686,6 +691,9 @@ msgid ""
 "Please fill in the partner and pricelist field in the analytic account:\n"
 "%s"
 msgstr ""
+"Kérem, töltse ki a partner és az árlista mezőt az alábbi gyűjtőkód "
+"törzsben:\n"
+"%s"
 
 #. module: hr_timesheet_invoice
 #: constraint:account.analytic.account:0
@@ -693,6 +701,7 @@ msgid ""
 "Error! The currency has to be the same as the currency of the selected "
 "company"
 msgstr ""
+"Hiba! A pénznemnek meg kell egyeznie a kiválasztott vállalat pénznemével."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
@@ -735,7 +744,7 @@ msgstr "Főkönyvi számla"
 #. module: hr_timesheet_invoice
 #: model:ir.model,name:hr_timesheet_invoice.model_hr_timesheet_analytic_profit
 msgid "Print Timesheet Profit"
-msgstr ""
+msgstr "Munkaidő-kimutatás eredménylevezetésének nyomtatása"
 
 #. module: hr_timesheet_invoice
 #: field:account.analytic.account,to_invoice:0
@@ -750,7 +759,7 @@ msgstr "Összesen:"
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.profit,date_to:0
 msgid "To"
-msgstr ""
+msgstr "Záró dátum"
 
 #. module: hr_timesheet_invoice
 #: view:hr.timesheet.invoice.create:0
@@ -790,12 +799,12 @@ msgstr "Számla"
 #: view:hr.timesheet.invoice.create:0
 #: view:hr.timesheet.invoice.create.final:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégse"
 
 #. module: hr_timesheet_invoice
 #: view:account.analytic.account:0
 msgid "Close"
-msgstr ""
+msgstr "Zárás"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,help:hr_timesheet_invoice.action_hr_timesheet_invoice_factor_form
@@ -805,6 +814,11 @@ msgid ""
 "a customer. From this menu, you can create additional types of invoicing to "
 "speed up your invoicing."
 msgstr ""
+"A rendszer lehetővé teszi alapértelmezett számlázási típusok meghatározását. "
+"Előfordulhat, hogy a vevőkkel kötött szerződések vagy megállapodások alapján "
+"rendszeresen kell engedményt tartalmazó számlákat készíteni. Ebből a "
+"menüpontból Ön további alapértelmezett számlázási típusokat hozhat létre, "
+"amelyek felgyorsítják a számlázást."
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_line_stat_all
@@ -833,6 +847,9 @@ msgid ""
 "Analytic Account:\n"
 "%s"
 msgstr ""
+"Kérem, töltse ki a partner vagy vevő és az eladási árlista mezőt az alábbi "
+"gyűjtőkód törzsben:\n"
+"%s"
 
 #. module: hr_timesheet_invoice
 #: help:hr_timesheet_invoice.factor,customer_name:0
@@ -868,12 +885,12 @@ msgstr "Minden elvégzett munka dátuma megjelenik a számlában"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_invoice_create.py:120
 #, python-format
 msgid "At least one line has no product !"
-msgstr ""
+msgstr "Legalább egy sor nem tartalmaz terméket!"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
 msgid "Timesheets to invoice"
-msgstr ""
+msgstr "Kiszámlázandó munkaidő-kimutatások"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.analytic.cost.ledger,date1:0
@@ -883,7 +900,7 @@ msgstr "Időszak kezdete"
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.action_timesheet_account_date_stat_all
 msgid "Daily Timesheet by Account"
-msgstr "Számlák szerinti napi munkaidő-kimutatás"
+msgstr "Gyűjtőkód szerinti napi munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,product:0
@@ -901,7 +918,7 @@ msgstr ""
 #. module: hr_timesheet_invoice
 #: report:account.analytic.profit:0
 msgid "%"
-msgstr ""
+msgstr "%"
 
 #. module: hr_timesheet_invoice
 #: field:hr_timesheet_invoice.factor,name:0
@@ -933,17 +950,19 @@ msgid ""
 "This list shows you every task you can invoice to the customer. Select the "
 "lines and click the Action button to generate the invoices automatically."
 msgstr ""
+"Ez a lista a vevőknek kiszámlázható összes feladatot mutatja. Az automatikus "
+"számlakészítéshez válassza ki a sorokat és nyomja meg a művelet gombot."
 
 #. module: hr_timesheet_invoice
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_analytic_profit.py:58
 #, python-format
 msgid "No Records Found for Report!"
-msgstr ""
+msgstr "Nincs megjeleníthető tétel!"
 
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.invoice:0
 msgid "Timesheet by invoice"
-msgstr ""
+msgstr "Számla szerinti munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:0
@@ -981,7 +1000,7 @@ msgstr "Számla gyűjtőkód tételek alapján"
 #. module: hr_timesheet_invoice
 #: view:report_timesheet.account.date:0
 msgid "Daily timesheet by account"
-msgstr "Számlák szerinti napi munkaidő-kimutatás"
+msgstr "Gyűjtőkód szerinti napi munkaidő-kimutatás"
 
 #. module: hr_timesheet_invoice
 #: field:report.account.analytic.line.to.invoice,sale_price:0
@@ -1020,12 +1039,12 @@ msgstr "Engedmény százalékban megadva"
 #. module: hr_timesheet_invoice
 #: view:hr_timesheet_invoice.factor:0
 msgid "Types of invoicing"
-msgstr ""
+msgstr "Számlázási típusok"
 
 #. module: hr_timesheet_invoice
 #: model:ir.actions.act_window,name:hr_timesheet_invoice.act_res_users_2_report_timehsheet_account
 msgid "Timesheets per account"
-msgstr "Munkaidő-kimutatások számlánként"
+msgstr "Gyűjtőkódonkénti munkaidő-kimutatások"
 
 #. module: hr_timesheet_invoice
 #: field:hr.timesheet.invoice.create,name:0
@@ -1041,7 +1060,7 @@ msgstr "Egységek"
 #. module: hr_timesheet_invoice
 #: field:account.analytic.line,to_invoice:0
 msgid "Type of Invoicing"
-msgstr "Számlázás típusa"
+msgstr "Számlázási típus"
 
 #. module: hr_timesheet_invoice
 #: view:report.account.analytic.line.to.invoice:0
@@ -1052,7 +1071,7 @@ msgstr "Kiszámlázandó gyűjtőkód tételek"
 #: code:addons/hr_timesheet_invoice/wizard/hr_timesheet_final_invoice_create.py:147
 #, python-format
 msgid "Please fill a Balance product in the wizard"
-msgstr ""
+msgstr "Kérem, adjon meg egy maradványterméket a varázslóban!"
 
 #. module: hr_timesheet_invoice
 #: field:report_timesheet.invoice,manager_id:0

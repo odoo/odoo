@@ -568,6 +568,7 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        super(account_installer, self).execute(cr, uid, ids, context=context)
         fy_obj = self.pool.get('account.fiscalyear')
         mod_obj = self.pool.get('ir.model.data')
         obj_acc = self.pool.get('account.account')
@@ -576,7 +577,6 @@ class account_installer(osv.osv_memory):
         obj_tax = self.pool.get('account.tax')
         obj_product = self.pool.get('product.product')
         ir_values = self.pool.get('ir.values')
-        super(account_installer, self).execute(cr, uid, ids, context=context)
         record = self.browse(cr, uid, ids, context=context)[0]
         company_id = record.company_id
         for res in self.read(cr, uid, ids, context=context):
