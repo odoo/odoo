@@ -301,8 +301,8 @@ class account_account(osv.osv):
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
                     for child in current.child_id:
-                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
-                            if sums.get(child.id, False):
+                        if sums.get(child.id, False):
+                            if child.company_id.currency_id.id == current.company_id.currency_id.id:
                                 sums[current.id][fn] += sums[child.id][fn]
                             else:
                                 sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
