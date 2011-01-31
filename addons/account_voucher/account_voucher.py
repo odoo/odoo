@@ -142,50 +142,31 @@ class account_voucher(osv.osv):
             res['arch'] = etree.tostring(doc)
         return res
 
-    def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount, context=None):
-        if context is None:
-            context = {}
+    def _compute_writeoff_amount(self, cr, uid, line_dr_ids, line_cr_ids, amount):
         debit = credit = 0.0
-        if context.get('based_on', 'amount') == 'amount_unreconciled':
-            for l in line_dr_ids:
-                debit += l['amount_unreconciled']
-            for l in line_cr_ids:
-                credit += l['amount_unreconciled']
-        else:
-            for l in line_dr_ids:
-                debit += l['amount']
-            for l in line_cr_ids:
-                credit += l['amount']
+        for l in line_dr_ids:
+            debit += l['amount']
+        for l in line_cr_ids:
+            credit += l['amount']
         return abs(amount - abs(credit - debit))
 
-    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount, context=None):
-        if not context:
-            context = {}
-        context.update({'based_on': context.get('based_on', False)})
+    def onchange_line_ids(self, cr, uid, ids, line_dr_ids, line_cr_ids, amount):
         if not line_dr_ids and not line_cr_ids:
             return {'value':{}}
         line_dr_ids = [x[2] for x in line_dr_ids]
         line_cr_ids = [x[2] for x in line_cr_ids]
-        return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount, context=context)}, 'context': context}
+        return {'value': {'writeoff_amount': self._compute_writeoff_amount(cr, uid, line_dr_ids, line_cr_ids, amount)}}
 
     def _get_writeoff_amount(self, cr, uid, ids, name, args, context=None):
         if not ids: return {}
         res = {}
         debit = credit = 0.0
-        if context.get('based_on', 'amount') == 'amount_unreconciled':
-            for voucher in self.browse(cr, uid, ids, context=context):
-                for l in voucher.line_dr_ids:
-                    debit += l.amount_unreconciled
-                for l in voucher.line_cr_ids:
-                    credit += l.amount_unreconciled
-                res[voucher.id] =  abs(voucher.amount - abs(credit - debit))
-        else:
-            for voucher in self.browse(cr, uid, ids, context=context):
-                for l in voucher.line_dr_ids:
-                    debit += l.amount
-                for l in voucher.line_cr_ids:
-                    credit += l.amount
-                res[voucher.id] =  abs(voucher.amount - abs(credit - debit))
+        for voucher in self.browse(cr, uid, ids, context=context):
+            for l in voucher.line_dr_ids:
+                debit += l.amount
+            for l in voucher.line_cr_ids:
+                credit += l.amount
+            res[voucher.id] =  abs(voucher.amount - abs(credit - debit))
         return res
 
     _name = 'account.voucher'
@@ -536,10 +517,7 @@ class account_voucher(osv.osv):
                 default['value']['pre_line'] = 1
             elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1
-            ctx = context.copy()
-            ctx.update({'based_on': 'amount_unreconciled'})
-            default['value']['writeoff_amount'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price, context=ctx)
-            default['context'] = ctx
+            default['value']['writeoff_amount'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price)
         return default
 
     def onchange_date(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=None):
@@ -722,16 +700,13 @@ class account_voucher(osv.osv):
 
             for line in inv.line_ids:
                 #create one move line per voucher line where amount is not 0.0
-                if not line.amount and not inv.payment_option == 'with_writeoff':
+                if not line.amount:
                     continue
                 #we check if the voucher line is fully paid or not and create a move line to balance the payment and initial invoice if needed
                 if line.amount == line.amount_unreconciled:
                     amount = line.move_line_id.amount_residual #residual amount in company currency
                 else:
-                    if inv.payment_option == 'with_writeoff':
-                        amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.amount_unreconciled or line.amount, context=context_multi_currency)
-                    else:
-                        amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context_multi_currency)
+                    amount = currency_pool.compute(cr, uid, current_currency, company_currency, line.untax_amount or line.amount, context=context_multi_currency)
                 move_line = {
                     'journal_id': inv.journal_id.id,
                     'period_id': inv.period_id.id,

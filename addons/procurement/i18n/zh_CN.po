@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2010-12-15 23:53+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2011-01-28 09:25+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-15 05:54+0000\n"
+"X-Launchpad-Export-Date: 2011-01-29 04:56+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: procurement
@@ -43,7 +43,7 @@ msgstr "触发所有虚拟库存为小于0的自动采购。建议您不要使�
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Group By..."
-msgstr ""
+msgstr "分组..."
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -122,7 +122,7 @@ msgstr "备注"
 #. module: procurement
 #: selection:procurement.order,procure_method:0
 msgid "on order"
-msgstr ""
+msgstr "来自订单"
 
 #. module: procurement
 #: help:procurement.order,message:0
@@ -152,7 +152,7 @@ msgstr "使用最少库存法则搜寻"
 msgid ""
 "When the virtual stock goes belong the Min Quantity, OpenERP generates a "
 "procurement to bring the virtual stock to the Max Quantity."
-msgstr ""
+msgstr "当可售库存降到最低库存以下， OpenERP 会自动生成订货单，把可售库存提升到最高库存数量。"
 
 #. module: procurement
 #: view:procurement.order.compute.all:0
@@ -167,7 +167,7 @@ msgstr "库存调拨"
 #. module: procurement
 #: view:procurement.order:0
 msgid "Planification"
-msgstr ""
+msgstr "计划"
 
 #. module: procurement
 #: selection:procurement.order,state:0
@@ -177,7 +177,7 @@ msgstr "准备就绪"
 #. module: procurement
 #: field:procurement.order.compute.all,automatic:0
 msgid "Automatic orderpoint"
-msgstr ""
+msgstr "自动计算订货点"
 
 #. module: procurement
 #: field:mrp.property,composition:0
@@ -211,16 +211,18 @@ msgid ""
 "Reference of the document that created this Procurement.\n"
 "This is automatically completed by OpenERP."
 msgstr ""
+"创建此需求单的原始单据号。\n"
+"此项由系统自动填写。"
 
 #. module: procurement
 #: view:stock.warehouse.orderpoint:0
 msgid "Procurement Orders to Process"
-msgstr ""
+msgstr "待处理需求单"
 
 #. module: procurement
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "错误！您不能创建递归公司."
 
 #. module: procurement
 #: field:procurement.order,priority:0
@@ -231,7 +233,7 @@ msgstr "优先级"
 #: view:procurement.order:0
 #: field:procurement.order,state:0
 msgid "State"
-msgstr "州"
+msgstr "状态"
 
 #. module: procurement
 #: field:procurement.order,location_id:0
@@ -255,23 +257,23 @@ msgstr "仓库"
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Best price (not yet active!)"
-msgstr ""
+msgstr "最优价(尚未激活!)"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Product & Location"
-msgstr ""
+msgstr "产品与库位"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order_compute
 msgid "Compute Procurement"
-msgstr ""
+msgstr "计算产品需求"
 
 #. module: procurement
 #: model:ir.module.module,shortdesc:procurement.module_meta_information
 #: field:stock.move,procurements:0
 msgid "Procurements"
-msgstr ""
+msgstr "需求单"
 
 #. module: procurement
 #: field:res.company,schedule_range:0
@@ -292,45 +294,45 @@ msgstr ""
 #. module: procurement
 #: field:make.procurement,date_planned:0
 msgid "Planned Date"
-msgstr ""
+msgstr "计划日期"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "Group By"
-msgstr ""
+msgstr "分组"
 
 #. module: procurement
 #: field:make.procurement,qty:0
 #: field:procurement.order,product_qty:0
 msgid "Quantity"
-msgstr ""
+msgstr "数量"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
-msgstr ""
+msgstr "没有足够库存且没有定义最小订货点规则。"
 
 #. module: procurement
 #: code:addons/procurement/procurement.py:137
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "无效的动作！"
 
 #. module: procurement
 #: view:procurement.order:0
 msgid "References"
-msgstr ""
+msgstr "单号"
 
 #. module: procurement
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "配置"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,qty_multiple:0
 msgid "Qty Multiple"
-msgstr ""
+msgstr "数量倍数"
 
 #. module: procurement
 #: help:procurement.order,procure_method:0
@@ -342,24 +344,24 @@ msgstr ""
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_procurement
 msgid "Automatic Procurements"
-msgstr ""
+msgstr "自动生成需求单"
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,product_max_qty:0
 msgid "Max Quantity"
-msgstr ""
+msgstr "最大数量"
 
 #. module: procurement
 #: model:ir.model,name:procurement.model_procurement_order
 #: model:process.process,name:procurement.process_process_procurementprocess0
 #: view:procurement.order:0
 msgid "Procurement"
-msgstr ""
+msgstr "需求单"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.procurement_action
 msgid "Procurement Orders"
-msgstr ""
+msgstr "需求单"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -369,7 +371,7 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Exceptions"
-msgstr ""
+msgstr "异常"
 
 #. module: procurement
 #: model:process.node,note:procurement.process_node_serviceonorder0
@@ -379,18 +381,18 @@ msgstr ""
 #. module: procurement
 #: model:ir.model,name:procurement.model_mrp_property
 msgid "Property"
-msgstr ""
+msgstr "属性"
 
 #. module: procurement
 #: model:ir.actions.act_window,name:procurement.act_make_procurement
 #: view:make.procurement:0
 msgid "Procurement Request"
-msgstr ""
+msgstr "产品需求请求"
 
 #. module: procurement
 #: view:procurement.orderpoint.compute:0
 msgid "Compute Stock"
-msgstr ""
+msgstr "计算库存"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -400,7 +402,7 @@ msgstr ""
 #. module: procurement
 #: model:process.process,name:procurement.process_process_serviceproductprocess0
 msgid "Service"
-msgstr ""
+msgstr "服务"
 
 #. module: procurement
 #: model:ir.module.module,description:procurement.module_meta_information
@@ -409,6 +411,9 @@ msgid ""
 "    This is the module for computing Procurements.\n"
 "    "
 msgstr ""
+"\n"
+"    此模块用于计算产品需求计划。\n"
+"    "
 
 #. module: procurement
 #: field:stock.warehouse.orderpoint,procurement_draft_ids:0
@@ -449,7 +454,7 @@ msgstr ""
 msgid ""
 "If the active field is set to False, it will allow you to hide the "
 "orderpoint without removing it."
-msgstr ""
+msgstr "如果没有选中“可用”字段，那么将隐藏订货单记录且不会删除它。"
 
 #. module: procurement
 #: help:stock.warehouse.orderpoint,product_max_qty:0
@@ -461,7 +466,7 @@ msgstr ""
 #. module: procurement
 #: help:procurement.orderpoint.compute,automatic:0
 msgid "If the stock of a product is under 0, it will act like an orderpoint"
-msgstr ""
+msgstr "如果产品的库存量小于0，将会像一个订货点规则一样执行动作。"
 
 #. module: procurement
 #: view:procurement.order:0
@@ -876,7 +881,7 @@ msgstr ""
 #. module: procurement
 #: field:procurement.orderpoint.compute,automatic:0
 msgid "Automatic Orderpoint"
-msgstr ""
+msgstr "自动计算订货点"
 
 #. module: procurement
 #: view:procurement.order:0
