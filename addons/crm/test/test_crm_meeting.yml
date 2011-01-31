@@ -7,7 +7,7 @@
   !record {model: crm.meeting, id: crm_meeting_regardingpresentation0}:
     categ_id: crm.categ_meet2
     date: !eval time.strftime('%Y-%m-%d 16:04:00')
-    date_deadline: !eval "'%s-%s-%s 00:04:00' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
+    date_deadline: !eval "'%s-%s-%d 00:04:00' %(datetime.now().year, (datetime.now()+timedelta(1)).month, (datetime.now()+timedelta(1)).day)"
     duration: 8.0
     email_from: info@balmerinc.be
     location: Ahmedabad

@@ -26,7 +26,7 @@
   I create a payroll register record.
 -
   !record {model: hr.payroll.register, id: hr_payroll_register_payroll0}:
-    date: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month,datetime.now().day+1)"
+    date: !eval "'%s-%s-%s' %(datetime.now().year, (datetime.now()+timedelta(1)).month, (datetime.now()+timedelta(1)).day)"
     line_ids:
       - employee_id: hr_payroll.hr_employee_keith0
     name: payroll1
