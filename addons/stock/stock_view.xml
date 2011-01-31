@@ -1830,7 +1830,7 @@
             src_model="product.product"/>
 
         <act_window
-            domain="[('move_lines','in',[active_id])]"
+            domain="[('move_lines','=',active_id)]"
             id="act_relate_picking"
             name="Related Picking"
             res_model="stock.picking"
