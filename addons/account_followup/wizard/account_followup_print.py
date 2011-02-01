@@ -48,10 +48,10 @@ class account_followup_print(osv.osv_memory):
 
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.browse(cr, uid, ids, context=context)[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context.update({'followup_id': data['followup_id'], 'date':data['date']})
+        context.update({'followup_id': data.followup_id.id, 'date':data.date})
         return {
             'name': _('Select Partners'),
             'view_type': 'form',

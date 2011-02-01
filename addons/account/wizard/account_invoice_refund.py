@@ -95,6 +95,8 @@ class account_invoice_refund(osv.osv_memory):
             description = False
             company = res_users_obj.browse(cr, uid, uid, context=context).company_id
             journal_id = form.get('journal_id', False)
+            if isinstance(journal_id, tuple):
+                journal_id = journal_id[0]
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
                     raise osv.except_osv(_('Error !'), _('Can not %s draft/proforma/cancel invoice.') % (mode))
@@ -102,6 +104,8 @@ class account_invoice_refund(osv.osv_memory):
                     raise osv.except_osv(_('Error !'), _('Can not %s invoice which is already reconciled, invoice should be unreconciled first. You can only Refund this invoice') % (mode))
                 if form['period']:
                     period = form['period']
+                    if isinstance(period, tuple):
+                        period = period[0]
                 else:
                     period = inv.period_id and inv.period_id.id or False
 
