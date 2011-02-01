@@ -346,6 +346,7 @@ class stock_planning(osv.osv):
                         (date_start, date_stop, val.product_id.id, val.company_id.id,))
         planning_qtys = cr.fetchall()
         res = self._to_default_uom(cr, uid, val, planning_qtys, context)
+        logging.getLogger().info(str(res)+" "+date_start +" "+date_stop)
         return res
 
     def _to_default_uom(self, cr, uid, val, qtys, context=None):
@@ -565,15 +566,18 @@ class stock_planning(osv.osv):
         return res / product.uom_id.factor, uom.rounding
 
     def calculate_planning(self, cr, uid, ids, context, *args):
-        one_minute = relativedelta(minutes=1)
-        current_date_beginning_c = datetime.today()
-        current_date_end_c = current_date_beginning_c  + relativedelta(days=1, minutes=-1)  # to get hour 23:59:00
+        one_second = relativedelta(seconds=1)
+        today = datetime.today()
+        current_date_beginning_c = datetime(today.year, today.month, today.day)
+        current_date_end_c = current_date_beginning_c  + relativedelta(days=1, seconds=-1)  # to get hour 23:59:59
         current_date_beginning = current_date_beginning_c.strftime('%Y-%m-%d %H:%M:%S')
         current_date_end = current_date_end_c.strftime('%Y-%m-%d %H:%M:%S')
+        logging.getLogger().info("Current date beg and end"+current_date_beginning +" "+current_date_end)
         for val in self.browse(cr, uid, ids, context=context):
             day = datetime.strptime(val.period_id.date_start, '%Y-%m-%d %H:%M:%S')
-            dbefore = datetime(day.year, day.month, day.day) - one_minute
+            dbefore = datetime(day.year, day.month, day.day) - one_second
             day_before_calculated_period = dbefore.strftime('%Y-%m-%d %H:%M:%S')   # one day before start of calculated period
+            logging.getLogger().info("Day before calculated period "+day_before_calculated_period)
             cr.execute("SELECT date_start \
                     FROM stock_period AS period \
                     LEFT JOIN stock_planning AS planning \
@@ -585,8 +589,9 @@ class stock_planning(osv.osv):
             start_date_current_period = start_date_current_period or current_date_beginning
             
             day = datetime.strptime(start_date_current_period, '%Y-%m-%d %H:%M:%S')
-            dbefore = datetime(day.year, day.month, day.day) - one_minute
+            dbefore = datetime(day.year, day.month, day.day) - one_second
             date_for_start = dbefore.strftime('%Y-%m-%d %H:%M:%S')   # one day before current period
+            logging.getLogger().info("Date for start"+date_for_start)
             already_out = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='out', done=True, context=context),
             already_in = self._get_in_out(cr, uid, val, start_date_current_period, current_date_end, direction='in', done=True, context=context),
             outgoing = self._get_in_out(cr, uid, val, val.period_id.date_start, val.period_id.date_stop, direction='out', done=False, context=context),
