@@ -220,7 +220,7 @@ class mailgate_message(osv.osv):
         action_data = False
         action_pool = self.pool.get('ir.actions.act_window')
         message_pool = self.browse(cr ,uid, ids, context=context)[0]
-        att_ids = [x.id for x in message_pool.attachment_ids] 
+        att_ids = [x.id for x in message_pool.attachment_ids]
         action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
         if action_ids:
             action_data = action_pool.read(cr, uid, action_ids[0], context=context)

@@ -65,11 +65,11 @@ def extract_emails_from_dict(addresses={}):
             result['all-recipients'].extend(emails)
     return result
 
-class email_template_account(osv.osv):
+class email_smtp_server(osv.osv):
     """
     Object to store email account settings
     """
-    _name = "email_template.account"
+    _name = "email.smtp_server"
     _known_content_types = ['multipart/mixed',
                             'multipart/alternative',
                             'multipart/related',
@@ -81,14 +81,8 @@ class email_template_account(osv.osv):
                         size=64, required=True,
                         readonly=True, select=True,
                         help="The description is used as the Sender name along with the provided From Email, \
-unless it is already specified in the From Email, e.g: John Doe <john@doe.com>", 
+unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         states={'draft':[('readonly', False)]}),
-        'auto_delete': fields.boolean('Auto Delete', size=64, readonly=True, 
-                                      help="Permanently delete emails after sending", 
-                                      states={'draft':[('readonly', False)]}),
-        'user':fields.many2one('res.users',
-                        'Related User', required=True,
-                        readonly=True, states={'draft':[('readonly', False)]}),
         'email_id': fields.char('From Email',
                         size=120, required=True,
                         readonly=True, states={'draft':[('readonly', False)]} ,
@@ -112,33 +106,16 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         states={'draft':[('readonly', False)]}),
         'smtptls':fields.boolean('TLS',
                         states={'draft':[('readonly', False)]}, readonly=True),
-                                
+
         'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)',
                         states={'draft':[('readonly', False)]}, readonly=True),
-        'send_pref':fields.selection([
-                                      ('html', 'HTML, otherwise Text'),
-                                      ('text', 'Text, otherwise HTML'),
-                                      ('alternative', 'Both HTML & Text (Alternative)'),
-                                      ('mixed', 'Both HTML & Text (Mixed)')
-                                      ], 'Mail Format', required=True),
-        'company':fields.selection([
-                        ('yes', 'Yes'),
-                        ('no', 'No')
-                        ], 'Corporate',
-                        readonly=True,
-                        help="Select if this mail account does not belong " \
-                        "to specific user but to the organization as a whole. " \
-                        "eg: info@companydomain.com",
-                        required=True, states={
-                                           'draft':[('readonly', False)]
-                                           }),
-
         'state':fields.selection([
                                   ('draft', 'Initiated'),
                                   ('suspended', 'Suspended'),
                                   ('approved', 'Approved')
                                   ],
                         'State', required=True, readonly=True),
+        'default': fields.boolean('Default', help="Only one account can be default at a time"),
     }
 
     _defaults = {
@@ -154,12 +131,9 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
          'state':lambda * a:'draft',
          'smtpport':lambda *a:25,
          'smtpserver':lambda *a:'localhost',
-         'company':lambda *a:'yes',
-         'user':lambda self, cursor, user, context:user,
-         'send_pref':lambda *a: 'html',
          'smtptls':lambda *a:True,
      }
-    
+
     _sql_constraints = [
         (
          'email_uniq',
@@ -167,46 +141,34 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
          'Another setting already exists with this email ID !')
     ]
 
-    def name_get(self, cr, uid, ids, context=None):
-        return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
-
-    def _constraint_unique(self, cursor, user, ids, context=None):
-        """
-        This makes sure that you dont give personal 
-        users two accounts with same ID (Validated in sql constaints)
-        However this constraint exempts company accounts. 
-        Any no of co accounts for a user is allowed
-        """
-        if self.read(cursor, user, ids, ['company'])[0]['company'] == 'no':
-            accounts = self.search(cursor, user, [
-                                                 ('user', '=', user),
-                                                 ('company', '=', 'no')
-                                                 ])
-            if len(accounts) > 1 :
-                return False
-            else :
-                return True
+    def _constraint_unique(self, cr, uid, ids, context=None):
+        default_ids = self.search(cr, uid, [('default','=',True)])
+        if len(default_ids) > 1:
+            return False
         else:
             return True
-        
+
     _constraints = [
         (_constraint_unique,
-         'Error: You are not allowed to have more than 1 account.',
+         'Error: You are not allowed to set default more than 1 account.',
          [])
     ]
+
+    def name_get(self, cr, uid, ids, context=None):
+        return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
 
     def get_outgoing_server(self, cursor, user, ids, context=None):
         """
         Returns the Out Going Connection (SMTP) object
-        
+
         @attention: DO NOT USE except_osv IN THIS METHOD
         @param cursor: Database Cursor
         @param user: ID of current user
-        @param ids: ID/list of ids of current object for 
+        @param ids: ID/list of ids of current object for
                     which connection is required
                     First ID will be chosen from lists
         @param context: Context
-        
+
         @return: SMTP server object or Exception
         """
         #Type cast ids to integer
@@ -214,7 +176,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             ids = ids[0]
         this_object = self.browse(cursor, user, ids, context=context)
         if this_object:
-            if this_object.smtpserver and this_object.smtpport: 
+            if this_object.smtpserver and this_object.smtpport:
                 try:
                     if this_object.smtpssl:
                         serv = smtplib.SMTP_SSL(this_object.smtpserver, this_object.smtpport)
@@ -234,14 +196,14 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                 return serv
             raise Exception(_("SMTP SERVER or PORT not specified"))
         raise Exception(_("Core connection for the given ID does not exist"))
-    
+
     def check_outgoing_connection(self, cursor, user, ids, context=None):
         """
         checks SMTP credentials and confirms if outgoing connection works
         (Attached to button)
         @param cursor: Database Cursor
         @param user: ID of current user
-        @param ids: list of ids of current object for 
+        @param ids: list of ids of current object for
                     which connection is required
         @param context: Context
         """
@@ -255,7 +217,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                                  _("Out going connection test failed"),
                                  _("Reason: %s") % error
                                  )
-    
+
     def do_approval(self, cr, uid, ids, context=None):
         #TODO: Check if user has rights
         self.write(cr, uid, ids, {'state':'approved'}, context=context)
@@ -279,12 +241,12 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         else:
             logger.notifyChannel(_("Email Template"), netsvc.LOG_ERROR, _("Mail from Account %s failed. Probable Reason:Account not approved") % id)
             return False
-                      
+
 #**************************** MAIL SENDING FEATURES ***********************#
 
 
 
-    
+
     def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, message_id=None, context=None):
         #TODO: Replace all this with a single email object
         if body is None:
@@ -294,7 +256,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         if context is None:
             context = {}
         logger = netsvc.Logger()
-        for id in ids:  
+        for id in ids:
             core_obj = self.browse(cr, uid, id, context)
             serv = self.smtp_connection(cr, uid, id)
             if serv:
@@ -307,7 +269,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         text_part = MIMEMultipart(_subtype=text_subtype)
                         payload_part.attach(text_part)
                     else:
-                        # otherwise a single multipart/mixed will do the whole job 
+                        # otherwise a single multipart/mixed will do the whole job
                         payload_part = text_part = MIMEMultipart(_subtype=text_subtype)
 
                     if subject:
@@ -322,7 +284,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         payload_part['From'] = sender_name + " <" + core_obj.email_id + ">"
                     payload_part['Organization'] = tools.ustr(core_obj.user.company_id.name)
                     payload_part['Date'] = formatdate()
-                    addresses_l = extract_emails_from_dict(addresses) 
+                    addresses_l = extract_emails_from_dict(addresses)
                     if addresses_l['To']:
                         payload_part['To'] = u','.join(addresses_l['To'])
                     if addresses_l['CC']:
@@ -430,28 +392,28 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                                     e)
                       )
         return date_as_date
-        
+
     def send_receive(self, cr, uid, ids, context=None):
         for id in ids:
             ctx = context.copy()
             ctx['filters'] = [('account_id', '=', id)]
             self.pool.get('email_template.mailbox').send_all_mail(cr, uid, [], context=ctx)
         return True
- 
+
     def decode_header_text(self, text):
         """ Decode internationalized headers RFC2822.
-            To, CC, BCC, Subject fields can contain 
+            To, CC, BCC, Subject fields can contain
             text slices with different encodes, like:
-                =?iso-8859-1?Q?Enric_Mart=ED?= <enricmarti@company.com>, 
+                =?iso-8859-1?Q?Enric_Mart=ED?= <enricmarti@company.com>,
                 =?Windows-1252?Q?David_G=F3mez?= <david@company.com>
             Sometimes they include extra " character at the beginning/
             end of the contact name, like:
                 "=?iso-8859-1?Q?Enric_Mart=ED?=" <enricmarti@company.com>
-            and decode_header() does not work well, so we use regular 
+            and decode_header() does not work well, so we use regular
             expressions (?=   ? ?   ?=) to split the text slices
         """
         if not text:
-            return text        
+            return text
         p = re.compile("(=\?.*?\?.\?.*?\?=)")
         text2 = ''
         try:
@@ -465,6 +427,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             return text
         return text2
 
-email_template_account()
+email_smtp_server()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

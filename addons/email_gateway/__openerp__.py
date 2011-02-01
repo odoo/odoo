@@ -28,11 +28,10 @@
     * Easy Integration with any Module""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base','email'],
     'init_xml': [],
     'update_xml': [
-        "mail_gateway_view.xml",
-        "res_partner_view.xml",
+        "email_gateway_view.xml",
         'security/ir.model.access.csv'
 
     ],

@@ -51,9 +51,9 @@ class email_template_send_wizard(osv.osv_memory):
         if template.from_account:
             return [(template.from_account.id, '%s (%s)' % (template.from_account.name, template.from_account.email_id))]
         else:
-            account_id = self.pool.get('email_template.account').search(cr,uid,[('company','=','no'),('user','=',uid)], context=context)
+            account_id = self.pool.get('email.smtp_server').search(cr,uid,[('company','=','no'),('user','=',uid)], context=context)
             if account_id:
-                account = self.pool.get('email_template.account').browse(cr,uid,account_id, context)
+                account = self.pool.get('email.smtp_server').browse(cr,uid,account_id, context)
                 return [(r.id,r.name + " (" + r.email_id + ")") for r in account]
             else:
                 logger.notifyChannel(_("email-template"), netsvc.LOG_ERROR, _("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
@@ -66,7 +66,7 @@ class email_template_send_wizard(osv.osv_memory):
         if not id:
             id = context['src_rec_ids'][0]
         return get_value(cursor, user, id, message, template, context)
-    
+
     def _get_template(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -116,13 +116,13 @@ class email_template_send_wizard(osv.osv_memory):
         'to':fields.char('To',size=250,required=True),
         'cc':fields.char('CC',size=250,),
         'bcc':fields.char('BCC',size=250,),
-        'reply_to':fields.char('Reply-To', 
-                    size=250, 
+        'reply_to':fields.char('Reply-To',
+                    size=250,
                     help="The address recipients should reply to,"
                          " if different from the From address."
                          " Placeholders can be used here."),
-        'message_id':fields.char('Message-ID', 
-                    size=250, 
+        'message_id':fields.char('Message-ID',
+                    size=250,
                     help="The Message-ID header value, if you need to"
                          "specify it, for example to automatically recognize the replies later."
                         " Placeholders can be used here."),
@@ -133,12 +133,12 @@ class email_template_send_wizard(osv.osv_memory):
         'signature':fields.boolean('Attach my signature to mail'),
         #'filename':fields.text('File Name'),
         'requested':fields.integer('No of requested Mails',readonly=True),
-        'generated':fields.integer('No of generated Mails',readonly=True), 
+        'generated':fields.integer('No of generated Mails',readonly=True),
         'full_success':fields.boolean('Complete Success',readonly=True),
         'attachment_ids': fields.many2many('ir.attachment','send_wizard_attachment_rel', 'wizard_id', 'attachment_id', 'Attachments'),
     }
 
-    #FIXME: probably better by overriding default_get directly 
+    #FIXME: probably better by overriding default_get directly
     _defaults = {
         'state': lambda self,cr,uid,ctx: len(ctx['src_rec_ids']) > 1 and 'multi' or 'single',
         'rel_model': lambda self,cr,uid,ctx: self.pool.get('ir.model').search(cr,uid,[('model','=',ctx['src_model'])],context=ctx)[0],
@@ -156,7 +156,7 @@ class email_template_send_wizard(osv.osv_memory):
         'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
         'requested':lambda self,cr,uid,ctx: len(ctx['src_rec_ids']),
         'full_success': False,
-        'attachment_ids': [], 
+        'attachment_ids': [],
     }
 
     def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
@@ -200,7 +200,7 @@ class email_template_send_wizard(osv.osv_memory):
             else:
                 raise osv.except_osv(_("Email Template"),_("Email sending failed for one or more objects."))
         return True
-     
+
     def save_to_mailbox(self, cr, uid, ids, context=None):
         def get_end_value(id, value):
             if len(context['src_rec_ids']) > 1: # Multiple Mail: Gets value from the template
@@ -214,7 +214,7 @@ class email_template_send_wizard(osv.osv_memory):
         template = self._get_template(cr, uid, context)
         for id in context['src_rec_ids']:
             screen_vals = self.read(cr, uid, ids[0], [],context)
-            account = self.pool.get('email_template.account').read(cr, uid, screen_vals['from'], context=context)
+            account = self.pool.get('email.smtp_server').read(cr, uid, screen_vals['from'], context=context)
             vals = {
                 'email_from': tools.ustr(account['name']) + "<" + tools.ustr(account['email_id']) + ">",
                 'email_to': get_end_value(id, screen_vals['to']),
