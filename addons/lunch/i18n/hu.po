@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-21 11:05+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
+"PO-Revision-Date: 2011-01-25 10:39+0000\n"
+"Last-Translator: Csaba TOTH <csaba.toth@i3rendszerhaz.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-22 04:53+0000\n"
+"X-Launchpad-Export-Date: 2011-01-26 04:39+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: lunch
 #: view:lunch.cashbox.clean:0
 msgid "Reset cashbox"
-msgstr ""
+msgstr "Kézi pénztár ürítése"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_order_form
@@ -37,7 +37,7 @@ msgstr "Biztos, hogy törölni akarja ezt a rendelést?"
 #: model:ir.actions.act_window,name:lunch.action_lunch_cashmove_form
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashmove_form
 msgid "Cash Moves"
-msgstr ""
+msgstr "Pénzmozgások"
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -67,6 +67,13 @@ msgid ""
 "    Apply Different Category for the product.\n"
 "    "
 msgstr ""
+"\n"
+"    Alap modul az ebédpénz nyilvántartásához\n"
+"\n"
+"    nyilvántartja az ebéd rendelést, a pénz mozgást, kézi pénztárat, "
+"terméket.\n"
+"    Több termék kategória is alkalmazható.\n"
+"    "
 
 #. module: lunch
 #: view:lunch.cashmove:0
@@ -117,7 +124,7 @@ msgstr "Termékek"
 #. module: lunch
 #: model:ir.model,name:lunch.model_report_lunch_amount
 msgid "Amount available by user and box"
-msgstr ""
+msgstr "Pénzösszeg elérhető a felhasználó és a kassza által"
 
 #. module: lunch
 #: view:report.lunch.amount:0
@@ -133,7 +140,7 @@ msgstr "Ebédrendelés statisztika"
 #: view:lunch.cashmove:0
 #: field:lunch.order,cashmove:0
 msgid "CashMove"
-msgstr ""
+msgstr "Pénzmozgás"
 
 #. module: lunch
 #: view:lunch.order:0
@@ -169,7 +176,7 @@ msgstr "Teljes ár"
 #. module: lunch
 #: view:report.lunch.amount:0
 msgid "Box Amount by User"
-msgstr ""
+msgstr "Felhasználó része a pénztárban"
 
 #. module: lunch
 #: field:lunch.cashmove,create_date:0
@@ -235,7 +242,7 @@ msgstr "Beállítás nullára"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove
 msgid "Cash Move"
-msgstr ""
+msgstr "Pénz mozgatás"
 
 #. module: lunch
 #: selection:report.lunch.amount,month:0
@@ -305,7 +312,7 @@ msgstr "Rendelések megerősítése"
 #. module: lunch
 #: view:lunch.cashbox.clean:0
 msgid "Are you sure you want to reset this cashbox ?"
-msgstr ""
+msgstr "Biztos benne hogy törli a kassza összes előzményét és üríti azt?"
 
 #. module: lunch
 #: selection:lunch.order,state:0
@@ -381,7 +388,7 @@ msgstr "Január"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashbox_clean
 msgid "clean cashbox"
-msgstr ""
+msgstr "Kassza tisztítása"
 
 #. module: lunch
 #: field:lunch.cashmove,active:0
@@ -397,13 +404,13 @@ msgstr "Rendelés dátuma"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashbox
 msgid "Cashbox for Lunch "
-msgstr ""
+msgstr "Ebédpénz kassza "
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_clean
 #: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_clean_values
 msgid "Set CashBox to Zero"
-msgstr ""
+msgstr "Kassza nullázása"
 
 #. module: lunch
 #: field:lunch.cashmove,box:0
@@ -414,12 +421,12 @@ msgstr "Doboz megnevezése"
 #. module: lunch
 #: view:lunch.order.confirm:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégse"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.action_lunch_cashbox_form
 msgid " Cashboxes "
-msgstr ""
+msgstr " Kézi kasszák "
 
 #. module: lunch
 #: report:lunch.order:0
@@ -453,7 +460,7 @@ msgstr "Ár"
 #. module: lunch
 #: view:lunch.cashmove:0
 msgid "Search CashMove"
-msgstr ""
+msgstr "Pénzmozgás keresése"
 
 #. module: lunch
 #: view:report.lunch.amount:0
@@ -463,12 +470,12 @@ msgstr "Osszes doboz"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "Ebéd termék"
 
 #. module: lunch
 #: field:lunch.cashbox,sum_remain:0
 msgid "Total Remaining"
-msgstr ""
+msgstr "Összes hátralévő"
 
 #. module: lunch
 #: view:lunch.order:0
@@ -497,13 +504,13 @@ msgstr "Összesen"
 #. module: lunch
 #: view:lunch.category:0
 msgid "Category related to Products"
-msgstr ""
+msgstr "Termékkel összekapcsolódó kategóriák"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_cashbox_form
 #: view:lunch.cashbox:0
 msgid "Cashboxes"
-msgstr ""
+msgstr "Kasszák"
 
 #. module: lunch
 #: view:lunch.category:0
