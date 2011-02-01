@@ -94,7 +94,7 @@ class account_invoice(osv.osv):
             if invoice.move_id:
                 for m in invoice.move_id.line_id:
                     if m.account_id.type in ('receivable','payable'):
-                        result[invoice.id] = m.amount_residual_currency
+                        result[invoice.id] += m.amount_residual_currency
         return result
 
     # Give Journal Items related to the payment reconciled to this invoice
@@ -1303,64 +1303,6 @@ class account_invoice_line(osv.osv):
             context.update({'lang': part.lang})
         result = {}
         res = self.pool.get('product.product').browse(cr, uid, product, context=context)
-
-        if company_id:
-            property_obj = self.pool.get('ir.property')
-            account_obj = self.pool.get('account.account')
-            in_pro_id = property_obj.search(cr, uid, [('name','=','property_account_income'),('res_id','=','product.template,'+str(res.product_tmpl_id.id)+''),('company_id','=',company_id)])
-            if not in_pro_id:
-                in_pro_id = property_obj.search(cr, uid, [('name','=','property_account_income_categ'),('res_id','=','product.template,'+str(res.categ_id.id)+''),('company_id','=',company_id)])
-            exp_pro_id = property_obj.search(cr, uid, [('name','=','property_account_expense'),('res_id','=','product.template,'+str(res.product_tmpl_id.id)+''),('company_id','=',company_id)])
-            if not exp_pro_id:
-                exp_pro_id = property_obj.search(cr, uid, [('name','=','property_account_expense_categ'),('res_id','=','product.template,'+str(res.categ_id.id)+''),('company_id','=',company_id)])
-            if not in_pro_id:
-                in_acc = res.product_tmpl_id.property_account_income
-                in_acc_cate = res.categ_id.property_account_income_categ
-                if in_acc:
-                    app_acc_in = in_acc
-                else:
-                    app_acc_in = in_acc_cate
-            else:
-                # Get the fields from the ir.property record
-                my_value = property_obj.read(cr,uid,in_pro_id,['name','value_reference','res_id'])
-                # Parse the value_reference field to get the ID of the account.account record
-                account_id = int (my_value[0]["value_reference"].split(",")[1])
-                # Use the ID of the account.account record in the browse for the account.account record
-                app_acc_in = account_obj.browse(cr, uid, account_id, context=context)
-            if not exp_pro_id:
-                ex_acc = res.product_tmpl_id.property_account_expense
-                ex_acc_cate = res.categ_id.property_account_expense_categ
-                if ex_acc:
-                    app_acc_exp = ex_acc
-                else:
-                    app_acc_exp = ex_acc_cate
-            else:
-                app_acc_exp = account_obj.browse(cr, uid, exp_pro_id, context=context)[0]
-            if not in_pro_id and not exp_pro_id:
-                in_acc = res.product_tmpl_id.property_account_income
-                in_acc_cate = res.categ_id.property_account_income_categ
-                ex_acc = res.product_tmpl_id.property_account_expense
-                ex_acc_cate = res.categ_id.property_account_expense_categ
-                if in_acc or ex_acc:
-                    app_acc_in = in_acc
-                    app_acc_exp = ex_acc
-                else:
-                    app_acc_in = in_acc_cate
-                    app_acc_exp = ex_acc_cate
-            if app_acc_in and app_acc_in.company_id.id != company_id and app_acc_exp and app_acc_exp.company_id.id != company_id:
-                in_res_id = account_obj.search(cr, uid, [('name','=',app_acc_in.name),('company_id','=',company_id)])
-                exp_res_id = account_obj.search(cr, uid, [('name','=',app_acc_exp.name),('company_id','=',company_id)])
-                if not in_res_id and not exp_res_id:
-                    raise osv.except_osv(_('Configuration Error !'),
-                        _('Can not find account chart for this company, Please Create account.'))
-                in_obj_acc = account_obj.browse(cr, uid, in_res_id, context=context)
-                exp_obj_acc = account_obj.browse(cr, uid, exp_res_id, context=context)
-                if in_acc or ex_acc:
-                    res.product_tmpl_id.property_account_income = in_obj_acc[-1]
-                    res.product_tmpl_id.property_account_expense = exp_obj_acc[-1]
-                else:
-                    res.categ_id.property_account_income_categ = in_obj_acc[-1]
-                    res.categ_id.property_account_expense_categ = exp_obj_acc[-1]
 
         if type in ('out_invoice','out_refund'):
             a = res.product_tmpl_id.property_account_income.id
