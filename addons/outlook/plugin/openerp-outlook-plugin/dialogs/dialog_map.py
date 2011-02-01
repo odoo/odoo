@@ -421,6 +421,7 @@ class DialogCommand(ButtonProcessor):
         return "Displays the %s dialog" % dd.caption
 
 def TestConnection(btnProcessor,*args):
+    dbname = None
     server = NewConn.getitem('_server')
     port = NewConn.getitem('_port')
     NewConn.GetDBList()
@@ -428,18 +429,19 @@ def TestConnection(btnProcessor,*args):
         btnProcessor.window.LoadAllControls()
         win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return
-    try:
-        dbname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, 7000)
-        if not dbname:
-            win32ui.MessageBox("Authentication Error !\nBad Database Name !", "OpenERP Connection", flag_excl)
-            return
-    except Exception,e:
-        print "Exception %s: %s"%(type(e),str(e))
+
     dbname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
+    if not dbname:
+        try:
+            dbname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, 7000)
+            if not dbname:
+                win32ui.MessageBox("Authentication Error !\nBad Database Name !", "OpenERP Connection", flag_excl)
+                return
+        except Exception,e:
+            pass
     if not dbname:
         win32ui.MessageBox("No database found on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return
-
     uname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
     pwd = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[2])
 
@@ -470,7 +472,7 @@ def TestConnection(btnProcessor,*args):
             flag = flag_stop
             NewConn.setitem('_login', 'False')
     except Exception,e:
-        msg = "Authentication Error !\n\n" + getMessage(e)
+        msg = "Authentication Error !\n Invalid Configuration Please check server parameters and database name."
         flag = flag_error
     win32ui.MessageBox(msg, "OpenERP Connection", flag)
     return
