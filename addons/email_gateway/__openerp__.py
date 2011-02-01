@@ -33,7 +33,7 @@
     'update_xml': [
         "email_gateway_view.xml",
         'security/ir.model.access.csv'
-
+        'email_gateway_scheduler_data.xml',
     ],
     'demo_xml': [],
     'installable': True,

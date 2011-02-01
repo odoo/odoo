@@ -42,8 +42,12 @@ def format_date_tz(date, tz=None):
 
 class email_message(osv.osv):
     '''
-    Mailgateway Message
+    Email Message
     '''
+    _name = 'email.message'
+    _description = 'Email Message'
+    _order = 'date desc'
+
     def open_document(self, cr, uid, ids, context=None):
         """ To Open Document
         @param self: The object pointer.
@@ -124,9 +128,6 @@ class email_message(osv.osv):
             result[message.id] = msg_txt
         return result
 
-    _name = 'email.message'
-    _description = 'Email Message'
-    _order = 'date desc'
     _columns = {
         'name':fields.text('Subject', readonly=True),
         'model': fields.char('Object Name', size=128, select=1, readonly=True),
