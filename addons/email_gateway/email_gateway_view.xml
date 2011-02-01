@@ -9,7 +9,7 @@
             <field name="arch" type="xml">
              <form string="Email message">
                     <group colspan="4" col="6">
-                        <field name="name" string="Subject" required="1"/>
+                        <field name="name" widget="char" string="Subject" required="1"/>
                         <field name="date" required="1"/>
                         <field name="user_id" string="Owner"/>
                         <field name="partner_id" readonly="1" />
@@ -40,6 +40,11 @@
                         <page string="Attachments">
                             <separator string="Attachments" colspan="4"/>
                             <field name="attachment_ids" nolabel="1" colspan="4" readonly="1"/>
+                        </page>
+                        <page string="Advanced">
+                            <field name="account_id" colspan="2" />
+                            <field name="folder" colspan="2" select="2"/>
+                            <field name="state"/>
                         </page>
                     </notebook>
                 </form>

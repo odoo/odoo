@@ -147,7 +147,37 @@ class email_message(osv.osv):
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'reply_to':fields.char('Reply-To', size=250, readonly=True),
+        'account_id' :fields.many2one('email.smtp_server', 'User account', required=True, readonly=True),
+        #I like GMAIL which allows putting same mail in many folders
+        #Lets plan it for 0.9
+        'folder':fields.selection([
+                        ('drafts', 'Drafts'),
+                        ('outbox', 'Outbox'),
+                        ('trash', 'Trash'),
+                        ('sent', 'Sent Items'),
+                        ], 'Folder', required=True, readonly=True),
+        'state':fields.selection([
+                        ('na', 'Not Applicable'),
+                        ('sending', 'Sending'),
+                        ('wait', 'Waiting'),
+                        ], 'Status', required=True, readonly=True),
     }
+
+    def unlink(self, cr, uid, ids, context=None):
+        """
+        It just changes the folder of the item to "Trash", if it is no in Trash folder yet,
+        or completely deletes it if it is already in Trash.
+        """
+        to_update = []
+        to_remove = []
+        for mail in self.browse(cr, uid, ids, context=context):
+            if mail.folder == 'trash':
+                to_remove.append(mail.id)
+            else:
+                to_update.append(mail.id)
+        # Changes the folder to trash
+        self.write(cr, uid, to_update, {'folder': 'trash'}, context=context)
+        return super(email_template_mailbox, self).unlink(cr, uid, to_remove, context=context)
 
     def init(self, cr):
         cr.execute("""SELECT indexname
@@ -157,74 +187,74 @@ class email_message(osv.osv):
             cr.execute("""CREATE INDEX email_message_res_id_model_idx
                           ON email_message (model, res_id)""")
 
-#    def run_mail_scheduler(self, cursor, user, context=None):
-#        """
-#        This method is called by OpenERP Scheduler
-#        to periodically send emails
-#        """
-#        try:
-#            self.send_all_mail(cursor, user, context=context)
-#        except Exception, e:
-#            LOGGER.notifyChannel(
-#                                 "Email Template",
-#                                 netsvc.LOG_ERROR,
-#                                 _("Error sending mail: %s") % e)
-#
-#    def send_all_mail(self, cr, uid, ids=None, context=None):
-#        if ids is None:
-#            ids = []
-#        if context is None:
-#            context = {}
-#        filters = [('folder', '=', 'outbox'), ('state', '!=', 'sending')]
-#        if 'filters' in context.keys():
-#            for each_filter in context['filters']:
-#                filters.append(each_filter)
-#        ids = self.search(cr, uid, filters, context=context)
-#        self.write(cr, uid, ids, {'state':'sending'}, context)
-#        self.send_this_mail(cr, uid, ids, context)
-#        return True
-#
-#    def send_this_mail(self, cr, uid, ids=None, context=None):
-#        #previous method to send email (link with email account can be found at the revision 4172 and below
-#        result = True
-#        attachment_pool = self.pool.get('ir.attachment')
-#        for id in (ids or []):
-#            try:
-#                account_obj = self.pool.get('email.smtp_server')
-#                values = self.read(cr, uid, id, [], context)
-#                payload = {}
-#                if values['attachments_ids']:
-#                    for attid in values['attachments_ids']:
-#                        attachment = attachment_pool.browse(cr, uid, attid, context)#,['datas_fname','datas'])
-#                        payload[attachment.datas_fname] = attachment.datas
-#                result = account_obj.send_mail(cr, uid,
-#                              [values['account_id'][0]],
-#                              {'To':values.get('email_to') or u'',
-#                               'CC':values.get('email_cc') or u'',
-#                               'BCC':values.get('email_bcc') or u'',
-#                               'Reply-To':values.get('reply_to') or u''},
-#                              values['subject'] or u'',
-#                              {'text':values.get('body_text') or u'', 'html':values.get('body_html') or u''},
-#                              payload=payload,
-#                              message_id=values['message_id'],
-#                              context=context)
-#                if result == True:
-#                    account = account_obj.browse(cr, uid, values['account_id'][0], context=context)
-#                    if account.auto_delete:
-#                        self.write(cr, uid, id, {'folder': 'trash'}, context=context)
-#                        self.unlink(cr, uid, [id], context=context)
-#                        # Remove attachments for this mail
-#                        attachment_pool.unlink(cr, uid, values['attachments_ids'], context=context)
-#                    else:
-#                        self.write(cr, uid, id, {'folder':'sent', 'state':'na', 'date_mail':time.strftime("%Y-%m-%d %H:%M:%S")}, context)
-#                else:
-#                    error = result['error_msg']
-#
-#            except Exception, error:
-#                logger = netsvc.Logger()
-#                logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (id, error))
-#            self.write(cr, uid, id, {'state':'na'}, context)
-#        return result
+    def run_mail_scheduler(self, cursor, user, context=None):
+        """
+        This method is called by OpenERP Scheduler
+        to periodically send emails
+        """
+        try:
+            self.send_all_mail(cursor, user, context=context)
+        except Exception, e:
+            LOGGER.notifyChannel(
+                                 "Email Template",
+                                 netsvc.LOG_ERROR,
+                                 _("Error sending mail: %s") % e)
+
+    def send_all_mail(self, cr, uid, ids=None, context=None):
+        if ids is None:
+            ids = []
+        if context is None:
+            context = {}
+        filters = [('folder', '=', 'outbox'), ('state', '!=', 'sending')]
+        if 'filters' in context.keys():
+            for each_filter in context['filters']:
+                filters.append(each_filter)
+        ids = self.search(cr, uid, filters, context=context)
+        self.write(cr, uid, ids, {'state':'sending'}, context)
+        self.send_this_mail(cr, uid, ids, context)
+        return True
+
+    def send_this_mail(self, cr, uid, ids=None, context=None):
+        #previous method to send email (link with email account can be found at the revision 4172 and below
+        result = True
+        attachment_pool = self.pool.get('ir.attachment')
+        for id in (ids or []):
+            try:
+                account_obj = self.pool.get('email.smtp_server')
+                values = self.read(cr, uid, id, [], context)
+                payload = {}
+                if values['attachments_ids']:
+                    for attid in values['attachments_ids']:
+                        attachment = attachment_pool.browse(cr, uid, attid, context)#,['datas_fname','datas'])
+                        payload[attachment.datas_fname] = attachment.datas
+                result = account_obj.send_mail(cr, uid,
+                              [values['account_id'][0]],
+                              {'To':values.get('email_to') or u'',
+                               'CC':values.get('email_cc') or u'',
+                               'BCC':values.get('email_bcc') or u'',
+                               'Reply-To':values.get('reply_to') or u''},
+                              values['subject'] or u'',
+                              {'text':values.get('body_text') or u'', 'html':values.get('body_html') or u''},
+                              payload=payload,
+                              message_id=values['message_id'],
+                              context=context)
+                if result == True:
+                    account = account_obj.browse(cr, uid, values['account_id'][0], context=context)
+                    if account.auto_delete:
+                        self.write(cr, uid, id, {'folder': 'trash'}, context=context)
+                        self.unlink(cr, uid, [id], context=context)
+                        # Remove attachments for this mail
+                        attachment_pool.unlink(cr, uid, values['attachments_ids'], context=context)
+                    else:
+                        self.write(cr, uid, id, {'folder':'sent', 'state':'na', 'date_mail':time.strftime("%Y-%m-%d %H:%M:%S")}, context)
+                else:
+                    error = result['error_msg']
+
+            except Exception, error:
+                logger = netsvc.Logger()
+                logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (id, error))
+            self.write(cr, uid, id, {'state':'na'}, context)
+        return result
 
 email_message()
 
