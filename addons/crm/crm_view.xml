@@ -124,11 +124,13 @@
                 <form string="Stage">
                     <separator string="Stage Definition" colspan="4"/>
                     <field name="name" select="1"/>
-                    <field name="type" invisible="1" />
+                    <field name="type" groups="base.group_extended" />
                      
                     <field name="sequence"/>
                     <field name="probability"/>
-                    <field name="on_change"/>
+                    <group colspan="4" col="2" >
+                        <field name="on_change"/>
+                    </group>
                     <separator string="Requirements" colspan="4"/>
                     <field name="requirements" nolabel="1" colspan="4"/>
             <field name="section_ids" invisible="1" />
