@@ -301,10 +301,11 @@ class account_account(osv.osv):
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
                     for child in current.child_id:
-                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
-                            sums[current.id][fn] += sums[child.id][fn]
-                        else:
-                            sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
+                        if sums.get(child.id, False):
+                            if child.company_id.currency_id.id == current.company_id.currency_id.id:
+                                sums[current.id][fn] += sums[child.id][fn]
+                            else:
+                                sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
             res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
@@ -995,7 +996,7 @@ class account_journal_period(osv.osv):
         return super(account_journal_period, self).write(cr, uid, ids, vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
-        period_id=vals.get('period_id',False)
+        period_id = vals.get('period_id',False)
         if period_id:
             period = self.pool.get('account.period').browse(cr, uid, period_id, context=context)
             vals['state']=period.state
