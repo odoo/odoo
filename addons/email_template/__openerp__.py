@@ -30,12 +30,12 @@
     "description": """
     Email Template is extraction of Power Email basically just to send the emails.
     """,
-    "init_xml": ['email_template_scheduler_data.xml'],
+    "init_xml": [],
     "update_xml": [
         'security/email_template_security.xml',
+        'wizard/email_template_preview_view.xml',
         'email_template_view.xml',
         'wizard/email_template_send_wizard_view.xml',
-        'wizard/email_template_preview_view.xml',
         'security/ir.model.access.csv'
     ],
     "installable": True,

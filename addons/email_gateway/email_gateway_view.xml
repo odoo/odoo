@@ -97,14 +97,14 @@
 
         <act_window domain="[('partner_id', '=', active_id), ('history', '=', True)]"
             id="act_res_partner_emails" name="Emails"
-            res_model="mailgate.message"
+            res_model="email.message"
             src_model="res.partner"
             view_id="view_email_message_tree"/>
 
 	    <act_window
 	       id="act_res_partner_open_email" name="Attachments"
 	       res_model="ir.attachment"
-	       src_model="mailgate.message"
+	       src_model="email.message"
 	       domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
 
         <menuitem name="Email Template" id="menu_email_template_tools"

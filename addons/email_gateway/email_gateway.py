@@ -152,10 +152,10 @@ class email_message(osv.osv):
     def init(self, cr):
         cr.execute("""SELECT indexname
                       FROM pg_indexes
-                      WHERE indexname = 'mailgate_message_res_id_model_idx'""")
+                      WHERE indexname = 'email_message_res_id_model_idx'""")
         if not cr.fetchone():
-            cr.execute("""CREATE INDEX mailgate_message_res_id_model_idx
-                          ON mailgate_message (model, res_id)""")
+            cr.execute("""CREATE INDEX email_message_res_id_model_idx
+                          ON email_message (model, res_id)""")
 
 #    def run_mail_scheduler(self, cursor, user, context=None):
 #        """
