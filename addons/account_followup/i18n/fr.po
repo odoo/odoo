@@ -6,18 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-29 07:53+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 19:07+0000\n"
+"Last-Translator: Quentin THEURET <quentin@theuret.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-31 05:24+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:17+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
+#: code:addons/account_followup/wizard/account_followup_print.py:295
 #, python-format
 msgid "Follwoup Summary"
 msgstr "Sommaire des suivis"
@@ -80,7 +80,7 @@ msgid "Group By..."
 msgstr "Groupé par ..."
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
+#: code:addons/account_followup/wizard/account_followup_print.py:287
 #, python-format
 msgid ""
 "\n"
@@ -214,7 +214,7 @@ msgid "Partners"
 msgstr "Partenaires"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
+#: code:addons/account_followup/wizard/account_followup_print.py:138
 #, python-format
 msgid "Invoices Reminder"
 msgstr "Rappel de facture"
@@ -308,6 +308,25 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Cher %(partner_name)s,\n"
+"\n"
+"Nous sommes au regret de remarquer que, malgré notre rappel, vous avez "
+"largement dépassé le délais de paiement.\n"
+"\n"
+"Nous attendons votre paiement dans les plus brefs délais à défaut de quoi, "
+"nous devrons envisager de suspendre votre compte, ce qui signifie que nous "
+"ne serons plus en mesure de fournir à votre entreprise nos  "
+"(produits/services).\n"
+"Nous vous prions de bien vouloir régulariser votre situation d'ici 8 jours.\n"
+"\n"
+"En cas de difficulté, non portée à notre connaissance, concernant ce "
+"paiement  n'hésitez pas à contacter notre service de comptabilité au "
+"(+32)10.68.94.39 afin que nous puissions résoudre le problème rapidement.\n"
+"\n"
+"Le détail de votre compte se trouve ci-dessous.\n"
+"\n"
+"Cordialement,\n"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -368,6 +387,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Cher %(partner_name)s,\n"
+"\n"
+"Sauf erreur de notre part, il semble que le montant suivant est resté "
+"impayé. Nous vous prions de bien vouloir régulariser ce paiement dans les 8 "
+"jours.\n"
+"\n"
+"Si votre paiement a été effectué depuis l'envoi de ce courrier, veuillez ne "
+"pas en tenir compte. N'hésitez pas à contacter notre service comptabilité au "
+"(+32)10.68.94.39.\n"
+"\n"
+"Cordialement,\n"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -388,6 +419,21 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Cher %(partner_name)s,\n"
+"\n"
+"Malgré plusieurs rappels, votre compte est toujours débiteur.\n"
+"\n"
+"A défaut de paiement sous 8 jours, une action en recouvrement judiciaire "
+"sera intentée sans autre avertissement.\n"
+"\n"
+"Je suis convaincu que cette action se révèlera inutile, le détail de votre "
+"débit étant imprimé ci-dessous.\n"
+"\n"
+"Pour toutes questions concernant ce sujet, n'hésitez pas à contacter notre "
+"service comptabilité au (+32)10.68.94.39.\n"
+"\n"
+"Cordialement,\n"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -427,7 +473,7 @@ msgid "Due"
 msgstr "Dû"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
+#: code:addons/account_followup/wizard/account_followup_print.py:56
 #, python-format
 msgid "Select Partners"
 msgstr "Sélectionner les partenaires"
@@ -488,7 +534,7 @@ msgid "Send email confirmation"
 msgstr "Envoyer un Message de confirmation"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
+#: code:addons/account_followup/wizard/account_followup_print.py:284
 #, python-format
 msgid ""
 "All E-mails have been successfully sent to Partners:.\n"
@@ -600,7 +646,7 @@ msgstr "Niveau de suivi maximal"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr ""
+msgstr "Éléments payables"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -647,7 +693,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
 msgid "Receivable Items"
-msgstr ""
+msgstr "Eléments à recevoir"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -679,7 +725,7 @@ msgid "Maturity"
 msgstr "Échu"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:0
+#: code:addons/account_followup/wizard/account_followup_print.py:286
 #, python-format
 msgid ""
 "E-Mail not sent to following Partners, Email not available !\n"
@@ -717,7 +763,7 @@ msgstr "Total crédit"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
-msgstr ""
+msgstr "%(line)s: lignes afichées du Grand Livre"
 
 #. module: account_followup
 #: field:account_followup.followup.line,sequence:0
@@ -742,12 +788,12 @@ msgstr "%(partner_name)s: nom du Partenaire"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Followup Date"
-msgstr ""
+msgstr "Date du dernier suivi"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr ""
+msgstr "Critère de suivi"
 
 #. module: account_followup
 #: constraint:account.move.line:0

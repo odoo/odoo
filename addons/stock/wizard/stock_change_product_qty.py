@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from tools.translate import _
+import tools
 
 class stock_change_product_qty(osv.osv_memory):
     _name = "stock.change.product.qty"
@@ -31,6 +32,19 @@ class stock_change_product_qty(osv.osv_memory):
         'prodlot_id': fields.many2one('stock.production.lot', 'Production Lot', domain="[('product_id','=',product_id)]"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, domain="[('usage', '=', 'internal')]"),
     }
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        result = super(stock_change_product_qty, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        product_id = context and context.get('active_id', False) or False
+
+        if (context.get('active_model') == 'product.product') and product_id:
+            prod_obj = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            fields = result.get('fields', {})
+            if fields and (prod_obj.track_production == True) and (fields.get('prodlot_id')):
+                result['fields']['prodlot_id']['required'] =  True
+            else:
+                result['fields']['prodlot_id']['required'] = False
+        return result
 
     def default_get(self, cr, uid, fields, context):
         """ To get default values for the object.
@@ -71,7 +85,7 @@ class stock_change_product_qty(osv.osv_memory):
 
         res_original = prod_obj_pool.browse(cr, uid, rec_id, context=context)
         for data in self.browse(cr, uid, ids, context=context):
-            inventory_id = inventry_obj.create(cr , uid, {'name': _('INV: ') + str(res_original.name)}, context=context)
+            inventory_id = inventry_obj.create(cr , uid, {'name': _('INV: ') + tools.ustr(res_original.name)}, context=context)
             line_data ={
                 'inventory_id' : inventory_id,
                 'product_qty' : data.new_quantity,

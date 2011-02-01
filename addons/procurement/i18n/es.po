@@ -7,16 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-28 09:19+0000\n"
-"Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
-"<jesteve@zikzakmedia.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-14 19:40+0000\n"
+"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:53+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: procurement
+#: view:make.procurement:0
+msgid "Ask New Products"
+msgstr "Solicitar nuevos productos"
 
 #. module: procurement
 #: model:ir.ui.menu,name:procurement.menu_stock_sched
@@ -52,7 +56,7 @@ msgstr ""
 "mínimo"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:288
 #, python-format
 msgid "No supplier defined for this product !"
 msgstr "¡No se ha definido un proveedor para este producto!"
@@ -68,7 +72,7 @@ msgid "Procurement Method"
 msgstr "Método abastecimiento"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:298
 #, python-format
 msgid "No address defined for the supplier"
 msgstr "No se ha definido una dirección para el proveedor"
@@ -77,23 +81,6 @@ msgstr "No se ha definido una dirección para el proveedor"
 #: model:ir.actions.act_window,name:procurement.action_procurement_compute
 msgid "Compute Stock Minimum Rules Only"
 msgstr "Calcular sólo reglas de stock mínimo"
-
-#. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_action
-msgid ""
-"A procurement order is used to record a need in a specific product at a "
-"specific location. They are usually created automatically by the sales "
-"orders, the Pull Logistics rules or the minimum stock rules. When the "
-"procurement order is confirmed, it creates automatically the necessary "
-"operations to fullfil the need: purchase order proposition, manufacturing "
-"order, etc."
-msgstr ""
-"Una orden de abastecimiento se utiliza para registrar una necesidad de un "
-"producto específico en una ubicación específica. Normalmente son creadas "
-"automáticamente por los pedidos de venta, las reglas de abastecimiento o "
-"reglas de stock mínimo. Cuando la orden de abastecimiento es confirmada, se "
-"crean automáticamente las operaciones necesarias para satisfacer dicha "
-"necesidad: proposición de compra, orden de fabricación, etc."
 
 #. module: procurement
 #: field:procurement.order,company_id:0
@@ -136,6 +123,11 @@ msgstr "Último abastecimiento"
 #: view:procurement.order:0
 msgid "Notes"
 msgstr "Notas"
+
+#. module: procurement
+#: selection:procurement.order,procure_method:0
+msgid "on order"
+msgstr "Bajo pedido"
 
 #. module: procurement
 #: help:procurement.order,message:0
@@ -279,23 +271,6 @@ msgid "Warehouse"
 msgstr "Almacén"
 
 #. module: procurement
-#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
-msgid ""
-"You can define your minimum stock rules, so that OpenERP will trigger "
-"automatically the propositions of manufacturing or purchase orders according "
-"to the stock level. Once the virtual stock of a product (=stock on hand "
-"minus all confirmed orders and reservations) is bellow the minimum quantity, "
-"OpenERP will generate a procurement request in order to fullfil the stock up "
-"to the maximum quantity."
-msgstr ""
-"Puede definir sus reglas de stock mínimo, de forma que OpenERP lance "
-"automáticamente propuestas de órdenes de fabricación o de compra en función "
-"de los niveles de stock. Una vez que el stock virtual de un producto (= "
-"stock disponible menos todas las órdenes confirmadas y reservas) esté debajo "
-"de la cantidad mínima, OpenERP generará una solicitud de abastecimiento para "
-"satisfacer el stock hasta la cantidad máxima establecida para dicho producto."
-
-#. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Best price (not yet active!)"
 msgstr "Mejor precio (¡todavía no activo!)"
@@ -322,9 +297,22 @@ msgid "Scheduler Range Days"
 msgstr "Día rango planificador"
 
 #. module: procurement
-#: view:make.procurement:0
-msgid "Ask New Products"
-msgstr "Solicitar nuevos productos"
+#: model:ir.actions.act_window,help:procurement.procurement_action
+msgid ""
+"A procurement order is used to record a need for a specific product at a "
+"specific location. A procurement order is usually created automatically from "
+"sales orders, a Pull Logistics rule or Minimum Stock Rules. When the "
+"procurement order is confirmed, it automatically creates the necessary "
+"operations to fullfil the need: purchase order proposition, manufacturing "
+"order, etc."
+msgstr ""
+"Una orden de abastecimiento se utiliza para registrar una necesidad de un "
+"producto específico en una ubicación específica. Una orden de abastecimiento "
+"es generalmente creada automáticamente a partir de órdenes de venta, reglas "
+"logísticas Pull o regals de stck mínimo. Cuando la orden de abastecimiento "
+"es confirmada, crea automáticamente las operaciones necesarias para "
+"satisafacer al necesidad: propuesta de orden de compra, orden de fabricaión, "
+"etc."
 
 #. module: procurement
 #: field:make.procurement,date_planned:0
@@ -343,14 +331,14 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:370
 #, python-format
 msgid "Not enough stock and no minimum orderpoint rule defined."
 msgstr ""
 "No hay suficiente stock y no se ha definido una regla de stock mínimo."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:137
 #, python-format
 msgid "Invalid action !"
 msgstr "¡Acción no válida!"
@@ -459,6 +447,14 @@ msgid "Related Procurement Orders"
 msgstr "Órdenes de abastecimiento relacionadas"
 
 #. module: procurement
+#: view:procurement.orderpoint.compute:0
+msgid ""
+"Wizard checks all the stock minimum rules and generate procurement order."
+msgstr ""
+"El asistente comprobará todas las reglas de stock mínimo y generará orden de "
+"abastecimiento."
+
+#. module: procurement
 #: field:stock.warehouse.orderpoint,product_min_qty:0
 msgid "Min Quantity"
 msgstr "Cantidad mín"
@@ -474,7 +470,7 @@ msgid "plus"
 msgstr "más"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:319
 #, python-format
 msgid ""
 "Please check the Quantity in Procurement Order(s), it should not be less "
@@ -547,46 +543,9 @@ msgid "This wizard will schedule procurements."
 msgstr "Este asistente planificará abastecimientos."
 
 #. module: procurement
-#: model:ir.actions.act_window,help:procurement.procurement_exceptions
-msgid ""
-"Procurement Orders represent the need for a certain quantity of products, at "
-"a given time, in a given location. Sale Orders are one typical source of "
-"Procurement Orders (but these are distinct documents). Depending on the "
-"procurement parameters and the products configuration, the procurement "
-"engine will attempt to satisfy the need by reserving products from stock, or "
-"ordering products from a supplier, or passing a manufacturing order, etc. A "
-"Procurement Exception occurs when the system cannot find a way to fulfill a "
-"procurement. Some exceptions will resolve themselves automatically, but "
-"others require manual intervention (those are identified by a specific error "
-"message)"
-msgstr ""
-"Las órdenes de abastecimiento representan la necesidad de una determinada "
-"cantidad de productos, en un momento dado, en una ubicación determinada. Los "
-"pedidos de venta son una fuente típica de las órdenes de abastecimiento "
-"(pero estos son documentos distintos). Dependiendo de los parámetros de "
-"abastecimiento y la configuración de productos, el motor de abastecimientos "
-"tratará de satisfacer la necesidad de reservar los productos del stock, u "
-"ordenar productos de un proveedor, o crear una orden de producción, etc. Se "
-"produce una excepción de abastecimiento cuando el sistema no puede encontrar "
-"una manera de cumplir un abastecimiento. Algunas excepciones se resolverán "
-"de forma automática, pero otras requieren intervención manual (las que se "
-"identifican con un mensaje de error específico)."
-
-#. module: procurement
 #: view:procurement.order:0
 msgid "Status"
 msgstr "Estado"
-
-#. module: procurement
-#: help:res.company,schedule_range:0
-msgid ""
-"This is the time frame analysed by the scheduler when computing "
-"procurements. All procurements that are not between today and today+range "
-"are skipped for futur computation."
-msgstr ""
-"Este es el período de tiempo analizado por el planificador al calcular los "
-"abastecimientos. Todos los abastecimientos que no están entre hoy y "
-"hoy+intervalo se omiten para el cálculo futuro."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -619,7 +578,7 @@ msgid "Exception"
 msgstr "Excepción"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:0
+#: code:addons/procurement/schedulers.py:179
 #, python-format
 msgid "Automatic OP: %s"
 msgstr "Ord. abastecimiento automática: %s"
@@ -675,20 +634,20 @@ msgid "Date Closed"
 msgstr "Fecha de cierre"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:372
 #, python-format
 msgid "Procurement '%s' is in exception: not enough stock."
 msgstr "El abastecimiento '%s' está en excepción: no suficiente stock."
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:138
 #, python-format
 msgid "Cannot delete Procurement Order(s) which are in %s State!"
 msgstr ""
 "¡No se puede eliminar orden(es) de abastecimiento que están en estado %s!"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:318
 #, python-format
 msgid "Data Insufficient !"
 msgstr "¡Datos insuficientes!"
@@ -863,9 +822,21 @@ msgid "Waiting"
 msgstr "En espera"
 
 #. module: procurement
-#: selection:procurement.order,procure_method:0
-msgid "on order"
-msgstr "Bajo pedido"
+#: model:ir.actions.act_window,help:procurement.action_orderpoint_form
+msgid ""
+"You can define your minimum stock rules, so that OpenERP will automatically "
+"create draft manufacturing orders or purchase quotations according to the "
+"stock level. Once the virtual stock of a product (= stock on hand minus all "
+"confirmed orders and reservations) is below the minimum quantity, OpenERP "
+"will generate a procurement request to increase the stock up to the maximum "
+"quantity."
+msgstr ""
+"Puede definir sus reglas de stock mínimo, para que OpenERP cree "
+"automáticamente órdenes de fabricación en borrador o presupuestos de compra "
+"en función del nivel de stock. Cuando el stock virtual de un producto (= "
+"stock físico menos todas los pedidos confirmados y reservas) esté por debajo "
+"de la cantidad mínima, OpenERP generará una solicitud de abastecimiento para "
+"incrementar el stock hasta la cantidad máxima indicada."
 
 #. module: procurement
 #: field:procurement.order,move_id:0
@@ -909,7 +880,7 @@ msgid "Product UoS"
 msgstr "UdV del producto"
 
 #. module: procurement
-#: code:addons/procurement/procurement.py:0
+#: code:addons/procurement/procurement.py:347
 #, python-format
 msgid "from stock: products assigned."
 msgstr "desde stock: productos asignados"
@@ -922,12 +893,30 @@ msgid "Compute Schedulers"
 msgstr "Caclular planificadores"
 
 #. module: procurement
-#: view:procurement.orderpoint.compute:0
+#: model:ir.actions.act_window,help:procurement.procurement_exceptions
 msgid ""
-"Wizard checks all the stock minimum rules and generate procurement order."
+"Procurement Orders represent the need for a certain quantity of products, at "
+"a given time, in a given location. Sales Orders are one typical source of "
+"Procurement Orders (but these are distinct documents). Depending on the "
+"procurement parameters and the product configuration, the procurement engine "
+"will attempt to satisfy the need by reserving products from stock, ordering "
+"products from a supplier, or passing a manufacturing order, etc. A "
+"Procurement Exception occurs when the system cannot find a way to fulfill a "
+"procurement. Some exceptions will resolve themselves automatically, but "
+"others require manual intervention (those are identified by a specific error "
+"message)."
 msgstr ""
-"El asistente comprobará todas las reglas de stock mínimo y generará orden de "
-"abastecimiento."
+"Las órdenes de adquisición representan la necesidad de una cierta cantidad "
+"de productos en un momento y lugar dado. Las órdenes de venta son una de las "
+"típicas fuentes de órdenes de adquisición (pero aquí son documentos "
+"distintos). En función de los parámetros de la adquisición y la "
+"configuración del producto, el motor de adquisiciones intentará satisfacer "
+"la demanda reservando productos de stock, encargando productos a un "
+"proveedor, elaborando una órden de producción, etc. Una 'Excepción de "
+"Adquisición' ocurre cuando el sistema no puede encontrar la forma de "
+"satisfacer una adquisición. Algunas excepciones se resolverán "
+"automáticamente, pero otras necesitarán intervención manual (éstas se "
+"identificarán por un mensaje de error específico)."
 
 #. module: procurement
 #: field:procurement.order,product_uom:0
@@ -938,6 +927,17 @@ msgstr "UdM del producto"
 #: view:procurement.order:0
 msgid "Search Procurement"
 msgstr "Buscar abastecimiento"
+
+#. module: procurement
+#: help:res.company,schedule_range:0
+msgid ""
+"This is the time frame analysed by the scheduler when computing "
+"procurements. All procurements that are not between today and today+range "
+"are skipped for future computation."
+msgstr ""
+"Este es el marco temporal analizado por el planificar al calcular las "
+"órdenes de adquisición. Todas las adquisiciones que no se encuentren entre "
+"hoy y 'hoy+rango' se aplazarán a futuros cálculos."
 
 #. module: procurement
 #: selection:procurement.order,priority:0
@@ -955,7 +955,7 @@ msgid "Procurement Details"
 msgstr "Detalles de abastecimiento"
 
 #. module: procurement
-#: code:addons/procurement/schedulers.py:0
+#: code:addons/procurement/schedulers.py:180
 #, python-format
 msgid "SCHEDULER"
 msgstr "PLANIFICADOR"
@@ -982,6 +982,15 @@ msgstr "PLANIFICADOR"
 #~ msgstr "¡Error! No puede crear menús recursivos."
 
 #~ msgid ""
+#~ "This is the time frame analysed by the scheduler when computing "
+#~ "procurements. All procurements that are not between today and today+range "
+#~ "are skipped for futur computation."
+#~ msgstr ""
+#~ "Este es el período de tiempo analizado por el planificador al calcular los "
+#~ "abastecimientos. Todos los abastecimientos que no están entre hoy y "
+#~ "hoy+intervalo se omiten para el cálculo futuro."
+
+#~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
@@ -1001,3 +1010,57 @@ msgstr "PLANIFICADOR"
 
 #~ msgid "Rules are not supported for osv_memory objects !"
 #~ msgstr "¡Las reglas no están soportadas en los objetos osv_memory!"
+
+#~ msgid ""
+#~ "You can define your minimum stock rules, so that OpenERP will trigger "
+#~ "automatically the propositions of manufacturing or purchase orders according "
+#~ "to the stock level. Once the virtual stock of a product (=stock on hand "
+#~ "minus all confirmed orders and reservations) is bellow the minimum quantity, "
+#~ "OpenERP will generate a procurement request in order to fullfil the stock up "
+#~ "to the maximum quantity."
+#~ msgstr ""
+#~ "Puede definir sus reglas de stock mínimo, de forma que OpenERP lance "
+#~ "automáticamente propuestas de órdenes de fabricación o de compra en función "
+#~ "de los niveles de stock. Una vez que el stock virtual de un producto (= "
+#~ "stock disponible menos todas las órdenes confirmadas y reservas) esté debajo "
+#~ "de la cantidad mínima, OpenERP generará una solicitud de abastecimiento para "
+#~ "satisfacer el stock hasta la cantidad máxima establecida para dicho producto."
+
+#~ msgid ""
+#~ "A procurement order is used to record a need in a specific product at a "
+#~ "specific location. They are usually created automatically by the sales "
+#~ "orders, the Pull Logistics rules or the minimum stock rules. When the "
+#~ "procurement order is confirmed, it creates automatically the necessary "
+#~ "operations to fullfil the need: purchase order proposition, manufacturing "
+#~ "order, etc."
+#~ msgstr ""
+#~ "Una orden de abastecimiento se utiliza para registrar una necesidad de un "
+#~ "producto específico en una ubicación específica. Normalmente son creadas "
+#~ "automáticamente por los pedidos de venta, las reglas de abastecimiento o "
+#~ "reglas de stock mínimo. Cuando la orden de abastecimiento es confirmada, se "
+#~ "crean automáticamente las operaciones necesarias para satisfacer dicha "
+#~ "necesidad: proposición de compra, orden de fabricación, etc."
+
+#~ msgid ""
+#~ "Procurement Orders represent the need for a certain quantity of products, at "
+#~ "a given time, in a given location. Sale Orders are one typical source of "
+#~ "Procurement Orders (but these are distinct documents). Depending on the "
+#~ "procurement parameters and the products configuration, the procurement "
+#~ "engine will attempt to satisfy the need by reserving products from stock, or "
+#~ "ordering products from a supplier, or passing a manufacturing order, etc. A "
+#~ "Procurement Exception occurs when the system cannot find a way to fulfill a "
+#~ "procurement. Some exceptions will resolve themselves automatically, but "
+#~ "others require manual intervention (those are identified by a specific error "
+#~ "message)"
+#~ msgstr ""
+#~ "Las órdenes de abastecimiento representan la necesidad de una determinada "
+#~ "cantidad de productos, en un momento dado, en una ubicación determinada. Los "
+#~ "pedidos de venta son una fuente típica de las órdenes de abastecimiento "
+#~ "(pero estos son documentos distintos). Dependiendo de los parámetros de "
+#~ "abastecimiento y la configuración de productos, el motor de abastecimientos "
+#~ "tratará de satisfacer la necesidad de reservar los productos del stock, u "
+#~ "ordenar productos de un proveedor, o crear una orden de producción, etc. Se "
+#~ "produce una excepción de abastecimiento cuando el sistema no puede encontrar "
+#~ "una manera de cumplir un abastecimiento. Algunas excepciones se resolverán "
+#~ "de forma automática, pero otras requieren intervención manual (las que se "
+#~ "identifican con un mensaje de error específico)."

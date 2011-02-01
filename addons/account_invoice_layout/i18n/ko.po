@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2009-09-08 16:22+0000\n"
 "Last-Translator: ekodaq <ceo@ekosdaq.com>\n"
 "Language-Team: Korean <ko@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:33+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -103,8 +103,8 @@ msgstr ""
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Document"
-msgstr "문서"
+msgid "Tel. :"
+msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -133,9 +133,10 @@ msgid "Product"
 msgstr "상품"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "메시지 쓰기"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Description"
+msgstr "설명"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
@@ -156,7 +157,6 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Taxes:"
 msgstr "세금:"
 
@@ -166,9 +166,9 @@ msgid "Source Account"
 msgstr "소스 금액"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "취소"
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "메시지 쓰기"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -201,19 +201,17 @@ msgstr "수량"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Partner Ref."
+msgid "Refund"
+msgstr "환급"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Fax :"
 msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: model:ir.model,name:account_invoice_layout.model_account_invoice
-#: report:notify_account.invoice:0
-msgid "Invoice"
-msgstr "인보이스"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Total:"
 msgstr ""
 
@@ -245,9 +243,18 @@ msgid "Amount"
 msgstr "금액"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "ERP & CRM Solutions..."
+msgstr ""
+
+#. module: account_invoice_layout
 #: report:notify_account.invoice:0
-msgid "Tel. :"
+msgid "Net Total :"
+msgstr ""
+
+#. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Total :"
 msgstr ""
 
 #. module: account_invoice_layout
@@ -269,8 +276,8 @@ msgstr ""
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Refund"
-msgstr "환급"
+msgid "Origin"
+msgstr ""
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -281,6 +288,12 @@ msgstr "타입"
 #: selection:account.invoice.line,state:0
 msgid "Separator Line"
 msgstr "분리 라인"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Your Reference"
+msgstr ""
 
 #. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
@@ -311,7 +324,6 @@ msgstr ""
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Net Total:"
 msgstr ""
 
@@ -322,14 +334,15 @@ msgstr "알림 또는 희망 메시지"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
+#: model:ir.model,name:account_invoice_layout.model_account_invoice
 #: report:notify_account.invoice:0
-msgid "Fax :"
-msgstr ""
+msgid "Invoice"
+msgstr "인보이스"
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
-msgstr ""
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "취소"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -343,6 +356,11 @@ msgid "Message"
 msgstr "메시지"
 
 #. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Taxes :"
+msgstr ""
+
+#. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "모든 알림 메시지"
@@ -353,8 +371,8 @@ msgstr "모든 알림 메시지"
 #~ msgid "Customer Ref:"
 #~ msgstr "고객 참조:"
 
-#~ msgid "Description"
-#~ msgstr "설명"
+#~ msgid "Document"
+#~ msgstr "문서"
 
 #~ msgid "Canceled Invoice"
 #~ msgstr "취소된 인보이스"

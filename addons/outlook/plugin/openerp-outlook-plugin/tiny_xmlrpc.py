@@ -108,7 +108,10 @@ class XMLRpcConn(object):
         self._uname = user
         self._pwd = pwd
         conn = xmlrpclib.ServerProxy(str(self._uri) + '/xmlrpc/common')
-        uid = execute(conn,'login',dbname, ustr(user), ustr(pwd))
+        try:
+            uid = execute(conn,'login',dbname, ustr(user), ustr(pwd))
+        except:
+            return False
         return uid
 
     def GetAllObjects(self):

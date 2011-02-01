@@ -3,7 +3,7 @@
   I create a Sale Order for Slider Mobile for 200 quantity having Shipping Policy 'Invoice from Picking' and Invoice on 'Shipped quantities'
 -
   !record {model: sale.order, id: sale_order_so6}:
-    date_order: '2010-07-17'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: Test_SO006BIS
     order_line:
@@ -25,13 +25,13 @@
     picking_policy: direct
     pricelist_id: product.list0
     shop_id: sale.shop
-- 
+-
   I confirm the Sale Order.
-- 
+-
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so6}
 -
   I verify that the picking has been generated for the sale order
-- 
+-
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so6"))
     assert so.picking_ids,"Picking has not been generated for sale_order_so6"
@@ -39,10 +39,10 @@
   Then I click on the "Product Sent" button of Outgoing Shipments
 -
   !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: '2010-07-17 17:52:09'
--    
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
+-
   I change the quantity on the picking to 199, and confirm partially 100 PCE.
-- 
+-
   !python {model: stock.picking }: |
     import time
     sale_order_obj = self.pool.get('sale.order')
@@ -69,10 +69,11 @@
   Then I click on 'Create Invoices' button
 -
   !python {model: stock.invoice.onshipping}: |
-    sale_obj = self.pool.get('sale.order')  
+    import time
+    sale_obj = self.pool.get('sale.order')
     sale_id = sale_obj.browse(cr, uid, ref("sale_order_so6"))
     ids = [x.id for x in sale_id.picking_ids]
-    wiz_id = self.create(cr, uid, {'invoice_date': '2010-07-17', 'journal_id': ref('account.sales_journal')},
+    wiz_id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.sales_journal')},
       {'active_ids': ids})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids, "active_id": ids[0]})
 -
@@ -98,7 +99,7 @@
     for inv_lines in inv_brw.invoice_line:
         qty1=inv_lines.quantity
     assert (qty1 == qty), "Quantities are not the same"
--    
+-
   I open the Invoice for the SO.
 -
   !python {model: account.invoice}: |
@@ -111,7 +112,7 @@
       wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
 -
   Assign analytic journal into bank journal
-- 
+-
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
 -
@@ -127,7 +128,7 @@
         ref('account.period_8'), ref('sale.account_journal_bankjournal0'),
         name='test')
 -
-  I verify the invoice are in paid state or not. 
+  I verify the invoice are in paid state or not.
 -
   !python {model: account.invoice}: |
     sale_order_obj = self.pool.get('sale.order')

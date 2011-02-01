@@ -28,11 +28,11 @@
 -
   !record {model: purchase.order, id: purchase_order_po2}:
     company_id: base.main_company
-    date_order: '2010-05-11'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_method: picking
     location_id: stock.stock_location_stock
     order_line:
-      - date_planned: '2010-05-13'
+      - date_planned: !eval time.strftime('%Y-%m-%d')
         name: iPod
         price_unit: 100.0
         product_id: 'product_product_ipod0'
@@ -132,10 +132,11 @@
   Then I create an invoice from picking by clicking on "Create Invoice" wizard
 -
   !python {model: stock.invoice.onshipping}: |
+    import time
     pur_obj=self.pool.get('purchase.order')
     pur_id1=pur_obj.browse(cr, uid, ref("purchase_order_po2"))
     pick_ids = [x.id for x in pur_id1.picking_ids]
-    id = self.create(cr, uid, {'invoice_date': '2010-05-11', 'journal_id': ref('account.expenses_journal')},
+    id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.expenses_journal')},
       {'active_ids': pick_ids})
     self.create_invoice(cr, uid, [id], {"active_ids": pick_ids, "active_id": pick_ids[0]})
 -

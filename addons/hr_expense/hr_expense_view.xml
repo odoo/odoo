@@ -78,15 +78,15 @@
                     <notebook colspan="4">
                         <page string="Description">
                             <newline/>
-                            <field colspan="4" name="line_ids" nolabel="1">
+                            <field colspan="4" name="line_ids" nolabel="1" context="{'currency_id': currency_id}">
                                 <form string="Expense Lines">
                                     <group col="6" colspan="4">
-                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
+                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
                                         <field name="name" colspan="4"/>
                                         <newline/>
                                         <field name="unit_amount"/>
                                         <field name="unit_quantity"/>
-                                        <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id)"/>
+                                        <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
                                     </group>
                                     <group colspan="2" col="2" groups="analytic.group_analytic_accounting">
                                         <separator string="Customer Project" colspan="2"/>
@@ -112,7 +112,7 @@
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Accounting data"/>
                             <field name="journal_id"/>
-                            <field name="invoice_id"/>
+                            <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
                             </group>
                             <group col="2" colspan="2">
                             <separator colspan="2" string="Validation"/>

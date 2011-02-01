@@ -33,11 +33,7 @@
                     <field name="user_type"/>
                     <group colspan="4" attrs="{'invisible':[('user_type','!=','existing')]}">
                         <separator colspan="4" string="Existing External Users"/>
-                        <field colspan="4" nolabel="1" name="user_ids" mode="tree">
-                            <tree editable="bottom" string="">
-                                <field name="user_id"/>
-                            </tree>
-                        </field>
+                        <field colspan="4" nolabel="1" name="user_ids" mode="tree"/>
                     </group>
                     <group colspan="4" attrs="{'invisible':[('user_type','!=','new')]}">
                         <separator colspan="4" string="New Users (please provide one e-mail address per line below)"/>

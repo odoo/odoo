@@ -7,16 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-29 09:00+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-10 16:53+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:58+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: project_planning
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr "Fehler! Die Währung muss der Währung des Unternehmens entsprechen"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -73,6 +80,23 @@ msgstr "Zeiterfassung"
 #: model:ir.module.module,shortdesc:project_planning.module_meta_information
 msgid "Planning Management Module"
 msgstr "Management Zeitressourcen"
+
+#. module: project_planning
+#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
+msgid ""
+"With its global system to schedule all resources of a company (people and "
+"material), OpenERP allows you to encode and then automatically compute tasks "
+"and phases scheduling, track resource allocation and availability."
+msgstr ""
+"Sämtliche Ressourcen eines Unternehmens (Personal- und Sachmittel) können "
+"durch die umfassende Planungslogik zunächst definiert werden, bevor über "
+"automatische Planungsassistenten Aufgabendauern und Projektphasen unter "
+"gleichzeitiger Berücksichtigung von Verfügbarkeiten zugewiesen werden."
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Total planned tasks"
+msgstr "Anzahl geplanter Aufgaben"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.stat,account_id:0
@@ -134,11 +158,6 @@ msgid "Planning By Account"
 msgstr "Verplante Zeiten nach Analysekonto"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "Time without"
-msgstr "Zeit ohne Aufgabe"
-
-#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Current Plannings"
 msgstr "Aktuelle Auslastungsplanung"
@@ -159,9 +178,9 @@ msgid "Extra Info"
 msgstr "Extra Information"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,total_planned:0
-msgid "Total Planned"
-msgstr "Gesamt Auslastung"
+#: report:report_account_analytic.planning.print:0
+msgid "To :"
+msgstr "An:"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,timesheet:0
@@ -185,9 +204,10 @@ msgid "Time Allocation without Tasks"
 msgstr "Verfügbare Zeit ohne Aufgabe"
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "From"
-msgstr "Von"
+#: view:account.analytic.account:0
+#: view:report_account_analytic.planning:0
+msgid "Planning Lines"
+msgstr "Planungspositionen"
 
 #. module: project_planning
 #: constraint:res.company:0
@@ -247,6 +267,11 @@ msgid "Planning"
 msgstr "Auslastungsplanung"
 
 #. module: project_planning
+#: field:report_account_analytic.planning,total_planned:0
+msgid "Total Planned"
+msgstr "Gesamt Auslastung"
+
+#. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Time Encoding"
 msgstr "Verplane Arbeitszeiten"
@@ -255,12 +280,6 @@ msgstr "Verplane Arbeitszeiten"
 #: field:report_account_analytic.planning.user,free:0
 msgid "Unallocated Time"
 msgstr "Verfügbare Arbeitszeit"
-
-#. module: project_planning
-#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
-#: view:report_account_analytic.planning:0
-msgid "Planning by Account"
-msgstr "Planung nach Analysekonto"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.user,plan_open:0
@@ -277,9 +296,13 @@ msgid "Delegate"
 msgstr "Delegiere"
 
 #. module: project_planning
-#: field:report_account_analytic.planning,stat_ids:0
-msgid "Planning analysis"
-msgstr "Analyse Planung"
+#: help:report_account_analytic.planning.user,free:0
+msgid ""
+"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
+"without Tasks + Holiday Leaves)"
+msgstr ""
+"Berechnet in Arbeitstagen - (verplante Zeit für konkrete Aufgaben + "
+"verplante Zeit ohne konkrete Aufgaben + Urlaubszeit)"
 
 #. module: project_planning
 #: help:report_account_analytic.planning,business_days:0
@@ -288,6 +311,16 @@ msgid ""
 "time"
 msgstr ""
 "Definieren Sie hier die Arbeitstage in diesem Zeitraum für eine Vollkraft."
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "["
+msgstr "["
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "From :"
+msgstr "Von:"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,planning_user_ids:0
@@ -307,14 +340,14 @@ msgid "Planning By Account (in Days)"
 msgstr "Auslastungsplanung nach Analysekonto (in Tagen)"
 
 #. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Time without tasks"
+msgstr "Verfügbare Arbeitszeiten"
+
+#. module: project_planning
 #: field:report_account_analytic.planning,date_from:0
 msgid "Start Date"
 msgstr "Beginn am"
-
-#. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "Total Planned Tasks"
-msgstr "Gesamtverpl.  Aufgabenzeit"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,total_free:0
@@ -331,18 +364,9 @@ msgstr ""
 "zugewiesenen Aufgabenauslastung, ausgedrückt in Tagen."
 
 #. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "tasks"
-msgstr "Aufgaben"
-
-#. module: project_planning
-#: help:report_account_analytic.planning.user,free:0
-msgid ""
-"Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
-"without Tasks + Holiday Leaves)"
-msgstr ""
-"Berechnet in Arbeitstagen - (verplante Zeit für konkrete Aufgaben + "
-"verplante Zeit ohne konkrete Aufgaben + Urlaubszeit)"
+#: field:report_account_analytic.planning,stat_ids:0
+msgid "Planning analysis"
+msgstr "Analyse Planung"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -361,10 +385,10 @@ msgid "Draft"
 msgstr "Entwurf"
 
 #. module: project_planning
-#: view:account.analytic.account:0
+#: model:ir.model,name:project_planning.model_report_account_analytic_planning_account
 #: view:report_account_analytic.planning:0
-msgid "Planning Lines"
-msgstr "Planungspositionen"
+msgid "Planning by Account"
+msgstr "Planung nach Analysekonto"
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -520,7 +544,6 @@ msgstr "Reaktiviere"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,user_id:0
-#: report:report_account_analytic.planning.print:0
 msgid "Responsible"
 msgstr "Verantwortlich"
 
@@ -528,11 +551,6 @@ msgstr "Verantwortlich"
 #: model:ir.model,name:project_planning.model_report_account_analytic_planning_stat
 msgid "Planning stat"
 msgstr "Auswertung verfügbarer Zeitressourcen"
-
-#. module: project_planning
-#: report:report_account_analytic.planning.print:0
-msgid "To"
-msgstr "An"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.account,plan_tasks:0
@@ -543,18 +561,6 @@ msgstr "Verplante Zeiten für Aufgaben"
 #: report:report_account_analytic.planning.print:0
 msgid "Summary by user"
 msgstr "Gesamtsumme nach Benutzer"
-
-#. module: project_planning
-#: model:ir.actions.act_window,help:project_planning.action_account_analytic_planning_form
-msgid ""
-"With its commun system for scheduling all resources of a company (people and "
-"materials), OpenERP allows you to encode then compute automatically tasks "
-"and phases scheduling, track resources allocation and availibility."
-msgstr ""
-"Durch die grundsätzliche Möglichkeit zur Planung von Ressourcen (Personen "
-"und Sachgüter), ermöglicht OpenERP eine automatische Kalkulation von Aufgabe "
-"und Projektphasen zwecks Verfolgung und Abgleich freier und tatsächlicher "
-"benötigter Ressourcen sowie Verfügbarkeit von Ressourcen."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -587,6 +593,16 @@ msgid "Summary by project"
 msgstr "Zeiten nach Projekt"
 
 #. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "Responsible :"
+msgstr "Verantwortlich:"
+
+#. module: project_planning
+#: report:report_account_analytic.planning.print:0
+msgid "]"
+msgstr "]"
+
+#. module: project_planning
 #: field:res.company,planning_time_mode_id:0
 msgid "Planning Time Unit"
 msgstr "Projekt Zeiteinheit"
@@ -613,8 +629,20 @@ msgstr ""
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
+#~ msgid "Time without"
+#~ msgstr "Zeit ohne Aufgabe"
+
+#~ msgid "From"
+#~ msgstr "Von"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Fehlerhafter xml Quellcode für diese Ansicht !"
+
+#~ msgid "Total Planned Tasks"
+#~ msgstr "Gesamtverpl.  Aufgabenzeit"
+
+#~ msgid "tasks"
+#~ msgstr "Aufgaben"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Fehler ! Sie können kein rekursives Menü erstellen."
@@ -622,6 +650,9 @@ msgstr ""
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "Das Objekt muss mit x_ beginnen und darf keine Sonderzeichen haben !"
+
+#~ msgid "To"
+#~ msgstr "An"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Der Name des Moduls muss eindeutig sein."
@@ -631,3 +662,13 @@ msgstr ""
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Die Größe des Feldes sollte niemals kleiner als 1 sein !"
+
+#~ msgid ""
+#~ "With its commun system for scheduling all resources of a company (people and "
+#~ "materials), OpenERP allows you to encode then compute automatically tasks "
+#~ "and phases scheduling, track resources allocation and availibility."
+#~ msgstr ""
+#~ "Durch die grundsätzliche Möglichkeit zur Planung von Ressourcen (Personen "
+#~ "und Sachgüter), ermöglicht OpenERP eine automatische Kalkulation von Aufgabe "
+#~ "und Projektphasen zwecks Verfolgung und Abgleich freier und tatsächlicher "
+#~ "benötigter Ressourcen sowie Verfügbarkeit von Ressourcen."

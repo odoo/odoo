@@ -44,13 +44,13 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="name">May Expenses</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="date">2010-05-03</field>
+            <field name="date" eval="time.strftime('%Y-%m-03')"/>
             <field name="state">draft</field>
         </record>
 
         <record id="hr_expense_line_travelbycarcustomerseagatedouble0" model="hr.expense.line">
             <field name="name">Travel by Air</field>
-            <field name="date_value">2010-05-03</field>
+            <field name="date_value" eval="time.strftime('%Y-%m-03')"/>
             <field name="analytic_account" ref="account.analytic_consultancy"/>
             <field name="product_id" ref="product_product_expense_air"/>
             <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'May Expenses')]"/>
@@ -61,7 +61,7 @@
 
         <record id="hr_expense_line_basicpcserverforseagate0" model="hr.expense.line">
             <field name="name">Basic PC - Server for Seagate</field>
-            <field name="date_value">2010-05-03</field>
+            <field name="date_value" eval="time.strftime('%Y-%m-03')"/>
             <field name="analytic_account" ref="account.analytic_seagate_p2"/>
             <field name="product_id" ref="product.product_product_pc4"/>
             <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'May Expenses')]"/>
@@ -79,13 +79,13 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="name">Travel Expenses</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="date">2010-04-20</field>
+            <field name="date" eval="time.strftime('%Y-%m-20')"/>
             <field name="state">draft</field>
         </record>
 
         <record id="hr_expense_line_hotelexpensesthymbra0" model="hr.expense.line">
             <field name="name">Hotel Expenses - Thymbra</field>
-            <field name="date_value">2010-05-03</field>
+            <field name="date_value" eval="time.strftime('%Y-%m-03')"/>
             <field name="analytic_account" ref="account.analytic_thymbra"/>
             <field name="product_id" ref="product_product_expense_hotel"/>
             <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'Travel Expenses')]"/>
@@ -96,7 +96,7 @@
 
         <record id="hr_expense_line_car_travel" model="hr.expense.line">
                 <field name="name">Bruxelles - Paris</field>
-                <field name="date_value">2010-05-03</field>
+                <field name="date_value" eval="time.strftime('%Y-%m-03')"/>
                 <field name="analytic_account" ref="account.analytic_thymbra"/>
                 <field name="product_id" ref="product_product_expense_car"/>
                 <field model="hr.expense.expense" name="expense_id" search="[('name', '=', u'Travel Expenses')]"/>

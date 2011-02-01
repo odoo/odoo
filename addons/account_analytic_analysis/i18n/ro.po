@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-10-30 16:17+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:31+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:32+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,hours_qtt_invoiced:0
@@ -35,15 +35,11 @@ msgid "Computed using the formula: Maximum Quantity - Hours Tot."
 msgstr "Calculat folosind formula: Cantitate maximă - Total ore"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:532
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:703
 #, python-format
 msgid "AccessError"
 msgstr ""
-
-#. module: account_analytic_analysis
-#: field:account.analytic.account,ca_theorical:0
-msgid "Theorical Revenue"
-msgstr "Venit teoretic"
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_invoice_date:0
@@ -73,14 +69,14 @@ msgid "Computed using the formula: Theorial Revenue - Total Costs"
 msgstr "Calculat folosing formula: Venit teoretic - Costuri totale"
 
 #. module: account_analytic_analysis
-#: field:account.analytic.account,theorical_margin:0
-msgid "Theorical Margin"
-msgstr "Marja teoretică"
-
-#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr "Rată marjă reală (%)"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,ca_theorical:0
+msgid "Theoretical Revenue"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,last_worked_invoiced_date:0
@@ -119,6 +115,11 @@ msgstr ""
 #: field:account.analytic.account,remaining_hours:0
 msgid "Remaining Hours"
 msgstr "Ore rămase"
+
+#. module: account_analytic_analysis
+#: field:account.analytic.account,theorical_margin:0
+msgid "Theoretical Margin"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_theorical:0
@@ -173,7 +174,8 @@ msgid "Invoiced Amount"
 msgstr "Suma facturată"
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:0
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:533
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:704
 #, python-format
 msgid "You try to bypass an access rule (Document type: %s)."
 msgstr "Aţi încercat să încălcaţi o regulă de acces (Tip document: %s)."
@@ -192,6 +194,13 @@ msgstr "Ore facturate"
 #: field:account.analytic.account,real_margin:0
 msgid "Real Margin"
 msgstr "Marja reală"
+
+#. module: account_analytic_analysis
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr ""
 
 #. module: account_analytic_analysis
 #: help:account.analytic.account,ca_invoiced:0
@@ -308,6 +317,9 @@ msgstr ""
 #~ msgid "Hours summary by user"
 #~ msgstr "Situaţie ore per utilizator"
 
+#~ msgid "Theorical Revenue"
+#~ msgstr "Venit teoretic"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML invalid pentru arhitectura machetei de afișare !"
 
@@ -316,6 +328,9 @@ msgstr ""
 
 #~ msgid "Current Analytic Accounts"
 #~ msgstr "Conturi analitice curente"
+
+#~ msgid "Theorical Margin"
+#~ msgstr "Marja teoretică"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

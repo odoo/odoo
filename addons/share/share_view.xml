@@ -18,9 +18,9 @@
             <field name="type">form</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
-                <field name="password" position="after">
+                <xpath expr="/form/notebook" position="before">
                     <field name="share"/>
-                </field>
+                </xpath>
             </field>
     </record>
     </data>

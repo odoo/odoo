@@ -250,7 +250,7 @@ class resource_resource(osv.osv):
         """
         Return a list of  Resource Class objects for the resources allocated to the phase.
         """
-        resource_objs = []
+        resource_objs = {}
         user_pool = self.pool.get('res.users')
         for user in user_pool.browse(cr, uid, user_ids, context=context):
             resource_ids = self.search(cr, uid, [('user_id', '=', user.id)], context=context)
@@ -264,12 +264,18 @@ class resource_resource(osv.osv):
                 resource_cal = resource.calendar_id.id
                 if resource_cal:
                     leaves = self.compute_vacation(cr, uid, calendar_id, resource.id, resource_cal, context=context)
-            resource_objs.append(classobj(str(user.name), (Resource,),{
-                                             '__doc__': user.name,
-                                             '__name__': user.name,
-                                             'vacation': tuple(leaves),
-                                             'efficiency': resource_eff,
-                                          }))
+                temp = {
+                         'name' : resource.name,
+                         'vacation': tuple(leaves),
+                         'efficiency': resource_eff,
+                      }
+                resource_objs[resource_id] = temp     
+#            resource_objs.append(classobj(str(user.name), (Resource,),{
+#                                             '__doc__': user.name,
+#                                             '__name__': user.name,
+#                                             'vacation': tuple(leaves),
+#                                             'efficiency': resource_eff,
+#                                          }))
         return resource_objs
 
     def compute_vacation(self, cr, uid, calendar_id, resource_id=False, resource_calendar=False, context=None):
@@ -322,6 +328,7 @@ class resource_resource(osv.osv):
         # and create a list like [('mon', '8:00-12:00'), ('mon', '13:00-18:00')]
         for week in weeks:
             res_str = ""
+            day = None
             if week_days.has_key(week['dayofweek']):
                 day = week_days[week['dayofweek']]
                 wk_days[week['dayofweek']] = week_days[week['dayofweek']]
@@ -348,6 +355,13 @@ class resource_resource(osv.osv):
             wktime_cal.append((non_working[:-1], time_range))
         return wktime_cal
 
+    #TODO: Write optimized alogrothem for resource availability. : Method Yet not implemented
+    def check_availability(self, cr, uid, ids, start, end, context=None):
+        if context ==  None:
+            contex = {}
+        allocation = {}
+        return allocation
+
 resource_resource()
 
 class resource_calendar_leaves(osv.osv):
@@ -355,7 +369,7 @@ class resource_calendar_leaves(osv.osv):
     _description = "Leave Detail"
     _columns = {
         'name' : fields.char("Name", size=64),
-        'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company",readonly=True),
+        'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company", store=True, readonly=True),
         'calendar_id' : fields.many2one("resource.calendar", "Working time"),
         'date_from' : fields.datetime('Start Date', required=True),
         'date_to' : fields.datetime('End Date', required=True),

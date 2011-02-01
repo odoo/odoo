@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-29 09:52+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-12 16:46+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-31 05:26+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:39+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
@@ -252,16 +252,6 @@ msgid "Gives the sequence order when displaying a list of expense lines."
 msgstr "Reihenfolge für die Ansichtsliste der Personalspesen."
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
-#, python-format
-msgid ""
-"Please configure Default Expanse account for Product purchase, "
-"`property_account_expense_categ`"
-msgstr ""
-"Bitte definieren Sie das Standard Aufwandskonto für Produkt Einkäufe,  "
-"`property_account_expense_categ`"
-
-#. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
 #: view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
@@ -281,6 +271,16 @@ msgid "State"
 msgstr "Status"
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:145
+#, python-format
+msgid ""
+"Please configure Default Expense account for Product purchase, "
+"`property_account_expense_categ`"
+msgstr ""
+"Bitte konfigurieren Sie ein Standard Aufwandskonto für den Einkauf von "
+"Produkten (property_account_expense_categ)"
+
+#. module: hr_expense
 #: report:hr.expense:0
 #: view:hr.expense.expense:0
 #: field:hr.expense.expense,employee_id:0
@@ -295,7 +295,6 @@ msgid "Qty"
 msgstr "Anz."
 
 #. module: hr_expense
-#: report:hr.expense:0
 #: view:hr.expense.report:0
 #: field:hr.expense.report,price_total:0
 msgid "Total Price"
@@ -307,7 +306,8 @@ msgid "Some costs may be reinvoices to the customer"
 msgstr "Einige Aufwendungen können an Kunde weiterberechnet werden"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
+#: code:addons/hr_expense/hr_expense.py:145
+#: code:addons/hr_expense/hr_expense.py:158
 #, python-format
 msgid "Error !"
 msgstr "Fehler !"
@@ -366,7 +366,7 @@ msgid "Reimbursement"
 msgstr "Erstattung"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:0
+#: code:addons/hr_expense/hr_expense.py:158
 #, python-format
 msgid "The employee must have a Home address"
 msgstr "Der Mitarbeiter muss eine private Anschrift haben."
@@ -706,6 +706,11 @@ msgid "Quantities"
 msgstr "Mengen"
 
 #. module: hr_expense
+#: report:hr.expense:0
+msgid "Price"
+msgstr "Preis"
+
+#. module: hr_expense
 #: field:hr.expense.report,no_of_account:0
 msgid "# of Accounts"
 msgstr "# Konten"
@@ -938,6 +943,14 @@ msgstr "Weiterberechnung"
 
 #~ msgid "Can be Expensed"
 #~ msgstr "Als Ausgabe verwendbar"
+
+#, python-format
+#~ msgid ""
+#~ "Please configure Default Expanse account for Product purchase, "
+#~ "`property_account_expense_categ`"
+#~ msgstr ""
+#~ "Bitte definieren Sie das Standard Aufwandskonto für Produkt Einkäufe,  "
+#~ "`property_account_expense_categ`"
 
 #~ msgid ""
 #~ "Determine if the product can be visible in the list of product within a "

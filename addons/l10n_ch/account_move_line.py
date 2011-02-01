@@ -31,7 +31,27 @@
 #
 ##############################################################################
 
-from osv import osv
+from osv import fields, osv
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    Author: Nicolas Bessi. Copyright Camptocamp SA
+#    Donors: Hasa Sàrl, Open Net Sàrl and Prisme Solutions Informatique SA
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 
 class AccountMoveLine(osv.osv):
     """ Inherit account.move.line in order to add a custom link
@@ -39,13 +59,6 @@ class AccountMoveLine(osv.osv):
         was defined in account_payment between line """
 
     _inherit = 'account.move.line'
-
-    ## @param self The object pointer.
-    ## @param cr a psycopg cursor
-    ## @param uid res.user.id that is currently loged
-    ## @param payment_type manual
-    ## @parma context a standard dict
-    ## @return a dict  who has the account move line id as key and the bank id as value
 
     def line2bank(self, cr, uid, ids, payment_type='manual', context=None):
         """add a link to account.move.line in order to link

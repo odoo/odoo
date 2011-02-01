@@ -6,73 +6,78 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2009-01-30 13:27+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-28 03:29+0000\n"
+"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:04+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-29 04:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Ref."
-msgstr ""
+msgstr "單號參照"
 
 #. module: delivery
 #: model:product.template,name:delivery.delivery_product_product_template
 msgid "Delivery by Poste"
-msgstr ""
+msgstr "郵遞交貨"
 
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Destination"
-msgstr ""
+msgstr "目的地"
 
 #. module: delivery
 #: field:stock.move,weight_net:0
 msgid "Net weight"
-msgstr ""
+msgstr "淨重"
 
 #. module: delivery
 #: view:stock.picking:0
 msgid "Delivery Order"
-msgstr ""
+msgstr "交貨單"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No price available !"
-msgstr ""
+msgstr "無價錢提供！"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
 msgid "Delivery Grid Line"
-msgstr ""
+msgstr "交貨格線"
 
 #. module: delivery
 #: view:delivery.grid:0
 msgid "Delivery grids"
-msgstr ""
+msgstr "交貨格"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
 msgid "Volume"
-msgstr ""
+msgstr "體積"
+
+#. module: delivery
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "交貨參照不能重覆！"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
 msgid "Grid Line"
-msgstr ""
+msgstr "格線"
 
 #. module: delivery
 #: model:ir.actions.report.xml,name:delivery.report_shipping
 msgid "Delivery order"
-msgstr ""
+msgstr "交貨單"
 
 #. module: delivery
 #: view:res.partner:0
@@ -93,12 +98,12 @@ msgstr ""
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
-msgstr ""
+msgstr "國家"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Delivery Order :"
-msgstr ""
+msgstr "交貨單："
 
 #. module: delivery
 #: field:delivery.grid.line,variable_factor:0
@@ -106,9 +111,18 @@ msgid "Variable Factor"
 msgstr ""
 
 #. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"The delivery price list allows you to compute the cost and sales price of "
+"the delivery according to the weight of the products and other criteria. You "
+"can define several price lists for one delivery method, per country or a "
+"zone in a specific country defined by a postal code range."
+msgstr ""
+
+#. module: delivery
 #: selection:delivery.grid.line,price_type:0
 msgid "Fixed"
-msgstr ""
+msgstr "固定"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -118,15 +132,15 @@ msgstr ""
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
-msgstr ""
+msgstr "交貨方式"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "庫存調動"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:0
+#: code:addons/delivery/delivery.py:141
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
@@ -134,18 +148,26 @@ msgstr ""
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "運輸公司追蹤編號"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
 msgid "Net Weight"
+msgstr "淨重"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"Create and manage the delivery methods you need for your sales activities. "
+"Each delivery method can be assigned to a price list which computes the "
+"price of the delivery according to the products sold or delivered."
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
+#: code:addons/delivery/stock.py:98
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "警告"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -155,22 +177,22 @@ msgstr ""
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Cancel"
-msgstr ""
+msgstr "取消(_C)"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
 msgid "Operator"
-msgstr ""
+msgstr "經手人"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "伙伴"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "銷貨單"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid
@@ -180,12 +202,12 @@ msgstr ""
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Invoiced to"
-msgstr ""
+msgstr "發票交至"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "提貨清單"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_sale_order
@@ -228,7 +250,7 @@ msgstr ""
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Order Date"
-msgstr ""
+msgstr "單子日期"
 
 #. module: delivery
 #: field:delivery.grid,name:0
@@ -238,12 +260,12 @@ msgstr ""
 #. module: delivery
 #: view:stock.move:0
 msgid "Weights"
-msgstr ""
+msgstr "重量"
 
 #. module: delivery
 #: field:stock.picking,number_of_packages:0
 msgid "Number of Packages"
-msgstr ""
+msgstr "包裝數"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
@@ -252,7 +274,7 @@ msgstr ""
 #: field:stock.move,weight:0
 #: field:stock.picking,weight:0
 msgid "Weight"
-msgstr ""
+msgstr "重量"
 
 #. module: delivery
 #: help:delivery.carrier,active:0
@@ -262,7 +284,7 @@ msgid ""
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid available !"
 msgstr ""
@@ -273,7 +295,8 @@ msgid ">="
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:66
+#: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "Order not in draft state !"
 msgstr ""
@@ -286,7 +309,7 @@ msgstr ""
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Lot"
-msgstr ""
+msgstr "批次"
 
 #. module: delivery
 #: constraint:stock.move:0
@@ -297,7 +320,7 @@ msgstr ""
 #: field:delivery.carrier,active:0
 #: field:delivery.grid,active:0
 msgid "Active"
-msgstr ""
+msgstr "活躍"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -307,31 +330,23 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,product_id:0
 msgid "Delivery Product"
-msgstr ""
+msgstr "交貨產品"
 
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid "Condition"
-msgstr ""
+msgstr "條件"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"Create and manage the delivery method(s) you want your sales to be processed "
-"with. Each delivery method can be assigned to a pricelist which computes the "
-"price of the delivery according to the products sold or delivered."
-msgstr ""
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr ""
+#: field:delivery.grid.line,standard_price:0
+msgid "Cost Price"
+msgstr "成本價"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
 #: field:delivery.grid.line,type:0
 msgid "Variable"
-msgstr ""
+msgstr "變量"
 
 #. module: delivery
 #: help:res.partner,property_delivery_carrier:0
@@ -341,12 +356,12 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,max_value:0
 msgid "Maximum Value"
-msgstr ""
+msgstr "最大值"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Quantity"
-msgstr ""
+msgstr "數量"
 
 #. module: delivery
 #: field:delivery.grid,zip_from:0
@@ -362,21 +377,12 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
 msgid "Carrier Partner"
-msgstr ""
+msgstr "運輸公司伙伴"
 
 #. module: delivery
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
-
-#. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
-msgid ""
-"The delivery pricelist allows you to compute the cost and sales price of the "
-"delivery based on the weight of the products and other criteria. You can "
-"define several pricelists for one delivery method, for each region such as "
-"countries or a zone in a specific country defined by a zip code range."
-msgstr ""
+msgstr "銷售&採購"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -384,9 +390,9 @@ msgid "<="
 msgstr ""
 
 #. module: delivery
-#: field:delivery.grid.line,standard_price:0
-msgid "Cost Price"
-msgstr ""
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "須為此產品分配生產批次"
 
 #. module: delivery
 #: view:delivery.sale.order:0
@@ -397,28 +403,28 @@ msgstr ""
 #: model:ir.actions.act_window,name:delivery.action_delivery_cost
 #: view:sale.order:0
 msgid "Delivery Costs"
-msgstr ""
+msgstr "交貨成本"
 
 #. module: delivery
 #: report:sale.shipping:0
 msgid "Description"
-msgstr ""
+msgstr "說明"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_grid_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_grid_form
 msgid "Delivery Pricelist"
-msgstr ""
+msgstr "交貨價目表"
 
 #. module: delivery
 #: field:delivery.carrier,price:0
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Price"
-msgstr ""
+msgstr "價格"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr ""
@@ -426,13 +432,13 @@ msgstr ""
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
 msgid "Delivery"
-msgstr ""
+msgstr "交貨"
 
 #. module: delivery
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 msgid "Weight * Volume"
-msgstr ""
+msgstr "重量 * 體積"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -440,7 +446,7 @@ msgid "="
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/stock.py:0
+#: code:addons/delivery/stock.py:99
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
 msgstr ""
@@ -448,7 +454,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
-msgstr ""
+msgstr "名稱"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -458,12 +464,12 @@ msgstr ""
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
 msgid "Carrier"
-msgstr ""
+msgstr "運輸公司"
 
 #. module: delivery
 #: view:delivery.sale.order:0
 msgid "_Apply"
-msgstr ""
+msgstr "套用(_A)"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -471,7 +477,8 @@ msgid "ID"
 msgstr ""
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:0
+#: code:addons/delivery/wizard/delivery_sale_order.py:66
+#: code:addons/delivery/wizard/delivery_sale_order.py:98
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
@@ -479,7 +486,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
 msgid "Carriers and deliveries"
-msgstr ""
+msgstr "運輸公司與交貨"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
@@ -494,7 +501,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,list_price:0
 msgid "Sale Price"
-msgstr ""
+msgstr "銷售價"
 
 #. module: delivery
 #: view:delivery.grid:0
@@ -505,7 +512,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
-msgstr ""
+msgstr "價目類型"
 
 #~ msgid "Notes"
 #~ msgstr "注解"

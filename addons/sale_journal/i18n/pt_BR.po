@@ -6,43 +6,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2009-09-08 14:31+0000\n"
-"Last-Translator: Aldo Giovani <aldogiovani@gmail.com>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-14 09:27+0000\n"
+"Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:32+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid "The type of journal used for sales and picking."
-msgstr ""
+msgstr "Tipo de diário usado para vendas e separação"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_sale_order
-msgid "Sales Order"
-msgstr ""
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "Referência de Pedido deve ser única !"
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Invoicing"
-msgstr ""
-
-#. module: sale_journal
-#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
-msgid ""
-"Invoice types are used on partners, sales order and delivery orders. You can "
-"create journal to group your invoicing according to customer's needs: daily, "
-"each wednesday, monthly, etc."
-msgstr ""
+msgstr "Faturamento"
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -55,16 +47,18 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the invoice "
 "type without removing it."
 msgstr ""
+"Se o campo Ativo estiver Falso (desmarcado), a fatura não será mostrada "
+"mesmo sem ser removida."
 
 #. module: sale_journal
 #: view:sale_journal.invoice.type:0
 msgid "Notes"
-msgstr ""
+msgstr "Notas"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Method"
-msgstr ""
+msgstr "Método de Faturamento"
 
 #. module: sale_journal
 #: model:ir.module.module,description:sale_journal.module_meta_information
@@ -93,26 +87,68 @@ msgid ""
 "    Some statistics by journals are provided.\n"
 "    "
 msgstr ""
+"\n"
+"    O módulos de diários de venda permitem que você categorize suas\n"
+"    vendas e entregas (listas de separação) em diferentes diários.\n"
+"    Este módulo é muito útil para grandes empresas que\n"
+"    trabalham por departamentos.\n"
+"\n"
+"    Você pode usar um diário para diferentes propósitos, alguns exemplos:\n"
+"    * isolar vendas de diferentes departamentos\n"
+"    * diários de entregas por caminhão ou por UPS\n"
+"\n"
+"    Diários tem um responsável e passam por diferentes status:\n"
+"    * provisório, aberto, cancelado, concluído.\n"
+"\n"
+"    Operações em lote podem ser processadas em diferentes diários para\n"
+"    confirmar todas as vendas de uma só vez, para validar ou faturar "
+"embalagem, ...\n"
+"\n"
+"    Também suportam métodos de faturamento em lote que podem ser "
+"configurados por\n"
+"    parceiros e pedidos de venda. Exemplos:\n"
+"    * faturamento diário,\n"
+"    * faturamento mensal, ...\n"
+"\n"
+"    Algumas estatísticas por diários também são fornecidas.\n"
+"    "
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
-msgstr ""
+msgstr "Não agrupado"
 
 #. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Grouped"
-msgstr ""
+msgstr "Agrupado"
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
+msgstr "Erro ! Você não pode criar membros recursivos associados."
+
+#. module: sale_journal
+#: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
+msgid ""
+"Invoice types are used for partners, sales orders and delivery orders. You "
+"can create a specific invoicing journal to group your invoicing according to "
+"your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
+"Tipos de fatura são usadas por parceiros, pedidos de venda e pedidos de "
+"entrega. Você pode criar um diário específico de faturamento para agrupar "
+"seu faturamento de acordo com as necessidades de seus clientes: diariamente, "
+"cada Quarta-Feira, mensalmente, etc."
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
 msgid "Invoicing method"
-msgstr ""
+msgstr "Método de faturamento"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de Venda"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -120,34 +156,34 @@ msgstr ""
 #: field:sale_journal.invoice.type,name:0
 #: field:stock.picking,invoice_type_id:0
 msgid "Invoice Type"
-msgstr ""
+msgstr "Tipo de Fatura"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,active:0
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Parceiro"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
 #: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
 #: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
 msgid "Invoice Types"
-msgstr ""
+msgstr "Tipos de Fatura"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Lista de Separação"
 
 #. module: sale_journal
 #: model:ir.module.module,shortdesc:sale_journal.module_meta_information
 msgid "Managing sales and deliveries by journal"
-msgstr ""
+msgstr "Gerenciar vendas e entregas por diário"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Invalido XML para Arquitetura da View"

@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-25 21:04+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 11:11+0000\n"
+"Last-Translator: badralb <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-26 04:50+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:29+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
 msgid "If True creator of the idea will be visible to others"
-msgstr ""
+msgstr "Хэрэв Үнэн бол идейг үүсгэгч бусдад харагдана."
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
@@ -32,7 +32,7 @@ msgstr ""
 #: view:idea.vote:0
 #: model:ir.ui.menu,name:idea.menu_idea_vote
 msgid "Votes"
-msgstr ""
+msgstr "Саналууд"
 
 #. module: idea
 #: view:idea.idea:0
@@ -43,7 +43,7 @@ msgstr "Сэтгэгдэл"
 #. module: idea
 #: view:idea.idea:0
 msgid "Submit Vote"
-msgstr ""
+msgstr "Саналыг баталгаажуулах"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_report_vote_all
@@ -84,7 +84,7 @@ msgid "March"
 msgstr "3-р сар"
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
+#: code:addons/idea/wizard/idea_post_vote.py:92
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
 msgstr ""
@@ -103,7 +103,7 @@ msgstr "Татгалзах"
 #. module: idea
 #: field:idea.idea,count_votes:0
 msgid "Count of votes"
-msgstr ""
+msgstr "Саналын тоо"
 
 #. module: idea
 #: model:ir.model,name:idea.model_report_vote
@@ -129,8 +129,9 @@ msgid "Category of ideas"
 msgstr ""
 
 #. module: idea
-#: code:addons/idea/idea.py:0
-#: code:addons/idea/wizard/idea_post_vote.py:0
+#: code:addons/idea/idea.py:253
+#: code:addons/idea/wizard/idea_post_vote.py:89
+#: code:addons/idea/wizard/idea_post_vote.py:92
 #, python-format
 msgid "Warning !"
 msgstr "Сануулга !"
@@ -153,7 +154,7 @@ msgstr ""
 #. module: idea
 #: field:idea.category,parent_id:0
 msgid "Parent Categories"
-msgstr ""
+msgstr "Эцэг ангилалууд"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -175,7 +176,7 @@ msgid "# of Lines"
 msgstr ""
 
 #. module: idea
-#: code:addons/idea/wizard/idea_post_vote.py:0
+#: code:addons/idea/wizard/idea_post_vote.py:89
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
 msgstr ""
@@ -207,7 +208,7 @@ msgstr "Статистик"
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Not Voted"
-msgstr ""
+msgstr "Санал аваагүй"
 
 #. module: idea
 #: sql_constraint:idea.category:0
@@ -232,7 +233,7 @@ msgstr "Дэд ангиллууд"
 #. module: idea
 #: view:idea.select:0
 msgid "Next"
-msgstr ""
+msgstr "Дараагийн"
 
 #. module: idea
 #: view:idea.idea:0
@@ -277,7 +278,7 @@ msgstr ""
 #. module: idea
 #: selection:report.vote,month:0
 msgid "July"
-msgstr ""
+msgstr "7-р сар"
 
 #. module: idea
 #: view:idea.idea:0
@@ -285,13 +286,13 @@ msgstr ""
 #: view:report.vote:0
 #: selection:report.vote,idea_state:0
 msgid "Accepted"
-msgstr ""
+msgstr "Зөвшөөрсөн"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_category
 #: model:ir.ui.menu,name:idea.menu_idea_category
 msgid "Categories"
-msgstr ""
+msgstr "Ангилалууд"
 
 #. module: idea
 #: view:report.vote:0
@@ -301,19 +302,19 @@ msgstr ""
 #. module: idea
 #: field:idea.idea,open_date:0
 msgid "Open date"
-msgstr ""
+msgstr "Нээлттэй огноо"
 
 #. module: idea
 #: field:idea.idea,vote_ids:0
 #: model:ir.actions.act_window,name:idea.action_idea_post_vote
 msgid "Vote"
-msgstr ""
+msgstr "Санал"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote_stat
 #: model:ir.ui.menu,name:idea.menu_idea_vote_stat
 msgid "Vote Statistics"
-msgstr ""
+msgstr "Саналын статистик"
 
 #. module: idea
 #: field:idea.idea,vote_limit:0
@@ -323,7 +324,7 @@ msgstr ""
 #. module: idea
 #: view:idea.category:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Эцэг ангилал"
 
 #. module: idea
 #: field:idea.comment,content:0
@@ -332,23 +333,23 @@ msgstr ""
 #: field:idea.vote,comment:0
 #: model:ir.model,name:idea.model_idea_comment
 msgid "Comment"
-msgstr ""
+msgstr "Сэтгэгдэл"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "September"
-msgstr ""
+msgstr "Есдүгээр сар"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "December"
-msgstr ""
+msgstr "Арван хоёрдугаар сар"
 
 #. module: idea
 #: view:report.vote:0
 #: field:report.vote,month:0
 msgid "Month"
-msgstr ""
+msgstr "Сар"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_idea_categ_open
@@ -364,7 +365,7 @@ msgstr ""
 #: view:report.vote:0
 #: field:report.vote,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Ангилал"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -372,18 +373,18 @@ msgstr ""
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Very Good"
-msgstr ""
+msgstr "Маш сайн"
 
 #. module: idea
 #: view:report.vote:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Жил  "
 
 #. module: idea
 #: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Opened"
-msgstr ""
+msgstr "Нээлттэй"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
@@ -410,12 +411,12 @@ msgstr ""
 #: selection:idea.idea,state:0
 #: selection:report.vote,idea_state:0
 msgid "Draft"
-msgstr ""
+msgstr "Ноорог"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "August"
-msgstr ""
+msgstr "8-р сар"
 
 #. module: idea
 #: selection:idea.idea,my_vote:0
@@ -423,18 +424,18 @@ msgstr ""
 #: selection:idea.vote,score:0
 #: selection:idea.vote.stat,score:0
 msgid "Normal"
-msgstr ""
+msgstr "Хэвийн"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "June"
-msgstr ""
+msgstr "6-р сар"
 
 #. module: idea
 #: field:report.vote,creater_id:0
 #: field:report.vote,user_id:0
 msgid "User Name"
-msgstr ""
+msgstr "Хэрэглэгчийн Нэр"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
@@ -447,12 +448,12 @@ msgstr ""
 #: field:idea.vote,user_id:0
 #: view:report.vote:0
 msgid "User"
-msgstr ""
+msgstr "Хэрэглэгч"
 
 #. module: idea
 #: field:idea.vote,date:0
 msgid "Date"
-msgstr ""
+msgstr "Огноо"
 
 #. module: idea
 #: view:idea.post.vote:0
@@ -462,33 +463,33 @@ msgstr ""
 #. module: idea
 #: field:idea.idea,my_vote:0
 msgid "My Vote"
-msgstr ""
+msgstr "Миний Санал"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "October"
-msgstr ""
+msgstr "10-р сар"
 
 #. module: idea
 #: field:idea.comment,create_date:0
 #: field:idea.idea,created_date:0
 msgid "Creation date"
-msgstr ""
+msgstr "Үүсгэсэн огноо"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "January"
-msgstr ""
+msgstr "1-р сар"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_idea
 msgid "idea.idea"
-msgstr ""
+msgstr "idea.idea"
 
 #. module: idea
 #: field:idea.category,summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Хураангуй"
 
 #. module: idea
 #: field:idea.idea,name:0
@@ -498,56 +499,56 @@ msgstr ""
 #. module: idea
 #: selection:report.vote,month:0
 msgid "November"
-msgstr ""
+msgstr "11-р сар"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "History"
-msgstr ""
+msgstr "Түүх"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Vots Statistics"
-msgstr ""
+msgstr "Саналын Статистик"
 
 #. module: idea
 #: field:report.vote,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Захиалгын огноо"
 
 #. module: idea
 #: view:idea.idea:0
 #: field:idea.idea,user_id:0
 #: view:report.vote:0
 msgid "Creator"
-msgstr ""
+msgstr "Үүсгэгч"
 
 #. module: idea
 #: view:idea.post.vote:0
 #: model:ir.ui.menu,name:idea.menu_give_vote
 msgid "Give Vote"
-msgstr ""
+msgstr "Санал Өгөх"
 
 #. module: idea
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
-msgstr ""
+msgstr "Танд хэрэглэгч бүрт зөвхөн нэг Санал хэрэгтэй бол нэг болго"
 
 #. module: idea
 #: view:idea.post.vote:0
 msgid "Cancel"
-msgstr ""
+msgstr "Цуцлах"
 
 #. module: idea
 #: view:idea.select:0
 msgid "Close"
-msgstr ""
+msgstr "Хаах"
 
 #. module: idea
 #: view:idea.idea:0
 #: view:report.vote:0
 msgid "Open"
-msgstr ""
+msgstr "Нээх"
 
 #. module: idea
 #: view:report.vote:0
@@ -566,44 +567,44 @@ msgstr ""
 #. module: idea
 #: model:ir.model,name:idea.model_idea_post_vote
 msgid "Post vote"
-msgstr ""
+msgstr "Саналыг нийтлэх"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Current"
-msgstr ""
+msgstr "Одоогийн"
 
 #. module: idea
 #: field:idea.vote.stat,score:0
 #: field:report.vote,score:0
 msgid "Score"
-msgstr ""
+msgstr "Оноо"
 
 #. module: idea
 #: view:idea.vote:0
 msgid "Comments:"
-msgstr ""
+msgstr "Сэтгэгдлүүд"
 
 #. module: idea
 #: view:idea.category:0
 #: field:idea.idea,description:0
 #: field:idea.post.vote,note:0
 msgid "Description"
-msgstr ""
+msgstr "Тайлбар"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "May"
-msgstr ""
+msgstr "5-р сар"
 
 #. module: idea
 #: selection:idea.idea,state:0
 #: view:report.vote:0
 msgid "Refused"
-msgstr ""
+msgstr "Татгалзсан"
 
 #. module: idea
-#: code:addons/idea/idea.py:0
+#: code:addons/idea/idea.py:253
 #, python-format
 msgid "Draft/Accepted/Cancelled ideas Could not be voted"
 msgstr ""
@@ -611,12 +612,12 @@ msgstr ""
 #. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
-msgstr ""
+msgstr "Саналын огноо"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "February"
-msgstr ""
+msgstr "2-р сар"
 
 #. module: idea
 #: view:report.vote:0
@@ -626,12 +627,12 @@ msgstr ""
 #. module: idea
 #: field:idea.vote.stat,nbr:0
 msgid "Number of Votes"
-msgstr ""
+msgstr "Саналын тоо"
 
 #. module: idea
 #: selection:report.vote,month:0
 msgid "April"
-msgstr ""
+msgstr "4-р сар"
 
 #. module: idea
 #: field:idea.idea,count_comments:0

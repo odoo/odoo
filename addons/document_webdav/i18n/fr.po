@@ -7,16 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-16 17:52+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 17:53+0000\n"
+"Last-Translator: lolivier <olivier.lenoir@free.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:51+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:49+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,create_date:0
+#: field:document.webdav.file.property,create_date:0
+msgid "Date Created"
+msgstr "Date de création"
 
 #. module: document_webdav
 #: constraint:document.directory:0
@@ -25,7 +30,15 @@ msgstr "Erreur! Vous ne pouvez pas créer de répertoires récursifs."
 
 #. module: document_webdav
 #: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
+msgid "Search Document properties"
+msgstr "Rechercher dans les propriétés du document"
+
+#. module: document_webdav
+#: view:document.webdav.dir.property:0
 #: field:document.webdav.dir.property,namespace:0
+#: view:document.webdav.file.property:0
+#: field:document.webdav.file.property,namespace:0
 msgid "Namespace"
 msgstr "Espace de noms"
 
@@ -35,20 +48,37 @@ msgid "DAV properties"
 msgstr "Propriétés du DAV (Distributed Authoring and Versioning)"
 
 #. module: document_webdav
+#: model:ir.model,name:document_webdav.model_document_webdav_file_property
+msgid "document.webdav.file.property"
+msgstr "document.webdav.file.property"
+
+#. module: document_webdav
 #: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
 msgid "Group By..."
 msgstr "Groupé par ..."
 
 #. module: document_webdav
 #: view:document.directory:0
 msgid "These properties will be added to WebDAV requests"
-msgstr "Ces propriétés seront ajoutés aux requêtes WebDAV"
+msgstr "Ces propriétés seront ajoutées aux requêtes WebDAV"
 
 #. module: document_webdav
-#: code:addons/document_webdav/webdav.py:0
+#: model:ir.ui.menu,name:document_webdav.menu_file_props
+msgid "DAV properties for documents"
+msgstr "Propriétés DAV (Distributed Authoring and Versioning) du document"
+
+#. module: document_webdav
+#: code:addons/document_webdav/webdav.py:37
 #, python-format
 msgid "PyWebDAV Import Error!"
 msgstr "Erreur d'import PyWebDAV !"
+
+#. module: document_webdav
+#: view:document.webdav.file.property:0
+#: field:document.webdav.file.property,file_id:0
+msgid "Document"
+msgstr "Document"
 
 #. module: document_webdav
 #: model:ir.module.module,description:document_webdav.module_meta_information
@@ -71,6 +101,25 @@ msgid ""
 "          ; levels \"debug\" and \"debug_rpc\" respectively, you can leave\n"
 "          ; these options on\n"
 msgstr ""
+" Avec ce module, le serveur WebDAV pour les documents est activé.\n"
+"        Vous pouvez ensuite utiliser n'importe quel navigateur compatible "
+"pour voir les pièces jointes d'OpenObject.\n"
+"\n"
+"        Après l'installation, le serveur webDAV peut être contrôlé par une "
+"section [webdav] dans la configuration du serveur.\n"
+"        Paramètre de configuration du serveur :\n"
+"        [webdav]\n"
+"        ; enable = True ; Servir webdav via les serveurs http(s)\n"
+"        ; vdir = webdav ; le répertoire que webdav va utiliser\n"
+"          ; les valeurs par défaut signifient que webdav sera\n"
+"          ; sur \"http://localhost:8069/webdav/\n"
+"        ; verbose = True ; Active les messages verbeux de webdav\n"
+"        ; debug = True ; Active les message de déboguage de webdav\n"
+"          ; comme les messages sont dirigés vers la journalisation python, "
+"avec\n"
+"          ; les niveaux \"debug\" et \"debug_rpc\" respectivement, vous "
+"pouvez laisser\n"
+"          ; ces options actives\n"
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
@@ -93,7 +142,7 @@ msgid "The directory name must be unique !"
 msgstr "Le nom du répertoire doit être unique !"
 
 #. module: document_webdav
-#: code:addons/document_webdav/webdav.py:0
+#: code:addons/document_webdav/webdav.py:37
 #, python-format
 msgid ""
 "Please install PyWebDAV from "
@@ -112,11 +161,13 @@ msgstr "Propriétés DAV pour les classeurs"
 #. module: document_webdav
 #: view:document.directory:0
 #: view:document.webdav.dir.property:0
+#: view:document.webdav.file.property:0
 msgid "Properties"
 msgstr "Propriétés"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,name:0
+#: field:document.webdav.file.property,name:0
 msgid "Name"
 msgstr "Nom"
 
@@ -127,6 +178,7 @@ msgstr "document.webdav.dir.property"
 
 #. module: document_webdav
 #: field:document.webdav.dir.property,value:0
+#: field:document.webdav.file.property,value:0
 msgid "Value"
 msgstr "Valeur"
 
@@ -137,14 +189,32 @@ msgid "Directory"
 msgstr "Répertoire"
 
 #. module: document_webdav
+#: field:document.webdav.dir.property,write_uid:0
+#: field:document.webdav.file.property,write_uid:0
+msgid "Last Modification User"
+msgstr "Utilisateur de la dernière modification"
+
+#. module: document_webdav
 #: view:document.webdav.dir.property:0
 msgid "Dir"
 msgstr "Répertoire"
 
 #. module: document_webdav
+#: field:document.webdav.dir.property,write_date:0
+#: field:document.webdav.file.property,write_date:0
+msgid "Date Modified"
+msgstr "Date de modification"
+
+#. module: document_webdav
+#: field:document.webdav.dir.property,create_uid:0
+#: field:document.webdav.file.property,create_uid:0
+msgid "Creator"
+msgstr "Créateur"
+
+#. module: document_webdav
 #: model:ir.module.module,shortdesc:document_webdav.module_meta_information
 msgid "WebDAV server for Document Management"
-msgstr "Serveur WebDAV pour le Module de Gestion Documentaire"
+msgstr "Serveur WebDAV pour le module de Gestion Documentaire"
 
 #. module: document_webdav
 #: sql_constraint:document.directory:0
@@ -152,11 +222,10 @@ msgid "Directory must have a parent or a storage"
 msgstr "Le répertoire doit avoir un parent ou un espace de stockage"
 
 #. module: document_webdav
-#: view:document.webdav.dir.property:0
-msgid "Search Document storage"
-msgstr "Rechercher dans les documents stockés"
-
-#. module: document_webdav
 #: field:document.webdav.dir.property,do_subst:0
+#: field:document.webdav.file.property,do_subst:0
 msgid "Substitute"
 msgstr "Remplacer"
+
+#~ msgid "Search Document storage"
+#~ msgstr "Rechercher dans les documents stockés"

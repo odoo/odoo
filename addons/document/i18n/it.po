@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
-"PO-Revision-Date: 2010-12-25 03:23+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-13 15:19+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-26 04:51+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:46+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -34,17 +34,17 @@ msgstr "Nome campo"
 #. module: document
 #: view:board.board:0
 msgid "Document board"
-msgstr ""
+msgstr "Board documenti"
 
 #. module: document
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
-msgstr ""
+msgstr "Nodo Processo"
 
 #. module: document
 #: view:document.directory:0
 msgid "Search Document Directory"
-msgstr ""
+msgstr "Cerca directory documenti"
 
 #. module: document
 #: help:document.directory,resource_field:0
@@ -56,7 +56,7 @@ msgstr ""
 "campo \"nome\""
 
 #. module: document
-#: code:addons/document/document_directory.py:0
+#: code:addons/document/document_directory.py:276
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Il nome della directory contiene caratteri speciali !"
@@ -103,7 +103,7 @@ msgstr "titolo"
 #: view:document.directory:0
 #: field:document.directory,company_id:0
 msgid "Company"
-msgstr "Company"
+msgstr "Azienda"
 
 #. module: document
 #: model:ir.model,name:document.model_document_directory_content
@@ -113,7 +113,7 @@ msgstr "Contenuto della Cartella"
 #. module: document
 #: view:document.directory:0
 msgid "Dynamic context"
-msgstr ""
+msgstr "Contesto dinamico"
 
 #. module: document
 #: model:ir.ui.menu,name:document.menu_document_management_configuration
@@ -142,7 +142,8 @@ msgid "Path"
 msgstr "Percorso"
 
 #. module: document
-#: code:addons/document/document_directory.py:0
+#: code:addons/document/document_directory.py:266
+#: code:addons/document/document_directory.py:271
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Il nome della directory deve essere univoco!"
@@ -184,7 +185,8 @@ msgid "Project"
 msgstr "Progetto"
 
 #. module: document
-#: code:addons/document/document_storage.py:0
+#: code:addons/document/document_storage.py:573
+#: code:addons/document/document_storage.py:601
 #, python-format
 msgid "Error!"
 msgstr "Errore!"
@@ -217,7 +219,7 @@ msgstr "Data modificata"
 #. module: document
 #: view:document.configuration:0
 msgid "Knowledge Application Configuration"
-msgstr ""
+msgstr "Configurazione applicazione know how"
 
 #. module: document
 #: view:ir.attachment:0
@@ -237,8 +239,11 @@ msgid "Document directory"
 msgstr "Cartella Documenti"
 
 #. module: document
-#: code:addons/document/document.py:0
-#: code:addons/document/document_directory.py:0
+#: code:addons/document/document.py:154
+#: code:addons/document/document.py:222
+#: code:addons/document/document_directory.py:266
+#: code:addons/document/document_directory.py:271
+#: code:addons/document/document_directory.py:276
 #, python-format
 msgid "ValidateError"
 msgstr "Errore convalida"
@@ -265,7 +270,7 @@ msgstr "Errore! Non puoi creare Direcroty ricorsive"
 #: view:document.directory:0
 #: field:document.directory,storage_id:0
 msgid "Storage"
-msgstr ""
+msgstr "Storage"
 
 #. module: document
 #: view:document.configuration:0
@@ -372,7 +377,7 @@ msgid "Modified"
 msgstr "Modificato"
 
 #. module: document
-#: code:addons/document/document_storage.py:0
+#: code:addons/document/document_storage.py:639
 #, python-format
 msgid "Error at doc write!"
 msgstr "Errore durante la scrittura del documento!"
@@ -882,7 +887,7 @@ msgstr "Gennaio"
 #. module: document
 #: view:document.directory:0
 msgid "Static"
-msgstr ""
+msgstr "Statico"
 
 #. module: document
 #: view:report.files.partner:0
@@ -1002,7 +1007,8 @@ msgid "Content Name"
 msgstr "Nome del Contenuto"
 
 #. module: document
-#: code:addons/document/document.py:0
+#: code:addons/document/document.py:154
+#: code:addons/document/document.py:222
 #, python-format
 msgid "File name must be unique!"
 msgstr "Il nome file deve essere unico!"
@@ -1041,12 +1047,12 @@ msgstr "Anno"
 #: model:ir.model,name:document.model_document_storage
 #: model:ir.ui.menu,name:document.menu_document_storage_media
 msgid "Storage Media"
-msgstr ""
+msgstr "Supporto di archiviazione"
 
 #. module: document
 #: view:document.storage:0
 msgid "Search Document storage"
-msgstr ""
+msgstr "Cerca deposito documenti"
 
 #. module: document
 #: field:document.directory.content,extension:0

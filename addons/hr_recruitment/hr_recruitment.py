@@ -126,7 +126,7 @@ class hr_applicant(crm.crm_case, osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'partner_address_id': fields.many2one('res.partner.address', 'Partner Contact', \
                                  domain="[('partner_id','=',partner_id)]"),
-        'create_date': fields.datetime('Creation Date', readonly=True),
+        'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage'),
         'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True,
@@ -137,8 +137,8 @@ class hr_applicant(crm.crm_case, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
-        'date_closed': fields.datetime('Closed', readonly=True),
-        'date_open': fields.datetime('Opened', readonly=True),
+        'date_closed': fields.datetime('Closed', readonly=True, select=True),
+        'date_open': fields.datetime('Opened', readonly=True, select=True),
         'date': fields.datetime('Date'),
         'date_action': fields.date('Next Action Date'),
         'title_action': fields.char('Next Action', size=64),

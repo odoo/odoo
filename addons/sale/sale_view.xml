@@ -146,7 +146,6 @@
                                                 domain="[('product_id','=',product_id)]"
                                                 groups="base.group_extended"/>
 
-                                            <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                                             <field colspan="4" name="name"/>
                                             <field name="price_unit"/>
                                             <field name="discount"/>
@@ -172,6 +171,7 @@
                                         <page groups="base.group_extended" string="Extra Info">
                                             <field name="th_weight"/>
                                             <field name="address_allotment_id"/>
+                                            <field name="property_ids" colspan="4"/>
                                         </page>
                                         <page string="Notes">
                                             <field colspan="4" name="notes" nolabel="1"/>

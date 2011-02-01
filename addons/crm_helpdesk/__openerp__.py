@@ -43,6 +43,7 @@
     'test': ['test/test_crm_helpdesk.yml'], 
     'installable': True, 
     'active': False, 
+    'certificate' : '00830691522781519309',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:44+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
 "PO-Revision-Date: 2010-12-21 11:33+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:37+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:38+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: hr_contract
 #: view:hr.contract.wage.type:0
@@ -38,9 +38,9 @@ msgid "Trial Start Date"
 msgstr "Туршилтын үе эхлэх огноо"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function Arguments"
-msgstr "Функцийн хувьсагчууд"
+#: view:hr.contract:0
+msgid "Passport"
+msgstr "Пасспорт"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -68,9 +68,9 @@ msgid "Current"
 msgstr "Одоогийн"
 
 #. module: hr_contract
-#: field:hr.contract,department_id:0
-msgid "Department"
-msgstr "Хэлтэс"
+#: field:hr.contract.wage.type,factor_type:0
+msgid "Factor for hour cost"
+msgstr "Цагийн өртөгийн фактор"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -83,9 +83,9 @@ msgid "Wage Types"
 msgstr "Цалингийн төрлүүд"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Calculations"
-msgstr "Тооцоолол"
+#: field:hr.contract,department_id:0
+msgid "Department"
+msgstr "Хэлтэс"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -98,12 +98,6 @@ msgstr "Үндсэн"
 #: model:ir.model,name:hr_contract.model_hr_employee
 msgid "Employee"
 msgstr "Ажилтан"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: field:hr.contract,working_hours:0
-msgid "Working Schedule"
-msgstr "Ажлын цагийн хуваарь"
 
 #. module: hr_contract
 #: selection:hr.contract.wage.type,type:0
@@ -121,29 +115,12 @@ msgid "Hours in the period"
 msgstr "Хугацааны мөчлөг"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Function"
-msgstr "Үүрэг"
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Distance"
+msgstr "Гэрээс ажил хүртэлх зай"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.contract.wage.type:0
-msgid "Group By..."
-msgstr "Бүлэглэвэл..."
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Description"
-msgstr "Тайлбар"
-
-#. module: hr_contract
-#: field:hr.employee,place_of_birth:0
-msgid "Place of Birth"
-msgstr "Төрсөн газар"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -152,20 +129,14 @@ msgid "Contracts"
 msgstr "Гэрээнүүд"
 
 #. module: hr_contract
-#: field:hr.employee,manager:0
-msgid "Is a Manager"
-msgstr "Менежер эсэх"
+#: view:hr.employee:0
+msgid "Personal Info"
+msgstr "Хувийн мэдээлэл"
 
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Job"
 msgstr "Ажлын байр"
-
-#. module: hr_contract
-#: view:hr.contract:0
-#: view:hr.employee:0
-msgid "Passport"
-msgstr "Пасспорт"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -197,19 +168,16 @@ msgstr ""
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,advantages:0
-#: view:hr.employee:0
 msgid "Advantages"
 msgstr "Давуу тал"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Valid for"
 msgstr "Хүчинтэй хугацаа дуусах огноо"
 
 #. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Work Permit"
 msgstr "Ажлын зөвшөөрөл"
 
@@ -225,9 +193,13 @@ msgid "Contract Types"
 msgstr "Гэрээний төрлүүд"
 
 #. module: hr_contract
+#: field:hr.contract,wage_type_id:0
 #: view:hr.contract.wage.type:0
-msgid "Search Wage Type"
-msgstr "Цалин төрлийг хайх"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
+#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
+msgid "Wage Type"
+msgstr "Цалингийн төрөл"
 
 #. module: hr_contract
 #: constraint:hr.employee:0
@@ -257,7 +229,6 @@ msgstr "Километрээр"
 #. module: hr_contract
 #: view:hr.contract:0
 #: field:hr.contract,notes:0
-#: view:hr.employee:0
 msgid "Notes"
 msgstr "Тэмдэглэл"
 
@@ -266,15 +237,6 @@ msgstr "Тэмдэглэл"
 msgid ""
 "Error ! You cannot select a department for which the employee is the manager."
 msgstr "Алдаа! Ажилтан нь менежер байх хэлтсийг сонгож болохгүй."
-
-#. module: hr_contract
-#: field:hr.contract,wage_type_id:0
-#: view:hr.contract.wage.type:0
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type
-#: model:ir.model,name:hr_contract.model_hr_contract_wage_type
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type
-msgid "Wage Type"
-msgstr "Цалингийн төрөл"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -299,9 +261,10 @@ msgid "Search Wage Period"
 msgstr "Цалийн мөчлөгийг хайх"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Computation"
-msgstr "Цалингийн тооцоолол"
+#: view:hr.contract:0
+#: field:hr.contract,working_hours:0
+msgid "Working Schedule"
+msgstr "Ажлын цагийн хуваарь"
 
 #. module: hr_contract
 #: view:hr.employee:0
@@ -321,15 +284,9 @@ msgid "Job Title"
 msgstr "Албан тушаал"
 
 #. module: hr_contract
-#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
-#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
-msgid "Wage period"
-msgstr "Цалингийн мөчлөг"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "Гэрээс ажил хүртэлх зай"
+#: field:hr.employee,manager:0
+msgid "Is a Manager"
+msgstr "Менежер эсэх"
 
 #. module: hr_contract
 #: field:hr.contract,date_start:0
@@ -337,9 +294,14 @@ msgid "Start Date"
 msgstr "Эхлэх огноо"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Company contribution"
-msgstr "Ажил олгогчийн төлөх шимтгэл"
+#: constraint:hr.contract:0
+msgid "Error! contract start-date must be lower then contract end-date."
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract.wage.type:0
+msgid "Search Wage Type"
+msgstr "Цалин төрлийг хайх"
 
 #. module: hr_contract
 #: field:hr.contract.wage.type,type:0
@@ -352,9 +314,10 @@ msgid "Trial End Date"
 msgstr "Туршилт хугацаа дуусах огноо"
 
 #. module: hr_contract
-#: field:hr.contract.wage.type,factor_type:0
-msgid "Factor for hour cost"
-msgstr "Цагийн өртөгийн фактор"
+#: view:hr.contract:0
+#: view:hr.contract.wage.type:0
+msgid "Group By..."
+msgstr "Бүлэглэвэл..."
 
 #. module: hr_contract
 #: field:hr.contract.wage.type.period,name:0
@@ -367,24 +330,15 @@ msgid "Period"
 msgstr "Мөчлөг"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Payslip Line"
-msgstr "Цалингийн хуудасны мөр"
+#: field:hr.employee,place_of_birth:0
+msgid "Place of Birth"
+msgstr "Төрсөн газар"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Employee specific allowances and deductions"
-msgstr "Ажилтанд бүрт онцлог олголт, суутгалууд"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Contract Details"
-msgstr "Гэрээний дэлгэрэнгүй"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Salary Structure"
-msgstr "Цалингийн шатлал"
+#: model:ir.actions.act_window,name:hr_contract.action_hr_contract_wage_type_period
+#: model:ir.ui.menu,name:hr_contract.hr_menu_contract_wage_type_period
+msgid "Wage period"
+msgstr "Цалингийн мөчлөг"
 
 #. module: hr_contract
 #: help:hr.contract.wage.type,factor_type:0
@@ -397,13 +351,7 @@ msgstr ""
 "тооцоход хэрэглэгдэнэ"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "Хувийн мэдээлэл"
-
-#. module: hr_contract
 #: view:hr.contract:0
-#: view:hr.employee:0
 msgid "Duration"
 msgstr "Үргэлжлэх хугацаа"
 
@@ -481,8 +429,38 @@ msgstr "Гэрээний төрлийг хайх"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
+#~ msgid "Function"
+#~ msgstr "Үүрэг"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Дэлгэцийн XML алдаатай!"
 
+#~ msgid "Calculations"
+#~ msgstr "Тооцоолол"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Алдаа! Рекурс цэсийг үүсгэж болохгүй"
+
+#~ msgid "Function Arguments"
+#~ msgstr "Функцийн хувьсагчууд"
+
+#~ msgid "Description"
+#~ msgstr "Тайлбар"
+
+#~ msgid "Payslip Line"
+#~ msgstr "Цалингийн хуудасны мөр"
+
+#~ msgid "Company contribution"
+#~ msgstr "Ажил олгогчийн төлөх шимтгэл"
+
+#~ msgid "Salary Computation"
+#~ msgstr "Цалингийн тооцоолол"
+
+#~ msgid "Employee specific allowances and deductions"
+#~ msgstr "Ажилтанд бүрт онцлог олголт, суутгалууд"
+
+#~ msgid "Contract Details"
+#~ msgstr "Гэрээний дэлгэрэнгүй"
+
+#~ msgid "Salary Structure"
+#~ msgstr "Цалингийн шатлал"

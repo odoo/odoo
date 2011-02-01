@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:45+0000\n"
-"PO-Revision-Date: 2010-12-31 10:37+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:16+0000\n"
+"PO-Revision-Date: 2011-01-15 19:42+0000\n"
+"Last-Translator: Nicola Riolini - Micronaet <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-01 05:02+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-16 05:04+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: sale_crm
 #: field:crm.make.sale,partner_id:0
@@ -27,19 +27,19 @@ msgid "Convert to Quotation"
 msgstr "Converti in preventivo"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#: code:addons/sale_crm/wizard/crm_make_sale.py:108
 #, python-format
 msgid "is converted to Quotation."
 msgstr "è convertito in preventivo"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#: code:addons/sale_crm/wizard/crm_make_sale.py:89
 #, python-format
 msgid "Data Insufficient!"
 msgstr "Dati insufficienti"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#: code:addons/sale_crm/wizard/crm_make_sale.py:89
 #, python-format
 msgid "Customer has no addresses defined!"
 msgstr "Il cliente non ha un indirizzo definito"
@@ -86,6 +86,11 @@ msgid "_Create"
 msgstr "_Crea"
 
 #. module: sale_crm
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique !"
+msgstr "Il riferimento ordine deve essere unico!"
+
+#. module: sale_crm
 #: help:crm.make.sale,close:0
 msgid ""
 "Check this to close the opportunity after having created the sale order."
@@ -105,19 +110,19 @@ msgid "Monthly Turnover"
 msgstr "Fatturato mensile"
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#: code:addons/sale_crm/wizard/crm_make_sale.py:110
 #, python-format
 msgid "Converted to Sales Quotation(id: %s)."
 msgstr "Convertito in preventivo di vendita(id: %s)."
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#: code:addons/sale_crm/wizard/crm_make_sale.py:108
 #, python-format
 msgid "Opportunity "
 msgstr "Opportunità "
 
 #. module: sale_crm
-#: code:addons/sale_crm/wizard/crm_make_sale.py:0
+#: code:addons/sale_crm/wizard/crm_make_sale.py:92
 #, python-format
 msgid "Opportunity: %s"
 msgstr "Opportunità:%s"
@@ -140,7 +145,7 @@ msgstr "Negozio"
 #. module: sale_crm
 #: view:board.board:0
 msgid "Opportunities by Stage"
-msgstr "Opportunità per fase"
+msgstr "Opportunità per stadio"
 
 #. module: sale_crm
 #: view:board.board:0

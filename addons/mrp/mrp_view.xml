@@ -343,6 +343,54 @@
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
                                 </tree>
+                                <form string="Bill of Material">
+                                    <group colspan="4" col="6">
+                                    <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                                    <field name="name" select="1"/>
+                                    <field name="code" select="1" string="Reference" groups="base.group_extended"/>
+                                    <newline/>
+                                    <field name="product_qty"/>
+                                    <field name="product_uom"/>
+                                    <field name="routing_id"  groups="base.group_extended"/>
+                                    <newline/>
+                                    <field name="product_uos_qty" groups="product.group_uos" />
+                                    <field name="product_uos"  groups="product.group_uos"/>
+                                    <newline/>
+                                    <field name="type" groups="base.group_extended"/>
+                                    <field name="company_id" select="1" groups="base.group_multi_company" widget="selection"/>
+                                </group>
+                                <group groups="base.group_extended">
+                                <notebook colspan="4">
+                                    <page string="Components">
+                                        <field colspan="4" name="bom_lines" nolabel="1" widget="one2many_list">
+                                            <tree string="Components" editable="bottom">
+                                                <field name="product_id" on_change="onchange_product_id(product_id, name)" select="1"/>
+                                                <field name="product_qty"/>
+                                                <field name="product_uom"/>
+                                                <field name="name" invisible="1"/>
+                                                <field name="date_start"/>
+                                                <field name="date_stop"/>
+                                            </tree>
+                                        </field>
+                                    </page>
+                                    <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
+                                        <field colspan="4" name="revision_ids" nolabel="1" widget="one2many_list"/>
+                                    </page>
+                                    <page string="Properties" groups="base.group_extended">
+                                        <field name="position"/>
+                                        <field name="active"/>
+                                        <field name="sequence"/>
+                                        <field name="bom_id"/>
+
+                                        <field name="date_start"/>
+                                        <field name="date_stop"/>
+                                        <field name="product_rounding"/>
+                                        <field name="product_efficiency" groups="base.group_extended"/>
+                                        <field colspan="4" name="property_ids" nolabel="2" groups="base.group_extended"/>
+                                    </page>
+                                </notebook>
+                                </group>
+                            </form>
                             </field>
                         </page>
                         <page string="Revisions" groups="base.group_extended" attrs="{'invisible': [('bom_id','!=',False)]}">
@@ -412,6 +460,28 @@
                 </tree>
             </field>
         </record>
+       <record id="mrp_bom_component_tree_view" model="ir.ui.view">
+            <field name="name">mrp.bom.component.tree</field>
+            <field name="model">mrp.bom</field>
+            <field name="type">tree</field>
+            <field name="field_parent">child_complete_ids</field>
+            <field name="arch" type="xml">
+                <tree string="BoM Structure" colors="blue:method">
+                    <field name="sequence" invisible="1"/>
+                    <field name="name" string="Component Name"/>
+                    <field name="code"/>
+                    <field name="product_id" string="Component Product"/>
+                    <field name="bom_id"/>
+                    <field name="product_qty"/>
+                    <field name="product_uom"/>
+                    <field name="type"/>
+                    <field name="method" groups="base.group_extended"/>
+                    <field name="routing_id" groups="base.group_extended"/>
+                    <field name="date_start" groups="base.group_extended"/>
+                    <field name="date_stop" groups="base.group_extended"/>
+                </tree>
+            </field>
+        </record>
         <record id="mrp_bom_form_action" model="ir.actions.act_window">
             <field name="name">Bill of Materials</field>
             <field name="type">ir.actions.act_window</field>
@@ -426,6 +496,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
+            <field name="view_id" ref="mrp_bom_component_tree_view"/>
             <field name="domain">[('bom_id','!=',False)]</field>
             <field name="help">Bills of materials components are components and sub-products used to create master bills of materials. Use this menu to search in which BoM a specific component is used.</field>
         </record>
@@ -616,7 +687,6 @@
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM"/>
-                                       <field name="location_dest_id"  readonly="1" string="Destination Loc."/>
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
@@ -630,7 +700,8 @@
                             <separator colspan="4"/>
                             <group col="9" colspan="4">
                                 <field name="state"/>
-                                <button name="button_cancel" states="draft,ready,confirmed,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
+                                <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel" icon="gtk-stop"/>
+                                <button name="action_cancel" type="object" states="confirmed" string="Cancel" icon="gtk-stop"/>
                                 <button name="button_confirm" states="draft" string="Confirm Production" icon="gtk-apply"/>
                                 <button name="button_produce" states="ready" string="Start Production" icon="terp-gtk-jump-to-ltr"/>
                                 <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" icon="gtk-ok" type="action"/>
@@ -645,9 +716,8 @@
                                     <field name="product_id" />
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM"/>
-                                    <field name="location_id"  string="Source Loc." />
                                     <field name="state" invisible="1"/>
-                                    <button name="%(stock.action_partial_move)d"
+                                    <button name="%(stock.action_partial_move_server)d"
                                         string="Partial"
                                         type="action" states="confirmed,assigned"
                                         icon="gtk-justify-fill"/>
@@ -680,7 +750,7 @@
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"
-                                colspan="4" />
+                                colspan="2" />
                             <field colspan="4" name="workcenter_lines" nolabel="1">
                                 <form string="Production Work Centers">
                                     <field colspan="4" name="name"/>
@@ -702,7 +772,7 @@
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"
-                                colspan="4" />
+                                colspan="2" />
                             <field colspan="4" name="product_lines" nolabel="1" widget="one2many_list"/>
                         </page>
                         <page string="Extra Information">

@@ -3,7 +3,7 @@
   I create a Sale Order for Slider Mobile for qty 500 having Shipping Policy is 'Invoice from Picking'
 -
   !record {model: sale.order, id: sale_order_so7}:
-    date_order: '2010-07-15'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     name: Test_SO007
     order_line:
@@ -31,7 +31,7 @@
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so7}
 -
   I verify that picking has been generated for the sale order.
-- 
+-
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so7"))
     assert so.picking_ids,"Picking has not been generated for sale_order_so7"
@@ -62,10 +62,11 @@
   Then I click on 'Create Invoices' button
 -
   !python {model: stock.invoice.onshipping}: |
-    sale_obj=self.pool.get('sale.order')  
+    import time
+    sale_obj=self.pool.get('sale.order')
     sale_id=sale_obj.browse(cr, uid, ref("sale_order_so7"))
     ids = [x.id for x in sale_id.picking_ids]
-    wiz_id = self.create(cr, uid, {'invoice_date': '2010-07-15', 'journal_id': ref('account.sales_journal')},
+    wiz_id = self.create(cr, uid, {'invoice_date': time.strftime('%Y-%m-%d'), 'journal_id': ref('account.sales_journal')},
       {'active_ids': ids})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ids, "active_id": ids[0]})
 -
@@ -87,7 +88,7 @@
         wf_service.trg_validate(uid, 'account.invoice',invoice.id,'invoice_open', cr)
 -
   Assign analytic journal into bank journal
-- 
+-
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
 -
@@ -179,7 +180,7 @@
         pur_ids = pur_obj.search(cr, uid, [('origin','=',so.name)])
         for pur in pur_ids:
           wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_confirm', cr)
-- 
+-
   I click on the "Approved by supplier" button to approve the purchase order
 -
   !python {model: sale.order}: |
@@ -196,7 +197,7 @@
         for pur in pur_ids:
           wf_service.trg_validate(uid, 'purchase.order',pur,'purchase_approve', cr)
 -
-  I verify that a picking related to purchase order has been generated. 
+  I verify that a picking related to purchase order has been generated.
 -
   !python {model: sale.order}: |
     modules = self.pool.get('ir.module.module')
@@ -208,11 +209,11 @@
         pur_id = pur_obj.search(cr, uid, [('origin','=',so.name)])
         po = pur_obj.browse(cr, uid, pur_id)[0]
         assert(po.picking_ids),"Picking for purchase order has not been generated"
--  
+-
   Then I click on the "Products Received" button of Incoming Shipments
 -
   !record {model: stock.partial.picking, id: stock_partial_picking_0}:
-    date: '2010-07-15 17:52:09'
+    date: !eval time.strftime('%Y-%m-%d %H:%M:%S')
 -
   I click on the "Validate" button
 -
@@ -276,8 +277,8 @@
           'product_id': move.product_id.id,
           'product_qty': move.product_qty,
           'product_uom': move.product_uom.id,
-      } 
-      self.do_partial(cr, uid, [pick.id],partial_datas)  
+      }
+      self.do_partial(cr, uid, [pick.id],partial_datas)
 -
   I verify that delivery state is done
 -
@@ -289,12 +290,12 @@
      pick = self.browse(cr,uid,picking_id[0])
      assert (pick.state) =='done', "Picking for SO is not in done state."
 -
-  I verify that a "Picked" has been set to true 
+  I verify that a "Picked" has been set to true
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so7"))
     assert (so.shipped == True), "Picked has not been set to True"
--  
+-
   I verify that a sale order is in done state
 -
    !python {model: sale.order}: |

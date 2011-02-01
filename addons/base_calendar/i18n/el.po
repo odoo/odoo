@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
 "PO-Revision-Date: 2010-12-29 09:46+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-31 05:28+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:54+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -68,9 +68,15 @@ msgid "Invited User"
 msgstr "Προσκαλούμενος Χρήστης"
 
 #. module: base_calendar
-#: view:base.calendar.set.exrule:0
-msgid "Select range to Exclude"
-msgstr "Επιλογή εύρους για Εξαίρεση"
+#: view:calendar.attendee:0
+msgid "Invitation"
+msgstr "Πρόσκληση"
+
+#. module: base_calendar
+#: help:calendar.event,recurrency:0
+#: help:calendar.todo,recurrency:0
+msgid "Recurrent Meeting"
+msgstr ""
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -105,12 +111,6 @@ msgid "Fourth"
 msgstr "Τέταρτο"
 
 #. module: base_calendar
-#: help:calendar.event,count:0
-#: help:calendar.todo,count:0
-msgid "Repeat max that times"
-msgstr "Επανάληψη μέγιστο τόσες φορές"
-
-#. module: base_calendar
 #: field:calendar.event,show_as:0
 #: field:calendar.todo,show_as:0
 msgid "Show as"
@@ -133,12 +133,9 @@ msgid "Public"
 msgstr "Κοινόχρηστο"
 
 #. module: base_calendar
-#: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-#: selection:res.alarm,trigger_interval:0
-msgid "Hours"
-msgstr "Ώρες"
+#: view:calendar.event:0
+msgid " "
+msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,month_list:0
@@ -148,7 +145,7 @@ msgid "March"
 msgstr "Μάρτιος"
 
 #. module: base_calendar
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:0
+#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Warning !"
 msgstr "Προειδοποίηση!"
@@ -187,9 +184,9 @@ msgid "Indicats whether the favor of a reply is requested"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.alarm,alarm_id:0
-msgid "Basic Alarm"
-msgstr "Βασική Υπενθύμιση"
+#: model:ir.model,name:base_calendar.model_ir_attachment
+msgid "ir.attachment"
+msgstr "ir.attachment"
 
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
@@ -197,10 +194,9 @@ msgid "The users that the original request was delegated to"
 msgstr "Ο χρήστης ο οποίος εξουσιοδοτήθηκε από την αρχική αίτηση"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: field:calendar.attendee,delegated_to:0
-msgid "Delegated To"
-msgstr "Εξουσιοδότηση σε"
+#: field:calendar.attendee,ref:0
+msgid "Event Ref"
+msgstr "Αναφ Συμβάντος"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,we:0
@@ -222,16 +218,17 @@ msgid "Tue"
 msgstr "Τρι"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
-
-#. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
 #: selection:calendar.event,rrule_type:0
 #: selection:calendar.todo,rrule_type:0
 msgid "Yearly"
 msgstr "Ετήσια"
+
+#. module: base_calendar
+#: selection:calendar.alarm,trigger_related:0
+#: selection:res.alarm,trigger_related:0
+msgid "The event ends"
+msgstr "Το γεγονός λήγει"
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,byday:0
@@ -265,9 +262,11 @@ msgid "Invitation Detail"
 msgstr "Λεπτομέρειες Πρόσκλησης"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
-#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:0
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:0
+#: code:addons/base_calendar/base_calendar.py:1356
+#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:96
+#: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
+#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:128
+#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:136
 #, python-format
 msgid "Error!"
 msgstr "Λάθος!"
@@ -278,14 +277,9 @@ msgid "Chair Person"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
-msgid "Exclude range"
-msgstr "Αποκλεισμός έκτασης"
-
-#. module: base_calendar
-#: view:calendar.event:0
-msgid "Select data for Custom Rule"
-msgstr "Επιλογή δεδομένων για προσαρμοσμένο κανόνα"
+#: selection:calendar.alarm,action:0
+msgid "Procedure"
+msgstr "Διαδικασία"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -295,8 +289,6 @@ msgstr "Ακυρώθηκε"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
 #: selection:res.alarm,trigger_interval:0
 msgid "Minutes"
 msgstr "Λεπτά"
@@ -322,10 +314,11 @@ msgid "Secondly"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.alarm,trigger_related:0
-#: selection:res.alarm,trigger_related:0
-msgid "The event ends"
-msgstr "Το γεγονός λήγει"
+#: field:calendar.alarm,event_date:0
+#: field:calendar.attendee,event_date:0
+#: view:calendar.event:0
+msgid "Event Date"
+msgstr "Ημερομηνία Γεγονότος"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -341,9 +334,14 @@ msgstr ""
 "πρόσκληση."
 
 #. module: base_calendar
-#: help:calendar.attendee,partner_id:0
-msgid "Partner related to contact"
-msgstr "Συνεργάτης συνδεδεμένος με επαφή"
+#: model:ir.module.module,description:base_calendar.module_meta_information
+msgid ""
+"Full featured calendar system that supports:\n"
+"    - Calendar of events\n"
+"    - Alerts (create requests)\n"
+"    - Recurring events\n"
+"    - Invitations to people"
+msgstr ""
 
 #. module: base_calendar
 #: help:calendar.attendee,cutype:0
@@ -368,27 +366,26 @@ msgid "Optional Participation"
 msgstr "Προαιρετική Συμμετοχή"
 
 #. module: base_calendar
-#: help:calendar.event,interval:0
-#: help:calendar.todo,interval:0
-msgid "Repeat every x"
-msgstr "Επανάληψη κάθε x"
-
-#. module: base_calendar
 #: field:calendar.event,date_deadline:0
 #: field:calendar.todo,date_deadline:0
 msgid "Deadline"
 msgstr "Προσθεσμία"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: code:addons/base_calendar/base_calendar.py:385
+#: code:addons/base_calendar/base_calendar.py:1090
+#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Warning!"
 msgstr "Προειδοποίηση"
 
 #. module: base_calendar
-#: view:base.calendar.set.exrule:0
-msgid "_Cancel"
-msgstr "_Άκυρο"
+#: help:calendar.event,active:0
+#: help:calendar.todo,active:0
+msgid ""
+"If the active field is set to          true, it will allow you to hide the "
+"event alarm information without removing it."
+msgstr ""
 
 #. module: base_calendar
 #: model:ir.module.module,shortdesc:base_calendar.module_meta_information
@@ -404,12 +401,24 @@ msgid "Organizer"
 msgstr "Ατζέντα"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: view:calendar.attendee:0
+#: view:calendar.event:0
+#: field:calendar.event,user_id:0
+#: field:calendar.todo,user_id:0
+msgid "Responsible"
+msgstr "Υπεύθυνος"
+
+#. module: base_calendar
 #: view:calendar.event:0
 #: model:res.request.link,name:base_calendar.request_link_meeting
-#, python-format
 msgid "Event"
 msgstr "Γεγονός"
+
+#. module: base_calendar
+#: help:calendar.event,edit_all:0
+#: help:calendar.todo,edit_all:0
+msgid "Edit all Occurrences  of recurrent Meeting."
+msgstr ""
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_occurs:0
@@ -459,6 +468,11 @@ msgid "Invite Type"
 msgstr "Τύπος Πρόσκλησης"
 
 #. module: base_calendar
+#: help:calendar.attendee,partner_id:0
+msgid "Partner related to contact"
+msgstr "Συνεργάτης συνδεδεμένος με επαφή"
+
+#. module: base_calendar
 #: view:res.alarm:0
 msgid "Reminder details"
 msgstr "Λεπτομέρειες Υπενθύμισης"
@@ -506,9 +520,10 @@ msgid "Run"
 msgstr "Έναρξη"
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_calendar_alarm
-msgid "Event alarm information"
-msgstr "Πληροφορίες Υπενθύμισης Γεγονότος"
+#: field:calendar.event,exdate:0
+#: field:calendar.todo,exdate:0
+msgid "Exception Date/Times"
+msgstr "Εξαίρεση Ημερομηνία/Ώρες"
 
 #. module: base_calendar
 #: selection:calendar.event,class:0
@@ -524,10 +539,11 @@ msgid "Repeat Until"
 msgstr "Επανάληψη μέχρι"
 
 #. module: base_calendar
-#: selection:calendar.event,freq:0
-#: selection:calendar.todo,freq:0
-msgid "Seconds"
-msgstr "Δευτερόλεπτα"
+#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
+msgid ""
+"Create specific calendar alarms that may be assigned to calendar events or "
+"meetings."
+msgstr ""
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -544,6 +560,11 @@ msgstr "Απαιτούμενη Απάντηση;"
 #: field:calendar.todo,base_calendar_url:0
 msgid "Caldav URL"
 msgstr "Caldav URL"
+
+#. module: base_calendar
+#: view:base.calendar.set.exrule:0
+msgid "Select range to Exclude"
+msgstr "Επιλογή εύρους για Εξαίρεση"
 
 #. module: base_calendar
 #: field:calendar.event,recurrent_uid:0
@@ -582,9 +603,20 @@ msgid "Required Reply"
 msgstr "Απαιτούμενη Απάντηση"
 
 #. module: base_calendar
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "Forever"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Participation required"
 msgstr "Απαιτούμενη Συμμετοχή"
+
+#. module: base_calendar
+#: view:base.calendar.set.exrule:0
+msgid "_Cancel"
+msgstr "_Άκυρο"
 
 #. module: base_calendar
 #: field:calendar.event,create_date:0
@@ -606,7 +638,7 @@ msgid "Daily"
 msgstr "Ημερήσια"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: code:addons/base_calendar/base_calendar.py:385
 #, python-format
 msgid "Can not Duplicate"
 msgstr "Δεν μπορεί να Διπλοκαταχωρηθεί"
@@ -712,6 +744,12 @@ msgid "Individual"
 msgstr "Μεμονωμένα"
 
 #. module: base_calendar
+#: help:calendar.event,count:0
+#: help:calendar.todo,count:0
+msgid "Repeat x times"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.alarm,user_id:0
 msgid "Owner"
 msgstr "Ιδιοκτήτης"
@@ -766,7 +804,8 @@ msgid "Group"
 msgstr "Ομάδα"
 
 #. module: base_calendar
-#: view:calendar.event:0
+#: field:calendar.event,edit_all:0
+#: field:calendar.todo,edit_all:0
 msgid "Edit All"
 msgstr "Επεξεργασία όλων"
 
@@ -788,7 +827,15 @@ msgid "Fri"
 msgstr "Παρ"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: selection:calendar.alarm,trigger_interval:0
+#: selection:calendar.event,freq:0
+#: selection:calendar.todo,freq:0
+#: selection:res.alarm,trigger_interval:0
+msgid "Hours"
+msgstr "Ώρες"
+
+#. module: base_calendar
+#: code:addons/base_calendar/base_calendar.py:1092
 #, python-format
 msgid "Count can not be Negative"
 msgstr ""
@@ -827,6 +874,11 @@ msgstr "Πρόσκληση Από"
 
 #. module: base_calendar
 #: view:calendar.event:0
+msgid "End of recurrency"
+msgstr ""
+
+#. module: base_calendar
+#: view:calendar.event:0
 #: field:calendar.event.edit.all,alarm_id:0
 msgid "Reminder"
 msgstr "Υπενθύμιση"
@@ -858,6 +910,8 @@ msgstr "Email του Προσκεκλημένου"
 
 #. module: base_calendar
 #: field:calendar.alarm,repeat:0
+#: field:calendar.event,count:0
+#: field:calendar.todo,count:0
 #: field:res.alarm,repeat:0
 msgid "Repeat"
 msgstr "Επαναλαμβανόμενη"
@@ -898,11 +952,9 @@ msgid "June"
 msgstr "Ιούνιος"
 
 #. module: base_calendar
-#: field:calendar.alarm,event_date:0
-#: field:calendar.attendee,event_date:0
-#: view:calendar.event:0
-msgid "Event Date"
-msgstr "Ημερομηνία Γεγονότος"
+#: field:calendar.alarm,alarm_id:0
+msgid "Basic Alarm"
+msgstr "Βασική Υπενθύμιση"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
@@ -953,8 +1005,6 @@ msgstr "Δευ"
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,count:0
-#: field:calendar.event,count:0
-#: field:calendar.todo,count:0
 msgid "Count"
 msgstr "Υπολόγισε"
 
@@ -1005,8 +1055,6 @@ msgstr "Συσχετίζεται με"
 #. module: base_calendar
 #: field:base.calendar.set.exrule,interval:0
 #: field:calendar.alarm,trigger_interval:0
-#: field:calendar.event,interval:0
-#: field:calendar.todo,interval:0
 #: field:res.alarm,trigger_interval:0
 msgid "Interval"
 msgstr "Διάστημα"
@@ -1019,7 +1067,7 @@ msgid "Wednesday"
 msgstr "Τετάρτη"
 
 #. module: base_calendar
-#: code:addons/base_calendar/base_calendar.py:0
+#: code:addons/base_calendar/base_calendar.py:1090
 #, python-format
 msgid "Interval can not be Negative"
 msgstr ""
@@ -1039,9 +1087,9 @@ msgid "Active"
 msgstr "Ενεργό"
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-msgid "Invitation"
-msgstr "Πρόσκληση"
+#: view:calendar.event:0
+msgid "Choose day in the month where repeat the meeting"
+msgstr ""
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1072,9 +1120,10 @@ msgid "Participation role for the calendar user"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.attendee,ref:0
-msgid "Event Ref"
-msgstr "Αναφ Συμβάντος"
+#: view:calendar.attendee:0
+#: field:calendar.attendee,delegated_to:0
+msgid "Delegated To"
+msgstr "Εξουσιοδότηση σε"
 
 #. module: base_calendar
 #: help:calendar.alarm,action:0
@@ -1082,9 +1131,20 @@ msgid "Defines the action to be invoked when an alarm is triggered"
 msgstr ""
 
 #. module: base_calendar
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "End date"
+msgstr ""
+
+#. module: base_calendar
 #: view:calendar.event:0
 msgid "Search Events"
 msgstr "Αναζήτηση Συμβάντων"
+
+#. module: base_calendar
+#: view:calendar.event:0
+msgid "Recurrency Option"
+msgstr ""
 
 #. module: base_calendar
 #: selection:base.calendar.set.exrule,freq:0
@@ -1095,8 +1155,6 @@ msgstr "Εβδομαδιαία"
 
 #. module: base_calendar
 #: help:calendar.alarm,active:0
-#: help:calendar.event,active:0
-#: help:calendar.todo,active:0
 #: help:res.alarm,active:0
 msgid ""
 "If the active field is set to true, it will allow you to hide the event "
@@ -1149,6 +1207,12 @@ msgid "Done"
 msgstr "Ολοκληρώθηκε"
 
 #. module: base_calendar
+#: help:calendar.event,interval:0
+#: help:calendar.todo,interval:0
+msgid "Repeat every (Days/Week/Month/Year)"
+msgstr ""
+
+#. module: base_calendar
 #: view:base_calendar.invite.attendee:0
 #: field:base_calendar.invite.attendee,user_ids:0
 msgid "Users"
@@ -1156,7 +1220,6 @@ msgstr "Χρήστες"
 
 #. module: base_calendar
 #: view:base.calendar.set.exrule:0
-#: view:calendar.event:0
 msgid "of"
 msgstr "από"
 
@@ -1178,11 +1241,6 @@ msgstr "res.users"
 #: selection:calendar.todo,week_list:0
 msgid "Tuesday"
 msgstr "Τρίτη"
-
-#. module: base_calendar
-#: selection:calendar.alarm,action:0
-msgid "Procedure"
-msgstr "Διαδικασία"
 
 #. module: base_calendar
 #: help:calendar.alarm,description:0
@@ -1218,15 +1276,24 @@ msgid "Tentative"
 msgstr ""
 
 #. module: base_calendar
-#: view:calendar.attendee:0
-#: view:calendar.event:0
-#: field:calendar.event,user_id:0
-#: field:calendar.todo,user_id:0
-msgid "Responsible"
-msgstr "Υπεύθυνος"
+#: field:calendar.event,interval:0
+#: field:calendar.todo,interval:0
+msgid "Repeat every"
+msgstr ""
 
 #. module: base_calendar
-#: view:calendar.event:0
+#: selection:calendar.event,end_type:0
+#: selection:calendar.todo,end_type:0
+msgid "Fix amout of times"
+msgstr ""
+
+#. module: base_calendar
+#: field:calendar.event,recurrency:0
+#: field:calendar.todo,recurrency:0
+msgid "Recurrent"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,rrule_type:0
 #: field:calendar.todo,rrule_type:0
 msgid "Recurrency"
@@ -1244,12 +1311,6 @@ msgstr "Προσκλήσεις Γεγονότος"
 #: selection:calendar.todo,week_list:0
 msgid "Thursday"
 msgstr "Πέμπτη"
-
-#. module: base_calendar
-#: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,rrule_type:0
-msgid "Custom"
-msgstr "Προσαρμοσμένος"
 
 #. module: base_calendar
 #: field:calendar.event,exrule:0
@@ -1284,9 +1345,10 @@ msgid "Month"
 msgstr "Μήνας"
 
 #. module: base_calendar
-#: selection:base_calendar.invite.attendee,type:0
-msgid "External Email"
-msgstr "Εξωτερικό Email"
+#: view:base_calendar.invite.attendee:0
+#: view:calendar.event:0
+msgid "Invite People"
+msgstr "Κάλεσε Κόσμο"
 
 #. module: base_calendar
 #: help:calendar.event,rrule:0
@@ -1347,12 +1409,6 @@ msgid "ir.values"
 msgstr ""
 
 #. module: base_calendar
-#: view:base_calendar.invite.attendee:0
-#: view:calendar.event:0
-msgid "Invite People"
-msgstr "Κάλεσε Κόσμο"
-
-#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Objects"
 msgstr "Αντικείμενα"
@@ -1371,13 +1427,8 @@ msgid "Sat"
 msgstr "Σάβ"
 
 #. module: base_calendar
-#: model:ir.module.module,description:base_calendar.module_meta_information
-msgid ""
-"Full featured calendar system that supports:\n"
-"    - Calendar of events\n"
-"    - Alerts (create requests)\n"
-"    - Recurring events\n"
-"    - Invitations to people"
+#: view:calendar.event:0
+msgid "Choose day where repeat the meeting"
 msgstr ""
 
 #. module: base_calendar
@@ -1420,10 +1471,9 @@ msgid "Name"
 msgstr "Όνομα"
 
 #. module: base_calendar
-#: field:calendar.event,exdate:0
-#: field:calendar.todo,exdate:0
-msgid "Exception Date/Times"
-msgstr "Εξαίρεση Ημερομηνία/Ώρες"
+#: model:ir.model,name:base_calendar.model_calendar_alarm
+msgid "Event alarm information"
+msgstr "Πληροφορίες Υπενθύμισης Γεγονότος"
 
 #. module: base_calendar
 #: help:calendar.alarm,name:0
@@ -1443,7 +1493,7 @@ msgid "Alarm"
 msgstr "Υπενθύμιση"
 
 #. module: base_calendar
-#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:0
+#: code:addons/base_calendar/wizard/base_calendar_set_exrule.py:90
 #, python-format
 msgid "Please Apply Recurrency before applying Exception Rule."
 msgstr ""
@@ -1459,6 +1509,11 @@ msgstr "Αποστάλθηκε από Χρήστη"
 #: selection:calendar.todo,month_list:0
 msgid "April"
 msgstr "Απρίλιος"
+
+#. module: base_calendar
+#: view:calendar.event:0
+msgid "Recurrency period"
+msgstr ""
 
 #. module: base_calendar
 #: field:base.calendar.set.exrule,week_list:0
@@ -1569,6 +1624,12 @@ msgid "Free/Busy"
 msgstr "Ελεύθερο/Απασχολημένο"
 
 #. module: base_calendar
+#: field:calendar.event,end_type:0
+#: field:calendar.todo,end_type:0
+msgid "Way to end reccurency"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.alarm,duration:0
 #: field:calendar.alarm,trigger_duration:0
 #: field:calendar.event,duration:0
@@ -1580,13 +1641,9 @@ msgid "Duration"
 msgstr "Διάρκεια"
 
 #. module: base_calendar
-#: model:ir.actions.act_window,help:base_calendar.action_res_alarm_view
-msgid ""
-"Create specific calendar alarms that can be assigned to calendar events or "
-"meetings."
-msgstr ""
-"Δημιουργεία συγκεκριμένων υπενθυμήσεων ημερολογίου που μπορούν να ανατεθούνε "
-"σε γεγονότα ημερολογίου ή συναντήσεις."
+#: selection:base_calendar.invite.attendee,type:0
+msgid "External Email"
+msgstr "Εξωτερικό Email"
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_date:0
@@ -1611,8 +1668,23 @@ msgstr ""
 msgid "Fifth"
 msgstr "Πέμπτος"
 
+#~ msgid "Select data for Custom Rule"
+#~ msgstr "Επιλογή δεδομένων για προσαρμοσμένο κανόνα"
+
+#~ msgid "Exclude range"
+#~ msgstr "Αποκλεισμός έκτασης"
+
+#~ msgid "Repeat every x"
+#~ msgstr "Επανάληψη κάθε x"
+
+#~ msgid "Seconds"
+#~ msgstr "Δευτερόλεπτα"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Μη έγκυρο XML για προβολή Αρχιτεκτονικής"
+
+#~ msgid "Repeat max that times"
+#~ msgstr "Επανάληψη μέγιστο τόσες φορές"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Το όνομα της υπομονάδας πρέπει να είναι μοναδικό!"
@@ -1631,3 +1703,13 @@ msgstr "Πέμπτος"
 
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Λάθος! Δεν μπορείτε να δημιουργήσετε κενό Μενού."
+
+#~ msgid "Custom"
+#~ msgstr "Προσαρμοσμένος"
+
+#~ msgid ""
+#~ "Create specific calendar alarms that can be assigned to calendar events or "
+#~ "meetings."
+#~ msgstr ""
+#~ "Δημιουργεία συγκεκριμένων υπενθυμήσεων ημερολογίου που μπορούν να ανατεθούνε "
+#~ "σε γεγονότα ημερολογίου ή συναντήσεις."

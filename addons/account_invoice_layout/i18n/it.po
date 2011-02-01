@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-11-25 20:04+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 18:38+0000\n"
+"Last-Translator: lollo_Ge <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:33+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:33+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
@@ -54,7 +54,7 @@ msgstr "Sconto (%)"
 #. module: account_invoice_layout
 #: selection:account.invoice.line,state:0
 msgid "Note"
-msgstr "Nota"
+msgstr "Note"
 
 #. module: account_invoice_layout
 #: model:ir.model,name:account_invoice_layout.model_notify_message
@@ -94,6 +94,21 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"    Questo modulo fornisce gli strumenti per migliorare il layout delle "
+"fatture.\n"
+"\n"
+"    Ti offre la possibilità di\n"
+"        * ordinare le linee di una fattura\n"
+"        * aggiungere titoli, linee di commento, totali parziali\n"
+"        * disegnare linee orizzontali ed inserire interruzioni di pagina\n"
+"\n"
+"    In più ha un'opzione per stampare le fatture selezionate con un "
+"messaggio preimpostato nel piede del documento. Questa funzione può essere "
+"molto per stampare le fatture con auguri di fine anno, condizioni "
+"particolari...\n"
+"\n"
+"    "
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -104,8 +119,8 @@ msgstr "IVA"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Document"
-msgstr "Documento"
+msgid "Tel. :"
+msgstr "Tel. :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -134,9 +149,10 @@ msgid "Product"
 msgstr "Prodotto"
 
 #. module: account_invoice_layout
-#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
-msgid "Write Messages"
-msgstr "Scrivi Messaggi"
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Description"
+msgstr "Descrizione"
 
 #. module: account_invoice_layout
 #: help:account.invoice.line,sequence:0
@@ -159,7 +175,6 @@ msgstr "Data fattura"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Taxes:"
 msgstr "Imposte"
 
@@ -169,9 +184,9 @@ msgid "Source Account"
 msgstr "Conto origine"
 
 #. module: account_invoice_layout
-#: view:account.invoice.special.msg:0
-msgid "Cancel"
-msgstr "Annulla"
+#: model:ir.actions.act_window,name:account_invoice_layout.notify_mesage_tree_form
+msgid "Write Messages"
+msgstr "Scrivi Messaggi"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -204,19 +219,17 @@ msgstr "Quantità"
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Partner Ref."
-msgstr "Rif. Partner"
-
-#. module: account_invoice_layout
-#: report:account.invoice.layout:0
-#: model:ir.model,name:account_invoice_layout.model_account_invoice
-#: report:notify_account.invoice:0
-msgid "Invoice"
-msgstr "Fattura"
+msgid "Refund"
+msgstr "Rimborso"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
+msgid "Fax :"
+msgstr "Fax :"
+
+#. module: account_invoice_layout
+#: report:account.invoice.layout:0
 msgid "Total:"
 msgstr "Totale:"
 
@@ -248,10 +261,19 @@ msgid "Amount"
 msgstr "Importo"
 
 #. module: account_invoice_layout
-#: report:account.invoice.layout:0
+#: model:notify.message,msg:account_invoice_layout.demo_message1
+msgid "ERP & CRM Solutions..."
+msgstr "Soluzioni ERP & CRM..."
+
+#. module: account_invoice_layout
 #: report:notify_account.invoice:0
-msgid "Tel. :"
-msgstr "Tel. :"
+msgid "Net Total :"
+msgstr "Totale netto :"
+
+#. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Total :"
+msgstr "Totale :"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -272,8 +294,8 @@ msgstr ""
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
 #: report:notify_account.invoice:0
-msgid "Refund"
-msgstr "Rimborso"
+msgid "Origin"
+msgstr "Origine"
 
 #. module: account_invoice_layout
 #: field:account.invoice.line,state:0
@@ -286,9 +308,15 @@ msgid "Separator Line"
 msgstr "Linea di separazione"
 
 #. module: account_invoice_layout
+#: report:account.invoice.layout:0
+#: report:notify_account.invoice:0
+msgid "Your Reference"
+msgstr "Vostro riferimento"
+
+#. module: account_invoice_layout
 #: model:ir.module.module,shortdesc:account_invoice_layout.module_meta_information
 msgid "Invoices Layout Improvement"
-msgstr ""
+msgstr "Miglioramento della disposizione delle fatture"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -314,7 +342,6 @@ msgstr "Linea fattura"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
-#: report:notify_account.invoice:0
 msgid "Net Total:"
 msgstr "Totale imponibile"
 
@@ -325,14 +352,15 @@ msgstr "Scrivi il messaggio che desideri"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
+#: model:ir.model,name:account_invoice_layout.model_account_invoice
 #: report:notify_account.invoice:0
-msgid "Fax :"
-msgstr "Fax :"
+msgid "Invoice"
+msgstr "Fattura"
 
 #. module: account_invoice_layout
-#: model:notify.message,msg:account_invoice_layout.demo_message1
-msgid "Be Expert with the Experts..."
-msgstr "Sii un esperto con gli esperti"
+#: view:account.invoice.special.msg:0
+msgid "Cancel"
+msgstr "Annulla"
 
 #. module: account_invoice_layout
 #: report:account.invoice.layout:0
@@ -346,9 +374,17 @@ msgid "Message"
 msgstr "Messaggio"
 
 #. module: account_invoice_layout
+#: report:notify_account.invoice:0
+msgid "Taxes :"
+msgstr "Tasse :"
+
+#. module: account_invoice_layout
 #: model:ir.ui.menu,name:account_invoice_layout.menu_notify_mesage_tree_form
 msgid "All Notification Messages"
 msgstr "Tutte le notifiche messaggi"
+
+#~ msgid "Document"
+#~ msgstr "Documento"
 
 #~ msgid ":"
 #~ msgstr ":"
@@ -364,9 +400,6 @@ msgstr "Tutte le notifiche messaggi"
 
 #~ msgid "Customer Ref:"
 #~ msgstr "Rif. Cliente:"
-
-#~ msgid "Description"
-#~ msgstr "Descrizione"
 
 #~ msgid "Canceled Invoice"
 #~ msgstr "Fattura Annullata"
@@ -422,8 +455,14 @@ msgstr "Tutte le notifiche messaggi"
 #~ msgid "(Incl. taxes):"
 #~ msgstr "(Tasse Incluse):"
 
+#~ msgid "Partner Ref."
+#~ msgstr "Rif. Partner"
+
 #~ msgid "Error ! You can not create recursive Menu."
 #~ msgstr "Errore! Non è possibile creare un menù ricorsivo."
+
+#~ msgid "Be Expert with the Experts..."
+#~ msgstr "Sii un esperto con gli esperti"
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Il nome del modulo deve essere unico!"

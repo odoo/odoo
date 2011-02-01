@@ -686,6 +686,10 @@ var listDbHandler = {
     },
 
     onError: function (client, ctxt, status, errorMsg) {
+        if(status == 0) {
+            setconnect_server("true");
+            setDBList("false");
+        }
         
     }
 };
@@ -1384,7 +1388,6 @@ function getPartnerList(){
     strvalue.data = document.getElementById('txtselectpartner').value;
     xmlRpcClient.asyncCall(listPartnerHandler,cmdPartnerList,'execute',[ strDbName,struid,strpass,strobj,strmethod,strvalue ],6);
 }
-
 
 //function to create the xmlrpc supported variables for xmlrpc request
 function dictcontact(a,b){

@@ -30,7 +30,7 @@
     action: sign_in
     action_desc: 'hr_action_reason_login0'
     employee_id: 'hr_employee_employee0'
-    name: '2010-05-18 19:08:08'
+    name: !eval "'%s-01-01 19:08:08' %(datetime.now().year)"
 -
   I check that Employee state is "Present".
 -
@@ -43,7 +43,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr_employee_employee0'
-    name: '2010-05-18 19:10:55'
+    name: !eval "'%s-01-01 19:10:55' %(datetime.now().year)"
 -
   I check that Employee state is Absent.
 -

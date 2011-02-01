@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-28 09:17+0000\n"
-"Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
-"consulting.net>\n"
+"POT-Creation-Date: 2011-01-11 11:14+0000\n"
+"PO-Revision-Date: 2011-01-13 12:52+0000\n"
+"Last-Translator: silas <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:58+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-15 05:55+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_user:0
@@ -76,7 +75,12 @@ msgid "Days"
 msgstr "Tage"
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr "Zuletzt ausgeführt"
+
+#. module: base_action_rule
+#: code:addons/base_action_rule/base_action_rule.py:313
 #, python-format
 msgid "Error!"
 msgstr "Fehler !"
@@ -113,20 +117,6 @@ msgstr ""
 "Aktiviere Feld, wenn diese Regel eine EMail an den Partner senden soll."
 
 #. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
-msgid ""
-"Create actions automatically triggered based on a user activity in the "
-"system.E.g.: an opportunity created by a specific user can be automatically "
-"maintained with a specific sales team, or an opportunity which still has "
-"status pending after 14 days triggers an automatic reminder email."
-msgstr ""
-"Definition von  Aktionen, die durch bestimmte Vorgänge eines Benutzers "
-"automatisch ausgelöst werden. Z.B. eine neue Verkaufschance kann dazu "
-"führen, dass automatisch ein bestimmtes Vertriebsteam zugewiesen wird, oder "
-"eine Verkaufschance, die nach 14 Tagen immer noch offen ist, löst "
-"automatisch eine neue Email aus."
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
 msgstr "Bedingungen Partner Daten"
@@ -160,6 +150,20 @@ msgstr "Schlüsselwörter zur Benutzung im Haupttext"
 #: field:base.action.rule,trg_state_from:0
 msgid "State"
 msgstr "Status"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
+msgid ""
+"Use automated actions to automatically trigger actions for various screens. "
+"Example: a lead created by a specific user may be automatically set to a "
+"specific sales team, or an opportunity which still has status pending after "
+"14 days might trigger an automatic reminder email."
+msgstr ""
+"Verwenden Sie die Anwendung zur Definition von Aktionen, die durch bestimmte "
+"Vorgänge automatisch ausgelöst werden sollen. Z.B. eine neue Verkaufschance "
+"kann dazu führen, dass automatisch ein bestimmtes Vertriebsteam zugewiesen "
+"wird, oder eine Verkaufschance, die nach 14 Tagen immer noch offen ist, löst "
+"automatisch eine neue Email aus."
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
@@ -329,7 +333,7 @@ msgid "Active"
 msgstr "Aktiv"
 
 #. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:0
+#: code:addons/base_action_rule/base_action_rule.py:314
 #, python-format
 msgid "No E-Mail ID Found for your Company address!"
 msgstr "EMail Daten fehlen bei den Adressdaten Ihrer Firma!"
@@ -379,7 +383,7 @@ msgstr ""
 #. module: base_action_rule
 #: model:ir.model,name:base_action_rule.model_ir_cron
 msgid "ir.cron"
-msgstr ""
+msgstr "ir.cron"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -545,6 +549,18 @@ msgstr "Auslösetermin"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Fehlerhafte Modulbezeichnung für diese Aktion"
+
+#~ msgid ""
+#~ "Create actions automatically triggered based on a user activity in the "
+#~ "system.E.g.: an opportunity created by a specific user can be automatically "
+#~ "maintained with a specific sales team, or an opportunity which still has "
+#~ "status pending after 14 days triggers an automatic reminder email."
+#~ msgstr ""
+#~ "Definition von  Aktionen, die durch bestimmte Vorgänge eines Benutzers "
+#~ "automatisch ausgelöst werden. Z.B. eine neue Verkaufschance kann dazu "
+#~ "führen, dass automatisch ein bestimmtes Vertriebsteam zugewiesen wird, oder "
+#~ "eine Verkaufschance, die nach 14 Tagen immer noch offen ist, löst "
+#~ "automatisch eine neue Email aus."
 
 #~ msgid "The name of the module must be unique !"
 #~ msgstr "Die Modulbezeichnung sollte eindeutig sein !"

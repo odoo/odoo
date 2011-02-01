@@ -51,7 +51,7 @@ class hr_evaluation_plan_phase(osv.osv):
     _columns = {
         'name': fields.char("Phase", size=64, required=True),
         'sequence': fields.integer("Sequence"),
-        'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True),
+        'company_id': fields.related('plan_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
         'plan_id': fields.many2one('hr_evaluation.plan','Evaluation Plan', ondelete='cascade'),
         'action': fields.selection([
             ('top-down','Top-Down Appraisal Requests'),
@@ -143,7 +143,7 @@ class hr_evaluation(osv.osv):
     _description = "Employee Evaluation"
     _rec_name = 'employee_id'
     _columns = {
-        'date': fields.date("Evaluation Deadline", required=True),
+        'date': fields.date("Evaluation Deadline", required=True, select=True),
         'employee_id': fields.many2one('hr.employee', "Employee", required=True),
         'note_summary': fields.text('Evaluation Summary'),
         'note_action': fields.text('Action Plan',
@@ -165,7 +165,7 @@ class hr_evaluation(osv.osv):
             ('done','Done'),
             ('cancel','Cancelled'),
         ], 'State', required=True, readonly=True),
-        'date_close': fields.date('Ending Date'),
+        'date_close': fields.date('Ending Date', select=True),
         'progress': fields.float("Progress"),
     }
     _defaults = {

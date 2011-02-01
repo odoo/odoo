@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+
 from report import report_sxw
 from common_report_header import common_report_header
 
@@ -111,7 +112,8 @@ class account_balance(report_sxw.rml_parse, common_report_header):
 
         ctx['fiscalyear'] = form['fiscalyear_id']
         if form['filter'] == 'filter_period':
-            ctx['periods'] = form['periods']
+            ctx['period_from'] = form['period_from']
+            ctx['period_to'] = form['period_to']
         elif form['filter'] == 'filter_date':
             ctx['date_from'] = form['date_from']
             ctx['date_to'] =  form['date_to']

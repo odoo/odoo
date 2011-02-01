@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -32,8 +32,7 @@ class BaseTemplateEditor(openobject.templating.TemplateEditor):
         output = output[:end_head] + """
     <link rel="stylesheet" type="text/css" href="/web_livechat/static/css/lc.css"/>
     <%
-        if 'livechat' not in cp.session:
-            cp.session['livechat'] = rpc.session.execute('object', 'execute', 'publisher_warranty.contract', 'is_livechat_enable')
+        cp.session['livechat'] = rpc.session.execute('object', 'execute', 'publisher_warranty.contract', 'is_livechat_enable')
     %>
     % if cp.session['livechat']:
 <script type="text/javascript">
@@ -82,8 +81,8 @@ class HeaderTemplateEditor(openobject.templating.TemplateEditor):
                     skill: '0',
                     type: 'text',
                     labels: {
-                      online: '<img src="/web_livechat/static/images/available.png"/>Online Support',
-                      offline: '<img src="/web_livechat/static/images/away.png"/>Online Support'
+                      online: '<img src="/web_livechat/static/images/available.png"/>Support',
+                      offline: '<img src="/web_livechat/static/images/away.png"/>Support'
                     }
                   });
                 </script>

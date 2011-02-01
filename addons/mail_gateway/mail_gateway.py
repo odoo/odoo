@@ -25,6 +25,7 @@ import tools
 import binascii
 import email
 from email.header import decode_header
+from email.utils import parsedate
 import base64
 import re
 from tools.translate import _
@@ -111,6 +112,11 @@ class mailgate_thread(osv.osv):
         if attach is None:
             attach = []
 
+        if email_date:
+            edate = parsedate(email_date)
+            if edate is not None:
+                email_date = time.strftime('%Y-%m-%d %H:%M:%S', edate)
+
         # The mailgate sends the ids of the cases and not the object list
 
         if all(isinstance(case_id, (int, long)) for case_id in cases):
@@ -122,7 +128,7 @@ class mailgate_thread(osv.osv):
         for case in cases:
             attachments = []
             for att in attach:
-                    attachments.append(att_obj.create(cr, uid, {'name': att[0], 'datas': base64.encodestring(att[1])}))
+                    attachments.append(att_obj.create(cr, uid, {'res_model':case._name,'res_id':case.id, 'name': att[0], 'datas': base64.encodestring(att[1])}))
 
             partner_id = hasattr(case, 'partner_id') and (case.partner_id and case.partner_id.id or False) or False
             if not partner_id and case._name == 'res.partner':
@@ -214,11 +220,12 @@ class mailgate_message(osv.osv):
         action_data = False
         action_pool = self.pool.get('ir.actions.act_window')
         message_pool = self.browse(cr ,uid, ids, context=context)[0]
+        att_ids = [x.id for x in message_pool.attachment_ids] 
         action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')])
         if action_ids:
             action_data = action_pool.read(cr, uid, action_ids[0], context=context)
             action_data.update({
-                'domain': [('res_id','=',message_pool.res_id),('res_model','=',message_pool.model)],
+                'domain': [('id','in',att_ids)],
                 'nodestroy': True
                 })
         return action_data

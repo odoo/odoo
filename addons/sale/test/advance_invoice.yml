@@ -1,9 +1,9 @@
 -
   In order to test the Deposit wizard of sale module in the Open-ERP,
   I create a Sale Order for LG Viewty Smart for qty 100 having order_policy manual.
-- 
+-
   !record {model: sale.order, id: sale_order_so5}:
-    date_order: '2010-07-17'
+    date_order: !eval time.strftime('%Y-%m-%d')
     invoice_quantity: order
     order_line:
       - name: LG Viewty Smart
@@ -26,14 +26,14 @@
     shop_id: sale.shop
 -
   I use the Advance Payment wizard.
-- 
+-
   !record {model: sale.advance.payment.inv, id: sale_advance_payment_inv_0}:
     amount: 1000.0
     product_id: product.product_product_pc3
     qtty: 3.0
-- 
+-
   Then I click on the "Create Partial Invoice" button
-- 
+-
   !python {model: sale.advance.payment.inv}: |
     self.create_invoices(cr, uid, [ref("sale_advance_payment_inv_0")], {"lang": 'en_US',
       "active_model": 'sale.order', "active_ids": [ref("sale_order_so5")], "tz":
@@ -43,8 +43,8 @@
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so5"))
-    assert so.invoice_ids, "Invoices has not been generated for sale_order_so5"    
--    
+    assert so.invoice_ids, "Invoices has not been generated for sale_order_so5"
+-
   I open the Invoice for the SO.
 -
   !python {model: account.invoice}: |
@@ -91,18 +91,18 @@
     assert(sale_id.invoiced == True), "Paid has not been set to true"
 -
   I confirm the Sale Order.
-- 
+-
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_so5}
 -
   I click on "Create Invoice" button of Sales order to create the invoice.
-- 
+-
   !workflow {model: sale.order, action: manual_invoice, ref: sale_order_so5}
 -
   I verify whether the invoice has been generated for SO
 -
   !python {model: sale.order}: |
     so = self.browse(cr, uid, ref("sale_order_so5"))
-    assert so.invoice_ids[1], "Invoices has not been generated for sale_order_so5" 
+    assert so.invoice_ids[1], "Invoices has not been generated for sale_order_so5"
 -
   I open the Invoice for the SO.
 -
@@ -124,7 +124,7 @@
     assert invoice_id, "Invoice is not in the open state"
 -
   I assign an analytic journal to the bank journal
-- 
+-
   !record {model: account.journal, id: sale.account_journal_bankjournal0}:
     analytic_journal_id: account.cose_journal_sale
 -

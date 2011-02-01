@@ -38,6 +38,7 @@ The decimal precision is configured per company.
     ],
     "demo_xml": [],
     "installable": True,
+    "certificate" : "001307317809612974621",
 }
 
 

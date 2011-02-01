@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-28 07:56+0000\n"
+"POT-Creation-Date: 2011-01-03 16:56+0000\n"
+"PO-Revision-Date: 2011-01-12 16:14+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-29 04:57+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-14 05:37+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: analytic_user_function
 #: field:analytic_user_funct_grid,product_id:0
@@ -23,7 +23,8 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
+#: code:addons/analytic_user_function/analytic_user_function.py:96
+#: code:addons/analytic_user_function/analytic_user_function.py:131
 #, python-format
 msgid "Error !"
 msgstr "Fehler !"
@@ -51,7 +52,15 @@ msgid "User"
 msgstr "Benutzer"
 
 #. module: analytic_user_function
-#: code:addons/analytic_user_function/analytic_user_function.py:0
+#: constraint:account.analytic.account:0
+msgid ""
+"Error! The currency has to be the same as the currency of the selected "
+"company"
+msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
+
+#. module: analytic_user_function
+#: code:addons/analytic_user_function/analytic_user_function.py:97
+#: code:addons/analytic_user_function/analytic_user_function.py:132
 #, python-format
 msgid "There is no expense account define for this product: \"%s\" (id:%d)"
 msgstr "Es ist kein Aufwandskonto definiert für:\"%s\"(id:%d)"

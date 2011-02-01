@@ -6,16 +6,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2010-12-21 19:43+0000\n"
-"PO-Revision-Date: 2010-12-15 13:01+0000\n"
+"POT-Creation-Date: 2011-01-11 11:15+0000\n"
+"PO-Revision-Date: 2011-01-15 09:45+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2010-12-24 05:56+0000\n"
-"X-Generator: Launchpad (build Unknown)\n"
+"X-Launchpad-Export-Date: 2011-01-16 05:06+0000\n"
+"X-Generator: Launchpad (build 12177)\n"
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -37,6 +37,11 @@ msgstr "Zuständigkeiten"
 #: field:crm.claim,date_action_next:0
 msgid "Next Action Date"
 msgstr "Datum nächste Aktion"
+
+#. module: crm_claim
+#: field:crm.claim.report,probability:0
+msgid "Probability"
+msgstr "Wahrscheinlichkeit"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -421,6 +426,11 @@ msgid "Pending"
 msgstr "Unerledigt"
 
 #. module: crm_claim
+#: view:crm.claim:0
+msgid "Communication & History"
+msgstr "Kommunikation & Historie"
+
+#. module: crm_claim
 #: selection:crm.claim.report,month:0
 msgid "August"
 msgstr "August"
@@ -561,21 +571,9 @@ msgid "Attachments"
 msgstr "Anhänge"
 
 #. module: crm_claim
-#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
-msgid ""
-"Record and track your customers' claims. Claims can be linked to a sales "
-"order or a lot. You can send emails with attachments and get the history of "
-"everything that happened on a specific claim (emails sent, interventions "
-"type and so on..). Claims can be automatically linked to an email address "
-"using the mail gateway module."
-msgstr ""
-"Erfassen und verfolgen Sie Ihre Kundenreklamationsvorfälle. Dabei können "
-"Reklamationen zu einem Verkaufsauftrag oder einer Losnummer zugewiesen "
-"werden. Sie können Emails zu dem Vorgang versenden oder einfach in die "
-"Ansicht der Historie wechseln, damit Sie sich schnell einen Überblick über "
-"die gesamte Korrespondenz und Historie verschaffen können (EMails, Tickets "
-"etc.). Reklamationen können dabei auch über eine Email Adresse durch das "
-"EMailgateway angebunden werden und automatisch zu dem Fall empfangen werden."
+#: model:ir.model,name:crm_claim.model_crm_case_stage
+msgid "Stage of case"
+msgstr "Stufen zu Vorgang"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -638,11 +636,6 @@ msgstr "Details"
 
 #. module: crm_claim
 #: view:crm.claim:0
-msgid "Cases By Stage and Estimates"
-msgstr "Fälle nach Stufe und Prognose"
-
-#. module: crm_claim
-#: view:crm.claim:0
 msgid "Reply"
 msgstr "Antwort"
 
@@ -687,6 +680,27 @@ msgstr "Vorgehen Problembehebung"
 #: model:ir.actions.act_window,name:crm_claim.act_claim_partner_address
 msgid "Report a Claim"
 msgstr "Erstelle Reklamation"
+
+#. module: crm_claim
+#: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
+msgid ""
+"Record and track your customers' claims. Claims may be linked to a sales "
+"order or a lot. You can send emails with attachments and keep the full "
+"history for a claim (emails sent, intervention type and so on). Claims may "
+"automatically be linked to an email address using the mail gateway module."
+msgstr ""
+"Erfassen und verfolgen Sie Ihre Kundenreklamationsvorfälle. Dabei können "
+"Reklamationen zu einem Verkaufsauftrag oder einer Losnummer zugewiesen "
+"werden. Sie können Emails zu dem Vorgang versenden oder einfach in die "
+"Ansicht der Historie wechseln, damit Sie sich schnell einen Überblick über "
+"die gesamte Korrespondenz und Historie verschaffen können (EMails, Tickets "
+"etc.). Reklamationen können dabei auch über eine Email Adresse durch das "
+"EMail Gateway angebunden werden und automatisch zu dem Fall empfangen werden."
+
+#. module: crm_claim
+#: field:crm.claim.report,email:0
+msgid "# Emails"
+msgstr "# EMails"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -870,6 +884,9 @@ msgstr "Jahr"
 #~ msgid "Date of Claim"
 #~ msgstr "Datum Reklamation"
 
+#~ msgid "Cases By Stage and Estimates"
+#~ msgstr "Fälle nach Stufe und Prognose"
+
 #~ msgid "Probability (%)"
 #~ msgstr "Wahrscheinl. (%)"
 
@@ -903,6 +920,21 @@ msgstr "Jahr"
 #~ msgstr ""
 #~ "Der Kanal repräsentiert unterschiedliche Möglichkeiten für die Kommunikation "
 #~ "mit Kunden."
+
+#~ msgid ""
+#~ "Record and track your customers' claims. Claims can be linked to a sales "
+#~ "order or a lot. You can send emails with attachments and get the history of "
+#~ "everything that happened on a specific claim (emails sent, interventions "
+#~ "type and so on..). Claims can be automatically linked to an email address "
+#~ "using the mail gateway module."
+#~ msgstr ""
+#~ "Erfassen und verfolgen Sie Ihre Kundenreklamationsvorfälle. Dabei können "
+#~ "Reklamationen zu einem Verkaufsauftrag oder einer Losnummer zugewiesen "
+#~ "werden. Sie können Emails zu dem Vorgang versenden oder einfach in die "
+#~ "Ansicht der Historie wechseln, damit Sie sich schnell einen Überblick über "
+#~ "die gesamte Korrespondenz und Historie verschaffen können (EMails, Tickets "
+#~ "etc.). Reklamationen können dabei auch über eine Email Adresse durch das "
+#~ "EMailgateway angebunden werden und automatisch zu dem Fall empfangen werden."
 
 #~ msgid "Size of the field can never be less than 1 !"
 #~ msgstr "Grösse des Feldes darf nie kleiner als 1 sein !"

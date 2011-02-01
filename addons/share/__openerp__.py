@@ -22,7 +22,7 @@
 
 {
     "name" : "Sharing Tools",
-    "version" : "1.1",
+    "version" : "1.2",
     "depends" : ["base"],
     "author" : "OpenERP SA",
     "category": 'Generic Modules',
@@ -50,6 +50,7 @@
     ],
     'installable': True,
     'web': True,
+    'certificate' : '001301246528927038493',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

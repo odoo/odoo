@@ -107,7 +107,7 @@
   !record {model: mrp.production, id: mrp_production_mo0}:
     bom_id: mrp_bom_woodenchair0
     company_id: base.main_company
-    date_planned: '2010-08-06 14:55:52'
+    date_planned: !eval datetime.today().strftime("%Y-%m-%d %H:%M:%S")
     location_dest_id: stock.stock_location_stock
     location_src_id: stock.stock_location_stock
     name: MO/00004

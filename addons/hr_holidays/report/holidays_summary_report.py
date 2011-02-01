@@ -29,6 +29,7 @@ from report.interface import toxml
 import pooler
 import time
 from report import report_sxw
+from tools import ustr
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
@@ -76,7 +77,7 @@ def emp_create_xml(self, cr, uid, dept, holiday_type, row_id, empid, name, som, 
     %s
     <employee row="%d" id="%d" name="%s" sum="%s">
     </employee>
-    ''' % (data_xml,row_id,dept, toxml(name),count)
+    ''' % (data_xml,row_id,dept, ustr(toxml(name)),count)
 
     return xml
 
@@ -244,7 +245,7 @@ class report_custom(report_rml):
         %s
         %s
         </report>
-        ''' % (header_xml,months_xml,date_xml, emp_xml)
+        ''' % (header_xml,months_xml,date_xml, ustr(emp_xml))
 
         return xml
 
