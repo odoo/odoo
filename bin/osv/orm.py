@@ -620,8 +620,9 @@ class orm_template(object):
                                 if not data[fpos]:
                                     dt = ''
                                     for rr in r:
-                                        if isinstance(rr.name, browse_record):
-                                            rr = rr.name
+                                        name_relation = self.pool.get(rr._table_name)._rec_name
+                                        if isinstance(rr[name_relation], browse_record):
+                                            rr = rr[name_relation]
                                         rr_name = self.pool.get(rr._table_name).name_get(cr, uid, [rr.id], context=context)
                                         rr_name = rr_name and rr_name[0] and rr_name[0][1] or ''
                                         dt += tools.ustr(rr_name or '') + ','
