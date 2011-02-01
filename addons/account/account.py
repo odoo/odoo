@@ -2822,12 +2822,16 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             seq_id_opening = obj_sequence.search(cr, uid, [('name','=','Opening Entries Journal')])
             if seq_id_opening:
                 seq_id_opening = seq_id_opening[0]
+            seq_id_miscellaneous = obj_sequence.search(cr, uid, [('name','=','Miscellaneous Journal')])
+            if seq_id_miscellaneous:
+                seq_id_miscellaneous = seq_id_miscellaneous[0]
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
             seq_id_sale_refund = seq_id
             seq_id_purchase_refund = seq_id
             seq_id_opening = seq_id
+            seq_id_miscellaneous = seq_id
 
         vals_journal['view_id'] = view_id
 
@@ -2888,12 +2892,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
 
-
-#        if obj_multi.property_account_receivable:
-#            vals_journal.update({
-#                'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id],
-#                'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
-#            })
         obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Purchase Refund Journal
@@ -2912,12 +2910,20 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
 
+        obj_journal.create(cr, uid, vals_journal, context=context)
 
-#        if obj_multi.property_account_payable:
-#            vals_journal.update({
-#                'default_credit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id],
-#                'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id]
-#            })
+        # Miscellaneous Journal
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Miscellaneous Journal'),
+            'type': 'general',
+            'refund_journal': True,
+            'code': _('MISC'),
+            'sequence_id': seq_id_miscellaneous,
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id
+        }
+
         obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Opening Entries Journal
@@ -2930,10 +2936,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'sequence_id': seq_id_opening,
                 'analytic_journal_id': analitical_journal_purchase,
                 'company_id': company_id,
+                'centralisation': True,
                 'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_opening.id],
                 'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_expense_opening.id]
                 }
             obj_journal.create(cr, uid, vals_journal, context=context)
+
 
         # Bank Journals
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])

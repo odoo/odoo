@@ -424,13 +424,21 @@ class account_installer(osv.osv_memory):
                 'company_id': company_id.id
             }
             seq_id_opening = obj_sequence.create(cr, uid, seq_opening_journal, context=context)
+            seq_miscellaneous_journal = {
+                'name': 'Miscellaneous Journal',
+                'code': 'account.journal',
+                'prefix': 'MISC/%(year)s/',
+                'padding': 3,
+                'company_id': company_id.id
+            }
+            seq_id_miscellaneous = obj_sequence.create(cr, uid, seq_opening_journal, context=context)
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
             seq_id_sale_refund = seq_id
             seq_id_purchase_refund = seq_id
             seq_id_opening = seq_id
-
+            seq_id_miscellaneous = seq_id
         vals_journal['view_id'] = view_id
 
         #Sales Journal
@@ -517,16 +525,31 @@ class account_installer(osv.osv_memory):
             })
         obj_journal.create(cr, uid, vals_journal, context=context)
 
+        # Miscellaneous Journal
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Miscellaneous Journal'),
+            'type': 'general',
+            'refund_journal': True,
+            'code': _('MISC'),
+            'sequence_id': seq_id_miscellaneous,
+            'analytic_journal_id': analitical_journal_purchase,
+            'company_id': company_id.id
+        }
+
+        obj_journal.create(cr, uid, vals_journal, context=context)
+
         # Opening Entries Journal
         if obj_multi.property_account_income_opening and obj_multi.property_account_expense_opening:
             vals_journal = {
                 'view_id': view_id,
                 'name': _('Opening Entries Journal'),
                 'type': 'situation',
-                'code': _('TOEJ'),
+                'code': _('OPEJ'),
                 'sequence_id': seq_id_opening,
                 'analytic_journal_id': analitical_journal_purchase,
                 'company_id': company_id.id,
+                'centralisation': True,
                 'default_credit_account_id': acc_template_ref[obj_multi.property_account_income_opening.id],
                 'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_opening.id]
                 }
