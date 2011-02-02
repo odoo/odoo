@@ -132,9 +132,7 @@ class email_message(osv.osv):
         'name':fields.text('Subject', readonly=True),
         'model': fields.char('Object Name', size=128, select=1, readonly=True),
         'res_id': fields.integer('Resource ID', select=1, readonly=True),
-        'ref_id': fields.char('Reference Id', size=256, readonly=True, help="Message Id in Email Server.", select=True),
         'date': fields.datetime('Date', readonly=True),
-        'history': fields.boolean('Is History?', readonly=True),
         'user_id': fields.many2one('res.users', 'User Responsible', readonly=True),
         'message': fields.text('Description', readonly=True),
         'email_from': fields.char('From', size=128, help="Email From", readonly=True),
@@ -143,12 +141,14 @@ class email_message(osv.osv):
         'email_bcc': fields.char('Bcc', help='Blind Carbon Copy Email Recipients', size=256, readonly=True),
         'message_id': fields.char('Message Id', size=1024, readonly=True, help="Message Id on Email.", select=True),
         'references': fields.text('References', readonly=True, help="References emails."),
-        'description': fields.text('Description', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', required=False),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'reply_to':fields.char('Reply-To', size=250, readonly=True),
-        'account_id' :fields.many2one('email.smtp_server', 'User account', required=True, readonly=True),
+        'account_id' :fields.many2one('email.smtp_server', 'User account', readonly=True),
+        'sub_type': fields.char('Sub Type', size=32, readonly=True),
+        'x_headers': fields.char('x_headers',size=256, readonly=True),
+        'priority':fields.integer('Priority', readonly=True),
         #I like GMAIL which allows putting same mail in many folders
         #Lets plan it for 0.9
         'folder':fields.selection([
@@ -160,7 +160,7 @@ class email_message(osv.osv):
         'state':fields.selection([
                         ('na', 'Not Applicable'),
                         ('sending', 'Sending'),
-                        ('wait', 'Waiting'),
+                        ('waiting', 'Waiting'),
                         ], 'Status', required=True, readonly=True),
     }
 

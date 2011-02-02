@@ -35,10 +35,7 @@
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
                                 </group>
                                 <field name="message_id"/>
-                                <field name="ref_id"/>
                            </group>
-                           <separator string="Description" colspan="4"/>
-                            <field name="description" nolabel="1" colspan="4" />
                         </page>
                         <page string="Attachments">
                             <separator string="Attachments" colspan="4"/>
@@ -48,6 +45,9 @@
                             <field name="account_id" colspan="2" />
                             <field name="folder" colspan="2" select="2"/>
                             <field name="state"/>
+                            <field name="sub_type"/>
+                            <field name="x_headers"/>
+                            <field name="priority"/>
                         </page>
                     </notebook>
                 </form>
