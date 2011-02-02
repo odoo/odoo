@@ -83,9 +83,7 @@ class report_custom(report_rml):
                     # sum up the attendances' durations
                     ldt = None
                     for att in attendences:
-                        print"--att---",att
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
-                        print"--dt---",dt
                         if ldt and att['action'] == 'sign_out':
                             wh += (dt - ldt).seconds/60/60
                         else:
