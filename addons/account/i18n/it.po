@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-25 23:44+0000\n"
-"Last-Translator: Pietro F. Sacchi - Umibozu <Unknown>\n"
+"PO-Revision-Date: 2011-02-01 17:57+0000\n"
+"Last-Translator: Vincenzo Marino <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-27 04:36+0000\n"
+"X-Launchpad-Export-Date: 2011-02-02 04:40+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -64,7 +64,7 @@ msgstr "Statistiche contabili"
 #: field:account.invoice,residual:0
 #: field:report.invoice.created,residual:0
 msgid "Residual"
-msgstr "Riserva"
+msgstr "Residuo"
 
 #. module: account
 #: code:addons/account/invoice.py:785
@@ -8818,6 +8818,8 @@ msgid ""
 "The journal must have centralised counterpart without the Skipping draft "
 "state option checked!"
 msgstr ""
+"Questo registro deve avere una controparte centralizzata senza che l'opzione "
+"per saltare lo stato di bozza sia marcata!"
 
 #. module: account
 #: model:process.node,note:account.process_node_paymententries0
@@ -8848,7 +8850,7 @@ msgstr "Abbonamento"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_balance
 msgid "Account Analytic Balance"
-msgstr ""
+msgstr "Bilancio Contabilità Analitica"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8984,7 +8986,7 @@ msgstr "In attesa"
 #: model:process.transition,name:account.process_transition_analyticinvoice0
 #: model:process.transition,name:account.process_transition_supplieranalyticcost0
 msgid "From analytic accounts"
-msgstr ""
+msgstr "Dalla contabilità analitica"
 
 #. module: account
 #: field:account.installer.modules,account_payment:0
@@ -9047,7 +9049,7 @@ msgstr "Valuta secondaria"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Account Move"
-msgstr ""
+msgstr "Convalida movimento in conto"
 
 #. module: account
 #: field:account.account,credit:0
@@ -9080,6 +9082,9 @@ msgid ""
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
 msgstr ""
+"Quì puoi selezionare il registro da usare per le note di credito che "
+"verranno create. Se lasci questo campo vuoto, verrà utilizzato lo stesso "
+"registro delle fatture correnti."
 
 #. module: account
 #: report:account.move.voucher:0
@@ -9174,7 +9179,7 @@ msgstr "Aprile"
 #. module: account
 #: view:account.move.line.reconcile.select:0
 msgid "Open for Reconciliation"
-msgstr ""
+msgstr "Apri per la riconciliazione"
 
 #. module: account
 #: field:account.account,parent_left:0
@@ -9193,6 +9198,8 @@ msgstr ""
 msgid ""
 "Allows invoice lines to impact multiple analytic accounts simultaneously."
 msgstr ""
+"Consenti le linee della fattura di coinvolgere più conti analitici "
+"simultaneamente."
 
 #. module: account
 #: field:account.installer,sale_tax:0
@@ -9470,6 +9477,9 @@ msgid ""
 "reconciliation process today. The current partner is counted as already "
 "processed."
 msgstr ""
+"Questo raffigura il numero totale dei partner che sono passati attraverso il "
+"processo di riconciliazione nella giornata di oggi. L'attuale partner è "
+"considerato come già processato."
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -9496,6 +9506,7 @@ msgstr "Movimenti in bozza."
 msgid ""
 "Manual or automatic creation of payment entries according to the statements"
 msgstr ""
+"Creazione manuale o automatica delle voci di pagamento in base agli estratti"
 
 #. module: account
 #: view:account.invoice:0
@@ -9542,6 +9553,8 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using cost price"
 msgstr ""
+"Questo conto verrà usato per valutare l'uscita di merci dalla categoria "
+"corrente di prodotto usando il prezzo di costo"
 
 #. module: account
 #: report:account.move.voucher:0
@@ -9728,6 +9741,8 @@ msgstr ""
 msgid ""
 "Import of the statement in the system from a supplier or customer invoice"
 msgstr ""
+"Importare l'estratto nel sistema dalla fattura di un fornitore o da un "
+"cliente"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_periodical_processing_billing
@@ -9749,6 +9764,12 @@ msgid ""
 "may keep several types of specialized journals such as a cash journal, "
 "purchase journal, sales journal..."
 msgstr ""
+"Crea e gestisti i registri dell'azienda da questo menu. Un Registro è usato "
+"per inserire tutte le transazioni di contabilità relative agli affari "
+"giornalieri utilizzando il sistema della partita doppia. A seconda della "
+"natura dell'attività ed al numero di transazioni giornaliere, un'azienda può "
+"mantenere diversi tipi di registri specializzati quali ad esempio il "
+"registro di cassa, registro acquisti, registro vendite ecc..."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
