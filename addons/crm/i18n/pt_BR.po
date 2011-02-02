@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: renato.lima@akretion.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-29 15:31+0000\n"
+"PO-Revision-Date: 2011-02-01 01:56+0000\n"
 "Last-Translator: Adriano Prado <adrianojprado@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-30 04:50+0000\n"
+"X-Launchpad-Export-Date: 2011-02-01 04:40+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: crm
@@ -1119,7 +1119,7 @@ msgstr "Referência"
 #. module: crm
 #: field:crm.lead,optin:0
 msgid "Opt-In"
-msgstr ""
+msgstr "Aceita Mala Direta"
 
 #. module: crm
 #: code:addons/crm/crm_opportunity.py:208
@@ -1746,10 +1746,9 @@ msgid ""
 "organise their sales pipeline. Stages will allow them to easily track how a "
 "specific lead or opportunity is positioned in the sales cycle."
 msgstr ""
-"Adiciona passos específicos para prospecções e oportunidades permitindo que "
-"suas vendas organizem-se melhor no fluxo de vendas. Os Passos  permitiram "
-"que eles rastreiem como uma prospecção especifica esta situada no ciclo de "
-"vendas."
+"Adicionar estágios específicos para prospecções e oportunidades permitindo "
+"organizar melhor seu fluxo de vendas. Os Estágios lhe permitirá facilmente "
+"rastrear como um prospécto ou oportunidade é posicionado no ciclo de vendas."
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -1812,6 +1811,10 @@ msgid ""
 "sent/to be sent to your colleagues/partners. You can not only invite OpenERP "
 "users, but also external parties, such as a customer."
 msgstr ""
+"Com convites para reuniões você pode criar e gerenciar os convites de uma "
+"reunião enviados ou a serem enviados aos seus Colegas/Parceiros. Você não "
+"apenas pode convidar os usuários do OpenERP como também partes externas como "
+"um cliente."
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -1917,6 +1920,8 @@ msgid ""
 "This percentage depicts the default/average probability of the Case for this "
 "stage to be a success"
 msgstr ""
+"Esse percentual representa a probabilidade média padrão do caso, para que "
+"este estágio seja um sucesso."
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -3038,7 +3043,7 @@ msgstr "Corpo da Anotação"
 #. module: crm
 #: view:board.board:0
 msgid "My Planned Revenues by Stage"
-msgstr "Minhas Receitas Planejadas por Fase"
+msgstr "Minhas Receitas Planejadas por Estágio"
 
 #. module: crm
 #: field:crm.lead.report,date_closed:0
@@ -3076,6 +3081,8 @@ msgid ""
 "If the partner has not purchased (or bought) during a period, decrease the "
 "state of mind by this factor. It's a multiplication"
 msgstr ""
+"Se o parceiro não tiver comprado durante um período, diminuir o estado de "
+"espírito por este factor. Isso é uma multiplicação"
 
 #. module: crm
 #: model:ir.actions.act_window,help:crm.action_report_crm_phonecall
@@ -3085,16 +3092,22 @@ msgid ""
 "several criteria and drill down the information, by adding more groups in "
 "the report."
 msgstr ""
+"A partir deste relatório, é possível analisar o desempenho de sua equipe de "
+"vendas, com base nas suas chamadas telefônicas. Você pode agrupar ou filtrar "
+"as informações de acordo com vários critérios e detalhamentos das "
+"informações, pela adição de mais grupos no relatório."
 
 #. module: crm
 #: view:crm.case.section:0
 msgid "Mailgateway"
-msgstr ""
+msgstr "Gateway de E-mail"
 
 #. module: crm
 #: help:crm.lead,user_id:0
 msgid "By Default Salesman is Administrator when create New User"
 msgstr ""
+"Por Padrão o Gerente de Vendas é o Administrador quando se cria um novo "
+"Usuário."
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -3174,6 +3187,8 @@ msgid ""
 "You can not escalate, You are already at the top level regarding your sales-"
 "team category."
 msgstr ""
+"Você não pode escalar, você já está no nível mais alto em relação a sua "
+"categoria da equipe de vendas."
 
 #. module: crm
 #: selection:crm.segmentation.line,operator:0
@@ -3244,6 +3259,10 @@ msgid ""
 "If checked, remove the category from partners that doesn't match "
 "segmentation criterions"
 msgstr ""
+"Selecione se a categoria é limitada aos parceiros que correspondem os "
+"critérios de segmentação.                       \n"
+"Se selecionada, remover a categoria de parceiros que não corresponde aos "
+"critérios de segmentação."
 
 #. module: crm
 #: field:crm.meeting,exdate:0
@@ -3331,6 +3350,7 @@ msgstr "    Mês-1    "
 #: help:crm.installer,sale_crm:0
 msgid "This module relates sale from opportunity cases in the CRM."
 msgstr ""
+"Este módulo se refere as vendas a partir dos casos de oportunidade no CRM."
 
 #. module: crm
 #: selection:crm.meeting,rrule_type:0
@@ -3346,7 +3366,7 @@ msgstr "Qualificação"
 #. module: crm
 #: view:crm.case.stage:0
 msgid "Stage Definition"
-msgstr "Definição da Fase"
+msgstr "Definição do Estágio"
 
 #. module: crm
 #: selection:crm.meeting,byday:0
@@ -3548,7 +3568,7 @@ msgstr "7 Dias"
 #. module: crm
 #: view:board.board:0
 msgid "Planned Revenue by Stage and User"
-msgstr "Receita Planejada por Fase e Usuário"
+msgstr "Receita Planejada por Estágio e Usuário"
 
 #. module: crm
 #: view:crm.lead:0

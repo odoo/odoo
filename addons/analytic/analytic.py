@@ -116,10 +116,7 @@ class account_analytic_account(osv.osv):
             context = {}
         
         for account in self.browse(cr, uid, ids, context=context):
-            for child in account.child_ids:
-                if child.state == 'template':
-                    account.child_ids.pop(account.child_ids.index(child))
-            result[account.id] = map(lambda x: x.id, account.child_ids)
+            result[account.id] = map(lambda x: x.id, [child for child in account.child_ids if child.state != 'template'])
 
         return result
 

@@ -142,8 +142,6 @@ class stock_partial_picking(osv.osv_memory):
         @return: A dictionary which of fields with values.
         """
         pick_obj = self.pool.get('stock.picking')
-        move_obj = self.pool.get('stock.move')
-        location_obj = self.pool.get('stock.location')
         
         picking_ids = context.get('active_ids', False)
         partial = self.browse(cr, uid, ids[0], context=context)

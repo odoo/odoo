@@ -21,7 +21,6 @@
 ##############################################################################
 
 from osv import fields, osv
-from osv.osv import except_osv
 from tools.translate import _
 
 class product_pricelist(osv.osv):
@@ -77,7 +76,6 @@ class sale_order_line(osv.osv):
         result=res['value']
         pricelist_obj=self.pool.get('product.pricelist')
         product_obj = self.pool.get('product.product')
-        product_uom_obj = self.pool.get('product.uom')
         if product:
             if result.get('price_unit',False):
                 price=result['price_unit']
@@ -90,7 +88,6 @@ class sale_order_line(osv.osv):
 
             pricelists = pricelist_obj.read(cr,uid,[pricelist],['visible_discount'])
 
-            old_uom = product.uos_id or product.uom_id
             new_list_price = get_real_price(list_price, product.id, qty, uom, pricelist)
             if(len(pricelists)>0 and pricelists[0]['visible_discount'] and list_price[pricelist] != 0):
                 discount = (new_list_price - price) / new_list_price * 100

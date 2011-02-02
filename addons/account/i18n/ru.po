@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-28 12:39+0000\n"
+"PO-Revision-Date: 2011-01-31 21:01+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-29 04:55+0000\n"
+"X-Launchpad-Export-Date: 2011-02-01 04:41+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -45,7 +45,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Согласование проводки журнала"
+msgstr "Сверка проводки журнала"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
@@ -95,7 +95,7 @@ msgstr ""
 #. module: account
 #: field:account.partner.ledger,reconcil:0
 msgid "Include Reconciled Entries"
-msgstr "Включать согласованные проводки"
+msgstr "Включать сверенные проводки"
 
 #. module: account
 #: view:account.pl.report:0
@@ -137,7 +137,7 @@ msgstr "Бухгалтерские проводки-"
 #: code:addons/account/account.py:1291
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
-msgstr "Вы не можете удалять подтвержденное перемещение: \"%s\"!"
+msgstr "Нельзя удалить проведенное перемещение: \"%s\"!"
 
 #. module: account
 #: report:account.invoice:0
@@ -346,7 +346,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile
 msgid "Account Unreconcile"
-msgstr ""
+msgstr "Отменить сверку счета"
 
 #. module: account
 #: view:product.product:0
@@ -439,7 +439,7 @@ msgstr "Положительный"
 #. module: account
 #: view:account.move.line.unreconcile.select:0
 msgid "Open For Unreconciliation"
-msgstr "Открыть для рассогласования"
+msgstr "Открыть для отмены сверки"
 
 #. module: account
 #: field:account.fiscal.position.template,chart_template_id:0
@@ -678,8 +678,7 @@ msgstr "Период журнала"
 #: code:addons/account/account_move_line.py:776
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
-msgstr ""
-"Для согласования проводок компания должна быть одна во всех проводках."
+msgstr "Для сверки проводок компания должна быть одна во всех проводках."
 
 #. module: account
 #: view:account.account:0
@@ -716,7 +715,7 @@ msgstr "Проверка"
 #. module: account
 #: field:account.partner.reconcile.process,today_reconciled:0
 msgid "Partners Reconciled Today"
-msgstr ""
+msgstr "Партнеры сверенные сегодня"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:306
@@ -788,7 +787,7 @@ msgstr "Журнал аналитики"
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
 msgid "Automatic Reconcile"
-msgstr "Автоматическое согласование"
+msgstr "Автоматическая сверка"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -841,7 +840,7 @@ msgstr "Вычисления"
 #. module: account
 #: view:account.move.line:0
 msgid "Next Partner to reconcile"
-msgstr ""
+msgstr "Следующий партнер для сверки"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1191
@@ -850,8 +849,8 @@ msgid ""
 "You can not do this modification on a confirmed entry ! Please note that you "
 "can just change some non important fields !"
 msgstr ""
-"Вы не можете сделать это изменение по подтвердила вступление! Обратите "
-"внимание на то, что вы можете просто изменить некоторые важные поля!"
+"Нельзя изменить подтвержденную запись! Обратите внимание, можно изменить "
+"только второстепенные поля!"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1047,7 +1046,7 @@ msgstr ""
 #. module: account
 #: selection:account.account.type,report_type:0
 msgid "Profit & Loss (Expense Accounts)"
-msgstr "Прибыль и убыток (расходные счета)"
+msgstr "Прибыль и убыток (счета расходов)"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -1110,7 +1109,7 @@ msgstr "Отменить счета"
 #. module: account
 #: view:account.unreconcile.reconcile:0
 msgid "Unreconciliation transactions"
-msgstr "Неподтвержденные транзакции"
+msgstr "Не сверенные транзакции"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
@@ -1585,8 +1584,8 @@ msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
 msgstr ""
-"Отмена счета: Создается счет на возврат, проверьте и согласуйте его для "
-"отмены текущего счета."
+"Отмена счета: создается возврат счета, утвердите и сверьте его для отмены "
+"текущего счета."
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1636,7 +1635,7 @@ msgstr "Ошибка! Вы не можете определить перекры
 #: code:addons/account/account_move_line.py:808
 #, python-format
 msgid "The account is not defined to be reconciled !"
-msgstr ""
+msgstr "Счет не определен для сверки !"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -1856,7 +1855,7 @@ msgstr ""
 #: model:process.node,note:account.process_node_reconciliation0
 #: model:process.node,note:account.process_node_supplierreconciliation0
 msgid "Comparison between accounting and payment entries"
-msgstr ""
+msgstr "Сравнение бухгалтерских проводок и платежей"
 
 #. module: account
 #: view:account.tax:0
@@ -1929,7 +1928,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_reconcile
 #: model:ir.actions.act_window,name:account.action_account_unreconcile_select
 msgid "Unreconcile Entries"
-msgstr "Несогласованные проводки"
+msgstr "Отмена сверки проводок"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -1950,7 +1949,7 @@ msgstr "Открытые проводки"
 #. module: account
 #: field:account.automatic.reconcile,account_ids:0
 msgid "Accounts to Reconcile"
-msgstr ""
+msgstr "Счета для сверки"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
@@ -2214,11 +2213,12 @@ msgstr "Состояние счета - \"Черновик\""
 msgid ""
 "Check this if the user is allowed to reconcile entries in this account."
 msgstr ""
+"Отметьте, если пользователю разрешается сверять проводки по этому счету."
 
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr ""
+msgstr "Сверка партнера"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2457,12 +2457,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
 msgid "Automatic Reconciliation"
-msgstr ""
+msgstr "Автоматическая сверка"
 
 #. module: account
 #: field:account.invoice,reconciled:0
 msgid "Paid/Reconciled"
-msgstr "Оплаченный/согласованный"
+msgstr "Оплаченный/сверенный"
 
 #. module: account
 #: field:account.tax,ref_base_code_id:0
@@ -2604,7 +2604,7 @@ msgstr "Ожидаемый баланс (%.2f) отличается от выч�
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Payment entries are the second input of the reconciliation."
-msgstr ""
+msgstr "Записи о платеже - вторая часть сверяемого."
 
 #. module: account
 #: report:account.move.voucher:0
@@ -3106,6 +3106,8 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
+"Все выбранные проводки будут утверждены и проведены. Это означает, что вы "
+"больше не сможете изменять их бухгалтерские поля."
 
 #. module: account
 #: code:addons/account/invoice.py:370
@@ -3203,7 +3205,7 @@ msgstr "Категория продукции"
 #: view:account.move.line:0
 #: field:account.move.line,narration:0
 msgid "Narration"
-msgstr ""
+msgstr "Пояснение"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -3252,7 +3254,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr ""
+msgstr "Процесс сверки: партнер за партнером"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3335,7 +3337,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:810
 #, python-format
 msgid "Some entries are already reconciled !"
-msgstr "Некоторые записи уже согласованы!"
+msgstr "Некоторые записи уже сверены!"
 
 #. module: account
 #: code:addons/account/account.py:1204
@@ -3440,8 +3442,7 @@ msgstr "Платежное поручение"
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
-"Отметьте, если вы хотите, чтобы пользователь согласовывал проводки по этому "
-"счету."
+"Отметьте, если вы хотите, чтобы пользователь сверял проводки по этому счету."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
@@ -3628,8 +3629,7 @@ msgstr "Средний курс"
 #. module: account
 #: view:account.state.open:0
 msgid "(Invoice should be unreconciled if you want to open it)"
-msgstr ""
-"(счет необходимо отметить как не сверенный, если вы хотите его открыть)"
+msgstr "(счет должен быть не сверен, если вы хотите его открыть)"
 
 #. module: account
 #: field:account.aged.trial.balance,period_from:0
@@ -3759,7 +3759,7 @@ msgstr ""
 #. module: account
 #: view:account.bank.statement:0
 msgid "Close CashBox"
-msgstr ""
+msgstr "Закрыть кассу"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -3869,7 +3869,7 @@ msgstr "Описание налога"
 #: code:addons/account/report/common_report_header.py:68
 #, python-format
 msgid "All Posted Entries"
-msgstr "Все добавленные проводки"
+msgstr "Все проведенные проводки"
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:357
@@ -4026,7 +4026,7 @@ msgstr "res_config_contents"
 #. module: account
 #: view:account.unreconcile:0
 msgid "Unreconciliate transactions"
-msgstr ""
+msgstr "Отмена сверки транзакций"
 
 #. module: account
 #: view:account.use.model:0
@@ -4036,7 +4036,7 @@ msgstr "Создать проводки по моделям"
 #. module: account
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr "Разрегить сверку"
+msgstr "Разрешить сверку"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -4106,7 +4106,7 @@ msgstr ""
 #. module: account
 #: help:account.partner.ledger,reconcil:0
 msgid "Consider reconciled entries"
-msgstr ""
+msgstr "Учесть сверенные проводки"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_validate_account_move_line
@@ -4237,7 +4237,7 @@ msgstr "Счет доходов и расходов из шаблона ТМЦ"
 #: help:res.partner,last_reconciliation_date:0
 msgid ""
 "Date on which the partner accounting entries were reconciled last time"
-msgstr ""
+msgstr "Дата последней сверки проводок партнера"
 
 #. module: account
 #: field:account.fiscalyear.close,fy2_id:0
@@ -4358,12 +4358,12 @@ msgstr "Налоги"
 #: model:ir.ui.menu,name:account.menu_eaction_account_moves_sale
 #, python-format
 msgid "Journal Items"
-msgstr "Записи журнала"
+msgstr "Элементы журнала"
 
 #. module: account
 #: selection:account.account.type,report_type:0
 msgid "Balance Sheet (Assets Accounts)"
-msgstr ""
+msgstr "Баланс (счета активов)"
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -4473,9 +4473,9 @@ msgid ""
 "You should set the journal to allow cancelling entries if you want to do "
 "that."
 msgstr ""
-"Вы не можете изменить сохранённую в этом журнале запись!\n"
-"Вам необходимо разрешить отмену записей для этого журнала если вы хотите это "
-"сделать."
+"Вы не можете изменить проведенную запись в этом журнале!\n"
+"Вам необходимо разрешить отмену записей для этого журнала, если вы хотите "
+"это сделать."
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_template_folder
@@ -4592,7 +4592,7 @@ msgstr "Год"
 #. module: account
 #: field:account.bank.statement,starting_details_ids:0
 msgid "Opening Cashbox"
-msgstr ""
+msgstr "Открытие кассы"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -4629,7 +4629,7 @@ msgstr "Описание счетов"
 #. module: account
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr ""
+msgstr "Следующий партнер для сверки"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -4732,6 +4732,8 @@ msgid ""
 "The Journal Entry of the invoice have been totally reconciled with one or "
 "several Journal Entries of payment."
 msgstr ""
+"Запись в журнале счетов была полностью сверена с одной или несколькими "
+"записями в журнале платежей."
 
 #. module: account
 #: field:account.tax,child_depend:0
@@ -4852,8 +4854,8 @@ msgid ""
 "You can not do this modification on a reconciled entry ! Please note that "
 "you can just change some non important fields !"
 msgstr ""
-"Вы не можете исправить согласованную проводку! Обратите внимание на то, что "
-"вы можете просто изменить некоторые неважные поля!"
+"Вы не можете исправить сверенную проводку! Обратите внимание на то, что вы "
+"можете просто изменить некоторые второстепенные поля!"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_account_report
@@ -4863,7 +4865,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement.line,name:0
 msgid "Communication"
-msgstr "Общение"
+msgstr "Назначение"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic_accounting
@@ -4940,7 +4942,7 @@ msgstr "Количество ТМЦ"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Unposted"
-msgstr ""
+msgstr "Непроведено"
 
 #. module: account
 #: view:account.change.currency:0
@@ -5012,7 +5014,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_move_line
 msgid "Lines to reconcile"
-msgstr ""
+msgstr "Позиции для сверки"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -5090,7 +5092,7 @@ msgstr "С валютой"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Open CashBox"
-msgstr ""
+msgstr "Открыть кассу"
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -5116,7 +5118,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_automatic_reconcile
 msgid "Account Automatic Reconcile"
-msgstr ""
+msgstr "Автоматическая сверка счета"
 
 #. module: account
 #: view:account.move:0
@@ -5139,7 +5141,7 @@ msgstr ""
 #: code:addons/account/account_move_line.py:738
 #, python-format
 msgid "Already Reconciled!"
-msgstr ""
+msgstr "Уже сверено !"
 
 #. module: account
 #: help:account.tax,type:0
@@ -5344,7 +5346,7 @@ msgstr "Нельзя использовать неактивный счет !"
 #: code:addons/account/account_move_line.py:803
 #, python-format
 msgid "Entries are not of the same account or already reconciled ! "
-msgstr "Проводки не по одному счету и тому же счету или уже согласованы! "
+msgstr "Проводки не по одному счету и тому же счету или уже сверены! "
 
 #. module: account
 #: field:account.tax,account_collected_id:0
@@ -5520,6 +5522,8 @@ msgid ""
 "As soon as the reconciliation is done, the invoice's state turns to “done” "
 "(i.e. paid) in the system."
 msgstr ""
+"Как только произойдет сверка, состояние счета в системе установится в "
+"\"Сделано\" (т.е. оплачено)."
 
 #. module: account
 #: code:addons/account/invoice.py:989
@@ -5536,7 +5540,7 @@ msgstr "Корневой счет"
 #. module: account
 #: field:res.partner,last_reconciliation_date:0
 msgid "Latest Reconciliation Date"
-msgstr ""
+msgstr "Дата последней сверки"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
@@ -5637,7 +5641,7 @@ msgstr "Отчетный год"
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Partial Reconcile Entries"
-msgstr ""
+msgstr "Частичная сверка проводок"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
@@ -5727,7 +5731,7 @@ msgstr "Текущий"
 #. module: account
 #: view:account.bank.statement:0
 msgid "CashBox"
-msgstr ""
+msgstr "Касса"
 
 #. module: account
 #: selection:account.tax,type:0
@@ -5762,7 +5766,7 @@ msgstr "Вид проводок аналитики"
 #. module: account
 #: selection:account.account.type,report_type:0
 msgid "Balance Sheet (Liability Accounts)"
-msgstr ""
+msgstr "Баланс (счета пассивов)"
 
 #. module: account
 #: field:account.invoice,internal_number:0
@@ -5780,7 +5784,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr ""
+msgstr "Сверка: следующий партнер"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
@@ -5958,7 +5962,7 @@ msgstr "Журнал аналитики"
 #. module: account
 #: view:account.entries.report:0
 msgid "Reconciled"
-msgstr ""
+msgstr "Сверено"
 
 #. module: account
 #: report:account.invoice:0
@@ -5985,7 +5989,7 @@ msgstr "Операции с наличными"
 #: code:addons/account/wizard/account_state_open.py:37
 #, python-format
 msgid "Invoice is already reconciled"
-msgstr ""
+msgstr "Счет уже сверен"
 
 #. module: account
 #: view:account.account:0
@@ -6041,6 +6045,8 @@ msgid ""
 "corresponds with the entries (or records) of that account in your accounting "
 "system."
 msgstr ""
+"Сверка по банку заключается в проверке соответствия выписки с проводками по "
+"бухгалтерскому счету в системе бухучета."
 
 #. module: account
 #: model:process.node,note:account.process_node_draftstatement0
@@ -6339,6 +6345,14 @@ msgid ""
 "\n"
 "e.g. My model on %(date)s"
 msgstr ""
+"Вы можете задать год, месяц и дату в названии модели, используя следующие "
+"выражения:\n"
+"\n"
+"%(year)s: задать год \n"
+"%(month)s: задать месяц \n"
+"%(date)s: текущая дата \n"
+"\n"
+"пример: Моя модель на %(date)s"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_income
@@ -6426,12 +6440,12 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 msgid "Unreconciled Entries"
-msgstr ""
+msgstr "Не сверенные проводки"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_menu_Bank_process
 msgid "Statements Reconciliation"
-msgstr ""
+msgstr "Сверка документов"
 
 #. module: account
 #: report:account.invoice:0
@@ -6713,7 +6727,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,ending_details_ids:0
 msgid "Closing Cashbox"
-msgstr ""
+msgstr "Закрытие кассы"
 
 #. module: account
 #: view:account.journal:0
@@ -6911,7 +6925,7 @@ msgstr "Свойства продаж"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_manual_reconcile
 msgid "Manual Reconciliation"
-msgstr ""
+msgstr "Ручная сверка"
 
 #. module: account
 #: report:account.overdue:0
@@ -7112,7 +7126,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
 msgid "CashBox Line"
-msgstr ""
+msgstr "Строка кассы"
 
 #. module: account
 #: view:account.partner.ledger:0
@@ -7159,7 +7173,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_move_line_reconcile
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile"
-msgstr ""
+msgstr "сверка проводки по счету"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -7573,7 +7587,7 @@ msgstr "Виды журналов"
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
 msgid "Move bank reconcile"
-msgstr ""
+msgstr "Сверка проводки по банку"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_type_form
@@ -7590,7 +7604,7 @@ msgstr ""
 #. module: account
 #: field:account.account.type,report_type:0
 msgid "P&L / BS Category"
-msgstr ""
+msgstr "Категория: баланс / прибыль и убыток"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -7615,7 +7629,7 @@ msgstr "Счет к получению"
 #. module: account
 #: view:account.bank.statement:0
 msgid "CashBox Balance"
-msgstr ""
+msgstr "Остаток в кассе"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscalyear_close_state
@@ -8204,6 +8218,8 @@ msgid ""
 "You cannot cancel the Invoice which is Partially Paid! You need to "
 "unreconcile concerned payment entries!"
 msgstr ""
+"Нельзя отменить частично оплаченный счет! Надо отменить сверку с "
+"соответствующими проводками платежа !"
 
 #. module: account
 #: report:account.overdue:0
@@ -8253,7 +8269,7 @@ msgstr ""
 #. module: account
 #: selection:account.account.type,report_type:0
 msgid "Profit & Loss (Income Accounts)"
-msgstr ""
+msgstr "Прибыль и убыток (счета доходов)"
 
 #. module: account
 #: view:account.tax:0
@@ -8309,7 +8325,7 @@ msgstr "Изменить"
 #. module: account
 #: view:account.account.type:0
 msgid "Closing Method"
-msgstr ""
+msgstr "Метод закрытия"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_partner_balance
@@ -8363,7 +8379,7 @@ msgstr ""
 #: code:addons/account/wizard/account_automatic_reconcile.py:152
 #, python-format
 msgid "You must select accounts to reconcile"
-msgstr "Вы должны выбрать счета для согласования"
+msgstr "Вы должны выбрать счета для сверки"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -8373,7 +8389,7 @@ msgstr "Баланс по типу счета"
 #. module: account
 #: model:process.transition,note:account.process_transition_entriesreconcile0
 msgid "Accounting entries are the first input of the reconciliation."
-msgstr ""
+msgstr "Проводки - первый источник сверки."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_period_form
@@ -8447,6 +8463,8 @@ msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
 msgstr ""
+"Для сверки вы должны определить \n"
+"счет банка при создании журнала."
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -8603,7 +8621,7 @@ msgstr "Черновики счетов"
 #: view:account.entries.report:0
 #: view:account.move.line:0
 msgid "Unreconciled"
-msgstr "Несогласованные"
+msgstr "Не сверенные"
 
 #. module: account
 #: code:addons/account/invoice.py:804
@@ -8827,7 +8845,7 @@ msgstr "Апрель"
 #. module: account
 #: view:account.move.line.reconcile.select:0
 msgid "Open for Reconciliation"
-msgstr ""
+msgstr "Открыть для сверки"
 
 #. module: account
 #: field:account.account,parent_left:0
@@ -8954,7 +8972,7 @@ msgstr "Выберите период"
 #: view:account.move.line:0
 #: report:account.move.voucher:0
 msgid "Posted"
-msgstr ""
+msgstr "Проведено"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9281,7 +9299,7 @@ msgstr "Повторение"
 #: code:addons/account/account_move_line.py:805
 #, python-format
 msgid "Entry is already reconciled"
-msgstr ""
+msgstr "Проводка уже сверена"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
@@ -9528,7 +9546,7 @@ msgstr "Состояние счета - Сделано"
 #. module: account
 #: model:process.transition,note:account.process_transition_reconcilepaid0
 msgid "As soon as the reconciliation is done, the invoice can be paid."
-msgstr ""
+msgstr "Как только сверка будет выполнена, счет может быть оплачен."
 
 #. module: account
 #: view:account.account.template:0
