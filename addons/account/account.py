@@ -334,7 +334,7 @@ class account_account(osv.osv):
         return result
 
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
-        res={}
+        res = {}
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             level = 0
@@ -475,7 +475,7 @@ class account_account(osv.osv):
         for record in reads:
             name = record['name']
             if record['code']:
-                name = record['code'] + ' '+name
+                name = record['code'] + ' ' + name
             res.append((record['id'], name))
         return res
 
@@ -743,9 +743,7 @@ class account_journal(osv.osv):
         }
 
         res = {}
-
         view_id = type_map.get(type, 'account_journal_view')
-
         user = user_pool.browse(cr, uid, uid)
         if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
             view_id = 'account_journal_bank_view_multi'
@@ -756,7 +754,6 @@ class account_journal(osv.osv):
             'centralisation':type == 'situation',
             'view_id':data.res_id,
         })
-
         return {
             'value':res
         }
