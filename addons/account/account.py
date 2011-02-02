@@ -1911,7 +1911,7 @@ class account_tax(osv.osv):
             totalex -= r.get('amount', 0.0)
         totlex_qty = 0.0
         try:
-            totlex_qty=totalex/quantity
+            totlex_qty = totalex/quantity
         except:
             pass
         tex = self._compute(cr, uid, tex, totlex_qty, quantity, address_id=address_id, product=product, partner=partner)
