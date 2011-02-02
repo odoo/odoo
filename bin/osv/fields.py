@@ -339,6 +339,20 @@ class many2one(_column):
         result = {}
         for id in ids:
             result[id] = obj.datas[id].get(name, False)
+
+        # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
+        # we use uid=1 because the visibility of a many2one field value (just id and name)
+        # must be the access right of the parent form and not the linked object itself.
+        obj = obj.pool.get(self._obj)
+        records = dict(obj.name_get(cr, 1,
+                                    list(set([x for x in result.values() if x and isinstance(x, (int,long))])),
+                                    context=context))
+        for id in ids:
+            if result[id] in records:
+                result[id] = (result[id], records[result[id]])
+            else:
+                result[id] = False
+
         return result
 
     def get(self, cr, obj, ids, name, user=None, context=None, values=None):
