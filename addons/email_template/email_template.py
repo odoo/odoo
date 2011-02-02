@@ -70,11 +70,6 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
                                                              peobject=object,
                                                              env=env,
                                                              format_exceptions=True)
-            elif template.template_language == 'django':
-                templ = DjangoTemplate(message)
-                env['object'] = object
-                env['peobject'] = object
-                reply = templ.render(Context(env))
             return reply or False
         except Exception:
             logging.exception("can't render %r", message)
@@ -97,9 +92,7 @@ class email_template(osv.osv):
                                               ['model'], context)['model']
         else:
             mod_name = False
-        return {
-                'value':{'model_int_name':mod_name}
-                }
+        return {'value':{'model_int_name':mod_name}}
 
     _columns = {
         'name' : fields.char('Name', size=100, required=True),
@@ -245,7 +238,6 @@ This is useful for CRM leads for example"),
 
     _defaults = {
         'template_language' : lambda *a:'mako',
-
     }
 
     _sql_constraints = [
@@ -322,7 +314,6 @@ This is useful for CRM leads for example"),
         @param template_language: name of template engine
         @return: computed expression
         """
-
         expression = ''
         if template_language == 'mako':
             if field_name:
@@ -332,14 +323,6 @@ This is useful for CRM leads for example"),
                 if null_value:
                     expression += " or '''%s'''" % null_value
                 expression += "}"
-        elif template_language == 'django':
-            if field_name:
-                expression = "{{object." + field_name
-                if sub_field_name:
-                    expression += "." + sub_field_name
-                if null_value:
-                    expression += "|default: '''%s'''" % null_value
-                expression += "}}"
         return expression
 
     def onchange_model_object_field(self, cr, uid, ids, model_object_field, template_language, context=None):
@@ -431,7 +414,6 @@ This is useful for CRM leads for example"),
     def _add_attachment(self, cursor, user, mailbox_id, name, data, filename, context=None):
         """
         Add an attachment to a given mailbox entry.
-
         :param data: base64 encoded attachment data to store
         """
         attachment_obj = self.pool.get('ir.attachment')
@@ -440,7 +422,7 @@ This is useful for CRM leads for example"),
             'datas': data,
             'datas_fname': filename,
             'description': name or _('No Description'),
-            'res_model':'email_template.mailbox',
+            'res_model':'email.message',
             'res_id': mailbox_id,
         }
         attachment_id = attachment_obj.create(cursor,
@@ -448,7 +430,7 @@ This is useful for CRM leads for example"),
                                               attachment_data,
                                               context)
         if attachment_id:
-            self.pool.get('email_template.mailbox').write(
+            self.pool.get('email.message').write(
                               cursor,
                               user,
                               mailbox_id,
@@ -458,13 +440,7 @@ This is useful for CRM leads for example"),
                               },
                               context)
 
-    def generate_attach_reports(self,
-                                 cursor,
-                                 user,
-                                 template,
-                                 record_id,
-                                 mail,
-                                 context=None):
+    def generate_attach_reports(self, cursor, user, template, record_id, mail, context=None):
         """
         Generate report to be attached and attach it
         to the email, and add any directly attached files as well.
@@ -509,12 +485,7 @@ This is useful for CRM leads for example"),
 
         return True
 
-    def _generate_mailbox_item_from_template(self,
-                                      cursor,
-                                      user,
-                                      template,
-                                      record_id,
-                                      context=None):
+    def _generate_mailbox_item_from_template(self, cursor, user, template, record_id, context=None):
         """
         Generates an email from the template for
         record record_id of target object
@@ -640,7 +611,7 @@ This is useful for CRM leads for example"),
                 mailbox_values['body_text'] += sign
             if mailbox_values['body_html']:
                 mailbox_values['body_html'] += sign
-        mailbox_id = self.pool.get('email_template.mailbox').create(
+        mailbox_id = self.pool.get('email.message').create(
                                                              cursor,
                                                              user,
                                                              mailbox_values,
@@ -649,19 +620,14 @@ This is useful for CRM leads for example"),
         return mailbox_id
 
 
-    def generate_mail(self,
-                      cursor,
-                      user,
-                      template_id,
-                      record_ids,
-                      context=None):
+    def generate_mail(self, cursor, user, template_id, record_ids,  context=None):
         if context is None:
             context = {}
         template = self.browse(cursor, user, template_id, context=context)
         if not template:
             raise Exception("The requested template could not be loaded")
         result = True
-        mailbox_obj = self.pool.get('email_template.mailbox')
+        mailbox_obj = self.pool.get('email.message')
         for record_id in record_ids:
             mailbox_id = self._generate_mailbox_item_from_template(
                                                                 cursor,
@@ -684,8 +650,7 @@ This is useful for CRM leads for example"),
                                               mail,
                                               context
                                               )
-
-            self.pool.get('email_template.mailbox').write(
+            self.pool.get('email.message').write(
                                                 cursor,
                                                 user,
                                                 mailbox_id,
@@ -693,12 +658,9 @@ This is useful for CRM leads for example"),
                                                 context=context
             )
             # TODO : manage return value of all the records
-            result = self.pool.get('email_template.mailbox').send_this_mail(cursor, user, [mailbox_id], context)
+            result = self.pool.get('email.message').send_this_mail(cursor, user, [mailbox_id], context)
         return result
 
 email_template()
-
-## FIXME: this class duplicates a lot of features of the email template send wizard,
-##        one of the 2 should inherit from the other!
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

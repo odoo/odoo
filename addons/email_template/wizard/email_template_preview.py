@@ -23,6 +23,7 @@
 from osv import osv, fields
 from tools.translate import _
 from email_template.email_template import get_value
+import tools
 
 
 class email_template_preview(osv.osv_memory):

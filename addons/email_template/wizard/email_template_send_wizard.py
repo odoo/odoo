@@ -29,7 +29,6 @@ from tools.translate import _
 import tools
 from email_template.email_template import get_value
 
-
 ## FIXME: this wizard duplicates a lot of features of the email template preview,
 ##        one of the 2 should inherit from the other!
 
@@ -171,14 +170,14 @@ class email_template_send_wizard(osv.osv_memory):
         if context is None:
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context=context)
-        if self.pool.get('email_template.mailbox').write(cr, uid, mailid, {'folder':'drafts'}, context):
+        if self.pool.get('email.message').write(cr, uid, mailid, {'folder':'drafts'}, context):
             return {'type':'ir.actions.act_window_close' }
 
     def send_mail(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         mailid = self.save_to_mailbox(cr, uid, ids, context)
-        if self.pool.get('email_template.mailbox').write(cr, uid, mailid, {'folder':'outbox'}, context):
+        if self.pool.get('email.message').write(cr, uid, mailid, {'folder':'outbox'}, context):
             return {'type':'ir.actions.act_window_close' }
 
     def get_generated(self, cr, uid, ids=None, context=None):
@@ -191,7 +190,7 @@ class email_template_send_wizard(osv.osv_memory):
             #Means there are multiple items selected for email.
             mail_ids = self.save_to_mailbox(cr, uid, ids, context)
             if mail_ids:
-                self.pool.get('email_template.mailbox').write(cr, uid, mail_ids, {'folder':'outbox'}, context)
+                self.pool.get('email.message').write(cr, uid, mail_ids, {'folder':'outbox'}, context)
                 logger.notifyChannel("email-template", netsvc.LOG_INFO, _("Emails for multiple items saved in outbox."))
                 self.write(cr, uid, ids, {
                     'generated':len(mail_ids),
@@ -211,9 +210,10 @@ class email_template_send_wizard(osv.osv_memory):
         if context is None:
             context = {}
         mail_ids = []
+        email_message_obj = self.pool.get('email.message')
         template = self._get_template(cr, uid, context)
         for id in context['src_rec_ids']:
-            screen_vals = self.read(cr, uid, ids[0], [],context)
+            screen_vals = self.read(cr, uid, ids[0], [], context)
             account = self.pool.get('email.smtp_server').read(cr, uid, screen_vals['from'], context=context)
             vals = {
                 'email_from': tools.ustr(account['name']) + "<" + tools.ustr(account['email_id']) + ">",
@@ -236,7 +236,7 @@ class email_template_send_wizard(osv.osv_memory):
             attachment_ids = []
 
             #Create partly the mail and later update attachments
-            mail_id = self.pool.get('email_template.mailbox').create(cr, uid, vals, context)
+            mail_id = email_message_obj.create(cr, uid, vals, context)
             mail_ids.append(mail_id)
             if template.report_template:
                 reportname = 'report.' + self.pool.get('ir.actions.report.xml').read(cr, uid, template.report_template.id, ['report_name'], context)['report_name']
@@ -254,7 +254,7 @@ class email_template_send_wizard(osv.osv_memory):
                     'datas': base64.b64encode(result),
                     'datas_fname': tools.ustr(get_end_value(id, screen_vals['report']) or _('Report')) + "." + format,
                     'description': vals['body_text'] or _("No Description"),
-                    'res_model': 'email_template.mailbox',
+                    'res_model': 'email.message',
                     'res_id': mail_id
                 }, context)
                 attachment_ids.append( attachment_id )
@@ -262,13 +262,13 @@ class email_template_send_wizard(osv.osv_memory):
             # Add document attachments
             for attachment_id in screen_vals.get('attachment_ids',[]):
                 new_id = self.pool.get('ir.attachment').copy(cr, uid, attachment_id, {
-                    'res_model': 'email_template.mailbox',
+                    'res_model': 'email.message',
                     'res_id': mail_id,
                 }, context)
                 attachment_ids.append( new_id )
 
             if attachment_ids:
-                self.pool.get('email_template.mailbox').write(cr, uid, mail_id, {
+                email_message_obj.write(cr, uid, mail_id, {
                     'attachments_ids': [[6, 0, attachment_ids]],
                     'mail_type': 'multipart/mixed'
                 }, context)

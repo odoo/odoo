@@ -243,10 +243,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             return False
 
 #**************************** MAIL SENDING FEATURES ***********************#
-
-
-
-
     def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, message_id=None, context=None):
         #TODO: Replace all this with a single email object
         if body is None:
@@ -261,16 +257,14 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             serv = self.smtp_connection(cr, uid, id)
             if serv:
                 try:
-                    # Prepare multipart containers depending on data
-                    text_subtype = (core_obj.send_pref == 'alternative') and 'alternative' or 'mixed'
                     # Need a multipart/mixed wrapper for attachments if content is alternative
-                    if payload and text_subtype == 'alternative':
+                    if payload:
                         payload_part = MIMEMultipart(_subtype='mixed')
-                        text_part = MIMEMultipart(_subtype=text_subtype)
+                        text_part = MIMEMultipart(_subtype='mixed')
                         payload_part.attach(text_part)
                     else:
                         # otherwise a single multipart/mixed will do the whole job
-                        payload_part = text_part = MIMEMultipart(_subtype=text_subtype)
+                        payload_part = text_part = MIMEMultipart(_subtype='mixed')
 
                     if subject:
                         payload_part['Subject'] = subject
@@ -301,16 +295,16 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                     # Attach parts into message container.
                     # According to RFC 2046, the last part of a multipart message, in this case
                     # the HTML message, is best and preferred.
-                    if core_obj.send_pref in ('text', 'mixed', 'alternative'):
-                        body_text = body.get('text', u'<Empty Message>')
-                        body_text = tools.ustr(body_text)
-                        text_part.attach(MIMEText(body_text.encode("utf-8"), _charset='UTF-8'))
-                    if core_obj.send_pref in ('html', 'mixed', 'alternative'):
-                        html_body = body.get('html', u'')
-                        if len(html_body) == 0 or html_body == u'':
-                            html_body = body.get('text', u'<p>&lt;Empty Message&gt;</p>').replace('\n', '<br/>').replace('\r', '<br/>')
-                        html_body = tools.ustr(html_body)
-                        text_part.attach(MIMEText(html_body.encode("utf-8"), _subtype='html', _charset='UTF-8'))
+#                    if core_obj.send_pref in ('text', 'mixed', 'alternative'):
+#                        body_text = body.get('text', u'<Empty Message>')
+#                        body_text = tools.ustr(body_text)
+#                        text_part.attach(MIMEText(body_text.encode("utf-8"), _charset='UTF-8'))
+#                    if core_obj.send_pref in ('html', 'mixed', 'alternative'):
+                    html_body = body.get('html', u'')
+                    if len(html_body) == 0 or html_body == u'':
+                        html_body = body.get('text', u'<p>&lt;Empty Message&gt;</p>').replace('\n', '<br/>').replace('\r', '<br/>')
+                    html_body = tools.ustr(html_body)
+                    text_part.attach(MIMEText(html_body.encode("utf-8"), _subtype='html', _charset='UTF-8'))
 
                     #Now add attachments if any, wrapping into a container multipart/mixed if needed
                     if payload:
@@ -397,7 +391,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         for id in ids:
             ctx = context.copy()
             ctx['filters'] = [('account_id', '=', id)]
-            self.pool.get('email_template.mailbox').send_all_mail(cr, uid, [], context=ctx)
+            self.pool.get('email.message').send_all_mail(cr, uid, [], context=ctx)
         return True
 
     def decode_header_text(self, text):

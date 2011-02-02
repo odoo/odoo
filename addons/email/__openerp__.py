@@ -31,11 +31,12 @@
     'depends': ['base', 'base_tools'],
     'init_xml': [],
     'update_xml': [
-        "email_view.xml",
+        "email_message_view.xml",
         "res_partner_view.xml",
         'email_smtp_server_view.xml',
         'security/ir.model.access.csv',
-        'email_smtp_server_data.xml'
+        'email_smtp_server_data.xml',
+        'email_gateway_scheduler_data.xml',
 
     ],
     'demo_xml': [],

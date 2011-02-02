@@ -32,12 +32,10 @@
     'init_xml': [],
     'update_xml': [
         "email_gateway_view.xml",
-        'security/ir.model.access.csv'
-        'email_gateway_scheduler_data.xml',
+        'security/ir.model.access.csv',
     ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '001056784984222247309',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
