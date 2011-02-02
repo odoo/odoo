@@ -139,8 +139,8 @@ class email_template_send_wizard(osv.osv_memory):
 
     #FIXME: probably better by overriding default_get directly
     _defaults = {
-        'state': lambda self,cr,uid,ctx: len(ctx['src_rec_ids']) > 1 and 'multi' or 'single',
-        'rel_model': lambda self,cr,uid,ctx: self.pool.get('ir.model').search(cr,uid,[('model','=',ctx['src_model'])],context=ctx)[0],
+        'state': lambda self,cr,uid,ctx: len(ctx.get('src_rec_ids','')) > 1 and 'multi' or 'single',
+        'rel_model': lambda self,cr,uid,ctx: self.pool.get('ir.model').search(cr,uid,[('model','=',ctx.get('src_model'))],context=ctx)[0],
         'rel_model_ref': lambda self,cr,uid,ctx: ctx['active_id'],
         'to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_to', ctx),
         'cc': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'def_cc', ctx),
@@ -153,7 +153,7 @@ class email_template_send_wizard(osv.osv_memory):
         'ref_template':lambda self,cr,uid,ctx: self._get_template(cr, uid, ctx).id,
         'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
         'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
-        'requested':lambda self,cr,uid,ctx: len(ctx['src_rec_ids']),
+        'requested':lambda self,cr,uid,ctx: len(ctx.get('src_rec_ids','')),
         'full_success': False,
         'attachment_ids': [],
     }
