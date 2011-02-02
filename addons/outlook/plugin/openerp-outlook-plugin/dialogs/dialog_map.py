@@ -330,8 +330,6 @@ class WEBOKButtonProcessor(ButtonProcessor):
             win32ui.MessageBox("Invalid web Server address.", "OpenERP Connection", flag_excl)
             return
         setWebConnAttribs(server, port, self.mngr)
-#        web_server = server
-#        web_server_port = port
         win32gui.EndDialog(self.window.hwnd, id)
 
 class WEBCHKProcessor(ButtonProcessor):
@@ -1626,7 +1624,6 @@ def SetStateList(listProcessor,*args):
     listProcessor.init_done = True
 
 def SelectStateFromList(btnProcessor,*args):
-
     hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
     sel_count = win32gui.SendMessage(hwndList, commctrl.LVM_GETSELECTEDCOUNT)
     sel_text = ''
@@ -1660,7 +1657,41 @@ def SelectStateFromList(btnProcessor,*args):
         win32ui.MessageBox("Multiple selection is not allowed.","Search Fed.State")
         return
 
+def SetWebDefaultVals(txtProcessor,*args):
+    import win32con
+    #Acquiring control of the text box
+    chk_hwnd =  win32gui.GetDlgItem(txtProcessor.window.hwnd, txtProcessor.other_ids[1])
+    try:
+        web_server = NewConn.getitem('_webserver')
+        web_port =  NewConn.getitem('_webport')
+        web_protocol =  NewConn.getitem('_webprotocol')
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id, web_server)
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0], web_port)
+        if web_protocol == "https:\\\\":
+            win32gui.SendMessage(chk_hwnd , win32con.BM_SETCHECK, 1, 0);
+    except Exception, e:
+        txtProcessor.init_done=True
+    #Reading Current Selected Email.
+    txtProcessor.init_done=True
 
+def SetServerDefaultVals(txtProcessor,*args):
+    import win32con
+    select = 1
+    #Acquiring control of the text box
+    cbprotocol_hwnd =  win32gui.GetDlgItem(txtProcessor.window.hwnd, txtProcessor.other_ids[1])
+    try:
+        web_server = NewConn.getitem('_server')
+        web_port =  NewConn.getitem('_port')
+        web_protocol =  NewConn.getitem('protocol')
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id, web_server)
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0], web_port)
+        if web_protocol == "XML-RPCS":
+            select = 2
+        win32gui.SendMessage(cbprotocol_hwnd, win32con.CB_SETCURSEL, select, 0)
+    except Exception, e:
+        txtProcessor.init_done=True
+    #Reading Current Selected Email.
+    txtProcessor.init_done=True
 
 dialog_map = {
                 "IDD_MANAGER" :            (
@@ -1694,7 +1725,8 @@ dialog_map = {
                 ),
 
                 "IDD_SERVER_PORT_DIALOG" : (
-                    (ProtocolComboProcessor,          "ID_DROPDOWNLIST_PROTOCOL", GetConn, ()),
+                    (TextProcessor,           "ID_SERVER ID_PORT ID_DROPDOWNLIST_PROTOCOL", SetServerDefaultVals, ()),
+                    (ProtocolComboProcessor,  "ID_DROPDOWNLIST_PROTOCOL", GetConn, ()),
                     (CloseButtonProcessor,    "IDCANCEL"),
                     (OKButtonProcessor,       "IDOK ID_SERVER ID_PORT IDR_XML_PROTOCOL ID_DROPDOWNLIST_PROTOCOL"),
 #
@@ -1758,6 +1790,7 @@ dialog_map = {
                     (TextProcessor,             "IDEB_OPENDOC_LINK_TEXT", SerachOpenDocuemnt,()),
                 ),
                 "IDD_WEB_SERVER_PORT_DIALOG" :(
+                     (TextProcessor,             "IDET_WEB_SERVER IDET_WEB_PORT IDCB_WEB_SECURE", SetWebDefaultVals, ()),
                      (CloseButtonProcessor,      "IDCANCEL"),
                      (WEBOKButtonProcessor,      "ID_WEB_OK IDET_WEB_SERVER IDET_WEB_PORT IDCB_WEB_SECURE"),
                      (WEBCHKProcessor,           "IDCB_WEB_SECURE"),
