@@ -143,14 +143,17 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
 
     def _constraint_unique(self, cr, uid, ids, context=None):
         default_ids = self.search(cr, uid, [('default','=',True)])
+        print "default_ids::",default_ids
         if len(default_ids) > 1:
+            return False
+        elif not default_ids:
             return False
         else:
             return True
 
     _constraints = [
         (_constraint_unique,
-         'Error: You are not allowed to set default more than 1 account.',
+         'Error: You must be define one default smtp server account !.',
          [])
     ]
 
@@ -243,7 +246,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
             return False
 
 #**************************** MAIL SENDING FEATURES ***********************#
-    def send_mail(self, cr, uid, ids, addresses, subject='', body=None, payload=None, message_id=None, context=None):
+    def send_email(self, cr, uid, ids, addresses, subject='', body=None, payload=None, message_id=None, context=None):
         #TODO: Replace all this with a single email object
         if body is None:
             body = {}

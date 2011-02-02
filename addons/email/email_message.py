@@ -233,7 +233,7 @@ class email_message(osv.osv):
                     for attid in values['attachments_ids']:
                         attachment = attachment_pool.browse(cr, uid, attid, context)#,['datas_fname','datas'])
                         payload[attachment.datas_fname] = attachment.datas
-                result = account_obj.send_mail(cr, uid,
+                result = account_obj.send_email(cr, uid,
                               [values['account_id'][0]],
                               {'To':values.get('email_to') or u'',
                                'CC':values.get('email_cc') or u'',
