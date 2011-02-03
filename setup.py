@@ -240,7 +240,7 @@ setup(name             = name,
           'reportlab',
           'caldav',
           'pyyaml',
-          'pywebdav'
+          'pywebdav',
           'feedparser',
       ],
       extras_require={
