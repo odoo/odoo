@@ -85,7 +85,14 @@ class report_custom(report_rml):
                     for att in attendences:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
-                            wh += (dt - ldt).seconds/60/60
+                            tot_tim = (str(float((dt - ldt).seconds)/3600))
+                            hrs = int(tot_tim.split('.')[0])
+                            mints = int(tot_tim.split('.')[1])
+                            tot_min = (int(mints * 60) / 10)
+                            if tot_min < (10) or tot_tim < ('0.09'):
+                                wh += float((str(hrs))+ '.' + '0' +(str(tot_min)))
+                            else:
+                                wh += float((str(hrs))+ '.' + (str(tot_min)))
                         else:
                             ldt = dt
                     # Week xml representation
