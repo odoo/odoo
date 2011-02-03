@@ -19,20 +19,22 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-import time
-import tools
-import binascii
-import email
-from email.header import decode_header
-from email.utils import parsedate
-import base64
-import re
+from osv import osv
+from osv import fields
 from tools.translate import _
-import logging
-import xmlrpclib
+import tools
 
-_logger = logging.getLogger('mailgate')
+#import time
+#import binascii
+#import email
+#from email.header import decode_header
+#from email.utils import parsedate
+#import base64
+#import re
+#import logging
+#import xmlrpclib
+
+#_logger = logging.getLogger('mailgate')
 
 def format_date_tz(date, tz=None):
     if not date:
