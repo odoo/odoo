@@ -2,8 +2,8 @@
 <openerp>
     <data>
 
-        <menuitem id="base.menu_mail_gateway" name="Emails"
-            parent="base.menu_base_config" sequence="1" />
+        <menuitem name="Configuration" parent="base.menu_tools"
+              id="base.menu_lunch_survey_root" sequence="20" />
 
         <record model="ir.ui.view" id="view_email_message_form">
           <field name="name">email.message.form</field>
@@ -117,18 +117,13 @@
 	       src_model="email.message"
 	       domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
 
-        <menuitem name="Email Template" id="menu_email_template_tools"
+        <menuitem name="Email Message" id="menu_email_message_tools"
             parent="base.menu_tools" />
 
         <menuitem name="Emails"
             id="menu_email_message"
-            parent="menu_email_template_tools"
+            parent="menu_email_message_tools"
             action="action_view_mail_message" />
-
-
-        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
-        <menuitem name="Emails" id="base.menu_emails" parent="base.marketing_menu" sequence="5"/>
-        <menuitem name="Email Smtp Server" id="menu_email_smtp" parent="base.menu_emails"/>
 
         <record model="ir.ui.view" id="email_smtp_server_form">
             <field name="name">email.smtp_server.form</field>
@@ -160,13 +155,6 @@
                             </group>
                         </page>
                     </notebook>
-                    <group colspan="4" col="10">
-                        <field name="state" select="1"/>
-                        <button string="Approve Account" name="button_approval" states="draft" type="workflow" icon="terp-camera_test"/>
-                        <button string="Suspend Account" name="button_suspended" states="approved" type="workflow" icon="gtk-cancel"/>
-                        <button string="Request Re-activation" name="get_reapprove" states="suspended" type="workflow" icon="gtk-convert"/>
-                        <button string="Send/Receive" name="send_receive" states="approved" type="object" icon="terp-check"/>
-                    </group>
                 </form>
             </field>
         </record>
@@ -176,13 +164,12 @@
             <field name="model">email.smtp_server</field>
             <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state in ('draft');black:state in ('suspended','approved')" string="Email Accounts">
+                <tree string="Email Accounts">
                     <field name="name" />
                     <field name="email_id" />
                     <field name="smtpuname" />
                     <field name="smtpserver" />
                     <field name="smtpport" />
-                    <field name="state" />
                 </tree>
             </field>
         </record>
@@ -193,10 +180,6 @@
            <field name="type">search</field>
            <field name="arch" type="xml">
                <search string="Email Smtp Server">
-                    <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
-                    <filter icon="terp-camera_test" string="Approved" domain="[('state','=','approved')]"/>
-                    <filter icon="terp-emblem-important" string="Suspended" domain="[('state','=','suspended')]"/>
-                    <separator orientation="vertical"/>
                     <field name="name" select="1"/>
                     <field name="email_id" select="1"/>
                </search>
@@ -213,22 +196,7 @@
             <field name="search_view_id" ref="view_email_smtp_server_search"/>
         </record>
 
-        <menuitem name="Configuration" parent="base.marketing_menu"
-            id="base.menu_marketing_config_root" sequence="20" groups="base.group_system"/>
-
-        <menuitem name="Email Template" id="menu_email_template_configuration" parent="base.menu_marketing_config_root" />
-
-        <menuitem name="Email Smtp Server" id="menu_email_smtp_server_all" parent="menu_email_template_configuration" action="action_email_smtp_server_tree_all"/>
-
-        <menuitem name="Configuration" parent="base.menu_tools"
-              id="base.menu_lunch_survey_root" sequence="20" />
-
-        <menuitem name="Email Template" id="menu_email_template_config_tools"
-            parent="base.menu_lunch_survey_root" />
-
-        <menuitem name="Email Smtp Server" id="menu_email_account_all_tools"
-            parent="menu_email_template_config_tools" action="action_email_smtp_server_tree_all" />
-
+        <menuitem name="Email Smtp Server" id="menu_email_smtp_server_all" parent="base.menu_lunch_survey_root" action="action_email_smtp_server_tree_all"/>
 
     </data>
 </openerp>

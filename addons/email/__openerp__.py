@@ -29,7 +29,7 @@
     * Store all emails releated messages """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base', 'base_tools'],
     'init_xml': [],
     'update_xml': [
         "email_view.xml",
