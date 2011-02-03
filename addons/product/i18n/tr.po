@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-19 12:00+0000\n"
-"Last-Translator: Arif Aydogmus <arifaydogmus@gmail.com>\n"
+"PO-Revision-Date: 2011-02-02 16:21+0000\n"
+"Last-Translator: Özge Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 06:55+0000\n"
+"X-Launchpad-Export-Date: 2011-02-03 06:17+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: product
@@ -332,7 +332,7 @@ msgstr ""
 #. module: product
 #: model:product.template,name:product.product_product_woodmm0_product_template
 msgid "Wood 2mm"
-msgstr ""
+msgstr "Tahta 2mm"
 
 #. module: product
 #: field:product.price_list,qty1:0
@@ -410,6 +410,10 @@ msgid ""
 "information about your products related to procurement logistics, sales "
 "price, product category, suppliers and so on."
 msgstr ""
+"Alınabilir ve/veya satılabilir ürünler. Bunlar hammadde, stoklanabilir ürün, "
+"tüketilebilir ürün ya da hizmet olabilir. Ürün formu, ürünleriniz ile ilgili "
+"tedarik planları, satış fiyatı, ürün kategorisi ve tedarikçi firma bigileri "
+"gibi detayları içerir."
 
 #. module: product
 #: view:product.pricelist:0
@@ -458,7 +462,7 @@ msgstr "Yükseklik"
 #. module: product
 #: help:product.pricelist.version,date_end:0
 msgid "Ending date for this pricelist version to be valid."
-msgstr ""
+msgstr "Bu fiyat listesinin geçerli olduğu son gün"
 
 #. module: product
 #: model:product.category,name:product.cat0
@@ -516,6 +520,11 @@ msgid ""
 "each version has several rules. Example: the customer price of a product "
 "category will be based on the supplier price multiplied by 1.80."
 msgstr ""
+"Fiyat listesi bütün iş ortakları için alım ve satım fiyatlarının "
+"hesaplanması için çeşitli kurallar içerir. Fiyat listesinin çeşitli "
+"versiyonları bulunur (2010, 2011, Şubat Promosyonu 2010 vb.) ve her "
+"versiyonun farklı kuralları vardır. Örneğin, ürün kategorisindeki müşteri "
+"fiyatları tedarikçi fiyatlarının 1.8 katıdır."
 
 #. module: product
 #: help:product.product,active:0
@@ -549,7 +558,7 @@ msgstr "Ürün Birim Grubu"
 #. module: product
 #: model:product.ul,name:product.product_ul_box
 msgid "Box 20x20x40"
-msgstr ""
+msgstr "Kutu 20x20x20"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -564,7 +573,7 @@ msgstr "Satın alınabilir"
 #. module: product
 #: model:product.template,name:product.product_product_cpu2_product_template
 msgid "High speed processor config"
-msgstr ""
+msgstr "Yüksek hızlı işlemci kurulumu"
 
 #. module: product
 #: model:process.transition,note:product.process_transition_supplierofproduct0
@@ -597,7 +606,7 @@ msgstr "Sanal Stok"
 #. module: product
 #: selection:product.category,type:0
 msgid "View"
-msgstr ""
+msgstr "Görüntüle"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
@@ -638,7 +647,7 @@ msgstr "Taban Fiyatı"
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
 msgid "Silent fan"
-msgstr ""
+msgstr "Sessiz vantilatör"
 
 #. module: product
 #: help:product.supplierinfo,name:0
@@ -652,6 +661,9 @@ msgid ""
 "not overlaps with original version. You should change the dates and "
 "reactivate the pricelist"
 msgstr ""
+"Bir versiyon kopyalanıp çoğaltılırsa pasif moda geçer, böylelikle tarihler "
+"orjinal versiyon ile çakışmaz. Fiyatları değiştirip yeniden aktive etmeniz "
+"gerekir."
 
 #. module: product
 #: model:product.template,name:product.product_product_kitshelfofcm0_product_template
@@ -851,7 +863,7 @@ msgstr "IT Parça Kitleri"
 #: selection:product.category,type:0
 #: selection:product.template,state:0
 msgid "Normal"
-msgstr ""
+msgstr "Normal"
 
 #. module: product
 #: model:process.node,name:product.process_node_supplier0
@@ -944,7 +956,7 @@ msgstr "Satın Alma Açıklaması"
 #. module: product
 #: constraint:product.pricelist.version:0
 msgid "You cannot have 2 pricelist versions that overlap!"
-msgstr ""
+msgstr "Aynı anda çakışan iki fiyat listesi kullanamazsınız"
 
 #. module: product
 #: help:product.supplierinfo,delay:0
@@ -961,6 +973,9 @@ msgid ""
 "manage new versions of a price list. Some examples of versions: 2010, 2011, "
 "Summer Promotion, etc."
 msgstr ""
+"Birden fazla fiyat listesi olabilir. Buradan yeni fiyat listesi "
+"oluşturabilir ve yönetebilirsiniz. Versiyonlara bazı örnekler: 2010, 2011, "
+"Yaz İndirimi, vb."
 
 #. module: product
 #: selection:product.template,type:0
@@ -980,12 +995,12 @@ msgstr "Sıra No"
 #. module: product
 #: view:product.price_list:0
 msgid "Calculate Product Price per unit base on pricelist version."
-msgstr ""
+msgstr "Fiyat listesi versiyonunu temel alarak birim ücretini hesapla"
 
 #. module: product
 #: model:ir.model,name:product.model_product_ul
 msgid "Shipping Unit"
-msgstr ""
+msgstr "Nakliye Birimi"
 
 #. module: product
 #: field:pricelist.partnerinfo,suppinfo_id:0
@@ -1007,7 +1022,7 @@ msgstr "Bilgi"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Products Listprices Items"
-msgstr ""
+msgstr "Ürünler Liste fiyatları Öğeler"
 
 #. module: product
 #: view:product.packaging:0
@@ -1046,12 +1061,12 @@ msgstr ""
 #. module: product
 #: model:product.category,name:product.product_category_services0
 msgid "Marketable Services"
-msgstr ""
+msgstr "Pazarlanabilir Hizmetler"
 
 #. module: product
 #: field:product.pricelist.item,price_surcharge:0
 msgid "Price Surcharge"
-msgstr ""
+msgstr "Fiyat artırımı"
 
 #. module: product
 #: model:product.template,name:product.product_product_mb1_product_template
@@ -1061,7 +1076,7 @@ msgstr ""
 #. module: product
 #: field:product.product,packaging:0
 msgid "Logistical Units"
-msgstr ""
+msgstr "Lojistik Birimleri"
 
 #. module: product
 #: field:product.category,complete_name:0
@@ -1080,7 +1095,7 @@ msgstr "Adı"
 #. module: product
 #: view:product.product:0
 msgid "Stockable"
-msgstr ""
+msgstr "Depolanabilir"
 
 #. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
@@ -1095,6 +1110,10 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Alınan ve satılan herşey için Ürün tanımı yapılmalıdır. Ürünler, hammadde, "
+"depolanabilir ürünler, tüketim malzemeleri ve hizmetler olabilir. Ürün "
+"formu, tedarik süreci, satış fiyatı, ürün kategorisi, tedarikçi firma "
+"bilgileri gibi detayları içermektedir."
 
 #. module: product
 #: model:product.uom,name:product.product_uom_kgm
@@ -1156,22 +1175,22 @@ msgstr "Genişlik"
 #. module: product
 #: help:product.price.type,field:0
 msgid "Associated field in the product form."
-msgstr ""
+msgstr "Ürün formu ile ilgili alan"
 
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Ölçü Birimi"
 
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr ""
+msgstr "Satınalma Yöntemi"
 
 #. module: product
 #: report:product.pricelist:0
 msgid "Printing Date"
-msgstr ""
+msgstr "Basım Tarihi"
 
 #. module: product
 #: field:product.template,uos_id:0
@@ -1201,6 +1220,22 @@ msgid ""
 "    Print product labels with barcode.\n"
 "    "
 msgstr ""
+"\n"
+"    Bu modül ürünler ve fiyat listelerinin yönetimi için OpenERP'deki temel "
+"modüldür.\n"
+"\n"
+"    Ürün destek parçaları, farklı fiyatlama metodları ve tedarikçiler\n"
+"    Bilgi, depo ve sipariş, farklı ölçü birimleri\n"
+"    Paketleme ve özellikler\n"
+"\n"
+"    Fiyat listesi desteği:\n"
+"    *Farklı indirim tanımları (ürün, kategori ve miktar bazında)\n"
+"    *Farklı bir kritere göre fiyat hesapla:\n"
+"        *Diğer fiyat listeleri\n"
+"        *Maliyet fiyatı,\n"
+"        *Liste fiyatı,\n"
+"        *Tedarikçi fiyatı, ...\n"
+"    "
 
 #. module: product
 #: help:product.template,seller_delay:0
