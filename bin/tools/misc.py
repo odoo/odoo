@@ -155,7 +155,7 @@ def exec_pg_command(name, *args):
     if not prog:
         raise Exception('Couldn\'t find %s' % name)
     args2 = (prog,) + args
-    
+
     return subprocess.call(args2)
 
 def exec_pg_command_pipe(name, *args):
@@ -422,7 +422,8 @@ def generate_tracking_message_id(openobject_id):
     """
     return "<%s-openobject-%s@%s>" % (time.time(), openobject_id, socket.gethostname())
 
-def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False):
+def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False, debug=False,
+            smtp_server=None, smtp_port=None, smtp_user=None, smtp_password=None):
     """Low-level method to send directly a Message through the configured smtp server.
         :param smtp_from: RFC-822 envelope FROM (not displayed to recipient)
         :param smtp_to_list: RFC-822 envelope RCPT_TOs (not displayed to recipient)
@@ -443,7 +444,7 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
         message['Message-Id'] = generate_tracking_message_id(openobject_id)
 
     try:
-        smtp_server = config['smtp_server']
+        smtp_server = smtp_server or config['smtp_server']
 
         if smtp_server.startswith('maildir:/'):
             from mailbox import Maildir
@@ -461,14 +462,15 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
                 smtplib.stderr = WriteToLogger()
 
             s.set_debuglevel(int(bool(debug)))  # 0 or 1
-            s.connect(smtp_server, config['smtp_port'])
+            s.connect(smtp_server, smtp_port or config['smtp_port'])
             if ssl:
                 s.ehlo()
                 s.starttls()
                 s.ehlo()
-
-            if config['smtp_user'] or config['smtp_password']:
-                s.login(config['smtp_user'], config['smtp_password'])
+            smtp_server_user = smtp_user or config['smtp_user']
+            smtp_server_password = smtp_password or config['smtp_password']
+            if smtp_server_user or smtp_server_password:
+                s.login(smtp_server_user, smtp_server_password)
 
             s.sendmail(smtp_from, smtp_to_list, message.as_string())
         finally:
@@ -488,7 +490,8 @@ def _email_send(smtp_from, smtp_to_list, message, openobject_id=None, ssl=False,
 
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
-               attach=None, openobject_id=False, ssl=False, debug=False, subtype='plain', x_headers=None, priority='3'):
+               attach=None, openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3',
+               smtp_email_from=None, smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None):
 
     """Send an email.
 
@@ -504,11 +507,11 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         x_headers = {}
 
 
-    if not (email_from or config['email_from']):
+    if not (email_from or smtp_email_from or config['email_from']):
         raise ValueError("Sending an email requires either providing a sender "
                          "address or having configured one")
 
-    if not email_from: email_from = config.get('email_from', False)
+    if not email_from: email_from = smtp_email_from or config.get('email_from', False)
     email_from = ustr(email_from).encode('utf-8')
 
     if not email_cc: email_cc = []
@@ -557,7 +560,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
             part.add_header('Content-Disposition', 'attachment; filename="%s"' % (fname,))
             msg.attach(part)
 
-    return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, openobject_id=openobject_id, ssl=ssl, debug=debug)
+    return _email_send(email_from, flatten([email_to, email_cc, email_bcc]), msg, openobject_id=openobject_id, ssl=ssl, debug=debug,
+                       smtp_server=smtp_server, smtp_port=smtp_port, smtp_user=smtp_user, smtp_password=smtp_password)
 
 #----------------------------------------------------------
 # SMS
