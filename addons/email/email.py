@@ -79,22 +79,31 @@ import tools
 #            result['all-recipients'].extend(emails)
 #    return result
 
+email_content_types = [
+    'multipart/mixed',
+    'multipart/alternative',
+    'multipart/related',
+    'text/plain',
+    'text/html'
+]
+
+def format_date_tz(date, tz=None):
+    if not date:
+        return 'n/a'
+    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
+    return tools.server_to_local_timestamp(date, format, format, tz)
+
 class email_smtp_server(osv.osv):
     """
-    Object to store email account settings
+    SMTP Server
     """
     _name = "email.smtp_server"
-    _known_content_types = ['multipart/mixed',
-                            'multipart/alternative',
-                            'multipart/related',
-                            'text/plain',
-                            'text/html'
-                            ]
+    
     _columns = {
-        'name': fields.char('Description',
+        'name': fields.char('Name',
                         size=64, required=True,
                         readonly=True, select=True,
-                        help="The description is used as the Sender name along with the provided From Email, \
+                        help="The Name is used as the Sender name along with the provided From Email, \
 unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         states={'draft':[('readonly', False)]}),
         'email_id': fields.char('From Email',
@@ -120,22 +129,14 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
                         states={'draft':[('readonly', False)]}),
         'smtptls':fields.boolean('TLS',
                         states={'draft':[('readonly', False)]}, readonly=True),
-
         'smtpssl':fields.boolean('SSL/TLS (only in python 2.6)',
                         states={'draft':[('readonly', False)]}, readonly=True),
-        'state':fields.selection([
-                                  ('draft', 'Initiated'),
-                                  ('suspended', 'Suspended'),
-                                  ('approved', 'Approved')
-                                  ],
-                        'State', required=True, readonly=True),
         'default': fields.boolean('Default', help="Only one account can be default at a time"),
     }
 
     _defaults = {
          'name':lambda self, cursor, user, context:self.pool.get( 'res.users'
                                                 ).read(cursor, user, user, ['name'], context)['name'],
-         'state':lambda * a:'draft',
          'smtpport':lambda *a:25,
          'smtpserver':lambda *a:'localhost',
          'smtptls':lambda *a:True,
@@ -150,7 +151,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
 
     def _constraint_unique(self, cr, uid, ids, context=None):
         default_ids = self.search(cr, uid, [('default','=',True)])
-        print "default_ids::",default_ids
         if len(default_ids) > 1:
             return False
         elif not default_ids:
@@ -167,47 +167,8 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
     def name_get(self, cr, uid, ids, context=None):
         return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
 
-    def email_send(cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3', smtp_id=False):
-        attachment_obj = self.pool.get('ir.attachment')
-        email_msg_obj = self.pool.get('email.message')
-        msg_vals = {
-                'name': subject,
-                'model': model or '',
-                'date': time.strftime('%Y-%m-%d'),
-                'user_id': uid,
-                'message': body,
-                'email_from': email_from,
-                'email_to': email_to or '',
-                'email_cc': email_cc or '',
-                'email_bcc': email_bcc or '',
-                'reply_to': reply_to or '',
-                'message_id': openobject_id,
-                'account_id': smtp_id,
-                'sub_type': subtype or '',
-                'x_headers': x_headers or '',
-                'priority': priority,
-                'debug': debug,
-                'folder': 'outbox',
-                'state': 'waiting',
-            }
-        email_msg_id = self.create(cr, uid, msg_vals, context)
-        if attach:
-            for attachment in attach:
-                attachment_data = {
-                        'name':  (subject or '') + _(' (Email Attachment)'),
-                        'datas': attachment[1],
-                        'datas_fname': attachment[0],
-                        'description': subject or _('No Description'),
-                        'res_model':'email.message',
-                        'res_id': email_msg_id,
-                    }
-                attachment_id = attachment_obj.create(cr, uid, attachment_data, context)
-                if attachment_id:
-                    email_msg_obj.write(cr, uid, email_msg_id,
-                                      { 'attachments_ids':[(4, attachment_id)] }, context)
-        return True
-
+    
+    
 
 
 #    def get_outgoing_server(self, cursor, user, ids, context=None):
@@ -476,14 +437,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
 
 email_smtp_server()
 
-def format_date_tz(date, tz=None):
-    if not date:
-        return 'n/a'
-    format = tools.DEFAULT_SERVER_DATETIME_FORMAT
-    return tools.server_to_local_timestamp(date, format, format, tz)
-
-
-
 class email_message(osv.osv):
     '''
     Email Message
@@ -606,7 +559,7 @@ class email_message(osv.osv):
                         ('na', 'Not Applicable'),
                         ('sending', 'Sending'),
                         ('waiting', 'Waiting'),
-                        ], 'Status', required=True, readonly=True),
+                        ], 'State', required=True, readonly=True),
     }
 
     _defaults = {
@@ -628,7 +581,7 @@ class email_message(osv.osv):
                 to_update.append(mail.id)
         # Changes the folder to trash
         self.write(cr, uid, to_update, {'folder': 'trash'}, context=context)
-        return super(email_template_mailbox, self).unlink(cr, uid, to_remove, context=context)
+        return super(email_message, self).unlink(cr, uid, to_remove, context=context)
 
     def init(self, cr):
         cr.execute("""SELECT indexname
@@ -644,14 +597,55 @@ class email_message(osv.osv):
         to periodically send emails
         """
         try:
-            self.email_send(cursor, user, context=context)
+            self.process_email_queue(cursor, user, context=context)
         except Exception, e:
             LOGGER.notifyChannel(
                                  "Email Template",
                                  netsvc.LOG_ERROR,
                                  _("Error sending mail: %s") % e)
 
-    def email_send(self, cr, uid, ids=None, context=None):
+
+    def email_send(cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
+            openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3', smtp_id=False):
+        attachment_obj = self.pool.get('ir.attachment')
+        msg_vals = {
+                'name': subject,
+                'model': model or '',
+                'date': time.strftime('%Y-%m-%d'),
+                'user_id': uid,
+                'message': body,
+                'email_from': email_from,
+                'email_to': email_to or '',
+                'email_cc': email_cc or '',
+                'email_bcc': email_bcc or '',
+                'reply_to': reply_to or '',
+                'message_id': openobject_id,
+                'account_id': smtp_id,
+                'sub_type': subtype or '',
+                'x_headers': x_headers or '',
+                'priority': priority,
+                'debug': debug,
+                'folder': 'outbox',
+                'state': 'waiting',
+            }
+        email_msg_id = self.create(cr, uid, msg_vals, context)
+        if attach:
+            for attachment in attach:
+                attachment_data = {
+                        'name':  (subject or '') + _(' (Email Attachment)'),
+                        'datas': attachment[1],
+                        'datas_fname': attachment[0],
+                        'description': subject or _('No Description'),
+                        'res_model':'email.message',
+                        'res_id': email_msg_id,
+                    }
+                attachment_id = attachment_obj.create(cr, uid, attachment_data, context)
+                if attachment_id:
+                    self.write(cr, uid, email_msg_id,
+                                      { 'attachments_ids':[(4, attachment_id)] }, context)
+        return True
+
+    def process_email_queue(self, cr, uid, ids=None, context=None):
         if ids is None:
             ids = []
         if context is None:
