@@ -1886,6 +1886,14 @@ class stock_move(osv.osv):
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'confirmed'})
+
+        # fix for bug lp:707031
+        # called write of related picking because changing move availability does
+        # not trigger workflow of picking in order to change the state of picking
+        wf_service = netsvc.LocalService('workflow')
+        for move in self.browse(cr, uid, ids, context):
+            if move.picking_id:
+                wf_service.trg_write(uid, 'stock.picking', move.picking_id.id, cr)
         return True
 
     #
