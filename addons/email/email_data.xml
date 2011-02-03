@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="email_smtp_server_administrator0" model="email.smtp_server">
+			<field name="name">Administrator</field>
+			<field eval="1" name="default"/>
+			<field eval="1" name="smtptls"/>
+			<field name="email_id">example@test.com</field>
+			<field name="state">draft</field>
+			<field eval="25" name="smtpport"/>
+			<field name="smtpserver">localhost</field>
+			<field eval="0" name="smtpssl"/>
+		</record>
         <record forcecreate="True" id="ir_cron_mail_scheduler_action" model="ir.cron">
-            <field name="name">Email Template scheduler</field>
+            <field name="name">Email scheduler</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>

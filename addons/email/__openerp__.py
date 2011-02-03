@@ -20,28 +20,27 @@
 ##############################################################################
 
 {
-    'name': 'Email Gateway System',
+    'name': 'Email System',
     'version': '1.0',
     'category': 'Generic Modules/Mail Service',
-    'description': """The generic email gateway system allows to send and receive emails
-    * History for Emails
-    * Easy Integration with any Module""",
+    'description': """The generic email system allows to send and receive emails
+    * SMTP Server Configuration
+    * Provide API for Sending Messages
+    * Store all emails releated messages """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools'],
+    'depends': ['base'],
     'init_xml': [],
     'update_xml': [
-        "email_message_view.xml",
+        "email_view.xml",
         "res_partner_view.xml",
-        'email_smtp_server_view.xml',
         'security/ir.model.access.csv',
-        'email_smtp_server_data.xml',
-        'email_gateway_scheduler_data.xml',
+        'email_data.xml',
 
     ],
     'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '001056784984222247309',
+    'certificate': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

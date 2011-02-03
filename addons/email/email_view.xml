@@ -125,5 +125,109 @@
             action="action_view_mail_message" />
 
 
+        <menuitem name="Marketing" icon="terp-crm" id="base.marketing_menu" sequence="17"/>
+        <menuitem name="Emails" id="base.menu_emails" parent="base.marketing_menu" sequence="5"/>
+        <menuitem name="Email Smtp Server" id="menu_email_smtp" parent="base.menu_emails"/>
+
+        <record model="ir.ui.view" id="email_smtp_server_form">
+            <field name="name">email.smtp_server.form</field>
+            <field name="model">email.smtp_server</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Email Smtp Server Configuration">
+                    <group colspan="2">
+                        <field name="name" select="1" />
+                        <field name="default"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="Outgoing">
+                            <separator string="Server Information" colspan="4" />
+                            <group colspan="4" col="4">
+                                <field name="smtpserver" select="1"/>
+                                <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" icon="gtk-network" colspan="2"/>
+                                <field name="smtpport" select="2" />
+                                <field name="smtpssl" select="2" />
+                                <field name="smtptls" select="2" />
+                            </group>
+                            <separator string="User Information" colspan="4" />
+                            <group col="2" colspan="2">
+                                <field name="email_id" select="1" colspan="2" />
+                                <field name="smtppass" password="True" colspan="2" />
+                            </group>
+                            <group col="2" colspan="2">
+                                <field name="smtpuname" select="1" colspan="2" />
+                            </group>
+                        </page>
+                    </notebook>
+                    <group colspan="4" col="10">
+                        <field name="state" select="1"/>
+                        <button string="Approve Account" name="button_approval" states="draft" type="workflow" icon="terp-camera_test"/>
+                        <button string="Suspend Account" name="button_suspended" states="approved" type="workflow" icon="gtk-cancel"/>
+                        <button string="Request Re-activation" name="get_reapprove" states="suspended" type="workflow" icon="gtk-convert"/>
+                        <button string="Send/Receive" name="send_receive" states="approved" type="object" icon="terp-check"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="email_smtp_server_tree">
+            <field name="name">email.smtp_server.tree</field>
+            <field name="model">email.smtp_server</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state in ('draft');black:state in ('suspended','approved')" string="Email Accounts">
+                    <field name="name" />
+                    <field name="email_id" />
+                    <field name="smtpuname" />
+                    <field name="smtpserver" />
+                    <field name="smtpport" />
+                    <field name="state" />
+                </tree>
+            </field>
+        </record>
+
+       <record id="view_email_smtp_server_search" model="ir.ui.view">
+           <field name="name">email_smtp.server.search</field>
+           <field name="model">email.smtp_server</field>
+           <field name="type">search</field>
+           <field name="arch" type="xml">
+               <search string="Email Smtp Server">
+                    <filter icon="terp-document-new" string="Draft" name="draft" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-camera_test" string="Approved" domain="[('state','=','approved')]"/>
+                    <filter icon="terp-emblem-important" string="Suspended" domain="[('state','=','suspended')]"/>
+                    <separator orientation="vertical"/>
+                    <field name="name" select="1"/>
+                    <field name="email_id" select="1"/>
+               </search>
+           </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_email_smtp_server_tree_all">
+            <field name="name">Smtp Server</field>
+            <field name="res_model">email.smtp_server</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+            <field name="view_id" ref="email_smtp_server_tree" />
+            <field name="context">{'group_by': [], 'search_default_draft': 1, 'search_default_my': 1}</field>
+            <field name="search_view_id" ref="view_email_smtp_server_search"/>
+        </record>
+
+        <menuitem name="Configuration" parent="base.marketing_menu"
+            id="base.menu_marketing_config_root" sequence="20" groups="base.group_system"/>
+
+        <menuitem name="Email Template" id="menu_email_template_configuration" parent="base.menu_marketing_config_root" />
+
+        <menuitem name="Email Smtp Server" id="menu_email_smtp_server_all" parent="menu_email_template_configuration" action="action_email_smtp_server_tree_all"/>
+
+        <menuitem name="Configuration" parent="base.menu_tools"
+              id="base.menu_lunch_survey_root" sequence="20" />
+
+        <menuitem name="Email Template" id="menu_email_template_config_tools"
+            parent="base.menu_lunch_survey_root" />
+
+        <menuitem name="Email Smtp Server" id="menu_email_account_all_tools"
+            parent="menu_email_template_config_tools" action="action_email_smtp_server_tree_all" />
+
+
     </data>
 </openerp>
