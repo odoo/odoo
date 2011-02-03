@@ -390,7 +390,7 @@ class account_analytic_account(osv.osv):
         'hours_quantity': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='float', string='Hours Tot',
             help="Number of hours you spent on the analytic account (from timesheet). It computes on all journal of type 'general'."),
         'last_invoice_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Last Invoice Date',
-            help="Date of the last invoice created for this analytic account."),
+            help="If invoice from the costs, this is the date of the latest invoiced."),
         'last_worked_invoiced_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Date of Last Invoiced Cost',
             help="If invoice from the costs, this is the date of the latest work or cost that have been invoiced."),
         'last_worked_date': fields.function(_analysis_all, method=True, multi='analytic_analysis', type='date', string='Date of Last Cost/Work',
