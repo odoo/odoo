@@ -586,10 +586,7 @@ This is useful for CRM leads for example"),
                                               )
             if template.report_template or template.attachment_ids:
                 self.generate_attach_reports(cursor, user, template, record_id, mail, context )
-            self.pool.get('email.message').write(cursor, user, mailbox_id, {'folder':'outbox'}, context=context)
-            # TODO : manage return value of all the records
-            result = self.pool.get('email.message').process_email_queue(cursor, user, [mailbox_id], context)
-
+            mailbox_obj.write(cursor, user, mailbox_id, {'folder':'outbox', 'state': 'waiting'}, context=context)
         return result
 
 email_template()
