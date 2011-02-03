@@ -238,7 +238,7 @@ class email_message(osv.osv):
                         email_bcc=message.email_bcc, reply_to=message.reply_to, attach=attachments, openobject_id=message.message_id,
                         subtype=message.sub_type, x_headers=message.x_headers, priority=message.priority, debug=message.debug,
                         smtp_email_from=smtp_account and smtp_account.email_id or None, smtp_server=smtp_account and smtp_account.smtpserver or None,
-                        smtp_port=smtp_account and smtp_account.smtpport or None, smtp_ssl=smtp_account and smtp_account.smtpssl or False,
+                        smtp_port=smtp_account and smtp_account.smtpport or None, ssl=smtp_account and smtp_account.smtpssl or False,
                         smtp_user=smtp_account and smtp_account.smtpuname or None, smtp_password=smtp_account and smtp_account.smtppass or None)
             except Exception, error:
                 logger = netsvc.Logger()
