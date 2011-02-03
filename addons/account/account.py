@@ -2459,8 +2459,8 @@ class account_chart_template(osv.osv):
         'property_account_expense': fields.many2one('account.account.template','Expense Account on Product Template'),
         'property_account_income': fields.many2one('account.account.template','Income Account on Product Template'),
         'property_reserve_and_surplus_account': fields.many2one('account.account.template', 'Reserve and Profit/Loss Account', domain=[('type', '=', 'payable')], help='This Account is used for transferring Profit/Loss(If It is Profit: Amount will be added, Loss: Amount will be deducted.), Which is calculated from Profilt & Loss Report'),
-        'property_account_income_opening': fields.many2one('account.account.template','Opening Entries Income Account'),
-        'property_account_expense_opening': fields.many2one('account.account.template','Opening Entries Expense Account'),
+        'property_account_income_opening': fields.many2one('account.account.template','Opening Entries Income Account', help='This Account is used for income opening entries'),
+        'property_account_expense_opening': fields.many2one('account.account.template','Opening Entries Expense Account', help='This Account is used for expense opening entires'),
     }
 
 account_chart_template()
@@ -2913,6 +2913,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Miscellaneous Journal
+        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
+        view_id = data.res_id
+
+        analitical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
+        analitical_journal_miscellaneous = analitical_miscellaneous_ids and analitical_miscellaneous_ids[0] or False
+
         vals_journal = {
             'view_id': view_id,
             'name': _('Miscellaneous Journal'),
@@ -2920,7 +2927,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             'refund_journal': True,
             'code': _('MISC'),
             'sequence_id': seq_id_miscellaneous,
-            'analytic_journal_id': analitical_journal_purchase,
+            'analytic_journal_id': analitical_journal_miscellaneous,
             'company_id': company_id
         }
 
@@ -2934,7 +2941,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'type': 'situation',
                 'code': _('TOEJ'),
                 'sequence_id': seq_id_opening,
-                'analytic_journal_id': analitical_journal_purchase,
                 'company_id': company_id,
                 'centralisation': True,
                 'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_opening.id],

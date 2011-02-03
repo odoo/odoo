@@ -382,7 +382,6 @@ class account_installer(osv.osv_memory):
         data = mod_obj.browse(cr, uid, data_id[0], context=context)
         view_id = data.res_id
         seq_id = obj_sequence.search(cr,uid,[('name', '=', 'Account Journal')], context=context)[0]
-
         if seq_journal:
             seq_sale = {
                 'name': 'Sale Journal',
@@ -419,7 +418,7 @@ class account_installer(osv.osv_memory):
             seq_opening_journal = {
                 'name': 'Opening Entries Journal',
                 'code': 'account.journal',
-                'prefix': 'TOEJ/%(year)s/',
+                'prefix': 'OPEJ/%(year)s/',
                 'padding': 3,
                 'company_id': company_id.id
             }
@@ -427,11 +426,11 @@ class account_installer(osv.osv_memory):
             seq_miscellaneous_journal = {
                 'name': 'Miscellaneous Journal',
                 'code': 'account.journal',
-                'prefix': 'MISC/%(year)s/',
+                'prefix': 'MISJ/%(year)s/',
                 'padding': 3,
                 'company_id': company_id.id
             }
-            seq_id_miscellaneous = obj_sequence.create(cr, uid, seq_opening_journal, context=context)
+            seq_id_miscellaneous = obj_sequence.create(cr, uid, seq_miscellaneous_journal, context=context)
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
@@ -526,14 +525,20 @@ class account_installer(osv.osv_memory):
         obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Miscellaneous Journal
+        data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')], context=context)
+        data = mod_obj.browse(cr, uid, data_id[0], context=context)
+        view_id_misc = data.res_id
+
+        analitical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
+        analitical_journal_miscellaneous = analitical_miscellaneous_ids and analitical_miscellaneous_ids[0] or False
+
         vals_journal = {
-            'view_id': view_id,
+            'view_id': view_id_misc,
             'name': _('Miscellaneous Journal'),
             'type': 'general',
-            'refund_journal': True,
             'code': _('MISC'),
             'sequence_id': seq_id_miscellaneous,
-            'analytic_journal_id': analitical_journal_purchase,
+            'analytic_journal_id': analitical_journal_miscellaneous,
             'company_id': company_id.id
         }
 
@@ -547,7 +552,6 @@ class account_installer(osv.osv_memory):
                 'type': 'situation',
                 'code': _('OPEJ'),
                 'sequence_id': seq_id_opening,
-                'analytic_journal_id': analitical_journal_purchase,
                 'company_id': company_id.id,
                 'centralisation': True,
                 'default_credit_account_id': acc_template_ref[obj_multi.property_account_income_opening.id],
