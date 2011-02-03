@@ -305,7 +305,7 @@ class email_message(osv.osv):
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
-        return True
+        return ids
 
 #    def send_all_mail(self, cr, uid, ids=None, context=None):
 #        if ids is None:

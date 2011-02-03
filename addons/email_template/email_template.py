@@ -542,6 +542,7 @@ This is useful for CRM leads for example"),
             'state':'na',
             'folder':'drafts',
             'mail_type':'multipart/alternative',
+            'template_id': template.id
         }
 
         if template['message_id']:
@@ -556,20 +557,12 @@ This is useful for CRM leads for example"),
 #            raise Exception("Unable to send the mail. No account linked to the template.")
         #Use signatures if allowed
         if template.use_sign:
-            sign = self.pool.get('res.users').read(cursor,
-                                                   user,
-                                                   user,
-                                                   ['signature'],
-                                                   context)['signature']
+            sign = self.pool.get('res.users').read(cursor, user, user, ['signature'], context)['signature']
             if mailbox_values['body_text']:
                 mailbox_values['body_text'] += sign
             if mailbox_values['body_html']:
                 mailbox_values['body_html'] += sign
-        mailbox_id = self.pool.get('email.message').create(
-                                                             cursor,
-                                                             user,
-                                                             mailbox_values,
-                                                             context)
+        mailbox_id = self.pool.get('email.message').create(cursor, user, mailbox_values, context)
 
         return mailbox_id
 
@@ -589,33 +582,34 @@ This is useful for CRM leads for example"),
                                                                 template,
                                                                 record_id,
                                                                 context)
-            mail = mailbox_obj.browse(
-                                        cursor,
-                                        user,
-                                        mailbox_id,
-                                        context=context
+            mail = mailbox_obj.browse(cursor, user, mailbox_id, context=context
                                               )
             if template.report_template or template.attachment_ids:
-                self.generate_attach_reports(
-                                              cursor,
-                                              user,
-                                              template,
-                                              record_id,
-                                              mail,
-                                              context
-                                              )
-            self.pool.get('email.message').write(
-                                                cursor,
-                                                user,
-                                                mailbox_id,
-                                                {'folder':'outbox'},
-                                                context=context
-            )
+                self.generate_attach_reports(cursor, user, template, record_id, mail, context )
+            self.pool.get('email.message').write(cursor, user, mailbox_id, {'folder':'outbox'}, context=context)
             # TODO : manage return value of all the records
             result = self.pool.get('email.message').process_email_queue(cursor, user, [mailbox_id], context)
 
         return result
 
 email_template()
+
+class email_message(osv.osv):
+    _inherit = 'email.message'
+    _columns = {
+        'template_id': fields.many2one('email.template', 'Email-Template', readonly=True),
+        }
+
+    def process_email_queue(self, cr, uid, ids=None, context=None):
+        result = super(email_template, self).copy(cr, uid, id, default, context)
+        attachment_obj = self.pool.get('ir.attachment')
+        for message in self.browse(cr, uid, result, context):
+            if message.template_id and message.template_id.auto_delete:
+                self.unlink(cr, uid, [id], context=context)
+                attachment_ids = [x.id for x in message.attachments_ids]
+                attachment_obj.unlink(cr, uid, attachment_ids, context=context)
+        return result
+
+email_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
