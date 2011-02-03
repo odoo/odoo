@@ -23,6 +23,7 @@ from osv import osv
 from osv import fields
 from tools.translate import _
 import tools
+import netsvc
 
 #import time
 #import binascii
@@ -33,8 +34,6 @@ import tools
 #import re
 #import logging
 #import xmlrpclib
-
-#_logger = logging.getLogger('mailgate')
 
 #import re
 #import smtplib
@@ -57,6 +56,8 @@ import tools
 #    'text/plain',
 #    'text/html'
 #]
+
+LOGGER = netsvc.Logger()
 
 def format_date_tz(date, tz=None):
     if not date:
