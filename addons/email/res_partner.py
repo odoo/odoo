@@ -19,7 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields,osv
+from osv import osv
+from osv import fields
 
 class res_partner(osv.osv):
     """ Inherits partner and adds CRM information in the partner form """
@@ -30,6 +31,5 @@ class res_partner(osv.osv):
     }
 
 res_partner()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
