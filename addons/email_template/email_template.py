@@ -614,6 +614,7 @@ This is useful for CRM leads for example"),
             )
             # TODO : manage return value of all the records
             result = self.pool.get('email.message').process_email_queue(cursor, user, [mailbox_id], context)
+
         return result
 
 email_template()
