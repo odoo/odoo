@@ -5,18 +5,22 @@
     acc_number: 001-1001-1291-12323
     bank: base.res_bank_1
     bvr_number: 01-101-12
-    name: Argolait Main Account
-    partner_id: base.res_partner_agrolait
+    name: Asustek Main Account
+    partner_id: base.res_partner_asus
     sequence: 0.0
     state: bvbank
 -
   In order to test the BVR report, I will assign a bank to the invoice
 -
-  !record {model: account.invoice, id: account.test_invoice_1}:
+  !record {model: account.invoice, id: test_invoice_2}:
       partner_bank_id: res_partner_bank_account0
+      address_invoice_id: base.res_partner_address_tang
+      partner_id: base.res_partner_asus
+      account_id: account.a_recv
+      company_id: base.main_company
 -
   In order to test the PDF reports defined on a l10n_ch, we will print BVR Report
 -
   !python {model: account.invoice}: |
     from tools.test_reports import try_report
-    try_report(cr, uid, 'report.invoice_web_bvr', [ref('account.test_invoice_1')])
+    try_report(cr, uid, 'report.invoice_web_bvr', [ref('test_invoice_2')])

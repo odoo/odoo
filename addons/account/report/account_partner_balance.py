@@ -296,7 +296,6 @@ class partner_balance(report_sxw.rml_parse, common_report_header):
 
     def _get_partners(self):
         cr, uid = self.cr, self.uid
-        context = self.localcontext # all of it?
 
         if self.result_selection == 'customer':
             return _('Receivable Accounts')

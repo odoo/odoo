@@ -306,7 +306,7 @@ class payment_line(osv.osv):
             if id.move_line_id:
                 res[id.id] = id.move_line_id.date_maturity
             else:
-                res[id.id] = ""
+                res[id.id] = False
         return res
 
     def _get_ml_created_date(self, cr, uid, ids, *a):
@@ -315,7 +315,7 @@ class payment_line(osv.osv):
             if id.move_line_id:
                 res[id.id] = id.move_line_id.date_created
             else:
-                res[id.id] = ""
+                res[id.id] = False
         return res
 
     _columns = {
