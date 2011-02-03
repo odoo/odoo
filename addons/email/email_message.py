@@ -151,6 +151,7 @@ class email_message(osv.osv):
         'sub_type': fields.char('Sub Type', size=32, readonly=True),
         'x_headers': fields.char('x_headers',size=256, readonly=True),
         'priority':fields.integer('Priority', readonly=True),
+        'debug':fields.boolean('Debug', readonly=True),
         #I like GMAIL which allows putting same mail in many folders
         #Lets plan it for 0.9
         'folder':fields.selection([
@@ -215,19 +216,30 @@ class email_message(osv.osv):
             context = {}
         attachment_obj = self.pool.get('ir.attachment')
         account_obj = self.pool.get('email.smtp_server')
-        filters = [('folder', '=', 'outbox'), ('state', '!=', 'sending')]
-        if 'filters' in context:
-            filters.extend(context['filters'])
-        ids = self.search(cr, uid, filters, context=context)
-        self.write(cr, uid, ids, {'state':'sending', 'folder':'sent'}, context)
+        if not ids:
+            filters = [('folder', '=', 'outbox'), ('state', '!=', 'sending')]
+            if 'filters' in context:
+                filters.extend(context['filters'])
+            ids = self.search(cr, uid, filters, context=context)
+            self.write(cr, uid, ids, {'state':'sending', 'folder':'sent'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
                 attachments = []
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname ,attach.datas))
+                smtp_account = False
+                if message.account_id:
+                    account_id = smtp_account
+                else:
+                    smtp_ids = account_obj.search(cr, uid, [('default','=',True)])
+                    if smtp_ids:
+                        smtp_account = account_obj.browse(cr, uid, smtp_ids, context)[0]
                 tools.email_send(message.email_from, message.email_to, message.name, message.message, email_cc=message.email_cc,
                         email_bcc=message.email_bcc, reply_to=message.reply_to, attach=attachments, openobject_id=message.message_id,
-                        subtype=message.sub_type, x_headers=message.x_headers, priority=message.priority)
+                        subtype=message.sub_type, x_headers=message.x_headers, priority=message.priority, debug=message.debug,
+                        smtp_email_from=smtp_account and smtp_account.email_id or None, smtp_server=smtp_account and smtp_account.smtpserver or None,
+                        smtp_port=smtp_account and smtp_account.smtpport or None, smtp_ssl=smtp_account and smtp_account.smtpssl or False,
+                        smtp_user=smtp_account and smtp_account.smtpuname or None, smtp_password=smtp_account and smtp_account.smtppass or None)
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
