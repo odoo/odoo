@@ -98,7 +98,7 @@ class email_smtp_server(osv.osv):
     SMTP Server
     """
     _name = "email.smtp_server"
-    
+
     _columns = {
         'name': fields.char('Name',
                         size=64, required=True,
@@ -166,10 +166,6 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
 
     def name_get(self, cr, uid, ids, context=None):
         return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
-
-    
-    
-
 
 #    def get_outgoing_server(self, cursor, user, ids, context=None):
 #        """
@@ -590,6 +586,10 @@ class email_message(osv.osv):
         if not cr.fetchone():
             cr.execute("""CREATE INDEX email_message_res_id_model_idx
                           ON email_message (model, res_id)""")
+
+    def process_queue(self, cr, uid, ids, arg):
+        self.process_email_queue(cr, uid, ids=ids)
+        return True
 
     def run_mail_scheduler(self, cursor, user, context=None):
         """

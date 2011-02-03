@@ -613,7 +613,7 @@ This is useful for CRM leads for example"),
                                                 context=context
             )
             # TODO : manage return value of all the records
-            result = self.pool.get('email.message').email_send(cursor, user, [mailbox_id], context)
+            result = self.pool.get('email.message').process_email_queue(cursor, user, [mailbox_id], context)
         return result
 
 email_template()
