@@ -127,7 +127,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         res = picking_pool.action_invoice_create(cr, uid, active_ids,
               journal_id = onshipdata_obj[0]['journal_id'],
               group = onshipdata_obj[0]['group'],
-              type = None,
+              type = context.get('inv_type'),
               context=context)
         return res
 
