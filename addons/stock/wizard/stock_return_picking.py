@@ -151,7 +151,7 @@ class stock_return_picking(osv.osv_memory):
         wf_service = netsvc.LocalService("workflow")
     
         pick = pick_obj.browse(cr, uid, record_id, context=context)
-        data = self.read(cr, uid, ids[0])
+        data = self.read(cr, uid, ids[0], context=context)
         new_picking = None
         date_cur = time.strftime('%Y-%m-%d %H:%M:%S')
 
