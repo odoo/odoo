@@ -31,12 +31,6 @@ TEMPLATE_ENGINES = []
 from osv import osv, fields
 from tools.translate import _
 
-try:
-    from mako.template import Template as MakoTemplate
-    TEMPLATE_ENGINES.append(('mako', 'Mako Templates'))
-except ImportError:
-    logging.getLogger('init').warning("module email_template: Mako templates not installed")
-
 import tools
 import pooler
 import logging
@@ -63,13 +57,9 @@ def get_value(cursor, user, recid, message=None, template=None, context=None):
             env = {
                 'user':pool.get('res.users').browse(cursor, user, user, context=context),
                 'db':cursor.dbname
-                   }
-            if template.template_language == 'mako':
-                templ = MakoTemplate(message, input_encoding='utf-8')
-                reply = MakoTemplate(message).render_unicode(object=object,
-                                                             peobject=object,
-                                                             env=env,
-                                                             format_exceptions=True)
+               }
+            templ = MakoTemplate(message, input_encoding='utf-8')
+            reply = MakoTemplate(message).render_unicode(object=object, peobject=object, env=env, format_exceptions=True)
             return reply or False
         except Exception:
             logging.exception("can't render %r", message)
@@ -227,17 +217,7 @@ This is useful for CRM leads for example"),
              help="Copy this html code to your HTML message"
              " body for displaying the info in your mail.",
              store=False),
-        #Template language(engine eg.Mako) specifics
-        'template_language':fields.selection(
-                TEMPLATE_ENGINES,
-                'Templating Language',
-                required=True
-                ),
         'auto_delete': fields.boolean('Auto Delete', help="Permanently delete emails after sending"),
-    }
-
-    _defaults = {
-        'template_language' : lambda *a:'mako',
     }
 
     _sql_constraints = [
@@ -305,27 +285,25 @@ This is useful for CRM leads for example"),
         default.update({'name':new_name})
         return super(email_template, self).copy(cr, uid, id, default, context)
 
-    def build_expression(self, field_name, sub_field_name, null_value, template_language='mako'):
+    def build_expression(self, field_name, sub_field_name, null_value):
         """
         Returns a template expression based on data provided
         @param field_name: field name
         @param sub_field_name: sub field name (M2O)
         @param null_value: default value if the target value is empty
-        @param template_language: name of template engine
         @return: computed expression
         """
         expression = ''
-        if template_language == 'mako':
-            if field_name:
-                expression = "${object." + field_name
-                if sub_field_name:
-                    expression += "." + sub_field_name
-                if null_value:
-                    expression += " or '''%s'''" % null_value
-                expression += "}"
+        if field_name:
+            expression = "${object." + field_name
+            if sub_field_name:
+                expression += "." + sub_field_name
+            if null_value:
+                expression += " or '''%s'''" % null_value
+            expression += "}"
         return expression
 
-    def onchange_model_object_field(self, cr, uid, ids, model_object_field, template_language, context=None):
+    def onchange_model_object_field(self, cr, uid, ids, model_object_field, context=None):
         if not model_object_field:
             return {}
         result = {}
@@ -335,25 +313,18 @@ This is useful for CRM leads for example"),
             res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
             if res_ids:
                 result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.build_expression(False,
-                                                      False,
-                                                      False,
-                                                      template_language)
+                result['copyvalue'] = self.build_expression(False, False, False)
                 result['sub_model_object_field'] = False
                 result['null_value'] = False
         else:
             #Its a simple field... just compute placeholder
             result['sub_object'] = False
-            result['copyvalue'] = self.build_expression(field_obj.name,
-                                                  False,
-                                                  False,
-                                                  template_language
-                                                  )
+            result['copyvalue'] = self.build_expression(field_obj.name, False, False)
             result['sub_model_object_field'] = False
             result['null_value'] = False
         return {'value':result}
 
-    def onchange_sub_model_object_field(self, cr, uid, ids, model_object_field, sub_model_object_field, template_language, context=None):
+    def onchange_sub_model_object_field(self, cr, uid, ids, model_object_field, sub_model_object_field, context=None):
         if not model_object_field or not sub_model_object_field:
             return {}
         result = {}
@@ -363,26 +334,18 @@ This is useful for CRM leads for example"),
             sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
             if res_ids:
                 result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.build_expression(field_obj.name,
-                                                      sub_field_obj.name,
-                                                      False,
-                                                      template_language
-                                                      )
+                result['copyvalue'] = self.build_expression(field_obj.name, sub_field_obj.name, False)
                 result['sub_model_object_field'] = sub_model_object_field
                 result['null_value'] = False
         else:
             #Its a simple field... just compute placeholder
             result['sub_object'] = False
-            result['copyvalue'] = self.build_expression(field_obj.name,
-                                                  False,
-                                                  False,
-                                                  template_language
-                                                  )
+            result['copyvalue'] = self.build_expression(field_obj.name, False, False)
             result['sub_model_object_field'] = False
             result['null_value'] = False
         return {'value':result}
 
-    def onchange_null_value(self, cr, uid, ids, model_object_field, sub_model_object_field, null_value, template_language, context=None):
+    def onchange_null_value(self, cr, uid, ids, model_object_field, sub_model_object_field, null_value, context=None):
         if not model_object_field and not null_value:
             return {}
         result = {}
@@ -392,21 +355,13 @@ This is useful for CRM leads for example"),
             sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
             if res_ids:
                 result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.build_expression(field_obj.name,
-                                                      sub_field_obj.name,
-                                                      null_value,
-                                                      template_language
-                                                      )
+                result['copyvalue'] = self.build_expression(field_obj.name, sub_field_obj.name, null_value)
                 result['sub_model_object_field'] = sub_model_object_field
                 result['null_value'] = null_value
         else:
             #Its a simple field... just compute placeholder
             result['sub_object'] = False
-            result['copyvalue'] = self.build_expression(field_obj.name,
-                                                  False,
-                                                  null_value,
-                                                  template_language
-                                                  )
+            result['copyvalue'] = self.build_expression(field_obj.name, False, null_value)
             result['sub_model_object_field'] = False
             result['null_value'] = null_value
         return {'value':result}
