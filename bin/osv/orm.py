@@ -3426,13 +3426,18 @@ class orm(orm_template):
                     clause, params = '%s=%%s' % (self._parent_name,), (parent_val,)
                 else:
                     clause, params = '%s IS NULL' % (self._parent_name,), ()
-                cr.execute('SELECT parent_right, id FROM %s WHERE %s ORDER BY %s' % (self._table, clause, order), params)
-                parents = cr.fetchall()
 
                 for id in parents_changed:
                     cr.execute('SELECT parent_left, parent_right FROM %s WHERE id=%%s' % (self._table,), (id,))
                     pleft, pright = cr.fetchone()
                     distance = pright - pleft + 1
+
+                    # Positions of current siblings, to locate proper insertion point;
+                    # this can _not_ be fetched outside the loop, as it needs to be refreshed
+                    # after each update, in case several nodes are sequentially inserted one
+                    # next to the other (i.e computed incrementally)
+                    cr.execute('SELECT parent_right, id FROM %s WHERE %s ORDER BY %s' % (self._table, clause, order), params)
+                    parents = cr.fetchall()
 
                     # Find Position of the element
                     position = None
