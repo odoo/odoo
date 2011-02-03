@@ -169,7 +169,6 @@ class email_message(osv.osv):
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel', 'message_id', 'attachment_id', 'Attachments', readonly=True),
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'reply_to':fields.char('Reply-To', size=250, readonly=True),
-        'account_id' :fields.many2one('email.smtp_server', 'User account', readonly=True),
         'sub_type': fields.char('Sub Type', size=32, readonly=True),
         'x_headers': fields.char('x_headers',size=256, readonly=True),
         'priority':fields.integer('Priority', readonly=True),
@@ -237,7 +236,7 @@ class email_message(osv.osv):
 
 
     def email_send(cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3', smtp_id=False):
+            openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3'):
         attachment_obj = self.pool.get('ir.attachment')
         msg_vals = {
                 'name': subject,
@@ -251,7 +250,6 @@ class email_message(osv.osv):
                 'email_bcc': email_bcc or '',
                 'reply_to': reply_to or '',
                 'message_id': openobject_id,
-                'account_id': smtp_id,
                 'sub_type': subtype or '',
                 'x_headers': x_headers or '',
                 'priority': priority,
@@ -295,12 +293,9 @@ class email_message(osv.osv):
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname ,attach.datas))
                 smtp_account = False
-                if message.account_id:
-                    account_id = smtp_account
-                else:
-                    smtp_ids = account_obj.search(cr, uid, [('default','=',True)])
-                    if smtp_ids:
-                        smtp_account = account_obj.browse(cr, uid, smtp_ids, context)[0]
+                smtp_ids = account_obj.search(cr, uid, [('default','=',True)])
+                if smtp_ids:
+                    smtp_account = account_obj.browse(cr, uid, smtp_ids, context)[0]
                 tools.email_send(message.email_from, message.email_to, message.name, message.message, email_cc=message.email_cc,
                         email_bcc=message.email_bcc, reply_to=message.reply_to, attach=attachments, openobject_id=message.message_id,
                         subtype=message.sub_type, x_headers=message.x_headers, priority=message.priority, debug=message.debug,

@@ -538,7 +538,6 @@ This is useful for CRM leads for example"),
                                       template.def_body_html,
                                       template,
                                       context),
-            'account_id' :from_account['id'],
             #This is a mandatory field when automatic emails are sent
             'state':'na',
             'folder':'drafts',
@@ -552,9 +551,9 @@ This is useful for CRM leads for example"),
         elif template['track_campaign_item']:
             # get appropriate message-id
             mailbox_values.update({'message_id': tools.misc.generate_tracking_message_id(record_id)})
-
-        if not mailbox_values['account_id']:
-            raise Exception("Unable to send the mail. No account linked to the template.")
+#
+#        if not mailbox_values['account_id']:
+#            raise Exception("Unable to send the mail. No account linked to the template.")
         #Use signatures if allowed
         if template.use_sign:
             sign = self.pool.get('res.users').read(cursor,
