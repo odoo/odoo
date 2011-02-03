@@ -115,7 +115,7 @@ class stock_invoice_onshipping(osv.osv_memory):
         if context is None:
             context = {}
         picking_pool = self.pool.get('stock.picking')
-        onshipdata_obj = self.read(cr, uid, ids, ['journal_id', 'group', 'invoice_date'])
+        onshipdata_obj = self.read(cr, uid, ids, ['journal_id', 'group', 'invoice_date'], context=context)
         if context.get('new_picking', False):
             onshipdata_obj['id'] = onshipdata_obj.new_picking
             onshipdata_obj[ids] = onshipdata_obj.new_picking
