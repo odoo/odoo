@@ -157,7 +157,7 @@ unless it is already specified in the From Email, e.g: John Doe <john@doe.com>",
         return [(a["id"], "%s (%s)" % (a['email_id'], a['name'])) for a in self.read(cr, uid, ids, ['name', 'email_id'], context=context)]
 
     def email_send(cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            openobject_id=False, ssl=False, subtype='plain', x_headers=None, priority='3', smtp_id=False):
+            openobject_id=False, subtype='plain', x_headers=None, priority='3', smtp_id=False):
         attachment_obj = self.pool.get('ir.attachment')
         email_msg_obj = self.pool.get('email.message')
         msg_vals = {
