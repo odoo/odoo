@@ -1463,7 +1463,7 @@ class stock_move(osv.osv):
     _description = "Stock Move"
     _order = 'date_expected desc, id'
     _log_create = False
-    
+
     def action_partial_move(self, cr, uid, ids, context=None):
         if context is None: context = {}
         partial_id = self.pool.get("stock.partial.move").create(
@@ -1481,7 +1481,7 @@ class stock_move(osv.osv):
             'domain': '[]',
             'context': context
         }
-        
+
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
@@ -1855,11 +1855,6 @@ class stock_move(osv.osv):
         """
         moves = self.browse(cr, uid, ids, context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
-        res_obj = self.pool.get('res.company')
-        location_obj = self.pool.get('stock.location')
-        move_obj = self.pool.get('stock.move')
-        wf_service = netsvc.LocalService("workflow")
-
         self.create_chained_picking(cr, uid, moves, context)
         return []
 
@@ -2143,7 +2138,7 @@ class stock_move(osv.osv):
             prodlot_id = partial_datas and partial_datas.get('move%s_prodlot_id' % (move.id), False)
             if prodlot_id:
                 self.write(cr, uid, [move.id], {'prodlot_id': prodlot_id}, context=context)
-            if move.state not in ('confirmed','done'):
+            if move.state not in ('confirmed','done','assigned'):
                 self.action_confirm(cr, uid, move_ids, context=context)
 
         self.write(cr, uid, move_ids, {'state': 'done', 'date_planned': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
