@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-18 04:47+0000\n"
-"Last-Translator: ryanlin <Unknown>\n"
+"PO-Revision-Date: 2011-01-28 03:33+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-20 04:50+0000\n"
+"X-Launchpad-Export-Date: 2011-01-29 04:54+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: base
@@ -124,7 +124,7 @@ msgid ""
 "The optional domain to restrict possible values for relationship fields, "
 "specified as a Python expression defining a list of triplets. For example: "
 "[('color','=','red')]"
-msgstr ""
+msgstr "过滤条件这个字段是可选输入的，用于在输入关系型字段时限制可选值的范围。格式为一个python列表，每个列表项由三个字符组成。"
 
 #. module: base
 #: field:res.partner,ref:0
@@ -2143,7 +2143,7 @@ msgstr "访问控制"
 #: view:ir.module.module:0
 #: field:ir.module.module,dependencies_id:0
 msgid "Dependencies"
-msgstr "依赖关系"
+msgstr "依赖模块"
 
 #. module: base
 #: field:multi_company.default,company_id:0
@@ -3365,6 +3365,7 @@ msgid ""
 "to see. Whether they can have a read, write, create and delete access right "
 "can be managed from here."
 msgstr ""
+"用户组用于把一系列功能分配给用户，使其能够访问特定的模块和功能。可以新建或修改现有的用户组，这样就可以自定义该组用户的菜单，或者对某个对象的插删改查权限。"
 
 #. module: base
 #: view:res.partner:0
@@ -3387,7 +3388,7 @@ msgid ""
 "to discuss.                         \n"
 "Would your payment have been carried out after this mail was sent, please "
 "consider the present one as void."
-msgstr ""
+msgstr "请注意，下列款项现已到期。如果您已付款，请将您的付款详单发给我们。\\n 如果将进一步拖延付款，请联系我们洽谈。"
 
 #. module: base
 #: model:res.country,name:base.mx
@@ -3596,7 +3597,7 @@ msgstr "起始业务伙伴"
 msgid ""
 "For one2many fields, the field on the target model that implement the "
 "opposite many2one relationship"
-msgstr ""
+msgstr "对于一对多的字段，此字段在目标模型是实现了相反的多对一关系。"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
@@ -3809,7 +3810,7 @@ msgid ""
 "When the operation of transition comes from a button pressed in the client "
 "form, signal tests the name of the pressed button. If signal is NULL, no "
 "button is necessary to validate this transition."
-msgstr ""
+msgstr "如果转换的操作来源于界面上的一个按钮，信号字段存储按钮的名称。如果该值为NULL，界面上不需要按钮"
 
 #. module: base
 #: help:multi_company.default,object_id:0
@@ -3935,7 +3936,7 @@ msgstr "Latvian / latviešu valoda"
 #: view:res.config:0
 #: view:res.config.installer:0
 msgid "vsep"
-msgstr ""
+msgstr "vsep"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -4076,7 +4077,7 @@ msgstr "报表Xml"
 #: model:ir.ui.menu,name:base.menu_management
 #: model:ir.ui.menu,name:base.menu_module_tree
 msgid "Modules"
-msgstr "模块列表"
+msgstr "模块"
 
 #. module: base
 #: view:workflow.activity:0
@@ -4725,7 +4726,7 @@ msgid ""
 "Track from where is coming your leads and opportunities by creating specific "
 "channels that will be maintained at the creation of a document in the "
 "system. Some examples of channels can be: Website, Phone Call, Reseller, etc."
-msgstr ""
+msgstr "渠道用于记录你的销售线索或商机的来源，并记录在这些单据上。例如：网站、电话、经销商等"
 
 #. module: base
 #: model:res.partner.bank.type.field,name:base.bank_normal_field
@@ -4826,7 +4827,7 @@ msgstr "科科斯(基林)群岛"
 #: selection:base.module.import,state:0
 #: selection:base.module.update,state:0
 msgid "init"
-msgstr ""
+msgstr "初始化"
 
 #. module: base
 #: view:res.lang:0
@@ -5927,7 +5928,7 @@ msgstr "利比里亚"
 #: field:res.partner,comment:0
 #: model:res.widget,title:base.note_widget
 msgid "Notes"
-msgstr "注解"
+msgstr "备注"
 
 #. module: base
 #: field:ir.config_parameter,value:0
@@ -6038,7 +6039,7 @@ msgstr "res.log"
 #: help:ir.translation,module:0
 #: help:ir.translation,xml_id:0
 msgid "Maps to the ir_model_data for which this translation is provided."
-msgstr ""
+msgstr "该翻译对应ir_model_data表中的数据条目"
 
 #. module: base
 #: view:workflow.activity:0
@@ -6146,7 +6147,7 @@ msgstr "有限公司"
 #: help:workflow.transition,group_id:0
 msgid ""
 "The group that a user must have to be authorized to validate this transition."
-msgstr ""
+msgstr "用户组中的用户需要授权才能确认此转换。"
 
 #. module: base
 #: constraint:res.config.users:0
@@ -6795,7 +6796,7 @@ msgid ""
 "deactivated should there be a period of time during which they will/should "
 "not connect to the system. You can assign them groups in order to give them "
 "specific access to the applications they need to use in the system."
-msgstr ""
+msgstr "为系统创建和管理用户。在一段时间内用该系统的用户可以暂不激活。你还可以给用户分配某一个组，以便他们能用到系统的指定功能"
 
 #. module: base
 #: selection:res.request,priority:0
@@ -7364,7 +7365,7 @@ msgstr "如果设为真，那么向导不会显示于表单右侧的工具栏上
 #. module: base
 #: view:base.language.import:0
 msgid "- type,name,res_id,src,value"
-msgstr ""
+msgstr "- type,name,res_id,src,value"
 
 #. module: base
 #: model:res.country,name:base.hm
@@ -7430,7 +7431,7 @@ msgstr "分类"
 #: selection:ir.attachment,type:0
 #: selection:ir.property,type:0
 msgid "Binary"
-msgstr "二进制"
+msgstr "二进制数据"
 
 #. module: base
 #: field:ir.actions.server,sms:0
@@ -7523,7 +7524,7 @@ msgstr "Norwegian Bokmål / Norsk bokmål"
 msgid ""
 "Only specify a value if you want to change the user password. This user will "
 "have to logout and login again!"
-msgstr ""
+msgstr "如果您要修改用户密码的话只需要输入一个新密码。用户应该先注销再登录。"
 
 #. module: base
 #: model:res.partner.title,name:base.res_partner_title_madam
@@ -7574,7 +7575,7 @@ msgstr "ir.values"
 #. module: base
 #: selection:base.language.install,lang:0
 msgid "Occitan (FR, post 1500) / Occitan"
-msgstr ""
+msgstr "Occitan (FR, post 1500) / Occitan"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.open_module_tree
@@ -7888,7 +7889,7 @@ msgstr "工作流"
 msgid ""
 "Create and manage the companies that will be managed by OpenERP from here. "
 "Shops or subsidiaries can be created and maintained from here."
-msgstr ""
+msgstr "在此处创建与管理系统中的公司机构信息。门店与下属机构也可以在这里进行创建与维护。"
 
 #. module: base
 #: model:res.country,name:base.id
@@ -7901,7 +7902,7 @@ msgid ""
 "This wizard will detect new terms to translate in the application, so that "
 "you can then add translations manually or perform a complete export (as a "
 "template for a new language example)."
-msgstr ""
+msgstr "此向导将检测应用程序中待翻译的新术语，之后您可以手工添加翻译或进行完整的导出（作为一种新语言的模板）。"
 
 #. module: base
 #: help:multi_company.default,expression:0
@@ -8529,7 +8530,7 @@ msgstr "注册合同"
 msgid ""
 "3. If user belongs to several groups, the results from step 2 are combined "
 "with logical OR operator"
-msgstr "3. 如果用户属于多个组，那么第2部的结果将使用“或”操作符进行组合。"
+msgstr "3. 如果用户属于多个组，那么第2步的结果将使用“或”操作符进行组合。"
 
 #. module: base
 #: code:addons/base/publisher_warranty/publisher_warranty.py:145
@@ -8643,7 +8644,7 @@ msgid ""
 "of each line and then delete it through the button that appeared. Items can "
 "be assigned to specific groups in order to make them accessible to some "
 "users within the system."
-msgstr ""
+msgstr "管理和自定义用户的菜单项。你可以用勾选一些菜单项，然后删除。菜单项可以分配给某些特定的用户组，以便他们使用系统的某些特定的功能"
 
 #. module: base
 #: field:ir.ui.view,field_parent:0
@@ -8846,6 +8847,8 @@ msgid ""
 "categories have a hierarchy structure: a partner belonging to a category "
 "also belong to his parent category."
 msgstr ""
+"管理业务伙伴分类，以便更好地鉴它们用于进行数据的跟踪和分析。一个业务伙伴可以属于多个分类，分类是层次结构的形式，也就是说一个业务伙伴如果属于一个分类那么它"
+"也属于该分类的上级分类。"
 
 #. module: base
 #: model:res.country,name:base.az
@@ -8892,6 +8895,8 @@ msgid ""
 "uncheck the 'Suppliers' filter button in order to search in all your "
 "partners, including customers and prospects."
 msgstr ""
+"在供应商界面你能看到所有该供应商的信息：财务数据、邮件往来历史、会见记录、采购记录等。你也可以释放“供应商”那个过滤按钮，这样就可以在这个界面搜索到所有业"
+"务伙伴，包括客户和潜在客户"
 
 #. module: base
 #: model:res.country,name:base.rw
@@ -8969,7 +8974,7 @@ msgstr "Is Object"
 msgid ""
 "1. Global rules are combined together with a logical AND operator, and with "
 "the result of the following steps"
-msgstr "各个全局规则逻辑上使用 AND 操作符连接并有如下结果"
+msgstr ""
 
 #. module: base
 #: field:res.partner.category,name:0
@@ -9016,7 +9021,7 @@ msgstr "纵向"
 #: code:addons/base/ir/ir_model.py:317
 #, python-format
 msgid "Can only rename one column at a time!"
-msgstr ""
+msgstr "一次只能给一列改名"
 
 #. module: base
 #: selection:ir.translation,type:0
@@ -9118,7 +9123,7 @@ msgstr "另存为附件前缀"
 msgid ""
 "Only one client action will be executed, last client action will be "
 "considered in case of multiple client actions."
-msgstr ""
+msgstr "如果有多个客户端操作的话只会执行最进的那个。"
 
 #. module: base
 #: view:res.lang:0
@@ -9152,7 +9157,7 @@ msgstr "向导字段"
 #. module: base
 #: help:ir.sequence,prefix:0
 msgid "Prefix value of the record for the sequence"
-msgstr ""
+msgstr "记录流水号的前缀"
 
 #. module: base
 #: model:res.country,name:base.sc

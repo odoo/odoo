@@ -920,7 +920,6 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             ]
             if dic['type'] == 'model':
                 if dic['res_id'] is False:
-                    args.append(('res_id', '=', 0))
                     args.append(('module', '=', dic['module']))
                     args.append(('xml_id', '=', dic['xml_id']))
                 else:
