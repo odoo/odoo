@@ -290,7 +290,7 @@
   !record {model: pos.order, id: pos_order_pos0}:
     company_id: base.main_company
     date_order: !eval time.strftime('%Y-%m-%d %H:%M:%S')
-    date_validity: !eval "'%s-%s-%s' %(datetime.now().year,datetime.now().month+6,datetime.now().day)"
+    date_validity: !eval "(datetime.now() + timedelta(6*1)).strftime('%Y-%m-%d')" 
     lines:
       - company_id: base.main_company
         name: Order Line/01

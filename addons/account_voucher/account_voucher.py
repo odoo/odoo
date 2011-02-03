@@ -518,7 +518,6 @@ class account_voucher(osv.osv):
             elif ttype == 'receipt' and len(default['value']['line_dr_ids']) > 0:
                 default['value']['pre_line'] = 1
             default['value']['writeoff_amount'] = self._compute_writeoff_amount(cr, uid, default['value']['line_dr_ids'], default['value']['line_cr_ids'], price)
-
         return default
 
     def onchange_date(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=None):
@@ -728,7 +727,6 @@ class account_voucher(osv.osv):
                         line.type = 'cr'
                     else:
                         line.type = 'dr'
-
                 if (line.type=='dr'):
                     line_total += amount
                     move_line['debit'] = amount
