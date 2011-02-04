@@ -228,31 +228,33 @@ This is useful for CRM leads for example"),
         vals = {}
         if context is None:
             context = {}
-        template_obj = self.browse(cr, uid, ids, context=context)[0]
-        src_obj = template_obj.object_name.model
-        vals['ref_ir_act_window'] = self.pool.get('ir.actions.act_window').create(cr, uid, {
-             'name': template_obj.name,
-             'type': 'ir.actions.act_window',
-             'res_model': 'email_template.send.wizard',
-             'src_model': src_obj,
-             'view_type': 'form',
-             'context': "{'src_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template_obj.id),
-             'view_mode':'form,tree',
-             'view_id': self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'email_template.send.wizard.form')], context=context)[0],
-             'target': 'new',
-             'auto_refresh':1
-        }, context)
-        vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, uid, {
-             'name': _('Send Mail (%s)') % template_obj.name,
-             'model': src_obj,
-             'key2': 'client_action_multi',
-             'value': "ir.actions.act_window," + str(vals['ref_ir_act_window']),
-             'object': True,
-         }, context)
+            template_obj = a
+        action_obj = self.pool.get('ir.actions.act_window')
+        for template in self.browse(cr, uid, ids, context=context):
+            src_obj = template.object_name.model
+            vals['ref_ir_act_window'] = action_obj.create(cr, uid, {
+                 'name': template.name,
+                 'type': 'ir.actions.act_window',
+                 'res_model': 'email_template.send.wizard',
+                 'src_model': src_obj,
+                 'view_type': 'form',
+                 'context': "{'src_model':'%s','template_id':'%d','src_rec_id':active_id,'src_rec_ids':active_ids}" % (src_obj, template.id),
+                 'view_mode':'form,tree',
+                 'view_id': self.pool.get('ir.ui.view').search(cr, uid, [('name', '=', 'email_template.send.wizard.form')], context=context)[0],
+                 'target': 'new',
+                 'auto_refresh':1
+            }, context)
+            vals['ref_ir_value'] = self.pool.get('ir.values').create(cr, uid, {
+                 'name': _('Send Mail (%s)') % template.name,
+                 'model': src_obj,
+                 'key2': 'client_action_multi',
+                 'value': "ir.actions.act_window," + str(vals['ref_ir_act_window']),
+                 'object': True,
+             }, context)
         self.write(cr, uid, ids, {
-            'ref_ir_act_window': vals['ref_ir_act_window'],
-            'ref_ir_value': vals['ref_ir_value'],
-        }, context)
+                    'ref_ir_act_window': vals['ref_ir_act_window'],
+                    'ref_ir_value': vals['ref_ir_value'],
+                }, context)
         return True
 
     def unlink_action(self, cr, uid, ids, context=None):
@@ -383,22 +385,23 @@ This is useful for CRM leads for example"),
             'null_value': False
             }
         if model_object_field:
-            field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
-            if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
-                res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
+            fields_obj = self.pool.get('ir.model.fields')
+            field_value = fields_obj.browse(cr, uid, model_object_field, context)
+            if field_value.ttype in ['many2one', 'one2many', 'many2many']:
+                res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_value.relation)], context=context)
                 sub_field_value = False
                 if sub_model_object_field:
-                    sub_field_value = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
+                    sub_field_value = fields_obj.browse(cr, uid, sub_model_object_field, context)
                 if res_ids:
                     result.update({
                         'sub_object': res_ids[0],
-                        'copyvalue': self.build_expression(field_obj.name, sub_field_value and sub_field_value.name or False, null_value or False),
+                        'copyvalue': self.build_expression(field_value.name, sub_field_value and sub_field_value.name or False, null_value or False),
                         'sub_model_object_field': sub_model_object_field or False,
                         'null_value': null_value or False
                         })
             else:
                 result.update({
-                        'copyvalue': self.build_expression(field_obj.name, False, null_value or False),
+                        'copyvalue': self.build_expression(field_value.name, False, null_value or False),
                         'null_value': null_value or False
                         })
         return {'value':result}
