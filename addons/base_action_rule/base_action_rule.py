@@ -300,6 +300,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if context is None:
             context = {}
 
+        email_message_obj = self.pool.get('email.message')
         body = self.format_mail(obj, body)
         if not emailfrom:
             if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.address_id and\
@@ -312,7 +313,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if not emailfrom:
             raise osv.except_osv(_('Error!'), 
                     _("No E-Mail ID Found for your Company address!"))
-        return tools.email_send(emailfrom, emails, name, body, reply_to=reply_to, openobject_id=str(obj.id))
+        return email_message_obj.email_send(emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, openobject_id=str(obj.id))
 
 
     def do_check(self, cr, uid, action, obj, context=None):

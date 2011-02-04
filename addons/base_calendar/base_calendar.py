@@ -480,6 +480,7 @@ property or property parameter."),
             context = {}
 
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
+        email_message_obj = self.pool.get('email.message')
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
@@ -506,11 +507,12 @@ property or property parameter."),
                 body = html_invitation % body_vals
                 if mail_to and email_from:
                     attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    tools.email_send(
+                    email_message_obj.email_send(
                         email_from,
                         mail_to,
                         sub,
                         body,
+                        model='calendar.attendee',
                         attach=attach and [('invitation.ics', attach)] or None,
                         subtype='html',
                         reply_to=email_from
@@ -809,6 +811,7 @@ class calendar_alarm(osv.osv):
         return True # XXX FIXME REMOVE THIS AFTER FIXING get_recurrent_dates!!
         if context is None:
             context = {}
+        email_message_obj = self.pool.get('email.message')
         current_datetime = datetime.now()
         request_obj = self.pool.get('res.request')
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
@@ -890,11 +893,12 @@ From:
                     for att in alarm.attendee_ids:
                         mail_to.append(att.user_id.address_id.email)
                     if mail_to:
-                        tools.email_send(
+                        email_message_obj.email_send(
                             tools.config.get('email_from', False),
                             mail_to,
                             sub,
-                            body
+                            body,
+                            model='calendar.alarm'
                         )
             if next_trigger_date:
                 update_vals.update({'trigger_date': next_trigger_date})

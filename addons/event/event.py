@@ -521,7 +521,7 @@ class event_registration(osv.osv):
         """
         Send email to user
         """
-
+        email_message_obj = self.pool.get('email.message')
         for regestration in self.browse(cr, uid, ids, context=context):
             src = regestration.event_id.reply_to or False
             email_to = []
@@ -545,7 +545,7 @@ class event_registration(osv.osv):
                     subject = _('Auto Confirmation: [%s] %s') %(regestration.id, regestration.name)
                     body = regestration.event_id.mail_confirm
             if subject or body:
-                tools.email_send(src, email_to, subject, body, email_cc=email_cc, openobject_id=regestration.id)
+                email_message_obj.email_send(src, email_to, subject, body, model='event.registration', email_cc=email_cc, openobject_id=regestration.id)
                 self.history(cr, uid, [regestration], subject, history = True, \
                         email=email_to, details=body, \
                         subjec=subject, email_from=src, \
