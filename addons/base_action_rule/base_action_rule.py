@@ -179,6 +179,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if context is None:
             context  = {}
         def make_call_old(cr, uid, ids, vals, context=context):
+            if context is None:
+               context = {}
             if isinstance(ids, (str, int, long)):
                 ids = [ids]
             if not context.get('action'):

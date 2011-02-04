@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-31 21:01+0000\n"
+"PO-Revision-Date: 2011-02-01 19:28+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-01 04:41+0000\n"
+"X-Launchpad-Export-Date: 2011-02-02 04:41+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -650,7 +650,7 @@ msgstr "КнП"
 #. module: account
 #: help:account.bank.statement,balance_end_real:0
 msgid "closing balance entered by the cashbox verifier"
-msgstr ""
+msgstr "Конечное сальдо введенное ответственным за кассу"
 
 #. module: account
 #: view:account.period:0
@@ -1041,7 +1041,7 @@ msgstr "Под вопросом"
 #: model:ir.actions.act_window,name:account.action_view_bank_statement_tree
 #: model:ir.ui.menu,name:account.journal_cash_move_lines
 msgid "Cash Registers"
-msgstr ""
+msgstr "Кассы"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -1714,7 +1714,7 @@ msgstr "Эти периоды могут перекрываться."
 #. module: account
 #: model:process.node,name:account.process_node_draftstatement0
 msgid "Draft statement"
-msgstr ""
+msgstr "Черновик документа"
 
 #. module: account
 #: view:account.tax:0
@@ -1735,7 +1735,7 @@ msgstr "Сумма кредита"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create move line on closed account."
-msgstr ""
+msgstr "Нельзя сделать проводку по закрытому счету."
 
 #. module: account
 #: code:addons/account/account.py:519
@@ -1753,7 +1753,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Ошибочное значение проводки по дебету или кредиту !"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1849,7 +1849,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Closing balance based on Starting Balance and Cash Transactions"
-msgstr ""
+msgstr "Конечное сальдо основано на начальном сальдо и операциях по кассе"
 
 #. module: account
 #: model:process.node,note:account.process_node_reconciliation0
@@ -1869,6 +1869,8 @@ msgid ""
 "Check this box if you want to use a different sequence for each created "
 "journal. Otherwise, all will use the same sequence."
 msgstr ""
+"Отметьте, если вы хотите использовать различную нумерацию для каждого "
+"создаваемого журнала. Иначе будет сквозная нумерация."
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -1884,6 +1886,8 @@ msgid ""
 "If set to True then do not accept the entry if the entry date is not into "
 "the period dates"
 msgstr ""
+"Если отмечено, то проводки с датой не попадающей в период приниматься не "
+"будут"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_pl_report
@@ -1954,7 +1958,7 @@ msgstr "Счета для сверки"
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
 msgid "Import of the statement in the system from an electronic file"
-msgstr ""
+msgstr "Импорт электронного документа в систему из файла"
 
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
@@ -1983,7 +1987,7 @@ msgstr "Этот фин. год"
 #. module: account
 #: view:account.tax.chart:0
 msgid "Account tax charts"
-msgstr ""
+msgstr "План налоговых счетов"
 
 #. module: account
 #: constraint:account.period:0
@@ -1991,6 +1995,8 @@ msgid ""
 "Invalid period ! Some periods overlap or the date period is not in the scope "
 "of the fiscal year. "
 msgstr ""
+"Неверный период ! Периоды перекрываются или даты периода выходят за "
+"финансовый год. "
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -2013,6 +2019,8 @@ msgid ""
 "There is no default default debit account defined \n"
 "on journal \"%s\""
 msgstr ""
+"Не определен дебетовый счет по умолчанию \n"
+"для журнала \"%s\""
 
 #. module: account
 #: help:account.account,type:0
@@ -2494,7 +2502,7 @@ msgstr "Даты"
 #: field:account.tax,parent_id:0
 #: field:account.tax.template,parent_id:0
 msgid "Parent Tax Account"
-msgstr ""
+msgstr "Главный налоговый счет"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -2553,7 +2561,7 @@ msgstr "Этот помощник создаст повторяющиеся бу
 #: code:addons/account/account.py:1181
 #, python-format
 msgid "No sequence defined on the journal !"
-msgstr ""
+msgstr "Нумерация в журнале не определена !"
 
 #. module: account
 #: code:addons/account/account.py:2083
@@ -2563,7 +2571,7 @@ msgstr ""
 #: code:addons/account/wizard/account_use_model.py:81
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr ""
+msgstr "Вы должны определить журнал аналитики для журнала '%s' !"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -2669,7 +2677,7 @@ msgstr ""
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
 msgid "Default Sale Tax"
-msgstr ""
+msgstr "Налог с продаж по умолчанию"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -2768,7 +2776,7 @@ msgstr "Условия"
 #. module: account
 #: field:account.bank.statement,total_entry_encoding:0
 msgid "Cash Transaction"
-msgstr ""
+msgstr "Операции по кассе"
 
 #. module: account
 #: view:res.partner:0
@@ -3083,7 +3091,7 @@ msgstr "Диаграмма Налогового"
 #. module: account
 #: view:account.journal:0
 msgid "Search Account Journal"
-msgstr ""
+msgstr "Искать журнал счета"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -3143,12 +3151,12 @@ msgstr "Сумма налога"
 #. module: account
 #: view:account.installer:0
 msgid "Your bank and cash accounts"
-msgstr ""
+msgstr "Ваши банковские и денежные счета"
 
 #. module: account
 #: view:account.move:0
 msgid "Search Move"
-msgstr ""
+msgstr "Искать проводку"
 
 #. module: account
 #: field:account.tax.code,name:0
@@ -3177,11 +3185,12 @@ msgid ""
 "You cannot change the type of account from '%s' to '%s' type as it contains "
 "account entries!"
 msgstr ""
+"Нельзя изменить тип счета с  '%s' на '%s' так, как он содержит проводки !"
 
 #. module: account
 #: report:account.general.ledger:0
 msgid "Counterpart"
-msgstr ""
+msgstr "Корреспондирующая сторона"
 
 #. module: account
 #: view:account.journal:0
@@ -3216,7 +3225,7 @@ msgstr "Создать счет"
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
 msgid "Report of the Sales by Account Type"
-msgstr ""
+msgstr "Отчет о продажах по типу счета"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3226,7 +3235,7 @@ msgstr "Подробности"
 #. module: account
 #: field:account.installer,bank_accounts_id:0
 msgid "Your Bank and Cash Accounts"
-msgstr ""
+msgstr "Ваши банковские и денежные счета"
 
 #. module: account
 #: report:account.invoice:0
@@ -3245,6 +3254,7 @@ msgstr "План счетов"
 #: view:account.tax.chart:0
 msgid "(If you do not select period it will take all open periods)"
 msgstr ""
+"(Если вы не выбрали период, то будут использованы все открытые периоды)"
 
 #. module: account
 #: field:account.journal,centralisation:0
@@ -3265,6 +3275,8 @@ msgstr "2"
 #: view:account.chart:0
 msgid "(If you do not select Fiscal year it will take all open fiscal years)"
 msgstr ""
+"(Если вы не выбрали финансовый год, то будут использованы все открытые "
+"финансовые годы)"
 
 #. module: account
 #: selection:account.aged.trial.balance,filter:0
@@ -3458,7 +3470,7 @@ msgstr "Цена за ед."
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
 msgid "Analytic Items"
-msgstr ""
+msgstr "Элементы аналитики"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1128
@@ -3469,14 +3481,14 @@ msgstr "Невозможно изменить налог !"
 #. module: account
 #: field:analytic.entries.report,nbr:0
 msgid "#Entries"
-msgstr ""
+msgstr "#Проводок"
 
 #. module: account
 #: code:addons/account/invoice.py:1422
 #, python-format
 msgid ""
 "You selected an Unit of Measure which is not compatible with the product."
-msgstr ""
+msgstr "Вы выбрали единицу измерения не совместимую с ТМЦ."
 
 #. module: account
 #: code:addons/account/invoice.py:473
@@ -3591,12 +3603,12 @@ msgstr "Установить в 'Черновик'"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form
 msgid "Recurring Lines"
-msgstr ""
+msgstr "Повторяющиеся строки"
 
 #. module: account
 #: field:account.partner.balance,display_partner:0
 msgid "Display Partners"
-msgstr ""
+msgstr "Вывести партнеров"
 
 #. module: account
 #: view:account.invoice:0
@@ -3649,7 +3661,7 @@ msgstr "(счет должен быть не сверен, если вы хот�
 #: field:account.report.general.ledger,period_from:0
 #: field:account.vat.declaration,period_from:0
 msgid "Start period"
-msgstr ""
+msgstr "Начало периода"
 
 #. module: account
 #: field:account.tax,name:0
@@ -3890,7 +3902,7 @@ msgstr ""
 #. module: account
 #: help:account.analytic.balance,empty_acc:0
 msgid "Check if you want to display Accounts with 0 balance too."
-msgstr ""
+msgstr "Отметьте, если хотите выводить счета с 0 балансом."
 
 #. module: account
 #: view:account.tax:0
@@ -3950,7 +3962,7 @@ msgstr "Название счета"
 #. module: account
 #: help:account.fiscalyear.close,report_name:0
 msgid "Give name of the new entries"
-msgstr ""
+msgstr "Дать название новым проводкам"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_report
@@ -3960,7 +3972,7 @@ msgstr "Статистика по счетам"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderreconcilation0
 msgid "Bank statements are entered in the system."
-msgstr ""
+msgstr "Банковские выписки введены в систему."
 
 #. module: account
 #: code:addons/account/wizard/account_reconcile.py:133
@@ -3994,12 +4006,12 @@ msgstr "Не реализовано"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr ""
+msgstr "Выбор журнала счета"
 
 #. module: account
 #: view:account.invoice:0
 msgid "Print Invoice"
-msgstr ""
+msgstr "Печать счета"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4049,6 +4061,8 @@ msgid ""
 "This will automatically configure your chart of accounts, bank accounts, "
 "taxes and journals according to the selected template"
 msgstr ""
+"Автоматическая настройка плана счетов, банковских счетов, налогов и журналов "
+"в соответствии с выбранным шаблоном."
 
 #. module: account
 #: field:account.tax,price_include:0
@@ -4091,7 +4105,7 @@ msgstr "Изменить"
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:57
 #, python-format
 msgid "UserError"
-msgstr ""
+msgstr "Ошибка пользователя"
 
 #. module: account
 #: field:account.journal,type_control_ids:0
@@ -4101,7 +4115,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,default_credit_account_id:0
 msgid "It acts as a default account for credit amount"
-msgstr ""
+msgstr "Используется как кредитовый счет по умолчанию"
 
 #. module: account
 #: help:account.partner.ledger,reconcil:0
@@ -4114,7 +4128,7 @@ msgstr "Учесть сверенные проводки"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr ""
+msgstr "Провести записи журнала"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -4126,7 +4140,7 @@ msgstr "Отменено"
 #. module: account
 #: help:account.bank.statement,balance_end_cash:0
 msgid "Closing balance based on cashBox"
-msgstr ""
+msgstr "Остаток по кассе"
 
 #. module: account
 #: constraint:account.account:0
@@ -4140,6 +4154,8 @@ msgid ""
 "You cannot create an account! \n"
 "Make sure if the account has children then it should be type \"View\"!"
 msgstr ""
+"Вы не можете создать счет! \n"
+"Убедитесь, что если счет имеет подсчета, то он должен иметь тип \"Вид\" !"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -4447,7 +4463,7 @@ msgstr "Закрыть"
 #. module: account
 #: field:account.bank.statement.line,move_ids:0
 msgid "Moves"
-msgstr ""
+msgstr "Проводки"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
@@ -5387,7 +5403,7 @@ msgstr "Неверное действие !"
 #: code:addons/account/wizard/account_move_journal.py:102
 #, python-format
 msgid "Period: %s"
-msgstr ""
+msgstr "Период: %s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
@@ -5456,6 +5472,8 @@ msgid ""
 "Selected Invoice(s) cannot be confirmed as they are not in 'Draft' or 'Pro-"
 "Forma' state!"
 msgstr ""
+"Выбранные счета нельзя подтвердить так, как их состояние не \"Черновик\" и "
+"не \"Проформа\" !"
 
 #. module: account
 #: report:account.invoice:0
@@ -5711,7 +5729,7 @@ msgstr "Счет по кредиту по умолчанию"
 #. module: account
 #: view:account.installer:0
 msgid "Configure Your Accounting Chart"
-msgstr ""
+msgstr "Настройка вашего плана счетов"
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5897,7 +5915,7 @@ msgstr "Централизация"
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Accounting Chart from a Chart Template"
-msgstr ""
+msgstr "Генерировать ваш план счетов из шаблона"
 
 #. module: account
 #: view:account.account:0
@@ -5983,7 +6001,7 @@ msgstr "Категория счета расходов"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Cash Transactions"
-msgstr "Операции с наличными"
+msgstr "Операции по кассе"
 
 #. module: account
 #: code:addons/account/wizard/account_state_open.py:37
@@ -6018,7 +6036,7 @@ msgstr "Проводки: "
 #. module: account
 #: view:account.use.model:0
 msgid "Create manual recurring entries in a chosen journal."
-msgstr ""
+msgstr "Создать вручную повторяющиеся проводки в выбранном журнале"
 
 #. module: account
 #: code:addons/account/account.py:1393
@@ -6658,7 +6676,7 @@ msgstr ""
 #. module: account
 #: field:account.bank.statement,closing_date:0
 msgid "Closed On"
-msgstr ""
+msgstr "Дата закрытия"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement_line
@@ -8373,7 +8391,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:391
 #, python-format
 msgid "Cannot delete bank statement(s) which are already confirmed !"
-msgstr ""
+msgstr "Нельзя удалить банковский документ, который уже подтвержден !"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:152
@@ -8868,7 +8886,7 @@ msgstr ""
 #. module: account
 #: field:account.installer,sale_tax:0
 msgid "Sale Tax(%)"
-msgstr ""
+msgstr "Налог с продаж (%)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
@@ -9130,7 +9148,7 @@ msgstr ""
 #. module: account
 #: help:account.bank.statement,total_entry_encoding:0
 msgid "Total cash transactions"
-msgstr ""
+msgstr "Сумма операций по кассе"
 
 #. module: account
 #: help:account.partner.reconcile.process,today_reconciled:0
