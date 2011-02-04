@@ -38,17 +38,24 @@ class crm_merge_opportunity(osv.osv_memory):
 
         @return : Dictionary value for created Opportunity form
         """
-        record_ids = context and context.get('active_ids') or False
-        if len(record_ids) <= 1:
-            return {'type': 'ir.actions.act_window_close'}
-        
-        obj_opportunity = self.browse(cr, uid, ids[0], context=context)
+        record_id = context and context.get('active_id') or False
         opp_obj = self.pool.get('crm.lead')
-        first_opp = obj_opportunity.opportunity_ids[0]
-        op_ids = obj_opportunity.opportunity_ids
+        if self.datas:
+            obj_opportunity = self.browse(cr, uid, ids[0], context=context)
+            if hasattr(obj_opportunity, 'opportunity_ids'):
+                op_ids = obj_opportunity.opportunity_ids
+        else:
+            op_ids = context.get('opportunity_ids')
+        
+        if len(op_ids) <= 1:
+            raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
+        elif op_ids[0].id == record_id:
+            op_ids = op_ids[1:]
+        
+        first_opp = opp_obj.browse(cr, uid, record_id, context=context)
         first_opp_data = {}
 
-        for opp in op_ids[1:]:
+        for opp in op_ids:
             first_opp_data = {
                 'partner_id': first_opp.partner_id.id or opp.partner_id.id,
                 'stage_id': first_opp.stage_id.id or opp.stage_id.id, 
@@ -74,6 +81,7 @@ class crm_merge_opportunity(osv.osv_memory):
                 'fax': first_opp.fax or opp.fax,
                 'mobile': first_opp.mobile or opp.mobile,
                 'email_cc': ','.join(filter(lambda x: x, [opp.email_cc, first_opp.email_cc])),
+                'type': 'opportunity', 
                 'state': 'open'
             }
             for history in opp.message_ids:
@@ -81,10 +89,9 @@ class crm_merge_opportunity(osv.osv_memory):
                     new_history = message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
             opp_obj._history(cr, uid, [first_opp], _('Merged from Opportunity: %s : Information lost : [Partner: %s, Stage: %s, Section: %s, Salesman: %s]') % (opp.name, opp.partner_id.name or '', opp.stage_id.name or '', opp.section_id.name or '', opp.user_id.name or ''))
         
-
         opp_obj.write(cr, uid, [first_opp.id], first_opp_data)
         
-        unlink_ids = map(lambda x: x.id, op_ids[1:])
+        unlink_ids = map(lambda x: x.id, op_ids)
         opp_obj.unlink(cr, uid, unlink_ids)
         
         models_data = self.pool.get('ir.model.data')
