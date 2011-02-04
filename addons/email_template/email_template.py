@@ -598,7 +598,7 @@ class email_message(osv.osv):
         }
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
-        result = super(email_template, self).copy(cr, uid, id, default, context)
+        result = super(email_message, self).process_email_queue(cr, uid, ids, context)
         attachment_obj = self.pool.get('ir.attachment')
         for message in self.browse(cr, uid, result, context):
             if message.template_id and message.template_id.auto_delete:
