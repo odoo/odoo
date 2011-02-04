@@ -105,7 +105,12 @@ class crm_lead(osv.osv):
         if not partner_assigned_id:
             return {'value':{'date_assign': False}}
         else:
-            return {'value':{'date_assign': time.strftime('%Y-%m-%d')}}
+            partners = self.pool.get('res.partner').browse(cr, uid, [partner_assigned_id], context=context)
+            user_id = partners[0] and partners[0].user_id.id or False
+            return {'value':    
+                        {'date_assign': time.strftime('%Y-%m-%d'), 
+                         'user_id' : user_id}
+                   }
 
     def assign_partner(self, cr, uid, ids, context=None):
         ok = False
