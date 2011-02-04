@@ -471,7 +471,7 @@ class mrp_production(osv.osv):
             #if bom_point.routing_id and bom_point.routing_id.location_id:
             #   self.write(cr, uid, [production.id], {'location_src_id': bom_point.routing_id.location_id.id})
 
-            factor = production.product_qty * production.product_uom.factor / bom_point.product_uom.factor
+            factor = production.product_qty * production.product_uom.factor_inv / bom_point.product_uom.factor
             res = self.pool.get('mrp.bom')._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
             results = res[0]
             results2 = res[1]
