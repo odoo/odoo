@@ -2712,14 +2712,15 @@ class orm(orm_template):
                     clause, params = '%s=%%s' % (self._parent_name,), (parent_val,)
                 else:
                     clause, params = '%s IS NULL' % (self._parent_name,), ()
-                cr.execute('SELECT parent_right, id FROM "%s" WHERE %s ORDER BY %s' % (self._table, clause, order), params)
-                parents = cr.fetchall()
 
                 for id in parents_changed:
                     cr.execute('SELECT parent_left, parent_right FROM "%s" WHERE id=%%s' % (self._table,), (id,))
                     pleft, pright = cr.fetchone()
                     distance = pright - pleft + 1
-
+                                                
+                    cr.execute('SELECT parent_right, id FROM "%s" WHERE %s ORDER BY %s' % (self._table, clause, order), params)
+                    parents = cr.fetchall()
+                    
                     # Find Position of the element
                     position = None
                     for (parent_pright, parent_id) in parents:
