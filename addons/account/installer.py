@@ -547,7 +547,7 @@ class account_installer(osv.osv_memory):
         # Opening Entries Journal
         if obj_multi.property_account_income_opening and obj_multi.property_account_expense_opening:
             vals_journal = {
-                'view_id': view_id,
+                'view_id': view_id_misc,
                 'name': _('Opening Entries Journal'),
                 'type': 'situation',
                 'code': _('OPEJ'),
