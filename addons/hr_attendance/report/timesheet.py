@@ -43,7 +43,7 @@ class report_custom(report_rml):
         end_date = datetime.strptime(datas['form']['end_date'], '%Y-%m-%d')
         first_monday = start_date - relativedelta(days=start_date.date().weekday())
         last_monday = end_date + relativedelta(days=7 - end_date.date().weekday())
-        
+
         if last_monday < first_monday:
             first_monday, last_monday = last_monday, first_monday
 
@@ -80,10 +80,18 @@ class report_custom(report_rml):
                         attendances.append({'name': n_monday.strftime('%Y-%m-%d %H:%M:%S'), 'action': 'sign_out'})
                     # sum up the attendances' durations
                     ldt = None
+                    wh = 0.0
                     for att in attendances:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
-                            week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + ((dt - ldt).seconds/3600)
+                           tot_time = (dt - ldt).seconds
+                           hrs, remainder = divmod(tot_time, 3600)
+                           min, sec = divmod(remainder, 60)
+                           if min < 10:
+                               wh = float((str(hrs))+ '.' + '0' +(str(min)))
+                           else:
+                               wh = float((str(hrs))+ '.' + (str(min)))
+                           week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + round(wh,2)
                         else:
                             ldt = dt
 
@@ -92,10 +100,10 @@ class report_custom(report_rml):
                 for idx in range(7):
                     week_repr.append('<%s>' % num2day[idx])
                     if idx in week_wh:
-                        week_repr.append('<workhours>%sh%02d</workhours>' % to_hour(week_wh[idx]))
+                        week_repr.append('<workhours>%s</workhours>' %(week_wh[idx]))
                     week_repr.append('</%s>' % num2day[idx])
                 week_repr.append('<total>')
-                week_repr.append('<worked>%sh%02d</worked>' % to_hour(reduce(lambda x,y:x+y, week_wh.values(), 0)))
+                week_repr.append('<worked>%s</worked>' % sum(week_wh.values()))
                 week_repr.append('</total>')
                 week_repr.append('</week>')
                 if len(week_repr) > 21: # 21 = minimal length of week_repr
