@@ -44,7 +44,7 @@ class survey_print_statistics(osv.osv_memory):
         if context is None:
             context = {}
         datas = {'ids': context.get('active_ids', [])}
-        res = self.read(cr, uid, ids, ['survey_ids'], context)
+        res = self.read(cr, uid, ids, ['survey_ids'], context=context)
         res = res and res[0] or {}
         datas['form'] = res
         datas['model'] = 'survey.print.statistics'
