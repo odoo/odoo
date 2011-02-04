@@ -70,6 +70,7 @@ class pos_order(osv.osv):
         return super(pos_order, self).unlink(cr, uid, ids, context=context)
 
     def onchange_partner_pricelist(self, cr, uid, ids, part=False, context=None):
+
         """ Changed price list on_change of partner_id"""
         if not part:
             return {'value': {}}
@@ -647,6 +648,7 @@ class pos_order(osv.osv):
                 'reference': order.name,
                 'partner_id': order.partner_id.id,
                 'comment': order.note or '',
+                'currency_id': order.partner_id.property_product_pricelist.currency_id.id, # considering partner's sale pricelist's currency
             }
             inv.update(inv_ref.onchange_partner_id(cr, uid, [], 'out_invoice', order.partner_id.id)['value'])
             if not inv.get('account_id', None):

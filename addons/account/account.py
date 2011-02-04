@@ -301,11 +301,10 @@ class account_account(osv.osv):
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
                     for child in current.child_id:
-                        if sums.get(child.id, False):
-                            if child.company_id.currency_id.id == current.company_id.currency_id.id:
-                                sums[current.id][fn] += sums[child.id][fn]
-                            else:
-                                sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
+                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
+                            sums[current.id][fn] += sums[child.id][fn]
+                        else:
+                            sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
             res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
@@ -334,7 +333,7 @@ class account_account(osv.osv):
         return result
 
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
-        res={}
+        res = {}
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             level = 0
@@ -475,7 +474,7 @@ class account_account(osv.osv):
         for record in reads:
             name = record['name']
             if record['code']:
-                name = record['code'] + ' '+name
+                name = record['code'] + ' ' + name
             res.append((record['id'], name))
         return res
 
@@ -743,9 +742,7 @@ class account_journal(osv.osv):
         }
 
         res = {}
-
         view_id = type_map.get(type, 'account_journal_view')
-
         user = user_pool.browse(cr, uid, uid)
         if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
             view_id = 'account_journal_bank_view_multi'
@@ -756,7 +753,6 @@ class account_journal(osv.osv):
             'centralisation':type == 'situation',
             'view_id':data.res_id,
         })
-
         return {
             'value':res
         }
@@ -1920,7 +1916,7 @@ class account_tax(osv.osv):
             totalex -= r.get('amount', 0.0)
         totlex_qty = 0.0
         try:
-            totlex_qty=totalex/quantity
+            totlex_qty = totalex/quantity
         except:
             pass
         tex = self._compute(cr, uid, tex, totlex_qty, quantity, address_id=address_id, product=product, partner=partner)

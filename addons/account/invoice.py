@@ -353,6 +353,8 @@ class account_invoice(osv.osv):
                 raise orm.except_orm(_('Unknown Error'), str(e))
 
     def confirm_paid(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         self.write(cr, uid, ids, {'state':'paid'}, context=context)
         for inv_id, name in self.name_get(cr, uid, ids, context=context):
             message = _("Invoice '%s' is paid.") % name
@@ -360,6 +362,8 @@ class account_invoice(osv.osv):
         return True
 
     def unlink(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         invoices = self.read(cr, uid, ids, ['state'], context=context)
         unlink_ids = []
         for t in invoices:
@@ -598,6 +602,8 @@ class account_invoice(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default={}, context=None):
+        if context is None:
+            context = {}
         default.update({
             'state':'draft',
             'number':False,
