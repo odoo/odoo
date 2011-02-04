@@ -25,10 +25,10 @@
     'version' : '1.0',
     'author' : 'OpenERP SA',
     'website' : 'http://www.openerp.com/',
-    'depends' : ['base', 'mail_gateway'],
+    'depends' : ['base', 'email_gateway'],
     'category' : 'Generic Modules/Outlook interface',
     'description': '''
-      This module provide the Outlook plug-in. 
+      This module provide the Outlook plug-in.
 
       Outlook plug-in allows you to select an object that you’d like to add
       to your email and its attachments from MS Outlook. You can select a partner, a task,
