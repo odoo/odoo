@@ -54,6 +54,7 @@ Create dashboard for CRM that includes:
     'website': 'http://www.openerp.com',
     'depends': [
         'base',
+        'email',
         'base_action_rule',
         'process',
         'mail_gateway',

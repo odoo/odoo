@@ -24,7 +24,6 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 from dateutil import parser
 from osv import fields, osv
-import tools
 from tools.translate import _
 
 class hr_evaluation_plan(osv.osv):

@@ -22,7 +22,6 @@ import logging
 import random
 import time
 
-import tools
 from osv import osv, fields
 from osv.expression import expression
 from tools.translate import _

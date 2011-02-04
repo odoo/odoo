@@ -24,7 +24,6 @@ import time
 from crm import crm
 from osv import fields, osv
 from tools.translate import _
-import tools
 import decimal_precision as dp
 
 class event_type(osv.osv):
