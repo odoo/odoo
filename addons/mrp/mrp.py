@@ -590,7 +590,7 @@ class mrp_production(osv.osv):
             if not bom_id:
                 raise osv.except_osv(_('Error'), _("Couldn't find bill of material for product"))
 
-            factor = production.product_qty * production.product_uom.factor / bom_point.product_uom.factor
+            factor = production.product_qty * production.product_uom.factor_inv / bom_point.product_uom.factor
             res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, properties)
             results = res[0]
             results2 = res[1]
