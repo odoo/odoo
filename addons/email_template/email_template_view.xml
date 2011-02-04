@@ -47,16 +47,16 @@
 
                                         <field name="model_object_field"
                                             domain="[('model_id','=',object_name),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                            on_change="onchange_model_object_field(model_object_field,context)"
+                                            on_change="onchange_sub_model_object_value_field(model_object_field)"
                                             colspan="4" />
                                         <field name="sub_object" readonly="1" colspan="4" />
                                         <field name="sub_model_object_field"
                                             domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
                                             colspan="4"
                                             attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
-                                            on_change="onchange_sub_model_object_field(model_object_field,sub_model_object_field,context)" />
+                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)" />
                                         <field name="null_value" colspan="4"
-                                            on_change="onchange_null_value(model_object_field,sub_model_object_field,null_value,context)" />
+                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)" />
                                         <field name="copyvalue" colspan="4" />
                                     </page>
                                 </notebook>

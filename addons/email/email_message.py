@@ -235,7 +235,6 @@ class email_message(osv.osv):
                                  netsvc.LOG_ERROR,
                                  _("Error sending mail: %s") % e)
 
-
     def email_send(cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
             openobject_id=False, debug=False, subtype='plain', x_headers=None, priority='3'):
         attachment_obj = self.pool.get('ir.attachment')

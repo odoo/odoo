@@ -302,68 +302,105 @@ This is useful for CRM leads for example"),
                 expression += " or '''%s'''" % null_value
             expression += "}"
         return expression
+#
+#    def onchange_model_object_field(self, cr, uid, ids, model_object_field, context=None):
+#        if not model_object_field:
+#            return {}
+#        result = {}
+#        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
+#        #Check if field is relational
+#        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
+#            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
+#            if res_ids:
+#                result['sub_object'] = res_ids[0]
+#                result['copyvalue'] = self.build_expression(False, False, False)
+#                result['sub_model_object_field'] = False
+#                result['null_value'] = False
+#        else:
+#            #Its a simple field... just compute placeholder
+#            result['sub_object'] = False
+#            result['copyvalue'] = self.build_expression(field_obj.name, False, False)
+#            result['sub_model_object_field'] = False
+#            result['null_value'] = False
+#        return {'value':result}
+#
+#    def onchange_sub_model_object_field(self, cr, uid, ids, model_object_field, sub_model_object_field, context=None):
+#        if not model_object_field or not sub_model_object_field:
+#            return {}
+#        result = {}
+#        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
+#        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
+#            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
+#            sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
+#            if res_ids:
+#                result['sub_object'] = res_ids[0]
+#                result['copyvalue'] = self.build_expression(field_obj.name, sub_field_obj.name, False)
+#                result['sub_model_object_field'] = sub_model_object_field
+#                result['null_value'] = False
+#        else:
+#            #Its a simple field... just compute placeholder
+#            result['sub_object'] = False
+#            result['copyvalue'] = self.build_expression(field_obj.name, False, False)
+#            result['sub_model_object_field'] = False
+#            result['null_value'] = False
+#        return {'value':result}
+#
+#
+#    def onchange_null_value(self, cr, uid, ids, model_object_field, sub_model_object_field, null_value, template_language, context=None):
+#        if not model_object_field and not null_value:
+#            return {}
+#        result = {}
+#        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
+#        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
+#            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
+#            sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
+#            if res_ids:
+#                result['sub_object'] = res_ids[0]
+#                result['copyvalue'] = self.build_expression(field_obj.name,
+#                                                      sub_field_obj.name,
+#                                                      null_value,
+#                                                      template_language
+#                                                      )
+#                result['sub_model_object_field'] = sub_model_object_field
+#                result['null_value'] = null_value
+#        else:
+#            #Its a simple field... just compute placeholder
+#            result['sub_object'] = False
+#            result['copyvalue'] = self.build_expression(field_obj.name,
+#                                                  False,
+#                                                  null_value,
+#                                                  template_language
+#                                                  )
+#            result['sub_model_object_field'] = False
+#            result['null_value'] = null_value
+#        return {'value':result}
 
-    def onchange_model_object_field(self, cr, uid, ids, model_object_field, context=None):
-        if not model_object_field:
-            return {}
-        result = {}
-        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
-        #Check if field is relational
-        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
-            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
-            if res_ids:
-                result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.build_expression(False, False, False)
-                result['sub_model_object_field'] = False
-                result['null_value'] = False
-        else:
-            #Its a simple field... just compute placeholder
-            result['sub_object'] = False
-            result['copyvalue'] = self.build_expression(field_obj.name, False, False)
-            result['sub_model_object_field'] = False
-            result['null_value'] = False
-        return {'value':result}
-
-    def onchange_sub_model_object_field(self, cr, uid, ids, model_object_field, sub_model_object_field, context=None):
-        if not model_object_field or not sub_model_object_field:
-            return {}
-        result = {}
-        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
-        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
-            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
-            sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
-            if res_ids:
-                result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.build_expression(field_obj.name, sub_field_obj.name, False)
-                result['sub_model_object_field'] = sub_model_object_field
-                result['null_value'] = False
-        else:
-            #Its a simple field... just compute placeholder
-            result['sub_object'] = False
-            result['copyvalue'] = self.build_expression(field_obj.name, False, False)
-            result['sub_model_object_field'] = False
-            result['null_value'] = False
-        return {'value':result}
-
-    def onchange_null_value(self, cr, uid, ids, model_object_field, sub_model_object_field, null_value, context=None):
-        if not model_object_field and not null_value:
-            return {}
-        result = {}
-        field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
-        if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
-            res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
-            sub_field_obj = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
-            if res_ids:
-                result['sub_object'] = res_ids[0]
-                result['copyvalue'] = self.build_expression(field_obj.name, sub_field_obj.name, null_value)
-                result['sub_model_object_field'] = sub_model_object_field
-                result['null_value'] = null_value
-        else:
-            #Its a simple field... just compute placeholder
-            result['sub_object'] = False
-            result['copyvalue'] = self.build_expression(field_obj.name, False, null_value)
-            result['sub_model_object_field'] = False
-            result['null_value'] = null_value
+    def onchange_sub_model_object_value_field(self, cr, uid, ids, model_object_field, sub_model_object_field=False, null_value=None, context=None):
+        result = {
+            'sub_object': False,
+            'copyvalue': False,
+            'sub_model_object_field': False,
+            'null_value': False
+            }
+        if model_object_field:
+            field_obj = self.pool.get('ir.model.fields').browse(cr, uid, model_object_field, context)
+            if field_obj.ttype in ['many2one', 'one2many', 'many2many']:
+                res_ids = self.pool.get('ir.model').search(cr, uid, [('model', '=', field_obj.relation)], context=context)
+                sub_field_value = False
+                if sub_model_object_field:
+                    sub_field_value = self.pool.get('ir.model.fields').browse(cr, uid, sub_model_object_field, context)
+                if res_ids:
+                    result.update({
+                        'sub_object': res_ids[0],
+                        'copyvalue': self.build_expression(field_obj.name, sub_field_value and sub_field_value.name or False, null_value or False),
+                        'sub_model_object_field': sub_model_object_field or False,
+                        'null_value': null_value or False
+                        })
+            else:
+                result.update({
+                        'copyvalue': self.build_expression(field_obj.name, False, null_value or False),
+                        'null_value': null_value or False
+                        })
         return {'value':result}
 
     def _add_attachment(self, cursor, user, mailbox_id, name, data, filename, context=None):
