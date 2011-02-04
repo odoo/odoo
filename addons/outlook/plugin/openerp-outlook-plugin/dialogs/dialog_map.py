@@ -167,10 +167,6 @@ global name
 name=''
 global email
 email=''
-global web_server
-web_server = 'localhost'
-global web_server_port
-web_server_port = '8080'
 global country_ref
 country_ref = ""
 global state_ref
@@ -198,7 +194,7 @@ def resetConnAttribs(window):
     config = window.manager.LoadConfig()
     NewConn.setitem('_server', config['server'])
     NewConn.setitem('_port', config['port'])
-#    NewConn.setitem('protocol', config['protocol'])
+    NewConn.setitem('protocol', config['protocol'])
     NewConn.setitem('_uri', "http://" + config['server'] + ":" + str(config['port']))
     NewConn.setitem('_obj_list', config['objects'])
     NewConn.setitem('_dbname', config['database'])
@@ -207,6 +203,7 @@ def resetConnAttribs(window):
     NewConn.setitem('_login', str(config['login']))
     NewConn.setitem('_webserver',manager.config['webserver'])
     NewConn.setitem('_webport',manager.config['webport'])
+    NewConn.setitem('_webportocol',manager.config['webportocol'])
     return
 
 def setConnAttribs(server, port, manager):
@@ -228,6 +225,7 @@ def setConnAttribs(server, port, manager):
     NewConn.setitem('_obj_list', manager.config['objects'])
     NewConn.setitem('_webserver',manager.config['webserver'])
     NewConn.setitem('_webport',manager.config['webport'])
+    NewConn.setitem('_webprotocol',manager.config['webprotocol'])
     return
 
 def getConnAttributes(manager):
@@ -241,7 +239,9 @@ def getConnAttributes(manager):
     manager.config['login'] = NewConn.getitem('_login')
     manager.config['webserver'] = NewConn.getitem('_webserver')
     manager.config['webport'] = NewConn.getitem('_webport')
+    manager.config['webprotocol'] = NewConn.getitem('_webprotocol')
     return
+
 def setWebConnAttribs(server, port, manager):
     manager.config = manager.LoadConfig()
     NewConn.setitem('_webserver',server)
@@ -272,6 +272,11 @@ class OKButtonProcessor(ButtonProcessor):
 
     def OnClicked(self, id):
         server = win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[0])
+        protocol = win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[3])
+        if not protocol:
+            win32ui.MessageBox("Invalid Protocol !\nPlease select Protocol from Connection Protocol List.", "OpenERP Connection", flag_excl)
+            return
+        NewConn.setitem('protocol', protocol)
         try:
             port = int(win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[1]))
         except ValueError, e:
@@ -306,9 +311,16 @@ class WEBOKButtonProcessor(ButtonProcessor):
         ControlProcessor.__init__(self, window, control_ids)
 
     def OnClicked(self, id):
-        global web_server
-        global web_server_port
+#        global web_server
+#        global web_server_port
         server = win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[0])
+        web_protocol = 'http:\\\\'
+
+        hwnd = win32gui.GetDlgItem(self.window.hwnd, self.other_ids[2])
+        chk = win32gui.SendMessage(hwnd, win32con.BM_GETCHECK)
+        if chk:
+            web_protocol = 'https:\\\\'
+        NewConn.setitem('_webprotocol', web_protocol)
         try:
             port = int(win32gui.GetDlgItemText(self.window.hwnd, self.other_ids[1]))
         except ValueError:
@@ -318,9 +330,20 @@ class WEBOKButtonProcessor(ButtonProcessor):
             win32ui.MessageBox("Invalid web Server address.", "OpenERP Connection", flag_excl)
             return
         setWebConnAttribs(server, port, self.mngr)
-        web_server = server
-        web_server_port = port
         win32gui.EndDialog(self.window.hwnd, id)
+
+class WEBCHKProcessor(ButtonProcessor):
+    def __init__(self, window, control_ids):
+        self.mngr = window.manager
+        ControlProcessor.__init__(self, window, control_ids)
+
+    def OnClicked(self, id):
+        web_protocol = 'http:\\\\'
+        hwnd = self.GetControl()
+        chk = win32gui.SendMessage(hwnd, win32con.BM_GETCHECK)
+        if chk:
+            web_protocol = 'https:\\\\'
+        NewConn.setitem('_webprotocol', web_protocol)
 
 class MessageProcessor(ControlProcessor):
     def Init(self):
@@ -421,6 +444,7 @@ class DialogCommand(ButtonProcessor):
         return "Displays the %s dialog" % dd.caption
 
 def TestConnection(btnProcessor,*args):
+    dbname = None
     server = NewConn.getitem('_server')
     port = NewConn.getitem('_port')
     NewConn.GetDBList()
@@ -428,18 +452,19 @@ def TestConnection(btnProcessor,*args):
         btnProcessor.window.LoadAllControls()
         win32ui.MessageBox("No server running on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return
-    try:
-        dbname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, 7000)
-        if not dbname:
-            win32ui.MessageBox("Authentication Error !\nBad Database Name !", "OpenERP Connection", flag_excl)
-            return
-    except Exception,e:
-        print "Exception %s: %s"%(type(e),str(e))
+
     dbname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
+    if not dbname:
+        try:
+            dbname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, 7000)
+            if not dbname:
+                win32ui.MessageBox("Authentication Error !\nBad Database Name !", "OpenERP Connection", flag_excl)
+                return
+        except Exception,e:
+            pass
     if not dbname:
         win32ui.MessageBox("No database found on host "+ server+" at port "+str(port), "OpenERP Connection", flag_excl)
         return
-
     uname = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[1])
     pwd = win32gui.GetDlgItemText(btnProcessor.window.hwnd, btnProcessor.other_ids[2])
 
@@ -470,7 +495,7 @@ def TestConnection(btnProcessor,*args):
             flag = flag_stop
             NewConn.setitem('_login', 'False')
     except Exception,e:
-        msg = "Authentication Error !\n\n" + getMessage(e)
+        msg = "Authentication Error !\n Invalid Configuration Please check server parameters and database name."
         flag = flag_error
     win32ui.MessageBox(msg, "OpenERP Connection", flag)
     return
@@ -849,9 +874,6 @@ def CreateContact(btnProcessor,*args):
     win32gui.EndDialog(btnProcessor.window.hwnd, btnProcessor.id)
 
 def SetAllText(txtProcessor,*args):
-    # Set values for url, uname, pwd from config file
-    global web_server
-    global web_server_port
     url = NewConn.getitem('_uri')
     tbox = txtProcessor.GetControl()
     win32gui.SendMessage(tbox, win32con.WM_SETTEXT, 0, str(url))
@@ -864,9 +886,7 @@ def SetAllText(txtProcessor,*args):
     pwd = NewConn.getitem('_pwd')
     win32gui.SendMessage(passbox, win32con.WM_SETTEXT, 0, str(pwd))
     serverBox = txtProcessor.GetControl(txtProcessor.other_ids[2])
-    web_server = NewConn.getitem('_webserver')
-    web_server_port = NewConn.getitem('_webport')
-    webstr = "http:\\\\"+str(web_server)+":"+str(web_server_port)
+    webstr = NewConn.getitem('_webprotocol')+NewConn.getitem('_webserver')+":"+str(NewConn.getitem('_webport'))
     win32gui.SendMessage(serverBox, win32con.WM_SETTEXT, 0, str(webstr))
 
 def SetDefaultList(listProcessor,*args):
@@ -1376,29 +1396,24 @@ def OpenPartnerForm(txtProcessor,*args):
     partner_text = ""
     try:
     	partner_text = ustr(mail.SenderName).encode('iso-8859-1')
-        sender_mail = ustr(mail.SenderEmailAddress).encode('iso-8859-1')
+        sender_mail = ustr(mail.SenderEmailAddress).strip()
     except Exception:
     	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Error in reading email.>")
     	pass
     vals = NewConn.SearchPartner(sender_mail)
-    if vals:
+    if not vals:
         win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< Their is contact related to "+str(partner_text)+"  email address, but no partner is linked to contact>")
         txtProcessor.init_done=True
         return
-    if vals == None:
-    	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, "< No Partner found linked to "+str(partner_text)+"  email address.>")
-    	txtProcessor.init_done=True
-    	return
-    global web_server
-    global web_server_port
-    if web_server.strip() == "" or web_server.strip() == "http:\\\\":
+
+    if NewConn.getitem('_webserver') == "" or NewConn.getitem('_webserver') in ["http:\\\\","https:\\\\"]:
     	win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, " <Invalid Server Address>")
     	txtProcessor.init_done=True
     	return
     try:
         import urllib
         next =  urllib.urlencode({'next' : '/openerp/form/view?model=res.partner&id=' +str(vals) })
-        weburl = 'http://'+web_server+':'+str(web_server_port)+'/'
+        weburl = NewConn.getitem('_webprotocol')+NewConn.getitem('_webserver')+":"+str(NewConn.getitem('_webport'))
         linktopartner = weburl + '?' + next
         win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, str(linktopartner))
     except Exception,e:
@@ -1414,8 +1429,8 @@ def SerachOpenDocuemnt(txtProcessor,*args):
     b = check()
     if not b:
         return
-    global web_server
-    global web_server_port
+#    global web_server
+#    global web_server_port
     #Reading Current Selected Email.
     ex = txtProcessor.window.manager.outlook.ActiveExplorer()
     assert ex.Selection.Count == 1
@@ -1423,8 +1438,8 @@ def SerachOpenDocuemnt(txtProcessor,*args):
     #Acquiring control of the text box
     link_box = txtProcessor.GetControl()
     #Checking for the web server Parameters
-    if web_server.strip() == "" or web_server.strip() == "http:\\\\":
-        win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, " <Invalid Server Address>")
+    if NewConn.getitem('_webserver') == "" or NewConn.getitem('_webserver') in ["http:\\\\","https:\\\\"]:
+        win32gui.SendMessage(partner_link, win32con.WM_SETTEXT, 0, " <Invalid Server Address>")
         txtProcessor.init_done=True
         return
     linktodoc = ""
@@ -1458,7 +1473,7 @@ def SerachOpenDocuemnt(txtProcessor,*args):
     try:
         import urllib
         next =  urllib.urlencode({'next' : '/openerp/form/view?model='+vals[0][1]+'&id='+str(vals[1][1])})
-        weburl = 'http://'+web_server+':'+str(web_server_port)+'/'
+        weburl = NewConn.getitem('_webprotocol')+NewConn.getitem('_webserver')+":"+str(NewConn.getitem('_webport'))
         linktodoc = weburl + '?' + next
         win32gui.SendMessage(link_box, win32con.WM_SETTEXT, 0, str(linktodoc))
     except Exception,e:
@@ -1609,7 +1624,6 @@ def SetStateList(listProcessor,*args):
     listProcessor.init_done = True
 
 def SelectStateFromList(btnProcessor,*args):
-
     hwndList = win32gui.GetDlgItem(btnProcessor.window.hwnd, btnProcessor.other_ids[0])
     sel_count = win32gui.SendMessage(hwndList, commctrl.LVM_GETSELECTEDCOUNT)
     sel_text = ''
@@ -1643,7 +1657,41 @@ def SelectStateFromList(btnProcessor,*args):
         win32ui.MessageBox("Multiple selection is not allowed.","Search Fed.State")
         return
 
+def SetWebDefaultVals(txtProcessor,*args):
+    import win32con
+    #Acquiring control of the text box
+    chk_hwnd =  win32gui.GetDlgItem(txtProcessor.window.hwnd, txtProcessor.other_ids[1])
+    try:
+        web_server = NewConn.getitem('_webserver')
+        web_port =  NewConn.getitem('_webport')
+        web_protocol =  NewConn.getitem('_webprotocol')
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id, web_server)
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0], web_port)
+        if web_protocol == "https:\\\\":
+            win32gui.SendMessage(chk_hwnd , win32con.BM_SETCHECK, 1, 0);
+    except Exception, e:
+        txtProcessor.init_done=True
+    #Reading Current Selected Email.
+    txtProcessor.init_done=True
 
+def SetServerDefaultVals(txtProcessor,*args):
+    import win32con
+    select = 1
+    #Acquiring control of the text box
+    cbprotocol_hwnd =  win32gui.GetDlgItem(txtProcessor.window.hwnd, txtProcessor.other_ids[1])
+    try:
+        web_server = NewConn.getitem('_server')
+        web_port =  NewConn.getitem('_port')
+        web_protocol =  NewConn.getitem('protocol')
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.control_id, web_server)
+        win32gui.SetDlgItemText(txtProcessor.window.hwnd, txtProcessor.other_ids[0], web_port)
+        if web_protocol == "XML-RPCS":
+            select = 2
+        win32gui.SendMessage(cbprotocol_hwnd, win32con.CB_SETCURSEL, select, 0)
+    except Exception, e:
+        txtProcessor.init_done=True
+    #Reading Current Selected Email.
+    txtProcessor.init_done=True
 
 dialog_map = {
                 "IDD_MANAGER" :            (
@@ -1677,8 +1725,14 @@ dialog_map = {
                 ),
 
                 "IDD_SERVER_PORT_DIALOG" : (
+                    (TextProcessor,           "ID_SERVER ID_PORT ID_DROPDOWNLIST_PROTOCOL", SetServerDefaultVals, ()),
+                    (ProtocolComboProcessor,  "ID_DROPDOWNLIST_PROTOCOL", GetConn, ()),
                     (CloseButtonProcessor,    "IDCANCEL"),
-                    (OKButtonProcessor,  "IDOK ID_SERVER ID_PORT IDR_XML_PROTOCOL"),
+                    (OKButtonProcessor,       "IDOK ID_SERVER ID_PORT IDR_XML_PROTOCOL ID_DROPDOWNLIST_PROTOCOL"),
+#
+#                    (RadioButtonProcessor,    "IDR_XML_PROTOCOL", GetConn, ()),
+#                    (RadioButtonProcessor,    "IDR_XMLS_PROTOCOL", GetConn, ()),
+#                    (RadioButtonProcessor,    "IDR_NETRPC_PROTOCOL", GetConn, ()),
                 ),
 
                 "IDD_SYNC" :               (
@@ -1736,8 +1790,11 @@ dialog_map = {
                     (TextProcessor,             "IDEB_OPENDOC_LINK_TEXT", SerachOpenDocuemnt,()),
                 ),
                 "IDD_WEB_SERVER_PORT_DIALOG" :(
+                     (TextProcessor,             "IDET_WEB_SERVER IDET_WEB_PORT IDCB_WEB_SECURE", SetWebDefaultVals, ()),
                      (CloseButtonProcessor,      "IDCANCEL"),
-                     (WEBOKButtonProcessor,      "ID_WEB_OK IDET_WEB_SERVER IDET_WEB_PORT")
+                     (WEBOKButtonProcessor,      "ID_WEB_OK IDET_WEB_SERVER IDET_WEB_PORT IDCB_WEB_SECURE"),
+                     (WEBCHKProcessor,           "IDCB_WEB_SECURE"),
+
                 ),
                 "IDD_SELECT_COUNTRY" : (
                     (CommandButtonProcessor,     "IDPB_SEARCH_COUNTRY IDET_COUNTRY_SEARCH_NAME IDC_LIST_COUNTRY" , SearchCountry, ()),

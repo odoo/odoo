@@ -742,6 +742,15 @@ class users(osv.osv):
     _columns = {
         'context_section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(users, self).write(cr, uid, ids, vals, context=context)
+        section_obj=self.pool.get('crm.case.section')
+        if isinstance(ids, (str, int, long)):
+            ids = [ids]
+        for user in self.browse(cr, uid, ids, context):
+            if user.context_section_id:
+               section_obj.write(cr, uid, [user.context_section_id.id], {'member_ids':[(4, user.id)]},context)
+        return res    
 users()
 
 

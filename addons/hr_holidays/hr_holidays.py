@@ -111,7 +111,7 @@ class hr_holidays(osv.osv):
 
     _columns = {
         'name': fields.char('Description', required=True, size=64),
-        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'), 
+        'state': fields.selection([('draft', 'Draft'), ('confirm', 'Waiting Approval'), ('refuse', 'Refused'),
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')],
             'State', readonly=True, help='When the holiday request is created the state is \'Draft\'.\n It is confirmed by the user and request is sent to admin, the state is \'Waiting Approval\'.\
             If the admin accepts it, the state is \'Approved\'. If it is refused, the state is \'Refused\'.'),
@@ -126,7 +126,7 @@ class hr_holidays(osv.osv):
         'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)]}),
         'number_of_days_temp': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)]}),
         'number_of_days': fields.function(_compute_number_of_days, method=True, string='Number of Days', store=True),
-        'case_id': fields.char('Meeting', size=64),
+        'case_id': fields.many2one('crm.meeting', 'Meeting'),
         'type': fields.selection([('remove','Leave Request'),('add','Allocation Request')], 'Request Type', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose 'Leave Request' if someone wants to take an off-day. \nChoose 'Allocation Request' if you want to increase the number of leaves available for someone"),
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
@@ -290,7 +290,7 @@ class hr_holidays(osv.osv):
         for record in self.browse(cr, uid, ids):
             # Delete the meeting
             if record.case_id:
-                obj_crm_meeting.unlink(cr, uid, [record.case_id])
+                obj_crm_meeting.unlink(cr, uid, [record.case_id.id])
 
             # If a category that created several holidays, cancel all related
             wf_service = netsvc.LocalService("workflow")
