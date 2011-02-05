@@ -52,3 +52,96 @@
            # but other exceptions probably indicate that open() was executed!
            assert False, "safe_eval should not allow calling open() builtin"
 
+
+-
+    "ORM test: verify that parent_store computation are going right"
+-
+    0. Emulate normal behavior of tree structure storing
+-
+    !python {model: res.partner.category}: |
+        # pretend the pool has finished loading to avoid deferring parent_store computation
+        self.pool._init = False
+-
+    "1.0 Setup test partner categories: parent root"
+-
+    !record {model: res.partner.category, id: test_categ_root}:
+        name: Root category
+-
+    "1.1 Setup test partner categories: parent category"
+-
+    !record {model: res.partner.category, id: test_categ_0}:
+        name: Parent category
+        parent_id: test_categ_root
+-
+    "1.2 Setup test partner categories: child 1"
+-
+    !record {model: res.partner.category, id: test_categ_1}:
+        name: Child 1
+        parent_id: test_categ_0
+-
+    "1.3 Setup test partner categories: child 2"
+-
+    !record {model: res.partner.category, id: test_categ_2}:
+        name: Child 2
+        parent_id: test_categ_0
+-
+    "1.4 Setup test partner categories: child 2-1"
+-
+    !record {model: res.partner.category, id: test_categ_21}:
+        name: Child 2-1
+        parent_id: test_categ_2
+-
+    2. Duplicate the parent category and verify that the children have been duplicated too and are below the new parent
+-
+    !python {model: res.partner.category}: |
+        new_id = self.copy(cr, uid, ref('test_categ_0'))
+        new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
+        assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
+        assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
+-
+    3. Duplicate the children then reassign them to the new parent (1st method) and check the parent_store structure.
+-
+    !python {model: res.partner.category}: |
+        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
+        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
+        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': []})
+        self.write(cr, uid, [new_child1_id, new_child2_id], {'parent_id': new_id})
+        new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
+        assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
+        assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
+-
+    4. Duplicate the children then reassign them to the new parent (2nd method) and check the parent_store structure.
+-
+    !python {model: res.partner.category}: |
+        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
+        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': [(6,0,[new_child1_id, new_child2_id])]})
+        new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
+        assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
+        assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
+-
+    5. Duplicate the children then reassign them to the new parent (3rd method) and make sure the parent_store structure is still right.
+-
+    !python {model: res.partner.category}: |
+        new_child1_id = self.copy(cr, uid, ref('test_categ_1'))
+        new_child2_id = self.copy(cr, uid, ref('test_categ_2'))
+        new_id = self.copy(cr, uid, ref('test_categ_0'), {'child_ids': []})
+        self.write(cr, uid, [new_id], {'child_ids': [(4,new_child1_id), (4,new_child2_id)]})
+        new_struct = self.search(cr, uid, [('parent_id', 'child_of', new_id)])
+        assert len(new_struct) == 4, "After duplication, the new object must have the childs records"
+        old_struct = self.search(cr, uid, [('parent_id', 'child_of', ref('test_categ_0'))])
+        assert len(old_struct) == 4, "After duplication, previous record must have old childs records only"
+        assert (not set(new_struct).intersection(old_struct)), "After duplication, nodes should not be mixed"
+-
+    6. Restore pool state after the test
+-
+    !python {model: res.partner.category}: |
+        self.pool._init = True
+
