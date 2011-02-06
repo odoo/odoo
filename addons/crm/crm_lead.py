@@ -297,6 +297,16 @@ class crm_lead(crm_case, osv.osv):
                 data = {'probability': stage_obj.probability}
                 self.write(cr, uid, ids, data)
         return stage
+        
+    def stage_previous(self, cr, uid, ids, context=None):
+        stage = super(crm_lead, self).stage_previous(cr, uid, ids, context=context)
+        if stage:
+            stage_obj = self.pool.get('crm.case.stage').browse(cr, uid, stage, context=context)
+            if stage_obj.on_change:
+                data = {'probability': stage_obj.probability}
+                self.write(cr, uid, ids, data)
+        return stage
+
     
     def message_new(self, cr, uid, msg, context=None):
         """
