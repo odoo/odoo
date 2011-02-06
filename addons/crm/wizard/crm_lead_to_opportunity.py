@@ -36,6 +36,34 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         'opportunity_ids': fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
     }
     
+    def default_get(self, cr, uid, fields, context=None):
+		"""
+			Default get for name, opportunity_ids
+			if there is an exisitng  partner link to the lead, find all existing opportunity link with this partnet to merge 
+			all information together
+		"""
+		lead_obj = self.pool.get('crm.lead')
+		partner_id = False
+
+ 
+		res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
+		opportunities = res.get('opportunity_ids') or []
+		name = 'convert'
+		if res.get('partner_id'):
+			name = 'merge'
+			partner_id = res.get('partner_id')
+			ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
+			opportunities += ids
+			
+                
+		if 'name' in fields:
+			res.update({'name' : name})
+		if 'opportunity_ids' in fields:
+			res.update({'opportunity_ids': opportunities})
+		
+
+		return res
+    
     def view_init(self, cr, uid, fields, context=None):
         """
         This function checks for precondition before wizard executes

@@ -66,6 +66,7 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : default values of fields.
         """
+        print "SUPER DEFAULT GET"
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
