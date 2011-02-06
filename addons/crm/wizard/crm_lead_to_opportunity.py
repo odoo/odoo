@@ -30,8 +30,8 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     _inherit = 'crm.lead2partner'
 
     _columns = {
-        'partner_id': fields.many2one('res.partner', 'Partner'),
-        'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner')], 'Action'),
+        #'partner_id': fields.many2one('res.partner', 'Partner'),
+        #'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner')], 'Action'),
         'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
     }
@@ -50,9 +50,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 		opportunities = res.get('opportunity_ids') or []
 		name = 'convert'
 		if res.get('partner_id'):
-			name = 'merge'
+			
 			partner_id = res.get('partner_id')
 			ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
+			if ids:
+				name = 'merge'
 			opportunities += ids
 			
                 

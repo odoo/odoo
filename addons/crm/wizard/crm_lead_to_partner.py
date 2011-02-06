@@ -31,7 +31,8 @@ class crm_lead2partner(osv.osv_memory):
 
     _columns = {
         'action': fields.selection([('exist', 'Link to an existing partner'), \
-                                    ('create', 'Create a new partner')], \
+                                    ('create', 'Create a new partner'), \
+                                    ('nothing', 'Do not link to a partner')], \
                                     'Action', required=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'msg': fields.text('Message', readonly=True)
@@ -66,7 +67,6 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : default values of fields.
         """
-        print "SUPER DEFAULT GET"
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
