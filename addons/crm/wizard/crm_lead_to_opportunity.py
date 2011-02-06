@@ -56,6 +56,28 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 Leads Could not convert into Opportunity"))
         return False
     
+    def _convert(self, cr, uid, ids, lead, partner_id, stage_ids, context=None):
+        leads = self.pool.get('crm.lead')
+        vals = {
+            'planned_revenue': lead.planned_revenue,
+            'probability': lead.probability,
+            'name': lead.name,
+            'partner_id': partner_id,
+            'user_id': (lead.user_id and lead.user_id.id),
+            'type': 'opportunity',
+            'stage_id': stage_ids and stage_ids[0] or False,
+            'date_action': time.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        lead.write(vals, context=context)
+        leads.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
+        if lead.partner_id:
+            msg_ids = [ x.id for x in lead.message_ids]
+            self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
+                        'partner_id': lead.partner_id.id
+                    }, context=context)
+            leads.log(cr, uid, lead.id, _("Lead '%s' has been converted to an opportunity.") % lead.name)
+        
+    
     def action_apply(self, cr, uid, ids, context=None):
         """
         This converts lead to opportunity and opens Opportunity view
@@ -98,27 +120,8 @@ Leads Could not convert into Opportunity"))
                 partner_ids = self._create_partner(cr, uid, ids, context=context)
                 
             partner_id = partner_ids and partner_ids[0] or data.partner_id.id 
-            if data.name == 'convert':
-                vals = {
-                    'planned_revenue': lead.planned_revenue,
-                    'probability': lead.probability,
-                    'name': lead.name,
-                    'partner_id': partner_id,
-                    'user_id': (lead.user_id and lead.user_id.id),
-                    'type': 'opportunity',
-                    'stage_id': stage_ids and stage_ids[0] or False,
-                    'date_action': time.strftime('%Y-%m-%d %H:%M:%S')
-                }
-                lead.write(vals, context=context)
-                leads.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
-                if lead.partner_id:
-                    msg_ids = [ x.id for x in lead.message_ids]
-                    self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
-                        'partner_id': lead.partner_id.id
-                    }, context=context)
-                leads.log(cr, uid, lead.id,
-                    _("Lead '%s' has been converted to an opportunity.") % lead.name)
-            elif data.name == 'merge':
+            self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
+            if data.name == 'merge':
                 merge_obj = self.pool.get('crm.merge.opportunity')
                 context.update({'opportunity_ids': data.opportunity_ids})
                 return merge_obj.action_merge(cr, uid, ids, context=context)
