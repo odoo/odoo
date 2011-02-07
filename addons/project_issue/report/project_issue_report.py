@@ -1,7 +1,7 @@
 
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -16,7 +16,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -102,7 +102,7 @@ class project_issue_report(osv.osv):
                     date_trunc('day',c.create_date) as create_date,
                     extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
-                    (SELECT count(id) FROM mailgate_message WHERE model='project.issue' AND res_id=c.id) AS email
+                    (SELECT count(id) FROM email_message WHERE model='project.issue' AND res_id=c.id) AS email
                 FROM
                     project_issue c
             )""")
