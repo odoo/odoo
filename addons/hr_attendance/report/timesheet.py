@@ -80,7 +80,6 @@ class report_custom(report_rml):
                         attendances.append({'name': n_monday.strftime('%Y-%m-%d %H:%M:%S'), 'action': 'sign_out'})
                     # sum up the attendances' durations
                     ldt = None
-                    wh = 0.0
                     for att in attendances:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
