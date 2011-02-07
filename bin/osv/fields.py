@@ -502,7 +502,7 @@ class one2many(_column):
                 cr.execute('update '+_table+' set '+self._fields_id+'=null where id=%s', (act[1],))
             elif act[0] == 4:
                 # Must use write() to recompute parent_store structure if needed
-                obj.write(cr, user, act[1], {self._fields_id:id}, context=context or {})
+                obj.write(cr, user, [act[1]], {self._fields_id:id}, context=context or {})
             elif act[0] == 5:
                 cr.execute('update '+_table+' set '+self._fields_id+'=null where '+self._fields_id+'=%s', (id,))
             elif act[0] == 6:
