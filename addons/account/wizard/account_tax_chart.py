@@ -54,20 +54,20 @@ class account_tax_chart(osv.osv_memory):
         period_obj = self.pool.get('account.period')
         if context is None:
             context = {}
-        data = self.read(cr, uid, ids, [], context=context)[0]
+        data = self.browse(cr, uid, ids, context=context)[0]
         result = mod_obj.get_object_reference(cr, uid, 'account', 'action_tax_code_tree')
         id = result and result[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
-        if data['period_id']:
-            fiscalyear_id = period_obj.read(cr, uid, [data['period_id']], context=context)[0]['fiscalyear_id'][0]
-            result['context'] = str({'period_id': data['period_id'], \
+        if data.period_id:
+            fiscalyear_id = period_obj.read(cr, uid, [data.period_id.id], context=context)[0]['fiscalyear_id'][0]
+            result['context'] = str({'period_id': data.period_id.id, \
                                      'fiscalyear_id': fiscalyear_id, \
-                                        'state': data['target_move']})
+                                        'state': data.target_move})
         else:
-            result['context'] = str({'state': data['target_move']})
+            result['context'] = str({'state': data.target_move})
 
-        if data['period_id']:
-            period_code = period_obj.read(cr, uid, [data['period_id']], context=context)[0]['code']
+        if data.period_id:
+            period_code = period_obj.read(cr, uid, [data.period_id.id], context=context)[0]['code']
             result['name'] += period_code and (':' + period_code) or ''
         return result
 
