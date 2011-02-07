@@ -46,7 +46,6 @@
         'board_mrp_procurement_view.xml',
     ],
     'demo_xml': ['stock_orderpoint.xml'],
-    'test': ['test/procurement_test.yml'],
     'installable': True,
     'active': False,
     'certificate': '00954248826881074509',
