@@ -43,7 +43,7 @@ class stock_move_track(osv.osv_memory):
         @param context: A standard dictionary
         @return:
         """
-        datas = self.read(cr, uid, ids)[0]
+        datas = self.read(cr, uid, ids, context=context)[0]
         move_obj = self.pool.get('stock.move')
         move_obj._track_lines(cr, uid, context['active_id'], datas, context=context)
         return {'type': 'ir.actions.act_window_close'}
