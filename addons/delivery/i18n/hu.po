@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-02 22:31+0000\n"
+"PO-Revision-Date: 2011-02-03 12:10+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-03 04:43+0000\n"
+"X-Launchpad-Export-Date: 2011-02-05 05:00+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: delivery
@@ -118,6 +118,10 @@ msgid ""
 "can define several price lists for one delivery method, per country or a "
 "zone in a specific country defined by a postal code range."
 msgstr ""
+"A szállítási díj lista lehetővé teszi a szállítás költségének és díjának "
+"kiszámítását a termékek súlya és egyéb kritériumok alapján. Egy szállítási "
+"módra több árlistát is meghatározhat, országonként vagy az irányítószámok "
+"szerint kialakított országon belüli zónánként."
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -144,11 +148,13 @@ msgstr "Készletmozgás"
 #, python-format
 msgid "No line matched this order in the choosed delivery grids !"
 msgstr ""
+"A kiválasztott szállítási tarifatáblázatban nincs a megrendeléshez "
+"illeszkedő sor."
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
-msgstr ""
+msgstr "Fuvarozó hiv."
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
@@ -162,6 +168,9 @@ msgid ""
 "Each delivery method can be assigned to a price list which computes the "
 "price of the delivery according to the products sold or delivered."
 msgstr ""
+"Itt hozhatja létre és kezelheti az értékesítéshez szükséges szállítási "
+"módokat. Minden szállítási mód hozzárendelhető egy árlistához, amely az "
+"eladott vagy kiszállított termékek alapján kiszámítja a szállítási díjat."
 
 #. module: delivery
 #: code:addons/delivery/stock.py:98
@@ -224,6 +233,13 @@ msgid ""
 "\n"
 "     "
 msgstr ""
+"Ez a modul lehetővé teszi a szállítási módok megadását a vevői "
+"megrendelésekben és a szállítólevelekben.\n"
+"     Meghatározhatja a saját fuvarozóját és szállítási tarifatáblázatát.\n"
+"     Ha szállítólevél alapján számláznak, a rendszer létrehozza a szállítási "
+"díj sort a számlában, és kiszámítja annak értékét.\n"
+"\n"
+"     "
 
 #. module: delivery
 #: view:delivery.grid.line:0
@@ -281,7 +297,7 @@ msgstr "Súly"
 msgid ""
 "If the active field is set to False, it will allow you to hide the delivery "
 "carrier without removing it."
-msgstr ""
+msgstr "Ha az aktív mező nincs bejelölve, nem használható a fuvarozó."
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
@@ -340,7 +356,7 @@ msgstr "Feltétel"
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
-msgstr "Beszerzési ár"
+msgstr "Bekerülési érték"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -373,7 +389,7 @@ msgstr "Indulási hely irányítószáma"
 #: help:sale.order,carrier_id:0
 msgid ""
 "Complete this field if you plan to invoice the shipping based on picking."
-msgstr ""
+msgstr "Töltse ki ezt a mezőt, ha szállítólevél alapján számláznak."
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -428,7 +444,7 @@ msgstr "Ár"
 #: code:addons/delivery/wizard/delivery_sale_order.py:95
 #, python-format
 msgid "No grid matching for this carrier !"
-msgstr ""
+msgstr "Nincs ehhez a fuvarozóhoz illeszkedő tarifatáblázat!"
 
 #. module: delivery
 #: model:ir.ui.menu,name:delivery.menu_delivery
@@ -450,7 +466,7 @@ msgstr "="
 #: code:addons/delivery/stock.py:99
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
-msgstr ""
+msgstr "%s (kód: %d) fuvarozónak nincs szállítási tarifatáblázata!"
 
 #. module: delivery
 #: field:delivery.grid.line,name:0
@@ -475,7 +491,7 @@ msgstr ""
 #. module: delivery
 #: field:sale.order,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: delivery
 #: code:addons/delivery/wizard/delivery_sale_order.py:66
@@ -483,11 +499,13 @@ msgstr ""
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr ""
+"A megrendelésnek tervezet állapotban kell lenni ahhoz, hogy a szállítási díj "
+"sort létre lehessen hozni benne."
 
 #. module: delivery
 #: model:ir.module.module,shortdesc:delivery.module_meta_information
 msgid "Carriers and deliveries"
-msgstr "Fuvarozók és szállítók"
+msgstr "Fuvarozók és szállítások"
 
 #. module: delivery
 #: field:delivery.carrier,grids_id:0
