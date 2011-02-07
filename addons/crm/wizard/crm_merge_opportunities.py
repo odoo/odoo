@@ -26,6 +26,25 @@ class crm_merge_opportunity(osv.osv_memory):
 
     _name = 'crm.merge.opportunity'
     _description = 'Merge two Opportunities'
+    
+    def _get_first_not_null_id(self, attr, ops):
+        for op in ops:
+            if hasattr(op, attr) and getattr(op, attr):
+                return getattr(op, attr).id
+        return False
+        
+    def _get_first_not_null(self, attr, ops):
+        for op in ops:
+            if hasattr(op, attr) and getattr(op, attr):
+                return getattr(op, attr)
+        return False
+                
+    def _concat_all(self, attr, ops):
+        result = ''
+        for op in ops:
+            if hasattr(op, attr) and getattr(op, attr):
+                result += ' # ' + getattr(op, attr)
+        return result
 
     def action_merge(self, cr, uid, ids, context=None):
         """
@@ -40,6 +59,7 @@ class crm_merge_opportunity(osv.osv_memory):
         """
         record_id = context and context.get('active_id') or False
         opp_obj = self.pool.get('crm.lead')
+        message_obj = self.pool.get('mailgate.message')
         if self.datas:
             obj_opportunity = self.browse(cr, uid, ids[0], context=context)
             if hasattr(obj_opportunity, 'opportunity_ids'):
@@ -49,52 +69,71 @@ class crm_merge_opportunity(osv.osv_memory):
         
         if len(op_ids) <= 1:
             raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
-        elif op_ids[0].id == record_id:
-            op_ids = op_ids[1:]
-        
-        first_opp = opp_obj.browse(cr, uid, record_id, context=context)
-        first_opp_data = {}
-
-        for opp in op_ids:
-            first_opp_data = {
-                'partner_id': first_opp.partner_id.id or opp.partner_id.id,
-                'stage_id': first_opp.stage_id.id or opp.stage_id.id, 
-                'section_id': first_opp.section_id.id or opp.section_id.id,
-                'categ_id': first_opp.categ_id.id or opp.categ_id.id,
-                'type_id': first_opp.type_id.id or opp.type_id.id,
-                'channel_id': first_opp.channel_id.id or opp.channel_id.id,
-                'user_id': first_opp.user_id.id or opp.user_id.id,
-                'country_id': first_opp.country_id.id or opp.country_id.id, 
-                'state_id': first_opp.state_id.id or opp.state_id.id,
-                'partner_address_id': first_opp.partner_address_id.id or opp.partner_address_id.id,
-                'priority': first_opp.priority or opp.priority,
-                'title': first_opp.title.id or opp.title.id,
-                'function': first_opp.function or opp.function,
-                'email_from': first_opp.email_from or opp.email_from,
-                'phone': first_opp.phone or opp.phone,
-                'description': first_opp.description or opp.description,
-                'partner_name': first_opp.partner_name or opp.partner_name,
-                'street': first_opp.street or opp.street,
-                'street2': first_opp.street2 or opp.street2,
-                'zip': first_opp.zip or opp.zip,
-                'city': first_opp.city or opp.city,
-                'fax': first_opp.fax or opp.fax,
-                'mobile': first_opp.mobile or opp.mobile,
-                'email_cc': ','.join(filter(lambda x: x, [opp.email_cc, first_opp.email_cc])),
-                'type': 'opportunity', 
-                'state': 'open'
+       
+        first_opp = op_ids[0]
+        data = {
+                'partner_id': self._get_first_not_null_id('partner_id', op_ids),  # !!
+                'title': self._get_first_not_null_id('title', op_ids),
+                'name' : self._concat_all('name', op_ids),  #not lost
+                'categ_id' : self._get_first_not_null_id('categ_id', op_ids), # !!
+                'channel_id' : self._get_first_not_null_id('channel_id', op_ids), # !!
+                'city' : self._get_first_not_null('city', op_ids),  # !!
+                'company_id' : self._get_first_not_null_id('company_id', op_ids), #!!
+                'contact_name' : self._concat_all('contact_name', op_ids), #not lost
+                'country_id' : self._get_first_not_null_id('country_id', op_ids), #!!
+                'partner_address_id' : self._get_first_not_null_id('partner_address_id', op_ids), #!!
+                'partner_assigned_id' : self._get_first_not_null_id('partner_assigned_id', op_ids), #!!
+                'type_id' : self._get_first_not_null_id('type_id', op_ids), #!!
+                'user_id' : self._get_first_not_null_id('user_id', op_ids), #!!
+                'section_id' : self._get_first_not_null_id('section_id', op_ids), #!!
+                'state_id' : self._get_first_not_null_id('state_id', op_ids), 
+                'description' : self._concat_all('description', op_ids),  #not lost
+                'email' : self._get_first_not_null('email', op_ids), # !!
+                'fax' : self._get_first_not_null('fax', op_ids),	
+                'mobile' : self._get_first_not_null('mobile', op_ids),	
+                'partner_latitude' : self._get_first_not_null('partner_latitude', op_ids),	
+                'partner_longitude' : self._get_first_not_null('partner_longitude', op_ids),	
+                'partner_name' : self._get_first_not_null('partner_name', op_ids),	
+                'phone' : self._get_first_not_null('phone', op_ids),	
+                'probability' : self._get_first_not_null('probability', op_ids),	
+                'planned_revenue' : self._get_first_not_null('planned_revenue', op_ids),	
+                'street' : self._get_first_not_null('street', op_ids),	
+                'street2' : self._get_first_not_null('street2', op_ids),	
+                'zip' : self._get_first_not_null('zip', op_ids),	
+                
             }
+        
+        
+        
+        #copy message into the first opportunity
+        for opp in op_ids[1:]:
             for history in opp.message_ids:
-                if history.history:
-                    new_history = message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
-            opp_obj._history(cr, uid, [first_opp], _('Merged from Opportunity: %s : Information lost : [Partner: %s, Stage: %s, Section: %s, Salesman: %s]') % (opp.name, opp.partner_id.name or '', opp.stage_id.name or '', opp.section_id.name or '', opp.user_id.name or ''))
+                new_history = message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
+        #Notification about loss of information
+        for opp in op_ids:
+            opp_obj._history(cr, uid, [first_opp], _('Merged from Opportunity: %s : Information lost : [Partner: %s, Stage: %s, Section: %s, Salesman: %s, Category: %s, Channel: %s, City: %s, Company: %s, Country: %s, Email: %s, Phone number: %s, Contact name: %s]')  
+                    % ( opp.name, opp.partner_id.name or '', 
+                        opp.stage_id.name or '', 
+                        opp.section_id.name or '', 
+                        opp.user_id.name or '',
+                        opp.categ_id.name or '', 
+                        opp.channel_id.name or '', 
+                        opp.city or '', 
+                        opp.company_id.name or '',
+                        opp.country_id.name or '', 
+                        opp.email or '', 
+                        opp.phone or '',
+                        opp.contact_name or ''))
+                    
+        #data.update({'message_ids' : [(6, 0 ,self._concat_o2m('message_ids', op_ids))]})
+        opp_obj.write(cr, uid, [first_opp.id], data)
         
-        opp_obj.write(cr, uid, [first_opp.id], first_opp_data)
-        
-        unlink_ids = map(lambda x: x.id, op_ids)
+        unlink_ids = map(lambda x: x.id, op_ids[1:])
         opp_obj.unlink(cr, uid, unlink_ids)
         
         models_data = self.pool.get('ir.model.data')
+
+
 
         # Get Opportunity views
         result = models_data._get_id(
