@@ -116,10 +116,7 @@ class account_analytic_account(osv.osv):
             context = {}
 
         for account in self.browse(cr, uid, ids, context=context):
-            for child in account.child_ids:
-                if child.state == 'template':
-                    account.child_ids.pop(account.child_ids.index(child))
-            result[account.id] = map(lambda x: x.id, account.child_ids)
+            result[account.id] = map(lambda x: x.id, [child for child in account.child_ids if child.state != 'template'])
 
         return result
 
@@ -227,16 +224,13 @@ class account_analytic_account(osv.osv):
             cr.execute("select analytic_account_id from project_project")
             project_ids = [x[0] for x in cr.fetchall()]
             return self.name_get(cr, uid, project_ids, context=context)
-        account = self.search(cr, uid, [('code', '=', name)]+args, limit=limit, context=context)
+        account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
         if not account:
-            if context.get('analytic_act_window', False):
-                account = self.search(cr, uid, [('id', '=', context['active_id'])]+args, limit=limit, context=context)
-            else:
-                account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)]+args, limit=limit, context=context)
+            account = self.search(cr, uid, [('name', 'ilike', '%%%s%%' % name)] + args, limit=limit, context=context)
             newacc = account
             while newacc:
                 newacc = self.search(cr, uid, [('parent_id', 'in', newacc)]+args, limit=limit, context=context)
-                account+=newacc
+                account += newacc
         return self.name_get(cr, uid, account, context=context)
 
 account_analytic_account()

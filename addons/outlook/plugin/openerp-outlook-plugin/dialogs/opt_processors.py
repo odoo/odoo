@@ -94,7 +94,7 @@ class DBComboProcessor(ComboProcessor):
                                         "EDIT",
                                         db,
                                         dwStyle,
-                                        67,80,180,20,
+                                        127,80,235,20,
                                         parent,
                                         7000,
                                         0,

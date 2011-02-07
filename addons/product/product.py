@@ -567,7 +567,7 @@ class product_product(osv.osv):
                ptrn=re.compile('(\[(.*?)\])')
                res = ptrn.search(name)
                if res:
-                   ids = self.search(cr, user, [('default_code','ilike',res.group(2))]+ args, limit=limit, context=context)
+                   ids = self.search(cr, user, [('default_code','=', res.group(2))] + args, limit=limit, context=context)
         else:
             ids = self.search(cr, user, args, limit=limit, context=context)
         result = self.name_get(cr, user, ids, context=context)

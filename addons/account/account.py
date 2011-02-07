@@ -301,11 +301,10 @@ class account_account(osv.osv):
                 for fn in field_names:
                     sums.setdefault(current.id, {})[fn] = accounts.get(current.id, {}).get(fn, 0.0)
                     for child in current.child_id:
-                        if sums.get(child.id, False):
-                            if child.company_id.currency_id.id == current.company_id.currency_id.id:
-                                sums[current.id][fn] += sums[child.id][fn]
-                            else:
-                                sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
+                        if child.company_id.currency_id.id == current.company_id.currency_id.id:
+                            sums[current.id][fn] += sums[child.id][fn]
+                        else:
+                            sums[current.id][fn] += currency_obj.compute(cr, uid, child.company_id.currency_id.id, current.company_id.currency_id.id, sums[child.id][fn], context=context)
             res = {}
             null_result = dict((fn, 0.0) for fn in field_names)
             for id in ids:
@@ -334,7 +333,7 @@ class account_account(osv.osv):
         return result
 
     def _get_level(self, cr, uid, ids, field_name, arg, context=None):
-        res={}
+        res = {}
         accounts = self.browse(cr, uid, ids, context=context)
         for account in accounts:
             level = 0
@@ -475,7 +474,7 @@ class account_account(osv.osv):
         for record in reads:
             name = record['name']
             if record['code']:
-                name = record['code'] + ' '+name
+                name = record['code'] + ' ' + name
             res.append((record['id'], name))
         return res
 
@@ -743,9 +742,7 @@ class account_journal(osv.osv):
         }
 
         res = {}
-
         view_id = type_map.get(type, 'account_journal_view')
-
         user = user_pool.browse(cr, uid, uid)
         if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
             view_id = 'account_journal_bank_view_multi'
@@ -756,7 +753,6 @@ class account_journal(osv.osv):
             'centralisation':type == 'situation',
             'view_id':data.res_id,
         })
-
         return {
             'value':res
         }
@@ -806,19 +802,28 @@ class account_fiscalyear(osv.osv):
         (_check_fiscal_year, 'Error! You cannot define overlapping fiscal years',['date_start', 'date_stop'])
     ]
 
-    def create_period3(self,cr, uid, ids, context=None):
+    def create_period3(self, cr, uid, ids, context=None):
         return self.create_period(cr, uid, ids, context, 3)
 
-    def create_period(self,cr, uid, ids, context=None, interval=1):
+    def create_period(self, cr, uid, ids, context=None, interval=1):
+        period_obj = self.pool.get('account.period')
         for fy in self.browse(cr, uid, ids, context=context):
             ds = datetime.strptime(fy.date_start, '%Y-%m-%d')
-            while ds.strftime('%Y-%m-%d')<fy.date_stop:
+            period_obj.create(cr, uid, {
+                    'name': 'Opening Period',
+                    'code': ds.strftime('00/%Y'),
+                    'date_start': ds + relativedelta(years=-1, days=-1),
+                    'date_stop': ds + relativedelta(years=-1),
+                    'special': True,
+                    'fiscalyear_id': fy.id,
+                })
+            while ds.strftime('%Y-%m-%d') < fy.date_stop:
                 de = ds + relativedelta(months=interval, days=-1)
 
-                if de.strftime('%Y-%m-%d')>fy.date_stop:
+                if de.strftime('%Y-%m-%d') > fy.date_stop:
                     de = datetime.strptime(fy.date_stop, '%Y-%m-%d')
 
-                self.pool.get('account.period').create(cr, uid, {
+                period_obj.create(cr, uid, {
                     'name': ds.strftime('%m/%Y'),
                     'code': ds.strftime('%m/%Y'),
                     'date_start': ds.strftime('%Y-%m-%d'),
@@ -1911,7 +1916,7 @@ class account_tax(osv.osv):
             totalex -= r.get('amount', 0.0)
         totlex_qty = 0.0
         try:
-            totlex_qty=totalex/quantity
+            totlex_qty = totalex/quantity
         except:
             pass
         tex = self._compute(cr, uid, tex, totlex_qty, quantity, address_id=address_id, product=product, partner=partner)
@@ -2450,6 +2455,8 @@ class account_chart_template(osv.osv):
         'property_account_expense': fields.many2one('account.account.template','Expense Account on Product Template'),
         'property_account_income': fields.many2one('account.account.template','Income Account on Product Template'),
         'property_reserve_and_surplus_account': fields.many2one('account.account.template', 'Reserve and Profit/Loss Account', domain=[('type', '=', 'payable')], help='This Account is used for transferring Profit/Loss(If It is Profit: Amount will be added, Loss: Amount will be deducted.), Which is calculated from Profilt & Loss Report'),
+        'property_account_income_opening': fields.many2one('account.account.template','Opening Entries Income Account'),
+        'property_account_expense_opening': fields.many2one('account.account.template','Opening Entries Expense Account'),
     }
 
 account_chart_template()
@@ -2682,6 +2689,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         obj_data = self.pool.get('ir.model.data')
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_tax_code = self.pool.get('account.tax.code')
+        obj_tax_code_template = self.pool.get('account.tax.code.template')
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -2694,9 +2702,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         todo_dict = {}
 
         #create all the tax code
-        children_tax_code_template = self.pool.get('account.tax.code.template').search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
+        children_tax_code_template = obj_tax_code_template.search(cr, uid, [('parent_id','child_of',[tax_code_root_id])], order='id')
         children_tax_code_template.sort()
-        for tax_code_template in self.pool.get('account.tax.code.template').browse(cr, uid, children_tax_code_template, context=context):
+        for tax_code_template in obj_tax_code_template.browse(cr, uid, children_tax_code_template, context=context):
             vals={
                 'name': (tax_code_root_id == tax_code_template.id) and obj_multi.company_id.name or tax_code_template.name,
                 'code': tax_code_template.code,
@@ -2807,11 +2815,19 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             seq_id_purchase_refund = obj_sequence.search(cr, uid, [('name','=','Purchase Refund Journal')])
             if seq_id_purchase_refund:
                 seq_id_purchase_refund = seq_id_purchase_refund[0]
+            seq_id_opening = obj_sequence.search(cr, uid, [('name','=','Opening Entries Journal')])
+            if seq_id_opening:
+                seq_id_opening = seq_id_opening[0]
+            seq_id_miscellaneous = obj_sequence.search(cr, uid, [('name','=','Miscellaneous Journal')])
+            if seq_id_miscellaneous:
+                seq_id_miscellaneous = seq_id_miscellaneous[0]
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
             seq_id_sale_refund = seq_id
             seq_id_purchase_refund = seq_id
+            seq_id_opening = seq_id
+            seq_id_miscellaneous = seq_id
 
         vals_journal['view_id'] = view_id
 
@@ -2872,12 +2888,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
 
-
-#        if obj_multi.property_account_receivable:
-#            vals_journal.update({
-#                'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id],
-#                'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_categ.id]
-#            })
         obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Purchase Refund Journal
@@ -2896,13 +2906,43 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             vals_journal['default_credit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
             vals_journal['default_debit_account_id'] = acc_template_ref[obj_multi.chart_template_id.property_account_expense_categ.id]
 
-
-#        if obj_multi.property_account_payable:
-#            vals_journal.update({
-#                'default_credit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id],
-#                'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id]
-#            })
         obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Miscellaneous Journal
+        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')])
+        data = obj_data.browse(cr, uid, data_id[0], context=context)
+        view_id = data.res_id
+
+        analitical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
+        analitical_journal_miscellaneous = analitical_miscellaneous_ids and analitical_miscellaneous_ids[0] or False
+
+        vals_journal = {
+            'view_id': view_id,
+            'name': _('Miscellaneous Journal'),
+            'type': 'general',
+            'code': _('MISC'),
+            'sequence_id': seq_id_miscellaneous,
+            'analytic_journal_id': analitical_journal_miscellaneous,
+            'company_id': company_id
+        }
+
+        obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Opening Entries Journal
+        if obj_multi.chart_template_id.property_account_income_opening and obj_multi.chart_template_id.property_account_expense_opening:
+            vals_journal = {
+                'view_id': view_id,
+                'name': _('Opening Entries Journal'),
+                'type': 'situation',
+                'code': _('TOEJ'),
+                'sequence_id': seq_id_opening,
+                'company_id': company_id,
+                'centralisation': True,
+                'default_credit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_income_opening.id],
+                'default_debit_account_id': acc_template_ref[obj_multi.chart_template_id.property_account_expense_opening.id]
+                }
+            obj_journal.create(cr, uid, vals_journal, context=context)
+
 
         # Bank Journals
         data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])

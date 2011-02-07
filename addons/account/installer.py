@@ -382,7 +382,6 @@ class account_installer(osv.osv_memory):
         data = mod_obj.browse(cr, uid, data_id[0], context=context)
         view_id = data.res_id
         seq_id = obj_sequence.search(cr,uid,[('name', '=', 'Account Journal')], context=context)[0]
-
         if seq_journal:
             seq_sale = {
                 'name': 'Sale Journal',
@@ -416,12 +415,29 @@ class account_installer(osv.osv_memory):
                 'company_id': company_id.id
             }
             seq_id_purchase_refund = obj_sequence.create(cr, uid, seq_refund_purchase, context=context)
+            seq_opening_journal = {
+                'name': 'Opening Entries Journal',
+                'code': 'account.journal',
+                'prefix': 'OPEJ/%(year)s/',
+                'padding': 3,
+                'company_id': company_id.id
+            }
+            seq_id_opening = obj_sequence.create(cr, uid, seq_opening_journal, context=context)
+            seq_miscellaneous_journal = {
+                'name': 'Miscellaneous Journal',
+                'code': 'account.journal',
+                'prefix': 'MISJ/%(year)s/',
+                'padding': 3,
+                'company_id': company_id.id
+            }
+            seq_id_miscellaneous = obj_sequence.create(cr, uid, seq_miscellaneous_journal, context=context)
         else:
             seq_id_sale = seq_id
             seq_id_purchase = seq_id
             seq_id_sale_refund = seq_id
             seq_id_purchase_refund = seq_id
-
+            seq_id_opening = seq_id
+            seq_id_miscellaneous = seq_id
         vals_journal['view_id'] = view_id
 
         #Sales Journal
@@ -507,6 +523,41 @@ class account_installer(osv.osv_memory):
                 'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_categ.id]
             })
         obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Miscellaneous Journal
+        data_id = mod_obj.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_view')], context=context)
+        data = mod_obj.browse(cr, uid, data_id[0], context=context)
+        view_id_misc = data.res_id
+
+        analitical_miscellaneous_ids = analytic_journal_obj.search(cr, uid, [('type', '=', 'situation')], context=context)
+        analitical_journal_miscellaneous = analitical_miscellaneous_ids and analitical_miscellaneous_ids[0] or False
+
+        vals_journal = {
+            'view_id': view_id_misc,
+            'name': _('Miscellaneous Journal'),
+            'type': 'general',
+            'code': _('MISC'),
+            'sequence_id': seq_id_miscellaneous,
+            'analytic_journal_id': analitical_journal_miscellaneous,
+            'company_id': company_id.id
+        }
+
+        obj_journal.create(cr, uid, vals_journal, context=context)
+
+        # Opening Entries Journal
+        if obj_multi.property_account_income_opening and obj_multi.property_account_expense_opening:
+            vals_journal = {
+                'view_id': view_id_misc,
+                'name': _('Opening Entries Journal'),
+                'type': 'situation',
+                'code': _('OPEJ'),
+                'sequence_id': seq_id_opening,
+                'company_id': company_id.id,
+                'centralisation': True,
+                'default_credit_account_id': acc_template_ref[obj_multi.property_account_income_opening.id],
+                'default_debit_account_id': acc_template_ref[obj_multi.property_account_expense_opening.id]
+                }
+            obj_journal.create(cr, uid, vals_journal, context=context)
 
         # Bank Journals
         view_id_cash = obj_acc_journal_view.search(cr, uid, [('name', '=', 'Bank/Cash Journal View')], context=context)[0] #TOFIX: Why put fixed name ?

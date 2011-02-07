@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-27 02:54+0000\n"
+"PO-Revision-Date: 2011-02-03 07:56+0000\n"
 "Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-28 04:45+0000\n"
+"X-Launchpad-Export-Date: 2011-02-05 05:00+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/stock/product.py:76
 #, python-format
 msgid "Variation Account is not specified for Product Category: %s"
-msgstr ""
+msgstr "产品种类“%s”没有指定库存变动科目"
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -215,7 +215,7 @@ msgstr "无效"
 #. module: stock
 #: help:stock.tracking,serial:0
 msgid "Other reference or serial number"
-msgstr "其它参考或序列号"
+msgstr "其它编号或序列号"
 
 #. module: stock
 #: field:stock.move,origin:0
@@ -232,7 +232,7 @@ msgstr ""
 #. module: stock
 #: view:stock.tracking:0
 msgid "Pack Identification"
-msgstr ""
+msgstr "包装单标识"
 
 #. module: stock
 #: view:stock.move:0
@@ -240,7 +240,7 @@ msgstr ""
 #: field:stock.picking,name:0
 #: view:stock.production.lot:0
 msgid "Reference"
-msgstr "关联单号"
+msgstr "单号"
 
 #. module: stock
 #: code:addons/stock/stock.py:661
@@ -258,7 +258,7 @@ msgstr "错误!你不能创建递归的分类"
 msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
-msgstr ""
+msgstr "如果选定此处，那么所有产品数量将设为零以确保真实盘点操作的完成。"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_split_lines
@@ -329,7 +329,7 @@ msgstr "贸易术语编号"
 #. module: stock
 #: field:stock.tracking,move_ids:0
 msgid "Moves for this pack"
-msgstr ""
+msgstr "此包装单包含的库存调拨"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -366,7 +366,7 @@ msgstr "实际库存值"
 #. module: stock
 #: field:report.stock.move,day_diff2:0
 msgid "Lag (Days)"
-msgstr ""
+msgstr "滞后天数"
 
 #. module: stock
 #: model:ir.model,name:stock.model_action_traceability
@@ -399,24 +399,24 @@ msgstr "可用"
 #: view:stock.picking:0
 #: field:stock.picking,min_date:0
 msgid "Expected Date"
-msgstr ""
+msgstr "预计日期"
 
 #. module: stock
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_outgoing_product_board
 msgid "Outgoing Product"
-msgstr ""
+msgstr "出库货品"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_warehouse_form
 msgid ""
 "Create and manage your warehouses and assign them a location from here"
-msgstr ""
+msgstr "在此处创建与管理您的实体仓库并给它们分配库位。"
 
 #. module: stock
 #: field:report.stock.move,product_qty_in:0
 msgid "In Qty"
-msgstr ""
+msgstr "按数量"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_fill_inventory.py:115
@@ -463,7 +463,7 @@ msgstr "指定货物进出的货运类型"
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_move_labels
 msgid "Item Labels"
-msgstr ""
+msgstr "产品标签"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_move
@@ -488,7 +488,7 @@ msgstr "["
 msgid ""
 "Current quantity of products with this Production Lot Number available in "
 "company warehouses"
-msgstr ""
+msgstr "当前此产品批次在公司仓库内的产品存量"
 
 #. module: stock
 #: field:stock.move,move_history_ids:0
@@ -573,7 +573,7 @@ msgstr "收货"
 #. module: stock
 #: field:stock.tracking,serial:0
 msgid "Additional Reference"
-msgstr "附加引用单号"
+msgstr "附加单号"
 
 #. module: stock
 #: view:stock.production.lot.revision:0
@@ -748,7 +748,7 @@ msgstr "此单据上的日期"
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Periodical (manual)"
-msgstr "周期（手工）"
+msgstr "定期（手动进行）"
 
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
@@ -1748,7 +1748,7 @@ msgstr "成本价"
 #: view:product.product:0
 #: field:product.product,valuation:0
 msgid "Inventory Valuation"
-msgstr "库存价值"
+msgstr "库存核算"
 
 #. module: stock
 #: view:stock.picking:0
@@ -1825,7 +1825,7 @@ msgstr "已接收数量"
 #. module: stock
 #: field:stock.production.lot,ref:0
 msgid "Internal Reference"
-msgstr "内部引用单号"
+msgstr "内部单号"
 
 #. module: stock
 #: help:stock.production.lot,prefix:0
@@ -1894,7 +1894,7 @@ msgstr "可库存"
 #. module: stock
 #: selection:product.product,valuation:0
 msgid "Real Time (automated)"
-msgstr "实时（自动计算）"
+msgstr "实时（自动进行）"
 
 #. module: stock
 #: help:stock.move,tracking_id:0
@@ -2175,7 +2175,7 @@ msgstr "系统存储成品的库位"
 msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
+msgstr "当开启了此产品实时库存核算，那么此科目将记录此产品的当前价值。"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -2930,7 +2930,7 @@ msgstr ""
 #. module: stock
 #: field:stock.tracking,name:0
 msgid "Pack Reference"
-msgstr "包装单引用"
+msgstr "包装单号"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -2985,7 +2985,7 @@ msgstr "目标货位"
 #. module: stock
 #: selection:stock.picking,move_type:0
 msgid "All at once"
-msgstr "所有一起"
+msgstr "全部一次性"
 
 #. module: stock
 #: code:addons/stock/stock.py:1603
@@ -3554,7 +3554,7 @@ msgstr ""
 #. module: stock
 #: help:stock.picking,origin:0
 msgid "Reference of the document that produced this picking."
-msgstr ""
+msgstr "产生此分拣单的原始单据编号。"
 
 #. module: stock
 #: field:stock.fill.inventory,set_stock_zero:0

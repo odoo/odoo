@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-01-29 10:06+0000\n"
+"PO-Revision-Date: 2011-02-01 21:51+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-30 04:51+0000\n"
+"X-Launchpad-Export-Date: 2011-02-02 04:41+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -3938,7 +3938,7 @@ msgstr "Fechar Caixa"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,due_delay:0
 msgid "Avg. Due Delay"
-msgstr ""
+msgstr "Atraso Médio"
 
 #. module: account
 #: view:account.entries.report:0
@@ -5709,6 +5709,10 @@ msgid ""
 "line of the expense account. OpenERP will propose to you automatically the "
 "Tax related to this account and the counterpart \"Account Payable\"."
 msgstr ""
+"Esta tela pode ser usada por contadores para gravar rapidamente lançamentos "
+"no OpenERP. Se você quer gravar uma fatura de fornecedor, inicie pela "
+"gravação da linha da conta de despesa. O OpenERP irá propor automaticamente "
+"a Taxa relacionada a esta conta e a contra-partida \"Conta Pagável\"."
 
 #. module: account
 #: field:account.entries.report,date_created:0
@@ -6055,6 +6059,10 @@ msgid ""
 "year. Note that you can run this wizard many times for the same fiscal year: "
 "it will simply replace the old opening entries with the new ones."
 msgstr ""
+"Este assistente irá gerar os lançamentos de diário de fechamento de ano do "
+"ano fiscal selecionado. Repare que você pode executá-lo várias vezes para o "
+"mesmo ano fiscal, neste caso, ele apenas troca os saldos iniciais pelos "
+"novos."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_bank_and_cash
@@ -6418,6 +6426,11 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"Para uma fatura ser considerada paga, seus lançamentos devem ser "
+"reconciliados com as contra-partidas, geralmente pagamentos. Com a "
+"funcionalidade de reconciliação automática, o próprio OpenERP procura pelos "
+"lançamentos para reconciliação em uma serie de contas. Ele encontra "
+"lançamentos para cada parceiro ao qual o valor corresponde."
 
 #. module: account
 #: view:account.move:0
@@ -6550,6 +6563,8 @@ msgid ""
 "Account Voucher module includes all the basic requirements of Voucher "
 "Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "
 msgstr ""
+"O módulo de Recibo de Conta inclui todos os requerimentos básicos para "
+"Lançamentos de Recibos para Banco, Caixa, Venda, Compra, Despesa, etc... "
 
 #. module: account
 #: view:account.chart.template:0
@@ -6856,6 +6871,9 @@ msgid ""
 "You can search for individual account entries through useful information. To "
 "search for account entries, open a journal, then select a record line."
 msgstr ""
+"Você pode procurar por lançamentos individuais de contas através de "
+"informações úteis. Para procurar um lançamento de conta, abra o diário e "
+"então selecione uma linha de registro."
 
 #. module: account
 #: report:account.invoice:0
@@ -7004,6 +7022,9 @@ msgid ""
 "the system to go through the reconciliation process, based on the latest day "
 "it have been reconciled."
 msgstr ""
+"Este campo mostra o próximo parceiro que irá ser escolhido automaticamente "
+"pelo sistema para entrar o processo de reconciliação, baseado no último dia "
+"que foi reconciliado."
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7099,6 +7120,8 @@ msgid ""
 "Helps you generate reminder letters for unpaid invoices, including multiple "
 "levels of reminding and customized per-partner policies."
 msgstr ""
+"Ajuda você a gerar cartas de cobrança para faturas não pagas, incluindo "
+"múltiplos níveis de lembrete e políticas customizadas por parceiro."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -7142,6 +7165,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
+"Este campo é usado para lançamentos pagáveis e recebíveis de diário. Você "
+"pode colocar data limite para o pagamento desta linha."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1271

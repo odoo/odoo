@@ -47,6 +47,7 @@
                 <tree colors="blue:state in ('draft');gray:state in ('done') " string="Fiscalyear">
                     <field name="code"/>
                     <field name="name"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -116,6 +117,7 @@
                     <field name="date_start"/>
                     <field name="date_stop"/>
                     <field name="special"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
                     <button name="action_draft" states="done" string="Set to Draft" type="object" icon="terp-document-new" groups="account.group_account_manager"/>
                     <button name="%(action_account_period_close)d" states="draft" string="Close Period" type="action" icon="terp-camera_test"/>
@@ -2150,6 +2152,8 @@
                     <field name="property_account_income_categ" domain="[('id', 'child_of', [account_root_id])]" />
                     <field name="property_account_expense" domain="[('id', 'child_of', [account_root_id])]"/>
                     <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_income_opening" domain="[('id', 'child_of', [account_root_id])]"/>
+                    <field name="property_account_expense_opening" domain="[('id', 'child_of', [account_root_id])]"/>
                     <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
