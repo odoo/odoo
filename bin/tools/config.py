@@ -95,7 +95,7 @@ class configmanager(object):
             'secure_pkey_file': 'server.pkey',
             'publisher_warranty_url': 'http://services.openerp.com/publisher-warranty/',
         }
-        
+
         self.blacklist_for_save = set(["publisher_warranty_url", "load_language"])
 
         self.misc = {}
@@ -108,10 +108,21 @@ class configmanager(object):
         version = "%s %s" % (release.description, release.version)
         self.parser = parser = optparse.OptionParser(version=version)
 
-        parser.add_option("-c", "--config", dest="config", help="specify alternate config file")
-        parser.add_option("-s", "--save", action="store_true", dest="save", default=False,
+        # Server startup config
+        group = optparse.OptionGroup(parser, "Common options")
+        group.add_option("-c", "--config", dest="config", help="specify alternate config file")
+        group.add_option("-s", "--save", action="store_true", dest="save", default=False,
                           help="save configuration to ~/.openerp_serverrc")
-        parser.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
+        group.add_option("-i", "--init", dest="init", help="install one or more modules (comma-separated list, use \"all\" for all modules), requires -d")
+        group.add_option("-u", "--update", dest="update",
+                          help="update one or more modules (comma-separated list, use \"all\" for all modules). Requires -d.")
+        group.add_option("--without-demo", dest="without_demo",
+                          help="disable loading demo data for modules to be installed (comma-separated, use \"all\" for all modules). Requires -d and -i. Default is %default",
+                          default=False)
+        group.add_option("-P", "--import-partial", dest="import_partial",
+                        help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
+        group.add_option("--pidfile", dest="pidfile", help="file where the server pid will be stored")
+        parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "XML-RPC Configuration")
         group.add_option("--xmlrpc-interface", dest="xmlrpc_interface", help="specify the TCP IP address for the XML-RPC protocol")
@@ -145,22 +156,6 @@ class configmanager(object):
         group.add_option("--static-http-url-prefix", dest="static_http_url_prefix", help="specify the URL root prefix where you want web browsers to access your static HTML files (e.g '/')")
         parser.add_option_group(group)
 
-        parser.add_option("-i", "--init", dest="init", help="init a module (use \"all\" for all modules)")
-        parser.add_option("--without-demo", dest="without_demo",
-                          help="load demo data for a module (use \"all\" for all modules)", default=False)
-        parser.add_option("-u", "--update", dest="update",
-                          help="update a module (use \"all\" for all modules)")
-        parser.add_option("--cache-timeout", dest="cache_timeout",
-                          help="set the timeout for the cache system", type="int")
-        parser.add_option("-t", "--timezone", dest="timezone", help="specify reference timezone for the server (e.g. Europe/Brussels")
-
-        # stops the server from launching after initialization
-        parser.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False,
-                          help="stop the server after it initializes")
-        parser.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
-        parser.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
-                          help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
-
         # Testing Group
         group = optparse.OptionGroup(parser, "Testing Configuration")
         group.add_option("--test-file", dest="test_file", help="Launch a YML test file.")
@@ -169,6 +164,8 @@ class configmanager(object):
                          default=False, help="Disable loading test files.")
         group.add_option("--test-commit", action="store_true", dest="test_commit",
                          default=False, help="Commit database changes performed by tests.")
+        group.add_option("--assert-exit-level", dest='assert_exit_level', type="choice", choices=self._LOGLEVELS.keys(),
+                          help="specify the level at which a failed assertion will stop the server. Accepted values: %s" % (self._LOGLEVELS.keys(),))
         parser.add_option_group(group)
 
         # Logging Group
@@ -201,8 +198,6 @@ class configmanager(object):
         group.add_option("--db_port", dest="db_port", help="specify the database port", type="int")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int',
                          help="specify the the maximum number of physical connections to posgresql")
-        group.add_option("-P", "--import-partial", dest="import_partial",
-                         help="Use this for big data importation, if it crashes you will be able to continue at the current state. Provide a filename to store intermediate importation states.", default=False)
         parser.add_option_group(group)
 
         group = optparse.OptionGroup(parser, "Internationalisation options",
@@ -210,7 +205,6 @@ class configmanager(object):
             "See i18n section of the user manual. Option '-d' is mandatory."
             "Option '-l' is mandatory in case of importation"
             )
-
         group.add_option('--load-language', dest="load_language",
                          help="specifies the languages for the translations you want to be loaded")
         group.add_option('-l', "--language", dest="language",
@@ -231,6 +225,16 @@ class configmanager(object):
         security = optparse.OptionGroup(parser, 'Security-related options')
         security.add_option('--no-database-list', action="store_false", dest='list_db', help="disable the ability to return the list of databases")
         parser.add_option_group(security)
+
+        # Advanced options
+        group = optparse.OptionGroup(parser, "Advanced options")
+        group.add_option("--cache-timeout", dest="cache_timeout",
+                          help="set the timeout for the cache system", type="int")
+        group.add_option('--debug', dest='debug_mode', action='store_true', default=False, help='enable debug mode')
+        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", default=False,
+                          help="stop the server after it initializes")
+        group.add_option("-t", "--timezone", dest="timezone", help="specify reference timezone for the server (e.g. Europe/Brussels")
+        parser.add_option_group(group)
 
     def parse_config(self):
         opt = self.parser.parse_args()[0]
