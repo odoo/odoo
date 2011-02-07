@@ -67,7 +67,11 @@ class purchase_requisition_partner(osv.osv_memory):
             context = {}
         record_ids = context and context.get('active_ids', False)
         if record_ids:
-            data =  self.read(cr, uid, ids)
+            data =  self.read(cr, uid, ids,context=context)
+            for m2o_field in ['partner_id','partner_address_id']:
+                if isinstance(data[0][m2o_field], tuple):
+                    data[0][m2o_field] = data[0][m2o_field][0]
+
             company = self.pool.get('res.users').browse(cr, uid, uid, context).company_id
             order_obj = self.pool.get('purchase.order')
             order_line_obj = self.pool.get('purchase.order.line')
