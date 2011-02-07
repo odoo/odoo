@@ -3319,18 +3319,21 @@ class orm(orm_template):
         vals.pop('parent_right', None)
 
         parents_changed = []
+        parent_order = self._parent_order or self._order
         if self._parent_store and (self._parent_name in vals):
             # The parent_left/right computation may take up to
             # 5 seconds. No need to recompute the values if the
-            # parent is the same. Get the current value of the parent
+            # parent is the same.
+            # Note: to respect parent_order, nodes must be processed in
+            # order, so ``parents_changed`` must be ordered properly.
             parent_val = vals[self._parent_name]
             if parent_val:
-                query = "SELECT id FROM %s WHERE id IN %%s AND (%s != %%s OR %s IS NULL)" % \
-                                (self._table, self._parent_name, self._parent_name)
+                query = "SELECT id FROM %s WHERE id IN %%s AND (%s != %%s OR %s IS NULL) ORDER BY %s" % \
+                                (self._table, self._parent_name, self._parent_name, parent_order)
                 cr.execute(query, (tuple(ids), parent_val))
             else:
-                query = "SELECT id FROM %s WHERE id IN %%s AND (%s IS NOT NULL)" % \
-                                (self._table, self._parent_name)
+                query = "SELECT id FROM %s WHERE id IN %%s AND (%s IS NOT NULL) ORDER BY %s" % \
+                                (self._table, self._parent_name, parent_order)
                 cr.execute(query, (tuple(ids),))
             parents_changed = map(operator.itemgetter(0), cr.fetchall())
 
@@ -3436,7 +3439,7 @@ class orm(orm_template):
                     # this can _not_ be fetched outside the loop, as it needs to be refreshed
                     # after each update, in case several nodes are sequentially inserted one
                     # next to the other (i.e computed incrementally)
-                    cr.execute('SELECT parent_right, id FROM %s WHERE %s ORDER BY %s' % (self._table, clause, order), params)
+                    cr.execute('SELECT parent_right, id FROM %s WHERE %s ORDER BY %s' % (self._table, clause, parent_order), params)
                     parents = cr.fetchall()
 
                     # Find Position of the element
