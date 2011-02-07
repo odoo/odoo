@@ -84,14 +84,7 @@ class report_custom(report_rml):
                     for att in attendances:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
-                           tot_time = (dt - ldt).seconds
-                           hrs, remainder = divmod(tot_time, 3600)
-                           min, sec = divmod(remainder, 60)
-                           if min < 10:
-                               wh = float((str(hrs))+ '.' + '0' +(str(min)))
-                           else:
-                               wh = float((str(hrs))+ '.' + (str(min)))
-                           week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + round(wh,2)
+                            week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + (float((dt - ldt).seconds)/3600)
                         else:
                             ldt = dt
 
@@ -100,10 +93,10 @@ class report_custom(report_rml):
                 for idx in range(7):
                     week_repr.append('<%s>' % num2day[idx])
                     if idx in week_wh:
-                        week_repr.append('<workhours>%s</workhours>' %(str(week_wh[idx])).replace('.','h'))
+                        week_repr.append('<workhours>%sh%02d</workhours>' % to_hour(week_wh[idx]))
                     week_repr.append('</%s>' % num2day[idx])
                 week_repr.append('<total>')
-                week_repr.append('<worked>%s</worked>' % str(sum(week_wh.values())).replace('.','h'))
+                week_repr.append('<worked>%sh%02d</worked>' % to_hour(reduce(lambda x,y:x+y, week_wh.values(), 0)))
                 week_repr.append('</total>')
                 week_repr.append('</week>')
                 if len(week_repr) > 21: # 21 = minimal length of week_repr
