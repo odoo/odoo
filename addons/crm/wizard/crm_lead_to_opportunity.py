@@ -70,8 +70,10 @@ class crm_lead2opportunity(osv.osv_memory):
                 cr, uid, opportunity_view_tree, context=context).res_id
 
         lead = leads.browse(cr, uid, record_id, context=context)
-        stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
-
+        if(lead.section_id):
+            stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1), ('section_ids','=', lead.section_id.id)])
+        else:
+            stage_ids = self.pool.get('crm.case.stage').search(cr, uid, [('type','=','opportunity'),('sequence','>=',1)])
         for this in self.browse(cr, uid, ids, context=context):
             vals ={
                 'planned_revenue': this.planned_revenue,
