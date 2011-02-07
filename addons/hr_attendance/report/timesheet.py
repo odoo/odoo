@@ -100,10 +100,10 @@ class report_custom(report_rml):
                 for idx in range(7):
                     week_repr.append('<%s>' % num2day[idx])
                     if idx in week_wh:
-                        week_repr.append('<workhours>%s</workhours>' %(week_wh[idx]))
+                        week_repr.append('<workhours>%s</workhours>' %(str(week_wh[idx])).replace('.','h'))
                     week_repr.append('</%s>' % num2day[idx])
                 week_repr.append('<total>')
-                week_repr.append('<worked>%s</worked>' % sum(week_wh.values()))
+                week_repr.append('<worked>%s</worked>' % str(sum(week_wh.values())).replace('.','h'))
                 week_repr.append('</total>')
                 week_repr.append('</week>')
                 if len(week_repr) > 21: # 21 = minimal length of week_repr
