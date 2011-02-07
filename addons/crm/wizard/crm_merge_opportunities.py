@@ -82,7 +82,7 @@ class crm_merge_opportunity(osv.osv_memory):
                 'contact_name' : self._concat_all('contact_name', op_ids), #not lost
                 'country_id' : self._get_first_not_null_id('country_id', op_ids), #!!
                 'partner_address_id' : self._get_first_not_null_id('partner_address_id', op_ids), #!!
-                'partner_assigned_id' : self._get_first_not_null_id('partner_assigned_id', op_ids), #!!
+                'partner_assigned_id' : hasattr(opp_obj,'partner_assigned_id') and self._get_first_not_null_id('partner_assigned_id', op_ids), #!!
                 'type_id' : self._get_first_not_null_id('type_id', op_ids), #!!
                 'user_id' : self._get_first_not_null_id('user_id', op_ids), #!!
                 'section_id' : self._get_first_not_null_id('section_id', op_ids), #!!
@@ -91,8 +91,8 @@ class crm_merge_opportunity(osv.osv_memory):
                 'email' : self._get_first_not_null('email', op_ids), # !!
                 'fax' : self._get_first_not_null('fax', op_ids),	
                 'mobile' : self._get_first_not_null('mobile', op_ids),	
-                'partner_latitude' : self._get_first_not_null('partner_latitude', op_ids),	
-                'partner_longitude' : self._get_first_not_null('partner_longitude', op_ids),	
+                'partner_latitude' : hasattr(opp_obj,'partner_latitude') and self._get_first_not_null('partner_latitude', op_ids),	
+                'partner_longitude' : hasattr(opp_obj,'partner_longitude') and self._get_first_not_null('partner_longitude', op_ids),	
                 'partner_name' : self._get_first_not_null('partner_name', op_ids),	
                 'phone' : self._get_first_not_null('phone', op_ids),	
                 'probability' : self._get_first_not_null('probability', op_ids),	
