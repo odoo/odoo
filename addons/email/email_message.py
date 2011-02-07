@@ -171,7 +171,7 @@ class email_message(osv.osv):
         'display_text': fields.function(_get_display_text, method=True, type='text', size="512", string='Display Text'),
         'reply_to':fields.char('Reply-To', size=250, readonly=True),
         'sub_type': fields.char('Sub Type', size=32, readonly=True),
-        'x_headers': fields.char('x_headers',size=256, readonly=True),
+        'headers': fields.char('x_headers',size=256, readonly=True),
         'priority':fields.integer('Priority', readonly=True),
         'debug':fields.boolean('Debug', readonly=True),
         'history': fields.boolean('History'),
@@ -252,7 +252,7 @@ class email_message(osv.osv):
                 'reply_to': reply_to or '',
                 'message_id': openobject_id,
                 'sub_type': subtype or '',
-                'x_headers': x_headers or '',
+                'headers': x_headers or '',
                 'priority': priority,
                 'debug': debug,
                 'folder': 'outbox',
@@ -299,7 +299,7 @@ class email_message(osv.osv):
                     smtp_account = account_obj.browse(cr, uid, smtp_ids, context)[0]
                 tools.email_send(message.email_from, message.email_to, message.name, message.message, email_cc=message.email_cc,
                         email_bcc=message.email_bcc, reply_to=message.reply_to, attach=attachments, openobject_id=message.message_id,
-                        subtype=message.sub_type, x_headers=message.x_headers, priority=message.priority, debug=message.debug,
+                        subtype=message.sub_type, x_headers=message.headers, priority=message.priority, debug=message.debug,
                         smtp_email_from=smtp_account and smtp_account.email_id or None, smtp_server=smtp_account and smtp_account.smtpserver or None,
                         smtp_port=smtp_account and smtp_account.smtpport or None, ssl=smtp_account and smtp_account.smtpssl or False,
                         smtp_user=smtp_account and smtp_account.smtpuname or None, smtp_password=smtp_account and smtp_account.smtppass or None)

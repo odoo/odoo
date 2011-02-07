@@ -102,7 +102,7 @@
         </record>
 
         <menuitem
-            parent="base.menu_mail_gateway"
+            parent="email.menu_email_message_tools"
             id="menu_action_fetchmail_server_tree"
             action="action_email_server_tree"
             name="Email Servers"
@@ -147,7 +147,7 @@
       </record>
 
       <menuitem id="base.menu_email_gateway_form"
-               parent="base.menu_mail_gateway" action="action_view_mail_message_emails" />
+               parent="email.menu_email_message_tools" action="action_view_mail_message_emails" />
 
       <act_window
             context="{'server_id': active_id}"
