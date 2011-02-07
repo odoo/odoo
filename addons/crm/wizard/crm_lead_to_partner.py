@@ -31,7 +31,8 @@ class crm_lead2partner(osv.osv_memory):
 
     _columns = {
         'action': fields.selection([('exist', 'Link to an existing partner'), \
-                                    ('create', 'Create a new partner')], \
+                                    ('create', 'Create a new partner'), \
+                                    ('nothing', 'Do not link to a partner')], \
                                     'Action', required=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'msg': fields.text('Message', readonly=True)
@@ -116,11 +117,15 @@ class crm_lead2partner(osv.osv_memory):
                     label = opp_ids and 'name' or False
                 if label:
                     res.update({'msg': "An existing opportunity seems to match the %s of this lead, you should double-check before converting it." % (label)})
-
+            
             if 'partner_id' in fields:
                 res.update({'partner_id': partner_id})
             if 'action' in fields:
                 res.update({'action': partner_id and 'exist' or 'create'})
+            if 'name' in fields:
+                res.update({'name': 'convert'})
+            if 'opportunity_ids' in fields:
+                res.update({'opportunity_ids': data})
 
         return res
     
@@ -205,14 +210,6 @@ class crm_lead2partner(osv.osv_memory):
                         contact_id = partner_obj.address_get(cr, uid, [partner_id])['default']
 
                 partner_ids.append(partner_id)
-
-                if data.action<>'no':
-                    vals = {}
-                    if partner_id:
-                        vals.update({'partner_id': partner_id})
-                    if contact_id:
-                        vals.update({'partner_address_id': contact_id})
-                    lead_obj.write(cr, uid, [lead.id], vals)
         return partner_ids
 
     def make_partner(self, cr, uid, ids, context=None):
