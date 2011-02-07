@@ -196,7 +196,10 @@
             <field name="search_view_id" ref="view_email_smtp_server_search"/>
         </record>
 
-        <menuitem name="Email Smtp Server" id="menu_email_smtp_server_all" parent="base.menu_lunch_survey_root" action="action_email_smtp_server_tree_all"/>
+        <menuitem name="Email" id="menu_config_email"
+              parent="base.menu_lunch_survey_root" sequence="20" />
+
+        <menuitem name="Email Smtp Server" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
 
     </data>
 </openerp>
