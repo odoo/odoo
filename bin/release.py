@@ -21,8 +21,8 @@
 ##############################################################################
 
 name = 'openerp-server'
-version = '6.0.1'
-major_version = '6.0'
+version = '6.1-dev'
+major_version = '6.1'
 description = 'OpenERP Server'
 long_desc = '''OpenERP is a complete ERP and CRM. The main features are accounting (analytic
 and financial), stock management, sales and purchases management, tasks
@@ -41,4 +41,3 @@ support_email = 'support@openerp.com'
 license = 'AGPL-3'
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
