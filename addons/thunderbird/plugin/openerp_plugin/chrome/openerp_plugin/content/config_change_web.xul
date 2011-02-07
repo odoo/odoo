@@ -2,25 +2,29 @@
 <?xml-stylesheet href="chrome://global/skin/global.css" type="text/css"?>
 <!DOCTYPE window SYSTEM "chrome://openerp_plugin/locale/config_change.dtd">
 <window xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
-	xmlns:html="http://www.w3.org/1999/xhtml" onload="config_change_load_web()"
-	title="Openerp Connection" height="140" width="240">
+    xmlns:html="http://www.w3.org/1999/xhtml" onload="config_change_load_web()"
+    title="Openerp Connection" height="140" width="240">
 <script type="text/javascript" src="chrome://openerp_plugin/content/tiny_xmlrpc.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/config.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/loaddata.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/static.js"></script>
 <script type="text/javascript" src="chrome://openerp_plugin/content/overlay.js"></script>
-	<hbox>
-	 <label  align="center" id="heading"  value="&lblheading.label;" style="padding-left:38px" />
+    <hbox>
+     <label  align="center" id="heading"  value="&lblheading.label;" style="padding-left:38px" />
     </hbox>
 <groupbox id="gpData" width="200">
-	<hbox >
-		<label id="lblurl" control="txtcurl" value="&lblurl.label;" width="50"/>
-		<textbox id="txtcweburl" width="140" />
-	</hbox>
-	<hbox>	
-		<label id="lblport" control="txtcport" value="&lblport.label;" width="50"/>
-		<textbox id="txtcwebport" width="140" />
-	</hbox>
+    <hbox >
+        <label id="lblurl" control="txtcurl" value="&lblurl.label;" width="50"/>
+        <textbox id="txtcweburl" width="140" />
+    </hbox>
+    <hbox>  
+        <label id="lblport" control="txtcport" value="&lblport.label;" width="50"/>
+        <textbox id="txtcwebport" width="140" />
+    </hbox>
+    <hbox>
+
+        <checkbox id="lblssl" label="SSL (https)" checked="false"/>
+    </hbox>
     
 </groupbox>
 <hbox align="right">

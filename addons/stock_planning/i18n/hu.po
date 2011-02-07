@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:16+0000\n"
-"PO-Revision-Date: 2011-01-27 08:28+0000\n"
+"PO-Revision-Date: 2011-02-01 11:50+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-28 04:46+0000\n"
+"X-Launchpad-Export-Date: 2011-02-02 04:41+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: stock_planning
@@ -145,6 +145,8 @@ msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
 "selected Period."
 msgstr ""
+"A kiválasztott termék kiválasztott raktárának minden értékesítési "
+"előrejelzése a kiválasztott időszakban."
 
 #. module: stock_planning
 #: model:ir.ui.menu,name:stock_planning.menu_stock_period_creatlines
@@ -214,7 +216,7 @@ msgstr "Összes termék előrejelzésekkel"
 #. module: stock_planning
 #: view:stock.sale.forecast:0
 msgid "Periods :"
-msgstr "Időszakok"
+msgstr "Időszakok :"
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
@@ -252,7 +254,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,stock_simulation:0
 msgid "Stock Simulation"
-msgstr ""
+msgstr "Készlet szimuláció"
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning_createlines
@@ -288,6 +290,8 @@ msgid ""
 "All sales forecasts for whole company (for all Warehouses) of selected "
 "Product during selected Period."
 msgstr ""
+"A kiválasztott termék minden értékesítési előrejelzése a kiválasztott "
+"időszakban (az egész vállalatra és minden raktárra)."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_user:0
@@ -403,7 +407,8 @@ msgstr ""
 #: help:stock.sale.forecast,analyze_company:0
 msgid "Check this box to see the sales for whole company."
 msgstr ""
-"Jelölje be ezta négyzetet, ha a teljes vállalat értékesítést látni szeretné."
+"Jelölje be ezt a négyzetet, ha az egész vállalatra látni szeretné az "
+"értékesítést."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,name:0
@@ -424,7 +429,7 @@ msgstr ""
 #: field:stock.planning.createlines,product_categ_id:0
 #: field:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category"
-msgstr "Termékkategória"
+msgstr "Termék kategória"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:621
@@ -492,7 +497,7 @@ msgstr ""
 #. module: stock_planning
 #: view:stock.period.createlines:0
 msgid "Create Weekly Periods"
-msgstr "Heti periódusok létrehozása"
+msgstr "Heti időszakok létrehozása"
 
 #. module: stock_planning
 #: help:stock.planning,maximum_op:0
@@ -591,7 +596,7 @@ msgstr ""
 #: field:stock.period,date_start:0
 #: field:stock.period.createlines,date_start:0
 msgid "Start Date"
-msgstr "Kezdődátum"
+msgstr "Kezdő dátum"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:642
@@ -605,7 +610,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.planning,confirmed_forecasts_only:0
 msgid "Validated Forecasts"
-msgstr "Érévnyesített előrejelzések"
+msgstr "Jóváhagyott előrejelzések"
 
 #. module: stock_planning
 #: help:stock.planning.createlines,product_categ_id:0
@@ -906,7 +911,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:140
 #, python-format
 msgid "Cannot delete Validated Sale Forecasts !"
-msgstr "Nem lehet törölni az érvényesített értékesítési előrejelzéseket !"
+msgstr "Nem lehet törölni a jóváhagyott értékesítési előrejelzéseket !"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -965,17 +970,17 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_id:0
 msgid "Period2"
-msgstr ""
+msgstr "Időszak2"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period3_id:0
 msgid "Period3"
-msgstr ""
+msgstr "Időszak3"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_id:0
 msgid "Period1"
-msgstr ""
+msgstr "Időszak1"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
@@ -995,7 +1000,7 @@ msgstr "Aktív ME"
 #: model:ir.ui.menu,name:stock_planning.menu_stock_planning_createlines
 #: view:stock.planning.createlines:0
 msgid "Create Stock Planning Lines"
-msgstr ""
+msgstr "Készlettervezési sorok létrehozása"
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -1057,7 +1062,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.period.createlines,date_stop:0
 msgid "Ending date for planning period."
-msgstr ""
+msgstr "Tervezési időszak záró dátuma"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period2_per_user:0
@@ -1096,12 +1101,12 @@ msgstr "Múlt/Jövő"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uos_categ:0
 msgid "Product UoS Category"
-msgstr "Termék EM kategória"
+msgstr "Termék ME kategória"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_qty:0
 msgid "Product Quantity"
-msgstr "Termék mennyiség"
+msgstr "Termékmennyiség"
 
 #. module: stock_planning
 #: field:stock.sale.forecast.createlines,copy_forecast:0
@@ -1111,7 +1116,7 @@ msgstr "Utolsó előrejelzés másolása"
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr ""
+msgstr "Megmutatja, hogy melyik termékre vonatkozik ez az előrejelzés."
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
@@ -1128,7 +1133,7 @@ msgstr "Időszakok"
 #: code:addons/stock_planning/stock_planning.py:680
 #, python-format
 msgid " according to state:"
-msgstr ""
+msgstr " állapot szerint:"
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -1147,7 +1152,7 @@ msgstr ""
 #: view:stock.sale.forecast:0
 #: selection:stock.sale.forecast,state:0
 msgid "Validated"
-msgstr "Érvényesített"
+msgstr "Jóváhagyott"
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -1240,7 +1245,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
 msgid "Warehouse which planning will concern."
-msgstr ""
+msgstr "Raktár, amelyre a tervezés vonatkozik."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:647
@@ -1250,6 +1255,8 @@ msgid ""
 "\n"
 " Stock Simulation: "
 msgstr ""
+"\n"
+" Készletszimuláció: "
 
 #. module: stock_planning
 #: help:stock.planning,to_procure:0
@@ -1262,7 +1269,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr ""
+msgstr "Időszak, amelyre a tervezés vonatkozik."
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
@@ -1272,7 +1279,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.planning,product_id:0
 msgid "Product which this planning is created for."
-msgstr ""
+msgstr "Termék, amelyre a tervezés vonatkozik."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1298,7 +1305,7 @@ msgstr "Beszerzési előzmény"
 #. module: stock_planning
 #: help:stock.period.createlines,date_start:0
 msgid "Starting date for planning period."
-msgstr "Tervezési periódus kezdődátuma"
+msgstr "Tervezési időszak kezdő dátuma"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:641
@@ -1329,7 +1336,7 @@ msgstr ""
 #: field:stock.period,date_stop:0
 #: field:stock.period.createlines,date_stop:0
 msgid "End Date"
-msgstr "Befejezés dátuma"
+msgstr "Záró dátum"
 
 #. module: stock_planning
 #: help:stock.planning,stock_supply_location:0
@@ -1352,7 +1359,7 @@ msgstr ""
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "Megmutatja, hogy melyik időszakra vonatkozik az előrejelzés."
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
@@ -1380,6 +1387,8 @@ msgid ""
 "\n"
 "For period: "
 msgstr ""
+"\n"
+"Időszakra: "
 
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
@@ -1437,7 +1446,7 @@ msgstr ""
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
 msgid "Period5"
-msgstr ""
+msgstr "Időszak5"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_period_createlines_form

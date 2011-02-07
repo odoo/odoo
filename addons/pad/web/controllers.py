@@ -26,6 +26,7 @@ class Piratepad(openerp.controllers.SecuredController):
                    default_res_model=params.model, default_res_id=params.id,
                    active_id=False, active_ids=[])
 
+        pad_name = pad_name.decode('utf8')
         pad_link = self.make_url(pad_name)
         attachment_id = rpc.RPCProxy('ir.attachment').create({
             'name': pad_name,
