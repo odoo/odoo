@@ -225,7 +225,6 @@ class email_template_send_wizard(osv.osv_memory):
                 'body_html': get_end_value(id, screen_vals['body_html']),
 #                'account_id': screen_vals['from'],
                 'state':'na',
-                'mail_type':'multipart/alternative' #Options:'multipart/mixed','multipart/alternative','text/plain','text/html'
             }
             if screen_vals['signature']:
                 signature = self.pool.get('res.users').read(cr, uid, uid, ['signature'], context)['signature']
@@ -270,7 +269,6 @@ class email_template_send_wizard(osv.osv_memory):
             if attachment_ids:
                 email_message_obj.write(cr, uid, mail_id, {
                     'attachments_ids': [[6, 0, attachment_ids]],
-                    'mail_type': 'multipart/mixed'
                 }, context)
 
         return mail_ids
