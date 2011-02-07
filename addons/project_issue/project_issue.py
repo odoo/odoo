@@ -144,7 +144,7 @@ class project_issue(crm.crm_case, osv.osv):
         issues = []
         issue_pool = self.pool.get('project.issue')
         for task in self.pool.get('project.task').browse(cr, uid, ids, context=context):
-            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])            
+            issues += issue_pool.search(cr, uid, [('task_id','=',task.id)])
         return issues
 
     def _get_issue_work(self, cr, uid, ids, context=None):
@@ -162,8 +162,8 @@ class project_issue(crm.crm_case, osv.osv):
             progress = 0.0
             if issue.task_id:
                 progress = task_pool._hours_get(cr, uid, [issue.task_id.id], field_names, args, context=context)[issue.task_id.id]['progress']
-            res[issue.id] = {'progress' : progress}     
-        return res        
+            res[issue.id] = {'progress' : progress}
+        return res
 
     _columns = {
         'id': fields.integer('ID'),
@@ -213,7 +213,7 @@ class project_issue(crm.crm_case, osv.osv):
                                 method=True, multi='working_days_open', type="float", store=True),
         'working_hours_close': fields.function(_compute_day, string='Working Hours to Close the Issue', \
                                 method=True, multi='working_days_close', type="float", store=True),
-        'message_ids': fields.one2many('mailgate.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
+        'message_ids': fields.one2many('email.message', 'res_id', 'Messages', domain=[('model','=',_name)]),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'progress': fields.function(_hours_get, method=True, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
@@ -370,7 +370,7 @@ class project_issue(crm.crm_case, osv.osv):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks
         """
-        if context is None: 
+        if context is None:
             context = {}
         mailgate_pool = self.pool.get('email.server.tools')
 

@@ -61,7 +61,7 @@ class email_server(osv.osv):
         'object_id': fields.many2one('ir.model', "Model", required=True, help="OpenObject Model. Generates a record of this model.\nSelect Object with message_new attrbutes."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Priority between 0 to 10, select define the order of Processing"),
         'user_id':fields.many2one('res.users', 'User', required=False),
-        'message_ids': fields.one2many('mailgate.message', 'server_id', 'Messages', readonly=True),
+        'message_ids': fields.one2many('email.message', 'server_id', 'Messages', readonly=True),
     }
     _defaults = {
         'state': lambda *a: "draft",

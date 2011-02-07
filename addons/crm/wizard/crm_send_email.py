@@ -63,7 +63,6 @@ class crm_send_new_email(osv.osv_memory):
     def action_send(self, cr, uid, ids, context=None):
         """ This sends an email to ALL the addresses of the selected partners.
         """
-        hist_obj = self.pool.get('mailgate.message')
         email_message_obj = self.pool.get('email.message')
         if context is None:
             context = {}
@@ -103,7 +102,7 @@ class crm_send_new_email(osv.osv_memory):
                 attach += attach_all
 
             else:
-                hist = hist_obj.browse(cr, uid, res_id, context=context)
+                hist = email_message_obj.browse(cr, uid, res_id, context=context)
                 message_id = hist.message_id
                 model = hist.model
                 case_pool = self.pool.get(model)
@@ -205,7 +204,7 @@ class crm_send_new_email(osv.osv_memory):
         """
         This function gets default values for reply mail
         """
-        hist_obj = self.pool.get('mailgate.message')
+        hist_obj = self.pool.get('email.message')
         res_ids = context and context.get('active_ids', []) or []
 
         user_obj = self.pool.get('res.users')
