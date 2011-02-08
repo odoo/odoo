@@ -153,14 +153,14 @@
         </record>
 
         <menuitem name="Email Templates" id="menu_email_template_all_tools"
-            parent="email.menu_config_email" action="action_email_template_tree_all" />
+            parent="emails.menu_config_email" action="action_email_template_tree_all" />
 
         <!-- Inherit email.message view -->
 
         <record model="ir.ui.view" id="view_email_message_template_form">
             <field name="name">email.message.template.form</field>
             <field name="model">email.message</field>
-            <field name="inherit_id" ref="email.view_email_message_form"/>
+            <field name="inherit_id" ref="emails.view_email_message_form"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
 	            <field name="debug" position="after">
