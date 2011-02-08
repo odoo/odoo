@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-01-25 13:12+0000\n"
+"PO-Revision-Date: 2011-02-07 20:02+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-26 04:39+0000\n"
+"X-Launchpad-Export-Date: 2011-02-08 04:37+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: project_long_term
@@ -24,13 +24,13 @@ msgstr "Hosszútávú projektmenedzsment"
 #. module: project_long_term
 #: view:project.compute.phases:0
 msgid "Compute Scheduling of Phases"
-msgstr ""
+msgstr "Fázisok ütemezésének számítása"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,next_phase_ids:0
 msgid "Next Phases"
-msgstr "Következő fázis"
+msgstr "Következő fázisok"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -58,12 +58,12 @@ msgstr ""
 #. module: project_long_term
 #: view:project.resource.allocation:0
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Erőforrás elosztás"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Displaying settings"
-msgstr ""
+msgstr "Megjelenítési beállítások"
 
 #. module: project_long_term
 #: field:project.compute.phases,target_project:0
@@ -91,6 +91,24 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"\n"
+"        Hosszú távú projektmenedzsment modul, amely nyomon követi a "
+"tervezést, az ütemezést és az erőforrás elosztást.\n"
+"        Főleg nagyprojektek kezelésére szolgál.\n"
+"            - A projektfázisokat a projektmenedzser tartja karban.\n"
+"            - Fázisok ütemezésének számítása: Az adott projekt tervezet, "
+"nyitott és függőben lévő állapotú fázisai kezdési és befejezési dátumának "
+"kiszámítása.\n"
+"                                        Ha nem adtak meg projektet, akkor az "
+"összes tervezet, nyitott és függőben lévő állapotú fázist veszi.\n"
+"            - Feladat ütemezésének számítása: Ugyanúgy működik, mint az "
+"ütemező gomb a projektfázisban. Veszi a projektet, mint paramétert, és "
+"minden tervezet, nyitott és függőben lévő feladatot kiszámít.\n"
+"            - Feladatok ütemezése: Minden tervezet, nyitott és függőben lévő "
+"állapotú feladatot ütemez a fázis kezdési dátumának figyelembe vételével.\n"
+"\n"
+"    "
 
 #. module: project_long_term
 #: constraint:project.task:0
@@ -101,7 +119,7 @@ msgstr "Hiba! Nem hozhat létre rekurzív feladatokat."
 #: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
 msgid "Resource Allocations"
-msgstr ""
+msgstr "Erőforrás elosztások"
 
 #. module: project_long_term
 #: constraint:project.project:0
@@ -122,24 +140,24 @@ msgstr "Feladat"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute a Single Project"
-msgstr ""
+msgstr "Egyetlen projekt ütemezésének számítása"
 
 #. module: project_long_term
 #: view:project.phase:0
 #: field:project.phase,previous_phase_ids:0
 msgid "Previous Phases"
-msgstr "Előző fázis"
+msgstr "Előző fázisok"
 
 #. module: project_long_term
 #: help:project.phase,product_uom:0
 msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr ""
+msgstr "Az időtartam mértékegysége (ME)"
 
 #. module: project_long_term
 #: help:project.phase,date_end:0
 msgid ""
 " It's computed by the scheduler according to the start date and the duration."
-msgstr ""
+msgstr " A kezdési dátum és az időtartam alapján számítja az ütemező."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_project
@@ -189,7 +207,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_phases
 #: model:ir.ui.menu,name:project_long_term.menu_compute_phase
 msgid "Compute Phase Scheduling"
-msgstr ""
+msgstr "Fázis ütemezésének számítása"
 
 #. module: project_long_term
 #: code:addons/project_long_term/project_long_term.py:195
@@ -208,7 +226,7 @@ msgstr "Elérhetőség"
 #: view:project.phase:0
 #: field:project.phase,state:0
 msgid "State"
-msgstr "Státusz"
+msgstr "Állapot"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
@@ -219,35 +237,35 @@ msgstr ""
 #. module: project_long_term
 #: view:project.compute.phases:0
 msgid "Compute Scheduling of phases for all or specified project"
-msgstr ""
+msgstr "Az összes vagy a megadott projekt fázisai ütemezésének számítása"
 
 #. module: project_long_term
 #: field:project.phase,product_uom:0
 msgid "Duration UoM"
-msgstr ""
+msgstr "Időtartam ME"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.action_project_compute_tasks
 #: model:ir.ui.menu,name:project_long_term.menu_compute_tasks
 msgid "Compute Task Scheduling"
-msgstr ""
+msgstr "Feladat ütemezésének számítása"
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
-msgstr ""
+msgstr "Legkorábbi kezdési dátum"
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_resource_allocation
 #: view:project.phase:0
 #: view:project.resource.allocation:0
 msgid "Project Resource Allocation"
-msgstr ""
+msgstr "Projekt erőforrás elosztás"
 
 #. module: project_long_term
 #: view:project.compute.tasks:0
 msgid "Compute Scheduling of Task"
-msgstr ""
+msgstr "Feladat ütemezésének számítása"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_resource
@@ -255,7 +273,7 @@ msgstr ""
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource
 #: view:project.resource.allocation:0
 msgid "Resources"
-msgstr "Források"
+msgstr "Erőforrások"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,help:project_long_term.action_project_compute_phases
@@ -264,42 +282,45 @@ msgid ""
 "view.\n"
 "\t           "
 msgstr ""
+"Minden projekt vagy az adott projekt fázisait ütemezi. Aztán megnyitja a "
+"Gantt-nézetet.\n"
+"\t           "
 
 #. module: project_long_term
 #: help:project.resource.allocation,date_start:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Kezdési dátum"
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
 msgid "Related Tasks"
-msgstr ""
+msgstr "Kapcsolódó feladatok"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Dates"
-msgstr ""
+msgstr "Dátumok"
 
 #. module: project_long_term
 #: help:project.resource.allocation,useability:0
 msgid ""
 "Availability of this resource for this project phase in percentage (=50%)"
-msgstr ""
+msgstr "Az erőforrás elérhetősége ebben a projektfázisban százalékban."
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
 msgid "force the phase to start after this date"
-msgstr ""
+msgstr "A fázisnak ezután az időpont után kell kezdődnie."
 
 #. module: project_long_term
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
-msgstr ""
+msgstr "Projekt feladatok"
 
 #. module: project_long_term
 #: field:project.phase,resource_ids:0
 msgid "Project Resources"
-msgstr ""
+msgstr "Projekt erőforrások"
 
 #. module: project_long_term
 #: view:project.schedule.tasks:0
@@ -309,7 +330,7 @@ msgstr ""
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Schedule and Display info"
-msgstr ""
+msgstr "Ütemezési és megjelenítési információ"
 
 #. module: project_long_term
 #: help:project.phase,date_start:0
@@ -317,6 +338,8 @@ msgid ""
 "It's computed by the scheduler according the project date or the end date of "
 "the previous phase."
 msgstr ""
+"A projekt dátuma vagy az előző fázis befejezési időpontja alapján számítja "
+"az ütemező."
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -327,6 +350,8 @@ msgstr "Hónap"
 #: constraint:project.phase:0
 msgid "Phase start-date must be lower than phase end-date."
 msgstr ""
+"A fázis kezdési dátumának előbbinek kell lennie, mint a fázis befejezési "
+"dátumának."
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_schedule_tasks
@@ -343,22 +368,28 @@ msgid ""
 "human resources, convert your phases into a series of tasks when you start "
 "working on the project."
 msgstr ""
+"A projekt különböző fázisokra osztható. Minden fázisra meghatározhatja az "
+"erőforrás elosztást, leírhatja a különböző feladatokat, összekötheti a "
+"fázist az előző és következő fázisokkal és adatkorlátozásokat adhat meg az "
+"automatizált ütemezéshez. Használja a hosszú távú tervezést a rendelkezésre "
+"álló emberi erőforrások tervezésére, a fázisoknak feladatok sorozataivá való "
+"átalakítására, amikor elkezd dolgozni a projekten."
 
 #. module: project_long_term
 #: field:project.phase,date_start:0
 #: field:project.resource.allocation,date_start:0
 msgid "Start Date"
-msgstr "Kezdődátum"
+msgstr "Kezdési dátum"
 
 #. module: project_long_term
 #: view:project.phase:0
 msgid "Resource Allocation"
-msgstr ""
+msgstr "Erőforrás elosztás"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
-msgstr ""
+msgstr "A fázisnak ezelőtt az időpont előtt be kell fejeződnie."
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -395,7 +426,7 @@ msgstr ""
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
-msgstr ""
+msgstr "Projektfeladatok ütemezése"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -405,7 +436,7 @@ msgstr ""
 #. module: project_long_term
 #: help:project.phase,sequence:0
 msgid "Gives the sequence order when displaying a list of phases."
-msgstr ""
+msgstr "Megadja a fázisok listázási sorrendjét."
 
 #. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_project_phase
@@ -464,7 +495,7 @@ msgstr "Kezdőfázis"
 #: code:addons/project_long_term/wizard/project_compute_phases.py:50
 #, python-format
 msgid "Please Specify Project to be schedule"
-msgstr ""
+msgstr "Kérem, adja meg az ütemezendő projektet."
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -475,12 +506,12 @@ msgstr "Összes óra"
 #. module: project_long_term
 #: view:project.schedule.tasks:0
 msgid "Task Scheduling completed successfully."
-msgstr ""
+msgstr "A feladat ütemezése sikeresen befejeződött."
 
 #. module: project_long_term
 #: view:project.compute.tasks:0
 msgid "Compute Scheduling of Task for specified project."
-msgstr ""
+msgstr "Feladat ütemezésének számítása adott projektre."
 
 #. module: project_long_term
 #: view:project.resource.allocation:0
@@ -496,6 +527,11 @@ msgid ""
 "          \n"
 " If the phase is over, the states is set to 'Done'."
 msgstr ""
+"Amikor a fázist létrehozzák, tervezet állapotban van.\n"
+" Ha a fázis elkezdődik, folyamatban állapotba kerül.\n"
+" Ha ellenőrzés szükséges, akkor a fázis függőben lévő állapotban van.        "
+"                        \n"
+" Amikor a fázis befejeződik, kész állapotba kerül."
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
@@ -507,7 +543,7 @@ msgstr "Befejezés dátuma"
 #: view:project.resource.allocation:0
 #: field:project.resource.allocation,resource_id:0
 msgid "Resource"
-msgstr "Forrás"
+msgstr "Erőforrás"
 
 #. module: project_long_term
 #: field:project.phase,name:0
@@ -527,7 +563,7 @@ msgstr "Munkaidő"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_resource_resource
 msgid "Resource Detail"
-msgstr "Forrás részletei"
+msgstr "Erőforrás részletei"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_phase_schedule
@@ -546,7 +582,7 @@ msgstr "Projektfázis"
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
 msgid "Project Compute Phases"
-msgstr ""
+msgstr "Projektfázisok ütemezése"
 
 #. module: project_long_term
 #: field:project.schedule.tasks,msg:0
@@ -556,7 +592,7 @@ msgstr "Üzenet"
 #. module: project_long_term
 #: constraint:project.phase:0
 msgid "Loops in phases not allowed"
-msgstr ""
+msgstr "A fázisban hurkok nem engedélyezettek."
 
 #. module: project_long_term
 #: field:project.phase,sequence:0
@@ -566,7 +602,7 @@ msgstr "Sorszám"
 #. module: project_long_term
 #: selection:project.compute.phases,target_project:0
 msgid "Compute All Projects"
-msgstr ""
+msgstr "Minden projekt ütemezésének számítása"
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_view_resource_calendar_leaves
@@ -578,14 +614,14 @@ msgstr ""
 #: view:project.phase:0
 #: view:project.schedule.tasks:0
 msgid "Schedule Tasks"
-msgstr "Ütemezett feladatok"
+msgstr "Feladatok ütemezése"
 
 #. module: project_long_term
 #: help:project.phase,duration:0
 msgid "By default in days"
-msgstr ""
+msgstr "Alapértelmezés szerint napokban megadva."
 
 #. module: project_long_term
 #: field:project.phase,duration:0
 msgid "Duration"
-msgstr ""
+msgstr "Időtartam"
