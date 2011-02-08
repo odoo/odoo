@@ -99,7 +99,7 @@ class configmanager(object):
             'osv_memory_age_limit': 1, # hours
         }
 
-        self.blacklist_for_save = set(["publisher_warranty_url", "load_language"])
+        self.blacklist_for_save = set(["publisher_warranty_url", "load_language", "root_path"])
 
         self.misc = {}
         self.config_file = fname
@@ -334,10 +334,11 @@ class configmanager(object):
         else:
             self.options['log_level'] = self._LOGLEVELS.get(self.options['log_level']) or int(self.options['log_level'])
 
-        if not self.options['root_path'] or self.options['root_path']=='None':
-            self.options['root_path'] = os.path.dirname(openerp.__file__)
+        self.options['root_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(os.path.dirname(openerp.__file__))))
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             self.options['addons_path'] = os.path.join(self.options['root_path'], 'addons')
+        else:
+            self.options['addons_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['addons_path'])))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
