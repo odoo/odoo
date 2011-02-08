@@ -1884,8 +1884,8 @@ class orm_memory(orm_template):
 
     _protected = ['read', 'write', 'create', 'default_get', 'perm_read', 'unlink', 'fields_get', 'fields_view_get', 'search', 'name_get', 'distinct_field_get', 'name_search', 'copy', 'import_data', 'search_count', 'exists']
     _inherit_fields = {}
-    _max_count = 200
-    _max_hours = 1
+    _max_count = config.get('osv_memory_count_limit')
+    _max_hours = config.get('osv_memory_age_limit')
     _check_time = 20
 
     def __init__(self, cr):
@@ -1899,21 +1899,32 @@ class orm_memory(orm_template):
         if uid != 1 and self.datas[object_id]['internal.create_uid'] != uid:
             raise except_orm(_('AccessError'), '%s access is only allowed on your own records for osv_memory objects except for the super-user' % mode.capitalize())
 
-    def vaccum(self, cr, uid):
+    def vaccum(self, cr, uid, force=False):
+        """Run the vaccuum cleaning system, expiring and removing old records from the
+        virtual osv_memory tables if the "max count" or "max age" conditions are enabled
+        and have been reached. This method can be called very often (e.g. everytime a record
+        is created), but will only actually trigger the cleanup process once out of
+        "_check_time" times (by default once out of 20 calls)."""
         self.check_id += 1
-        if self.check_id % self._check_time:
+        if (not force) and (self.check_id % self._check_time):
             return True
         tounlink = []
-        max = time.time() - self._max_hours * 60 * 60
-        for id in self.datas:
-            if self.datas[id]['internal.date_access'] < max:
-                tounlink.append(id)
-        self.unlink(cr, 1, tounlink)
-        if len(self.datas) > self._max_count:
-            sorted = map(lambda x: (x[1]['internal.date_access'], x[0]), self.datas.items())
-            sorted.sort()
-            ids = map(lambda x: x[1], sorted[:len(self.datas)-self._max_count])
-            self.unlink(cr, uid, ids)
+
+        # Age-based expiration
+        if self._max_hours:
+            max = time.time() - self._max_hours * 60 * 60
+            for k,v in self.datas.iteritems():
+                if v['internal.date_access'] < max:
+                    tounlink.append(k)
+            self.unlink(cr, 1, tounlink)
+
+        # Count-based expiration
+        if self._max_count and len(self.datas) > self._max_count:
+            # sort by access time to remove only the first/oldest ones in LRU fashion
+            records = self.datas.items()
+            records.sort(key=lambda x:x[1]['internal.date_access'])
+            self.unlink(cr, 1, [x[0] for x in records[:len(self.datas)-self._max_count]])
+
         return True
 
     def read(self, cr, user, ids, fields_to_read=None, context=None, load='_classic_read'):
