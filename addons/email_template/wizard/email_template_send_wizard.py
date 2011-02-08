@@ -37,26 +37,26 @@ class email_template_send_wizard(osv.osv_memory):
     _description = 'This is the wizard for sending mail'
     _rec_name = "subject"
 
-#    def _get_accounts(self, cr, uid, context=None):
-#        if context is None:
-#            context = {}
-#
-#        template = self._get_template(cr, uid, context)
-#        if not template:
-#            return []
-#
-#        logger = netsvc.Logger()
-#
-#        if template.from_account:
-#            return [(template.from_account.id, '%s (%s)' % (template.from_account.name, template.from_account.email_id))]
-#        else:
-#            account_id = self.pool.get('email.smtp_server').search(cr,uid,[('company','=','no'),('user','=',uid)], context=context)
-#            if account_id:
-#                account = self.pool.get('email.smtp_server').browse(cr,uid,account_id, context)
-#                return [(r.id,r.name + " (" + r.email_id + ")") for r in account]
-#            else:
-#                logger.notifyChannel(_("email-template"), netsvc.LOG_ERROR, _("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
-#                raise osv.except_osv(_("Missing mail account"),_("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
+    def _get_accounts(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+
+        template = self._get_template(cr, uid, context)
+        if not template:
+            return []
+
+        logger = netsvc.Logger()
+
+        if template.from_account:
+            return [(template.from_account.id, '%s (%s)' % (template.from_account.name, template.from_account.email_id))]
+        else:
+            account_id = self.pool.get('email.smtp_server').search(cr,uid,[('company','=','no'),('user','=',uid)], context=context)
+            if account_id:
+                account = self.pool.get('email.smtp_server').browse(cr,uid,account_id, context)
+                return [(r.id,r.name + " (" + r.email_id + ")") for r in account]
+            else:
+                logger.notifyChannel(_("email-template"), netsvc.LOG_ERROR, _("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
+                raise osv.except_osv(_("Missing mail account"),_("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
 
     def get_value(self, cursor, user, template, message, context=None, id=None):
         """Gets the value of the message parsed with the content of object id (or the first 'src_rec_ids' if id is not given)"""
@@ -111,7 +111,7 @@ class email_template_send_wizard(osv.osv_memory):
         'ref_template':fields.many2one('email.template','Template',readonly=True),
         'rel_model':fields.many2one('ir.model','Model',readonly=True),
         'rel_model_ref':fields.integer('Referred Document',readonly=True),
-#        'from':fields.selection(_get_accounts,'From Account',select=True),
+        'from':fields.selection(_get_accounts,'From Account',select=True),
         'to':fields.char('To',size=250,required=True),
         'cc':fields.char('CC',size=250,),
         'bcc':fields.char('BCC',size=250,),
