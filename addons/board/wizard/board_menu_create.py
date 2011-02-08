@@ -71,7 +71,8 @@ class board_menu_create(osv.osv_memory):
         obj_menu = self.pool.get('ir.ui.menu')
         #start Loop
         for data in self.read(cr, uid, ids, context=context):
-            data['menu_parent_id'] = data['menu_parent_id'][0]
+            if isinstance(data['menu_parent_id'], tuple):
+                data['menu_parent_id'] = data['menu_parent_id'][0]
             obj_menu.create(cr, uid, {
                 'name': data.get('menu_name'),
                 'parent_id': data.get('menu_parent_id'),

@@ -64,7 +64,8 @@ class survey_browse_answer(osv.osv_memory):
         record = self.read(cr, uid, ids, [],context=context)
         record = record and record[0] or {} 
         if record['response_id']:
-            record['response_id'] = record['response_id'][0]
+            if isinstance(record['response_id'], tuple):
+                record['response_id'] = record['response_id'][0]
             res_id = [(record['response_id'])]
         else:
             sur_response_obj = self.pool.get('survey.response')
