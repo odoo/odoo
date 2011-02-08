@@ -49,8 +49,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
         opportunities = res.get('opportunity_ids') or []
         name = 'convert'
-        if res.get('partner_id'):
-            
+        if res.get('partner_id'):            
             partner_id = res.get('partner_id')
             ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
             if ids:
