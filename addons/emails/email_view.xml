@@ -33,8 +33,9 @@
                                 <group col="3" colspan="2">
                                     <field name="res_id"  readonly="1"/>
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
+	                                <field name="message_id"/>
+	                                <button name="process_queue" string="Process Queue" type="object" icon="gtk-execute"/>
                                 </group>
-                                <field name="message_id"/>
                             </group>
                             <separator string="Description" colspan="4"/>
                             <field name="description" nolabel="1" colspan="4"/>
@@ -44,15 +45,15 @@
                             <field name="attachment_ids" nolabel="1" colspan="4" readonly="1"/>
                         </page>
                         <page string="Advanced">
-                            <field name="folder" colspan="2"/>
-                            <field name="state"/>
-                            <field name="sub_type"/>
-                            <field name="headers"/>
-                            <field name="priority"/>
-                            <field name="debug"/>
-                            <field name="history"/>
-                            <newline/>
-                            <button name="process_queue" string="Process Queue" type="object" icon="gtk-execute"/>
+                            <group col="4" colspan="4">
+	                            <field name="folder"/>
+	                            <field name="state"/>
+	                            <field name="sub_type"/>
+	                            <field name="headers"/>
+	                            <field name="priority"/>
+	                            <field name="debug"/>
+	                            <field name="history"/>
+                            </group>
                         </page>
                     </notebook>
                 </form>
@@ -87,6 +88,7 @@
                     <field name="date"/>
                     <field name="user_id" string="Owner"/>
                     <field name="partner_id" string="Partner Name"/>
+                    <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Owner" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
