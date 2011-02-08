@@ -8,10 +8,10 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Email Templates">
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="object_name" required="1"
-                        on_change="change_model(object_name)" />
-                    <field name="model_int_name" invisible="1" />
+                        on_change="change_model(object_name)"/>
+                    <field name="model_int_name" invisible="1"/>
                     <notebook colspan="4">
                         <page string="Mail Details">
                             <group col="2" colspan="2">
@@ -29,35 +29,34 @@
                                 <field name="track_campaign_item" colspan="4"/>
                             </group>
                             <group col="2" colspan="2">
-                                <separator colspan="2" string="Email Content  " />
-                                <field name="def_subject" colspan="4" required="1" />
+                                <separator colspan="2" string="Email Content"/>
+                                <field name="def_subject" colspan="4" required="1"/>
                                 <notebook>
                                     <page string="Body (Text)">
-                                        <field name="def_body_text" colspan="4" nolabel="1" />
+                                        <field name="def_body_text" colspan="4" nolabel="1"/>
                                     </page>
                                     <page string="Body (Raw HTML)">
-                                        <field name="def_body_html" colspan="4" nolabel="1" />
-                                        <label string="Note: This is Raw HTML." colspan="4" />
+                                        <field name="def_body_html" colspan="4" nolabel="1"/>
+                                        <label string="Note: This is Raw HTML." colspan="4"/>
                                     </page>
                                 </notebook>
                             </group>
                             <group col="4" colspan="2">
                                 <notebook>
                                     <page string="Insert Simple Field">
-
                                         <field name="model_object_field"
                                             domain="[('model_id','=',object_name),('ttype','!=','one2many'),('ttype','!=','many2many')]"
                                             on_change="onchange_sub_model_object_value_field(model_object_field)"
-                                            colspan="4" />
-                                        <field name="sub_object" readonly="1" colspan="4" />
+                                            colspan="4"/>
+                                        <field name="sub_object" readonly="1" colspan="4"/>
                                         <field name="sub_model_object_field"
                                             domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
                                             colspan="4"
                                             attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
-                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)" />
+                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
                                         <field name="null_value" colspan="4"
                                             on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)" />
-                                        <field name="copyvalue" colspan="4" />
+                                        <field name="copyvalue" colspan="4"/>
                                     </page>
                                 </notebook>
                                 <button name="%(wizard_email_template_preview)d" string="Preview Template"
@@ -87,7 +86,7 @@
                                     </page>
                                     <page string="Report">
                                         <field name="report_template" colspan="4"
-                                            domain="[('model','=',model_int_name)]" />
+                                            domain="[('model','=',model_int_name)]"/>
                                         <field name="file_name" colspan="4" />
                                     </page>
                                 </notebook>
@@ -126,13 +125,13 @@
            <field name="arch" type="xml">
                <search string="Templates">
                     <group col="13" colspan="4">
-                        <field name="name" select="1"/>
-                        <field name="object_name" select="1"/>
-                        <field name="def_to" select="1"/>
+                        <field name="name"/>
+                        <field name="object_name"/>
+                        <field name="def_to"/>
                         <separator orientation="vertical"/>
-                        <field name="lang" select="1"/>
-                        <field name="def_subject" select="1"/>
-                        <field name="file_name" select="1"/>
+                        <field name="lang"/>
+                        <field name="def_subject"/>
+                        <field name="file_name"/>
                     </group>
                     <newline/>
                     <group expand="0" string="Group by..." colspan="4" col="10">
@@ -156,7 +155,7 @@
         <menuitem name="Email Templates" id="menu_email_template_all_tools"
             parent="email.menu_config_email" action="action_email_template_tree_all" />
 
-	<!-- Inherit email.message view -->
+		<!-- Inherit email.message view -->
 
         <record model="ir.ui.view" id="view_email_message_template_form">
             <field name="name">email.message.template.form</field>
@@ -172,8 +171,3 @@
 
     </data>
 </openerp>
-
-
-
-
-

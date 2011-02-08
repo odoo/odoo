@@ -9,14 +9,14 @@
             <field name="arch" type="xml">
                 <form string="Email Preview">
                     <group col="4" colspan="4">
-                        <field name="rel_model" />
+                        <field name="rel_model"/>
                         <field name="rel_model_ref" on_change="on_change_ref(rel_model_ref, context)"/>
                     </group>
                     <group col="8" colspan="4">
-                        <field name="to" />
-                        <field name="cc" />
-                        <field name="bcc" />
-                        <field name="reply_to" />
+                        <field name="to"/>
+                        <field name="cc"/>
+                        <field name="bcc"/>
+                        <field name="reply_to"/>
                         <field name="message_id" attrs="{'invisible':[('message_id','=',False)]}" groups="base.group_extended"/>
                         <field name="subject" colspan="8"/>
                     </group>
@@ -47,4 +47,3 @@
 
 	</data>
 </openerp>
-
