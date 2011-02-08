@@ -1130,6 +1130,8 @@ class account_move_line(osv.osv):
         move_obj = self.pool.get('account.move')
         account_obj = self.pool.get('account.account')
         journal_obj = self.pool.get('account.journal')
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if vals.get('account_tax_id', False):
             raise osv.except_osv(_('Unable to change tax !'), _('You can not change the tax, you should remove and recreate lines !'))
         self._check_date(cr, uid, vals, context, check)
