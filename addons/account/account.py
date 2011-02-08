@@ -2238,6 +2238,7 @@ class account_subscription(osv.osv):
                     ds = (datetime.strptime(ds, '%Y-%m-%d') + relativedelta(years=sub.period_nbr)).strftime('%Y-%m-%d')
         self.write(cr, uid, ids, {'state':'running'})
         return True
+
 account_subscription()
 
 class account_subscription_line(osv.osv):
@@ -2266,6 +2267,7 @@ class account_subscription_line(osv.osv):
         return all_moves
 
     _rec_name = 'date'
+
 account_subscription_line()
 
 #  ---------------------------------------------------------------
@@ -2534,7 +2536,6 @@ class account_tax_template(osv.osv):
     }
     _order = 'sequence'
 
-
 account_tax_template()
 
 # Fiscal Position Templates
@@ -2643,10 +2644,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return False
 
     def _get_default_accounts(self, cr, uid, context=None):
-        accounts = [{'acc_name':'Current','account_type':'bank'},
+        return [{'acc_name':'Current','account_type':'bank'},
                     {'acc_name':'Deposit','account_type':'bank'},
                     {'acc_name':'Cash','account_type':'cash'}]
-        return accounts
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
@@ -3086,7 +3086,7 @@ class account_bank_accounts_wizard(osv.osv_memory):
         'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
     }
     _defaults = {
-        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
+        'currency_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
     }
 
 account_bank_accounts_wizard()
