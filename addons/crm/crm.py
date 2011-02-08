@@ -218,12 +218,12 @@ class crm_case(object):
     def stage_change(self, cr, uid, ids, context=None, order='sequence'):
         if context is None:
             context = {}
-        stage_pool = self.pool.get('crm.case.stage')
+        stage_pool = self.pool.get('crm.case.setage')
+        stage_type = context and context.get('stage_type','')
         current_seq = False
         next_stage_id = False
 
         for case in self.browse(cr, uid, ids, context=context):
-            stage_type = case.type
             next_stage = False
             value = {}
             if case.section_id.id : 
