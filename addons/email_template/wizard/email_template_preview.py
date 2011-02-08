@@ -36,13 +36,12 @@ class email_template_preview(osv.osv_memory):
             #Fills up the selection box which allows records from the selected object to be displayed
         self.context = context
         if 'template_id' in context:
-            ref_obj_id = self.pool.get('email.template').read(cr, uid, context['template_id'], ['object_name'], context)
-            ref_obj_name = self.pool.get('ir.model').read(cr, uid, ref_obj_id['object_name'][0], ['model'], context)['model']
+            ref_obj_id = self.pool.get('email.template').browse(cr, uid, context['template_id'], context).object_name.id
+            ref_obj_name = self.pool.get('ir.model').browse(cr, uid, ref_obj_id, context).model
             model_obj = self.pool.get(ref_obj_name)
             ref_obj_ids = model_obj.search(cr, uid, [], 0, 20, 'id', context=context)
             if not ref_obj_ids:
                 ref_obj_ids = []
-
             # also add the default one if requested, otherwise it won't be available for selection:
             default_id = context.get('default_rel_model_ref')
             if default_id and default_id not in ref_obj_ids:
@@ -54,8 +53,7 @@ class email_template_preview(osv.osv_memory):
         if context is None:
             context = {}
         result = super(email_template_preview, self).default_get(cr, uid, fields, context=context)
-        if (not fields or 'rel_model_ref' in fields) and 'template_id' in context \
-           and not result.get('rel_model_ref'):
+        if (not fields or 'rel_model_ref' in fields) and 'template_id' in context and not result.get('rel_model_ref'):
             selectables = self._get_model_recs(cr, uid, context=context)
             result['rel_model_ref'] = selectables and selectables[0][0] or False
         return result
@@ -67,12 +65,7 @@ class email_template_preview(osv.osv_memory):
         @param user: ID of current user
         @param context: OpenERP Context
         """
-        return self.pool.get('email.template').read(
-                                                   cursor,
-                                                   user,
-                                                   context['template_id'],
-                                                   ['object_name'],
-                                                   context).get('object_name', False)
+        return self.pool.get('email.template').read(cursor, user, context['template_id'], ['object_name'], context).get('object_name', False)
 
     _columns = {
         'ref_template':fields.many2one(

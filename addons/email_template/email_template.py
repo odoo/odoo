@@ -31,6 +31,11 @@ from tools.translate import _
 import tools
 import pooler
 
+try:
+    from mako.template import Template as MakoTemplate
+except ImportError:
+    logging.getLogger('init').warning("module email_template: Mako templates not installed")
+
 def get_value(cursor, user, recid, message=None, template=None, context=None):
     """
     Evaluates an expression and returns its value

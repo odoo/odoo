@@ -23,10 +23,5 @@
 import email_template
 import wizard
 
-try:
-    from mako.template import Template as MakoTemplate
-except ImportError:
-    logging.getLogger('init').warning("module email_template: Mako templates not installed")
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
