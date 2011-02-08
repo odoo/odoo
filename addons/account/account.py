@@ -2690,6 +2690,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_tax_code_template = self.pool.get('account.tax.code.template')
+        ir_values = self.pool.get('ir.values')
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -2789,7 +2790,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
         #reactivate the parent_store functionnality on account_account
-        self.pool.get('account.account')._parent_store_compute(cr)
+        obj_acc._parent_store_compute(cr)
 
         for key,value in todo_dict.items():
             if value['account_collected_id'] or value['account_paid_id']:
@@ -3026,7 +3027,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': record[0],
                 'company_id': company_id,
                 'fields_id': field[0],
-                'value': account and 'account.account,'+str(acc_template_ref[account.id]) or False,
+                'value': account and 'account.account,' + str(acc_template_ref[account.id]) or False,
             }
 
             if r:
@@ -3039,7 +3040,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         fp_ids = obj_fiscal_position_template.search(cr, uid, [('chart_template_id', '=', obj_multi.chart_template_id.id)])
 
         if fp_ids:
-
             obj_tax_fp = self.pool.get('account.fiscal.position.tax')
             obj_ac_fp = self.pool.get('account.fiscal.position.account')
 
@@ -3067,7 +3067,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
 
-        ir_values = self.pool.get('ir.values')
         if obj_multi.sale_tax:
             ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
