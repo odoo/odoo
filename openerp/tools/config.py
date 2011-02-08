@@ -233,8 +233,10 @@ class configmanager(object):
         security.add_option('--no-database-list', action="store_false", dest='list_db', help="disable the ability to return the list of databases")
         parser.add_option_group(security)
 
-    def parse_config(self):
-        opt = self.parser.parse_args()[0]
+        self.parse_config()
+
+    def parse_config(self, args=[]):
+        opt = self.parser.parse_args(args)[0]
 
         def die(cond, msg):
             if cond:

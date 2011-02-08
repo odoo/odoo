@@ -46,21 +46,29 @@ import logging
 
 logger = netsvc.Logger()
 
-_ad = os.path.abspath(opj(tools.ustr(tools.config['root_path']), u'addons'))     # default addons path (base)
-ad_paths= map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
-
-sys.path.insert(1, _ad)
-
-ad_cnt=1
-for adp in ad_paths:
-    if adp != _ad:
-        sys.path.insert(ad_cnt, adp)
-        ad_cnt+=1
-
-ad_paths.append(_ad)    # for get_module_path
+_ad = os.path.dirname(__file__) # default addons path (base)
+ad_paths = []
 
 # Modules already loaded
 loaded = []
+
+def initialize_sys_path():
+    global ad_paths
+
+    if ad_paths:
+        return
+
+    ad_paths = map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
+
+    sys.path.insert(1, _ad)
+
+    ad_cnt=1
+    for adp in ad_paths:
+        if adp != _ad:
+            sys.path.insert(ad_cnt, adp)
+            ad_cnt+=1
+
+    ad_paths.append(_ad)    # for get_module_path
 
 class Graph(dict):
 
@@ -797,6 +805,8 @@ def _check_module_names(cr, module_names):
             logging.getLogger('init').warning('invalid module names, ignored: %s', ", ".join(incorrect_names))
 
 def load_modules(db, force_demo=False, status=None, update_module=False):
+
+    initialize_sys_path()
 
     # Backward compatibility: addons don't have to import openerp.xxx, they still can import xxx
     for k, v in list(sys.modules.items()):

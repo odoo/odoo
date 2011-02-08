@@ -19,26 +19,21 @@
 #
 ##############################################################################
 
-# We don't want addons to be imported right now;
-# the commented imports import addons.
-# This will change when addons.__init__ and addons.base
-# are cleaned.
-
-#import addons
+import addons
 import ir
 import loglevels
 import netsvc
 import osv
-#import pooler
+import pooler
 import pychart
 import release
-#import report
+import report
 import run_tests
-#import service
+import service
 import sql_db
 import test
 import tiny_socket
-#import tools
+import tools
 import wizard
 import workflow
 

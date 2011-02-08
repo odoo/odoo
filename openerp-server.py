@@ -56,7 +56,7 @@ if os.name == 'posix':
 # import the tools module so that the commandline parameters are parsed
 #-----------------------------------------------------------------------
 import openerp.tools as tools
-tools.config.parse_config()
+tools.config.parse_config(sys.argv[1:])
 
 #----------------------------------------------------------
 # get logger
