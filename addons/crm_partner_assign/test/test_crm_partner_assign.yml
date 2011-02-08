@@ -60,6 +60,7 @@
   Now I click on Forward button.
 -
   !python {model: crm.lead.forward.to.partner}: |
+    import tools
     vals = {
        'name': 'email',
        'email_to': 'info@axelor.com',
@@ -67,7 +68,6 @@
        'reply_to': 'sales_openerp@openerp.com'
     }
     ids = self.create(cr, uid, vals, context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
-    try:
-      self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
-    except Exception, e:
-      pass
+    assert tools.config.get('smtp_user', False), 'SMTP not configured !'
+    self.action_forward(cr, uid, [ids], context={'active_id': ref('crm_lead_questionnaireonopenerp0'), 'active_model': 'crm.lead'})
+    
