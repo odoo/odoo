@@ -2238,6 +2238,7 @@ class account_subscription(osv.osv):
                     ds = (datetime.strptime(ds, '%Y-%m-%d') + relativedelta(years=sub.period_nbr)).strftime('%Y-%m-%d')
         self.write(cr, uid, ids, {'state':'running'})
         return True
+
 account_subscription()
 
 class account_subscription_line(osv.osv):
@@ -2266,6 +2267,7 @@ class account_subscription_line(osv.osv):
         return all_moves
 
     _rec_name = 'date'
+
 account_subscription_line()
 
 #  ---------------------------------------------------------------
@@ -2534,7 +2536,6 @@ class account_tax_template(osv.osv):
     }
     _order = 'sequence'
 
-
 account_tax_template()
 
 # Fiscal Position Templates
@@ -2643,10 +2644,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         return False
 
     def _get_default_accounts(self, cr, uid, context=None):
-        accounts = [{'acc_name':'Current','account_type':'bank'},
+        return [{'acc_name':'Current','account_type':'bank'},
                     {'acc_name':'Deposit','account_type':'bank'},
                     {'acc_name':'Cash','account_type':'cash'}]
-        return accounts
 
     _defaults = {
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, [uid], c)[0].company_id.id,
@@ -2690,6 +2690,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         analytic_journal_obj = self.pool.get('account.analytic.journal')
         obj_tax_code = self.pool.get('account.tax.code')
         obj_tax_code_template = self.pool.get('account.tax.code.template')
+        ir_values = self.pool.get('ir.values')
         # Creating Account
         obj_acc_root = obj_multi.chart_template_id.account_root_id
         tax_code_root_id = obj_multi.chart_template_id.tax_code_root_id.id
@@ -2789,7 +2790,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             new_account = obj_acc.create(cr, uid, vals, context=ctx)
             acc_template_ref[account_template.id] = new_account
         #reactivate the parent_store functionnality on account_account
-        self.pool.get('account.account')._parent_store_compute(cr)
+        obj_acc._parent_store_compute(cr)
 
         for key,value in todo_dict.items():
             if value['account_collected_id'] or value['account_paid_id']:
@@ -3026,7 +3027,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'name': record[0],
                 'company_id': company_id,
                 'fields_id': field[0],
-                'value': account and 'account.account,'+str(acc_template_ref[account.id]) or False,
+                'value': account and 'account.account,' + str(acc_template_ref[account.id]) or False,
             }
 
             if r:
@@ -3039,7 +3040,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         fp_ids = obj_fiscal_position_template.search(cr, uid, [('chart_template_id', '=', obj_multi.chart_template_id.id)])
 
         if fp_ids:
-
             obj_tax_fp = self.pool.get('account.fiscal.position.tax')
             obj_ac_fp = self.pool.get('account.fiscal.position.account')
 
@@ -3067,7 +3067,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     }
                     obj_ac_fp.create(cr, uid, vals_acc)
 
-        ir_values = self.pool.get('ir.values')
         if obj_multi.sale_tax:
             ir_values.set(cr, uid, key='default', key2=False, name="taxes_id", company=obj_multi.company_id.id,
                             models =[('product.product',False)], value=[tax_template_to_tax[obj_multi.sale_tax.id]])
@@ -3087,7 +3086,7 @@ class account_bank_accounts_wizard(osv.osv_memory):
         'account_type': fields.selection([('cash','Cash'),('check','Check'),('bank','Bank')], 'Type', size=32),
     }
     _defaults = {
-        'currency_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
+        'currency_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.currency_id.id,
     }
 
 account_bank_accounts_wizard()
