@@ -11,22 +11,22 @@
                     <separator string="History" colspan="4"/>
                     <field name="message_ids" nolabel="1" colspan="4" mode="tree,form">
                         <tree string="Mailgateway History">
-                            <field name="display_text" />
+                            <field name="display_text"/>
                         </tree>
                         <form string="Mailgate History">
-                            <field name="name" widget="char" size="512"/>
-                            <field name="date" />
-                            <field name="user_id" />
-                            <field name="message_id" />
-                            <field name="history" />
+                            <field name="name" widget="char"/>
+                            <field name="date"/>
+                            <field name="user_id"/>
+                            <field name="message_id"/>
+                            <field name="history"/>
                             <notebook colspan="4">
                                 <page string="Email Details">
                                     <group col="4" colspan="4">
                                         <separator string="Email Details" colspan="4"/>
-                                        <field name="email_from" />
-                                        <field name="email_to" widget="char" size="512"/>
-                                        <field name="email_cc" widget="char" size="512"/>
-                                        <field name="email_bcc" widget="char" size="512"/>
+                                        <field name="email_from"/>
+                                        <field name="email_to"/>
+                                        <field name="email_cc"/>
+                                        <field name="email_bcc"/>
                                    </group>
                                 </page>
                                 <page string="Attachments">
@@ -50,9 +50,6 @@
                 </tree>
             </field>
         </record>
-
-
-
 
          <!--        Emails action-->
         <record model="ir.actions.act_window" id="action_view_mailgate_thread">
