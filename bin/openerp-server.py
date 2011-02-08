@@ -11,7 +11,8 @@ if __name__ == "__main__":
     print '-' * 70
 
     # Change to the parent directory ...
-    os.chdir(os.path.dirname(os.path.dirname(__file__)))
+    os.chdir(os.path.normpath(os.path.dirname(__file__)))
+    os.chdir('..')
     # ... and execute the new executable.
     os.execv('openerp-server.py', sys.argv)
 
