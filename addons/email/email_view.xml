@@ -6,16 +6,16 @@
               id="base.menu_lunch_survey_root" sequence="20" />
 
         <record model="ir.ui.view" id="view_email_message_form">
-          <field name="name">email.message.form</field>
-            <field name="model">email.message</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-             <form string="Email message">
+            <field name="name">email.message.form</field>
+			<field name="model">email.message</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+                <form string="Email message">
                     <group colspan="4" col="6">
-                        <field name="name" widget="char" string="Subject" required="1"/>
-                        <field name="date" required="1"/>
-                        <field name="user_id" string="Owner"/>
-                        <field name="partner_id" readonly="1" />
+                       <field name="name" widget="char" required="1"/>
+                       <field name="date" required="1"/>
+                       <field name="user_id" string="Owner"/>
+                       <field name="partner_id" readonly="1" />
                     </group>
                     <notebook colspan="4">
                         <page string="Details">
@@ -26,8 +26,8 @@
                                 <field name="email_cc"/>
                                 <field name="email_bcc" groups="base.group_extended"/>
                                 <field name="reply_to"/>
-                           </group>
-                           <group col="2" colspan="2">
+                            </group>
+                            <group col="2" colspan="2">
                                 <separator string="Message Details" colspan="4"/>
                                 <field name="model" readonly="1"/>
                                 <group col="3" colspan="2">
@@ -35,14 +35,14 @@
                                     <button name="open_document" string="Open Document" type="object" icon="gtk-jump-to"/>
                                 </group>
                                 <field name="message_id"/>
-                           </group>
+                            </group>
                         </page>
                         <page string="Attachments">
                             <separator string="Attachments" colspan="4"/>
                             <field name="attachment_ids" nolabel="1" colspan="4" readonly="1"/>
                         </page>
                         <page string="Advanced">
-                            <field name="folder" colspan="2" select="2"/>
+                            <field name="folder" colspan="2"/>
                             <field name="state"/>
                             <field name="sub_type"/>
                             <field name="headers"/>
@@ -62,9 +62,9 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Emails">
-                    <field name="date" />
-                    <field name="name" string="Subject"/>
-                    <field name="email_from" string="From"/>
+                    <field name="date"/>
+                    <field name="name"/>
+                    <field name="email_from"/>
                     <field name="user_id" string="Owner"/>
                     <field name="message_id" string="Message" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
@@ -80,18 +80,17 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Email Search">
-                    <field name="name" string="Subject"/>
-                    <field name="date" />
+                    <field name="name"/>
+                    <field name="date"/>
                     <field name="user_id" string="Owner"/>
                     <field name="partner_id" string="Partner Name"/>
-                    <newline/>
                     <group expand="0" string="Group By..." groups="base.group_extended">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Owner" name="User" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <separator orientation="vertical"/>
-                         <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
-                         <separator orientation="vertical"/>
-                         <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Thread" icon="terp-mail-" domain="[]" context="{'group_by':'message_id'}"/>
+                        <separator orientation="vertical"/>
+                        <filter string="Month" help="Creation Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
@@ -132,26 +131,26 @@
             <field name="arch" type="xml">
                 <form string="Email Smtp Server Configuration">
                     <group colspan="2">
-                        <field name="name" select="1" />
+                        <field name="name"/>
                         <field name="default"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Outgoing">
-                            <separator string="Server Information" colspan="4" />
+                            <separator string="Server Information" colspan="4"/>
                             <group colspan="4" col="4">
-                                <field name="smtpserver" select="1"/>
+                                <field name="smtpserver"/>
                                 <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" icon="gtk-network" colspan="2"/>
-                                <field name="smtpport" select="2" />
-                                <field name="smtpssl" select="2" />
-                                <field name="smtptls" select="2" />
+                                <field name="smtpport"/>
+                                <field name="smtpssl"/>
+                                <field name="smtptls"/>
                             </group>
-                            <separator string="User Information" colspan="4" />
+                            <separator string="User Information" colspan="4"/>
                             <group col="2" colspan="2">
-                                <field name="email_id" select="1" colspan="2" />
-                                <field name="smtppass" password="True" colspan="2" />
+                                <field name="email_id" colspan="2"/>
+                                <field name="smtppass" password="True" colspan="2"/>
                             </group>
                             <group col="2" colspan="2">
-                                <field name="smtpuname" select="1" colspan="2" />
+                                <field name="smtpuname" colspan="2"/>
                             </group>
                         </page>
                     </notebook>
@@ -165,25 +164,25 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Email Accounts">
-                    <field name="name" />
-                    <field name="email_id" />
-                    <field name="smtpuname" />
-                    <field name="smtpserver" />
-                    <field name="smtpport" />
+                    <field name="name"/>
+                    <field name="email_id"/>
+                    <field name="smtpuname"/>
+                    <field name="smtpserver"/>
+                    <field name="smtpport"/>
                 </tree>
             </field>
         </record>
 
-       <record id="view_email_smtp_server_search" model="ir.ui.view">
-           <field name="name">email_smtp.server.search</field>
-           <field name="model">email.smtp_server</field>
-           <field name="type">search</field>
-           <field name="arch" type="xml">
-               <search string="Email Smtp Server">
-                    <field name="name" select="1"/>
-                    <field name="email_id" select="1"/>
-               </search>
-           </field>
+        <record id="view_email_smtp_server_search" model="ir.ui.view">
+            <field name="name">email_smtp.server.search</field>
+            <field name="model">email.smtp_server</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Email Smtp Server">
+                    <field name="name"/>
+                    <field name="email_id"/>
+                </search>
+            </field>
         </record>
 
         <record model="ir.actions.act_window" id="action_email_smtp_server_tree_all">
@@ -196,8 +195,7 @@
             <field name="search_view_id" ref="view_email_smtp_server_search"/>
         </record>
 
-        <menuitem name="Email" id="menu_config_email"
-              parent="base.menu_lunch_survey_root" sequence="20" />
+        <menuitem name="Email" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
 
         <menuitem name="Email Smtp Server" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
 

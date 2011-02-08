@@ -155,7 +155,7 @@
         <menuitem name="Email Templates" id="menu_email_template_all_tools"
             parent="email.menu_config_email" action="action_email_template_tree_all" />
 
-		<!-- Inherit email.message view -->
+        <!-- Inherit email.message view -->
 
         <record model="ir.ui.view" id="view_email_message_template_form">
             <field name="name">email.message.template.form</field>
@@ -165,7 +165,7 @@
             <field name="arch" type="xml">
 	            <field name="debug" position="after">
 	                <field name="template_id"/>
-	            </field>
+                </field>
             </field>
         </record>
 
