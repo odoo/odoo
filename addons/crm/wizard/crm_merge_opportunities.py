@@ -40,11 +40,7 @@ class crm_merge_opportunity(osv.osv_memory):
         return False
                 
     def _concat_all(self, attr, ops):
-        result = ''
-        for op in ops:
-            if hasattr(op, attr) and getattr(op, attr):
-                result += ' # ' + getattr(op, attr)
-        return result
+        return ', '.join([getattr(op, attr) for op in ops if hasattr(op, attr) and getattr(op, attr)])
 
     def action_merge(self, cr, uid, ids, context=None):
         """
@@ -53,7 +49,7 @@ class crm_merge_opportunity(osv.osv_memory):
         @param cr: the current row, from the database cursor,
         @param uid: the current user’s ID for security checks,
         @param ids: List of Phonecall to Opportunity IDs
-        @param context: A standard dictionary for contextual values
+        @param context: A standard dictionary for contextual valuesn
 
         @return : Dictionary value for created Opportunity form
         """
@@ -89,17 +85,17 @@ class crm_merge_opportunity(osv.osv_memory):
                 'state_id' : self._get_first_not_null_id('state_id', op_ids), 
                 'description' : self._concat_all('description', op_ids),  #not lost
                 'email' : self._get_first_not_null('email', op_ids), # !!
-                'fax' : self._get_first_not_null('fax', op_ids),	
-                'mobile' : self._get_first_not_null('mobile', op_ids),	
-                'partner_latitude' : hasattr(opp_obj,'partner_latitude') and self._get_first_not_null('partner_latitude', op_ids),	
-                'partner_longitude' : hasattr(opp_obj,'partner_longitude') and self._get_first_not_null('partner_longitude', op_ids),	
-                'partner_name' : self._get_first_not_null('partner_name', op_ids),	
-                'phone' : self._get_first_not_null('phone', op_ids),	
-                'probability' : self._get_first_not_null('probability', op_ids),	
-                'planned_revenue' : self._get_first_not_null('planned_revenue', op_ids),	
-                'street' : self._get_first_not_null('street', op_ids),	
-                'street2' : self._get_first_not_null('street2', op_ids),	
-                'zip' : self._get_first_not_null('zip', op_ids),	
+                'fax' : self._get_first_not_null('fax', op_ids),    
+                'mobile' : self._get_first_not_null('mobile', op_ids),  
+                'partner_latitude' : hasattr(opp_obj,'partner_latitude') and self._get_first_not_null('partner_latitude', op_ids),  
+                'partner_longitude' : hasattr(opp_obj,'partner_longitude') and self._get_first_not_null('partner_longitude', op_ids),   
+                'partner_name' : self._get_first_not_null('partner_name', op_ids),  
+                'phone' : self._get_first_not_null('phone', op_ids),    
+                'probability' : self._get_first_not_null('probability', op_ids),    
+                'planned_revenue' : self._get_first_not_null('planned_revenue', op_ids),    
+                'street' : self._get_first_not_null('street', op_ids),  
+                'street2' : self._get_first_not_null('street2', op_ids),    
+                'zip' : self._get_first_not_null('zip', op_ids),    
                 
             }
         
@@ -110,9 +106,11 @@ class crm_merge_opportunity(osv.osv_memory):
             for history in opp.message_ids:
                 new_history = message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
         #Notification about loss of information
+        details = []
+        subject = ['Merged opportunities :']
         for opp in op_ids:
-            opp_obj._history(cr, uid, [first_opp], _('Merged from Opportunity: %s : Information lost : [Partner: %s, Stage: %s, Section: %s, Salesman: %s, Category: %s, Channel: %s, City: %s, Company: %s, Country: %s, Email: %s, Phone number: %s, Contact name: %s]')  
-                    % ( opp.name, opp.partner_id.name or '', 
+            subject.append(opp.name) 
+            details.append(_('Merged Opportunity: %s\n  Partner: %s\n  Stage: %s\n  Section: %s\n   Salesman: %s\n   Category: %s\n   Channel: %s\n   City: %s\n   Company: %s\n   Country: %s\n   Email: %s\n   Phone number: %s\n   Contact name: %s')  % ( opp.name, opp.partner_id.name or '', 
                         opp.stage_id.name or '', 
                         opp.section_id.name or '', 
                         opp.user_id.name or '',
@@ -124,6 +122,10 @@ class crm_merge_opportunity(osv.osv_memory):
                         opp.email or '', 
                         opp.phone or '',
                         opp.contact_name or ''))
+        subject = subject[0] + ", ".join(subject[1:])
+        details = "\n\n".join(details) 
+        
+        opp_obj._history(cr, uid, [first_opp], subject, details=details)
                     
         #data.update({'message_ids' : [(6, 0 ,self._concat_o2m('message_ids', op_ids))]})
         opp_obj.write(cr, uid, [first_opp.id], data)

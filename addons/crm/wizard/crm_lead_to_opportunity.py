@@ -37,34 +37,34 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     }
     
     def default_get(self, cr, uid, fields, context=None):
-		"""
-			Default get for name, opportunity_ids
-			if there is an exisitng  partner link to the lead, find all existing opportunity link with this partnet to merge 
-			all information together
-		"""
-		lead_obj = self.pool.get('crm.lead')
-		partner_id = False
+        """
+            Default get for name, opportunity_ids
+            if there is an exisitng  partner link to the lead, find all existing opportunity link with this partnet to merge 
+            all information together
+        """
+        lead_obj = self.pool.get('crm.lead')
+        partner_id = False
 
  
-		res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
-		opportunities = res.get('opportunity_ids') or []
-		name = 'convert'
-		if res.get('partner_id'):
-			
-			partner_id = res.get('partner_id')
-			ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
-			if ids:
-				name = 'merge'
-			opportunities += ids
-			
+        res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
+        opportunities = res.get('opportunity_ids') or []
+        name = 'convert'
+        if res.get('partner_id'):
+            
+            partner_id = res.get('partner_id')
+            ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
+            if ids:
+                name = 'merge'
+            opportunities += ids
+            
                 
-		if 'name' in fields:
-			res.update({'name' : name})
-		if 'opportunity_ids' in fields:
-			res.update({'opportunity_ids': opportunities})
-		
+        if 'name' in fields:
+            res.update({'name' : name})
+        if 'opportunity_ids' in fields:
+            res.update({'opportunity_ids': opportunities})
+        
 
-		return res
+        return res
     
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -99,7 +99,7 @@ Leads Could not convert into Opportunity"))
             'date_action': time.strftime('%Y-%m-%d %H:%M:%S')
         }
         lead.write(vals, context=context)
-        leads.history(cr, uid, [lead], _('Opportunity'), details='Converted to Opportunity', context=context)
+        leads.history(cr, uid, [lead], _('Converted to opportunity'), details='Converted to Opportunity', context=context)
         if lead.partner_id:
             msg_ids = [ x.id for x in lead.message_ids]
             self.pool.get('mailgate.message').write(cr, uid, msg_ids, {
