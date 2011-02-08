@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-02 18:37+0000\n"
+"PO-Revision-Date: 2011-02-07 18:00+0000\n"
 "Last-Translator: ian syah <Unknown>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-03 06:17+0000\n"
+"X-Launchpad-Export-Date: 2011-02-08 05:59+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -31,7 +31,7 @@ msgstr "Pengaturan Lainnya"
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:40
 #, python-format
 msgid "No End of year journal defined for the fiscal year"
-msgstr ""
+msgstr "Journal akhir tahun belum ditetapkan untuk tahun fiskal tersebut"
 
 #. module: account
 #: code:addons/account/account.py:506
@@ -40,6 +40,8 @@ msgid ""
 "You cannot remove/deactivate an account which is set as a property to any "
 "Partner."
 msgstr ""
+"Anda tidak dapat menghapus/ menon-aktifkan akun yang telah ditetapkan "
+"sebagai milik Mitra anda"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -94,7 +96,7 @@ msgstr "Piutang jatuh tempo hingga hari ini"
 #. module: account
 #: field:account.partner.ledger,reconcil:0
 msgid "Include Reconciled Entries"
-msgstr ""
+msgstr "Termasuk Ayat-ayat yang telah direkonsiliasi"
 
 #. module: account
 #: view:account.pl.report:0
@@ -102,6 +104,8 @@ msgid ""
 "The Profit and Loss report gives you an overview of your company profit and "
 "loss in a single document"
 msgstr ""
+"Laporan Laba Rugi memberikan gambaran dari keuntungan dan kerugian "
+"perusahaan dalam satu lembar berkas"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
@@ -111,7 +115,7 @@ msgstr "Impor dari tagihan atau pembayaran"
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
 msgid "wizard.multi.charts.accounts"
-msgstr ""
+msgstr "tuntunan.multi.bagan.akun"
 
 #. module: account
 #: view:account.move:0
@@ -124,17 +128,21 @@ msgid ""
 "If you unreconciliate transactions, you must also verify all the actions "
 "that are linked to those transactions because they will not be disabled"
 msgstr ""
+"Jika anda merekonsiliasi transaksi-transaksi, anda juga harus memeriksa "
+"seluruh kegiatan yang terkait karena seluruh transaksi tersebut tidak "
+"dibatalkan"
 
 #. module: account
 #: report:account.tax.code.entries:0
 msgid "Accounting Entries-"
-msgstr ""
+msgstr "Ayat-ayat Akuntansi"
 
 #. module: account
 #: code:addons/account/account.py:1291
 #, python-format
 msgid "You can not delete posted movement: \"%s\"!"
 msgstr ""
+"Anda tidak bisa menghapus pergerakan akun yang telah tercatat: \"%s\"!"
 
 #. module: account
 #: report:account.invoice:0
@@ -150,7 +158,7 @@ msgstr "Sumber"
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Reconcile"
-msgstr ""
+msgstr "Rekonsiliasi"
 
 #. module: account
 #: field:account.bank.statement.line,ref:0
@@ -165,7 +173,7 @@ msgstr "Referensi"
 #. module: account
 #: view:account.open.closed.fiscalyear:0
 msgid "Choose Fiscal Year "
-msgstr ""
+msgstr "Pilih Tahun Fiskal "
 
 #. module: account
 #: help:account.payment.term,active:0
@@ -186,12 +194,12 @@ msgstr "Perhatian!"
 #: field:account.fiscal.position.account,account_src_id:0
 #: field:account.fiscal.position.account.template,account_src_id:0
 msgid "Account Source"
-msgstr ""
+msgstr "Sumber Akun"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
-msgstr ""
+msgstr "Seluruh Ayat Analitik"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -207,7 +215,7 @@ msgstr "Negatif"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr ""
+msgstr "Jurnal: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -221,7 +229,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_template_form
 msgid "Tax Templates"
-msgstr ""
+msgstr "Lembar Contoh Pajak"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -235,11 +243,13 @@ msgid ""
 "No period defined for this date: %s !\n"
 "Please create a fiscal year."
 msgstr ""
+"Periode fiskal belum ditentukan untuk tanggal ini: %s !\n"
+"Silahkan buat tahun fiskal terlebih dahulu."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr ""
+msgstr "Pindahkan baris rekonsiliasi terpilih"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -247,6 +257,8 @@ msgid ""
 "The sequence field is used to order the resources from lower sequences to "
 "higher ones"
 msgstr ""
+"Kolom urutan digunakan untuk mengurutkan data dimulai dari nilai urut "
+"terkecil"
 
 #. module: account
 #: help:account.tax.code,notprintable:0
@@ -255,6 +267,8 @@ msgid ""
 "Check this box if you don't want any VAT related to this Tax Code to appear "
 "on invoices"
 msgstr ""
+"Tandai kotak ini jika anda tidak ingin PPN yang terkait dengan Kode Pajak "
+"ini tertera dalam tagihan"
 
 #. module: account
 #: code:addons/account/invoice.py:1210
@@ -1396,7 +1410,7 @@ msgstr "Menghitung Pajak"
 #. module: account
 #: field:wizard.multi.charts.accounts,code_digits:0
 msgid "# of Digits"
-msgstr ""
+msgstr "# Digit"
 
 #. module: account
 #: field:account.journal,entry_posted:0
