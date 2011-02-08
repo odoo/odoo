@@ -20,20 +20,16 @@
 #
 ##############################################################################
 
+from osv import osv
+from osv import fields
 import base64
 import random
 import netsvc
 import logging
 import re
-
-TEMPLATE_ENGINES = []
-
-from osv import osv, fields
 from tools.translate import _
-
 import tools
 import pooler
-import logging
 
 def get_value(cursor, user, recid, message=None, template=None, context=None):
     """
@@ -74,14 +70,9 @@ class email_template(osv.osv):
     _description = 'Email Templates for Models'
 
     def change_model(self, cursor, user, ids, object_name, context=None):
+        mod_name = False
         if object_name:
-            mod_name = self.pool.get('ir.model').read(
-                                              cursor,
-                                              user,
-                                              object_name,
-                                              ['model'], context)['model']
-        else:
-            mod_name = False
+            mod_name = self.pool.get('ir.model').browse(cursor, user, object_name, context).model
         return {'value':{'model_int_name':mod_name}}
 
     _columns = {
@@ -228,7 +219,6 @@ This is useful for CRM leads for example"),
         vals = {}
         if context is None:
             context = {}
-            template_obj = a
         action_obj = self.pool.get('ir.actions.act_window')
         for template in self.browse(cr, uid, ids, context=context):
             src_obj = template.object_name.model
@@ -252,8 +242,8 @@ This is useful for CRM leads for example"),
                  'object': True,
              }, context)
         self.write(cr, uid, ids, {
-                    'ref_ir_act_window': vals['ref_ir_act_window'],
-                    'ref_ir_value': vals['ref_ir_value'],
+                    'ref_ir_act_window': vals.get('ref_ir_act_window',False),
+                    'ref_ir_value': vals.get('ref_ir_value',False),
                 }, context)
         return True
 
@@ -420,15 +410,9 @@ This is useful for CRM leads for example"),
             'res_model':'email.message',
             'res_id': mailbox_id,
         }
-        attachment_id = attachment_obj.create(cursor,
-                                              user,
-                                              attachment_data,
-                                              context)
+        attachment_id = attachment_obj.create(cursor, user, attachment_data, context)
         if attachment_id:
-            self.pool.get('email.message').write(
-                              cursor,
-                              user,
-                              mailbox_id,
+            self.pool.get('email.message').write(cursor, user, mailbox_id,
                               {
                                'attachments_ids':[(4, attachment_id)],
                                'mail_type':'multipart/mixed'
@@ -451,21 +435,12 @@ This is useful for CRM leads for example"),
         @return: True
         """
         if template.report_template:
-            reportname = 'report.' + \
-                self.pool.get('ir.actions.report.xml').read(
-                                             cursor,
-                                             user,
-                                             template.report_template.id,
-                                             ['report_name'],
-                                             context)['report_name']
+            reportname = 'report.' + self.pool.get('ir.actions.report.xml').browse(cursor,
+                                user, template.report_template.id, context).report_name
             service = netsvc.LocalService(reportname)
             data = {}
             data['model'] = template.model_int_name
-            (result, format) = service.create(cursor,
-                                              user,
-                                              [record_id],
-                                              data,
-                                              context)
+            (result, format) = service.create(cursor, user, [record_id], data, context)
             fname = tools.ustr(get_value(cursor, user, record_id,
                                          template.file_name, template, context)
                                or 'Report')
@@ -498,25 +473,14 @@ This is useful for CRM leads for example"),
             context = {}
         #If account to send from is in context select it, else use enforced account
         if 'account_id' in context.keys():
-            from_account = self.pool.get('email.smtp_server').read(
-                                                    cursor,
-                                                    user,
-                                                    context.get('account_id'),
-                                                    ['name', 'email_id'],
-                                                    context
-                                                    )
+            from_account = self.pool.get('email.smtp_server').read(cursor, user, context.get('account_id'), ['name', 'email_id'], context)
         else:
             from_account = {
                             'id':template.from_account.id,
                             'name':template.from_account.name,
                             'email_id':template.from_account.email_id
                             }
-        lang = get_value(cursor,
-                         user,
-                         record_id,
-                         template.lang,
-                         template,
-                         context)
+        lang = get_value(cursor, user, record_id, template.lang, template, context)
         if lang:
             ctx = context.copy()
             ctx.update({'lang':lang})
@@ -616,14 +580,8 @@ This is useful for CRM leads for example"),
         result = True
         mailbox_obj = self.pool.get('email.message')
         for record_id in record_ids:
-            mailbox_id = self._generate_mailbox_item_from_template(
-                                                                cursor,
-                                                                user,
-                                                                template,
-                                                                record_id,
-                                                                context)
-            mail = mailbox_obj.browse(cursor, user, mailbox_id, context=context
-                                              )
+            mailbox_id = self._generate_mailbox_item_from_template(cursor, user, template, record_id, context)
+            mail = mailbox_obj.browse(cursor, user, mailbox_id, context=context)
             if template.report_template or template.attachment_ids:
                 self.generate_attach_reports(cursor, user, template, record_id, mail, context )
             mailbox_obj.write(cursor, user, mailbox_id, {'folder':'outbox', 'state': 'waiting'}, context=context)
