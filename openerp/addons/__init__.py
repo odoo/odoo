@@ -167,6 +167,7 @@ class Node(Singleton):
 
 def get_module_path(module, downloaded=False):
     """Return the path of the given module."""
+    initialize_sys_path()
     for adp in ad_paths:
         if os.path.exists(opj(adp, module)) or os.path.exists(opj(adp, '%s.zip' % module)):
             return opj(adp, module)
@@ -309,6 +310,7 @@ def get_modules():
         return map(clean, filter(is_really_module, os.listdir(dir)))
 
     plist = []
+    initialize_sys_path()
     for ad in ad_paths:
         plist.extend(listdir(ad))
     return list(set(plist))
@@ -449,6 +451,7 @@ def register_class(m):
     logger.notifyChannel('init', netsvc.LOG_INFO, 'module %s: registering objects' % m)
     mod_path = get_module_path(m)
 
+    initialize_sys_path()
     try:
         zip_mod_path = mod_path + '.zip'
         if not os.path.isfile(zip_mod_path):
