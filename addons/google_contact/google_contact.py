@@ -31,7 +31,7 @@ except ImportError:
 class google_lib(object):
 
     def __init__(self, email, password):
-        super(google_conact, self).__init__()
+        super(google_lib, self).__init__()
         self.contact = gdata.contacts.service.ContactsService()
         self.contact.email = email
         self.contact.password = password
@@ -39,7 +39,7 @@ class google_lib(object):
         self.contact.ProgrammaticLogin()
         
     def _get_contact(self):
-        feed= gd_client.GetContactsFeed()
+        feed= self.contact.GetContactsFeed()
         return feed
 
     def _get_contact_allGroups(self):
@@ -68,10 +68,11 @@ class google_contact(osv.osv):
         }
     def get_contact(self, cr, uid, ids, context):
         # Only see the result , we will change the code
-        for user in self.browse(cr, uid, ids, context=context):
-            google_obj=google_lib(self.user,self.password)
+        for obj in self.browse(cr, uid, ids, context=context):
+            google_obj=google_lib(obj.user,obj.password)
             contact=google_obj._get_contact()
-            print contact
+        for i, entry in enumerate(contact.entry):
+            print entry.title.text
         return {}    
 google_contact()
 
