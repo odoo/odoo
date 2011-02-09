@@ -1,5 +1,23 @@
 <openerp>
 <data noupdate="1">
+    
+        <record model="res.bank" id="main_bank">
+            <field name="name">Main Partner Bank</field>
+            <field name="clearing">234567</field>
+        </record>
+
+        <record model="res.partner.bank" id="main_partner_bank">
+            <field name="name">OpenERP BVR Account</field>
+            <field name="acc_number">11-1234-1</field>
+            <field name="partner_id" ref="base.main_partner"/>
+            <field name="state">bvrbank</field>
+            <field name="post_number">11-1234-1</field>
+            <field name="bank" ref="main_bank"/>
+            <field name="iban">CH9100767000S00023455</field>
+            <field name="bvr_adherent_num">0000000</field>
+            
+            
+        </record>
 
         <record id="bank" model="res.partner">
                 <field name="comment">My bank !</field>
@@ -7,6 +25,7 @@
                 <field name="name">Banque</field>
                 <field name="category_id" model="res.partner.category" search="[('name','=','Partenaire')]"/>
         </record>
+        
         <record id="res_partner_address_bank1" model="res.partner.address">
             <field name="fax">+41 31 622 13 00</field>
             <field name="name">Marc Dufour</field>
