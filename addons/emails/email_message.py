@@ -297,7 +297,6 @@ class email_message(osv.osv):
                 smtp_ids = account_obj.search(cr, uid, [('default','=',True)])
                 if smtp_ids:
                     smtp_account = account_obj.browse(cr, uid, smtp_ids, context)[0]
-                print "message.email_to::",message.email_to,  message.email_to.split(',')
                 tools.email_send(message.email_from,
                         message.email_to and message.email_to.split(',') or [],
                         message.name, message.description,
