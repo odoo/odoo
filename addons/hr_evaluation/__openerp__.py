@@ -25,7 +25,7 @@
     "author": "OpenERP SA",
     "category": "Generic Modules/Human Resources",
     "website": "http://www.openerp.com",
-    "depends": ["hr","hr_recruitment","survey", "emails"],
+    "depends": ["hr","hr_recruitment","survey"],
     "description": """
           Ability to create employees evaluation.
           An evaluation can be created by employee for subordinates,
