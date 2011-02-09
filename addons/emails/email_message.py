@@ -174,7 +174,7 @@ class email_message(osv.osv):
         'priority':fields.integer('Priority', readonly=True),
         'debug':fields.boolean('Debug', readonly=True),
         'history': fields.boolean('History', readonly=True),
-        'description': fields.text('Description'),
+        'description': fields.text('Description', readonly=True),
         #I like GMAIL which allows putting same mail in many folders
         #Lets plan it for 0.9
         'folder':fields.selection([
