@@ -65,7 +65,7 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : default values of fields.
         """
-        
+
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
@@ -80,8 +80,8 @@ class crm_lead2partner(osv.osv_memory):
             email = re.findall(r'([^ ,<@]+@[^> ,]+)', lead.email_from or '')
             email = map(lambda x: "'" + x + "'", email)
             if email:
-                cr.execute("""select id from res_partner_address 
-                                where 
+                cr.execute("""select id from res_partner_address
+                                where
                                 substring(email from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
                 address_ids = map(lambda x: x[0], cr.fetchall())
                 if address_ids:
@@ -92,7 +92,7 @@ class crm_lead2partner(osv.osv_memory):
             if not partner_ids and lead.partner_name:
                 partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
             if not partner_ids:
-                cr.execute("""SELECT p.id from res_partner p 
+                cr.execute("""SELECT p.id from res_partner p
                             where regexp_replace(lower(p.name), '[^a-z]*', '', 'g') = regexp_replace(%s, '[^a-z]*', '', 'g')""", (lead.name.lower(), ))
                 partner_ids = map(lambda x: x[0], cr.fetchall())
             partner_id = partner_ids and partner_ids[0] or False
@@ -105,7 +105,7 @@ class crm_lead2partner(osv.osv_memory):
                 res.update({'opportunity_ids': data})
 
         return res
-    
+
     def open_create_partner(self, cr, uid, ids, context=None):
         """
         This function Opens form of create partner.
@@ -185,9 +185,14 @@ class crm_lead2partner(osv.osv_memory):
                     if data.partner_id:
                         partner_id = data.partner_id.id
                         contact_id = partner_obj.address_get(cr, uid, [partner_id])['default']
-
+                self.assign_partner(cr, uid, lead.id, partner_id)
                 partner_ids.append(partner_id)
         return partner_ids
+
+
+    def assign_partner(self, cr, uid, lead_id, partner_id):
+        self.pool.get("crm.lead").write(cr, uid, [lead_id], {'partner_id' : partner_id})
+
 
     def make_partner(self, cr, uid, ids, context=None):
         """
@@ -207,19 +212,8 @@ class crm_lead2partner(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         result = mod_obj._get_id(cr, uid, 'base', 'view_res_partner_filter')
         res = mod_obj.read(cr, uid, result, ['res_id'])
-
-        value = {
-            'domain': "[]",
-            'view_type': 'form',
-            'view_mode': 'form,tree',
-            'res_model': 'res.partner',
-            'res_id': partner_ids and int(partner_ids[0]) or False,
-            'view_id': False,
-            'context': context,
-            'type': 'ir.actions.act_window',
-            'search_view_id': res['res_id']
-        }
-        return value
+        print partner_ids
+        return {'type': 'ir.actions.act_window_close'}
 
 crm_lead2partner()
 

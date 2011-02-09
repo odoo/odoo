@@ -17,7 +17,14 @@
                         <group col="4" colspan="4" attrs="{'invisible': [('name', '=', 'convert')]}" >
                             <separator string="Select Opportunities" colspan="4" />
                         </group>
-                            <field name="opportunity_ids" colspan="4" nolabel="1" attrs="{'invisible': [('name', '=', 'convert')]}"/>
+                            <field name="opportunity_ids" colspan="4" nolabel="1" attrs="{'invisible': [('name', '=', 'convert')]}">
+                                <tree>
+                                    <field name="name" />
+                                    <field name="partner_id" />
+                                    <field name="user_id" />
+                                    <field name="section_id" />
+                                </tree>
+                            </field>
                         
                         <separator string="" colspan="4" />
                         <group col="4" colspan="4">

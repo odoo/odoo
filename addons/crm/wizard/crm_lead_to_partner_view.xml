@@ -10,8 +10,6 @@
           <field name="arch" type="xml">
               <form string="Create a Partner">
                   <separator string="Create a Partner" colspan="4" />
-                  <label string="Are you sure you want to create a partner based on this lead ?" colspan="4"/>
-                  <label string="You may have to verify that this partner does not exist already." colspan="4"/>
                   <field name="action"/>
                   <group attrs="{'invisible':[('action','!=','exist')]}">
                     <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
