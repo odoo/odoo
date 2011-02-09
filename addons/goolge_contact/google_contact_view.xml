@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <record model="ir.ui.view" id="view_google_contact_form">
+            <field name="name">google.contact.form</field>
+            <field name="model">google.contact</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+            <form string="Google Contact">
+                  <group colspan="2" col="2">
+                      <field name="user"/>
+                      <field name="password" password="True"/>
+                  </group>
+       				<separator string="" colspan="4" />
+                    <group colspan="2" col="2">
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="get_contact" string="Contact " type="object" icon="terp-mail-message-new"/>
+                    </group>                  
+                </form>             
+            </field>
+        </record>
+  	<record model="ir.ui.view" id="view_google_contact_tree">
+            <field name="name">google.contact.tree</field>
+            <field name="model">google.contact</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+            <tree string="Google Contact">
+                      <field name="user"/>
+                      <field name="password" password="True"/>
+                </tree>             
+            </field>
+        </record>        
+
+     <menuitem id="base.menu_sales" name="Sales"
+         parent="base.menu_base_partner" sequence="1" />
+
+
+     <record model="ir.actions.act_window" id="google_contact_act">
+          <field name="name">Google Contact</field>
+          <field name="res_model">google.contact</field>
+          <field name="view_mode">tree,form,</field>
+          <field name="view_id" ref="view_google_contact_tree"/>
+        </record>
+        
+     <menuitem name="Google Contact" id="menu_google_contact"
+         parent="base.menu_sales" action="google_contact_act"
+         sequence="2" />
+    </data>
+</openerp>
