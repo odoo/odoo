@@ -28,5 +28,18 @@ try:
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
 
+
+class google_contact(osv.osv):
+    _description ='Google Contact'
+    _name = 'google.contact'
+    _columns = {
+        'user': fields.char('Login', size=64, required=True,),
+        'password': fields.char('Password', size=64,),
+        }
+    def get_contact(self, cr, uid, ids, context):
+
+      return {}    
+google_contact()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
