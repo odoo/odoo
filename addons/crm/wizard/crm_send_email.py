@@ -123,7 +123,7 @@ class crm_send_new_email(osv.osv_memory):
             if obj.html:
                 subtype = 'html'
 
-            flag = email_message_obj.email_send(
+            flag = email_message_obj.email_send(cr, uid,
                 email_from,
                 emails,
                 obj.subject,

@@ -277,7 +277,7 @@ class account_followup_print_all(osv.osv_memory):
                 msg = ''
                 if dest:
                     try:
-                        email_message_obj.email_send(src, dest, sub, body, model='account.followup.print.all')
+                        email_message_obj.email_send(cr, uid, src, dest, sub, body, model='account.followup.print.all')
                         msg_sent += partner.name + '\n'
                     except Exception, e:
                         raise osv.except_osv('Error !', e )

@@ -25,7 +25,7 @@ from tools.translate import _
 import tools
 import netsvc
 
-#import time
+import time
 #import binascii
 #import email
 #from email.header import decode_header
@@ -236,8 +236,8 @@ class email_message(osv.osv):
                                  netsvc.LOG_ERROR,
                                  _("Error sending mail: %s") % e)
 
-    def email_send(cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
-            openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3'):
+    def email_send(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None, email_bcc=None, reply_to=False, attach=None,
+            openobject_id=False, debug=False, subtype='plain', x_headers={}, priority='3', context=None):
         attachment_obj = self.pool.get('ir.attachment')
         msg_vals = {
                 'name': subject,
@@ -260,6 +260,7 @@ class email_message(osv.osv):
             }
         email_msg_id = self.create(cr, uid, msg_vals, context)
         if attach:
+            attachment_ids = []
             for attachment in attach:
                 attachment_data = {
                         'name':  (subject or '') + _(' (Email Attachment)'),
@@ -269,10 +270,9 @@ class email_message(osv.osv):
                         'res_model':'email.message',
                         'res_id': email_msg_id,
                     }
-                attachment_id = attachment_obj.create(cr, uid, attachment_data, context)
-                if attachment_id:
-                    self.write(cr, uid, email_msg_id,
-                                      { 'attachments_ids':[(4, attachment_id)] }, context)
+                attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
+            self.write(cr, uid, email_msg_id,
+                              { 'attachment_ids': [[6, 0, attachment_ids]] }, context)
         return True
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
