@@ -27,6 +27,7 @@ from osv import fields
 from osv import osv
 
 import crm
+from openerp.loglevels import ustr 
 
 class base_action_rule(osv.osv):
     """ Base Action Rule """
@@ -73,9 +74,9 @@ class base_action_rule(osv.osv):
         regex = action.regex_history
         if regex:
             res = False
-            ptrn = re.compile(str(regex))
+            ptrn = re.compile(ustr(regex))
             for history in obj.message_ids:
-                _result = ptrn.search(str(history.name))
+                _result = ptrn.search(ustr(history.subject))
                 if _result:
                     res = True
                     break
