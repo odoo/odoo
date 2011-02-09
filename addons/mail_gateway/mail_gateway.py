@@ -92,7 +92,6 @@ class mailgate_thread(osv.osv):
     def history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, \
                     email_from=False, message_id=False, references=None, attach=None, email_cc=None, \
                     email_bcc=None, email_date=None, context=None):
-        print "histpory",details
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -171,7 +170,6 @@ class mailgate_thread(osv.osv):
                     'attachment_ids': [(6, 0, attachments)]
                 }
                 
-            print data
             obj.create(cr, uid, data, context=context)
         return True
 mailgate_thread()
