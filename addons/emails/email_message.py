@@ -246,13 +246,13 @@ class email_message(osv.osv):
                 'user_id': uid,
                 'description': body,
                 'email_from': email_from,
-                'email_to': email_to or '',
-                'email_cc': email_cc or '',
-                'email_bcc': email_bcc or '',
-                'reply_to': reply_to or '',
+                'email_to': email_to and ','.join(email_to) or '',
+                'email_cc': email_cc and ','.join(email_cc) or '',
+                'email_bcc': email_bcc and ','.join(email_bcc) or '',
+                'reply_to': reply_to and ','.join(reply_to) or '',
                 'message_id': openobject_id,
                 'sub_type': subtype or '',
-                'headers': x_headers or {},
+                'headers': x_headers or False,
                 'priority': priority,
                 'debug': debug,
                 'folder': 'outbox',
@@ -287,7 +287,7 @@ class email_message(osv.osv):
             if 'filters' in context:
                 filters.extend(context['filters'])
             ids = self.search(cr, uid, filters, context=context)
-            self.write(cr, uid, ids, {'state':'sending', 'folder':'sent'}, context)
+        self.write(cr, uid, ids, {'state':'sending', 'folder':'sent'}, context)
         for message in self.browse(cr, uid, ids, context):
             try:
                 attachments = []
@@ -297,12 +297,23 @@ class email_message(osv.osv):
                 smtp_ids = account_obj.search(cr, uid, [('default','=',True)])
                 if smtp_ids:
                     smtp_account = account_obj.browse(cr, uid, smtp_ids, context)[0]
-                tools.email_send(message.email_from, message.email_to, message.name, message.description, email_cc=message.email_cc,
-                        email_bcc=message.email_bcc, reply_to=message.reply_to, attach=attachments, openobject_id=message.message_id,
-                        subtype=message.sub_type, x_headers=message.headers or {}, priority=message.priority, debug=message.debug,
-                        smtp_email_from=smtp_account and smtp_account.email_id or None, smtp_server=smtp_account and smtp_account.smtpserver or None,
-                        smtp_port=smtp_account and smtp_account.smtpport or None, ssl=smtp_account and smtp_account.smtpssl or False,
-                        smtp_user=smtp_account and smtp_account.smtpuname or None, smtp_password=smtp_account and smtp_account.smtppass or None)
+                print "message.email_to::",message.email_to,  message.email_to.split(',')
+                tools.email_send(message.email_from,
+                        message.email_to and message.email_to.split(',') or [],
+                        message.name, message.description,
+                        email_cc=message.email_cc and message.email_cc.split(',') or [],
+                        email_bcc=message.email_bcc and message.email_bcc.split(',') or [],
+                        reply_to=message.reply_to and message.reply_to.split(',') or [],
+                        attach=attachments, openobject_id=message.message_id,
+                        subtype=message.sub_type,
+                        x_headers=message.headers and eval(message.headers) or {},
+                        priority=message.priority, debug=message.debug,
+                        smtp_email_from=smtp_account and smtp_account.email_id or None,
+                        smtp_server=smtp_account and smtp_account.smtpserver or None,
+                        smtp_port=smtp_account and smtp_account.smtpport or None,
+                        ssl=smtp_account and smtp_account.smtpssl or False,
+                        smtp_user=smtp_account and smtp_account.smtpuname or None,
+                        smtp_password=smtp_account and smtp_account.smtppass or None)
             except Exception, error:
                 logger = netsvc.Logger()
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
