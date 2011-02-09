@@ -30,8 +30,10 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     _inherit = 'crm.lead2partner'
 
     _columns = {
-        #'partner_id': fields.many2one('res.partner', 'Partner'),
-        #'action': fields.selection([('exist', 'Link to an existing partner'), ('create', 'Create a new partner')], 'Action'),
+        'action': fields.selection([('exist', 'Link to an existing partner'), \
+                                    ('create', 'Create a new partner'), \
+                                    ('nothing', 'Do not link to a partner')], \
+                                    'Action', required=True),
         'name': fields.selection([('convert', 'Convert to Opportunity'), ('merge', 'Merge with existing Opportunity')],'Select Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
     }
@@ -43,22 +45,29 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             all information together
         """
         lead_obj = self.pool.get('crm.lead')
-        partner_id = False
 
- 
+        
         res = super(crm_lead2opportunity_partner, self).default_get(cr, uid, fields, context=context)
         opportunities = res.get('opportunity_ids') or []
-        name = 'convert'
-        if res.get('partner_id'):            
+        
+        partner_id = False
+        for lead in lead_obj.browse(cr, uid, opportunities, context=context):
+            partner_id = lead.partner_id and lead.partner_id.id or False
+
+        if not partner_id and res.get('partner_id'):            
             partner_id = res.get('partner_id')
+
+        ids = []
+        if partner_id:
             ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity')])
-            if ids:
-                name = 'merge'
             opportunities += ids
             
-                
+        if 'action' in fields:
+            res.update({'action' : partner_id and 'exist' or 'create'})
+        if 'partner_id' in fields:
+            res.update({'partner_id' : partner_id})
         if 'name' in fields:
-            res.update({'name' : name})
+            res.update({'name' : ids and 'merge' or 'convert'})
         if 'opportunity_ids' in fields:
             res.update({'opportunity_ids': opportunities})
         
@@ -152,8 +161,7 @@ Leads Could not convert into Opportunity"))
             self._convert(cr, uid, ids, lead, partner_id, stage_ids, context=context)
             if data.name == 'merge':
                 merge_obj = self.pool.get('crm.merge.opportunity')
-                context.update({'opportunity_ids': data.opportunity_ids})
-                return merge_obj.action_merge(cr, uid, ids, context=context)
+                return merge_obj.merge(cr, uid, data.opportunity_ids, context=context)
 
         return {
             'name': _('Opportunity'),

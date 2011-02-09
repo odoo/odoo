@@ -41,28 +41,15 @@ class crm_merge_opportunity(osv.osv_memory):
                 
     def _concat_all(self, attr, ops):
         return ', '.join([getattr(op, attr) for op in ops if hasattr(op, attr) and getattr(op, attr)])
-
-    def action_merge(self, cr, uid, ids, context=None):
+        
+    
+    def merge(self, cr, uid, op_ids, context=None):
         """
-        This function merges opportunities
-        @param self: The object pointer
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of Phonecall to Opportunity IDs
-        @param context: A standard dictionary for contextual valuesn
-
-        @return : Dictionary value for created Opportunity form
+            @param opp_ids : list of opportunities ids to merge
         """
-        record_id = context and context.get('active_id') or False
         opp_obj = self.pool.get('crm.lead')
         message_obj = self.pool.get('mailgate.message')
-        if self.datas:
-            obj_opportunity = self.browse(cr, uid, ids[0], context=context)
-            if hasattr(obj_opportunity, 'opportunity_ids'):
-                op_ids = obj_opportunity.opportunity_ids
-        else:
-            op_ids = context.get('opportunity_ids')
-        
+
         if len(op_ids) <= 1:
             raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
        
@@ -119,7 +106,7 @@ class crm_merge_opportunity(osv.osv_memory):
                         opp.city or '', 
                         opp.company_id.name or '',
                         opp.country_id.name or '', 
-                        opp.email or '', 
+                        opp.email_from or '', 
                         opp.phone or '',
                         opp.contact_name or ''))
         subject = subject[0] + ", ".join(subject[1:])
@@ -164,6 +151,16 @@ class crm_merge_opportunity(osv.osv_memory):
                           (False, 'calendar'), (False, 'graph')],
                 'type': 'ir.actions.act_window',
         }
+        
+
+    def action_merge(self, cr, uid, ids, context=None):
+        obj_opportunity = self.browse(cr, uid, ids[0], context=context)
+        if hasattr(obj_opportunity, 'opportunity_ids'):
+            op_ids = obj_opportunity.opportunity_ids
+                
+                
+        return self.merge(cr, uid, op_ids, context)
+       
 
     _columns = {
         'opportunity_ids' : fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),

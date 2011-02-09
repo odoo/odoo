@@ -31,12 +31,10 @@ class crm_lead2partner(osv.osv_memory):
 
     _columns = {
         'action': fields.selection([('exist', 'Link to an existing partner'), \
-                                    ('create', 'Create a new partner'), \
-                                    ('nothing', 'Do not link to a partner')], \
+                                    ('create', 'Create a new partner')], \
                                     'Action', required=True),
         'partner_id': fields.many2one('res.partner', 'Partner'),
-        'msg': fields.text('Message', readonly=True)
-        }
+    }
 
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -67,6 +65,7 @@ class crm_lead2partner(osv.osv_memory):
 
         @return : default values of fields.
         """
+        
         lead_obj = self.pool.get('crm.lead')
         partner_obj = self.pool.get('res.partner')
         contact_obj = self.pool.get('res.partner.address')
@@ -98,32 +97,10 @@ class crm_lead2partner(osv.osv_memory):
                 partner_ids = map(lambda x: x[0], cr.fetchall())
             partner_id = partner_ids and partner_ids[0] or False
 
-            if not partner_id:
-                label = False
-                opp_ids = []
-                if email:
-                    # Find email of existing opportunity matches the email_from of the lead
-                    cr.execute("""select id from crm_lead 
-                                where type='opportunity' and
-                                substring(email_from from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
-                    opp_ids = map(lambda x:x[0], cr.fetchall())
-                    label = opp_ids and 'email' or False
-                if not opp_ids:
-                    # Find name of existing opportunity matches the name of the lead
-                    cr.execute("""SELECT l.id from crm_lead l
-                                    where type = 'opportunity' and
-                                    regexp_replace(lower(l.name), '[^a-z]*', '', 'g') = regexp_replace(%s, '[^a-z]*', '', 'g')""", (lead.name.lower(), ))
-                    opp_ids = map(lambda x: x[0], cr.fetchall())
-                    label = opp_ids and 'name' or False
-                if label:
-                    res.update({'msg': "An existing opportunity seems to match the %s of this lead, you should double-check before converting it." % (label)})
-            
             if 'partner_id' in fields:
                 res.update({'partner_id': partner_id})
             if 'action' in fields:
                 res.update({'action': partner_id and 'exist' or 'create'})
-            if 'name' in fields:
-                res.update({'name': 'convert'})
             if 'opportunity_ids' in fields:
                 res.update({'opportunity_ids': data})
 

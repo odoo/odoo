@@ -8,10 +8,6 @@
           <field name="arch" type="xml">
                <form string="Convert to Opportunity">
                    
-                        <group colspan="4" col="1" attrs="{'invisible':[('msg','=',False)]}">
-                            <field name="msg" colspan="4" nolabel="1" height="50"/>
-                        </group>
-                        <newline />
                         <field name="action"/>
                         <group attrs="{'invisible':[('action','!=','exist')]}">
                             <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
