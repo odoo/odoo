@@ -270,9 +270,8 @@ class email_template_send_wizard(osv.osv_memory):
                 }, context)
                 attachment_ids.append(new_id)
             if attachment_ids:
-                #Need to Fix
                 email_message_obj.write(cr, uid, mail_id, {
-                    'attachments_ids': [[6, 0, attachment_ids]],
+                    'attachment_ids': [[6, 0, attachment_ids]],
                 }, context)
         return mail_ids
 
