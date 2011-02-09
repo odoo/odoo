@@ -99,6 +99,15 @@ class email_template_send_wizard(osv.osv_memory):
         else: # Simple Mail: Gets computed template values
             return self.get_value(cr, uid, template, getattr(template, field), context)
 
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        result = super(email_template_send_wizard, self).default_get(cr, uid, fields, context=context)
+        if 'template_id' in context and context.get('template_id'):
+            temp_data = self.pool.get('email.template').read(cr, uid, int(context.get('template_id')), ['attachment_ids'])
+            result['attachment_ids'] = temp_data['attachment_ids']
+        return result
+
     _columns = {
         'state':fields.selection([
                         ('single','Simple Mail Wizard Step 1'),
@@ -151,8 +160,6 @@ class email_template_send_wizard(osv.osv_memory):
         'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
         'reply_to': lambda self,cr,uid,ctx: self._get_template_value(cr, uid, 'reply_to', ctx),
         'requested':lambda self,cr,uid,ctx: len(ctx.get('src_rec_ids','')),
-        'full_success': False,
-        'attachment_ids': [],
     }
 
     def fields_get(self, cr, uid, fields=None, context=None, write_access=True):
@@ -253,7 +260,7 @@ class email_template_send_wizard(osv.osv_memory):
                     'res_model': 'email.message',
                     'res_id': mail_id
                 }, context)
-                attachment_ids.append( attachment_id )
+                attachment_ids.append(attachment_id)
 
             # Add document attachments
             for attachment_id in screen_vals.get('attachment_ids',[]):
@@ -263,6 +270,7 @@ class email_template_send_wizard(osv.osv_memory):
                 }, context)
                 attachment_ids.append(new_id)
             if attachment_ids:
+                #Need to Fix
                 email_message_obj.write(cr, uid, mail_id, {
                     'attachments_ids': [[6, 0, attachment_ids]],
                 }, context)

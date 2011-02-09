@@ -48,7 +48,6 @@ import netsvc
 #import datetime
 #import tools
 #import logging
-
 #email_content_types = [
 #    'multipart/mixed',
 #    'multipart/alternative',
@@ -183,12 +182,12 @@ class email_message(osv.osv):
                         ('outbox', 'Outbox'),
                         ('trash', 'Trash'),
                         ('sent', 'Sent Items'),
-                        ], 'Folder', required=True, readonly=True),
+                        ], 'Folder', readonly=True),
         'state':fields.selection([
                         ('na', 'Not Applicable'),
                         ('sending', 'Sending'),
                         ('waiting', 'Waiting'),
-                        ], 'State', required=True, readonly=True),
+                        ], 'State', readonly=True),
     }
 
     _defaults = {
@@ -309,6 +308,7 @@ class email_message(osv.osv):
                 logger.notifyChannel("email-template", netsvc.LOG_ERROR, _("Sending of Mail %s failed. Probable Reason:Could not login to server\nError: %s") % (message.id, error))
         return ids
 
+# OLD Code.
 #    def send_all_mail(self, cr, uid, ids=None, context=None):
 #        if ids is None:
 #            ids = []
