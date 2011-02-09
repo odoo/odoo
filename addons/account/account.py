@@ -395,7 +395,7 @@ class account_account(osv.osv):
         'reconcile': False,
         'active': True,
         'currency_mode': 'current',
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
+        'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):
@@ -1121,9 +1121,8 @@ class account_move(osv.osv):
             res_ids = set(id[0] for id in cr.fetchall())
             ids = ids and (ids & res_ids) or res_ids
         if ids:
-            return [('id','in',tuple(ids))]
-        else:
-            return [('id', '=', '0')]
+            return [('id', 'in', tuple(ids))]
+        return [('id', '=', '0')]
 
     _columns = {
         'name': fields.char('Number', size=64, required=True),
@@ -1207,7 +1206,6 @@ class account_move(osv.osv):
                    'SET state=%s '\
                    'WHERE id IN %s',
                    ('posted', tuple(valid_moves),))
-
         return True
 
     def button_validate(self, cursor, user, ids, context=None):
@@ -1522,7 +1520,6 @@ class account_move_reconcile(osv.osv):
                 result.append((r.id,r.name))
         return result
 
-
 account_move_reconcile()
 
 #----------------------------------------------------------
@@ -1834,7 +1831,6 @@ class account_tax(osv.osv):
         obj_partener_address = self.pool.get('res.partner.address')
         for tax in taxes:
             # we compute the amount for the current tax object and append it to the result
-
             data = {'id':tax.id,
                     'name':tax.description and tax.description + " - " + tax.name or tax.name,
                     'account_collected_id':tax.account_collected_id.id,
@@ -2049,6 +2045,7 @@ class account_tax(osv.osv):
                 r['amount'] = round(r['amount'] * quantity, prec)
                 total += r['amount']
         return res
+
 account_tax()
 
 # ---------------------------------------------------------
@@ -2177,13 +2174,11 @@ class account_subscription(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'ref': fields.char('Reference', size=16),
         'model_id': fields.many2one('account.model', 'Model', required=True),
-
         'date_start': fields.date('Start Date', required=True),
         'period_total': fields.integer('Number of Periods', required=True),
         'period_nbr': fields.integer('Period', required=True),
         'period_type': fields.selection([('day','days'),('month','month'),('year','year')], 'Period Type', required=True),
         'state': fields.selection([('draft','Draft'),('running','Running'),('done','Done')], 'State', required=True, readonly=True),
-
         'lines_id': fields.one2many('account.subscription.line', 'subscription_id', 'Subscription Lines')
     }
     _defaults = {
@@ -2354,9 +2349,9 @@ class account_add_tmpl_wizard(osv.osv_memory):
     _name = 'account.addtmpl.wizard'
 
     def _get_def_cparent(self, cr, uid, context=None):
-        acc_obj=self.pool.get('account.account')
-        tmpl_obj=self.pool.get('account.account.template')
-        tids=tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
+        acc_obj = self.pool.get('account.account')
+        tmpl_obj = self.pool.get('account.account.template')
+        tids = tmpl_obj.read(cr, uid, [context['tmpl_ids']], ['parent_id'])
         if not tids or not tids[0]['parent_id']:
             return False
         ptids = tmpl_obj.read(cr, uid, [tids[0]['parent_id'][0]], ['code'])
@@ -2364,7 +2359,6 @@ class account_add_tmpl_wizard(osv.osv_memory):
         if not ptids or not ptids[0]['code']:
             raise osv.except_osv(_('Error !'), _('Cannot locate parent code for template account!'))
             res = acc_obj.search(cr, uid, [('code','=',ptids[0]['code'])])
-
         return res and res[0] or False
 
     _columns = {
