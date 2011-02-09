@@ -245,7 +245,7 @@ class email_message(osv.osv):
                 'model': model or '',
                 'date': time.strftime('%Y-%m-%d'),
                 'user_id': uid,
-                'message': body,
+                'description': body,
                 'email_from': email_from,
                 'email_to': email_to or '',
                 'email_cc': email_cc or '',
@@ -298,7 +298,7 @@ class email_message(osv.osv):
                 smtp_ids = account_obj.search(cr, uid, [('default','=',True)])
                 if smtp_ids:
                     smtp_account = account_obj.browse(cr, uid, smtp_ids, context)[0]
-                tools.email_send(message.email_from, message.email_to, message.name, message.message, email_cc=message.email_cc,
+                tools.email_send(message.email_from, message.email_to, message.name, message.description, email_cc=message.email_cc,
                         email_bcc=message.email_bcc, reply_to=message.reply_to, attach=attachments, openobject_id=message.message_id,
                         subtype=message.sub_type, x_headers=message.headers or {}, priority=message.priority, debug=message.debug,
                         smtp_email_from=smtp_account and smtp_account.email_id or None, smtp_server=smtp_account and smtp_account.smtpserver or None,
