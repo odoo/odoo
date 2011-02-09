@@ -43,12 +43,25 @@ class crm_merge_opportunity(osv.osv_memory):
         return ', '.join([getattr(op, attr) for op in ops if hasattr(op, attr) and getattr(op, attr)])
         
     
+    def get_attachments(self, cr, uid, id, context=None):
+        attach_obj = self.pool.get('ir.attachment')
+        result = []        
+        attach_ids = attach_obj.search(cr, uid, [('res_model' , '=', 'crm.lead'), ('res_id', '=', id)]) 
+        return attach_ids
+        
+    def set_attachements_res_id(self, cr, uid, op_id, attach_ids, context=None):
+        attach_obj = self.pool.get('ir.attachment')
+        attach_obj.write(cr, uid, attach_ids, {'res_id' : op_id})
+        
+        
+    
     def merge(self, cr, uid, op_ids, context=None):
         """
             @param opp_ids : list of opportunities ids to merge
         """
         opp_obj = self.pool.get('crm.lead')
         message_obj = self.pool.get('mailgate.message')
+        
 
         if len(op_ids) <= 1:
             raise osv.except_osv(_('Warning !'),_('Please select more than one opportunities.'))
@@ -88,27 +101,40 @@ class crm_merge_opportunity(osv.osv_memory):
         
         
         
-        #copy message into the first opportunity
+        #copy message into the first opportunity + merge attachement
         for opp in op_ids[1:]:
+            attach_ids = self.get_attachments(cr, uid, opp, context=context)
+            self.set_attachements_res_id(cr, uid, first_opp.id, attach_ids)
             for history in opp.message_ids:
                 new_history = message_obj.copy(cr, uid, history.id, default={'res_id': opp.id})
+                
         #Notification about loss of information
         details = []
         subject = ['Merged opportunities :']
         for opp in op_ids:
             subject.append(opp.name) 
-            details.append(_('Merged Opportunity: %s\n  Partner: %s\n  Stage: %s\n  Section: %s\n   Salesman: %s\n   Category: %s\n   Channel: %s\n   City: %s\n   Company: %s\n   Country: %s\n   Email: %s\n   Phone number: %s\n   Contact name: %s')  % ( opp.name, opp.partner_id.name or '', 
+            details.append(_('Merged Opportunity: %s\n  Partner: %s\n  Stage: %s\n  Section: %s\n   Salesman: %s\n   Category: %s\n   Channel: %s\n   Company: %s\n   Contact name: %s\n   Email: %s\n   Phone number: %s\n   Fax: %s\n   Mobile: %s\n   State: %s\n   Description: %s\n   Probability: %s\n   Planned revennue: %s\n   Country: %s\n   City: %s\n   Street: %s\n   Street 2: %s\n   Zip 2: %s')  % ( opp.name, opp.partner_id.name or '', 
                         opp.stage_id.name or '', 
                         opp.section_id.name or '', 
                         opp.user_id.name or '',
                         opp.categ_id.name or '', 
                         opp.channel_id.name or '', 
-                        opp.city or '', 
                         opp.company_id.name or '',
-                        opp.country_id.name or '', 
+                        opp.contact_name or '',
                         opp.email_from or '', 
                         opp.phone or '',
-                        opp.contact_name or ''))
+                        opp.fax or '',
+                        opp.mobile or '',
+                        opp.state_id.name or '',
+                        opp.description or '', 
+                        opp.probability or '',
+                        opp.planned_revenue or '',
+                        opp.country_id.name or '', 
+                        opp.city or '',
+                        opp.street or '',
+                        opp.street2 or '',
+                        opp.zip or '',
+                        ))
         subject = subject[0] + ", ".join(subject[1:])
         details = "\n\n".join(details) 
         
