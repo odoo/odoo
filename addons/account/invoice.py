@@ -657,7 +657,9 @@ class account_invoice(osv.osv):
     def _convert_ref(self, cr, uid, ref):
         return (ref or '').replace('/','')
 
-    def _get_analytic_lines(self, cr, uid, id):
+    def _get_analytic_lines(self, cr, uid, id, context=None):
+        if context is None:
+            context = {}
         inv = self.browse(cr, uid, id)
         cur_obj = self.pool.get('res.currency')
 
@@ -667,7 +669,7 @@ class account_invoice(osv.osv):
         else:
             sign = -1
 
-        iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id)
+        iml = self.pool.get('account.invoice.line').move_line_get(cr, uid, inv.id, context=context)
         for il in iml:
             if il['account_analytic_id']:
                 if inv.type in ('in_invoice', 'in_refund'):
