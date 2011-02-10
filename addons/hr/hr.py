@@ -191,7 +191,7 @@ class hr_employee(osv.osv):
     _defaults = {
         'active': 1,
         'photo': _get_photo,
-        'address_id': lambda self,cr,uid,c: self.pool.get('res.partner.address').browse(cr, uid, uid, c).partner_id.id
+        'address_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).address_id.id
     }
 
     def _check_recursion(self, cr, uid, ids, context=None):

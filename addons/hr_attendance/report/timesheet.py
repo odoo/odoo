@@ -43,7 +43,7 @@ class report_custom(report_rml):
         end_date = datetime.strptime(datas['form']['end_date'], '%Y-%m-%d')
         first_monday = start_date - relativedelta(days=start_date.date().weekday())
         last_monday = end_date + relativedelta(days=7 - end_date.date().weekday())
-        
+
         if last_monday < first_monday:
             first_monday, last_monday = last_monday, first_monday
 
@@ -83,7 +83,7 @@ class report_custom(report_rml):
                     for att in attendances:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
-                            week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + ((dt - ldt).seconds/3600)
+                            week_wh[ldt.date().weekday()] = week_wh.get(ldt.date().weekday(), 0) + (float((dt - ldt).seconds)/3600)
                         else:
                             ldt = dt
 
