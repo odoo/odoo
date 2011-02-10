@@ -241,9 +241,12 @@ class purchase_order(osv.osv):
     def onchange_dest_address_id(self, cr, uid, ids, adr_id):
         if not adr_id:
             return {}
-        part_id = self.pool.get('res.partner.address').read(cr, uid, [adr_id], ['partner_id'])[0]['partner_id'][0]
-        loc_id = self.pool.get('res.partner').browse(cr, uid, part_id).property_stock_customer.id
-        return {'value':{'location_id': loc_id, 'warehouse_id': False}}
+        values = {'warehouse_id': False}
+        part_id = self.pool.get('res.partner.address').browse(cr, uid, adr_id).partner_id
+        if part_id:
+            loc_id = part_id.property_stock_customer.id
+            values.update({'location_id': loc_id})
+        return {'value':values}
 
     def onchange_warehouse_id(self, cr, uid, ids, warehouse_id):
         if not warehouse_id:
