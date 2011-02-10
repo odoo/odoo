@@ -71,8 +71,14 @@ class google_contact(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             google_obj=google_lib(obj.user,obj.password)
             contact=google_obj._get_contact()
-        for i, entry in enumerate(contact.entry):
-            print entry.title.text
+            while contact:
+                for i, contact in enumerate(contact.entry):
+                    if contact.title.text:
+                        print contact.title.text
+                next = contact.GetNextLink()
+                contact=None
+                if next:
+                    contact = google_obj.GetContactsFeed(next.href)
         return {}    
 google_contact()
 
