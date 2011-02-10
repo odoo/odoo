@@ -78,7 +78,7 @@ class google_contact(osv.osv):
                 next = contact.GetNextLink()
                 contact=None
                 if next:
-                    contact = google_obj.GetContactsFeed(next.href)
+                    contact = google_obj._get_contact(next.href)
         return {}    
 google_contact()
 
