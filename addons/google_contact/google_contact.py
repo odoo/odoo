@@ -20,10 +20,11 @@
 ##############################################################################
 
 from osv import fields,osv,orm
+from tools.translate import _
 
 try:
     import gdata
-    from gdata import  contacts
+    from gdata import contacts
     import gdata.contacts.service
 except ImportError:
     raise osv.except_osv(_('Google Contacts Import Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
@@ -36,10 +37,16 @@ class google_lib(object):
         self.contact.email = email
         self.contact.password = password
         self.contact.source = 'GoogleInc-ContactsPythonSample-1'
-        self.contact.ProgrammaticLogin()
+        try:
+            self.contact.ProgrammaticLogin()
+        except Exception, e:
+            raise osv.except_osv(_('Error!'),_('%s' % (e)))
         
-    def _get_contact(self):
-        feed= self.contact.GetContactsFeed()
+    def _get_contact(self, href=''):
+        if href:
+            feed = self.contact.GetContactsFeed(href)
+        else:
+            feed = self.contact.GetContactsFeed()
         return feed
 
     def _get_contact_allGroups(self):
@@ -58,29 +65,6 @@ class google_lib(object):
     def _delete_contact(self):
         self.contact.DeleteContact(selected_entry.GetEditLink().href)        
         return True
-
-class google_contact(osv.osv):
-    _description ='Google Contact'
-    _name = 'google.contact'
-    _columns = {
-        'user': fields.char('Login', size=64, required=True,),
-        'password': fields.char('Password', size=64,),
-        }
-    def get_contact(self, cr, uid, ids, context):
-        # Only see the result , we will change the code
-        for obj in self.browse(cr, uid, ids, context=context):
-            google_obj=google_lib(obj.user,obj.password)
-            contact=google_obj._get_contact()
-            while contact:
-                for i, contact in enumerate(contact.entry):
-                    if contact.title.text:
-                        print contact.title.text
-                next = contact.GetNextLink()
-                contact=None
-                if next:
-                    contact = google_obj._get_contact(next.href)
-        return {}    
-google_contact()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
