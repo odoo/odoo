@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:14+0000\n"
-"PO-Revision-Date: 2011-02-08 01:31+0000\n"
+"PO-Revision-Date: 2011-02-10 00:58+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-08 04:36+0000\n"
+"X-Launchpad-Export-Date: 2011-02-10 04:35+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: account
@@ -722,7 +722,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_aged_receivable
 #, python-format
 msgid "Receivable Accounts"
-msgstr "Contas a receber"
+msgstr "Contas de Recebíveis"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -1349,7 +1349,7 @@ msgstr "Dono da conta bancária"
 #. module: account
 #: field:res.partner,property_account_receivable:0
 msgid "Account Receivable"
-msgstr "Conta de recebimento"
+msgstr "Conta de Recebimento"
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
@@ -1728,7 +1728,7 @@ msgstr "A quantidade opcional nos lançamentos"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_partner_account_move_all
 msgid "Receivables & Payables"
-msgstr "Receber & Pagar"
+msgstr "Recebíveis & Pagáveis"
 
 #. module: account
 #: code:addons/account/account_move_line.py:815
@@ -2111,7 +2111,7 @@ msgstr ""
 "Este tipo é usado para diferenciar tipos com efeitos especiais no OpenERP: "
 "visualização não pode ter lançamentos, consolidação são contas que possuem "
 "contas filho para consolidação de multi-empresas, pagamentos/recebimentos "
-"são para contas de parceiros (para computação de débito/crédito), fechado "
+"são para contas de parceiros (para computação de débito/crédito), fechado é "
 "para contas de depreciação."
 
 #. module: account
@@ -2167,7 +2167,7 @@ msgstr "Em execução"
 #: field:product.category,property_account_income_categ:0
 #: field:product.template,property_account_income:0
 msgid "Income Account"
-msgstr "Conta de receitas"
+msgstr "Conta de Receita"
 
 #. module: account
 #: code:addons/account/invoice.py:352
@@ -4418,7 +4418,7 @@ msgstr "Data Inicial"
 #. module: account
 #: field:account.chart.template,property_account_income:0
 msgid "Income Account on Product Template"
-msgstr "Conta de receita no modelo de produtos"
+msgstr ""
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -5441,7 +5441,7 @@ msgstr "Valorização"
 #: code:addons/account/report/account_partner_balance.py:306
 #, python-format
 msgid "Receivable and Payable Accounts"
-msgstr "Contas a Pagar e Receber"
+msgstr "Contas de Pagamento e Recebimento"
 
 #. module: account
 #: field:account.fiscal.position.account.template,position_id:0
@@ -5922,7 +5922,7 @@ msgstr "Nome Tipo de Conta"
 #: selection:account.account.template,type:0
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr "Receber"
+msgstr "Recebimento"
 
 #. module: account
 #: view:account.invoice:0
@@ -6321,8 +6321,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"Esta conta será usada em vez da conta padrão,  como conta de recebível para "
-"o parceiro atual"
+"Esta conta será usada em vez da conta padrão,  como conta de recebimento "
+"para o parceiro atual"
 
 #. module: account
 #: field:account.tax,python_applicable:0
@@ -6678,6 +6678,12 @@ msgid ""
 "you request an interval of 30 days OpenERP generates an analysis of "
 "creditors for the past month, past two months, and so on. "
 msgstr ""
+"O Saldo de Parceiro Vencido é um relatório mais detalhado dos seus "
+"recebíveis por intervalo. Quando abrir este relatório, o OpenERP pede o nome "
+"da empresa, o período fiscal e o intervalo a ser analisado (em dias). O "
+"OpenERP, então, calcula a tabela de saldo por período. Assim, se você pedir "
+"um intervalo de 30 dias, o OpenERP gera uma análise dos créditos para o mês "
+"passado, o penúltimo mês e assim por diante. "
 
 #. module: account
 #: field:account.invoice,origin:0
@@ -6867,6 +6873,25 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"Módulo financeiro e contábil que engloba:\n"
+"    Contabilização geral\n"
+"    Contabilização analítica e de custos\n"
+"    Contas de terceiros\n"
+"    Gerênciamento de impostos\n"
+"    Orçamentos\n"
+"    Faturas de clientes e fornecedores\n"
+"    Extratos de banco\n"
+"    Processo de reconciliação por parceiros\n"
+"    Criação de um painel contábil que inclui:\n"
+"    * Lista de cotações não faturadas\n"
+"    * Gráfico de recebíveis atrasados\n"
+"    * Gráfico de receitas atrasadas\n"
+"\n"
+"Os processos como manutenção de livro-razão geral é feito através da "
+"definição dos diários financeiros (lançamentos únicos ou agrupados são "
+"mantidos com diários) para um ano fiscal e para preparação de recibos que "
+"está em um módulo chamado account_voucher.\n"
+"    "
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_journal_period_tree
@@ -7168,8 +7193,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"Este campo é usado para lançamentos pagáveis e recebíveis de diário. Você "
-"pode colocar data limite para o pagamento desta linha."
+"Este campo é usado para lançamentos de pagamento e recebimento em diário. "
+"Você pode colocar data limite para o pagamento desta linha."
 
 #. module: account
 #: code:addons/account/account_move_line.py:1271
@@ -7775,7 +7800,7 @@ msgstr "Código computacional para Impostos incluídos nos preços"
 #. module: account
 #: field:account.chart.template,property_account_income_categ:0
 msgid "Income Category Account"
-msgstr "Conta da categoria Receita"
+msgstr "Conta da Categoria de Receita"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
@@ -7926,7 +7951,7 @@ msgstr "Conciliação"
 #: view:account.chart.template:0
 #: field:account.chart.template,property_account_receivable:0
 msgid "Receivable Account"
-msgstr "Conta de recebimento"
+msgstr "Conta de Recebimento"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -8050,7 +8075,7 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
-"O valor residual de recebíveis ou pagáveis de um lançamento de diário "
+"O valor residual de um lançamento de recebimento ou pagamento em diário "
 "expresso na moeda da empresa."
 
 #. module: account
@@ -8685,6 +8710,12 @@ msgid ""
 "the income account. OpenERP will propose to you automatically the Tax "
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
+"Esta visualização é usada para gravação de lançamentos em massa no OpenERP. "
+"Se você quiser registrar uma fatura de cliente, selecione o diário e o "
+"período na barra de pesquisa. Então, comece registrando a linha de "
+"lançamento da conta de receita. O OpenERP irá propor automaticamente a Taxa "
+"(Imposto) relacionado a esta conta e a contra-partida \"Conta de "
+"recebimento\"."
 
 #. module: account
 #: code:addons/account/account_bank_statement.py:391
@@ -9643,7 +9674,7 @@ msgstr "Este lançamento já está conciliado"
 #. module: account
 #: model:ir.model,name:account.model_report_account_receivable
 msgid "Receivable accounts"
-msgstr "Contas a receber"
+msgstr "Contas de recebimento"
 
 #. module: account
 #: selection:account.model.line,date_maturity:0
@@ -9717,7 +9748,7 @@ msgstr "Fin.Account"
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
 #: view:report.aged.receivable:0
 msgid "Aged Receivable"
-msgstr "A Receber"
+msgstr "Recebimentos Vencidos"
 
 #. module: account
 #: field:account.tax,applicable_type:0
@@ -9761,6 +9792,12 @@ msgid ""
 "may keep several types of specialized journals such as a cash journal, "
 "purchase journal, sales journal..."
 msgstr ""
+"Crie e gerencie os diários de sua empresa neste menu. Um diário é usado para "
+"registrar transações de todos os dados contábeis relacionados aos negócios "
+"do dia a dia. Ele usa o sistema de dupla partida para manter os registros. "
+"Dependendo da natureza das atividades e do número de transações diárias, uma "
+"empresa pode ter vários tipos de diários específicos como um diário de "
+"caixa, um diário de compras, diários de vendas..."
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_chart
@@ -9854,7 +9891,7 @@ msgstr "Contas Bancaria"
 #. module: account
 #: field:res.partner,credit:0
 msgid "Total Receivable"
-msgstr "Total a receber"
+msgstr "Total Recebível"
 
 #. module: account
 #: view:account.account:0
@@ -10038,6 +10075,13 @@ msgid ""
 "certain amount of information. They have to be certified by an external "
 "auditor annually."
 msgstr ""
+"Criar e gerenciar as contas que você precisa que sejam lançadas no diário. A "
+"conta é parte do livro-razão e permite que sua empresa registre todos os "
+"tipos de transações de débito e crédito. Empresas apresentam sua "
+"contabilidade anual em duas partes principais: o balanço e a declaração de "
+"renda (contas de lucros e perdas). A contabilidade anual de uma empresa é "
+"requerida por lei para que possam ser fiscalizadas algumas informações. Elas "
+"devem ser conferidas por um contador anualmente."
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
@@ -10045,6 +10089,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
+"O valor residual de um recebimento ou pagamento em um lançamento de diário "
+"expresso na respectiva moeda (pode ser diferente da moeda da empresa)"
 
 #~ msgid "Keep empty to use the period of the validation date."
 #~ msgstr "Mantenha vazio pra usar o período na data de validação"

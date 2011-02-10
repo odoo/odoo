@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-03 16:58+0000\n"
-"PO-Revision-Date: 2011-01-24 13:18+0000\n"
+"PO-Revision-Date: 2011-02-08 21:19+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-01-25 04:54+0000\n"
+"X-Launchpad-Export-Date: 2011-02-09 04:55+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: point_of_sale
@@ -114,7 +114,7 @@ msgstr ""
 #: view:report.cash.register:0
 #: view:report.pos.order:0
 msgid "My Sales"
-msgstr "Értékestéseim"
+msgstr "Értékesítéseim"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_out
@@ -253,7 +253,7 @@ msgstr "Értékesítési jelentés"
 #: code:addons/point_of_sale/wizard/pos_discount.py:52
 #, python-format
 msgid "No Order Lines"
-msgstr "Rendelési tételek száma"
+msgstr "Nincsenek megrendelés sorok"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -286,7 +286,7 @@ msgstr "Pénztárkezelés"
 #: code:addons/point_of_sale/point_of_sale.py:1075
 #, python-format
 msgid "No valid pricelist line found !"
-msgstr ""
+msgstr "A rendszer nem talált érvényes árlista sort."
 
 #. module: point_of_sale
 #: report:pos.details:0
@@ -312,7 +312,7 @@ msgstr "Engedmény (%)"
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "Total qty"
-msgstr "Összes db"
+msgstr "Összes menny."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
@@ -330,7 +330,7 @@ msgstr ""
 #. module: point_of_sale
 #: help:pos.order,user_salesman_id:0
 msgid "User who is logged into the system."
-msgstr ""
+msgstr "Felhasználó, aki bejelentkezett a rendszerbe."
 
 #. module: point_of_sale
 #: field:product.product,income_pdt:0
@@ -496,7 +496,7 @@ msgstr "Termék hozzáadása"
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
 msgid "Invoice Amount"
-msgstr ""
+msgstr "Számla összege"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -563,7 +563,7 @@ msgstr "A pénztárak már le vannak zárva."
 #. module: point_of_sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Hiba: Helytelen vonalkód"
+msgstr "Hiba: Érvénytelen vonalkód"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
@@ -597,7 +597,7 @@ msgstr "Adatok ellenőrzése"
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Qty of product"
-msgstr "Termék db"
+msgstr "Termékmenny."
 
 #. module: point_of_sale
 #: field:pos.order,contract_number:0
@@ -699,7 +699,7 @@ msgstr "Kifizetés dátuma"
 #. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
-msgstr "Rendelési tételek"
+msgstr "Megrendelés sorok"
 
 #. module: point_of_sale
 #: field:pos.order.line,create_date:0
@@ -761,7 +761,7 @@ msgstr "Számlázott összesen"
 #: view:report.pos.order:0
 #: field:report.pos.order,product_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "Mennyiség"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_return
@@ -900,7 +900,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_get_sale.py:54
 #, python-format
 msgid "You can't modify this order. It has already been paid"
-msgstr ""
+msgstr "Nem módosíthatja ezt a megrendelést. Már kifizették."
 
 #. module: point_of_sale
 #: field:pos.details,date_end:0
@@ -916,7 +916,7 @@ msgstr "Az Ön hivatkozása"
 #. module: point_of_sale
 #: field:report.transaction.pos,no_trans:0
 msgid "Number of Transaction"
-msgstr ""
+msgstr "Tranzakció száma"
 
 #. module: point_of_sale
 #: view:pos.add.product:0
@@ -928,12 +928,12 @@ msgstr ""
 #: view:pos.receipt:0
 #: selection:report.pos.order,state:0
 msgid "Cancel"
-msgstr ""
+msgstr "Mégsem"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Return Picking"
-msgstr "Kiszedés ismétlése"
+msgstr "Visszáruzás"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
@@ -1057,12 +1057,12 @@ msgstr "Pénztár nyitása"
 #: report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "A napló névnek egyedinek kell lenni!"
+msgstr "A napló nevének egyedinek kell lennie!"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1098,12 +1098,12 @@ msgstr "Nincs árlista !"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_get_sale
 #: view:pos.get.sale:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "Nyitott vevői megrendelés kiválasztása"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Order date"
-msgstr "Rendelés"
+msgstr "Megrendelés dátuma"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1129,7 +1129,7 @@ msgstr "Megjegyzések"
 #: field:pos.get.sale,picking_id:0
 #: view:pos.order:0
 msgid "Sale Order"
-msgstr "Rendelés"
+msgstr "Vevői megrendelés"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1229,13 +1229,13 @@ msgstr "Kiszedési lista"
 #: field:report.sales.by.margin.pos,qty:0
 #: field:report.sales.by.margin.pos.month,qty:0
 msgid "Qty"
-msgstr "Db"
+msgstr "Menny."
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 #: view:report.pos.order:0
 msgid "Month -1"
-msgstr "Hónap -1"
+msgstr "Előző hónap"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sale_user
@@ -1283,7 +1283,7 @@ msgstr "Július"
 #: code:addons/point_of_sale/point_of_sale.py:544
 #, python-format
 msgid "Please provide an account for the product: %s"
-msgstr ""
+msgstr "Kérem, adjon meg egy főkönyvi számlát a(z) %s termékre."
 
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
@@ -1569,7 +1569,7 @@ msgstr "Befejezés dátuma"
 #. module: point_of_sale
 #: field:pos.order,date_order:0
 msgid "Date Ordered"
-msgstr "Rendelés dátuma"
+msgstr "Megrendelés dátuma"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_report_user
@@ -1593,7 +1593,8 @@ msgstr "Igen"
 #: code:addons/point_of_sale/point_of_sale.py:743
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr "Nincs árbevétel számla meghatározva erre a termékre: \"%s\" (kód:%d)"
+msgstr ""
+"\"%s\" (kód:%d) termékre nem határoztak meg árbevétel főkönyvi számlát."
 
 #. module: point_of_sale
 #: view:pos.make.payment:0
@@ -1614,7 +1615,7 @@ msgstr "Termék leírása"
 #: field:pos.details,date_start:0
 #: field:pos.sale.user,date_start:0
 msgid "Date Start"
-msgstr "Kezdődátum"
+msgstr "Kezdő dátum"
 
 #. module: point_of_sale
 #: field:pos.order,amount_total:0
@@ -1811,12 +1812,12 @@ msgstr "Művelet"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale
 msgid "Sales Order"
-msgstr "Vevői rendelés"
+msgstr "Vevői megrendelés"
 
 #. module: point_of_sale
 #: field:pos.order,journal_entry:0
 msgid "Journal Entry"
-msgstr "Számla kontírozás"
+msgstr "Könyvelési tétel"
 
 #. module: point_of_sale
 #: selection:report.cash.register,state:0
@@ -1843,7 +1844,7 @@ msgstr "Értékesítés sorok"
 #. module: point_of_sale
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Hiba! Ön nem hozhat létre rekurzív cégeket!"
+msgstr "Hiba! Nem hozhat létre rekurzív vállalatokat."
 
 #. module: point_of_sale
 #: field:pos.discount,discount:0
@@ -2124,7 +2125,7 @@ msgstr ""
 #: report:pos.sales.user.today:0
 #: field:report.pos.order,date:0
 msgid "Date Order"
-msgstr "Rendelés dátuma"
+msgstr "Megrendelés dátuma"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_close_statement
@@ -2324,7 +2325,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr "Rendelés keresése"
+msgstr "Vevői megrendelés keresése"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0

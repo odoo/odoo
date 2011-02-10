@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-01-11 11:15+0000\n"
-"PO-Revision-Date: 2011-02-07 11:41+0000\n"
+"PO-Revision-Date: 2011-02-08 16:17+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ <openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-02-08 04:36+0000\n"
+"X-Launchpad-Export-Date: 2011-02-09 04:54+0000\n"
 "X-Generator: Launchpad (build 12177)\n"
 
 #. module: project
@@ -30,7 +30,7 @@ msgstr ""
 #: code:addons/project/project.py:658
 #, python-format
 msgid "The task '%s' has been delegated to %s."
-msgstr ""
+msgstr "'%s' feladat átruházásra került %s-ra/re."
 
 #. module: project
 #: help:res.company,project_time_mode_id:0
@@ -39,12 +39,17 @@ msgid ""
 "If you use the timesheet linked to projects (project_timesheet module), "
 "don't forget to setup the right unit of measure in your employees."
 msgstr ""
+"Ez állítja be a projektekben és a feladatokban használt mértékegységet.\n"
+"Ha használja a projektekhez kapcsolt munkaidő-kimutatást (project_timesheet "
+"modul), ne felejtse el beállítani a helyes mértékegységet az alkalmazotti "
+"űrlapon."
 
 #. module: project
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
-"A kiválasztott cég nincs az engedélyezett cégek között ehhez a felhasználóhoz"
+"A kiválasztott vállalat nincs az erre a felhasználóra engedélyezett "
+"vállalatok között"
 
 #. module: project
 #: help:project.task.reevaluate,remaining_hours:0
@@ -86,12 +91,12 @@ msgstr "Munkaidő-kimutatások"
 #. module: project
 #: view:project.task:0
 msgid "Delegations"
-msgstr ""
+msgstr "Feladat-átruházások"
 
 #. module: project
 #: field:project.task.delegate,planned_hours_me:0
 msgid "Hours to Validate"
-msgstr ""
+msgstr "Jóváhagyáshoz szükséges idő"
 
 #. module: project
 #: field:project.project,progress_rate:0
@@ -123,7 +128,7 @@ msgstr ""
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluation Task"
-msgstr "Újraértékelt feladat"
+msgstr "Feladat újraértékelése"
 
 #. module: project
 #: field:project.project,members:0
@@ -156,6 +161,8 @@ msgid ""
 "Header added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
+"A feladat lezárásakor a vevőnek küldött figyelmeztető e-mail elejéhez "
+"hozzáadott fejléc."
 
 #. module: project
 #: view:project.task:0
@@ -183,12 +190,12 @@ msgstr "Scrum"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_planned_total_hours_graph
 msgid "Projects: Planned Vs Total hours"
-msgstr ""
+msgstr "Projektek: tervezett kontra összes óra"
 
 #. module: project
 #: view:project.task.close:0
 msgid "Warn Message"
-msgstr ""
+msgstr "Figyelmeztető üzenet"
 
 #. module: project
 #: field:project.task.type,name:0
@@ -198,7 +205,7 @@ msgstr "Szakasz neve"
 #. module: project
 #: model:process.transition.action,name:project.process_transition_action_openpendingtask0
 msgid "Set pending"
-msgstr "Beállítása folyamatban"
+msgstr "Beállítás függőben lévőnek"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -209,7 +216,7 @@ msgstr "Megnyitásig hátralévő napok"
 #. module: project
 #: view:project.task:0
 msgid "Change Stage"
-msgstr ""
+msgstr "Szakasz megváltoztatása"
 
 #. module: project
 #: view:project.project:0
@@ -230,7 +237,7 @@ msgstr "Nagyon sürgős"
 #. module: project
 #: help:project.task.delegate,user_id:0
 msgid "User you want to delegate this task to"
-msgstr ""
+msgstr "Felhasználó, akire át akarja ruházni a feladatot."
 
 #. module: project
 #: view:report.project.task.user:0
@@ -243,12 +250,12 @@ msgstr "Nap"
 #: code:addons/project/project.py:571
 #, python-format
 msgid "The task '%s' is done"
-msgstr "A feladat '%s' kész"
+msgstr "'%s' feladat elkészült"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_close
 msgid "Project Close Task"
-msgstr ""
+msgstr "Projektfeladat lezárása"
 
 #. module: project
 #: model:process.node,name:project.process_node_drafttask0
@@ -279,7 +286,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_work
 msgid "Project Task Work"
-msgstr ""
+msgstr "Projektfeladat munka"
 
 #. module: project
 #: view:project.project:0
@@ -291,7 +298,7 @@ msgstr "Megjegyzések"
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs remaining hours"
-msgstr ""
+msgstr "Projekt kontra hátralévő óra"
 
 #. module: project
 #: view:project.project:0
@@ -306,7 +313,7 @@ msgstr "Feladatösszegzés"
 #. module: project
 #: field:project.task,active:0
 msgid "Not a Template Task"
-msgstr ""
+msgstr "Nem sablonfeladat"
 
 #. module: project
 #: view:project.task:0
@@ -363,7 +370,7 @@ msgstr "Kész feladat"
 #. module: project
 #: help:project.task.delegate,prefix:0
 msgid "Title for your validation task"
-msgstr ""
+msgstr "Jóváhagyási feladat megnevezése"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -374,13 +381,13 @@ msgstr "Tervezett és a tényleges érték átlagos különbsége"
 #. module: project
 #: model:process.node,note:project.process_node_donetask0
 msgid "Task is Completed"
-msgstr "Feladat befejezése"
+msgstr "Feladat befejezve"
 
 #. module: project
 #: field:project.task,date_end:0
 #: field:report.project.task.user,date_end:0
 msgid "Ending Date"
-msgstr "Befejező dátum"
+msgstr "Befejezési dátum"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -390,7 +397,7 @@ msgstr "   Hónap   "
 #. module: project
 #: model:process.transition,note:project.process_transition_delegate0
 msgid "Delegates tasks to the other user"
-msgstr ""
+msgstr "Átruházza a feladatokat más felhasználóra"
 
 #. module: project
 #: view:project.project:0
@@ -402,7 +409,7 @@ msgstr "Csoportosítás..."
 #. module: project
 #: help:project.task,effective_hours:0
 msgid "Computed using the sum of the task work done."
-msgstr ""
+msgstr "Elvégzett feladatmunkák összege."
 
 #. module: project
 #: help:project.project,warn_customer:0
@@ -410,6 +417,8 @@ msgid ""
 "If you check this, the user will have a popup when closing a task that "
 "propose a message to send by email to the customer."
 msgstr ""
+"Ha bejelöli, a feladat lezárásakor a felhasználónál megjelenik egy előugró "
+"ablak, amely javasolja, hogy küldjön üzenetet e-mail-ben a vevőnek."
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
@@ -425,17 +434,19 @@ msgstr "Tesztelés"
 #: help:project.task.delegate,planned_hours:0
 msgid "Estimated time to close this task by the delegated user"
 msgstr ""
+"A feladattal megbízott felhasználó számára a feladat lezárásához szükséges "
+"becsült idő"
 
 #. module: project
 #: view:project.project:0
 msgid "Reactivate Project"
-msgstr "Visszaható projekt"
+msgstr "Projekt újraaktíválása"
 
 #. module: project
 #: code:addons/project/project.py:553
 #, python-format
 msgid "Task '%s' closed"
-msgstr "Feladat '%s' zárt"
+msgstr "'%s' feladat lezárásra került"
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -479,7 +490,7 @@ msgstr "Partner"
 #. module: project
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr "Hiba! Nem hozhat létre rekurzív gyűjtőkódot."
+msgstr "Hiba! Nem hozhat létre rekurzív gyűjtőkódokat."
 
 #. module: project
 #: code:addons/project/project.py:225
@@ -510,7 +521,7 @@ msgstr "Előző"
 #. module: project
 #: view:project.task.reevaluate:0
 msgid "Reevaluate Task"
-msgstr ""
+msgstr "Feladat újraértékelése"
 
 #. module: project
 #: field:report.project.task.user,user_id:0
@@ -520,7 +531,7 @@ msgstr "Hozzárendelve"
 #. module: project
 #: view:project.project:0
 msgid "Date Stop: %(date)s"
-msgstr "Befejező dátum: %(date)s"
+msgstr "Befejezési dátum: %(date)s"
 
 #. module: project
 #: sql_constraint:res.users:0
@@ -535,12 +546,12 @@ msgstr "Projekt újraindítása"
 #. module: project
 #: selection:project.vs.hours,state:0
 msgid "Template"
-msgstr "Minta"
+msgstr "Sablon"
 
 #. module: project
 #: model:project.task.type,name:project.project_tt_specification
 msgid "Specification"
-msgstr ""
+msgstr "Részletezés"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_my_project
@@ -575,6 +586,10 @@ msgid ""
 "boolean 'active' field: if the task is linked to a template or unactivated "
 "project, it will be hidden unless specifically asked."
 msgstr ""
+"Ezt a mezőt automatikusan kiszámítja a rendszer, és ugyanúgy viselkedik, "
+"mint a logikai Aktív mező: ha a feladat egy sablon vagy nem aktívált "
+"projekthez kapcsolódik, akkor elrejtésre kerül, hacsak kifejezetten nem "
+"kérték az ellenkezőjét."
 
 #. module: project
 #: help:project.project,progress_rate:0
@@ -618,12 +633,12 @@ msgstr "Tényleges órák száma"
 #. module: project
 #: view:project.task.delegate:0
 msgid "Validation Task Title"
-msgstr "Érvényesített feladat"
+msgstr "Jóváhagyási feladat megnevezése"
 
 #. module: project
 #: view:project.task:0
 msgid "Reevaluate"
-msgstr ""
+msgstr "Újraértékelés"
 
 #. module: project
 #: code:addons/project/project.py:531
@@ -656,12 +671,12 @@ msgstr "Hátralévő idő"
 #: view:project.task:0
 #: view:project.task.work:0
 msgid "Task Work"
-msgstr ""
+msgstr "Feladatmunka"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_board_note_tree
 msgid "Public Notes"
-msgstr "Nyilvános jegyzetek"
+msgstr "Nyilvános megjegyzések"
 
 #. module: project
 #: field:project.project,planned_hours:0
@@ -672,12 +687,12 @@ msgstr "Tervezett idő"
 #: code:addons/project/wizard/project_task_close.py:86
 #, python-format
 msgid "Task '%s' Closed"
-msgstr "Feladat '%s' lezárt"
+msgstr "'%s' feladat lezárásra került"
 
 #. module: project
 #: view:report.project.task.user:0
 msgid "Non Assigned Tasks to users"
-msgstr ""
+msgstr "Felhasználóhoz nem hozzárendelt feladatok"
 
 #. module: project
 #: help:project.project,planned_hours:0
@@ -691,7 +706,7 @@ msgstr ""
 #. module: project
 #: field:project.task.delegate,name:0
 msgid "Delegated Title"
-msgstr "Kiküldött cím"
+msgstr "Átruházott feladat megnevezése"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -718,7 +733,7 @@ msgstr "Beállítások"
 #: field:project.task,date_start:0
 #: field:report.project.task.user,date_start:0
 msgid "Starting Date"
-msgstr "Indulás dátuma"
+msgstr "Kezdési dátum"
 
 #. module: project
 #: code:addons/project/project.py:267
@@ -749,7 +764,7 @@ msgstr ""
 #: code:addons/project/project.py:622
 #, python-format
 msgid "The task '%s' is opened."
-msgstr "A feladat '%s' nyitott"
+msgstr "'%s' feladat megnyitásra került."
 
 #. module: project
 #: view:project.task:0
@@ -759,7 +774,7 @@ msgstr "Dátumok"
 #. module: project
 #: help:project.task.delegate,name:0
 msgid "New title of the task delegated to the user"
-msgstr ""
+msgstr "A felhasználóra átruházott feladat új megnevezése"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -772,11 +787,13 @@ msgid ""
 "Various OpenERP applications are available to manage your projects with "
 "different level of control and flexibility."
 msgstr ""
+"Különböző alkalmazások állnak rendelkezésre a projektek különböző "
+"ellenőrzési és rugalmassági szintű kezelésére"
 
 #. module: project
 #: view:project.vs.hours:0
 msgid "Project vs Planned and Total Hours"
-msgstr ""
+msgstr "Projekt kontra tervezett és összes óra"
 
 #. module: project
 #: model:process.transition,name:project.process_transition_draftopentask0
@@ -791,7 +808,7 @@ msgstr "Felhasználó: %(user_id)s"
 #. module: project
 #: field:project.task,delay_hours:0
 msgid "Delay Hours"
-msgstr ""
+msgstr "Csúszási idő"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_user_tree
@@ -809,7 +826,7 @@ msgstr "Feladatok a felhasználók és projektek szerint"
 #: model:process.transition,name:project.process_transition_delegate0
 #: view:project.task:0
 msgid "Delegate"
-msgstr "Megbízott"
+msgstr "Feladat-átruházás"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_template_project
@@ -845,7 +862,7 @@ msgstr ""
 #: code:addons/project/wizard/project_task_close.py:79
 #, python-format
 msgid "Please specify the email address of Project Manager."
-msgstr ""
+msgstr "Kérem, adja meg a projektmenedzser e-mail címét."
 
 #. module: project
 #: model:ir.module.module,shortdesc:project.module_meta_information
@@ -862,7 +879,7 @@ msgstr "Augusztus"
 #: model:ir.actions.act_window,name:project.action_project_task_delegate
 #: view:project.task.delegate:0
 msgid "Project Task Delegate"
-msgstr ""
+msgstr "Projektfeladat átruházása"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -884,7 +901,7 @@ msgstr ""
 #. module: project
 #: model:ir.model,name:project.model_project_task_delegate
 msgid "Task Delegate"
-msgstr ""
+msgstr "Feladat-átruházás"
 
 #. module: project
 #: model:ir.actions.act_window,help:project.action_view_task
@@ -898,6 +915,15 @@ msgid ""
 "configuration. With the project_mrp module, sales orders can create tasks "
 "automatically when they are confirmed."
 msgstr ""
+"A feladat az elvégzendő munkát jelenti. Minden felhasználó a saját "
+"feladatlistájában dolgozik, amelybe berögzítheti a feladatra fordított "
+"munkaóráit. Önmaga is dolgozhat és lezárhatja a feladatot, vagy átruházhatja "
+"azt más felhasználóra. Ha átruházza a feladatot egy másik felhasználóra, egy "
+"függőben lévő állapotú új feladatot kap, amely újra megnyitásra kerül, ha "
+"ellenőrizni kell az elvégzett munkát. Ha telepíti a project_timesheet "
+"modult, a feladatmunkát ki lehet számlázni a projekt beállítása alapján. A "
+"project_mrp modul segítségével a vevői megrendelések automatikusan "
+"feladatokat hozhatnak létre, amikor megerősítésre kerülnek."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -928,6 +954,11 @@ msgid ""
 "         \n"
 " If the task is over, the states is set to 'Done'."
 msgstr ""
+"Amikor a feladatot létrehozzák, tervezet állapotban van.\n"
+" Ha a feladatot elkezdik, folyamatban állapotba kerül.\n"
+" Ha ellenőrzés szükséges, akkor a feladat függőben lévő állapotban van.      "
+"                            \n"
+" Amikor a feladatot befejezik, kész állapotba kerül."
 
 #. module: project
 #: help:project.task,progress:0
@@ -968,7 +999,7 @@ msgstr "Beállítás sablonként"
 #. module: project
 #: view:project.project:0
 msgid "Status: %(state)s"
-msgstr "Státusz: %(state)s"
+msgstr "Állapot: %(state)s"
 
 #. module: project
 #: field:project.installer,project_long_term:0
@@ -979,7 +1010,7 @@ msgstr "Hosszútávú tervezés"
 #: view:project.project:0
 #: view:project.task:0
 msgid "Start Date"
-msgstr "Kezdő dátum"
+msgstr "Kezdési dátum"
 
 #. module: project
 #: view:project.task:0
@@ -990,7 +1021,7 @@ msgstr "Forrás feladatok"
 #. module: project
 #: field:project.project,warn_customer:0
 msgid "Warn Partner"
-msgstr ""
+msgstr "Partner figyelmeztetése"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -1036,12 +1067,12 @@ msgstr "Feladatom"
 #. module: project
 #: view:project.project:0
 msgid "Member"
-msgstr ""
+msgstr "Tag"
 
 #. module: project
 #: view:project.task:0
 msgid "Project Tasks"
-msgstr "Projekt feladatok"
+msgstr "Projektfeladatok"
 
 #. module: project
 #: constraint:res.partner:0
@@ -1121,6 +1152,8 @@ msgid ""
 "New state of your own task. Pending will be reopened automatically when the "
 "delegated task is closed"
 msgstr ""
+"Az Ön saját feladatának új állapota. A függőben lévő állapot automatikusan "
+"újra megnyílik, amikor az átruházott feladat lezárásra kerül."
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1196,7 +1229,7 @@ msgstr "Október"
 #. module: project
 #: help:project.task.close,manager_warn:0
 msgid "Warn Manager by Email"
-msgstr ""
+msgstr "Menedzser figyelmeztetése e-mail útján"
 
 #. module: project
 #: model:process.node,name:project.process_node_opentask0
@@ -1206,7 +1239,7 @@ msgstr "Nyitott feladat"
 #. module: project
 #: field:project.task.close,manager_email:0
 msgid "Manager Email"
-msgstr ""
+msgstr "Menedzser e-mail címe"
 
 #. module: project
 #: help:project.project,active:0
@@ -1261,7 +1294,7 @@ msgstr "Hiba"
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_project
 msgid "User's projects"
-msgstr "Felhasználók projektjei"
+msgstr "Felhasználó projektjei"
 
 #. module: project
 #: field:project.installer,progress:0
@@ -1289,7 +1322,7 @@ msgstr "Napok száma a feladat megnyitásáig"
 #. module: project
 #: field:project.task,delegated_user_id:0
 msgid "Delegated To"
-msgstr ""
+msgstr "Feladattal megbízva"
 
 #. module: project
 #: view:res.partner:0
@@ -1304,12 +1337,12 @@ msgstr "Hozzárendelve"
 #. module: project
 #: view:project.task.delegate:0
 msgid "Delegated Task"
-msgstr "Átadott feladat"
+msgstr "Átruházott feladat"
 
 #. module: project
 #: field:project.installer,project_gtd:0
 msgid "Getting Things Done"
-msgstr ""
+msgstr "Getting Things Done"
 
 #. module: project
 #: help:project.project,members:0
@@ -1321,7 +1354,7 @@ msgstr ""
 #. module: project
 #: help:project.task.close,partner_warn:0
 msgid "Warn Customer by Email"
-msgstr "Ügyfél figyelmeztetése e-mail útján"
+msgstr "Vevő figyelmeztetése e-mail útján"
 
 #. module: project
 #: model:ir.module.module,description:project.module_meta_information
@@ -1333,6 +1366,14 @@ msgid ""
 "    * Members list of project\n"
 "    "
 msgstr ""
+"A projektmenedzsment modul nyomon követi a többszintű projekteket, "
+"feladatokat, a feladatokon\n"
+"végzett munkákat, stb. Lehetővé teszi a tervezést, a feladatok sorba "
+"rendezését, stb.\n"
+" Vezérlőpult a projekttagok számára, amely tartalmazza az alábbiakat:\n"
+"    * nyitott feladataim listája\n"
+"    * projekttagok listája\n"
+"    "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_work_month
@@ -1373,12 +1414,12 @@ msgstr ""
 #: code:addons/project/project.py:582
 #, python-format
 msgid "Task '%s' set in progress"
-msgstr ""
+msgstr "'%s' feladat folyamatban állapotba beállításra került"
 
 #. module: project
 #: view:project.project:0
 msgid "Date Start: %(date_start)s"
-msgstr "Kezdő dátum: %(date_start)s"
+msgstr "Kezdési dátum: %(date_start)s"
 
 #. module: project
 #: help:project.project,analytic_account_id:0
@@ -1447,12 +1488,12 @@ msgstr "Folyamatban"
 #: code:addons/project/wizard/project_task_close.py:82
 #, python-format
 msgid "Please specify the email address of Customer."
-msgstr "Kérjük, hogy adja meg az ügyfél e-mail címét."
+msgstr "Kérem, adja meg a vevő e-mail címét."
 
 #. module: project
 #: view:project.task:0
 msgid "Reactivate"
-msgstr "Újra"
+msgstr "Újraaktíválás"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_task_close
@@ -1481,11 +1522,13 @@ msgid ""
 "GTD is a methodology to efficiently organise yourself and your tasks. This "
 "module fully integrates GTD principle with OpenERP's project management."
 msgstr ""
+"A GTD a feladatok hatékony rendszerezésére szolgáló módszertan. Ez a modul "
+"teljesen integrálja a GTD alapelvet az OpenERP projektmenedzsmentjébe."
 
 #. module: project
 #: model:ir.model,name:project.model_project_vs_hours
 msgid " Project vs  hours"
-msgstr ""
+msgstr " Projekt kontra órák"
 
 #. module: project
 #: view:project.project:0
@@ -1504,7 +1547,7 @@ msgstr "Nagyon alacsony"
 #: field:project.project,warn_manager:0
 #: field:project.task.close,manager_warn:0
 msgid "Warn Manager"
-msgstr ""
+msgstr "Menedzser figyelmeztetése"
 
 #. module: project
 #: field:report.project.task.user,delay_endings_days:0
@@ -1556,7 +1599,7 @@ msgstr "Feladatra fordított idő számlázása"
 #. module: project
 #: view:board.board:0
 msgid "My Remaining Hours by Project"
-msgstr ""
+msgstr "Hátralévő időm projektenként"
 
 #. module: project
 #: field:project.task,description:0
@@ -1570,7 +1613,7 @@ msgstr "Leírás"
 #. module: project
 #: field:project.task.delegate,prefix:0
 msgid "Your Task Title"
-msgstr "Feladatainak címe"
+msgstr "Feladata megnevezése"
 
 #. module: project
 #: selection:project.task,priority:0
@@ -1586,7 +1629,7 @@ msgstr "Május"
 #. module: project
 #: view:project.task.delegate:0
 msgid "Validation Task"
-msgstr "Érvényesített feladat"
+msgstr "Feladat jóváhagyása"
 
 #. module: project
 #: field:task.by.days,total_task:0
@@ -1598,7 +1641,7 @@ msgstr "Összes feladat"
 #: model:ir.actions.act_window,name:project.action_view_delegate_task_tree
 #: view:project.task:0
 msgid "My Delegated Tasks"
-msgstr ""
+msgstr "Átruházott feladataim"
 
 #. module: project
 #: view:project.project:0
@@ -1635,7 +1678,7 @@ msgstr "Január"
 #. module: project
 #: field:project.project,tasks:0
 msgid "Project tasks"
-msgstr "Projekt feladatok"
+msgstr "Projektfeladatok"
 
 #. module: project
 #: help:project.project,warn_manager:0
@@ -1669,7 +1712,7 @@ msgstr "Vevő"
 #: view:project.project:0
 #: view:project.task:0
 msgid "End Date"
-msgstr "Befejezés dátuma"
+msgstr "Befejezési dátum"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1693,7 +1736,7 @@ msgstr ""
 #. module: project
 #: field:project.task.close,partner_warn:0
 msgid "Warn Customer"
-msgstr "Ügyfél figyelmeztetése"
+msgstr "Vevő figyelmeztetése"
 
 #. module: project
 #: view:project.task:0
@@ -1719,7 +1762,7 @@ msgstr "Napok száma a feladat lezárásáig"
 #. module: project
 #: view:board.board:0
 msgid "My Projects: Planned vs Total Hours"
-msgstr ""
+msgstr "Projektjeim: tervezett kontra összes óra"
 
 #. module: project
 #: model:ir.model,name:project.model_project_installer
@@ -1734,7 +1777,7 @@ msgstr "Április"
 #. module: project
 #: field:project.task,effective_hours:0
 msgid "Hours Spent"
-msgstr ""
+msgstr "Eltöltött órák"
 
 #. module: project
 #: view:project.project:0
@@ -1745,7 +1788,7 @@ msgstr "Vegyes"
 #. module: project
 #: model:process.transition,name:project.process_transition_opendonetask0
 msgid "Open Done Task"
-msgstr ""
+msgstr "Kész feladat megnyitása"
 
 #. module: project
 #: field:res.company,project_time_mode_id:0
@@ -1755,7 +1798,7 @@ msgstr "Projekt időegysége"
 #. module: project
 #: view:project.task:0
 msgid "Spent Hours"
-msgstr ""
+msgstr "Eltöltött órák"
 
 #. module: project
 #: code:addons/project/project.py:665
@@ -1794,7 +1837,7 @@ msgstr ""
 #. module: project
 #: model:project.task.type,name:project.project_tt_merge
 msgid "Merge"
-msgstr ""
+msgstr "Összevonás"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_project_vs_remaining_hours_graph
@@ -1808,6 +1851,8 @@ msgid ""
 "Footer added at the beginning of the email for the warning message sent to "
 "the customer when a task is closed."
 msgstr ""
+"A feladat lezárásakor a vevőnek küldött figyelmeztető e-mail elejéhez "
+"hozzáadott lábléc."
 
 #. module: project
 #: model:ir.actions.act_window,help:project.open_view_project_all
@@ -1830,13 +1875,13 @@ msgstr "Összes idő"
 #. module: project
 #: field:project.task.delegate,state:0
 msgid "Validation State"
-msgstr "Érvényesítési státusz"
+msgstr "Jóváhagyás állapota"
 
 #. module: project
 #: code:addons/project/project.py:602
 #, python-format
 msgid "Task '%s' cancelled"
-msgstr "Feladat '%s' törölt"
+msgstr "'%s' feladat törlésre került"
 
 #. module: project
 #: field:project.task,work_ids:0
@@ -1849,6 +1894,8 @@ msgid ""
 "Estimated time for you to validate the work done by the user to whom you "
 "delegate this task"
 msgstr ""
+"A felhasználóra átruházott és általa elvégzett munka jóváhagyásához az Ön "
+"számára szükséges becsült idő"
 
 #. module: project
 #: view:project.project:0
@@ -1864,7 +1911,7 @@ msgstr "Létrehozás dátuma"
 #: code:addons/project/project.py:610
 #, python-format
 msgid "The task '%s' is cancelled."
-msgstr "A feladat '%s' törölve."
+msgstr "'%s' feladat törlésre került."
 
 #. module: project
 #: view:project.task.close:0
@@ -1884,7 +1931,7 @@ msgstr "Pozíció"
 #. module: project
 #: help:project.installer,project_issue:0
 msgid "Automatically synchronizes project tasks and crm cases."
-msgstr ""
+msgstr "Automatikusan összehangolja a projektfeladatokat és a crm eseteket."
 
 #. module: project
 #: view:project.project:0
@@ -1895,7 +1942,7 @@ msgstr "Feladatok szakaszai"
 #. module: project
 #: model:process.node,note:project.process_node_taskbydelegate0
 msgid "Delegate your task to the other user"
-msgstr ""
+msgstr "Ön átruházza a feladatát más felhasználóra."
 
 #. module: project
 #: view:project.project:0
