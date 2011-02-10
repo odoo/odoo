@@ -196,16 +196,18 @@ class stock_picking(osv.osv):
         for pick in self.browse(cr, uid, ids, context):
             call_ship_end = True
             if pick.sale_id:
+                non_cancelled_picks = [stock_pick.id for stock_pick in pick.sale_id.picking_ids if stock_pick.state!='cancel']
+                if not non_cancelled_picks:
+                    #All the relevant Pickings are cancelled, so no need to call action_ship_end()
+                    continue
                 for picks in pick.sale_id.picking_ids:
                     if picks.state not in ('done','cancel'):
                         call_ship_end = False
                         break
                 if call_ship_end:
-                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context)    
+                    self.pool.get('sale.order').action_ship_end(cr, uid, [pick.sale_id.id], context)
         return res
 stock_picking()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
