@@ -303,7 +303,10 @@ class crm_case(object):
         if not add:
             return {'value': {'email_from': False}}
         address = self.pool.get('res.partner.address').browse(cr, uid, add)
-        return {'value': {'email_from': address.email, 'phone': address.phone}}
+        if address.email:
+            return {'value': {'email_from': address.email, 'phone': address.phone}}
+        else:
+            return {'value': {'phone': address.phone}}
 
     def _history(self, cr, uid, cases, keyword, history=False, subject=None, email=False, details=None, email_from=False, message_id=False, attach=[], context=None):
         mailgate_pool = self.pool.get('mailgate.thread')
