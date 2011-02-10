@@ -28,6 +28,8 @@ import pooler
 from report.interface import report_rml
 from report.interface import toxml
 
+import tools
+
 one_week = relativedelta(days=7)
 num2day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -58,7 +60,7 @@ class report_custom(report_rml):
               <name>%s</name>
               %%s
             </user>
-            ''' % ustr(toxml(emp['name']))
+            ''' % tools.ustr(toxml(emp['name']))
             while monday != last_monday:
                 #### Work hour calculation
                 sql = '''
