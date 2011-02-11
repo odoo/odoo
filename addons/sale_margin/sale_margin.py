@@ -60,8 +60,13 @@ class sale_order(osv.osv):
 
     def _product_margin(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
+        obj_line = self.pool.get('sale.order.line')
         for sale in self.browse(cr, uid, ids, context=context):
             result[sale.id] = 0.0
+            line_ids = []
+            if sale.order_line:
+                map(lambda x: line_ids.append(x.id), sale.order_line)
+                obj_line.write(cr, uid, line_ids, {})
             for line in sale.order_line:
                 result[sale.id] += line.margin or 0.0
         return result
