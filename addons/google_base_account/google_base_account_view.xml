@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+   <record model="ir.ui.view" id="view_google_user_form">
+           <field name="name">res.users.google.form</field>
+          <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+        		<form string="Google User">
+                  <group colspan="2" col="2">
+                      <field name="gmail_user"/>
+                      <field name="gmail_password" password="True"/>
+                  </group>
+       				<separator string="" colspan="4" />
+                    <group colspan="2" col="2">
+                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
+                        <button name="check_login" string="Checking" type="object" icon="gtk-ok"/>
+                    </group>                  
+                </form>  
+            </field>
+        </record>
+		<record model="ir.ui.view" id="view_google_user_tree">
+	         <field name="name">google.user.tree</field>
+	         <field name="model">res.users</field>
+	         <field name="type">tree</field>
+	         <field name="arch" type="xml">
+	         <tree string="Google User">
+				<field name="gmail_user"/>
+				<field name="gmail_password" password="True"/>
+	             </tree>             
+	         </field>
+	     </record>        
+
+        <record id="action_google_user" model="ir.actions.act_window">
+            <field name="name">Gooogle User</field>
+            <field name="res_model">res.users</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+                      
+       <record model="ir.actions.act_window.view" id="action_google_user_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_google_user_tree"/>
+            <field name="act_window_id" ref="action_google_user"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="action_google_user_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_google_user_form"/>
+            <field name="act_window_id" ref="action_google_user"/>
+        </record>
+     <menuitem id="base.menu_sales" name="Sales"
+         parent="base.menu_base_partner" sequence="1" />
+
+     <menuitem name="Google User" id="menu_google_contact"
+         parent="base.menu_address_book" action="action_google_user"
+         sequence="20" />
+    </data>
+</openerp>
