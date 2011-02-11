@@ -66,7 +66,7 @@ class sale_order(osv.osv):
             line_ids = []
             if sale.order_line:
                 map(lambda x: line_ids.append(x.id), sale.order_line)
-            obj_line.write(cr, uid, line_ids, {})
+                obj_line.write(cr, uid, line_ids, {})
             for line in sale.order_line:
                 result[sale.id] += line.margin or 0.0
         return result
