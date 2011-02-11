@@ -613,6 +613,13 @@
 			<field name="tax_ids" eval="[(6,0,[ref('otaxs')])]"/>
 		</record>
 
+		<record id="action_wizard_multi_chart_todo" model="ir.actions.todo">
+			<field name="name">Generate Chart of Accounts from a Chart Template</field>
+			<field name="action_id" ref="account.action_wizard_multi_chart"/>
+			<field name="state">open</field>
+			<field name="restart">onskip</field>
+		</record>
+
 
     </data>
 </openerp>
