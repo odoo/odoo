@@ -24,10 +24,8 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import pooler
-
 from report.interface import report_rml
 from report.interface import toxml
-
 import tools
 
 one_week = relativedelta(days=7)
@@ -40,7 +38,7 @@ class report_custom(report_rml):
 
     def create_xml(self, cr, uid, ids, datas, context=None):
         obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
-        
+
         start_date = datetime.strptime(datas['form']['init_date'], '%Y-%m-%d')
         end_date = datetime.strptime(datas['form']['end_date'], '%Y-%m-%d')
         first_monday = start_date - relativedelta(days=start_date.date().weekday())
