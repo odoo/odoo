@@ -1,11 +1,10 @@
 import urlparse
+import cherrypy
 
+from openobject import rpc
 from openobject.tools import expose, ast
-from openerp.controllers import actions
-from openerp.utils import rpc
 
 import openerp.controllers
-import cherrypy
 
 
 
@@ -42,6 +41,6 @@ class ShareWizardController(openerp.controllers.SecuredController):
             'domain': str(domain),
             'action_id':action_id
         }, context)
-        return actions.execute(
+        return openerp.controllers.actions.execute(
             Share.go_step_1([sharing_view_id], context),
             ids=[sharing_view_id], context=context)

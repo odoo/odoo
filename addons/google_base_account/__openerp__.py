@@ -19,36 +19,22 @@
 #
 ##############################################################################
 
-{
-    'name': 'Document Management - Wiki',
-    'version': '1.0.1',
-    'category': 'Generic Modules/Others',
-    'description': """
-The base module to manage documents(wiki)
 
-keep track for the wiki groups, pages, and history
-    """,
-    'author': 'OpenERP SA & Axelor',
-    'website': 'http://openerp.com',
-    'depends': ['knowledge'],
-    'web_depends': ['widget_wiki'],
+{
+    'name': 'Google user',
+    'version': '1.0',
+    'category': 'Generic Modules/Others',
+    'description': """The module adds google user  in res user""",
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
     'init_xml': [],
     'update_xml': [
-        'wizard/wiki_wiki_page_open_view.xml',
-        'wizard/wiki_create_menu_view.xml',
-        'wizard/wiki_make_index_view.xml',
-        'wizard/wiki_show_diff_view.xml',
-        'wiki_view.xml',
-        'data/wiki_quickstart.xml',
-        'data/wiki_main.xml',
-        'security/wiki_security.xml',
-        'security/ir.model.access.csv'
-    ],
-    'demo_xml': ['wiki_demo.xml'],
-    'test': ['test/wiki_test00.yml'],
+                  'google_base_account_view.xml',
+                   ],
+    'demo_xml': [],
     'installable': True,
     'active': False,
-    'certificate': '0086363630317',
-    'web': True,
+    'certificate': '',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,12 +15,22 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
-import google_contact
-import wizard
+from osv import fields,osv,orm
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    
+class res_users(osv.osv):
+    _inherit = "res.users"
+    _columns = {
+        'gmail_user': fields.char('User Name', size=64,),
+        'gmail_password': fields.char('Password', size=64),
+    }
+    def check_login(self, cr, uid, ids, context=None):
+        # we can check login detail is correct or not
+        return {'type': 'ir.actions.act_window_close'}    
+res_users()    
+# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
 
