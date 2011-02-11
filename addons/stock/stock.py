@@ -1247,9 +1247,9 @@ class stock_picking(osv.osv):
 
             if new_picking:
                 move_obj.write(cr, uid, [c.id for c in complete], {'picking_id': new_picking})
-                for move in complete:
-                    if prodlot_ids.get(move.id):
-                        move_obj.write(cr, uid, move.id, {'prodlot_id': prodlot_ids[move.id]})
+            for move in complete:
+                if prodlot_ids.get(move.id):
+                    move_obj.write(cr, uid, move.id, {'prodlot_id': prodlot_ids[move.id]})
             for move in too_many:
                 product_qty = move_product_qty[move.id]
                 defaults = {

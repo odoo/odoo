@@ -61,11 +61,9 @@ class survey_browse_answer(osv.osv_memory):
         @return : Dictionary value for Open the browse answer wizard.
         """
         if context is None: context = {}
-        record = self.read(cr, uid, ids, [],context=context)
+        record = self.read(cr, uid, ids, [])
         record = record and record[0] or {} 
         if record['response_id']:
-            if isinstance(record['response_id'], tuple):
-                record['response_id'] = record['response_id'][0]
             res_id = [(record['response_id'])]
         else:
             sur_response_obj = self.pool.get('survey.response')

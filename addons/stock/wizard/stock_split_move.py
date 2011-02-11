@@ -107,7 +107,7 @@ class stock_split_move_line(osv.osv_memory):
         record_id = context and context.get('active_id', False) or False
         pick_obj = self.pool.get('stock.picking')
         pick = pick_obj.browse(cr, uid, record_id, context=context)
-        data = self.read(cr, uid, ids[0], context=context)
+        data = self.read(cr, uid, ids[0])
         for move in pick.move_lines:
             quantity = data['move%s' % move.id]
             if 0 < quantity < move.product_qty:
