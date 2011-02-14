@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2009 Sharoon Thomas
-#    Copyright (C) 2010-2010 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2010-2011 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -84,10 +84,10 @@ class email_template(osv.osv):
         'name' : fields.char('Name', size=100, required=True),
         'object_name':fields.many2one('ir.model', 'Resource'),
         'model_int_name':fields.char('Model Internal Name', size=200,),
-        'from_account':fields.many2one(
+        'smtp_server_id':fields.many2one(
                    'email.smtp_server',
-                   string="Email Account",
-                   help="Emails will be sent from this approved account."),
+                   string="SMTP Server",
+                   help="Emails will be sent from this SMTP Server."),
         'def_to':fields.char(
                  'Recipient (To)',
                  size=250,
@@ -478,12 +478,12 @@ This is useful for CRM leads for example"),
             context = {}
         #If account to send from is in context select it, else use enforced account
         if 'account_id' in context.keys():
-            from_account = self.pool.get('email.smtp_server').read(cursor, user, context.get('account_id'), ['name', 'email_id'], context)
+            smtp_server_id = self.pool.get('email.smtp_server').read(cursor, user, context.get('account_id'), ['name', 'email_id'], context)
         else:
-            from_account = {
-                            'id':template.from_account.id,
-                            'name':template.from_account.name,
-                            'email_id':template.from_account.email_id
+            smtp_server_id = {
+                            'id':template.smtp_server_id.id,
+                            'name':template.smtp_server_id.name,
+                            'email_id':template.smtp_server_id.email_id
                             }
         lang = get_value(cursor, user, record_id, template.lang, template, context)
         if lang:
@@ -493,13 +493,13 @@ This is useful for CRM leads for example"),
 
         # determine name of sender, either it is specified in email_id or we
         # use the account name
-        email_id = from_account['email_id'].strip()
+        email_id = smtp_server_id['email_id'].strip()
         email_from = re.findall(r'([^ ,<@]+@[^> ,]+)', email_id)[0]
         if email_from != email_id:
             # we should keep it all, name is probably specified in the address
-            email_from = from_account['email_id']
+            email_from = smtp_server_id['email_id']
         else:
-            email_from = tools.ustr(from_account['name']) + "<" + tools.ustr(email_id) + ">"
+            email_from = tools.ustr(smtp_server_id['name']) + "<" + tools.ustr(email_id) + ">"
 
         # FIXME: should do this in a loop and rename template fields to the corresponding
         # mailbox fields. (makes no sense to have different names I think.

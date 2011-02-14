@@ -16,7 +16,7 @@
                         <page string="Mail Details">
                             <group col="2" colspan="2">
                                 <separator string="Addresses" colspan="2"/>
-                                <field name="from_account" required="1"/>
+                                <field name="smtp_server_id"/>
                                 <field name="def_to" required="1"/>
                                 <field name="def_cc"/>
                                 <field name="def_bcc"/>
@@ -104,7 +104,7 @@
             <field name="arch" type="xml">
                 <tree string="Email Templates">
                     <field name="name"/>
-                    <field name="from_account"/>
+                    <field name="smtp_server_id"/>
                     <field name="object_name"/>
                     <field name="def_to"/>
                     <field name="def_cc"/>
@@ -135,7 +135,7 @@
                     </group>
                     <newline/>
                     <group expand="0" string="Group by..." colspan="4" col="10">
-                        <filter string="Account" domain="[]" context="{'group_by':'from_account'}" icon="terp-folder-orange"/>
+                        <filter string="Account" domain="[]" context="{'group_by':'smtp_server_id'}" icon="terp-folder-orange"/>
                         <separator orientation="vertical"/>
                         <filter string="Resource" domain="[]" context="{'group_by':'object_name'}" icon="terp-accessories-archiver"/>
                     </group>

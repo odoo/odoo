@@ -47,8 +47,8 @@ class email_template_send_wizard(osv.osv_memory):
 
         logger = netsvc.Logger()
 
-        if template.from_account:
-            return [(template.from_account.id, '%s (%s)' % (template.from_account.name, template.from_account.email_id))]
+        if template.smtp_server_id:
+            return [(template.smtp_server_id.id, '%s (%s)' % (template.smtp_server_id.name, template.smtp_server_id.email_id))]
         else:
             logger.notifyChannel(_("email-template"), netsvc.LOG_ERROR, _("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
             raise osv.except_osv(_("Missing mail account"),_("No personal email accounts are configured for you. \nEither ask admin to enforce an account for this template or get yourself a personal email account."))
