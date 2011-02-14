@@ -2,10 +2,11 @@ import urlparse
 
 import cherrypy
 
+from openobject import rpc
 from openobject.tools import expose
 
 import openerp.controllers
-from openerp.utils import rpc, TinyDict
+from openerp.utils import TinyDict
 
 class Piratepad(openerp.controllers.SecuredController):
     _cp_path = "/piratepad"
