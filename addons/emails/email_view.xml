@@ -106,6 +106,7 @@
             <field name="res_model">email.message</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="domain">[('history', '=', True)]</field>
             <field name="search_view_id" ref="view_email_message_search"/>
         </record>
 
@@ -121,10 +122,10 @@
 	       src_model="email.message"
 	       domain="[('res_id', '=', res_id),('res_model','=',model)]"/>
 
-        <menuitem name="Email Message" id="menu_email_message_tools"
+        <menuitem name="Email" id="menu_email_message_tools"
             parent="base.menu_tools" />
 
-        <menuitem name="Message"
+        <menuitem name="Messages"
             id="menu_email_message"
             parent="menu_email_message_tools"
             action="action_view_mail_message" />
@@ -202,7 +203,7 @@
 
         <menuitem name="Email" id="menu_config_email" parent="base.menu_lunch_survey_root" sequence="20"/>
 
-        <menuitem name="Email Smtp Server" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
+        <menuitem name="Smtp Server" id="menu_email_smtp_server_all" parent="menu_config_email" action="action_email_smtp_server_tree_all"/>
 
     </data>
 </openerp>
