@@ -216,7 +216,7 @@ class base_synchro(osv.osv_memory):
         start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
         syn_obj = self.browse(cr, uid, ids, context=context)[0]
         pool = pooler.get_pool(cr.dbname)
-        server = pool.get('base.synchro.server').browse(cr, uid, ids, context=context)[0]
+        server = pool.get('base.synchro.server').browse(cr, uid, syn_obj.server_url.id, context=context)
         for object in server.obj_ids:
             dt = time.strftime('%Y-%m-%d %H:%M:%S')
             self.synchronize(cr, uid, server, object, context)
