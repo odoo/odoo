@@ -22,7 +22,7 @@
 from osv import fields,osv,orm
 from tools.translate import _
 
-from google_contact import google_contact
+from sync_google_contact import sync_google_contact
 
 class google_contact_import(osv.osv_memory):
     _description ='Google Contact'
@@ -36,7 +36,7 @@ class google_contact_import(osv.osv_memory):
         # Only see the result, we will change the code
         addresss_obj = self.pool.get('res.partner.address')
         for obj in self.browse(cr, uid, ids, context=context):
-            google_obj = google_contact.google_lib(obj.user, obj.password)
+            google_obj = sync_google_contact.google_lib(obj.user, obj.password)
             contact = google_obj._get_contact()
             addresses = []
             while contact:
