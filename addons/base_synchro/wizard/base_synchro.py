@@ -225,7 +225,7 @@ class base_synchro(osv.osv_memory):
                 dt = time.strftime('%Y-%m-%d %H:%M:%S')
             self.pool.get('base.synchro.obj').write(cr, uid, [object.id], {'synchronize_date': dt})
         end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
-        if 'user_id' in syn_obj.user_id:
+        if syn_obj.user_id:
             request = pooler.get_pool(cr.dbname).get('res.request')
             if not self.report:
                 self.report.append('No exception.')
@@ -244,7 +244,7 @@ Exceptions:
             request.create(cr, uid, {
                 'name' : "Synchronization report",
                 'act_from' : uid,
-                'act_to' : syn_obj.user_id,
+                'act_to' : syn_obj.user_id.id,
                 'body': summary,
             })
             return True
