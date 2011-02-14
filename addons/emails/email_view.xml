@@ -135,21 +135,21 @@
             <field name="model">email.smtp_server</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Email Smtp Server Configuration">
-                    <group colspan="2">
+                <form string="Smtp Server Configuration">
+                    <group colspan="4">
                         <field name="name"/>
                         <field name="default"/>
                     </group>
                     <notebook colspan="4">
-                        <page string="Outgoing">
+                        <page string="Configuration">
                             <separator string="Server Information" colspan="4"/>
-                            <group colspan="4" col="4">
+                            <group colspan="4" col="8">
                                 <field name="smtpserver"/>
-                                <button name="check_outgoing_connection" type="object" string="Test Outgoing Connection" icon="gtk-network" colspan="2"/>
                                 <field name="smtpport"/>
                                 <field name="smtpssl"/>
                                 <field name="smtptls"/>
-                            </group>
+                             </group>   
+                               
                             <separator string="User Information" colspan="4"/>
                             <group col="6" colspan="4">
                                 <field name="email_id"/>
@@ -157,6 +157,9 @@
                                 <field name="smtppass" password="True"/>
                                 
                             </group>
+                            <separator string="" colspan="4"/>
+                            <label string="" colspan="2"/>
+                            <button name="test_smtp_connection" type="object" string="Test Connection" icon="gtk-network" colspan="2"/>
                            
                         </page>
                     </notebook>
