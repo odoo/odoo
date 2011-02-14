@@ -338,7 +338,9 @@ class configmanager(object):
         if not self.options['addons_path'] or self.options['addons_path']=='None':
             self.options['addons_path'] = os.path.join(self.options['root_path'], 'addons')
         else:
-            self.options['addons_path'] = os.path.abspath(os.path.expanduser(os.path.expandvars(self.options['addons_path'])))
+            self.options['addons_path'] = ",".join(
+                    os.path.abspath(os.path.expanduser(os.path.expandvars(x)))
+                      for x in self.options['addons_path'].split(','))
 
         self.options['init'] = opt.init and dict.fromkeys(opt.init.split(','), 1) or {}
         self.options["demo"] = not opt.without_demo and self.options['init'] or {}
