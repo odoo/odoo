@@ -36,7 +36,7 @@ class google_lib(object):
         self.contact = gdata.contacts.service.ContactsService()
         self.contact.email = email
         self.contact.password = password
-        self.contact.source = 'GoogleInc-ContactsPythonSample-1'
+        self.contact.source = 'OpenERP'
         try:
             self.contact.ProgrammaticLogin()
         except Exception, e:

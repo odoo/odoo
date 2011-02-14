@@ -39,6 +39,8 @@ class google_contact_import(osv.osv_memory):
         user_obj=self.pool.get('res.users').browse(cr, uid, uid)
         gmail_user=user_obj.gmail_user
         gamil_pwd=user_obj.gmail_password
+        if not gmail_user or not gamil_pwd:
+            raise osv.except_osv(_('Error'), _("Please specify the user and password !"))      
         for obj in self.browse(cr, uid, ids, context=context):
             google_obj = sync_google_contact.google_lib(gmail_user, gamil_pwd)
             contact = google_obj._get_contact()
