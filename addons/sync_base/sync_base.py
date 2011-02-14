@@ -21,13 +21,32 @@
 
 from osv import fields,osv,orm
 
-    
-class res_users(osv.osv):
-    _inherit = "res.users"
-    _columns = {
-        'gmail_user': fields.char('User Name', size=64,),
-        'gmail_password': fields.char('Password', size=64),
-    }
-res_users()    
-# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
+#framework to handle synchronization with multiple app
+# we will improve the code and function
 
+class res_partner_sync_base:
+    _inherit = "res.partner.address"
+
+    def create(self, cr, uid, vals, context=None):
+        id = super(res_partner_sync_base, self).create(cr, uid, vals, context=context)   
+        return id 
+
+    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
+        if context is None:
+            context = {}
+        return super(res_partner_sync_base, self).write(cr, uid, ids, vals, context=context)
+    
+    def unlink(self, cr, uid, ids, context=None):
+        osv.osv.unlink(self, cr, uid, ids, context=context)
+        return True
+    
+    def sync_create(self, cr, uid, vals, context=None,synchronize=True):
+        return True
+    
+    def sync_modify(self, cr, uid, ids, vals, context=None, synchronize=True):
+        return True    
+ 
+    def sync_modify(self, cr, uid, ids,context=None, synchronize=True):
+        return True      
+
+res_partner_sync_base()

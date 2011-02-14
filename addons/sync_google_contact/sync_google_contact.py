@@ -66,5 +66,7 @@ class google_lib(object):
         self.contact.DeleteContact(selected_entry.GetEditLink().href)        
         return True
 
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

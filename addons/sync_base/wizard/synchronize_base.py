@@ -20,14 +20,17 @@
 ##############################################################################
 
 from osv import fields,osv,orm
+from tools.translate import _
 
-    
-class res_users(osv.osv):
-    _inherit = "res.users"
+
+class synchronize_base(osv.osv_memory):
+    _description ='Synchronize Contact'
+    _name = "synchronize.base"
     _columns = {
-        'gmail_user': fields.char('User Name', size=64,),
-        'gmail_password': fields.char('Password', size=64),
-    }
-res_users()    
-# vim:expandtab:smartindent:toabstop=4:softtabstop=4:shiftwidth=4:
+        'tools':  fields.selection([('none','Nothing')], 'App to synchronize with'),
+     }
+    def action_synchronize(self, cr, uid, ids, context=None):
+         return {}
+synchronize_base()
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -27,11 +27,11 @@
     'description': """The module adds google contact  in partner address""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base'],
+    'depends': ['base','sync_base','google_base_account',],
     'init_xml': [],
     'update_xml': [
                   #'google_contact_view.xml',
-                  'wizard/google_contact_import_view.xml'
+                  #'wizard/google_contact_import_view.xml'
                    ],
     'demo_xml': [],
     'installable': True,

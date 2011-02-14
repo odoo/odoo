@@ -25,15 +25,16 @@ from tools.translate import _
 from sync_google_contact import sync_google_contact
 
 class google_contact_import(osv.osv_memory):
-    _description ='Google Contact'
-    _name = 'google.contact.import'
+    _name = "synchronize.base"    
+    _inherit = 'synchronize.base'
     _columns = {
-        'user': fields.char('User Name', size=64, required=True),
-        'password': fields.char('Password', size=64),
-    }
-    
-    def get_contact(self, cr, uid, ids, context=None):
+        'tools':  fields.selection([('gmail','Gmail')], 'App to synchronize with'),
+        'create_partner':fields.selection([('group','Group'),('email_address','Email address'),('gmail_user','Gmail user')], ''),
+     }
+        
+    def import_contact(self, cr, uid, ids, context=None):
         # Only see the result, we will change the code
+        
         addresss_obj = self.pool.get('res.partner.address')
         for obj in self.browse(cr, uid, ids, context=context):
             google_obj = sync_google_contact.google_lib(obj.user, obj.password)
