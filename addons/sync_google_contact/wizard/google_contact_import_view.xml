@@ -3,12 +3,12 @@
     <data>
     
         <record model="ir.ui.view" id="view_google_contact_import_form">
-            <field name="name">google.contact.import.form</field>
-            <field name="model">google.contact.import</field>
+            <field name="name">synchronize.base.import.form</field>
+            <field name="model">synchronize.base</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Google Contacts">
-	                <group colspan="4" col="4">
+	                <group colspan="2" col="2">
 	                    <field name="tools"/>
 	                    <field name="create_partner" />
 	                </group>
@@ -24,7 +24,7 @@
         <record model="ir.actions.act_window" id="act_google_contact_import_form">
           <field name="name">Import Google Contacts</field>
           <field name="type">ir.actions.act_window</field>
-          <field name="res_model">google.contact.import</field>
+          <field name="res_model">synchronize.base</field>
           <field name="view_type">form</field>
           <field name="view_mode">form</field>
           <field name="target">new</field>

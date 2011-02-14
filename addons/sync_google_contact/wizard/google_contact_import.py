@@ -28,16 +28,19 @@ class google_contact_import(osv.osv_memory):
     _name = "synchronize.base"    
     _inherit = 'synchronize.base'
     _columns = {
-        'tools':  fields.selection([('gmail','Gmail')], 'App to synchronize with'),
-        'create_partner':fields.selection([('group','Group'),('email_address','Email address'),('gmail_user','Gmail user')], ''),
+        'tools':  fields.selection([('gmail','Gmail')],'Tools'),
+        'create_partner':fields.selection([('group','Group'),('email_address','Email address'),('gmail_user','Gmail user')], 'Create Partner'),
      }
         
     def import_contact(self, cr, uid, ids, context=None):
         # Only see the result, we will change the code
         
         addresss_obj = self.pool.get('res.partner.address')
+        user_obj=self.pool.get('res.users').browse(cr, uid, uid)
+        gmail_user=user_obj.gmail_user
+        gamil_pwd=user_obj.gmail_password
         for obj in self.browse(cr, uid, ids, context=context):
-            google_obj = sync_google_contact.google_lib(obj.user, obj.password)
+            google_obj = sync_google_contact.google_lib(gmail_user, gamil_pwd)
             contact = google_obj._get_contact()
             addresses = []
             while contact:
