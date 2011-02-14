@@ -32,7 +32,7 @@ class BaseTemplateEditor(openobject.templating.TemplateEditor):
         output = output[:end_head] + """
     <link rel="stylesheet" type="text/css" href="/web_livechat/static/css/lc.css"/>
     <%
-        cp.session['livechat'] = rpc.session.execute('object', 'execute', 'publisher_warranty.contract', 'is_livechat_enable')
+        cp.session['livechat'] = rpc.RPCProxy('publisher_warranty.contract').is_livechat_enable()
     %>
     % if cp.session['livechat']:
 <script type="text/javascript">
@@ -69,7 +69,7 @@ class HeaderTemplateEditor(openobject.templating.TemplateEditor):
 
         output = output[:corner] + """
             <p id="livechat_status" class="logout">
-                ${ rpc.session.execute('object', 'execute', 'publisher_warranty.contract', 'get_default_livechat_text') | n}
+                ${ rpc.RPCProxy('publisher_warranty.contract').get_default_livechat_text() | n}
             </p>
             % if cp.session['livechat']:
 
