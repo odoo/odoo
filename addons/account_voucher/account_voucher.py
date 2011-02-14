@@ -835,7 +835,7 @@ class account_voucher_line(osv.osv):
         'partner_id':fields.related('voucher_id', 'partner_id', type='many2one', relation='res.partner', string='Partner'),
         'untax_amount':fields.float('Untax Amount'),
         'amount':fields.float('Amount', digits_compute=dp.get_precision('Account')),
-        'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Cr/Dr'),
+        'type':fields.selection([('dr','Debit'),('cr','Credit')], 'Dr/Cr'),
         'account_analytic_id':  fields.many2one('account.analytic.account', 'Analytic Account'),
         'move_line_id': fields.many2one('account.move.line', 'Journal Item'),
         'date_original': fields.related('move_line_id','date', type='date', relation='account.move.line', string='Date', readonly=1),
