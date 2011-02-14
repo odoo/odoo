@@ -68,7 +68,7 @@ class SugarModule:
           for j in i._name_value_list:
               ans_dir[j._name.encode(self.encoding)] = j._value.encode(self.encoding)
             #end for
-      ans_list.append(ans_dir);
+          ans_list.append(ans_dir);
         #end for
       return ans_list;
 

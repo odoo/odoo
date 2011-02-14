@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 from osv import fields, osv
 import sugar
 from tools.translate import _
@@ -37,6 +36,7 @@ class import_sugarcrm(osv.osv):
         ],'Module Name', help="Module Name is used to specify which Module data want to Import"),
      }
 
+
      def import_data(self, cr, uid, ids,context=None):
        if not context:
         context={}
@@ -52,19 +52,31 @@ class import_sugarcrm(osv.osv):
         if not ids:
            raise osv.except_osv(_('Error !'), _('Please  Install %s Module') % (module_name))
 
-       if current.mod_name == 'lead':
+        if current.mod_name == 'lead':
            sugar_name = "Leads"
-       elif current.mod_name == 'opportunity':
+        elif current.mod_name == 'opportunity':
            sugar_name="Opportunities"
-       elif current.mod_name == 'accounts':
+        elif current.mod_name == 'accounts':
            sugar_name="Accounts"
-       elif current.mod_name == 'contact':
+        elif current.mod_name == 'contact':
            sugar_name="Contacts"
 
        sugar_data = sugar.test(sugar_name)
        for sugar_val in sugar_data:
            if sugar_name == "Leads":
-               lead_pool.create(cr, uid, {'name': sugar_val.get("first_name"), 'email_from': sugar_val.get("email1"), 'phone': sugar_val.get("phone_work"), 'mobile': sugar_val.get("phone_mobile"), 'write_date':sugar_val.get("date_modified"), 'user_id':sugar_val.get("created_by"), 'partner_name':sugar_val.get("title"), 'city':sugar_val.get("primary_address_city")})
+               vals = {'name':sugar_val.get('first_name', ''),
+                       'user_id':sugar_val.get('created_by',''),
+                       'partner_name': sugar_val.get('first_name','')+''+ sugar_val.get('last_name',''),
+                       'email_from': sugar_val.get('email1',''),
+                       'phone': sugar_val.get('phone_work',''),
+                       'mobile': sugar_val.get('phone_mobile',''),
+                       'write_date':sugar_val.get('date_modified',''),
+                       'function':sugar_val.get('title',''),
+                       'street': sugar_val.get('primary_address_street',''),
+                       'zip': sugar_val.get('primary_address_postalcode',''),
+                       'city':sugar_val.get('primary_address_city',''),
+                       }
+               lead_pool.create(cr, uid, vals)
 
        return {}
 
